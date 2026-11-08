@@ -1,0 +1,26 @@
+{
+  "sum-bits": {
+    "parent": {
+      "runtime": "out/query-receipts/conditional-runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "control": {
+      "runtime": "out/entry-publications/compact-runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "nodes": {
+      "runtime": "out/entry-publications/compact-runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  }
+}

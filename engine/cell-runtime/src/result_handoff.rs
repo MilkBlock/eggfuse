@@ -373,6 +373,12 @@ enum Trail {
 }
 #[derive(Clone, Debug, Default)]
 pub(crate) struct History(Option<Rc<Trail>>);
+#[derive(Default)]
+pub(crate) struct CaptureWork {
+    pub reads: usize,
+    pub slots: usize,
+    pub allocations: usize,
+}
 impl History {
     pub(crate) fn capture(
         &mut self,
@@ -381,9 +387,9 @@ impl History {
         wanted: &[Donor],
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
-    ) {
+    ) -> CaptureWork {
         if limit == 0 || (wanted.is_empty() && self.0.is_none()) {
-            return;
+            return CaptureWork::default();
         }
         let mut rows = smallvec::SmallVec::new();
         for &d in wanted {
@@ -395,10 +401,12 @@ impl History {
                 rows.push((d, w));
             }
         }
+        let mut work = CaptureWork { reads: wanted.len(), slots: rows.len(), allocations: 0 };
         let frame = (!rows.is_empty()).then_some(Exports { rule: rid, rows });
         if limit == 1 {
+            work.allocations = usize::from(frame.is_some());
             self.0 = frame.map(|f| Rc::new(Trail::One(f)));
-            return;
+            return work;
         }
         let prev = match self.0.as_deref() {
             Some(Trail::Many(v)) => v.as_slice(),
@@ -407,12 +415,15 @@ impl History {
         let prev = &prev[prev.len().saturating_sub(limit - 1)..];
         if frame.is_none() && !prev.iter().any(Option::is_some) {
             self.0 = None;
-            return;
+            return work;
         }
+        work.slots += prev.len() + 1;
+        work.allocations = 2 + usize::from(frame.is_some());
         let mut v = Vec::with_capacity(prev.len() + 1);
         v.extend_from_slice(prev);
         v.push(frame.map(Rc::new));
         self.0 = Some(Rc::new(Trail::Many(v)));
+        work
     }
     pub(crate) fn get(&self, r: &Reuse) -> Option<FactRef> {
         match self.get_donor(r.back, r.rule, r.donor)? {

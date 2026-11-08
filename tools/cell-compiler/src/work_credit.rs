@@ -1,0 +1,64 @@
+//! Deterministic credit from two complete executions of the same workload.
+//! These are equally weighted observed operations, not calibrated nanoseconds.
+use serde_json::{Value as J, json};
+use std::collections::BTreeMap;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct Work(pub BTreeMap<String, u64>);
+impl Work {
+    pub fn read(report: &J) -> Result<Self, String> {
+        let mut work = BTreeMap::new();
+        for (group, fields) in [
+            ("", &["key_lookup_calls"][..]),
+            ("stats", &["decoded_rows", "repaired_dependencies", "residual_candidates", "key_operations", "handoff_attempts", "constructor_requests", "union_requests", "cells_created"]),
+            ("stage_spine/stats", &[
+                "legacy_entry_writes", "legacy_retirement_checks", "legacy_cursor_probes", "node_cursor_reads",
+                "root_handles_created", "contexts_created", "captured_anchors", "capture_reads",
+                "origin_key_slots", "origin_map_writes", "origin_map_probes",
+                "history_capture_reads", "history_slots_written", "history_allocations",
+                "query_receipt_attempts", "context_reads", "port_cache_fills", "guards",
+            ]),
+            ("entry_schedule/stats", &[
+                "entry_publication_writes", "entry_retirement_checks", "predicate_checks", "row_decodes",
+            ]),
+            ("publication", &["row_reads", "column_rows", "range_rows", "neighbor_rows"]),
+        ] {
+            for field in fields {
+                let key = if group.is_empty() { field.to_string() } else { format!("{group}/{field}") };
+                let value = report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(|| format!("missing measured-work counter {key}"))?;
+                work.insert(key, value);
+            }
+        }
+        Ok(Self(work))
+    }
+    pub fn savings(&self, trial: &Self) -> (i128, J) {
+        let mut changes = BTreeMap::new();
+        let mut net = 0i128;
+        for (name, &before) in &self.0 {
+            let after = trial.0[name];
+            let saved = i128::from(before) - i128::from(after);
+            net += saved;
+            changes.insert(name, json!({"before":before,"after":after,"saved":saved}));
+        }
+        (net, json!({"net_saved_operations":net,"counters":changes,
+            "unit":"one observed operation per counter; equal weights, not elapsed time",
+            "scope":"complete inference including failed candidates and unused source captures; excludes compilation and replay cost"}))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn lookup_savings_must_pay_for_unused_capture_and_failed_reads() {
+        let old = Work(BTreeMap::from([("lookup".into(), 100), ("capture".into(), 0), ("failed_read".into(), 0)]));
+        let mut trial = old.clone();
+        trial.0.insert("lookup".into(), 90);
+        trial.0.insert("capture".into(), 8);
+        trial.0.insert("failed_read".into(), 3);
+        assert_eq!(old.savings(&trial).0, -1);
+        trial.0.insert("capture".into(), 2);
+        assert_eq!(old.savings(&trial).0, 5);
+    }
+}

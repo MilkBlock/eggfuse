@@ -60,6 +60,18 @@ fn compare(p: &Program, plan: &J) -> Executor {
     raw["iterative_bake"] = plan.clone();
     let base = execute(p.clone());
     let fast = execute(Program::parse(raw).unwrap());
+    #[cfg(feature = "sparse-cells")]
+    {
+        let mut owned = Executor::new(Graph::new(fast.graph.program.clone()).unwrap(), true);
+        owned.use_entry_publications().unwrap();
+        owned.execute().unwrap();
+        assert_eq!(fast.snapshots, owned.snapshots);
+        assert_eq!(fast.binding_audit, owned.binding_audit);
+        for k in ["resumed_steps", "root_completion_seeds", "query_receipt_hits", "anchor_publications"] {
+            assert_eq!(fast.report()["stage_spine"]["stats"][k], owned.report()["stage_spine"]["stats"][k], "{k}");
+        }
+        assert!(owned.report()["entry_schedule"]["stats"]["entry_publication_writes"].as_u64().unwrap() > 0);
+    }
     assert_eq!(base.snapshots, fast.snapshots);
     assert_eq!(base.binding_audit, fast.binding_audit);
     assert_eq!(base.steps.len(), fast.steps.len());
@@ -199,6 +211,44 @@ fn resume_catalog_reconstructs_old_certificate_before_learning_new_query_work() 
     let out = tmp.path().join("rejected");
     assert!(!run(&out).status.success());
     assert!(!out.exists());
+}
+
+#[test]
+fn measured_credit_rejects_query_hits_that_do_not_pay_for_source_history() {
+    use std::{fs, process::Command};
+    // Make Gateway the first eligible witness so this continuation wins the
+    // binding tie break and supplies actual discovery evidence.
+    let source = SOURCE.replace("(let g (G fx)) (H g) (union x y) (Gateway fy)",
+        "(Gateway fy) (let g (G fx)) (H g) (union x y)");
+    let (p, mut plan) = seed(&source);
+    plan["joins"] = json!([]);
+    let tmp = tempfile::tempdir().unwrap();
+    let program = tmp.path().join("program.json");
+    let catalog = tmp.path().join("catalog.json");
+    fs::write(&program, serde_json::to_vec(&p.artifact).unwrap()).unwrap();
+    fs::write(&catalog, serde_json::to_vec(&plan).unwrap()).unwrap();
+    for score in ["static", "measured-work"] {
+        let output = tmp.path().join(score);
+        let result = Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+            .args(["iterate", "--program"]).arg(&program)
+            .arg("--resume-catalog").arg(&catalog)
+            .arg("--output").arg(&output)
+            .args(["--rounds", "1", "--objective", "stage-congruence", "--score", score, "--trial-limit", "1"])
+            .output().unwrap();
+        assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
+        let rounds: J = serde_json::from_slice(&fs::read(output.join("rounds.json")).unwrap()).unwrap();
+        if score == "static" {
+            assert_eq!(rounds[0]["admitted"].as_array().unwrap().len(), 1, "{rounds}");
+        } else {
+            assert_eq!(rounds[0]["stop"], "no_measured_gain");
+            assert_eq!(rounds[0]["admitted"], json!([]));
+            let trial = &rounds[0]["credit"]["trials"][0];
+            assert_eq!(trial["semantic_audit"], true);
+            assert!(trial["work"]["net_saved_operations"].as_i64().unwrap() < 0);
+            assert!(trial["work"]["counters"]["stage_spine/stats/history_capture_reads"]["saved"].as_i64().unwrap() < 0);
+            assert_eq!(rounds[0]["units"], 2);
+        }
+    }
 }
 
 #[test]

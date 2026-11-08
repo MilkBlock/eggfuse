@@ -62,6 +62,9 @@ def measure(spec, output, repeat):
                 record['phases'] = {k: sum(s['phases'][k] for s in report['steps'])
                                     for k in report['steps'][0]['phases']}
                 record['repair_ports'] = report.get('repair_ports', {}).get('stats')
+                record['entry_schedule'] = report['entry_schedule']
+                record['publication'] = report['publication']
+                record['key_lookup_calls'] = report['key_lookup_calls']
                 if iteration < 0:
                     rows[label]['warmup'] = record
                 else:

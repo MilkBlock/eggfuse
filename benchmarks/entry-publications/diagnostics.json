@@ -1,0 +1,119 @@
+{
+  "scope": "standalone Cell CPU; sequential implementation diagnostics, not cumulative speedups",
+  "variants": [
+    {
+      "name": "arena",
+      "note": "Per-publication allocation removed; all packet maps still carried the optional expression field.",
+      "cases": {
+        "sum-bits": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 0.021341417
+          },
+          "control": {
+            "binary_sha256": "aff5f2fda6cd09786b9a136336580b7cafb9473ad6daf9aad75f59cbe108b0ac",
+            "median_inference_seconds": 0.021261625
+          },
+          "nodes": {
+            "binary_sha256": "aff5f2fda6cd09786b9a136336580b7cafb9473ad6daf9aad75f59cbe108b0ac",
+            "median_inference_seconds": 0.021582417
+          },
+          "node_vs_control_median_percent": 1.508784018154774,
+          "node_vs_control_paired_median_percent": 2.306404207527346
+        },
+        "raytrace": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 7.469411542
+          },
+          "control": {
+            "binary_sha256": "aff5f2fda6cd09786b9a136336580b7cafb9473ad6daf9aad75f59cbe108b0ac",
+            "median_inference_seconds": 7.560898875
+          },
+          "nodes": {
+            "binary_sha256": "aff5f2fda6cd09786b9a136336580b7cafb9473ad6daf9aad75f59cbe108b0ac",
+            "median_inference_seconds": 7.5885124170000005
+          },
+          "node_vs_control_median_percent": 0.36521506842663864,
+          "node_vs_control_paired_median_percent": -0.30731087066504514
+        }
+      }
+    },
+    {
+      "name": "typed-retirement",
+      "note": "Consumes explicit removal events and avoids repeated table-identity checks.",
+      "cases": {
+        "sum-bits": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 0.021017125
+          },
+          "control": {
+            "binary_sha256": "7ff995f678b904c5dd3106decac67ce23eff8819578af336bd6f1f8b5b0129a7",
+            "median_inference_seconds": 0.020797334
+          },
+          "nodes": {
+            "binary_sha256": "7ff995f678b904c5dd3106decac67ce23eff8819578af336bd6f1f8b5b0129a7",
+            "median_inference_seconds": 0.021153208
+          },
+          "node_vs_control_median_percent": 1.7111520159266425,
+          "node_vs_control_paired_median_percent": 2.281721712478446
+        },
+        "raytrace": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 7.634887083
+          },
+          "control": {
+            "binary_sha256": "7ff995f678b904c5dd3106decac67ce23eff8819578af336bd6f1f8b5b0129a7",
+            "median_inference_seconds": 7.835602125
+          },
+          "nodes": {
+            "binary_sha256": "7ff995f678b904c5dd3106decac67ce23eff8819578af336bd6f1f8b5b0129a7",
+            "median_inference_seconds": 7.819203292
+          },
+          "node_vs_control_median_percent": -0.2092861880732655,
+          "node_vs_control_paired_median_percent": -0.2775043808032951
+        }
+      }
+    },
+    {
+      "name": "compact-ordinary-map",
+      "note": "Final version: only publication owners use the extended record layout.",
+      "cases": {
+        "sum-bits": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 0.020998042
+          },
+          "control": {
+            "binary_sha256": "abcb102fba8244661d491950f8661a25abcc54bf53b81777f0506fb7733f1e36",
+            "median_inference_seconds": 0.020873042
+          },
+          "nodes": {
+            "binary_sha256": "abcb102fba8244661d491950f8661a25abcc54bf53b81777f0506fb7733f1e36",
+            "median_inference_seconds": 0.021127459
+          },
+          "node_vs_control_median_percent": 1.2188783982708395,
+          "node_vs_control_paired_median_percent": 1.6848509789513244
+        },
+        "raytrace": {
+          "parent": {
+            "binary_sha256": "a900078a640fb5f7d82b337dabcc0f586b76ca22d2f35e596036f4f18c4d15ee",
+            "median_inference_seconds": 7.7781665
+          },
+          "control": {
+            "binary_sha256": "abcb102fba8244661d491950f8661a25abcc54bf53b81777f0506fb7733f1e36",
+            "median_inference_seconds": 7.6673863749999995
+          },
+          "nodes": {
+            "binary_sha256": "abcb102fba8244661d491950f8661a25abcc54bf53b81777f0506fb7733f1e36",
+            "median_inference_seconds": 7.76407575
+          },
+          "node_vs_control_median_percent": 1.2610473800467759,
+          "node_vs_control_paired_median_percent": -1.0786313270066183
+        }
+      }
+    }
+  ]
+}

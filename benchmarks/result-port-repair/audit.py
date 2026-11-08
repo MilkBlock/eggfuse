@@ -56,6 +56,8 @@ def audit(runtime, programs, output):
             rows[lane] = {'program_file_sha256': sha(Path(program)), 'args': args,
                           'hashes': hashes, 'stats': report['stats'], 'repair_ports': report['repair_ports'],
                           'stage_spine': report['stage_spine']['stats'], 'runs': len(schedule)}
+            rows[lane].update(entry_schedule=report['entry_schedule'], publication=report['publication'],
+                              key_lookup_calls=report['key_lookup_calls'])
             temp = output / 'results.tmp'
             temp.write_text(json.dumps(result, indent=2) + '\n')
             temp.replace(output / 'results.json')

@@ -1,0 +1,2040 @@
+{
+  "scope": "standalone Cell CPU; observed-operation credit, not latency credit",
+  "compiler_sha256": "08b4be6777f558f202ff586d7c7c87131ebec262f6dd1f93b0b83f5dacd8e9cd",
+  "cases": {
+    "sum-bits": {
+      "program_file_sha256": "87c504a9b9d8041a8c789d79c3bd3cf73a5443cab6f43b4f8f5a3a2fee883767",
+      "rounds": [
+        {
+          "round": 0,
+          "units": 208,
+          "source_program": "3b6f86a4859770f6b4cc32c8fcb89dcde706d8a0d3fb129fd3cf01030c9301ff",
+          "work": {
+            "applied_units": {
+              "0": 311,
+              "1": 195,
+              "2": 5,
+              "3": 193,
+              "4": 112,
+              "5": 119,
+              "6": 102,
+              "7": 96,
+              "8": 93,
+              "9": 91,
+              "10": 90,
+              "11": 81,
+              "12": 76,
+              "13": 74,
+              "14": 68,
+              "15": 62,
+              "16": 54,
+              "17": 48,
+              "18": 47,
+              "19": 44,
+              "20": 43,
+              "21": 40,
+              "22": 38,
+              "23": 37,
+              "24": 34,
+              "25": 31,
+              "26": 28,
+              "27": 26,
+              "28": 25,
+              "29": 25,
+              "30": 24,
+              "31": 18,
+              "32": 16,
+              "33": 16,
+              "34": 16,
+              "35": 16,
+              "36": 14,
+              "37": 13,
+              "38": 6,
+              "39": 10,
+              "40": 8,
+              "41": 9,
+              "42": 9,
+              "43": 9,
+              "44": 9,
+              "45": 8,
+              "46": 8,
+              "47": 8,
+              "48": 8,
+              "49": 6,
+              "50": 6,
+              "51": 5,
+              "52": 5,
+              "53": 5,
+              "54": 5,
+              "55": 5,
+              "56": 5,
+              "57": 5,
+              "58": 5,
+              "59": 5,
+              "60": 5,
+              "61": 5,
+              "62": 5,
+              "63": 5,
+              "64": 5,
+              "65": 5,
+              "66": 4,
+              "67": 4,
+              "68": 4,
+              "69": 4,
+              "70": 4,
+              "71": 4,
+              "72": 3,
+              "73": 3,
+              "74": 3,
+              "75": 3,
+              "76": 3,
+              "77": 2,
+              "78": 2,
+              "79": 2,
+              "80": 2,
+              "81": 2,
+              "82": 2,
+              "83": 2,
+              "84": 2,
+              "85": 2,
+              "86": 2,
+              "87": 2,
+              "88": 1,
+              "89": 1,
+              "90": 1,
+              "91": 1,
+              "92": 1,
+              "93": 1,
+              "94": 1,
+              "95": 1,
+              "96": 1,
+              "198": 223,
+              "199": 28,
+              "200": 51,
+              "201": 24,
+              "202": 11,
+              "203": 3,
+              "204": 2,
+              "205": 2,
+              "206": 3,
+              "207": 17
+            },
+            "candidate_shapes": 515,
+            "counter_prunes": 0,
+            "oversized_applied_pairs": 0,
+            "direct_origins": 2625,
+            "saved_origin_key_slots": 9754,
+            "saved_answer_slot_copies": 10009
+          },
+          "rhs_completion": {
+            "lets": 293,
+            "sets": 170,
+            "closed": 165,
+            "noop_unions": 170,
+            "deep": 0
+          },
+          "query_completion": {
+            "attempts": 5,
+            "hits": 5,
+            "function_hits": 0,
+            "missing": 0,
+            "stale": 0,
+            "port_refreshes": 3865
+          },
+          "admitted": [],
+          "runs": 1428,
+          "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+          "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+          "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "stop": "trial_limit",
+          "resumed_steps": 3034,
+          "credit": {
+            "policy": "measured-work",
+            "entry_publications": true,
+            "repair_ports": true,
+            "ranked_proposals": 16,
+            "untried_ranked_proposals": 12,
+            "trials": [
+              {
+                "join": {
+                  "left": 14,
+                  "output": 5,
+                  "right": 14
+                },
+                "proposal": {
+                  "visits": 51,
+                  "predicted_key_reads": 51,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 106,
+                  "consumer_run": 110,
+                  "witness": {
+                    "Fact": {
+                      "cell": 795,
+                      "op": 5
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "0af3bfbd63470f794e491ce7d49f5d438d767bef9485c7d0926171970ae6dc81",
+                "semantic_audit": true,
+                "compile_seconds": 0.133740167,
+                "replay_and_export_hash_seconds": 0.038741791,
+                "work": {
+                  "net_saved_operations": -206,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 5913,
+                      "after": 5913,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 2854,
+                      "after": 2854,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 6418,
+                      "after": 6418,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 5743,
+                      "after": 5743,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 19322,
+                      "after": 19319,
+                      "saved": 3
+                    },
+                    "publication/column_rows": {
+                      "before": 5585,
+                      "after": 5585,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 190,
+                      "after": 190,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 4750,
+                      "after": 4750,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 58,
+                      "after": 58,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 12898,
+                      "after": 12898,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 311,
+                      "after": 248,
+                      "saved": 63
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 1100,
+                      "after": 1100,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 1072,
+                      "after": 1072,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 1137,
+                      "after": 1205,
+                      "saved": -68
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 2009,
+                      "after": 2077,
+                      "saved": -68
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 2009,
+                      "after": 2077,
+                      "saved": -68
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 2521,
+                      "after": 2521,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 2501,
+                      "after": 2501,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 1143,
+                      "after": 1143,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 3217,
+                      "after": 3217,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 814,
+                      "after": 811,
+                      "saved": 3
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 5,
+                      "after": 72,
+                      "saved": -67
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 2522,
+                      "after": 2522,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 2893,
+                      "after": 2893,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 11481,
+                      "after": 11481,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 3727,
+                      "after": 3731,
+                      "saved": -4
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 623,
+                      "after": 623,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 1496,
+                      "after": 1496,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 12275,
+                      "after": 12275,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 3041,
+                      "after": 3041,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 11,
+                  "output": 3,
+                  "right": 11
+                },
+                "proposal": {
+                  "visits": 19,
+                  "predicted_key_reads": 38,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 106,
+                  "consumer_run": 110,
+                  "witness": {
+                    "Fact": {
+                      "cell": 753,
+                      "op": 3
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "7ace143eaa31b72b1232e530c775c75ffc2c78eeb7b0764b9c0c4fc1a018de91",
+                "semantic_audit": true,
+                "compile_seconds": 0.127975375,
+                "replay_and_export_hash_seconds": 0.043236458,
+                "work": {
+                  "net_saved_operations": -405,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 5913,
+                      "after": 5913,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 2854,
+                      "after": 2854,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 6418,
+                      "after": 6418,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 5743,
+                      "after": 5743,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 19322,
+                      "after": 19320,
+                      "saved": 2
+                    },
+                    "publication/column_rows": {
+                      "before": 5585,
+                      "after": 5585,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 190,
+                      "after": 190,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 4750,
+                      "after": 4750,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 58,
+                      "after": 58,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 12898,
+                      "after": 12898,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 311,
+                      "after": 259,
+                      "saved": 52
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 1100,
+                      "after": 1100,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 1072,
+                      "after": 1072,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 1137,
+                      "after": 1218,
+                      "saved": -81
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 2009,
+                      "after": 2171,
+                      "saved": -162
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 2009,
+                      "after": 2171,
+                      "saved": -162
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 2521,
+                      "after": 2521,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 2501,
+                      "after": 2501,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 1143,
+                      "after": 1143,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 3217,
+                      "after": 3217,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 814,
+                      "after": 812,
+                      "saved": 2
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 5,
+                      "after": 59,
+                      "saved": -54
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 2522,
+                      "after": 2522,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 2893,
+                      "after": 2893,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 11481,
+                      "after": 11481,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 3727,
+                      "after": 3729,
+                      "saved": -2
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 623,
+                      "after": 623,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 1496,
+                      "after": 1496,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 12275,
+                      "after": 12275,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 3041,
+                      "after": 3041,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 31,
+                  "output": 0,
+                  "right": 11
+                },
+                "proposal": {
+                  "visits": 6,
+                  "predicted_key_reads": 12,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 102,
+                  "consumer_run": 106,
+                  "witness": {
+                    "Fact": {
+                      "cell": 625,
+                      "op": 0
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "5595742551d7704a795f27dea42b70077d0d20f7956b95e857b26de1ed25545b",
+                "semantic_audit": true,
+                "compile_seconds": 0.127998042,
+                "replay_and_export_hash_seconds": 0.042727583,
+                "work": {
+                  "net_saved_operations": -94,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 5913,
+                      "after": 5913,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 2854,
+                      "after": 2854,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 6418,
+                      "after": 6418,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 5743,
+                      "after": 5743,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 19322,
+                      "after": 19322,
+                      "saved": 0
+                    },
+                    "publication/column_rows": {
+                      "before": 5585,
+                      "after": 5585,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 190,
+                      "after": 190,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 4750,
+                      "after": 4750,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 58,
+                      "after": 58,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 12898,
+                      "after": 12898,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 311,
+                      "after": 301,
+                      "saved": 10
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 1100,
+                      "after": 1100,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 1072,
+                      "after": 1072,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 1137,
+                      "after": 1155,
+                      "saved": -18
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 2009,
+                      "after": 2045,
+                      "saved": -36
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 2009,
+                      "after": 2045,
+                      "saved": -36
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 2521,
+                      "after": 2521,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 2501,
+                      "after": 2501,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 1143,
+                      "after": 1143,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 3217,
+                      "after": 3217,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 814,
+                      "after": 814,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 5,
+                      "after": 17,
+                      "saved": -12
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 2522,
+                      "after": 2522,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 2893,
+                      "after": 2893,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 11481,
+                      "after": 11481,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 3727,
+                      "after": 3729,
+                      "saved": -2
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 623,
+                      "after": 623,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 1496,
+                      "after": 1496,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 12275,
+                      "after": 12275,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 3041,
+                      "after": 3041,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 97,
+                  "output": 17,
+                  "right": 34
+                },
+                "proposal": {
+                  "visits": 8,
+                  "predicted_key_reads": 8,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 1009,
+                  "consumer_run": 1011,
+                  "witness": {
+                    "Fact": {
+                      "cell": 6871,
+                      "op": 11
+                    }
+                  },
+                  "width": 5
+                },
+                "program_sha256": "d8be320c520ad84ffd73f8b09c2dce1bbffd69e546bea8b3db0262e306e854d0",
+                "semantic_audit": true,
+                "compile_seconds": 0.134081459,
+                "replay_and_export_hash_seconds": 0.038909417,
+                "work": {
+                  "net_saved_operations": -56,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 5913,
+                      "after": 5913,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 2854,
+                      "after": 2854,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 6418,
+                      "after": 6418,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 5743,
+                      "after": 5743,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 19322,
+                      "after": 19314,
+                      "saved": 8
+                    },
+                    "publication/column_rows": {
+                      "before": 5585,
+                      "after": 5585,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 190,
+                      "after": 190,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 4750,
+                      "after": 4750,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 58,
+                      "after": 58,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 12898,
+                      "after": 12898,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 311,
+                      "after": 311,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 1100,
+                      "after": 1100,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 1072,
+                      "after": 1072,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 1137,
+                      "after": 1153,
+                      "saved": -16
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 2009,
+                      "after": 2025,
+                      "saved": -16
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 2009,
+                      "after": 2025,
+                      "saved": -16
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 2521,
+                      "after": 2521,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 2501,
+                      "after": 2501,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 1143,
+                      "after": 1143,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 3217,
+                      "after": 3217,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 814,
+                      "after": 814,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 5,
+                      "after": 13,
+                      "saved": -8
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 2522,
+                      "after": 2522,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 2893,
+                      "after": 2893,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 11481,
+                      "after": 11481,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 3727,
+                      "after": 3735,
+                      "saved": -8
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 623,
+                      "after": 623,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 1496,
+                      "after": 1496,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 12275,
+                      "after": 12275,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 3041,
+                      "after": 3041,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              }
+            ],
+            "selected_net_saved_operations": 0
+          },
+          "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+        }
+      ]
+    },
+    "raytrace": {
+      "program_file_sha256": "9f8c623497ad3193fd0d7664160febc8d8875b7e5411f22727fa5a92542eef09",
+      "rounds": [
+        {
+          "round": 0,
+          "units": 316,
+          "source_program": "c548b9d32115c7781854e1b9eee711cdd4b41ef79ccbc28f24f356efb8dcb196",
+          "work": {
+            "applied_units": {
+              "0": 301840,
+              "1": 71204,
+              "2": 32879,
+              "3": 19575,
+              "4": 24962,
+              "5": 285,
+              "6": 14972,
+              "7": 13442,
+              "8": 11879,
+              "9": 10526,
+              "10": 9812,
+              "11": 8186,
+              "12": 8174,
+              "13": 7427,
+              "14": 6508,
+              "15": 6495,
+              "16": 6167,
+              "17": 6098,
+              "18": 4935,
+              "19": 4136,
+              "20": 4054,
+              "21": 3716,
+              "22": 3555,
+              "23": 3338,
+              "24": 3283,
+              "25": 2146,
+              "26": 1920,
+              "27": 874,
+              "28": 1552,
+              "29": 1547,
+              "30": 1552,
+              "31": 1552,
+              "32": 1548,
+              "33": 1537,
+              "34": 1534,
+              "35": 1457,
+              "36": 1413,
+              "37": 1269,
+              "38": 1114,
+              "39": 915,
+              "40": 885,
+              "41": 855,
+              "42": 848,
+              "43": 845,
+              "44": 803,
+              "45": 794,
+              "46": 820,
+              "47": 817,
+              "48": 657,
+              "49": 631,
+              "50": 437,
+              "51": 571,
+              "52": 431,
+              "53": 349,
+              "54": 329,
+              "55": 313,
+              "56": 315,
+              "57": 315,
+              "58": 304,
+              "59": 282,
+              "60": 231,
+              "61": 194,
+              "62": 193,
+              "63": 172,
+              "64": 167,
+              "65": 165,
+              "66": 152,
+              "67": 120,
+              "68": 116,
+              "69": 104,
+              "70": 104,
+              "71": 104,
+              "72": 104,
+              "73": 104,
+              "74": 84,
+              "75": 84,
+              "76": 78,
+              "77": 78,
+              "78": 78,
+              "79": 78,
+              "80": 78,
+              "81": 78,
+              "82": 78,
+              "83": 75,
+              "84": 69,
+              "85": 59,
+              "86": 57,
+              "87": 53,
+              "88": 51,
+              "89": 51,
+              "90": 50,
+              "91": 50,
+              "92": 46,
+              "93": 43,
+              "94": 41,
+              "95": 28,
+              "96": 31,
+              "97": 29,
+              "98": 29,
+              "99": 29,
+              "100": 27,
+              "101": 20,
+              "102": 13,
+              "103": 13,
+              "104": 4,
+              "105": 8,
+              "106": 5,
+              "107": 5,
+              "108": 5,
+              "109": 5,
+              "110": 5,
+              "111": 5,
+              "112": 5,
+              "113": 4,
+              "114": 4,
+              "115": 4,
+              "116": 4,
+              "117": 3,
+              "118": 2,
+              "119": 2,
+              "120": 2,
+              "121": 1,
+              "122": 1,
+              "123": 1,
+              "124": 1,
+              "125": 1,
+              "126": 1,
+              "288": 22892,
+              "289": 7506,
+              "290": 2359,
+              "291": 2469,
+              "292": 830,
+              "293": 864,
+              "294": 164,
+              "295": 126,
+              "296": 36,
+              "297": 30,
+              "298": 14,
+              "299": 13,
+              "300": 13,
+              "301": 8,
+              "302": 8,
+              "303": 8,
+              "304": 1352,
+              "305": 5,
+              "306": 4,
+              "307": 4,
+              "308": 3,
+              "309": 3,
+              "310": 2,
+              "311": 2,
+              "312": 14,
+              "313": 4,
+              "314": 3,
+              "315": 2
+            },
+            "candidate_shapes": 24422,
+            "counter_prunes": 0,
+            "oversized_applied_pairs": 0,
+            "direct_origins": 603468,
+            "saved_origin_key_slots": 1949703,
+            "saved_answer_slot_copies": 1965324
+          },
+          "rhs_completion": {
+            "lets": 34063,
+            "sets": 17363,
+            "closed": 18016,
+            "noop_unions": 17363,
+            "deep": 0
+          },
+          "query_completion": {
+            "attempts": 199,
+            "hits": 197,
+            "function_hits": 0,
+            "missing": 0,
+            "stale": 2,
+            "port_refreshes": 1574828
+          },
+          "admitted": [],
+          "runs": 16883,
+          "final_state_sha256": "bc752aa028a83214b45fd92591c97985cb8d59e1c4545b802c28271c862f546f",
+          "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40",
+          "ordered_rhs_sha256": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+          "stop": "trial_limit",
+          "resumed_steps": 663403,
+          "credit": {
+            "policy": "measured-work",
+            "entry_publications": true,
+            "repair_ports": true,
+            "ranked_proposals": 16,
+            "untried_ranked_proposals": 12,
+            "trials": [
+              {
+                "join": {
+                  "left": 13,
+                  "output": 3,
+                  "right": 13
+                },
+                "proposal": {
+                  "visits": 2389,
+                  "predicted_key_reads": 4778,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 1112,
+                  "consumer_run": 1117,
+                  "witness": {
+                    "Fact": {
+                      "cell": 107590,
+                      "op": 3
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "4a987d930d68bcb0818971815d72ca4c73732e196685c49ce09e7261c380eda8",
+                "semantic_audit": true,
+                "compile_seconds": 0.536119333,
+                "replay_and_export_hash_seconds": 12.724743333,
+                "work": {
+                  "net_saved_operations": -37151,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 2043825,
+                      "after": 2043825,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 1558795,
+                      "after": 1558795,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 2307528,
+                      "after": 2307528,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 2313765,
+                      "after": 2313765,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 4420555,
+                      "after": 4420393,
+                      "saved": 162
+                    },
+                    "publication/column_rows": {
+                      "before": 2395590,
+                      "after": 2395590,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 1126308,
+                      "after": 1126308,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 57325,
+                      "after": 57325,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 2231377,
+                      "after": 2231377,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 29,
+                      "after": 29,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 3704657,
+                      "after": 3704657,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 22378,
+                      "after": 17148,
+                      "saved": 5230
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 472906,
+                      "after": 472906,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 151425,
+                      "after": 151425,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 114560,
+                      "after": 121987,
+                      "saved": -7427
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 227541,
+                      "after": 242395,
+                      "saved": -14854
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 227541,
+                      "after": 242395,
+                      "saved": -14854
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 286859,
+                      "after": 286859,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 258317,
+                      "after": 258317,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 141222,
+                      "after": 141222,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 1585130,
+                      "after": 1585130,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 66574,
+                      "after": 66412,
+                      "saved": 162
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 199,
+                      "after": 5599,
+                      "saved": -5400
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 297750,
+                      "after": 297750,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 704559,
+                      "after": 704559,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 2062640,
+                      "after": 2062640,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 867874,
+                      "after": 868044,
+                      "saved": -170
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 64796,
+                      "after": 64796,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 479589,
+                      "after": 479589,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 4490637,
+                      "after": 4490637,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 573277,
+                      "after": 573277,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 16,
+                  "output": 5,
+                  "right": 16
+                },
+                "proposal": {
+                  "visits": 4060,
+                  "predicted_key_reads": 4060,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 1112,
+                  "consumer_run": 1117,
+                  "witness": {
+                    "Fact": {
+                      "cell": 113888,
+                      "op": 5
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "12944053ca5585e0bac26483207d3b35ccb51e72ba468ba26af96459be72b81a",
+                "semantic_audit": true,
+                "compile_seconds": 0.598607792,
+                "replay_and_export_hash_seconds": 12.660256875,
+                "work": {
+                  "net_saved_operations": -18539,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 2043825,
+                      "after": 2043825,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 1558795,
+                      "after": 1558795,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 2307528,
+                      "after": 2307528,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 2313765,
+                      "after": 2313765,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 4420555,
+                      "after": 4420527,
+                      "saved": 28
+                    },
+                    "publication/column_rows": {
+                      "before": 2395590,
+                      "after": 2395590,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 1126308,
+                      "after": 1126308,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 57325,
+                      "after": 57325,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 2231377,
+                      "after": 2231377,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 29,
+                      "after": 29,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 3704657,
+                      "after": 3704657,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 22378,
+                      "after": 16273,
+                      "saved": 6105
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 472906,
+                      "after": 472906,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 151425,
+                      "after": 151425,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 114560,
+                      "after": 120727,
+                      "saved": -6167
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 227541,
+                      "after": 233708,
+                      "saved": -6167
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 227541,
+                      "after": 233708,
+                      "saved": -6167
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 286859,
+                      "after": 286859,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 258317,
+                      "after": 258317,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 141222,
+                      "after": 141222,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 1585130,
+                      "after": 1585130,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 66574,
+                      "after": 66546,
+                      "saved": 28
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 199,
+                      "after": 6351,
+                      "saved": -6152
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 297750,
+                      "after": 297750,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 704559,
+                      "after": 704559,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 2062640,
+                      "after": 2062640,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 867874,
+                      "after": 867921,
+                      "saved": -47
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 64796,
+                      "after": 64796,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 479589,
+                      "after": 479589,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 4490637,
+                      "after": 4490637,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 573277,
+                      "after": 573277,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 51,
+                  "output": 0,
+                  "right": 13
+                },
+                "proposal": {
+                  "visits": 249,
+                  "predicted_key_reads": 498,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 1107,
+                  "consumer_run": 1112,
+                  "witness": {
+                    "Fact": {
+                      "cell": 89679,
+                      "op": 0
+                    }
+                  },
+                  "width": 7
+                },
+                "program_sha256": "cee016e35e27f083ca9bf9af7e3be1e57c1b981de3802f07d3ad009fcebbbdc7",
+                "semantic_audit": true,
+                "compile_seconds": 0.554182917,
+                "replay_and_export_hash_seconds": 12.389444375,
+                "work": {
+                  "net_saved_operations": -2847,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 2043825,
+                      "after": 2043825,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 1558795,
+                      "after": 1558795,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 2307528,
+                      "after": 2307528,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 2313765,
+                      "after": 2313765,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 4420555,
+                      "after": 4420534,
+                      "saved": 21
+                    },
+                    "publication/column_rows": {
+                      "before": 2395590,
+                      "after": 2395590,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 1126308,
+                      "after": 1126308,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 57325,
+                      "after": 57325,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 2231377,
+                      "after": 2231377,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 29,
+                      "after": 29,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 3704657,
+                      "after": 3704657,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 22378,
+                      "after": 21795,
+                      "saved": 583
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 472906,
+                      "after": 472906,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 151425,
+                      "after": 151425,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 114560,
+                      "after": 115131,
+                      "saved": -571
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 227541,
+                      "after": 228683,
+                      "saved": -1142
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 227541,
+                      "after": 228683,
+                      "saved": -1142
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 286859,
+                      "after": 286859,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 258317,
+                      "after": 258317,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 141222,
+                      "after": 141222,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 1585130,
+                      "after": 1585130,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 66574,
+                      "after": 66553,
+                      "saved": 21
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 199,
+                      "after": 799,
+                      "saved": -600
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 297750,
+                      "after": 297750,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 704559,
+                      "after": 704559,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 2062640,
+                      "after": 2062640,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 867874,
+                      "after": 867891,
+                      "saved": -17
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 64796,
+                      "after": 64796,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 479589,
+                      "after": 479589,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 4490637,
+                      "after": 4490637,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 573277,
+                      "after": 573277,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              },
+              {
+                "join": {
+                  "left": 127,
+                  "output": 17,
+                  "right": 41
+                },
+                "proposal": {
+                  "visits": 431,
+                  "predicted_key_reads": 431,
+                  "bridge_support": 0,
+                  "avoidable_origin_slots": 0,
+                  "producer_run": 6265,
+                  "consumer_run": 6268,
+                  "witness": {
+                    "Fact": {
+                      "cell": 696980,
+                      "op": 11
+                    }
+                  },
+                  "width": 5
+                },
+                "program_sha256": "cebc83b3148abe8ae84b2122fa7910744b4bce453172897ff47905eff542e712",
+                "semantic_audit": true,
+                "compile_seconds": 0.553946458,
+                "replay_and_export_hash_seconds": 12.895801833,
+                "work": {
+                  "net_saved_operations": -2944,
+                  "counters": {
+                    "entry_schedule/stats/entry_publication_writes": {
+                      "before": 2043825,
+                      "after": 2043825,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/entry_retirement_checks": {
+                      "before": 1558795,
+                      "after": 1558795,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/predicate_checks": {
+                      "before": 2307528,
+                      "after": 2307528,
+                      "saved": 0
+                    },
+                    "entry_schedule/stats/row_decodes": {
+                      "before": 2313765,
+                      "after": 2313765,
+                      "saved": 0
+                    },
+                    "key_lookup_calls": {
+                      "before": 4420555,
+                      "after": 4420124,
+                      "saved": 431
+                    },
+                    "publication/column_rows": {
+                      "before": 2395590,
+                      "after": 2395590,
+                      "saved": 0
+                    },
+                    "publication/neighbor_rows": {
+                      "before": 1126308,
+                      "after": 1126308,
+                      "saved": 0
+                    },
+                    "publication/range_rows": {
+                      "before": 57325,
+                      "after": 57325,
+                      "saved": 0
+                    },
+                    "publication/row_reads": {
+                      "before": 2231377,
+                      "after": 2231377,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/capture_reads": {
+                      "before": 29,
+                      "after": 29,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/captured_anchors": {
+                      "before": 3704657,
+                      "after": 3704657,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/context_reads": {
+                      "before": 22378,
+                      "after": 22378,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/contexts_created": {
+                      "before": 472906,
+                      "after": 472906,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/guards": {
+                      "before": 151425,
+                      "after": 151425,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/history_allocations": {
+                      "before": 114560,
+                      "after": 115399,
+                      "saved": -839
+                    },
+                    "stage_spine/stats/history_capture_reads": {
+                      "before": 227541,
+                      "after": 228380,
+                      "saved": -839
+                    },
+                    "stage_spine/stats/history_slots_written": {
+                      "before": 227541,
+                      "after": 228380,
+                      "saved": -839
+                    },
+                    "stage_spine/stats/legacy_cursor_probes": {
+                      "before": 286859,
+                      "after": 286859,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_entry_writes": {
+                      "before": 258317,
+                      "after": 258317,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/legacy_retirement_checks": {
+                      "before": 141222,
+                      "after": 141222,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/node_cursor_reads": {
+                      "before": 1585130,
+                      "after": 1585130,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_key_slots": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_probes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/origin_map_writes": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stage_spine/stats/port_cache_fills": {
+                      "before": 66574,
+                      "after": 66570,
+                      "saved": 4
+                    },
+                    "stage_spine/stats/query_receipt_attempts": {
+                      "before": 199,
+                      "after": 630,
+                      "saved": -431
+                    },
+                    "stage_spine/stats/root_handles_created": {
+                      "before": 297750,
+                      "after": 297750,
+                      "saved": 0
+                    },
+                    "stats/cells_created": {
+                      "before": 704559,
+                      "after": 704559,
+                      "saved": 0
+                    },
+                    "stats/constructor_requests": {
+                      "before": 2062640,
+                      "after": 2062640,
+                      "saved": 0
+                    },
+                    "stats/decoded_rows": {
+                      "before": 867874,
+                      "after": 868305,
+                      "saved": -431
+                    },
+                    "stats/handoff_attempts": {
+                      "before": 64796,
+                      "after": 64796,
+                      "saved": 0
+                    },
+                    "stats/key_operations": {
+                      "before": 0,
+                      "after": 0,
+                      "saved": 0
+                    },
+                    "stats/repaired_dependencies": {
+                      "before": 479589,
+                      "after": 479589,
+                      "saved": 0
+                    },
+                    "stats/residual_candidates": {
+                      "before": 4490637,
+                      "after": 4490637,
+                      "saved": 0
+                    },
+                    "stats/union_requests": {
+                      "before": 573277,
+                      "after": 573277,
+                      "saved": 0
+                    }
+                  },
+                  "unit": "one observed operation per counter; equal weights, not elapsed time",
+                  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+                }
+              }
+            ],
+            "selected_net_saved_operations": 0
+          },
+          "ordered_writes_sha256": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+          "ordered_resumes_sha256": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d"
+        }
+      ]
+    }
+  }
+}

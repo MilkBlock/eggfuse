@@ -1,0 +1,32 @@
+{
+  "sum-bits": {
+    "control": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "nodes": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  },
+  "raytrace": {
+    "control": {
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "nodes": {
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  }
+}

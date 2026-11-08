@@ -212,18 +212,22 @@ impl Started {
         rid: usize,
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
+        stats: &mut Stats,
     ) {
         if cat.history_depth() == 0 {
             return;
         }
         if let Self::Live(c) = self {
-            c.state.history.capture(
+            let work = c.state.history.capture(
                 cat.history_depth(),
                 rid,
                 cat.capture_sources(&c.state),
                 read,
                 effect,
             );
+            stats.history_capture_reads += work.reads as u64;
+            stats.history_slots_written += work.slots as u64;
+            stats.history_allocations += work.allocations as u64;
         }
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
@@ -342,6 +346,16 @@ mod set_counts_test {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    origin_key_slots: u64,
+    origin_map_writes: u64,
+    origin_map_probes: u64,
+    history_capture_reads: u64,
+    history_slots_written: u64,
+    history_allocations: u64,
+    legacy_entry_writes: u64,
+    legacy_retirement_checks: u64,
+    pub(crate) legacy_cursor_probes: u64,
+    pub(crate) node_cursor_reads: u64,
     root_attempts: u64,
     root_handles_created: u64,
     #[cfg(feature = "sparse-cells")]
@@ -460,6 +474,10 @@ pub struct Programs {
     live_inputs: Vec<usize>,
     orders: BTreeMap<(usize, usize), Vec<usize>>,
     entries: HashMap<Dependency, Published>,
+    #[cfg(feature = "sparse-cells")]
+    entry_owned_tables: Vec<bool>,
+    #[cfg(feature = "sparse-cells")]
+    entry_owned_ids: Vec<usize>,
     #[cfg(feature = "sparse-cells")]
     published_bases: Vec<Option<PublishedBase>>,
     active_tables: Vec<usize>,
@@ -729,6 +747,10 @@ impl Programs {
             orders: BTreeMap::new(),
             entries: HashMap::default(),
             #[cfg(feature = "sparse-cells")]
+            entry_owned_tables: vec![false; p.tables.len()],
+            #[cfg(feature = "sparse-cells")]
+            entry_owned_ids: vec![],
+            #[cfg(feature = "sparse-cells")]
             published_bases: vec![],
             active_tables: vec![0; p.tables.len()],
             #[cfg(feature = "spine-shapes")]
@@ -895,6 +917,8 @@ impl Programs {
             if bucket.is_empty() {
                 return None;
             }
+            self.stats.origin_key_slots += p.rules[rid].inputs.len() as u64;
+            self.stats.origin_map_probes += 1;
             let key: smallvec::SmallVec<[Value; 6]> = p.rules[rid]
                 .inputs
                 .iter()
@@ -1060,7 +1084,7 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(&g.program.iterative, rid, &query_fact, |i| effects.and_then(|e| e[i]));
+            s.remember(&g.program.iterative, rid, &query_fact, |i| effects.and_then(|e| e[i]), &mut self.stats);
             s
         };
         self.pending_steps.push(step);
@@ -1164,7 +1188,7 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(catalog, rid, |i| query.receipt(i), |i| (i == op).then_some(w));
+            s.remember(catalog, rid, |i| query.receipt(i), |i| (i == op).then_some(w), &mut self.stats);
             s
         };
         self.pending_steps.push(step);
@@ -1194,7 +1218,9 @@ impl Programs {
         self.stats.captured_anchors += 1;
         self.stats.captured_contexts += 1;
     }
-    fn install_anchor(&mut self, w: Dependency, table: usize, publication: Publication) {
+    fn install_anchor(&mut self, w: Dependency, table: usize, publication: Publication,
+        #[cfg(feature = "sparse-cells")] entries: Option<&mut crate::entry_schedule::Scheduler>,
+    ) {
         let slot = publication.slot;
         #[cfg(feature = "sparse-cells")]
         let cursor = {
@@ -1259,6 +1285,13 @@ impl Programs {
             };
             cursor
         };
+        self.stats.anchor_publications += 1;
+        #[cfg(feature = "sparse-cells")]
+        if self.entry_owned_tables[table] {
+            entries.expect("entry publication owner").install_publication(table, w, cursor);
+            return;
+        }
+        self.stats.legacy_entry_writes += 1;
         if self.entries.insert(w, cursor).is_none() {
             if self.active_tables[table] == 0 {
                 for &rid in &self.table_readers[table] {
@@ -1267,7 +1300,6 @@ impl Programs {
             }
             self.active_tables[table] += 1;
         }
-        self.stats.anchor_publications += 1;
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn settled(&self)->bool {
@@ -1277,6 +1309,15 @@ impl Programs {
             && self.capture_unions.is_none() && self.entry_cache.is_empty() && self.row_cache.is_empty()
     }
     pub fn publish(&mut self, g: &mut Graph) -> Result<()> {
+        self.publish_impl(g, #[cfg(feature = "sparse-cells")] None)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn publish_to_entries(&mut self, g: &mut Graph, entries: &mut crate::entry_schedule::Scheduler) -> Result<()> {
+        self.publish_impl(g, Some(entries))
+    }
+    fn publish_impl(&mut self, g: &mut Graph,
+        #[cfg(feature = "sparse-cells")] mut entries: Option<&mut crate::entry_schedule::Scheduler>,
+    ) -> Result<()> {
         if !self.enabled {
             return Ok(());
         };
@@ -1284,8 +1325,11 @@ impl Programs {
         // Removed/coalesced anchors are not reusable. Other stale ports are
         // refreshed by exact keys when their legal consumer stage arrives.
         for (t, changes) in g.changes.tables() {
+            #[cfg(feature = "sparse-cells")]
+            if self.entry_owned_tables[t] { continue; }
             if self.active_tables[t] == 0 { continue; }
             for w in changes.keys() {
+                self.stats.legacy_retirement_checks += 1;
                 let live = match *w {
                     Dependency::Fact(f) => g
                         .cells
@@ -1391,7 +1435,7 @@ impl Programs {
                     }
                     self.direct_publications.remove(&w);
                 }
-                self.install_anchor(w, table, publication);
+                self.install_anchor(w, table, publication, #[cfg(feature = "sparse-cells")] entries.as_deref_mut());
             } else {
                 self.stats.missing_capture_rows += 1;
             }
@@ -1408,7 +1452,7 @@ impl Programs {
                 self.stats.receipt_attempts += 1;
                 self.stats.receipt_hits += 1;
                 self.stats.receipt_redirects += u64::from(p.receipt != Some(w));
-                self.install_anchor(w, table, p);
+                self.install_anchor(w, table, p, entries.as_deref_mut());
             }
             self.direct_publications = resolved;
         }
@@ -1552,6 +1596,28 @@ impl Programs {
     pub(crate) fn active_for_rule(&self, rid: usize) -> bool {
         self.enabled && self.live_inputs[rid] != 0
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn configure_entry_owners(&mut self, scheduler: &mut crate::entry_schedule::Scheduler, excluded: impl Fn(usize) -> bool) {
+        self.entry_owned_tables = scheduler.own_publications(|t| self.enabled && !self.table_readers[t].is_empty() && !excluded(t));
+        self.entry_owned_ids = self.entry_owned_tables.iter().enumerate().filter_map(|(t, &owned)| owned.then_some(t)).collect();
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn refresh_entry_owners(&mut self, scheduler: &crate::entry_schedule::Scheduler) {
+        for &table in &self.entry_owned_ids {
+                let count = scheduler.publication_count(table);
+                if (count != 0) != (self.active_tables[table] != 0) {
+                    for &rid in &self.table_readers[table] {
+                        if count == 0 { self.live_inputs[rid] -= 1; }
+                        else { self.live_inputs[rid] += 1; }
+                    }
+                }
+                self.active_tables[table] = count;
+        }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn entry_owns(&self, rid: usize, pivot: usize, table: usize) -> bool {
+        self.enabled && self.entry_owned_tables[table] && self.orders.contains_key(&(rid, pivot))
+    }
 
     /// A live cursor only owns this pivot if the compiler supplied an exhaustive
     /// functional-key order for it. Other witnesses of the same table can fall back.
@@ -1562,6 +1628,12 @@ impl Programs {
         table: usize,
     ) -> Option<&HashMap<Dependency, Published>> {
         (self.enabled
+            && {
+                #[cfg(feature = "sparse-cells")]
+                { !self.entry_owned_tables[table] }
+                #[cfg(not(feature = "sparse-cells"))]
+                { true }
+            }
             && self.active_tables[table] != 0
             && self.orders.contains_key(&(rid, pivot)))
         .then_some(&self.entries)
@@ -1943,6 +2015,7 @@ impl Programs {
                     a.values = key.clone();
                     a
                 };
+                self.stats.origin_map_writes += 1;
                 self.origins[rid].insert(key, cursor);
                 answer
             })
@@ -2052,9 +2125,14 @@ impl Programs {
         self.shapes.report()
     }
     pub fn report(&self) -> J {
+        self.report_with(std::iter::empty())
+    }
+    pub(crate) fn report_with<'a>(&'a self, extra: impl Iterator<Item = &'a Published>) -> J {
+        let extra: Vec<_> = extra.collect();
         let contexts = self
             .entries
             .values()
+            .chain(extra.iter().copied())
             .map(Published::root_info)
             .collect::<BTreeMap<_, _>>();
         let materialized = contexts
@@ -2064,7 +2142,7 @@ impl Programs {
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
         let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.anchor_ops.iter().filter(|ops| !ops.is_empty()).count(),
             "keyed_entries":self.orders.len(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
-            "entry_references":self.entries.len(),"context_fact_references":facts,
+            "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]
         let report = {

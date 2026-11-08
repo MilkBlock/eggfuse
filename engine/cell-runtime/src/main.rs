@@ -27,6 +27,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
+        #[cfg(feature = "sparse-cells")]
+        println!("  --entry-publications (shared entry nodes own producer expressions)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -79,6 +81,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .ok_or("missing keeper pairs")?;
             }
             "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            #[cfg(feature = "sparse-cells")]
+            "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -123,6 +127,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature = "sparse-cells")]
+    if args.iter().any(|x| x == "--entry-publications") {
+        runtime.use_entry_publications()?;
+    }
     #[cfg(feature = "structural-depth")]
     {
         let survey = args.iter().any(|x| x == "--structural-survey");

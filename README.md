@@ -71,3 +71,9 @@ Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs
 do not improve total inference time; source capture and publication still cost
 more than the small number of global lookups avoided.
+
+[Shared entry publication ownership](benchmarks/entry-publications/README.md)
+lets exhaustive entry nodes hold both matching packets and producer expressions,
+removing their separate Spine source index. Iterative Bake now defaults to
+measured marginal operation credit, charging source history and failed reads;
+the previous static score remains an explicit proposal/diagnostic policy.

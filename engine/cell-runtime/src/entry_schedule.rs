@@ -289,7 +289,74 @@ impl std::ops::IndexMut<usize> for Inputs {
 #[path = "epoch_runs.rs"]
 mod epoch_runs;
 #[derive(Default)]
+struct Entry {
+    // A producer may publish before this node's first scheduled consumer.
+    // Keep its expression here without decoding an otherwise unused row.
+    packet: Option<SharedPacket>,
+    #[cfg(feature = "sparse-cells")]
+    publication: Option<std::num::NonZeroUsize>,
+}
+// Preserve the original compact packet map for ordinary nodes. Only a node
+// that actually owns publications pays for the extra expression handle.
+enum Entries {
+    Plain(HashMap<Dependency, SharedPacket>),
+    #[cfg(feature = "sparse-cells")]
+    Owned(HashMap<Dependency, Entry>),
+}
+impl Default for Entries {
+    fn default() -> Self { Self::Plain(HashMap::default()) }
+}
+impl Entries {
+    fn len(&self) -> usize {
+        match self {
+            Self::Plain(rows) => rows.len(),
+            #[cfg(feature = "sparse-cells")]
+            Self::Owned(rows) => rows.len(),
+        }
+    }
+    fn is_empty(&self) -> bool { self.len() == 0 }
+    fn packet(&self, w: Dependency) -> Option<&SharedPacket> {
+        match self {
+            Self::Plain(rows) => rows.get(&w),
+            #[cfg(feature = "sparse-cells")]
+            Self::Owned(rows) => rows.get(&w).and_then(|e| e.packet.as_ref()),
+        }
+    }
+    fn remove(&mut self, w: &Dependency) -> Option<Entry> {
+        match self {
+            Self::Plain(rows) => rows.remove(w).map(|packet| Entry {
+                packet: Some(packet),
+                #[cfg(feature = "sparse-cells")]
+                publication: None,
+            }),
+            #[cfg(feature = "sparse-cells")]
+            Self::Owned(rows) => rows.remove(w),
+        }
+    }
+    fn insert(&mut self, w: Dependency, entry: Entry) {
+        match self {
+            Self::Plain(rows) => {
+                #[cfg(feature = "sparse-cells")]
+                debug_assert!(entry.publication.is_none());
+                rows.insert(w, entry.packet.expect("ordinary packet"));
+            }
+            #[cfg(feature = "sparse-cells")]
+            Self::Owned(rows) => { rows.insert(w, entry); }
+        }
+    }
+    fn take(&mut self) -> Self {
+        let empty = match self {
+            Self::Plain(_) => Self::default(),
+            #[cfg(feature = "sparse-cells")]
+            Self::Owned(_) => Self::Owned(HashMap::default()),
+        };
+        std::mem::replace(self, empty)
+    }
+}
+#[derive(Default)]
 struct State {
+    #[cfg(feature = "sparse-cells")]
+    publications: usize,
     latest_witness_epoch: u64,
     #[cfg(feature = "sparse-cells")]
     planned_counts: bool,
@@ -300,7 +367,7 @@ struct State {
     pending: Vec<Dependency>,
     #[cfg(feature = "sparse-cells")]
     sorted_pending: usize,
-    rows: HashMap<Dependency, SharedPacket>,
+    rows: Entries,
     #[cfg(not(feature = "sparse-cells"))]
     epochs: BTreeSet<(u64, Dependency)>,
     #[cfg(feature = "sparse-cells")]
@@ -346,6 +413,9 @@ impl State {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    entry_publication_writes: u64,
+    entry_publications_retired: u64,
+    entry_retirement_checks: u64,
     pub predicate_checks: u64,
     node_refreshes: u64,
     changed_headers: u64,
@@ -366,6 +436,12 @@ pub struct Scheduler {
     states: Vec<State>,
     rows: HashMap<Dependency, Option<Rc<Row>>>,
     unions: u64,
+    #[cfg(feature = "sparse-cells")]
+    publication_nodes: Vec<Option<usize>>,
+    #[cfg(feature = "sparse-cells")]
+    publications: Vec<Option<crate::stage_spine::Published>>,
+    #[cfg(feature = "sparse-cells")]
+    publication_free: Vec<std::num::NonZeroUsize>,
     pub stats: Stats,
 }
 /// Immutable node contents after refresh, plus this consumer's delta frontier.
@@ -375,6 +451,8 @@ pub(crate) struct Batch<'a> {
     consumer: &'a Consumer,
     watermark: u64,
     pub table: usize,
+    #[cfg(feature = "sparse-cells")]
+    publications: &'a [Option<crate::stage_spine::Published>],
 }
 impl Batch<'_> {
     #[cfg(any(
@@ -456,8 +534,18 @@ impl Batch<'_> {
     pub fn packet(&self, w: Dependency) -> Option<&SharedPacket> {
         self.state
             .rows
-            .get(&w)
+            .packet(w)
             .filter(|p| p.row.epoch >= self.watermark)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn published_packet(&self, w: Dependency) -> (&SharedPacket, Option<&crate::stage_spine::Published>) {
+        match &self.state.rows {
+            Entries::Plain(rows) => (&rows[&w], None),
+            Entries::Owned(rows) => {
+                let e = &rows[&w];
+                (e.packet.as_ref().expect("refreshed entry"), e.publication.and_then(|i| self.publications[i.get() - 1].as_ref()))
+            }
+        }
     }
     pub fn seed(&self, packet: &SharedPacket) -> Seed {
         Seed {
@@ -486,6 +574,12 @@ impl Scheduler {
             })
             .collect();
         Self {
+            #[cfg(feature = "sparse-cells")]
+            publication_nodes: vec![None; p.tables.len()],
+            #[cfg(feature = "sparse-cells")]
+            publications: vec![],
+            #[cfg(feature = "sparse-cells")]
+            publication_free: vec![],
             enabled,
             plan,
             states,
@@ -496,6 +590,50 @@ impl Scheduler {
     }
     pub fn accepts(&self, rid: usize) -> bool {
         self.enabled && self.plan.rules.get(rid).is_some_and(|x| !x.is_empty())
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn own_publications(&mut self, eligible: impl Fn(usize) -> bool) -> Vec<bool> {
+        for (table, nodes) in self.plan.tables.iter().enumerate() {
+            // One exhaustive identity entry owns every visible row of this
+            // table. Filtered/multiple entries retain the ordinary owner.
+            if self.enabled && eligible(table) && nodes.len() == 1
+                && self.plan.nodes[nodes[0]].checks.is_empty()
+            {
+                self.publication_nodes[table] = Some(nodes[0]);
+                if let Entries::Plain(rows) = &mut self.states[nodes[0]].rows {
+                    let owned = std::mem::take(rows).into_iter().map(|(w, packet)| {
+                        (w, Entry { packet: Some(packet), publication: None })
+                    }).collect();
+                    self.states[nodes[0]].rows = Entries::Owned(owned);
+                }
+            }
+        }
+        self.publication_nodes.iter().map(Option::is_some).collect()
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency, p: crate::stage_spine::Published) {
+        let node = self.publication_nodes[table].expect("compiled entry owner");
+        let state = &mut self.states[node];
+        let Entries::Owned(rows) = &mut state.rows else { unreachable!("entry owner") };
+        let e = rows.entry(w).or_default();
+        state.publications += usize::from(e.publication.is_none());
+        if e.packet.is_none() && !state.cold {
+            state.pending.push(w);
+        }
+        let id = *e.publication.get_or_insert_with(|| self.publication_free.pop().unwrap_or_else(|| {
+            self.publications.push(None);
+            std::num::NonZeroUsize::new(self.publications.len()).unwrap()
+        }));
+        self.publications[id.get() - 1] = Some(p);
+        self.stats.entry_publication_writes += 1;
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn publication_count(&self, table: usize) -> usize {
+        self.publication_nodes[table].map_or(0, |id| self.states[id].publications)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn publications(&self) -> impl Iterator<Item = &crate::stage_spine::Published> {
+        self.publications.iter().filter_map(Option::as_ref)
     }
     /// Called before query-change records are consumed. Only committed rows and
     /// exact same-key forwarding retirements enter the shared pending domains.
@@ -516,6 +654,44 @@ impl Scheduler {
                 continue;
             }
             self.stats.changed_headers += changes.len() as u64;
+            #[cfg(feature = "sparse-cells")]
+            if let Some(id) = self.publication_nodes[table] {
+                let state = &mut self.states[id];
+                for (&w, change) in changes {
+                    // The sealed change batch already identifies the table
+                    // and explicit removals. Only Wake can still be subsumed.
+                    let live = if *change != crate::change_batch::Change::Wake {
+                        false
+                    } else {
+                        self.stats.entry_retirement_checks += 1;
+                        match w {
+                            Dependency::Fact(f) => g.cells.get(&f.cell)
+                                .and_then(|c| c.facts.get(&f.op)).is_some_and(|f| !f.hidden),
+                            Dependency::Function(i) => g.functions.get(i).is_some_and(|f| f.live),
+                        }
+                    };
+                    if !live {
+                        if let Some(e) = state.rows.remove(&w) {
+                            self.stats.entry_publications_retired += u64::from(e.publication.is_some());
+                            state.publications -= usize::from(e.publication.is_some());
+                            if let Some(id) = e.publication {
+                                self.publications[id.get() - 1] = None;
+                                self.publication_free.push(id);
+                            }
+                            if let Some(p) = e.packet {
+                                state.remove_epoch(p.row.epoch, w);
+                                self.stats.retired_packets += 1;
+                            }
+                        }
+                    } else if !state.cold {
+                        state.pending.push(w);
+                    }
+                }
+                if state.pending.len() > state.sorted_pending.saturating_mul(2).max(64) {
+                    state.compact_pending();
+                }
+                continue;
+            }
             for &id in &self.plan.tables[table] {
                 let state = &mut self.states[id];
                 if !state.cold {
@@ -555,7 +731,7 @@ impl Scheduler {
         self.batches(g, rid, watermark, |batch, out| {
             for &(_, w) in batch.delta() {
                 if allow(batch.atom(), batch.table, w) {
-                    out.push(batch.seed(&batch.state.rows[&w]));
+                    out.push(batch.seed(batch.state.rows.packet(w).unwrap()));
                 }
             }
             Ok(())
@@ -575,6 +751,8 @@ impl Scheduler {
         let node = self.plan.rules[rid][i].node;
         self.refresh(g, node)?;
         Ok(Batch {
+            #[cfg(feature = "sparse-cells")]
+            publications: &self.publications,
             state: &self.states[node],
             consumer: &self.plan.rules[rid][i],
             watermark,
@@ -597,6 +775,8 @@ impl Scheduler {
             let start = out.len();
             visit(
                 Batch {
+                    #[cfg(feature = "sparse-cells")]
+                    publications: &self.publications,
                     state: &self.states[c.node],
                     consumer: c,
                     watermark,
@@ -647,16 +827,19 @@ impl Scheduler {
             }
         }
         let mut old = if full {
-            std::mem::take(&mut s.rows)
+            s.rows.take()
         } else {
-            HashMap::default()
+            Entries::default()
         };
         for w in pending.drain(..) {
             let previous = if full {
                 old.remove(&w)
             } else {
                 s.rows.remove(&w)
-            };
+            }.unwrap_or_default();
+            #[cfg(feature = "sparse-cells")]
+            let publication = previous.publication;
+            let previous = previous.packet;
             if !full && let Some(p) = &previous {
                 s.remove_epoch(p.row.epoch, w);
             }
@@ -685,14 +868,14 @@ impl Scheduler {
                 self.stats.parameter_packets_reused += 1;
                 s.insert_epoch(row.epoch, w);
                 #[cfg(feature = "sparse-cells")]
-                s.rows.insert(w, Packet { row });
+                s.rows.insert(w, Entry { packet: Some(Packet { row }), publication });
                 #[cfg(not(feature = "sparse-cells"))]
                 s.rows.insert(
                     w,
-                    Rc::new(Packet {
+                    Entry { packet: Some(Rc::new(Packet {
                         row,
                         values: _previous.values.clone(),
-                    }),
+                    })) },
                 );
                 continue;
             }
@@ -704,7 +887,7 @@ impl Scheduler {
                 });
                 if valid {
                     s.insert_epoch(row.epoch, w);
-                    s.rows.insert(w, Packet { row });
+                    s.rows.insert(w, Entry { packet: Some(Packet { row }), publication });
                 } else {
                     self.stats.retired_packets += u64::from(previous.is_some());
                 }
@@ -733,7 +916,7 @@ impl Scheduler {
                         Rc::new(values)
                     };
                     s.insert_epoch(row.epoch, w);
-                    s.rows.insert(w, Rc::new(Packet { row, values }));
+                    s.rows.insert(w, Entry { packet: Some(Rc::new(Packet { row, values })) });
                 } else {
                     self.stats.retired_packets += u64::from(previous.is_some());
                 }

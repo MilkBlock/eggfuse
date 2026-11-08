@@ -1,0 +1,26 @@
+{
+  "raytrace": {
+    "parent": {
+      "runtime": "out/query-receipts/conditional-runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "control": {
+      "runtime": "out/entry-publications/compact-runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "nodes": {
+      "runtime": "out/entry-publications/compact-runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  }
+}

@@ -369,6 +369,17 @@ impl Executor {
         e.graph.changes.clear();
         e
     }
+    #[cfg(feature = "sparse-cells")]
+    pub fn use_entry_publications(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure entry ownership before execution".into()); }
+        self.stage_spine.configure_entry_owners(&mut self.entry_schedule, |_t| {
+            #[cfg(feature = "view-consumers")]
+            { self.blocks.dedicated(_t) }
+            #[cfg(not(feature = "view-consumers"))]
+            { false }
+        });
+        Ok(())
+    }
     fn deliver(&mut self) {
         use crate::change_batch::Change;
         let batch = &self.graph.changes;
@@ -1145,6 +1156,8 @@ impl Executor {
         let route_spine = scheduled_entry && self.stage_spine.enabled;
         let active_spine = route_spine && self.stage_spine.active_for_rule(rid);
         let mut spine_routes = Vec::new();
+        let mut legacy_cursor_probes = 0;
+        let mut node_cursor_reads = 0;
         let mut entry_domains = Vec::new();
         let scheduled = if scheduled_entry {
             let watermark = self.watermarks[rid];
@@ -1172,6 +1185,10 @@ impl Executor {
                         let point_only = false;
                         let start = out.len();
                         let claimed = spine_routes.len();
+                        #[cfg(feature = "sparse-cells")]
+                        let node_owns = active_spine && self.stage_spine.entry_owns(rid, atom, batch.table);
+                        #[cfg(not(feature = "sparse-cells"))]
+                        let node_owns = false;
                         let cursors = if active_spine {
                             self.stage_spine.scheduled_cursors(rid, atom, batch.table)
                         } else {
@@ -1188,7 +1205,7 @@ impl Executor {
                             None
                         };
                         #[cfg(feature = "projection-semijoin")]
-                        let inverted = if inverted.is_none() && early_join && cursors.is_none() {
+                        let inverted = if inverted.is_none() && early_join && cursors.is_none() && !node_owns {
                             self.free_join.gates.restrict(
                                 &self.graph,
                                 &mut self.query_indexes,
@@ -1199,7 +1216,7 @@ impl Executor {
                             inverted
                         };
                         #[cfg(feature = "projection-shared")]
-                        let shared = if inverted.is_none() && early_join && cursors.is_none() {
+                        let shared = if inverted.is_none() && early_join && cursors.is_none() && !node_owns {
                             self.free_join.shared_frontier(
                                 &self.graph,
                                 &mut self.query_indexes,
@@ -1226,8 +1243,21 @@ impl Executor {
                             {
                                 return Ok(());
                             }
+                            #[cfg(feature = "sparse-cells")]
+                            let (packet, published) = batch.published_packet(w);
+                            #[cfg(not(feature = "sparse-cells"))]
                             let packet = batch.packet(w).expect("current delta entry");
-                            if let Some(cursor) = cursors.and_then(|entries| entries.get(&w)) {
+                            let cursor = if node_owns {
+                                node_cursor_reads += 1;
+                                #[cfg(feature = "sparse-cells")]
+                                { published }
+                                #[cfg(not(feature = "sparse-cells"))]
+                                { None }
+                            } else {
+                                legacy_cursor_probes += u64::from(cursors.is_some());
+                                cursors.and_then(|entries| entries.get(&w))
+                            };
+                            if let Some(cursor) = cursor {
                                 spine_routes.push((out.len(), cursor.expand()));
                                 // Keep domain slots aligned with the shared seed vector.
                                 if early_join {
@@ -1327,6 +1357,8 @@ impl Executor {
         } else {
             None
         };
+        self.stage_spine.stats.legacy_cursor_probes += legacy_cursor_probes;
+        self.stage_spine.stats.node_cursor_reads += node_cursor_reads;
         let mut stage_covered = BTreeSet::new();
         let mut found = vec![];
         if !probe && rule.seminaive {
@@ -2710,6 +2742,9 @@ impl Executor {
             self.prior_union = unions_before != self.graph.stats.unions;
         }
         let phase = repair_end;
+        #[cfg(feature = "sparse-cells")]
+        self.stage_spine.publish_to_entries(&mut self.graph, &mut self.entry_schedule)?;
+        #[cfg(not(feature = "sparse-cells"))]
         self.stage_spine.publish(&mut self.graph)?;
         #[cfg(feature = "structural-depth")]
         self.stage_spine.structural.publish(&mut self.graph)?;
@@ -2718,6 +2753,8 @@ impl Executor {
             .publish_except(&self.graph, |t| self.blocks.dedicated(t));
         #[cfg(not(feature = "view-consumers"))]
         self.entry_schedule.publish(&self.graph);
+        #[cfg(feature = "sparse-cells")]
+        self.stage_spine.refresh_entry_owners(&self.entry_schedule);
         self.graph.receipt_forwards.clear();
         self.publication.publish(
             #[cfg(feature = "family-survey")]
@@ -3033,6 +3070,10 @@ impl Executor {
         self.graph.proof.write(&self.graph, path)
     }
     pub fn report(&self) -> J {
+        #[cfg(feature = "sparse-cells")]
+        let spine = self.stage_spine.report_with(self.entry_schedule.publications());
+        #[cfg(not(feature = "sparse-cells"))]
+        let spine = self.stage_spine.report();
         let view_rule_profile=self.profile_queries.then(||{
             self.graph.program.view_blocks.iter().flat_map(|b|b.producer.members.iter().chain(&b.consumers.members))
                 .map(|m|{let (calls,seconds,visits,answers)=self.query_profile[m.rule];
@@ -3052,7 +3093,7 @@ impl Executor {
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
-            "local_context":self.local_context.report(&self.graph.program),"stage_spine":self.stage_spine.report(),"key_lookup_calls":self.graph.key_lookup_calls.get(),
+            "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats},"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
     }
 }

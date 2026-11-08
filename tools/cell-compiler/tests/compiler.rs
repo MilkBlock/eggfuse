@@ -473,6 +473,7 @@ fn a_learned_pair_executes_and_becomes_an_operand_in_the_next_round() {
         let result = Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
             .args([
                 "iterate",
+                "--score", "static",
                 "--program",
                 seed.to_str().unwrap(),
                 "--output",
@@ -717,6 +718,7 @@ fn switched_rhs_carries_a_two_run_old_fact_and_restarts_on_a_deleted_sibling() {
             "4",
             "--objective",
             "rhs-lookups",
+            "--score", "static",
         ])
         .output()
         .unwrap();

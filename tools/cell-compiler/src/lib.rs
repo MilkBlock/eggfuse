@@ -1,6 +1,8 @@
 mod bench;
 #[cfg(feature = "iterative-bake")]
 mod iterate;
+#[cfg(feature = "iterative-bake")]
+mod work_credit;
 mod keys;
 mod marker_ir;
 mod markers;
@@ -281,7 +283,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
     };
     if cmd == "iterate" && args.iter().any(|a| a == "--help") {
         println!(
-            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
+            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--score measured-work|static] [--trial-limit N] [--entry-publications true|false] [--repair-ports true|false] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
         );
         return Ok(());
     }
