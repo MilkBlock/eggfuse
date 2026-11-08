@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "legacy_fields": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--cell-ownership"]
+    },
+    "stable_fields": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--stable-ports"]
+    }
+  }
+}

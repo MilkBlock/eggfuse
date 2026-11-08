@@ -9,6 +9,8 @@ pub mod slices;
 use slices::{PortProgram, Signal};
 #[path = "ownership_composition.rs"]
 pub mod composition;
+#[path = "stable_ports.rs"]
+pub mod ports;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -332,6 +334,7 @@ impl Graph {
         m.stats.owned_births += 1;
         m.stats.owned_live += 1;
         self.attach_owned_signals(f, fields);
+        self.store_stable_fields(f, t, fields);
     }
     fn signal_is_native(&self, signal: Signal, id: u64) -> bool {
         let cell = (id >> 32) as u32;
@@ -601,6 +604,9 @@ impl Graph {
         m.composition.columns = columns;
     }
     fn project_owned_ports(&mut self, f: FactRef, columns: &[usize], from: u64, to: u64) {
+        if self.notify_stable_fields(f, columns) {
+            return;
+        }
         let m = self.ownership.as_mut().unwrap();
         m.stats.body_visits += 1;
         let s = self
@@ -796,7 +802,8 @@ impl Graph {
                     .cells
                     .get(&cell)
                     .and_then(|c| c.facts.get(&step.op))
-                    .is_some_and(|s| s.owned && s.decoded.as_ref().unwrap().0 == table)
+                    .is_some_and(|s| s.owned && s.ports.as_ref().map_or_else(
+                        || s.decoded.as_ref().unwrap().0, |p| p.table) == table)
                 {
                     result.insert(Dependency::Fact(FactRef { cell, op: step.op }));
                 }
@@ -876,14 +883,10 @@ impl Graph {
                     across += u64::from(s.born < self.epoch);
                     let program =
                         &self.program.cell_ownership.markers[self.cells[&f.cell].template].program;
-                    for (column, v) in s
-                        .decoded
-                        .as_ref()
-                        .expect("settled owned body")
-                        .1
-                        .iter()
-                        .enumerate()
-                    {
+                    let values = if let Some(stored) = &s.ports {
+                        self.stable_values(stored, false).expect("read owned stable body")
+                    } else { s.decoded.as_ref().expect("settled owned body").1.clone() };
+                    for (column, v) in values.iter().enumerate() {
                         if let Value::Eq(id) = v {
                             assert_eq!(*id, root(&self.parents, *id), "owned body is stale");
                             let signal = self.composed_signal(

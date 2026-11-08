@@ -1,0 +1,18 @@
+{
+  "workspace-tests": {
+    "passed": 226,
+    "failed": 0,
+    "ignored": 4
+  },
+  "fields-tests": {
+    "passed": 30,
+    "failed": 0,
+    "ignored": 0
+  },
+  "fields-non-sparse-tests": {
+    "passed": 30,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed"
+}

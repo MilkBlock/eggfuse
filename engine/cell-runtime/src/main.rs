@@ -36,6 +36,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --repair-cells (experimental shared Cell repair templates)");
         println!("  --local-unions (experimental Cell-internal union completion without birth subscriptions)");
         println!("  --cell-ownership (persistent cross-stage scalar Cell completion)");
+        println!("  --stable-ports (Cell ownership with stable stored equality fields)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "sparse-cells")]
         println!("  --entry-publications (shared entry nodes own producer expressions)");
@@ -92,7 +93,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -115,7 +116,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let expressions = args.iter().any(|x| x == "--congruence-cells");
     let cells = args.iter().any(|x| x == "--repair-cells");
     let local = args.iter().any(|x| x == "--local-unions");
-    let ownership = args.iter().any(|x| x == "--cell-ownership");
+    let stable_ports = args.iter().any(|x| x == "--stable-ports");
+    let ownership = stable_ports || args.iter().any(|x| x == "--cell-ownership");
     if ownership && (local || cells || digest || expressions) {
         return Err("--cell-ownership requires its own completion backend".into());
     }
@@ -152,6 +154,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     if local { graph.use_local_union_cells()?; }
     if ownership { graph.use_cell_ownership()?; }
+    if stable_ports { graph.use_stable_port_fields()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     #[cfg(feature = "sparse-cells")]

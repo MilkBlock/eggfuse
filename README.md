@@ -115,6 +115,14 @@ process time improves 1.63% / 13.31%; both workloads pass the paired confidence
 gate. The ordinary fast baseline remains faster, so this is a local improvement
 to the opt-in path, not an overall acceleration claim.
 
+[Stable ports and dependency-scoped completion](benchmarks/stable-port-congruence/README.md)
+starts the structural replacement of canonical field storage. `--stable-ports`
+stores covered equality fields as shared symbolic addresses and resolves values
+on read; the frozen sum-bits ordered audit is unchanged. Constructor key repair
+and the global Run barrier remain in this first step, with separate evidence for
+the new read costs. The complete objective includes local congruence conditions,
+checked coverage, and independent progress while unrelated regions are pending.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs
