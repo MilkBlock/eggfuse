@@ -10,6 +10,8 @@ use std::collections::{BTreeMap, BTreeSet};
 mod access;
 #[path = "completion_effects.rs"]
 mod effects;
+#[path = "completion_rhs.rs"]
+pub(crate) mod rhs;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Scope {
@@ -246,6 +248,20 @@ impl Plan {
         }
         Ok(plan)
     }
+    /// Compile once per template when the optional bound-effect path is enabled.
+    /// Ordinary scoped execution does not allocate or retain this code.
+    pub(crate) fn prepare_pure_rhs(&mut self, p: &Program) {
+        let mut templates = BTreeMap::new();
+        for (rid, demand) in self.rule_demands.iter_mut().enumerate() {
+            let template = p.rules[rid].template;
+            demand.pure = templates
+                .entry(template)
+                .or_insert_with(|| {
+                    rhs::Plan::derive(p, &p.templates[template]).map(std::sync::Arc::new)
+                })
+                .clone();
+        }
+    }
     pub fn scope(&self, tables: &[usize]) -> Result<Scope> {
         if tables.iter().any(|&t| t >= self.affects.len()) {
             return Err("completion table out of bounds".into());
@@ -273,7 +289,18 @@ impl Plan {
         self.global_effects[table]
     }
     pub fn report(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let pure = self
+            .rule_demands
+            .iter()
+            .filter_map(|r| r.pure.as_ref())
+            .filter(|p| seen.insert(std::sync::Arc::as_ptr(p)))
+            .collect::<Vec<_>>();
         serde_json::json!({"tables":self.affects.len(), "opaque_tables":self.opaque_tables,
+            "pure_rhs_templates":pure.len(),
+            "pure_rhs_expressions":pure.iter().map(|p|p.values.len()).sum::<usize>(),
+            "pure_rhs_effects":pure.iter().map(|p|p.effects.len()).sum::<usize>(),
+            "pure_rhs_copies_elided":pure.iter().map(|p|p.copies_elided).sum::<usize>(),
             "dependency_edges":self.affects.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
             "wait_edges":self.waits.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
             "merge_read_edges":self.merges.iter().map(|m|m.reads.len()).sum::<usize>(),

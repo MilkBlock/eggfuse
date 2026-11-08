@@ -1,0 +1,23 @@
+{
+  "workspace-tests": {
+    "passed": 284,
+    "failed": 0,
+    "ignored": 4
+  },
+  "tests": {
+    "passed": 86,
+    "failed": 0,
+    "ignored": 0
+  },
+  "non-sparse-tests": {
+    "passed": 86,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed",
+  "negative_control": {
+    "mutation": "evaluate the compiled multiply expression as addition",
+    "failure": "the preview probes a different key and incorrectly admits a mutable collision as a birth",
+    "production_source_restored_and_positive_suites_passed": true
+  }
+}

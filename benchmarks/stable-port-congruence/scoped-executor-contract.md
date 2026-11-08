@@ -113,8 +113,13 @@ complete before its key is probed. No custom merge, deletion, fresh constructor
 call or opaque equality is previewed. All source matching remains sealed first.
 
 If every union is already true and every Set finds the same existing result,
-the RHS cannot create a new equality or fact. Otherwise a bounded interpreter
-records explicit source equality pairs and new constructor sites. All key
+the RHS cannot create a new equality or fact. Otherwise shared compiler-derived
+expressions record explicit source equality pairs and new constructor sites.
+Copy aliases share expression addresses; only needed bound slots are read, and
+checked i64 arithmetic uses dense temporary values. The old whole-binding clone
+and Copy/temporary-slot map are removed. Arithmetic remains in the preview even
+when its result is unused, so failure cannot silently authorize source effects.
+The code is prepared once per template only when pure epochs are enabled. All key
 lookups use complete tables. A finite RHS-local overlay includes earlier births
 under the same exact key; no source union commits between these lookups.
 
@@ -139,7 +144,7 @@ pure-epoch mode. They are not per-producer consumer lists.
 
 A live legacy/mutable user on a displaced root or possible result rejects the
 batch; unchanged unrelated input users do not. Missing wiring and budget overflow
-retain the previous wait. The preview accepts at most 4,096 instruction/overlay
+retain the previous wait. The preview accepts at most 4,096 expression/effect/overlay
 steps; the proof accepts at most 4,096 root/signal/static/legacy/source/birth steps.
 These counters and scratch growths are charged to Bake's heuristic work ledger;
 they do not provide a complete allocator census or a latency model.
@@ -166,8 +171,17 @@ pending. RHS waits drop from four to zero; query waits stay at six, so total
 waits fall from ten to six. All 1,428 source observations and state/RHS/effective
 write/resume/Spine hashes remain exact. This is independent single-thread
 progress, not a measured speedup or concurrent-worker result. The original pure
-proof and scope planning costs remain visible in the two audit files; additional
-source grouping, birth checks and retained-frontier memory must also be counted.
+proof and scope planning costs remain visible in the audit files; additional source grouping, birth
+checks, compiled-expression evaluation and retained-frontier memory must also be
+counted. The compiled preview reduces its tracked scratch growths from 83 to 3
+and materialized values from 275 to 155. It adds no further waiting improvement.
+
+Optional progress diagnostics now retain the actual query fence outcomes. Runs
+23, 86, 169 and 581 publish 9, 1, 12 and 50 effective congruence unions. Runs 79
+and 477 have no collision or legacy repair: they advance one TCons and two Concat
+query versions. These version advances are publication notifications, not source
+writes. Removing those two waits requires a complete snapshot/publication proof;
+zero result unions alone do not establish that proof.
 
 ## Executor contract (implemented for conservative table scopes)
 

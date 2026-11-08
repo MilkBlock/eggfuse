@@ -824,3 +824,77 @@ cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/d
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/displaced-epochs-runtime benchmarks/stable-port-congruence/displaced-epochs-audit-manifest.json out/stable-port-congruence/displaced-epochs-final-audit
 python3 benchmarks/stable-port-congruence/collect-displaced-epochs.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
+
+## Compiler-derived bound effects and the remaining query fences
+
+The preceding execution catalog admits seven `type-helpers` batches but pays
+105 preview instructions, 275 copied/inserted values and 83 scratch growths. The
+same compiler facts that restrict those RHSs to Copy, checked i64 arithmetic,
+Union and shared-owned constructor Set allow preprocessing their value flow.
+The new plan removes Copy operations by sharing expression addresses and reads
+only referenced binding slots. Arithmetic uses checked Add/Sub/Mul operations and
+dense temporary values. Ordered Set/Union effects retain the exact-key overlay
+and displaced-root/complete-peer proof from `10ae5ece`; no collision or equality
+is assumed by the compiler. All arithmetic remains represented, including an
+unused operation whose failure must retain the original failing RHS path.
+
+Plans are shared once per template through immutable Arc code, and are prepared
+only when `--pure-epochs` is enabled. Ordinary scoped execution does not retain
+this code. Sum-bits prepares 59 templates, 146 value expressions and 60 effects,
+eliminating 72 static Copy instructions. The old whole-binding clone and mutable
+slot-map preview are removed, including the no-longer-used slot-capacity helper.
+This establishes reusable read-only code, not concurrent Graph ownership.
+
+The same sum-bits audit retains all 1,428 source observations and exact
+state/RHS/effective-write/resume/Spine/schedule hashes. All port-influence and
+completion-queue counters match `10ae5ece`. The existing five effective source
+unions and six fact births still occur while prior congruence is pending; there
+are still six query waits and no RHS waits. Preview scratch growths fall from
+83 to 3 and materialized values from 275 to 155. Executed arithmetic/effect
+instructions fall from 105 to 65 after removing Copy. The new evaluator also
+performs 155 expression steps and 105 bound-input reads; those operand costs were
+not separately measured by the old counter. They are charged to Bake's work
+ledger. These are selected operation/allocation events, not a whole-execution
+allocation count or measured speedup.
+
+Three new short tests cover nested arithmetic and consumed births across pending
+work, checked overflow preserving the original failing RHS, and an arithmetic
+key that must find an existing result with a mutable user. In a negative control,
+replacing compiled multiply by addition probes the wrong key and incorrectly
+admits that last batch. Restoring the operation restores rejection. This tests
+the preview's actual effect proof, rather than only the unchanged RHS evaluator.
+The workspace passes 284 tests (four ignored), both sparse and non-sparse focused
+suites pass 86 tests, and the no-default-feature compile check passes.
+
+Progress-only query diagnostics identify the outstanding waits:
+
+| Run | Ruleset | Effective congruence unions | Other observed work |
+| --- | --- | ---: | --- |
+| 23 | type-analysis | 9 | Base and HasType query versions advance |
+| 79 | type-helpers | 0 | One TCons query version advance; no collision or legacy repair |
+| 86 | type-analysis | 1 | Base and HasType query versions advance |
+| 169 | type-analysis | 12 | Base and HasType query versions advance |
+| 477 | always-run | 0 | Two Concat query version advances; no collision or legacy repair |
+| 581 | cleanup-drop | 50 | DelayedDropUnion query versions advance |
+
+Zero unions at Runs 79/477 do not authorize dropping publication. Separating
+those three row-publication obligations from potential congruence, with complete
+candidate and snapshot proofs, is the next concrete opportunity. Broad runtime
+influence walks, shared mutable ownership and real worker execution remain open.
+This result measures the standalone single-thread Cell CPU, not native egglog.
+
+Reproduce using the same Cargo environment and seven focused suites from the
+preceding section, with `compiled-effects-` log names. Save the workspace,
+sparse/non-sparse focused and no-default-feature logs. For the negative control,
+temporarily replace `Self::Mul => a.checked_mul(b)` with
+`Self::Mul => a.checked_add(b)` in `completion_rhs.rs`; run only
+`compiled_arithmetic_keys_select_the_actual_mutable_collision_result`, saving
+`compiled-effects-arithmetic-negative.log`. Restore the source before all positive
+checks. Build the standalone audit runtime separately from compiler tests:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/compiled-effects-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/compiled-effects-runtime benchmarks/stable-port-congruence/compiled-effects-audit-manifest.json out/stable-port-congruence/compiled-effects-final-audit
+python3 benchmarks/stable-port-congruence/collect-compiled-effects.py out/stable-port-congruence benchmarks/stable-port-congruence
+```

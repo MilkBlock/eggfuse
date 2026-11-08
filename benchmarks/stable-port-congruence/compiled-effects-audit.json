@@ -1,0 +1,420 @@
+{
+  "scope": "standalone single-thread Cell CPU; exact ordered trace audit, not timing",
+  "previous_revision": "10ae5ece",
+  "runtime_sha256": "e0e37146155190c4faeeb55238b5b5b7131857d80ba3181236e3d6b80b5e5c1e",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "admitted_as_performance_improvement": false,
+  "compiled_code": {
+    "pure_rhs_copies_elided": 72,
+    "pure_rhs_effects": 60,
+    "pure_rhs_expressions": 146,
+    "pure_rhs_templates": 59
+  },
+  "changed_preview_counters": {
+    "bound_rhs_ops": {
+      "before": 105,
+      "after": 65
+    },
+    "bound_rhs_value_slots": {
+      "before": 275,
+      "after": 155
+    },
+    "bound_rhs_scratch_growths": {
+      "before": 83,
+      "after": 3
+    },
+    "bound_rhs_expression_steps": {
+      "before": null,
+      "after": 155
+    },
+    "bound_rhs_input_reads": {
+      "before": null,
+      "after": 105
+    }
+  },
+  "counter_scope": "Scratch growths are selected preview allocation events, not whole-execution allocations. Expression/input counters were previously unmetered, not zero-cost. Instruction counts exclude these newly explicit operand steps.",
+  "unchanged": {
+    "query_waits": 6,
+    "rhs_waits": 0,
+    "effective_source_unions_while_pending": 5,
+    "fact_births_while_pending": 6,
+    "key_lookup_calls": 19349,
+    "port_completion_counts": "identical to previous revision",
+    "completion_queue_counts": "identical to previous revision"
+  },
+  "remaining_query_waits": [
+    {
+      "constructor_collisions": 9,
+      "effective_unions": 9,
+      "legacy_repairs": 0,
+      "ordinal": 23,
+      "pending_after": 0,
+      "pending_before": 10,
+      "rules": [
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535,
+        537,
+        538,
+        539,
+        540,
+        542,
+        545,
+        547,
+        550,
+        551,
+        559,
+        561,
+        563,
+        566,
+        567,
+        568,
+        569,
+        571
+      ],
+      "ruleset": "type-analysis",
+      "table_version_advances": [
+        [
+          "Base",
+          28
+        ],
+        [
+          "HasType",
+          9
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "Base",
+          "Base"
+        ],
+        [
+          "Base",
+          "HasType"
+        ],
+        [
+          "Base",
+          "bop-of-type"
+        ],
+        [
+          "Base",
+          "bpred-of-type"
+        ]
+      ]
+    },
+    {
+      "constructor_collisions": 0,
+      "effective_unions": 0,
+      "legacy_repairs": 0,
+      "ordinal": 79,
+      "pending_after": 0,
+      "pending_before": 1,
+      "rules": [
+        572,
+        573,
+        575,
+        576,
+        577,
+        580,
+        581
+      ],
+      "ruleset": "type-helpers",
+      "table_version_advances": [
+        [
+          "TCons",
+          1
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "TCons",
+          "TCons"
+        ],
+        [
+          "TCons",
+          "TLConcat"
+        ]
+      ]
+    },
+    {
+      "constructor_collisions": 1,
+      "effective_unions": 1,
+      "legacy_repairs": 0,
+      "ordinal": 86,
+      "pending_after": 0,
+      "pending_before": 1,
+      "rules": [
+        528,
+        529,
+        530,
+        531,
+        533,
+        534,
+        535,
+        537,
+        538,
+        539,
+        540,
+        542,
+        545,
+        547,
+        550,
+        551,
+        559,
+        561,
+        563,
+        566,
+        567,
+        568,
+        569,
+        571
+      ],
+      "ruleset": "type-analysis",
+      "table_version_advances": [
+        [
+          "Base",
+          3
+        ],
+        [
+          "HasType",
+          1
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "Base",
+          "Base"
+        ],
+        [
+          "Base",
+          "HasType"
+        ],
+        [
+          "Base",
+          "bpred-of-type"
+        ]
+      ]
+    },
+    {
+      "constructor_collisions": 12,
+      "effective_unions": 12,
+      "legacy_repairs": 0,
+      "ordinal": 169,
+      "pending_after": 0,
+      "pending_before": 6,
+      "rules": [
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535,
+        537,
+        538,
+        539,
+        540,
+        542,
+        545,
+        547,
+        550,
+        551,
+        559,
+        561,
+        563,
+        566,
+        567,
+        568,
+        569,
+        571
+      ],
+      "ruleset": "type-analysis",
+      "table_version_advances": [
+        [
+          "Base",
+          18
+        ],
+        [
+          "HasType",
+          18
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "Base",
+          "Base"
+        ],
+        [
+          "Base",
+          "HasType"
+        ],
+        [
+          "Base",
+          "bop-of-type"
+        ],
+        [
+          "Base",
+          "bpred-of-type"
+        ]
+      ]
+    },
+    {
+      "constructor_collisions": 0,
+      "effective_unions": 0,
+      "legacy_repairs": 0,
+      "ordinal": 477,
+      "pending_after": 0,
+      "pending_before": 2,
+      "rules": [
+        51,
+        56,
+        57,
+        59,
+        61,
+        69,
+        76,
+        79,
+        85,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        98,
+        104,
+        107,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        140,
+        144,
+        146,
+        147,
+        154,
+        157,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        264,
+        265
+      ],
+      "ruleset": "always-run",
+      "table_version_advances": [
+        [
+          "Concat",
+          2
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "Concat",
+          "BodyContainsExpr"
+        ],
+        [
+          "Concat",
+          "Concat"
+        ],
+        [
+          "Concat",
+          "ContextOf"
+        ],
+        [
+          "Concat",
+          "HasArgType"
+        ],
+        [
+          "Concat",
+          "If"
+        ],
+        [
+          "Concat",
+          "Not-Just-Concat"
+        ],
+        [
+          "Concat",
+          "TupleRemoveAt"
+        ],
+        [
+          "Concat",
+          "leading-Expr"
+        ]
+      ]
+    },
+    {
+      "constructor_collisions": 50,
+      "effective_unions": 50,
+      "legacy_repairs": 0,
+      "ordinal": 581,
+      "pending_after": 0,
+      "pending_before": 90,
+      "rules": [
+        316
+      ],
+      "ruleset": "cleanup-drop",
+      "table_version_advances": [
+        [
+          "DelayedDropUnion",
+          190
+        ]
+      ],
+      "conflicting_tables": [
+        [
+          "DelayedDropUnion",
+          "DelayedDropUnion"
+        ]
+      ]
+    }
+  ],
+  "interpretation": "The old slot-map preview is replaced by shared compiler-derived expressions. Copies and whole-binding clones disappear; exact collision, lifecycle and boundary proofs remain. Waiting and logical completion counts do not improve this iteration.",
+  "remaining": "Runs 79/477 only advance one TCons and two Concat query versions after proving no collisions. Separate those publication obligations from congruence without losing snapshot completeness. Runtime influence walks, shared mutable ownership and actual worker execution remain open."
+}

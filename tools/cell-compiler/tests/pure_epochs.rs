@@ -423,3 +423,107 @@ fn equal_absent_set_keys_are_not_independent_births() {
         .replace("(score (J (Nb 0)))", "(score (Nb 3))");
     check_displaced("same-key-birth-collision", &source, false);
 }
+
+const ARITHMETIC: &str = r#"
+(datatype E (N i64) (F E) (Final E))
+(datatype B (Nb i64) (H B i64) (Seen B))
+(ruleset a) (ruleset b) (ruleset consume) (ruleset observe)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (Nb n)) (= n 0) (= y (Nb 1)))
+      ((let copied x) (let k (- (* (+ n 5) 3) 2)) (union (H copied k) y)) :ruleset b)
+(rule ((= x (H y k))) ((Seen x)) :ruleset consume)
+(rule ((= x (F y))) ((Final x)) :ruleset observe)
+(F (N 0)) (F (N 1)) (Nb 0) (Nb 1)
+(run-schedule (seq (run a) (run b) (run consume) (run observe)))
+"#;
+
+#[test]
+fn compiled_scalar_effects_preserve_arithmetic_and_publish_the_birth() {
+    let mut old = executor(ARITHMETIC, false);
+    let mut new = executor(ARITHMETIC, true);
+    assert_eq!(
+        old.graph.program.completion_plan.as_ref().unwrap().report()["pure_rhs_templates"],
+        0
+    );
+    assert!(
+        new.graph.program.completion_plan.as_ref().unwrap().report()["pure_rhs_templates"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    old.execute().unwrap();
+    new.execute_until(Some(3)).unwrap();
+    let h = new
+        .graph
+        .program
+        .tables
+        .iter()
+        .position(|t| t.name == "H")
+        .unwrap();
+    let rows = new.graph.witnesses(h);
+    assert_eq!(rows.len(), 1);
+    assert_eq!(
+        new.graph.row(rows[0]).unwrap().unwrap().values[1],
+        eggfuse_cell_runtime::value::Value::Int(13)
+    );
+    let seen = new
+        .graph
+        .program
+        .tables
+        .iter()
+        .position(|t| t.name == "Seen")
+        .unwrap();
+    assert_eq!(new.graph.witness_count(seen), 1);
+    if new.scoped_execution_report()["global_observer"] == false {
+        assert!(new.graph.pending_completion_tasks() > 0);
+        assert!(
+            new.scoped_execution_report()["stats"]["bound_rhs_input_reads"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert!(
+            new.scoped_execution_report()["stats"]["rhs_fact_births_while_pending"]
+                .as_u64()
+                .unwrap()
+                >= 1
+        );
+    }
+    new.execute().unwrap();
+    compare(&old, &new);
+}
+
+#[test]
+fn compiled_effect_overflow_retains_the_original_failing_rhs() {
+    let source = ARITHMETIC
+        .replace("(- (* (+ n 5) 3) 2)", "(+ n 9223372036854775807)")
+        .replace("(= n 0)", "(= n 1)");
+    let mut old = executor(&source, false);
+    let mut new = executor(&source, true);
+    assert_eq!(old.execute().unwrap_err(), new.execute().unwrap_err());
+    if new.scoped_execution_report()["global_observer"] == false {
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["bound_rhs_attempts"],
+            1
+        );
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["bound_rhs_accepts"],
+            0
+        );
+    }
+}
+
+#[test]
+fn compiled_arithmetic_keys_select_the_actual_mutable_collision_result() {
+    let source = DISPLACED
+        .replace("(H B)", "(H B i64)")
+        .replace("(H (Nb 0))", "(H (Nb 0) 13)")
+        .replace("(H (Nb 1))", "(H (Nb 1) 13)")
+        .replace("(rule ((= x (Nb 0))", "(rule ((= x (Nb n)) (= n 0)")
+        .replace(
+            "((union x y)) :ruleset b)",
+            "((union (H x (- (* (+ n 5) 3) 2)) w)) :ruleset b)",
+        )
+        .replace("(score (J (Nb 0)))", "(score (H (Nb 0) 13))");
+    check_displaced("compiled-arithmetic-key", &source, false);
+}

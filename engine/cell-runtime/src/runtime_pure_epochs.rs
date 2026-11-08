@@ -2,6 +2,7 @@
 //! equality and constructor Set. Whole-table reads remain ready before probing.
 //! It does not publish speculative writes or evaluate a custom merge.
 use super::*;
+use crate::completion_plan::rhs::{Effect, Expr};
 use crate::graph::cell_ownership::completion::{Batch, Birth};
 
 impl Executor {
@@ -22,13 +23,13 @@ impl Executor {
         let mut rules = 0;
         for (rid, _) in &patch.groups {
             rules += 1;
-            let Some(writes) = &plan.rule_demands[*rid].pure_writes else {
+            let Some(code) = &plan.rule_demands[*rid].pure else {
                 let stats = &mut self.completion.as_mut().unwrap().stats;
                 stats.readiness_dependency_checks += checks;
                 stats.bound_rhs_rule_checks += rules;
                 return Ok(false);
             };
-            let (ready, cost) = forecast.readiness(writes);
+            let (ready, cost) = forecast.readiness(&code.writes);
             checks += cost;
             if !ready {
                 let stats = &mut self.completion.as_mut().unwrap().stats;
@@ -51,6 +52,9 @@ impl Executor {
         let mut all_noop = true;
         let mut ops = 0;
         let mut reads = 0;
+        let mut expression_steps = 0;
+        let mut input_reads = 0;
+        let mut work = 0;
         let mut slots = 0;
         let mut growths = 0;
         let mut overlay_checks = 0;
@@ -59,26 +63,54 @@ impl Executor {
         // uses the current exact keys, including births by earlier bindings.
         let mut valid = true;
         'bindings: for (rid, binding) in patch.iter() {
-            let template = &self.graph.program.templates[self.graph.program.rules[*rid].template];
-            let mut values = binding.values.clone();
-            slots += values.len() as u64;
-            growths += u64::from(!values.is_empty());
-            for op in template.ops.iter() {
-                if ops + overlay_checks >= 4096 {
+            let code = plan.rule_demands[*rid].pure.as_ref().unwrap();
+            let mut values = smallvec::SmallVec::<[Value; 8]>::new();
+            for expression in &code.values {
+                if work >= 4096 {
                     budget_rejected = true;
                     valid = false;
                     break 'bindings;
                 }
-                ops += 1;
-                let arg = |a: &Arg| -> Option<Value> {
-                    Some(canon(
-                        match a {
-                            Arg::Slot(s) => values.get(s)?,
-                            Arg::Literal(v) => v,
-                        },
-                        &self.graph.parents,
-                    ))
+                work += 1;
+                expression_steps += 1;
+                let value = match *expression {
+                    Expr::Bound(slot) => {
+                        input_reads += 1;
+                        let Some(value @ (Value::Eq(_) | Value::Int(_))) =
+                            binding.values.get(&slot)
+                        else {
+                            valid = false;
+                            break 'bindings;
+                        };
+                        canon(value, &self.graph.parents)
+                    }
+                    Expr::Integer(n) => Value::Int(n),
+                    Expr::Arithmetic(operation, [a, b]) => {
+                        ops += 1;
+                        let (Value::Int(a), Value::Int(b)) = (&values[a], &values[b]) else {
+                            valid = false;
+                            break 'bindings;
+                        };
+                        let Some(value) = operation.evaluate(*a, *b) else {
+                            valid = false;
+                            break 'bindings;
+                        };
+                        Value::Int(value)
+                    }
                 };
+                let before = values.capacity();
+                values.push(value);
+                slots += 1;
+                growths += u64::from(before != values.capacity());
+            }
+            for effect in &code.effects {
+                if work >= 4096 {
+                    budget_rejected = true;
+                    valid = false;
+                    break 'bindings;
+                }
+                work += 1;
+                ops += 1;
                 let mut pair = |a: &Value, b: &Value| -> Result<()> {
                     let (Value::Eq(a), Value::Eq(b)) = (a, b) else {
                         return Err("pure-epoch union requires equality values".into());
@@ -90,73 +122,38 @@ impl Executor {
                     }
                     Ok(())
                 };
-                match op {
-                    Op::Copy(dst, a) => {
-                        let Some(v) = arg(a) else {
-                            valid = false;
-                            break 'bindings;
-                        };
-                        let before = values.capacity();
-                        values.insert(*dst, v);
-                        slots += 1;
-                        growths += u64::from(before != values.capacity());
-                    }
-                    Op::Let(dst, Call::Primitive(name, sort), args) => {
-                        let Some(args) = args
-                            .iter()
-                            .map(arg)
-                            .collect::<Option<smallvec::SmallVec<[Value; 2]>>>()
-                        else {
-                            valid = false;
-                            break 'bindings;
-                        };
-                        let Ok(Some(v)) =
-                            value::primitive(name, &args, sort, self.graph.program.key_nodes())
-                        else {
-                            valid = false;
-                            break 'bindings;
-                        };
-                        let before = values.capacity();
-                        values.insert(*dst, v);
-                        slots += 1;
-                        growths += u64::from(before != values.capacity());
-                    }
-                    Op::Union(a, b) => {
-                        let (Some(a), Some(b)) = (arg(a), arg(b)) else {
-                            valid = false;
-                            break 'bindings;
-                        };
+                match effect {
+                    Effect::Union([a, b]) => {
+                        let (a, b) = (&values[*a], &values[*b]);
                         all_noop &= a == b;
-                        pair(&a, &b)?;
+                        pair(a, b)?;
                     }
-                    Op::Set(t, key, value) => {
-                        let Some(key) = key
+                    Effect::Set {
+                        table: t,
+                        key,
+                        value,
+                    } => {
+                        let key = key
                             .iter()
-                            .map(arg)
-                            .collect::<Option<smallvec::SmallVec<[Value; 4]>>>()
-                        else {
-                            valid = false;
-                            break 'bindings;
-                        };
-                        let Some(value) = arg(value) else {
-                            valid = false;
-                            break 'bindings;
-                        };
+                            .map(|&slot| values[slot].clone())
+                            .collect::<smallvec::SmallVec<[Value; 4]>>();
+                        let value = &values[*value];
                         reads += 1;
                         let old = self.graph.lookup_canonical(*t, &key)?;
                         if let Some(old) = old {
                             let old = old.values.last().unwrap();
-                            all_noop &= old == &value;
-                            pair(old, &value)?;
+                            all_noop &= old == value;
+                            pair(old, value)?;
                         } else {
                             all_noop = false;
                             let mut previous = None;
                             for birth in &batch.births {
-                                if ops + overlay_checks >= 4096 {
+                                if work >= 4096 {
                                     budget_rejected = true;
                                     valid = false;
                                     break 'bindings;
                                 }
+                                work += 1;
                                 overlay_checks += 1;
                                 if birth.table == *t && birth.key == key {
                                     previous = Some(birth.output);
@@ -164,7 +161,7 @@ impl Executor {
                                 }
                             }
                             if let Some(old) = previous {
-                                pair(&Value::Eq(old), &value)?;
+                                pair(&Value::Eq(old), value)?;
                             } else {
                                 let Value::Eq(output) = value else {
                                     return Err(
@@ -175,19 +172,20 @@ impl Executor {
                                 batch.births.push(Birth {
                                     table: *t,
                                     key,
-                                    output,
+                                    output: *output,
                                 });
                                 growths += u64::from(before != batch.births.capacity());
                             }
                         }
                     }
-                    _ => return Err("invalid checked pure-epoch program".into()),
                 }
             }
         }
         let stats = &mut self.completion.as_mut().unwrap().stats;
         stats.bound_rhs_attempts += 1;
         stats.bound_rhs_ops += ops;
+        stats.bound_rhs_expression_steps += expression_steps;
+        stats.bound_rhs_input_reads += input_reads;
         stats.bound_rhs_key_reads += reads;
         stats.bound_rhs_value_slots += slots;
         stats.bound_rhs_scratch_growths += growths;

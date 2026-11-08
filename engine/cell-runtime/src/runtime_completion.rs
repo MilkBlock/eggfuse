@@ -42,6 +42,8 @@ pub(super) struct Counts {
     pub bound_rhs_noop_accepts: u64,
     pub bound_rhs_bindings: u64,
     pub bound_rhs_ops: u64,
+    pub bound_rhs_expression_steps: u64,
+    pub bound_rhs_input_reads: u64,
     pub bound_rhs_key_reads: u64,
     pub bound_rhs_value_slots: u64,
     pub bound_rhs_scratch_growths: u64,
@@ -179,7 +181,7 @@ impl Executor {
         let global = self.global_completion_observer();
         if !global && self.completion.as_ref().unwrap().port_scopes {
             let demand = plan.query_demands.get(set).ok_or("unknown query demand")?;
-            if self.wait_for_ports(demand)? {
+            if self.wait_for_ports(demand, Some(set))? {
                 self.completion.as_mut().unwrap().stats.query_completions += 1;
             }
             return Ok(());
@@ -204,7 +206,7 @@ impl Executor {
         self.graph.changed = changed;
         Ok(())
     }
-    fn wait_for_ports(&mut self, demand: &[usize]) -> Result<bool> {
+    fn wait_for_ports(&mut self, demand: &[usize], query_set: Option<&str>) -> Result<bool> {
         let forecast = match self.completion.as_mut().unwrap().forecast.take() {
             Some(f) => f,
             None => self.graph.forecast_port_completion()?,
@@ -212,8 +214,50 @@ impl Executor {
         let (allowed, checks) = forecast.select(demand, false);
         let changed = self.graph.changed;
         let before = self.graph.stats.unions;
+        let diagnostic = (self.progress && query_set.is_some()).then(|| {
+            (
+                self.graph.query_versions.clone(),
+                self.graph.stats.repair_collisions,
+                self.graph.stats.repaired_dependencies,
+                self.graph.pending_completion_tasks(),
+            )
+        });
         let completed = self.graph.complete_port_selection(&allowed, checks)?;
         if completed {
+            if self.progress
+                && let Some(set) = query_set
+            {
+                let plan = self.graph.program.completion_plan.as_ref().unwrap();
+                let rules = self.graph.program.sets[set]
+                    .iter()
+                    .filter_map(|&rid| {
+                        let conflicts = forecast.conflicts(&plan.rule_demands[rid].query);
+                        (!conflicts.is_empty()).then(|| json!({"rule":rid,"conflicts":conflicts}))
+                    })
+                    .collect::<Vec<_>>();
+                let (versions, collisions, repairs, pending) = diagnostic.unwrap();
+                let changed_tables = self
+                    .graph
+                    .query_versions
+                    .iter()
+                    .zip(versions)
+                    .enumerate()
+                    .filter_map(|(table, (&after, before))| {
+                        (after != before).then_some((table, after - before))
+                    })
+                    .collect::<Vec<_>>();
+                eprintln!(
+                    "[cell-cpu] completion-query {}",
+                    json!({
+                        "ordinal":self.steps.len()+1,"ruleset":set,"rules":rules,
+                        "effective_unions":self.graph.stats.unions-before,
+                        "constructor_collisions":self.graph.stats.repair_collisions-collisions,
+                        "legacy_repairs":self.graph.stats.repaired_dependencies-repairs,
+                        "table_version_advances":changed_tables,"pending_before":pending,
+                        "pending_after":self.graph.pending_completion_tasks(),
+                    })
+                );
+            }
             let next = self.graph.forecast_port_completion()?;
             let (ready, checks) = next.readiness(demand);
             self.completion
@@ -311,7 +355,7 @@ impl Executor {
             .peak_matched_origin_slots
             .max(self.stage_spine.matched_origin_slots());
         self.stage_spine.retain_matched_origins(true);
-        let result = self.wait_for_ports(&demand);
+        let result = self.wait_for_ports(&demand, None);
         self.stage_spine.retain_matched_origins(false);
         let state = self.completion.as_mut().unwrap();
         state.matched = false;
