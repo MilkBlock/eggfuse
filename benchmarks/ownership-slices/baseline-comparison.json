@@ -1,0 +1,51 @@
+{
+  "scope": "same-binary ownership-disabled control versus symbolic slices; operation counts only",
+  "baseline_args": ["--repair-ports", "--entry-publications"],
+  "candidate_args": ["--cell-ownership"],
+  "typed_constructor_field_checks": {
+    "baseline": 3773,
+    "candidate": 2098,
+    "limit": "counts field inspections in the respective typed propagation paths, not complete repair cost"
+  },
+  "exact_key_probes": {
+    "baseline": 1046,
+    "candidate": 1046
+  },
+  "legacy_maintenance": {
+    "subscription_calls": {
+      "baseline": 6716,
+      "candidate": 2187
+    },
+    "subscription_value_visits": {
+      "baseline": 19944,
+      "candidate": 7709
+    },
+    "reverse_insert_attempts": {
+      "baseline": 13418,
+      "candidate": 3748
+    },
+    "reverse_remove_attempts": {
+      "baseline": 2871,
+      "candidate": 859
+    },
+    "live_reverse_edges": {
+      "baseline": 10262,
+      "candidate": 2885
+    }
+  },
+  "additional_candidate_work": {
+    "marker_entries": 8304,
+    "marker_anchor_reads": 10572,
+    "signal_binding_reads": 12430,
+    "signal_bindings_created": 8909,
+    "signal_bindings_retired": 1933,
+    "signal_bindings_live": 6976,
+    "boundary_insert_attempts": 7570,
+    "boundary_live": 4922,
+    "signal_activations": 1765,
+    "slice_steps": 2628
+  },
+  "unmetered_costs": ["temporary BTreeMap/BTreeSet node allocation and comparisons", "temporary column-vector growth and sort/dedup", "actual allocation bytes and hash-table probing", "memory-access locality and instrumentation overhead"],
+  "interpretation": "the owner-scan comparison removes a prior regression; an equal-weight sum is not a validated speedup predictor",
+  "latency_claim": null
+}

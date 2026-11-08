@@ -83,9 +83,10 @@ All eligible live scalar bodies are covered, but the final CPU campaign regresse
 
 [Shared symbolic repair slices](benchmarks/ownership-slices/README.md) replace
 that owner traversal with compiled port programs and incremental boundary bindings.
-The sum-bits audit reduces port checks from 306,860 to 2,098 with identical ordered
-effects. Cross-frame bindings remain explicit; this iteration records structural
-evidence without a new timing campaign.
+The sum-bits audit uses 2,098 port checks versus 3,773 in the ordinary backend
+(306,860 in the regressed owner-scan version), with identical ordered effects.
+New binding and temporary-dispatch costs remain; this iteration records structural
+evidence without a validated speedup claim or a new timing campaign.
 
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and

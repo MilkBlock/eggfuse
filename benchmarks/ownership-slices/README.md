@@ -83,8 +83,9 @@ root-to-template-symbol memberships. `native_signal_routes` and
 zero. `slice_steps` includes skipped inactive instructions, `coalesced_slice_steps`
 counts additional instructions for an already selected fact, and `port_checks`
 counts the fields actually inspected. The work-credit ledger charges signal
-binding operations, allocations/retirements, activations, slice execution and
+binding operations, record creations/retirements, activations, slice execution and
 candidate planning. Occupancy gauges and shared-program counts earn no credit.
+Binding-record creations are not measurements of heap allocation calls or bytes.
 
 ## Small application audit
 
@@ -93,6 +94,28 @@ ordered RHS, effective-write, resume and normalized Spine comparison, both again
 the same binary with ownership disabled and the retained `ee259fd2` audit.
 These are structural operations in the standalone runtime, not native egglog
 measurements; logical matches are not described as committed mutations.
+
+The primary comparison is against the ordinary backend, with result-port repair
+and shared Entry publication enabled. The owner-scan predecessor was already a
+performance regression; improvements against it do not establish baseline savings.
+
+| Baseline comparison | Ownership disabled | Shared slices |
+|---|---:|---:|
+| Fields checked by typed constructor propagation | 3,773 | 2,098 |
+| Exact key probes | 1,046 | 1,046 |
+| Legacy subscription calls | 6,716 | 2,187 |
+| Legacy subscription value visits | 19,944 | 7,709 |
+
+The candidate also creates 8,909 symbol-binding records and performs 12,430
+attachment/retirement binding reads, plus 7,570 boundary insertion attempts.
+These costs must accompany the legacy maintenance savings. Each equality currently
+builds temporary ordered maps/sets and column vectors, then sorts/deduplicates them.
+Their allocations, allocated bytes, tree comparisons and actual hash-table probes
+are not fully measured. An equally weighted sum of the existing counters is not
+a validated execution-time model and cannot establish an acceleration result.
+
+`baseline-comparison.json` retains this comparison and its explicit omissions.
+The table below is a secondary diagnosis of the removed owner-scan regression:
 
 | Metric | Previous owner scan | Shared slices |
 |---|---:|---:|

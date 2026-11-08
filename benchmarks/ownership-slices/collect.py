@@ -32,6 +32,7 @@ def collect(root, output):
             assert current['hashes'][key] == stamp, key
     report = current['cell_ownership']
     s = report['stats']
+    control = audit['cases']['sum-bits']['lanes']['control']
     assert s['owned_live'] == report['inventory']['eligible_live_facts']
     assert report['pending_keys'] == 0
     assert s['boundary_body_reads'] == s['boundary_rebuilds'] == 0
@@ -69,6 +70,33 @@ def collect(root, output):
     save('audit.json', audit)
     save('monitor.json', monitor, keep=True)
     save('fixtures.json', fixtures)
+    save('baseline-comparison.json', {
+        'scope': 'same-binary ownership-disabled control versus symbolic slices; operation counts only',
+        'baseline_args': control['args'],
+        'candidate_args': current['args'],
+        'typed_constructor_field_checks': {
+            'baseline': control['repair_ports']['stats']['port_checks'],
+            'candidate': s['port_checks'],
+            'limit': 'counts field inspections in the respective typed propagation paths, not complete repair cost'},
+        'exact_key_probes': {
+            'baseline': control['maintenance']['stats']['repair_key_probes'],
+            'candidate': current['maintenance']['stats']['repair_key_probes']},
+        'legacy_maintenance': {
+            k: {'baseline': control['maintenance']['stats'][k],
+                'candidate': current['maintenance']['stats'][k]}
+            for k in ['subscription_calls', 'subscription_value_visits', 'reverse_insert_attempts',
+                      'reverse_remove_attempts', 'live_reverse_edges']},
+        'additional_candidate_work': {k: s[k] for k in
+            ['marker_entries', 'marker_anchor_reads', 'signal_binding_reads', 'signal_bindings_created',
+             'signal_bindings_retired', 'signal_bindings_live', 'boundary_insert_attempts',
+             'boundary_live', 'signal_activations', 'slice_steps']},
+        'unmetered_costs': ['temporary BTreeMap/BTreeSet node allocation and comparisons',
+                           'temporary column-vector growth and sort/dedup',
+                           'actual allocation bytes and hash-table probing',
+                           'memory-access locality and instrumentation overhead'],
+        'interpretation': 'the owner-scan comparison removes a prior regression; an equal-weight sum is not a validated speedup predictor',
+        'latency_claim': None,
+    })
     save('bake.json', {'scope': 'compiler only; no workload execution',
                       'compiler_sha256': hashlib.sha256((root / 'compiler-final').read_bytes()).hexdigest(),
                       'coverage': read(root / 'baked-sum-final/coverage.json')})
