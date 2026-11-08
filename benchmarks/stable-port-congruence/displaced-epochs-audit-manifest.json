@@ -1,0 +1,16 @@
+{
+  "sum-bits": {
+    "local_congruence": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--local-congruence"]
+    },
+    "staged_scopes": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--port-scopes"]
+    },
+    "pure_epochs": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs"]
+    }
+  }
+}

@@ -113,13 +113,36 @@ complete before its key is probed. No custom merge, deletion, fresh constructor
 call or opaque equality is previewed. All source matching remains sealed first.
 
 If every union is already true and every Set finds the same existing result,
-the RHS cannot create a new equality or fact. Otherwise, its input/output roots
-are conservatively closed through the existing native/boundary signal domains
-and shared template wiring. New Set outputs are included even for absent keys:
-two bindings that both saw an absent key can later collide. A live legacy user,
-missing code or a bounded-walk failure keeps the previous wait. This analysis
-does not establish any speculative congruence equality. At most 4,096 supplied
-seeds and 4,096 root/signal/step/legacy visits are accepted by the proof.
+the RHS cannot create a new equality or fact. Otherwise a bounded interpreter
+records explicit source equality pairs and new constructor sites. All key
+lookups use complete tables. A finite RHS-local overlay includes earlier births
+under the same exact key; no source union commits between these lookups.
+
+The proof builds equivalence classes of those *known source pairs*, including
+transitive chains. The actual runtime's minimum-root union policy identifies
+which existing roots will be displaced; it does not establish any congruence.
+Only displaced roots start an effect. Their complete shared signal domains
+identify affected operators. For each operator, the proof includes outputs from
+all class members, including the unchanged representative and the new Set sites.
+It therefore cannot omit a same-operator collision peer on the unchanged side,
+and it does not expand unrelated operators on that side. Candidates need not
+satisfy all scalar or multi-input guards: including extra outputs is conservative.
+The existing exact congruence path still proves every committed equality.
+
+From these output roots, the proof closes conservatively through live shared
+wiring, the whole known source class and new Set sites. An older pending effect
+can also acquire a new consumer: a birth whose input belongs to the retained
+complete pending frontier contributes its output to this closure. Typed fallback
+frontiers are unknown and conservatively expose every such birth. The frontier
+sets reuse the existing forecast's visited-root sets, and are retained only in
+pure-epoch mode. They are not per-producer consumer lists.
+
+A live legacy/mutable user on a displaced root or possible result rejects the
+batch; unchanged unrelated input users do not. Missing wiring and budget overflow
+retain the previous wait. The preview accepts at most 4,096 instruction/overlay
+steps; the proof accepts at most 4,096 root/signal/static/legacy/source/birth steps.
+These counters and scratch growths are charged to Bake's heuristic work ledger;
+they do not provide a complete allocator census or a latency model.
 
 The scoped queue stores an epoch with each existing pending fact, retaining its
 source-ordered head directory. Multiple inputs can re-notify the same fact; its
@@ -136,15 +159,15 @@ two, colliding absent-key Sets, a no-op union with a mutable user, an actual
 mutable-boundary rejection, and the walk-budget fallback. This establishes the
 single-thread protocol, not concurrent access safety.
 
-On sum-bits, all three admitted batches are no-ops. Twelve bindings execute
-before pending completion, but zero effective source unions, fact births or
-function updates do so. The four nontrivial candidates reach `TypeList-length`
-and fall back. The proof currently includes Set input roots and both sides of
-union, so this is potential influence, not evidence of four actual mutable
-writes. The next refinement must separate unchanged inputs from displaced roots
-and retain complete operator-filtered collision peers. All ten waits remain;
-their position changes. Do not remove the mutable boundary or claim speedup from
-the increased executed-binding count. See `pure-epochs-audit.json` for the costs.
+The original all-root proof in `210b57dd` admitted only three no-op batches on
+sum-bits. The displaced-source proof now admits the other four batches too:
+five effective source unions and six fact births commit while old congruence is
+pending. RHS waits drop from four to zero; query waits stay at six, so total
+waits fall from ten to six. All 1,428 source observations and state/RHS/effective
+write/resume/Spine hashes remain exact. This is independent single-thread
+progress, not a measured speedup or concurrent-worker result. The original pure
+proof and scope planning costs remain visible in the two audit files; additional
+source grouping, birth checks and retained-frontier memory must also be counted.
 
 ## Executor contract (implemented for conservative table scopes)
 

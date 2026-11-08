@@ -2,6 +2,7 @@
 //! equality and constructor Set. Whole-table reads remain ready before probing.
 //! It does not publish speculative writes or evaluate a custom merge.
 use super::*;
+use crate::graph::cell_ownership::completion::{Batch, Birth};
 
 impl Executor {
     pub(super) fn admit_pure_epoch(&mut self, patch: &StagePatch) -> Result<bool> {
@@ -46,15 +47,16 @@ impl Executor {
             .unwrap()
             .stats
             .bound_rhs_rule_checks += rules;
-        let mut seeds = smallvec::SmallVec::<[u64; 16]>::new();
+        let mut batch = Batch::default();
         let mut all_noop = true;
         let mut ops = 0;
         let mut reads = 0;
         let mut slots = 0;
         let mut growths = 0;
-        // Pending unions are not committed between bindings in a source Run.
-        // We collect every Set output even for absent keys: two earlier/later
-        // births of the same key can union those outputs when the RHS executes.
+        let mut overlay_checks = 0;
+        let mut budget_rejected = false;
+        // Source unions commit after all bindings. This finite overlay therefore
+        // uses the current exact keys, including births by earlier bindings.
         let mut valid = true;
         'bindings: for (rid, binding) in patch.iter() {
             let template = &self.graph.program.templates[self.graph.program.rules[*rid].template];
@@ -62,6 +64,11 @@ impl Executor {
             slots += values.len() as u64;
             growths += u64::from(!values.is_empty());
             for op in template.ops.iter() {
+                if ops + overlay_checks >= 4096 {
+                    budget_rejected = true;
+                    valid = false;
+                    break 'bindings;
+                }
                 ops += 1;
                 let arg = |a: &Arg| -> Option<Value> {
                     Some(canon(
@@ -72,12 +79,16 @@ impl Executor {
                         &self.graph.parents,
                     ))
                 };
-                let mut record = |v: &Value| {
-                    if let Value::Eq(root) = v {
-                        let before = seeds.capacity();
-                        seeds.push(*root);
-                        growths += u64::from(before != seeds.capacity());
+                let mut pair = |a: &Value, b: &Value| -> Result<()> {
+                    let (Value::Eq(a), Value::Eq(b)) = (a, b) else {
+                        return Err("pure-epoch union requires equality values".into());
+                    };
+                    if a != b {
+                        let before = batch.pairs.capacity();
+                        batch.pairs.push((*a, *b));
+                        growths += u64::from(before != batch.pairs.capacity());
                     }
+                    Ok(())
                 };
                 match op {
                     Op::Copy(dst, a) => {
@@ -116,8 +127,7 @@ impl Executor {
                             break 'bindings;
                         };
                         all_noop &= a == b;
-                        record(&a);
-                        record(&b);
+                        pair(&a, &b)?;
                     }
                     Op::Set(t, key, value) => {
                         let Some(key) = key
@@ -132,17 +142,43 @@ impl Executor {
                             valid = false;
                             break 'bindings;
                         };
-                        for v in &key {
-                            record(v);
-                        }
-                        record(&value);
                         reads += 1;
                         let old = self.graph.lookup_canonical(*t, &key)?;
-                        all_noop &= old
-                            .as_ref()
-                            .is_some_and(|r| r.values.last() == Some(&value));
                         if let Some(old) = old {
-                            record(old.values.last().unwrap());
+                            let old = old.values.last().unwrap();
+                            all_noop &= old == &value;
+                            pair(old, &value)?;
+                        } else {
+                            all_noop = false;
+                            let mut previous = None;
+                            for birth in &batch.births {
+                                if ops + overlay_checks >= 4096 {
+                                    budget_rejected = true;
+                                    valid = false;
+                                    break 'bindings;
+                                }
+                                overlay_checks += 1;
+                                if birth.table == *t && birth.key == key {
+                                    previous = Some(birth.output);
+                                    break;
+                                }
+                            }
+                            if let Some(old) = previous {
+                                pair(&Value::Eq(old), &value)?;
+                            } else {
+                                let Value::Eq(output) = value else {
+                                    return Err(
+                                        "pure-epoch constructor requires equality output".into()
+                                    );
+                                };
+                                let before = batch.births.capacity();
+                                batch.births.push(Birth {
+                                    table: *t,
+                                    key,
+                                    output,
+                                });
+                                growths += u64::from(before != batch.births.capacity());
+                            }
                         }
                     }
                     _ => return Err("invalid checked pure-epoch program".into()),
@@ -155,10 +191,18 @@ impl Executor {
         stats.bound_rhs_key_reads += reads;
         stats.bound_rhs_value_slots += slots;
         stats.bound_rhs_scratch_growths += growths;
+        stats.bound_rhs_overlay_checks += overlay_checks;
+        stats.bound_rhs_source_pairs += batch.pairs.len() as u64;
+        stats.bound_rhs_birth_sites += batch.births.len() as u64;
+        stats.bound_rhs_budget_rejections += u64::from(budget_rejected);
         if !valid {
             return Ok(false);
         }
-        let accepted = all_noop || self.graph.pure_epoch_closure(&seeds)?;
+        let accepted = all_noop
+            || self.graph.pure_epoch_closure(
+                &batch,
+                self.completion.as_ref().unwrap().forecast.as_ref().unwrap(),
+            )?;
         if accepted {
             let stats = &mut self.completion.as_mut().unwrap().stats;
             stats.bound_rhs_accepts += 1;

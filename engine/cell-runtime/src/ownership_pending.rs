@@ -58,6 +58,9 @@ impl Pending {
         assert!(self.scoped() && self.is_empty());
         self.mixed_epochs = true;
     }
+    pub fn mixed_epochs(&self) -> bool {
+        self.mixed_epochs
+    }
     pub fn completion_epoch(&mut self, epoch: u64, row: u64, peer: Option<u64>) -> u64 {
         if !self.mixed_epochs {
             return epoch;

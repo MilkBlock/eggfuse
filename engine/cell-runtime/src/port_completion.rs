@@ -1,8 +1,12 @@
 //! Conservative influence of outstanding congruence through actual port roots.
 //! Shared wiring describes all live uses. No per-producer consumer list, key
-//! comparison, simulated union, or guessed equality is installed by this proof.
+//! comparison or guessed equality is installed by the pending influence proof.
 use super::*;
 use rustc_hash::FxHashSet;
+
+#[path = "pure_effects.rs"]
+mod pure_effects;
+pub(crate) use pure_effects::{Batch, Birth};
 
 const MAX_VISITS: u64 = 4096;
 #[derive(Default, Serialize)]
@@ -35,8 +39,16 @@ pub(crate) struct Counts {
     pure_epoch_boundary_tables: BTreeMap<usize, u64>,
     pure_epoch_budget_rejections: u64,
     pure_epoch_peak_visits: u64,
+    pure_epoch_source_steps: u64,
+    pure_epoch_displaced_roots: u64,
+    pure_epoch_peer_candidates: u64,
+    pure_epoch_birth_checks: u64,
+    peak_retained_frontier_roots: usize,
 }
 struct Influence {
+    // Complete conservative output frontier. None denotes a typed fallback;
+    // a new constructor must then assume its input may change.
+    roots: Option<FxHashSet<u64>>,
     table: usize,
     tables: Vec<bool>,
     reads: Vec<usize>,
@@ -140,119 +152,6 @@ impl Graph {
             .pending
             .enable_mixed_epochs();
     }
-    /// Close over every current user of the bound RHS equality endpoints and
-    /// supplied constructor outputs. Newly born Set facts can only connect
-    /// these supplied endpoints. A legacy/mutable user rejects the whole batch.
-    /// No equality is assumed and no union or producer subscription is created.
-    pub(crate) fn pure_epoch_closure(&mut self, seeds: &[u64]) -> Result<bool> {
-        let mut counts = self
-            .ownership
-            .as_mut()
-            .unwrap()
-            .port_completion
-            .take()
-            .unwrap();
-        counts.pure_epoch_proofs += 1;
-        let before = visits(&counts);
-        let result = (|| {
-            if seeds.len() > MAX_VISITS as usize {
-                counts.pure_epoch_budget_rejections += 1;
-                return Ok(false);
-            }
-            let runtime = self.ownership.as_ref().unwrap();
-            let plan = &self.program.cell_ownership.composition;
-            let mut roots = smallvec::SmallVec::<[u64; 16]>::new();
-            let mut seen = FxHashSet::default();
-            for &seed in seeds {
-                offer(
-                    root(&self.parents, seed),
-                    &mut roots,
-                    &mut seen,
-                    &mut counts,
-                );
-            }
-            let mut next = 0;
-            while next < roots.len() {
-                if visits(&counts) - before >= MAX_VISITS {
-                    counts.pure_epoch_budget_rejections += 1;
-                    return Ok(false);
-                }
-                let root = roots[next];
-                next += 1;
-                counts.root_visits += 1;
-                for &dep in self.uses.get(&root).into_iter().flat_map(|s| s.iter()) {
-                    if visits(&counts) - before >= MAX_VISITS {
-                        counts.pure_epoch_budget_rejections += 1;
-                        return Ok(false);
-                    }
-                    counts.legacy_boundaries += 1;
-                    if let Some(table) = self.dependency_table(dep) {
-                        counts.pure_epoch_boundary_rejections += 1;
-                        *counts.pure_epoch_boundary_tables.entry(table).or_default() += 1;
-                        return Ok(false);
-                    }
-                }
-                for signal in runtime
-                    .boundaries
-                    .get(&root)
-                    .into_iter()
-                    .flat_map(|s| s.iter().copied())
-                    .chain(self.native_signal(root))
-                {
-                    if visits(&counts) - before >= MAX_VISITS {
-                        counts.pure_epoch_budget_rejections += 1;
-                        return Ok(false);
-                    }
-                    counts.signal_visits += 1;
-                    let component = runtime.composition.components[signal.component as usize]
-                        .as_ref()
-                        .ok_or("expired pure-epoch component")?;
-                    let Some(code) = plan.effects.get(component.shape) else {
-                        counts.pure_epoch_boundary_rejections += 1;
-                        return Ok(false);
-                    };
-                    for step in &code.signals[signal.symbol] {
-                        if visits(&counts) - before >= MAX_VISITS {
-                            counts.pure_epoch_budget_rejections += 1;
-                            return Ok(false);
-                        }
-                        counts.static_steps += 1;
-                        let fact = FactRef {
-                            cell: component.frames[step.frame],
-                            op: step.op,
-                        };
-                        let Some(_state) = self
-                            .cells
-                            .get(&fact.cell)
-                            .and_then(|c| c.facts.get(&fact.op))
-                            .filter(|s| s.owned)
-                        else {
-                            counts.inactive_steps += 1;
-                            continue;
-                        };
-                        if let Some(output) = step.output {
-                            counts.output_reads += 1;
-                            let value = component.signals[output]
-                                .ok_or("live pure-epoch output is unbound")?;
-                            offer(
-                                crate::value::root(&self.parents, value),
-                                &mut roots,
-                                &mut seen,
-                                &mut counts,
-                            );
-                        }
-                    }
-                }
-            }
-            Ok(true)
-        })();
-        counts.pure_epoch_peak_visits = counts.pure_epoch_peak_visits.max(visits(&counts) - before);
-        if matches!(result, Ok(true)) {
-            counts.pure_epoch_accepts += 1;
-        }
-        self.ownership.as_mut().unwrap().port_completion = Some(counts);
-        result
-    }
     pub(crate) fn use_port_completion(&mut self) -> Result<()> {
         self.use_scoped_completion()?;
         if self.ownership.as_ref().unwrap().port_completion.is_some() {
@@ -271,6 +170,7 @@ impl Graph {
     fn typed_influence(&self, table: usize) -> Influence {
         let plan = self.program.completion_plan.as_ref().unwrap();
         Influence {
+            roots: None,
             table,
             tables: (0..self.program.tables.len())
                 .map(|t| plan.affects(table, t))
@@ -288,6 +188,7 @@ impl Graph {
             return Ok(self.typed_influence(table));
         }
         let mut influence = Influence {
+            roots: None,
             table,
             tables: vec![false; self.program.tables.len()],
             reads: Vec::new(),
@@ -465,6 +366,9 @@ impl Graph {
         }
         influence.reads.sort_unstable();
         influence.reads.dedup();
+        if runtime.pending.mixed_epochs() {
+            influence.roots = Some(seen);
+        }
         Ok(influence)
     }
     pub(crate) fn forecast_port_completion(&mut self) -> Result<Forecast> {
@@ -497,6 +401,7 @@ impl Graph {
                 *counts.pending_global_by_table.entry(table).or_default() += 1;
                 counts.groups += 1;
                 groups.push(Influence {
+                    roots: None,
                     table,
                     tables: vec![true; self.program.tables.len()],
                     reads: Vec::new(),
@@ -531,6 +436,13 @@ impl Graph {
                 groups.push(influence);
             }
             counts.groups += groups.len() as u64;
+            counts.peak_retained_frontier_roots = counts.peak_retained_frontier_roots.max(
+                groups
+                    .iter()
+                    .filter_map(|g| g.roots.as_ref())
+                    .map(FxHashSet::len)
+                    .sum(),
+            );
             Ok(Forecast {
                 tables: self.program.tables.len(),
                 groups,
@@ -616,6 +528,7 @@ mod tests {
             tables: 3,
             groups: vec![
                 Influence {
+                    roots: None,
                     table: 0,
                     tables: vec![true, false, true],
                     reads: vec![],
@@ -623,6 +536,7 @@ mod tests {
                     global: false,
                 },
                 Influence {
+                    roots: None,
                     table: 1,
                     tables: vec![false, true, false],
                     reads: vec![2],

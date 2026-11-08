@@ -1,0 +1,436 @@
+{
+  "scope": "standalone single-thread Cell CPU; exact ordered trace audit, not timing",
+  "previous_revision": "210b57dd",
+  "runtime_sha256": "cbf51e643bbe660acf234a771f98a35279a5c20dea8c23880e1d9447ef139297",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "admitted_as_performance_improvement": false,
+  "completion_waits": {
+    "previous": 10,
+    "current": 6,
+    "query": 6,
+    "rhs": 0
+  },
+  "independent_effective_mutations": {
+    "source_unions": 5,
+    "fact_births": 6,
+    "function_updates": 0
+  },
+  "port_completion": {
+    "enabled": true,
+    "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+    "shared_plans": 630,
+    "shared_steps": 7559,
+    "stats": {
+      "boundary_global_shortcuts": 0,
+      "bypassed_tasks": 90,
+      "forecasts": 93,
+      "forest_global_shortcuts": 0,
+      "global_boundaries_by_table": {},
+      "groups": 264,
+      "inactive_steps": 48120,
+      "legacy_boundaries": 17721,
+      "membership_checks": 676109,
+      "output_reads": 59120,
+      "peak_group_visits": 4096,
+      "peak_retained_frontier_roots": 599,
+      "pending_global_by_table": {},
+      "pending_global_shortcuts": 0,
+      "pure_epoch_accepts": 4,
+      "pure_epoch_birth_checks": 622,
+      "pure_epoch_boundary_rejections": 0,
+      "pure_epoch_boundary_tables": {},
+      "pure_epoch_budget_rejections": 0,
+      "pure_epoch_displaced_roots": 5,
+      "pure_epoch_peak_visits": 682,
+      "pure_epoch_peer_candidates": 59,
+      "pure_epoch_proofs": 4,
+      "pure_epoch_source_steps": 288,
+      "pure_groups": 59,
+      "root_visits": 23525,
+      "scope_completions": 83,
+      "scratch_growths": 1389,
+      "seed_candidates": 1135,
+      "seed_roots": 410,
+      "signal_visits": 89985,
+      "static_steps": 151515,
+      "typed_fallbacks": 60
+    },
+    "visit_budget_per_group": 4096
+  },
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 71,
+      "dependency_edges": 30664,
+      "merge_birth_edges": 5,
+      "merge_read_edges": 5,
+      "merges": [
+        {
+          "births": [
+            324
+          ],
+          "opaque": false,
+          "reads": [
+            324
+          ],
+          "table": 205
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 232
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 234
+        },
+        {
+          "births": [
+            385
+          ],
+          "opaque": false,
+          "reads": [
+            385
+          ],
+          "table": 387
+        },
+        {
+          "births": [
+            384
+          ],
+          "opaque": false,
+          "reads": [
+            384
+          ],
+          "table": 393
+        }
+      ],
+      "opaque_tables": [],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401,
+      "wait_edges": 42294
+    },
+    "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+    "stats": {
+      "advanced_task_epochs": 1,
+      "bypassed_tasks": 0,
+      "cause_comparisons": 4245,
+      "cause_growths": 36,
+      "cause_probes": 1111,
+      "completion_epoch_checks": 1046,
+      "completion_epoch_joins": 3,
+      "head_probes": 1059,
+      "head_updates": 1594,
+      "legacy_frontier_probes": 938,
+      "mixed_epoch_inserts": 6,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "scoped_executor": {
+    "compiler_admits_deferral": true,
+    "enabled": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "port_scopes": true,
+    "pure_epochs": true,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+    "stats": {
+      "already_ready_waits": 12,
+      "bound_rhs_accepts": 7,
+      "bound_rhs_attempts": 7,
+      "bound_rhs_bindings": 40,
+      "bound_rhs_birth_sites": 6,
+      "bound_rhs_budget_rejections": 0,
+      "bound_rhs_key_reads": 25,
+      "bound_rhs_noop_accepts": 3,
+      "bound_rhs_ops": 105,
+      "bound_rhs_overlay_checks": 4,
+      "bound_rhs_rule_checks": 13,
+      "bound_rhs_scratch_growths": 83,
+      "bound_rhs_source_pairs": 5,
+      "bound_rhs_value_slots": 275,
+      "compiler_full_completion_runs": 0,
+      "deferred_rows_carried": 25,
+      "eager_waits": 0,
+      "executed_bindings_while_pending": 40,
+      "global_observation_fences": 0,
+      "partial_publications": 18,
+      "peak_matched_origin_slots": 0,
+      "peak_retained_anchors": 6,
+      "peak_retained_changes": 8,
+      "peak_retained_contexts": 7,
+      "peak_retained_forwards": 0,
+      "publication_table_checks": 32,
+      "published_tables_while_pending": 25,
+      "query_bindings_while_pending": 40,
+      "query_completions": 6,
+      "query_runs_while_pending": 12,
+      "readiness_dependency_checks": 7224,
+      "rhs_access_completions": 0,
+      "rhs_completions": 0,
+      "rhs_demand_growths": 0,
+      "rhs_demand_probes": 0,
+      "rhs_empty_skips": 5,
+      "rhs_fact_births_while_pending": 6,
+      "rhs_function_updates_while_pending": 0,
+      "rhs_selected_rules": 0,
+      "rhs_union_completions": 0,
+      "ruleset_waits": 1428,
+      "runs_with_unrelated_pending": 12,
+      "source_unions_while_pending": 5,
+      "unchanged_influence_reuses": 8
+    },
+    "unpublished_changes": 0
+  },
+  "counter_changes_from_previous_pure_epochs": {
+    "port_completion": {
+      "forecasts": {
+        "before": 97,
+        "after": 93,
+        "delta": -4
+      },
+      "inactive_steps": {
+        "before": 48191,
+        "after": 48120,
+        "delta": -71
+      },
+      "legacy_boundaries": {
+        "before": 17725,
+        "after": 17721,
+        "delta": -4
+      },
+      "membership_checks": {
+        "before": 677634,
+        "after": 676109,
+        "delta": -1525
+      },
+      "output_reads": {
+        "before": 58910,
+        "after": 59120,
+        "delta": 210
+      },
+      "peak_retained_frontier_roots": {
+        "before": 0,
+        "after": 599,
+        "delta": 599
+      },
+      "pure_epoch_accepts": {
+        "before": 0,
+        "after": 4,
+        "delta": 4
+      },
+      "pure_epoch_birth_checks": {
+        "before": 0,
+        "after": 622,
+        "delta": 622
+      },
+      "pure_epoch_boundary_rejections": {
+        "before": 4,
+        "after": 0,
+        "delta": -4
+      },
+      "pure_epoch_displaced_roots": {
+        "before": 0,
+        "after": 5,
+        "delta": 5
+      },
+      "pure_epoch_peak_visits": {
+        "before": 67,
+        "after": 682,
+        "delta": 615
+      },
+      "pure_epoch_peer_candidates": {
+        "before": 0,
+        "after": 59,
+        "delta": 59
+      },
+      "pure_epoch_source_steps": {
+        "before": 0,
+        "after": 288,
+        "delta": 288
+      },
+      "root_visits": {
+        "before": 23301,
+        "after": 23525,
+        "delta": 224
+      },
+      "scope_completions": {
+        "before": 87,
+        "after": 83,
+        "delta": -4
+      },
+      "scratch_growths": {
+        "before": 1359,
+        "after": 1389,
+        "delta": 30
+      },
+      "seed_candidates": {
+        "before": 1107,
+        "after": 1135,
+        "delta": 28
+      },
+      "seed_roots": {
+        "before": 403,
+        "after": 410,
+        "delta": 7
+      },
+      "signal_visits": {
+        "before": 89693,
+        "after": 89985,
+        "delta": 292
+      },
+      "static_steps": {
+        "before": 151073,
+        "after": 151515,
+        "delta": 442
+      }
+    },
+    "scoped_completion": {
+      "advanced_task_epochs": {
+        "before": 0,
+        "after": 1,
+        "delta": 1
+      },
+      "cause_comparisons": {
+        "before": 4238,
+        "after": 4245,
+        "delta": 7
+      },
+      "cause_probes": {
+        "before": 1110,
+        "after": 1111,
+        "delta": 1
+      },
+      "completion_epoch_joins": {
+        "before": 0,
+        "after": 3,
+        "delta": 3
+      },
+      "head_updates": {
+        "before": 1599,
+        "after": 1594,
+        "delta": -5
+      },
+      "mixed_epoch_inserts": {
+        "before": 0,
+        "after": 6,
+        "delta": 6
+      }
+    },
+    "scoped_executor": {
+      "bound_rhs_accepts": {
+        "before": 3,
+        "after": 7,
+        "delta": 4
+      },
+      "bound_rhs_bindings": {
+        "before": 12,
+        "after": 40,
+        "delta": 28
+      },
+      "bound_rhs_birth_sites": {
+        "before": 0,
+        "after": 6,
+        "delta": 6
+      },
+      "bound_rhs_overlay_checks": {
+        "before": 0,
+        "after": 4,
+        "delta": 4
+      },
+      "bound_rhs_source_pairs": {
+        "before": 0,
+        "after": 5,
+        "delta": 5
+      },
+      "executed_bindings_while_pending": {
+        "before": 12,
+        "after": 40,
+        "delta": 28
+      },
+      "peak_retained_forwards": {
+        "before": 4,
+        "after": 0,
+        "delta": -4
+      },
+      "readiness_dependency_checks": {
+        "before": 7268,
+        "after": 7224,
+        "delta": -44
+      },
+      "rhs_access_completions": {
+        "before": 4,
+        "after": 0,
+        "delta": -4
+      },
+      "rhs_completions": {
+        "before": 4,
+        "after": 0,
+        "delta": -4
+      },
+      "rhs_demand_growths": {
+        "before": 8,
+        "after": 0,
+        "delta": -8
+      },
+      "rhs_demand_probes": {
+        "before": 2224,
+        "after": 0,
+        "delta": -2224
+      },
+      "rhs_fact_births_while_pending": {
+        "before": 0,
+        "after": 6,
+        "delta": 6
+      },
+      "rhs_selected_rules": {
+        "before": 8,
+        "after": 0,
+        "delta": -8
+      },
+      "runs_with_unrelated_pending": {
+        "before": 8,
+        "after": 12,
+        "delta": 4
+      },
+      "source_unions_while_pending": {
+        "before": 0,
+        "after": 5,
+        "delta": 5
+      }
+    }
+  },
+  "key_lookup_calls": {
+    "previous": 19351,
+    "current": 19349
+  },
+  "interpretation": "Four nontrivial source batches now commit while older congruence is pending. Both collision endpoints remain covered. No full-cost speedup or worker scaling is established.",
+  "remaining": "Six query waits remain; influence walks, bound RHS replay, retained frontiers and publication are still sequential costs. Replace repeated runtime proofs with reusable compiler/Bake facts, then establish concurrent ownership and worker scaling."
+}

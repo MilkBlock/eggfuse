@@ -1,0 +1,74 @@
+{
+  "workspace-tests": {
+    "passed": 281,
+    "failed": 0,
+    "ignored": 4
+  },
+  "tests": {
+    "passed": 83,
+    "failed": 0,
+    "ignored": 0
+  },
+  "non-sparse-tests": {
+    "passed": 83,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed",
+  "negative_control": {
+    "mutation": "omit shared-wiring candidates on the unchanged source representative",
+    "failure": "a batch with a mutable collision-result consumer is incorrectly admitted",
+    "restored_source_passes_focused_suites": true,
+    "scope": "pure admission gate; rejection retains ordinary scoped/eager handling, which may still advance unrelated work"
+  },
+  "fixtures": {
+    "read-only-birth-input": {
+      "pure_epoch_admitted": true,
+      "pending_tasks": 1,
+      "effective_source_unions_while_pending": 0,
+      "fact_births_while_pending": 1,
+      "boundary_rejections": 0,
+      "exact_final_state_and_ordered_bindings": true
+    },
+    "unrelated-unchanged-user": {
+      "pure_epoch_admitted": true,
+      "pending_tasks": 2,
+      "effective_source_unions_while_pending": 1,
+      "fact_births_while_pending": 0,
+      "boundary_rejections": 0,
+      "exact_final_state_and_ordered_bindings": true
+    },
+    "same-operator-peer": {
+      "pure_epoch_admitted": false,
+      "pending_tasks": 1,
+      "effective_source_unions_while_pending": 1,
+      "fact_births_while_pending": 0,
+      "boundary_rejections": 1,
+      "exact_final_state_and_ordered_bindings": true
+    },
+    "transitive-source-pairs": {
+      "pure_epoch_admitted": false,
+      "pending_tasks": 2,
+      "effective_source_unions_while_pending": 2,
+      "fact_births_while_pending": 0,
+      "boundary_rejections": 1,
+      "exact_final_state_and_ordered_bindings": true
+    },
+    "future-birth-collision": {
+      "pure_epoch_admitted": false,
+      "pending_tasks": 1,
+      "effective_source_unions_while_pending": 1,
+      "fact_births_while_pending": 2,
+      "boundary_rejections": 1,
+      "exact_final_state_and_ordered_bindings": true
+    },
+    "same-key-birth-collision": {
+      "pure_epoch_admitted": false,
+      "pending_tasks": 1,
+      "effective_source_unions_while_pending": 1,
+      "fact_births_while_pending": 1,
+      "boundary_rejections": 1,
+      "exact_final_state_and_ordered_bindings": true
+    }
+  }
+}

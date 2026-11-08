@@ -748,3 +748,79 @@ The collector reads the retained initial attempt from
 `scoped-executor-unspecialized-audit/results.json` when available, otherwise its
 frozen compact counts from the committed audit. The current runtime intentionally does not offer a flag
 to repeat this rejected overhead.
+
+## Displaced source effects and complete collision peers
+
+The prior catalog's seven `type-helpers` waits are still the opportunity: rules
+576/577 only copy values, compute an i64 offset, union bound `BaseType` values and
+Set `TypeList-ith`. Typed compiler facts already establish this restricted RHS
+class and complete direct Set-table reads. Actual bound execution now separates
+read-only keys, absent-key births and known result equalities. The goal is to
+commit these source effects across Runs while older `Base` congruence remains
+pending, without executing or reordering an unknown mutable merge.
+
+The preview maintains a finite exact-key overlay for earlier births in the same
+sealed RHS. Thus two initially absent Sets are not assumed independent. Its
+known equality pairs are grouped transitively before effects are walked: choosing
+the larger endpoint of each pair independently would miss roots displaced by a
+chain. Shared template wiring on displaced members identifies affected operators;
+all members then supply those operators' collision outputs, including the
+unchanged representative. Unrelated operators on the unchanged input no longer
+start the closure. The output closure also follows source aliases and new Set
+sites. A birth whose input may change under older pending work contributes its
+output, using the pending forecast's complete root frontier; unknown frontiers
+stay conservative. No instance-owned producer/consumer index is introduced.
+
+Six new short fixtures cover unchanged unrelated users, same-operator peers with
+mutable consumers, transitive source pairs, read-only birth inputs, birth keys
+that collide after source union, and duplicate initially absent keys. Temporarily
+omitting the unchanged-side candidates makes the peer fixture incorrectly admit
+its batch as closed-pure; restoring that code restores rejection. Rejection
+retains ordinary scoped/eager handling, which can still advance unrelated work.
+The existing cross-epoch,
+shared Entry, publication lifetime and budget fixtures remain in the test suite.
+The production path remains opt-in under `--pure-epochs`. The workspace passes
+281 tests (four ignored); sparse and non-sparse focused suites each pass 83 tests,
+and the no-default-feature runtime compile check passes.
+
+The retained final audit compares the same frozen sum-bits program against the
+local-congruence and staged-scope controls, and the committed `210b57dd` hashes.
+All 1,428 Runs retain exact state, ordered RHS, effective writes, resumes, schedule
+and normalized Spine results. Four nontrivial batches now join the three no-op
+admissions. They commit **five effective source unions and six new facts while
+older congruence is pending**. RHS waits fall from four to zero; six query waits
+remain, so total waits fall from ten to six. Six mixed-epoch task insertions,
+one notification-epoch advance and three causal completion-epoch joins now occur
+on this workload. This is the standalone single-thread Cell CPU executor.
+
+This does not establish a full-cost speedup or worker scaling. The preview still
+performs 105 instructions, 25 key reads, 275 copied/inserted slots and 83 tracked
+scratch growths. It adds four exact-key overlay comparisons. The proof adds
+288 source-relation steps and 622 new-site checks, retains at most 599 frontier
+root entries, and still walks shared wiring at runtime. Static steps rise from
+151,073 to 151,515 and tracked proof/forecast scratch growths from 1,359 to 1,389.
+The audit records these alongside four fewer forecasts, 2,224 eliminated RHS
+demand probes, 1,525 fewer membership checks and two fewer total key lookups.
+Query/publication costs remain. Growth-event counters are not a complete allocator census, and Bake's
+charged work ledger is not elapsed time. Reusable compiler/Bake certificates and
+concurrent ownership remain unfinished work.
+
+Reproduce using the same Cargo environment and separate compiler/runtime builds
+as the preceding experiments. Save workspace, focused, non-sparse and minimal
+logs as `displaced-epochs-{workspace-tests,tests,non-sparse-tests,minimal-check}.log`.
+The focused suites are `pure_epochs`, `staged_completion`, `scoped_completion`,
+`port_completion`, `merge_completion`, `stable_ports` and `cell_ownership`.
+Set `DISPLACED_EPOCH_EVIDENCE` to the absolute
+`out/stable-port-congruence/displaced-epochs-fixtures` directory only for the
+sparse focused run. For the negative control, temporarily skip `id == leader`
+in the source-group member loop in `pure_effects.rs`, then run
+`unchanged_input_peers_of_the_same_operator_keep_the_mutable_boundary` and save
+`displaced-epochs-peer-negative.log`. Restore the file before positive checks.
+Finally build only the standalone audit runtime and run:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/displaced-epochs-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/displaced-epochs-runtime benchmarks/stable-port-congruence/displaced-epochs-audit-manifest.json out/stable-port-congruence/displaced-epochs-final-audit
+python3 benchmarks/stable-port-congruence/collect-displaced-epochs.py out/stable-port-congruence benchmarks/stable-port-congruence
+```

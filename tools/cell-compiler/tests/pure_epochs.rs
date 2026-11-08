@@ -293,3 +293,133 @@ fn the_pure_closure_budget_retains_the_original_effect_wait() {
         );
     }
 }
+
+const DISPLACED: &str = r#"
+(datatype E (N i64) (F E) (Seen E))
+(datatype B (Nb i64) (H B) (J B))
+(function score (B) i64 :merge (+ old new))
+(ruleset a) (ruleset b) (ruleset observe)
+(rule ((= x (F y))) ((Seen x)) :ruleset observe)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (Nb 0)) (= y (Nb 1)) (= z (Nb 2)) (= w (Nb 3)))
+      ((union x y)) :ruleset b)
+(F (N 0)) (F (N 1))
+(Nb 0) (Nb 1) (Nb 2) (Nb 3)
+(H (Nb 0)) (H (Nb 1))
+(set (score (J (Nb 0))) 7)
+(run-schedule (seq (run a) (run b) (run observe)))
+"#;
+
+fn check_displaced(case: &str, source: &str, accepted: bool) -> Executor {
+    let mut old = executor(source, false);
+    let mut new = executor(source, true);
+    old.execute().unwrap();
+    new.execute_until(Some(2)).unwrap();
+    let report = new.scoped_execution_report();
+    let pending = new.graph.pending_completion_tasks();
+    let ports = new.graph.port_completion_report();
+    if report["global_observer"] == false {
+        assert_eq!(report["stats"]["bound_rhs_attempts"], 1);
+        assert_eq!(report["stats"]["bound_rhs_accepts"], u64::from(accepted));
+        if accepted {
+            assert!(new.graph.pending_completion_tasks() > 0);
+        } else {
+            assert!(
+                new.graph.port_completion_report()["stats"]["pure_epoch_boundary_rejections"]
+                    .as_u64()
+                    .unwrap()
+                    > 0
+            );
+        }
+    }
+    new.execute().unwrap();
+    compare(&old, &new);
+    if let Ok(directory) = std::env::var("DISPLACED_EPOCH_EVIDENCE") {
+        std::fs::create_dir_all(&directory).unwrap();
+        std::fs::write(
+            std::path::Path::new(&directory).join(format!("{case}.json")),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "scope":"standalone single-thread Cell CPU; displaced source effects",
+                "admitted":accepted, "pending_tasks":pending, "checkpoint":report,
+                "ports":ports, "final_executor":new.scoped_execution_report(),
+                "exact_final_state_and_ordered_bindings":true,
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+    }
+    new
+}
+
+#[test]
+fn unchanged_input_users_of_other_operators_do_not_block_the_source_union() {
+    let new = check_displaced("unrelated-unchanged-user", DISPLACED, true);
+    if new.scoped_execution_report()["global_observer"] == false {
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["source_unions_while_pending"],
+            1
+        );
+    }
+}
+
+#[test]
+fn unchanged_input_peers_of_the_same_operator_keep_the_mutable_boundary() {
+    check_displaced(
+        "same-operator-peer",
+        &DISPLACED.replace("(score (J (Nb 0)))", "(score (H (Nb 0)))"),
+        false,
+    );
+}
+
+#[test]
+fn chained_source_unions_must_include_every_displaced_root() {
+    let source = DISPLACED
+        .replace(
+            "((union x y)) :ruleset b)",
+            "((union x z) (union z y)) :ruleset b)",
+        )
+        .replace("(score (J (Nb 0)))", "(score (Nb 1))");
+    check_displaced("transitive-source-pairs", &source, false);
+}
+
+#[test]
+fn a_constructor_birth_does_not_change_its_read_only_input() {
+    let source = DISPLACED
+        .replace("((union x y)) :ruleset b)", "((union (J x) z)) :ruleset b)")
+        .replace("(score (J (Nb 0)))", "(score (Nb 0))");
+    let new = check_displaced("read-only-birth-input", &source, true);
+    if new.scoped_execution_report()["global_observer"] == false {
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["rhs_fact_births_while_pending"],
+            1
+        );
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["source_unions_while_pending"],
+            0
+        );
+    }
+}
+
+#[test]
+fn new_set_keys_that_collide_after_source_unions_keep_both_result_endpoints() {
+    let source = DISPLACED
+        .replace(
+            "((union x y)) :ruleset b)",
+            "((union (H x) z) (union (H y) w) (union x y)) :ruleset b)",
+        )
+        .replace("(H (Nb 0)) (H (Nb 1))", "")
+        .replace("(score (J (Nb 0)))", "(score (Nb 3))");
+    check_displaced("future-birth-collision", &source, false);
+}
+
+#[test]
+fn equal_absent_set_keys_are_not_independent_births() {
+    let source = DISPLACED
+        .replace(
+            "((union x y)) :ruleset b)",
+            "((union (H x) z) (union (H x) w)) :ruleset b)",
+        )
+        .replace("(H (Nb 0)) (H (Nb 1))", "")
+        .replace("(score (J (Nb 0)))", "(score (Nb 3))");
+    check_displaced("same-key-birth-collision", &source, false);
+}
