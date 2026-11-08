@@ -232,6 +232,23 @@ zero result unions alone do not establish that proof.
    `set` result sorts. Do not reuse a prior influence proof across changed Runs,
    or remove this gate, without a proof for the bound writes and epoch ownership.
 
+## Immutable read phase
+
+Exact local conditions and foreign candidate checks use a borrowed ReadView of
+the equality relation and component signal arrays. Each guard returns local work
+counts. The coordinator alone updates runtime counters, chooses the first live
+eligible candidate, and commits visibility, retirement and result equalities.
+Scalar fields and compiler condition code are borrowed; no full Graph or row
+snapshot is copied to make the evaluator Send + Sync.
+
+KeyGuard binds one live candidate to a key canonicalized in that same read epoch.
+A true guard establishes neither domain completeness nor permission to publish.
+The borrow prevents a union, deletion or rebinding while workers use the view.
+After mutation, a new borrow and new canonical key are required. Scoped worker
+fixtures demonstrate concurrent guard evaluation; the actual Executor still
+dispatches guards serially. Pending task generations, concurrent mutation and
+asynchronous publication are not established by this interface.
+
 ## Gates that must remain open
 
 - Through the actual Executor, A retains outstanding congruence while B matches,

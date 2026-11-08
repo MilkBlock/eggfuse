@@ -1,0 +1,303 @@
+//! Borrowed, immutable inputs for constructor guards. Workers return local
+//! counts and a match result; liveness, candidate ordering and commits remain
+//! with the executor. The borrow prevents mutation while a guard is running.
+use super::*;
+use composition::conditions::Condition;
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
+pub struct Work {
+    pub port_reads: u64,
+    pub key_fields: u64,
+    pub scalar_guards: u64,
+    pub equality_guards: u64,
+    pub shared_symbol_guards: u64,
+}
+
+/// This view borrows only plain port bindings and the equality relation. It
+/// contains no Graph, Rc, interior counters, locks or copied canonical rows.
+#[derive(Clone, Copy)]
+pub struct ReadView<'a> {
+    parents: &'a Parents,
+    components: &'a [Option<composition::Component>],
+}
+
+pub struct KeyGuard<'a> {
+    view: ReadView<'a>,
+    target: &'a Stored,
+    table: usize,
+    key: &'a [Value],
+}
+
+impl KeyGuard<'_> {
+    /// A true result proves this candidate's key, not domain completeness or
+    /// permission to retire it. Hidden facts remain valid congruence peers.
+    pub fn evaluate(&self) -> (Result<bool>, Work) {
+        let mut work = Work::default();
+        let result = self
+            .view
+            .key_matches(self.target, self.table, self.key, &mut work);
+        (result, work)
+    }
+}
+
+impl ReadView<'_> {
+    pub fn read_port(&self, port: PortRef) -> Result<Value> {
+        self.components
+            .get(port.component as usize)
+            .and_then(Option::as_ref)
+            .and_then(|c| c.signals.get(port.symbol))
+            .copied()
+            .flatten()
+            .map(|id| Value::Eq(root(self.parents, id)))
+            .ok_or_else(|| "expired stable port".into())
+    }
+
+    fn field_matches(&self, field: &Field, value: &Value, work: &mut Work) -> Result<bool> {
+        match field {
+            Field::Scalar(stored) => Ok(stored == value),
+            Field::Port(port) => {
+                let current = self.read_port(*port)?;
+                work.port_reads += 1;
+                Ok(current == *value)
+            }
+        }
+    }
+
+    pub(super) fn key_matches(
+        &self,
+        target: &Stored,
+        table: usize,
+        key: &[Value],
+        work: &mut Work,
+    ) -> Result<bool> {
+        if target.table != table || target.fields.len() != key.len() + 1 {
+            return Ok(false);
+        }
+        for (field, value) in target.fields.iter().zip(key) {
+            work.key_fields += 1;
+            if !self.field_matches(field, value, work)? {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+
+    pub(super) fn condition_matches(
+        &self,
+        component: u32,
+        condition: &Condition,
+        target: &Stored,
+        source: &[Value],
+        work: &mut Work,
+    ) -> Result<bool> {
+        for &column in &condition.scalar_columns {
+            work.scalar_guards += 1;
+            if !self.field_matches(&target.fields[column], &source[column], work)? {
+                return Ok(false);
+            }
+        }
+        // The compiled condition's two symbols belong to this one component.
+        // Resolve its directory entry once, instead of twice per Eq guard.
+        let signals = &self
+            .components
+            .get(component as usize)
+            .and_then(Option::as_ref)
+            .ok_or("expired condition component")?
+            .signals;
+        for &[a, b] in &condition.equality_inputs {
+            if a == b {
+                work.shared_symbol_guards += 1;
+                continue;
+            }
+            work.equality_guards += 1;
+            let mut resolve = |symbol: usize| -> Result<u64> {
+                let id = signals
+                    .get(symbol)
+                    .copied()
+                    .flatten()
+                    .ok_or("expired stable port")?;
+                work.port_reads += 1;
+                Ok(root(self.parents, id))
+            };
+            if resolve(a)? != resolve(b)? {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+}
+
+impl Graph {
+    pub fn stable_port_reader(&self) -> Result<ReadView<'_>> {
+        if self.stable_ports.is_none() {
+            return Err("stable fields disabled".into());
+        }
+        Ok(ReadView {
+            parents: &self.parents,
+            components: &self.ownership.as_ref().unwrap().composition.components,
+        })
+    }
+
+    /// Bind a live candidate to a key already canonicalized in this read epoch,
+    /// as required by lookup_port_key. This is one candidate, not a lookup over
+    /// the complete domain. Rebuild the key after releasing the borrow for a
+    /// union; this descriptor cannot be retained across graph mutation.
+    pub fn stable_key_guard<'a>(
+        &'a self,
+        fact: FactRef,
+        table: usize,
+        key: &'a [Value],
+    ) -> Result<Option<KeyGuard<'a>>> {
+        let view = self.stable_port_reader()?;
+        let target = self
+            .cells
+            .get(&fact.cell)
+            .and_then(|c| c.facts.get(&fact.op))
+            .and_then(|s| s.ports.as_deref());
+        Ok(target.map(|target| KeyGuard {
+            view,
+            target,
+            table,
+            key,
+        }))
+    }
+
+    pub(super) fn record_guard_reads(&self, work: &Work) {
+        let stats = self.stable_ports.as_ref().unwrap();
+        stats
+            .port_reads
+            .set(stats.port_reads.get() + work.port_reads);
+        stats
+            .root_resolutions
+            .set(stats.root_resolutions.get() + work.port_reads);
+        stats
+            .key_field_comparisons
+            .set(stats.key_field_comparisons.get() + work.key_fields);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shared_multi_input_code_requires_every_equality_and_scalar_guard() {
+        let mut parents = Parents::default();
+        parents.insert(11, 10);
+        let components = vec![Some(composition::Component {
+            shape: 0,
+            frames: smallvec::smallvec![1],
+            live_facts: 2,
+            signals: vec![Some(10), Some(11), Some(20), Some(21), Some(30)],
+        })];
+        let condition = Condition {
+            sites: [0, 1],
+            equality_inputs: vec![[0, 1], [2, 3], [4, 4]],
+            scalar_columns: vec![0],
+            outputs: [0, 1],
+        };
+        let target = Stored {
+            table: 0,
+            fields: vec![Field::Scalar(Value::Int(7))],
+        };
+        let mut work = Work::default();
+        assert!(
+            !ReadView {
+                parents: &parents,
+                components: &components
+            }
+            .condition_matches(0, &condition, &target, &[Value::Int(8)], &mut work)
+            .unwrap()
+        );
+        assert_eq!(work.scalar_guards, 1);
+        assert_eq!(work.port_reads, 0);
+        let mut work = Work::default();
+        assert!(
+            !ReadView {
+                parents: &parents,
+                components: &components
+            }
+            .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
+            .unwrap()
+        );
+        assert_eq!(
+            (
+                work.equality_guards,
+                work.port_reads,
+                work.shared_symbol_guards
+            ),
+            (2, 4, 0)
+        );
+        parents.insert(21, 20);
+        let mut work = Work::default();
+        assert!(
+            ReadView {
+                parents: &parents,
+                components: &components
+            }
+            .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
+            .unwrap()
+        );
+        assert_eq!(
+            (
+                work.equality_guards,
+                work.port_reads,
+                work.shared_symbol_guards
+            ),
+            (2, 4, 1)
+        );
+    }
+
+    #[test]
+    fn compiled_conditions_and_bound_inputs_are_shared_by_scoped_workers() {
+        fn send_sync<T: Send + Sync>() {}
+        send_sync::<ReadView<'static>>();
+        send_sync::<KeyGuard<'static>>();
+        send_sync::<composition::conditions::Plan>();
+        let mut parents = Parents::default();
+        parents.insert(11, 10);
+        let components = vec![Some(composition::Component {
+            shape: 0,
+            frames: smallvec::smallvec![1],
+            live_facts: 2,
+            signals: vec![Some(10), Some(11)],
+        })];
+        let view = ReadView {
+            parents: &parents,
+            components: &components,
+        };
+        let condition = Condition {
+            sites: [0, 1],
+            equality_inputs: vec![[0, 1]],
+            scalar_columns: vec![],
+            outputs: [0, 1],
+        };
+        let target = Stored {
+            table: 0,
+            fields: vec![],
+        };
+        let barrier = std::sync::Barrier::new(3);
+        let answers = std::thread::scope(|scope| {
+            let mut workers = Vec::new();
+            for _ in 0..2 {
+                let (condition, target, barrier) = (&condition, &target, &barrier);
+                workers.push(scope.spawn(move || {
+                    barrier.wait();
+                    let mut work = Work::default();
+                    let result = view.condition_matches(0, condition, target, &[], &mut work);
+                    (std::thread::current().id(), result, work)
+                }));
+            }
+            barrier.wait();
+            workers
+                .into_iter()
+                .map(|w| w.join().unwrap())
+                .collect::<Vec<_>>()
+        });
+        assert_ne!(answers[0].0, answers[1].0);
+        for (_, result, work) in answers {
+            assert!(result.unwrap());
+            assert_eq!((work.equality_guards, work.port_reads), (1, 2));
+        }
+    }
+}

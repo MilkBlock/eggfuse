@@ -2,7 +2,7 @@
 //! cache or per-instance reverse graph is maintained. Each visit checks current
 //! fact liveness; the queue contains facts, not stale condition incarnations.
 use super::*;
-use composition::conditions::{Condition, Plan};
+use composition::conditions::Plan;
 
 #[derive(Default, Serialize)]
 pub(super) struct Stats {
@@ -149,8 +149,16 @@ impl Graph {
         }
         for candidate in candidates {
             let target = candidate.fact;
-            if self.dependency_table(Dependency::Fact(target)).is_some_and(|t|
-                self.ownership.as_ref().unwrap().pending.contains(t, &target)) {
+            if self
+                .dependency_table(Dependency::Fact(target))
+                .is_some_and(|t| {
+                    self.ownership
+                        .as_ref()
+                        .unwrap()
+                        .pending
+                        .contains(t, &target)
+                })
+            {
                 self.local_condition_stats().pending_sites += 1;
                 continue;
             }
@@ -172,15 +180,29 @@ impl Graph {
                 self.local_condition_stats().inactive_sites += 1;
                 continue;
             };
-            let Some(stored) = state.ports.clone() else {
+            let Some(stored) = state.ports.as_deref() else {
                 self.local_condition_stats().inactive_sites += 1;
                 continue;
             };
-            self.local_condition_stats().operator_guards += 1;
-            if stored.table != row.table {
-                continue;
-            }
-            if !self.local_condition_holds(frame.component, condition, &stored, row)? {
+            let mut work = guard::Work::default();
+            let matched = if stored.table != row.table {
+                Ok(false)
+            } else {
+                self.stable_port_reader()?.condition_matches(
+                    frame.component,
+                    condition,
+                    stored,
+                    &row.values,
+                    &mut work,
+                )
+            };
+            self.record_guard_reads(&work);
+            let stats = self.local_condition_stats();
+            stats.operator_guards += 1;
+            stats.scalar_guards += work.scalar_guards;
+            stats.equality_guards += work.equality_guards;
+            stats.shared_symbol_guards += work.shared_symbol_guards;
+            if !matched? {
                 continue;
             }
             self.local_condition_stats().completed_conditions += 1;
@@ -190,7 +212,7 @@ impl Graph {
             // interface, preserving visibility, receipts and ordered retirement.
             let state = &self.cells[&cell].facts[&op];
             return self
-                .read_stable_fact(target, state, &stored)
+                .read_stable_fact(target, state, state.ports.as_deref().unwrap())
                 .map(|r| Some(Some(r)));
         }
         Ok(Some(None))
@@ -306,37 +328,6 @@ impl Graph {
             .ports
             .as_ref()
             .map(|s| s.table)
-    }
-    fn local_condition_holds(
-        &mut self,
-        component: u32,
-        c: &Condition,
-        target: &Stored,
-        source: &Row,
-    ) -> Result<bool> {
-        for &column in &c.scalar_columns {
-            self.local_condition_stats().scalar_guards += 1;
-            if self.stable_field_value(&target.fields[column], true)? != source.values[column] {
-                return Ok(false);
-            }
-        }
-        for &[a, b] in &c.equality_inputs {
-            if a == b {
-                self.local_condition_stats().shared_symbol_guards += 1;
-                continue;
-            }
-            self.local_condition_stats().equality_guards += 1;
-            if self.read_port(PortRef {
-                component,
-                symbol: a,
-            })? != self.read_port(PortRef {
-                component,
-                symbol: b,
-            })? {
-                return Ok(false);
-            }
-        }
-        Ok(true)
     }
     pub(super) fn local_condition_report(&self) -> J {
         let Some(stats) = self

@@ -92,7 +92,8 @@ impl Graph {
             // Preserve source-order collision commits: an unprocessed changed
             // key is not a completed survivor yet. Ordinary constructor reads
             // still see every live exact candidate, including pending ones.
-            if completing.is_some() && self.ownership.as_ref().unwrap().pending.contains(table, &f) {
+            if completing.is_some() && self.ownership.as_ref().unwrap().pending.contains(table, &f)
+            {
                 stats
                     .pending_candidate_skips
                     .set(stats.pending_candidate_skips.get() + 1);
@@ -104,7 +105,12 @@ impl Graph {
         }
         Ok(None)
     }
-    pub(super) fn exact_port_candidate(&self, f: FactRef, table: usize, key: &[Value]) -> Result<Option<Row>> {
+    pub(super) fn exact_port_candidate(
+        &self,
+        f: FactRef,
+        table: usize,
+        key: &[Value],
+    ) -> Result<Option<Row>> {
         let stats = self.stable_ports.as_ref().unwrap();
         stats.key_candidates.set(stats.key_candidates.get() + 1);
         let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
@@ -113,16 +119,13 @@ impl Graph {
         let Some(row) = &state.ports else {
             return Ok(None);
         };
-        if row.table != table || row.fields.len() != key.len() + 1 {
+        let mut work = guard::Work::default();
+        let matched = self
+            .stable_port_reader()?
+            .key_matches(row, table, key, &mut work);
+        self.record_guard_reads(&work);
+        if !matched? {
             return Ok(None);
-        }
-        for (field, want) in row.fields.iter().zip(key) {
-            stats
-                .key_field_comparisons
-                .set(stats.key_field_comparisons.get() + 1);
-            if self.stable_field_value(field, true)? != *want {
-                return Ok(None);
-            }
         }
         self.read_stable_fact(f, state, row).map(Some)
     }

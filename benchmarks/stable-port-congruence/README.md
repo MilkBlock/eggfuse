@@ -34,9 +34,9 @@ phase does not establish completion of the objective.
 | Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance, publish and consume independent regions of the same Eq sort; no useful main-workload bypass, same-table independence still open |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; retention peaks reported; parallel and full-cost admission pending |
-| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
+| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Exact guards now use immutable Send + Sync views and local counters; mutable commits, publication ownership and worker scheduling remain open |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
-| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, recursive container sorts, source-union effects and shared result influence; bound accesses/writes and cheaper proof still pending |
+| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, source-union effects, shared influence wiring and compiled bound expressions; cheaper coverage/order proofs and useful parallel task grouping remain open |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
 boundary aliases, not merely a single-threaded queue. A single global union-find
@@ -1004,4 +1004,73 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/unique-publication-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/unique-publication-runtime benchmarks/stable-port-congruence/unique-publication-audit-manifest.json out/stable-port-congruence/unique-publication-final-audit
 python3 benchmarks/stable-port-congruence/collect-unique-publication.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Immutable guard evaluation
+
+The preceding run provides two useful constraints. Four Base overlaps cannot
+currently cross a source switch without an ordering proof, and speculative
+uniqueness checking adds work without removing waits. Inspecting the first
+rejected overlap also shows that a pending survivor may have a later FactRef
+than a newly changed peer. An existing stable target is therefore not a general
+permission to reorder the remaining chain. The conservative source fence stays.
+
+There is a separate implementation obstacle that does not require relaxing that
+fence: local guard evaluation borrowed mutable Graph only to resolve ports and
+update counters. The new `port_guard::ReadView` borrows the equality relation and
+plain component bindings. `KeyGuard` adds a borrowed live node and an already
+canonical key from the same read epoch. These types and shared condition plans
+are Send + Sync without unsafe implementations. They contain no Graph, Rc-owned
+packet, graph copy, canonical-row copy or shared mutable counters.
+
+Both real runtime paths now use this evaluator: `exact_port_candidate` for
+foreign/birth-index candidates and the local shared-condition loop. Candidate
+selection still checks liveness and pending status in order. Operator/scalar/Eq
+checks return their actual work in a local `Work` value; the coordinator folds
+that work into the existing Bake counters. Successful guards do not authorize
+retirement or establish domain completeness. The existing ordered commit and
+boundary checks retain those obligations.
+
+The compiler already establishes that both symbols of a local Eq guard belong
+to one composed component. The evaluator uses that fact to resolve the component
+once per condition, then reads its signal array directly. Local target-node Rc
+cloning is removed, and scalar guards compare borrowed values. No parallel
+speedup or constant-factor speedup is inferred from these code changes.
+
+Two worker fixtures exercise the actual new kernels. Two scoped threads share a
+condition and its bindings; three scoped threads evaluate descriptors borrowed
+from a live Graph, including rejected operator and scalar guards. They return
+separate counts and leave Graph counters unchanged. Multi-input conditions still
+require every equality; shared-symbol checks retain their shortcut. A new borrow
+observes an alias through the original PortRef, hidden peers remain eligible,
+and deletion rejects the expired instance. The Rust borrow prevents mutation
+while readers run. This establishes concurrent reading within a sealed epoch,
+not an asynchronous result protocol across graph mutation.
+
+The frozen sum-bits audit executes all three existing lanes for 1,428 Runs. Exact
+state/RHS/effective-write/resume/Spine/schedule hashes and **all deterministic audit
+counters** match `a64d43f1`. The pure lane still visits 18,080 key candidates,
+compares 35,321 fields and visits 611 local conditions; query/RHS waits remain
+six/four. Profiling clocks are excluded from counter equality and are not a timing
+gate. The workspace passes 299 tests (four ignored), sparse and non-sparse focused
+suites each pass 99, and the minimal compile check passes.
+
+The Executor still invokes these kernels serially. Actual parallel execution is
+verified only in the scoped worker fixtures. The next required work is to group
+useful jobs and connect persistent workers without copying Graph or scanning
+unrelated tables, retaining the source snapshot and ordered publications. Task
+preparation, dispatch, result storage, allocations and contention must be charged;
+small condition jobs are not automatically worthwhile parallel tasks.
+
+Reproduce with the same build environment, adding `--test read_guards` to the
+eight preceding focused suites and using `read-guards-` log prefixes for the
+workspace, sparse, non-sparse and minimal checks. Retain the previous
+`unique-publication-final-audit/results.json` for deterministic counter comparison.
+Build the standalone audit runtime separately from compiler tests:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/read-guards-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/read-guards-runtime benchmarks/stable-port-congruence/unique-publication-audit-manifest.json out/stable-port-congruence/read-guards-final-audit
+python3 benchmarks/stable-port-congruence/collect-read-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

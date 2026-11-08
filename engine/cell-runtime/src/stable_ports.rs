@@ -5,6 +5,8 @@
 use super::*;
 #[path = "local_port_conditions.rs"]
 mod conditions;
+#[path = "port_guard.rs"]
+pub mod guard;
 #[path = "port_keys.rs"]
 mod keys;
 #[path = "unique_port_publication.rs"]
