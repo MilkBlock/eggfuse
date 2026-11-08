@@ -1754,3 +1754,105 @@ fn complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts() {
     let mut native = egglog::EGraph::default();
     native.parse_and_run_program(None, source).unwrap();
 }
+
+#[cfg(feature = "iterative-bake")]
+#[test]
+fn completed_producer_receipt_does_not_require_a_matching_entry() {
+    use eggfuse_cell_runtime::{
+        compiler,
+        executor::Executor,
+        graph::Graph,
+        iterative::{Catalog, Limits},
+        program::Program,
+    };
+    use std::collections::BTreeSet;
+    let source = r#"
+(datatype E (N i64) (Start E) (Side i64) (Mark E) (Gateway E))
+(ruleset make) (ruleset consume)
+(rule ((Start x) (Side i)) ((Mark x) (Gateway x)) :ruleset make :name "producer")
+(rule ((Gateway x)) ((Mark x)) :ruleset consume :name "consumer")
+(Start (N 1)) (Start (N 2)) (Side 7)
+(run-schedule (seq (run make) (run consume)))
+(check (Mark (N 1)) (Mark (N 2)))
+"#;
+    let core = eggfuse_bake::device_frontend::core("producer-receipts", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let rules = p.artifact["recipe"]["rules"].as_array().unwrap();
+    let id = |name| {
+        rules
+            .iter()
+            .position(|r| r["metadata"]["name"] == name)
+            .unwrap()
+    };
+    let (producer, consumer) = (id("producer"), id("consumer"));
+    assert!(
+        p.multi_stage
+            .stage_entries
+            .iter()
+            .all(|(r, _, _)| *r != producer)
+    );
+    let profile = json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":[{"edge":[0,0,consumer,0],"visits":2}]});
+    let leaves = compiler::bake_stage_blocks(&p, &profile, &p, 1).unwrap();
+    assert_eq!(leaves["entries"].as_array().unwrap().len(), 1);
+    let mut raw = p.artifact.clone();
+    raw["spine_blocks"] = leaves;
+    let seed = Program::parse(raw.clone()).unwrap();
+    let mut plan = Catalog::seed_with_roots(&seed, Limits::default(), &[producer]).unwrap();
+    assert_eq!(plan["schema"], "eggfuse-iterative/v2");
+    let publication = rules[producer]["effects"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|o| o["call"]["table"] == "Gateway")
+        .unwrap();
+    plan["joins"] = json!([{"left":1,"output":publication,"right":0}]);
+    Catalog::emit_congruence_handoffs(&seed, &mut plan).unwrap();
+    raw["iterative_bake"] = plan.clone();
+    let execute = |p| {
+        let mut e = Executor::new(Graph::new(p).unwrap(), false);
+        e.execute_until(None).unwrap();
+        e
+    };
+    let base = execute(p);
+    let fast = execute(Program::parse(raw.clone()).unwrap());
+    let mut a = vec![];
+    let mut b = vec![];
+    base.graph.write_export(&mut a).unwrap();
+    fast.graph.write_export(&mut b).unwrap();
+    assert_eq!(a, b);
+    assert_eq!(fast.graph.stats.handoff_closed, 2);
+    assert_eq!(fast.graph.stats.handoff_lets, 2);
+    let mut learned = Catalog::seed_with_roots(&seed, Limits::default(), &[producer]).unwrap();
+    Catalog::emit_congruence_handoffs(&seed, &mut learned).unwrap();
+    let mut training = raw.clone();
+    training["iterative_bake"] = learned;
+    let mut e = Executor::new(
+        Graph::new(Program::parse(training).unwrap()).unwrap(),
+        false,
+    );
+    e.collect_iterative_pairs();
+    e.execute_until(None).unwrap();
+    let choices = e
+        .graph
+        .program
+        .iterative
+        .select(&e.graph.program, e.iterative_training());
+    assert!(
+        choices
+            .iter()
+            .any(|(j, e)| j.left == 1 && j.right == 0 && e.predicted_key_reads == 2)
+    );
+    assert!(Catalog::seed_with_roots(&seed, Limits::default(), &[producer, producer]).is_err());
+    assert!(Catalog::seed_with_roots(&seed, Limits::default(), &[seed.rules.len()]).is_err());
+    raw["iterative_bake"]["joins"][0]["right"] = json!(1);
+    assert!(
+        Program::parse(raw.clone()).is_err(),
+        "a completed producer is not a matching entry"
+    );
+    raw["iterative_bake"] = plan;
+    raw["iterative_bake"]["schema"] = "eggfuse-iterative/v1".into();
+    assert!(Program::parse(raw).is_err());
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, source).unwrap();
+}

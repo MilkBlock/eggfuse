@@ -55,3 +55,8 @@ measured extra reuse on the current narrow leaf catalog is still small.
 extends opt-in leaf admission to dependent table ports and primitive guards.
 Wider measured coverage supplies 864 additional complete Raytrace RHSs; the
 report separately records the limited extra reuse from complete stage lowering.
+
+[Completed producer receipt nodes](benchmarks/producer-receipts/README.md)
+let typed source executions supply cross-Run proofs without a matching entry.
+An exact compiler fact index makes the larger candidate audit practical;
+measured extra receipt reuse has not improved application throughput.

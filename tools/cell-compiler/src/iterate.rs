@@ -32,6 +32,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "--max-units",
             "--candidate-slots",
             "--min-support",
+            "--producer-profile",
         ],
     )?;
     let path = opts
@@ -75,7 +76,49 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         "rhs-congruence" => (true, true),
         _ => return Err("unknown iterative Bake objective".into()),
     };
-    let mut plan = Catalog::seed(&seed, limits)?;
+    let mut plan = if let Some(path) = opts.get("--producer-profile") {
+        if !congruence {
+            return Err("producer receipts require the rhs-congruence objective".into());
+        }
+        let profile = super::read(Path::new(path))?;
+        if profile["schema"] != "eggfuse-spine-shapes/v1"
+            || profile["program_sha256"] != seed.artifact["sha256"]
+        {
+            return Err("producer profile belongs to another seed program".into());
+        }
+        let mut roots = std::collections::BTreeSet::new();
+        for prefix in profile["prefixes"]
+            .as_array()
+            .ok_or("missing producer prefixes")?
+        {
+            let [r, op, consumer, pivot]: [usize; 4] =
+                serde_json::from_value(prefix["edge"].clone())?;
+            let source = seed.rules.get(r).ok_or("unknown producer rule")?;
+            let table = match seed.templates[source.template].ops.get(op) {
+                Some(eggfuse_cell_runtime::program::Op::Let(
+                    _,
+                    eggfuse_cell_runtime::program::Call::Table(t),
+                    _,
+                ))
+                | Some(eggfuse_cell_runtime::program::Op::Set(t, _, _)) => *t,
+                _ => return Err("producer profile references a nonpublication operation".into()),
+            };
+            let target = seed.rules.get(consumer).and_then(|r| r.query.get(pivot));
+            if !matches!(target.map(|a| &a.call), Some(eggfuse_cell_runtime::program::Call::Table(t)) if *t == table)
+            {
+                return Err("producer profile references incompatible tables".into());
+            }
+            if prefix["visits"].as_u64().ok_or("invalid producer visits")? > 0 {
+                roots.insert(r);
+            }
+        }
+        let mut plan =
+            Catalog::seed_with_roots(&seed, limits, &roots.into_iter().collect::<Vec<_>>())?;
+        plan["producer_profile_sha256"] = artifact_digest(&profile).into();
+        plan
+    } else {
+        Catalog::seed(&seed, limits)?
+    };
     let out = Path::new(output);
     fs::create_dir(out)?;
     let mut reference = None;

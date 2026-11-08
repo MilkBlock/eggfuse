@@ -2,12 +2,16 @@
 //! facts are donors. Acquisition of a live fact remains a runtime obligation.
 use crate::{
     graph::{Dependency, FactRef},
+    iterative::Entry,
     known_results::Source,
     program::*,
     value::Value,
 };
 use serde::Serialize;
-use std::{collections::BTreeMap, rc::Rc};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    rc::Rc,
+};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) enum Donor {
@@ -42,6 +46,8 @@ struct Fact {
 struct Symbols {
     parents: Vec<usize>,
     literals: BTreeMap<Value, usize>,
+    indexed_roots: BTreeSet<usize>,
+    key_epoch: usize,
 }
 impl Symbols {
     fn fresh(&mut self) -> usize {
@@ -58,6 +64,10 @@ impl Symbols {
     fn equal(&mut self, a: usize, b: usize) {
         let a = self.root(a);
         let b = self.root(b);
+        // Fresh output aliases normally do not change any existing fact key.
+        if a != b && self.indexed_roots.contains(&a.max(b)) {
+            self.key_epoch += 1;
+        }
         self.parents[a.max(b)] = a.min(b);
     }
     fn arg(&mut self, a: &Arg, slots: &[usize]) -> usize {
@@ -73,6 +83,7 @@ impl Symbols {
             }
         }
     }
+    #[cfg(test)]
     fn same_key(&self, a: &[usize], b: &[usize]) -> bool {
         a.len() == b.len() && a.iter().zip(b).all(|(&x, &y)| self.root(x) == self.root(y))
     }
@@ -102,16 +113,49 @@ impl Symbols {
         }
     }
 }
-pub(crate) fn derive(
-    p: &Program,
-    path: &[(Option<usize>, (usize, usize))],
-    congruence: bool,
-) -> Vec<Reuse> {
+/// Exact canonical keys, retaining the most recent donor like the reverse scan.
+/// This is a compiler lookup index, not another equality solver.
+#[derive(Default)]
+struct FactIndex {
+    keys: BTreeMap<(usize, Vec<usize>), usize>,
+    indexed: usize,
+    epoch: usize,
+}
+impl FactIndex {
+    fn clear(&mut self, symbols: &mut Symbols) {
+        self.keys.clear();
+        self.indexed = 0;
+        symbols.indexed_roots.clear();
+    }
+    fn find(
+        &mut self,
+        symbols: &mut Symbols,
+        facts: &[Fact],
+        table: usize,
+        key: &[usize],
+    ) -> Option<usize> {
+        if self.epoch != symbols.key_epoch {
+            self.clear(symbols);
+        }
+        for (i, f) in facts.iter().enumerate().skip(self.indexed) {
+            let key = f.key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
+            symbols.indexed_roots.extend(&key);
+            self.keys.insert((f.table, key), i);
+        }
+        self.indexed = facts.len();
+        self.epoch = symbols.key_epoch;
+        self.keys
+            .get(&(table, key.iter().map(|&s| symbols.root(s)).collect()))
+            .copied()
+    }
+}
+pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: bool) -> Vec<Reuse> {
     if path.len() < 2 {
         return vec![];
     }
     let mut symbols = Symbols::default();
     let mut facts = Vec::<Fact>::new();
+    let mut index = FactIndex::default();
     let mut published = Vec::new();
     let mut program = vec![];
     for (stage, &(_, (rid, pivot))) in path.iter().enumerate() {
@@ -120,9 +164,13 @@ pub(crate) fn derive(
         let mut slots = (0..t.sorts.len())
             .map(|_| symbols.fresh())
             .collect::<Vec<_>>();
-        for (arg, col) in r.query[pivot].args.iter().zip(published.drain(..)) {
-            let into = symbols.arg(arg, &slots);
-            symbols.equal(into, col);
+        if let Some(pivot) = pivot {
+            for (arg, col) in r.query[pivot].args.iter().zip(published.drain(..)) {
+                let into = symbols.arg(arg, &slots);
+                symbols.equal(into, col);
+            }
+        } else {
+            debug_assert!(stage == 0 && published.is_empty());
         }
         for (atom, a) in r.query.iter().enumerate() {
             let Call::Table(table) = a.call else { continue };
@@ -135,11 +183,8 @@ pub(crate) fn derive(
                 .iter()
                 .map(|a| symbols.arg(a, &slots))
                 .collect::<Vec<_>>();
-            if let Some(f) = facts
-                .iter()
-                .rev()
-                .find(|f| f.table == table && symbols.same_key(&f.key, &key))
-            {
+            if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
+                let f = &facts[i];
                 symbols.equal(result, f.result)
             }
             facts.push(Fact {
@@ -168,6 +213,7 @@ pub(crate) fn derive(
                 }
                 Op::Hide(t, ..) => {
                     facts.retain(|f| f.table != *t);
+                    index.clear(&mut symbols);
                     continue;
                 }
                 Op::Let(dst, Call::Table(t), a) => (*t, a, Arg::Slot(*dst)),
@@ -189,11 +235,8 @@ pub(crate) fn derive(
             if !p.tables[table].constructor || !p.tables[table].virtual_fact {
                 continue;
             }
-            if let Some(f) = facts
-                .iter()
-                .rev()
-                .find(|f| f.table == table && symbols.same_key(&f.key, &key))
-            {
+            if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
+                let f = &facts[i];
                 if f.stage != stage
                     && stage + 1 == path.len()
                     && !p.known_results.static_skip.get(rid).is_some_and(|s| s[op])
@@ -308,24 +351,20 @@ pub(crate) struct Terminal {
     pub reuse: Vec<Reuse>,
     pub complete: bool,
 }
-pub(crate) fn terminal(
-    p: &Program,
-    path: &[(Option<usize>, (usize, usize))],
-    congruence: bool,
-) -> Terminal {
+pub(crate) fn terminal(p: &Program, path: &[(Option<usize>, Entry)], congruence: bool) -> Terminal {
     let reuse = derive(p, path, congruence);
     let r = path.last().unwrap().1.0;
     let complete = is_complete(p, r, &reuse, congruence);
     Terminal { reuse, complete }
 }
 
-type Entry = (usize, usize);
 #[derive(Clone, Debug, Default)]
 pub(crate) struct Switch {
     reuse_results: bool,
     pub(crate) congruence: bool,
     nodes: Vec<Node>,
     by_rule: Vec<Vec<Option<usize>>>,
+    roots: Vec<Option<usize>>,
     initial: Vec<usize>,
     leaves: BTreeMap<Entry, usize>,
     pub exports: Vec<Vec<Donor>>,
@@ -444,7 +483,12 @@ impl Switch {
             s.dedup();
         }
         let mut by_rule = vec![vec![]; p.rules.len()];
+        let mut roots = vec![None; p.rules.len()];
         for (&(rid, pivot), &leaf) in leaves {
+            let Some(pivot) = pivot else {
+                roots[rid] = Some(leaf);
+                continue;
+            };
             let entries = &mut by_rule[rid];
             entries.resize(entries.len().max(pivot + 1), None);
             entries[pivot] = Some(leaf);
@@ -454,6 +498,7 @@ impl Switch {
             congruence,
             nodes,
             by_rule,
+            roots,
             initial,
             leaves: leaves.clone(),
             exports,
@@ -464,6 +509,10 @@ impl Switch {
         self.by_rule.get(r)?.get(p).copied().flatten()
     }
     pub(crate) fn unique_root(&self, rule: usize, require_supply: bool) -> Option<usize> {
+        if let Some(leaf) = self.roots.get(rule).copied().flatten() {
+            let pc = self.initial[leaf];
+            return (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc);
+        }
         let mut leaves = self.by_rule.get(rule)?.iter().flatten();
         let leaf = *leaves.next()?;
         if leaves.next().is_some() {
@@ -512,4 +561,62 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
                     || (congruence && matches!(o, Op::Union(..)))
                     || reuse.iter().any(|x| x.op == i)
             })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn indexed_donors_match_reverse_scan_after_unions_appends_and_deletions() {
+        let mut symbols = Symbols::default();
+        for _ in 0..64 {
+            symbols.fresh();
+        }
+        let mut facts = vec![];
+        let mut index = FactIndex::default();
+        let mut state = 7u64;
+        let mut next = || {
+            state = state.wrapping_mul(6364136223846793005).wrapping_add(1);
+            (state >> 32) as usize
+        };
+        for turn in 0..600 {
+            let table = next() % 5;
+            let key = vec![next() % 64, next() % 64];
+            if turn % 7 == 0 {
+                symbols.equal(next() % 64, next() % 64);
+            }
+            if turn % 23 == 0 {
+                facts.retain(|f: &Fact| f.table != table);
+                index.clear(&mut symbols);
+            }
+            if turn % 3 != 0 {
+                facts.push(Fact {
+                    stage: turn,
+                    rule: 0,
+                    source: Donor::Effect(turn),
+                    table,
+                    key: key.clone(),
+                    result: next() % 64,
+                });
+            }
+            // Appended facts may be unindexed when a subsequent union arrives.
+            if turn % 11 == 0 {
+                symbols.equal(next() % 64, next() % 64);
+            }
+            let found = index.find(&mut symbols, &facts, table, &key);
+            let expected = facts
+                .iter()
+                .rposition(|f| f.table == table && symbols.same_key(&f.key, &key));
+            assert_eq!(found, expected, "turn {turn}");
+            for f in &facts {
+                let found = index.find(&mut symbols, &facts, f.table, &f.key);
+                assert_eq!(
+                    found,
+                    facts
+                        .iter()
+                        .rposition(|g| g.table == f.table && symbols.same_key(&g.key, &f.key))
+                );
+            }
+        }
+    }
 }

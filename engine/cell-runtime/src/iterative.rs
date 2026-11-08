@@ -1,5 +1,5 @@
-//! Frozen, append-only binary continuations. Leaves refer to validated
-//! spine-block entries. IDs are scoped to their seed catalog and recipe.
+//! Frozen, append-only binary continuations. Leaves refer to validated matching
+//! entries or completed typed producers. IDs are scoped to the catalog/recipe.
 use crate::{program::*, spine_blocks::Block};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as J, json};
@@ -8,7 +8,9 @@ use std::{
     rc::Rc,
 };
 pub type Id = usize;
-type Entry = (usize, usize);
+// None denotes a completed producer, which is never a matching entry. Some
+// serializes as the old pivot number, preserving existing catalog artifacts.
+pub(crate) type Entry = (usize, Option<usize>);
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct Join {
     pub left: Id,
@@ -58,7 +60,7 @@ struct Unit {
     first: Entry,
     last: Entry,
     path: Vec<(Option<usize>, Entry)>,
-    terminal: Rc<Block>,
+    terminal: Option<Rc<Block>>,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Catalog {
@@ -99,17 +101,29 @@ impl State {
 }
 impl Catalog {
     pub fn seed(p: &Program, limits: Limits) -> Result<J> {
+        Self::seed_with_roots(p, limits, &[])
+    }
+    /// Roots witness a fully executed typed rule; they do not promise that its
+    /// query can be matched from one anchor. Only matching leaves can be a
+    /// continuation's right operand.
+    pub fn seed_with_roots(p: &Program, limits: Limits, roots: &[usize]) -> Result<J> {
         limits.validate()?;
         let seed = &p.artifact["spine_blocks"];
         let entries = seed["entries"]
             .as_array()
             .ok_or("warm start requires validated spine blocks")?;
-        if entries.is_empty() || entries.len() > limits.total {
+        if entries.is_empty() || entries.len().saturating_add(roots.len()) > limits.total {
             return Err("seed size outside catalog budget".into());
         }
-        Ok(
-            json!({"schema":"eggfuse-iterative/v1","recipe":p.artifact["recipe"]["sha256"],"seed":crate::checksum::artifact_digest(seed),"limits":limits,"joins":[]}),
-        )
+        if roots.iter().any(|&r| r >= p.rules.len()) || roots.windows(2).any(|w| w[0] >= w[1]) {
+            return Err("producer roots must be unique, sorted typed rule indices".into());
+        }
+        let mut plan = json!({"schema":"eggfuse-iterative/v1","recipe":p.artifact["recipe"]["sha256"],"seed":crate::checksum::artifact_digest(seed),"limits":limits,"joins":[]});
+        if !roots.is_empty() {
+            plan["schema"] = "eggfuse-iterative/v2".into();
+            plan["producer_roots"] = json!(roots);
+        }
+        Ok(plan)
     }
     pub(crate) fn parse(p: &Program, raw: &J) -> Result<Self> {
         if raw.is_null() {
@@ -117,7 +131,14 @@ impl Catalog {
         }
         let limits: Limits =
             serde_json::from_value(raw["limits"].clone()).map_err(|e| e.to_string())?;
-        let seed = Self::seed(p, limits)?;
+        let roots: Vec<usize> = match raw["schema"].as_str() {
+            Some("eggfuse-iterative/v1") if raw.get("producer_roots").is_none() => vec![],
+            Some("eggfuse-iterative/v2") => {
+                serde_json::from_value(raw["producer_roots"].clone()).map_err(|e| e.to_string())?
+            }
+            _ => return Err("unsupported iterative catalog policy".into()),
+        };
+        let seed = Self::seed_with_roots(p, limits, &roots)?;
         for k in ["schema", "recipe", "seed"] {
             if raw[k] != seed[k] {
                 return Err("iterative catalog source mismatch".into());
@@ -130,11 +151,11 @@ impl Catalog {
         for e in array(&p.artifact["spine_blocks"]["entries"])? {
             let entry = (
                 e["consumer"].as_u64().unwrap() as usize,
-                e["pivot"].as_u64().unwrap() as usize,
+                Some(e["pivot"].as_u64().unwrap() as usize),
             );
             let terminal = p
                 .spine_blocks
-                .get(entry.0, entry.1)
+                .get(entry.0, entry.1.unwrap())
                 .ok_or("invalid leaf entry")?;
             let path = vec![(None, entry)];
             let id = s.units.len();
@@ -144,7 +165,19 @@ impl Catalog {
                 first: entry,
                 last: entry,
                 path,
-                terminal,
+                terminal: Some(terminal),
+            });
+        }
+        for rule in roots {
+            let entry = (rule, None);
+            let path = vec![(None, entry)];
+            s.leaves.insert(entry, s.units.len());
+            s.paths.insert(path.clone());
+            s.units.push(Unit {
+                first: entry,
+                last: entry,
+                path,
+                terminal: None,
             });
         }
         for j in array(&raw["joins"])? {
@@ -213,8 +246,8 @@ impl Catalog {
     pub(crate) fn history_depth(&self) -> usize {
         self.switch.depth
     }
-    /// A fully executed source rule can seed a unique admitted leaf. Keep this
-    /// restricted to v2 roots whose receipts a compiled continuation demands.
+    /// A fully executed rule seeds its producer node, or a unique legacy leaf.
+    /// Keep this restricted to v2 receipts a compiled continuation demands.
     /// Training also observes unspecialized roots, so their first continuation
     /// can enter the candidate set before any catalog demands those receipts.
     pub(crate) fn root_state(&self, rule: usize, run: usize, collect_pairs: bool) -> Option<State> {
@@ -254,7 +287,8 @@ impl Catalog {
             Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
             _ => return None,
         };
-        if !matches!(p.rules[r.first.0].query[r.first.1].call,Call::Table(t) if t==table) {
+        let pivot = r.first.1?;
+        if !matches!(p.rules[r.first.0].query[pivot].call,Call::Table(t) if t==table) {
             return None;
         }
         let mut path = l.path.clone();
@@ -337,9 +371,9 @@ impl Catalog {
                     .count();
                 state.stack.drain(..state.stack.len() - keep);
             }
-            return Some(self.units[unit].terminal.clone());
+            return self.units[unit].terminal.clone();
         }
-        let Some(&id) = self.leaves.get(&(rule, pivot)) else {
+        let Some(&id) = self.leaves.get(&(rule, Some(pivot))) else {
             *state = State::default();
             return None;
         };
@@ -388,7 +422,7 @@ impl Catalog {
             })
             .count();
         state.stack.drain(..state.stack.len() - keep);
-        Some(self.units[right.unit].terminal.clone())
+        self.units[right.unit].terminal.clone()
     }
     pub fn entries(&self) -> Vec<J> {
         self.units
@@ -608,12 +642,12 @@ mod tests {
         });
         let mut c = Catalog::default();
         for i in 0..4 {
-            c.leaves.insert((i, 0), i);
+            c.leaves.insert((i, Some(0)), i);
             c.units.push(Unit {
-                first: (i, 0),
-                last: (i, 0),
-                terminal: terminal.clone(),
-                path: vec![(None, (i, 0))],
+                first: (i, Some(0)),
+                last: (i, Some(0)),
+                terminal: Some(terminal.clone()),
+                path: vec![(None, (i, Some(0)))],
             });
         }
         for (l, r) in [(0, 1), (2, 3), (4, 5)] {
@@ -625,7 +659,7 @@ mod tests {
                 first: c.units[l].first,
                 last: c.units[r].last,
                 path,
-                terminal: terminal.clone(),
+                terminal: Some(terminal.clone()),
             };
             c.jumps.insert(
                 Join {
@@ -657,7 +691,7 @@ mod tests {
     fn tail_counters_remain_bounded_and_credit_only_complete_entries() {
         let mut c = Catalog::default();
         c.limits.candidates = 1;
-        c.leaves.insert((0, 0), 0);
+        c.leaves.insert((0, Some(0)), 0);
         let mut s = State {
             stack: vec![Segment {
                 unit: 0,

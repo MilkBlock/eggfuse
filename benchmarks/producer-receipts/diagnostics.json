@@ -1,0 +1,133 @@
+{
+  "scope": "diagnostic compiler wall times, not isolated speed benchmarks; short test/build commands overlapped parts of these runs",
+  "unindexed_audit": {
+    "status": "interrupted",
+    "elapsed_seconds": 435.19919657707214,
+    "completed_round_checkpoints": 1,
+    "reason": "unpruned audit exceeded practical iteration time; retained checkpoint and sampled own process before stopping",
+    "command": "out/producer-receipts/compiler iterate --program out/leaf-completion/staged-learn-raytrace-rhs-congruence/program.json --producer-profile out/producer-receipts/profile-raytrace/spine-shapes.json --output out/producer-receipts/audit-learn-raytrace --objective rhs-congruence --rounds 6 --max-depth 8 --max-nodes 16 --max-units 512 --new-per-round 16 --candidate-slots 131072 --min-support 2"
+  },
+  "indexed_audit": {
+    "elapsed_seconds": 326.07149599999997,
+    "checkpoints": [
+      {
+        "line": "round 0: 288 blocks, 16 new, 603468 direct origins",
+        "seconds": 19.031787875
+      },
+      {
+        "line": "round 1: 304 blocks, 12 new, 603468 direct origins",
+        "seconds": 157.72208775000001
+      },
+      {
+        "line": "round 2: 316 blocks, 0 new, 603468 direct origins",
+        "seconds": 296.41561166699995
+      }
+    ],
+    "old_first_round_plan_identical": true,
+    "prior_semantic_stamps_match": true,
+    "command": [
+      "out/producer-receipts/indexed-compiler",
+      "iterate",
+      "--program",
+      "out/leaf-completion/staged-learn-raytrace-rhs-congruence/program.json",
+      "--producer-profile",
+      "out/producer-receipts/profile-raytrace/spine-shapes.json",
+      "--output",
+      "out/producer-receipts/indexed-audit-learn-raytrace",
+      "--objective",
+      "rhs-congruence",
+      "--rounds",
+      "6",
+      "--max-depth",
+      "8",
+      "--max-nodes",
+      "16",
+      "--max-units",
+      "512",
+      "--new-per-round",
+      "16",
+      "--candidate-slots",
+      "131072",
+      "--min-support",
+      "2"
+    ]
+  },
+  "sampling": {
+    "main_thread_samples": 1665,
+    "derive_top_of_stack": 1521,
+    "sample_file_sha256": "3d69563aaaedc7b8891f9ce6cb41b26b6430e809331ef34a79223523f09c7428"
+  },
+  "binaries": {
+    "compiler": "6f81c1e8919450f7f368e618fe01a7a0e3cb7dcb4c8240c4715ee9326776cf19",
+    "indexed-compiler": "341a889ff541304f1708284698407dca6c864ed4f2b2657ea85b07de45d2a807",
+    "runtime": "8e44d7b526f5e82fdabd48f63eab224b7dda7b3f4f7adab856698663425e88ce",
+    "indexed-runtime": "28ceb775e9e9228eb25ed445580381d0ce1801882325ef21447eb80ab11bbe58"
+  },
+  "old_certificate_check": {
+    "old_linear_certificate_loaded": true,
+    "graph_matches_parent": true,
+    "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+    "stats": {
+      "bindings": 3785196,
+      "cells_created": 704559,
+      "constructor_requests": 2062640,
+      "constructor_reused": 1311590,
+      "decoded_rows": 867701,
+      "delivery_events": 3146119,
+      "direct_bindings": 0,
+      "direct_candidates": 0,
+      "distinct_delivery_events": 2798026,
+      "empty_frames_released": 102635,
+      "function_updates": 1676336,
+      "handoff_attempts": 64796,
+      "handoff_closed": 18016,
+      "handoff_closed_fallback": 5740,
+      "handoff_deep": 0,
+      "handoff_lets": 34063,
+      "handoff_missing": 0,
+      "handoff_noop_unions": 17363,
+      "handoff_sets": 17363,
+      "handoff_stale": 13370,
+      "idle_scheduled_runs": 7551,
+      "key_operations": 0,
+      "logical_facts_created": 820439,
+      "merge_calls": 2961959,
+      "merge_contract_calls": {
+        "lattice": 1922368,
+        "ordered": 1033842,
+        "unique": 5749
+      },
+      "merge_port_reads": 0,
+      "merge_program_calls": 107161,
+      "merge_program_constructs": 106103,
+      "merge_program_operations": 106151,
+      "native_free_join_calls": 0,
+      "native_table_reads": 0,
+      "native_table_writes": 0,
+      "register_answers": 2452435,
+      "register_seeds": 1937670,
+      "repair_collisions": 161769,
+      "repair_key_hash_changes": 224478,
+      "repaired_dependencies": 643609,
+      "residual_candidates": 4490637,
+      "rhs_frames_avoided": 1822751,
+      "scalar_merge_calls": 2847545,
+      "scalar_old_projection": 925177,
+      "scalar_unchanged": 1742162,
+      "shared_negative_hits": 379,
+      "shared_point_hits": 24221,
+      "shared_point_requests": 122926,
+      "single_writes": 2301668,
+      "sum_index_reads": 20416,
+      "sum_index_skips": 80843,
+      "transient_writes": 1017798,
+      "union_requests": 573277,
+      "unions": 226523
+    }
+  },
+  "mismatched_profile": {
+    "mismatched_profile_rejected": true,
+    "no_output_published": true,
+    "stderr": "Error: \"producer profile belongs to another seed program\"\n"
+  }
+}

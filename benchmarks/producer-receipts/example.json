@@ -1,0 +1,781 @@
+{
+  "scope": "standalone Cell CPU learned source path; switch hits are not committed mutations or successful receipt reuses",
+  "source": {
+    "effects": [
+      {
+        "args": [
+          {
+            "slot": 2
+          },
+          {
+            "slot": 3
+          }
+        ],
+        "call": {
+          "table": "Get"
+        },
+        "kind": "set",
+        "op": "set",
+        "value": {
+          "slot": 0
+        }
+      }
+    ],
+    "footprint": {
+      "equality_invalidates": [
+        "Add-All-Gets",
+        "Add-Gets",
+        "AddContext",
+        "Alloc",
+        "Append",
+        "Arg",
+        "BodyContainsExpr",
+        "BodyContainsListExpr",
+        "Bop",
+        "Call",
+        "CellSpineApplied119",
+        "CellSpineApplied181",
+        "CellSpineApplied183",
+        "CellSpineApplied23",
+        "CellSpineApplied25",
+        "CellSpineApplied30",
+        "CellSpineApplied308",
+        "CellSpineApplied309",
+        "CellSpineApplied31",
+        "CellSpineApplied336",
+        "CellSpineApplied337",
+        "CellSpineApplied34",
+        "CellSpineApplied35",
+        "CellSpineApplied355",
+        "CellSpineApplied356",
+        "CellSpineApplied36",
+        "CellSpineApplied37",
+        "CellSpineApplied38",
+        "CellSpineApplied382",
+        "CellSpineApplied383",
+        "CellSpineApplied384",
+        "CellSpineApplied385",
+        "CellSpineApplied386",
+        "CellSpineApplied387",
+        "CellSpineApplied388",
+        "CellSpineApplied389",
+        "CellSpineApplied39",
+        "CellSpineApplied390",
+        "CellSpineApplied391",
+        "CellSpineApplied392",
+        "CellSpineApplied393",
+        "CellSpineApplied394",
+        "CellSpineApplied395",
+        "CellSpineApplied396",
+        "CellSpineApplied397",
+        "CellSpineApplied403",
+        "CellSpineApplied48",
+        "CellSpineApplied49",
+        "CellSpineApplied55",
+        "CellSpineApplied56",
+        "CellSpineApplied564",
+        "CellSpineApplied566",
+        "CellSpineApplied567",
+        "CellSpineApplied568",
+        "CellSpineApplied575",
+        "CellSpineApplied579",
+        "CellSpineApplied589",
+        "CellSpineApplied590",
+        "CellSpineApplied591",
+        "CellSpineApplied592",
+        "CellSpineApplied597",
+        "CellSpineApplied598",
+        "CellSpineApplied599",
+        "CellSpineApplied600",
+        "CellSpineApplied601",
+        "CellSpineApplied602",
+        "CellSpineApplied603",
+        "CellSpineApplied605",
+        "CellSpineApplied652",
+        "CellSpineApplied653",
+        "CellSpineApplied654",
+        "CellSpineApplied655",
+        "CellSpineApplied656",
+        "CellSpineApplied657",
+        "CellSpineApplied659",
+        "CellSpineApplied661",
+        "CellSpineApplied662",
+        "CellSpineApplied70",
+        "CellSpineApplied71",
+        "CellSpineApplied72",
+        "CellSpineView0",
+        "CellSpineView1",
+        "CellSpineView10",
+        "CellSpineView11",
+        "CellSpineView12",
+        "CellSpineView13",
+        "CellSpineView14",
+        "CellSpineView15",
+        "CellSpineView16",
+        "CellSpineView17",
+        "CellSpineView18",
+        "CellSpineView19",
+        "CellSpineView2",
+        "CellSpineView20",
+        "CellSpineView21",
+        "CellSpineView22",
+        "CellSpineView27",
+        "CellSpineView29",
+        "CellSpineView3",
+        "CellSpineView30",
+        "CellSpineView31",
+        "CellSpineView32",
+        "CellSpineView33",
+        "CellSpineView4",
+        "CellSpineView5",
+        "CellSpineView6",
+        "CellSpineView7",
+        "CellSpineView8",
+        "Concat",
+        "Cons",
+        "Const",
+        "ContextOf",
+        "DebugExpr",
+        "DelayedDropUnion",
+        "DelayedSubstUnion",
+        "DemandDontAlias",
+        "DoWhile",
+        "DontAlias",
+        "DropAt",
+        "DropAtInternal",
+        "ES",
+        "Empty",
+        "ExpectType",
+        "Expr-size",
+        "ExprIsPure",
+        "ExprIsResolved",
+        "ExprIsValid",
+        "ExprSet-insert",
+        "ExtractedExpr",
+        "ExtractedExprCache",
+        "Function",
+        "Get",
+        "HasArgType",
+        "HasType",
+        "IVTAnalysisRes",
+        "IVTNewInputsAnalysis",
+        "IVTNewInputsAnalysisDemand",
+        "IVTNewInputsAnalysisImpl",
+        "If",
+        "IfNode",
+        "IfSubst",
+        "InIf",
+        "InLoop",
+        "InSwitch",
+        "InlinedCall",
+        "InvCodeMotionCandidate",
+        "IsIsEven",
+        "ListExpr-ith",
+        "LoopIsFinite",
+        "LoopNumItersGuess",
+        "NTZIterations",
+        "NoAlias",
+        "Not-Just-Concat",
+        "PointsToCells",
+        "PointsToCellsAtIter",
+        "PointsToExpr",
+        "PotentialExtractedExpr",
+        "Program",
+        "Single",
+        "SubTuple",
+        "Subst",
+        "Switch",
+        "TermSubst",
+        "ToSubsumeIf",
+        "Top",
+        "TupleRemoveAt",
+        "Uop",
+        "___GeneratedFreshTable",
+        "___GeneratedFreshTable1",
+        "___GeneratedFreshTable2",
+        "___GeneratedFreshTable3",
+        "___GeneratedFreshTable4",
+        "___GeneratedFreshTable5",
+        "hi-bound",
+        "is-inv-Expr",
+        "is-inv-ListExpr",
+        "is-inv-ListExpr-helper",
+        "leading-Expr",
+        "lo-bound",
+        "lsr-inv",
+        "to-hoist",
+        "to-hoist-size",
+        "tuple-length"
+      ],
+      "operations": [
+        "set"
+      ],
+      "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+      "read_tables": [
+        "Add-Gets",
+        "Single"
+      ],
+      "union_sorts": [
+        "Expr"
+      ],
+      "write_tables": [
+        "Get"
+      ]
+    },
+    "interface": {
+      "correlation": "one complete binding row; slot equality and literals remain constraints",
+      "guaranteed_atoms": [],
+      "primitive_atoms": [],
+      "residual_atoms": [
+        0,
+        1
+      ],
+      "rows": [
+        {
+          "atom": 0,
+          "columns": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "key_columns": [
+            0
+          ],
+          "table": "Single",
+          "witness": "complete visible row"
+        },
+        {
+          "atom": 1,
+          "columns": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "key_columns": [
+            0,
+            1,
+            2
+          ],
+          "table": "Add-Gets",
+          "witness": "complete visible row"
+        }
+      ]
+    },
+    "metadata": {
+      "name": "(rule ((Add-Gets orig (Single e) n))\n      ((union (Get orig n) e))\n        :ruleset always-run )",
+      "seminaive": true,
+      "source_set": "always-run"
+    },
+    "query": [
+      {
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          }
+        ],
+        "call": {
+          "table": "Single"
+        }
+      },
+      {
+        "args": [
+          {
+            "slot": 2
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 3
+          },
+          {
+            "slot": 4
+          }
+        ],
+        "call": {
+          "table": "Add-Gets"
+        }
+      }
+    ],
+    "slots": [
+      {
+        "definition": "query",
+        "name": "e",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "@Single11",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "orig",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "n",
+        "sort": {
+          "kind": "i64",
+          "name": "i64"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "@Add-Gets9",
+        "sort": {
+          "kind": "eq",
+          "name": "___AddGetsSort"
+        }
+      }
+    ]
+  },
+  "consumer": {
+    "effects": [
+      {
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          }
+        ],
+        "call": {
+          "table": "Get"
+        },
+        "dst": 3,
+        "kind": "construct",
+        "op": "let",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "args": [
+          {
+            "slot": 3
+          }
+        ],
+        "call": {
+          "table": "Single"
+        },
+        "dst": 4,
+        "kind": "construct",
+        "op": "let",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          },
+          {
+            "literal": 1,
+            "sort": {
+              "kind": "i64",
+              "name": "i64"
+            }
+          }
+        ],
+        "call": {
+          "table": "SubTuple"
+        },
+        "dst": 5,
+        "kind": "construct",
+        "op": "let",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "args": [
+          {
+            "slot": 4
+          },
+          {
+            "slot": 5
+          }
+        ],
+        "kind": "union",
+        "op": "union"
+      }
+    ],
+    "footprint": {
+      "equality_invalidates": [
+        "Add-All-Gets",
+        "Add-Gets",
+        "AddContext",
+        "Alloc",
+        "Append",
+        "Arg",
+        "BodyContainsExpr",
+        "BodyContainsListExpr",
+        "Bop",
+        "Call",
+        "CellSpineApplied119",
+        "CellSpineApplied181",
+        "CellSpineApplied183",
+        "CellSpineApplied23",
+        "CellSpineApplied25",
+        "CellSpineApplied30",
+        "CellSpineApplied308",
+        "CellSpineApplied309",
+        "CellSpineApplied31",
+        "CellSpineApplied336",
+        "CellSpineApplied337",
+        "CellSpineApplied34",
+        "CellSpineApplied35",
+        "CellSpineApplied355",
+        "CellSpineApplied356",
+        "CellSpineApplied36",
+        "CellSpineApplied37",
+        "CellSpineApplied38",
+        "CellSpineApplied382",
+        "CellSpineApplied383",
+        "CellSpineApplied384",
+        "CellSpineApplied385",
+        "CellSpineApplied386",
+        "CellSpineApplied387",
+        "CellSpineApplied388",
+        "CellSpineApplied389",
+        "CellSpineApplied39",
+        "CellSpineApplied390",
+        "CellSpineApplied391",
+        "CellSpineApplied392",
+        "CellSpineApplied393",
+        "CellSpineApplied394",
+        "CellSpineApplied395",
+        "CellSpineApplied396",
+        "CellSpineApplied397",
+        "CellSpineApplied403",
+        "CellSpineApplied48",
+        "CellSpineApplied49",
+        "CellSpineApplied55",
+        "CellSpineApplied56",
+        "CellSpineApplied564",
+        "CellSpineApplied566",
+        "CellSpineApplied567",
+        "CellSpineApplied568",
+        "CellSpineApplied575",
+        "CellSpineApplied579",
+        "CellSpineApplied589",
+        "CellSpineApplied590",
+        "CellSpineApplied591",
+        "CellSpineApplied592",
+        "CellSpineApplied597",
+        "CellSpineApplied598",
+        "CellSpineApplied599",
+        "CellSpineApplied600",
+        "CellSpineApplied601",
+        "CellSpineApplied602",
+        "CellSpineApplied603",
+        "CellSpineApplied605",
+        "CellSpineApplied652",
+        "CellSpineApplied653",
+        "CellSpineApplied654",
+        "CellSpineApplied655",
+        "CellSpineApplied656",
+        "CellSpineApplied657",
+        "CellSpineApplied659",
+        "CellSpineApplied661",
+        "CellSpineApplied662",
+        "CellSpineApplied70",
+        "CellSpineApplied71",
+        "CellSpineApplied72",
+        "CellSpineView0",
+        "CellSpineView1",
+        "CellSpineView10",
+        "CellSpineView11",
+        "CellSpineView12",
+        "CellSpineView13",
+        "CellSpineView14",
+        "CellSpineView15",
+        "CellSpineView16",
+        "CellSpineView17",
+        "CellSpineView18",
+        "CellSpineView19",
+        "CellSpineView2",
+        "CellSpineView20",
+        "CellSpineView21",
+        "CellSpineView22",
+        "CellSpineView27",
+        "CellSpineView29",
+        "CellSpineView3",
+        "CellSpineView30",
+        "CellSpineView31",
+        "CellSpineView32",
+        "CellSpineView33",
+        "CellSpineView4",
+        "CellSpineView5",
+        "CellSpineView6",
+        "CellSpineView7",
+        "CellSpineView8",
+        "Concat",
+        "Cons",
+        "Const",
+        "ContextOf",
+        "DebugExpr",
+        "DelayedDropUnion",
+        "DelayedSubstUnion",
+        "DemandDontAlias",
+        "DoWhile",
+        "DontAlias",
+        "DropAt",
+        "DropAtInternal",
+        "ES",
+        "Empty",
+        "ExpectType",
+        "Expr-size",
+        "ExprIsPure",
+        "ExprIsResolved",
+        "ExprIsValid",
+        "ExprSet-insert",
+        "ExtractedExpr",
+        "ExtractedExprCache",
+        "Function",
+        "Get",
+        "HasArgType",
+        "HasType",
+        "IVTAnalysisRes",
+        "IVTNewInputsAnalysis",
+        "IVTNewInputsAnalysisDemand",
+        "IVTNewInputsAnalysisImpl",
+        "If",
+        "IfNode",
+        "IfSubst",
+        "InIf",
+        "InLoop",
+        "InSwitch",
+        "InlinedCall",
+        "InvCodeMotionCandidate",
+        "IsIsEven",
+        "ListExpr-ith",
+        "LoopIsFinite",
+        "LoopNumItersGuess",
+        "NTZIterations",
+        "NoAlias",
+        "Not-Just-Concat",
+        "PointsToCells",
+        "PointsToCellsAtIter",
+        "PointsToExpr",
+        "PotentialExtractedExpr",
+        "Program",
+        "Single",
+        "SubTuple",
+        "Subst",
+        "Switch",
+        "TermSubst",
+        "ToSubsumeIf",
+        "Top",
+        "TupleRemoveAt",
+        "Uop",
+        "___GeneratedFreshTable",
+        "___GeneratedFreshTable1",
+        "___GeneratedFreshTable2",
+        "___GeneratedFreshTable3",
+        "___GeneratedFreshTable4",
+        "___GeneratedFreshTable5",
+        "hi-bound",
+        "is-inv-Expr",
+        "is-inv-ListExpr",
+        "is-inv-ListExpr-helper",
+        "leading-Expr",
+        "lo-bound",
+        "lsr-inv",
+        "to-hoist",
+        "to-hoist-size",
+        "tuple-length"
+      ],
+      "operations": [
+        "construct",
+        "union"
+      ],
+      "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+      "read_tables": [
+        "Get"
+      ],
+      "union_sorts": [
+        "Expr"
+      ],
+      "write_tables": [
+        "Get",
+        "Single",
+        "SubTuple"
+      ]
+    },
+    "interface": {
+      "correlation": "one complete binding row; slot equality and literals remain constraints",
+      "guaranteed_atoms": [],
+      "primitive_atoms": [],
+      "residual_atoms": [
+        0
+      ],
+      "rows": [
+        {
+          "atom": 0,
+          "columns": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ],
+          "key_columns": [
+            0,
+            1
+          ],
+          "table": "Get",
+          "witness": "complete visible row"
+        }
+      ]
+    },
+    "metadata": {
+      "name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+      "seminaive": true,
+      "source_set": "always-run"
+    },
+    "query": [
+      {
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 2
+          }
+        ],
+        "call": {
+          "table": "Get"
+        }
+      }
+    ],
+    "slots": [
+      {
+        "definition": "query",
+        "name": "expr",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "i",
+        "sort": {
+          "kind": "i64",
+          "name": "i64"
+        }
+      },
+      {
+        "definition": "query",
+        "name": "@Get60",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": 0,
+        "name": "@Get61",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": 1,
+        "name": "@Single43",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      },
+      {
+        "definition": 2,
+        "name": "@SubTuple17",
+        "sort": {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      }
+    ]
+  },
+  "unit": {
+    "id": 291,
+    "expanded": [
+      [
+        null,
+        [
+          60,
+          null
+        ]
+      ],
+      [
+        0,
+        [
+          143,
+          0
+        ]
+      ]
+    ],
+    "depth": 2,
+    "nodes": 2,
+    "terminal": {
+      "reuse": [
+        {
+          "equal_output": false,
+          "op": 1,
+          "back": 1,
+          "rule": 60,
+          "donor": {
+            "Query": 0
+          }
+        }
+      ],
+      "complete": false
+    }
+  },
+  "observed_switch_hits": 2469,
+  "program_sha256": "2ccd6448b48b60abd8f788daa69dce773c4f3c0b09183d871063095f332119cf"
+}
