@@ -5,6 +5,8 @@
 use super::*;
 #[path = "port_keys.rs"]
 mod keys;
+#[path = "local_port_conditions.rs"]
+mod conditions;
 
 /// A shared symbolic address. Component IDs are monotonic and never recycled;
 /// a retired address is rejected rather than rebound to a later instance.
@@ -42,6 +44,8 @@ pub struct Stored {
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
     keys: bool,
+    #[serde(skip)]
+    conditions: Option<conditions::Stats>,
     key_lookups: Counter<u64>,
     key_candidates: Counter<u64>,
     key_field_comparisons: Counter<u64>,
@@ -326,7 +330,7 @@ impl Graph {
             })
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
-            "stats":stats,"live_stable_nodes":nodes,"live_port_fields":ports,
+            "stats":stats,"local_conditions":self.local_condition_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
             "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})

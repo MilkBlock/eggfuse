@@ -1,6 +1,8 @@
 //! Checked Entry substitutions compose immutable port programs. Runtime frame
 //! locations are instance parameters, never part of a shared shape's identity.
 use super::*;
+#[path = "ownership_conditions.rs"]
+pub mod conditions;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -110,6 +112,9 @@ pub struct Plan {
     pub active_rules: Vec<bool>,
     #[serde(skip)]
     pub shapes: Vec<Rc<Shape>>,
+    /// Re-derived from checked wiring, never trusted from a profile.
+    #[serde(skip)]
+    pub conditions: Vec<Rc<conditions::Plan>>,
     pub fragments: Vec<Fragment>,
     pub transitions: Vec<(Key, usize)>,
     pub max_frames: usize,
@@ -220,6 +225,7 @@ impl Plan {
             .collect();
         let mut plan = Self {
             sources,
+            conditions: vec![],
             active_rules: vec![false; p.rules.len()],
             shapes: programs
                 .iter()
@@ -298,6 +304,12 @@ impl Plan {
             plan.active_rules[key.hop.rule] = true;
         }
         Ok(plan)
+    }
+    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
+        if self.conditions.is_empty() {
+            self.conditions = self.shapes.iter()
+                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs))).collect();
+        }
     }
     fn substitutions(
         &self,

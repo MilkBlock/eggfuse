@@ -85,6 +85,15 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
+        for field in ["attempts", "boundary_signals", "boundary_sites", "condition_visits",
+            "inactive_sites", "pending_sites", "operator_guards", "scalar_guards", "equality_guards", "shared_symbol_guards"] {
+            let key = format!("stable_ports/local_conditions/stats/{field}");
+            let conditions = &report["stable_ports"]["local_conditions"];
+            let value = if conditions["enabled"] == true {
+                conditions["stats"][field].as_u64().ok_or_else(|| format!("missing local condition work {field}"))?
+            } else { 0 };
+            work.insert(key, value);
+        }
         Ok(Self(work))
     }
     pub fn savings(&self, trial: &Self) -> (i128, J) {

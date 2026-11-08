@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "port_keys": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--port-keys"]
+    },
+    "local_conditions": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--local-congruence"]
+    }
+  }
+}

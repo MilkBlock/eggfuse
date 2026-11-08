@@ -129,8 +129,11 @@ impl Graph {
     pub(in crate::graph) fn complete_port_key(&mut self, f: FactRef, row: Row) -> Result<()> {
         self.dirty_facts[row.table].remove(&f);
         self.stable_ports.as_mut().unwrap().equality_completions += 1;
-        let found =
-            self.lookup_port_key(row.table, &row.values[..row.values.len() - 1], Some(f))?;
+        let found = if let Some(found) = self.local_port_collision(f, &row)? {
+            found
+        } else {
+            self.lookup_port_key(row.table, &row.values[..row.values.len() - 1], Some(f))?
+        };
         if let Some(other) = &found {
             self.enqueue_union(
                 row.values.last().unwrap().clone(),

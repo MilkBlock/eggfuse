@@ -34,10 +34,14 @@ fn compare(src: &str) -> Executor {
     let p = baked(src);
     let mut old = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
     let mut new = Executor::new(Graph::new_with_stable_ports(p.clone()).unwrap(), true);
-    let mut keyed = Executor::new(Graph::new_with_port_keys(p).unwrap(), true);
+    let mut keyed = Executor::new(Graph::new_with_port_keys(p.clone()).unwrap(), true);
+    let mut local = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
     old.execute().unwrap();
     new.execute().unwrap();
     keyed.execute().unwrap();
+    local.execute().unwrap();
+    assert_execution_equal(&old, &local);
+    local.graph.ownership_report();
     assert_eq!(old.initial_audit, keyed.initial_audit);
     assert_eq!(old.snapshots, keyed.snapshots);
     assert_eq!(old.binding_audit, keyed.binding_audit);
@@ -93,6 +97,143 @@ fn compare(src: &str) -> Executor {
         .parse_and_run_program(None, src)
         .unwrap();
     new
+}
+
+fn assert_execution_equal(a: &Executor, b: &Executor) {
+    assert_eq!(a.initial_audit, b.initial_audit);
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    assert_eq!(a.steps.len(), b.steps.len());
+    for (a, b) in a.steps.iter().zip(&b.steps) {
+        for k in [
+            "ordinal",
+            "ruleset",
+            "path",
+            "iterations",
+            "epoch",
+            "logical_matches",
+            "executed_bindings",
+            "changed",
+        ] {
+            assert_eq!(a[k], b[k], "local conditions: {k}");
+        }
+    }
+}
+
+fn local_compare(src: &str) -> Executor {
+    let p = baked(src);
+    let mut old = Executor::new(Graph::new_with_port_keys(p.clone()).unwrap(), true);
+    let mut new = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
+    old.execute().unwrap();
+    new.execute().unwrap();
+    assert_execution_equal(&old, &new);
+    new.graph.ownership_report();
+    egglog::EGraph::default()
+        .parse_and_run_program(None, src)
+        .unwrap();
+    new
+}
+
+#[test]
+fn local_conditions_require_all_inputs_before_cascading_to_outputs() {
+    let src = r#"
+(datatype E (N i64) (Pair E E) (Wrap E))
+(ruleset build) (ruleset first) (ruleset second)
+(rule ((= a (N 0)) (= b (N 1)) (= c (N 2)) (= d (N 3)))
+      ((Wrap (Pair a c)) (Wrap (Pair b d))) :ruleset build)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset first)
+(rule ((= c (N 2)) (= d (N 3))) ((union c d)) :ruleset second)
+(N 0) (N 1) (N 2) (N 3)
+(run-schedule (seq (run build) (run first) (run second)))
+"#;
+    let p = baked(src);
+    let pair = p.tables.iter().position(|t| t.name == "Pair").unwrap();
+    let wrap = p.tables.iter().position(|t| t.name == "Wrap").unwrap();
+    let mut e = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
+    e.execute_until(Some(2)).unwrap();
+    assert_eq!(e.graph.witness_count(pair), 2);
+    assert_eq!(e.graph.witness_count(wrap), 2);
+    assert_eq!(
+        e.graph.stable_port_report()["local_conditions"]["stats"]["completed_conditions"],
+        0
+    );
+    e.execute().unwrap();
+    assert_eq!(e.graph.witness_count(pair), 1);
+    assert_eq!(e.graph.witness_count(wrap), 1);
+    assert_eq!(
+        e.graph.stable_port_report()["local_conditions"]["stats"]["completed_conditions"],
+        2
+    );
+    let reference = local_compare(src);
+    assert_execution_equal(&reference, &e);
+}
+
+const LOCAL_STAGES: &str = r#"
+(datatype E (N i64) (F E) (G E) (Tag E) (Noise E))
+(ruleset build) (ruleset extend) (ruleset merge)
+(rule ((= a (N 0)) (= b (N 1))) ((F a) (Tag b)) :ruleset build)
+(rule ((= f (F a)) (= tag (Tag b))) ((G f) (G (F b))) :ruleset extend)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run build) (run extend) (run merge)))
+(check (= (G (F (N 0))) (G (F (N 1)))))
+"#;
+
+#[test]
+fn shared_conditions_cross_stage_and_ignore_unrelated_nodes() {
+    let plain = local_compare(LOCAL_STAGES);
+    let noise = (10..110)
+        .map(|n| format!("(Noise (N {n}))\n"))
+        .collect::<String>();
+    let noisy =
+        local_compare(&LOCAL_STAGES.replace("(N 0) (N 1)\n", &format!("(N 0) (N 1)\n{noise}")));
+    let a = plain.graph.stable_port_report()["local_conditions"].clone();
+    let b = noisy.graph.stable_port_report()["local_conditions"].clone();
+    assert!(
+        a["stats"]["cross_stage_conditions"].as_u64().unwrap() > 0,
+        "{a}"
+    );
+    assert_eq!(a["stats"], b["stats"]);
+}
+
+#[test]
+fn foreign_constructor_keeps_the_boundary_path_live() {
+    let e = local_compare(
+        r#"
+(datatype E (N i64) (F E))
+(ruleset build) (ruleset merge)
+(rule ((= a (N n))) ((F a)) :ruleset build)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run build) (run merge)))
+(check (= (F (N 0)) (F (N 1))))
+"#,
+    );
+    let stats = e.graph.stable_port_report()["local_conditions"]["stats"].clone();
+    assert!(stats["open_fallbacks"].as_u64().unwrap() > 0, "{stats}");
+}
+
+#[test]
+fn condition_budget_falls_back_instead_of_truncating_coverage() {
+    let rhs = (1..17).map(|n| format!("(F (N {n})) ")).collect::<String>();
+    let src = format!(
+        r#"
+(datatype E (N i64) (F E))
+(ruleset build) (ruleset merge)
+(rule ((= a (N 0))) ((F a) {rhs}) :ruleset build)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
+(N 0)
+(run-schedule (seq (run build) (run merge)))
+(check (= (F (N 0)) (F (N 1))))
+"#
+    );
+    let e = local_compare(&src);
+    let report = e.graph.stable_port_report()["local_conditions"].clone();
+    assert!(report["uncovered_shapes"].as_u64().unwrap() > 0, "{report}");
+    assert!(
+        report["stats"]["uncovered_shapes"].as_u64().unwrap() > 0,
+        "{report}"
+    );
 }
 
 #[test]

@@ -38,6 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --cell-ownership (persistent cross-stage scalar Cell completion)");
         println!("  --stable-ports (Cell ownership with stable stored equality fields)");
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
+        println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "sparse-cells")]
         println!("  --entry-publications (shared entry nodes own producer expressions)");
@@ -94,7 +95,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -117,7 +118,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let expressions = args.iter().any(|x| x == "--congruence-cells");
     let cells = args.iter().any(|x| x == "--repair-cells");
     let local = args.iter().any(|x| x == "--local-unions");
-    let port_keys = args.iter().any(|x| x == "--port-keys");
+    let local_conditions = args.iter().any(|x| x == "--local-congruence");
+    let port_keys = local_conditions || args.iter().any(|x| x == "--port-keys");
     let stable_ports = port_keys || args.iter().any(|x| x == "--stable-ports");
     let ownership = stable_ports || args.iter().any(|x| x == "--cell-ownership");
     if ownership && (local || cells || digest || expressions) {
@@ -158,6 +160,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if ownership { graph.use_cell_ownership()?; }
     if stable_ports { graph.use_stable_port_fields()?; }
     if port_keys { graph.use_port_constructor_matching()?; }
+    if local_conditions { graph.use_local_port_conditions()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     #[cfg(feature = "sparse-cells")]
