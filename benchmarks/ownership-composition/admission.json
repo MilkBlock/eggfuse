@@ -1,0 +1,42 @@
+{
+  "scope": "sum-bits only; normal release builds, one warmup and interleaved fresh processes",
+  "fast_baseline_revision": "8fffff65",
+  "fast_baseline_args": ["--repair-ports", "--entry-publications"],
+  "rule": "semantic audit passes and upper 95% paired bootstrap ratio is below 1 for both inference and process wall versus ordinary fast baseline",
+  "accepted_as_acceleration": false,
+  "against_fast_baseline": {
+    "inference_seconds": {
+      "candidate_median": 0.0249335,
+      "baseline_median": 0.021959583,
+      "median_ratio": 1.135426843032493,
+      "paired_bootstrap_95pct_ratio": [1.1233280105425365, 1.1568468732239119]
+    },
+    "process_wall_seconds": {
+      "candidate_median": 0.18421787499999986,
+      "baseline_median": 0.14877358299999965,
+      "median_ratio": 1.2382431832672893,
+      "paired_bootstrap_95pct_ratio": [1.216052764167908, 1.2505468393538604]
+    }
+  },
+  "against_same_binary_control": {
+    "inference_seconds": {
+      "candidate_median": 0.0249335,
+      "baseline_median": 0.021879458,
+      "median_ratio": 1.1395849019660358,
+      "paired_bootstrap_95pct_ratio": [1.1290346863254108, 1.1586077223667972]
+    },
+    "load_setup_inference_seconds": {
+      "candidate_median": 0.12121191699999999,
+      "baseline_median": 0.109077333,
+      "median_ratio": 1.1112475311437986,
+      "paired_bootstrap_95pct_ratio": [1.1000054434369149, 1.1258560504703412]
+    },
+    "process_wall_seconds": {
+      "candidate_median": 0.18421787499999986,
+      "baseline_median": 0.16774295799999983,
+      "median_ratio": 1.098215252648639,
+      "paired_bootstrap_95pct_ratio": [1.086727984781507, 1.1093601398867041]
+    }
+  },
+  "caveats": ["small sample and one workload; no generalization to larger workloads", "process wall includes parsing, validation, setup, export and report diagnostics", "archived fast baseline lacks separate load_seconds; never treat its setup as loading", "operation counts are diagnostic evidence, not time-calibrated credit"]
+}

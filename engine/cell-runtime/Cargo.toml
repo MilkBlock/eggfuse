@@ -6,6 +6,7 @@ edition = "2024"
 [features]
 sparse-cells = ["iterative-bake"]
 storage-metrics = ["dep:libc"]
+allocation-metrics = []
 keeper-proof = ["rhs-work-audit", "rhs-locals"]
 rhs-locals = ["iterative-bake"]
 rhs-work-audit = ["structural-depth"]

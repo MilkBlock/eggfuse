@@ -1,0 +1,18 @@
+{
+  "scope": "compiler only; compact recipes with cold runtime shape materialization",
+  "compiler_sha256": "15274ea215f7669095b7bd291fae98a930b528f6b118ae9faa8930f72fd81628",
+  "coverage": {
+    "scope": "typed compiler coverage, no workload execution or timing",
+    "templates": 983,
+    "covered_bodies": 1459,
+    "covered_tables": 241,
+    "entry_ports": 1454,
+    "shared_port_programs": 376,
+    "template_signal_steps": 3720,
+    "composition_initial_shapes": 376,
+    "composition_transitions": 4096,
+    "composition_input_sources": 1202
+  },
+  "program_bytes": 6363405,
+  "markers_bytes": 526542
+}

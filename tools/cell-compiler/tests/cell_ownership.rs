@@ -305,8 +305,8 @@ fn symbolic_program_is_shared_and_untrusted_artifacts_are_rechecked() {
         .position(|m| !m.program.signals.is_empty())
         .unwrap();
     raw["ownership_markers"] = p.cell_ownership.artifact(&p);
-    raw["ownership_markers"]["plan"]["markers"][marker]["program"]["signals"][0][0]["columns"] =
-        json!([999]);
+    raw["ownership_markers"]["plan"]["programs"][p.cell_ownership.markers[marker].program_id]["signals"]
+        [0][0]["columns"] = json!([999]);
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
     let err = Program::parse(raw).unwrap_err();
@@ -326,6 +326,21 @@ fn symbolic_program_is_shared_and_untrusted_artifacts_are_rechecked() {
 }
 
 #[test]
+fn composition_substitutions_are_rechecked_even_with_a_valid_checksum() {
+    let p = program(STAGES);
+    let mut raw = p.artifact.clone();
+    raw["ownership_markers"] = p.cell_ownership.artifact(&p);
+    let substitutions =
+        &mut raw["ownership_markers"]["plan"]["composition"]["transitions"][0][0]["substitutions"];
+    assert!(!substitutions.as_array().unwrap().is_empty());
+    substitutions[0][1] = json!(999);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let err = Program::parse(raw).unwrap_err();
+    assert!(err.contains("ownership marker"), "{err}");
+}
+
+#[test]
 fn deletion_and_recreation_do_not_collapse_distinct_result_signals() {
     let e = compare(
         r#"
@@ -341,4 +356,99 @@ fn deletion_and_recreation_do_not_collapse_distinct_result_signals() {
     let r = e.graph.ownership_report();
     assert_eq!(r["stats"]["unchanged_port_checks"], 0);
     assert_eq!(r["stats"]["boundary_body_reads"], 0);
+}
+
+#[test]
+fn checked_entries_share_slots_across_all_stages_of_identical_chains() {
+    let initial = Graph::new_with_cell_ownership(program(STAGES))
+        .unwrap()
+        .ownership_report();
+    let e = compare(STAGES);
+    let r = e.graph.ownership_report();
+    let s = &r["stats"];
+    assert_eq!(
+        s["boundary_live"], initial["stats"]["boundary_live"],
+        "the closed chains must add no cross-template root bindings beyond their imported inputs"
+    );
+    assert_eq!(
+        s["components_live"], 2,
+        "one component per independent seed"
+    );
+    assert!(s["composition_substituted_ports"].as_u64().unwrap() >= 6);
+    assert!(s["composition_baked_hits"].as_u64().unwrap() > 0);
+    assert!(
+        s["composition_cache_hits"].as_u64().unwrap()
+            > s["composition_shape_builds"].as_u64().unwrap()
+    );
+    println!("COMPOSITION_EVIDENCE {}", r);
+}
+
+#[test]
+fn component_keeps_a_deleted_producer_port_alive_for_later_external_union() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(ruleset a) (ruleset b) (ruleset erase) (ruleset merge) (ruleset read)
+(rule ((= x (N 0))) ((F x)) :ruleset a)
+(rule ((= f (F x)) (= y (N 1))) ((G f)) :ruleset b)
+(rule ((= x (N 0))) ((delete (F x))) :ruleset erase)
+(rule ((= g (G x)) (= y (N 1))) ((union x y)) :ruleset merge)
+(rule ((= g (G x))) ((H g)) :ruleset read)
+(N 0) (N 1)
+(run-schedule (seq (run a) (run b) (run erase) (run merge) (run read)))
+"#,
+    );
+    let r = e.graph.ownership_report();
+    assert!(
+        r["stats"]["composition_substituted_ports"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert_eq!(r["stats"]["unchanged_port_checks"], 0);
+}
+
+#[test]
+fn dynamically_aliased_inputs_merge_ordered_slices_without_duplicate_field_work() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (Pair E E) (Both E E) (After E))
+(ruleset a) (ruleset merge) (ruleset read)
+(rule ((= p (Pair x y))) ((Both x y)) :ruleset a)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(rule ((= b (Both x y))) ((After b)) :ruleset read)
+(N 0) (Pair (N 1) (N 1))
+(run-schedule (seq (run a) (run merge) (run read)))
+"#,
+    );
+    let r = e.graph.ownership_report();
+    assert!(r["stats"]["coalesced_slice_steps"].as_u64().unwrap() > 0);
+    assert_eq!(r["stats"]["port_checks"], r["stats"]["changed_ports"]);
+    assert!(r["stats"]["dispatch_heap_pops"].as_u64().unwrap() > 0);
+}
+
+#[test]
+fn composition_capacity_cuts_keep_external_notifications_complete() {
+    let mut src = String::from("(datatype E (N i64)");
+    for i in 0..20 {
+        src.push_str(&format!(" (F{i} E)"));
+    }
+    src.push_str(")\n(ruleset merge)\n(N 0) (N 1)\n");
+    for i in 0..20 {
+        src.push_str(&format!(
+            "(ruleset r{i})\n(rule ((= x (N n))) ((F{i} x)) :ruleset r{i})\n"
+        ));
+    }
+    src.push_str(
+        "(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)\n(run-schedule (seq",
+    );
+    for i in 0..20 {
+        src.push_str(&format!(" (run r{i})"));
+    }
+    src.push_str(" (run merge)))\n(check (= (F19 (N 0)) (F19 (N 1))))\n");
+    let e = compare(&src);
+    let r = e.graph.ownership_report();
+    assert!(r["stats"]["composition_capacity_cuts"].as_u64().unwrap() > 0);
+    assert_eq!(r["stats"]["boundary_body_reads"], 0);
+    assert_eq!(r["stats"]["port_checks"], r["stats"]["changed_ports"]);
 }

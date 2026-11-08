@@ -28,7 +28,10 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         "templates":p.cell_ownership.markers.len(),"covered_bodies":p.cell_ownership.markers.iter().map(|m|m.bodies.iter().filter(|x|**x).count()).sum::<usize>(),
         "covered_tables":p.cell_ownership.tables.iter().filter(|x|**x).count(),"entry_ports":p.cell_ownership.entries.iter().map(Vec::len).sum::<usize>(),
         "shared_port_programs":p.cell_ownership.markers.iter().map(|m|std::rc::Rc::as_ptr(&m.program)).collect::<std::collections::BTreeSet<_>>().len(),
-        "template_signal_steps":p.cell_ownership.markers.iter().flat_map(|m|&m.program.signals).map(Vec::len).sum::<usize>()}),
+        "template_signal_steps":p.cell_ownership.markers.iter().flat_map(|m|&m.program.signals).map(Vec::len).sum::<usize>(),
+        "composition_initial_shapes":p.cell_ownership.composition.shapes.len(),
+        "composition_transitions":p.cell_ownership.composition.transitions.len(),
+        "composition_input_sources":p.cell_ownership.composition.sources.iter().map(Vec::len).sum::<usize>()}),
     )?;
     Ok(())
 }

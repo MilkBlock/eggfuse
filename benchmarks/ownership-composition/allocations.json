@@ -1,0 +1,28 @@
+{
+  "scope": "allocator request accounting during execute only; separate diagnostic build; no timing claims",
+  "runtime_sha256": "24456b67f4d66d20eac5cfc4abbde604303105eaab8074c0b38669364d897d60",
+  "lanes": {
+    "control": {
+      "alloc_calls": 116981,
+      "free_calls": 89441,
+      "live_bytes_after": 142941943,
+      "live_bytes_before": 136809919,
+      "peak_live_requested_bytes": 143463098,
+      "realloc_calls": 18727,
+      "released_bytes": 20883054,
+      "requested_bytes": 27015078,
+      "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+    },
+    "composed": {
+      "alloc_calls": 174940,
+      "free_calls": 105012,
+      "live_bytes_after": 157331221,
+      "live_bytes_before": 148313465,
+      "peak_live_requested_bytes": 157797949,
+      "realloc_calls": 25409,
+      "released_bytes": 22442798,
+      "requested_bytes": 31460554,
+      "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+    }
+  }
+}

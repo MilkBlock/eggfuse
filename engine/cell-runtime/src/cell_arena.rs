@@ -71,6 +71,9 @@ impl Cells {
     pub fn values(&self) -> impl Iterator<Item = &Cell> {
         self.records.iter().map(|(_, c)| c)
     }
+    pub fn iter(&self) -> impl Iterator<Item = (&u32, &Cell)> {
+        self.records.iter().map(|(id, c)| (id, c))
+    }
     pub fn len(&self) -> usize {
         self.records.len()
     }

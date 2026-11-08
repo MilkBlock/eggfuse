@@ -11,6 +11,7 @@ pub struct PortProgram {
     pub signals: Vec<Vec<Step>>,
     /// Recipe result slot -> signal. This is an address, never an equality proof.
     pub native: BTreeMap<usize, usize>,
+    pub slots: Vec<Option<usize>>,
     /// Source-ordered union instructions, evaluated only when their RHS runs.
     pub unions: Vec<Option<[Arg; 2]>>,
 }
@@ -101,17 +102,19 @@ impl PortProgram {
                 .into_iter()
                 .map(|(slot, symbol)| (slot, names[&symbols.root(symbol)]))
                 .collect(),
+            slots: (0..t.sorts.len())
+                .map(|slot| names.get(&symbols.root(slot)).copied())
+                .collect(),
         }
     }
 }
 
-/// One instance binding per *template symbol*, independent of its use count.
-/// Internal native symbols have no canonical-root directory entry. Cross-frame
-/// inputs and escaped aliases are explicit component boundaries, even when the
-/// two frames happen to belong to the same lifetime owner.
+/// One binding per composed symbol, independent of its cross-frame use count.
+/// Checked Entry substitutions share symbols within a component. Foreign inputs
+/// and escaped aliases retain canonical-root boundary entries.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(super) struct Signal {
-    pub cell: u32,
+    pub component: u32,
     pub symbol: usize,
 }
 pub(super) struct Binding {

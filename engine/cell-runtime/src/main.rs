@@ -1,3 +1,9 @@
+#[cfg(feature = "allocation-metrics")]
+mod allocation_metrics;
+#[cfg(feature = "allocation-metrics")]
+#[global_allocator]
+static ALLOCATOR: allocation_metrics::Meter = allocation_metrics::Meter;
+#[cfg(not(feature = "allocation-metrics"))]
 #[global_allocator]
 static ALLOCATOR: mimalloc::MiMalloc = mimalloc::MiMalloc;
 use eggfuse_cell_runtime::{executor::Executor, graph::Graph, program::Program};
@@ -92,8 +98,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
+    let load_start = Instant::now();
     let bytes = std::fs::read(opt("--program").ok_or("--program required")?)?;
     let program = Program::parse(serde_json::from_slice(&bytes)?)?;
+    let load_seconds = load_start.elapsed().as_secs_f64();
     if args.iter().any(|x| x == "--inspect-program") {
         let (rules, orientations) = program.context_cut_counts();
         println!(
@@ -190,6 +198,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         eggfuse_cell_runtime::transfer_audit::set_active(true);
         eggfuse_cell_runtime::transfer_audit::enable_write_audit();
     }
+    #[cfg(feature = "allocation-metrics")]
+    let allocation_start = allocation_metrics::begin();
     if let Err(error) = runtime.execute() {
         std::fs::write(
             out.join("failure.json"),
@@ -199,6 +209,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )?;
         return Err(error.into());
     }
+    #[cfg(feature = "allocation-metrics")]
+    let allocation_delta = allocation_metrics::end(allocation_start);
     #[cfg(feature = "slot-transfer-audit")]
     {
         eggfuse_cell_runtime::transfer_audit::set_active(false);
@@ -247,6 +259,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "keeper-proof")]
     runtime.write_keepers(&out)?;
     let mut report = runtime.report();
+    #[cfg(feature = "allocation-metrics")]
+    {
+        report["allocations"] = allocation_delta.report();
+    }
     #[cfg(all(unix, feature = "storage-metrics"))]
     {
         report["peak_rss_through_setup_bytes"] = setup_peak_rss_bytes.into();
@@ -259,6 +275,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     report["inference_seconds"] = seconds.into();
     report["setup_seconds"] = setup.into();
+    report["load_seconds"] = load_seconds.into();
+    report["load_setup_inference_seconds"] = (load_seconds + setup + seconds).into();
     report["repair_ports"] = runtime.graph.repair_port_report();
     let export_start = Instant::now();
     let mut writer = std::io::BufWriter::new(std::fs::File::create(out.join("state.json"))?);

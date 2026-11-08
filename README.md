@@ -88,6 +88,14 @@ The sum-bits audit uses 2,098 port checks versus 3,773 in the ordinary backend
 New binding and temporary-dispatch costs remain; this iteration records structural
 evidence without a validated speedup claim or a new timing campaign.
 
+[Checked cross-template port composition](benchmarks/ownership-composition/README.md)
+shares producer/consumer symbols through Entry receipts and replaces temporary
+union-dispatch maps with a reusable ordered merge. Sum-bits external bindings
+fall from 4,922 to 3,434, with identical ordered effects. The full-cost gate
+rejects acceleration: inference is 13.5% slower and process wall time 23.8%
+slower than the ordinary fast baseline. Allocation and cold composition costs
+are retained alongside structural counters; the backend remains opt-in.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

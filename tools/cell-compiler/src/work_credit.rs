@@ -63,7 +63,10 @@ impl Work {
             "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
             "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows",
             "signal_binding_reads","signal_bindings_created","signal_bindings_retired","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
-            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_signal_visits","domain_slice_steps"] {
+            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_signal_visits","domain_slice_steps",
+            "components_created","components_retired","composition_entry_reads","composition_missing_sources","composition_foreign_inputs",
+            "composition_requests","composition_shape_builds","composition_materializations","composition_shape_steps","composition_frames",
+            "dispatch_heap_pushes","dispatch_heap_pops","dispatch_comparisons","dispatch_scratch_growths"] {
             let key=format!("cell_ownership/stats/{field}");
             let value=if report["cell_ownership"]["enabled"]==false {0} else {
                 report["cell_ownership"]["stats"][field].as_u64().ok_or_else(||format!("missing ownership work {field}"))?
@@ -83,6 +86,7 @@ impl Work {
         }
         (net, json!({"net_saved_operations":net,"counters":changes,
             "unit":"one observed operation per counter; equal weights, not elapsed time",
+            "performance_admission":"unvalidated proxy; a positive sum alone does not establish acceleration",
             "scope":"complete inference including failed candidates and unused source captures; excludes compilation and replay cost"}))
     }
 }

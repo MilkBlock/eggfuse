@@ -1,0 +1,18 @@
+{
+  "workspace_all_features": {
+    "passed": 210,
+    "failed": 0,
+    "ignored": 4
+  },
+  "ownership_sparse": {
+    "passed": 17,
+    "failed": 0,
+    "ignored": 0
+  },
+  "ownership_non_sparse": {
+    "passed": 17,
+    "failed": 0,
+    "ignored": 0
+  },
+  "runtime_no_default_features": "compile check passed"
+}

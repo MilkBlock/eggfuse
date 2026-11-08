@@ -1,0 +1,19 @@
+{
+  "sum-bits": {
+    "fast_baseline": {
+      "runtime": "out/local-unions/runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "control": {
+      "runtime": "out/ownership-composition/runtime-final",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "composed": {
+      "runtime": "out/ownership-composition/runtime-final",
+      "program": "out/ownership-composition/baked-sum-final/program.json",
+      "args": ["--cell-ownership"]
+    }
+  }
+}

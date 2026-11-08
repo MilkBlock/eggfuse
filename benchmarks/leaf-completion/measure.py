@@ -12,6 +12,7 @@ from pathlib import Path
 import random
 import statistics
 import subprocess
+import time
 
 KEYS = ('ordinal', 'ruleset', 'path', 'iterations', 'epoch', 'logical_matches', 'executed_bindings', 'changed')
 
@@ -32,7 +33,7 @@ def save(path, value):
 
 def measure(spec, output, repeat):
     output.mkdir()
-    result = {'repeat': repeat, 'warmups': 1, 'scope': 'standalone Cell CPU; inference excludes setup and export', 'cases': {}}
+    result = {'repeat': repeat, 'warmups': 1, 'scope': 'standalone Cell CPU; inference excludes load/setup/export; process wall includes all work and diagnostics', 'cases': {}}
     for case, lanes in spec.items():
         rows = {label: dict(runtime_sha256=sha(v['runtime']), program_file_sha256=sha(v['program']), args=v.get('args', []), samples=[])
                 for label, v in lanes.items()}
@@ -46,8 +47,10 @@ def measure(spec, output, repeat):
                 config = lanes[label]
                 directory = output / f'{case}-{label}-{iteration}'
                 with (output / f'{directory.name}.log').open('w') as log:
+                    started = time.perf_counter()
                     subprocess.run([config['runtime'], '--program', config['program'], '--output', str(directory), *config.get('args', [])],
                                    stdout=log, stderr=subprocess.STDOUT, check=True)
+                    wall_seconds = time.perf_counter() - started
                 report = json.loads((directory / 'report.json').read_text())
                 assert report['status'] == 'complete'
                 schedule = [[s[k] for k in KEYS] for s in report['steps']]
@@ -57,6 +60,10 @@ def measure(spec, output, repeat):
                 assert stamp == reference, (case, label, iteration, stamp, reference)
                 record = {k: report[k] for k in ('setup_seconds', 'inference_seconds', 'export_seconds',
                     'peak_rss_through_inference_bytes', 'stats')}
+                record['process_wall_seconds'] = wall_seconds
+                for key in ('load_seconds', 'load_setup_inference_seconds', 'allocations'):
+                    if key in report:
+                        record[key] = report[key]
                 record.update(iteration=iteration, state_file_sha256=stamp[0], schedule_sha256=stamp[1],
                               stage_spine=report['stage_spine']['stats'])
                 record['phases'] = {k: sum(s['phases'][k] for s in report['steps'])
@@ -83,6 +90,9 @@ def measure(spec, output, repeat):
         for row in rows.values():
             row['median_inference_seconds'] = statistics.median(s['inference_seconds'] for s in row['samples'])
             row['median_peak_rss_bytes'] = statistics.median(s['peak_rss_through_inference_bytes'] for s in row['samples'])
+            for key in ('process_wall_seconds', 'load_seconds', 'load_setup_inference_seconds'):
+                if all(key in s for s in row['samples']):
+                    row['median_' + key] = statistics.median(s[key] for s in row['samples'])
         save(output / 'samples.json', result)
     return result
 

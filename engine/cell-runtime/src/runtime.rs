@@ -1933,7 +1933,7 @@ impl Executor {
     ) -> Result<()> {
         if self.graph.ownership_enabled() && self.graph.program.cell_ownership.markers[self.graph.program.rules[rid].template].active {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
-            self.graph.begin_owner_entry(rid,anchors.into_iter());
+            self.graph.begin_owner_entry(rid,&anchors);
         }
         let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
         self.graph.end_owner_entry();
