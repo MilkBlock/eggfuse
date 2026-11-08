@@ -60,6 +60,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         entry_publications: owned,
         repair_ports: true,
         repair_cells: enabled,
+        local_unions: false,
     };
     let all = (0..seed.repair_cells.len()).collect::<Vec<_>>();
     fs::create_dir(out)?;

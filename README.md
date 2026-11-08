@@ -66,6 +66,13 @@ opt-in `--repair-ports` path. A compiler-checked key footprint lets result-only
 equality changes update a constructor's output without reindexing its body.
 Key changes and collision handling retain the ordinary repair algorithm.
 
+[Cell-local union completion](benchmarks/local-unions/README.md) uses whole-Cell
+equations to defer new constructor subscriptions and complete internal work from
+a finite local list. Actual reverse maintenance, local proof cost and remaining
+boundary work are measured separately; `bake-local-unions` rejects candidates
+whose observed savings do not cover their costs. The runtime path is opt-in via
+`--local-unions`.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

@@ -65,6 +65,8 @@ def measure(spec, output, repeat):
                 record['entry_schedule'] = report['entry_schedule']
                 record['publication'] = report['publication']
                 record['key_lookup_calls'] = report['key_lookup_calls']
+                record['maintenance'] = report.get('maintenance')
+                record['local_union_cells'] = {k:v for k,v in report.get('local_union_cells', {}).items() if k != 'plan'}
                 record['fact_decode_calls'] = report.get('fact_decode_calls')
                 record['fact_decode_ports'] = report.get('fact_decode_ports')
                 record['repair_cells'] = report.get('repair_cells', {}).get('stats')

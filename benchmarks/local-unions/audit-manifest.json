@@ -1,0 +1,44 @@
+{
+  "sum-bits": {
+    "control": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "local": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--local-unions"
+      ]
+    },
+    "shared": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--local-unions",
+        "--entry-publications"
+      ]
+    }
+  },
+  "raytrace": {
+    "control": {
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "local": {
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--local-unions"
+      ]
+    },
+    "shared": {
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--local-unions",
+        "--entry-publications"
+      ]
+    }
+  }
+}

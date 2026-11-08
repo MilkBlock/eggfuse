@@ -28,6 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
         #[cfg(feature = "spine-blocks")]
         println!("  --repair-cells (experimental shared Cell repair templates)");
+        println!("  --local-unions (experimental Cell-internal union completion without birth subscriptions)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "sparse-cells")]
         println!("  --entry-publications (shared entry nodes own producer expressions)");
@@ -84,7 +85,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -104,8 +105,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let digest = args.iter().any(|x| x == "--union-digest");
     let expressions = args.iter().any(|x| x == "--congruence-cells");
     let cells = args.iter().any(|x| x == "--repair-cells");
+    let local = args.iter().any(|x| x == "--local-unions");
     let ports = args.iter().any(|x| x == "--repair-ports");
-    if (ports || cells) && (digest || expressions) {
+    if (ports || cells || local) && (digest || expressions) {
         return Err("repair ports currently require the ordinary repair backend".into());
     }
     if digest && expressions {
@@ -117,7 +119,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out = PathBuf::from(opt("--output").ok_or("--output required")?);
     let start = Instant::now();
     let audit = args.iter().any(|x| x == "--audit-stages");
-    let graph = if digest || expressions {
+    let mut graph = if digest || expressions {
         let bits = opt("--union-digest-hash-bits")
             .map(|v| v.parse()).transpose()?.unwrap_or(64);
         if expressions {
@@ -130,11 +132,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         { Graph::new_with_repair_cells(program)? }
         #[cfg(not(feature = "spine-blocks"))]
         { return Err("repair cells require spine-blocks".into()); }
-    } else if ports {
+    } else if ports || local {
         Graph::new_with_repair_ports(program)?
     } else {
         Graph::new(program)?
     };
+    if local { graph.use_local_union_cells()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     #[cfg(feature = "sparse-cells")]

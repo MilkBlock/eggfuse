@@ -1,0 +1,25 @@
+{
+  "raytrace": {
+    "parent": {
+      "runtime": "out/repair-cells/runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "control": {
+      "runtime": "out/local-unions/runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports"
+      ]
+    },
+    "local": {
+      "runtime": "out/local-unions/runtime",
+      "program": "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--local-unions"
+      ]
+    }
+  }
+}

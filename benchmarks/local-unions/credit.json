@@ -1,0 +1,692 @@
+{
+  "scope": "standalone Cell CPU; equal-weight observed work, not latency",
+  "compiler_sha256": "05b431cdb4d30ff5f47a404a034e75d52dd619913fcdd7ff0fbe5f740d3ba918",
+  "cases": {
+    "sum-bits": {
+      "policy": "complete-family measured-work",
+      "accepted": false,
+      "work": {
+        "net_saved_operations": -3624,
+        "counters": {
+          "entry_schedule/stats/entry_publication_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "entry_schedule/stats/entry_retirement_checks": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "entry_schedule/stats/predicate_checks": {
+            "before": 6418,
+            "after": 6418,
+            "saved": 0
+          },
+          "entry_schedule/stats/row_decodes": {
+            "before": 6357,
+            "after": 6357,
+            "saved": 0
+          },
+          "fact_decode_calls": {
+            "before": 1890,
+            "after": 1890,
+            "saved": 0
+          },
+          "fact_decode_ports": {
+            "before": 5859,
+            "after": 5859,
+            "saved": 0
+          },
+          "key_lookup_calls": {
+            "before": 19326,
+            "after": 19326,
+            "saved": 0
+          },
+          "local_union_cells/fallback_queries": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "local_union_cells/fallback_rows": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "local_union_cells/stats/birth_attempts": {
+            "before": 0,
+            "after": 3611,
+            "saved": -3611
+          },
+          "local_union_cells/stats/completion_allocations": {
+            "before": 0,
+            "after": 24,
+            "saved": -24
+          },
+          "local_union_cells/stats/completion_visits": {
+            "before": 0,
+            "after": 222,
+            "saved": -222
+          },
+          "local_union_cells/stats/obligation_checks": {
+            "before": 0,
+            "after": 37,
+            "saved": -37
+          },
+          "local_union_cells/stats/obligation_reads": {
+            "before": 0,
+            "after": 74,
+            "saved": -74
+          },
+          "local_union_cells/stats/port_checks": {
+            "before": 0,
+            "after": 474,
+            "saved": -474
+          },
+          "local_union_cells/stats/prepare_reads": {
+            "before": 0,
+            "after": 222,
+            "saved": -222
+          },
+          "local_union_cells/stats/row_copies": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "maintenance/stats/repair_candidate_checks": {
+            "before": 844,
+            "after": 844,
+            "saved": 0
+          },
+          "maintenance/stats/repair_key_probes": {
+            "before": 1046,
+            "after": 1046,
+            "saved": 0
+          },
+          "maintenance/stats/reverse_insert_attempts": {
+            "before": 13418,
+            "after": 13358,
+            "saved": 60
+          },
+          "maintenance/stats/reverse_merge_inserts": {
+            "before": 2369,
+            "after": 2184,
+            "saved": 185
+          },
+          "maintenance/stats/reverse_remove_attempts": {
+            "before": 2871,
+            "after": 2846,
+            "saved": 25
+          },
+          "maintenance/stats/subscription_calls": {
+            "before": 6716,
+            "after": 6716,
+            "saved": 0
+          },
+          "maintenance/stats/subscription_value_visits": {
+            "before": 19944,
+            "after": 19944,
+            "saved": 0
+          },
+          "maintenance/stats/union_frontier_probes": {
+            "before": 1039,
+            "after": 1039,
+            "saved": 0
+          },
+          "maintenance/stats/union_wake_visits": {
+            "before": 2441,
+            "after": 2256,
+            "saved": 185
+          },
+          "publication/column_rows": {
+            "before": 5585,
+            "after": 5585,
+            "saved": 0
+          },
+          "publication/neighbor_rows": {
+            "before": 190,
+            "after": 190,
+            "saved": 0
+          },
+          "publication/range_rows": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "publication/row_reads": {
+            "before": 4750,
+            "after": 4750,
+            "saved": 0
+          },
+          "repair_cells/stats/attempts": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/effect_steps": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/port_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/row_copies": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/steps": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_ports/stats/attempts": {
+            "before": 1988,
+            "after": 1803,
+            "saved": 185
+          },
+          "repair_ports/stats/field_copies": {
+            "before": 530,
+            "after": 530,
+            "saved": 0
+          },
+          "repair_ports/stats/port_checks": {
+            "before": 3773,
+            "after": 3373,
+            "saved": 400
+          },
+          "stage_spine/stats/capture_reads": {
+            "before": 58,
+            "after": 58,
+            "saved": 0
+          },
+          "stage_spine/stats/captured_anchors": {
+            "before": 12898,
+            "after": 12898,
+            "saved": 0
+          },
+          "stage_spine/stats/context_reads": {
+            "before": 312,
+            "after": 312,
+            "saved": 0
+          },
+          "stage_spine/stats/contexts_created": {
+            "before": 1100,
+            "after": 1100,
+            "saved": 0
+          },
+          "stage_spine/stats/guards": {
+            "before": 1072,
+            "after": 1072,
+            "saved": 0
+          },
+          "stage_spine/stats/history_allocations": {
+            "before": 1137,
+            "after": 1137,
+            "saved": 0
+          },
+          "stage_spine/stats/history_capture_reads": {
+            "before": 1987,
+            "after": 1987,
+            "saved": 0
+          },
+          "stage_spine/stats/history_slots_written": {
+            "before": 1987,
+            "after": 1987,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_cursor_probes": {
+            "before": 5738,
+            "after": 5738,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_entry_writes": {
+            "before": 8414,
+            "after": 8414,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_retirement_checks": {
+            "before": 4342,
+            "after": 4342,
+            "saved": 0
+          },
+          "stage_spine/stats/node_cursor_reads": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_key_slots": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_map_probes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_map_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/port_cache_fills": {
+            "before": 818,
+            "after": 818,
+            "saved": 0
+          },
+          "stage_spine/stats/query_receipt_attempts": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/root_handles_created": {
+            "before": 2522,
+            "after": 2522,
+            "saved": 0
+          },
+          "stats/cells_created": {
+            "before": 2893,
+            "after": 2893,
+            "saved": 0
+          },
+          "stats/constructor_requests": {
+            "before": 11481,
+            "after": 11481,
+            "saved": 0
+          },
+          "stats/decoded_rows": {
+            "before": 3723,
+            "after": 3723,
+            "saved": 0
+          },
+          "stats/handoff_attempts": {
+            "before": 623,
+            "after": 623,
+            "saved": 0
+          },
+          "stats/key_operations": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stats/repaired_dependencies": {
+            "before": 1496,
+            "after": 1496,
+            "saved": 0
+          },
+          "stats/residual_candidates": {
+            "before": 12275,
+            "after": 12275,
+            "saved": 0
+          },
+          "stats/union_requests": {
+            "before": 3041,
+            "after": 3041,
+            "saved": 0
+          }
+        },
+        "unit": "one observed operation per counter; equal weights, not elapsed time",
+        "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+      },
+      "semantic_audit": true,
+      "entry_publications": false,
+      "baseline_replay_and_hash_seconds": 0.064345917,
+      "trial_replay_and_hash_seconds": 0.058223541,
+      "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+      "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+      "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+      "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+      "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+      "scope": "standalone Cell CPU; no subset search or held-out validation",
+      "selected": [],
+      "program_file_sha256": "b9d75ff98f5de0b549fd68e237dc05dba56e027e3e4162289ceb97d702c8961e"
+    },
+    "raytrace": {
+      "policy": "complete-family measured-work",
+      "accepted": false,
+      "work": {
+        "net_saved_operations": -1465709,
+        "counters": {
+          "entry_schedule/stats/entry_publication_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "entry_schedule/stats/entry_retirement_checks": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "entry_schedule/stats/predicate_checks": {
+            "before": 2307528,
+            "after": 2307528,
+            "saved": 0
+          },
+          "entry_schedule/stats/row_decodes": {
+            "before": 2407239,
+            "after": 2407239,
+            "saved": 0
+          },
+          "fact_decode_calls": {
+            "before": 386247,
+            "after": 386248,
+            "saved": -1
+          },
+          "fact_decode_ports": {
+            "before": 1179030,
+            "after": 1179033,
+            "saved": -3
+          },
+          "key_lookup_calls": {
+            "before": 4420726,
+            "after": 4420726,
+            "saved": 0
+          },
+          "local_union_cells/fallback_queries": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "local_union_cells/fallback_rows": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "local_union_cells/stats/birth_attempts": {
+            "before": 0,
+            "after": 820311,
+            "saved": -820311
+          },
+          "local_union_cells/stats/completion_allocations": {
+            "before": 0,
+            "after": 119,
+            "saved": -119
+          },
+          "local_union_cells/stats/completion_visits": {
+            "before": 0,
+            "after": 115063,
+            "saved": -115063
+          },
+          "local_union_cells/stats/obligation_checks": {
+            "before": 0,
+            "after": 96655,
+            "saved": -96655
+          },
+          "local_union_cells/stats/obligation_reads": {
+            "before": 0,
+            "after": 193310,
+            "saved": -193310
+          },
+          "local_union_cells/stats/port_checks": {
+            "before": 0,
+            "after": 323358,
+            "saved": -323358
+          },
+          "local_union_cells/stats/prepare_reads": {
+            "before": 0,
+            "after": 23425,
+            "saved": -23425
+          },
+          "local_union_cells/stats/row_copies": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "maintenance/stats/repair_candidate_checks": {
+            "before": 161769,
+            "after": 161769,
+            "saved": 0
+          },
+          "maintenance/stats/repair_key_probes": {
+            "before": 224478,
+            "after": 224478,
+            "saved": 0
+          },
+          "maintenance/stats/reverse_insert_attempts": {
+            "before": 3808194,
+            "after": 3799808,
+            "saved": 8386
+          },
+          "maintenance/stats/reverse_merge_inserts": {
+            "before": 688189,
+            "after": 669768,
+            "saved": 18421
+          },
+          "maintenance/stats/reverse_remove_attempts": {
+            "before": 913772,
+            "after": 909708,
+            "saved": 4064
+          },
+          "maintenance/stats/subscription_calls": {
+            "before": 1880368,
+            "after": 1880187,
+            "saved": 181
+          },
+          "maintenance/stats/subscription_value_visits": {
+            "before": 6001261,
+            "after": 6001073,
+            "saved": 188
+          },
+          "maintenance/stats/union_frontier_probes": {
+            "before": 226523,
+            "after": 226523,
+            "saved": 0
+          },
+          "maintenance/stats/union_wake_visits": {
+            "before": 704057,
+            "after": 685607,
+            "saved": 18450
+          },
+          "publication/column_rows": {
+            "before": 2395590,
+            "after": 2395590,
+            "saved": 0
+          },
+          "publication/neighbor_rows": {
+            "before": 1126308,
+            "after": 1126308,
+            "saved": 0
+          },
+          "publication/range_rows": {
+            "before": 57325,
+            "after": 57325,
+            "saved": 0
+          },
+          "publication/row_reads": {
+            "before": 2231377,
+            "after": 2231377,
+            "saved": 0
+          },
+          "repair_cells/stats/attempts": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/effect_steps": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/port_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/row_copies": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_cells/stats/steps": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "repair_ports/stats/attempts": {
+            "before": 430871,
+            "after": 412421,
+            "saved": 18450
+          },
+          "repair_ports/stats/field_copies": {
+            "before": 140973,
+            "after": 140973,
+            "saved": 0
+          },
+          "repair_ports/stats/port_checks": {
+            "before": 816912,
+            "after": 778516,
+            "saved": 38396
+          },
+          "stage_spine/stats/capture_reads": {
+            "before": 29,
+            "after": 29,
+            "saved": 0
+          },
+          "stage_spine/stats/captured_anchors": {
+            "before": 3704657,
+            "after": 3704657,
+            "saved": 0
+          },
+          "stage_spine/stats/context_reads": {
+            "before": 22404,
+            "after": 22404,
+            "saved": 0
+          },
+          "stage_spine/stats/contexts_created": {
+            "before": 472906,
+            "after": 472906,
+            "saved": 0
+          },
+          "stage_spine/stats/guards": {
+            "before": 151425,
+            "after": 151425,
+            "saved": 0
+          },
+          "stage_spine/stats/history_allocations": {
+            "before": 114560,
+            "after": 114560,
+            "saved": 0
+          },
+          "stage_spine/stats/history_capture_reads": {
+            "before": 220262,
+            "after": 220262,
+            "saved": 0
+          },
+          "stage_spine/stats/history_slots_written": {
+            "before": 220262,
+            "after": 220262,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_cursor_probes": {
+            "before": 1871989,
+            "after": 1871989,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_entry_writes": {
+            "before": 2302142,
+            "after": 2302142,
+            "saved": 0
+          },
+          "stage_spine/stats/legacy_retirement_checks": {
+            "before": 1772810,
+            "after": 1772810,
+            "saved": 0
+          },
+          "stage_spine/stats/node_cursor_reads": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_key_slots": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_map_probes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/origin_map_writes": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/port_cache_fills": {
+            "before": 66729,
+            "after": 66729,
+            "saved": 0
+          },
+          "stage_spine/stats/query_receipt_attempts": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stage_spine/stats/root_handles_created": {
+            "before": 297750,
+            "after": 297750,
+            "saved": 0
+          },
+          "stats/cells_created": {
+            "before": 704559,
+            "after": 704559,
+            "saved": 0
+          },
+          "stats/constructor_requests": {
+            "before": 2062640,
+            "after": 2062640,
+            "saved": 0
+          },
+          "stats/decoded_rows": {
+            "before": 867701,
+            "after": 867701,
+            "saved": 0
+          },
+          "stats/handoff_attempts": {
+            "before": 64796,
+            "after": 64796,
+            "saved": 0
+          },
+          "stats/key_operations": {
+            "before": 0,
+            "after": 0,
+            "saved": 0
+          },
+          "stats/repaired_dependencies": {
+            "before": 479589,
+            "after": 479589,
+            "saved": 0
+          },
+          "stats/residual_candidates": {
+            "before": 4490637,
+            "after": 4490637,
+            "saved": 0
+          },
+          "stats/union_requests": {
+            "before": 573277,
+            "after": 573277,
+            "saved": 0
+          }
+        },
+        "unit": "one observed operation per counter; equal weights, not elapsed time",
+        "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+      },
+      "semantic_audit": true,
+      "entry_publications": false,
+      "baseline_replay_and_hash_seconds": 12.977658417,
+      "trial_replay_and_hash_seconds": 13.081877209,
+      "final_state_sha256": "bc752aa028a83214b45fd92591c97985cb8d59e1c4545b802c28271c862f546f",
+      "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40",
+      "ordered_rhs_sha256": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+      "ordered_writes_sha256": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+      "ordered_resumes_sha256": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d",
+      "scope": "standalone Cell CPU; no subset search or held-out validation",
+      "selected": [],
+      "program_file_sha256": "8022aae5acbe860baef6e127d7f288543527173b1e47d0049aac8fd1a1766854"
+    }
+  }
+}

@@ -43,6 +43,22 @@ impl Work {
                 else { report["repair_ports"]["stats"][field].as_u64().ok_or_else(|| format!("missing repair port work {field}"))? };
             work.insert(key, value);
         }
+        for field in ["subscription_calls", "subscription_value_visits", "reverse_insert_attempts", "reverse_remove_attempts",
+            "union_frontier_probes", "union_wake_visits", "reverse_merge_inserts", "repair_key_probes", "repair_candidate_checks"] {
+            let key = format!("maintenance/stats/{field}");
+            let value = report["maintenance"]["stats"][field].as_u64().ok_or_else(||format!("missing maintenance work {field}"))?;
+            work.insert(key, value);
+        }
+        for field in ["birth_attempts", "prepare_reads", "completion_allocations", "completion_visits", "port_checks", "row_copies", "obligation_checks", "obligation_reads"] {
+            let key = format!("local_union_cells/stats/{field}");
+            let value = if report["local_union_cells"]["enabled"] == false {0}
+                else {report["local_union_cells"]["stats"][field].as_u64().ok_or_else(||format!("missing local completion work {field}"))?};
+            work.insert(key, value);
+        }
+        for field in ["fallback_queries", "fallback_rows"] {
+            let key=format!("local_union_cells/{field}");
+            work.insert(key,report["local_union_cells"][field].as_u64().ok_or("missing coverage fallback work")?);
+        }
         Ok(Self(work))
     }
     pub fn savings(&self, trial: &Self) -> (i128, J) {

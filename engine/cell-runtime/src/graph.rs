@@ -6,6 +6,10 @@ pub(crate) mod repair_ports;
 #[cfg(feature = "spine-blocks")]
 #[path = "repair_cells.rs"]
 pub mod repair_cells;
+#[path = "maintenance.rs"]
+pub mod maintenance;
+#[path = "local_union_cells.rs"]
+pub mod local_union_cells;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -50,6 +54,8 @@ impl FactRef {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct FactState {
+    #[serde(skip)]
+    local_union_owned: bool,
     #[cfg(feature = "receipt-slots")]
     #[serde(skip)]
     port_slot: u32,
@@ -265,6 +271,8 @@ pub struct Graph {
     pub epoch: u64,
     pub changed: bool,
     pub stats: Stats,
+    pub maintenance: maintenance::Metrics,
+    local_unions: Option<local_union_cells::Runtime>,
     pub pending_unions: Vec<(u64, u64)>,
     union_digest: Option<union_digest::Matcher>,
     repair_ports: Option<repair_ports::Runtime>,
@@ -490,6 +498,8 @@ impl Graph {
             epoch: 0,
             changed: false,
             stats: Stats::default(),
+            maintenance: Default::default(),
+            local_unions: None,
 
             known_stats: Default::default(),
             scalar_merge: cfg!(feature = "sparse-cells"),
@@ -1169,10 +1179,17 @@ impl Graph {
     }
     pub fn candidate_count(&self, table: usize, bound: &[Option<Value>]) -> usize {
         let all = self.witness_count(table);
+        if self.local_unions.as_ref().is_some_and(|m|m.untracked_tables[table] > 0) { return all; }
         self.bound_uses(bound)
             .map_or(all, |uses| all.min(uses.len()))
     }
     pub fn candidates(&self, table: usize, bound: &[Option<Value>]) -> Vec<Dependency> {
+        if let Some(m)=&self.local_unions && m.untracked_tables[table] > 0 {
+            m.fallback_queries.set(m.fallback_queries.get()+1);
+            let rows=self.witnesses(table);
+            m.fallback_rows.set(m.fallback_rows.get()+rows.len() as u64);
+            return rows;
+        }
         if let Some(uses) = self.bound_uses(bound) {
             if uses.len() < self.witness_count(table) {
                 let rows: Vec<_> = uses
@@ -1271,25 +1288,30 @@ impl Graph {
         Ok(None)
     }
     #[cfg(not(feature = "sparse-cells"))]
-    fn refs(v: &Value, out: &mut BTreeSet<u64>) {
+    fn refs(v: &Value, out: &mut BTreeSet<u64>, visits: &mut u64) {
+        *visits += 1;
         match v {
             Value::Eq(i) => {
                 out.insert(*i);
             }
             Value::Set(xs) => {
                 for x in xs.iter() {
-                    Self::refs(x, out)
+                    Self::refs(x, out, visits)
                 }
             }
             _ => {}
         }
     }
-    #[cfg(not(feature = "sparse-cells"))]
     fn subscribe(&mut self, table: usize, d: Dependency, values: &[Value]) {
         self.query_versions[table] += 1;
+        self.subscribe_edges(d, values);
+    }
+    #[cfg(not(feature = "sparse-cells"))]
+    fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
+        self.maintenance.subscription_calls += 1;
         let mut refs = BTreeSet::new();
         for v in values {
-            Self::refs(v, &mut refs);
+            Self::refs(v, &mut refs, &mut self.maintenance.subscription_value_visits);
         }
         if refs.iter().any(|v| self.parents.contains_key(v)) {
             refs = refs.into_iter().map(|id| root(&self.parents, id)).collect();
@@ -1303,32 +1325,33 @@ impl Graph {
             if !refs.contains(&id)
                 && let Some(uses) = self.uses.get_mut(&id)
             {
-                uses.remove(&d);
+                maintenance::remove(uses, &mut self.maintenance, d);
             }
         }
         for &id in &refs {
-            self.uses.entry(id).or_default().insert(d);
+            maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
         }
         self.dependencies.insert(d, refs);
     }
     #[cfg(feature = "sparse-cells")]
-    fn subscribe(&mut self, table: usize, d: Dependency, values: &[Value]) {
+    fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
+        self.maintenance.subscription_calls += 1;
         type Refs = smallvec::SmallVec<[u64; 3]>;
-        fn collect(v: &Value, p: &Parents, out: &mut Refs) {
+        fn collect(v: &Value, p: &Parents, out: &mut Refs, visits: &mut u64) {
+            *visits += 1;
             match v {
                 Value::Eq(i) => out.push(root(p, *i)),
                 Value::Set(xs) => {
                     for x in xs.iter() {
-                        collect(x, p, out);
+                        collect(x, p, out, visits);
                     }
                 }
                 _ => (),
             }
         }
-        self.query_versions[table] += 1;
         let mut refs = Refs::new();
         for v in values {
-            collect(v, &self.parents, &mut refs);
+            collect(v, &self.parents, &mut refs, &mut self.maintenance.subscription_value_visits);
         }
         refs.sort_unstable();
         refs.dedup();
@@ -1336,7 +1359,7 @@ impl Graph {
         let mut old = match self.dependencies.entry(d) {
             Entry::Vacant(slot) => {
                 for &id in &refs {
-                    self.uses.entry(id).or_default().insert(d);
+                    maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
                 }
                 if !refs.is_empty() {
                     slot.insert(refs);
@@ -1353,7 +1376,7 @@ impl Graph {
             if !refs.contains(id)
                 && let Some(bucket) = self.uses.get_mut(id)
             {
-                bucket.remove(&d);
+                maintenance::remove(bucket, &mut self.maintenance, d);
                 if bucket.is_empty() {
                     self.uses.remove(id);
                 }
@@ -1361,7 +1384,7 @@ impl Graph {
         }
         for &id in &refs {
             if !old.contains(&id) {
-                self.uses.entry(id).or_default().insert(d);
+                maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
             }
         }
         if !refs.is_empty() {
@@ -1399,12 +1422,14 @@ impl Graph {
         let vs = Self::shared_fields(key, &v);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
+        let local_union_owned = self.defer_local_birth(f, t);
         let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
         #[cfg(feature = "sparse-cells")]
         facts.reserve_first();
         facts.insert(
             f.op,
             FactState {
+                local_union_owned,
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
                 decoded: Some((t, vs.clone())),
@@ -1418,7 +1443,8 @@ impl Graph {
         );
         self.members[t].insert(f.ordered_id());
         self.intern.entry(h).or_default().insert(f);
-        self.subscribe(t, Dependency::Fact(f), &vs);
+        if local_union_owned { self.query_versions[t] += 1; }
+        else { self.subscribe(t, Dependency::Fact(f), &vs); }
         self.changes.touch(t, Dependency::Fact(f));
         self.stats.logical_facts_created += 1;
 
@@ -1704,7 +1730,12 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }
         self.parents.insert(hi, lo);
+        self.maintenance.union_frontier_probes += 1;
         let mut affected = self.uses.remove(&hi).unwrap_or_default();
+        let displaced = affected.len();
+        let kept = self.uses.get(&lo).map_or(0, |s|s.len());
+        self.maintenance.union_wake_visits += displaced as u64;
+        self.maintenance.union_redirected_edges += displaced as u64;
         // Only displaced identities change row fields. Re-stamping the already
         // canonical side can re-run an unchanged LHS and create extra custom
         // merge nodes (e.g. a repeated default ExtractedExpr write).
@@ -1715,6 +1746,7 @@ impl Graph {
         }
         #[cfg(not(feature = "sparse-cells"))]
         {
+            self.maintenance.reverse_merge_inserts += kept as u64;
             affected.extend(self.uses.get(&lo).into_iter().flatten().copied());
             self.uses.insert(lo, affected);
         }
@@ -1724,10 +1756,15 @@ impl Graph {
             if keep.len() < affected.len() {
                 std::mem::swap(keep, &mut affected);
             }
+            self.maintenance.reverse_merge_inserts += affected.len() as u64;
             for &dependency in affected.iter() {
                 keep.insert(dependency);
             }
         }
+        let merged = self.uses.get(&lo).map_or(0, |s|s.len());
+        let coalesced = (displaced + kept - merged) as u64;
+        self.maintenance.reverse_edges_coalesced += coalesced;
+        self.maintenance.live_reverse_edges -= coalesced;
         self.stats.unions += 1;
         self.changed = true;
         if self.union_digest.is_some() {
@@ -2168,6 +2205,8 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
+            self.end_local_ownership(f, r.table, true);
             if let Some(matcher) = self.union_digest.as_mut() {
                 matcher.removed(f);
             }
@@ -2193,7 +2232,8 @@ impl Graph {
                     self.intern.remove(&s.hash);
                 }
             }
-            self.subscribe(r.table, Dependency::Fact(f), &[]);
+            if local { self.query_versions[r.table] += 1; }
+            else { self.subscribe(r.table, Dependency::Fact(f), &[]); }
             self.garbage.insert(f.cell);
         }
         Ok(())
@@ -2287,10 +2327,12 @@ impl Graph {
     // Both bucket implementations iterate in witness order. Skipping self
     // before the read-only probe preserves remove-self-then-probe ordering;
     // no bucket clone or mutation is needed until the terminal effect.
-    fn find_repair_collision(&self, f: FactRef, r: &Row, h: u64) -> Result<Option<Row>> {
+    fn find_repair_collision(&mut self, f: FactRef, r: &Row, h: u64) -> Result<Option<Row>> {
+        self.maintenance.repair_key_probes += 1;
         let key = &r.values[..r.values.len() - 1];
         for &other in self.intern.get(&h).into_iter().flatten() {
             if other == f { continue; }
+            self.maintenance.repair_candidate_checks += 1;
             if let Some(row) = self.fact(other)? {
                 if row.table == r.table && row.values[..key.len()] == *key { return Ok(Some(row)); }
             }
@@ -2307,6 +2349,7 @@ impl Graph {
             if bucket.is_empty() { self.intern.remove(&old); }
         }
         if let Some(other) = found {
+            self.note_local_collision(f);
             self.stats.repair_collisions += 1;
             if let Dependency::Fact(keep) = other.witness {
                 self.query_versions[r.table] += 1;
@@ -2332,6 +2375,7 @@ impl Graph {
             }
             self.retire(f)?;
         } else {
+            self.end_local_ownership(f, r.table, false);
             self.intern.entry(h).or_default().insert(f);
             let s = self
                 .cells
@@ -2354,12 +2398,17 @@ impl Graph {
         if self.union_digest.is_some() {
             return self.propagate_union_digests();
         }
+        let mut local_completion = Vec::new();
         loop {
+            if self.local_unions.as_ref().is_some_and(|m|!m.pending.is_empty()) {
+                local_completion.extend(self.prepare_local_completion());
+            }
             if !self.pending_unions.is_empty() {
                 let pairs = std::mem::take(&mut self.pending_unions);
                 for (a, b) in pairs {
                     self.union(a, b)?;
                 }
+                local_completion = self.finish_local_completion(local_completion, false)?;
                 continue;
             }
 
@@ -2368,6 +2417,10 @@ impl Graph {
                 .pop_first()
                 .or_else(|| self.dirty_markers.pop_first().map(Dependency::Fact))
             else {
+                if !local_completion.is_empty() {
+                    local_completion = self.finish_local_completion(local_completion, true)?;
+                    continue;
+                }
                 break;
             };
             if let Dependency::Fact(f) = d {
