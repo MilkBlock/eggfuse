@@ -31,21 +31,35 @@ def save(path, value):
     tmp.replace(path)
 
 
-def measure(spec, output, repeat):
+def measure(spec, output, repeat, normalize_paths=False):
     output.mkdir()
     result = {'repeat': repeat, 'warmups': 1, 'scope': 'standalone Cell CPU; inference excludes load/setup/export; process wall includes all work and diagnostics', 'cases': {}}
-    for case, lanes in spec.items():
+    if normalize_paths:
+        result['path_policy'] = 'equal-length executable/input symlinks and numeric output paths within each case'
+        (output / '_inputs').mkdir()
+        (output / '_runtimes').mkdir()
+    for case_index, (case, lanes) in enumerate(spec.items()):
         rows = {label: dict(runtime_sha256=sha(v['runtime']), program_file_sha256=sha(v['program']), args=v.get('args', []), samples=[])
                 for label, v in lanes.items()}
         result['cases'][case] = rows
+        execution = {}
+        for lane_index, (label, config) in enumerate(lanes.items()):
+            item = dict(config)
+            if normalize_paths:
+                for key, folder, suffix in (('runtime', '_runtimes', ''), ('program', '_inputs', '.json')):
+                    link = output / folder / f'{case_index:04d}-{lane_index:04d}{suffix}'
+                    link.symlink_to(Path(config[key]).resolve())
+                    item[key] = str(link.absolute())
+            execution[label] = item
         reference = None
         rng = random.Random(20261108)
         for iteration in range(-1, repeat):
             order = list(lanes)
             rng.shuffle(order)
             for label in order:
-                config = lanes[label]
-                directory = output / f'{case}-{label}-{iteration}'
+                config = execution[label]
+                directory = output / (f'{case}-{iteration + 1:04d}-{list(lanes).index(label):04d}'
+                                      if normalize_paths else f'{case}-{label}-{iteration}')
                 with (output / f'{directory.name}.log').open('w') as log:
                     started = time.perf_counter()
                     subprocess.run([config['runtime'], '--program', config['program'], '--output', str(directory), *config.get('args', [])],
@@ -102,6 +116,8 @@ if __name__ == '__main__':
     parser.add_argument('spec', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--repeat', type=int, default=7)
+    parser.add_argument('--normalize-paths', action='store_true',
+                        help='use equal-length paths to check argv/allocator-layout sensitivity')
     args = parser.parse_args()
     assert args.repeat > 0
-    measure(json.loads(args.spec.read_text()), args.output, args.repeat)
+    measure(json.loads(args.spec.read_text()), args.output, args.repeat, args.normalize_paths)

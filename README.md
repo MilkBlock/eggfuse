@@ -96,6 +96,16 @@ rejects acceleration: inference is 13.5% slower and process wall time 23.8%
 slower than the ordinary fast baseline. Allocation and cold composition costs
 are retained alongside structural counters; the backend remains opt-in.
 
+[Baked local repair fragments](benchmarks/ownership-fragments/README.md) remove
+the obsolete Owner lifecycle and move composition construction out of production
+execution. An explicit profile selects bounded, shared fragments from checked
+Entry reuse; unselected continuations retain external boundaries. On sum-bits,
+inference improves 9.4% over the previous composition but remains 4.3% slower than
+the ordinary fast baseline; whole-process time is 27.3% slower. The performance
+gate rejects acceleration despite zero runtime shape construction and fewer
+external bindings than uncomposed ownership. Remaining binding access, allocation
+and loading costs are recorded alongside exact semantic checks.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

@@ -142,6 +142,13 @@ pub fn call(j: &J, names: &BTreeMap<String, usize>) -> Result<Call> {
     }
 }
 impl Program {
+    pub fn prepare_cell_ownership(&mut self) -> Result<()> {
+        if self.cell_ownership.markers.is_empty() {
+            self.cell_ownership = crate::graph::cell_ownership::Plan::derive(self)?;
+        }
+        Ok(())
+    }
+
     #[inline]
     pub(crate) fn key_nodes(&self) -> &J {
         #[cfg(feature = "sparse-cells")]
@@ -400,7 +407,9 @@ impl Program {
         #[cfg(feature = "spine-blocks")]
         { p.repair_cells = crate::graph::repair_cells::Catalog::derive(&p)?; }
         p.local_union_cells = crate::graph::local_union_cells::Plan::derive(&p)?;
-        p.cell_ownership = crate::graph::cell_ownership::Plan::derive(&p)?;
+        if p.artifact.get("ownership_markers").is_some() || p.artifact.get("ownership_fragments").is_some() {
+            p.prepare_cell_ownership()?;
+        }
         p.writes = crate::row_kernel::writes(&p);
         p.neighbor_plans = crate::neighbor::derive(&p);
         if let Some(raw) = p.artifact.get("neighbor_entries")

@@ -3,7 +3,21 @@ use serde_json::json;
 use std::collections::BTreeSet;
 fn program(src: &str) -> Program {
     let core = eggfuse_bake::device_frontend::core("ownership", src).unwrap();
-    Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap()
+    let raw = compiler::compile(core, &BTreeSet::new()).unwrap();
+    let p = Program::parse(raw.clone()).unwrap();
+    let mut g = Graph::new_with_cell_ownership(p).unwrap();
+    g.train_ownership_fragments().unwrap();
+    let mut training = Executor::new(g, false);
+    training.execute().unwrap();
+    let profile = training.graph.ownership_fragment_profile().unwrap();
+    // Semantic fixtures exercise every observed bounded continuation, including
+    // single-use paths. Production selection has its own repeated-use test.
+    let mut raw = raw;
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1", "source":profile["source"],
+        "fragments":profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    Program::parse(raw).unwrap()
 }
 fn compare(src: &str) -> Executor {
     let p = program(src);
@@ -52,7 +66,10 @@ fn live_bodies_cross_stages_without_internal_subscriptions() {
     let r = e.graph.ownership_report();
     let s = &r["stats"];
     assert!(s["owned_live"].as_u64().unwrap() > 0, "{r}");
-    assert!(s["cross_stage_continuations"].as_u64().unwrap() > 0, "{r}");
+    assert!(
+        s["composition_cross_stage_joins"].as_u64().unwrap() > 0,
+        "{r}"
+    );
     assert!(s["internal_ports_seen"].as_u64().unwrap() > 0, "{r}");
     assert!(
         s["carried_facts"].as_u64().unwrap() > s["owned_live"].as_u64().unwrap(),
@@ -143,7 +160,7 @@ fn native_result_aliases_and_query_domains_survive_multiple_union_waves() {
     }
 }
 #[test]
-fn bounded_owner_splits_preserve_native_routes_and_candidate_completeness() {
+fn wide_bodies_preserve_native_routes_without_lifetime_owner_splits() {
     let mut src = String::from(
         "(datatype E (N i64) (F E) (G E))\n(ruleset make) (ruleset merge)\n(rule ((= x (N 0))) (",
     );
@@ -153,8 +170,8 @@ fn bounded_owner_splits_preserve_native_routes_and_candidate_completeness() {
     src.push_str(" ) :ruleset make)\n(rule ((= x (N 0)) (= y (N 269))) ((union x y)) :ruleset merge)\n(N 0)\n(run-schedule (seq (run make) (run merge)))");
     let e = compare(&src);
     let r = e.graph.ownership_report();
-    assert!(r["stats"]["capacity_splits"].as_u64().unwrap() > 0);
-    assert!(r["inventory"]["largest_owner"].as_u64().unwrap() <= 256);
+    assert!(r["stats"]["owned_live"].as_u64().unwrap() > 256);
+    assert!(r["inventory"]["largest_component_frames"].as_u64().unwrap() <= 4);
 }
 #[test]
 fn deletion_external_aliases_and_mutable_merges_remain_visible() {
@@ -199,7 +216,7 @@ fn bake_emits_checked_markers_without_executing_the_program() {
         serde_json::from_slice(&fs::read(out.join("program.json")).unwrap()).unwrap();
     Program::parse(raw.clone()).unwrap();
     assert!(!out.join("trial.json").exists());
-    raw["ownership_markers"]["plan"]["max_continuation_facts"] = json!(1);
+    raw["ownership_markers"]["plan"]["composition"]["max_frames"] = json!(1);
     assert!(Program::parse(raw).is_err());
 }
 
@@ -244,7 +261,7 @@ fn unrelated_bodies_do_not_amplify_cross_stage_repair() {
         assert_eq!(stats["boundary_rebuilds"], 0);
         assert!(stats["marker_union_requests"].as_u64().unwrap() > 0);
         if noise == 0 {
-            assert!(stats["cross_stage_continuations"].as_u64().unwrap() > 0);
+            assert!(stats["composition_cross_stage_joins"].as_u64().unwrap() > 0);
         }
         evidence
             .push(json!({"unrelated_bodies":noise,"inventory":report["inventory"],"stats":stats}));
@@ -330,10 +347,8 @@ fn composition_substitutions_are_rechecked_even_with_a_valid_checksum() {
     let p = program(STAGES);
     let mut raw = p.artifact.clone();
     raw["ownership_markers"] = p.cell_ownership.artifact(&p);
-    let substitutions =
-        &mut raw["ownership_markers"]["plan"]["composition"]["transitions"][0][0]["substitutions"];
-    assert!(!substitutions.as_array().unwrap().is_empty());
-    substitutions[0][1] = json!(999);
+    raw["ownership_markers"]["plan"]["composition"]["transitions"][0][0]["hop"]["source_frame"] =
+        json!(999);
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
     let err = Program::parse(raw).unwrap_err();
@@ -376,10 +391,9 @@ fn checked_entries_share_slots_across_all_stages_of_identical_chains() {
     );
     assert!(s["composition_substituted_ports"].as_u64().unwrap() >= 6);
     assert!(s["composition_baked_hits"].as_u64().unwrap() > 0);
-    assert!(
-        s["composition_cache_hits"].as_u64().unwrap()
-            > s["composition_shape_builds"].as_u64().unwrap()
-    );
+    assert_eq!(s["composition_shape_builds"], 0);
+    assert_eq!(s["composition_materializations"], 0);
+    assert_eq!(s["composition_shape_steps"], 0);
     println!("COMPOSITION_EVIDENCE {}", r);
 }
 
@@ -448,7 +462,180 @@ fn composition_capacity_cuts_keep_external_notifications_complete() {
     src.push_str(" (run merge)))\n(check (= (F19 (N 0)) (F19 (N 1))))\n");
     let e = compare(&src);
     let r = e.graph.ownership_report();
-    assert!(r["stats"]["composition_capacity_cuts"].as_u64().unwrap() > 0);
+    assert!(r["stats"]["components_live"].as_u64().unwrap() > 2);
+    assert!(r["inventory"]["largest_component_frames"].as_u64().unwrap() <= 4);
     assert_eq!(r["stats"]["boundary_body_reads"], 0);
     assert_eq!(r["stats"]["port_checks"], r["stats"]["changed_ports"]);
+}
+
+fn raw_program(src: &str) -> Program {
+    let core = eggfuse_bake::device_frontend::core("ownership", src).unwrap();
+    Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap()
+}
+fn reparse(mut raw: serde_json::Value) -> Program {
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    Program::parse(raw).unwrap()
+}
+#[test]
+fn ordinary_load_and_execution_do_not_prepare_ownership_plans() {
+    let p = raw_program(STAGES);
+    assert!(p.cell_ownership.markers.is_empty());
+    let mut e = Executor::new(Graph::new_with_repair_ports(p).unwrap(), true);
+    e.execute().unwrap();
+    assert!(e.graph.program.cell_ownership.markers.is_empty());
+    assert_eq!(e.graph.ownership_report()["plan_prepared"], false);
+}
+#[test]
+fn unseen_continuations_keep_external_union_notifications_without_compiling_code() {
+    let src=STAGES.replace("(N 0) (N 1)","(ruleset merge)\n(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)\n(N 0) (N 1)");
+    let src = format!("{src}\n(run-schedule (seq (run merge) (run c)))");
+    let p = raw_program(&src);
+    let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    let shapes = b.graph.program.cell_ownership.composition.shapes.len();
+    a.execute().unwrap();
+    b.execute().unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    let r = b.graph.ownership_report();
+    assert_eq!(r["stats"]["composition_transition_probes"], 0);
+    assert_eq!(r["stats"]["composition_requests"], 0);
+    assert_eq!(r["stats"]["composition_materializations"], 0);
+    assert_eq!(r["inventory"]["runtime_composition_shapes"], json!(shapes));
+    assert!(r["stats"]["key_completions"].as_u64().unwrap() > 0);
+}
+#[test]
+fn a_local_suffix_is_shared_after_unrelated_producer_prefixes() {
+    let src = r#"
+(datatype E (N i64) (F E) (G E) (H E) (Seen E))
+(ruleset a) (ruleset b) (ruleset c)
+(rule ((= x (N 0))) ((F x)) :ruleset a)
+(rule ((= x (N 1))) ((G (F x))) :ruleset a)
+(rule ((= f (F x))) ((H f)) :ruleset b)
+(rule ((= h (H f))) ((Seen h)) :ruleset c)
+(N 0) (N 1)
+(run-schedule (seq (run a) (run b) (run c)))
+"#;
+    let p = program(src);
+    let mut raw = p.artifact.clone();
+    let rid = p.rules.len() - 1;
+    let fragments = raw["ownership_fragments"]["fragments"]
+        .as_array_mut()
+        .unwrap();
+    fragments
+        .retain(|f| f["hops"].as_array().unwrap().len() == 1 && f["hops"][0]["rule"] == json!(rid));
+    assert_eq!(
+        fragments.len(),
+        1,
+        "one local H -> Seen route, independent of the F/G prefix"
+    );
+    let p = reparse(raw);
+    let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    a.execute().unwrap();
+    b.execute().unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    let r = b.graph.ownership_report();
+    assert_eq!(r["stats"]["composition_baked_hits"], 2);
+    assert_eq!(r["stats"]["composition_shape_steps"], 0);
+    assert_eq!(r["stats"]["marker_entries"], 2);
+}
+#[test]
+fn profile_selection_requires_repeated_actual_shared_inputs() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition::select_profile;
+    for (src, expected) in [
+        (STAGES.to_string(), true),
+        (STAGES.replace("(N 0) (N 1)", "(N 0)"), false),
+    ] {
+        let mut g = Graph::new_with_cell_ownership(raw_program(&src)).unwrap();
+        g.train_ownership_fragments().unwrap();
+        let mut e = Executor::new(g, false);
+        e.execute().unwrap();
+        let profile = e.graph.ownership_fragment_profile().unwrap();
+        let selected = select_profile(&profile).unwrap();
+        assert_eq!(
+            !selected["fragments"].as_array().unwrap().is_empty(),
+            expected
+        );
+        assert_eq!(profile["alternatives_overlap"], true);
+    }
+}
+#[test]
+fn fragment_loading_validates_routes_even_before_enabling_ownership() {
+    let p = program(STAGES);
+    let mut raw = p.artifact.clone();
+    raw["ownership_fragments"]["fragments"][0]["hops"][0]["source_frame"] = json!(999);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    assert!(
+        Program::parse(raw)
+            .unwrap_err()
+            .contains("ownership fragment")
+    );
+}
+
+#[test]
+fn different_entry_guards_share_identical_local_code() {
+    let src = r#"
+(datatype E (N i64) (F E))
+(ruleset a)
+(rule ((= x (N 0))) ((F x)) :ruleset a)
+(rule ((= x (N 1))) ((F x)) :ruleset a)
+(N 0) (N 1)
+(run-schedule (run a))
+"#;
+    let p = program(src);
+    let plan = &p.cell_ownership.composition;
+    assert_eq!(plan.transitions.len(), 2);
+    assert_eq!(plan.transitions[0].1, plan.transitions[1].1);
+    assert_eq!(plan.shapes.len(), p.cell_ownership.programs.len() + 1);
+    let mut e = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    e.execute().unwrap();
+    assert_eq!(
+        e.graph.ownership_report()["stats"]["composition_baked_hits"],
+        2
+    );
+}
+
+#[test]
+fn active_marker_with_an_unseen_prefix_falls_back_without_expanding_code() {
+    let src = r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(ruleset a) (ruleset b) (ruleset merge)
+(rule ((= x (N 0))) ((F x)) :ruleset a)
+(rule ((= x (N 1))) ((G (F x))) :ruleset a)
+(rule ((= f (F x))) ((H f)) :ruleset b)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run a) (run b) (run merge)))
+"#;
+    let p = program(src);
+    let mut raw = p.artifact.clone();
+    let fragments = raw["ownership_fragments"]["fragments"]
+        .as_array_mut()
+        .unwrap();
+    fragments.retain(|f| {
+        f["hops"].as_array().unwrap().len() == 2
+            && f["hops"][0]["rule"] == 0
+            && f["hops"][1]["rule"] == 2
+    });
+    assert_eq!(fragments.len(), 1);
+    let p = reparse(raw);
+    let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    a.execute().unwrap();
+    b.execute().unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    let r = b.graph.ownership_report();
+    assert!(
+        r["stats"]["composition_unbaked_fallbacks"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert_eq!(r["stats"]["composition_materializations"], 0);
+    assert!(r["stats"]["key_completions"].as_u64().unwrap() > 0);
 }

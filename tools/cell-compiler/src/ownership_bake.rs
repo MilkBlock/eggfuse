@@ -1,17 +1,34 @@
 //! Emit rechecked entry/body ownership markers without executing a workload.
 use crate::Result;
-use eggfuse_cell_runtime::{checksum::artifact_digest, program::Program};
+use eggfuse_cell_runtime::{
+    checksum::artifact_digest,
+    executor::Executor,
+    graph::{Graph, cell_ownership::composition},
+    program::Program,
+};
 use serde_json::json;
 use std::{fs, path::Path};
 pub(crate) fn run(args: Vec<String>) -> Result<()> {
     if args.iter().any(|s| s == "--help") {
-        println!("bake-cell-ownership --program FILE --output NEW_DIR");
+        println!("bake-cell-ownership --program FILE [--profile FILE] --output NEW_DIR");
         return Ok(());
     }
-    let opts = super::options(args.into_iter(), &["--program", "--output"])?;
-    let p = Program::parse(super::read(Path::new(
+    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile"])?;
+    let mut raw = super::read(Path::new(
         opts.get("--program").ok_or("--program required")?,
-    ))?)?;
+    ))?;
+    if let Some(path) = opts.get("--profile") {
+        let profile = super::read(Path::new(path))?;
+        if profile["source"] != composition::source_digest(&raw) {
+            return Err("ownership profile source differs".into());
+        }
+        raw.as_object_mut().unwrap().remove("ownership_markers");
+        raw["ownership_fragments"] = composition::select_profile(&profile)?;
+        raw.as_object_mut().unwrap().remove("sha256");
+        raw["sha256"] = artifact_digest(&raw).into();
+    }
+    let mut p = Program::parse(raw)?;
+    p.prepare_cell_ownership()?;
     let out = Path::new(opts.get("--output").ok_or("--output required")?);
     let markers = p.cell_ownership.artifact(&p);
     let mut raw = p.artifact.clone();
@@ -29,9 +46,36 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         "covered_tables":p.cell_ownership.tables.iter().filter(|x|**x).count(),"entry_ports":p.cell_ownership.entries.iter().map(Vec::len).sum::<usize>(),
         "shared_port_programs":p.cell_ownership.markers.iter().map(|m|std::rc::Rc::as_ptr(&m.program)).collect::<std::collections::BTreeSet<_>>().len(),
         "template_signal_steps":p.cell_ownership.markers.iter().flat_map(|m|&m.program.signals).map(Vec::len).sum::<usize>(),
-        "composition_initial_shapes":p.cell_ownership.composition.shapes.len(),
+        "composition_initial_shapes":p.cell_ownership.programs.len(),
+        "composition_baked_shapes":p.cell_ownership.composition.shapes.len(),
         "composition_transitions":p.cell_ownership.composition.transitions.len(),
         "composition_input_sources":p.cell_ownership.composition.sources.iter().map(Vec::len).sum::<usize>()}),
     )?;
+    Ok(())
+}
+
+/// Explicit training command. Baking itself never executes the input workload.
+pub(crate) fn profile(args: Vec<String>) -> Result<()> {
+    if args.iter().any(|a| a == "--help") {
+        println!("profile-cell-ownership --program FILE --output NEW_DIR");
+        return Ok(());
+    }
+    let opts = super::options(args.into_iter(), &["--program", "--output"])?;
+    let out = Path::new(opts.get("--output").ok_or("--output required")?);
+    if out.exists() {
+        return Err("output already exists".into());
+    }
+    let p = Program::parse(super::read(Path::new(
+        opts.get("--program").ok_or("--program required")?,
+    ))?)?;
+    let mut g = Graph::new_with_cell_ownership(p)?;
+    g.train_ownership_fragments()?;
+    let mut e = Executor::new(g, false);
+    e.execute()?;
+    let profile = e.graph.ownership_fragment_profile()?;
+    let report = e.report();
+    fs::create_dir(out)?;
+    super::write(&out.join("profile.json"), &profile)?;
+    super::write(&out.join("report.json"), &report)?;
     Ok(())
 }

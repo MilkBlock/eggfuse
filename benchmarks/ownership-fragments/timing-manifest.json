@@ -1,0 +1,29 @@
+{
+  "sum-bits": {
+    "fast_baseline": {
+      "runtime": "out/local-unions/runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "previous_composed": {
+      "runtime": "out/ownership-composition/runtime-final",
+      "program": "out/ownership-composition/baked-sum-final/program.json",
+      "args": ["--cell-ownership"]
+    },
+    "control": {
+      "runtime": "out/ownership-fragments/runtime-final",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "uncomposed": {
+      "runtime": "out/ownership-fragments/runtime-final",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--cell-ownership"]
+    },
+    "fragments": {
+      "runtime": "out/ownership-fragments/runtime-final",
+      "program": "out/ownership-fragments/baked-sum-final/program.json",
+      "args": ["--cell-ownership"]
+    }
+  }
+}

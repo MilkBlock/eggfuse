@@ -1931,7 +1931,7 @@ impl Executor {
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
-        if self.graph.ownership_enabled() && self.graph.program.cell_ownership.markers[self.graph.program.rules[rid].template].active {
+        if self.graph.needs_ownership_entry(rid) {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
             self.graph.begin_owner_entry(rid,&anchors);
         }

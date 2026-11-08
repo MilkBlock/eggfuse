@@ -1,0 +1,39 @@
+{
+  "scope": "allocator requests during execute only; diagnostic binary excluded from timing",
+  "runtime_sha256": "2559a183450edffb0260e779a6610287e305f3a4689adff5ef3007a42ad3d16a",
+  "lanes": {
+    "control": {
+      "alloc_calls": 116981,
+      "free_calls": 89441,
+      "live_bytes_after": 141172150,
+      "live_bytes_before": 135103374,
+      "peak_live_requested_bytes": 141694289,
+      "realloc_calls": 18727,
+      "released_bytes": 20838038,
+      "requested_bytes": 26906814,
+      "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+    },
+    "uncomposed": {
+      "alloc_calls": 129430,
+      "free_calls": 101409,
+      "live_bytes_after": 143576921,
+      "live_bytes_before": 136598329,
+      "peak_live_requested_bytes": 144209661,
+      "realloc_calls": 18692,
+      "released_bytes": 22082934,
+      "requested_bytes": 29061526,
+      "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+    },
+    "fragments": {
+      "alloc_calls": 129207,
+      "free_calls": 101365,
+      "live_bytes_after": 151221033,
+      "live_bytes_before": 144645865,
+      "peak_live_requested_bytes": 151784993,
+      "realloc_calls": 18690,
+      "released_bytes": 21701294,
+      "requested_bytes": 28276462,
+      "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+    }
+  }
+}

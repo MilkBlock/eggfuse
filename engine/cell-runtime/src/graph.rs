@@ -59,8 +59,6 @@ pub struct FactState {
     #[serde(skip)]
     owned: bool,
     #[serde(skip)]
-    owned_owner: Option<u32>,
-    #[serde(skip)]
     local_union_owned: bool,
     #[cfg(feature = "receipt-slots")]
     #[serde(skip)]
@@ -83,8 +81,6 @@ pub struct FactState {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Cell {
-    #[serde(skip)]
-    owner: Option<u32>,
     #[serde(default)]
     pub completed_prefix: usize,
     #[serde(default)]
@@ -641,7 +637,6 @@ impl Graph {
         }
 
         Cell {
-            owner: self.owner_entry(),
             template,
             values,
             parent,
@@ -1439,7 +1434,6 @@ impl Graph {
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);
         let owned = self.owns_birth(f);
-        let owned_owner = owned.then(|| self.cells[&f.cell].owner.unwrap());
         let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
         #[cfg(feature = "sparse-cells")]
         facts.reserve_first();
@@ -1447,7 +1441,6 @@ impl Graph {
             f.op,
             FactState {
                 owned,
-                owned_owner,
                 local_union_owned,
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
@@ -2449,7 +2442,6 @@ impl Graph {
                     local_completion = self.finish_local_completion(local_completion, true)?;
                     continue;
                 }
-                self.settle_owned_lifetimes()?;
                 break;
             };
             if let Dependency::Fact(f) = d {

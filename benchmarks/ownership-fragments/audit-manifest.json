@@ -1,0 +1,16 @@
+{
+  "sum-bits": {
+    "control": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "uncomposed": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--cell-ownership"]
+    },
+    "fragments": {
+      "program": "out/ownership-fragments/baked-sum-final/program.json",
+      "args": ["--cell-ownership"]
+    }
+  }
+}

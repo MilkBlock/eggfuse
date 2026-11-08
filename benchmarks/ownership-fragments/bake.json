@@ -1,0 +1,3907 @@
+{
+  "scope": "Bake consumes a separate observed profile; baking does not execute the workload",
+  "compiler_sha256": "3b53c50942b00b1561064a7500a27a69078858898e03a0be6ad6df8cd6f4ec42",
+  "coverage": {
+    "scope": "typed compiler coverage, no workload execution or timing",
+    "templates": 983,
+    "covered_bodies": 1459,
+    "covered_tables": 241,
+    "entry_ports": 1454,
+    "shared_port_programs": 376,
+    "template_signal_steps": 3720,
+    "composition_initial_shapes": 376,
+    "composition_baked_shapes": 630,
+    "composition_transitions": 259,
+    "composition_input_sources": 1202
+  },
+  "selection": {
+    "schema": "eggfuse-ownership-fragments/v1",
+    "source": "1394b824f6c12b117e5ac7e61c1cbcc25f8a0e699eb48e0e65c590f50f69c115",
+    "fragments": [
+      {
+        "root": 48,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 0,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 47,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 99,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 305,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 522,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 303,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 43,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 0,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 183,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 303,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 48,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 43,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 87,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 95,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 96,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 0,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 0
+          },
+          {
+            "source_frame": 2,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 202,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 343,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 285,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 487,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 318,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 573,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 342,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 577,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 82,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 321,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 262,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 87,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 88,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 166,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 498,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 285,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 487,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 344,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 348,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 531,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 348,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 532,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 192,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 344,
+            "entry": 1,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 42,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 42,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 303,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 522,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 64,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 88,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 0,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 87,
+            "entry": 0,
+            "op": 11
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 143,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 48,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          },
+          {
+            "source_frame": 2,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 47,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 316,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 577,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 322,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 293,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 501,
+            "entry": 2,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 279,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 43,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 42,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 99,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 162,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 243,
+            "entry": 3,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 87,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 283,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 491,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 283,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 290,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 498,
+            "entry": 2,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 47,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 62,
+            "entry": 0,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          },
+          {
+            "source_frame": 2,
+            "rule": 62,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 283,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 491,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 19,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 532,
+            "entry": 0,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 95,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 297,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 501,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 49,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 208,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 321,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 119,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 87,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 87,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 64,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 94,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 262,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 522,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 262,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 512,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 303,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 523,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 43,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 61,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 61,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 285,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 487,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 2,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 316,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 531,
+            "entry": 2,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 261,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 51,
+            "entry": 0,
+            "op": 21
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 321,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 19,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 513,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 531,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 532,
+            "entry": 0,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 119,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 0,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 64,
+            "entry": 0,
+            "op": 11
+          },
+          {
+            "source_frame": 0,
+            "rule": 87,
+            "entry": 0,
+            "op": 11
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 208,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 538,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 316,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 577,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 577,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 338,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 166,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 338,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 183,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 82,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 82,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 346,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 293,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 0,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 64,
+            "entry": 0,
+            "op": 11
+          },
+          {
+            "source_frame": 0,
+            "rule": 87,
+            "entry": 0,
+            "op": 11
+          },
+          {
+            "source_frame": 0,
+            "rule": 87,
+            "entry": 0,
+            "op": 11
+          }
+        ]
+      },
+      {
+        "root": 101,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 7
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 290,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 202,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 344,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 43,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 57,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 2,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 119,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 95,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 138,
+            "entry": 0,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 285,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 348,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 534,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 136,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 94,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 0,
+            "op": 6
+          },
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 87,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 105,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 0,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 64,
+            "entry": 0,
+            "op": 11
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 88,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 98,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 55,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 144,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 202,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 522,
+            "entry": 0,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 318,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 542,
+            "entry": 5,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 183,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 208,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 538,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 322,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 307,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 522,
+            "entry": 1,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 331,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 513,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 331,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 183,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 322,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 322,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 19,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 513,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 19,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 531,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 44,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 2,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 121,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 101,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 0,
+            "op": 7
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 316,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 577,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 577,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 2,
+            "rule": 577,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 293,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 1,
+            "op": 5
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 94,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 82,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 41,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 90,
+            "entry": 0,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 66,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 88,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 68,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 88,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 88,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 331,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 522,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 348,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 532,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 0,
+            "rule": 532,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 2,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 19,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 513,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 531,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 96,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 318,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 540,
+            "entry": 3,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 45,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 83,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 123,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 85,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 121,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 1,
+            "rule": 125,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 185,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 324,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 2,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 188,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 327,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 328,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 321,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 539,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 290,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 498,
+            "entry": 1,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 91,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 2,
+            "rule": 88,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 67,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 92,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 1,
+            "rule": 88,
+            "entry": 1,
+            "op": 0
+          },
+          {
+            "source_frame": 2,
+            "rule": 88,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 86,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 122,
+            "entry": 1,
+            "op": 1
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          },
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 521,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 539,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 290,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 322,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 518,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 291,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 8
+          }
+        ]
+      },
+      {
+        "root": 96,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 290,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 498,
+            "entry": 2,
+            "op": 6
+          },
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 318,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 573,
+            "entry": 1,
+            "op": 1
+          },
+          {
+            "source_frame": 0,
+            "rule": 540,
+            "entry": 3,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 1,
+            "rule": 59,
+            "entry": 1,
+            "op": 0
+          }
+        ]
+      },
+      {
+        "root": 201,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 95,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 138,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 138,
+            "entry": 0,
+            "op": 5
+          },
+          {
+            "source_frame": 1,
+            "rule": 91,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 94,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          },
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          },
+          {
+            "source_frame": 0,
+            "rule": 59,
+            "entry": 0,
+            "op": 6
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 283,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 486,
+            "entry": 0,
+            "op": 2
+          },
+          {
+            "source_frame": 0,
+            "rule": 491,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 2,
+            "rule": 486,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 261,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 524,
+            "entry": 0,
+            "op": 21
+          }
+        ]
+      },
+      {
+        "root": 202,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 343,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 297,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 58,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 297,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 312,
+            "entry": 0,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 202,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 343,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 340,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 292,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 4
+          }
+        ]
+      },
+      {
+        "root": 296,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 498,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 296,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 198,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 504,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 0,
+            "rule": 143,
+            "entry": 0,
+            "op": 3
+          },
+          {
+            "source_frame": 2,
+            "rule": 144,
+            "entry": 0,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 291,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 8
+          },
+          {
+            "source_frame": 1,
+            "rule": 501,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 294,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 2
+          }
+        ]
+      },
+      {
+        "root": 294,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 2
+          },
+          {
+            "source_frame": 1,
+            "rule": 501,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      },
+      {
+        "root": 291,
+        "hops": [
+          {
+            "source_frame": 0,
+            "rule": 505,
+            "entry": 1,
+            "op": 8
+          },
+          {
+            "source_frame": 1,
+            "rule": 504,
+            "entry": 1,
+            "op": 3
+          }
+        ]
+      }
+    ],
+    "ranking": {
+      "minimum_activations": 2,
+      "max_fragments": 256,
+      "instruction_handle_budget": 16384,
+      "charged_static_handles": 4892,
+      "sum_of_candidate_scores_not_global_savings": 2174,
+      "alternatives_overlap": true,
+      "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+      "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+    }
+  },
+  "program_bytes": 6189761,
+  "markers_bytes": 326643
+}

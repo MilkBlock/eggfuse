@@ -8,23 +8,18 @@ pub struct Source {
     pub entry: usize,
     pub column: usize,
 }
-#[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, Serialize, PartialEq, Eq, Hash)]
 pub struct Shape {
     pub programs: Vec<usize>,
     pub ports: Vec<Rc<Vec<usize>>>,
     pub signals: Vec<Rc<Vec<Instruction>>>,
+    pub last_substitutions: usize,
 }
-#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, PartialEq, Eq, Hash)]
 pub struct Instruction {
     pub frame: usize,
     pub op: u32,
     pub columns: Rc<Vec<usize>>,
-}
-#[derive(Clone, Debug, Serialize, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Key {
-    pub parent: usize,
-    pub program: usize,
-    pub substitutions: Vec<(usize, usize)>,
 }
 impl Shape {
     fn initial(id: usize, p: &PortProgram) -> Self {
@@ -37,6 +32,7 @@ impl Shape {
         substitutions: &[(usize, usize)],
     ) -> (Self, usize) {
         let mut shape = self.clone();
+        shape.last_substitutions = substitutions.len();
         let mut copied_steps = 0;
         let mut touched = smallvec::SmallVec::<[usize; 8]>::new();
         let frame = shape.programs.len();
@@ -88,14 +84,108 @@ impl Shape {
         (shape, copied_steps)
     }
 }
+
+/// A marker route inside a bounded fragment. Its identity contains no eclass,
+/// instance address, or history preceding the fragment root.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Hop {
+    pub source_frame: usize,
+    pub rule: usize,
+    pub entry: usize,
+    pub op: u32,
+}
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Fragment {
+    pub root: usize,
+    pub hops: Vec<Hop>,
+}
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Key {
+    pub shape: usize,
+    pub hop: Hop,
+}
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
     pub sources: Vec<Vec<Source>>,
+    pub active_rules: Vec<bool>,
     #[serde(skip)]
     pub shapes: Vec<Rc<Shape>>,
+    pub fragments: Vec<Fragment>,
     pub transitions: Vec<(Key, usize)>,
     pub max_frames: usize,
-    pub precompile_budget: usize,
+}
+/// Profiles select code; they never authorize equality. Rebinding a profile to
+/// different source requires generating new checked observations.
+pub fn source_digest(raw: &J) -> String {
+    crate::checksum::artifact_digest_excluding_root(
+        raw,
+        &["sha256", "ownership_markers", "ownership_fragments"],
+    )
+}
+/// Rank repeated, actually used local continuations within a static code budget.
+/// The score is a proposal heuristic. Whole-execution timing admits speedups.
+pub fn select_profile(profile: &J) -> Result<J> {
+    if profile["schema"] != "eggfuse-ownership-fragment-profile/v1" {
+        return Err("invalid ownership fragment profile".into());
+    }
+    let records = profile["records"]
+        .as_array()
+        .ok_or("missing fragment observations")?;
+    let mut ranked = Vec::new();
+    let mut code_costs = BTreeMap::new();
+    for row in records {
+        let obs = &row["observed"];
+        let uses = obs["activations"]
+            .as_u64()
+            .ok_or("missing actual fragment activations")?;
+        let saved = obs["binding_records_saved"]
+            .as_u64()
+            .ok_or("missing binding savings")?;
+        let probes = obs["transition_probes"]
+            .as_u64()
+            .ok_or("missing transition costs")?;
+        let cost = row["static_instruction_handles"]
+            .as_u64()
+            .ok_or("missing code cost")?;
+        let net = 2 * i128::from(saved) - i128::from(probes);
+        let fragment: Fragment =
+            serde_json::from_value(row["fragment"].clone()).map_err(|e| e.to_string())?;
+        code_costs.insert(fragment.clone(), cost);
+        if uses >= 2 && net > 0 {
+            ranked.push((net as f64 / (1.0 + cost as f64), fragment, cost, net));
+        }
+    }
+    ranked.sort_by(|a, b| b.0.total_cmp(&a.0).then(a.1.cmp(&b.1)));
+    let mut selected = Vec::new();
+    let mut handles = 0;
+    let mut net = 0;
+    let mut prepared = BTreeSet::new();
+    for (_, fragment, cost, credit) in ranked {
+        let prefixes = (1..=fragment.hops.len())
+            .map(|n| Fragment {
+                root: fragment.root,
+                hops: fragment.hops[..n].to_vec(),
+            })
+            .filter(|prefix| !prepared.contains(prefix))
+            .collect::<Vec<_>>();
+        let added = prefixes
+            .iter()
+            .map(|p| code_costs.get(p).copied().unwrap_or(cost))
+            .sum::<u64>();
+        if selected.len() < 256 && handles + added <= 16_384 {
+            prepared.extend(prefixes);
+            selected.push(fragment);
+            handles += added;
+            net += credit;
+        }
+    }
+    Ok(
+        json!({"schema":"eggfuse-ownership-fragments/v1","source":profile["source"],"fragments":selected,
+        "ranking":{"minimum_activations":2,"max_fragments":256,"instruction_handle_budget":16384,
+            "charged_static_handles":handles,"sum_of_candidate_scores_not_global_savings":net,"alternatives_overlap":true,
+            "rule":"rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+            "performance_admission":"unvalidated ranking; requires whole-execution baseline comparison"}}),
+    )
 }
 impl Plan {
     pub(super) fn derive(
@@ -103,7 +193,7 @@ impl Plan {
         markers: &[Marker],
         programs: &[Rc<PortProgram>],
         entries: &[Vec<usize>],
-    ) -> Self {
+    ) -> Result<Self> {
         let sources = p
             .rules
             .iter()
@@ -127,65 +217,134 @@ impl Plan {
                 }
                 sources
             })
-            .collect::<Vec<_>>();
-        let shapes = programs
+            .collect();
+        let mut plan = Self {
+            sources,
+            active_rules: vec![false; p.rules.len()],
+            shapes: programs
+                .iter()
+                .enumerate()
+                .map(|(id, p)| Rc::new(Shape::initial(id, p)))
+                .collect(),
+            fragments: (0..programs.len())
+                .map(|root| Fragment { root, hops: vec![] })
+                .collect(),
+            transitions: vec![],
+            max_frames: 4,
+        };
+        let mut transitions = BTreeMap::new();
+        // Guard history selects a transition; code identity is just the local
+        // programs and symbolic wiring. Equivalent prefixes share one state.
+        let mut intern: HashMap<Shape, usize> = plan
+            .shapes
             .iter()
             .enumerate()
-            .map(|(id, p)| Rc::new(Shape::initial(id, p)))
-            .collect::<Vec<_>>();
-        let mut producers = vec![Vec::new(); p.tables.len()];
-        for (tid, t) in p.templates.iter().enumerate() {
-            for (op, ins) in t.ops.iter().enumerate() {
-                if let Op::Let(_, Call::Table(table), _) | Op::Set(table, _, _) = ins
-                    && markers[tid].bodies[op]
-                {
-                    producers[*table].push((markers[tid].program_id, op));
-                }
+            .map(|(id, s)| ((**s).clone(), id))
+            .collect();
+        if let Some(raw) = p.artifact.get("ownership_fragments") {
+            if raw["schema"] != "eggfuse-ownership-fragments/v1"
+                || raw["source"] != source_digest(&p.artifact)
+            {
+                return Err("ownership fragments have a different source or schema".into());
             }
-        }
-        let mut transitions = BTreeMap::new();
-        let budget = 4096;
-        for (rid, r) in p.rules.iter().enumerate() {
-            let callee = markers[r.template].program_id;
-            for (entry, &atom) in entries[rid].iter().enumerate() {
-                let Call::Table(table) = r.query[atom].call else {
-                    continue;
-                };
-                for &(producer, op) in &producers[table] {
-                    let mut subst = BTreeMap::new();
-                    for source in sources[rid].iter().filter(|s| s.entry == entry) {
-                        if let Some(symbol) = programs[producer].fields[op][source.column] {
-                            subst.entry(source.symbol).or_insert(symbol);
-                        }
-                    }
-                    if subst.is_empty() {
-                        continue;
-                    }
+            let selected: Vec<Fragment> = serde_json::from_value(raw["fragments"].clone())
+                .map_err(|e| format!("invalid ownership fragments: {e}"))?;
+            if selected.len() > 256 {
+                return Err("ownership fragment budget exceeded".into());
+            }
+            for fragment in selected {
+                if fragment.root >= programs.len() || fragment.hops.len() >= plan.max_frames {
+                    return Err("invalid ownership fragment root or extent".into());
+                }
+                let mut parent = fragment.root;
+                for hop in fragment.hops {
                     let key = Key {
-                        parent: producer,
-                        program: callee,
-                        substitutions: subst.into_iter().collect(),
+                        shape: parent,
+                        hop: hop.clone(),
                     };
-                    if transitions.len() < budget && !transitions.contains_key(&key) {
-                        let id = programs.len() + transitions.len();
+                    parent = if let Some(&id) = transitions.get(&key) {
+                        id
+                    } else {
+                        let program = p
+                            .rules
+                            .get(hop.rule)
+                            .map(|r| markers[r.template].program_id)
+                            .ok_or("ownership fragment rule out of bounds")?;
+                        let subst = plan
+                            .substitutions(programs, parent, &hop)
+                            .ok_or("ownership fragment has no checked input substitution")?;
+                        let code = plan.shapes[parent]
+                            .append(program, &programs[program], &subst)
+                            .0;
+                        let mut prefix = plan.fragments[parent].clone();
+                        prefix.hops.push(hop);
+                        let id = if let Some(&id) = intern.get(&code) {
+                            id
+                        } else {
+                            let id = plan.shapes.len();
+                            intern.insert(code.clone(), id);
+                            plan.shapes.push(Rc::new(code));
+                            plan.fragments.push(prefix);
+                            id
+                        };
                         transitions.insert(key, id);
-                    }
+                        id
+                    };
                 }
             }
         }
-        Self {
-            sources,
-            shapes,
-            transitions: transitions.into_iter().collect(),
-            max_frames: 16,
-            precompile_budget: budget,
+        plan.transitions = transitions.into_iter().collect();
+        for (key, _) in &plan.transitions {
+            plan.active_rules[key.hop.rule] = true;
         }
+        Ok(plan)
+    }
+    fn substitutions(
+        &self,
+        programs: &[Rc<PortProgram>],
+        shape: usize,
+        hop: &Hop,
+    ) -> Option<Vec<(usize, usize)>> {
+        substitutions(&self.sources, programs, self.shapes.get(shape)?, hop)
     }
 }
-
+fn substitutions(
+    sources: &[Vec<Source>],
+    programs: &[Rc<PortProgram>],
+    shape: &Shape,
+    hop: &Hop,
+) -> Option<Vec<(usize, usize)>> {
+    let producer = *shape.programs.get(hop.source_frame)?;
+    let fields = programs[producer].fields.get(hop.op as usize)?;
+    let mut subst = BTreeMap::new();
+    for source in sources
+        .get(hop.rule)?
+        .iter()
+        .filter(|s| s.entry == hop.entry)
+    {
+        let symbol = fields.get(source.column).copied().flatten()?;
+        subst
+            .entry(source.symbol)
+            .or_insert(shape.ports[hop.source_frame][symbol]);
+    }
+    (!subst.is_empty()).then(|| subst.into_iter().collect())
+}
+#[derive(Clone, Debug, Default, Serialize)]
+pub struct Observation {
+    pub activations: u64,
+    pub binding_records_saved: u64,
+    pub transition_probes: u64,
+}
+#[derive(Default)]
+pub(super) struct Training {
+    fragments: Vec<Fragment>,
+    observations: BTreeMap<usize, Observation>,
+    joined: HashMap<u32, usize>,
+    seen: BTreeSet<(u32, usize)>,
+}
 pub(super) struct Component {
     pub shape: usize,
-    pub frames: Vec<u32>,
+    pub frames: smallvec::SmallVec<[u32; 4]>,
     pub live_facts: usize,
 }
 #[derive(Clone, Copy)]
@@ -193,6 +352,57 @@ pub(super) struct Frame {
     pub component: u32,
     pub ordinal: usize,
     pub program: usize,
+}
+/// Stable frame addresses are normally dense. Retain outlier support for
+/// imported IDs without paying a hash lookup on every local port access.
+#[derive(Default)]
+pub(super) struct Frames {
+    dense: Vec<Option<Frame>>,
+    outliers: HashMap<u32, Frame>,
+    live: usize,
+}
+impl Frames {
+    pub fn get(&self, id: &u32) -> Option<&Frame> {
+        self.dense
+            .get(*id as usize)
+            .and_then(Option::as_ref)
+            .or_else(|| self.outliers.get(id))
+    }
+    pub fn contains_key(&self, id: &u32) -> bool {
+        self.get(id).is_some()
+    }
+    pub fn insert(&mut self, id: u32, frame: Frame) {
+        if let Some(old) = self.outliers.get_mut(&id) {
+            *old = frame;
+            return;
+        }
+        let n = id as usize;
+        if n <= self.dense.len().saturating_add(65536) {
+            if n >= self.dense.len() {
+                self.dense.resize(n + 1, None);
+            }
+            self.live += usize::from(self.dense[n].replace(frame).is_none());
+        } else {
+            self.live += usize::from(self.outliers.insert(id, frame).is_none());
+        }
+    }
+    pub fn remove(&mut self, id: &u32) {
+        let old = self
+            .dense
+            .get_mut(*id as usize)
+            .and_then(Option::take)
+            .or_else(|| self.outliers.remove(id));
+        self.live -= usize::from(old.is_some());
+    }
+    pub fn len(&self) -> usize {
+        self.live
+    }
+}
+impl std::ops::Index<&u32> for Frames {
+    type Output = Frame;
+    fn index(&self, id: &u32) -> &Frame {
+        self.get(id).expect("missing composition frame")
+    }
 }
 #[derive(Clone, Copy)]
 pub(super) struct Cursor {
@@ -202,9 +412,10 @@ pub(super) struct Cursor {
 }
 pub(super) struct Runtime {
     pub components: Vec<Option<Component>>,
-    pub frames: HashMap<u32, Frame>,
+    pub frames: Frames,
     pub shapes: Vec<Option<Rc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
+    pub training: Option<Training>,
     pub entry_rule: Option<usize>,
     pub anchors: smallvec::SmallVec<[Option<Dependency>; 4]>,
     pub entry_template: Option<usize>,
@@ -215,15 +426,10 @@ impl Runtime {
     pub fn new(p: &Plan) -> Self {
         Self {
             components: vec![],
-            frames: HashMap::default(),
-            shapes: p
-                .shapes
-                .iter()
-                .cloned()
-                .map(Some)
-                .chain(std::iter::repeat_n(None, p.transitions.len()))
-                .collect(),
+            frames: Frames::default(),
+            shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),
+            training: None,
             entry_rule: None,
             anchors: smallvec::SmallVec::new(),
             entry_template: None,
@@ -231,15 +437,123 @@ impl Runtime {
             columns: vec![],
         }
     }
-}
-impl Graph {
-    pub(super) fn composition_entry(&mut self, rid: usize, anchors: &[Option<Dependency>]) {
-        let Some(m) = &mut self.ownership else {
+    /// Diagnostic only: count actual first cross-frame binding reuse, not
+    /// potential symbolic substitutions or repeated uses of one consumer slot.
+    pub fn observe_shared_binding(&mut self, cell: u32, local: usize, symbol: usize) {
+        let Some(t) = &mut self.training else { return };
+        let Some(&record) = t.joined.get(&cell) else {
             return;
         };
-        // Keep checked Entry receipts; resolve their symbolic ports only if this
-        // application actually creates an owned frame. All-hit RHSs pay no
-        // composition lookups or shape construction.
+        let frame = self.frames[&cell];
+        let shape = self.shapes[record].as_ref().unwrap();
+        if shape.ports[..frame.ordinal]
+            .iter()
+            .any(|ports| ports.contains(&symbol))
+            && t.seen.insert((cell, local))
+        {
+            t.observations
+                .get_mut(&record)
+                .unwrap()
+                .binding_records_saved += 1;
+        }
+    }
+}
+impl Graph {
+    pub fn train_ownership_fragments(&mut self) -> Result<()> {
+        let m = self
+            .ownership
+            .as_mut()
+            .ok_or("enable ownership before profiling fragments")?;
+        if m.stats.marker_entries != 0 {
+            return Err("start fragment profiling before execution".into());
+        }
+        if !self
+            .program
+            .cell_ownership
+            .composition
+            .transitions
+            .is_empty()
+        {
+            return Err("profile fragments from the unbaked source catalog".into());
+        }
+        m.composition.training = Some(Training {
+            fragments: self.program.cell_ownership.composition.fragments.clone(),
+            ..Training::default()
+        });
+        Ok(())
+    }
+    pub fn ownership_fragment_profile(&self) -> Result<J> {
+        let m = self.ownership.as_ref().ok_or("ownership is disabled")?;
+        let t = m
+            .composition
+            .training
+            .as_ref()
+            .ok_or("fragment profiling is disabled")?;
+        // Project the actually checked last edge to a local producer/receiver
+        // pair as well. This shares the same continuation across unrelated
+        // prefixes; candidate records overlap and their credit must not be added
+        // as whole-execution savings.
+        let mut candidates = BTreeMap::<Fragment, (Observation, usize)>::new();
+        for (&id, obs) in &t.observations {
+            let shape = m.composition.shapes[id].as_ref().unwrap();
+            let full = t.fragments[id].clone();
+            let handles = shape.signals.iter().map(|s| s.len()).sum::<usize>();
+            let entry = candidates
+                .entry(full.clone())
+                .or_insert((Observation::default(), handles));
+            entry.0.activations += obs.activations;
+            entry.0.binding_records_saved += obs.binding_records_saved;
+            entry.0.transition_probes += obs.transition_probes;
+            if full.hops.len() > 1 {
+                let last = full.hops.last().unwrap();
+                let root = shape.programs[last.source_frame];
+                let hop = Hop {
+                    source_frame: 0,
+                    ..last.clone()
+                };
+                let pair = Fragment {
+                    root,
+                    hops: vec![hop.clone()],
+                };
+                let base = &self.program.cell_ownership.composition.shapes[root];
+                let subst = substitutions(
+                    &self.program.cell_ownership.composition.sources,
+                    &self.program.cell_ownership.programs,
+                    base,
+                    &hop,
+                )
+                .unwrap();
+                let program = *shape.programs.last().unwrap();
+                let code = base
+                    .append(
+                        program,
+                        &self.program.cell_ownership.programs[program],
+                        &subst,
+                    )
+                    .0;
+                let handles = code.signals.iter().map(|s| s.len()).sum::<usize>();
+                let entry = candidates
+                    .entry(pair)
+                    .or_insert((Observation::default(), handles));
+                entry.0.activations += obs.activations;
+                entry.0.binding_records_saved += obs.binding_records_saved;
+                entry.0.transition_probes += obs.transition_probes;
+            }
+        }
+        let records=candidates.into_iter().map(|(fragment,(obs,handles))|json!({
+            "fragment":fragment,"observed":obs,"static_instruction_handles":handles,
+            "net_record_operations":2 * obs.binding_records_saved as i128 - obs.transition_probes as i128,
+        })).collect::<Vec<_>>();
+        Ok(
+            json!({"schema":"eggfuse-ownership-fragment-profile/v1","source":source_digest(&self.program.artifact),
+            "scope":"checked Entry applications with actual owned births; diagnostic training, not production latency",
+            "alternatives_overlap":true,
+            "credit":"one avoided binding creation plus one avoided boundary insertion per observed shared input, minus transition probes; uncalibrated ranking only",
+            "records":records}),
+        )
+    }
+    pub(super) fn composition_entry(&mut self, rid: usize, anchors: &[Option<Dependency>]) {
+        let Some(m) = &mut self.ownership else { return };
         m.composition.entry_rule = Some(rid);
         m.composition.anchors.clear();
         m.composition.anchors.extend_from_slice(anchors);
@@ -252,43 +566,29 @@ impl Graph {
         if m.composition.frames.contains_key(&cell) {
             return;
         }
-        let mut parent = None;
-        let mut subst = BTreeMap::new();
+        let mut selected = None;
         if m.composition.entry_template == Some(template) {
             let rid = m.composition.entry_rule.unwrap();
-            for source in &self.program.cell_ownership.composition.sources[rid] {
+            for (entry, anchor) in m.composition.anchors.iter().copied().enumerate() {
                 m.stats.composition_entry_reads += 1;
-                let Some(Dependency::Fact(f)) = m.composition.anchors[source.entry] else {
+                let Some(Dependency::Fact(f)) = anchor else {
                     continue;
                 };
-                let Some(frame) = m.composition.frames.get(&f.cell) else {
-                    continue;
-                };
-                let Some(symbol) = self.program.cell_ownership.programs[frame.program].fields
-                    [f.op as usize]
-                    .get(source.column)
-                    .copied()
-                    .flatten()
-                else {
-                    continue;
-                };
-                let shape = m.composition.components[frame.component as usize]
-                    .as_ref()
-                    .unwrap()
-                    .shape;
-                let local = source.symbol;
-                let source = Signal {
-                    component: frame.component,
-                    symbol: m.composition.shapes[shape].as_ref().unwrap().ports[frame.ordinal]
-                        [symbol],
-                };
-                if !m.signals.contains_key(&source) {
+                if !self
+                    .cells
+                    .get(&f.cell)
+                    .and_then(|c| c.facts.get(&f.op))
+                    .is_some_and(|s| s.owned)
+                {
                     m.stats.composition_missing_sources += 1;
                     continue;
                 }
-                let Some(c) = m.composition.components[source.component as usize].as_ref() else {
+                let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
                     continue;
                 };
+                let c = m.composition.components[frame.component as usize]
+                    .as_ref()
+                    .unwrap();
                 if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
                     m.stats.composition_capacity_cuts += 1;
                     continue;
@@ -296,63 +596,85 @@ impl Graph {
                 if c.frames.last().is_some_and(|&last| last >= cell) {
                     continue;
                 }
-                if parent.is_none() {
-                    parent = Some(source.component);
-                }
-                if parent == Some(source.component) {
-                    subst.entry(local).or_insert(source.symbol);
-                } else {
-                    m.stats.composition_foreign_inputs += 1;
-                }
-            }
-        }
-        let (component, ordinal) = if let Some(component) = parent {
-            let c = m.composition.components[component as usize]
-                .as_ref()
-                .unwrap();
-            let key = Key {
-                parent: c.shape,
-                program,
-                substitutions: subst.into_iter().collect(),
-            };
-            m.stats.composition_requests += 1;
-            m.stats.composition_substituted_ports += key.substitutions.len() as u64;
-            let baked_count = self.program.cell_ownership.composition.shapes.len()
-                + self.program.cell_ownership.composition.transitions.len();
-            let shape = if let Some(&id) = m.composition.transitions.get(&key) {
-                m.stats.composition_cache_hits += 1;
-                m.stats.composition_baked_hits += u64::from(id < baked_count);
-                id
-            } else {
-                let id = m.composition.shapes.len();
-                m.composition.shapes.push(None);
-                m.composition.transitions.insert(key.clone(), id);
-                m.stats.composition_shape_builds += 1;
-                id
-            };
-            if m.composition.shapes[shape].is_none() {
-                let (code, copied_steps) =
-                    m.composition.shapes[key.parent].as_ref().unwrap().append(
+                let key = Key {
+                    shape: c.shape,
+                    hop: Hop {
+                        source_frame: frame.ordinal,
+                        rule: rid,
+                        entry,
+                        op: f.op,
+                    },
+                };
+                m.stats.composition_transition_probes += 1;
+                let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
+                    m.stats.composition_cache_hits += 1;
+                    m.stats.composition_baked_hits +=
+                        u64::from(shape < self.program.cell_ownership.composition.shapes.len());
+                    shape
+                } else if m.composition.training.is_some() {
+                    let Some(subst) = substitutions(
+                        &self.program.cell_ownership.composition.sources,
+                        &self.program.cell_ownership.programs,
+                        m.composition.shapes[c.shape].as_ref().unwrap(),
+                        &key.hop,
+                    ) else {
+                        continue;
+                    };
+                    let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
                         program,
                         &self.program.cell_ownership.programs[program],
-                        &key.substitutions,
+                        &subst,
                     );
-                m.stats.composition_materializations += 1;
-                m.stats.composition_shape_steps += copied_steps as u64;
-                m.composition.shapes[shape] = Some(Rc::new(code));
+                    let t = m.composition.training.as_mut().unwrap();
+                    let mut fragment = t.fragments[c.shape].clone();
+                    fragment.hops.push(key.hop.clone());
+                    t.fragments.push(fragment);
+                    let id = m.composition.shapes.len();
+                    m.composition.shapes.push(Some(Rc::new(code)));
+                    m.composition.transitions.insert(key, id);
+                    m.stats.composition_shape_builds += 1;
+                    m.stats.composition_materializations += 1;
+                    m.stats.composition_shape_steps += steps as u64;
+                    id
+                } else {
+                    m.stats.composition_unbaked_fallbacks += 1;
+                    continue;
+                };
+                selected = Some((
+                    frame.component,
+                    shape,
+                    self.cells[&f.cell].started_epoch != self.epoch,
+                ));
+                break;
             }
+        }
+        let (component, ordinal) = if let Some((component, shape, cross_stage)) = selected {
             let c = m.composition.components[component as usize]
                 .as_mut()
                 .unwrap();
             let ordinal = c.frames.len();
             c.frames.push(cell);
             c.shape = shape;
+            m.stats.composition_requests += 1;
+            m.stats.composition_substituted_ports += m.composition.shapes[shape]
+                .as_ref()
+                .unwrap()
+                .last_substitutions as u64;
+            m.stats.composition_cross_stage_joins += u64::from(cross_stage);
+            // All substitutions are in the precompiled port map. No runtime
+            // substitution vector or instruction materialization is required.
+            if let Some(t) = &mut m.composition.training {
+                t.joined.insert(cell, shape);
+                let obs = t.observations.entry(shape).or_default();
+                obs.activations += 1;
+                obs.transition_probes += 1;
+            }
             (component, ordinal)
         } else {
             let id = u32::try_from(m.composition.components.len()).expect("composition capacity");
             m.composition.components.push(Some(Component {
                 shape: program,
-                frames: vec![cell],
+                frames: smallvec::smallvec![cell],
                 live_facts: 0,
             }));
             m.stats.components_created += 1;
@@ -395,10 +717,34 @@ impl Graph {
         }
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn retained_frame_addresses_support_sparse_imports_and_dense_reuse() {
+        let mut frames = Frames::default();
+        let frame = Frame {
+            component: 1,
+            ordinal: 2,
+            program: 3,
+        };
+        frames.insert(u32::MAX, frame);
+        frames.insert(4, frame);
+        frames.insert(
+            4,
+            Frame {
+                program: 5,
+                ..frame
+            },
+        );
+        assert_eq!(frames.len(), 2);
+        assert_eq!(frames[&4].program, 5);
+        frames.remove(&4);
+        frames.remove(&4);
+        assert_eq!(frames.len(), 1);
+        assert_eq!(frames[&u32::MAX].ordinal, 2);
+        assert!(frames.dense.len() < 100);
+    }
     #[test]
     fn appending_a_receiver_preserves_unrelated_program_storage() {
         let producer = PortProgram {

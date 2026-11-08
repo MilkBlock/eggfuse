@@ -92,7 +92,6 @@ mod tests {
     use super::*;
     fn cell(t: usize) -> Cell {
         Cell {
-            owner: None,
             template: t,
             started_epoch: 0,
             parent: None,

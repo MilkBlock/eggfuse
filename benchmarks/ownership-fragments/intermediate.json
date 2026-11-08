@@ -1,0 +1,199 @@
+{
+  "scope": "intermediate standalone experiment before canonical hashing and storage fixes; not an accepted speedup",
+  "admission": {
+    "scope": "sum-bits only; profile and evaluation use the same frozen workload, not held-out generalization",
+    "fast_baseline_revision": "8fffff65",
+    "previous_revision": "c4bad788",
+    "rule": "semantic audit passes and upper 95% paired bootstrap ratio is below 1 for both inference and process wall versus ordinary fast baseline",
+    "accepted_as_acceleration": false,
+    "against": {
+      "fast_baseline": {
+        "inference_seconds": {
+          "candidate_median": 0.021653709,
+          "baseline_median": 0.021307583,
+          "median_ratio": 1.0162442638379021,
+          "paired_bootstrap_95pct_ratio": [
+            0.9929374606518119,
+            1.0300547251106553
+          ]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.27323120799999856,
+          "baseline_median": 0.14600129199999978,
+          "median_ratio": 1.8714300692626678,
+          "paired_bootstrap_95pct_ratio": [
+            1.849410674953888,
+            1.8906274564544252
+          ]
+        }
+      },
+      "previous_composed": {
+        "inference_seconds": {
+          "candidate_median": 0.021653709,
+          "baseline_median": 0.024604917,
+          "median_ratio": 0.8800561692608027,
+          "paired_bootstrap_95pct_ratio": [
+            0.8576615966489081,
+            0.8936721305870624
+          ]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.27323120799999856,
+          "baseline_median": 0.1800508329999957,
+          "median_ratio": 1.5175225987430176,
+          "paired_bootstrap_95pct_ratio": [
+            1.4980864903086826,
+            1.531486469330288
+          ]
+        }
+      },
+      "control": {
+        "inference_seconds": {
+          "candidate_median": 0.021653709,
+          "baseline_median": 0.021510708,
+          "median_ratio": 1.0066478983397478,
+          "paired_bootstrap_95pct_ratio": [
+            0.9813107667567875,
+            1.0200636498325926
+          ]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.27323120799999856,
+          "baseline_median": 0.1459582079999997,
+          "median_ratio": 1.8719824787106123,
+          "paired_bootstrap_95pct_ratio": [
+            1.8361530361932576,
+            1.8962197097377447
+          ]
+        }
+      },
+      "uncomposed": {
+        "inference_seconds": {
+          "candidate_median": 0.021653709,
+          "baseline_median": 0.021934875,
+          "median_ratio": 0.9871817824355051,
+          "paired_bootstrap_95pct_ratio": [
+            0.9619270681961944,
+            1.0279701724625387
+          ]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.27323120799999856,
+          "baseline_median": 0.15148158299999892,
+          "median_ratio": 1.8037255921731457,
+          "paired_bootstrap_95pct_ratio": [
+            1.7884422475501096,
+            1.8236874632242508
+          ]
+        }
+      }
+    },
+    "control_vs_fast_baseline": {
+      "inference_seconds": {
+        "candidate_median": 0.021510708,
+        "baseline_median": 0.021307583,
+        "median_ratio": 1.0095329911421675,
+        "paired_bootstrap_95pct_ratio": [
+          1.0022562714079815,
+          1.0244528417927747
+        ]
+      },
+      "process_wall_seconds": {
+        "candidate_median": 0.1459582079999997,
+        "baseline_median": 0.14600129199999978,
+        "median_ratio": 0.9997049067209619,
+        "paired_bootstrap_95pct_ratio": [
+          0.990644284842062,
+          1.0135804606473884
+        ]
+      }
+    },
+    "caveats": [
+      "one warmup and 31 interleaved fresh-process samples per lane",
+      "normal timing builds exclude allocation and ordered-trace instrumentation",
+      "process wall includes parsing, validation, setup, export and report diagnostics",
+      "training/Bake is separate preprocessing and must be amortized for deployment",
+      "profile alternatives overlap; candidate scores are not total savings"
+    ]
+  },
+  "allocations": {
+    "scope": "allocator requests during execute only; diagnostic binary excluded from timing",
+    "runtime_sha256": "8dfeb6bef2a1bb4e33d6065274e2ed226797a278ead7c2b2c61bd2632d4ae475",
+    "lanes": {
+      "control": {
+        "alloc_calls": 116981,
+        "free_calls": 89441,
+        "live_bytes_after": 141172138,
+        "live_bytes_before": 135103362,
+        "peak_live_requested_bytes": 141694277,
+        "realloc_calls": 18727,
+        "released_bytes": 20838038,
+        "requested_bytes": 26906814,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "uncomposed": {
+        "alloc_calls": 128961,
+        "free_calls": 101229,
+        "live_bytes_after": 143203869,
+        "live_bytes_before": 136614365,
+        "peak_live_requested_bytes": 143838337,
+        "realloc_calls": 18686,
+        "released_bytes": 21699590,
+        "requested_bytes": 28289094,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "fragments": {
+        "alloc_calls": 128818,
+        "free_calls": 101234,
+        "live_bytes_after": 150851239,
+        "live_bytes_before": 144661895,
+        "peak_live_requested_bytes": 151415343,
+        "realloc_calls": 18684,
+        "released_bytes": 21321310,
+        "requested_bytes": 27510654,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      }
+    }
+  },
+  "medians": {
+    "fast_baseline": {
+      "runtime_sha256": "9d5aa6db095301ed2285ce8b365c0f7124853b17138b0420a1cf97a10d93d3aa",
+      "median_inference_seconds": 0.021307583,
+      "median_peak_rss_bytes": 178012160,
+      "median_process_wall_seconds": 0.14600129199999978
+    },
+    "previous_composed": {
+      "runtime_sha256": "8fa60ec5e74d9b1f74729fc4f32b2a6fc8062ba68716a24b91f71f8b0007ca1e",
+      "median_inference_seconds": 0.024604917,
+      "median_peak_rss_bytes": 184451072,
+      "median_process_wall_seconds": 0.1800508329999957,
+      "median_load_seconds": 0.091863208,
+      "median_load_setup_inference_seconds": 0.118716292
+    },
+    "control": {
+      "runtime_sha256": "2b2803630ed4c6d3b3fd7fd41b56f647178b179771e2d4c5b6604a81897c4752",
+      "median_inference_seconds": 0.021510708,
+      "median_peak_rss_bytes": 178241536,
+      "median_process_wall_seconds": 0.1459582079999997,
+      "median_load_seconds": 0.079937334,
+      "median_load_setup_inference_seconds": 0.103880958
+    },
+    "uncomposed": {
+      "runtime_sha256": "2b2803630ed4c6d3b3fd7fd41b56f647178b179771e2d4c5b6604a81897c4752",
+      "median_inference_seconds": 0.021934875,
+      "median_peak_rss_bytes": 179830784,
+      "median_process_wall_seconds": 0.15148158299999892,
+      "median_load_seconds": 0.08025425,
+      "median_load_setup_inference_seconds": 0.10593970899999999
+    },
+    "fragments": {
+      "runtime_sha256": "2b2803630ed4c6d3b3fd7fd41b56f647178b179771e2d4c5b6604a81897c4752",
+      "median_inference_seconds": 0.021653709,
+      "median_peak_rss_bytes": 398721024,
+      "median_process_wall_seconds": 0.27323120799999856,
+      "median_load_seconds": 0.201629291,
+      "median_load_setup_inference_seconds": 0.225477459
+    }
+  },
+  "diagnosis": "source fingerprinting cloned and canonicalized the whole program again; singleton boundaries allocated tree nodes; retained frame metadata used a hash map on local port reads"
+}

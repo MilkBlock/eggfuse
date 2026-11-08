@@ -21,7 +21,6 @@ pub struct Plan {
     /// operations reference these same table IDs; routes are shared, not
     /// expanded into a separate per-producer/per-consumer dependency graph.
     pub routes: Vec<Vec<(usize, usize)>>,
-    pub max_continuation_facts: usize,
 }
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Marker {
@@ -89,7 +88,7 @@ impl Plan {
                 }
             }
         }
-        let composition = composition::Plan::derive(p, &markers, &programs, &entries);
+        let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
         let plan = Self {
             programs,
             composition,
@@ -97,7 +96,6 @@ impl Plan {
             markers,
             entries,
             routes,
-            max_continuation_facts: 256,
         };
         if let Some(raw) = p.artifact.get("ownership_markers") {
             if *raw != plan.artifact(p) {
@@ -107,7 +105,7 @@ impl Plan {
         Ok(plan)
     }
     pub fn artifact(&self, p: &Program) -> J {
-        json!({"schema":"eggfuse-ownership-markers/v3", "recipe":p.artifact["recipe"]["sha256"],
+        json!({"schema":"eggfuse-ownership-markers/v4", "recipe":p.artifact["recipe"]["sha256"],
             "entry_schedule":crate::checksum::artifact_digest(&p.artifact["entry_schedule"]),"plan":self,
             "contract":"checked scheduled bindings enter persistent scalar constructor owners; foreign roots are boundaries; no future union is assumed"})
     }
@@ -116,12 +114,6 @@ impl Plan {
 struct Stats {
     marker_entries: u64,
     marker_anchor_reads: u64,
-    marker_continuations: u64,
-    cross_stage_continuations: u64,
-    capacity_splits: u64,
-    owners_created: u64,
-    owners_retired: u64,
-    owners_live: u64,
     owned_births: u64,
     adopted_existing: u64,
     owned_retirements: u64,
@@ -146,7 +138,7 @@ struct Stats {
     boundary_body_reads: u64,
     stage_barriers: u64,
     carried_facts: u64,
-    carried_owners: u64,
+    carried_components: u64,
     unbound_query_calls: Counter<u64>,
     unbound_query_rows: Counter<u64>,
     retired_result_boundaries: u64,
@@ -160,8 +152,10 @@ struct Stats {
     components_retired: u64,
     components_live: u64,
     composition_entry_reads: u64,
+    composition_transition_probes: u64,
+    composition_unbaked_fallbacks: u64,
+    composition_cross_stage_joins: u64,
     composition_missing_sources: u64,
-    composition_foreign_inputs: u64,
     composition_capacity_cuts: u64,
     composition_requests: u64,
     composition_substituted_ports: u64,
@@ -196,17 +190,11 @@ struct Stats {
     domain_signal_visits: Counter<u64>,
     domain_slice_steps: Counter<u64>,
 }
-struct Owner {
-    // Lifetime accounting only. Composed programs already describe all uses;
-    // retaining a second destination set here adds birth/death maintenance.
-    facts: usize,
-    last_epoch: u64,
-}
 #[derive(Serialize)]
 struct Barrier {
     epoch: u64,
     live_facts: u64,
-    live_owners: u64,
+    live_components: u64,
     boundary_edges: u64,
     legacy_reverse_edges: u64,
     key_completions: u64,
@@ -219,13 +207,10 @@ struct Barrier {
 }
 pub(super) struct Runtime {
     composition: composition::Runtime,
-    owners: Vec<Option<Owner>>,
-    boundaries: HashMap<u64, BTreeSet<Signal>>,
+    boundaries: HashMap<u64, crate::tiny_set::TinySet<Signal>>,
     signals: HashMap<Signal, SignalBinding>,
-    retire_owners: BTreeSet<u32>,
     pending: BTreeSet<FactRef>,
     pub(super) tables: Vec<usize>,
-    entry: Option<u32>,
     stats: Stats,
     barriers: Vec<Barrier>,
 }
@@ -233,10 +218,15 @@ impl Graph {
     pub fn ownership_enabled(&self) -> bool {
         self.ownership.is_some()
     }
+    pub(crate) fn needs_ownership_entry(&self, rid: usize) -> bool {
+        self.ownership.as_ref().is_some_and(|m| {
+            self.program.cell_ownership.markers[self.program.rules[rid].template].active
+                && (m.composition.training.is_some()
+                    || self.program.cell_ownership.composition.active_rules[rid])
+        })
+    }
     pub(super) fn ownership_settled(&self) -> bool {
-        self.ownership
-            .as_ref()
-            .is_none_or(|m| m.pending.is_empty() && m.retire_owners.is_empty())
+        self.ownership.as_ref().is_none_or(|m| m.pending.is_empty())
     }
     pub fn new_with_cell_ownership(p: Program) -> Result<Self> {
         let mut g = Self::new_with_repair_ports(p)?;
@@ -261,15 +251,13 @@ impl Graph {
                 "persistent Cell ownership requires its own ordered completion backend".into(),
             );
         }
+        self.program.prepare_cell_ownership()?;
         self.ownership = Some(Runtime {
             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
-            owners: vec![],
             boundaries: HashMap::default(),
             signals: HashMap::default(),
-            retire_owners: BTreeSet::new(),
             pending: BTreeSet::new(),
             tables: vec![0; self.program.tables.len()],
-            entry: None,
             stats: Stats::default(),
             barriers: vec![],
         });
@@ -290,16 +278,8 @@ impl Graph {
             if !self.program.cell_ownership.tables[row.table] {
                 continue;
             }
-            let owner = self.ensure_cell_owner(f.cell);
             self.subscribe_edges(Dependency::Fact(f), &[]);
             self.dependencies.remove(&Dependency::Fact(f));
-            self.cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
-                .unwrap()
-                .owned_owner = Some(owner);
             self.cells
                 .get_mut(&f.cell)
                 .unwrap()
@@ -315,75 +295,21 @@ impl Graph {
                 .unwrap()
                 .decoded = Some((row.table, row.values.clone()));
             let m = self.ownership.as_mut().unwrap();
-            m.owners[owner as usize].as_mut().unwrap().facts += 1;
             m.tables[row.table] += 1;
             m.stats.adopted_existing += 1;
             m.stats.owned_live += 1;
             self.attach_owned_signals(f, &row.values);
         }
-        self.settle_owned_lifetimes()?;
         Ok(())
     }
-    fn ensure_cell_owner(&mut self, cell: u32) -> u32 {
-        let inherited = self.cells[&cell].owner;
-        let m = self.ownership.as_mut().unwrap();
-        if let Some(id) = inherited
-            && m.owners.get(id as usize).is_some_and(Option::is_some)
-        {
-            if m.owners[id as usize].as_ref().unwrap().facts
-                < self.program.cell_ownership.max_continuation_facts
-            {
-                return id;
-            }
-            m.stats.capacity_splits += 1;
-        }
-        let id = u32::try_from(m.owners.len()).expect("Cell owner capacity");
-        m.owners.push(Some(Owner {
-            facts: 0,
-            last_epoch: self.epoch,
-        }));
-        m.stats.owners_created += 1;
-        m.stats.owners_live += 1;
-        self.cells.get_mut(&cell).unwrap().owner = Some(id);
-        id
-    }
-    pub(crate) fn owner_entry(&self) -> Option<u32> {
-        self.ownership.as_ref().and_then(|m| m.entry)
-    }
     pub(crate) fn begin_owner_entry(&mut self, rid: usize, anchors: &[Option<Dependency>]) {
-        let Some(m) = &mut self.ownership else { return };
-        m.entry = None;
-        m.stats.marker_entries += 1;
-        for w in anchors.iter().copied().flatten() {
-            m.stats.marker_anchor_reads += 1;
-            let Dependency::Fact(f) = w else { continue };
-            let Some(c) = self.cells.get(&f.cell) else {
-                continue;
-            };
-            if !c.facts.get(&f.op).is_some_and(|s| s.owned) {
-                continue;
-            }
-            let Some(owner) = c.facts[&f.op].owned_owner else {
-                continue;
-            };
-            let Some(o) = m.owners[owner as usize].as_mut() else {
-                continue;
-            };
-            if o.facts >= self.program.cell_ownership.max_continuation_facts {
-                m.stats.capacity_splits += 1;
-                continue;
-            }
-            m.stats.marker_continuations += 1;
-            m.stats.cross_stage_continuations += u64::from(o.last_epoch != self.epoch);
-            o.last_epoch = self.epoch;
-            m.entry = Some(owner);
-            break;
+        if let Some(m) = &mut self.ownership {
+            m.stats.marker_entries += 1;
         }
         self.composition_entry(rid, anchors);
     }
     pub(crate) fn end_owner_entry(&mut self) {
         if let Some(m) = &mut self.ownership {
-            m.entry = None;
             m.composition.entry_rule = None;
             m.composition.anchors.clear();
             m.composition.entry_template = None;
@@ -398,13 +324,10 @@ impl Graph {
             self.ownership.as_mut().unwrap().stats.uncovered_births += 1;
             return false;
         }
-        self.ensure_cell_owner(f.cell);
         true
     }
     pub(super) fn publish_owned_birth(&mut self, f: FactRef, t: usize, fields: &[Value]) {
-        let owner = self.cells[&f.cell].facts[&f.op].owned_owner.unwrap();
         let m = self.ownership.as_mut().unwrap();
-        m.owners[owner as usize].as_mut().unwrap().facts += 1;
         m.tables[t] += 1;
         m.stats.owned_births += 1;
         m.stats.owned_live += 1;
@@ -480,6 +403,8 @@ impl Graph {
             if let Some(binding) = m.signals.get_mut(&signal) {
                 assert_eq!(binding.root, id, "symbolic alias disagrees with live port");
                 binding.live_ports += 1;
+                m.composition
+                    .observe_shared_binding(f.cell, symbol, signal.symbol);
             } else {
                 m.signals.insert(
                     signal,
@@ -641,7 +566,7 @@ impl Graph {
         let mut heap = std::mem::take(&mut m.composition.heap);
         let mut columns = std::mem::take(&mut m.composition.columns);
         debug_assert!(heap.is_empty());
-        for signal in signals.into_iter().chain(native) {
+        for signal in signals.iter().copied().chain(native) {
             let intrinsic = self.signal_is_native(signal, to);
             let m = self.ownership.as_mut().unwrap();
             m.stats.signal_activations += 1;
@@ -763,46 +688,28 @@ impl Graph {
         if !self.cells[&f.cell].facts[&f.op].owned {
             return false;
         }
-        let owner = self.cells[&f.cell].facts[&f.op].owned_owner.unwrap();
         self.detach_owned_signals(f);
         self.composition_retire_fact(f.cell);
         let m = self.ownership.as_mut().unwrap();
-        m.owners[owner as usize].as_mut().unwrap().facts -= 1;
         m.pending.remove(&f);
-        m.retire_owners.insert(owner);
         m.tables[t] -= 1;
         m.stats.owned_live -= 1;
         m.stats.owned_retirements += 1;
         true
     }
-    pub(super) fn settle_owned_lifetimes(&mut self) -> Result<()> {
-        let Some(m) = &mut self.ownership else {
-            return Ok(());
-        };
-        // Only release empty lifetime owners. Boundary membership is maintained
-        // at signal birth/death/alias, never by traversing an owner's body.
-        while let Some(owner) = m.retire_owners.pop_first() {
-            if m.owners[owner as usize].as_ref().unwrap().facts == 0 {
-                m.owners[owner as usize] = None;
-                m.stats.owners_live -= 1;
-                m.stats.owners_retired += 1;
-            }
-        }
-        Ok(())
-    }
     pub(crate) fn ownership_barrier(&mut self) {
         if let Some(m) = &mut self.ownership {
             assert!(
-                m.pending.is_empty() && m.retire_owners.is_empty(),
+                m.pending.is_empty(),
                 "unsettled owner at publication boundary"
             );
             m.stats.stage_barriers += 1;
             m.stats.carried_facts += m.stats.owned_live;
-            m.stats.carried_owners += m.stats.owners_live;
+            m.stats.carried_components += m.stats.components_live;
             m.barriers.push(Barrier {
                 epoch: self.epoch,
                 live_facts: m.stats.owned_live,
-                live_owners: m.stats.owners_live,
+                live_components: m.stats.components_live,
                 boundary_edges: m.stats.boundary_live,
                 legacy_reverse_edges: self.maintenance.live_reverse_edges,
                 key_completions: m.stats.key_completions,
@@ -817,7 +724,11 @@ impl Graph {
     }
     fn signal_domain(&self, id: u64) -> BTreeSet<Signal> {
         let m = self.ownership.as_ref().unwrap();
-        let mut signals = m.boundaries.get(&id).cloned().unwrap_or_default();
+        let mut signals = m
+            .boundaries
+            .get(&id)
+            .map(|set| set.iter().copied().collect::<BTreeSet<_>>())
+            .unwrap_or_default();
         if let Some(signal) = self.native_signal(id) {
             signals.insert(signal);
         }
@@ -901,10 +812,12 @@ impl Graph {
         result.into_iter().collect()
     }
     pub fn ownership_report(&self) -> J {
+        if self.ownership.is_none() {
+            return json!({"enabled":false,"plan_prepared":!self.program.cell_ownership.markers.is_empty(),"stats":null,"pending_keys":0});
+        }
         let mut internal = 0u64;
         let mut boundary = 0u64;
         let mut across = 0u64;
-        let mut largest = 0;
         let mut references = HashMap::<Signal, usize>::default();
         if let Some(m) = &self.ownership {
             assert_eq!(
@@ -912,14 +825,6 @@ impl Graph {
                 m.boundaries.values().map(|x| x.len() as u64).sum::<u64>()
             );
             assert_eq!(m.stats.owned_live, m.tables.iter().sum::<usize>() as u64);
-            assert_eq!(
-                m.stats.owned_live,
-                m.owners
-                    .iter()
-                    .flatten()
-                    .map(|o| o.facts as u64)
-                    .sum::<u64>()
-            );
             assert_eq!(m.stats.signal_bindings_live, m.signals.len() as u64);
             assert_eq!(
                 m.stats.components_live,
@@ -949,14 +854,10 @@ impl Graph {
                     assert!(!self.signal_is_native(signal, id));
                 }
             }
-            // Inventory reconstruction is outside inference. No live owner
-            // maintains a redundant per-fact reverse index for these checks.
-            let mut owner_facts = vec![0; m.owners.len()];
             for (&cell, c) in self.cells.iter() {
                 for (&op, s) in c.facts.iter().filter(|(_, s)| s.owned) {
                     let f = FactRef { cell, op };
                     assert!(!self.dependencies.contains_key(&Dependency::Fact(f)));
-                    owner_facts[s.owned_owner.unwrap() as usize] += 1;
                     across += u64::from(s.born < self.epoch);
                     let program =
                         &self.program.cell_ownership.markers[self.cells[&f.cell].template].program;
@@ -981,17 +882,15 @@ impl Graph {
                             } else {
                                 boundary += 1;
                                 assert!(
-                                    m.boundaries.get(id).is_some_and(|b| b.contains(&signal)),
+                                    m.boundaries
+                                        .get(id)
+                                        .is_some_and(|b| b.iter().any(|s| *s == signal)),
                                     "missing owner boundary"
                                 );
                             }
                         }
                     }
                 }
-            }
-            for (owner, count) in m.owners.iter().zip(owner_facts) {
-                assert_eq!(owner.as_ref().map_or(0, |o| o.facts), count);
-                largest = largest.max(count);
             }
         }
         if let Some(m) = &self.ownership {
@@ -1012,9 +911,9 @@ impl Graph {
             .map(|m| Rc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
-        json!({"routing":"composed symbolic port programs; boundary edges count external component slots", "enabled":self.ownership.is_some(),"plan":self.program.cell_ownership.artifact(&self.program),
+        json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":"eggfuse-ownership-markers/v4","port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
-            "inventory":{"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_owner":largest,
+            "inventory":{"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})

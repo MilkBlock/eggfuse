@@ -1,0 +1,80 @@
+{
+  "scope": "sum-bits only; profile and evaluation use the same frozen workload, not held-out generalization",
+  "fast_baseline_revision": "8fffff65",
+  "previous_revision": "c4bad788",
+  "rule": "semantic audit passes and upper 95% paired bootstrap ratio is below 1 for both inference and process wall versus ordinary fast baseline",
+  "accepted_as_acceleration": false,
+  "against": {
+    "fast_baseline": {
+      "inference_seconds": {
+        "candidate_median": 0.022246,
+        "baseline_median": 0.021334708,
+        "median_ratio": 1.0427140601127514,
+        "paired_bootstrap_95pct_ratio": [1.0314539953284971, 1.052746746940869]
+      },
+      "process_wall_seconds": {
+        "candidate_median": 0.18762645900000052,
+        "baseline_median": 0.14739674999999863,
+        "median_ratio": 1.272934844221479,
+        "paired_bootstrap_95pct_ratio": [1.2599865400683032, 1.2936350449086673]
+      }
+    },
+    "previous_composed": {
+      "inference_seconds": {
+        "candidate_median": 0.022246,
+        "baseline_median": 0.024547708,
+        "median_ratio": 0.906235319403343,
+        "paired_bootstrap_95pct_ratio": [0.8964422462502956, 0.920115128057317]
+      },
+      "process_wall_seconds": {
+        "candidate_median": 0.18762645900000052,
+        "baseline_median": 0.1811200829999997,
+        "median_ratio": 1.0359229959054337,
+        "paired_bootstrap_95pct_ratio": [1.025137706672235, 1.0509139347534304]
+      }
+    },
+    "control": {
+      "inference_seconds": {
+        "candidate_median": 0.022246,
+        "baseline_median": 0.021472292,
+        "median_ratio": 1.03603285573799,
+        "paired_bootstrap_95pct_ratio": [1.0255321604853473, 1.0470721767942048]
+      },
+      "process_wall_seconds": {
+        "candidate_median": 0.18762645900000052,
+        "baseline_median": 0.14723816600000106,
+        "median_ratio": 1.2743058684933577,
+        "paired_bootstrap_95pct_ratio": [1.259432006586669, 1.2942091638826365]
+      }
+    },
+    "uncomposed": {
+      "inference_seconds": {
+        "candidate_median": 0.022246,
+        "baseline_median": 0.022156208,
+        "median_ratio": 1.0040526790504944,
+        "paired_bootstrap_95pct_ratio": [0.9909296925895198, 1.0135371402862332]
+      },
+      "process_wall_seconds": {
+        "candidate_median": 0.18762645900000052,
+        "baseline_median": 0.15286945899998727,
+        "median_ratio": 1.227363923620716,
+        "paired_bootstrap_95pct_ratio": [1.2140133054759759, 1.2457857324918926]
+      }
+    }
+  },
+  "control_vs_fast_baseline": {
+    "inference_seconds": {
+      "candidate_median": 0.021472292,
+      "baseline_median": 0.021334708,
+      "median_ratio": 1.0064488344532299,
+      "paired_bootstrap_95pct_ratio": [0.9989254031411574, 1.0143112069275322]
+    },
+    "process_wall_seconds": {
+      "candidate_median": 0.14723816600000106,
+      "baseline_median": 0.14739674999999863,
+      "median_ratio": 0.9989241011080803,
+      "paired_bootstrap_95pct_ratio": [0.9839928808841971, 1.0132711274781732]
+    }
+  },
+  "caveats": ["one warmup and 31 interleaved fresh-process samples per lane", "equal-length executable/input symlinks and numeric output paths within each case", "normal timing builds exclude allocation and ordered-trace instrumentation", "process wall includes parsing, validation, setup, export and report diagnostics", "training/Bake is separate preprocessing and must be amortized for deployment", "profile alternatives overlap; candidate scores are not total savings"]
+}

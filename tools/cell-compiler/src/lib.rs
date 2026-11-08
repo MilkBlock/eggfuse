@@ -312,6 +312,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
     egglog::EGraph::set_num_threads(1);
     match cmd.as_str() {
         "bake-cell-ownership" => ownership_bake::run(args),
+        "profile-cell-ownership" => ownership_bake::profile(args),
         #[cfg(feature = "iterative-bake")]
         "iterate" => iterate::run(args),
         #[cfg(feature = "iterative-bake")]
