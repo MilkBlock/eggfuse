@@ -3,6 +3,8 @@
 //! consumed by shared Entry; source Run barriers still control observation.
 use super::*;
 use std::rc::Rc;
+#[path = "congruence_cells.rs"]
+mod cells;
 
 #[derive(Default, Debug, Serialize)]
 pub(super) struct DigestStats {
@@ -25,6 +27,7 @@ pub(super) struct DigestStats {
     pub unit_rows_retired: u64,
     pub unit_compact_rekeys: u64,
     pub unit_compact_retired: u64,
+    pub expression_publication_births: u64,
 }
 
 pub(super) struct Matcher {
@@ -32,6 +35,8 @@ pub(super) struct Matcher {
     eq_columns: Vec<Box<[usize]>>,
     duplicates: BTreeSet<FactRef>,
     unit_pending: BTreeSet<usize>,
+    expressions: Option<cells::Expressions>,
+    publication: BTreeSet<FactRef>,
     stats: DigestStats,
     live_rows: usize,
     hash_bits: u32,
@@ -90,6 +95,8 @@ impl Matcher {
                 .collect(),
             duplicates: BTreeSet::new(),
             unit_pending: BTreeSet::new(),
+            expressions: None,
+            publication: BTreeSet::new(),
             stats: DigestStats::default(),
             live_rows: 0,
             hash_bits,
@@ -101,6 +108,12 @@ impl Matcher {
         })
     }
 
+    pub fn with_cells(p: &Program, hash_bits: u32) -> Result<Self> {
+        let mut m = Self::new(p, hash_bits)?;
+        m.expressions = Some(cells::Expressions::default());
+        Ok(m)
+    }
+
     pub fn removed(&mut self, f: FactRef) {
         self.live_rows -= 1;
         self.duplicates.remove(&f);
@@ -109,16 +122,25 @@ impl Matcher {
     pub fn report(&self) -> J {
         json!({"enabled": true, "stats": self.stats,
             "live_packets": self.live_rows, "owned_key_packets": 0,
-            "owned_argument_postings": 0, "owned_key_buckets": 0,
+            "owned_argument_postings": self.expressions.as_ref().map_or(0, |e| e.argument_postings()), "owned_key_buckets": 0,
             "hash_bits": self.hash_bits,
             "storage": "Graph RowFields, reverse incidences and constructor interning",
             "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
             "pending_unit_rows": self.unit_pending.len(),
+            "congruence_cells": self.expressions.as_ref().map(|e| e.report()),
             "scope": "constructor congruence and scalar Unit presence; ordered/value-producing merges excluded"})
     }
 }
 
 impl Graph {
+    pub fn congruence_cells_audit(&self) -> Option<J> {
+        self.union_digest
+            .as_ref()?
+            .expressions
+            .as_ref()
+            .map(|e| e.audit())
+    }
+
     #[inline]
     pub(super) fn constructor_hash(&self, table: usize, key: &[Value]) -> u64 {
         let h = hashkey(table, key);
@@ -129,6 +151,22 @@ impl Graph {
         let matcher = self.union_digest.as_mut().unwrap();
         matcher.live_rows += 1;
         matcher.stats.peak_packets = matcher.stats.peak_packets.max(matcher.live_rows);
+        if let Some(e) = matcher.expressions.as_mut() {
+            let state = &self.cells[&f.cell].facts[&f.op];
+            let (table, fields) = state.decoded.as_ref().ok_or("missing application fields")?;
+            if self.program.tables[*table].constructor {
+                e.application(*table, fields.clone(), &self.parents, self.epoch);
+            }
+            // Activation already published a canonical row. Only a possible
+            // duplicate import needs another pass; later equality events will
+            // independently enqueue genuinely changed rows. The bucket is a
+            // publication hint, never a premise for a congruence proposal.
+            if self.intern[&state.hash].len() > 1 {
+                matcher.publication.insert(f);
+                matcher.stats.expression_publication_births += 1;
+            }
+            return Ok(());
+        }
         // Activation already installed the packet in the shared constructor
         // bucket. Normally singleton, but imports can contain duplicate keys.
         self.join_digest(f)
@@ -165,6 +203,14 @@ impl Graph {
             matcher.duplicates.insert(f);
             matcher.duplicates.insert(other);
             if self.program.tables[*table].constructor {
+                if matcher.expressions.is_some() {
+                    if result != other_result {
+                        return Err(
+                            "congruence publication found an unproved result equality".into()
+                        );
+                    }
+                    return Ok(());
+                }
                 matcher.stats.congruence_matches += 1;
                 matcher.stats.output_union_requests += 1;
                 self.enqueue_union(result, other_result)?;
@@ -189,6 +235,23 @@ impl Graph {
     ) -> Result<()> {
         let matcher = self.union_digest.as_mut().unwrap();
         matcher.stats.equality_events += 1;
+        if let Some(e) = matcher.expressions.as_mut() {
+            e.merged(from, to, &self.parents, self.epoch);
+            for d in affected.iter() {
+                matcher.stats.shared_incidence_visits += 1;
+                match *d {
+                    Dependency::Fact(f) => {
+                        matcher.publication.insert(f);
+                    }
+                    Dependency::Function(i) => {
+                        self.functions[i].decoded = None;
+                        matcher.unit_pending.insert(i);
+                        matcher.stats.unit_notifications += 1;
+                    }
+                }
+            }
+            return Ok(());
+        }
         let mut rekeyed = Vec::new();
         for d in affected.iter() {
             matcher.stats.shared_incidence_visits += 1;
@@ -316,6 +379,9 @@ impl Graph {
     }
 
     pub(super) fn propagate_union_digests(&mut self) -> Result<()> {
+        if self.union_digest.as_ref().unwrap().expressions.is_some() {
+            return self.propagate_congruence_cells();
+        }
         // Imported equal keys may have emitted proposals before any event.
         self.retire_digest_duplicates()?;
         while !self.pending_unions.is_empty() {
@@ -324,6 +390,72 @@ impl Graph {
                 self.union(a, b)?;
             }
         }
+        self.publish_unit_digests()
+    }
+
+    fn propagate_congruence_cells(&mut self) -> Result<()> {
+        let pairs = std::mem::take(&mut self.pending_unions);
+        let e = self
+            .union_digest
+            .as_mut()
+            .unwrap()
+            .expressions
+            .as_mut()
+            .unwrap();
+        for (a, b) in pairs {
+            e.source(a, b, &self.parents, self.epoch);
+        }
+        loop {
+            let ready = self
+                .union_digest
+                .as_mut()
+                .unwrap()
+                .expressions
+                .as_mut()
+                .unwrap()
+                .pop();
+            let Some((a, b, derived)) = ready else {
+                break;
+            };
+            self.stats.union_requests += u64::from(derived);
+            self.union(a, b)?;
+        }
+        // Congruence is already closed. The compatibility publication pass is
+        // forbidden from inferring any new equality. Detach ALL old keys first.
+        let pending = std::mem::take(&mut self.union_digest.as_mut().unwrap().publication);
+        for &f in &pending {
+            let state = self
+                .cells
+                .get_mut(&f.cell)
+                .and_then(|c| c.facts.get_mut(&f.op))
+                .ok_or("missing expression publication witness")?;
+            let (table, fields) = state.decoded.as_mut().ok_or("missing expression row")?;
+            let m = self.union_digest.as_mut().unwrap();
+            m.stats.shared_row_copies += u64::from(Rc::strong_count(fields) > 1);
+            let values = Rc::make_mut(fields);
+            for &col in &m.eq_columns[*table] {
+                values[col] = canon(&values[col], &self.parents);
+            }
+            let old = state.hash;
+            if let Some(bucket) = self.intern.get_mut(&old) {
+                bucket.remove(&f);
+                if bucket.is_empty() {
+                    self.intern.remove(&old);
+                }
+            }
+            state.hash = hashkey(*table, &values[..values.len() - 1]) & m.hash_mask;
+            self.stats.repair_key_hash_changes += u64::from(state.hash != old);
+            state.epoch = self.epoch;
+            self.query_versions[*table] += 1;
+            self.changes.touch(*table, Dependency::Fact(f));
+            m.stats.publication_visits += 1;
+        }
+        for f in pending {
+            self.join_digest(f)?;
+            let h = self.cells[&f.cell].facts[&f.op].hash;
+            self.intern.entry(h).or_default().insert(f);
+        }
+        self.retire_digest_duplicates()?;
         self.publish_unit_digests()
     }
 

@@ -25,6 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
+        println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -76,7 +77,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .filter(|v| !v.starts_with("--"))
                     .ok_or("missing keeper pairs")?;
             }
-            "--audit-stages" | "--inspect-program" | "--union-digest" => {}
+            "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -92,16 +93,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Ok(());
     }
     let digest = args.iter().any(|x| x == "--union-digest");
-    if !digest && opt("--union-digest-hash-bits").is_some() {
-        return Err("--union-digest-hash-bits requires --union-digest".into());
+    let expressions = args.iter().any(|x| x == "--congruence-cells");
+    if digest && expressions {
+        return Err("choose --union-digest or --congruence-cells".into());
+    }
+    if !digest && !expressions && opt("--union-digest-hash-bits").is_some() {
+        return Err("--union-digest-hash-bits requires --union-digest or --congruence-cells".into());
     }
     let out = PathBuf::from(opt("--output").ok_or("--output required")?);
     let start = Instant::now();
     let audit = args.iter().any(|x| x == "--audit-stages");
-    let graph = if digest {
+    let graph = if digest || expressions {
         let bits = opt("--union-digest-hash-bits")
             .map(|v| v.parse()).transpose()?.unwrap_or(64);
-        Graph::new_with_union_digest(program, bits)?
+        if expressions {
+            Graph::new_with_congruence_cells(program, bits)?
+        } else {
+            Graph::new_with_union_digest(program, bits)?
+        }
     } else {
         Graph::new(program)?
     };
@@ -228,6 +237,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )?;
     }
     if runtime.audit {
+        if let Some(nodes) = runtime.graph.congruence_cells_audit() {
+            std::fs::write(out.join("congruence-cells.json"), serde_json::to_vec(&nodes)?)?;
+        }
         std::fs::write(
             out.join("stages.json"),
             serde_json::to_vec(&runtime.snapshots)?,

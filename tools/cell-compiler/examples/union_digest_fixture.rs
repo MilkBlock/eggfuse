@@ -16,13 +16,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .strip_prefix("warm-")
         .or_else(|| args[1].strip_prefix("unit-"))
         .unwrap_or(&args[1]);
-    if !["chain", "fanout", "stable"].contains(&shape) || (warm && shape == "stable") {
+    if !["chain", "fanout", "stable", "staged"].contains(&shape) || (warm && shape == "stable") {
         return Err("unknown shape".into());
     }
     let groups: usize = args[2].parse()?;
     let depth: usize = args[3].parse()?;
     if groups == 0 || depth == 0 {
         return Err("positive GROUPS and DEPTH required".into());
+    }
+    if shape == "staged" {
+        return write_fixture(out, staged(groups, depth), BTreeSet::new());
     }
     let mut source = String::from("(datatype E (N i64) (Seed E E) (F i64 E) (Seen E))\n");
     if unit {
@@ -64,16 +67,49 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         source.push_str("(run-schedule (seq (run make) (run alias) (run read)))\n");
     }
-    let core = eggfuse_bake::device_frontend::core("union-digest-fixture", &source)?;
     let markers = if unit {
         BTreeSet::from(["Mark".to_owned()])
     } else {
         BTreeSet::new()
     };
+    write_fixture(out, source, markers)
+}
+
+fn write_fixture(
+    out: PathBuf,
+    source: String,
+    markers: BTreeSet<String>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let core = eggfuse_bake::device_frontend::core("union-digest-fixture", &source)?;
     let artifact = compiler::compile(core, &markers)?;
     Program::parse(artifact.clone())?;
     fs::create_dir(&out)?;
     fs::write(out.join("source.egg"), source)?;
     fs::write(out.join("program.json"), serde_json::to_vec(&artifact)?)?;
     Ok(())
+}
+
+fn staged(groups: usize, depth: usize) -> String {
+    let mut s = String::from(
+        "(datatype E (N i64) (Seed E E E E) (Pair i64 E E) (Other i64 E E) (F E) (Seen E))\n(ruleset make) (ruleset left) (ruleset right) (ruleset read)\n(rule ((Seed a b c d)) (\n",
+    );
+    for i in 0..depth {
+        s.push_str(&format!(
+            "(F (Pair {i} a c)) (F (Pair {i} b d)) (F (Other {i} a c)) (F (Other {i} b d))\n"
+        ));
+    }
+    s.push_str(") :ruleset make)\n(rule ((Seed a b c d)) ((union a b)) :ruleset left)\n(rule ((Seed a b c d)) ((union c d)) :ruleset right)\n(rule ((= x (F y))) ((Seen x)) :ruleset read)\n");
+    for g in 0..groups {
+        s.push_str(&format!(
+            "(Seed (N {}) (N {}) (N {}) (N {}))\n",
+            4 * g,
+            4 * g + 1,
+            4 * g + 2,
+            4 * g + 3
+        ));
+    }
+    s.push_str(
+        "(run-schedule (seq (run make) (run read) (run left) (run read) (run right) (run read)))\n",
+    );
+    s
 }

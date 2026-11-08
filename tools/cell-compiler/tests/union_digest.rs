@@ -8,6 +8,14 @@ fn program(source: &str) -> Program {
     Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap()
 }
 
+fn mode_graph(p: Program, bits: u32, nodes: bool) -> Result<Graph, String> {
+    if nodes {
+        Graph::new_with_congruence_cells(p, bits)
+    } else {
+        Graph::new_with_union_digest(p, bits)
+    }
+}
+
 // Give each class a deterministic name from its first grounded constructor
 // layer. These fixtures are reachable from scalar/nullary constructors, even
 // after cyclic unions. Reject unresolved or duplicate class names; then compare
@@ -104,9 +112,8 @@ fn differential(init: &str, runs: &[&str]) {
             .map(|s| rows(s["rows"].clone()))
             .collect::<Vec<_>>();
         assert_eq!(reference, expected, "ordinary Cell/native mismatch");
-        for bits in [0, 64] {
-            let mut digest =
-                Executor::new(Graph::new_with_union_digest(p.clone(), bits).unwrap(), true);
+        for (nodes, bits) in [(false, 0), (false, 64), (true, 0), (true, 64)] {
+            let mut digest = Executor::new(mode_graph(p.clone(), bits, nodes).unwrap(), true);
             digest.execute().unwrap();
             let actual = std::iter::once(digest.initial_audit.as_ref().unwrap())
                 .chain(digest.snapshots.iter())
@@ -114,7 +121,7 @@ fn differential(init: &str, runs: &[&str]) {
                 .collect::<Vec<_>>();
             assert_eq!(
                 actual, expected,
-                "digest/native mismatch: reversed={reverse}, bits={bits}"
+                "digest/native mismatch: reversed={reverse}, bits={bits}, nodes={nodes}"
             );
             // Same-input audits additionally check bindings and schedule.
             assert_eq!(digest.binding_audit, control.binding_audit);
@@ -198,9 +205,145 @@ fn unsupported_effects_are_rejected() {
     ] {
         let result = Graph::new_with_union_digest(program(source), 64);
         assert!(matches!(result, Err(e) if e.contains(reason)));
+        let result = Graph::new_with_congruence_cells(program(source), 64);
+        assert!(matches!(result, Err(e) if e.contains(reason)));
     }
     let p = program("(datatype E (N i64)) (N 0) (run 1)");
     assert!(Graph::new_with_union_digest(p, 65).is_err());
+}
+
+#[test]
+fn congruence_cells_reuse_premises_and_complete_across_runs() {
+    use eggfuse_cell_runtime::value::{Value, canon};
+    let p = program("(datatype E (N i64) (Pair E E) (Other E E) (F E)) (run 1)");
+    let table = |name: &str| p.tables.iter().position(|t| t.name == name).unwrap();
+    for bits in [0, 64] {
+        let mut g = Graph::new_with_congruence_cells(p.clone(), bits).unwrap();
+        let ns: Vec<_> = (0..4)
+            .map(|i| {
+                g.dynamic_construct(table("N"), vec![Value::Int(i)])
+                    .unwrap()
+            })
+            .collect();
+        let mut outputs = vec![];
+        for t in ["Pair", "Other"] {
+            outputs.push(
+                g.dynamic_construct(table(t), vec![ns[0].clone(), ns[2].clone()])
+                    .unwrap(),
+            );
+            outputs.push(
+                g.dynamic_construct(table(t), vec![ns[1].clone(), ns[3].clone()])
+                    .unwrap(),
+            );
+        }
+        let left = g
+            .dynamic_construct(table("F"), vec![outputs[0].clone()])
+            .unwrap();
+        let right = g
+            .dynamic_construct(table("F"), vec![outputs[1].clone()])
+            .unwrap();
+        g.repair().unwrap();
+        g.epoch = 1;
+        g.enqueue_union(ns[0].clone(), ns[1].clone()).unwrap();
+        g.repair().unwrap();
+        let before = g.congruence_cells_audit().unwrap();
+        let waiting: Vec<_> = before["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .enumerate()
+            .filter(|(_, c)| c["completed"].is_null())
+            .collect();
+        assert_eq!(waiting.len(), 2);
+        assert_eq!(
+            waiting[0].1["ports"], waiting[1].1["ports"],
+            "two operator cells must share equality premises"
+        );
+        assert!(
+            waiting
+                .iter()
+                .all(|(_, c)| c["remaining"] == 1 && c["born"] == 1)
+        );
+        assert_ne!(canon(&left, &g.parents), canon(&right, &g.parents));
+        g.epoch = 2;
+        g.enqueue_union(ns[2].clone(), ns[3].clone()).unwrap();
+        g.repair().unwrap();
+        let after = g.congruence_cells_audit().unwrap();
+        for (id, c) in waiting {
+            assert_eq!(after["cells"][id]["applications"], c["applications"]);
+            assert_eq!(after["cells"][id]["completed"], 2);
+            assert_eq!(after["cells"][id]["remaining"], 0);
+        }
+        assert_eq!(canon(&left, &g.parents), canon(&right, &g.parents));
+        let report = g.union_digest_report();
+        assert_eq!(
+            report["congruence_cells"]["stats"]["completed_across_runs"],
+            2
+        );
+        assert_eq!(report["stats"]["key_packets_updated"], 0);
+        assert_eq!(
+            report["stats"]["output_union_requests"], 0,
+            "publication cannot infer congruence"
+        );
+        assert_eq!(g.stats.repaired_dependencies, 0);
+    }
+}
+
+#[test]
+fn recursive_completion_requires_an_external_equality() {
+    use eggfuse_cell_runtime::value::{Value, canon};
+    let p = program("(datatype E (N i64) (Pair E E)) (run 1)");
+    let table = |name: &str| p.tables.iter().position(|t| t.name == name).unwrap();
+    let mut g = Graph::new_with_congruence_cells(p.clone(), 0).unwrap();
+    let ns: Vec<_> = (0..3)
+        .map(|i| {
+            g.dynamic_construct(table("N"), vec![Value::Int(i)])
+                .unwrap()
+        })
+        .collect();
+    let a = g
+        .dynamic_construct(table("Pair"), vec![ns[0].clone(), ns[2].clone()])
+        .unwrap();
+    let b = g
+        .dynamic_construct(table("Pair"), vec![ns[1].clone(), ns[2].clone()])
+        .unwrap();
+    g.enqueue_union(a.clone(), ns[0].clone()).unwrap();
+    g.enqueue_union(b.clone(), ns[1].clone()).unwrap();
+    g.repair().unwrap();
+    assert_ne!(canon(&a, &g.parents), canon(&b, &g.parents));
+    let report = g.union_digest_report();
+    assert_eq!(report["congruence_cells"]["waiting_cells"], 1);
+    assert_eq!(report["congruence_cells"]["stats"]["completed_cells"], 0);
+    g.epoch += 1;
+    g.enqueue_union(ns[0].clone(), ns[1].clone()).unwrap();
+    g.repair().unwrap();
+    assert_eq!(canon(&a, &g.parents), canon(&b, &g.parents));
+    assert_eq!(
+        g.union_digest_report()["congruence_cells"]["waiting_cells"],
+        0
+    );
+}
+
+#[test]
+fn staged_congruence_matches_native_at_each_source_boundary() {
+    differential(
+        r#"
+        (datatype E (N i64) (Pair E E) (Other E E) (F E) (Seen E))
+        (ruleset left) (ruleset right) (ruleset read)
+        (rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset left)
+        (rule ((= c (N 2)) (= d (N 3))) ((union c d)) :ruleset right)
+        (rule ((= x (F y))) ((Seen x)) :ruleset read)
+        (F (Pair (N 0) (N 2))) (F (Pair (N 1) (N 3)))
+        (F (Other (N 0) (N 2))) (F (Other (N 1) (N 3)))
+        "#,
+        &[
+            "(run read)",
+            "(run left)",
+            "(run read)",
+            "(run right)",
+            "(run read)",
+        ],
+    );
 }
 
 #[test]
@@ -262,9 +405,8 @@ fn bake_markers_and_compact_unit_ports_survive_union_digests() {
         .map(|s| rows(s["rows"].clone()))
         .collect();
     let mut final_rows = J::Null;
-    for bits in [0, 64] {
-        let mut digest =
-            Executor::new(Graph::new_with_union_digest(p.clone(), bits).unwrap(), true);
+    for (nodes, bits) in [(false, 0), (false, 64), (true, 0), (true, 64)] {
+        let mut digest = Executor::new(mode_graph(p.clone(), bits, nodes).unwrap(), true);
         digest.execute().unwrap();
         assert_eq!(
             digest
@@ -332,9 +474,9 @@ fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
     );
     let any = p.sets["any"][0];
     let equal = p.sets["equal"][0];
-    for bits in [0, 64] {
+    for (nodes, bits) in [(false, 0), (false, 64), (true, 0), (true, 64)] {
         let mut scheduler = Scheduler::new(&p, true);
-        let mut graph = Graph::new_with_union_digest(p.clone(), bits).unwrap();
+        let mut graph = mode_graph(p.clone(), bits, nodes).unwrap();
         let old = scheduler
             .seeds(&graph, any, 0)
             .unwrap()
@@ -390,7 +532,9 @@ fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
         let report = graph.union_digest_report();
         assert!(report["stats"]["shared_row_copies"].as_u64().unwrap() > 0);
         assert_eq!(report["owned_key_packets"], 0);
-        assert_eq!(report["owned_argument_postings"], 0);
+        if !nodes {
+            assert_eq!(report["owned_argument_postings"], 0);
+        }
         assert_eq!(report["owned_key_buckets"], 0);
     }
 }
@@ -423,8 +567,8 @@ fn retiring_imported_duplicates_preserves_pending_transitive_unions() {
         if reverse {
             p.initial.reverse();
         }
-        for bits in [0, 64] {
-            let graph = Graph::new_with_union_digest(p.clone(), bits).unwrap();
+        for (nodes, bits) in [(false, 0), (false, 64), (true, 0), (true, 64)] {
+            let graph = mode_graph(p.clone(), bits, nodes).unwrap();
             assert_eq!(rows(graph.export().unwrap()["rows"].clone()), expected);
             assert_eq!(graph.stats.unions, 2);
             assert!(graph.pending_unions.is_empty());
@@ -462,8 +606,10 @@ fn incremental_operations_match_a_full_scan_congruence_oracle() {
             Graph::new(p.clone()).unwrap(),
             Graph::new_with_union_digest(p.clone(), 64).unwrap(),
             Graph::new_with_union_digest(p.clone(), 0).unwrap(),
+            Graph::new_with_congruence_cells(p.clone(), 64).unwrap(),
+            Graph::new_with_congruence_cells(p.clone(), 0).unwrap(),
         ];
-        let mut handles = [vec![], vec![], vec![]];
+        let mut handles = [vec![], vec![], vec![], vec![], vec![]];
         let mut parents = vec![];
         let mut facts = vec![];
         for step in 0..128 {

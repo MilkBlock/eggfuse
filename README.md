@@ -40,3 +40,8 @@ is opt-in and supports scalar constructors and Unit-presence markers through
 shared graph storage and Entry delivery. Source Run publication is retained;
 value-producing/effectful merges, containers and visibility changes remain
 unsupported. Application-wide performance gains are unproven.
+
+[Congruence completion expressions](benchmarks/congruence-cells/README.md)
+add an opt-in `--congruence-cells` path: immutable applications and shared
+equality premises can complete across Runs before table publication. This is
+an experimental representation, not yet a Bake-trained or parallel backend.

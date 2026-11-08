@@ -410,6 +410,10 @@ impl Graph {
         let matcher = union_digest::Matcher::new(&program, hash_bits)?;
         Self::new_mode(program, Some(matcher))
     }
+    pub fn new_with_congruence_cells(program: Program, hash_bits: u32) -> Result<Self> {
+        let matcher = union_digest::Matcher::with_cells(&program, hash_bits)?;
+        Self::new_mode(program, Some(matcher))
+    }
     fn new_mode(program: Program, union_digest: Option<union_digest::Matcher>) -> Result<Self> {
         let n = program.tables.len();
         let initial = program.initial.clone();

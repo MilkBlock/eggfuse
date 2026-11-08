@@ -42,10 +42,11 @@ def main():
     ap.add_argument("--fixture", type=Path, default=Path("target/release/examples/union_digest_fixture"))
     ap.add_argument("--baseline", type=Path)
     ap.add_argument("--previous-digest", type=Path)
+    ap.add_argument("--congruence-cells", action="store_true")
     ap.add_argument("--repeat", type=int, default=7)
     ap.add_argument("--groups", type=int, default=256)
     ap.add_argument("--depth", type=int, default=32)
-    ap.add_argument("--shapes", nargs="+", choices=("chain", "fanout", "stable", "warm-chain", "warm-fanout", "unit-chain", "unit-fanout", "unit-stable"),
+    ap.add_argument("--shapes", nargs="+", choices=("chain", "fanout", "stable", "warm-chain", "warm-fanout", "unit-chain", "unit-fanout", "unit-stable", "staged"),
                     default=("chain", "fanout", "stable"))
     args = ap.parse_args()
     if min(args.repeat, args.groups, args.depth) <= 0:
@@ -56,6 +57,8 @@ def main():
         lanes["parent"] = (args.baseline, [])
     if args.previous_digest:
         lanes["previous_digest"] = (args.previous_digest, ["--union-digest"])
+    if args.congruence_cells:
+        lanes["cells"] = (args.runtime, ["--congruence-cells"])
     report = {"scope": "standalone Cell CPU; constructor/Unit synthetic workloads from typed IR, no marker Bake or egglog runtime timing",
               "platform": platform.platform(), "groups": args.groups, "depth": args.depth,
               "repeat": args.repeat,
