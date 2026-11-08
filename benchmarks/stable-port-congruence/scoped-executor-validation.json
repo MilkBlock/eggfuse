@@ -1,0 +1,18 @@
+{
+  "scoped-executor-workspace-tests": {
+    "passed": 245,
+    "failed": 0,
+    "ignored": 4
+  },
+  "scoped-executor-tests": {
+    "passed": 48,
+    "failed": 0,
+    "ignored": 0
+  },
+  "scoped-executor-non-sparse-tests": {
+    "passed": 48,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed"
+}

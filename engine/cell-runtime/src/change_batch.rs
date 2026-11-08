@@ -21,6 +21,9 @@ pub(crate) enum Change {
 pub(crate) struct ChangeBatch {
     tables: Vec<FxHashMap<Dependency, Change>>,
     active: Vec<usize>,
+    // Allocated only for selective publication. Counts move with each table,
+    // including writes coalesced before a later retirement.
+    counts: Option<Vec<(u64, u64)>>,
     pub events: u64,
     pub distinct_events: u64,
 }
@@ -30,6 +33,7 @@ impl ChangeBatch {
         Self {
             tables: vec![FxHashMap::default(); tables],
             active: Vec::new(),
+            counts: None,
             events: 0,
             distinct_events: 0,
         }
@@ -47,6 +51,10 @@ impl ChangeBatch {
         let previous = self.table(table).insert(witness, Change::Wake);
         self.events += 1;
         self.distinct_events += u64::from(matches!(previous, None | Some(Change::Removed)));
+        if let Some(counts) = &mut self.counts {
+            counts[table].0 += 1;
+            counts[table].1 += u64::from(matches!(previous, None | Some(Change::Removed)));
+        }
     }
 
     pub fn retire(&mut self, table: usize, witness: Dependency) {
@@ -71,9 +79,42 @@ impl ChangeBatch {
     pub fn clear(&mut self) {
         for t in self.active.drain(..) {
             self.tables[t].clear();
+            if let Some(counts) = &mut self.counts {
+                counts[t] = (0, 0);
+            }
         }
         self.events = 0;
         self.distinct_events = 0;
+    }
+
+    pub(crate) fn enable_split(&mut self) {
+        assert!(self.is_empty(), "enable split after initial publication");
+        self.counts = Some(vec![(0, 0); self.tables.len()]);
+    }
+
+    /// Move whole table batches; never copy fields or re-deliver deferred rows.
+    /// The empty scratch maps are exchanged so both paths retain allocations.
+    pub(crate) fn defer_unready(&mut self, ready: &[bool], deferred: &mut Self) -> (usize, usize) {
+        assert!(deferred.is_empty());
+        let checked = self.active.len();
+        let counts = self.counts.as_mut().expect("split counts");
+        let saved = deferred.counts.as_mut().expect("split counts");
+        let mut moved = 0;
+        self.active.retain(|&t| {
+            if ready[t] {
+                return true;
+            }
+            moved += self.tables[t].len();
+            std::mem::swap(&mut self.tables[t], &mut deferred.tables[t]);
+            std::mem::swap(&mut counts[t], &mut saved[t]);
+            self.events -= saved[t].0;
+            self.distinct_events -= saved[t].1;
+            deferred.events += saved[t].0;
+            deferred.distinct_events += saved[t].1;
+            deferred.active.push(t);
+            false
+        });
+        (moved, checked)
     }
 }
 
@@ -186,6 +227,34 @@ impl Publication {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn selective_publication_moves_retirements_and_exact_counts_once() {
+        let mut batch = ChangeBatch::new(2);
+        let mut deferred = ChangeBatch::new(2);
+        batch.enable_split();
+        deferred.enable_split();
+        let a = Dependency::Function(0);
+        let b = Dependency::Function(1);
+        batch.touch(0, a);
+        batch.touch(0, a);
+        batch.retire(0, a);
+        batch.touch(1, b);
+        assert_eq!(batch.defer_unready(&[false, true], &mut deferred), (1, 2));
+        assert_eq!((batch.events, batch.distinct_events), (1, 1));
+        assert_eq!((deferred.events, deferred.distinct_events), (2, 1));
+        assert_eq!(batch.tables().map(|(t, _)| t).collect::<Vec<_>>(), [1]);
+        batch.clear();
+        std::mem::swap(&mut batch, &mut deferred);
+        assert!(deferred.is_empty());
+        assert!(batch.tables().next().unwrap().1[&a] == Change::RemovedAfterWake);
+        batch.touch(0, a);
+        assert_eq!((batch.events, batch.distinct_events), (3, 1));
+        batch.clear();
+        batch.retire(1, b);
+        assert_eq!(batch.defer_unready(&[true, false], &mut deferred), (1, 1));
+        assert_eq!((deferred.events, deferred.distinct_events), (0, 0));
+    }
 
     #[test]
     fn retirement_cancels_wakeup_but_keeps_delivery_counts() {

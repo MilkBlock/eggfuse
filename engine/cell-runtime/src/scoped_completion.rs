@@ -106,11 +106,58 @@ impl Graph {
         }
         Ok(())
     }
+    pub(crate) fn complete_eager_scope(&mut self, eager: &Scope) -> Result<()> {
+        // Legacy tasks do not carry an originating epoch. Complete their full
+        // dependency footprint before crossing a source occurrence.
+        if self.dirty.is_empty() && self.dirty_markers.is_empty() {
+            return self.complete_scope(eager);
+        }
+        let mut tables = eager.tables().to_vec();
+        tables.extend(
+            self.dirty
+                .iter()
+                .copied()
+                .chain(self.dirty_markers.iter().copied().map(Dependency::Fact))
+                .filter_map(|d| self.dependency_table(d)),
+        );
+        tables.sort_unstable();
+        tables.dedup();
+        let scope = self.completion_scope(&tables)?;
+        self.complete_scope(&scope)
+    }
     pub fn pending_completion_tasks(&self) -> usize {
         self.pending_unions.len()
             + self.dirty.len()
             + self.dirty_markers.len()
             + self.ownership.as_ref().map_or(0, |m| m.pending.len())
+    }
+    /// A table is publishable only if no outstanding task can affect it.
+    /// Compute this from table heads and compiler reachability, not fact scans.
+    pub(crate) fn completion_ready_tables(&self) -> (Vec<bool>, u64) {
+        assert!(self.pending_unions.is_empty());
+        let plan = self.program.completion_plan.as_ref().unwrap();
+        let mut ready = vec![true; self.program.tables.len()];
+        let mut checks = 0;
+        for t in self
+            .ownership
+            .as_ref()
+            .unwrap()
+            .pending
+            .active_tables()
+            .chain(
+                self.dirty
+                    .iter()
+                    .copied()
+                    .chain(self.dirty_markers.iter().copied().map(Dependency::Fact))
+                    .filter_map(|d| self.dependency_table(d)),
+            )
+        {
+            for (other, yes) in ready.iter_mut().enumerate() {
+                checks += 1;
+                *yes &= !plan.affects(t, other);
+            }
+        }
+        (ready, checks)
     }
     pub fn scoped_completion_report(&self) -> J {
         let Some(plan) = &self.program.completion_plan else {
@@ -120,7 +167,7 @@ impl Graph {
         json!({"enabled":true,"plan":plan.report(),"stats":pending.counts,
             "pending_tasks":self.pending_completion_tasks(),
             "pending_owned_tables":pending.active_tables().collect::<Vec<_>>(),
-            "scope":"compiler-scoped Graph completion; Executor publication integration pending"})
+            "scope":"compiler-scoped Graph completion; Executor mode reported separately"})
     }
     pub(super) fn next_scoped_dirty(&mut self, allowed: Option<&[bool]>) -> Option<Dependency> {
         let Some(allowed) = allowed else {

@@ -432,6 +432,9 @@ pub struct Stats {
     max_stage_visits: u64,
     capture_seconds: f64,
     publication_seconds: f64,
+    scoped_anchor_checks: u64,
+    scoped_direct_checks: u64,
+    scoped_receipt_checks: u64,
     query_seconds: f64,
     by_set: SetCounts,
     resumed_by_set: SetCounts,
@@ -1319,14 +1322,27 @@ impl Programs {
             && self.capture_unions.is_none() && self.entry_cache.is_empty() && self.row_cache.is_empty()
     }
     pub fn publish(&mut self, g: &mut Graph) -> Result<()> {
-        self.publish_impl(g, #[cfg(feature = "sparse-cells")] None)
+        self.publish_impl(g, #[cfg(feature = "sparse-cells")] None, None)
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publish_to_entries(&mut self, g: &mut Graph, entries: &mut crate::entry_schedule::Scheduler) -> Result<()> {
-        self.publish_impl(g, Some(entries))
+        self.publish_impl(g, Some(entries), None)
+    }
+    pub(crate) fn pending_publication_counts(&self) -> (usize, usize) {
+        let anchors = self.pending_anchors.len();
+        #[cfg(feature = "sparse-cells")]
+        let anchors = anchors + self.direct_publications.len();
+        (anchors, self.pending_steps.len())
+    }
+    pub(crate) fn publish_selected(&mut self, g: &mut Graph,
+        #[cfg(feature = "sparse-cells")] entries: &mut crate::entry_schedule::Scheduler,
+        ready: &[bool],
+    ) -> Result<()> {
+        self.publish_impl(g, #[cfg(feature = "sparse-cells")] Some(entries), Some(ready))
     }
     fn publish_impl(&mut self, g: &mut Graph,
         #[cfg(feature = "sparse-cells")] mut entries: Option<&mut crate::entry_schedule::Scheduler>,
+        ready: Option<&[bool]>,
     ) -> Result<()> {
         if !self.enabled {
             return Ok(());
@@ -1369,9 +1385,9 @@ impl Programs {
         let mut anchors = HashMap::default();
         let recanonicalize = self
             .capture_unions
-            .take()
             .is_some_and(|before| before != g.stats.unions);
-        for (table, mut key, publication) in self.pending_anchors.drain(..) {
+        if ready.is_some() { self.stats.scoped_anchor_checks += self.pending_anchors.len() as u64; }
+        for (table, mut key, publication) in self.pending_anchors.extract_if(.., |(t, _, _)| ready.is_none_or(|r| r[*t])) {
             if recanonicalize {
                 for value in &mut key {
                     *value = canon(value, &g.parents);
@@ -1382,6 +1398,10 @@ impl Programs {
         self.stats.distinct_anchor_keys += anchors.len() as u64;
         #[cfg(feature = "sparse-cells")]
         for &old in g.receipt_forwards.keys() {
+            if let Some(ready) = ready {
+                self.stats.scoped_receipt_checks += 1;
+                if self.direct_publications.get(&old).is_some_and(|(t, _)| !ready[*t]) { continue; }
+            }
             if let Some(incoming) = self.direct_publications.remove(&old) {
                 let target = g.resolve_receipt(old);
                 match self.direct_publications.entry(target) {
@@ -1398,7 +1418,10 @@ impl Programs {
         }
         #[cfg(feature = "sparse-cells")]
         {
-            self.stats.distinct_anchor_keys += self.direct_publications.len() as u64;
+            self.stats.distinct_anchor_keys += if let Some(ready) = ready {
+                self.stats.scoped_direct_checks += self.direct_publications.len() as u64;
+                self.direct_publications.values().filter(|(t, _)| ready[*t]).count()
+            } else { self.direct_publications.len() } as u64;
         }
         let hits_before = self.stats.receipt_hits;
         for ((table, key), publication) in anchors {
@@ -1453,7 +1476,8 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         {
             let mut resolved = std::mem::take(&mut self.direct_publications);
-            for (w, (table, p)) in resolved.drain() {
+            if ready.is_some() { self.stats.scoped_direct_checks += resolved.len() as u64; }
+            for (w, (table, p)) in resolved.extract_if(|_, (t, _)| ready.is_none_or(|r| r[*t])) {
                 // All subsume/delete producers and initially hidden rows were
                 // excluded. Only same-key repair forwarding can move a receipt.
                 if !g.receipt_visible(w, table) {
@@ -1474,11 +1498,16 @@ impl Programs {
                 .entry("effect".into())
                 .or_default() += hits;
         }
-        self.pending_steps.clear();
+        // A deferred publication still addresses its original shared slot.
+        // New source Runs append contexts; release the arena only when drained.
+        if self.pending_publication_counts().0 == 0 {
+            self.pending_steps.clear();
+            self.capture_unions = None;
+            #[cfg(feature = "sparse-cells")]
+            self.published_bases.clear();
+        }
         #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
         self.sealed_cursors.clear();
-        #[cfg(feature = "sparse-cells")]
-        self.published_bases.clear();
         for rid in self.origin_rules.drain(..) {
             self.origins[rid].clear();
         }

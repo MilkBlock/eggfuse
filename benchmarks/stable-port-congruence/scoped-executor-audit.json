@@ -1,0 +1,116 @@
+{
+  "scope": "standalone Cell CPU; actual Executor protocol, single thread; no timing or parallel claim",
+  "baseline_revision": "9b9300d0",
+  "runtime_sha256": "44f86f6d4191d10d15c600926a579933f374815da27b0619be61122f486266f1",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "runs": 1428,
+  "exact_ordered_semantics_match": true,
+  "ordinary_stats_stable_ports_publication_and_queue_counts_match": true,
+  "independent_executor_progress": "verified by two-datatype fixture; not admitted for sum-bits",
+  "same_sort_independence_verified": false,
+  "global_wait_removed_in_sum_bits": false,
+  "scoped_executor": {
+    "compiler_admits_deferral": false,
+    "enabled": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+    "stats": {
+      "already_ready_waits": 0,
+      "compiler_full_completion_runs": 659,
+      "deferred_rows_carried": 0,
+      "eager_waits": 0,
+      "executed_bindings_while_pending": 0,
+      "global_observation_fences": 0,
+      "partial_publications": 0,
+      "peak_retained_anchors": 0,
+      "peak_retained_changes": 0,
+      "peak_retained_contexts": 0,
+      "peak_retained_forwards": 0,
+      "publication_table_checks": 0,
+      "published_tables_while_pending": 0,
+      "readiness_dependency_checks": 0,
+      "ruleset_waits": 0,
+      "runs_with_unrelated_pending": 0
+    },
+    "unpublished_changes": 0
+  },
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 0,
+      "dependency_edges": 99201,
+      "opaque_tables": [
+        193,
+        205,
+        232,
+        234,
+        387,
+        393
+      ],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401
+    },
+    "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+    "stats": {
+      "bypassed_tasks": 0,
+      "head_probes": 1046,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 0,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "rejected_unspecialized_overhead": {
+    "runtime_sha256": "99c03f0b756bb1f02f106adb4ef8e499983171fc4daf79c1e8788ac8e181a147",
+    "hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+      "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+      "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+      "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+      "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+      "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+    },
+    "executor": {
+      "already_ready_waits": 0,
+      "deferred_rows_carried": 0,
+      "eager_waits": 659,
+      "executed_bindings_while_pending": 0,
+      "global_observation_fences": 0,
+      "partial_publications": 0,
+      "peak_retained_anchors": 0,
+      "peak_retained_changes": 0,
+      "peak_retained_contexts": 0,
+      "peak_retained_forwards": 0,
+      "publication_table_checks": 0,
+      "published_tables_while_pending": 0,
+      "readiness_dependency_checks": 0,
+      "ruleset_waits": 1428,
+      "runs_with_unrelated_pending": 0
+    },
+    "queue": {
+      "bypassed_tasks": 0,
+      "head_probes": 1046,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 638,
+      "opaque_full_completions": 38,
+      "scope_requests": 659
+    },
+    "reason": "zero compiler-admitted deferrable tables; erase dynamic scope queries and split bookkeeping for this program"
+  },
+  "remaining": "precise container/merge effects, concrete bound Cell-port dependencies, parallel publication/union protocol, workers and full-cost throughput admission"
+}

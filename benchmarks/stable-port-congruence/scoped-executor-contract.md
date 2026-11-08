@@ -2,8 +2,8 @@
 
 The current objective still requires actual independent progress through the
 Executor, concurrent workers, stronger Bake/compiler information and measured
-inference benefit. The Graph API added here is a prerequisite, not completion
-of those requirements. The last accepted structural catalog (`d68f334c`) still
+inference benefit. The Graph API and selective Executor publication added here are prerequisites,
+not completion of those requirements. The last accepted structural catalog (`d68f334c`) still
 executes 1,046 logical completion tasks and a global barrier at every source Run.
 
 ## Present evidence
@@ -35,7 +35,9 @@ Fixtures establish independent Graph closure, dependent cross-sort closure,
 origin epochs, exact mutable effects and stale program-scope rejection. Existing
 ownership fixtures also run with table queues through the normal Executor. The
 frozen sum-bits audit retains the original global barrier and compares exact
-ordered traces. **No fixture yet demonstrates independent Executor publication.**
+ordered traces. The subsequent Executor fixture now demonstrates independent publication and
+consumption across two datatypes; see `scoped-executor-fixture.json`. It does
+not establish same-sort locality or workload acceleration.
 
 The sum-bits proof is too coarse: 401 tables, 99,201 potential dependency edges,
 zero deferrable tables. Six opaque entries are one `set<Expr>` constructor and
@@ -44,7 +46,7 @@ rejects treating table/type scopes as the final locality model. The compiler
 already exposes the container element sort and merge programs; use those facts,
 then refine unresolved dependencies to bound Cell ports and explicit boundaries.
 
-## Required Executor changes
+## Executor contract (implemented for conservative table scopes)
 
 1. Source Run matching keeps its finite snapshot. Before reading a ruleset, wait
    for its relevant completion footprint; this must happen before ready-set

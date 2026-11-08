@@ -18,6 +18,8 @@ use free_join::{Domains, FreeJoin, Subtrie};
 mod execute_kernel;
 #[path = "ready_sets.rs"]
 mod ready_sets;
+#[path = "runtime_completion.rs"]
+mod completion;
 #[cfg(feature="sparse-cells")]
 #[path = "point_ports.rs"]
 mod point_ports;
@@ -85,6 +87,7 @@ impl StagePatch {
     }
 }
 pub struct Executor {
+    completion: Option<completion::State>,
     #[cfg(feature = "sparse-cells")]
     work_scratch: Vec<(usize, Vec<Binding>)>,
     #[cfg(feature = "rhs-locals")]
@@ -296,6 +299,7 @@ impl Executor {
         graph.receipt_tracking =
             (stage_spine.enabled && stage_spine.receipts) || entry_schedule.enabled;
         let mut e = Self {
+            completion: None,
             #[cfg(feature = "sparse-cells")]
             work_scratch: vec![],
             #[cfg(feature = "rhs-locals")]
@@ -2490,6 +2494,7 @@ impl Executor {
         Ok(())
     }
     fn probe(&mut self, set: &str) -> Result<bool> {
+        self.wait_for_ruleset(set)?;
         let rules = self
             .graph
             .program
@@ -2505,6 +2510,11 @@ impl Executor {
         Ok(false)
     }
     fn run(&mut self, set: &str, path: Rc<[usize]>, iterations: Rc<[u64]>) -> Result<bool> {
+        let start = Instant::now();
+        let scope_wait_seconds = if self.completion.is_some() {
+            self.wait_for_ruleset(set)?;
+            start.elapsed().as_secs_f64()
+        } else { 0.0 };
         if self.current_stage != set {
             self.current_stage.clear();
             self.current_stage.push_str(set);
@@ -2513,14 +2523,13 @@ impl Executor {
         {
             self.stage_spine.training.run = self.steps.len() + 1;
         }
-        self.graph.receipt_forwards.clear();
+        if self.completion.is_none() { self.graph.receipt_forwards.clear(); }
         self.graph.epoch = self.graph.epoch.checked_add(1).ok_or("epoch exhausted")?;
         self.graph.changed = false;
         #[cfg(feature = "family-survey")]
         self.survey.start(self.graph.epoch, set);
         #[cfg(feature = "family-overlap")]
         self.overlap.start(self.graph.epoch, set);
-        let start = Instant::now();
         if self.progress {
             eprintln!("[cell-cpu] Run {}: {set}", self.steps.len() + 1);
         }
@@ -2652,7 +2661,7 @@ impl Executor {
         crate::transfer_audit::record_run(patch.iter().map(|(rid, b)| (rid, &b.values)))?;
         let matches = patch.len;
         let search_end = Instant::now();
-        let search_seconds = search_end.duration_since(start).as_secs_f64();
+        let search_seconds = search_end.duration_since(start).as_secs_f64() - scope_wait_seconds;
         #[cfg(feature = "family-replay")]
         self.replay
             .run(&self.graph, set, &patch, &self.survey.samples[run_start..])?;
@@ -2665,6 +2674,10 @@ impl Executor {
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::begin_writes();
         let executed = patch.len;
+        if let Some(state) = &mut self.completion && self.graph.pending_completion_tasks() > 0 {
+            state.stats.runs_with_unrelated_pending += 1;
+            state.stats.executed_bindings_while_pending += executed as u64;
+        }
         #[cfg(feature = "sparse-cells")]
         let binding_generation = self.graph.stats.unions;
         #[cfg(feature = "family-survey")]
@@ -2749,8 +2762,7 @@ impl Executor {
         self.graph
             .proof
             .before_repair(&self.graph.parents, &self.graph.pending_unions);
-        self.graph.repair()?;
-        self.graph.ownership_barrier();
+        self.complete_source_run()?;
         #[cfg(feature = "rhs-work-audit")]
         {
             let mut births = std::mem::take(&mut self.graph.rhs_births);
@@ -2758,61 +2770,16 @@ impl Executor {
             self.graph.rhs_births = births;
         }
         let repair_end = Instant::now();
-        let repair_seconds = repair_end.duration_since(phase).as_secs_f64();
+        let repair_seconds = repair_end.duration_since(phase).as_secs_f64() + scope_wait_seconds;
         #[cfg(feature = "family-frontiers")]
         {
             self.prior_union = unions_before != self.graph.stats.unions;
         }
-        let phase = repair_end;
-        #[cfg(feature = "sparse-cells")]
-        self.stage_spine.publish_to_entries(&mut self.graph, &mut self.entry_schedule)?;
-        #[cfg(not(feature = "sparse-cells"))]
-        self.stage_spine.publish(&mut self.graph)?;
-        #[cfg(feature = "structural-depth")]
-        self.stage_spine.structural.publish(&mut self.graph)?;
-        #[cfg(feature = "view-consumers")]
-        self.entry_schedule
-            .publish_except(&self.graph, |t| self.blocks.dedicated(t));
-        #[cfg(not(feature = "view-consumers"))]
-        self.entry_schedule.publish(&self.graph);
-        #[cfg(feature = "sparse-cells")]
-        self.stage_spine.refresh_entry_owners(&self.entry_schedule);
-        self.graph.receipt_forwards.clear();
-        self.publication.publish(
-            #[cfg(feature = "family-survey")]
-            (&mut self.survey, unions_before != self.graph.stats.unions),
-            &self.graph,
-            &mut self.query_indexes,
-            self.range_index.as_mut(),
-            &mut self.neighbor,
-            |_table, _changes, _indexed| {
-                #[cfg(feature = "view-consumers")]
-                self.blocks
-                    .publish_table(&self.graph, _table, _changes, _indexed);
-            },
+        let (query_update_seconds, delivery_seconds) = self.publish_finished_tables(
+            #[cfg(feature = "family-survey")] unions_before,
+            #[cfg(not(feature = "family-survey"))] 0,
         )?;
-        #[cfg(feature = "projection-semijoin")]
-        self.free_join
-            .gates
-            .publish(&self.graph, &self.query_indexes);
-        self.sieve.publish(&mut self.query_indexes);
-        let publication_end = Instant::now();
-        let query_update_seconds = publication_end.duration_since(phase).as_secs_f64();
-        let phase = publication_end;
-        self.deliver();
-        #[cfg(feature = "rhs-work-audit")]
-        self.ledger.barrier(
-            &self.graph,
-            self.publication.index_writes(),
-            self.entry_schedule.seed_deliveries(),
-        );
-        #[cfg(feature = "family-replay")]
-        self.replay
-            .publish(&self.graph, unions_before != self.graph.stats.unions)?;
-        self.graph.changes.clear();
-        self.graph.collect_garbage();
         let end = Instant::now();
-        let delivery_seconds = end.duration_since(phase).as_secs_f64();
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::end_writes();
         let changed = self.graph.changed;
@@ -2966,6 +2933,7 @@ impl Executor {
                 }
             }
         }
+        if self.tasks.is_empty() { self.finish_completion()?; }
         Ok(())
     }
     #[cfg(feature = "family-survey")]
@@ -3117,6 +3085,7 @@ impl Executor {
         json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "scoped_completion":self.graph.scoped_completion_report(),
+            "scoped_executor":self.scoped_execution_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),

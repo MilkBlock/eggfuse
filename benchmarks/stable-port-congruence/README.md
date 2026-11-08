@@ -25,9 +25,9 @@ phase does not establish completion of the objective.
 | Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
 | Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Bounded shared conditions and foreign candidates execute in one ordered pass; all-input, cross-stage, noise and mixed-boundary tests pass |
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
-| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Graph scope API and owned table queues verified; independent Executor matching/publication not implemented |
+| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor advances, publishes and consumes an independent datatype while another chain remains pending; same-sort Cell scopes and main-workload bypass still unverified |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
-| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field and key replacement-work counters included in Bake's ledger; scoped-condition and parallel accounting pending |
+| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; retention peaks reported; parallel and full-cost admission pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
 | Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Shared conditions plus conservative completion/read-write footprints; concrete Cell-port scope refinement and precise merge/container effects pending |
@@ -353,3 +353,74 @@ mutable regions, with ordered boundary effects where program semantics require
 them. Compiler-derived effect footprints and checked local coverage should drive
 these decisions. Thread safety alone is not performance evidence; retain serial
 controls, worker-count comparisons, and sum-bits/Raytrace end-to-end results.
+
+
+## Selective Executor publication
+
+The opt-in `--scoped-execution` path now waits for a ruleset's compiler footprint
+**before** dirty-reader selection and matching. It commits explicit source unions
+at the end of the Run, completes mutable/legacy effects, and may retain pure
+constructor obligations while independent source occurrences proceed. Matching
+within one source Run still uses its original finite snapshot. Source checks
+and equality-sensitive guards request their complete footprint. Final execution
+drains outstanding work; an explicit `execute_until` checkpoint may retain it.
+
+`ChangeBatch` moves whole table maps between reusable batches, including exact
+coalesced event counts. Only ready tables reach shared Entries, query/range/
+neighbor indexes and reader delivery. Deferred anchors retain their source slot
+in the shared Spine context arena; new Runs append slots, and the arena clears
+when all anchors have published. Receipt forwards survive until deferred anchors
+resolve. This deliberately retains already-consumed slots too while any anchor
+remains pending; peak contexts/anchors/changes/forwards report that cost. It is a
+single-thread publication protocol, not a worker implementation.
+
+`scoped-executor-fixture.json` records actual Executor checkpoints: after the
+first source Run A has one pending completion and two pending anchors. B then
+executes two Runs, publishes three table batches and creates a `SeenB` fact from
+the preceding Run's output while A remains pending. A dependent observation then
+completes A; final graph and ordered binding/changed counts equal the global
+reference. Additional fixtures cover an inequality guard, a source check that
+itself forces completion, deletion/recreation, delayed receipt resolution,
+origin epochs and final draining without a dependent source Run. Global snapshot
+and incompatible global audit consumers explicitly retain full completion and
+are reported; they do not count as evidence of independent progress.
+
+The small fixture pays 24 dependency checks, 12 table-selection checks and 14
+direct-publication checks. It retains at most five change records, two anchors
+and two context slots. These counters describe replacement work, not a latency
+benefit. Already-ready independent reads skip redundant publication passes.
+
+Validation passes 245 workspace tests (four preexisting ignored), 48 focused
+fixtures in both sparse and non-sparse modes, and the no-default-features
+compile check. The frozen sum-bits audit retains all 1,428 exact ordered
+Run/effect observations.
+Its proof still admits **zero** deferrable tables. An initial implementation
+added 659 scoped completion requests, 638 legacy frontier probes and 38 opaque
+fallbacks without bypassing a barrier. The compiler's empty admission result now
+specializes these queries and split bookkeeping away. Final queue counts,
+ordinary runtime counters, stable-port work and index publication counts equal
+`--scoped-queues`; the old binary's semantic hashes match as well. This retains
+the full barrier in sum-bits and establishes **no speedup**. The rejected overhead
+is retained in `scoped-executor-audit.json` rather than credited as useful work.
+
+The next required refinement remains concrete bound Cell ports, including
+same-sort independent regions, plus precise container and merge effects. Table
+scopes demonstrate the publication protocol but cannot establish workload
+locality. Shared mutable state, real workers and complete-cost performance
+admission are still open requirements.
+
+Reproduce with the frozen artifact and separate compiler/runtime builds described
+above. Use `scoped-executor-{workspace-tests,tests,non-sparse-tests,minimal-check}`
+log names. The focused compiler test command adds `--test scoped_completion`;
+set `SCOPED_EXECUTOR_EVIDENCE` to an absolute output JSON path to retain the sparse
+fixture checkpoints. Build the same release audit features and run:
+
+```sh
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/scoped-executor-runtime benchmarks/stable-port-congruence/scoped-executor-audit-manifest.json out/stable-port-congruence/scoped-executor-audit
+python3 benchmarks/stable-port-congruence/collect-scoped-executor.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+The collector reads the retained initial attempt from
+`scoped-executor-unspecialized-audit/results.json` when available, otherwise its
+frozen compact counts from the committed audit. The current runtime intentionally does not offer a flag
+to repeat this rejected overhead.

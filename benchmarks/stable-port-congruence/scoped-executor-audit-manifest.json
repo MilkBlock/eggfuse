@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "scoped_queues": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--scoped-queues"]
+    },
+    "scoped_executor": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--scoped-execution"]
+    }
+  }
+}

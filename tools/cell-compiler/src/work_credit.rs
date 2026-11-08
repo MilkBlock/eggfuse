@@ -17,6 +17,7 @@ impl Work {
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards",
+                "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
             ]),
             ("entry_schedule/stats", &[
                 "entry_publication_writes", "entry_retirement_checks", "predicate_checks", "row_decodes",
@@ -100,6 +101,13 @@ impl Work {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
                 report["scoped_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped completion work {field}"))?
+            } else { 0 };
+            work.insert(key,value);
+        }
+        for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks"] {
+            let key = format!("scoped_executor/stats/{field}");
+            let value = if report["scoped_executor"]["enabled"] == true {
+                report["scoped_executor"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped execution work {field}"))?
             } else { 0 };
             work.insert(key,value);
         }

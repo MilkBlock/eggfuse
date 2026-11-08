@@ -1,0 +1,270 @@
+//! Source Runs retain finite matching snapshots. Pure constructor closure and
+//! its shared publication contexts may cross an independent source occurrence.
+//! A demanded scope is complete before ready-set selection, including probes.
+use super::*;
+use crate::{change_batch::ChangeBatch, completion_plan::Scope};
+
+#[derive(Default, serde::Serialize)]
+pub(super) struct Counts {
+    pub ruleset_waits: u64,
+    pub already_ready_waits: u64,
+    pub eager_waits: u64,
+    pub global_observation_fences: u64,
+    pub compiler_full_completion_runs: u64,
+    pub runs_with_unrelated_pending: u64,
+    // Executed bindings are not committed mutations.
+    pub executed_bindings_while_pending: u64,
+    pub partial_publications: u64,
+    pub published_tables_while_pending: u64,
+    pub readiness_dependency_checks: u64,
+    pub publication_table_checks: u64,
+    pub deferred_rows_carried: u64,
+    pub peak_retained_changes: usize,
+    pub peak_retained_anchors: usize,
+    pub peak_retained_contexts: usize,
+    pub peak_retained_forwards: usize,
+}
+pub(super) struct State {
+    can_defer: bool,
+    eager: Scope,
+    deferred: ChangeBatch,
+    pub stats: Counts,
+}
+impl Executor {
+    pub fn use_scoped_execution(&mut self) -> Result<()> {
+        if self.completion.is_some() {
+            return Ok(());
+        }
+        if !self.steps.is_empty() || !self.graph.changes.is_empty() {
+            return Err("configure scoped execution before source Runs".into());
+        }
+        self.graph.use_scoped_completion()?;
+        let plan = self.graph.program.completion_plan.as_ref().unwrap();
+        let eager = plan.scope(
+            &plan
+                .deferrable
+                .iter()
+                .enumerate()
+                .filter_map(|(t, &can_defer)| (!can_defer).then_some(t))
+                .collect::<Vec<_>>(),
+        )?;
+        let can_defer = plan.deferrable.iter().any(|&yes| yes);
+        let mut deferred = ChangeBatch::new(if can_defer {
+            self.graph.program.tables.len()
+        } else {
+            0
+        });
+        if can_defer {
+            deferred.enable_split();
+            self.graph.changes.enable_split();
+        }
+        self.completion = Some(State {
+            can_defer,
+            eager,
+            deferred,
+            stats: Counts::default(),
+        });
+        Ok(())
+    }
+    fn global_completion_observer(&self) -> bool {
+        let global = self.audit
+            || cfg!(any(
+                feature = "rhs-work-audit",
+                feature = "family-replay",
+                feature = "projection-semijoin"
+            ));
+        #[cfg(feature = "structural-depth")]
+        let global = global || self.stage_spine.structural.depth > 0;
+        global
+    }
+    pub fn scoped_execution_report(&self) -> J {
+        let Some(state) = &self.completion else {
+            return json!({"enabled":false});
+        };
+        let (anchors, contexts) = self.stage_spine.pending_publication_counts();
+        json!({"enabled":true,"stats":state.stats,
+            "compiler_admits_deferral":state.can_defer,
+            "global_observer":self.global_completion_observer(),
+            "pending_anchors":anchors,"retained_contexts":contexts,
+            "retained_forwards":self.graph.receipt_forwards.len(),
+            "unpublished_changes":self.graph.changes.tables().map(|(_, rows)|rows.len()).sum::<usize>(),
+            "scope":"standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers"})
+    }
+    pub(super) fn wait_for_ruleset(&mut self, set: &str) -> Result<()> {
+        if self
+            .completion
+            .as_ref()
+            .is_none_or(|state| !state.can_defer)
+        {
+            return Ok(());
+        }
+        let plan = self.graph.program.completion_plan.as_ref().unwrap().clone();
+        let scope = plan.rulesets.get(set).ok_or("unknown completion ruleset")?;
+        self.completion.as_mut().unwrap().stats.ruleset_waits += 1;
+        if self.graph.pending_completion_tasks() == 0 {
+            return Ok(());
+        }
+        let global = self.global_completion_observer();
+        if !global && self.graph.scope_ready(scope)? {
+            self.completion.as_mut().unwrap().stats.already_ready_waits += 1;
+            return Ok(());
+        }
+        let changed = self.graph.changed;
+        let before = self.graph.stats.unions;
+        if global {
+            self.completion
+                .as_mut()
+                .unwrap()
+                .stats
+                .global_observation_fences += 1;
+            self.graph.repair()?;
+        } else {
+            self.graph.complete_scope(scope)?;
+        }
+        self.publish_finished_tables(before)?;
+        self.graph.changed = changed;
+        Ok(())
+    }
+    pub(super) fn complete_source_run(&mut self) -> Result<()> {
+        if self.completion.is_none() || self.global_completion_observer() {
+            if let Some(state) = &mut self.completion {
+                state.stats.global_observation_fences += 1;
+            }
+            self.graph.repair()?;
+        } else if !self.completion.as_ref().unwrap().can_defer {
+            // The checked plan admits no deferred tasks. Specialize away all
+            // per-Run scope construction and membership probes for this case.
+            self.completion
+                .as_mut()
+                .unwrap()
+                .stats
+                .compiler_full_completion_runs += 1;
+            self.graph.repair()?;
+        } else {
+            self.graph.commit_scoped_unions()?;
+            self.completion.as_mut().unwrap().stats.eager_waits += 1;
+            self.graph
+                .complete_eager_scope(&self.completion.as_ref().unwrap().eager)?;
+        }
+        if self.graph.pending_completion_tasks() == 0 {
+            self.graph.ownership_barrier();
+        }
+        Ok(())
+    }
+    /// Complete final/global observations explicitly. A checkpoint intentionally
+    /// retains outstanding work; callers can request this before inspecting it.
+    pub fn finish_completion(&mut self) -> Result<()> {
+        if self.completion.is_none() {
+            return Ok(());
+        }
+        if self.graph.pending_completion_tasks() == 0
+            && self.graph.changes.is_empty()
+            && self.stage_spine.pending_publication_counts().0 == 0
+        {
+            return Ok(());
+        }
+        let before = self.graph.stats.unions;
+        self.graph.repair()?;
+        self.publish_finished_tables(before)?;
+        Ok(())
+    }
+    pub(super) fn publish_finished_tables(&mut self, unions_before: u64) -> Result<(f64, f64)> {
+        let partial = self.completion.is_some() && self.graph.pending_completion_tasks() > 0;
+        let (ready, checks) = if partial {
+            let (ready, checks) = self.graph.completion_ready_tables();
+            (Some(ready), checks)
+        } else {
+            (None, 0)
+        };
+        if let Some(ready) = &ready {
+            let state = self.completion.as_mut().unwrap();
+            state.stats.partial_publications += 1;
+            state.stats.readiness_dependency_checks += checks;
+            let (moved, checked) = self.graph.changes.defer_unready(ready, &mut state.deferred);
+            state.stats.publication_table_checks += checked as u64;
+            state.stats.deferred_rows_carried += moved as u64;
+            state.stats.peak_retained_changes = state.stats.peak_retained_changes.max(moved);
+            state.stats.published_tables_while_pending +=
+                self.graph.changes.tables().count() as u64;
+        }
+        let result = self.publish_batch(ready.as_deref(), unions_before);
+        if let Some(state) = &mut self.completion {
+            if partial {
+                std::mem::swap(&mut self.graph.changes, &mut state.deferred);
+            }
+            let (anchors, contexts) = self.stage_spine.pending_publication_counts();
+            state.stats.peak_retained_anchors = state.stats.peak_retained_anchors.max(anchors);
+            state.stats.peak_retained_contexts = state.stats.peak_retained_contexts.max(contexts);
+            state.stats.peak_retained_forwards = state
+                .stats
+                .peak_retained_forwards
+                .max(self.graph.receipt_forwards.len());
+        }
+        result
+    }
+    fn publish_batch(&mut self, ready: Option<&[bool]>, _unions_before: u64) -> Result<(f64, f64)> {
+        let phase = Instant::now();
+        if let Some(ready) = ready {
+            self.stage_spine.publish_selected(
+                &mut self.graph,
+                #[cfg(feature = "sparse-cells")]
+                &mut self.entry_schedule,
+                ready,
+            )?;
+        } else {
+            #[cfg(feature = "sparse-cells")]
+            self.stage_spine
+                .publish_to_entries(&mut self.graph, &mut self.entry_schedule)?;
+            #[cfg(not(feature = "sparse-cells"))]
+            self.stage_spine.publish(&mut self.graph)?;
+        }
+        #[cfg(feature = "structural-depth")]
+        self.stage_spine.structural.publish(&mut self.graph)?;
+        #[cfg(feature = "view-consumers")]
+        self.entry_schedule
+            .publish_except(&self.graph, |t| self.blocks.dedicated(t));
+        #[cfg(not(feature = "view-consumers"))]
+        self.entry_schedule.publish(&self.graph);
+        #[cfg(feature = "sparse-cells")]
+        self.stage_spine.refresh_entry_owners(&self.entry_schedule);
+        if self.stage_spine.pending_publication_counts().0 == 0 {
+            self.graph.receipt_forwards.clear();
+        }
+        self.publication.publish(
+            #[cfg(feature = "family-survey")]
+            (&mut self.survey, _unions_before != self.graph.stats.unions),
+            &self.graph,
+            &mut self.query_indexes,
+            self.range_index.as_mut(),
+            &mut self.neighbor,
+            |_table, _changes, _indexed| {
+                #[cfg(feature = "view-consumers")]
+                self.blocks
+                    .publish_table(&self.graph, _table, _changes, _indexed);
+            },
+        )?;
+        #[cfg(feature = "projection-semijoin")]
+        self.free_join
+            .gates
+            .publish(&self.graph, &self.query_indexes);
+        self.sieve.publish(&mut self.query_indexes);
+        let publication_end = Instant::now();
+        let query_update_seconds = publication_end.duration_since(phase).as_secs_f64();
+        let phase = publication_end;
+        self.deliver();
+        #[cfg(feature = "rhs-work-audit")]
+        self.ledger.barrier(
+            &self.graph,
+            self.publication.index_writes(),
+            self.entry_schedule.seed_deliveries(),
+        );
+        #[cfg(feature = "family-replay")]
+        self.replay
+            .publish(&self.graph, _unions_before != self.graph.stats.unions)?;
+        self.graph.changes.clear();
+        self.graph.collect_garbage();
+        let end = Instant::now();
+        let delivery_seconds = end.duration_since(phase).as_secs_f64();
+        Ok((query_update_seconds, delivery_seconds))
+    }
+}
