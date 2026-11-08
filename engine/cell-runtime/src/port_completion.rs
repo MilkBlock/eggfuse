@@ -103,9 +103,6 @@ impl Forecast {
     pub(crate) fn has_ordered_tasks(&self) -> bool {
         self.groups.iter().any(|g| !g.pure)
     }
-    pub(crate) fn ready(&self, demand: &[usize]) -> bool {
-        self.readiness(demand).0
-    }
     pub(crate) fn readiness(&self, demand: &[usize]) -> (bool, u64) {
         let mut checks = 0;
         let ready = self.groups.iter().all(|g| {

@@ -1,0 +1,23 @@
+{
+  "workspace-tests": {
+    "passed": 267,
+    "failed": 0,
+    "ignored": 4
+  },
+  "tests": {
+    "passed": 69,
+    "failed": 0,
+    "ignored": 0
+  },
+  "non-sparse-tests": {
+    "passed": 69,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed",
+  "matched_origin_negative_control": {
+    "mutation": "temporarily make publication clear matched origins unconditionally",
+    "observed_failure": "sealed cursor index 0 read after its storage was cleared",
+    "production_source_restored_and_focused_tests_passed": true
+  }
+}

@@ -63,7 +63,7 @@ shared input domains, including nonpending collision peers, rather than
 replaying every effect of the input union already committed. Shared changed
 inputs can therefore feed independently completed regions in the fixtures.
 
-Sum-bits still has zero useful cross-Run progress: ten partial publications are
+At `9a5c0a18`, sum-bits still has zero useful cross-Run progress: ten partial publications are
 followed by ten access-footprint waits, with zero waits caused solely by union
 expansion. Its scope analysis is more expensive than the previous global-boundary
 shortcut. The next required proof must refine the ruleset's aggregate LHS/RHS
@@ -71,8 +71,37 @@ accesses to the actual bound work. Query readiness must precede dirty-reader
 selection and snapshot matching; only then can empty/unexecuted RHSs be removed
 from effect demands. Completing deferred work after matching is admissible only
 when that work cannot invalidate any query binding, guard, watermark or snapshot.
-This is not yet implemented. Same-table regional ownership, concurrent workers
-and full-cost admission remain open.
+The matched-rule refinement now implements that separation under `--port-scopes`.
+The compiler derives mandatory query demands separately from each rule's RHS
+accesses, hidden merge reads and conservative incoming-union effects. Queries
+still wait before ready-set selection. All matching seals into one StagePatch;
+only rules with bindings contribute the second, RHS wait. An empty snapshot
+contributes no RHS effects, including inside a saturating source schedule.
+
+Publication between matching and RHS execution must preserve matched Entry
+origins and sealed Spine cursors. It also retains receipt forwarding and defers
+frame garbage collection until those bindings are consumed. The binding's union
+generation is captured before matching and remains unchanged across completion;
+otherwise a stale context could acquire an invalid freshness certificate. The
+matched-binding protection ends after RHS consumption; outstanding deferred
+consumers still retain their original lifetime obligations. Global observers
+retain their original barriers.
+
+The short fixture commits three new facts through two bindings, and consumes the
+independent result in a later Run while old same-sort congruence remains pending.
+A matched RHS touching the pending region still waits; an explicit union retains
+its future-effects fence. A negative control that unconditionally clears matched
+origins fails with an out-of-bounds sealed cursor. This tests actual lifetime
+dependence, not merely matching final graph hashes.
+
+Sum-bits still commits no RHS while repair is pending. Its ten waits become three
+query completions and seven matched-RHS completions. Forty bindings can be matched
+earlier, but they still wait before execution. Two empty Runs carry pending work
+without producing results and lose the settled-idle shortcut. The scope proof
+and new RHS-demand bookkeeping are additional costs. Six RHS waits intersect
+the access footprint; one comes solely from incoming-union expansion. Do not admit this as a
+speedup. Bound access/effect proofs, same-table regional ownership, concurrent
+workers and full-cost admission remain open.
 
 ## Executor contract (implemented for conservative table scopes)
 
@@ -81,7 +110,8 @@ and full-cost admission remain open.
    selection so unpublished changes cannot make a rule appear clean. Absence,
    equality-sensitive guards and nonmonotone effects need the same completion
    proof. An unrelated source occurrence may advance only when its reads and
-   effects are independent of outstanding work.
+   effects are independent of outstanding work. In port mode, query reads are
+   mandatory first; RHS demand is derived from the sealed matched rules afterward.
 2. Separate propagation progress from publication. Carry the origin epoch of
    deferred tasks, changes and publication records. Custom merge ordering and
    node allocation identity remain observable obligations, not incidental work
@@ -98,7 +128,8 @@ and full-cost admission remain open.
 5. Keep unresolved `receipt_forwards` until every deferred consumer is resolved.
    The unconditional clears at Run start and after global publication are not
    valid under partial publication. Retirement, visibility, cache epochs and
-   garbage collection must obey the same lifetime contract.
+   garbage collection must obey the same lifetime contract. Already matched
+   bindings also retain their cursors and frame ancestors across a pre-RHS wait.
 6. Publish only a proved-complete region into shared Entries, query indexes,
    neighbor/range views and reader wakeups. Audit instrumentation, final export
    and program checks must explicitly complete their observation footprint.

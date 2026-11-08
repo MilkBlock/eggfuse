@@ -1,0 +1,281 @@
+{
+  "scope": "standalone single-thread Cell CPU Executor; no timing or parallel claim",
+  "baseline_revision": "9a5c0a18",
+  "runtime_sha256": "b8cb7046174f66a358b85ef4fa09567c784d5446532be93395a2e99f1c496a7f",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "ordinary_runtime_counter_changes_from_global_control": {
+    "idle_scheduled_runs": {
+      "before": 769,
+      "after": 767
+    }
+  },
+  "admitted_as_performance_improvement": false,
+  "port_completion": {
+    "enabled": true,
+    "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+    "shared_plans": 630,
+    "shared_steps": 7559,
+    "stats": {
+      "boundary_global_shortcuts": 0,
+      "bypassed_tasks": 90,
+      "forecasts": 97,
+      "forest_global_shortcuts": 0,
+      "global_boundaries_by_table": {},
+      "groups": 264,
+      "inactive_steps": 48126,
+      "legacy_boundaries": 17721,
+      "membership_checks": 677445,
+      "output_reads": 58859,
+      "peak_group_visits": 4096,
+      "pending_global_by_table": {},
+      "pending_global_shortcuts": 0,
+      "pure_groups": 59,
+      "root_visits": 23286,
+      "scope_completions": 87,
+      "scratch_growths": 1343,
+      "seed_candidates": 1107,
+      "seed_roots": 403,
+      "signal_visits": 89646,
+      "static_steps": 150901,
+      "typed_fallbacks": 60
+    },
+    "visit_budget_per_group": 4096
+  },
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 71,
+      "dependency_edges": 30664,
+      "merge_birth_edges": 5,
+      "merge_read_edges": 5,
+      "merges": [
+        {
+          "births": [
+            324
+          ],
+          "opaque": false,
+          "reads": [
+            324
+          ],
+          "table": 205
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 232
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 234
+        },
+        {
+          "births": [
+            385
+          ],
+          "opaque": false,
+          "reads": [
+            385
+          ],
+          "table": 387
+        },
+        {
+          "births": [
+            384
+          ],
+          "opaque": false,
+          "reads": [
+            384
+          ],
+          "table": 393
+        }
+      ],
+      "opaque_tables": [],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401,
+      "wait_edges": 42294
+    },
+    "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+    "stats": {
+      "bypassed_tasks": 0,
+      "cause_comparisons": 4238,
+      "cause_growths": 36,
+      "cause_probes": 1110,
+      "head_probes": 1059,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 938,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "scoped_executor": {
+    "compiler_admits_deferral": true,
+    "enabled": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "port_scopes": true,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+    "stats": {
+      "already_ready_waits": 9,
+      "compiler_full_completion_runs": 0,
+      "deferred_rows_carried": 25,
+      "eager_waits": 0,
+      "executed_bindings_while_pending": 0,
+      "global_observation_fences": 0,
+      "partial_publications": 12,
+      "peak_matched_origin_slots": 0,
+      "peak_retained_anchors": 6,
+      "peak_retained_changes": 8,
+      "peak_retained_contexts": 7,
+      "peak_retained_forwards": 12,
+      "publication_table_checks": 32,
+      "published_tables_while_pending": 25,
+      "query_bindings_while_pending": 40,
+      "query_completions": 3,
+      "query_runs_while_pending": 9,
+      "readiness_dependency_checks": 4878,
+      "rhs_access_completions": 6,
+      "rhs_completions": 7,
+      "rhs_demand_growths": 8,
+      "rhs_demand_probes": 3614,
+      "rhs_empty_skips": 2,
+      "rhs_fact_births_while_pending": 0,
+      "rhs_function_updates_while_pending": 0,
+      "rhs_selected_rules": 13,
+      "rhs_union_completions": 1,
+      "ruleset_waits": 1428,
+      "runs_with_unrelated_pending": 2,
+      "unchanged_influence_reuses": 2
+    },
+    "unpublished_changes": 0
+  },
+  "counter_changes_from_previous_experiment": {
+    "port_completion": {
+      "membership_checks": {
+        "before": 677512,
+        "after": 677445,
+        "delta": -67
+      }
+    },
+    "scoped_completion": {},
+    "scoped_executor": {
+      "already_ready_waits": {
+        "before": 0,
+        "after": 9,
+        "delta": 9
+      },
+      "deferred_rows_carried": {
+        "before": 9,
+        "after": 25,
+        "delta": 16
+      },
+      "partial_publications": {
+        "before": 10,
+        "after": 12,
+        "delta": 2
+      },
+      "peak_retained_forwards": {
+        "before": 0,
+        "after": 12,
+        "delta": 12
+      },
+      "publication_table_checks": {
+        "before": 28,
+        "after": 32,
+        "delta": 4
+      },
+      "query_bindings_while_pending": {
+        "before": 0,
+        "after": 40,
+        "delta": 40
+      },
+      "query_completions": {
+        "before": 0,
+        "after": 3,
+        "delta": 3
+      },
+      "query_runs_while_pending": {
+        "before": 0,
+        "after": 9,
+        "delta": 9
+      },
+      "readiness_dependency_checks": {
+        "before": 4257,
+        "after": 4878,
+        "delta": 621
+      },
+      "rhs_access_completions": {
+        "before": 0,
+        "after": 6,
+        "delta": 6
+      },
+      "rhs_completions": {
+        "before": 0,
+        "after": 7,
+        "delta": 7
+      },
+      "rhs_demand_growths": {
+        "before": 0,
+        "after": 8,
+        "delta": 8
+      },
+      "rhs_demand_probes": {
+        "before": 0,
+        "after": 3614,
+        "delta": 3614
+      },
+      "rhs_empty_skips": {
+        "before": 0,
+        "after": 2,
+        "delta": 2
+      },
+      "rhs_selected_rules": {
+        "before": 0,
+        "after": 13,
+        "delta": 13
+      },
+      "rhs_union_completions": {
+        "before": 0,
+        "after": 1,
+        "delta": 1
+      },
+      "runs_with_unrelated_pending": {
+        "before": 0,
+        "after": 2,
+        "delta": 2
+      },
+      "unchanged_influence_reuses": {
+        "before": 0,
+        "after": 2,
+        "delta": 2
+      }
+    }
+  },
+  "idle_run_difference": "Two empty Runs now carry pending work, so they execute the normal empty path instead of the fully-settled idle shortcut. This is added work, not useful independent progress.",
+  "remaining": "bound matched-rule accesses and union effects, same-table regions, proof cost, concurrent union/publication ownership, real workers and full-cost admission"
+}

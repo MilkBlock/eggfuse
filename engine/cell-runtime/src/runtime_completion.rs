@@ -1,6 +1,7 @@
 //! Source Runs retain finite matching snapshots. Pure constructor closure and
 //! its shared publication contexts may cross an independent source occurrence.
-//! A demanded scope is complete before ready-set selection, including probes.
+//! Query scopes are complete before ready-set selection, including probes. In
+//! port mode only matched rules contribute RHS demands after the snapshot seals.
 use super::*;
 use crate::{
     change_batch::ChangeBatch, completion_plan::Scope, graph::cell_ownership::completion::Forecast,
@@ -21,8 +22,19 @@ pub(super) struct Counts {
     pub readiness_dependency_checks: u64,
     pub publication_table_checks: u64,
     pub unchanged_influence_reuses: u64,
-    pub port_access_waits: u64,
-    pub union_effect_waits: u64,
+    pub query_completions: u64,
+    pub rhs_completions: u64,
+    pub rhs_access_completions: u64,
+    pub rhs_union_completions: u64,
+    pub query_runs_while_pending: u64,
+    pub query_bindings_while_pending: u64,
+    pub rhs_empty_skips: u64,
+    pub rhs_demand_probes: u64,
+    pub rhs_demand_growths: u64,
+    pub rhs_selected_rules: u64,
+    pub peak_matched_origin_slots: usize,
+    pub rhs_fact_births_while_pending: u64,
+    pub rhs_function_updates_while_pending: u64,
     pub deferred_rows_carried: u64,
     pub peak_retained_changes: usize,
     pub peak_retained_anchors: usize,
@@ -33,6 +45,9 @@ pub(super) struct State {
     can_defer: bool,
     port_scopes: bool,
     forecast: Option<Forecast>,
+    matched: bool,
+    rhs_demand: Vec<usize>,
+    rhs_seen: Vec<bool>,
     eager: Scope,
     deferred: ChangeBatch,
     pub stats: Counts,
@@ -69,6 +84,9 @@ impl Executor {
             can_defer,
             port_scopes: false,
             forecast: None,
+            matched: false,
+            rhs_demand: Vec::new(),
+            rhs_seen: Vec::new(),
             eager,
             deferred,
             stats: Counts::default(),
@@ -89,6 +107,9 @@ impl Executor {
         }
         state.can_defer = true;
         state.port_scopes = true;
+        state
+            .rhs_seen
+            .resize(self.graph.program.tables.len(), false);
         Ok(())
     }
     fn global_completion_observer(&self) -> bool {
@@ -132,34 +153,10 @@ impl Executor {
         }
         let global = self.global_completion_observer();
         if !global && self.completion.as_ref().unwrap().port_scopes {
-            let demand = plan.port_demands.get(set).ok_or("unknown port demand")?;
-            let forecast = match self.completion.as_mut().unwrap().forecast.take() {
-                Some(f) => f,
-                None => self.graph.forecast_port_completion()?,
-            };
-            let (allowed, checks) = forecast.select(demand, false);
-            let changed = self.graph.changed;
-            let before = self.graph.stats.unions;
-            if self.graph.complete_port_selection(&allowed, checks)? {
-                let (access_ready, checks) = forecast.readiness(&plan.port_accesses[set]);
-                let stats = &mut self.completion.as_mut().unwrap().stats;
-                stats.readiness_dependency_checks += checks;
-                if access_ready {
-                    stats.union_effect_waits += 1;
-                } else {
-                    stats.port_access_waits += 1;
-                }
-                let next = self.graph.forecast_port_completion()?;
-                if !next.ready(demand) {
-                    return Err("port influence did not close a demanded scope".into());
-                }
-                self.completion.as_mut().unwrap().forecast = Some(next);
-                self.publish_finished_tables(before)?;
-            } else {
-                self.completion.as_mut().unwrap().stats.already_ready_waits += 1;
-                self.completion.as_mut().unwrap().forecast = Some(forecast);
+            let demand = plan.query_demands.get(set).ok_or("unknown query demand")?;
+            if self.wait_for_ports(demand)? {
+                self.completion.as_mut().unwrap().stats.query_completions += 1;
             }
-            self.graph.changed = changed;
             return Ok(());
         }
         if !global && self.graph.scope_ready(scope)? {
@@ -180,6 +177,106 @@ impl Executor {
         }
         self.publish_finished_tables(before)?;
         self.graph.changed = changed;
+        Ok(())
+    }
+    fn wait_for_ports(&mut self, demand: &[usize]) -> Result<bool> {
+        let forecast = match self.completion.as_mut().unwrap().forecast.take() {
+            Some(f) => f,
+            None => self.graph.forecast_port_completion()?,
+        };
+        let (allowed, checks) = forecast.select(demand, false);
+        let changed = self.graph.changed;
+        let before = self.graph.stats.unions;
+        let completed = self.graph.complete_port_selection(&allowed, checks)?;
+        if completed {
+            let next = self.graph.forecast_port_completion()?;
+            let (ready, checks) = next.readiness(demand);
+            self.completion
+                .as_mut()
+                .unwrap()
+                .stats
+                .readiness_dependency_checks += checks;
+            if !ready {
+                return Err("port influence did not close a demanded scope".into());
+            }
+            self.completion.as_mut().unwrap().forecast = Some(next);
+            self.publish_finished_tables(before)?;
+        } else {
+            self.completion.as_mut().unwrap().stats.already_ready_waits += 1;
+            self.completion.as_mut().unwrap().forecast = Some(forecast);
+        }
+        self.graph.changed = changed;
+        Ok(completed)
+    }
+    pub(super) fn wait_for_matched(&mut self, patch: &StagePatch) -> Result<()> {
+        if self.completion.as_ref().is_none_or(|s| !s.port_scopes)
+            || self.global_completion_observer()
+            || self.graph.pending_completion_tasks() == 0
+        {
+            return Ok(());
+        }
+        let plan = self.graph.program.completion_plan.as_ref().unwrap().clone();
+        let state = self.completion.as_mut().unwrap();
+        state.stats.query_runs_while_pending += 1;
+        state.stats.query_bindings_while_pending += patch.len as u64;
+        if patch.len == 0 {
+            state.stats.rhs_empty_skips += 1;
+            return Ok(());
+        }
+        for (rid, _) in &patch.groups {
+            state.stats.rhs_selected_rules += 1;
+            for &table in &plan.rule_demands[*rid].rhs {
+                state.stats.rhs_demand_probes += 1;
+                if !state.rhs_seen[table] {
+                    state.rhs_seen[table] = true;
+                    let before = state.rhs_demand.capacity();
+                    state.rhs_demand.push(table);
+                    state.stats.rhs_demand_growths +=
+                        u64::from(before != state.rhs_demand.capacity());
+                }
+            }
+        }
+        let mut demand = std::mem::take(&mut state.rhs_demand);
+        let forecast = match state.forecast.take() {
+            Some(f) => f,
+            None => self.graph.forecast_port_completion()?,
+        };
+        let mut access_ready = true;
+        let mut checks = 0;
+        for (rid, _) in &patch.groups {
+            let (ready, cost) = forecast.readiness(&plan.rule_demands[*rid].accesses);
+            checks += cost;
+            if !ready {
+                access_ready = false;
+                break;
+            }
+        }
+        let state = self.completion.as_mut().unwrap();
+        state.forecast = Some(forecast);
+        state.stats.readiness_dependency_checks += checks;
+        state.matched = true;
+        state.stats.peak_matched_origin_slots = state
+            .stats
+            .peak_matched_origin_slots
+            .max(self.stage_spine.matched_origin_slots());
+        self.stage_spine.retain_matched_origins(true);
+        let result = self.wait_for_ports(&demand);
+        self.stage_spine.retain_matched_origins(false);
+        let state = self.completion.as_mut().unwrap();
+        state.matched = false;
+        for &table in &demand {
+            state.rhs_seen[table] = false;
+        }
+        demand.clear();
+        state.rhs_demand = demand;
+        if result? {
+            state.stats.rhs_completions += 1;
+            if access_ready {
+                state.stats.rhs_union_completions += 1;
+            } else {
+                state.stats.rhs_access_completions += 1;
+            }
+        }
         Ok(())
     }
     pub(super) fn complete_source_run(&mut self) -> Result<()> {
@@ -322,7 +419,8 @@ impl Executor {
         self.entry_schedule.publish(&self.graph);
         #[cfg(feature = "sparse-cells")]
         self.stage_spine.refresh_entry_owners(&self.entry_schedule);
-        if self.stage_spine.pending_publication_counts().0 == 0 {
+        let matched = self.completion.as_ref().is_some_and(|s| s.matched);
+        if !matched && self.stage_spine.pending_publication_counts().0 == 0 {
             self.graph.receipt_forwards.clear();
         }
         self.publication.publish(
@@ -357,7 +455,9 @@ impl Executor {
         self.replay
             .publish(&self.graph, _unions_before != self.graph.stats.unions)?;
         self.graph.changes.clear();
-        self.graph.collect_garbage();
+        if !matched {
+            self.graph.collect_garbage();
+        }
         let end = Instant::now();
         let delivery_seconds = end.duration_since(phase).as_secs_f64();
         Ok((query_update_seconds, delivery_seconds))

@@ -6,6 +6,8 @@ use crate::program::{Arg, Call, Op, Program, Result};
 use crate::value::Value;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
+#[path = "completion_access.rs"]
+mod access;
 #[path = "completion_effects.rs"]
 mod effects;
 
@@ -40,9 +42,13 @@ pub struct Plan {
     /// Direct table observations/effects, for a proved concrete port influence.
     /// An empty list observes nothing; unknown implicit effects demand all.
     pub port_demands: BTreeMap<String, Vec<usize>>,
-    /// Access footprint before conservative incoming-union expansion. Retained
-    /// to distinguish a real table-access wait from a potential write fence.
+    /// Historical aggregate before incoming-union expansion. Runtime port
+    /// scopes instead use the query footprint and actually matched rules.
     pub port_accesses: BTreeMap<String, Vec<usize>>,
+    /// Mandatory source snapshot reads, before any RHS can run.
+    pub query_demands: BTreeMap<String, Vec<usize>>,
+    /// Separate source reads, RHS accesses, and conservative union effects.
+    pub rule_demands: Vec<access::Rule>,
 }
 fn eq_sorts(schema: &[serde_json::Value]) -> (BTreeSet<String>, bool) {
     let mut names = BTreeSet::new();
@@ -194,6 +200,8 @@ impl Plan {
             rulesets: BTreeMap::new(),
             port_demands: BTreeMap::new(),
             port_accesses: BTreeMap::new(),
+            query_demands: BTreeMap::new(),
+            rule_demands: Vec::new(),
         };
         // If completion can reach an ordered mutable effect, retain its source
         // barrier. Deferring only the first constructor would hide that effect.
@@ -203,127 +211,38 @@ impl Plan {
                     || (p.tables[j].constructor && p.tables[j].virtual_fact && !sorts[j].1)
             });
         }
+        plan.rule_demands = (0..p.rules.len())
+            .map(|rid| access::Rule::derive(p, &plan, rid, &sorts))
+            .collect();
         for (name, rules) in &p.sets {
             let mut tables = BTreeSet::new();
-            let mut implicit = false;
-            let mut union_sorts = BTreeSet::new();
+            let mut direct = BTreeSet::new();
+            let mut accesses = BTreeSet::new();
+            let mut queries = BTreeSet::new();
             for &rid in rules {
-                let rule = &p.rules[rid];
-                let template = &p.templates[rule.template];
-                for atom in rule.query.iter() {
-                    implicit |= atom.args.iter().any(opaque_literal);
-                    if let Call::Table(t) = atom.call {
-                        tables.insert(t);
-                    }
-                }
-                for op in template.ops.iter() {
-                    // A source union can enter a pending region through the
-                    // result of an otherwise unrelated constructor. Its future
-                    // write influence must complete before matching this Run.
-                    match op {
-                        Op::Union(a, b) => {
-                            for arg in [a, b] {
-                                if let Arg::Slot(slot) = arg {
-                                    let (sorts, unknown) =
-                                        eq_sorts(std::slice::from_ref(&template.sorts[*slot]));
-                                    union_sorts.extend(sorts);
-                                    implicit |= unknown;
-                                }
-                            }
-                        }
-                        Op::Set(t, _, _) if p.tables[*t].constructor => {
-                            let (sorts, unknown) =
-                                eq_sorts(&p.tables[*t].schema[p.tables[*t].schema.len() - 1..]);
-                            union_sorts.extend(sorts);
-                            implicit |= unknown;
-                        }
-                        _ => (),
-                    }
-                    implicit |= match op {
-                        Op::Copy(_, a) => opaque_literal(a),
-                        Op::Let(_, _, args) | Op::Hide(_, args, _) => {
-                            args.iter().any(opaque_literal)
-                        }
-                        Op::Set(_, args, v) => args.iter().any(opaque_literal) || opaque_literal(v),
-                        Op::Union(a, b) => opaque_literal(a) || opaque_literal(b),
-                        Op::Panic => false,
-                    };
-                    match op {
-                        Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) | Op::Hide(t, _, _) => {
-                            tables.insert(*t);
-                        }
-                        _ => (),
-                    }
-                }
-                // Eq-valued primitive guards also depend on future congruence,
-                // even when a sort does not appear as a separate table atom.
+                let demand = &plan.rule_demands[rid];
+                queries.extend(demand.query.iter().copied());
+                direct.extend(demand.query.iter().chain(&demand.rhs).copied());
+                accesses.extend(demand.query.iter().chain(&demand.accesses).copied());
+                let template = &p.templates[p.rules[rid].template];
                 let (reads, unknown) = eq_sorts(&template.sorts);
-                implicit |= unknown;
-                // Capture direct tables separately before adding all same-sort
-                // observations to the older type-only footprint below.
-                let direct = plan.port_demands.entry(name.clone()).or_default();
-                for atom in rule.query.iter() {
-                    if let Call::Table(t) = atom.call {
-                        direct.push(t);
-                    }
-                }
-                for op in template.ops.iter() {
-                    match op {
-                        Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) | Op::Hide(t, _, _) => {
-                            direct.push(*t);
-                            implicit |= plan.opaque_tables.contains(t);
-                            if matches!(op, Op::Set(..)) {
-                                // Ordered Set may execute a merge. Its hidden
-                                // reads and constructor births are source-Run
-                                // demands too, before matching begins.
-                                direct.extend(&plan.completion_reads[*t]);
-                                for other in 0..n {
-                                    if plan.affects[*t][other / 64] & (1 << (other % 64)) != 0 {
-                                        direct.push(other);
-                                    }
-                                }
-                            }
-                        }
-                        _ => (),
-                    }
-                }
                 for (t, (names, opaque)) in sorts.iter().enumerate() {
                     if unknown || *opaque || !reads.is_disjoint(names) {
                         tables.insert(t);
                     }
                 }
             }
+            tables.extend(&direct);
             plan.rulesets.insert(
                 name.clone(),
                 plan.scope(&tables.into_iter().collect::<Vec<_>>())?,
             );
-            let direct = plan.port_demands.entry(name.clone()).or_default();
-            let mut accesses = if implicit {
-                (0..n).collect()
-            } else {
-                direct.clone()
-            };
-            accesses.sort_unstable();
-            accesses.dedup();
-            plan.port_accesses.insert(name.clone(), accesses);
-            for (t, (names, unknown)) in sorts.iter().enumerate() {
-                if !union_sorts.is_empty() && (*unknown || !names.is_disjoint(&union_sorts)) {
-                    // Incoming equality may invoke an ordered merge before the
-                    // next boundary. Its hidden reads must be ready in the
-                    // source epoch, even when they do not produce any writes.
-                    direct.extend(&plan.completion_reads[t]);
-                    for other in 0..n {
-                        if plan.affects[t][other / 64] & (1 << (other % 64)) != 0 {
-                            direct.push(other);
-                        }
-                    }
-                }
-            }
-            if implicit {
-                *direct = (0..n).collect();
-            }
-            direct.sort_unstable();
-            direct.dedup();
+            plan.port_demands
+                .insert(name.clone(), direct.into_iter().collect());
+            plan.port_accesses
+                .insert(name.clone(), accesses.into_iter().collect());
+            plan.query_demands
+                .insert(name.clone(), queries.into_iter().collect());
         }
         Ok(plan)
     }

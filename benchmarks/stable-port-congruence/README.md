@@ -573,6 +573,79 @@ python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/merge-
 python3 benchmarks/stable-port-congruence/collect-merge-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
+## Query snapshots and matched-rule RHS demands
+
+The `9a5c0a18` catalog's ten waits all intersected the combined query/RHS access
+footprint. That footprint included rules with no bindings. The next compiler
+proof splits query tables from each rule's RHS accesses, hidden merge reads and
+incoming-union effects. `--port-scopes` first waits for query readiness before
+dirty-reader selection, seals all matching into one source snapshot, then waits
+only for the RHS demands of matched rules. The pending work still uses its
+original epoch and ordered completion path. An empty Run has no RHS demand;
+its unchanged result still controls a saturating schedule.
+
+A wait between matching and RHS publication must retain the matched Entry
+origins and sealed Spine cursors, receipt forwards and frame ancestors. The
+binding union generation is captured before matching, so old bindings cannot
+receive a freshness certificate from the later completed graph. Matched origins
+remain alive until the bindings are consumed; ordinary end-of-Run publication
+can then clean them while retaining any still-outstanding deferred consumers.
+
+Six short integration fixtures cover independent committed facts and subsequent
+consumption, an actual RHS access wait, an explicit-union effect fence, an empty
+saturating Run, the immutable matching snapshot, and matched Entry lifetime.
+The independent fixture commits **three fact births through two bindings**, and
+a subsequent Run consumes the independent result while one same-sort congruence
+task remains pending. Temporarily clearing matched origins during publication
+makes the Entry-lifetime fixture fail with an out-of-bounds sealed cursor;
+restoring the guard makes it pass. The full workspace passes 267 tests (four
+ignored), the 69 focused tests pass in both sparse and non-sparse configurations,
+and the runtime compiles without default features. Global-observer configurations
+keep their barriers and are not counted as independent-progress evidence.
+
+The frozen sum-bits audit again matches all 1,428 ordered Run observations and
+all state/RHS/effective-write/resume/Spine hashes, including the previous binary.
+Ten completion waits split into **three query waits and seven matched-RHS waits**.
+Of the seven RHS waits, six intersect the matched rules' access footprint and
+one is caused solely by the conservative incoming-union expansion.
+There are 40 bindings matched while old work is pending, but **zero bindings or
+RHS mutations execute before that pending work completes**. Two empty Runs carry
+pending work and lose the fully-settled idle shortcut (769 becomes 767); they
+produce no independent result. All other ordinary runtime counters match the
+global local-congruence control. This is not admitted as a speedup.
+
+The per-rule RHS union costs 3,614 demand probes, eight scratch-vector growths and
+13 matched-rule visits, all charged in Bake's heuristic work ledger. Readiness
+checks include both the post-completion proof and classification of actual access
+versus conservative union waits: 4,878 checks versus the previous 4,257. Carrying
+the empty Runs raises partial publications from ten to twelve and peak retained
+receipt forwards from zero to twelve. The existing proof still walks 150,901 static
+steps and incurs 1,343 tracked scratch growths; these growth counters are not a
+complete allocator census. Fact births and function updates have separate
+counters from logical matches and executed bindings. No timing or real-worker
+scaling claim is made. The remaining question is which bound accesses and effect
+ports actually intersect the pending Cell region, rather than merely sharing a
+table; the union safety gate and ordered mutable effects remain live obligations.
+
+Reproduce with the frozen artifact and the separate workspace, focused and
+minimal commands above, using `staged-scopes-*.log` names. Add
+`--test staged_completion` to both focused commands (along with the five suites
+from the merge refinement), and set
+`STAGED_COMPLETION_EVIDENCE="$PWD/out/stable-port-congruence/staged-completion-fixture.json"`
+only in the sparse focused run. For the negative control, temporarily change
+`if !self.retain_matched_origins` to `if true` in `stage_spine.rs`, run only
+`matched_entry_origins_survive_completion_and_publication_before_rhs`, capture
+`staged-scopes-origin-negative.log`, restore the source, and rerun the sparse
+focused tests. Do not run concurrent builds during this source mutation. Then
+build the standalone runtime separately:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/staged-scopes-runtime
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/staged-scopes-runtime benchmarks/stable-port-congruence/staged-scopes-audit-manifest.json out/stable-port-congruence/staged-scopes-final-audit
+python3 benchmarks/stable-port-congruence/collect-staged-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
 Reproduce with the frozen artifact and separate compiler/runtime builds described
 above. Use `scoped-executor-{workspace-tests,tests,non-sparse-tests,minimal-check}`
 log names. The focused compiler test command adds `--test scoped_completion`;

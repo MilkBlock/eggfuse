@@ -2511,7 +2511,7 @@ impl Executor {
     }
     fn run(&mut self, set: &str, path: Rc<[usize]>, iterations: Rc<[u64]>) -> Result<bool> {
         let start = Instant::now();
-        let scope_wait_seconds = if self.completion.is_some() {
+        let mut scope_wait_seconds = if self.completion.is_some() {
             self.wait_for_ruleset(set)?;
             start.elapsed().as_secs_f64()
         } else { 0.0 };
@@ -2571,6 +2571,8 @@ impl Executor {
         let mut work = vec![];
         // Every LHS is read before any effect is made visible. Prepared successor
         // recipes therefore cannot leak into this finite Run's matching snapshot.
+        #[cfg(feature = "sparse-cells")]
+        let binding_generation = self.graph.stats.unions;
         #[cfg(feature = "family-replay")]
         let run_start = self.survey.samples.len();
         #[cfg(feature = "structural-depth")]
@@ -2638,6 +2640,11 @@ impl Executor {
             sets.finish(id,self.graph.epoch);
         }
         let patch = StagePatch { groups: work, len: count };
+        if self.completion.is_some() {
+            let wait = Instant::now();
+            self.wait_for_matched(&patch)?;
+            scope_wait_seconds += wait.elapsed().as_secs_f64();
+        }
         #[cfg(feature = "structural-depth")]
         let mut evidence = if let Some(marks) = marks {
             Some(
@@ -2674,12 +2681,12 @@ impl Executor {
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::begin_writes();
         let executed = patch.len;
-        if let Some(state) = &mut self.completion && self.graph.pending_completion_tasks() > 0 {
+        let independent_rhs = self.completion.is_some() && self.graph.pending_completion_tasks() > 0;
+        let committed_before = (self.graph.stats.logical_facts_created, self.graph.stats.function_updates);
+        if let Some(state) = &mut self.completion && independent_rhs {
             state.stats.runs_with_unrelated_pending += 1;
             state.stats.executed_bindings_while_pending += executed as u64;
         }
-        #[cfg(feature = "sparse-cells")]
-        let binding_generation = self.graph.stats.unions;
         #[cfg(feature = "family-survey")]
         let mut rhs_clock: Option<(usize, Instant)> = None;
         #[cfg(feature = "rhs-work-audit")]
@@ -2746,6 +2753,10 @@ impl Executor {
             self.survey.rhs(r, clock.elapsed().as_nanos() as u64);
         }
 
+        if let Some(state) = &mut self.completion && independent_rhs {
+            state.stats.rhs_fact_births_while_pending += self.graph.stats.logical_facts_created - committed_before.0;
+            state.stats.rhs_function_updates_while_pending += self.graph.stats.function_updates - committed_before.1;
+        }
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::repaired();
         let rhs_end = Instant::now();

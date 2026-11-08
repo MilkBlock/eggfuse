@@ -506,6 +506,7 @@ pub struct Programs {
     capture_unions: Option<u64>,
     origins: Vec<HashMap<Vec<Value>, Cursor>>,
     origin_rules: Vec<usize>,
+    retain_matched_origins: bool,
     // Sealed bindings own move-only indices into this Run's winning cursors.
     #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
     sealed_cursors: Vec<Option<Cursor>>,
@@ -788,6 +789,7 @@ impl Programs {
             track_ports: vec![0; p.rules.len()],
             origins: vec![HashMap::default(); p.rules.len()],
             origin_rules: Vec::new(),
+            retain_matched_origins: false,
             #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
             sealed_cursors: Vec::new(),
             next_context: 0,
@@ -1506,15 +1508,28 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             self.published_bases.clear();
         }
-        #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
-        self.sealed_cursors.clear();
-        for rid in self.origin_rules.drain(..) {
-            self.origins[rid].clear();
+        if !self.retain_matched_origins {
+            #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
+            self.sealed_cursors.clear();
+            for rid in self.origin_rules.drain(..) {
+                self.origins[rid].clear();
+            }
         }
         self.entry_cache.clear();
         self.row_cache.clear();
         self.stats.publication_seconds += clock.elapsed().as_secs_f64();
         Ok(())
+    }
+    /// Bindings already returned by matching still own these cursors while an
+    /// independent old region completes before their RHS starts.
+    pub(crate) fn retain_matched_origins(&mut self, retain: bool) {
+        self.retain_matched_origins = retain;
+    }
+    pub(crate) fn matched_origin_slots(&self) -> usize {
+        let n = self.origin_rules.iter().map(|&r|self.origins[r].len()).sum::<usize>();
+        #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
+        let n = n + self.sealed_cursors.len();
+        n
     }
     pub fn answers(
         &mut self,
