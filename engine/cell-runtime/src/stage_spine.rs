@@ -211,7 +211,7 @@ impl Started {
         cat: &crate::iterative::Catalog,
         rid: usize,
         read: impl Fn(usize) -> Option<Dependency>,
-        effects: Option<&[Option<Dependency>]>,
+        effect: impl Fn(usize) -> Option<Dependency>,
     ) {
         if cat.history_depth() == 0 {
             return;
@@ -222,7 +222,7 @@ impl Started {
                 rid,
                 cat.capture_sources(&c.state),
                 read,
-                effects,
+                effect,
             );
         }
     }
@@ -394,6 +394,11 @@ pub struct Stats {
     port_refreshes: u64,
     pre_resume_port_lookups: u64,
     port_cache_fills: u64,
+    query_receipt_attempts: u64,
+    query_receipt_hits: u64,
+    query_receipt_function_hits: u64,
+    query_receipt_missing: u64,
+    query_receipt_stale: u64,
     guards: u64,
     guard_rejections: u64,
     bindings: u64,
@@ -548,6 +553,7 @@ fn record_answer(
 fn read_port(
     g: &mut Graph,
     cursor: &Cursor,
+    _atom: usize,
     table: usize,
     args: PortKey,
     stats: &mut Stats,
@@ -557,6 +563,21 @@ fn read_port(
     let good = |r: &Row| {
         r.table == table && !r.hidden && r.values[..key.1.len()] == key.1[..]
     };
+    #[cfg(feature = "iterative-bake")]
+    if let Some(proof) = g.program.iterative.query_receipt(&cursor.state, _atom) {
+        stats.query_receipt_attempts += 1;
+        if let Some(w) = cursor.state.history.get_query(proof) {
+            g.stats.decoded_rows += 1;
+            if let Some(row) = g.row(w)?.filter(good) {
+                stats.query_receipt_hits += 1;
+                stats.query_receipt_function_hits += u64::from(matches!(w, Dependency::Function(_)));
+                return Ok(Some(row));
+            }
+            stats.query_receipt_stale += 1;
+        } else {
+            stats.query_receipt_missing += 1;
+        }
+    }
     // A candidate may fail a later port or guard, or lose
     // binding deduplication. Only an applied origin promotes the root.
     let cache = cursor.root.context.get();
@@ -811,6 +832,10 @@ impl Programs {
             #[cfg(feature = "iterative-bake")]
             for src in p.iterative.exports(rid) {
                 if let crate::result_handoff::Donor::Query(i) = *src {
+                    if matches!(r.query[i].call, Call::Table(t) if !p.tables[t].constructor) {
+                        query_facts = QueryFacts::Ports(vec![None; r.query.len()]);
+                        continue;
+                    }
                     match query_facts {
                         QueryFacts::None => query_facts = QueryFacts::One(i, None),
                         QueryFacts::One(j, _) if i != j => {
@@ -1035,7 +1060,7 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(&g.program.iterative, rid, &query_fact, effects);
+            s.remember(&g.program.iterative, rid, &query_fact, |i| effects.and_then(|e| e[i]));
             s
         };
         self.pending_steps.push(step);
@@ -1139,7 +1164,7 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(catalog, rid, |i| query.get(i).map(Dependency::Fact), None);
+            s.remember(catalog, rid, |i| query.receipt(i), |i| (i == op).then_some(w));
             s
         };
         self.pending_steps.push(step);
@@ -1694,6 +1719,7 @@ impl Programs {
                                     let Some(found) = read_port(
                                         g,
                                         &cursor,
+                                        step.atom,
                                         *table,
                                         args,
                                         &mut self.stats,
@@ -1753,6 +1779,7 @@ impl Programs {
                         let Some(found) = read_port(
                             g,
                             &cursor,
+                            p.atom,
                             p.table,
                             args,
                             &mut self.stats,
@@ -1810,6 +1837,7 @@ impl Programs {
                         let Some(row) = read_port(
                             g,
                             &cursor,
+                            i,
                             *t,
                             args,
                             &mut self.stats,

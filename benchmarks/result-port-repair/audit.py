@@ -2,7 +2,9 @@
 """Compare ordered application traces, keeping compact evidence before deleting exports.
 
 Use an executable built with slot-transfer-audit,spine-shapes. PROGRAMS is a
-JSON map from case name to program path. Both lanes use the same executable.
+JSON map from case name to program path, or to {lane: {program: PATH, args:
+[FLAG]}}. All lanes use the same executable. Shape comparison excludes only
+the program hash; ordered RHS/write/resume digests remain byte comparisons.
 """
 import argparse
 import hashlib
@@ -25,11 +27,16 @@ def sha(path):
 def audit(runtime, programs, output):
     output.mkdir()
     result = {'runtime_sha256': sha(runtime), 'scope': 'standalone Cell CPU; ordered trace audit, not timing', 'cases': {}}
-    for case, program in programs.items():
+    for case, config in programs.items():
+        lanes = {'control': {'program': config, 'args': []},
+                 'ports': {'program': config, 'args': ['--repair-ports']}} if isinstance(config, str) else config
         rows = {}
-        result['cases'][case] = {'program_file_sha256': sha(Path(program)), 'lanes': rows}
+        result['cases'][case] = {'lanes': rows}
+        if isinstance(config, str):
+            result['cases'][case]['program_file_sha256'] = sha(Path(config))
         reference = None
-        for lane, args in [('control', []), ('ports', ['--repair-ports'])]:
+        for lane, settings in lanes.items():
+            program, args = settings['program'], settings.get('args', [])
             directory = output / f'{case}-{lane}'
             with (output / f'{directory.name}.log').open('w') as log:
                 subprocess.run([str(runtime), '--program', program, '--output', str(directory), *args],
@@ -37,12 +44,17 @@ def audit(runtime, programs, output):
             report = json.loads((directory / 'report.json').read_text())
             assert report['status'] == 'complete'
             hashes = {f: sha(directory / f) for f in FILES}
+            shape = json.loads((directory / 'spine-shapes.json').read_text())
+            shape.pop('program_sha256', None)
+            hashes['shape_without_program_hash'] = hashlib.sha256(json.dumps(shape, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
             schedule = [[s[k] for k in KEYS] for s in report['steps']]
             hashes['schedule'] = hashlib.sha256(json.dumps(schedule, separators=(',', ':')).encode()).hexdigest()
+            comparable = {k: v for k, v in hashes.items() if k != 'spine-shapes.json'}
             if reference is None:
-                reference = hashes
-            assert hashes == reference, (case, lane, hashes, reference)
-            rows[lane] = {'hashes': hashes, 'stats': report['stats'], 'repair_ports': report['repair_ports'],
+                reference = comparable
+            assert comparable == reference, (case, lane, comparable, reference)
+            rows[lane] = {'program_file_sha256': sha(Path(program)), 'args': args,
+                          'hashes': hashes, 'stats': report['stats'], 'repair_ports': report['repair_ports'],
                           'stage_spine': report['stage_spine']['stats'], 'runs': len(schedule)}
             temp = output / 'results.tmp'
             temp.write_text(json.dumps(result, indent=2) + '\n')

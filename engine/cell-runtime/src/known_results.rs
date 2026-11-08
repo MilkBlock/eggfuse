@@ -32,6 +32,8 @@ pub(crate) enum QueryFacts {
     None,
     One(usize, Option<FactRef>),
     All(Vec<Option<FactRef>>),
+    // Only enabled for a compiled query continuation demanding mutable rows.
+    Ports(Vec<Option<Dependency>>),
 }
 impl QueryFacts {
     #[cfg(feature = "structural-depth")]
@@ -68,6 +70,7 @@ impl QueryFacts {
             }
             Self::One(source, slot) if *source == atom => *slot = fact,
             Self::All(rows) => rows[atom] = fact,
+            Self::Ports(rows) => rows[atom] = witness,
             _ => {}
         }
     }
@@ -77,7 +80,19 @@ impl QueryFacts {
             Self::Tracked(original, _, _) => original.get(atom),
             Self::One(source, fact) if *source == atom => *fact,
             Self::All(rows) => rows[atom],
+            Self::Ports(rows) => match rows[atom] {
+                Some(Dependency::Fact(f)) => Some(f),
+                _ => None,
+            },
             _ => None,
+        }
+    }
+    pub(crate) fn receipt(&self, atom: usize) -> Option<Dependency> {
+        match self {
+            #[cfg(feature = "structural-depth")]
+            Self::Tracked(_, rows, _) => rows[atom],
+            Self::Ports(rows) => rows[atom],
+            _ => self.get(atom).map(Dependency::Fact),
         }
     }
 }

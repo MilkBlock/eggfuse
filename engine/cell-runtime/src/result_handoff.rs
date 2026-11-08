@@ -1,5 +1,6 @@
-//! Symbolic SSA keys on one finite, witnessed block path. Only constructor
-//! facts are donors. Acquisition of a live fact remains a runtime obligation.
+//! Symbolic SSA keys on one finite, witnessed block path. Constructor receipts
+//! can also prove result equality. Mutable receipts prove only a row location;
+//! a query must read its current result and check visibility and the full key.
 use crate::{
     graph::{Dependency, FactRef},
     iterative::Entry,
@@ -26,6 +27,13 @@ pub(crate) struct Reuse {
     pub rule: usize,
     pub donor: Donor,
 }
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub(crate) struct QueryReuse {
+    pub atom: usize,
+    pub back: usize,
+    pub rule: usize,
+    pub donor: Donor,
+}
 #[derive(Clone, Copy)]
 pub(crate) struct Input {
     pub op: usize,
@@ -41,13 +49,15 @@ struct Fact {
     table: usize,
     key: Vec<usize>,
     result: usize,
+    constructor: bool,
 }
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Symbols {
     parents: Vec<usize>,
     literals: BTreeMap<Value, usize>,
     indexed_roots: BTreeSet<usize>,
     key_epoch: usize,
+    congruence_dirty: bool,
 }
 impl Symbols {
     fn fresh(&mut self) -> usize {
@@ -67,6 +77,7 @@ impl Symbols {
         // Fresh output aliases normally do not change any existing fact key.
         if a != b && self.indexed_roots.contains(&a.max(b)) {
             self.key_epoch += 1;
+            self.congruence_dirty = true;
         }
         self.parents[a.max(b)] = a.min(b);
     }
@@ -92,14 +103,23 @@ impl Symbols {
     /// Call only at a source boundary or after collecting the complete LHS;
     /// queued RHS unions must not become visible to earlier RHS instructions.
     fn close(&mut self, facts: &[Fact]) {
+        if self.congruence_dirty {
+            self.close_full(facts);
+        }
+    }
+    fn close_full(&mut self, facts: &[Fact]) {
         loop {
             let mut keys = BTreeMap::new();
             let mut changed = false;
             for f in facts {
+                if !f.constructor {
+                    continue;
+                }
                 let key = (
                     f.table,
                     f.key.iter().map(|&i| self.root(i)).collect::<Vec<_>>(),
                 );
+                self.indexed_roots.extend(&key.1);
                 if let Some(other) = keys.insert(key, f.result)
                     && self.root(other) != self.root(f.result)
                 {
@@ -111,6 +131,7 @@ impl Symbols {
                 break;
             }
         }
+        self.congruence_dirty = false;
     }
 }
 /// Exact canonical keys, retaining the most recent donor like the reverse scan.
@@ -122,10 +143,11 @@ struct FactIndex {
     epoch: usize,
 }
 impl FactIndex {
-    fn clear(&mut self, symbols: &mut Symbols) {
+    fn clear(&mut self, _symbols: &mut Symbols) {
         self.keys.clear();
         self.indexed = 0;
-        symbols.indexed_roots.clear();
+        // Keep the conservative footprint: a Hide may clear this lookup index
+        // before queued unions affect other surviving constructor keys.
     }
     fn find(
         &mut self,
@@ -144,20 +166,27 @@ impl FactIndex {
         }
         self.indexed = facts.len();
         self.epoch = symbols.key_epoch;
-        self.keys
-            .get(&(table, key.iter().map(|&s| symbols.root(s)).collect()))
-            .copied()
+        let key = key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
+        // Register the pending fact too, before its source-boundary unions.
+        symbols.indexed_roots.extend(&key);
+        self.keys.get(&(table, key)).copied()
     }
 }
-pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: bool) -> Vec<Reuse> {
+fn derive_stage(
+    p: &Program,
+    path: &[(Option<usize>, Entry)],
+    congruence: bool,
+    query_ports: bool,
+) -> Terminal {
     if path.len() < 2 {
-        return vec![];
+        return Terminal::default();
     }
     let mut symbols = Symbols::default();
     let mut facts = Vec::<Fact>::new();
     let mut index = FactIndex::default();
     let mut published = Vec::new();
     let mut program = vec![];
+    let mut queries = vec![];
     for (stage, &(_, (rid, pivot))) in path.iter().enumerate() {
         let r = &p.rules[rid];
         let t = &p.templates[r.template];
@@ -172,9 +201,30 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
         } else {
             debug_assert!(stage == 0 && published.is_empty());
         }
-        for (atom, a) in r.query.iter().enumerate() {
+        // A query receipt may use only the pivot and earlier completed ports.
+        // Full-LHS equalities are valid for RHS proofs, but using them here
+        // could make a later query constraint justify an earlier lookup.
+        let order = if query_ports && stage + 1 == path.len() {
+            pivot.and_then(|pivot| {
+                p.multi_stage
+                    .stage_entries
+                    .iter()
+                    .find(|(rule, anchor, _)| (*rule, *anchor) == (rid, pivot))
+                    .map(|(_, _, rest)| {
+                        std::iter::once(pivot)
+                            .chain(rest.iter().copied())
+                            .collect::<Vec<_>>()
+                    })
+            })
+        } else {
+            None
+        };
+        let query_ordered = order.is_some();
+        for atom in order.unwrap_or_else(|| (0..r.query.len()).collect()) {
+            let a = &r.query[atom];
             let Call::Table(table) = a.call else { continue };
-            if !p.tables[table].constructor {
+            let constructor = p.tables[table].constructor;
+            if !constructor && !query_ports {
                 continue;
             }
             let (value, keys) = a.args.split_last().unwrap();
@@ -185,7 +235,19 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
                 .collect::<Vec<_>>();
             if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
                 let f = &facts[i];
-                symbols.equal(result, f.result)
+                if query_ordered && Some(atom) != pivot && f.stage != stage {
+                    queries.push(QueryReuse {
+                        atom,
+                        back: stage - f.stage,
+                        rule: f.rule,
+                        donor: f.source,
+                    });
+                }
+                // A mutable row's location may survive while its result changes.
+                // Only constructor functionality proves a result equality.
+                if constructor {
+                    symbols.equal(result, f.result);
+                }
             }
             facts.push(Fact {
                 stage,
@@ -194,6 +256,7 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
                 table,
                 key,
                 result,
+                constructor,
             });
         }
         if congruence {
@@ -233,6 +296,17 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
                 }
             }
             if !p.tables[table].constructor || !p.tables[table].virtual_fact {
+                if query_ports {
+                    facts.push(Fact {
+                        stage,
+                        rule: rid,
+                        source: Donor::Effect(op),
+                        table,
+                        key,
+                        result: value,
+                        constructor: false,
+                    });
+                }
                 continue;
             }
             if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
@@ -268,6 +342,7 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
                 table,
                 key,
                 result: value,
+                constructor: true,
             });
         }
         for (a, b) in unions {
@@ -277,12 +352,17 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, Entry)], congruence: b
             symbols.close(&facts);
         }
     }
-    program
+    let complete = is_complete(p, path.last().unwrap().1.0, &program, congruence);
+    Terminal {
+        reuse: program,
+        queries,
+        complete,
+    }
 }
 #[derive(Clone, Debug)]
 struct Exports {
     rule: usize,
-    rows: smallvec::SmallVec<[(Donor, FactRef); 2]>,
+    rows: smallvec::SmallVec<[(Donor, Dependency); 2]>,
 }
 /// Shared by copied/published cursors. Empty stages maintain real offsets;
 /// trimming at the largest compiled distance bounds the history.
@@ -300,7 +380,7 @@ impl History {
         rid: usize,
         wanted: &[Donor],
         read: impl Fn(usize) -> Option<Dependency>,
-        effects: Option<&[Option<Dependency>]>,
+        effect: impl Fn(usize) -> Option<Dependency>,
     ) {
         if limit == 0 || (wanted.is_empty() && self.0.is_none()) {
             return;
@@ -309,10 +389,10 @@ impl History {
         for &d in wanted {
             let w = match d {
                 Donor::Query(i) => read(i),
-                Donor::Effect(i) => effects.and_then(|e| e[i]),
+                Donor::Effect(i) => effect(i),
             };
-            if let Some(Dependency::Fact(f)) = w {
-                rows.push((d, f));
+            if let Some(w) = w {
+                rows.push((d, w));
             }
         }
         let frame = (!rows.is_empty()).then_some(Exports { rule: rid, rows });
@@ -335,13 +415,22 @@ impl History {
         self.0 = Some(Rc::new(Trail::Many(v)));
     }
     pub(crate) fn get(&self, r: &Reuse) -> Option<FactRef> {
+        match self.get_donor(r.back, r.rule, r.donor)? {
+            Dependency::Fact(f) => Some(f),
+            _ => None,
+        }
+    }
+    pub(crate) fn get_query(&self, r: &QueryReuse) -> Option<Dependency> {
+        self.get_donor(r.back, r.rule, r.donor)
+    }
+    fn get_donor(&self, back: usize, rule: usize, donor: Donor) -> Option<Dependency> {
         let e = match self.0.as_deref()? {
-            Trail::One(e) if r.back == 1 => e,
-            Trail::Many(v) => v.get(v.len().checked_sub(r.back)?)?.as_deref()?,
+            Trail::One(e) if back == 1 => e,
+            Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_deref()?,
             _ => return None,
         };
-        (e.rule == r.rule)
-            .then(|| e.rows.iter().find(|x| x.0 == r.donor).map(|x| x.1))
+        (e.rule == rule)
+            .then(|| e.rows.iter().find(|x| x.0 == donor).map(|x| x.1))
             .flatten()
     }
 }
@@ -349,19 +438,24 @@ impl History {
 #[derive(Clone, Debug, Serialize)]
 pub(crate) struct Terminal {
     pub reuse: Vec<Reuse>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub queries: Vec<QueryReuse>,
     pub complete: bool,
 }
-pub(crate) fn terminal(p: &Program, path: &[(Option<usize>, Entry)], congruence: bool) -> Terminal {
-    let reuse = derive(p, path, congruence);
-    let r = path.last().unwrap().1.0;
-    let complete = is_complete(p, r, &reuse, congruence);
-    Terminal { reuse, complete }
+pub(crate) fn terminal(
+    p: &Program,
+    path: &[(Option<usize>, Entry)],
+    congruence: bool,
+    query_ports: bool,
+) -> Terminal {
+    derive_stage(p, path, congruence, query_ports)
 }
 
 #[derive(Clone, Debug, Default)]
 pub(crate) struct Switch {
     reuse_results: bool,
     pub(crate) congruence: bool,
+    pub(crate) query_ports: bool,
     nodes: Vec<Node>,
     by_rule: Vec<Vec<Option<usize>>>,
     roots: Vec<Option<usize>>,
@@ -382,6 +476,7 @@ impl Default for Terminal {
     fn default() -> Self {
         Self {
             reuse: vec![],
+            queries: vec![],
             complete: false,
         }
     }
@@ -395,6 +490,7 @@ impl Switch {
         leaves: &BTreeMap<Entry, usize>,
         reuse_results: bool,
         congruence: bool,
+        query_ports: bool,
     ) -> Self {
         let mut prefixes = BTreeMap::new();
         let mut units = BTreeMap::new();
@@ -403,7 +499,7 @@ impl Switch {
             for i in 1..=path.len() {
                 prefixes.entry(path[..i].to_vec()).or_insert_with(|| {
                     if reuse_results {
-                        terminal(p, &path[..i], congruence)
+                        terminal(p, &path[..i], congruence, query_ports)
                     } else {
                         Terminal::default()
                     }
@@ -448,12 +544,23 @@ impl Switch {
                 }
             }
             program.reuse.sort_by_key(|r| r.op);
+            for rule in &nodes[failure].program.queries {
+                if !program.queries.iter().any(|r| r.atom == rule.atom) {
+                    program.queries.push(rule.clone());
+                }
+            }
+            program.queries.sort_by_key(|r| r.atom);
             program.complete = is_complete(p, entry.0, &program.reuse, congruence);
-            for r in &program.reuse {
-                let donor: usize = ids[&path[..path.len() - r.back]];
-                nodes[donor].supply.push(r.donor);
-                exports[r.rule].push(r.donor);
-                depth = depth.max(r.back);
+            for (back, rule, source) in program
+                .reuse
+                .iter()
+                .map(|r| (r.back, r.rule, r.donor))
+                .chain(program.queries.iter().map(|r| (r.back, r.rule, r.donor)))
+            {
+                let donor: usize = ids[&path[..path.len() - back]];
+                nodes[donor].supply.push(source);
+                exports[rule].push(source);
+                depth = depth.max(back);
             }
             let unit = units.get(&path).copied().unwrap_or(nodes[failure].unit);
             ids.insert(path, id);
@@ -496,6 +603,7 @@ impl Switch {
         Self {
             reuse_results,
             congruence,
+            query_ports,
             nodes,
             by_rule,
             roots,
@@ -538,7 +646,7 @@ impl Switch {
         self.nodes.get(id).map(|n| &n.program)
     }
     pub(crate) fn artifact(&self) -> serde_json::Value {
-        serde_json::json!({"schema":if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
+        serde_json::json!({"schema":if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
     }
     pub(crate) fn enabled(&self) -> bool {
         !self.nodes.is_empty()
@@ -566,6 +674,55 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn conditional_closure_matches_full_scan_through_hides_and_pending_unions() {
+        let mut symbols = Symbols::default();
+        let mut index = FactIndex::default();
+        let mut facts = vec![];
+        for _ in 0..90 {
+            symbols.fresh();
+        }
+        let mut seed = 193u64;
+        for step in 0..800 {
+            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
+            let table = (seed >> 32) as usize % 7;
+            let key = vec![(seed as usize >> 8) % 90, (seed as usize >> 18) % 90];
+            let result = symbols.fresh();
+            if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
+                symbols.equal(result, facts[i].result);
+            }
+            facts.push(Fact {
+                stage: step,
+                rule: 0,
+                source: Donor::Effect(step),
+                table,
+                key,
+                result,
+                constructor: true,
+            });
+            if step % 13 == 0 {
+                facts.retain(|f| f.table != (table + 1) % 7);
+                index.clear(&mut symbols);
+            }
+            // Includes changes to the most recently appended, unindexed key.
+            if step % 5 == 0 {
+                symbols.equal((seed as usize >> 8) % 90, (step * 11) % 90);
+            }
+            if step % 3 == 0 {
+                let mut reference = symbols.clone();
+                reference.close_full(&facts);
+                symbols.close(&facts);
+                for i in 0..symbols.parents.len() {
+                    assert_eq!(
+                        symbols.root(i),
+                        reference.root(i),
+                        "step={step}, symbol={i}"
+                    );
+                }
+                assert!(!symbols.congruence_dirty);
+            }
+        }
+    }
     #[test]
     fn indexed_donors_match_reverse_scan_after_unions_appends_and_deletions() {
         let mut symbols = Symbols::default();
@@ -597,6 +754,7 @@ mod tests {
                     table,
                     key: key.clone(),
                     result: next() % 64,
+                    constructor: true,
                 });
             }
             // Appended facts may be unindexed when a subsequent union arrives.

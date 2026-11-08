@@ -192,9 +192,10 @@ impl Catalog {
             s.units.push(u);
         }
         if let Some(raw) = raw.get("rhs_handoffs") {
-            let congruence = match raw["schema"].as_str() {
-                Some("eggfuse-result-switch/v1") => false,
-                Some("eggfuse-result-switch/v2") => true,
+            let (congruence, query_ports) = match raw["schema"].as_str() {
+                Some("eggfuse-result-switch/v1") => (false, false),
+                Some("eggfuse-result-switch/v2") => (true, false),
+                Some("eggfuse-result-switch/v3") => (true, true),
                 _ => return Err("unsupported cross-Run RHS proof policy".into()),
             };
             let reuse = raw["reuse_results"]
@@ -206,6 +207,7 @@ impl Catalog {
                 &s.leaves,
                 reuse,
                 congruence,
+                query_ports,
             );
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
@@ -217,12 +219,21 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
-        Self::emit_policy(p, plan, reuse, false)
+        Self::emit_policy(p, plan, reuse, false, false)
     }
     pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true)
+        Self::emit_policy(p, plan, true, true, false)
     }
-    fn emit_policy(p: &Program, plan: &mut J, reuse: bool, congruence: bool) -> Result<()> {
+    pub fn emit_query_handoffs(p: &Program, plan: &mut J) -> Result<()> {
+        Self::emit_policy(p, plan, true, true, true)
+    }
+    fn emit_policy(
+        p: &Program,
+        plan: &mut J,
+        reuse: bool,
+        congruence: bool,
+        query_ports: bool,
+    ) -> Result<()> {
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
@@ -233,6 +244,7 @@ impl Catalog {
             &cat.leaves,
             reuse,
             congruence,
+            query_ports,
         )
         .artifact();
         Ok(())
@@ -276,6 +288,20 @@ impl Catalog {
     }
     pub(crate) fn closed(&self, s: &State) -> bool {
         self.switch.program(s.pc).is_some_and(|p| p.complete)
+    }
+    pub(crate) fn query_receipt(
+        &self,
+        s: &State,
+        atom: usize,
+    ) -> Option<&crate::result_handoff::QueryReuse> {
+        if !self.switch.query_ports {
+            return None;
+        }
+        self.switch
+            .program(s.pc)?
+            .queries
+            .iter()
+            .find(|r| r.atom == atom)
     }
     fn combine(&self, p: &Program, j: Join) -> Option<Unit> {
         let (l, r) = (self.units.get(j.left)?, self.units.get(j.right)?);
@@ -452,17 +478,23 @@ impl Catalog {
             }
             let mut e = e.clone();
             if self.switch.enabled() {
-                let old = &self
-                    .switch
-                    .program(self.switch.replay(&u.path))
-                    .unwrap()
-                    .reuse;
-                let proof = crate::result_handoff::terminal(p, &u.path, self.switch.congruence);
+                let old = self.switch.program(self.switch.replay(&u.path)).unwrap();
+                let proof = crate::result_handoff::terminal(
+                    p,
+                    &u.path,
+                    self.switch.congruence,
+                    self.switch.query_ports,
+                );
                 let additional = proof
                     .reuse
                     .iter()
-                    .filter(|r| !old.iter().any(|s| s.op == r.op))
-                    .count();
+                    .filter(|r| !old.reuse.iter().any(|s| s.op == r.op))
+                    .count()
+                    + proof
+                        .queries
+                        .iter()
+                        .filter(|r| !old.queries.iter().any(|s| s.atom == r.atom))
+                        .count();
                 e.predicted_key_reads = e.visits.saturating_mul(additional as u64);
             }
             // A + B can be useful even when B itself has nothing to reuse.
@@ -494,19 +526,21 @@ impl Catalog {
                     let mut suffix = tail.path.clone();
                     suffix[0].0 = Some(next.output);
                     path.extend(suffix);
-                    let old = &self
-                        .switch
-                        .program(self.switch.replay(&path))
-                        .unwrap()
-                        .reuse;
+                    let old = self.switch.program(self.switch.replay(&path)).unwrap();
                     let start_of_b = self.units[join.left].path.len();
-                    if crate::result_handoff::derive(p, &path, self.switch.congruence)
-                        .iter()
-                        .any(|r| {
-                            path.len() - 1 - r.back < start_of_b
-                                && !old.iter().any(|x| x.op == r.op)
-                        })
-                    {
+                    let proof = crate::result_handoff::terminal(
+                        p,
+                        &path,
+                        self.switch.congruence,
+                        self.switch.query_ports,
+                    );
+                    if proof.reuse.iter().any(|r| {
+                        path.len() - 1 - r.back < start_of_b
+                            && !old.reuse.iter().any(|x| x.op == r.op)
+                    }) || proof.queries.iter().any(|r| {
+                        path.len() - 1 - r.back < start_of_b
+                            && !old.queries.iter().any(|x| x.atom == r.atom)
+                    }) {
                         e.bridge_support = e.bridge_support.max(w.visits.min(e.visits));
                     }
                 }

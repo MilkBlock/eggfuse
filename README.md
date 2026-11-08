@@ -65,3 +65,9 @@ measured extra receipt reuse has not improved application throughput.
 opt-in `--repair-ports` path. A compiler-checked key footprint lets result-only
 equality changes update a constructor's output without reindexing its body.
 Key changes and collision handling retain the ordinary repair algorithm.
+
+[Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
+Bake to constructor and mutable query ports, with current-value checks and
+resumable catalogs. More checked reuse is learned, but the measured catalogs
+do not improve total inference time; source capture and publication still cost
+more than the small number of global lookups avoided.

@@ -1,0 +1,67 @@
+{
+  "scope": "standalone Cell CPU compiler; correctness and diagnostic elapsed time, not an isolated speed ratio",
+  "closure_reference": "Symbols::close_full, retained by the randomized differential test",
+  "certificate_and_execution_equal": {
+    "source_program": "245ce01b5004cba948d621816a6e6843062c6392cc285a504457faf236d377b2",
+    "final_state_sha256": "bc752aa028a83214b45fd92591c97985cb8d59e1c4545b802c28271c862f546f",
+    "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40",
+    "ordered_rhs_sha256": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+    "query_completion": {
+      "attempts": 13591,
+      "hits": 13562,
+      "function_hits": 9587,
+      "missing": 0,
+      "stale": 29,
+      "port_refreshes": 1573388
+    },
+    "rhs_completion": {
+      "lets": 34063,
+      "sets": 17363,
+      "closed": 18016,
+      "noop_unions": 17363,
+      "deep": 0
+    }
+  },
+  "resume": {
+    "reason": "continue the validated catalog with conditional compiler closure",
+    "validated_round": 2,
+    "validated_source_program": "245ce01b5004cba948d621816a6e6843062c6392cc285a504457faf236d377b2",
+    "interrupted_live_process": true,
+    "time": 1794135222.6269069,
+    "resume_checkpoint": 3,
+    "resume_units": 364,
+    "command": [
+      "out/query-receipts/conditional-compiler",
+      "iterate",
+      "--program",
+      "out/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "--resume-catalog",
+      "out/query-receipts/generic-learn-raytrace/round-3/catalog.json",
+      "--output",
+      "out/query-receipts/conditional-learn-raytrace",
+      "--objective",
+      "stage-congruence",
+      "--rounds",
+      "12"
+    ],
+    "start": 1794135222.727776,
+    "elapsed_seconds": 437.3915159702301,
+    "returncode": 0
+  },
+  "validation": {
+    "workspace_all_features": {
+      "passed": 178,
+      "failed": 0,
+      "ignored": 4
+    },
+    "non_sparse_query_receipts": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "sample": {
+    "total_main_thread_samples": 787,
+    "candidate_selection_samples": 787,
+    "note": "725 samples at one Catalog::select call site plus 62 at another; full sample retained locally"
+  }
+}

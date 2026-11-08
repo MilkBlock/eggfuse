@@ -33,6 +33,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "--candidate-slots",
             "--min-support",
             "--producer-profile",
+            "--resume-catalog",
         ],
     )?;
     let path = opts
@@ -45,12 +46,20 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         .map(|s| s.parse())
         .transpose()?
         .unwrap_or(4usize);
+    let resume_plan = opts
+        .get("--resume-catalog")
+        .map(|path| super::read(Path::new(path)))
+        .transpose()?;
     let native = eggfuse_bake::bake_limits::BakeLimits::from_env()?;
-    let mut limits = Limits {
-        depth: native.max_depth,
-        nodes: native.max_nodes,
-        total: native.max_units,
-        ..Default::default()
+    let mut limits = if let Some(plan) = &resume_plan {
+        serde_json::from_value(plan["limits"].clone())?
+    } else {
+        Limits {
+            depth: native.max_depth,
+            nodes: native.max_nodes,
+            total: native.max_units,
+            ..Default::default()
+        }
     };
     for (name, slot) in [
         ("--max-depth", &mut limits.depth),
@@ -66,19 +75,33 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     if let Some(s) = opts.get("--min-support") {
         limits.support = s.parse()?
     }
-    let (handoffs, congruence) = match opts
+    let (handoffs, congruence, query_ports) = match opts
         .get("--objective")
         .map(String::as_str)
         .unwrap_or("copies")
     {
-        "copies" => (false, false),
-        "rhs-lookups" => (true, false),
-        "rhs-congruence" => (true, true),
+        "copies" => (false, false, false),
+        "rhs-lookups" => (true, false, false),
+        "rhs-congruence" => (true, true, false),
+        "stage-congruence" => (true, true, true),
         _ => return Err("unknown iterative Bake objective".into()),
     };
-    let mut plan = if let Some(path) = opts.get("--producer-profile") {
+    let mut plan = if let Some(mut plan) = resume_plan {
+        if opts.contains_key("--producer-profile") {
+            return Err("resume a catalog or select producer roots, not both".into());
+        }
+        let mut raw = seed.artifact.clone();
+        raw["iterative_bake"] = plan.clone();
+        // Reconstruct the old certificate before changing its objective/limits.
+        Program::parse(raw)?;
+        plan["limits"] = json!(limits);
+        plan.as_object_mut()
+            .ok_or("invalid resume catalog")?
+            .remove("rhs_handoffs");
+        plan
+    } else if let Some(path) = opts.get("--producer-profile") {
         if !congruence {
-            return Err("producer receipts require the rhs-congruence objective".into());
+            return Err("producer receipts require a congruence objective".into());
         }
         let profile = super::read(Path::new(path))?;
         if profile["schema"] != "eggfuse-spine-shapes/v1"
@@ -124,7 +147,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let mut reference = None;
     let mut history = Vec::new();
     for round in 0..=rounds {
-        if congruence {
+        if query_ports {
+            Catalog::emit_query_handoffs(&seed, &mut plan)?;
+        } else if congruence {
             Catalog::emit_congruence_handoffs(&seed, &mut plan)?;
         } else if handoffs {
             Catalog::emit_handoffs(&seed, &mut plan)?;
@@ -201,7 +226,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         } else {
             "continue"
         };
-        history.push(json!({"round":round,"units":units.len(),"source_program":p.artifact["sha256"],"work":train.report(),"rhs_completion":{"lets":exec.graph.stats.handoff_lets,"sets":exec.graph.stats.handoff_sets,"closed":exec.graph.stats.handoff_closed,"noop_unions":exec.graph.stats.handoff_noop_unions,"deep":exec.graph.stats.handoff_deep},"admitted":admitted,
+        let report = exec.report();
+        let spine = &report["stage_spine"]["stats"];
+        history.push(json!({"round":round,"units":units.len(),"source_program":p.artifact["sha256"],"work":train.report(),"rhs_completion":{"lets":exec.graph.stats.handoff_lets,"sets":exec.graph.stats.handoff_sets,"closed":exec.graph.stats.handoff_closed,"noop_unions":exec.graph.stats.handoff_noop_unions,"deep":exec.graph.stats.handoff_deep},"query_completion":{"attempts":spine["query_receipt_attempts"],"hits":spine["query_receipt_hits"],"function_hits":spine["query_receipt_function_hits"],"missing":spine["query_receipt_missing"],"stale":spine["query_receipt_stale"],"port_refreshes":spine["port_refreshes"]},"admitted":admitted,
             "runs":stamp.2.len(),"final_state_sha256":stamp.0,"schedule_sha256":stamp.1,
             "ordered_rhs_sha256":format!("{:x}",Sha256::digest(serde_json::to_vec(&stamp.2)?)),"stop":stopped,"resumed_steps":exec.report()["stage_spine"]["stats"]["resumed_steps"]}));
         // Immutable round checkpoints make an interrupted run inspectable.
