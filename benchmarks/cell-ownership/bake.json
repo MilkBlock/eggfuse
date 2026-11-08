@@ -1,0 +1,20 @@
+{
+  "scope": "compiler only; no application inference",
+  "compiler_sha256": "19866f77e960d8021a13415836bcc1709bbcc0439b00bac072e75c9d40158181",
+  "cases": {
+    "sum": {
+      "scope": "typed compiler coverage, no workload execution or timing",
+      "templates": 983,
+      "covered_bodies": 1459,
+      "covered_tables": 241,
+      "entry_ports": 1454
+    },
+    "raytrace": {
+      "scope": "typed compiler coverage, no workload execution or timing",
+      "templates": 983,
+      "covered_bodies": 15254,
+      "covered_tables": 241,
+      "entry_ports": 1454
+    }
+  }
+}

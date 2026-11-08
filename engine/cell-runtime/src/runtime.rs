@@ -277,6 +277,7 @@ impl Executor {
         let mut query_indexes = QueryIndexes::default();
         query_indexes.track_changes = sieve.enabled;
         let mut stage_spine = crate::stage_spine::Programs::new(&graph.program);
+        if graph.ownership_enabled() {stage_spine.enable_owner_queries(&graph.program);}
         stage_spine.audit_receipts = audit;
         #[cfg(feature = "sparse-cells")]
         {
@@ -364,6 +365,8 @@ impl Executor {
             continuation_stats: ContinuationStats::default(),
             handoffs: BTreeSet::new(),
         };
+        #[cfg(feature="sparse-cells")]
+        if e.graph.ownership_enabled() {e.use_entry_publications().expect("entry ownership configured before execution");}
         e.entry_schedule.publish(&e.graph);
         e.deliver();
         e.graph.changes.clear();
@@ -1928,6 +1931,20 @@ impl Executor {
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
+        if self.graph.ownership_enabled() && self.graph.program.cell_ownership.markers[self.graph.program.rules[rid].template].active {
+            let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
+            self.graph.begin_owner_entry(rid,anchors.into_iter());
+        }
+        let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
+        self.graph.end_owner_entry();
+        result
+    }
+    fn apply_owned(
+        &mut self,
+        rid: usize,
+        b: Binding,
+        #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
+    ) -> Result<()> {
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
         let stage_cursor = self.stage_spine.begin_step(
@@ -2729,6 +2746,7 @@ impl Executor {
             .proof
             .before_repair(&self.graph.parents, &self.graph.pending_unions);
         self.graph.repair()?;
+        self.graph.ownership_barrier();
         #[cfg(feature = "rhs-work-audit")]
         {
             let mut births = std::mem::take(&mut self.graph.rhs_births);
@@ -3092,7 +3110,7 @@ impl Executor {
         let repair_cells = self.graph.repair_cell_report();
         #[cfg(not(feature = "spine-blocks"))]
         let repair_cells = J::Null;
-        json!({"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
+        json!({"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,

@@ -59,6 +59,15 @@ impl Work {
             let key=format!("local_union_cells/{field}");
             work.insert(key,report["local_union_cells"][field].as_u64().ok_or("missing coverage fallback work")?);
         }
+        for field in ["marker_entries","marker_anchor_reads","boundary_insert_attempts","boundary_probes",
+            "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
+            "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows"] {
+            let key=format!("cell_ownership/stats/{field}");
+            let value=if report["cell_ownership"]["enabled"]==false {0} else {
+                report["cell_ownership"]["stats"][field].as_u64().ok_or_else(||format!("missing ownership work {field}"))?
+            };
+            work.insert(key,value);
+        }
         Ok(Self(work))
     }
     pub fn savings(&self, trial: &Self) -> (i128, J) {

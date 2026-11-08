@@ -73,6 +73,14 @@ boundary work are measured separately; `bake-local-unions` rejects candidates
 whose observed savings do not cover their costs. The runtime path is opt-in via
 `--local-unions`.
 
+[Persistent cross-stage Cell ownership](benchmarks/cell-ownership/README.md)
+extends this to live bodies across Runs. `bake-cell-ownership` emits checked
+entry/body markers without executing the workload. `--cell-ownership` shares
+boundary routing between local completion and candidate matching, retains
+internal ownership across stages, and reports coverage and remaining maintenance.
+All eligible live scalar bodies are covered, but the final CPU campaign regresses
+25.7% / 52.6% on sum-bits / Raytrace: coarse owner traversal remains too expensive.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

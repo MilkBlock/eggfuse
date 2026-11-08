@@ -1,0 +1,27 @@
+{
+  "sum-bits": {
+    "parent": {
+      "runtime": "out/local-unions/runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "control": {
+      "runtime": "out/cell-ownership/runtime",
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "owned": {
+      "runtime": "out/cell-ownership/runtime",
+      "program": "out/cell-ownership/baked-sum/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    }
+  }
+}

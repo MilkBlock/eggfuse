@@ -484,6 +484,7 @@ pub struct Programs {
     // Anchor-producing operations and their optional proven receipt sources.
     anchor_ops: Vec<Vec<(usize, Option<Source>)>>,
     alias_query_facts: Vec<QueryFacts>,
+    owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
     pending_steps: Vec<Started>,
     #[cfg(feature = "sparse-cells")]
@@ -759,6 +760,7 @@ impl Programs {
             training: Default::default(),
             anchor_ops: vec![],
             alias_query_facts: vec![],
+            owner_queries: false,
             pending_steps: vec![],
             pending_anchors: vec![],
             #[cfg(feature = "sparse-cells")]
@@ -1012,7 +1014,7 @@ impl Programs {
         self.enabled && self.receipts && self.anchor_ops.get(rid).is_some_and(|ops| !ops.is_empty())
     }
     pub(crate) fn alias_query_facts(&self, rid: usize) -> QueryFacts {
-        let base = if self.receipts {
+        let base = if self.receipts || self.owner_queries {
             self.alias_query_facts.get(rid).cloned().unwrap_or_default()
         } else {
             QueryFacts::None
@@ -1022,6 +1024,14 @@ impl Programs {
             return QueryFacts::Tracked(Box::new(base), vec![None; self.track_ports[rid]], 0);
         }
         base
+    }
+    pub(crate) fn enable_owner_queries(&mut self,p:&Program) {
+        self.owner_queries=true;
+        for (rid,ports) in p.cell_ownership.entries.iter().enumerate() {
+            if !ports.is_empty() {
+                self.alias_query_facts[rid]=QueryFacts::Ports(vec![None;p.rules[rid].query.len()]);
+            }
+        }
     }
     /// Query witnesses are used only as receipts for proved RHS aliases.
     pub fn capture(

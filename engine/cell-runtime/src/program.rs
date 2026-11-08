@@ -83,6 +83,8 @@ pub struct Program {
     pub(crate) repair_ports: crate::graph::repair_ports::Plan,
     #[serde(skip)]
     pub local_union_cells: crate::graph::local_union_cells::Plan,
+    #[serde(skip)]
+    pub cell_ownership: crate::graph::cell_ownership::Plan,
     #[cfg(feature = "spine-blocks")]
     #[serde(skip)]
     pub repair_cells: crate::graph::repair_cells::Catalog,
@@ -361,6 +363,7 @@ impl Program {
             physical: Default::default(),
             repair_ports: Default::default(),
             local_union_cells: Default::default(),
+            cell_ownership: Default::default(),
             #[cfg(feature = "spine-blocks")]
             repair_cells: Default::default(),
             known_results: Default::default(),
@@ -397,6 +400,7 @@ impl Program {
         #[cfg(feature = "spine-blocks")]
         { p.repair_cells = crate::graph::repair_cells::Catalog::derive(&p)?; }
         p.local_union_cells = crate::graph::local_union_cells::Plan::derive(&p)?;
+        p.cell_ownership = crate::graph::cell_ownership::Plan::derive(&p)?;
         p.writes = crate::row_kernel::writes(&p);
         p.neighbor_plans = crate::neighbor::derive(&p);
         if let Some(raw) = p.artifact.get("neighbor_entries")

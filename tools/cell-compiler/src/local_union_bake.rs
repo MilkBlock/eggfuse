@@ -38,6 +38,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         repair_ports: true,
         repair_cells: false,
         local_unions,
+        cell_ownership:false,
     };
     fs::create_dir(out)?;
     let start = Instant::now();

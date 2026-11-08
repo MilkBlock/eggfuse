@@ -5,6 +5,7 @@ mod iterate;
 mod repair_bake;
 #[cfg(feature = "iterative-bake")]
 mod local_union_bake;
+mod ownership_bake;
 #[cfg(feature = "iterative-bake")]
 mod work_credit;
 mod keys;
@@ -287,9 +288,12 @@ pub fn cli(default_bench: bool) -> Result<()> {
     };
     if cmd == "iterate" && args.iter().any(|a| a == "--help") {
         println!(
-            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--score measured-work|static] [--trial-limit N] [--entry-publications true|false] [--repair-ports true|false] [--repair-cells true|false] [--local-unions true|false] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
+            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--score measured-work|static] [--trial-limit N] [--entry-publications true|false] [--repair-ports true|false] [--repair-cells true|false] [--local-unions true|false] [--cell-ownership true|false] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
         );
         return Ok(());
+    }
+    if cmd == "bake-cell-ownership" && args.iter().any(|a| a == "--help") {
+        return ownership_bake::run(args);
     }
     #[cfg(feature = "iterative-bake")]
     if cmd == "bake-local-unions" && args.iter().any(|a| a == "--help") {
@@ -307,6 +311,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
     }
     egglog::EGraph::set_num_threads(1);
     match cmd.as_str() {
+        "bake-cell-ownership" => ownership_bake::run(args),
         #[cfg(feature = "iterative-bake")]
         "iterate" => iterate::run(args),
         #[cfg(feature = "iterative-bake")]

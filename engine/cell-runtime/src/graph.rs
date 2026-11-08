@@ -10,6 +10,8 @@ pub mod repair_cells;
 pub mod maintenance;
 #[path = "local_union_cells.rs"]
 pub mod local_union_cells;
+#[path = "cell_ownership.rs"]
+pub mod cell_ownership;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -55,6 +57,10 @@ impl FactRef {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct FactState {
     #[serde(skip)]
+    owned: bool,
+    #[serde(skip)]
+    owned_owner: Option<u32>,
+    #[serde(skip)]
     local_union_owned: bool,
     #[cfg(feature = "receipt-slots")]
     #[serde(skip)]
@@ -77,6 +83,8 @@ pub struct FactState {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Cell {
+    #[serde(skip)]
+    owner: Option<u32>,
     #[serde(default)]
     pub completed_prefix: usize,
     #[serde(default)]
@@ -273,6 +281,7 @@ pub struct Graph {
     pub stats: Stats,
     pub maintenance: maintenance::Metrics,
     local_unions: Option<local_union_cells::Runtime>,
+    ownership: Option<cell_ownership::Runtime>,
     pub pending_unions: Vec<(u64, u64)>,
     union_digest: Option<union_digest::Matcher>,
     repair_ports: Option<repair_ports::Runtime>,
@@ -500,6 +509,7 @@ impl Graph {
             stats: Stats::default(),
             maintenance: Default::default(),
             local_unions: None,
+            ownership: None,
 
             known_stats: Default::default(),
             scalar_merge: cfg!(feature = "sparse-cells"),
@@ -631,6 +641,7 @@ impl Graph {
         }
 
         Cell {
+            owner: self.owner_entry(),
             template,
             values,
             parent,
@@ -1179,11 +1190,15 @@ impl Graph {
     }
     pub fn candidate_count(&self, table: usize, bound: &[Option<Value>]) -> usize {
         let all = self.witness_count(table);
+        if self.ownership.as_ref().is_some_and(|m|m.tables[table]>0) {return self.owned_candidate_count(table,bound);}
         if self.local_unions.as_ref().is_some_and(|m|m.untracked_tables[table] > 0) { return all; }
         self.bound_uses(bound)
             .map_or(all, |uses| all.min(uses.len()))
     }
     pub fn candidates(&self, table: usize, bound: &[Option<Value>]) -> Vec<Dependency> {
+        if self.ownership.as_ref().is_some_and(|m|m.tables[table]>0) {
+            return self.owned_candidates(table,bound);
+        }
         if let Some(m)=&self.local_unions && m.untracked_tables[table] > 0 {
             m.fallback_queries.set(m.fallback_queries.get()+1);
             let rows=self.witnesses(table);
@@ -1423,12 +1438,16 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);
+        let owned = self.owns_birth(f);
+        let owned_owner = owned.then(|| self.cells[&f.cell].owner.unwrap());
         let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
         #[cfg(feature = "sparse-cells")]
         facts.reserve_first();
         facts.insert(
             f.op,
             FactState {
+                owned,
+                owned_owner,
                 local_union_owned,
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
@@ -1443,7 +1462,8 @@ impl Graph {
         );
         self.members[t].insert(f.ordered_id());
         self.intern.entry(h).or_default().insert(f);
-        if local_union_owned { self.query_versions[t] += 1; }
+        if owned { self.query_versions[t] += 1; self.publish_owned_birth(f,t,&vs); }
+        else if local_union_owned { self.query_versions[t] += 1; }
         else { self.subscribe(t, Dependency::Fact(f), &vs); }
         self.changes.touch(t, Dependency::Fact(f));
         self.stats.logical_facts_created += 1;
@@ -1730,6 +1750,7 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }
         self.parents.insert(hi, lo);
+        self.propagate_owned_union(hi, lo);
         self.maintenance.union_frontier_probes += 1;
         let mut affected = self.uses.remove(&hi).unwrap_or_default();
         let displaced = affected.len();
@@ -2205,6 +2226,7 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            let owned=self.retire_owned(f,r.table,&r.values);
             let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
             self.end_local_ownership(f, r.table, true);
             if let Some(matcher) = self.union_digest.as_mut() {
@@ -2232,7 +2254,7 @@ impl Graph {
                     self.intern.remove(&s.hash);
                 }
             }
-            if local { self.query_versions[r.table] += 1; }
+            if local || owned { self.query_versions[r.table] += 1; }
             else { self.subscribe(r.table, Dependency::Fact(f), &[]); }
             self.garbage.insert(f.cell);
         }
@@ -2322,7 +2344,7 @@ impl Graph {
     }
     pub(crate) fn settled(&self)->bool {
         self.changes.is_empty() && self.pending_unions.is_empty() && self.dirty.is_empty()
-            && self.dirty_markers.is_empty() && self.garbage.is_empty()
+            && self.dirty_markers.is_empty() && self.garbage.is_empty() && self.ownership_settled()
     }
     // Both bucket implementations iterate in witness order. Skipping self
     // before the read-only probe preserves remove-self-then-probe ordering;
@@ -2388,7 +2410,10 @@ impl Graph {
             s.decoded = Some((r.table, r.values.clone()));
             s.hash = h;
             s.epoch = self.epoch;
-            self.subscribe(r.table, d, &r.values);
+            if self.cells[&f.cell].facts[&f.op].owned {
+                self.query_versions[r.table]+=1;
+                self.owned_refreshed(f,&r.values);
+            } else { self.subscribe(r.table, d, &r.values); }
             self.changes.touch(r.table, d);
         }
         Ok(())
@@ -2412,6 +2437,10 @@ impl Graph {
                 continue;
             }
 
+            if let Some(f)=self.pop_owned_before(self.dirty.first().copied()) {
+                self.complete_owned_key(f)?;
+                continue;
+            }
             let Some(d) = self
                 .dirty
                 .pop_first()
@@ -2421,6 +2450,7 @@ impl Graph {
                     local_completion = self.finish_local_completion(local_completion, true)?;
                     continue;
                 }
+                self.settle_owned_boundaries()?;
                 break;
             };
             if let Dependency::Fact(f) = d {
