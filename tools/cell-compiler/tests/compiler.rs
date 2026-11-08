@@ -1623,3 +1623,134 @@ fn local_rhs_keeps_existing_intermediates_and_promotes_at_the_first_new_fact() {
         assert!(full[field].as_u64().unwrap() > 0, "{field}: {full}");
     }
 }
+
+#[cfg(feature = "iterative-bake")]
+#[test]
+fn complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts() {
+    use eggfuse_cell_runtime::{
+        compiler,
+        executor::Executor,
+        graph::Graph,
+        iterative::{Catalog, Limits},
+        program::Program,
+    };
+    use std::collections::BTreeSet;
+    let source = r#"
+(datatype E (N i64) (Start E i64) (Gateway E i64) (Mark E))
+(function score (E) i64 :merge old)
+(function next (i64) E :merge old)
+(ruleset make) (ruleset consume) (ruleset fill)
+(rule ((= n (N 9))) ((set (next 3) n)) :ruleset fill)
+(rule ((Start x i)) ((Mark x) (Gateway x i)) :ruleset make :name "producer")
+(rule ((Gateway x i) (= j (score x)) (= y (next j)) (= k (+ i j)) (> k 5))
+      ((Mark x)) :ruleset consume :name "consumer")
+(Start (N 1) 10) (Start (N 2) -10) (Start (N 3) 10)
+(set (score (N 1)) 1) (set (score (N 2)) 2) (set (score (N 3)) 3)
+(set (next 1) (N 9)) (set (next 2) (N 9))
+(run-schedule (seq (run make) (run consume) (run fill) (run consume)))
+(check (Mark (N 1)) (Mark (N 2)) (Mark (N 3)))
+"#;
+    let core = eggfuse_bake::device_frontend::core("complete-stage", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let rules = p.artifact["recipe"]["rules"].as_array().unwrap();
+    let id = |name| {
+        rules
+            .iter()
+            .position(|r| r["metadata"]["name"] == name)
+            .unwrap()
+    };
+    let (producer, consumer) = (id("producer"), id("consumer"));
+    let pivot = |rid: usize, table| {
+        rules[rid]["query"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .position(|a| a["call"]["table"] == table)
+            .unwrap()
+    };
+    let profile = json!({"schema":"eggfuse-spine-shapes/v1", "program_sha256":p.artifact["sha256"],
+        "prefixes":[{"edge":[0,0,producer,pivot(producer,"Start")],"visits":3},
+                    {"edge":[producer,1,consumer,pivot(consumer,"Gateway")],"visits":2}]});
+    let old = compiler::bake_spine_blocks(&p, &profile, &p, 2).unwrap();
+    assert_eq!(old["entries"].as_array().unwrap().len(), 1);
+    let leaves = compiler::bake_stage_blocks(&p, &profile, &p, 2).unwrap();
+    let entries = leaves["entries"].as_array().unwrap();
+    assert_eq!(entries.len(), 2);
+    let leaf = |rid| entries.iter().position(|e| e["consumer"] == rid).unwrap();
+    assert!(
+        entries[leaf(consumer)]["block"]["steps"]
+            .as_array()
+            .unwrap()
+            .len()
+            >= 4
+    );
+    let mut raw = p.artifact.clone();
+    raw["spine_blocks"] = leaves;
+    let seed = Program::parse(raw.clone()).unwrap();
+    let mut plan = Catalog::seed(&seed, Limits::default()).unwrap();
+    let publication = rules[producer]["effects"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|op| op["call"]["table"] == "Gateway")
+        .unwrap();
+    let entries = raw["spine_blocks"]["entries"].as_array().unwrap();
+    let leaf = |rid| entries.iter().position(|e| e["consumer"] == rid).unwrap();
+    plan["joins"] = json!([{"left":leaf(producer),"output":publication,"right":leaf(consumer)}]);
+    Catalog::emit_congruence_handoffs(&seed, &mut plan).unwrap();
+    raw["iterative_bake"] = plan;
+    let exec = |p| {
+        let mut e = Executor::new(Graph::new(p).unwrap(), false);
+        e.execute_until(None).unwrap();
+        e
+    };
+    let base = exec(p);
+    assert_eq!(
+        base.steps
+            .iter()
+            .filter(|s| s["ruleset"] == "consume")
+            .map(|s| s["logical_matches"].clone())
+            .collect::<Vec<_>>(),
+        vec![json!(1), json!(1)],
+        "a missing port must become eligible only after the later update"
+    );
+    {
+        let fast = exec(Program::parse(raw.clone()).unwrap());
+        let mut a = Vec::new();
+        let mut b = Vec::new();
+        base.graph.write_export(&mut a).unwrap();
+        fast.graph.write_export(&mut b).unwrap();
+        assert_eq!(a, b);
+        // The later function update supplies a different origin and falls back.
+        assert_eq!(fast.graph.stats.handoff_closed, 1);
+        assert_eq!(fast.graph.stats.handoff_lets, 1);
+        for (x, y) in base.steps.iter().zip(&fast.steps) {
+            for key in [
+                "ordinal",
+                "ruleset",
+                "path",
+                "iterations",
+                "epoch",
+                "logical_matches",
+                "executed_bindings",
+                "changed",
+            ] {
+                assert_eq!(x[key], y[key], "{key}");
+            }
+        }
+        assert_eq!(base.steps.len(), fast.steps.len());
+    }
+    let mut corrupt = raw.clone();
+    corrupt["spine_blocks"]["schema"] = "eggfuse-spine-blocks/v1".into();
+    assert!(Program::parse(corrupt).is_err());
+    let c = raw["spine_blocks"]["entries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|e| e["consumer"] == consumer)
+        .unwrap();
+    raw["spine_blocks"]["entries"][c]["block"]["steps"][0]["key"][0] = json!({"StepResult":99});
+    assert!(Program::parse(raw).is_err());
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, source).unwrap();
+}

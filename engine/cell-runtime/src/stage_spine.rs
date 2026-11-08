@@ -1648,7 +1648,7 @@ impl Programs {
         #[cfg(not(feature = "sparse-cells"))]
         let mut results = Winners::new();
         let covered_count = if complete { ready.len() } else { covered.len() };
-        for (pivot, row, make_input, cursor) in ready {
+        'answer: for (pivot, row, make_input, cursor) in ready {
             let mut epoch = row.epoch;
             #[cfg(feature = "spine-shapes")]
             let cursor = {
@@ -1679,6 +1679,75 @@ impl Programs {
                 let selected = { g.program.spine_blocks.get(rid, pivot) };
                 if let Some(block) = selected {
                     self.stats.block_entries += 1;
+                    if !block.steps.is_empty() {
+                        let mut values = smallvec::SmallVec::<[value::Value; 4]>::new();
+                        let mut witnesses = vec![None; rule.query.len()];
+                        witnesses[pivot] = Some(row.witness);
+                        for step in &block.steps {
+                            let args = step
+                                .key
+                                .iter()
+                                .map(|v| v.staged(g, &row, &values))
+                                .collect::<PortKey>();
+                            let result = match &step.call {
+                                Call::Table(table) => {
+                                    let Some(found) = read_port(
+                                        g,
+                                        &cursor,
+                                        *table,
+                                        args,
+                                        &mut self.stats,
+                                        #[cfg(feature = "structural-depth")]
+                                        (&mut self.structural, row.witness),
+                                    )?
+                                    else {
+                                        continue 'answer;
+                                    };
+                                    epoch = epoch.max(found.epoch);
+                                    witnesses[step.atom] = Some(found.witness);
+                                    found.values.last().unwrap().clone()
+                                }
+                                Call::Primitive(name, output) => {
+                                    self.stats.guards += 1;
+                                    if name.starts_with("cell-key-") {
+                                        g.stats.key_operations += 1;
+                                    }
+                                    let Some(result) =
+                                        value::primitive(name, &args, output, g.program.key_nodes())?
+                                    else {
+                                        self.stats.guard_rejections += 1;
+                                        continue 'answer;
+                                    };
+                                    result
+                                }
+                            };
+                            if step
+                                .check_result
+                                .as_ref()
+                                .is_some_and(|v| v.staged(g, &row, &values) != result)
+                            {
+                                if matches!(step.call, Call::Primitive(..)) {
+                                    self.stats.guard_rejections += 1;
+                                }
+                                continue 'answer;
+                            }
+                            values.push(result);
+                        }
+                        if epoch >= watermark {
+                            let inputs = block
+                                .inputs
+                                .iter()
+                                .map(|v| v.staged(g, &row, &values))
+                                .collect();
+                            cursor.via_block = true;
+                            #[cfg(feature = "iterative-bake")]
+                            if cursor.state.direct {
+                                self.training.seal_moves += block.inputs.len() as u64;
+                            }
+                            record_answer(&mut results, inputs, witnesses, epoch, cursor);
+                        }
+                        continue;
+                    }
                     let port = if let Some(p) = &block.port {
                         let args = p.key.iter().map(|v| v.get(g, &row, None)).collect();
                         let Some(found) = read_port(

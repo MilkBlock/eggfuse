@@ -3,7 +3,7 @@
 #[cfg(feature = "spine-blocks")]
 mod spine_blocks;
 #[cfg(feature = "spine-blocks")]
-pub use spine_blocks::bake_spine_blocks;
+pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
 use crate::{
     multistage::{extend, source},

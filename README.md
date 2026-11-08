@@ -50,3 +50,8 @@ an experimental representation, not yet a Bake-trained or parallel backend.
 add the opt-in `rhs-congruence` learning objective. It strengthens cross-Run
 constructor proofs and records a root producer's first useful continuation;
 measured extra reuse on the current narrow leaf catalog is still small.
+
+[Complete stage entry Bake](benchmarks/leaf-completion/README.md)
+extends opt-in leaf admission to dependent table ports and primitive guards.
+Wider measured coverage supplies 864 additional complete Raytrace RHSs; the
+report separately records the limited extra reuse from complete stage lowering.

@@ -1,0 +1,842 @@
+{
+  "sum-bits": {
+    "scope": "observed outgoing winning transitions; visits are not distinct producer executions",
+    "profile_sha256": "9b20b382837a2b457f1395da5ecbfeffd1d40bf5a1543a08220ccfc83d730dca",
+    "static_eligibility_artifact_sha256": "0caf6d029f1e1f51f155bcfdd6c28770717b798aa58379aaf6d0c71983eb7509",
+    "observed_producer_rules": 101,
+    "missing_from_staged_leaves": [
+      {
+        "rule": 0,
+        "outgoing_visits": 16,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 21,
+        "outgoing_visits": 8,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 49,
+        "outgoing_visits": 15,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 59,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 60,
+        "outgoing_visits": 86,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 118,
+        "outgoing_visits": 4,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 119,
+        "outgoing_visits": 9,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 120,
+        "outgoing_visits": 30,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 121,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 122,
+        "outgoing_visits": 96,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 123,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 124,
+        "outgoing_visits": 15,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 128,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 129,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 136,
+        "outgoing_visits": 3,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 139,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": [
+          0
+        ]
+      },
+      {
+        "rule": 144,
+        "outgoing_visits": 84,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 152,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": [
+          0
+        ]
+      },
+      {
+        "rule": 249,
+        "outgoing_visits": 4,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 250,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": [
+          1
+        ]
+      },
+      {
+        "rule": 251,
+        "outgoing_visits": 8,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 279,
+        "outgoing_visits": 10,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 321,
+        "outgoing_visits": 43,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 322,
+        "outgoing_visits": 47,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 324,
+        "outgoing_visits": 324,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 327,
+        "outgoing_visits": 107,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 328,
+        "outgoing_visits": 120,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 332,
+        "outgoing_visits": 18,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 335,
+        "outgoing_visits": 9,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 336,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 338,
+        "outgoing_visits": 23,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 339,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 340,
+        "outgoing_visits": 142,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 343,
+        "outgoing_visits": 43,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 344,
+        "outgoing_visits": 48,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 346,
+        "outgoing_visits": 12,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 350,
+        "outgoing_visits": 18,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 375,
+        "outgoing_visits": 102,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 423,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": [
+          0
+        ]
+      },
+      {
+        "rule": 463,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 466,
+        "outgoing_visits": 24,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 491,
+        "outgoing_visits": 24,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 493,
+        "outgoing_visits": 42,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 498,
+        "outgoing_visits": 26,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 499,
+        "outgoing_visits": 8,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 500,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 501,
+        "outgoing_visits": 29,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 504,
+        "outgoing_visits": 89,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 505,
+        "outgoing_visits": 29,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 512,
+        "outgoing_visits": 3,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 513,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 514,
+        "outgoing_visits": 11,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 515,
+        "outgoing_visits": 4,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 518,
+        "outgoing_visits": 40,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 538,
+        "outgoing_visits": 2,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 539,
+        "outgoing_visits": 3,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 540,
+        "outgoing_visits": 4,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 559,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": [
+          3
+        ]
+      },
+      {
+        "rule": 573,
+        "outgoing_visits": 18,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 574,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": []
+      }
+    ]
+  },
+  "raytrace": {
+    "scope": "observed outgoing winning transitions; visits are not distinct producer executions",
+    "profile_sha256": "fea18e15ddcab8010c487f3314819d22727e313ba7913b360fb0ccb61439cb39",
+    "static_eligibility_artifact_sha256": "b0edcfb124bb70a279f16b8f5f95b314b594281530e7861212a18e18ca2f66b2",
+    "observed_producer_rules": 161,
+    "missing_from_staged_leaves": [
+      {
+        "rule": 0,
+        "outgoing_visits": 902,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 8,
+        "outgoing_visits": 80,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 21,
+        "outgoing_visits": 41,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 22,
+        "outgoing_visits": 322,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 41,
+        "outgoing_visits": 3,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 43,
+        "outgoing_visits": 532,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 49,
+        "outgoing_visits": 3314,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 59,
+        "outgoing_visits": 207,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 60,
+        "outgoing_visits": 7112,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 116,
+        "outgoing_visits": 225,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 117,
+        "outgoing_visits": 95,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 118,
+        "outgoing_visits": 1043,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 119,
+        "outgoing_visits": 844,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 120,
+        "outgoing_visits": 6133,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 122,
+        "outgoing_visits": 11086,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 123,
+        "outgoing_visits": 53,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 124,
+        "outgoing_visits": 1057,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 127,
+        "outgoing_visits": 8,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 128,
+        "outgoing_visits": 69,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 129,
+        "outgoing_visits": 104,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 131,
+        "outgoing_visits": 27,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 132,
+        "outgoing_visits": 318,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 133,
+        "outgoing_visits": 375,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 136,
+        "outgoing_visits": 12,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 144,
+        "outgoing_visits": 6727,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 231,
+        "outgoing_visits": 371,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 249,
+        "outgoing_visits": 6564,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 251,
+        "outgoing_visits": 628,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 279,
+        "outgoing_visits": 1597,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 280,
+        "outgoing_visits": 168,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 318,
+        "outgoing_visits": 5,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 319,
+        "outgoing_visits": 121,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 321,
+        "outgoing_visits": 4627,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 322,
+        "outgoing_visits": 9689,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 323,
+        "outgoing_visits": 5,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 324,
+        "outgoing_visits": 42143,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 325,
+        "outgoing_visits": 506,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 326,
+        "outgoing_visits": 338,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 327,
+        "outgoing_visits": 13676,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 328,
+        "outgoing_visits": 15426,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 332,
+        "outgoing_visits": 1098,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 333,
+        "outgoing_visits": 358,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 335,
+        "outgoing_visits": 18,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 336,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 338,
+        "outgoing_visits": 29,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 340,
+        "outgoing_visits": 66,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 343,
+        "outgoing_visits": 27,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 344,
+        "outgoing_visits": 21,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 350,
+        "outgoing_visits": 15,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 375,
+        "outgoing_visits": 17589,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 405,
+        "outgoing_visits": 159,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 407,
+        "outgoing_visits": 28,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 408,
+        "outgoing_visits": 14,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 440,
+        "outgoing_visits": 826,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 442,
+        "outgoing_visits": 102,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 443,
+        "outgoing_visits": 60,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 444,
+        "outgoing_visits": 37,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 449,
+        "outgoing_visits": 306,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 454,
+        "outgoing_visits": 13,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 457,
+        "outgoing_visits": 92,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 463,
+        "outgoing_visits": 1190,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 466,
+        "outgoing_visits": 52,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 467,
+        "outgoing_visits": 857,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 469,
+        "outgoing_visits": 58,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 470,
+        "outgoing_visits": 57,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 472,
+        "outgoing_visits": 251,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 473,
+        "outgoing_visits": 1631,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 475,
+        "outgoing_visits": 5138,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 476,
+        "outgoing_visits": 12,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 477,
+        "outgoing_visits": 72,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 478,
+        "outgoing_visits": 3090,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 479,
+        "outgoing_visits": 4614,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 481,
+        "outgoing_visits": 20,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 482,
+        "outgoing_visits": 37,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 486,
+        "outgoing_visits": 65,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 488,
+        "outgoing_visits": 13,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 491,
+        "outgoing_visits": 94,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 493,
+        "outgoing_visits": 1793,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 498,
+        "outgoing_visits": 14401,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 499,
+        "outgoing_visits": 3778,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 500,
+        "outgoing_visits": 4,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 501,
+        "outgoing_visits": 5070,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 504,
+        "outgoing_visits": 34174,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 505,
+        "outgoing_visits": 12147,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 513,
+        "outgoing_visits": 91,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 514,
+        "outgoing_visits": 357,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 515,
+        "outgoing_visits": 320,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 516,
+        "outgoing_visits": 92,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 517,
+        "outgoing_visits": 102,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 518,
+        "outgoing_visits": 4530,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 526,
+        "outgoing_visits": 27,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 530,
+        "outgoing_visits": 6,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 533,
+        "outgoing_visits": 7,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 535,
+        "outgoing_visits": 5,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 538,
+        "outgoing_visits": 9,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 539,
+        "outgoing_visits": 5,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 540,
+        "outgoing_visits": 435,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 559,
+        "outgoing_visits": 6,
+        "statically_eligible_pivots": [
+          3
+        ]
+      },
+      {
+        "rule": 561,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": [
+          3
+        ]
+      },
+      {
+        "rule": 568,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 573,
+        "outgoing_visits": 3245,
+        "statically_eligible_pivots": []
+      },
+      {
+        "rule": 574,
+        "outgoing_visits": 1,
+        "statically_eligible_pivots": []
+      }
+    ]
+  }
+}

@@ -603,6 +603,7 @@ mod tests {
     fn two_reduced_operands_can_join_without_repeating_the_prefix() {
         let terminal = Rc::new(Block {
             port: None,
+            steps: vec![],
             inputs: vec![],
         });
         let mut c = Catalog::default();

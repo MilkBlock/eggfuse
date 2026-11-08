@@ -25,6 +25,29 @@ pub fn bake_spine_blocks(
     target: &Program,
     limit: usize,
 ) -> Result<J> {
+    bake(training, profile, target, limit, false)
+}
+/// Admit complete, typed stage recipes with dependent table reads and guards.
+pub fn bake_stage_blocks(
+    training: &Program,
+    profile: &J,
+    target: &Program,
+    limit: usize,
+) -> Result<J> {
+    bake(training, profile, target, limit, true)
+}
+fn bake(
+    training: &Program,
+    profile: &J,
+    target: &Program,
+    limit: usize,
+    staged: bool,
+) -> Result<J> {
+    let lower = if staged {
+        Block::lower_staged
+    } else {
+        Block::lower
+    };
     if profile["schema"] != "eggfuse-spine-shapes/v1"
         || profile["program_sha256"] != training.artifact["sha256"]
     {
@@ -43,7 +66,7 @@ pub fn bake_spine_blocks(
     }
     let mut ranked = frequencies
         .into_iter()
-        .filter(|((r, a), _)| Block::lower(training, *r, *a).is_some())
+        .filter(|((r, a), _)| lower(training, *r, *a).is_some())
         .collect::<Vec<_>>();
     ranked.sort_by_key(|(entry, count)| (std::cmp::Reverse(*count), *entry));
     let mut ids = BTreeMap::<String, Vec<usize>>::new();
@@ -65,13 +88,13 @@ pub fn bake_spine_blocks(
         if !seen.insert((consumer, pivot)) {
             continue;
         }
-        if let Some(block) = Block::lower(target, consumer, pivot) {
+        if let Some(block) = lower(target, consumer, pivot) {
             entries.push(json!({"consumer":consumer,"pivot":pivot,"rhs_template":target.rules[consumer].template,"block":block,
                 "training_rule":r,"training_visits":n}));
         }
     }
     Ok(
-        json!({"schema":"eggfuse-spine-blocks/v1","recipe_sha256":target.artifact["recipe"]["sha256"],
+        json!({"schema":if staged { "eggfuse-spine-blocks/v2" } else { "eggfuse-spine-blocks/v1" },"recipe_sha256":target.artifact["recipe"]["sha256"],
         "training_program_sha256":training.artifact["sha256"],"limit":limit,"entries":entries}),
     )
 }
