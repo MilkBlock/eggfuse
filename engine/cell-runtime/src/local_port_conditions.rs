@@ -149,7 +149,8 @@ impl Graph {
         }
         for candidate in candidates {
             let target = candidate.fact;
-            if self.ownership.as_ref().unwrap().pending.contains(&target) {
+            if self.dependency_table(Dependency::Fact(target)).is_some_and(|t|
+                self.ownership.as_ref().unwrap().pending.contains(t, &target)) {
                 self.local_condition_stats().pending_sites += 1;
                 continue;
             }

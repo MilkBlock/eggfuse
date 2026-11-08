@@ -258,14 +258,14 @@ impl Graph {
         let stats = self.stable_ports.as_mut().unwrap();
         stats.notifications += 1;
         stats.notified_columns += columns.len() as u64;
-        if !key && (port_key || singleton) && !m.pending.contains(&f) {
+        if !key && (port_key || singleton) && !m.pending.contains(table, &f) {
             state.epoch = self.epoch;
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(f));
             m.stats.result_publications += 1;
             stats.result_publications += 1;
         } else {
-            let added = u64::from(m.pending.insert(f));
+            let added = u64::from(m.pending.insert(table, f, self.epoch));
             m.stats.key_enqueues += added;
             if port_key {
                 stats.equality_enqueues += added;

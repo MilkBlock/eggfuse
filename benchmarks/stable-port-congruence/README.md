@@ -25,12 +25,12 @@ phase does not establish completion of the objective.
 | Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
 | Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Bounded shared conditions and foreign candidates execute in one ordered pass; all-input, cross-stage, noise and mixed-boundary tests pass |
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
-| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Not implemented |
+| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Graph scope API and owned table queues verified; independent Executor matching/publication not implemented |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field and key replacement-work counters included in Bake's ledger; scoped-condition and parallel accounting pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
-| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Existing fragments only; new structural metadata pending |
+| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Shared conditions plus conservative completion/read-write footprints; concrete Cell-port scope refinement and precise merge/container effects pending |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
 boundary aliases, not merely a single-threaded queue. A single global union-find
@@ -268,6 +268,50 @@ separately as above, then reproduce:
 cp target/release/eggfuse-cell-runtime out/stable-port-congruence/routed-condition-runtime
 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/routed-condition-runtime benchmarks/stable-port-congruence/local-condition-audit-manifest.json out/stable-port-congruence/routed-condition-audit
 python3 benchmarks/stable-port-congruence/collect-conditions.py out/stable-port-congruence benchmarks/stable-port-congruence --prefix routed-condition
+```
+
+## Compiler-scoped completion queues
+
+`--scoped-queues` additionally enables table-owned pending queues and checked
+completion scopes. It deliberately retains the source Run publication barrier;
+this flag does not claim independent Executor progress. The ordinary path keeps
+its original flat set. Scoped queues retain one membership per fact, with only
+nonempty table heads in the ordered directory, so choosing a scope does not scan
+every unrelated pending fact. Scope, head and fallback work is charged in Bake's
+ledger. The originating epoch stays attached to queued work.
+
+The compiler computes transitive effects from constructor result sorts and typed
+table fields, plus ruleset read/RHS demands. Unknown containers and pending
+opaque merge programs retain conservative boundaries. A readiness answer cannot
+be true while source connectivity is still pending. Fixtures prove that B's
+Graph closure can finish while A remains pending, delayed facts preserve their
+old epoch, multi-sort chains wait correctly, mutable and opaque merge effects
+remain exact, and a scope from another program is rejected.
+
+All 237 workspace tests pass (four preexisting ignored), with 41 focused tests in
+sparse and non-sparse configurations and a minimal compile check. Ownership
+fixtures run the new queues through the ordinary full-completion Executor. The
+sum-bits audit preserves all 1,428 Runs, state/effect digests, normal runtime
+counters and stable-port counters. It adds 1,046 head probes and 1,599 head
+updates. Because the Executor still waits globally, these additions are overhead,
+not savings or a timing result.
+
+The same audit exposes an admission failure: 401 tables, 99,201 potential effect
+edges, **zero** tables accepted for cross-Run deferral by this coarse proof.
+Table/type scopes alone therefore cannot solve the intended workload. Six opaque
+tables include a known `set<Expr>` and five known merge programs. Stronger compiler
+effects and concrete shared Cell ports must refine the proof. Independent Graph
+fixtures are not evidence of independent publication or parallel inference.
+
+The exact lifetime/publication obligations and next integration gates are in
+[scoped-executor-contract.md](scoped-executor-contract.md). The core evidence is
+retained in `scoped-core-audit.json` and `scoped-core-validation.json`. Save the
+usual separate validation logs under `scoped-core-*.log`, then reproduce:
+
+```sh
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/scoped-core-runtime
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/scoped-core-runtime benchmarks/stable-port-congruence/scoped-core-audit-manifest.json out/stable-port-congruence/scoped-core-audit
+python3 benchmarks/stable-port-congruence/collect-scoped-core.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
 ## Remaining completion and concurrency work

@@ -92,7 +92,7 @@ impl Graph {
             // Preserve source-order collision commits: an unprocessed changed
             // key is not a completed survivor yet. Ordinary constructor reads
             // still see every live exact candidate, including pending ones.
-            if completing.is_some() && self.ownership.as_ref().unwrap().pending.contains(&f) {
+            if completing.is_some() && self.ownership.as_ref().unwrap().pending.contains(table, &f) {
                 stats
                     .pending_candidate_skips
                     .set(stats.pending_candidate_skips.get() + 1);

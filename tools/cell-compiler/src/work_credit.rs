@@ -96,6 +96,13 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
+        for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes"] {
+            let key = format!("scoped_completion/stats/{field}");
+            let value = if report["scoped_completion"]["enabled"] == true {
+                report["scoped_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped completion work {field}"))?
+            } else { 0 };
+            work.insert(key,value);
+        }
         Ok(Self(work))
     }
     pub fn savings(&self, trial: &Self) -> (i128, J) {

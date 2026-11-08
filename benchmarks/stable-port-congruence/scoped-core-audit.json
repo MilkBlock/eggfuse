@@ -1,0 +1,226 @@
+{
+  "scope": "standalone Cell CPU; scoped Graph API and table queues; Executor still completes every Run globally",
+  "baseline_revision": "d68f334c",
+  "runtime_sha256": "58d6a0f302ef9b033813bf76d79a05853ddcc2a08faaef7c694ddfc00e723a86",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "runs": 1428,
+  "exact_ordered_semantics_match": true,
+  "graph_scope_fixtures": [
+    "independent chain remains pending",
+    "original epoch preserved",
+    "transitive cross-sort chain waits",
+    "mutable merge dependency waits",
+    "opaque pending merge retains full completion",
+    "foreign program scope rejected"
+  ],
+  "executor_independent_progress_verified": false,
+  "global_wait_removed": false,
+  "timing_or_parallel_claim": false,
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 0,
+      "dependency_edges": 99201,
+      "opaque_tables": [
+        193,
+        205,
+        232,
+        234,
+        387,
+        393
+      ],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401
+    },
+    "scope": "compiler-scoped Graph completion; Executor publication integration pending",
+    "stats": {
+      "bypassed_tasks": 0,
+      "head_probes": 1046,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 0,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "opaque_table_details": [
+    {
+      "id": 193,
+      "table": "ES",
+      "schema": [
+        {
+          "element": {
+            "kind": "eq",
+            "name": "Expr"
+          },
+          "kind": "set",
+          "name": "ExprSetPrim"
+        },
+        {
+          "kind": "eq",
+          "name": "ExprSet"
+        }
+      ],
+      "merge": null
+    },
+    {
+      "id": 205,
+      "table": "ExtractedExpr",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "TermAndCost"
+        }
+      ],
+      "merge": {
+        "args": [
+          {
+            "var": "old"
+          },
+          {
+            "var": "new"
+          }
+        ],
+        "call": {
+          "table": "Smaller"
+        }
+      }
+    },
+    {
+      "id": 232,
+      "table": "IVTNewInputsAnalysis",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Node"
+        },
+        {
+          "kind": "eq",
+          "name": "IVTRes"
+        }
+      ],
+      "merge": {
+        "args": [
+          {
+            "var": "old"
+          },
+          {
+            "var": "new"
+          }
+        ],
+        "call": {
+          "table": "IVTMin"
+        }
+      }
+    },
+    {
+      "id": 234,
+      "table": "IVTNewInputsAnalysisImpl",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Node"
+        },
+        {
+          "kind": "eq",
+          "name": "IVTRes"
+        }
+      ],
+      "merge": {
+        "args": [
+          {
+            "var": "old"
+          },
+          {
+            "var": "new"
+          }
+        ],
+        "call": {
+          "table": "IVTMin"
+        }
+      }
+    },
+    {
+      "id": 387,
+      "table": "hi-bound",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Bound"
+        }
+      ],
+      "merge": {
+        "args": [
+          {
+            "var": "old"
+          },
+          {
+            "var": "new"
+          }
+        ],
+        "call": {
+          "table": "bound-min"
+        }
+      }
+    },
+    {
+      "id": 393,
+      "table": "lo-bound",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Bound"
+        }
+      ],
+      "merge": {
+        "args": [
+          {
+            "var": "old"
+          },
+          {
+            "var": "new"
+          }
+        ],
+        "call": {
+          "table": "bound-max"
+        }
+      }
+    }
+  ],
+  "limitation": "Type/table reachability admits zero deferrable tables in this workload; concrete Cell ports and precise merge/container effects are required.",
+  "new_queue_work_is_overhead_until_scoped_executor_integration": true
+}

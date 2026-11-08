@@ -3116,6 +3116,7 @@ impl Executor {
         let repair_cells = J::Null;
         json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
+            "scoped_completion":self.graph.scoped_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),

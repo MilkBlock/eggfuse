@@ -11,6 +11,8 @@ use slices::{PortProgram, Signal};
 pub mod composition;
 #[path = "stable_ports.rs"]
 pub mod ports;
+#[path = "ownership_pending.rs"]
+mod ready;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -212,7 +214,7 @@ struct Barrier {
 pub(super) struct Runtime {
     composition: composition::Runtime,
     boundaries: HashMap<u64, crate::tiny_set::TinySet<Signal>>,
-    pending: BTreeSet<FactRef>,
+    pub(super) pending: ready::Pending,
     pub(super) tables: Vec<usize>,
     stats: Stats,
     barriers: Vec<Barrier>,
@@ -258,7 +260,7 @@ impl Graph {
         self.ownership = Some(Runtime {
             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
             boundaries: HashMap::default(),
-            pending: BTreeSet::new(),
+            pending: ready::Pending::default(),
             tables: vec![0; self.program.tables.len()],
             stats: Stats::default(),
             barriers: vec![],
@@ -639,23 +641,23 @@ impl Graph {
             .intern
             .get(&s.hash)
             .is_some_and(|b| b.len() == 1 && b.first() == Some(&f));
-        if !key && singleton && !m.pending.contains(&f) {
+        if !key && singleton && !m.pending.contains(table, &f) {
             s.epoch = self.epoch;
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(f));
             m.stats.result_publications += 1;
         } else {
-            m.stats.key_enqueues += u64::from(m.pending.insert(f));
+            m.stats.key_enqueues += u64::from(m.pending.insert(table, f, self.epoch));
             self.dirty_facts[table].insert(f);
         }
     }
-    pub(super) fn pop_owned_before(&mut self, next: Option<Dependency>) -> Option<FactRef> {
+    pub(super) fn pop_owned_before(&mut self, next: Option<Dependency>, allowed: Option<&[bool]>) -> Option<FactRef> {
         let m = self.ownership.as_mut()?;
-        let f = *m.pending.first()?;
+        let (f,table) = m.pending.first(allowed)?;
         if next.is_some_and(|d| d < Dependency::Fact(f)) {
             return None;
         }
-        m.pending.pop_first();
+        if let Some(epoch) = m.pending.pop(f, table) { self.epoch = epoch; }
         Some(f)
     }
     pub(super) fn complete_owned_key(&mut self, f: FactRef) -> Result<()> {
@@ -683,7 +685,7 @@ impl Graph {
         }
         self.composition_retire_fact(f.cell);
         let m = self.ownership.as_mut().unwrap();
-        m.pending.remove(&f);
+        m.pending.remove(t, &f);
         m.tables[t] -= 1;
         m.stats.owned_live -= 1;
         m.stats.owned_retirements += 1;

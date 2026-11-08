@@ -1,5 +1,6 @@
 mod change_batch;
 pub mod checksum;
+pub mod completion_plan;
 mod depth_plan;
 #[cfg(feature = "structural-depth")]
 mod depth_runtime;

@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "local_conditions": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--local-congruence"]
+    },
+    "scoped_queues": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--scoped-queues"]
+    }
+  }
+}

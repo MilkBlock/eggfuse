@@ -1,0 +1,130 @@
+//! Table-owned ready queues. The ordinary path retains its original flat set.
+//! Scoped completion indexes only each nonempty table's head, not every pair
+//! of producers and consumers. Membership remains in one queue per fact.
+use super::*;
+
+#[derive(Default, Serialize)]
+pub(in crate::graph) struct Counts {
+    pub scope_requests: u64,
+    pub head_probes: Counter<u64>,
+    pub head_updates: u64,
+    pub legacy_frontier_probes: u64,
+    pub bypassed_tasks: u64,
+    pub opaque_full_completions: u64,
+}
+pub(in crate::graph) struct Pending {
+    flat: Option<BTreeSet<FactRef>>,
+    tables: Vec<BTreeSet<FactRef>>,
+    heads: BTreeSet<(FactRef, usize)>,
+    epochs: Vec<Option<u64>>,
+    len: usize,
+    pub counts: Counts,
+}
+impl Default for Pending {
+    fn default() -> Self {
+        Self {
+            flat: Some(BTreeSet::new()),
+            tables: vec![],
+            heads: BTreeSet::new(),
+            epochs: vec![],
+            len: 0,
+            counts: Counts::default(),
+        }
+    }
+}
+impl Pending {
+    pub fn enable_scopes(&mut self, n: usize) {
+        assert!(
+            self.is_empty(),
+            "enable scoped queues at a settled boundary"
+        );
+        if self.flat.take().is_some() {
+            self.tables = vec![BTreeSet::new(); n];
+            self.epochs = vec![None; n];
+        }
+    }
+    pub fn scoped(&self) -> bool {
+        self.flat.is_none()
+    }
+    pub fn len(&self) -> usize {
+        self.flat.as_ref().map_or(self.len, BTreeSet::len)
+    }
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+    pub fn contains(&self, table: usize, f: &FactRef) -> bool {
+        self.flat
+            .as_ref()
+            .map_or_else(|| self.tables[table].contains(f), |s| s.contains(f))
+    }
+    fn refresh(&mut self, table: usize, before: Option<FactRef>) {
+        let after = self.tables[table].first().copied();
+        if after != before {
+            if let Some(old) = before {
+                self.heads.remove(&(old, table));
+            }
+            if let Some(new) = after {
+                self.heads.insert((new, table));
+            }
+            self.counts.head_updates += 1;
+        }
+        if after.is_none() {
+            self.epochs[table] = None;
+        }
+    }
+    pub fn insert(&mut self, table: usize, f: FactRef, epoch: u64) -> bool {
+        if let Some(flat) = &mut self.flat {
+            return flat.insert(f);
+        }
+        let before = self.tables[table].first().copied();
+        assert!(
+            self.epochs[table].is_none_or(|e| e == epoch),
+            "uncompleted table crossed a dependent source epoch"
+        );
+        self.epochs[table] = Some(epoch);
+        let added = self.tables[table].insert(f);
+        self.len += usize::from(added);
+        self.refresh(table, before);
+        added
+    }
+    pub fn remove(&mut self, table: usize, f: &FactRef) -> bool {
+        if let Some(flat) = &mut self.flat {
+            return flat.remove(f);
+        }
+        let before = self.tables[table].first().copied();
+        let removed = self.tables[table].remove(f);
+        self.len -= usize::from(removed);
+        self.refresh(table, before);
+        removed
+    }
+    pub fn first(&self, allowed: Option<&[bool]>) -> Option<(FactRef, usize)> {
+        if let Some(flat) = &self.flat {
+            assert!(allowed.is_none(), "scoped queue is not enabled");
+            return flat.first().map(|&f| (f, usize::MAX));
+        }
+        self.heads.iter().copied().find(|&(_, t)| {
+            self.counts
+                .head_probes
+                .set(self.counts.head_probes.get() + 1);
+            allowed.is_none_or(|a| a[t])
+        })
+    }
+    pub fn pop(&mut self, f: FactRef, table: usize) -> Option<u64> {
+        if let Some(flat) = &mut self.flat {
+            assert!(flat.remove(&f));
+            return None;
+        }
+        let epoch = self.epochs[table];
+        assert!(self.remove(table, &f));
+        epoch
+    }
+    pub fn iter(&self) -> impl Iterator<Item = &FactRef> {
+        self.flat
+            .iter()
+            .flat_map(|s| s.iter())
+            .chain(self.tables.iter().flat_map(|s| s.iter()))
+    }
+    pub fn active_tables(&self) -> impl Iterator<Item = usize> + '_ {
+        self.heads.iter().map(|&(_, t)| t)
+    }
+}

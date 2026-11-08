@@ -23,7 +23,7 @@ fn compare(src: &str) -> Executor {
     let p = program(src);
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
     let mut b = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
-    let mut port_keys = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
+    let mut port_keys = Executor::new(Graph::new_with_scoped_completion(p).unwrap(), true);
     a.execute().unwrap();
     b.execute().unwrap();
     port_keys.execute().unwrap();

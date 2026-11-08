@@ -232,6 +232,8 @@ pub struct Stats {
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_arena.rs"]
 pub mod arena;
+#[path = "scoped_completion.rs"]
+mod scoped_completion;
 #[cfg(feature = "sparse-cells")]
 #[path = "scalar_keys.rs"]
 mod scalar_keys;
@@ -2436,11 +2438,21 @@ impl Graph {
     }
 
     pub fn repair(&mut self) -> Result<()> {
+        let epoch = self.epoch;
+        let result = self.repair_selected(None);
+        self.epoch = epoch;
+        result
+    }
+    fn repair_selected(&mut self, allowed: Option<&[bool]>) -> Result<()> {
         if self.union_digest.is_some() {
             return self.propagate_union_digests();
         }
         let mut local_completion = Vec::new();
         loop {
+            if allowed.is_some_and(|mask|self.pending_opaque_completion(mask)) {
+                self.note_opaque_completion();
+                return self.repair_selected(None);
+            }
             if self.local_unions.as_ref().is_some_and(|m|!m.pending.is_empty()) {
                 local_completion.extend(self.prepare_local_completion());
             }
@@ -2453,14 +2465,13 @@ impl Graph {
                 continue;
             }
 
-            if let Some(f)=self.pop_owned_before(self.dirty.first().copied()) {
+            let next = self.next_scoped_dirty(allowed);
+            if let Some(f)=self.pop_owned_before(next, allowed) {
                 self.complete_owned_key(f)?;
                 continue;
             }
-            let Some(d) = self
-                .dirty
-                .pop_first()
-                .or_else(|| self.dirty_markers.pop_first().map(Dependency::Fact))
+            let Some((d, from_dirty)) = next.map(|d|(d,true))
+                .or_else(|| self.next_scoped_marker(allowed).map(|f|(Dependency::Fact(f),false)))
             else {
                 if !local_completion.is_empty() {
                     local_completion = self.finish_local_completion(local_completion, true)?;
@@ -2468,6 +2479,8 @@ impl Graph {
                 }
                 break;
             };
+            if from_dirty { self.dirty.remove(&d); }
+            else if let Dependency::Fact(f) = d { self.dirty_markers.remove(&f); }
             if let Dependency::Fact(f) = d {
                 if let Some(table) = self.dependency_table(d) {
                     self.dirty_facts[table].remove(&f);
