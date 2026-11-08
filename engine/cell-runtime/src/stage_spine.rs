@@ -1781,54 +1781,28 @@ impl Programs {
                         let mut witnesses = vec![None; rule.query.len()];
                         witnesses[pivot] = Some(row.witness);
                         for step in &block.steps {
-                            let args = step
-                                .key
-                                .iter()
-                                .map(|v| v.staged(g, &row, &values))
-                                .collect::<PortKey>();
-                            let result = match &step.call {
+                            let bound = step.bind::<PortKey>(|v| v.staged(g, &row, &values));
+                            let result = bound.evaluate(|args| match &step.call {
                                 Call::Table(table) => {
                                     let Some(found) = read_port(
-                                        g,
-                                        &cursor,
-                                        step.atom,
-                                        *table,
-                                        args,
-                                        &mut self.stats,
+                                        g, &cursor, step.atom, *table, args, &mut self.stats,
                                         #[cfg(feature = "structural-depth")]
                                         (&mut self.structural, row.witness),
-                                    )?
-                                    else {
-                                        continue 'answer;
-                                    };
+                                    )? else { return Ok(None); };
                                     epoch = epoch.max(found.epoch);
                                     witnesses[step.atom] = Some(found.witness);
-                                    found.values.last().unwrap().clone()
+                                    Ok(Some(found.values.last().unwrap().clone()))
                                 }
                                 Call::Primitive(name, output) => {
                                     self.stats.guards += 1;
-                                    if name.starts_with("cell-key-") {
-                                        g.stats.key_operations += 1;
-                                    }
-                                    let Some(result) =
-                                        value::primitive(name, &args, output, g.program.key_nodes())?
-                                    else {
-                                        self.stats.guard_rejections += 1;
-                                        continue 'answer;
-                                    };
-                                    result
+                                    if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
+                                    value::primitive(name, &args, output, g.program.key_nodes())
                                 }
-                            };
-                            if step
-                                .check_result
-                                .as_ref()
-                                .is_some_and(|v| v.staged(g, &row, &values) != result)
-                            {
-                                if matches!(step.call, Call::Primitive(..)) {
-                                    self.stats.guard_rejections += 1;
-                                }
+                            })?;
+                            let Some(result) = result else {
+                                if matches!(step.call, Call::Primitive(..)) { self.stats.guard_rejections += 1; }
                                 continue 'answer;
-                            }
+                            };
                             values.push(result);
                         }
                         if epoch >= watermark {

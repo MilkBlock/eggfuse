@@ -1,0 +1,6220 @@
+{
+  "scope": "standalone Cell CPU; observed operations, not elapsed-time credit",
+  "compiler_sha256": "2530880bfa3d48ee5ca47da8d86df3f0ab4928f05e264971547095147c356583",
+  "cases": {
+    "sum-bits": {
+      "program_file_sha256": "c15cab585d9ddee256604b99f9dfd6efe828b1de2c883171cf0e04852b9b8776",
+      "selected_shapes": [],
+      "source_units": 208,
+      "repair_units": 890,
+      "cell_egraph_file_sha256": "ee33e65e875021aed719b2623ca5d2c17fbe87f56a7bb39b81907d8b6c39fca7",
+      "audit": {
+        "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+        "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+        "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+        "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+        "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+        "scope": "standalone Cell CPU; every scored replay must match these digests"
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "selected": [],
+          "net_saved_operations": 0,
+          "untried_proposals": 176,
+          "stop": "trial_limit",
+          "trials": [
+            {
+              "selected": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148,
+                149,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162,
+                163,
+                164,
+                165,
+                166,
+                167,
+                168,
+                169,
+                170,
+                171,
+                172,
+                173,
+                174,
+                175,
+                176,
+                177
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.142538458,
+              "replay_and_hash_seconds": 0.047935709,
+              "work": {
+                "net_saved_operations": -580,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 6418,
+                    "after": 6418,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 6357,
+                    "after": 6357,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 1890,
+                    "after": 0,
+                    "saved": 1890
+                  },
+                  "fact_decode_ports": {
+                    "before": 5859,
+                    "after": 0,
+                    "saved": 5859
+                  },
+                  "key_lookup_calls": {
+                    "before": 19326,
+                    "after": 19326,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 5585,
+                    "after": 5585,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 190,
+                    "after": 190,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 4750,
+                    "after": 4750,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 1988,
+                    "saved": -1988
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 1890,
+                    "saved": -1890
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 2098,
+                    "saved": -2098
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 1154,
+                    "saved": -1154
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 7490,
+                    "saved": -7490
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 1988,
+                    "after": 0,
+                    "saved": 1988
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 530,
+                    "after": 0,
+                    "saved": 530
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 3773,
+                    "after": 0,
+                    "saved": 3773
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 58,
+                    "after": 58,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 12898,
+                    "after": 12898,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 312,
+                    "after": 312,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 1100,
+                    "after": 1100,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 1072,
+                    "after": 1072,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 1137,
+                    "after": 1137,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 5738,
+                    "after": 5738,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 8414,
+                    "after": 8414,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 4342,
+                    "after": 4342,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 818,
+                    "after": 818,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 2522,
+                    "after": 2522,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 2893,
+                    "after": 2893,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 11481,
+                    "after": 11481,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 3723,
+                    "after": 3723,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 623,
+                    "after": 623,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 1496,
+                    "after": 1496,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 12275,
+                    "after": 12275,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 3041,
+                    "after": 3041,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 1988,
+                "unmatched": 0,
+                "delta_cells": 1988,
+                "key_cells": 1046,
+                "steps": 7490,
+                "effect_steps": 1890,
+                "port_writes": 2098,
+                "row_copies": 1154,
+                "result_publications": 878,
+                "deferred_keys": 1110,
+                "collisions": 844,
+                "union_requests": 844,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    50,
+                    50
+                  ],
+                  [
+                    245,
+                    108
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    18,
+                    17
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    59,
+                    56
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    96,
+                    57
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    287,
+                    204
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    68,
+                    66
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    40,
+                    40
+                  ],
+                  [
+                    5,
+                    5
+                  ],
+                  [
+                    9,
+                    9
+                  ],
+                  [
+                    14,
+                    13
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    357,
+                    146
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    46,
+                    44
+                  ],
+                  [
+                    44,
+                    42
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    4
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    127,
+                    85
+                  ],
+                  [
+                    107,
+                    4
+                  ],
+                  [
+                    262,
+                    33
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    7
+                  ],
+                  [
+                    13,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    20,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    46,
+                    32
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    7
+                  ],
+                  [
+                    29,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    5
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            },
+            {
+              "selected": [
+                54
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.135836709,
+              "replay_and_hash_seconds": 0.048897625,
+              "work": {
+                "net_saved_operations": -1601,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 6418,
+                    "after": 6418,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 6357,
+                    "after": 6357,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 1890,
+                    "after": 1598,
+                    "saved": 292
+                  },
+                  "fact_decode_ports": {
+                    "before": 5859,
+                    "after": 4983,
+                    "saved": 876
+                  },
+                  "key_lookup_calls": {
+                    "before": 19326,
+                    "after": 19326,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 5585,
+                    "after": 5585,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 190,
+                    "after": 190,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 4750,
+                    "after": 4750,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 1988,
+                    "saved": -1988
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 292,
+                    "saved": -292
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 357,
+                    "saved": -357
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 179,
+                    "saved": -179
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 1006,
+                    "saved": -1006
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 1988,
+                    "after": 1631,
+                    "saved": 357
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 530,
+                    "after": 394,
+                    "saved": 136
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 3773,
+                    "after": 3213,
+                    "saved": 560
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 58,
+                    "after": 58,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 12898,
+                    "after": 12898,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 312,
+                    "after": 312,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 1100,
+                    "after": 1100,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 1072,
+                    "after": 1072,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 1137,
+                    "after": 1137,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 5738,
+                    "after": 5738,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 8414,
+                    "after": 8414,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 4342,
+                    "after": 4342,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 818,
+                    "after": 818,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 2522,
+                    "after": 2522,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 2893,
+                    "after": 2893,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 11481,
+                    "after": 11481,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 3723,
+                    "after": 3723,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 623,
+                    "after": 623,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 1496,
+                    "after": 1496,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 12275,
+                    "after": 12275,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 3041,
+                    "after": 3041,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 1988,
+                "unmatched": 1631,
+                "delta_cells": 357,
+                "key_cells": 146,
+                "steps": 1006,
+                "effect_steps": 292,
+                "port_writes": 357,
+                "row_copies": 179,
+                "result_publications": 207,
+                "deferred_keys": 150,
+                "collisions": 146,
+                "union_requests": 146,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    357,
+                    146
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            },
+            {
+              "selected": [
+                27
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.147858167,
+              "replay_and_hash_seconds": 0.048242708,
+              "work": {
+                "net_saved_operations": -1948,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 6418,
+                    "after": 6418,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 6357,
+                    "after": 6357,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 1890,
+                    "after": 1556,
+                    "saved": 334
+                  },
+                  "fact_decode_ports": {
+                    "before": 5859,
+                    "after": 4857,
+                    "saved": 1002
+                  },
+                  "key_lookup_calls": {
+                    "before": 19326,
+                    "after": 19326,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 5585,
+                    "after": 5585,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 190,
+                    "after": 190,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 4750,
+                    "after": 4750,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 1988,
+                    "saved": -1988
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 334,
+                    "saved": -334
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 295,
+                    "saved": -295
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 181,
+                    "saved": -181
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 1269,
+                    "saved": -1269
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 1988,
+                    "after": 1701,
+                    "saved": 287
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 530,
+                    "after": 510,
+                    "saved": 20
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 3773,
+                    "after": 3297,
+                    "saved": 476
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 58,
+                    "after": 58,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 12898,
+                    "after": 12898,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 312,
+                    "after": 312,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 1100,
+                    "after": 1100,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 1072,
+                    "after": 1072,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 1137,
+                    "after": 1137,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 1987,
+                    "after": 1987,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 5738,
+                    "after": 5738,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 8414,
+                    "after": 8414,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 4342,
+                    "after": 4342,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 818,
+                    "after": 818,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 2522,
+                    "after": 2522,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 2893,
+                    "after": 2893,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 11481,
+                    "after": 11481,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 3723,
+                    "after": 3723,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 623,
+                    "after": 623,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 1496,
+                    "after": 1496,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 12275,
+                    "after": 12275,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 3041,
+                    "after": 3041,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 1988,
+                "unmatched": 1701,
+                "delta_cells": 287,
+                "key_cells": 204,
+                "steps": 1269,
+                "effect_steps": 334,
+                "port_writes": 295,
+                "row_copies": 181,
+                "result_publications": 46,
+                "deferred_keys": 241,
+                "collisions": 130,
+                "union_requests": 130,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    287,
+                    204
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "raytrace": {
+      "program_file_sha256": "59143a15bbcf33de6484b15abdc6d85d204177df0919fed9648a71f8872784a3",
+      "selected_shapes": [],
+      "source_units": 316,
+      "repair_units": 890,
+      "cell_egraph_file_sha256": "7611f75afbe27de58536c5f0f502d7867b528facb0ad222d97283fb1a34987f5",
+      "audit": {
+        "final_state_sha256": "bc752aa028a83214b45fd92591c97985cb8d59e1c4545b802c28271c862f546f",
+        "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40",
+        "ordered_rhs_sha256": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+        "ordered_writes_sha256": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+        "ordered_resumes_sha256": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d",
+        "scope": "standalone Cell CPU; every scored replay must match these digests"
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "selected": [],
+          "net_saved_operations": 0,
+          "untried_proposals": 176,
+          "stop": "trial_limit",
+          "trials": [
+            {
+              "selected": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148,
+                149,
+                150,
+                151,
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158,
+                159,
+                160,
+                161,
+                162,
+                163,
+                164,
+                165,
+                166,
+                167,
+                168,
+                169,
+                170,
+                171,
+                172,
+                173,
+                174,
+                175,
+                176,
+                177
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.607799917,
+              "replay_and_hash_seconds": 13.092989083,
+              "work": {
+                "net_saved_operations": -290907,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 2307528,
+                    "after": 2307528,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 2407239,
+                    "after": 2407239,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 386247,
+                    "after": 0,
+                    "saved": 386247
+                  },
+                  "fact_decode_ports": {
+                    "before": 1179030,
+                    "after": 0,
+                    "saved": 1179030
+                  },
+                  "key_lookup_calls": {
+                    "before": 4420726,
+                    "after": 4420726,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 2395590,
+                    "after": 2395590,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 1126308,
+                    "after": 1126308,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 57325,
+                    "after": 57325,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 2231377,
+                    "after": 2231377,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 430871,
+                    "saved": -430871
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 386247,
+                    "saved": -386247
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 457480,
+                    "saved": -457480
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 301310,
+                    "saved": -301310
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 1669032,
+                    "saved": -1669032
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 430871,
+                    "after": 0,
+                    "saved": 430871
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 140973,
+                    "after": 0,
+                    "saved": 140973
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 816912,
+                    "after": 0,
+                    "saved": 816912
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 29,
+                    "after": 29,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 3704657,
+                    "after": 3704657,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 22404,
+                    "after": 22404,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 472906,
+                    "after": 472906,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 151425,
+                    "after": 151425,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 114560,
+                    "after": 114560,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 1871989,
+                    "after": 1871989,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 2302142,
+                    "after": 2302142,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 1772810,
+                    "after": 1772810,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 66729,
+                    "after": 66729,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 297750,
+                    "after": 297750,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 704559,
+                    "after": 704559,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 2062640,
+                    "after": 2062640,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 867701,
+                    "after": 867701,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 64796,
+                    "after": 64796,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 479589,
+                    "after": 479589,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 4490637,
+                    "after": 4490637,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 573277,
+                    "after": 573277,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 430871,
+                "unmatched": 0,
+                "delta_cells": 430871,
+                "key_cells": 224478,
+                "steps": 1669032,
+                "effect_steps": 386247,
+                "port_writes": 457480,
+                "row_copies": 301310,
+                "result_publications": 182870,
+                "deferred_keys": 248001,
+                "collisions": 161769,
+                "union_requests": 161769,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    660,
+                    641
+                  ],
+                  [
+                    5667,
+                    5541
+                  ],
+                  [
+                    55249,
+                    27243
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    677,
+                    400
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1397,
+                    1372
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    16031,
+                    12159
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    16124,
+                    10497
+                  ],
+                  [
+                    360,
+                    236
+                  ],
+                  [
+                    52872,
+                    35547
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    25,
+                    2
+                  ],
+                  [
+                    9190,
+                    7750
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    29,
+                    29
+                  ],
+                  [
+                    457,
+                    445
+                  ],
+                  [
+                    142,
+                    135
+                  ],
+                  [
+                    5252,
+                    4057
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1113,
+                    916
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    51985,
+                    23721
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    9507,
+                    8307
+                  ],
+                  [
+                    9957,
+                    8555
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    715,
+                    414
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    210,
+                    130
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    799,
+                    722
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1961,
+                    1555
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    16237,
+                    11057
+                  ],
+                  [
+                    123617,
+                    49661
+                  ],
+                  [
+                    27167,
+                    4460
+                  ],
+                  [
+                    3733,
+                    757
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1445,
+                    1444
+                  ],
+                  [
+                    2296,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    687,
+                    34
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    6229,
+                    3599
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1360,
+                    1257
+                  ],
+                  [
+                    5857,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    56,
+                    53
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    27,
+                    25
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1768,
+                    1750
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            },
+            {
+              "selected": [
+                124
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.624593375,
+              "replay_and_hash_seconds": 13.16456875,
+              "work": {
+                "net_saved_operations": -481929,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 2307528,
+                    "after": 2307528,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 2407239,
+                    "after": 2407239,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 386247,
+                    "after": 320498,
+                    "saved": 65749
+                  },
+                  "fact_decode_ports": {
+                    "before": 1179030,
+                    "after": 981783,
+                    "saved": 197247
+                  },
+                  "key_lookup_calls": {
+                    "before": 4420726,
+                    "after": 4420726,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 2395590,
+                    "after": 2395590,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 1126308,
+                    "after": 1126308,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 57325,
+                    "after": 57325,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 2231377,
+                    "after": 2231377,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 430871,
+                    "saved": -430871
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 65749,
+                    "saved": -65749
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 123617,
+                    "saved": -123617
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 123617,
+                    "saved": -123617
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 470173,
+                    "saved": -470173
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 430871,
+                    "after": 307254,
+                    "saved": 123617
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 140973,
+                    "after": 67017,
+                    "saved": 73956
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 816912,
+                    "after": 545383,
+                    "saved": 271529
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 29,
+                    "after": 29,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 3704657,
+                    "after": 3704657,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 22404,
+                    "after": 22404,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 472906,
+                    "after": 472906,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 151425,
+                    "after": 151425,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 114560,
+                    "after": 114560,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 1871989,
+                    "after": 1871989,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 2302142,
+                    "after": 2302142,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 1772810,
+                    "after": 1772810,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 66729,
+                    "after": 66729,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 297750,
+                    "after": 297750,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 704559,
+                    "after": 704559,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 2062640,
+                    "after": 2062640,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 867701,
+                    "after": 867701,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 64796,
+                    "after": 64796,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 479589,
+                    "after": 479589,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 4490637,
+                    "after": 4490637,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 573277,
+                    "after": 573277,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 430871,
+                "unmatched": 307254,
+                "delta_cells": 123617,
+                "key_cells": 49661,
+                "steps": 470173,
+                "effect_steps": 65749,
+                "port_writes": 123617,
+                "row_copies": 123617,
+                "result_publications": 73956,
+                "deferred_keys": 49661,
+                "collisions": 16088,
+                "union_requests": 16088,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    123617,
+                    49661
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            },
+            {
+              "selected": [
+                5
+              ],
+              "semantic_audit": true,
+              "compile_seconds": 0.601755583,
+              "replay_and_hash_seconds": 13.179943708,
+              "work": {
+                "net_saved_operations": -382375,
+                "counters": {
+                  "entry_schedule/stats/entry_publication_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/entry_retirement_checks": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/predicate_checks": {
+                    "before": 2307528,
+                    "after": 2307528,
+                    "saved": 0
+                  },
+                  "entry_schedule/stats/row_decodes": {
+                    "before": 2407239,
+                    "after": 2407239,
+                    "saved": 0
+                  },
+                  "fact_decode_calls": {
+                    "before": 386247,
+                    "after": 331802,
+                    "saved": 54445
+                  },
+                  "fact_decode_ports": {
+                    "before": 1179030,
+                    "after": 1015695,
+                    "saved": 163335
+                  },
+                  "key_lookup_calls": {
+                    "before": 4420726,
+                    "after": 4420726,
+                    "saved": 0
+                  },
+                  "publication/column_rows": {
+                    "before": 2395590,
+                    "after": 2395590,
+                    "saved": 0
+                  },
+                  "publication/neighbor_rows": {
+                    "before": 1126308,
+                    "after": 1126308,
+                    "saved": 0
+                  },
+                  "publication/range_rows": {
+                    "before": 57325,
+                    "after": 57325,
+                    "saved": 0
+                  },
+                  "publication/row_reads": {
+                    "before": 2231377,
+                    "after": 2231377,
+                    "saved": 0
+                  },
+                  "repair_cells/stats/attempts": {
+                    "before": 0,
+                    "after": 430871,
+                    "saved": -430871
+                  },
+                  "repair_cells/stats/effect_steps": {
+                    "before": 0,
+                    "after": 54445,
+                    "saved": -54445
+                  },
+                  "repair_cells/stats/port_writes": {
+                    "before": 0,
+                    "after": 69460,
+                    "saved": -69460
+                  },
+                  "repair_cells/stats/row_copies": {
+                    "before": 0,
+                    "after": 37831,
+                    "saved": -37831
+                  },
+                  "repair_cells/stats/steps": {
+                    "before": 0,
+                    "after": 220233,
+                    "saved": -220233
+                  },
+                  "repair_ports/stats/attempts": {
+                    "before": 430871,
+                    "after": 375622,
+                    "saved": 55249
+                  },
+                  "repair_ports/stats/field_copies": {
+                    "before": 140973,
+                    "after": 115276,
+                    "saved": 25697
+                  },
+                  "repair_ports/stats/port_checks": {
+                    "before": 816912,
+                    "after": 685173,
+                    "saved": 131739
+                  },
+                  "stage_spine/stats/capture_reads": {
+                    "before": 29,
+                    "after": 29,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/captured_anchors": {
+                    "before": 3704657,
+                    "after": 3704657,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/context_reads": {
+                    "before": 22404,
+                    "after": 22404,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/contexts_created": {
+                    "before": 472906,
+                    "after": 472906,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/guards": {
+                    "before": 151425,
+                    "after": 151425,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_allocations": {
+                    "before": 114560,
+                    "after": 114560,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_capture_reads": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/history_slots_written": {
+                    "before": 220262,
+                    "after": 220262,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_cursor_probes": {
+                    "before": 1871989,
+                    "after": 1871989,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_entry_writes": {
+                    "before": 2302142,
+                    "after": 2302142,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/legacy_retirement_checks": {
+                    "before": 1772810,
+                    "after": 1772810,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/node_cursor_reads": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_key_slots": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_probes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/origin_map_writes": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/port_cache_fills": {
+                    "before": 66729,
+                    "after": 66729,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/query_receipt_attempts": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stage_spine/stats/root_handles_created": {
+                    "before": 297750,
+                    "after": 297750,
+                    "saved": 0
+                  },
+                  "stats/cells_created": {
+                    "before": 704559,
+                    "after": 704559,
+                    "saved": 0
+                  },
+                  "stats/constructor_requests": {
+                    "before": 2062640,
+                    "after": 2062640,
+                    "saved": 0
+                  },
+                  "stats/decoded_rows": {
+                    "before": 867701,
+                    "after": 867701,
+                    "saved": 0
+                  },
+                  "stats/handoff_attempts": {
+                    "before": 64796,
+                    "after": 64796,
+                    "saved": 0
+                  },
+                  "stats/key_operations": {
+                    "before": 0,
+                    "after": 0,
+                    "saved": 0
+                  },
+                  "stats/repaired_dependencies": {
+                    "before": 479589,
+                    "after": 479589,
+                    "saved": 0
+                  },
+                  "stats/residual_candidates": {
+                    "before": 4490637,
+                    "after": 4490637,
+                    "saved": 0
+                  },
+                  "stats/union_requests": {
+                    "before": 573277,
+                    "after": 573277,
+                    "saved": 0
+                  }
+                },
+                "unit": "one observed operation per counter; equal weights, not elapsed time",
+                "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+              },
+              "repair_cells": {
+                "attempts": 430871,
+                "unmatched": 375622,
+                "delta_cells": 55249,
+                "key_cells": 27243,
+                "steps": 220233,
+                "effect_steps": 54445,
+                "port_writes": 69460,
+                "row_copies": 37831,
+                "result_publications": 25751,
+                "deferred_keys": 29498,
+                "collisions": 27202,
+                "union_requests": 27202,
+                "by_shape": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    55249,
+                    27243
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

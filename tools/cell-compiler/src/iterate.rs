@@ -13,14 +13,15 @@ use sha2::{Digest, Sha256};
 use std::{fs, path::Path};
 use crate::work_credit::Work;
 type Result<T> = eggfuse_bake::pipeline::Result<T>;
-type Stamp = (String, String, Vec<String>, Vec<(u64, String)>, Vec<(u64, String)>);
+pub(crate) type Stamp = (String, String, Vec<String>, Vec<(u64, String)>, Vec<(u64, String)>);
 #[derive(Clone, Copy)]
-struct Execution {
-    entry_publications: bool,
-    repair_ports: bool,
+pub(crate) struct Execution {
+    pub entry_publications: bool,
+    pub repair_ports: bool,
+    pub repair_cells: bool,
 }
-fn replay(p: Program, collect: bool, config: Execution) -> Result<(Executor, Stamp)> {
-    let graph = if config.repair_ports { Graph::new_with_repair_ports(p)? } else { Graph::new(p)? };
+pub(crate) fn replay(p: Program, collect: bool, config: Execution) -> Result<(Executor, Stamp)> {
+    let graph = if config.repair_cells { Graph::new_with_repair_cells(p)? } else if config.repair_ports { Graph::new_with_repair_ports(p)? } else { Graph::new(p)? };
     let mut exec = Executor::new(graph, false);
     #[cfg(feature = "sparse-cells")]
     if config.entry_publications { exec.use_entry_publications()?; }
@@ -71,6 +72,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "--trial-limit",
             "--entry-publications",
             "--repair-ports",
+            "--repair-cells",
         ],
     )?;
     let measured = match opts.get("--score").map(String::as_str).unwrap_or("measured-work") {
@@ -81,7 +83,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let trial_limit = opts.get("--trial-limit").map(|s| s.parse()).transpose()?.unwrap_or(8usize);
     if trial_limit == 0 { return Err("trial limit must be positive".into()); }
     let flag = |name| -> Result<bool> { Ok(opts.get(name).map(|s| s.parse()).transpose()?.unwrap_or(false)) };
-    let config = Execution { entry_publications: flag("--entry-publications")?, repair_ports: flag("--repair-ports")? };
+    let config = Execution { entry_publications: flag("--entry-publications")?, repair_ports: flag("--repair-ports")?, repair_cells: flag("--repair-cells")? };
     if config.entry_publications && !cfg!(feature = "sparse-cells") {
         return Err("entry publications require the sparse-cells build".into());
     }
@@ -246,7 +248,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         let report = exec.report();
         drop(exec);
         let mut credit = json!({"policy":if measured {"measured-work"} else {"static"},
-            "entry_publications":config.entry_publications,"repair_ports":config.repair_ports});
+            "entry_publications":config.entry_publications,"repair_ports":config.repair_ports,"repair_cells":config.repair_cells});
         if measured && !admitted.is_empty() {
             // Pair discovery can force producer roots into existence. Score
             // with collection disabled in BOTH executions, as in inference.

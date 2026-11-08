@@ -81,6 +81,9 @@ pub struct Program {
     pub(crate) physical: Rc<crate::physical_plan::Plan>,
     #[serde(default)]
     pub(crate) repair_ports: crate::graph::repair_ports::Plan,
+    #[cfg(feature = "spine-blocks")]
+    #[serde(skip)]
+    pub repair_cells: crate::graph::repair_cells::Catalog,
     #[serde(skip)]
     pub(crate) entry_join: Option<Rc<crate::entry_join::Plan>>,
     #[serde(default)]
@@ -355,6 +358,8 @@ impl Program {
             writes: vec![],
             physical: Default::default(),
             repair_ports: Default::default(),
+            #[cfg(feature = "spine-blocks")]
+            repair_cells: Default::default(),
             known_results: Default::default(),
             merge_programs: Default::default(),
 
@@ -386,6 +391,8 @@ impl Program {
         {
             return Err("repair port footprint differs from typed recipe".into());
         }
+        #[cfg(feature = "spine-blocks")]
+        { p.repair_cells = crate::graph::repair_cells::Catalog::derive(&p)?; }
         p.writes = crate::row_kernel::writes(&p);
         p.neighbor_plans = crate::neighbor::derive(&p);
         if let Some(raw) = p.artifact.get("neighbor_entries")

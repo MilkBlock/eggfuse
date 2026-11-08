@@ -757,8 +757,9 @@ pub(super) fn cpu_block_egraph(
     units: &[Json],
     joins: &[Json],
     limits: crate::bake_limits::BakeLimits,
+    repair_nodes: &[Json],
 ) -> Result<Json> {
-    if units.len() > limits.max_units || joins.len() > units.len() {
+    if units.len().saturating_add(repair_nodes.len()) > limits.max_units || joins.len() > units.len() {
         return Err("Cell catalog exceeds budget".into());
     }
     let base = units.len() - joins.len();
@@ -802,12 +803,22 @@ pub(super) fn cpu_block_egraph(
         }
         reg.register_descriptor(id, &parents, &desc, &Json::Null)?;
     }
+    for (id, node) in repair_nodes.iter().enumerate() {
+        let parents: Vec<usize> = serde_json::from_value(node["parents"].clone())?;
+        if node["id"] != id || parents.iter().any(|&p| p >= id) {
+            return Err("invalid repair Cell parent".into());
+        }
+        let parents = parents.into_iter().map(|p| units.len() + p).collect::<Vec<_>>();
+        reg.register_descriptor(units.len() + id, &parents, &node["descriptor"], &Json::Null)?;
+    }
     let mut report = reg.report();
     for node in report["nodes"].as_array_mut().unwrap() {
         node["parent_scope"] = json!("ordered components of a finite block");
     }
     report["recipe"] = plan["recipe"].clone();
     report["seed"] = plan["seed"].clone();
-    report["scope"] = json!("checked finite CPU continuation blocks; source-scheduled activation");
+    report["scope"] = json!("checked finite CPU continuation and repair blocks; source Runs and ordered repair remain distinct activation domains");
+    report["source_units"] = json!(units.len());
+    report["repair_units"] = json!(repair_nodes.len());
     Ok(report)
 }

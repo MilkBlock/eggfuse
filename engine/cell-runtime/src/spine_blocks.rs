@@ -53,7 +53,65 @@ pub(super) struct Step {
     pub key: Vec<Field>,
     pub check_result: Option<Field>,
 }
+/// Shared binding/checking instruction used by source entries and repair cells.
+/// The host supplies typed table/primitive capabilities; a failed predicate
+/// never publishes an effect.
+pub(crate) struct BoundStep<A> {
+    args: A,
+    expected: Option<Value>,
+}
+impl Step {
+    pub(crate) fn bind<A: FromIterator<Value>>(
+        &self,
+        mut field: impl FnMut(&Field) -> Value,
+    ) -> BoundStep<A> {
+        BoundStep {
+            args: self.key.iter().map(&mut field).collect(),
+            expected: self.check_result.as_ref().map(field),
+        }
+    }
+}
+impl<A> BoundStep<A> {
+    pub(crate) fn evaluate(
+        self,
+        call: impl FnOnce(A) -> Result<Option<Value>>,
+    ) -> Result<Option<Value>> {
+        Ok(call(self.args)?.filter(|v| self.expected.as_ref().is_none_or(|e| e == v)))
+    }
+}
 impl Block {
+    /// Substitute a complete block's outputs into the next block's anchor.
+    /// This is dataflow composition: no intermediate row or slot map is needed.
+    pub(crate) fn then(&self, next: &Self) -> Option<Self> {
+        if self.port.is_some() || next.port.is_some() {
+            return None;
+        }
+        let field = |f: &Field| -> Option<Field> {
+            Some(match f {
+                Field::Anchor(i) => self.inputs.get(*i)?.clone(),
+                Field::StepResult(i) => Field::StepResult(self.steps.len() + i),
+                Field::Literal(v) => Field::Literal(v.clone()),
+                Field::PortResult => return None,
+            })
+        };
+        let mut steps = self.steps.clone();
+        for step in &next.steps {
+            steps.push(Step {
+                atom: self.steps.len() + step.atom,
+                call: step.call.clone(),
+                key: step.key.iter().map(&field).collect::<Option<_>>()?,
+                check_result: match &step.check_result {
+                    Some(f) => Some(field(f)?),
+                    None => None,
+                },
+            });
+        }
+        Some(Self {
+            port: None,
+            steps,
+            inputs: next.inputs.iter().map(field).collect::<Option<_>>()?,
+        })
+    }
     pub(crate) fn lower(p: &Program, r: usize, pivot: usize) -> Option<Self> {
         let (_, _, order) = p
             .multi_stage
@@ -71,7 +129,7 @@ impl Block {
         Self::lower_entry(&p.rules[r], pivot, order)
             .or_else(|| Self::staged_entry(&p.rules[r], pivot, order))
     }
-    fn staged_entry(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
+    pub(crate) fn staged_entry(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
         let mut sources = BTreeMap::new();
         for (col, arg) in rule.query.get(pivot)?.args.iter().enumerate() {
             if let Arg::Slot(s) = arg {

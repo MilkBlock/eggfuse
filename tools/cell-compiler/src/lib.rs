@@ -2,6 +2,8 @@ mod bench;
 #[cfg(feature = "iterative-bake")]
 mod iterate;
 #[cfg(feature = "iterative-bake")]
+mod repair_bake;
+#[cfg(feature = "iterative-bake")]
 mod work_credit;
 mod keys;
 mod marker_ir;
@@ -283,9 +285,13 @@ pub fn cli(default_bench: bool) -> Result<()> {
     };
     if cmd == "iterate" && args.iter().any(|a| a == "--help") {
         println!(
-            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--score measured-work|static] [--trial-limit N] [--entry-publications true|false] [--repair-ports true|false] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
+            "cargo cell-iterate --program SEED --output NEW_DIR [--rounds N] [--objective copies|rhs-lookups|rhs-congruence|stage-congruence] [--score measured-work|static] [--trial-limit N] [--entry-publications true|false] [--repair-ports true|false] [--repair-cells true|false] [--resume-catalog PATH | --producer-profile PATH] [--max-depth N] [--max-nodes N] [--new-per-round N] [--max-units N] [--candidate-slots N] [--min-support N]"
         );
         return Ok(());
+    }
+    #[cfg(feature = "iterative-bake")]
+    if cmd == "bake-repair" && args.iter().any(|a| a == "--help") {
+        return repair_bake::run(args);
     }
     if cmd == "help" || args.iter().any(|a| a == "--help") {
         println!(
@@ -297,6 +303,8 @@ pub fn cli(default_bench: bool) -> Result<()> {
     match cmd.as_str() {
         #[cfg(feature = "iterative-bake")]
         "iterate" => iterate::run(args),
+        #[cfg(feature = "iterative-bake")]
+        "bake-repair" => repair_bake::run(args),
         "internal-bake" if args.len() == 2 => bake(Path::new(&args[0]), Path::new(&args[1])),
         "compile" => {
             let opts = options(

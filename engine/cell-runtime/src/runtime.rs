@@ -3088,7 +3088,11 @@ impl Executor {
         let survey = self.free_join.survey.report();
         #[cfg(not(feature = "projection-survey"))]
         let survey = J::Null;
-        json!({"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
+        #[cfg(feature = "spine-blocks")]
+        let repair_cells = self.graph.repair_cell_report();
+        #[cfg(not(feature = "spine-blocks"))]
+        let repair_cells = J::Null;
+        json!({"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,

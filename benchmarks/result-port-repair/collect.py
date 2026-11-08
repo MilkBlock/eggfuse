@@ -17,7 +17,7 @@ def collect(source):
             reference = None
             for sample in [row['warmup'], *row['samples']]:
                 fixed = {k: sample.pop(k) for k in ('stats', 'repair_ports', 'state_file_sha256', 'schedule_sha256')}
-                for key in ('entry_schedule', 'publication', 'key_lookup_calls'):
+                for key in ('entry_schedule', 'publication', 'key_lookup_calls', 'fact_decode_calls', 'fact_decode_ports', 'repair_cells'):
                     if key in sample:
                         fixed[key] = sample.pop(key)
                 fixed['stage_spine'] = {k: v for k, v in sample['stage_spine'].items() if not k.endswith('_seconds')}

@@ -44,6 +44,7 @@ pub(super) struct Runtime {
     ambiguous_bucket: u64,
     result_events: u64,
     field_copies: u64,
+    port_checks: u64,
     by_table: Vec<u64>,
 }
 impl Runtime {
@@ -83,13 +84,14 @@ impl Graph {
             stats.unsupported += 1;
             return false;
         };
-        if columns.iter().any(|&i| fields[i] == Value::Eq(from)) {
+        if columns.iter().any(|&i| { stats.port_checks += 1; fields[i] == Value::Eq(from) }) {
             stats.key_changes += 1;
             return false;
         }
         // The cached body is canonical before this equality delta. A singleton
         // exact-key bucket cannot hide a collision that ordinary repair would
         // resolve earlier; ambiguous hash buckets retain that original order.
+        stats.port_checks += 1;
         if fields.last() != Some(&Value::Eq(from)) {
             return false;
         }

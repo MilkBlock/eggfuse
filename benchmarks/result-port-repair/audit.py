@@ -57,7 +57,8 @@ def audit(runtime, programs, output):
                           'hashes': hashes, 'stats': report['stats'], 'repair_ports': report['repair_ports'],
                           'stage_spine': report['stage_spine']['stats'], 'runs': len(schedule)}
             rows[lane].update(entry_schedule=report['entry_schedule'], publication=report['publication'],
-                              key_lookup_calls=report['key_lookup_calls'])
+                              key_lookup_calls=report['key_lookup_calls'],
+                              fact_decode_calls=report.get('fact_decode_calls'), fact_decode_ports=report.get('fact_decode_ports'), repair_cells=report.get('repair_cells'))
             temp = output / 'results.tmp'
             temp.write_text(json.dumps(result, indent=2) + '\n')
             temp.replace(output / 'results.json')

@@ -3,6 +3,9 @@
 mod union_digest;
 #[path = "repair_ports.rs"]
 pub(crate) mod repair_ports;
+#[cfg(feature = "spine-blocks")]
+#[path = "repair_cells.rs"]
+pub mod repair_cells;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -249,6 +252,8 @@ pub struct Graph {
     merge_kinds: Vec<Option<String>>,
     equal_keeps_old: Vec<bool>,
     pub key_lookup_calls: std::cell::Cell<u64>,
+    pub fact_decode_calls: std::cell::Cell<u64>,
+    pub fact_decode_ports: std::cell::Cell<u64>,
     pub program: Program,
 
     #[cfg(not(feature = "sparse-cells"))]
@@ -263,6 +268,8 @@ pub struct Graph {
     pub pending_unions: Vec<(u64, u64)>,
     union_digest: Option<union_digest::Matcher>,
     repair_ports: Option<repair_ports::Runtime>,
+    #[cfg(feature = "spine-blocks")]
+    repair_cells: Option<repair_cells::Runtime>,
 
     pub(crate) changes: crate::change_batch::ChangeBatch,
     pub anchors: Vec<(String, String, u64)>,
@@ -472,6 +479,8 @@ impl Graph {
             merge_kinds,
             equal_keeps_old,
 
+            fact_decode_calls: std::cell::Cell::new(0),
+            fact_decode_ports: std::cell::Cell::new(0),
             key_lookup_calls: std::cell::Cell::new(0),
 
             program,
@@ -488,6 +497,8 @@ impl Graph {
             pending_unions: vec![],
             union_digest,
             repair_ports: None,
+            #[cfg(feature = "spine-blocks")]
+            repair_cells: None,
 
             changes: crate::change_batch::ChangeBatch::new(n),
             anchors: vec![],
@@ -956,6 +967,7 @@ impl Graph {
 
     #[inline(never)]
     fn decode_fact(&self, f: FactRef, c: &Cell, s: &FactState) -> Result<Row> {
+        self.fact_decode_calls.set(self.fact_decode_calls.get() + 1);
         let op = self.program.templates[c.template]
             .ops
             .get(f.op as usize)
@@ -965,6 +977,7 @@ impl Graph {
             Op::Set(t, args, value) => (*t, args, value.clone()),
             _ => return Err("invalid fact recipe position".into()),
         };
+        self.fact_decode_ports.set(self.fact_decode_ports.get() + args.len() as u64 + 1);
         let mut values = Vec::with_capacity(args.len() + 1);
         for arg in args {
             values.push(self.argument_in(f.cell, c, arg)?);
@@ -1727,7 +1740,19 @@ impl Graph {
 
     fn mark_affected(&mut self, affected: &UseSet, from: u64, to: u64) {
         for d in affected.iter() {
-            if self.repair_ports.is_some()
+            #[cfg(feature = "spine-blocks")]
+            let mut retained = false;
+            #[cfg(not(feature = "spine-blocks"))]
+            let retained = false;
+            #[cfg(feature = "spine-blocks")]
+            if self.repair_cells.is_some() && let Dependency::Fact(f) = d {
+                match self.match_repair_delta(*f, from, to) {
+                    repair_cells::Delta::Published => continue,
+                    repair_cells::Delta::Deferred => retained = true,
+                    repair_cells::Delta::Uncovered => (),
+                }
+            }
+            if !retained && self.repair_ports.is_some()
                 && let Dependency::Fact(f) = d
                 && self.finish_result_port(*f, from, to)
             {
@@ -1737,7 +1762,7 @@ impl Graph {
             if let Dependency::Function(i) = d {
                 self.functions[*i].decoded = None;
             }
-            if let Dependency::Fact(f) = d
+            if !retained && let Dependency::Fact(f) = d
                 && let Some(state) = self
                     .cells
                     .get_mut(&f.cell)
@@ -2259,6 +2284,72 @@ impl Graph {
         self.changes.is_empty() && self.pending_unions.is_empty() && self.dirty.is_empty()
             && self.dirty_markers.is_empty() && self.garbage.is_empty()
     }
+    // Both bucket implementations iterate in witness order. Skipping self
+    // before the read-only probe preserves remove-self-then-probe ordering;
+    // no bucket clone or mutation is needed until the terminal effect.
+    fn find_repair_collision(&self, f: FactRef, r: &Row, h: u64) -> Result<Option<Row>> {
+        let key = &r.values[..r.values.len() - 1];
+        for &other in self.intern.get(&h).into_iter().flatten() {
+            if other == f { continue; }
+            if let Some(row) = self.fact(other)? {
+                if row.table == r.table && row.values[..key.len()] == *key { return Ok(Some(row)); }
+            }
+        }
+        Ok(None)
+    }
+    fn commit_fact_repair(&mut self, f: FactRef, r: Row, h: u64, found: Option<Row>) -> Result<()> {
+        let d = Dependency::Fact(f);
+        let old = self.cells[&f.cell].facts[&f.op].hash;
+        self.stats.repair_key_hash_changes += u64::from(h != old);
+        if let Some(bucket) = self.intern.get_mut(&old) {
+            bucket.remove(&f);
+            #[cfg(feature = "sparse-cells")]
+            if bucket.is_empty() { self.intern.remove(&old); }
+        }
+        if let Some(other) = found {
+            self.stats.repair_collisions += 1;
+            if let Dependency::Fact(keep) = other.witness {
+                self.query_versions[r.table] += 1;
+                let target = self
+                    .cells
+                    .get_mut(&keep.cell)
+                    .unwrap()
+                    .facts
+                    .get_mut(&keep.op)
+                    .unwrap();
+                #[cfg(feature = "receipt-slots")]
+                if r.hidden && target.port_slot != 0 {
+                    self.retired_port_slots
+                        .insert(other.witness, std::mem::take(&mut target.port_slot));
+                }
+                target.hidden |= r.hidden;
+                target.epoch = self.epoch;
+                self.changes.touch(r.table, other.witness);
+            }
+            if self.receipt_tracking {
+                self.receipt_forwards
+                    .insert(Dependency::Fact(f), other.witness);
+            }
+            self.retire(f)?;
+        } else {
+            self.intern.entry(h).or_default().insert(f);
+            let s = self
+                .cells
+                .get_mut(&f.cell)
+                .unwrap()
+                .facts
+                .get_mut(&f.op)
+                .unwrap();
+
+            s.decoded = Some((r.table, r.values.clone()));
+            s.hash = h;
+            s.epoch = self.epoch;
+            self.subscribe(r.table, d, &r.values);
+            self.changes.touch(r.table, d);
+        }
+        Ok(())
+    }
+
     pub fn repair(&mut self) -> Result<()> {
         if self.union_digest.is_some() {
             return self.propagate_union_digests();
@@ -2288,75 +2379,15 @@ impl Graph {
 
             match d {
                 Dependency::Fact(f) => {
+                    #[cfg(feature = "spine-blocks")]
+                    if self.repair_cells.is_some() && self.match_repair_key(f)? { continue; }
                     let Some(r) = self.fact(f)? else { continue };
-                    let key = &r.values[..r.values.len() - 1];
-                    let h = hashkey(r.table, key);
-                    let old = self.cells[&f.cell].facts[&f.op].hash;
-                    self.stats.repair_key_hash_changes += u64::from(h != old);
-                    if let Some(bucket) = self.intern.get_mut(&old) {
-                        bucket.remove(&f);
-                        #[cfg(feature = "sparse-cells")]
-                        if bucket.is_empty() {
-                            self.intern.remove(&old);
-                        }
+                    let h = hashkey(r.table, &r.values[..r.values.len() - 1]);
+                    let found = self.find_repair_collision(f, &r, h)?;
+                    if let Some(other) = &found && self.program.tables[r.table].constructor {
+                        self.enqueue_union(r.values.last().unwrap().clone(), other.values.last().unwrap().clone())?;
                     }
-                    let candidates = self.intern.get(&h).cloned().unwrap_or_default();
-                    let mut found = None;
-                    for &other in candidates.iter() {
-                        if let Some(row) = self.fact(other)? {
-                            if row.table == r.table && row.values[..key.len()] == *key {
-                                found = Some(row);
-                                break;
-                            }
-                        }
-                    }
-                    if let Some(other) = found {
-                        self.stats.repair_collisions += 1;
-                        if self.program.tables[r.table].constructor {
-                            self.enqueue_union(
-                                r.values.last().unwrap().clone(),
-                                other.values.last().unwrap().clone(),
-                            )?;
-                        }
-                        if let Dependency::Fact(keep) = other.witness {
-                            self.query_versions[r.table] += 1;
-                            let target = self
-                                .cells
-                                .get_mut(&keep.cell)
-                                .unwrap()
-                                .facts
-                                .get_mut(&keep.op)
-                                .unwrap();
-                            #[cfg(feature = "receipt-slots")]
-                            if r.hidden && target.port_slot != 0 {
-                                self.retired_port_slots
-                                    .insert(other.witness, std::mem::take(&mut target.port_slot));
-                            }
-                            target.hidden |= r.hidden;
-                            target.epoch = self.epoch;
-                            self.changes.touch(r.table, other.witness);
-                        }
-                        if self.receipt_tracking {
-                            self.receipt_forwards
-                                .insert(Dependency::Fact(f), other.witness);
-                        }
-                        self.retire(f)?;
-                    } else {
-                        self.intern.entry(h).or_default().insert(f);
-                        let s = self
-                            .cells
-                            .get_mut(&f.cell)
-                            .unwrap()
-                            .facts
-                            .get_mut(&f.op)
-                            .unwrap();
-
-                        s.decoded = Some((r.table, r.values.clone()));
-                        s.hash = h;
-                        s.epoch = self.epoch;
-                        self.subscribe(r.table, d, &r.values);
-                        self.changes.touch(r.table, d);
-                    }
+                    self.commit_fact_repair(f, r, h, found)?;
                 }
                 Dependency::Function(i) => {
                     let Some(row) = self.function(i) else {

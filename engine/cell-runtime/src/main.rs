@@ -26,6 +26,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
+        #[cfg(feature = "spine-blocks")]
+        println!("  --repair-cells (experimental shared Cell repair templates)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "sparse-cells")]
         println!("  --entry-publications (shared entry nodes own producer expressions)");
@@ -80,6 +82,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .filter(|v| !v.starts_with("--"))
                     .ok_or("missing keeper pairs")?;
             }
+            #[cfg(feature = "spine-blocks")]
+            "--repair-cells" => {}
             "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
@@ -99,8 +103,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let digest = args.iter().any(|x| x == "--union-digest");
     let expressions = args.iter().any(|x| x == "--congruence-cells");
+    let cells = args.iter().any(|x| x == "--repair-cells");
     let ports = args.iter().any(|x| x == "--repair-ports");
-    if ports && (digest || expressions) {
+    if (ports || cells) && (digest || expressions) {
         return Err("repair ports currently require the ordinary repair backend".into());
     }
     if digest && expressions {
@@ -120,6 +125,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         } else {
             Graph::new_with_union_digest(program, bits)?
         }
+    } else if cells {
+        #[cfg(feature = "spine-blocks")]
+        { Graph::new_with_repair_cells(program)? }
+        #[cfg(not(feature = "spine-blocks"))]
+        { return Err("repair cells require spine-blocks".into()); }
     } else if ports {
         Graph::new_with_repair_ports(program)?
     } else {

@@ -1141,5 +1141,14 @@ pub fn register_cpu_blocks(
     joins: &[Json],
     limits: crate::bake_limits::BakeLimits,
 ) -> Result<Json> {
-    saturated_rule_composition_pipeline::cpu_block_egraph(plan, units, joins, limits)
+    saturated_rule_composition_pipeline::cpu_block_egraph(plan, units, joins, limits, &[])
+}
+
+/// Both source continuations and independently reconstructed repair templates
+/// are interned in the same finite Cell egraph.
+pub fn register_cpu_repair_blocks(
+    plan: &Json, units: &[Json], joins: &[Json], repair: &[Json],
+    limits: crate::bake_limits::BakeLimits,
+) -> Result<Json> {
+    saturated_rule_composition_pipeline::cpu_block_egraph(plan, units, joins, limits, repair)
 }

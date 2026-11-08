@@ -9,7 +9,7 @@ impl Work {
     pub fn read(report: &J) -> Result<Self, String> {
         let mut work = BTreeMap::new();
         for (group, fields) in [
-            ("", &["key_lookup_calls"][..]),
+            ("", &["key_lookup_calls", "fact_decode_calls", "fact_decode_ports"][..]),
             ("stats", &["decoded_rows", "repaired_dependencies", "residual_candidates", "key_operations", "handoff_attempts", "constructor_requests", "union_requests", "cells_created"]),
             ("stage_spine/stats", &[
                 "legacy_entry_writes", "legacy_retirement_checks", "legacy_cursor_probes", "node_cursor_reads",
@@ -29,6 +29,19 @@ impl Work {
                     .ok_or_else(|| format!("missing measured-work counter {key}"))?;
                 work.insert(key, value);
             }
+        }
+        for field in ["attempts", "steps", "effect_steps", "port_writes", "row_copies"] {
+            let key = format!("repair_cells/stats/{field}");
+            let stats = &report["repair_cells"]["stats"];
+            let value = if report["repair_cells"]["enabled"] == false { 0 }
+                else { stats[field].as_u64().ok_or_else(|| format!("missing repair work {field}"))? };
+            work.insert(key, value);
+        }
+        for field in ["attempts", "port_checks", "field_copies"] {
+            let key = format!("repair_ports/stats/{field}");
+            let value = if report["repair_ports"]["enabled"] == false { 0 }
+                else { report["repair_ports"]["stats"][field].as_u64().ok_or_else(|| format!("missing repair port work {field}"))? };
+            work.insert(key, value);
         }
         Ok(Self(work))
     }
