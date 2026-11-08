@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "scoped_executor": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--scoped-execution"]
+    },
+    "port_scopes": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--port-scopes"]
+    }
+  }
+}

@@ -97,7 +97,7 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
-        for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes"] {
+        for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths"] {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
                 report["scoped_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped completion work {field}"))?
@@ -108,6 +108,13 @@ impl Work {
             let key = format!("scoped_executor/stats/{field}");
             let value = if report["scoped_executor"]["enabled"] == true {
                 report["scoped_executor"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped execution work {field}"))?
+            } else { 0 };
+            work.insert(key,value);
+        }
+        for field in ["forecasts", "seed_roots", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths"] {
+            let key = format!("port_completion/stats/{field}");
+            let value = if report["port_completion"]["enabled"] == true {
+                report["port_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing port completion work {field}"))?
             } else { 0 };
             work.insert(key,value);
         }

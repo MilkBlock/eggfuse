@@ -25,12 +25,12 @@ phase does not establish completion of the objective.
 | Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
 | Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Bounded shared conditions and foreign candidates execute in one ordered pass; all-input, cross-stage, noise and mixed-boundary tests pass |
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
-| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor advances, publishes and consumes an independent datatype while another chain remains pending; same-sort Cell scopes and main-workload bypass still unverified |
+| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance, publish and consume independent regions of the same Eq sort; no useful main-workload bypass, same-table independence still open |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; retention peaks reported; parallel and full-cost admission pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
-| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Shared conditions plus conservative completion/read-write footprints; concrete Cell-port scope refinement and precise merge/container effects pending |
+| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Shared conditions and influence wiring plus conservative source-union write footprints; precise merge/container effects and bound write scopes pending |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
 boundary aliases, not merely a single-threaded queue. A single global union-find
@@ -408,6 +408,84 @@ same-sort independent regions, plus precise container and merge effects. Table
 scopes demonstrate the publication protocol but cannot establish workload
 locality. Shared mutable state, real workers and complete-cost performance
 admission are still open requirements.
+
+## Concrete port influence experiment
+
+The opt-in `--port-scopes` mode refines the type-only completion proof using
+actual equality roots and shared Cell wiring. The previous catalog admitted no
+deferred tables: an unrelated mutable function using the same Eq sort blocked
+every constructor. A queue now records the roots that actually caused its
+pending work. Shared influence code follows changed inputs to possible result
+equalities, and follows result-only uses as observations. It does not walk back
+through every other input of a constructor. Thus two regions sharing an
+unchanged `Context` input need not acquire the same influence footprint.
+
+This is a conservative reachability proof, not speculative congruence: it
+performs no simulated union or key comparison. Existing native/boundary symbols
+provide cross-component connections; no per-instance consumer index is added.
+Legacy or mutable consumers retain their typed boundary effects and ordered
+completion. Missing wiring and a 4,096-visit budget fall back to the complete
+typed proof. Queue groups and publication remain table-granular; this does not
+yet separate disjoint regions using the same constructor table.
+
+Before a source Run, the compiler supplies direct read/RHS demands **and** the
+potential effects of its explicit unions and constructor `set` operations.
+Read independence alone is insufficient: B's union can enter pending A through
+existing constructor result aliases. This version conservatively expands such
+writes by Eq sort. Removing that expansion fails the incoming-alias fixture's
+no-dependent-bypass assertion, although its final graph alone still matches.
+No incorrect final graph or epoch panic was observed in that negative control.
+Refining incoming writes requires a bound-write proof or a stronger causal
+epoch protocol, not deletion of the safety gate.
+
+The same-sort fixture retains A's one completion and two publication anchors
+while B commits two source Runs and a later rule creates `SeenB` from B's output.
+An unrelated mutable table and a shared unchanged input remain present. Final
+graph and ordered binding/changed observations equal the reference. Other
+fixtures cover a real mutable boundary, incoming result aliases, inequality
+guards, source checks, deletion/recreation, selective B completion and budget
+fallback. Validation passes 253 workspace tests (four preexisting ignored), 56
+focused tests in both configurations, and the minimal runtime compile check.
+
+The same frozen sum-bits program preserves all 1,428 ordered Run observations
+and state/RHS/write/resume/Spine digests. Ordinary runtime counters, stable-port
+work and index publication counts equal `e0c61d3a`'s scoped-executor control.
+It still performs 1,046 equality completions. **No source Run or binding advances
+while another region is pending.** One partial publication is not useful
+cross-Run progress. This mode remains experimental and is not admitted as a
+performance improvement.
+
+An initial probe added 747 influence forecasts, 13,748,491 membership checks,
+265,859 static steps and 1,981 tracked scratch growths without useful progress.
+Skipping empty/unchanged forecasts and stopping when a global boundary already
+forces full completion reduces these to 87 forecasts, 251,236 checks, 35,462
+steps and 566 growths. Actual cause tracking adds 1,110 probes, 4,238 comparisons
+and 36 growths. These remain extra work against the control; scratch growths are
+not complete allocation counts and no timing claim follows from this reduction.
+All added categories are charged in the heuristic Bake work ledger.
+
+The decisive observed boundaries are `ExtractedExpr` (36 already-pending global
+obligations and 29 reached global boundaries) and `hi-bound` (one reached global
+boundary). Their merge bodies call known constructors `Smaller` and `bound-min`.
+The compiler already has their schemas and merge expressions. The next useful
+refinement is an explicit merge read/write/birth footprint and recursive
+container effects, preserving constructor-lookup dependencies and ordered
+effects. Simply removing the global marker would not prove safe completion.
+
+Evidence and the rejected first probe are in `port-scopes-audit.json`; the
+fixture and validation have separate compact JSON records. Reproduce after
+preparing the same frozen artifact as above:
+
+```sh
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked --workspace --all-features -j 2 > out/stable-port-congruence/port-scopes-workspace-tests.log 2>&1
+PORT_COMPLETION_EVIDENCE="$PWD/out/stable-port-congruence/port-scopes-fixture.json" CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports,iterative-bake --test stable_ports --test cell_ownership --test scoped_completion --test port_completion -j 2 > out/stable-port-congruence/port-scopes-tests.log 2>&1
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features iterative-bake --test stable_ports --test cell_ownership --test scoped_completion --test port_completion -j 2 > out/stable-port-congruence/port-scopes-non-sparse-tests.log 2>&1
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo check --locked -p eggfuse-cell-runtime --no-default-features -j 2 > out/stable-port-congruence/port-scopes-minimal-check.log 2>&1
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/port-scopes-runtime
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/port-scopes-runtime benchmarks/stable-port-congruence/port-scopes-audit-manifest.json out/stable-port-congruence/port-scopes-audit
+python3 benchmarks/stable-port-congruence/collect-port-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
 
 Reproduce with the frozen artifact and separate compiler/runtime builds described
 above. Use `scoped-executor-{workspace-tests,tests,non-sparse-tests,minimal-check}`

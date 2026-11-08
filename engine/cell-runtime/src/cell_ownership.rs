@@ -13,6 +13,8 @@ pub mod composition;
 pub mod ports;
 #[path = "ownership_pending.rs"]
 mod ready;
+#[path = "port_completion.rs"]
+pub(crate) mod completion;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -213,6 +215,7 @@ struct Barrier {
 }
 pub(super) struct Runtime {
     composition: composition::Runtime,
+    port_completion: Option<completion::Counts>,
     boundaries: HashMap<u64, crate::tiny_set::TinySet<Signal>>,
     pub(super) pending: ready::Pending,
     pub(super) tables: Vec<usize>,
@@ -260,6 +263,7 @@ impl Graph {
         self.ownership = Some(Runtime {
             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
             boundaries: HashMap::default(),
+            port_completion: None,
             pending: ready::Pending::default(),
             tables: vec![0; self.program.tables.len()],
             stats: Stats::default(),
@@ -606,7 +610,7 @@ impl Graph {
         m.composition.columns = columns;
     }
     fn project_owned_ports(&mut self, f: FactRef, columns: &[usize], from: u64, to: u64) {
-        if self.notify_stable_fields(f, columns) {
+        if self.notify_stable_fields(f, columns, to) {
             return;
         }
         let m = self.ownership.as_mut().unwrap();

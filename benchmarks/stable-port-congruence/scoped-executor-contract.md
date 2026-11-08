@@ -39,6 +39,15 @@ ordered traces. The subsequent Executor fixture now demonstrates independent pub
 consumption across two datatypes; see `scoped-executor-fixture.json`. It does
 not establish same-sort locality or workload acceleration.
 
+The subsequent `--port-scopes` experiment establishes same-sort locality through
+the actual Executor: B commits and consumes results while A remains pending,
+even with an unchanged shared input and an unrelated mutable table of that sort.
+Shared influence code starts from the actual union cause roots, follows input
+uses to possible output equalities, and uses the existing explicit boundaries.
+It adds no per-producer consumer list. It remains table-granular and single
+threaded. Sum-bits admits zero useful cross-Run progress in this experiment;
+its added proof cost is retained as negative evidence in `port-scopes-audit.json`.
+
 The sum-bits proof is too coarse: 401 tables, 99,201 potential dependency edges,
 zero deferrable tables. Six opaque entries are one `set<Expr>` constructor and
 five merges calling `Smaller`, `IVTMin`, `bound-min` or `bound-max`. This evidence
@@ -76,6 +85,11 @@ then refine unresolved dependencies to bound Cell ports and explicit boundaries.
    and program checks must explicitly complete their observation footprint.
    A global audit snapshot may demand everything; it must not silently erase the
    independent-progress test's pending region.
+7. A new source Run's writes are also a completion demand. An explicit union can
+   reach old pending work through result aliases even when its direct reads are
+   disjoint. The current compiler conservatively expands union and constructor
+   `set` result sorts. Do not reuse a prior influence proof across changed Runs,
+   or remove this gate, without a proof for the bound writes and epoch ownership.
 
 ## Gates that must remain open
 

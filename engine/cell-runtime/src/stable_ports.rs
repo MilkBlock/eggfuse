@@ -225,7 +225,7 @@ impl Graph {
     /// Existing shared slices identify the changed columns. No stored field
     /// needs an Eq(from) comparison or an Eq(to) write. Changed inputs enqueue
     /// either canonical key work or an exact port-equality obligation.
-    pub(in crate::graph) fn notify_stable_fields(&mut self, f: FactRef, columns: &[usize]) -> bool {
+    pub(in crate::graph) fn notify_stable_fields(&mut self, f: FactRef, columns: &[usize], changed_root: u64) -> bool {
         let Some(stored) = self
             .cells
             .get(&f.cell)
@@ -266,6 +266,7 @@ impl Graph {
             stats.result_publications += 1;
         } else {
             let added = u64::from(m.pending.insert(table, f, self.epoch));
+            m.pending.cause(table, changed_root);
             m.stats.key_enqueues += added;
             if port_key {
                 stats.equality_enqueues += added;

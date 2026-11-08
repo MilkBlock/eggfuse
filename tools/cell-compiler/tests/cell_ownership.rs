@@ -24,12 +24,22 @@ fn compare(src: &str) -> Executor {
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
     let mut b = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
     let mut port_keys = Executor::new(Graph::new_with_scoped_completion(p.clone()).unwrap(), true);
-    let mut scoped = Executor::new(Graph::new_with_scoped_completion(p).unwrap(), false);
+    let mut scoped = Executor::new(Graph::new_with_scoped_completion(p.clone()).unwrap(), false);
+    let mut port_scopes = Executor::new(Graph::new_with_scoped_completion(p).unwrap(), false);
+    port_scopes.use_port_scopes().unwrap();
+    port_scopes.execute().unwrap();
     scoped.use_scoped_execution().unwrap();
     scoped.execute().unwrap();
     a.execute().unwrap();
     b.execute().unwrap();
     port_keys.execute().unwrap();
+    assert_eq!(a.graph.export().unwrap(), port_scopes.graph.export().unwrap());
+    assert_eq!(a.steps.len(), port_scopes.steps.len());
+    for (x, y) in a.steps.iter().zip(&port_scopes.steps) {
+        for k in ["ordinal", "ruleset", "path", "iterations", "epoch", "logical_matches", "executed_bindings", "changed"] {
+            assert_eq!(x[k], y[k], "port scopes: {k}");
+        }
+    }
     assert_eq!(a.graph.export().unwrap(), scoped.graph.export().unwrap());
     assert_eq!(a.steps.len(), scoped.steps.len());
     for (x, y) in a.steps.iter().zip(&scoped.steps) {

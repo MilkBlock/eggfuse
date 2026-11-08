@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --stable-ports (Cell ownership with stable stored equality fields)");
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
+        println!("  --port-scopes (experimental concrete-port influence and selective completion)");
         println!("  --scoped-execution (experimental compiler-scoped waits and selective publication)");
         println!("  --scoped-queues (compiler-scoped ready queues; source Run publication barrier retained)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
@@ -97,7 +98,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -120,7 +121,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let expressions = args.iter().any(|x| x == "--congruence-cells");
     let cells = args.iter().any(|x| x == "--repair-cells");
     let local = args.iter().any(|x| x == "--local-unions");
-    let scoped_execution = args.iter().any(|x| x == "--scoped-execution");
+    let port_scopes = args.iter().any(|x| x == "--port-scopes");
+    let scoped_execution = port_scopes || args.iter().any(|x| x == "--scoped-execution");
     let scoped_queues = scoped_execution || args.iter().any(|x| x == "--scoped-queues");
     let local_conditions = scoped_queues || args.iter().any(|x| x == "--local-congruence");
     let port_keys = local_conditions || args.iter().any(|x| x == "--port-keys");
@@ -169,6 +171,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     if scoped_execution { runtime.use_scoped_execution()?; }
+    if port_scopes { runtime.use_port_scopes()?; }
     #[cfg(feature = "sparse-cells")]
     if !ownership && args.iter().any(|x| x == "--entry-publications") {
         runtime.use_entry_publications()?;

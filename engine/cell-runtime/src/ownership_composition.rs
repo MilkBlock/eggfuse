@@ -3,6 +3,8 @@
 use super::*;
 #[path = "ownership_conditions.rs"]
 pub mod conditions;
+#[path = "ownership_effects.rs"]
+pub mod effects;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -115,6 +117,8 @@ pub struct Plan {
     /// Re-derived from checked wiring, never trusted from a profile.
     #[serde(skip)]
     pub conditions: Vec<Rc<conditions::Plan>>,
+    #[serde(skip)]
+    pub effects: Vec<Rc<effects::Plan>>,
     pub fragments: Vec<Fragment>,
     pub transitions: Vec<(Key, usize)>,
     pub max_frames: usize,
@@ -226,6 +230,7 @@ impl Plan {
         let mut plan = Self {
             sources,
             conditions: vec![],
+            effects: vec![],
             active_rules: vec![false; p.rules.len()],
             shapes: programs
                 .iter()
@@ -304,6 +309,11 @@ impl Plan {
             plan.active_rules[key.hop.rule] = true;
         }
         Ok(plan)
+    }
+    pub fn prepare_effects(&mut self, programs: &[Rc<PortProgram>]) {
+        if self.effects.is_empty() {
+            self.effects = self.shapes.iter().map(|shape| Rc::new(effects::Plan::derive(shape, programs))).collect();
+        }
     }
     pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
         if self.conditions.is_empty() {

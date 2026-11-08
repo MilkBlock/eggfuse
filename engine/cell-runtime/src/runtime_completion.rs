@@ -2,7 +2,9 @@
 //! its shared publication contexts may cross an independent source occurrence.
 //! A demanded scope is complete before ready-set selection, including probes.
 use super::*;
-use crate::{change_batch::ChangeBatch, completion_plan::Scope};
+use crate::{
+    change_batch::ChangeBatch, completion_plan::Scope, graph::cell_ownership::completion::Forecast,
+};
 
 #[derive(Default, serde::Serialize)]
 pub(super) struct Counts {
@@ -18,6 +20,7 @@ pub(super) struct Counts {
     pub published_tables_while_pending: u64,
     pub readiness_dependency_checks: u64,
     pub publication_table_checks: u64,
+    pub unchanged_influence_reuses: u64,
     pub deferred_rows_carried: u64,
     pub peak_retained_changes: usize,
     pub peak_retained_anchors: usize,
@@ -26,6 +29,8 @@ pub(super) struct Counts {
 }
 pub(super) struct State {
     can_defer: bool,
+    port_scopes: bool,
+    forecast: Option<Forecast>,
     eager: Scope,
     deferred: ChangeBatch,
     pub stats: Counts,
@@ -60,10 +65,28 @@ impl Executor {
         }
         self.completion = Some(State {
             can_defer,
+            port_scopes: false,
+            forecast: None,
             eager,
             deferred,
             stats: Counts::default(),
         });
+        Ok(())
+    }
+    pub fn use_port_scopes(&mut self) -> Result<()> {
+        self.use_scoped_execution()?;
+        if !self.steps.is_empty() {
+            return Err("configure port scopes before source Runs".into());
+        }
+        self.graph.use_port_completion()?;
+        let state = self.completion.as_mut().unwrap();
+        if !state.can_defer {
+            state.deferred = ChangeBatch::new(self.graph.program.tables.len());
+            state.deferred.enable_split();
+            self.graph.changes.enable_split();
+        }
+        state.can_defer = true;
+        state.port_scopes = true;
         Ok(())
     }
     fn global_completion_observer(&self) -> bool {
@@ -83,7 +106,8 @@ impl Executor {
         };
         let (anchors, contexts) = self.stage_spine.pending_publication_counts();
         json!({"enabled":true,"stats":state.stats,
-            "compiler_admits_deferral":state.can_defer,
+            "compiler_admits_deferral":self.graph.program.completion_plan.as_ref().unwrap().deferrable.iter().any(|&v|v),
+            "port_scopes":state.port_scopes,
             "global_observer":self.global_completion_observer(),
             "pending_anchors":anchors,"retained_contexts":contexts,
             "retained_forwards":self.graph.receipt_forwards.len(),
@@ -105,6 +129,29 @@ impl Executor {
             return Ok(());
         }
         let global = self.global_completion_observer();
+        if !global && self.completion.as_ref().unwrap().port_scopes {
+            let demand = plan.port_demands.get(set).ok_or("unknown port demand")?;
+            let forecast = match self.completion.as_mut().unwrap().forecast.take() {
+                Some(f) => f,
+                None => self.graph.forecast_port_completion()?,
+            };
+            let (allowed, checks) = forecast.select(demand, false);
+            let changed = self.graph.changed;
+            let before = self.graph.stats.unions;
+            if self.graph.complete_port_selection(&allowed, checks)? {
+                let next = self.graph.forecast_port_completion()?;
+                if !next.ready(demand) {
+                    return Err("port influence did not close a demanded scope".into());
+                }
+                self.completion.as_mut().unwrap().forecast = Some(next);
+                self.publish_finished_tables(before)?;
+            } else {
+                self.completion.as_mut().unwrap().stats.already_ready_waits += 1;
+                self.completion.as_mut().unwrap().forecast = Some(forecast);
+            }
+            self.graph.changed = changed;
+            return Ok(());
+        }
         if !global && self.graph.scope_ready(scope)? {
             self.completion.as_mut().unwrap().stats.already_ready_waits += 1;
             return Ok(());
@@ -131,6 +178,34 @@ impl Executor {
                 state.stats.global_observation_fences += 1;
             }
             self.graph.repair()?;
+        } else if self.completion.as_ref().unwrap().port_scopes {
+            self.graph.commit_scoped_unions()?;
+            if self.graph.pending_completion_tasks() == 0 {
+                self.completion.as_mut().unwrap().forecast = None;
+            } else if !self.graph.changed && self.completion.as_ref().unwrap().forecast.is_some() {
+                self.completion
+                    .as_mut()
+                    .unwrap()
+                    .stats
+                    .unchanged_influence_reuses += 1;
+            } else {
+                let forecast = self.graph.forecast_port_completion()?;
+                let (allowed, checks) = forecast.select(&[], true);
+                let completed = self.graph.complete_port_selection(&allowed, checks)?;
+                let forecast = if completed && self.graph.pending_completion_tasks() > 0 {
+                    self.graph.forecast_port_completion()?
+                } else {
+                    forecast
+                };
+                if self.graph.pending_completion_tasks() > 0 {
+                    if forecast.has_ordered_tasks() {
+                        return Err("port influence left an ordered effect pending".into());
+                    }
+                    self.completion.as_mut().unwrap().forecast = Some(forecast);
+                } else {
+                    self.completion.as_mut().unwrap().forecast = None;
+                }
+            }
         } else if !self.completion.as_ref().unwrap().can_defer {
             // The checked plan admits no deferred tasks. Specialize away all
             // per-Run scope construction and membership probes for this case.
@@ -171,7 +246,17 @@ impl Executor {
     pub(super) fn publish_finished_tables(&mut self, unions_before: u64) -> Result<(f64, f64)> {
         let partial = self.completion.is_some() && self.graph.pending_completion_tasks() > 0;
         let (ready, checks) = if partial {
-            let (ready, checks) = self.graph.completion_ready_tables();
+            let (ready, checks) = if self.completion.as_ref().unwrap().port_scopes {
+                self.completion
+                    .as_ref()
+                    .unwrap()
+                    .forecast
+                    .as_ref()
+                    .ok_or("missing publication influence proof")?
+                    .ready_tables()
+            } else {
+                self.graph.completion_ready_tables()
+            };
             (Some(ready), checks)
         } else {
             (None, 0)

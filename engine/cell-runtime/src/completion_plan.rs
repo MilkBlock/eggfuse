@@ -2,7 +2,8 @@
 //! congruence can union its result sort, which can change any table containing
 //! that sort. Transitive reachability includes arbitrarily long repair chains.
 //! Opaque merge programs and unclassified containers retain a global boundary.
-use crate::program::{Call, Op, Program, Result};
+use crate::program::{Arg, Call, Op, Program, Result};
+use crate::value::Value;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -22,11 +23,16 @@ pub struct Plan {
     source: String,
     #[serde(skip)]
     affects: Vec<Vec<u64>>,
+    #[serde(skip)]
+    global_effects: Vec<bool>,
     pub opaque_tables: Vec<usize>,
     /// Only pure constructor completion may cross source Run boundaries.
     /// Mutable merges can allocate nodes or have source-ordered effects.
     pub deferrable: Vec<bool>,
     pub rulesets: BTreeMap<String, Scope>,
+    /// Direct table observations/effects, for a proved concrete port influence.
+    /// An empty list observes nothing; unknown implicit effects demand all.
+    pub port_demands: BTreeMap<String, Vec<usize>>,
 }
 fn eq_sorts(schema: &[serde_json::Value]) -> (BTreeSet<String>, bool) {
     let mut names = BTreeSet::new();
@@ -116,6 +122,15 @@ impl Plan {
         }
         let mut plan = Self {
             source,
+            global_effects: affects
+                .iter()
+                .map(|row| {
+                    row.iter()
+                        .map(|word| word.count_ones() as usize)
+                        .sum::<usize>()
+                        == n
+                })
+                .collect(),
             affects,
             opaque_tables,
             deferrable: p
@@ -125,6 +140,7 @@ impl Plan {
                 .map(|(i, t)| t.constructor && t.virtual_fact && !sorts[i].1)
                 .collect(),
             rulesets: BTreeMap::new(),
+            port_demands: BTreeMap::new(),
         };
         // If completion can reach an ordered mutable effect, retain its source
         // barrier. Deferring only the first constructor would hide that effect.
@@ -136,15 +152,49 @@ impl Plan {
         }
         for (name, rules) in &p.sets {
             let mut tables = BTreeSet::new();
+            let mut implicit = false;
+            let mut union_sorts = BTreeSet::new();
             for &rid in rules {
                 let rule = &p.rules[rid];
                 let template = &p.templates[rule.template];
                 for atom in rule.query.iter() {
+                    implicit |= atom.args.iter().any(opaque_literal);
                     if let Call::Table(t) = atom.call {
                         tables.insert(t);
                     }
                 }
                 for op in template.ops.iter() {
+                    // A source union can enter a pending region through the
+                    // result of an otherwise unrelated constructor. Its future
+                    // write influence must complete before matching this Run.
+                    match op {
+                        Op::Union(a, b) => {
+                            for arg in [a, b] {
+                                if let Arg::Slot(slot) = arg {
+                                    let (sorts, unknown) =
+                                        eq_sorts(std::slice::from_ref(&template.sorts[*slot]));
+                                    union_sorts.extend(sorts);
+                                    implicit |= unknown;
+                                }
+                            }
+                        }
+                        Op::Set(t, _, _) if p.tables[*t].constructor => {
+                            let (sorts, unknown) =
+                                eq_sorts(&p.tables[*t].schema[p.tables[*t].schema.len() - 1..]);
+                            union_sorts.extend(sorts);
+                            implicit |= unknown;
+                        }
+                        _ => (),
+                    }
+                    implicit |= match op {
+                        Op::Copy(_, a) => opaque_literal(a),
+                        Op::Let(_, _, args) | Op::Hide(_, args, _) => {
+                            args.iter().any(opaque_literal)
+                        }
+                        Op::Set(_, args, v) => args.iter().any(opaque_literal) || opaque_literal(v),
+                        Op::Union(a, b) => opaque_literal(a) || opaque_literal(b),
+                        Op::Panic => false,
+                    };
                     match op {
                         Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) | Op::Hide(t, _, _) => {
                             tables.insert(*t);
@@ -155,6 +205,24 @@ impl Plan {
                 // Eq-valued primitive guards also depend on future congruence,
                 // even when a sort does not appear as a separate table atom.
                 let (reads, unknown) = eq_sorts(&template.sorts);
+                implicit |= unknown;
+                // Capture direct tables separately before adding all same-sort
+                // observations to the older type-only footprint below.
+                let direct = plan.port_demands.entry(name.clone()).or_default();
+                for atom in rule.query.iter() {
+                    if let Call::Table(t) = atom.call {
+                        direct.push(t);
+                    }
+                }
+                for op in template.ops.iter() {
+                    match op {
+                        Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) | Op::Hide(t, _, _) => {
+                            direct.push(*t);
+                            implicit |= plan.opaque_tables.contains(t);
+                        }
+                        _ => (),
+                    }
+                }
                 for (t, (names, opaque)) in sorts.iter().enumerate() {
                     if unknown || *opaque || !reads.is_disjoint(names) {
                         tables.insert(t);
@@ -165,6 +233,21 @@ impl Plan {
                 name.clone(),
                 plan.scope(&tables.into_iter().collect::<Vec<_>>())?,
             );
+            let direct = plan.port_demands.entry(name.clone()).or_default();
+            for (t, (names, unknown)) in sorts.iter().enumerate() {
+                if !union_sorts.is_empty() && (*unknown || !names.is_disjoint(&union_sorts)) {
+                    for other in 0..n {
+                        if plan.affects[t][other / 64] & (1 << (other % 64)) != 0 {
+                            direct.push(other);
+                        }
+                    }
+                }
+            }
+            if implicit {
+                *direct = (0..n).collect();
+            }
+            direct.sort_unstable();
+            direct.dedup();
         }
         Ok(plan)
     }
@@ -191,10 +274,17 @@ impl Plan {
     pub fn affects(&self, from: usize, to: usize) -> bool {
         self.affects[from][to / 64] & (1 << (to % 64)) != 0
     }
+    pub(crate) fn global_effects(&self, table: usize) -> bool {
+        self.global_effects[table]
+    }
     pub fn report(&self) -> serde_json::Value {
         serde_json::json!({"tables":self.affects.len(), "opaque_tables":self.opaque_tables,
             "dependency_edges":self.affects.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
             "deferrable_tables":self.deferrable.iter().filter(|&&v|v).count(),
             "scope":"typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring"})
     }
+}
+
+fn opaque_literal(a: &Arg) -> bool {
+    matches!(a, Arg::Literal(Value::Eq(_) | Value::Set(_)))
 }

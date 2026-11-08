@@ -11,12 +11,16 @@ pub(in crate::graph) struct Counts {
     pub legacy_frontier_probes: u64,
     pub bypassed_tasks: u64,
     pub opaque_full_completions: u64,
+    pub cause_probes: u64,
+    pub cause_comparisons: u64,
+    pub cause_growths: u64,
 }
 pub(in crate::graph) struct Pending {
     flat: Option<BTreeSet<FactRef>>,
     tables: Vec<BTreeSet<FactRef>>,
     heads: BTreeSet<(FactRef, usize)>,
     epochs: Vec<Option<u64>>,
+    causes: Option<Vec<smallvec::SmallVec<[u64; 2]>>>,
     len: usize,
     pub counts: Counts,
 }
@@ -27,6 +31,7 @@ impl Default for Pending {
             tables: vec![],
             heads: BTreeSet::new(),
             epochs: vec![],
+            causes: None,
             len: 0,
             counts: Counts::default(),
         }
@@ -42,6 +47,28 @@ impl Pending {
             self.tables = vec![BTreeSet::new(); n];
             self.epochs = vec![None; n];
         }
+    }
+    pub fn enable_causes(&mut self) {
+        assert!(self.scoped() && self.is_empty());
+        self.causes = Some(vec![smallvec::SmallVec::new(); self.tables.len()]);
+    }
+    pub fn cause(&mut self, table: usize, root: u64) {
+        if let Some(causes) = &mut self.causes {
+            self.counts.cause_probes += 1;
+            if !causes[table].iter().any(|&old| {
+                self.counts.cause_comparisons += 1;
+                old == root
+            }) {
+                let before = causes[table].capacity();
+                causes[table].push(root);
+                self.counts.cause_growths += u64::from(before != causes[table].capacity());
+            }
+        }
+    }
+    pub fn causes(&self, table: usize) -> &[u64] {
+        self.causes
+            .as_ref()
+            .map_or(&[], |causes| causes[table].as_slice())
     }
     pub fn scoped(&self) -> bool {
         self.flat.is_none()
@@ -70,6 +97,9 @@ impl Pending {
         }
         if after.is_none() {
             self.epochs[table] = None;
+            if let Some(causes) = &mut self.causes {
+                causes[table].clear();
+            }
         }
     }
     pub fn insert(&mut self, table: usize, f: FactRef, epoch: u64) -> bool {
