@@ -2412,7 +2412,6 @@ impl Graph {
             s.epoch = self.epoch;
             if self.cells[&f.cell].facts[&f.op].owned {
                 self.query_versions[r.table]+=1;
-                self.owned_refreshed(f,&r.values);
             } else { self.subscribe(r.table, d, &r.values); }
             self.changes.touch(r.table, d);
         }
@@ -2450,7 +2449,7 @@ impl Graph {
                     local_completion = self.finish_local_completion(local_completion, true)?;
                     continue;
                 }
-                self.settle_owned_boundaries()?;
+                self.settle_owned_lifetimes()?;
                 break;
             };
             if let Dependency::Fact(f) = d {

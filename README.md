@@ -81,6 +81,12 @@ internal ownership across stages, and reports coverage and remaining maintenance
 All eligible live scalar bodies are covered, but the final CPU campaign regresses
 25.7% / 52.6% on sum-bits / Raytrace: coarse owner traversal remains too expensive.
 
+[Shared symbolic repair slices](benchmarks/ownership-slices/README.md) replace
+that owner traversal with compiled port programs and incremental boundary bindings.
+The sum-bits audit reduces port checks from 306,860 to 2,098 with identical ordered
+effects. Cross-frame bindings remain explicit; this iteration records structural
+evidence without a new timing campaign.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

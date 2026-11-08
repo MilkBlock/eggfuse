@@ -2407,9 +2407,13 @@ impl Executor {
                     )?;
                 }
                 Op::Union(a, b) => {
-                    let a = self.graph.argument(cell, &a)?;
-                    let b = self.graph.argument(cell, &b)?;
-                    self.graph.enqueue_union(a, b)?;
+                    if self.graph.ownership_enabled() {
+                        self.graph.enqueue_marker_union(cell, i)?;
+                    } else {
+                        let a = self.graph.argument(cell, &a)?;
+                        let b = self.graph.argument(cell, &b)?;
+                        self.graph.enqueue_union(a, b)?;
+                    }
                 }
                 Op::Hide(t, aa, delete) => {
                     let key = self.graph.inline_arguments(cell, aa)?;

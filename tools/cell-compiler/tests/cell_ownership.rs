@@ -202,3 +202,143 @@ fn bake_emits_checked_markers_without_executing_the_program() {
     raw["ownership_markers"]["plan"]["max_continuation_facts"] = json!(1);
     assert!(Program::parse(raw).is_err());
 }
+
+#[test]
+fn unrelated_bodies_do_not_amplify_cross_stage_repair() {
+    let mut reference = None;
+    let mut evidence = Vec::new();
+    for noise in [0, 32, 300] {
+        let extras = (0..noise)
+            .map(|i| format!("(Noise {i}) "))
+            .collect::<String>();
+        let src = format!(
+            r#"
+(datatype E (N i64) (F E) (G E) (H E) (Noise i64))
+(ruleset a) (ruleset b) (ruleset merge)
+(rule ((= x (N 0)) (= y (N 1))) ((G (F x)) (G (F y)) {extras}) :ruleset a)
+(rule ((= z (G x))) ((H z)) :ruleset b)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run a) (run b) (run merge)))
+(check (= (H (G (F (N 0)))) (H (G (F (N 1))))))
+"#
+        );
+        let e = compare(&src);
+        let report = e.graph.ownership_report();
+        let stats = &report["stats"];
+        let work = [
+            "port_checks",
+            "changed_ports",
+            "body_visits",
+            "slice_steps",
+            "signal_activations",
+        ]
+        .map(|k| stats[k].as_u64().unwrap());
+        if let Some(expected) = reference {
+            assert_eq!(work, expected, "noise={noise}");
+        } else {
+            reference = Some(work);
+        }
+        assert_eq!(stats["port_checks"], stats["changed_ports"]);
+        assert_eq!(stats["boundary_body_reads"], 0);
+        assert_eq!(stats["boundary_rebuilds"], 0);
+        assert!(stats["marker_union_requests"].as_u64().unwrap() > 0);
+        if noise == 0 {
+            assert!(stats["cross_stage_continuations"].as_u64().unwrap() > 0);
+        }
+        evidence
+            .push(json!({"unrelated_bodies":noise,"inventory":report["inventory"],"stats":stats}));
+    }
+    println!(
+        "SLICE_EVIDENCE {}",
+        json!({"scope":"standalone Cell CPU; structural regression fixture, not timing", "cases":evidence})
+    );
+}
+
+#[test]
+fn future_union_after_failed_delete_never_activates_a_marker() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (F E) (G E))
+(ruleset make)
+(rule ((= x (N 0)) (= y (N 1)))
+      ((G x) (G y) (delete (F x)) (union x y)) :ruleset make)
+(N 0) (N 1)
+(run-schedule (run make))
+"#,
+    );
+    let r = e.graph.ownership_report();
+    assert_eq!(r["stats"]["marker_union_requests"], 0);
+    assert_eq!(r["stats"]["signal_activations"], 0);
+    assert_eq!(e.graph.stats.unions, 0);
+}
+
+#[test]
+fn shared_symbol_program_survives_origin_deletion_and_repeated_aliases() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (F E) (G E) (H E) (Pair E E))
+(ruleset make) (ruleset erase) (ruleset merge) (ruleset again) (ruleset read)
+(rule ((= x (N 0))) ((G (F x)) (Pair (F x) (F x))) :ruleset make)
+(rule ((= x (N 0))) ((delete (F x))) :ruleset erase)
+(rule ((= z (G x)) (= y (N 1))) ((union x y)) :ruleset merge)
+(rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset again)
+(rule ((= z (G x)) (= q (Pair x x))) ((H q)) :ruleset read)
+(N 0) (N 1) (N 2)
+(run-schedule (seq (run make) (run erase) (run merge) (run again) (run read)))
+"#,
+    );
+    let r = e.graph.ownership_report();
+    assert_eq!(r["stats"]["unchanged_port_checks"], 0);
+    assert_eq!(r["stats"]["boundary_body_reads"], 0);
+    assert!(r["stats"]["changed_ports"].as_u64().unwrap() > 0);
+}
+
+#[test]
+fn symbolic_program_is_shared_and_untrusted_artifacts_are_rechecked() {
+    let p = program(STAGES);
+    let mut raw = p.artifact.clone();
+    let marker = p
+        .cell_ownership
+        .markers
+        .iter()
+        .position(|m| !m.program.signals.is_empty())
+        .unwrap();
+    raw["ownership_markers"] = p.cell_ownership.artifact(&p);
+    raw["ownership_markers"]["plan"]["markers"][marker]["program"]["signals"][0][0]["columns"] =
+        json!([999]);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let err = Program::parse(raw).unwrap_err();
+    assert!(err.contains("ownership marker"), "{err}");
+    // Import constructors with the same field structure share the actual
+    // immutable program allocation, not a per-instance copy of destinations.
+    let mut shared = false;
+    for (i, a) in p.cell_ownership.markers.iter().enumerate() {
+        for b in &p.cell_ownership.markers[i + 1..] {
+            if !a.program.signals.is_empty() && a.program == b.program {
+                assert!(std::rc::Rc::ptr_eq(&a.program, &b.program));
+                shared = true;
+            }
+        }
+    }
+    assert!(shared);
+}
+
+#[test]
+fn deletion_and_recreation_do_not_collapse_distinct_result_signals() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(ruleset make) (ruleset merge)
+(rule ((= x (N 0)))
+      ((let a (F x)) (G a) (delete (F x)) (let b (F x)) (H b)) :ruleset make)
+(rule ((= g (G a)) (= h (H b))) ((union a b)) :ruleset merge)
+(N 0)
+(run-schedule (seq (run make) (run merge)))
+"#,
+    );
+    let r = e.graph.ownership_report();
+    assert_eq!(r["stats"]["unchanged_port_checks"], 0);
+    assert_eq!(r["stats"]["boundary_body_reads"], 0);
+}

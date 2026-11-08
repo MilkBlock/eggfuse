@@ -61,7 +61,9 @@ impl Work {
         }
         for field in ["marker_entries","marker_anchor_reads","boundary_insert_attempts","boundary_probes",
             "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
-            "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows"] {
+            "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows",
+            "signal_binding_reads","signal_bindings_created","signal_bindings_retired","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
+            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_signal_visits","domain_slice_steps"] {
             let key=format!("cell_ownership/stats/{field}");
             let value=if report["cell_ownership"]["enabled"]==false {0} else {
                 report["cell_ownership"]["stats"][field].as_u64().ok_or_else(||format!("missing ownership work {field}"))?

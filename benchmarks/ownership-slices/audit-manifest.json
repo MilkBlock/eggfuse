@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "control": {
+      "program": "out/producer-receipts/learn-sum-bits/program.json",
+      "args": ["--repair-ports", "--entry-publications"]
+    },
+    "slices": {
+      "program": "out/ownership-slices/baked-sum-final/program.json",
+      "args": ["--cell-ownership"]
+    }
+  }
+}

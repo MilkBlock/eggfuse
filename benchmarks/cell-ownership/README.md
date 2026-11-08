@@ -4,6 +4,11 @@ This extends `8fffff65` in the standalone Cell CPU runtime. Native egglog is a
 semantic oracle in the focused tests. The application results do not measure
 native egglog. The 208/316-unit source catalogs are kept frozen.
 
+This is the retained owner-scan experiment at `ee259fd2`. The subsequent
+[symbolic-slice implementation](../ownership-slices/README.md) changes propagation
+and boundary units; its evidence is recorded separately. Reproduce the tables
+below from revision `ee259fd2`.
+
 ## Compiler, entry and lifetime
 
 `bake-cell-ownership` emits typed ownership markers without executing the input

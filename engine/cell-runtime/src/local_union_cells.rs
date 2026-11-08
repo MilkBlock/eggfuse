@@ -17,23 +17,23 @@ struct TemplatePlan {
     obligations: BTreeMap<usize, Vec<(Arg, Arg)>>,
 }
 #[derive(Default)]
-struct Symbols {
-    parents: Vec<usize>,
+pub(super) struct Symbols {
+    pub(super) parents: Vec<usize>,
     literals: BTreeMap<Value, usize>,
 }
 impl Symbols {
-    fn root(&self, mut i: usize) -> usize {
+    pub(super) fn root(&self, mut i: usize) -> usize {
         while self.parents[i] != i {
             i = self.parents[i];
         }
         i
     }
-    fn union(&mut self, a: usize, b: usize) -> bool {
+    pub(super) fn union(&mut self, a: usize, b: usize) -> bool {
         let (a, b) = (self.root(a), self.root(b));
         self.parents[a.max(b)] = a.min(b);
         a != b
     }
-    fn arg(&mut self, a: &Arg) -> usize {
+    pub(super) fn arg(&mut self, a: &Arg) -> usize {
         match a {
             Arg::Slot(i) => *i,
             Arg::Literal(v) => *self.literals.entry(v.clone()).or_insert_with(|| {
@@ -43,7 +43,7 @@ impl Symbols {
             }),
         }
     }
-    fn close(&mut self, facts: &[(usize, usize, Vec<usize>)]) {
+    pub(super) fn close(&mut self, facts: &[(usize, usize, Vec<usize>)]) {
         loop {
             let mut keys = BTreeMap::new();
             let mut changed = false;
