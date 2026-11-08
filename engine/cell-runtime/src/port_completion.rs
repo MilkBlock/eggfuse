@@ -11,6 +11,7 @@ pub(crate) struct Counts {
     groups: u64,
     pure_groups: u64,
     seed_roots: u64,
+    seed_candidates: u64,
     root_visits: u64,
     signal_visits: u64,
     static_steps: u64,
@@ -32,6 +33,7 @@ pub(crate) struct Counts {
 struct Influence {
     table: usize,
     tables: Vec<bool>,
+    reads: Vec<usize>,
     pure: bool,
     global: bool,
 }
@@ -45,6 +47,8 @@ impl Forecast {
     pub(crate) fn select(&self, demand: &[usize], eager: bool) -> (Vec<bool>, u64) {
         let mut selected = vec![false; self.tables];
         let mut chosen = vec![false; self.groups.len()];
+        let mut required = smallvec::SmallVec::<[usize; 8]>::new();
+        let mut read = vec![false; self.tables];
         let mut checks = 0;
         loop {
             let mut progress = false;
@@ -55,7 +59,7 @@ impl Forecast {
                 }
                 let needed = (eager && !group.pure)
                     || selected[group.table]
-                    || demand.iter().any(|&t| {
+                    || demand.iter().chain(required.iter()).any(|&t| {
                         checks += 1;
                         group.tables[t]
                     });
@@ -68,6 +72,13 @@ impl Forecast {
                     for (out, &input) in selected.iter_mut().zip(&group.tables) {
                         checks += 1;
                         *out |= input;
+                    }
+                    for &table in &group.reads {
+                        checks += 1;
+                        if !read[table] {
+                            read[table] = true;
+                            required.push(table);
+                        }
                     }
                     progress = true;
                 }
@@ -93,9 +104,17 @@ impl Forecast {
         self.groups.iter().any(|g| !g.pure)
     }
     pub(crate) fn ready(&self, demand: &[usize]) -> bool {
-        self.groups
-            .iter()
-            .all(|g| demand.iter().all(|&t| !g.tables[t]))
+        self.readiness(demand).0
+    }
+    pub(crate) fn readiness(&self, demand: &[usize]) -> (bool, u64) {
+        let mut checks = 0;
+        let ready = self.groups.iter().all(|g| {
+            demand.iter().all(|&t| {
+                checks += 1;
+                !g.tables[t]
+            })
+        });
+        (ready, checks)
     }
 }
 impl Graph {
@@ -121,6 +140,7 @@ impl Graph {
             tables: (0..self.program.tables.len())
                 .map(|t| plan.affects(table, t))
                 .collect(),
+            reads: plan.completion_reads[table].clone(),
             pure: plan.deferrable[table],
             global: plan.global_effects(table),
         }
@@ -135,19 +155,84 @@ impl Graph {
         let mut influence = Influence {
             table,
             tables: vec![false; self.program.tables.len()],
+            reads: Vec::new(),
             pure: true,
             global: false,
         };
         influence.tables[table] = true;
         counts.scratch_growths += 1;
         let mut roots = smallvec::SmallVec::<[u64; 16]>::new();
+        let mut causes = smallvec::SmallVec::<[u64; 16]>::new();
         let mut seen = FxHashSet::default();
         for &seed in seeds {
             counts.seed_roots += 1;
-            offer(root(&self.parents, seed), &mut roots, &mut seen, counts);
+            offer(root(&self.parents, seed), &mut causes, &mut seen, counts);
         }
+        seen.clear();
         let plan = &self.program.cell_ownership.composition;
         let before = visits(counts);
+        // The input union has already notified every current user. This group
+        // owns only future equalities produced by its table's pending keys.
+        // Every possible collision peer shares a changed key port with one of
+        // those keys, so the existing complete signal domain covers both result
+        // endpoints without pulling sibling constructors into this group.
+        for cause in causes {
+            if visits(counts) - before >= MAX_VISITS {
+                counts.typed_fallbacks += 1;
+                return Ok(self.typed_influence(table));
+            }
+            counts.root_visits += 1;
+            for signal in runtime
+                .boundaries
+                .get(&cause)
+                .into_iter()
+                .flat_map(|s| s.iter().copied())
+                .chain(self.native_signal(cause))
+            {
+                if visits(counts) - before >= MAX_VISITS {
+                    counts.typed_fallbacks += 1;
+                    return Ok(self.typed_influence(table));
+                }
+                counts.signal_visits += 1;
+                let component = runtime.composition.components[signal.component as usize]
+                    .as_ref()
+                    .ok_or("expired seed component")?;
+                let Some(code) = plan.effects.get(component.shape) else {
+                    counts.typed_fallbacks += 1;
+                    return Ok(self.typed_influence(table));
+                };
+                for step in &code.signals[signal.symbol] {
+                    if visits(counts) - before >= MAX_VISITS {
+                        counts.typed_fallbacks += 1;
+                        return Ok(self.typed_influence(table));
+                    }
+                    counts.static_steps += 1;
+                    let Some(output) = step.output else { continue };
+                    let fact = FactRef {
+                        cell: component.frames[step.frame],
+                        op: step.op,
+                    };
+                    let Some(state) = self
+                        .cells
+                        .get(&fact.cell)
+                        .and_then(|c| c.facts.get(&fact.op))
+                        .filter(|s| s.owned)
+                    else {
+                        counts.inactive_steps += 1;
+                        continue;
+                    };
+                    let stored = state.ports.as_ref().ok_or("seed requires stable fields")?;
+                    if stored.table != table {
+                        continue;
+                    }
+                    counts.seed_candidates += 1;
+                    counts.output_reads += 1;
+                    let value =
+                        component.signals[output].ok_or("live seed lacks output binding")?;
+                    offer(root(&self.parents, value), &mut roots, &mut seen, counts);
+                }
+            }
+        }
         let mut boundary_tables = BTreeSet::new();
         let mut next = 0;
         while next < roots.len() {
@@ -179,6 +264,7 @@ impl Graph {
                     if !boundary_tables.insert(t) {
                         continue;
                     }
+                    influence.reads.extend(&types.completion_reads[t]);
                     for (other, affected) in influence.tables.iter_mut().enumerate() {
                         counts.membership_checks += 1;
                         *affected |= types.affects(t, other);
@@ -242,6 +328,8 @@ impl Graph {
                 }
             }
         }
+        influence.reads.sort_unstable();
+        influence.reads.dedup();
         Ok(influence)
     }
     pub(crate) fn forecast_port_completion(&mut self) -> Result<Forecast> {
@@ -276,6 +364,7 @@ impl Graph {
                 groups.push(Influence {
                     table,
                     tables: vec![true; self.program.tables.len()],
+                    reads: Vec::new(),
                     pure: false,
                     global: true,
                 });
@@ -380,4 +469,35 @@ fn offer(
 
 fn visits(counts: &Counts) -> u64 {
     counts.root_visits + counts.signal_visits + counts.static_steps + counts.legacy_boundaries
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_ordered_reader_selects_a_pure_producer_without_claiming_to_write_its_table() {
+        let forecast = Forecast {
+            tables: 3,
+            groups: vec![
+                Influence {
+                    table: 0,
+                    tables: vec![true, false, true],
+                    reads: vec![],
+                    pure: true,
+                    global: false,
+                },
+                Influence {
+                    table: 1,
+                    tables: vec![false, true, false],
+                    reads: vec![2],
+                    pure: false,
+                    global: false,
+                },
+            ],
+        };
+        assert!(!forecast.groups[1].tables[2]);
+        let (allowed, _) = forecast.select(&[], true);
+        assert_eq!(allowed, vec![true, true, true]);
+    }
 }

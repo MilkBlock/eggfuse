@@ -1,0 +1,145 @@
+{
+  "scope": "standalone single-thread Cell CPU; ordered merge creates a constructor while another region remains pending",
+  "checkpoint": {
+    "executor": {
+      "enabled": true,
+      "stats": {
+        "ruleset_waits": 2,
+        "already_ready_waits": 1,
+        "eager_waits": 0,
+        "global_observation_fences": 0,
+        "compiler_full_completion_runs": 0,
+        "runs_with_unrelated_pending": 1,
+        "executed_bindings_while_pending": 1,
+        "partial_publications": 2,
+        "published_tables_while_pending": 5,
+        "readiness_dependency_checks": 18,
+        "publication_table_checks": 9,
+        "unchanged_influence_reuses": 0,
+        "port_access_waits": 0,
+        "union_effect_waits": 0,
+        "deferred_rows_carried": 8,
+        "peak_retained_changes": 4,
+        "peak_retained_anchors": 2,
+        "peak_retained_contexts": 1,
+        "peak_retained_forwards": 1
+      },
+      "compiler_admits_deferral": true,
+      "port_scopes": true,
+      "global_observer": false,
+      "pending_anchors": 2,
+      "retained_contexts": 1,
+      "retained_forwards": 1,
+      "unpublished_changes": 4,
+      "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers"
+    },
+    "graph": {
+      "enabled": true,
+      "plan": {
+        "tables": 9,
+        "opaque_tables": [],
+        "dependency_edges": 33,
+        "wait_edges": 41,
+        "merge_read_edges": 1,
+        "merge_birth_edges": 1,
+        "merges": [
+          {
+            "table": 8,
+            "reads": [
+              7
+            ],
+            "births": [
+              7
+            ],
+            "opaque": false
+          }
+        ],
+        "deferrable_tables": 4,
+        "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring"
+      },
+      "stats": {
+        "scope_requests": 0,
+        "head_probes": 2,
+        "head_updates": 1,
+        "legacy_frontier_probes": 1,
+        "bypassed_tasks": 0,
+        "opaque_full_completions": 0,
+        "cause_probes": 1,
+        "cause_comparisons": 0,
+        "cause_growths": 0
+      },
+      "pending_tasks": 1,
+      "pending_owned_tables": [
+        0
+      ],
+      "scope": "compiler-scoped Graph completion; Executor mode reported separately"
+    },
+    "ports": {
+      "enabled": true,
+      "stats": {
+        "forecasts": 3,
+        "groups": 4,
+        "pure_groups": 3,
+        "seed_roots": 3,
+        "seed_candidates": 6,
+        "root_visits": 15,
+        "signal_visits": 24,
+        "static_steps": 30,
+        "inactive_steps": 0,
+        "output_reads": 12,
+        "legacy_boundaries": 0,
+        "typed_fallbacks": 0,
+        "pending_global_shortcuts": 0,
+        "boundary_global_shortcuts": 0,
+        "forest_global_shortcuts": 0,
+        "global_boundaries_by_table": {},
+        "pending_global_by_table": {},
+        "peak_group_visits": 23,
+        "membership_checks": 35,
+        "scratch_growths": 9,
+        "scope_completions": 1,
+        "bypassed_tasks": 1
+      },
+      "shared_plans": 6,
+      "shared_steps": 16,
+      "visit_budget_per_group": 4096,
+      "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups"
+    },
+    "smaller_facts": 1,
+    "seen_c_facts": 1
+  },
+  "final_executor": {
+    "enabled": true,
+    "stats": {
+      "ruleset_waits": 3,
+      "already_ready_waits": 1,
+      "eager_waits": 0,
+      "global_observation_fences": 0,
+      "compiler_full_completion_runs": 0,
+      "runs_with_unrelated_pending": 1,
+      "executed_bindings_while_pending": 1,
+      "partial_publications": 2,
+      "published_tables_while_pending": 5,
+      "readiness_dependency_checks": 19,
+      "publication_table_checks": 9,
+      "unchanged_influence_reuses": 0,
+      "port_access_waits": 1,
+      "union_effect_waits": 0,
+      "deferred_rows_carried": 8,
+      "peak_retained_changes": 4,
+      "peak_retained_anchors": 2,
+      "peak_retained_contexts": 1,
+      "peak_retained_forwards": 1
+    },
+    "compiler_admits_deferral": true,
+    "port_scopes": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "unpublished_changes": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers"
+  },
+  "exact_final_state_and_ordered_bindings": true,
+  "parallel_or_timing_claim": false
+}

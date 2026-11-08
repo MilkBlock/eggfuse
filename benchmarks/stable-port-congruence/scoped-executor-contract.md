@@ -48,12 +48,31 @@ It adds no per-producer consumer list. It remains table-granular and single
 threaded. Sum-bits admits zero useful cross-Run progress in this experiment;
 its added proof cost is retained as negative evidence in `port-scopes-audit.json`.
 
-The sum-bits proof is too coarse: 401 tables, 99,201 potential dependency edges,
+The initial sum-bits proof was too coarse: 401 tables, 99,201 potential dependency edges,
 zero deferrable tables. Six opaque entries are one `set<Expr>` constructor and
 five merges calling `Smaller`, `IVTMin`, `bound-min` or `bound-max`. This evidence
 rejects treating table/type scopes as the final locality model. The compiler
 already exposes the container element sort and merge programs; use those facts,
 then refine unresolved dependencies to bound Cell ports and explicit boundaries.
+
+The checked merge-footprint refinement now removes those six opaque entries.
+It separates future equality tasks from constructor births, and read prerequisites
+from mutation effects. Source Set and incoming union fences include hidden merge
+reads. Concrete groups seed future result equalities from operator-filtered
+shared input domains, including nonpending collision peers, rather than
+replaying every effect of the input union already committed. Shared changed
+inputs can therefore feed independently completed regions in the fixtures.
+
+Sum-bits still has zero useful cross-Run progress: ten partial publications are
+followed by ten access-footprint waits, with zero waits caused solely by union
+expansion. Its scope analysis is more expensive than the previous global-boundary
+shortcut. The next required proof must refine the ruleset's aggregate LHS/RHS
+accesses to the actual bound work. Query readiness must precede dirty-reader
+selection and snapshot matching; only then can empty/unexecuted RHSs be removed
+from effect demands. Completing deferred work after matching is admissible only
+when that work cannot invalidate any query binding, guard, watermark or snapshot.
+This is not yet implemented. Same-table regional ownership, concurrent workers
+and full-cost admission remain open.
 
 ## Executor contract (implemented for conservative table scopes)
 

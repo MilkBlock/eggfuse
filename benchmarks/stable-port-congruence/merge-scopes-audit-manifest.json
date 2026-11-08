@@ -1,0 +1,12 @@
+{
+  "sum-bits": {
+    "local_congruence": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--local-congruence"]
+    },
+    "merge_scopes": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--port-scopes"]
+    }
+  }
+}

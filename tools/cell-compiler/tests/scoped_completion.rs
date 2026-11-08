@@ -156,7 +156,7 @@ fn mutable_merge_effects_and_foreign_scopes_cannot_bypass_completion() {
 }
 
 #[test]
-fn opaque_merge_requires_full_completion_only_when_pending() {
+fn checked_merge_reads_complete_their_scope_without_a_global_barrier() {
     let p = program(
         r#"
 (datatype A (Na i64) (Fa A))
@@ -173,7 +173,8 @@ fn opaque_merge_requires_full_completion_only_when_pending() {
     let f = table(&p, "Fa");
     let callback = table(&p, "callback");
     let plan = Plan::derive(&p).unwrap();
-    assert!(plan.opaque_tables.contains(&callback));
+    assert!(!plan.opaque_tables.contains(&callback));
+    assert!(plan.merges[callback].reads.contains(&table(&p, "port")));
     assert!(
         !plan.affects(f, callback),
         "a dormant merge is not an alias between sorts"
@@ -187,18 +188,18 @@ fn opaque_merge_requires_full_completion_only_when_pending() {
     scoped.commit_scoped_unions().unwrap();
     let scope = scoped.completion_scope(&[callback]).unwrap();
     scoped.complete_scope(&scope).unwrap();
-    assert!(
-        scoped.scoped_completion_report()["stats"]["opaque_full_completions"]
-            .as_u64()
-            .unwrap()
-            > 0
+    assert_eq!(
+        scoped.scoped_completion_report()["stats"]["opaque_full_completions"],
+        0
     );
-    assert_eq!(scoped.pending_completion_tasks(), 0);
+    assert!(scoped.pending_completion_tasks() > 0);
+    assert_eq!(scoped.witness_count(f), 2);
     let nb = table(&scoped.program, "Nb");
     assert_eq!(
         value(&scoped, callback, &[value(&scoped, nb, &[Value::Int(0)])]),
         Value::Int(7)
     );
+    scoped.repair().unwrap();
     control.collect_garbage();
     scoped.collect_garbage();
     assert_eq!(control.export().unwrap(), scoped.export().unwrap());

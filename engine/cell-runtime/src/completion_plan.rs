@@ -1,11 +1,13 @@
 //! Conservative compiler proof of completion dependencies. A source table's
 //! congruence can union its result sort, which can change any table containing
 //! that sort. Transitive reachability includes arbitrarily long repair chains.
-//! Opaque merge programs and unclassified containers retain a global boundary.
+//! Checked merge reads and constructor births are separate obligations.
 use crate::program::{Arg, Call, Op, Program, Result};
 use crate::value::Value;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
+#[path = "completion_effects.rs"]
+mod effects;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Scope {
@@ -24,6 +26,11 @@ pub struct Plan {
     #[serde(skip)]
     affects: Vec<Vec<u64>>,
     #[serde(skip)]
+    waits: Vec<Vec<u64>>,
+    /// Tables that completion may read, including merges reached by its effects.
+    pub completion_reads: Vec<Vec<usize>>,
+    pub merges: Vec<effects::Merge>,
+    #[serde(skip)]
     global_effects: Vec<bool>,
     pub opaque_tables: Vec<usize>,
     /// Only pure constructor completion may cross source Run boundaries.
@@ -33,6 +40,9 @@ pub struct Plan {
     /// Direct table observations/effects, for a proved concrete port influence.
     /// An empty list observes nothing; unknown implicit effects demand all.
     pub port_demands: BTreeMap<String, Vec<usize>>,
+    /// Access footprint before conservative incoming-union expansion. Retained
+    /// to distinguish a real table-access wait from a potential write fence.
+    pub port_accesses: BTreeMap<String, Vec<usize>>,
 }
 fn eq_sorts(schema: &[serde_json::Value]) -> (BTreeSet<String>, bool) {
     let mut names = BTreeSet::new();
@@ -46,19 +56,15 @@ fn eq_sorts(schema: &[serde_json::Value]) -> (BTreeSet<String>, bool) {
                 None => unknown = true,
             },
             Some("i64" | "f64" | "String" | "bool" | "Unit" | "structural_key") => (),
+            Some("set") => {
+                let (elements, opaque) = eq_sorts(std::slice::from_ref(&sort["element"]));
+                names.extend(elements);
+                unknown |= opaque;
+            }
             _ => unknown = true,
         }
     }
     (names, unknown)
-}
-fn table_call(value: &serde_json::Value) -> bool {
-    match value {
-        serde_json::Value::Object(obj) => {
-            value["call"]["table"].is_string() || obj.values().any(table_call)
-        }
-        serde_json::Value::Array(xs) => xs.iter().any(table_call),
-        _ => false,
-    }
 }
 impl Plan {
     pub fn derive(p: &Program) -> Result<Self> {
@@ -72,11 +78,14 @@ impl Plan {
             .iter()
             .map(|t| eq_sorts(&t.schema))
             .collect::<Vec<_>>();
+        let merges = (0..n)
+            .map(|t| effects::Merge::derive(p, t))
+            .collect::<Vec<_>>();
         let opaque_tables = p
             .tables
             .iter()
             .enumerate()
-            .filter_map(|(i, t)| (sorts[i].1 || table_call(&t.merge)).then_some(i))
+            .filter_map(|(i, _)| (sorts[i].1 || merges[i].opaque).then_some(i))
             .collect::<Vec<_>>();
         let mut affects = vec![vec![false; n]; n];
         for (i, t) in p.tables.iter().enumerate() {
@@ -110,12 +119,52 @@ impl Plan {
                 bits
             })
             .collect::<Vec<_>>();
-        for k in 0..n {
-            let via = affects[k].clone();
-            for row in &mut affects {
-                if row[k / 64] & (1 << (k % 64)) != 0 {
-                    for (word, &other) in row.iter_mut().zip(&via) {
-                        *word |= other;
+        transitive(&mut affects);
+        // Closing an existing constructor key can publish an equality. A merge
+        // constructing a previously absent key only publishes that table's new
+        // fact; its fresh result is not a union of existing classes. Add birth
+        // writes after equality-task closure so they do not invent that union.
+        let task_effects = affects.clone();
+        let completion_reads = affects
+            .iter()
+            .map(|row| {
+                let mut reads = BTreeSet::new();
+                for (t, merge) in merges.iter().enumerate() {
+                    if row[t / 64] & (1 << (t % 64)) != 0 {
+                        reads.extend(merge.reads.iter().copied());
+                    }
+                }
+                reads.into_iter().collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        for (i, row) in task_effects.iter().enumerate() {
+            for (t, merge) in merges.iter().enumerate() {
+                if row[t / 64] & (1 << (t % 64)) != 0 {
+                    for &birth in &merge.births {
+                        affects[i][birth / 64] |= 1 << (birth % 64);
+                    }
+                }
+            }
+        }
+        // A selected merge must retain the original ordering with every task
+        // that can alter its reads. These edges constrain waiting; reading a
+        // table does not itself mutate that table or enqueue its consumers.
+        let mut read_dependencies = vec![vec![0u64; n.div_ceil(64)]; n];
+        for (from, row) in affects.iter().enumerate() {
+            read_dependencies[from][from / 64] |= 1 << (from % 64);
+            for (to, reads) in completion_reads.iter().enumerate() {
+                if reads.iter().any(|&r| row[r / 64] & (1 << (r % 64)) != 0) {
+                    read_dependencies[from][to / 64] |= 1 << (to % 64);
+                }
+            }
+        }
+        transitive(&mut read_dependencies);
+        let mut waits = vec![vec![0u64; n.div_ceil(64)]; n];
+        for (from, dependencies) in read_dependencies.iter().enumerate() {
+            for (to, effects) in affects.iter().enumerate() {
+                if dependencies[to / 64] & (1 << (to % 64)) != 0 {
+                    for (word, &bits) in waits[from].iter_mut().zip(effects) {
+                        *word |= bits;
                     }
                 }
             }
@@ -132,6 +181,9 @@ impl Plan {
                 })
                 .collect(),
             affects,
+            waits,
+            completion_reads,
+            merges,
             opaque_tables,
             deferrable: p
                 .tables
@@ -141,6 +193,7 @@ impl Plan {
                 .collect(),
             rulesets: BTreeMap::new(),
             port_demands: BTreeMap::new(),
+            port_accesses: BTreeMap::new(),
         };
         // If completion can reach an ordered mutable effect, retain its source
         // barrier. Deferring only the first constructor would hide that effect.
@@ -219,6 +272,17 @@ impl Plan {
                         Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) | Op::Hide(t, _, _) => {
                             direct.push(*t);
                             implicit |= plan.opaque_tables.contains(t);
+                            if matches!(op, Op::Set(..)) {
+                                // Ordered Set may execute a merge. Its hidden
+                                // reads and constructor births are source-Run
+                                // demands too, before matching begins.
+                                direct.extend(&plan.completion_reads[*t]);
+                                for other in 0..n {
+                                    if plan.affects[*t][other / 64] & (1 << (other % 64)) != 0 {
+                                        direct.push(other);
+                                    }
+                                }
+                            }
                         }
                         _ => (),
                     }
@@ -234,8 +298,20 @@ impl Plan {
                 plan.scope(&tables.into_iter().collect::<Vec<_>>())?,
             );
             let direct = plan.port_demands.entry(name.clone()).or_default();
+            let mut accesses = if implicit {
+                (0..n).collect()
+            } else {
+                direct.clone()
+            };
+            accesses.sort_unstable();
+            accesses.dedup();
+            plan.port_accesses.insert(name.clone(), accesses);
             for (t, (names, unknown)) in sorts.iter().enumerate() {
                 if !union_sorts.is_empty() && (*unknown || !names.is_disjoint(&union_sorts)) {
+                    // Incoming equality may invoke an ordered merge before the
+                    // next boundary. Its hidden reads must be ready in the
+                    // source epoch, even when they do not produce any writes.
+                    direct.extend(&plan.completion_reads[t]);
                     for other in 0..n {
                         if plan.affects[t][other / 64] & (1 << (other % 64)) != 0 {
                             direct.push(other);
@@ -259,7 +335,7 @@ impl Plan {
             source: self.source.clone(),
             tables: tables.to_vec(),
             predecessors: self
-                .affects
+                .waits
                 .iter()
                 .map(|row| tables.iter().any(|&t| row[t / 64] & (1 << (t % 64)) != 0))
                 .collect(),
@@ -280,6 +356,10 @@ impl Plan {
     pub fn report(&self) -> serde_json::Value {
         serde_json::json!({"tables":self.affects.len(), "opaque_tables":self.opaque_tables,
             "dependency_edges":self.affects.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
+            "wait_edges":self.waits.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
+            "merge_read_edges":self.merges.iter().map(|m|m.reads.len()).sum::<usize>(),
+            "merge_birth_edges":self.merges.iter().map(|m|m.births.len()).sum::<usize>(),
+            "merges":self.merges.iter().enumerate().filter(|(_,m)|m.opaque||!m.reads.is_empty()).map(|(table,m)|serde_json::json!({"table":table,"reads":m.reads,"births":m.births,"opaque":m.opaque})).collect::<Vec<_>>(),
             "deferrable_tables":self.deferrable.iter().filter(|&&v|v).count(),
             "scope":"typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring"})
     }
@@ -287,4 +367,16 @@ impl Plan {
 
 fn opaque_literal(a: &Arg) -> bool {
     matches!(a, Arg::Literal(Value::Eq(_) | Value::Set(_)))
+}
+fn transitive(rows: &mut [Vec<u64>]) {
+    for k in 0..rows.len() {
+        let via = rows[k].clone();
+        for row in &mut *rows {
+            if row[k / 64] & (1 << (k % 64)) != 0 {
+                for (word, &other) in row.iter_mut().zip(&via) {
+                    *word |= other;
+                }
+            }
+        }
+    }
 }

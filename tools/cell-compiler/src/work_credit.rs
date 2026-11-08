@@ -111,7 +111,7 @@ impl Work {
             } else { 0 };
             work.insert(key,value);
         }
-        for field in ["forecasts", "seed_roots", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths"] {
+        for field in ["forecasts", "seed_roots", "seed_candidates", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths"] {
             let key = format!("port_completion/stats/{field}");
             let value = if report["port_completion"]["enabled"] == true {
                 report["port_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing port completion work {field}"))?

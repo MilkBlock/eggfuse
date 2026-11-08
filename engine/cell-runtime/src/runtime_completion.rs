@@ -21,6 +21,8 @@ pub(super) struct Counts {
     pub readiness_dependency_checks: u64,
     pub publication_table_checks: u64,
     pub unchanged_influence_reuses: u64,
+    pub port_access_waits: u64,
+    pub union_effect_waits: u64,
     pub deferred_rows_carried: u64,
     pub peak_retained_changes: usize,
     pub peak_retained_anchors: usize,
@@ -139,6 +141,14 @@ impl Executor {
             let changed = self.graph.changed;
             let before = self.graph.stats.unions;
             if self.graph.complete_port_selection(&allowed, checks)? {
+                let (access_ready, checks) = forecast.readiness(&plan.port_accesses[set]);
+                let stats = &mut self.completion.as_mut().unwrap().stats;
+                stats.readiness_dependency_checks += checks;
+                if access_ready {
+                    stats.union_effect_waits += 1;
+                } else {
+                    stats.port_access_waits += 1;
+                }
                 let next = self.graph.forecast_port_completion()?;
                 if !next.ready(demand) {
                     return Err("port influence did not close a demanded scope".into());

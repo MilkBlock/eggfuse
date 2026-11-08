@@ -30,7 +30,7 @@ phase does not establish completion of the objective.
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; retention peaks reported; parallel and full-cost admission pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
-| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Shared conditions and influence wiring plus conservative source-union write footprints; precise merge/container effects and bound write scopes pending |
+| Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, recursive container sorts, source-union effects and shared result influence; bound accesses/writes and cheaper proof still pending |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
 boundary aliases, not merely a single-threaded queue. A single global union-find
@@ -485,6 +485,92 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp target/release/eggfuse-cell-runtime out/stable-port-congruence/port-scopes-runtime
 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/port-scopes-runtime benchmarks/stable-port-congruence/port-scopes-audit-manifest.json out/stable-port-congruence/port-scopes-audit
 python3 benchmarks/stable-port-congruence/collect-port-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Checked merge footprints and future result influence
+
+The previous catalog identified `ExtractedExpr` and `hi-bound` as reached global
+boundaries. Their checked merge bytecode is now used to derive separate read and
+constructor-birth footprints. Ordinary function calls read a port; constructor
+calls query a key and may publish a new fact. These reads constrain which pending
+tasks must participate in the original ordered completion pass. They do not
+themselves imply a write to the read table. Missing checked code, unsupported
+instructions and opaque equality literals retain the global fallback.
+
+Equality-task reachability is closed before adding birth writes. Creating a
+fresh constructor result is not an equality between existing results, so a merge
+birth does not automatically propagate a union through every table containing
+that result sort. Read prerequisites are closed separately. Source `set` and
+incoming source unions include the hidden merge reads they may execute, even
+when those reads produce no further writes. The existing ordering and epoch
+gates remain mandatory. Container sort analysis follows the declared element
+sort; the supported `Set<Eq>` no longer makes every table opaque.
+
+Concrete influence also distinguishes the input union already committed from
+the result equalities still to come. For a pending table, the input cause roots
+index the shared signal wiring to find that table's possible collision outputs,
+including peers that are not themselves pending. Only those output roots seed
+the subsequent influence walk. This avoids treating every sibling constructor
+using the already-changed input as part of each pending group's future work.
+Every collision peer shares a changed input port, so the existing complete
+native/boundary domain supplies the candidate coverage. No new per-instance
+consumer index or operator-bucket scan is introduced. Missing code and the
+4,096-visit bound still fall back to the complete typed footprint.
+
+Fixtures verify that an ordered merge can create `Smaller` and a later Run can
+consume it while independent congruence remains pending. A second fixture uses
+the **same changed input** for A and B: B's mutable consumer completes and its
+result is consumed while A stays pending. Other tests cover implicit constructor
+reads, source-set demands, hidden read-only callbacks triggered by source union,
+container equality and missing-code fallback. A selection unit test isolates
+read dependencies from write effects. An exploratory removal of read selection
+did not fail the constructor integration fixture, because its constructor births
+already selected the same chain; that fixture alone is not credited as proving
+the separate read-selection branch. All 261 workspace tests pass (four ignored),
+63 focused fixtures pass in both storage configurations, and the minimal runtime
+compile check passes.
+
+The frozen sum-bits audit retains all 1,428 ordered Run observations and all
+state/RHS/write/resume/Spine digests, also matching the prior binary's hashes.
+Ordinary runtime counters equal the global local-congruence control. Compiler
+effect edges fall from 99,201 to 30,664; the distinct wait relation has 42,294
+edges. The six opaque tables and 38 opaque full completions disappear. There are
+71 statically deferrable tables, but this is a proof classification, not a count
+of tasks that actually run concurrently.
+
+The runtime now performs ten partial publications (25 table batches). It leaves
+90 task occurrences pending across selected completion passes; this counts
+remaining tasks per pass, not unique tasks or eliminated work. **No subsequent
+source Run or binding executes while those tasks remain pending.** All ten
+following waits intersect the ruleset's direct/implicit access footprint;
+zero are caused solely by the additional incoming-union footprint. That access
+footprint still includes every rule's LHS and RHS, including unexecuted RHSs.
+This evidence prioritizes bound access scopes and separating query readiness
+from the effects of actual bindings, rather than removing the union safety gate.
+
+This remains an experimental path, not an admitted speedup. The first attempt
+with precise merge effects still replayed input influence and needed 1,061,534
+membership checks and 230,171 static steps. Restricting the starting points to
+future results reduces these to 677,512 checks and 150,901 steps. However, the
+previous `f8238efd` experiment needed only 251,236 checks and 35,462 steps because
+its coarse global boundaries stopped the proof early. Final tracked scratch
+growths rise from 566 to 1,343, head probes from 1,046 to 1,059, and legacy
+frontier probes from 638 to 938. Logical equality completions remain 1,046.
+The new seed-candidate work is included in Bake's heuristic ledger. Growths are
+not complete allocation counts; no timing or worker-scaling claim is made.
+
+The compact evidence retains both intermediate overapproximations, final costs,
+and the preceding experiment's counter deltas. Reproduce with the usual separate
+workspace, focused and minimal builds, saving logs under `merge-scopes-*.log`.
+Include `--test merge_completion` in both focused commands and set
+`MERGE_COMPLETION_EVIDENCE="$PWD/out/stable-port-congruence/merge-scopes-fixture.json"`
+only for the sparse focused run. Then build the standalone runtime separately:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/merge-scopes-final-runtime
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/merge-scopes-final-runtime benchmarks/stable-port-congruence/merge-scopes-audit-manifest.json out/stable-port-congruence/merge-scopes-final-audit
+python3 benchmarks/stable-port-congruence/collect-merge-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
 Reproduce with the frozen artifact and separate compiler/runtime builds described

@@ -1,0 +1,626 @@
+{
+  "scope": "standalone Cell CPU, actual single-thread Executor; no timing or parallel claim",
+  "baseline_revision": "f8238efd",
+  "runtime_sha256": "ec99575f8513a401325dd8083faed91d3a300d28425bc708497a516affdfa3e0",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "runs": 1428,
+  "exact_ordered_semantics_match": true,
+  "ordinary_runtime_counts_match_global_control": true,
+  "admitted_as_performance_improvement": false,
+  "port_completion": {
+    "enabled": true,
+    "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+    "shared_plans": 630,
+    "shared_steps": 7559,
+    "stats": {
+      "boundary_global_shortcuts": 0,
+      "bypassed_tasks": 90,
+      "forecasts": 97,
+      "forest_global_shortcuts": 0,
+      "global_boundaries_by_table": {},
+      "groups": 264,
+      "inactive_steps": 48126,
+      "legacy_boundaries": 17721,
+      "membership_checks": 677512,
+      "output_reads": 58859,
+      "peak_group_visits": 4096,
+      "pending_global_by_table": {},
+      "pending_global_shortcuts": 0,
+      "pure_groups": 59,
+      "root_visits": 23286,
+      "scope_completions": 87,
+      "scratch_growths": 1343,
+      "seed_candidates": 1107,
+      "seed_roots": 403,
+      "signal_visits": 89646,
+      "static_steps": 150901,
+      "typed_fallbacks": 60
+    },
+    "visit_budget_per_group": 4096
+  },
+  "scoped_executor": {
+    "compiler_admits_deferral": true,
+    "enabled": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "port_scopes": true,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+    "stats": {
+      "already_ready_waits": 0,
+      "compiler_full_completion_runs": 0,
+      "deferred_rows_carried": 9,
+      "eager_waits": 0,
+      "executed_bindings_while_pending": 0,
+      "global_observation_fences": 0,
+      "partial_publications": 10,
+      "peak_retained_anchors": 6,
+      "peak_retained_changes": 8,
+      "peak_retained_contexts": 7,
+      "peak_retained_forwards": 0,
+      "port_access_waits": 10,
+      "publication_table_checks": 28,
+      "published_tables_while_pending": 25,
+      "readiness_dependency_checks": 4257,
+      "ruleset_waits": 1428,
+      "runs_with_unrelated_pending": 0,
+      "unchanged_influence_reuses": 0,
+      "union_effect_waits": 0
+    },
+    "unpublished_changes": 0
+  },
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 71,
+      "dependency_edges": 30664,
+      "merge_birth_edges": 5,
+      "merge_read_edges": 5,
+      "merges": [
+        {
+          "births": [
+            324
+          ],
+          "opaque": false,
+          "reads": [
+            324
+          ],
+          "table": 205
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 232
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 234
+        },
+        {
+          "births": [
+            385
+          ],
+          "opaque": false,
+          "reads": [
+            385
+          ],
+          "table": 387
+        },
+        {
+          "births": [
+            384
+          ],
+          "opaque": false,
+          "reads": [
+            384
+          ],
+          "table": 393
+        }
+      ],
+      "opaque_tables": [],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401,
+      "wait_edges": 42294
+    },
+    "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+    "stats": {
+      "bypassed_tasks": 0,
+      "cause_comparisons": 4238,
+      "cause_growths": 36,
+      "cause_probes": 1110,
+      "head_probes": 1059,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 938,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "counter_changes_from_previous_experiment": {
+    "port_completion": {
+      "boundary_global_shortcuts": {
+        "before": 30,
+        "after": 0,
+        "delta": -30
+      },
+      "bypassed_tasks": {
+        "before": 0,
+        "after": 90,
+        "delta": 90
+      },
+      "forecasts": {
+        "before": 87,
+        "after": 97,
+        "delta": 10
+      },
+      "forest_global_shortcuts": {
+        "before": 31,
+        "after": 0,
+        "delta": -31
+      },
+      "groups": {
+        "before": 103,
+        "after": 264,
+        "delta": 161
+      },
+      "inactive_steps": {
+        "before": 7596,
+        "after": 48126,
+        "delta": 40530
+      },
+      "legacy_boundaries": {
+        "before": 3478,
+        "after": 17721,
+        "delta": 14243
+      },
+      "membership_checks": {
+        "before": 251236,
+        "after": 677512,
+        "delta": 426276
+      },
+      "output_reads": {
+        "before": 15913,
+        "after": 58859,
+        "delta": 42946
+      },
+      "pending_global_shortcuts": {
+        "before": 36,
+        "after": 0,
+        "delta": -36
+      },
+      "pure_groups": {
+        "before": 1,
+        "after": 59,
+        "delta": 58
+      },
+      "root_visits": {
+        "before": 9645,
+        "after": 23286,
+        "delta": 13641
+      },
+      "scope_completions": {
+        "before": 86,
+        "after": 87,
+        "delta": 1
+      },
+      "scratch_growths": {
+        "before": 566,
+        "after": 1343,
+        "delta": 777
+      },
+      "seed_candidates": {
+        "before": 0,
+        "after": 1107,
+        "delta": 1107
+      },
+      "seed_roots": {
+        "before": 174,
+        "after": 403,
+        "delta": 229
+      },
+      "signal_visits": {
+        "before": 22097,
+        "after": 89646,
+        "delta": 67549
+      },
+      "static_steps": {
+        "before": 35462,
+        "after": 150901,
+        "delta": 115439
+      },
+      "typed_fallbacks": {
+        "before": 1,
+        "after": 60,
+        "delta": 59
+      }
+    },
+    "scoped_completion": {
+      "head_probes": {
+        "before": 1046,
+        "after": 1059,
+        "delta": 13
+      },
+      "legacy_frontier_probes": {
+        "before": 638,
+        "after": 938,
+        "delta": 300
+      },
+      "opaque_full_completions": {
+        "before": 38,
+        "after": 0,
+        "delta": -38
+      }
+    },
+    "scoped_executor": {
+      "deferred_rows_carried": {
+        "before": 11,
+        "after": 9,
+        "delta": -2
+      },
+      "partial_publications": {
+        "before": 1,
+        "after": 10,
+        "delta": 9
+      },
+      "peak_retained_anchors": {
+        "before": 7,
+        "after": 6,
+        "delta": -1
+      },
+      "peak_retained_changes": {
+        "before": 11,
+        "after": 8,
+        "delta": -3
+      },
+      "port_access_waits": {
+        "before": 0,
+        "after": 10,
+        "delta": 10
+      },
+      "publication_table_checks": {
+        "before": 6,
+        "after": 28,
+        "delta": 22
+      },
+      "published_tables_while_pending": {
+        "before": 2,
+        "after": 25,
+        "delta": 23
+      },
+      "readiness_dependency_checks": {
+        "before": 401,
+        "after": 4257,
+        "delta": 3856
+      }
+    }
+  },
+  "rejected_overapproximation": {
+    "input_union_influence": {
+      "hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+        "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+        "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+        "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+        "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+        "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+      },
+      "port_completion": {
+        "enabled": true,
+        "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+        "shared_plans": 630,
+        "shared_steps": 7559,
+        "stats": {
+          "boundary_global_shortcuts": 0,
+          "bypassed_tasks": 0,
+          "forecasts": 87,
+          "forest_global_shortcuts": 0,
+          "global_boundaries_by_table": {},
+          "groups": 263,
+          "inactive_steps": 69160,
+          "legacy_boundaries": 30084,
+          "membership_checks": 1061534,
+          "output_reads": 97891,
+          "peak_group_visits": 4096,
+          "pending_global_by_table": {},
+          "pending_global_shortcuts": 0,
+          "pure_groups": 31,
+          "root_visits": 44218,
+          "scope_completions": 86,
+          "scratch_growths": 1969,
+          "seed_roots": 363,
+          "signal_visits": 140898,
+          "static_steps": 230171,
+          "typed_fallbacks": 91
+        },
+        "visit_budget_per_group": 4096
+      },
+      "scoped_completion": {
+        "enabled": true,
+        "pending_owned_tables": [],
+        "pending_tasks": 0,
+        "plan": {
+          "deferrable_tables": 71,
+          "dependency_edges": 31283,
+          "merge_birth_edges": 5,
+          "merge_read_edges": 5,
+          "merges": [
+            {
+              "births": [
+                324
+              ],
+              "opaque": false,
+              "reads": [
+                324
+              ],
+              "table": 205
+            },
+            {
+              "births": [
+                231
+              ],
+              "opaque": false,
+              "reads": [
+                231
+              ],
+              "table": 232
+            },
+            {
+              "births": [
+                231
+              ],
+              "opaque": false,
+              "reads": [
+                231
+              ],
+              "table": 234
+            },
+            {
+              "births": [
+                385
+              ],
+              "opaque": false,
+              "reads": [
+                385
+              ],
+              "table": 387
+            },
+            {
+              "births": [
+                384
+              ],
+              "opaque": false,
+              "reads": [
+                384
+              ],
+              "table": 393
+            }
+          ],
+          "opaque_tables": [],
+          "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+          "tables": 401,
+          "wait_edges": 42294
+        },
+        "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+        "stats": {
+          "bypassed_tasks": 0,
+          "cause_comparisons": 4238,
+          "cause_growths": 36,
+          "cause_probes": 1110,
+          "head_probes": 1046,
+          "head_updates": 1599,
+          "legacy_frontier_probes": 1028,
+          "opaque_full_completions": 0,
+          "scope_requests": 0
+        }
+      },
+      "scoped_executor": {
+        "compiler_admits_deferral": true,
+        "enabled": true,
+        "global_observer": false,
+        "pending_anchors": 0,
+        "port_scopes": true,
+        "retained_contexts": 0,
+        "retained_forwards": 0,
+        "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+        "stats": {
+          "already_ready_waits": 0,
+          "compiler_full_completion_runs": 0,
+          "deferred_rows_carried": 11,
+          "eager_waits": 0,
+          "executed_bindings_while_pending": 0,
+          "global_observation_fences": 0,
+          "partial_publications": 1,
+          "peak_retained_anchors": 7,
+          "peak_retained_changes": 11,
+          "peak_retained_contexts": 7,
+          "peak_retained_forwards": 0,
+          "publication_table_checks": 6,
+          "published_tables_while_pending": 2,
+          "readiness_dependency_checks": 401,
+          "ruleset_waits": 1428,
+          "runs_with_unrelated_pending": 0,
+          "unchanged_influence_reuses": 0
+        },
+        "unpublished_changes": 0
+      },
+      "runtime_sha256": "e19281fb4aca8f58e5745ee9acff12adab8ceb7d754cebc9cc9814eb6d9c0cd9"
+    },
+    "birth_as_result_union": {
+      "hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+        "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+        "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+        "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+        "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+        "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+      },
+      "port_completion": {
+        "enabled": true,
+        "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+        "shared_plans": 630,
+        "shared_steps": 7559,
+        "stats": {
+          "boundary_global_shortcuts": 0,
+          "bypassed_tasks": 90,
+          "forecasts": 97,
+          "forest_global_shortcuts": 0,
+          "global_boundaries_by_table": {},
+          "groups": 264,
+          "inactive_steps": 48126,
+          "legacy_boundaries": 17721,
+          "membership_checks": 677514,
+          "output_reads": 58859,
+          "peak_group_visits": 4096,
+          "pending_global_by_table": {},
+          "pending_global_shortcuts": 0,
+          "pure_groups": 59,
+          "root_visits": 23286,
+          "scope_completions": 87,
+          "scratch_growths": 1343,
+          "seed_candidates": 1107,
+          "seed_roots": 403,
+          "signal_visits": 89646,
+          "static_steps": 150901,
+          "typed_fallbacks": 60
+        },
+        "visit_budget_per_group": 4096
+      },
+      "scoped_completion": {
+        "enabled": true,
+        "pending_owned_tables": [],
+        "pending_tasks": 0,
+        "plan": {
+          "deferrable_tables": 71,
+          "dependency_edges": 31283,
+          "merge_birth_edges": 5,
+          "merge_read_edges": 5,
+          "merges": [
+            {
+              "births": [
+                324
+              ],
+              "opaque": false,
+              "reads": [
+                324
+              ],
+              "table": 205
+            },
+            {
+              "births": [
+                231
+              ],
+              "opaque": false,
+              "reads": [
+                231
+              ],
+              "table": 232
+            },
+            {
+              "births": [
+                231
+              ],
+              "opaque": false,
+              "reads": [
+                231
+              ],
+              "table": 234
+            },
+            {
+              "births": [
+                385
+              ],
+              "opaque": false,
+              "reads": [
+                385
+              ],
+              "table": 387
+            },
+            {
+              "births": [
+                384
+              ],
+              "opaque": false,
+              "reads": [
+                384
+              ],
+              "table": 393
+            }
+          ],
+          "opaque_tables": [],
+          "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+          "tables": 401,
+          "wait_edges": 42294
+        },
+        "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+        "stats": {
+          "bypassed_tasks": 0,
+          "cause_comparisons": 4238,
+          "cause_growths": 36,
+          "cause_probes": 1110,
+          "head_probes": 1059,
+          "head_updates": 1599,
+          "legacy_frontier_probes": 938,
+          "opaque_full_completions": 0,
+          "scope_requests": 0
+        }
+      },
+      "scoped_executor": {
+        "compiler_admits_deferral": true,
+        "enabled": true,
+        "global_observer": false,
+        "pending_anchors": 0,
+        "port_scopes": true,
+        "retained_contexts": 0,
+        "retained_forwards": 0,
+        "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+        "stats": {
+          "already_ready_waits": 0,
+          "compiler_full_completion_runs": 0,
+          "deferred_rows_carried": 9,
+          "eager_waits": 0,
+          "executed_bindings_while_pending": 0,
+          "global_observation_fences": 0,
+          "partial_publications": 10,
+          "peak_retained_anchors": 6,
+          "peak_retained_changes": 8,
+          "peak_retained_contexts": 7,
+          "peak_retained_forwards": 0,
+          "publication_table_checks": 28,
+          "published_tables_while_pending": 25,
+          "readiness_dependency_checks": 4010,
+          "ruleset_waits": 1428,
+          "runs_with_unrelated_pending": 0,
+          "unchanged_influence_reuses": 0
+        },
+        "unpublished_changes": 0
+      },
+      "runtime_sha256": "1b723a728e67e79cb092e751de89de0f5f616d526207a55dc1f26d1d1eb18e85"
+    }
+  },
+  "read_selection_validation": "The integration fixture alone also passed with read selection removed because constructor births independently selected that chain. A separate three-table selection unit test isolates the read-only dependency; no semantic corruption is claimed from the exploratory negative control.",
+  "remaining": "bound source accesses/writes, same-table regions, cheaper scope proof, ownership of concurrent publication and unions, real workers and complete-cost admission"
+}
