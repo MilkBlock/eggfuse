@@ -1,0 +1,18 @@
+{
+  "routed-condition-workspace-tests": {
+    "passed": 233,
+    "failed": 0,
+    "ignored": 4
+  },
+  "routed-condition-tests": {
+    "passed": 37,
+    "failed": 0,
+    "ignored": 0
+  },
+  "routed-condition-non-sparse-tests": {
+    "passed": 37,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed"
+}

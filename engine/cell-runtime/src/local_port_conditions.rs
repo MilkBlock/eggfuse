@@ -10,8 +10,16 @@ pub(super) struct Stats {
     pub uncovered_shapes: u64,
     pub boundary_signals: u64,
     pub boundary_sites: u64,
-    pub open_fallbacks: u64,
-    pub closed_regions: u64,
+    pub anchor_probes: u64,
+    pub boundary_uncompiled_steps: u64,
+    pub open_domains: u64,
+    pub closed_domain_probes: u64,
+    pub local_candidates: u64,
+    pub boundary_candidates: u64,
+    pub candidate_buffer_growths: u64,
+    pub candidate_buffer_spills: u64,
+    pub candidate_sort_comparisons: u64,
+    pub boundary_collisions: u64,
     pub condition_visits: u64,
     pub inactive_sites: u64,
     pub pending_sites: u64,
@@ -21,6 +29,25 @@ pub(super) struct Stats {
     pub shared_symbol_guards: u64,
     pub completed_conditions: u64,
     pub cross_stage_conditions: u64,
+}
+
+#[derive(Clone, Copy)]
+struct Candidate {
+    fact: FactRef,
+    condition: Option<usize>,
+}
+type Candidates = smallvec::SmallVec<[Candidate; 16]>;
+#[derive(Default)]
+struct BoundaryWork {
+    signals: u64,
+    sites: u64,
+    uncompiled_steps: u64,
+    growths: u64,
+}
+fn push_candidate(out: &mut Candidates, fact: FactRef, condition: Option<usize>) -> u64 {
+    let old = out.capacity();
+    out.push(Candidate { fact, condition });
+    u64::from(old != out.capacity())
 }
 
 impl Graph {
@@ -40,8 +67,9 @@ impl Graph {
             .get_or_insert_with(Stats::default);
         Ok(())
     }
-    /// Some(None) proves that the complete local condition set has no collision.
-    /// None means coverage is open; the complete port domain must still run.
+    /// Shared conditions cover the local component. One input domain supplies
+    /// foreign candidates. Their ordered union is complete, even when open.
+    /// None is reserved for an uncovered source shape.
     pub(super) fn local_port_collision(
         &mut self,
         f: FactRef,
@@ -72,23 +100,8 @@ impl Graph {
         let Some(site) = plan.site(frame.ordinal, f.op) else {
             return Err("complete local condition plan omits a covered source".into());
         };
-        let column = self.program.repair_ports.key_eq_columns[row.table]
-            .as_ref()
-            .unwrap()[0];
-        let Value::Eq(id) = row.values[column] else {
-            return Err("typed input port".into());
-        };
-        let (closed, signals, sites) =
-            self.local_domain_closed(frame.component, row.table, column, id)?;
-        self.local_condition_stats().boundary_signals += signals;
-        self.local_condition_stats().boundary_sites += sites;
-        if !closed {
-            self.local_condition_stats().open_fallbacks += 1;
-            return Ok(None);
-        }
-        self.local_condition_stats().closed_regions += 1;
+        let mut candidates = Candidates::new();
         for &id in &plan.routes[site] {
-            self.local_condition_stats().condition_visits += 1;
             let condition = &plan.conditions[id];
             let other = condition.sites[usize::from(condition.sites[0] == site)];
             let peer = &plan.sites[other];
@@ -98,7 +111,63 @@ impl Graph {
                 .unwrap()
                 .frames[peer.frame];
             let target = FactRef { cell, op: peer.op };
-            let Some(state) = self.cells.get(&cell).and_then(|c| c.facts.get(&peer.op)) else {
+            self.local_condition_stats().candidate_buffer_growths +=
+                push_candidate(&mut candidates, target, Some(id));
+        }
+        let locals = candidates.len();
+        let (column, id, probes) = self.condition_anchor(row)?;
+        let work = self.external_condition_candidates(
+            frame.component,
+            row.table,
+            column,
+            id,
+            &mut candidates,
+        )?;
+        let stats = self.local_condition_stats();
+        stats.local_candidates += locals as u64;
+        stats.boundary_candidates += (candidates.len() - locals) as u64;
+        stats.candidate_buffer_growths += work.growths;
+        stats.candidate_buffer_spills += u64::from(candidates.spilled());
+        stats.anchor_probes += probes;
+        stats.boundary_signals += work.signals;
+        stats.boundary_sites += work.sites;
+        stats.boundary_uncompiled_steps += work.uncompiled_steps;
+        if candidates.len() == locals {
+            stats.closed_domain_probes += 1;
+        } else {
+            stats.open_domains += 1;
+        }
+        // Local routes are already ordered. Foreign candidates use root-domain
+        // order, so merge through charged scratch (16 inline entries, measured
+        // heap growth beyond that). No persistent candidate index is built.
+        if candidates.len() > locals {
+            candidates.sort_unstable_by(|a, b| {
+                stats.candidate_sort_comparisons += 1;
+                a.fact.cmp(&b.fact)
+            });
+            candidates.dedup_by_key(|c| c.fact);
+        }
+        for candidate in candidates {
+            let target = candidate.fact;
+            if self.ownership.as_ref().unwrap().pending.contains(&target) {
+                self.local_condition_stats().pending_sites += 1;
+                continue;
+            }
+            let Some(id) = candidate.condition else {
+                if let Some(found) = self.exact_port_candidate(
+                    target,
+                    row.table,
+                    &row.values[..row.values.len() - 1],
+                )? {
+                    self.local_condition_stats().boundary_collisions += 1;
+                    return Ok(Some(Some(found)));
+                }
+                continue;
+            };
+            self.local_condition_stats().condition_visits += 1;
+            let condition = &plan.conditions[id];
+            let FactRef { cell, op } = target;
+            let Some(state) = self.cells.get(&cell).and_then(|c| c.facts.get(&op)) else {
                 self.local_condition_stats().inactive_sites += 1;
                 continue;
             };
@@ -106,10 +175,6 @@ impl Graph {
                 self.local_condition_stats().inactive_sites += 1;
                 continue;
             };
-            if self.ownership.as_ref().unwrap().pending.contains(&target) {
-                self.local_condition_stats().pending_sites += 1;
-                continue;
-            }
             self.local_condition_stats().operator_guards += 1;
             if stored.table != row.table {
                 continue;
@@ -122,7 +187,7 @@ impl Graph {
                 u64::from(self.cells[&f.cell].started_epoch != self.cells[&cell].started_epoch);
             // The logical commit consumes the result ports through the row
             // interface, preserving visibility, receipts and ordered retirement.
-            let state = &self.cells[&cell].facts[&peer.op];
+            let state = &self.cells[&cell].facts[&op];
             return self
                 .read_stable_fact(target, state, &stored)
                 .map(|r| Some(Some(r)));
@@ -137,13 +202,35 @@ impl Graph {
             .as_mut()
             .unwrap()
     }
-    fn local_domain_closed(
+    fn condition_anchor(&self, row: &Row) -> Result<(usize, u64, u64)> {
+        let columns = self.program.repair_ports.key_eq_columns[row.table]
+            .as_ref()
+            .unwrap();
+        let m = self.ownership.as_ref().unwrap();
+        let mut best = None;
+        for &column in columns {
+            let Value::Eq(id) = row.values[column] else {
+                return Err("typed input port".into());
+            };
+            // Signal cardinality is a cheap choice heuristic. It does not
+            // inspect every consumer of every possible anchor just to plan.
+            let count = m.boundaries.get(&id).map_or(0, |s| s.len())
+                + usize::from(self.native_signal(id).is_some());
+            if best.is_none_or(|(_, _, cost)| count < cost) {
+                best = Some((column, id, count));
+            }
+        }
+        let (column, id, _) = best.ok_or("constructor has no input port")?;
+        Ok((column, id, columns.len() as u64))
+    }
+    fn external_condition_candidates(
         &self,
         component: u32,
         table: usize,
         column: usize,
         id: u64,
-    ) -> Result<(bool, u64, u64)> {
+        out: &mut Candidates,
+    ) -> Result<BoundaryWork> {
         // Root-level boundary ownership already belongs to symbolic ports.
         // Probe shared code; no producer gets a runtime consumer list.
         let m = self.ownership.as_ref().unwrap();
@@ -153,47 +240,71 @@ impl Graph {
             .into_iter()
             .flat_map(|s| s.iter().copied())
             .chain(self.native_signal(id));
-        let mut signal_visits = 0;
-        let mut site_visits = 0;
+        let mut work = BoundaryWork::default();
         for signal in signals {
-            signal_visits += 1;
+            work.signals += 1;
             if signal.component == component {
                 continue;
             }
             let other = m.composition.components[signal.component as usize]
                 .as_ref()
                 .ok_or("expired boundary component")?;
-            let Some(plan) = self
+            if let Some(plan) = self
                 .program
                 .cell_ownership
                 .composition
                 .conditions
                 .get(other.shape)
                 .filter(|p| p.complete)
-            else {
-                return Ok((false, signal_visits, site_visits));
-            };
-            for &(site, input) in &plan.inputs[signal.symbol] {
-                if input != column {
-                    continue;
+            {
+                for &(site, input) in &plan.inputs[signal.symbol] {
+                    if input != column {
+                        continue;
+                    }
+                    let body = &plan.sites[site];
+                    let fact = FactRef {
+                        cell: other.frames[body.frame],
+                        op: body.op,
+                    };
+                    work.sites += 1;
+                    if self.condition_candidate_table(fact) == Some(table) {
+                        work.growths += push_candidate(out, fact, None);
+                    }
                 }
-                let body = &plan.sites[site];
-                let cell = other.frames[body.frame];
-                site_visits += 1;
-                if self
-                    .cells
-                    .get(&cell)
-                    .and_then(|c| c.facts.get(&body.op))
-                    .and_then(|s| s.ports.as_ref())
-                    .is_some_and(|s| s.table == table)
-                {
-                    return Ok((false, signal_visits, site_visits));
+            } else {
+                // An oversized foreign shape still has complete shared signal
+                // slices. Only the bound input column can supply a candidate.
+                let shape = m.composition.shapes[other.shape]
+                    .as_ref()
+                    .ok_or("missing foreign shape")?;
+                for step in shape.signals[signal.symbol].iter() {
+                    work.uncompiled_steps += 1;
+                    if !step.columns.contains(&column) {
+                        continue;
+                    }
+                    let fact = FactRef {
+                        cell: other.frames[step.frame],
+                        op: step.op,
+                    };
+                    work.sites += 1;
+                    if self.condition_candidate_table(fact) == Some(table) {
+                        work.growths += push_candidate(out, fact, None);
+                    }
                 }
             }
         }
         // Every fact in an admitted table is owned. Legacy reverse users must
         // belong to other tables and cannot be constructor-key candidates.
-        Ok((true, signal_visits, site_visits))
+        Ok(work)
+    }
+    fn condition_candidate_table(&self, fact: FactRef) -> Option<usize> {
+        self.cells
+            .get(&fact.cell)?
+            .facts
+            .get(&fact.op)?
+            .ports
+            .as_ref()
+            .map(|s| s.table)
     }
     fn local_condition_holds(
         &mut self,
@@ -239,6 +350,6 @@ impl Graph {
             "covered_shapes":plans.iter().filter(|p|p.complete).count(),
             "uncovered_shapes":plans.iter().filter(|p|!p.complete).count(),
             "shared_conditions":plans.iter().map(|p|p.conditions.len()).sum::<usize>(),
-            "scope":"shared local all-input guards with exact boundary exclusion; global Run barrier remains"})
+            "scope":"shared local all-input guards plus one complete foreign input domain; global Run barrier remains"})
     }
 }

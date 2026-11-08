@@ -210,7 +210,38 @@ fn foreign_constructor_keeps_the_boundary_path_live() {
 "#,
     );
     let stats = e.graph.stable_port_report()["local_conditions"]["stats"].clone();
-    assert!(stats["open_fallbacks"].as_u64().unwrap() > 0, "{stats}");
+    assert!(stats["open_domains"].as_u64().unwrap() > 0, "{stats}");
+    assert!(
+        stats["boundary_collisions"].as_u64().unwrap() > 0,
+        "{stats}"
+    );
+}
+
+#[test]
+fn mixed_internal_and_external_candidates_preserve_survivor_order() {
+    let e = local_compare(
+        r#"
+(datatype E (N i64) (F E) (G E))
+(ruleset older) (ruleset inside) (ruleset merge)
+(rule ((= a (N 1))) ((G (F a))) :ruleset older)
+(rule ((= a (N 2)) (= b (N 3))) ((G (F a)) (G (F b))) :ruleset inside)
+(rule ((= z (N 0)) (= a (N 1)) (= b (N 2)) (= c (N 3)))
+      ((union z a) (union z b) (union z c)) :ruleset merge)
+(N 0) (N 1) (N 2) (N 3)
+(run-schedule (seq (run older) (run inside) (run merge)))
+(check (= (G (F (N 1))) (G (F (N 3)))))
+"#,
+    );
+    let stats = e.graph.stable_port_report()["local_conditions"]["stats"].clone();
+    assert!(stats["local_candidates"].as_u64().unwrap() > 0, "{stats}");
+    assert!(
+        stats["boundary_candidates"].as_u64().unwrap() > 0,
+        "{stats}"
+    );
+    assert!(
+        stats["candidate_sort_comparisons"].as_u64().unwrap() > 0,
+        "{stats}"
+    );
 }
 
 #[test]
@@ -219,12 +250,13 @@ fn condition_budget_falls_back_instead_of_truncating_coverage() {
     let src = format!(
         r#"
 (datatype E (N i64) (F E))
-(ruleset build) (ruleset merge)
+(ruleset build) (ruleset small) (ruleset merge)
 (rule ((= a (N 0))) ((F a) {rhs}) :ruleset build)
-(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
-(N 0)
-(run-schedule (seq (run build) (run merge)))
-(check (= (F (N 0)) (F (N 1))))
+(rule ((= a (N 17))) ((F a)) :ruleset small)
+(rule ((= z (N -1)) (= a (N 0)) (= b (N 17))) ((union z a) (union z b)) :ruleset merge)
+(N -1) (N 0) (N 17)
+(run-schedule (seq (run build) (run small) (run merge)))
+(check (= (F (N 0)) (F (N 17))))
 "#
     );
     let e = local_compare(&src);
@@ -232,6 +264,13 @@ fn condition_budget_falls_back_instead_of_truncating_coverage() {
     assert!(report["uncovered_shapes"].as_u64().unwrap() > 0, "{report}");
     assert!(
         report["stats"]["uncovered_shapes"].as_u64().unwrap() > 0,
+        "{report}"
+    );
+    assert!(
+        report["stats"]["boundary_uncompiled_steps"]
+            .as_u64()
+            .unwrap()
+            > 0,
         "{report}"
     );
 }

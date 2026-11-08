@@ -23,7 +23,7 @@ phase does not establish completion of the objective.
 | --- | --- | --- |
 | Covered node fields use stable symbolic ports as authoritative storage | Addresses unchanged across union; read views match reference; no canonical Eq values stored in covered nodes | Verified by field fixtures and frozen sum-bits audit |
 | Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
-| Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Implemented for bounded shapes; all-input, cross-stage and noise tests pass; initial boundary gate is too expensive |
+| Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Bounded shared conditions and foreign candidates execute in one ordered pass; all-input, cross-stage, noise and mixed-boundary tests pass |
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
 | Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Not implemented |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
@@ -167,7 +167,7 @@ condition state, waiter list or cached satisfied bit is retained; deletion and
 rebirth cannot inherit a prior condition result. Birth lookup remains the exact
 port-key path, so a new constructor cannot miss an already-congruent live fact.
 
-The first implementation checks whether the chosen input domain has any foreign
+The first implementation (`3c8c51e0`) checks whether the chosen input domain has any foreign
 constructor before using the complete local pair set. `closed_regions` counts
 successful **probes**, not distinct regions or a permanent closure certificate.
 A later alias or birth rechecks the boundary. If foreign consumers exist, the
@@ -201,10 +201,74 @@ python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/local-
 python3 benchmarks/stable-port-congruence/collect-conditions.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
-The next revision should integrate internal conditions and foreign candidates in
-one exact ordered pass. It must retain boundary coverage and all-input proof,
-charge candidate-buffer work, and compare the full replacement work against the
-port-key baseline. A precheck followed by the same search again is wasteful.
+This experiment motivated integrating internal conditions and foreign candidates
+in one exact ordered pass, described next. The initial negative result is kept
+separately, not overwritten by the subsequent improvement.
+
+## Shared conditions with one boundary pass
+
+The current `--local-congruence` path obtains internal candidates directly from
+the shared condition routes. It chooses one equality input using root signal
+cardinality, without visiting every possible anchor's consumers just to plan.
+The chosen root's foreign signals supply the remaining candidates through shared
+input routes. An oversized foreign template uses its existing complete signal
+slice filtered to the corresponding input column. No runtime consumer list is
+created. All candidates are ordered by fact identity before exact guards run,
+preserving survivor, visibility and receipt order across local/foreign mixtures.
+
+An open boundary no longer repeats the generic lookup. Only an uncovered source
+shape takes the old complete path. Coverage holds because every congruent foreign
+constructor must have an equal value in the chosen input column; every internal
+pair with a compatible layout appears in the compiled conditions. Operator and
+all remaining inputs still require exact guards. The lookup proves the answer
+for the current equality relation; it is not a declaration that no future union
+can affect the region.
+
+The scratch candidate list has 16 inline entries; larger lists allocate and sort
+with explicit growth/comparison counters. On sum-bits it grows 43 times in 26
+spilled probes, with 8,895 sorting comparisons. These are not whole-process
+allocation counts. The Bake work ledger charges collection, sorting, boundary
+visits and exact guards as well as the old work that remains.
+
+All 233 workspace tests pass (four preexisting ignored), 37 focused fixtures pass
+in both configurations, and the minimal runtime compiles. New mixed-candidate
+fixtures preserve the oldest eligible survivor when both a local peer and a
+foreign candidate exist. Oversized source and foreign templates are both
+exercised. The same frozen sum-bits audit preserves all 1,428 Runs and all hashes.
+
+Of 1,046 logical completions, 1,036 use the combined route and 10 retain the
+generic source fallback. There are 189 probes with no foreign candidates and
+847 with foreign candidates. Local conditions fire 108 times, 96 across stages;
+foreign candidates account for another 733 collisions. Successful decisions
+proceed through the existing visibility/receipt/retirement commit path; these
+are not counts of effective union operations. Output propagation and the global
+Run barrier still remain.
+
+| Work counter | Port-key baseline | Combined route |
+| --- | ---: | ---: |
+| Generic port-domain probes | 7,305 | 6,269 |
+| Generic planning signal visits | 260,196 | 200,707 |
+| Generic planning slice visits | 555,540 | 428,687 |
+| Generic execution slice visits | 156,401 | 116,376 |
+| New boundary signal visits | 0 | 20,710 |
+| New boundary site checks | 0 | 17,234 |
+| New uncompiled foreign slice steps | 0 | 3,218 |
+| New local condition visits | 0 | 611 |
+| Port/root reads | 119,758 | 120,437 |
+
+This is a structural-work improvement against `f8a3ee35`, not a latency or
+multithreading result. No structural timing campaign has been run. The evidence
+retains setup and ordered-audit accesses, and reports added work rather than
+crediting the generic-probe decrease in isolation.
+
+Save validation logs under `routed-condition-*.log`, build the audit runtime
+separately as above, then reproduce:
+
+```sh
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/routed-condition-runtime
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/routed-condition-runtime benchmarks/stable-port-congruence/local-condition-audit-manifest.json out/stable-port-congruence/routed-condition-audit
+python3 benchmarks/stable-port-congruence/collect-conditions.py out/stable-port-congruence benchmarks/stable-port-congruence --prefix routed-condition
+```
 
 ## Remaining completion and concurrency work
 

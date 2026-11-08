@@ -86,7 +86,9 @@ impl Work {
             work.insert(key, value);
         }
         for field in ["attempts", "boundary_signals", "boundary_sites", "condition_visits",
-            "inactive_sites", "pending_sites", "operator_guards", "scalar_guards", "equality_guards", "shared_symbol_guards"] {
+            "inactive_sites", "pending_sites", "operator_guards", "scalar_guards", "equality_guards", "shared_symbol_guards",
+            "anchor_probes", "boundary_uncompiled_steps", "local_candidates", "boundary_candidates",
+            "candidate_buffer_growths", "candidate_sort_comparisons"] {
             let key = format!("stable_ports/local_conditions/stats/{field}");
             let conditions = &report["stable_ports"]["local_conditions"];
             let value = if conditions["enabled"] == true {

@@ -104,7 +104,7 @@ impl Graph {
         }
         Ok(None)
     }
-    fn exact_port_candidate(&self, f: FactRef, table: usize, key: &[Value]) -> Result<Option<Row>> {
+    pub(super) fn exact_port_candidate(&self, f: FactRef, table: usize, key: &[Value]) -> Result<Option<Row>> {
         let stats = self.stable_ports.as_ref().unwrap();
         stats.key_candidates.set(stats.key_candidates.get() + 1);
         let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
