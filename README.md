@@ -35,7 +35,8 @@ cargo test --release --locked --workspace --all-features
 
 [Compiler and audit commands](tools/cell-compiler/README.md) · [Workload and catalog provenance](workloads/pass3/README.md)
 
-[Experimental union-digest constructor matching](benchmarks/union-digest/SHARED.md)
-is opt-in and shares graph storage and shared Entry delivery. Constructor
-microbenchmarks improve over the first prototype; application-wide gains are
-unproven. It retains source Run publication and rejects marker/function programs.
+[Experimental union-digest matching](benchmarks/union-digest/UNIT.md)
+is opt-in and supports scalar constructors and Unit-presence markers through
+shared graph storage and Entry delivery. Source Run publication is retained;
+value-producing/effectful merges, containers and visibility changes remain
+unsupported. Application-wide performance gains are unproven.

@@ -18,12 +18,20 @@ pub(super) struct DigestStats {
     pub publication_visits: u64,
     pub duplicate_rows_retired: u64,
     pub peak_packets: usize,
+    pub relation_key_matches: u64,
+    pub unit_notifications: u64,
+    pub unit_rows_rekeyed: u64,
+    pub unit_key_matches: u64,
+    pub unit_rows_retired: u64,
+    pub unit_compact_rekeys: u64,
+    pub unit_compact_retired: u64,
 }
 
 pub(super) struct Matcher {
     // Typed schema positions, reusable across Runs; no learned IDs or rows.
     eq_columns: Vec<Box<[usize]>>,
     duplicates: BTreeSet<FactRef>,
+    unit_pending: BTreeSet<usize>,
     stats: DigestStats,
     live_rows: usize,
     hash_bits: u32,
@@ -32,13 +40,12 @@ pub(super) struct Matcher {
 
 impl Matcher {
     pub fn validate(p: &Program) -> Result<()> {
-        if !p.marker_tables.is_empty() {
-            return Err("union digest does not yet support marker tables".into());
-        }
         for t in &p.tables {
-            if !t.constructor || !t.virtual_fact {
+            let presence = t.schema.last().is_some_and(|s| s["kind"] == "Unit")
+                && (t.merge.is_null() || t.merge == json!({"var": "old"}));
+            if !(t.constructor && t.virtual_fact) && !presence {
                 return Err(format!(
-                    "union digest requires immutable constructor tables; unsupported table {}",
+                    "union digest requires immutable constructor or Unit-presence tables; unsupported table {}",
                     t.name
                 ));
             }
@@ -82,6 +89,7 @@ impl Matcher {
                 })
                 .collect(),
             duplicates: BTreeSet::new(),
+            unit_pending: BTreeSet::new(),
             stats: DigestStats::default(),
             live_rows: 0,
             hash_bits,
@@ -105,7 +113,8 @@ impl Matcher {
             "hash_bits": self.hash_bits,
             "storage": "Graph RowFields, reverse incidences and constructor interning",
             "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
-            "scope": "constructor-only relational congruence with shared storage and publication"})
+            "pending_unit_rows": self.unit_pending.len(),
+            "scope": "constructor congruence and scalar Unit presence; ordered/value-producing merges excluded"})
     }
 }
 
@@ -153,11 +162,18 @@ impl Graph {
         }
         if let Some((other, other_result)) = found {
             let result = fields.last().unwrap().clone();
-            matcher.stats.congruence_matches += 1;
-            matcher.stats.output_union_requests += 1;
             matcher.duplicates.insert(f);
             matcher.duplicates.insert(other);
-            self.enqueue_union(result, other_result)?;
+            if self.program.tables[*table].constructor {
+                matcher.stats.congruence_matches += 1;
+                matcher.stats.output_union_requests += 1;
+                self.enqueue_union(result, other_result)?;
+            } else {
+                if result != Value::Int(0) || other_result != Value::Int(0) {
+                    return Err("Unit presence has a non-Unit value".into());
+                }
+                matcher.stats.relation_key_matches += 1;
+            }
         }
         Ok(())
     }
@@ -176,8 +192,16 @@ impl Graph {
         let mut rekeyed = Vec::new();
         for d in affected.iter() {
             matcher.stats.shared_incidence_visits += 1;
-            let Dependency::Fact(f) = *d else {
-                return Err("function entered constructor digest".into());
+            let f = match *d {
+                Dependency::Fact(f) => f,
+                Dependency::Function(i) => {
+                    // Unit cannot cause another equality. Coalesce notifications
+                    // across the constructor closure before joining these keys.
+                    self.functions[i].decoded = None;
+                    matcher.unit_pending.insert(i);
+                    matcher.stats.unit_notifications += 1;
+                    continue;
+                }
             };
             let Some(state) = self
                 .cells
@@ -299,6 +323,89 @@ impl Graph {
             for (a, b) in pairs {
                 self.union(a, b)?;
             }
+        }
+        self.publish_unit_digests()
+    }
+
+    /// Unit presence has no result equality or effectful merge. Its canonical
+    /// key join can therefore wait for the equality stream's fixed point. Keep
+    /// each tuple correlated, and detach every old key before probing new keys.
+    fn publish_unit_digests(&mut self) -> Result<()> {
+        let pending = std::mem::take(&mut self.union_digest.as_mut().unwrap().unit_pending);
+        let mut rows = Vec::with_capacity(pending.len());
+        for i in pending {
+            let Some(row) = self.function(i) else {
+                continue;
+            };
+            if row.values.last() != Some(&Value::Int(0)) {
+                return Err("Unit presence has a non-Unit value".into());
+            }
+            let alias = self.units.detach_key(i);
+            if alias.is_none() {
+                let old = &self.functions[i].key;
+                if self.function_keys[row.table].get(old) == Some(&i) {
+                    self.function_keys[row.table].remove(old);
+                }
+            }
+            rows.push((i, row, alias));
+        }
+        for (i, row, alias) in rows {
+            let table = row.table;
+            let key = &row.values[..row.values.len() - 1];
+            self.union_digest.as_mut().unwrap().stats.unit_rows_rekeyed += 1;
+            if let Some(j) = self.function_index(table, key) {
+                if self.functions[j].value != Value::Int(0) {
+                    return Err("Unit presence keeper has a non-Unit value".into());
+                }
+                let stats = &mut self.union_digest.as_mut().unwrap().stats;
+                stats.unit_key_matches += 1;
+                stats.unit_rows_retired += 1;
+                stats.unit_compact_retired += u64::from(alias.is_some());
+                self.units.stats.lost += u64::from(alias.is_some());
+                // Both values are the unique Unit value and the typed merge is
+                // exactly old/null. No merge callback or result union is needed.
+                self.functions[j].epoch = self.epoch;
+                #[cfg(feature = "receipt-slots")]
+                if self.functions[i].port_slot != 0 {
+                    self.retired_port_slots.insert(
+                        Dependency::Function(i),
+                        std::mem::take(&mut self.functions[i].port_slot),
+                    );
+                }
+                self.functions[i].live = false;
+                self.changes.retire(table, Dependency::Function(i));
+                if self.receipt_tracking {
+                    self.receipt_forwards
+                        .insert(Dependency::Function(i), Dependency::Function(j));
+                }
+                self.function_origin(i, None);
+                self.members[table].remove(&(i as u64));
+                self.subscribe(table, Dependency::Function(i), &[]);
+                self.query_versions[table] += 1;
+                self.changes.touch(table, Dependency::Function(j));
+                continue;
+            }
+            let f = &mut self.functions[i];
+            f.epoch = self.epoch;
+            f.decoded = Some(row.values.clone());
+            if let Some(alias) = alias {
+                self.units.restore_key(i, alias, row.values);
+                self.union_digest
+                    .as_mut()
+                    .unwrap()
+                    .stats
+                    .unit_compact_rekeys += 1;
+            } else {
+                f.key = key.to_vec();
+                #[cfg(feature = "sparse-cells")]
+                self.function_keys[table].insert(key, i);
+                #[cfg(not(feature = "sparse-cells"))]
+                self.function_keys[table].insert(key.to_vec(), i);
+            }
+            // Union already migrated every reverse incidence; no key/value
+            // changes beyond canonicalization require resubscribing this row.
+            self.query_versions[table] += 1;
+            self.changes.touch(table, Dependency::Function(i));
         }
         Ok(())
     }

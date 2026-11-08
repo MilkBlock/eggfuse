@@ -1,5 +1,8 @@
 # Union digests with shared storage and Entry delivery
 
+This page records `31979aff`. The [next iteration](UNIT.md) extends the admitted
+fragment to scalar Unit-presence tables and selected Bake markers.
+
 This iteration continues `codex/union-digest-matching` from `1ccda85a`. It removes
 the first prototype's three parallel data structures: owned key packets,
 argument-position subscriptions, and digest hash buckets. Constructor equality

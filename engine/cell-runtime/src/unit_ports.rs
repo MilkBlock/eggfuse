@@ -18,7 +18,7 @@ pub(super) struct Stats {
     pub fast_merges: u64,
     pub peak: u64,
 }
-struct Alias {
+pub(super) struct Alias {
     table: usize,
     hash: u64,
     source: crate::graph::RowFields,
@@ -133,17 +133,30 @@ impl Units {
         self.stats.compact += 1;
         self.stats.peak = self.stats.peak.max(self.aliases.len() as u64);
     }
-    pub fn remove(&mut self, i: usize) -> bool {
-        let Some(a) = self.aliases.remove(&i) else {
-            return false;
-        };
+    /// Temporarily remove a compact row's key without promoting its storage.
+    /// The caller must restore it or retire its logical function before publish.
+    pub fn detach_key(&mut self, i: usize) -> Option<Alias> {
+        let a = self.aliases.remove(&i)?;
         self.counts[a.table] -= 1;
         let ids = self.directory.get_mut(&a.hash).unwrap();
         ids.retain(|v| *v != i);
         if ids.is_empty() {
             self.directory.remove(&a.hash);
         }
-        true
+        Some(a)
+    }
+    pub fn remove(&mut self, i: usize) -> bool {
+        self.detach_key(i).is_some()
+    }
+    pub fn restore_key(&mut self, i: usize, mut a: Alias, row: RowFields) {
+        debug_assert_eq!(a.columns.len() + 1, row.len());
+        a.hash = hashkey(a.table, &row[..row.len() - 1]);
+        self.stats.identity_switches += u64::from(!a.identity);
+        a.source = row;
+        a.identity = true;
+        self.directory.entry(a.hash).or_default().push(i);
+        self.counts[a.table] += 1;
+        self.aliases.insert(i, a);
     }
     pub fn change_block(&mut self, j: usize, row: &crate::graph::RowFields) -> bool {
         let Some(a) = self.aliases.get_mut(&j) else {

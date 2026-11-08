@@ -45,7 +45,7 @@ def main():
     ap.add_argument("--repeat", type=int, default=7)
     ap.add_argument("--groups", type=int, default=256)
     ap.add_argument("--depth", type=int, default=32)
-    ap.add_argument("--shapes", nargs="+", choices=("chain", "fanout", "stable", "warm-chain", "warm-fanout"),
+    ap.add_argument("--shapes", nargs="+", choices=("chain", "fanout", "stable", "warm-chain", "warm-fanout", "unit-chain", "unit-fanout", "unit-stable"),
                     default=("chain", "fanout", "stable"))
     args = ap.parse_args()
     if min(args.repeat, args.groups, args.depth) <= 0:
@@ -56,7 +56,7 @@ def main():
         lanes["parent"] = (args.baseline, [])
     if args.previous_digest:
         lanes["previous_digest"] = (args.previous_digest, ["--union-digest"])
-    report = {"scope": "standalone Cell CPU; constructor-only synthetic workloads, no marker Bake or egglog runtime timing",
+    report = {"scope": "standalone Cell CPU; constructor/Unit synthetic workloads from typed IR, no marker Bake or egglog runtime timing",
               "platform": platform.platform(), "groups": args.groups, "depth": args.depth,
               "repeat": args.repeat,
               "binaries_sha256": {lane: sha256(binary) for lane, (binary, _) in lanes.items()},

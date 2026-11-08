@@ -24,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
-        println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor-only matcher)");
+        println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]

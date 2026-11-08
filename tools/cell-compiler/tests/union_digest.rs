@@ -19,7 +19,9 @@ fn rows(mut rows: J) -> J {
         let mut ready = BTreeMap::<String, String>::new();
         for row in rs.iter() {
             let vs = row["values"].as_array().unwrap();
-            let id = vs.last().unwrap()["eq"].as_str().unwrap();
+            let Some(id) = vs.last().unwrap()["eq"].as_str() else {
+                continue;
+            };
             if names.contains_key(id) {
                 continue;
             }
@@ -189,12 +191,129 @@ fn unsupported_effects_are_rejected() {
             "(datatype E (N i64)) (rule ((= a (N i))) ((subsume (N i)))) (N 0) (run 1)",
             "subsumption",
         ),
+        (
+            "(datatype E (N i64)) (function port (E) Unit :merge old) (function callback (E) Unit :merge (port (N 0))) (N 0) (run 1)",
+            "Unit-presence",
+        ),
     ] {
         let result = Graph::new_with_union_digest(program(source), 64);
         assert!(matches!(result, Err(e) if e.contains(reason)));
     }
     let p = program("(datatype E (N i64)) (N 0) (run 1)");
     assert!(Graph::new_with_union_digest(p, 65).is_err());
+}
+
+#[test]
+fn unit_presence_is_correlated_and_wakes_repeated_variable_consumers() {
+    differential(
+        r#"
+        (datatype E (N i64) (Pair E E) (Seen E))
+        (function Mark (E E) Unit :merge old)
+        (relation Present (E E))
+        (ruleset alias) (ruleset read) (ruleset late)
+        (rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset alias)
+        (rule ((Mark a a) (Present a a)) ((Seen a)) :ruleset read)
+        (rule ((Seen a)) ((set (Mark a a) ()) (Present a a)) :ruleset late)
+        (set (Mark (N 0) (N 1)) ()) (set (Mark (N 1) (N 0)) ())
+        (set (Mark (N 0) (N 2)) ()) (Present (N 0) (N 1)) (Present (N 1) (N 0))
+    "#,
+        &[
+            "(run read)",
+            "(run alias)",
+            "(run read)",
+            "(run late)",
+            "(run alias)",
+            "(run read)",
+        ],
+    );
+}
+
+#[test]
+fn bake_markers_and_compact_unit_ports_survive_union_digests() {
+    let temp = tempfile::tempdir().unwrap();
+    let source = temp.path().join("ports.egg");
+    let out = temp.path().join("compiled");
+    let text = include_str!("fixtures/union-digest-ports.egg");
+    std::fs::write(&source, text).unwrap();
+    let output = std::process::Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+        .args(["compile", "--source"])
+        .arg(&source)
+        .arg("--output")
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let artifact =
+        serde_json::from_slice(&std::fs::read(out.join("program.json")).unwrap()).unwrap();
+    let p = Program::parse(artifact).unwrap();
+    assert!(
+        !p.marker_tables.is_empty(),
+        "fixture must exercise real selected Bake markers"
+    );
+    let mut control = Executor::new(Graph::new(p.clone()).unwrap(), true);
+    control.execute().unwrap();
+    let reference: Vec<_> = control
+        .snapshots
+        .iter()
+        .map(|s| rows(s["rows"].clone()))
+        .collect();
+    let mut final_rows = J::Null;
+    for bits in [0, 64] {
+        let mut digest =
+            Executor::new(Graph::new_with_union_digest(p.clone(), bits).unwrap(), true);
+        digest.execute().unwrap();
+        assert_eq!(
+            digest
+                .snapshots
+                .iter()
+                .map(|s| rows(s["rows"].clone()))
+                .collect::<Vec<_>>(),
+            reference
+        );
+        assert_eq!(digest.binding_audit, control.binding_audit);
+        final_rows = rows(digest.graph.export().unwrap()["rows"].clone());
+        let report = digest.report();
+        assert!(
+            report["union_digest"]["stats"]["unit_rows_rekeyed"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert_eq!(digest.graph.stats.repaired_dependencies, 0);
+        if cfg!(feature = "view-ports") {
+            assert!(report["view_storage"]["compact"].as_u64().unwrap() > 0);
+            assert!(
+                report["union_digest"]["stats"]["unit_compact_rekeys"]
+                    .as_u64()
+                    .unwrap()
+                    > 0
+            );
+            assert!(
+                report["union_digest"]["stats"]["unit_compact_retired"]
+                    .as_u64()
+                    .unwrap()
+                    > 0
+            );
+        }
+    }
+    // Independent oracle also executes the original and compiler-marked source checks.
+    for (index, source) in [
+        text.to_owned(),
+        std::fs::read_to_string(out.join("source_sk_mk.egg")).unwrap(),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let mut native = egglog::EGraph::default();
+        native.parse_and_run_program(None, &source).unwrap();
+        if index == 1 {
+            assert_eq!(rows(native.device_snapshot().unwrap()), final_rows);
+        }
+    }
 }
 
 #[test]
