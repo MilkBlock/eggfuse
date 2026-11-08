@@ -1,5 +1,4 @@
 mod change_batch;
-mod union_digest;
 pub mod checksum;
 mod depth_plan;
 #[cfg(feature = "structural-depth")]

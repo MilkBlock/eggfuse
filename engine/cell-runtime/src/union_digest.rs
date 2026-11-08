@@ -1,27 +1,17 @@
-//! Experimental relational congruence: equality deltas update correlated key
-//! packets and join them by (operator, ordered arguments). No digest collision
-//! authorizes an equality without a full-key comparison.
-//!
-//! Raw e-class numbers are bindings, never learned rule selectors. The only
-//! rule is F(xs, u), F(ys, v), xs == ys -> u == v. The ordinary graph still owns
-//! row publication, interning, receipts and the source Run barriers.
-use crate::{
-    graph::FactRef,
-    program::{Op, Program, Result},
-    value::Value,
-};
-use rustc_hash::FxHashMap as HashMap;
-use serde::Serialize;
-use std::{
-    collections::BTreeSet,
-    hash::{Hash, Hasher},
-};
+//! Constructor equality joins over the graph's existing row fields, reverse
+//! incidences and interning buckets. ChangeBatch is the only wake-up queue
+//! consumed by shared Entry; source Run barriers still control observation.
+use super::*;
+use std::rc::Rc;
 
 #[derive(Default, Debug, Serialize)]
-pub struct Stats {
+pub(super) struct DigestStats {
     pub equality_events: u64,
+    pub shared_incidence_visits: u64,
     pub changed_argument_positions: u64,
     pub key_packets_updated: u64,
+    pub result_only_updates: u64,
+    pub shared_row_copies: u64,
     pub full_key_checks: u64,
     pub congruence_matches: u64,
     pub output_union_requests: u64,
@@ -30,23 +20,14 @@ pub struct Stats {
     pub peak_packets: usize,
 }
 
-#[derive(Clone)]
-struct Packet {
-    table: usize,
-    key: Vec<Value>,
-    result: u64,
-    hash: u64,
-}
-
-pub struct Matcher {
-    packets: HashMap<FactRef, Packet>,
-    // Correlated keys remain in packets. The reverse relation records exact
-    // argument positions, including repeated occurrences of one variable.
-    arguments: HashMap<u64, BTreeSet<(FactRef, usize)>>,
-    buckets: HashMap<u64, BTreeSet<FactRef>>,
+pub(super) struct Matcher {
+    // Typed schema positions, reusable across Runs; no learned IDs or rows.
+    eq_columns: Vec<Box<[usize]>>,
     duplicates: BTreeSet<FactRef>,
-    pub stats: Stats,
+    stats: DigestStats,
+    live_rows: usize,
     hash_bits: u32,
+    hash_mask: u64,
 }
 
 impl Matcher {
@@ -83,217 +64,242 @@ impl Matcher {
         Ok(())
     }
 
-    pub fn new(hash_bits: u32) -> Result<Self> {
+    pub fn new(p: &Program, hash_bits: u32) -> Result<Self> {
+        Self::validate(p)?;
         if hash_bits > 64 {
             return Err("union digest hash bits must be in 0..=64".into());
         }
         Ok(Self {
-            packets: HashMap::default(),
-            arguments: HashMap::default(),
-            buckets: HashMap::default(),
+            eq_columns: p
+                .tables
+                .iter()
+                .map(|t| {
+                    t.schema
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, s)| (s["kind"] == "eq").then_some(i))
+                        .collect()
+                })
+                .collect(),
             duplicates: BTreeSet::new(),
-            stats: Stats::default(),
+            stats: DigestStats::default(),
+            live_rows: 0,
             hash_bits,
+            hash_mask: if hash_bits == 64 {
+                u64::MAX
+            } else {
+                (1u64 << hash_bits) - 1
+            },
         })
     }
 
-    fn hash(&self, table: usize, key: &[Value]) -> u64 {
-        let mut h = rustc_hash::FxHasher::default();
-        table.hash(&mut h);
-        key.hash(&mut h);
-        let word = h.finish();
-        if self.hash_bits == 64 {
-            word
-        } else {
-            word & ((1u64 << self.hash_bits) - 1)
-        }
-    }
-
-    fn unindex(&mut self, f: FactRef, hash: u64) {
-        if let Some(bucket) = self.buckets.get_mut(&hash) {
-            bucket.remove(&f);
-            if bucket.is_empty() {
-                self.buckets.remove(&hash);
-            }
-        }
-    }
-
-    /// Join a changed packet with an existing exact key. Tracking the whole
-    /// tuple prevents combining individually true columns of different rows.
-    fn join(&mut self, f: FactRef, out: &mut Vec<(u64, u64)>) {
-        let p = &self.packets[&f];
-        let mut equal = None;
-        for &g in self.buckets.get(&p.hash).into_iter().flatten() {
-            if f == g {
-                continue;
-            }
-            self.stats.full_key_checks += 1;
-            let q = &self.packets[&g];
-            if p.table == q.table && p.key == q.key {
-                equal = Some((g, q.result));
-                break;
-            }
-        }
-        if let Some((g, result)) = equal {
-            self.stats.congruence_matches += 1;
-            self.stats.output_union_requests += 1;
-            out.push((p.result, result));
-            self.duplicates.insert(f);
-            self.duplicates.insert(g);
-        }
-        self.buckets.entry(p.hash).or_default().insert(f);
-    }
-
-    pub fn insert(
-        &mut self,
-        f: FactRef,
-        table: usize,
-        key: &[Value],
-        result: &Value,
-    ) -> Result<Vec<(u64, u64)>> {
-        let Value::Eq(result) = result else {
-            return Err("constructor digest result is not an equality value".into());
-        };
-        if self.packets.contains_key(&f) {
-            return Err("duplicate digest witness".into());
-        }
-        let hash = self.hash(table, key);
-        self.packets.insert(
-            f,
-            Packet {
-                table,
-                key: key.to_vec(),
-                result: *result,
-                hash,
-            },
-        );
-        for (column, v) in key.iter().enumerate() {
-            if let Value::Eq(id) = v {
-                self.arguments.entry(*id).or_default().insert((f, column));
-            }
-        }
-        self.stats.peak_packets = self.stats.peak_packets.max(self.packets.len());
-        let mut out = vec![];
-        self.join(f, &mut out);
-        Ok(out)
-    }
-
-    /// The equality service supplies a displaced binding and its new binding.
-    /// This is a delta join, not a scan of all parent constructor rows. Update
-    /// every affected column before probing any packet in this event.
-    pub fn equality(&mut self, from: u64, to: u64) -> Vec<(u64, u64)> {
-        self.stats.equality_events += 1;
-        let positions = self.arguments.remove(&from).unwrap_or_default();
-        self.stats.changed_argument_positions += positions.len() as u64;
-        let changed: BTreeSet<_> = positions.iter().map(|(f, _)| *f).collect();
-        for &f in &changed {
-            self.unindex(f, self.packets[&f].hash);
-        }
-        for &(f, column) in &positions {
-            self.packets.get_mut(&f).unwrap().key[column] = Value::Eq(to);
-        }
-        if !positions.is_empty() {
-            self.arguments.entry(to).or_default().extend(positions);
-        }
-        let mut out = vec![];
-        for f in changed {
-            let p = &self.packets[&f];
-            let hash = self.hash(p.table, &p.key);
-            self.packets.get_mut(&f).unwrap().hash = hash;
-            self.stats.key_packets_updated += 1;
-            self.join(f, &mut out);
-        }
-        out
-    }
-
-    pub fn take_duplicates(&mut self) -> BTreeSet<FactRef> {
-        std::mem::take(&mut self.duplicates)
-    }
-
-    pub fn survivor(&self, f: FactRef) -> FactRef {
-        let p = &self.packets[&f];
-        self.buckets[&p.hash]
-            .iter()
-            .copied()
-            .find(|g| {
-                let q = &self.packets[g];
-                p.table == q.table && p.key == q.key
-            })
-            .expect("indexed digest packet")
-    }
-
-    pub fn fields(&self, f: FactRef) -> (usize, Vec<Value>, u64) {
-        let p = &self.packets[&f];
-        (p.table, p.key.clone(), p.result)
-    }
-
-    pub fn remove(&mut self, f: FactRef) {
-        let Some(p) = self.packets.remove(&f) else {
-            return;
-        };
-        self.unindex(f, p.hash);
-        for (column, v) in p.key.iter().enumerate() {
-            if let Value::Eq(id) = v {
-                if let Some(positions) = self.arguments.get_mut(id) {
-                    positions.remove(&(f, column));
-                    if positions.is_empty() {
-                        self.arguments.remove(id);
-                    }
-                }
-            }
-        }
+    pub fn removed(&mut self, f: FactRef) {
+        self.live_rows -= 1;
         self.duplicates.remove(&f);
     }
 
-    pub fn report(&self) -> serde_json::Value {
-        serde_json::json!({"enabled": true, "stats": self.stats,
-            "live_packets": self.packets.len(),
-            "live_argument_postings": self.arguments.values().map(BTreeSet::len).sum::<usize>(),
+    pub fn report(&self) -> J {
+        json!({"enabled": true, "stats": self.stats,
+            "live_packets": self.live_rows, "owned_key_packets": 0,
+            "owned_argument_postings": 0, "owned_key_buckets": 0,
             "hash_bits": self.hash_bits,
-            "scope": "constructor-only relational congruence; ordinary physical publication retained"})
+            "storage": "Graph RowFields, reverse incidences and constructor interning",
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "scope": "constructor-only relational congruence with shared storage and publication"})
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    fn f(n: u32) -> FactRef {
-        FactRef { cell: n, op: 0 }
+impl Graph {
+    #[inline]
+    pub(super) fn constructor_hash(&self, table: usize, key: &[Value]) -> u64 {
+        let h = hashkey(table, key);
+        self.union_digest.as_ref().map_or(h, |m| h & m.hash_mask)
     }
-    #[test]
-    fn complete_tuples_repeated_arguments_and_hash_collisions() {
-        for bits in [0, 64] {
-            let mut m = Matcher::new(bits).unwrap();
-            for (n, xs) in [(1, [1, 2]), (2, [2, 1]), (3, [1, 3])] {
-                assert!(
-                    m.insert(f(n), 0, &xs.map(Value::Eq), &Value::Eq(10 + n as u64))
-                        .unwrap()
-                        .is_empty()
-                );
+
+    pub(super) fn register_digest(&mut self, f: FactRef) -> Result<()> {
+        let matcher = self.union_digest.as_mut().unwrap();
+        matcher.live_rows += 1;
+        matcher.stats.peak_packets = matcher.stats.peak_packets.max(matcher.live_rows);
+        // Activation already installed the packet in the shared constructor
+        // bucket. Normally singleton, but imports can contain duplicate keys.
+        self.join_digest(f)
+    }
+
+    /// Exact correlated join against the SAME buckets used by constructor
+    /// lookup. A hash collision only adds candidate work, never equality.
+    fn join_digest(&mut self, f: FactRef) -> Result<()> {
+        let state = &self.cells[&f.cell].facts[&f.op];
+        let (table, fields) = state
+            .decoded
+            .as_ref()
+            .ok_or("missing shared digest fields")?;
+        let key = &fields[..fields.len() - 1];
+        let mut found = None;
+        let matcher = self.union_digest.as_mut().unwrap();
+        for &other in self.intern.get(&state.hash).into_iter().flatten() {
+            if other == f {
+                continue;
             }
-            assert_eq!(m.equality(2, 1).len(), 1);
-            assert_eq!(m.survivor(f(2)), f(1));
-            assert_eq!(m.survivor(f(3)), f(3));
-            m.remove(f(2));
-            assert_eq!(m.equality(3, 1).len(), 1);
-            assert_eq!(m.survivor(f(3)), f(1));
+            matcher.stats.full_key_checks += 1;
+            let other_state = &self.cells[&other.cell].facts[&other.op];
+            let (other_table, other_fields) = other_state
+                .decoded
+                .as_ref()
+                .ok_or("missing shared candidate fields")?;
+            if table == other_table && key == &other_fields[..other_fields.len() - 1] {
+                found = Some((other, other_fields.last().unwrap().clone()));
+                break;
+            }
         }
+        if let Some((other, other_result)) = found {
+            let result = fields.last().unwrap().clone();
+            matcher.stats.congruence_matches += 1;
+            matcher.stats.output_union_requests += 1;
+            matcher.duplicates.insert(f);
+            matcher.duplicates.insert(other);
+            self.enqueue_union(result, other_result)?;
+        }
+        Ok(())
     }
-    #[test]
-    fn equal_results_do_not_authorize_equal_keys() {
-        let mut m = Matcher::new(0).unwrap();
-        m.insert(f(1), 0, &[Value::Eq(1)], &Value::Eq(9)).unwrap();
-        assert!(
-            m.insert(f(2), 0, &[Value::Eq(2)], &Value::Eq(9))
+
+    /// Consume one equality delta through the reverse relation already used by
+    /// matching. Typed columns distinguish key changes from result-only wakes.
+    /// Update ALL correlated fields before joining any changed packet.
+    pub(super) fn match_equality_digest(
+        &mut self,
+        from: u64,
+        to: u64,
+        affected: &UseSet,
+    ) -> Result<()> {
+        let matcher = self.union_digest.as_mut().unwrap();
+        matcher.stats.equality_events += 1;
+        let mut rekeyed = Vec::new();
+        for d in affected.iter() {
+            matcher.stats.shared_incidence_visits += 1;
+            let Dependency::Fact(f) = *d else {
+                return Err("function entered constructor digest".into());
+            };
+            let Some(state) = self
+                .cells
+                .get_mut(&f.cell)
+                .and_then(|c| c.facts.get_mut(&f.op))
+            else {
+                continue;
+            };
+            let (table, fields) = state
+                .decoded
+                .as_mut()
+                .ok_or("missing shared digest fields")?;
+            let result_column = fields.len() - 1;
+            matcher.stats.shared_row_copies += u64::from(Rc::strong_count(fields) > 1);
+            // Entry packets may still own the preceding Run's fields. COW keeps
+            // those snapshots immutable while new packets use the updated row.
+            let values = Rc::make_mut(fields);
+            let mut changed_key = false;
+            let mut changed = false;
+            for &column in &matcher.eq_columns[*table] {
+                if values[column] == Value::Eq(from) {
+                    values[column] = Value::Eq(to);
+                    changed = true;
+                    if column != result_column {
+                        changed_key = true;
+                        matcher.stats.changed_argument_positions += 1;
+                    }
+                }
+            }
+            debug_assert!(changed, "stale reverse incidence in digest matcher");
+            if !changed {
+                continue;
+            }
+            if changed_key {
+                matcher.stats.key_packets_updated += 1;
+                let old = state.hash;
+                if let Some(bucket) = self.intern.get_mut(&old) {
+                    bucket.remove(&f);
+                    if bucket.is_empty() {
+                        self.intern.remove(&old);
+                    }
+                }
+                state.hash = hashkey(*table, &values[..result_column]) & matcher.hash_mask;
+                self.stats.repair_key_hash_changes += u64::from(state.hash != old);
+                rekeyed.push(f);
+            } else {
+                matcher.stats.result_only_updates += 1;
+            }
+            state.epoch = self.epoch;
+            self.query_versions[*table] += 1;
+            self.changes.touch(*table, *d);
+            matcher.stats.publication_visits += 1;
+        }
+        // Deterministic proposal ordering; incidence storage itself is unordered.
+        rekeyed.sort_unstable();
+        for f in rekeyed {
+            self.join_digest(f)?;
+            let h = self.cells[&f.cell].facts[&f.op].hash;
+            self.intern.entry(h).or_default().insert(f);
+        }
+        Ok(())
+    }
+
+    /// Equality witnesses can be retired immediately after the event's reverse
+    /// incidences have migrated. Their queued result unions remain obligations;
+    /// removing a duplicate does not count as committing that result union.
+    pub(super) fn retire_digest_duplicates(&mut self) -> Result<()> {
+        let duplicates = std::mem::take(&mut self.union_digest.as_mut().unwrap().duplicates);
+        for f in duplicates {
+            let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+                continue;
+            };
+            let (table, fields) = state.decoded.as_ref().ok_or("missing duplicate fields")?;
+            let table = *table;
+            let key = &fields[..fields.len() - 1];
+            let keep = self.intern[&state.hash]
+                .iter()
+                .copied()
+                .find(|other| {
+                    let (t, vs) = self.cells[&other.cell].facts[&other.op]
+                        .decoded
+                        .as_ref()
+                        .unwrap();
+                    *t == table && key == &vs[..vs.len() - 1]
+                })
+                .ok_or("missing digest keeper")?;
+            if keep == f {
+                continue;
+            }
+            self.union_digest
+                .as_mut()
                 .unwrap()
-                .is_empty()
-        );
-        assert!(
-            m.insert(f(3), 1, &[Value::Eq(1)], &Value::Eq(9))
+                .stats
+                .duplicate_rows_retired += 1;
+            let target = self
+                .cells
+                .get_mut(&keep.cell)
                 .unwrap()
-                .is_empty()
-        );
-        assert_eq!(m.equality(2, 1).len(), 1);
-        assert_eq!(m.survivor(f(3)), f(3));
+                .facts
+                .get_mut(&keep.op)
+                .unwrap();
+            target.epoch = self.epoch;
+            self.query_versions[table] += 1;
+            self.changes.touch(table, Dependency::Fact(keep));
+            if self.receipt_tracking {
+                self.receipt_forwards
+                    .insert(Dependency::Fact(f), Dependency::Fact(keep));
+            }
+            self.retire(f)?;
+        }
+        Ok(())
+    }
+
+    pub(super) fn propagate_union_digests(&mut self) -> Result<()> {
+        // Imported equal keys may have emitted proposals before any event.
+        self.retire_digest_duplicates()?;
+        while !self.pending_unions.is_empty() {
+            let pairs = std::mem::take(&mut self.pending_unions);
+            for (a, b) in pairs {
+                self.union(a, b)?;
+            }
+        }
+        Ok(())
     }
 }

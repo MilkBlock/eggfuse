@@ -1,4 +1,8 @@
-# Union digests as incremental constructor matches
+# Union digests as incremental constructor matches: first prototype
+
+This page records the implementation and measurements at `1ccda85a`. The
+current implementation shares graph storage and shared Entry delivery; see
+[the follow-up experiment](SHARED.md). The original results below are retained.
 
 This is an opt-in experiment in the **standalone Cell CPU executor**, forked
 from `codex/sparse-cell-storage` at `27f098a2`. That branch is the retained fast

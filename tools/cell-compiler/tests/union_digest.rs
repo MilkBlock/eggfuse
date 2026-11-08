@@ -198,6 +198,126 @@ fn unsupported_effects_are_rejected() {
 }
 
 #[test]
+fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
+    use eggfuse_cell_runtime::entry_schedule::Scheduler;
+    use std::rc::Rc;
+    let p = program(
+        r#"
+        (datatype E (N i64) (Pair E E) (Seen E) (Same E))
+        (ruleset any) (ruleset equal)
+        (rule ((= x (Pair a b))) ((Seen x)) :ruleset any)
+        (rule ((= x (Pair a a))) ((Same x)) :ruleset equal)
+        (Pair (N 0) (N 1))
+        (run-schedule (seq (run any) (run equal)))
+    "#,
+    );
+    let any = p.sets["any"][0];
+    let equal = p.sets["equal"][0];
+    for bits in [0, 64] {
+        let mut scheduler = Scheduler::new(&p, true);
+        let mut graph = Graph::new_with_union_digest(p.clone(), bits).unwrap();
+        let old = scheduler
+            .seeds(&graph, any, 0)
+            .unwrap()
+            .pop()
+            .unwrap()
+            .packet
+            .row
+            .clone();
+        let values = old.values.to_vec();
+        assert!(Rc::ptr_eq(
+            &old.values,
+            &graph.row(old.witness).unwrap().unwrap().values
+        ));
+        assert!(scheduler.seeds(&graph, equal, 0).unwrap().is_empty());
+        graph.epoch += 1;
+        graph
+            .enqueue_union(values[0].clone(), values[1].clone())
+            .unwrap();
+        graph.repair().unwrap();
+        assert_eq!(&*old.values, &values[..]);
+        // Both consumers stay on their previous snapshot until normal delivery.
+        assert!(
+            scheduler
+                .seeds(&graph, any, graph.epoch)
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            scheduler
+                .seeds(&graph, equal, graph.epoch)
+                .unwrap()
+                .is_empty()
+        );
+        scheduler.publish(&graph);
+        let new = scheduler
+            .seeds(&graph, any, graph.epoch)
+            .unwrap()
+            .pop()
+            .unwrap()
+            .packet
+            .row
+            .clone();
+        assert_eq!(new.values[0], new.values[1]);
+        assert_eq!(
+            scheduler.seeds(&graph, equal, graph.epoch).unwrap().len(),
+            1
+        );
+        assert!(Rc::ptr_eq(
+            &new.values,
+            &graph.row(new.witness).unwrap().unwrap().values
+        ));
+        assert!(!Rc::ptr_eq(&new.values, &old.values));
+        let report = graph.union_digest_report();
+        assert!(report["stats"]["shared_row_copies"].as_u64().unwrap() > 0);
+        assert_eq!(report["owned_key_packets"], 0);
+        assert_eq!(report["owned_argument_postings"], 0);
+        assert_eq!(report["owned_key_buckets"], 0);
+    }
+}
+
+#[test]
+fn retiring_imported_duplicates_preserves_pending_transitive_unions() {
+    let mut p = program("(datatype E (N i64) (F E) (G E)) (G (F (N 0))) (run 1)");
+    let expected = rows(Graph::new(p.clone()).unwrap().export().unwrap()["rows"].clone());
+    // The frontend normally exports canonical input. Inject aliases directly
+    // to exercise the digest import queue and its early-retirement obligation.
+    let mut duplicate = p
+        .initial
+        .iter()
+        .find(|r| r["table"] == "F")
+        .unwrap()
+        .clone();
+    duplicate["values"][1]["eq"] = json!("duplicate-F-result");
+    p.initial.push(duplicate);
+    let mut parent = p
+        .initial
+        .iter()
+        .find(|r| r["table"] == "G")
+        .unwrap()
+        .clone();
+    parent["values"][0]["eq"] = json!("duplicate-F-result");
+    parent["values"][1]["eq"] = json!("duplicate-G-result");
+    p.initial.push(parent);
+    for reverse in [false, true] {
+        let mut p = p.clone();
+        if reverse {
+            p.initial.reverse();
+        }
+        for bits in [0, 64] {
+            let graph = Graph::new_with_union_digest(p.clone(), bits).unwrap();
+            assert_eq!(rows(graph.export().unwrap()["rows"].clone()), expected);
+            assert_eq!(graph.stats.unions, 2);
+            assert!(graph.pending_unions.is_empty());
+            assert_eq!(
+                graph.union_digest_report()["stats"]["duplicate_rows_retired"],
+                2
+            );
+        }
+    }
+}
+
+#[test]
 fn incremental_operations_match_a_full_scan_congruence_oracle() {
     use eggfuse_cell_runtime::value::{Value, canon};
     fn root(parents: &[usize], mut i: usize) -> usize {

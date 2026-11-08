@@ -1,17 +1,20 @@
 //! Reproducible constructor-only workload; intentionally bypasses marker Bake.
 //! Usage: cargo run --release -p eggfuse-cell-compiler --example
-//! union_digest_fixture -- OUTPUT chain|fanout|stable GROUPS DEPTH
+//! union_digest_fixture -- OUTPUT SHAPE GROUPS DEPTH
 use eggfuse_cell_runtime::{compiler, program::Program};
 use std::{collections::BTreeSet, fs, path::PathBuf};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.len() != 4 {
-        return Err("expected OUTPUT chain|fanout|stable GROUPS DEPTH".into());
+        return Err(
+            "expected OUTPUT chain|fanout|stable|warm-chain|warm-fanout GROUPS DEPTH".into(),
+        );
     }
     let out = PathBuf::from(&args[0]);
-    let shape = &args[1];
-    if !["chain", "fanout", "stable"].contains(&shape.as_str()) {
+    let warm = args[1].starts_with("warm-");
+    let shape = args[1].strip_prefix("warm-").unwrap_or(&args[1]);
+    if !["chain", "fanout", "stable"].contains(&shape) || (warm && shape == "stable") {
         return Err("unknown shape".into());
     }
     let groups: usize = args[2].parse()?;
@@ -43,7 +46,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for group in 0..groups {
         source.push_str(&format!("(Seed (N {}) (N {}))\n", 2 * group, 2 * group + 1));
     }
-    source.push_str("(run-schedule (seq (run make) (run alias) (run read)))\n");
+    if warm {
+        source.push_str("(run-schedule (seq (run make) (run read) (run alias) (run read)))\n");
+    } else {
+        source.push_str("(run-schedule (seq (run make) (run alias) (run read)))\n");
+    }
     let core = eggfuse_bake::device_frontend::core("union-digest-fixture", &source)?;
     let artifact = compiler::compile(core, &BTreeSet::new())?;
     Program::parse(artifact.clone())?;

@@ -1,0 +1,45 @@
+{
+  "scope": "standalone Cell CPU; native egglog is a correctness oracle only",
+  "all_features": {
+    "command": "cargo test --release --offline --locked --workspace --all-features",
+    "passed": 157,
+    "failed": 0,
+    "ignored": 4
+  },
+  "default_digest_tests": {
+    "command": "cargo test --release --offline --locked -p eggfuse-cell-compiler --test union_digest",
+    "passed": 6
+  },
+  "ordinary_path": {
+    "sum-bits": {
+      "final_rows_and_anchors": "equal to 27f098a2",
+      "schedule_and_stats": "equal to 27f098a2",
+      "runs": 1428,
+      "program_sha256": "1d6e531e391cd34c56b452124e5c46563f044c1d75aea3776e9e2d0e60a29409",
+      "digest_error": "Error: \"union digest does not yet support marker tables\""
+    },
+    "raytrace": {
+      "final_rows_and_anchors": "equal to 27f098a2",
+      "schedule_and_stats": "equal to 27f098a2",
+      "runs": 16883,
+      "program_sha256": "2ea40b3ded80dda4bfbf7e9a67a1ac74ae08ad16568b1a4ea4b5ae3f355b6579",
+      "digest_error": "Error: \"union digest does not yet support marker tables\""
+    }
+  },
+  "benchmark_audits": {
+    "shapes": [
+      "chain",
+      "fanout",
+      "stable",
+      "warm-chain",
+      "warm-fanout"
+    ],
+    "checks": [
+      "initial, every Run and final graph",
+      "every Run binding audit",
+      "semantic schedule in audits and all timing samples",
+      "shared Entry consumer_seed_deliveries and borrowed_slots across lanes"
+    ]
+  },
+  "candidate_sha256": "973349c791f472a26d187169fde291f316c2690118090f5c5f611ba4ace06b51"
+}

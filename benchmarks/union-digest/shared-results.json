@@ -1,0 +1,2197 @@
+{
+  "scope": "standalone Cell CPU; constructor-only synthetic workloads, no marker Bake or egglog runtime timing",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "groups": 256,
+  "depth": 32,
+  "repeat": 7,
+  "binaries_sha256": {
+    "control": "973349c791f472a26d187169fde291f316c2690118090f5c5f611ba4ace06b51",
+    "digest": "973349c791f472a26d187169fde291f316c2690118090f5c5f611ba4ace06b51",
+    "previous_digest": "0a4d3d6016283969502964ae2e3a7bba613d455b9ddb707e5238f920e995382c"
+  },
+  "cases": {
+    "chain": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "program_file_sha256": "9ccae7501bee6945d0467243ede83cedc2a38c7d81435773eac85bbc47c344b2",
+      "source_sha256": "074a5f0903ebe18326ce4783f17f9a6f7df1b64bc77c07be0f7edcee47d054b9",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.000874791,
+              "inference_seconds": 0.020496791,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.000944709,
+              "inference_seconds": 0.020326167,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.001045542,
+              "inference_seconds": 0.021112667,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.00101775,
+              "inference_seconds": 0.022315417,
+              "peak_rss_through_inference_bytes": 44793856
+            },
+            {
+              "setup_seconds": 0.00107,
+              "inference_seconds": 0.0182755,
+              "peak_rss_through_inference_bytes": 44793856
+            },
+            {
+              "setup_seconds": 0.000860791,
+              "inference_seconds": 0.021398583,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.00103975,
+              "inference_seconds": 0.018512333,
+              "peak_rss_through_inference_bytes": 44777472
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 34140,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 8796,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.00101775,
+            "inference_seconds": 0.020496791,
+            "peak_rss_through_inference_bytes": 44777472
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.000959125,
+              "inference_seconds": 0.020273292,
+              "peak_rss_through_inference_bytes": 44761088
+            },
+            {
+              "setup_seconds": 0.00097725,
+              "inference_seconds": 0.019095792,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.000992708,
+              "inference_seconds": 0.019224292,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.001045375,
+              "inference_seconds": 0.021061791,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.001048333,
+              "inference_seconds": 0.02049875,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.000901042,
+              "inference_seconds": 0.021959791,
+              "peak_rss_through_inference_bytes": 44777472
+            },
+            {
+              "setup_seconds": 0.000900625,
+              "inference_seconds": 0.018059541,
+              "peak_rss_through_inference_bytes": 44777472
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 42240,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 42148,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "enabled": true,
+            "hash_bits": 64,
+            "live_packets": 17152,
+            "owned_argument_postings": 0,
+            "owned_key_buckets": 0,
+            "owned_key_packets": 0,
+            "scope": "constructor-only relational congruence with shared storage and publication",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 8704,
+              "result_only_updates": 256,
+              "shared_incidence_visits": 8704,
+              "shared_row_copies": 256
+            },
+            "storage": "Graph RowFields, reverse incidences and constructor interning"
+          },
+          "median": {
+            "setup_seconds": 0.00097725,
+            "inference_seconds": 0.020273292,
+            "peak_rss_through_inference_bytes": 44777472
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        },
+        "previous_digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001007209,
+              "inference_seconds": 0.034473208,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.00105975,
+              "inference_seconds": 0.03518675,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.001100625,
+              "inference_seconds": 0.033863667,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.001172417,
+              "inference_seconds": 0.037610541,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.001013084,
+              "inference_seconds": 0.037169625,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.000986,
+              "inference_seconds": 0.035070542,
+              "peak_rss_through_inference_bytes": 60997632
+            },
+            {
+              "setup_seconds": 0.001059709,
+              "inference_seconds": 0.036559416,
+              "peak_rss_through_inference_bytes": 60997632
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 34140,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 348,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 8796
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001059709,
+            "inference_seconds": 0.03518675,
+            "peak_rss_through_inference_bytes": 60997632
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        }
+      },
+      "batch": "eager-trial"
+    },
+    "fanout": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "program_file_sha256": "9257a46bcf4e12de222c235764a4712a4141123c2fe41cf9a1fcb23cd0d0cd28",
+      "source_sha256": "309229059a14b195dff185191536f5cc499586777037b8858e8d787cc53811ae",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.000949833,
+              "inference_seconds": 0.022626416,
+              "peak_rss_through_inference_bytes": 46776320
+            },
+            {
+              "setup_seconds": 0.000940334,
+              "inference_seconds": 0.021331042,
+              "peak_rss_through_inference_bytes": 46759936
+            },
+            {
+              "setup_seconds": 0.00105025,
+              "inference_seconds": 0.022513833,
+              "peak_rss_through_inference_bytes": 46759936
+            },
+            {
+              "setup_seconds": 0.001101,
+              "inference_seconds": 0.022682958,
+              "peak_rss_through_inference_bytes": 46776320
+            },
+            {
+              "setup_seconds": 0.000942708,
+              "inference_seconds": 0.020986208,
+              "peak_rss_through_inference_bytes": 46776320
+            },
+            {
+              "setup_seconds": 0.001101125,
+              "inference_seconds": 0.023209583,
+              "peak_rss_through_inference_bytes": 46759936
+            },
+            {
+              "setup_seconds": 0.000964,
+              "inference_seconds": 0.022221041,
+              "peak_rss_through_inference_bytes": 46776320
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 36992,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 11648,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.000964,
+            "inference_seconds": 0.022513833,
+            "peak_rss_through_inference_bytes": 46776320
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.00099825,
+              "inference_seconds": 0.018031208,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.001066709,
+              "inference_seconds": 0.019630334,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.001023333,
+              "inference_seconds": 0.019800917,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.000973875,
+              "inference_seconds": 0.017787417,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.001035,
+              "inference_seconds": 0.019671583,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.000902875,
+              "inference_seconds": 0.01796025,
+              "peak_rss_through_inference_bytes": 44482560
+            },
+            {
+              "setup_seconds": 0.000917792,
+              "inference_seconds": 0.0177995,
+              "peak_rss_through_inference_bytes": 44482560
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 42240,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 39296,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "enabled": true,
+            "hash_bits": 64,
+            "live_packets": 17152,
+            "owned_argument_postings": 0,
+            "owned_key_buckets": 0,
+            "owned_key_packets": 0,
+            "scope": "constructor-only relational congruence with shared storage and publication",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 8704,
+              "result_only_updates": 256,
+              "shared_incidence_visits": 8704,
+              "shared_row_copies": 256
+            },
+            "storage": "Graph RowFields, reverse incidences and constructor interning"
+          },
+          "median": {
+            "setup_seconds": 0.00099825,
+            "inference_seconds": 0.018031208,
+            "peak_rss_through_inference_bytes": 44482560
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        },
+        "previous_digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001100542,
+              "inference_seconds": 0.031353417,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.001167458,
+              "inference_seconds": 0.030590834,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.001171709,
+              "inference_seconds": 0.031080333,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.001100541,
+              "inference_seconds": 0.032435667,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.001221083,
+              "inference_seconds": 0.036272167,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.001166,
+              "inference_seconds": 0.030569375,
+              "peak_rss_through_inference_bytes": 53100544
+            },
+            {
+              "setup_seconds": 0.000994,
+              "inference_seconds": 0.032276,
+              "peak_rss_through_inference_bytes": 53100544
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 36992,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 3200,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 11648
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001166,
+            "inference_seconds": 0.031353417,
+            "peak_rss_through_inference_bytes": 53100544
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 41472,
+            "headers": 41472,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 26112,
+              "changed_headers": 42240,
+              "cold_rows": 8448,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 8704,
+              "node_notifications": 256,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 8448,
+              "private_row_reads": 8448,
+              "retired_packets": 0,
+              "row_decodes": 8448
+            }
+          }
+        }
+      },
+      "batch": "eager-trial"
+    },
+    "stable": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "program_file_sha256": "96637fc0c0c6d3962209f64fb3ff8e5b2d553b7d29b1b0d68a7219333c18b17b",
+      "source_sha256": "a169a753ba01960aef4a4310b7d70a8d5c1dab958e88fa26a83a8b9c517c38c1",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.003191958,
+              "inference_seconds": 0.027017083,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000932958,
+              "inference_seconds": 0.01905375,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000842167,
+              "inference_seconds": 0.018532917,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.001105,
+              "inference_seconds": 0.021115875,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.001004583,
+              "inference_seconds": 0.02153875,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.001182417,
+              "inference_seconds": 0.021925709,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.001057,
+              "inference_seconds": 0.021471584,
+              "peak_rss_through_inference_bytes": 68583424
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.001057,
+            "inference_seconds": 0.021471584,
+            "peak_rss_through_inference_bytes": 68583424
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 32768,
+            "headers": 32768,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 16640,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 50688,
+              "changed_headers": 33536,
+              "cold_rows": 16640,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 16896,
+              "node_notifications": 0,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 16640,
+              "private_row_reads": 16640,
+              "retired_packets": 0,
+              "row_decodes": 16640
+            }
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001005416,
+              "inference_seconds": 0.020454917,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.0009505,
+              "inference_seconds": 0.0195225,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000982208,
+              "inference_seconds": 0.019099375,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000900458,
+              "inference_seconds": 0.021217083,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.00101775,
+              "inference_seconds": 0.020537041,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000987208,
+              "inference_seconds": 0.019244375,
+              "peak_rss_through_inference_bytes": 68583424
+            },
+            {
+              "setup_seconds": 0.000967625,
+              "inference_seconds": 0.021730084,
+              "peak_rss_through_inference_bytes": 68583424
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": {
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "enabled": true,
+            "hash_bits": 64,
+            "live_packets": 33536,
+            "owned_argument_postings": 0,
+            "owned_key_buckets": 0,
+            "owned_key_packets": 0,
+            "scope": "constructor-only relational congruence with shared storage and publication",
+            "stats": {
+              "changed_argument_positions": 0,
+              "congruence_matches": 0,
+              "duplicate_rows_retired": 0,
+              "equality_events": 0,
+              "full_key_checks": 0,
+              "key_packets_updated": 0,
+              "output_union_requests": 0,
+              "peak_packets": 33536,
+              "publication_visits": 0,
+              "result_only_updates": 0,
+              "shared_incidence_visits": 0,
+              "shared_row_copies": 0
+            },
+            "storage": "Graph RowFields, reverse incidences and constructor interning"
+          },
+          "median": {
+            "setup_seconds": 0.000982208,
+            "inference_seconds": 0.020454917,
+            "peak_rss_through_inference_bytes": 68583424
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 32768,
+            "headers": 32768,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 16640,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 50688,
+              "changed_headers": 33536,
+              "cold_rows": 16640,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 16896,
+              "node_notifications": 0,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 16640,
+              "private_row_reads": 16640,
+              "retired_packets": 0,
+              "row_decodes": 16640
+            }
+          }
+        },
+        "previous_digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001115833,
+              "inference_seconds": 0.027619667,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.001148625,
+              "inference_seconds": 0.024446,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.000956792,
+              "inference_seconds": 0.024202417,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.001054708,
+              "inference_seconds": 0.025912,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.001218292,
+              "inference_seconds": 0.026546375,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.001204167,
+              "inference_seconds": 0.026557125,
+              "peak_rss_through_inference_bytes": 75546624
+            },
+            {
+              "setup_seconds": 0.001000584,
+              "inference_seconds": 0.026014,
+              "peak_rss_through_inference_bytes": 75546624
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 33280,
+            "live_packets": 33536,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 0,
+              "congruence_matches": 0,
+              "duplicate_rows_retired": 0,
+              "equality_events": 0,
+              "full_key_checks": 0,
+              "key_packets_updated": 0,
+              "output_union_requests": 0,
+              "peak_packets": 33536,
+              "publication_visits": 0
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001115833,
+            "inference_seconds": 0.026014,
+            "peak_rss_through_inference_bytes": 75546624
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 32768,
+            "headers": 32768,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 16640,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 50688,
+              "changed_headers": 33536,
+              "cold_rows": 16640,
+              "consumer_calls": 3,
+              "consumer_seed_deliveries": 16896,
+              "node_notifications": 0,
+              "node_refreshes": 2,
+              "parameter_packets_reused": 0,
+              "parameters_copied": 0,
+              "predicate_checks": 16640,
+              "private_row_reads": 16640,
+              "retired_packets": 0,
+              "row_decodes": 16640
+            }
+          }
+        }
+      },
+      "batch": "eager-trial"
+    },
+    "warm-chain": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "program_file_sha256": "eb025bcf8135b48120b203f61c4aacce954d5b773e4d7420a5977ee1f48c8cc7",
+      "source_sha256": "8beeec1f4f52dad74b6350b311e6de81b68a67295db266beb08934272eba70e8",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.000904959,
+              "inference_seconds": 0.043302334,
+              "peak_rss_through_inference_bytes": 70516736
+            },
+            {
+              "setup_seconds": 0.000999125,
+              "inference_seconds": 0.040811792,
+              "peak_rss_through_inference_bytes": 70500352
+            },
+            {
+              "setup_seconds": 0.001069,
+              "inference_seconds": 0.042217792,
+              "peak_rss_through_inference_bytes": 70516736
+            },
+            {
+              "setup_seconds": 0.001048834,
+              "inference_seconds": 0.041929792,
+              "peak_rss_through_inference_bytes": 70516736
+            },
+            {
+              "setup_seconds": 0.000984583,
+              "inference_seconds": 0.044107125,
+              "peak_rss_through_inference_bytes": 70500352
+            },
+            {
+              "setup_seconds": 0.000984125,
+              "inference_seconds": 0.0431235,
+              "peak_rss_through_inference_bytes": 70516736
+            },
+            {
+              "setup_seconds": 0.000972542,
+              "inference_seconds": 0.045218209,
+              "peak_rss_through_inference_bytes": 70516736
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 50616,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 50432,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 16384,
+            "repair_key_hash_changes": 16640,
+            "repaired_dependencies": 17080,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.000984583,
+            "inference_seconds": 0.0431235,
+            "peak_rss_through_inference_bytes": 70516736
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 8100,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001025,
+              "inference_seconds": 0.044525292,
+              "peak_rss_through_inference_bytes": 70172672
+            },
+            {
+              "setup_seconds": 0.001044375,
+              "inference_seconds": 0.043053166,
+              "peak_rss_through_inference_bytes": 70172672
+            },
+            {
+              "setup_seconds": 0.000893917,
+              "inference_seconds": 0.043703125,
+              "peak_rss_through_inference_bytes": 70156288
+            },
+            {
+              "setup_seconds": 0.001117833,
+              "inference_seconds": 0.044018125,
+              "peak_rss_through_inference_bytes": 70172672
+            },
+            {
+              "setup_seconds": 0.001021833,
+              "inference_seconds": 0.045722583,
+              "peak_rss_through_inference_bytes": 70172672
+            },
+            {
+              "setup_seconds": 0.001038708,
+              "inference_seconds": 0.043973208,
+              "peak_rss_through_inference_bytes": 70172672
+            },
+            {
+              "setup_seconds": 0.000954041,
+              "inference_seconds": 0.04134625,
+              "peak_rss_through_inference_bytes": 70172672
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 66816,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 66632,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 16640,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "enabled": true,
+            "hash_bits": 64,
+            "live_packets": 17152,
+            "owned_argument_postings": 0,
+            "owned_key_buckets": 0,
+            "owned_key_packets": 0,
+            "scope": "constructor-only relational congruence with shared storage and publication",
+            "stats": {
+              "changed_argument_positions": 16640,
+              "congruence_matches": 16384,
+              "duplicate_rows_retired": 16384,
+              "equality_events": 16640,
+              "full_key_checks": 16384,
+              "key_packets_updated": 16640,
+              "output_union_requests": 16384,
+              "peak_packets": 33536,
+              "publication_visits": 16896,
+              "result_only_updates": 256,
+              "shared_incidence_visits": 16896,
+              "shared_row_copies": 8448
+            },
+            "storage": "Graph RowFields, reverse incidences and constructor interning"
+          },
+          "median": {
+            "setup_seconds": 0.001025,
+            "inference_seconds": 0.043973208,
+            "peak_rss_through_inference_bytes": 70172672
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 8100,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        },
+        "previous_digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001021042,
+              "inference_seconds": 0.078635583,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.001129833,
+              "inference_seconds": 0.076948916,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.000976667,
+              "inference_seconds": 0.0797495,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.001023917,
+              "inference_seconds": 0.076796417,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.0010455,
+              "inference_seconds": 0.078278416,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.00094975,
+              "inference_seconds": 0.076756208,
+              "peak_rss_through_inference_bytes": 84033536
+            },
+            {
+              "setup_seconds": 0.001176334,
+              "inference_seconds": 0.078969291,
+              "peak_rss_through_inference_bytes": 84033536
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 50616,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 50432,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 440,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 16640,
+              "congruence_matches": 16384,
+              "duplicate_rows_retired": 16384,
+              "equality_events": 16640,
+              "full_key_checks": 16384,
+              "key_packets_updated": 16640,
+              "output_union_requests": 16384,
+              "peak_packets": 33536,
+              "publication_visits": 17080
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001023917,
+            "inference_seconds": 0.078278416,
+            "peak_rss_through_inference_bytes": 84033536
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 8100,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        }
+      },
+      "batch": "warm-trial"
+    },
+    "warm-fanout": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "program_file_sha256": "f54ef91ce267ba77143f988136593068c3f83f4353ffb789de06a46e72b8e22c",
+      "source_sha256": "1767897105291d75208b27c20aa3ef25c9232e7eb1157773f19dd4d1664ec0a9",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.000840208,
+              "inference_seconds": 0.043958667,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.000975375,
+              "inference_seconds": 0.048413666,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.000913125,
+              "inference_seconds": 0.046305667,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.000895875,
+              "inference_seconds": 0.043324166,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.000882667,
+              "inference_seconds": 0.044014084,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.000820958,
+              "inference_seconds": 0.043492958,
+              "peak_rss_through_inference_bytes": 70926336
+            },
+            {
+              "setup_seconds": 0.00098425,
+              "inference_seconds": 0.042592084,
+              "peak_rss_through_inference_bytes": 70926336
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 56320,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 50432,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 16384,
+            "repair_key_hash_changes": 16640,
+            "repaired_dependencies": 22784,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.000895875,
+            "inference_seconds": 0.043958667,
+            "peak_rss_through_inference_bytes": 70926336
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 5248,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.000998083,
+              "inference_seconds": 0.039807917,
+              "peak_rss_through_inference_bytes": 71008256
+            },
+            {
+              "setup_seconds": 0.000908458,
+              "inference_seconds": 0.042819958,
+              "peak_rss_through_inference_bytes": 71008256
+            },
+            {
+              "setup_seconds": 0.00097075,
+              "inference_seconds": 0.04089675,
+              "peak_rss_through_inference_bytes": 71008256
+            },
+            {
+              "setup_seconds": 0.000921709,
+              "inference_seconds": 0.041463083,
+              "peak_rss_through_inference_bytes": 71008256
+            },
+            {
+              "setup_seconds": 0.000941083,
+              "inference_seconds": 0.042134208,
+              "peak_rss_through_inference_bytes": 71008256
+            },
+            {
+              "setup_seconds": 0.00089325,
+              "inference_seconds": 0.039195458,
+              "peak_rss_through_inference_bytes": 70991872
+            },
+            {
+              "setup_seconds": 0.000852625,
+              "inference_seconds": 0.040609417,
+              "peak_rss_through_inference_bytes": 71008256
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 66816,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 60928,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 16640,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "delivery": "existing ChangeBatch to shared Entry at source Run boundaries",
+            "enabled": true,
+            "hash_bits": 64,
+            "live_packets": 17152,
+            "owned_argument_postings": 0,
+            "owned_key_buckets": 0,
+            "owned_key_packets": 0,
+            "scope": "constructor-only relational congruence with shared storage and publication",
+            "stats": {
+              "changed_argument_positions": 16640,
+              "congruence_matches": 16384,
+              "duplicate_rows_retired": 16384,
+              "equality_events": 16640,
+              "full_key_checks": 16384,
+              "key_packets_updated": 16640,
+              "output_union_requests": 16384,
+              "peak_packets": 33536,
+              "publication_visits": 16896,
+              "result_only_updates": 256,
+              "shared_incidence_visits": 16896,
+              "shared_row_copies": 8448
+            },
+            "storage": "Graph RowFields, reverse incidences and constructor interning"
+          },
+          "median": {
+            "setup_seconds": 0.000921709,
+            "inference_seconds": 0.04089675,
+            "peak_rss_through_inference_bytes": 71008256
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 5248,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        },
+        "previous_digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.000973125,
+              "inference_seconds": 0.077930292,
+              "peak_rss_through_inference_bytes": 88932352
+            },
+            {
+              "setup_seconds": 0.001165292,
+              "inference_seconds": 0.079125458,
+              "peak_rss_through_inference_bytes": 88915968
+            },
+            {
+              "setup_seconds": 0.001203625,
+              "inference_seconds": 0.080373041,
+              "peak_rss_through_inference_bytes": 88915968
+            },
+            {
+              "setup_seconds": 0.001009292,
+              "inference_seconds": 0.078136,
+              "peak_rss_through_inference_bytes": 88915968
+            },
+            {
+              "setup_seconds": 0.00096625,
+              "inference_seconds": 0.073040125,
+              "peak_rss_through_inference_bytes": 88915968
+            },
+            {
+              "setup_seconds": 0.000920625,
+              "inference_seconds": 0.07046325,
+              "peak_rss_through_inference_bytes": 88915968
+            },
+            {
+              "setup_seconds": 0.001088333,
+              "inference_seconds": 0.079705334,
+              "peak_rss_through_inference_bytes": 88915968
+            }
+          ],
+          "stats": {
+            "bindings": 25088,
+            "cells_created": 17408,
+            "constructor_requests": 40960,
+            "constructor_reused": 8192,
+            "decoded_rows": 0,
+            "delivery_events": 56320,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 50432,
+            "empty_frames_released": 8192,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 6144,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 8448,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 16640,
+            "unions": 16640
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 16640,
+              "congruence_matches": 16384,
+              "duplicate_rows_retired": 16384,
+              "equality_events": 16640,
+              "full_key_checks": 16384,
+              "key_packets_updated": 16640,
+              "output_union_requests": 16384,
+              "peak_packets": 33536,
+              "publication_visits": 22784
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001009292,
+            "inference_seconds": 0.078136,
+            "peak_rss_through_inference_bytes": 88915968
+          },
+          "publication": {
+            "column_rows": 0,
+            "header_only": 66048,
+            "headers": 66048,
+            "neighbor_rows": 0,
+            "range_rows": 0,
+            "row_reads": 0,
+            "view_column_rows": 0
+          },
+          "entry_schedule": {
+            "enabled": true,
+            "live_packets": 8448,
+            "nodes": 2,
+            "scope": "compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled",
+            "stats": {
+              "borrowed_slots": 75264,
+              "changed_headers": 66816,
+              "cold_rows": 16640,
+              "consumer_calls": 4,
+              "consumer_seed_deliveries": 25088,
+              "node_notifications": 16640,
+              "node_refreshes": 3,
+              "parameter_packets_reused": 5248,
+              "parameters_copied": 0,
+              "predicate_checks": 24832,
+              "private_row_reads": 33024,
+              "retired_packets": 8192,
+              "row_decodes": 33024
+            }
+          }
+        }
+      },
+      "batch": "warm-trial"
+    }
+  },
+  "fixture_binary_sha256_by_batch": {
+    "eager-trial": "aa89b1df72a5280052d7fffda1b4e017d1ffa27e75c63742bb615de3c0d5181e",
+    "warm-trial": "96ce58f71728f955e79d2b58551a167f3602a36384ee8d34ea0cf79ecbe25c57"
+  },
+  "parent_commit": "1ccda85a",
+  "build": "cargo build --release --offline --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics; no PGO or CPU/LTO overrides",
+  "cpu": "Apple M3 Max",
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)"
+}
