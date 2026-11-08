@@ -1,0 +1,16 @@
+{
+  "sum-bits": {
+    "local_congruence": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--local-congruence"]
+    },
+    "pure_epochs": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs"]
+    },
+    "unique_publication": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--unique-port-publication"]
+    }
+  }
+}

@@ -41,6 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
         println!("  --pure-epochs (experimental bound pure-congruence batches across source Runs)");
+        println!("  --unique-port-publication (experimental ordered publication through complete input-domain uniqueness)");
         println!("  --scoped-execution (experimental compiler-scoped waits and selective publication)");
         println!("  --scoped-queues (compiler-scoped ready queues; source Run publication barrier retained)");
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
@@ -99,7 +100,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -122,7 +123,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let expressions = args.iter().any(|x| x == "--congruence-cells");
     let cells = args.iter().any(|x| x == "--repair-cells");
     let local = args.iter().any(|x| x == "--local-unions");
-    let pure_epochs = args.iter().any(|x| x == "--pure-epochs");
+    let unique_publication = args.iter().any(|x| x == "--unique-port-publication");
+    let pure_epochs = unique_publication || args.iter().any(|x| x == "--pure-epochs");
     let port_scopes = pure_epochs || args.iter().any(|x| x == "--port-scopes");
     let scoped_execution = port_scopes || args.iter().any(|x| x == "--scoped-execution");
     let scoped_queues = scoped_execution || args.iter().any(|x| x == "--scoped-queues");
@@ -175,6 +177,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if scoped_execution { runtime.use_scoped_execution()?; }
     if port_scopes { runtime.use_port_scopes()?; }
     if pure_epochs { runtime.use_pure_epochs()?; }
+    if unique_publication { runtime.use_unique_port_publication()?; }
     #[cfg(feature = "sparse-cells")]
     if !ownership && args.iter().any(|x| x == "--entry-publications") {
         runtime.use_entry_publications()?;

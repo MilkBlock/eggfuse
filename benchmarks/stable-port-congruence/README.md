@@ -7,6 +7,12 @@ particular, a region must continue while unrelated equality propagation is
 pending. This work targets the actual **standalone Cell CPU executor**, not
 native egglog.
 
+Current admission: the ordered-publication regression below withdraws the
+general overlapping-epoch proof from `3c5739e8`. Corrected sum-bits execution has
+six query waits and four RHS waits. The optional uniqueness experiment removes
+17 queue obligations but no waits and is **not admitted as an optimization**.
+Earlier sections retain historical measurements, not current admission claims.
+
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
 previous frozen sum-bits execution still needed
@@ -897,4 +903,105 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/compiled-effects-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/compiled-effects-runtime benchmarks/stable-port-congruence/compiled-effects-audit-manifest.json out/stable-port-congruence/compiled-effects-final-audit
 python3 benchmarks/stable-port-congruence/collect-compiled-effects.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Ordered publication and the rejected uniqueness experiment
+
+The preceding catalog identified Runs 79/477 as potential discharge points:
+one TCons and two Concat rows needed publication after a no-collision check.
+Compiler facts already provide equality-key columns, complete owned-operator
+coverage and shared input routes. Those facts permit a sufficient uniqueness
+proof: if one complete input domain contains no other live constructor of the
+same operator, the changed key cannot collide. This is stronger than merely
+observing zero unions at a query fence.
+
+`--unique-port-publication` enables this opt-in experiment on top of pure epochs.
+It chooses the smallest native/boundary input domain and follows shared condition
+input routes (or the complete original shape slice when the bounded plan is
+absent). It checks live facts and actual operator identity, including hidden and
+already pending peers. A proof must find its own source. There is no per-producer
+consumer list, full operator scan, candidate sorting or per-attempt heap buffer.
+The 64-visit budget covers anchor reads, signals and static steps. Unknown or
+large domains retain normal completion. Accepted rows publish their joined epoch
+and query change directly, removing the key queue insertion and completion.
+
+Uniqueness at one instant is insufficient. In the regression, a batch first
+moves a high-index F input to N(0), then moves a lower-index F input to N(0).
+Publishing the first F early makes it a completed collision survivor; ordinary
+completion would process the lower witness first. This changes ordered exported
+witnesses. The fixture's scalar record value remains unchanged; no numeric
+divergence is claimed. Disabling the remaining-unions guard reproduces this
+failure. The experiment now also refuses to bypass existing lower completion
+tasks or in-flight/queued legacy work. It advances only a no-collision prefix of
+the existing completion order.
+
+Splitting these unions across source Runs exposed the same ordering hole in the
+previous pure-epoch proof, even with the new experiment disabled. Pure
+constructors do not imply order-independent survivor selection. The corrected
+proof rejects a new affected operator when it overlaps any older completion
+footprint, including effects reached through shared output wiring. This is
+conservative: it does not claim every same-operator overlap intrinsically needs a
+barrier. A new fixture still commits an H equality while F completion is pending
+in the same Eq sort. Other fixtures retain independent births and consumption.
+The five old tests expecting overlapping epochs now require the ordering fence
+and retain their exact state, schedule, visibility and epoch assertions.
+
+All three sum-bits lanes retain the previous exact state, ordered RHS, effective
+write, resume, normalized Spine and schedule hashes across 1,428 Runs. The
+corrected pure-epoch lane rejects four Base overlaps: RHS waits return from zero
+to four, and the previously admitted five effective source unions and six births
+while pending return to zero. Those earlier admission claims are withdrawn.
+The current proof does not establish finer independence for those four batches.
+
+Compared with that corrected control, the uniqueness experiment produces:
+
+| Observed work | Control | Experiment |
+| --- | ---: | ---: |
+| Equality-key enqueues / completions | 1,046 / 1,046 | 1,029 / 1,029 |
+| Query waits / RHS waits | 6 / 4 | 6 / 4 |
+| Stable port reads | 120,494 | 120,668 |
+| Queue head probes | 1,059 | 1,292 |
+| Queue head updates | 1,599 | 1,565 |
+| Influence forecasts / tracked scratch growths | 97 / 1,360 | 97 / 1,360 |
+
+The proof is attempted 1,091 times and publishes 17 rows. It performs 226 anchor
+reads, 1,244 signal visits and 1,348 static steps. Including membership, order,
+site/operator checks and publication, Bake charges 7,506 added proof events.
+The local congruence visitor does less work, but unchanged waits and the added
+checks do not justify admission. There is no timing claim or complete allocator
+census; selected scratch-growth counters and diagnostic maps are not a count of
+all allocations. The experiment stays disabled by default.
+
+The small positive fixture changes pending work from one to zero, publishes the
+row without a key enqueue and lets the next Run consume it. Tests also cover
+foreign operators, pending/hidden peers, multi-input notifications, deletion and
+recreation, older-task/newer-row epochs, and budget fallback. The workspace passes
+295 tests (four ignored); both sparse and non-sparse focused suites pass 97;
+the minimal compile check passes. These are standalone single-thread Cell CPU
+results, not native egglog or multithreaded speedup.
+
+The next useful compiler/Bake information must prove smaller independent
+regions and admissible publication order without repeating a runtime domain
+walk. Existing Eq guards, boundary coverage, liveness and row epochs remain
+obligations. Shared mutable Graph ownership and actual workers are still open.
+
+Reproduce using the preceding eight focused suites (add `unique_publication` to
+the seven listed above), with `unique-publication-` log prefixes. Set
+`UNIQUE_PUBLICATION_EVIDENCE="$PWD/out/stable-port-congruence/unique-publication-fixture.json"`
+for the sparse suite. Save the workspace and no-default-feature checks as usual.
+To reproduce the batch negative control, temporarily replace the
+`remaining_unions != 0 || !self.pending_unions.is_empty()` guard with `false` in
+`unique_port_publication.rs`, run only
+`early_publication_preserves_survivor_order_for_ordered_merge_observations`, and
+save `unique-publication-batch-negative.log`. For the epoch negative control,
+disable the two forecast-order rejection checks in `pure_effects.rs`, run only
+`separate_source_epochs_preserve_ordered_merge_observations`, and save
+`unique-publication-epochs-negative.log`. Restore sources before all positive
+checks and the standalone audit build:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/unique-publication-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/unique-publication-runtime benchmarks/stable-port-congruence/unique-publication-audit-manifest.json out/stable-port-congruence/unique-publication-final-audit
+python3 benchmarks/stable-port-congruence/collect-unique-publication.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

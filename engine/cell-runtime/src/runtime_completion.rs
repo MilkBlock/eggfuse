@@ -138,6 +138,10 @@ impl Executor {
         }
         Ok(())
     }
+    pub fn use_unique_port_publication(&mut self) -> Result<()> {
+        self.use_pure_epochs()?;
+        self.graph.use_unique_port_publication()
+    }
     fn global_completion_observer(&self) -> bool {
         let global = self.audit
             || cfg!(any(

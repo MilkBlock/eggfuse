@@ -110,9 +110,8 @@ impl Graph {
         if !self.ownership.as_ref().is_some_and(|m| m.pending.scoped()) {
             return Err("scoped completion disabled".into());
         }
-        for (a, b) in std::mem::take(&mut self.pending_unions) {
-            self.union(a, b)?;
-        }
+        let pairs = std::mem::take(&mut self.pending_unions);
+        self.commit_union_batch(pairs)?;
         Ok(())
     }
     pub(crate) fn complete_eager_scope(&mut self, eager: &Scope) -> Result<()> {

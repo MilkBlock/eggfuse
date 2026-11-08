@@ -104,6 +104,13 @@ impl Work {
             } else { 0 };
             work.insert(key,value);
         }
+        for field in ["attempts", "pending_checks", "order_checks", "anchor_reads", "signal_visits", "static_steps", "site_checks", "operator_checks", "publications"] {
+            let proof = &report["stable_ports"]["unique_publication"];
+            let value = if proof["enabled"] == true {
+                proof["stats"][field].as_u64().ok_or_else(|| format!("missing unique publication work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/unique_publication/stats/{field}"), value);
+        }
         for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks", "rhs_demand_probes", "rhs_demand_growths", "rhs_selected_rules", "bound_rhs_attempts", "bound_rhs_rule_checks", "bound_rhs_ops", "bound_rhs_expression_steps", "bound_rhs_input_reads", "bound_rhs_key_reads", "bound_rhs_value_slots", "bound_rhs_scratch_growths", "bound_rhs_overlay_checks"] {
             let key = format!("scoped_executor/stats/{field}");
             let value = if report["scoped_executor"]["enabled"] == true {
@@ -111,7 +118,7 @@ impl Work {
             } else { 0 };
             work.insert(key,value);
         }
-        for field in ["forecasts", "seed_roots", "seed_candidates", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths", "pure_epoch_source_steps", "pure_epoch_birth_checks"] {
+        for field in ["forecasts", "seed_roots", "seed_candidates", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths", "pure_epoch_source_steps", "pure_epoch_birth_checks", "pure_epoch_order_checks"] {
             let key = format!("port_completion/stats/{field}");
             let value = if report["port_completion"]["enabled"] == true {
                 report["port_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing port completion work {field}"))?

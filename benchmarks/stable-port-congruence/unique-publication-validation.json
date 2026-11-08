@@ -1,0 +1,23 @@
+{
+  "workspace-tests": {
+    "passed": 295,
+    "failed": 0,
+    "ignored": 4
+  },
+  "tests": {
+    "passed": 97,
+    "failed": 0,
+    "ignored": 0
+  },
+  "non-sparse-tests": {
+    "passed": 97,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed",
+  "negative_controls": {
+    "batch": "Disable the remaining-unions guard. The first publication changes the survivor selected after the second union in the same batch.",
+    "epochs": "The previous pure-epoch proof admits overlapping constructor epochs. FactRef queue order then selects a different survivor than ordered source completion."
+  },
+  "negative_control_limit": "Ordered exported witnesses differ; scalar record values stay equal in these fixtures. No differing numeric result is claimed."
+}

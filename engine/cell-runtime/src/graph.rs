@@ -1766,6 +1766,7 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }
         self.parents.insert(hi, lo);
+        self.unique_union_frontier(hi);
         self.propagate_owned_union(hi, lo);
         self.maintenance.union_frontier_probes += 1;
         let mut affected = self.uses.remove(&hi).unwrap_or_default();
@@ -2458,9 +2459,7 @@ impl Graph {
             }
             if !self.pending_unions.is_empty() {
                 let pairs = std::mem::take(&mut self.pending_unions);
-                for (a, b) in pairs {
-                    self.union(a, b)?;
-                }
+                self.commit_union_batch(pairs)?;
                 local_completion = self.finish_local_completion(local_completion, false)?;
                 continue;
             }

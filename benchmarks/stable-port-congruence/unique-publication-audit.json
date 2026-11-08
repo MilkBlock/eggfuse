@@ -1,0 +1,175 @@
+{
+  "scope": "standalone single-thread Cell CPU; exact ordered trace audit, not timing",
+  "previous_revision": "3c5739e8",
+  "runtime_sha256": "d23b190c3a1f13cd761482b290809728c5b8e30cfe20f42cd797d8394c6b5535",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "admitted_as_performance_improvement": false,
+  "previous_admission_withdrawn": {
+    "reason": "A new regression disproves unrestricted overlap of pure constructor epochs under ordered survivor selection. The current conservative proof requires disjoint affected operator closures.",
+    "query_waits": {
+      "before": 6,
+      "after": 6
+    },
+    "rhs_waits": {
+      "before": 0,
+      "after": 4
+    },
+    "effective_source_unions_while_pending": {
+      "before": 5,
+      "after": 0
+    },
+    "fact_births_while_pending": {
+      "before": 6,
+      "after": 0
+    },
+    "rejected_overlap_tables": {
+      "Base": 4
+    },
+    "limit": "This does not establish that all four sum-bits batches intrinsically require a wait. Their previous proof was insufficient; finer independence remains unproved."
+  },
+  "proof": {
+    "accepted": 17,
+    "anchor_reads": 226,
+    "attempts": 1091,
+    "batch_skips": 407,
+    "budget_rejections": 4,
+    "incomplete_rejections": 0,
+    "legacy_skips": 365,
+    "operator_checks": 606,
+    "order_checks": 1046,
+    "peak_visits": 64,
+    "peer_rejections": 105,
+    "pending_checks": 1091,
+    "pending_skips": 45,
+    "predecessor_skips": 148,
+    "publications": 17,
+    "signal_visits": 1244,
+    "site_checks": 837,
+    "static_steps": 1348
+  },
+  "new_charged_proof_events": 7506,
+  "charged_proof_fields": [
+    "attempts",
+    "pending_checks",
+    "order_checks",
+    "anchor_reads",
+    "signal_visits",
+    "static_steps",
+    "site_checks",
+    "operator_checks",
+    "publications"
+  ],
+  "stable_port_changes": {
+    "equality_completions": {
+      "before": 1046,
+      "after": 1029
+    },
+    "equality_enqueues": {
+      "before": 1046,
+      "after": 1029
+    },
+    "port_reads": {
+      "before": 120494,
+      "after": 120668
+    },
+    "root_resolutions": {
+      "before": 120494,
+      "after": 120668
+    },
+    "row_views": {
+      "before": 35621,
+      "after": 35604
+    }
+  },
+  "condition_changes": {
+    "anchor_probes": {
+      "before": 1922,
+      "after": 1891
+    },
+    "attempts": {
+      "before": 1046,
+      "after": 1029
+    },
+    "boundary_signals": {
+      "before": 20710,
+      "after": 20633
+    },
+    "boundary_sites": {
+      "before": 17234,
+      "after": 17188
+    },
+    "boundary_uncompiled_steps": {
+      "before": 3218,
+      "after": 3183
+    },
+    "closed_domain_probes": {
+      "before": 189,
+      "after": 172
+    },
+    "condition_visits": {
+      "before": 611,
+      "after": 583
+    },
+    "equality_guards": {
+      "before": 312,
+      "after": 310
+    },
+    "inactive_sites": {
+      "before": 191,
+      "after": 181
+    },
+    "local_candidates": {
+      "before": 2179,
+      "after": 2149
+    },
+    "operator_guards": {
+      "before": 420,
+      "after": 402
+    },
+    "pending_sites": {
+      "before": 300,
+      "after": 298
+    }
+  },
+  "queue_changes": {
+    "cause_comparisons": {
+      "before": 4238,
+      "after": 4224
+    },
+    "cause_probes": {
+      "before": 1110,
+      "after": 1093
+    },
+    "head_probes": {
+      "before": 1059,
+      "after": 1292
+    },
+    "head_updates": {
+      "before": 1599,
+      "after": 1565
+    }
+  },
+  "unchanged": {
+    "query_waits": 6,
+    "rhs_waits": 4,
+    "influence_forecasts": 97,
+    "influence_scratch_growths": 1360,
+    "key_lookup_calls": 19351,
+    "candidate_buffer_growths": 43,
+    "ordinary_runtime_and_legacy_maintenance": true
+  },
+  "interpretation": "The optional path removes 17 queue obligations but none of the observed waits. It adds 7506 charged proof events and more head probes/port reads; the runtime domain walk is not admitted as an optimization.",
+  "cost_limit": "Counters describe selected operations and growth events, not measured latency or whole-execution allocations. Diagnostic maps and existing queue allocators are not a full allocator census.",
+  "remaining": "Bake/compiler must prove smaller independent regions and publication order without repeated domain walks. Unknown boundaries retain completion; shared mutable Graph state and actual workers remain open."
+}

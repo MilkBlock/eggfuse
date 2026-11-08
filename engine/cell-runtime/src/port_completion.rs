@@ -43,6 +43,9 @@ pub(crate) struct Counts {
     pure_epoch_displaced_roots: u64,
     pure_epoch_peer_candidates: u64,
     pure_epoch_birth_checks: u64,
+    pure_epoch_order_checks: u64,
+    pure_epoch_order_rejections: u64,
+    pure_epoch_order_tables: BTreeMap<usize, u64>,
     peak_retained_frontier_roots: usize,
 }
 struct Influence {

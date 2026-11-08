@@ -143,9 +143,15 @@ sets reuse the existing forecast's visited-root sets, and are retained only in
 pure-epoch mode. They are not per-producer consumer lists.
 
 A live legacy/mutable user on a displaced root or possible result rejects the
-batch; unchanged unrelated input users do not. Missing wiring and budget overflow
+batch; unchanged unrelated input users do not. A new affected operator must also
+be outside every older pending completion footprint, including effects reached
+through output wiring. Pure constructors alone do not prove this: merging tasks
+from overlapping epochs in FactRef order can change the surviving witness.
+Unknown same-operator independence retains the source fence; a shared Eq sort
+alone does not require one. Missing wiring and budget overflow
 retain the previous wait. The preview accepts at most 4,096 expression/effect/overlay
-steps; the proof accepts at most 4,096 root/signal/static/legacy/source/birth steps.
+steps; the proof also charges root/signal/static/legacy/source/birth/order checks
+against its 4,096-visit budget.
 These counters and scratch growths are charged to Bake's heuristic work ledger;
 they do not provide a complete allocator census or a latency model.
 
@@ -157,24 +163,29 @@ both row epochs before enqueueing the result equality, including when an older
 task meets an already completed newer peer. This is pending work metadata, not a
 new producer/consumer reverse index. The ordinary flat queue is unchanged.
 
-The short fixture commits one source union and two fact births, and consumes the
-new result while prior congruence is still pending in the same table. Other
-fixtures cover repeated input notifications with the final row stamped at epoch
-two, colliding absent-key Sets, a no-op union with a mutable user, an actual
-mutable-boundary rejection, and the walk-budget fallback. This establishes the
-single-thread protocol, not concurrent access safety.
+Fixtures commit an independent H equality while F remains pending in the same
+Eq sort, and publish/consume independent births. Overlapping constructor epochs
+now retain a source fence. Other fixtures cover row epoch preservation, colliding
+absent-key Sets, no-op unions, mutable boundaries and walk-budget fallback. This
+establishes a single-thread protocol, not concurrent access safety.
 
-The original all-root proof in `210b57dd` admitted only three no-op batches on
-sum-bits. The displaced-source proof now admits the other four batches too:
-five effective source unions and six fact births commit while old congruence is
-pending. RHS waits drop from four to zero; query waits stay at six, so total
-waits fall from ten to six. All 1,428 source observations and state/RHS/effective
-write/resume/Spine hashes remain exact. This is independent single-thread
-progress, not a measured speedup or concurrent-worker result. The original pure
-proof and scope planning costs remain visible in the audit files; additional source grouping, birth
-checks, compiled-expression evaluation and retained-frontier memory must also be
-counted. The compiled preview reduces its tracked scratch growths from 83 to 3
-and materialized values from 275 to 155. It adds no further waiting improvement.
+The earlier `3c5739e8` pure-epoch admission is withdrawn by a regression that
+changes ordered exported witnesses (its scalar record result stays equal).
+The corrected sum-bits path rejects four Base overlaps, retaining six query and
+four RHS waits, zero effective source unions and zero fact births while pending.
+This is a conservative proof boundary, not evidence that all four waits are
+intrinsic. All 1,428 source observations and state/RHS/effective-write/resume/Spine
+hashes remain exact. Compiled preview code still uses three tracked scratch
+growths and 155 materialized values. No overall acceleration is admitted.
+
+The optional `--unique-port-publication` proof publishes a changed key only when
+one complete shared input domain proves that no other live same-operator peer
+exists, including hidden and pending facts. It cannot cross unfinished source
+unions, earlier queued facts or legacy work. The publication joins row/task epochs
+and advances the query version; it omits the key queue and congruence visitor.
+Sum-bits removes 17 such obligations but none of the ten waits, adding 7,506
+charged proof events. This experiment is disabled by default and is not admitted
+as a performance improvement. No new instance consumer index is installed.
 
 Optional progress diagnostics now retain the actual query fence outcomes. Runs
 23, 86, 169 and 581 publish 9, 1, 12 and 50 effective congruence unions. Runs 79

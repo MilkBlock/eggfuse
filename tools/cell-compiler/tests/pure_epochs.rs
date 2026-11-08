@@ -38,7 +38,7 @@ const SOURCE: &str = r#"
 "#;
 
 #[test]
-fn pure_constructor_epochs_can_commit_and_publish_while_prior_congruence_is_pending() {
+fn overlapping_constructor_epochs_wait_but_independent_consumers_still_publish() {
     let mut old = executor(SOURCE, false);
     let mut new = executor(SOURCE, true);
     old.execute().unwrap();
@@ -56,15 +56,15 @@ fn pure_constructor_epochs_can_commit_and_publish_while_prior_congruence_is_pend
     assert_eq!(consumed, 1);
     if point["global_observer"] == false {
         assert!(pending > 0);
-        assert_eq!(point["stats"]["rhs_fact_births_while_pending"], 2);
-        assert_eq!(point["stats"]["source_unions_while_pending"], 1);
+        assert_eq!(point["stats"]["rhs_fact_births_while_pending"], 1);
+        assert_eq!(point["stats"]["source_unions_while_pending"], 0);
         assert!(
-            new.graph.scoped_completion_report()["stats"]["mixed_epoch_inserts"]
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"]
                 .as_u64()
                 .unwrap()
                 > 0
         );
-        assert!(point["stats"]["bound_rhs_accepts"].as_u64().unwrap() > 0);
+        assert_eq!(point["stats"]["bound_rhs_accepts"], 0);
     }
     new.execute().unwrap();
     compare(&old, &new);
@@ -106,7 +106,7 @@ fn a_live_mutable_boundary_keeps_the_source_effect_fence() {
 }
 
 #[test]
-fn repeated_input_changes_coalesce_at_the_latest_task_epoch() {
+fn overlapping_input_changes_preserve_source_epoch_order() {
     let source = SOURCE
         .replace("(F E)", "(F E E)")
         .replace(
@@ -124,7 +124,7 @@ fn repeated_input_changes_coalesce_at_the_latest_task_epoch() {
     compare(&old, &new);
     if new.scoped_execution_report()["global_observer"] == false {
         assert!(
-            new.graph.scoped_completion_report()["stats"]["advanced_task_epochs"]
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"]
                 .as_u64()
                 .unwrap()
                 > 0
@@ -158,7 +158,13 @@ fn absent_constructor_sets_in_one_snapshot_can_collide_with_each_other() {
         let s = new.scoped_execution_report();
         assert_eq!(s["stats"]["bound_rhs_noop_accepts"], 0);
         assert_eq!(s["stats"]["bound_rhs_key_reads"], 3);
-        assert_eq!(s["stats"]["rhs_fact_births_while_pending"], 1);
+        assert_eq!(s["stats"]["rhs_fact_births_while_pending"], 0);
+        assert!(
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
         assert!(new.graph.pending_completion_tasks() > 0);
     }
     new.execute().unwrap();
@@ -193,7 +199,7 @@ fn an_already_true_union_needs_no_effect_closure_even_with_a_mutable_user() {
 }
 
 #[test]
-fn an_older_task_cannot_backdate_a_collision_with_a_completed_newer_peer() {
+fn overlapping_epochs_keep_the_collision_at_the_newer_epoch() {
     let source = r#"
 (datatype E (N i64) (F E E) (G E) (Seen E))
 (ruleset a) (ruleset b) (ruleset observe)
@@ -221,7 +227,7 @@ fn an_older_task_cannot_backdate_a_collision_with_a_completed_newer_peer() {
             assert_eq!(new.graph.row(witness).unwrap().unwrap().epoch, 2);
         }
         assert!(
-            new.graph.scoped_completion_report()["stats"]["completion_epoch_joins"]
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"]
                 .as_u64()
                 .unwrap()
                 > 0
@@ -249,7 +255,13 @@ fn shared_entry_results_survive_batched_two_dimensional_congruence() {
         assert!(new.graph.pending_completion_tasks() > 0);
         assert_eq!(
             new.scoped_execution_report()["stats"]["source_unions_while_pending"],
-            1
+            0
+        );
+        assert!(
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"]
+                .as_u64()
+                .unwrap()
+                > 0
         );
     }
     new.execute().unwrap();
@@ -360,6 +372,36 @@ fn unchanged_input_users_of_other_operators_do_not_block_the_source_union() {
             1
         );
     }
+}
+
+#[test]
+fn separate_operators_of_the_same_sort_can_cross_source_epochs() {
+    let source = r#"
+(datatype E (N i64) (F E) (H E) (Seen E))
+(ruleset a) (ruleset b) (ruleset observe)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (N 2)) (= y (N 3))) ((union x y)) :ruleset b)
+(rule ((= x (F y))) ((Seen x)) :ruleset observe)
+(F (N 0)) (F (N 1)) (H (N 2)) (H (N 3))
+(run-schedule (seq (run a) (run b) (run observe)))
+"#;
+    let mut old = executor(source, false);
+    let mut new = executor(source, true);
+    old.execute().unwrap();
+    new.execute_until(Some(2)).unwrap();
+    if new.scoped_execution_report()["global_observer"] == false {
+        assert!(new.graph.pending_completion_tasks() > 0);
+        assert_eq!(
+            new.scoped_execution_report()["stats"]["source_unions_while_pending"],
+            1
+        );
+        assert_eq!(
+            new.graph.port_completion_report()["stats"]["pure_epoch_order_rejections"],
+            0
+        );
+    }
+    new.execute().unwrap();
+    compare(&old, &new);
 }
 
 #[test]

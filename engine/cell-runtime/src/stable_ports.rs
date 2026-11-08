@@ -3,10 +3,12 @@
 //! into the stored node. Optional port-key matching uses immutable birth hints
 //! and complete symbolic domains; scoped completion remains a separate step.
 use super::*;
-#[path = "port_keys.rs"]
-mod keys;
 #[path = "local_port_conditions.rs"]
 mod conditions;
+#[path = "port_keys.rs"]
+mod keys;
+#[path = "unique_port_publication.rs"]
+mod publication;
 
 /// A shared symbolic address. Component IDs are monotonic and never recycled;
 /// a retired address is rejected rather than rebound to a later instance.
@@ -44,6 +46,8 @@ pub struct Stored {
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
     keys: bool,
+    #[serde(skip)]
+    unique: Option<publication::Counts>,
     #[serde(skip)]
     conditions: Option<conditions::Stats>,
     key_lookups: Counter<u64>,
@@ -225,7 +229,12 @@ impl Graph {
     /// Existing shared slices identify the changed columns. No stored field
     /// needs an Eq(from) comparison or an Eq(to) write. Changed inputs enqueue
     /// either canonical key work or an exact port-equality obligation.
-    pub(in crate::graph) fn notify_stable_fields(&mut self, f: FactRef, columns: &[usize], changed_root: u64) -> bool {
+    pub(in crate::graph) fn notify_stable_fields(
+        &mut self,
+        f: FactRef,
+        columns: &[usize],
+        changed_root: u64,
+    ) -> bool {
         let Some(stored) = self
             .cells
             .get(&f.cell)
@@ -242,6 +251,13 @@ impl Graph {
         // Dispatch coalesces disjoint columns from several signals, so their
         // concatenation need not be sorted.
         let key = columns.iter().any(|&i| i + 1 < stored.fields.len());
+        if port_key && key && self.unique_port_input(f, columns) {
+            let stats = self.stable_ports.as_mut().unwrap();
+            stats.notifications += 1;
+            stats.notified_columns += columns.len() as u64;
+            self.publish_unique_port(f, table);
+            return true;
+        }
         let state = self
             .cells
             .get_mut(&f.cell)
@@ -331,7 +347,7 @@ impl Graph {
             })
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
-            "stats":stats,"local_conditions":self.local_condition_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
+            "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
             "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})

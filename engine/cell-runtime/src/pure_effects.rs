@@ -27,7 +27,7 @@ struct Proof<'a> {
     groups: HashMap<u64, Roots>,
 }
 fn cost(c: &Counts) -> u64 {
-    visits(c) + c.pure_epoch_source_steps + c.pure_epoch_birth_checks
+    visits(c) + c.pure_epoch_source_steps + c.pure_epoch_birth_checks + c.pure_epoch_order_checks
 }
 impl Proof<'_> {
     fn room(&self) -> bool {
@@ -90,6 +90,23 @@ impl Proof<'_> {
             }
         }
         Some(true)
+    }
+    fn preserves_order(&mut self, table: usize, forecast: &Forecast) -> bool {
+        // Pure constructors still have ordered survivor selection. If a newer
+        // epoch adds key tasks to an older unfinished closure, FactRef order
+        // can retire a different witness than completing the epochs in order.
+        // A shared sort alone is not a conflict; require an affected operator.
+        let (ready, checks) = forecast.readiness(&[table]);
+        self.counts.pure_epoch_order_checks += checks;
+        if !ready {
+            self.counts.pure_epoch_order_rejections += 1;
+            *self
+                .counts
+                .pure_epoch_order_tables
+                .entry(table)
+                .or_default() += 1;
+        }
+        ready
     }
     /// A transient visitor, not an instance-owned consumer index. No table or
     /// operator bucket is scanned; every live site comes from shared wiring.
@@ -231,6 +248,9 @@ impl Proof<'_> {
                 }
                 self.counts.pure_epoch_source_steps += 1;
                 if operators.contains(&table) {
+                    if !self.preserves_order(table, forecast) {
+                        return Ok(Some(false));
+                    }
                     offer(output, &mut roots, &mut seen, self.counts);
                 }
             }
@@ -261,10 +281,21 @@ impl Proof<'_> {
                     offer(peer, &mut roots, &mut seen, self.counts);
                 }
             }
-            if !self.outputs(id, |_, output, counts| {
+            let mut order_ready = true;
+            if !self.outputs(id, |table, output, counts| {
+                let (ready, checks) = forecast.readiness(&[table]);
+                counts.pure_epoch_order_checks += checks;
+                if !ready {
+                    counts.pure_epoch_order_rejections += 1;
+                    *counts.pure_epoch_order_tables.entry(table).or_default() += 1;
+                    order_ready = false;
+                }
                 offer(output, &mut roots, &mut seen, counts)
             })? {
                 return Ok(None);
+            }
+            if !order_ready {
+                return Ok(Some(false));
             }
         }
         Ok(Some(true))
