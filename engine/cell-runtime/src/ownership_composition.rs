@@ -346,6 +346,9 @@ pub(super) struct Component {
     pub shape: usize,
     pub frames: smallvec::SmallVec<[u32; 4]>,
     pub live_facts: usize,
+    // Instance values only. Static use lists remain in Shape; live facts are
+    // already recorded by Graph. Slots survive until the component retires.
+    pub signals: Vec<Option<u64>>,
 }
 #[derive(Clone, Copy)]
 pub(super) struct Frame {
@@ -655,6 +658,10 @@ impl Graph {
             let ordinal = c.frames.len();
             c.frames.push(cell);
             c.shape = shape;
+            c.signals.resize(
+                m.composition.shapes[shape].as_ref().unwrap().signals.len(),
+                None,
+            );
             m.stats.composition_requests += 1;
             m.stats.composition_substituted_ports += m.composition.shapes[shape]
                 .as_ref()
@@ -676,6 +683,14 @@ impl Graph {
                 shape: program,
                 frames: smallvec::smallvec![cell],
                 live_facts: 0,
+                signals: vec![
+                    None;
+                    m.composition.shapes[program]
+                        .as_ref()
+                        .unwrap()
+                        .signals
+                        .len()
+                ],
             }));
             m.stats.components_created += 1;
             m.stats.components_live += 1;
@@ -708,6 +723,25 @@ impl Graph {
             .unwrap();
         c.live_facts -= 1;
         if c.live_facts == 0 {
+            for (symbol, id) in c.signals.iter().enumerate() {
+                m.stats.component_signal_retire_visits += 1;
+                let Some(id) = id else { continue };
+                let signal = Signal {
+                    component: f.component,
+                    symbol,
+                };
+                m.stats.signal_bindings_live -= 1;
+                m.stats.signal_bindings_retired += 1;
+                if let Some(set) = m.boundaries.get_mut(id) {
+                    if set.remove(&signal) {
+                        m.stats.boundary_live -= 1;
+                        m.stats.boundary_edges_removed += 1;
+                    }
+                    if set.is_empty() {
+                        m.boundaries.remove(id);
+                    }
+                }
+            }
             for id in &c.frames {
                 m.composition.frames.remove(id);
             }

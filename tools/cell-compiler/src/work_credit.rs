@@ -62,8 +62,8 @@ impl Work {
         for field in ["marker_entries","marker_anchor_reads","boundary_insert_attempts","boundary_probes",
             "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
             "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows",
-            "signal_binding_reads","signal_bindings_created","signal_bindings_retired","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
-            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_signal_visits","domain_slice_steps",
+            "signal_binding_reads","signal_bindings_created","signal_bindings_retired","component_signal_retire_visits","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
+            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_planning_slice_steps","domain_signal_visits","domain_slice_steps",
             "components_created","components_retired","composition_entry_reads","composition_missing_sources",
             "composition_transition_probes","composition_unbaked_fallbacks","composition_requests","composition_shape_builds","composition_materializations","composition_shape_steps","composition_frames",
             "dispatch_heap_pushes","dispatch_heap_pops","dispatch_comparisons","dispatch_scratch_growths"] {

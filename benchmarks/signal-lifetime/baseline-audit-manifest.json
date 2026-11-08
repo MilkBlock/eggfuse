@@ -1,0 +1,18 @@
+{
+  "sum-bits": {
+    "before": {
+      "program": "out/baseline/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    }
+  },
+  "raytrace": {
+    "before": {
+      "program": "out/signal-lifetime/baked-raytrace/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    }
+  }
+}

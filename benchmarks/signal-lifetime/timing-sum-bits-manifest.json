@@ -1,0 +1,26 @@
+{
+  "sum-bits": {
+    "fast_baseline": {
+      "runtime": "out/signal-lifetime/fast-runtime",
+      "program": "out/baseline/producer-receipts/learn-sum-bits/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "before": {
+      "runtime": "out/signal-lifetime/baseline-runtime",
+      "program": "out/baseline/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    },
+    "slots": {
+      "runtime": "out/signal-lifetime/runtime",
+      "program": "out/baseline/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    }
+  }
+}

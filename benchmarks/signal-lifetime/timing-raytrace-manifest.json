@@ -1,0 +1,26 @@
+{
+  "raytrace": {
+    "fast_baseline": {
+      "runtime": "out/signal-lifetime/fast-runtime",
+      "program": "out/baseline/producer-receipts/indexed-audit-learn-raytrace/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "before": {
+      "runtime": "out/signal-lifetime/baseline-runtime",
+      "program": "out/signal-lifetime/baked-raytrace/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    },
+    "slots": {
+      "runtime": "out/signal-lifetime/runtime",
+      "program": "out/signal-lifetime/baked-raytrace/program.json",
+      "args": [
+        "--cell-ownership"
+      ]
+    }
+  }
+}

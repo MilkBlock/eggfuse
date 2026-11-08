@@ -639,3 +639,107 @@ fn active_marker_with_an_unseen_prefix_falls_back_without_expanding_code() {
     assert_eq!(r["stats"]["composition_materializations"], 0);
     assert!(r["stats"]["key_completions"].as_u64().unwrap() > 0);
 }
+
+#[test]
+fn component_retirement_cleans_previously_inactive_signal_slots() {
+    let src = r#"
+(datatype E (N i64) (F E) (Keep E))
+(ruleset make) (ruleset erase) (ruleset finish)
+(rule ((= x (N 0)) (= y (N 1))) ((Keep y) (F x)) :ruleset make)
+(rule ((= x (N 0))) ((delete (F x))) :ruleset erase)
+(rule ((= y (N 1))) ((delete (Keep y))) :ruleset finish)
+(N 0) (N 1)
+(run-schedule (seq (run make) (run erase) (run finish)))
+"#;
+    let p = raw_program(src);
+    let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    a.execute_until(Some(2)).unwrap();
+    b.execute_until(Some(2)).unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert!(
+        b.graph.ownership_report()["inventory"]["retained_inactive_signal_bindings"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    a.execute().unwrap();
+    b.execute().unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    let r = b.graph.ownership_report();
+    assert_eq!(r["stats"]["signal_port_detaches"], 0);
+    assert!(
+        r["stats"]["component_signal_retire_visits"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert_eq!(r["inventory"]["retained_inactive_signal_bindings"], 0);
+    egglog::EGraph::default()
+        .parse_and_run_program(None, src)
+        .unwrap();
+}
+
+#[test]
+fn retained_inactive_routes_do_not_return_deleted_candidates() {
+    let src = r#"
+(datatype E (N i64) (F E) (Keep E))
+(ruleset make) (ruleset erase) (ruleset merge)
+(rule ((= x (N 0)) (= y (N 1))) ((Keep y) (F x)) :ruleset make)
+(rule ((= x (N 0))) ((delete (F x))) :ruleset erase)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run make) (run erase) (run merge)))
+"#;
+    let p = raw_program(src);
+    let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    a.execute().unwrap();
+    b.execute().unwrap();
+    assert_eq!(a.snapshots, b.snapshots);
+    assert_eq!(a.binding_audit, b.binding_audit);
+    let g = &b.graph;
+    let roots = (0..g.program.tables.len())
+        .flat_map(|t| g.witnesses(t))
+        .flat_map(|w| g.row(w).unwrap().unwrap().values.to_vec())
+        .filter(|v| matches!(v, eggfuse_cell_runtime::value::Value::Eq(_)))
+        .collect::<BTreeSet<_>>();
+    for (table, schema) in g.program.tables.iter().enumerate() {
+        let rows = g
+            .witnesses(table)
+            .into_iter()
+            .filter_map(|w| g.row(w).unwrap())
+            .collect::<Vec<_>>();
+        for (column, sort) in schema.schema.iter().enumerate() {
+            if sort["kind"] != "eq" {
+                continue;
+            }
+            for root in &roots {
+                let mut bound = vec![None; schema.schema.len()];
+                bound[column] = Some(root.clone());
+                let candidates = g.candidates(table, &bound);
+                assert!(candidates.iter().all(|w| g.row(*w).unwrap().is_some()));
+                let expected = rows
+                    .iter()
+                    .filter(|r| r.values[column] == *root)
+                    .map(|r| r.witness)
+                    .collect::<BTreeSet<_>>();
+                assert!(expected.is_subset(&candidates.into_iter().collect()));
+                assert!(g.candidate_count(table, &bound) >= expected.len());
+            }
+        }
+    }
+    let r = g.ownership_report();
+    assert!(
+        r["inventory"]["retained_inactive_signal_bindings"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert!(r["stats"]["domain_planning_slice_steps"].as_u64().unwrap() > 0);
+    assert_eq!(r["stats"]["signal_port_detaches"], 0);
+    egglog::EGraph::default()
+        .parse_and_run_program(None, src)
+        .unwrap();
+}

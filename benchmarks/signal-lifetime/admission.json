@@ -1,0 +1,103 @@
+{
+  "scope": "standalone Cell CPU; identical baked artifacts for before/after; no added descriptors",
+  "before_revision": "5ffdec1d",
+  "ordinary_fast_baseline_revision": "8fffff65",
+  "rule": "exact audit and upper 95% paired bootstrap ratio below one for inference and process wall on both sum-bits and Raytrace",
+  "cases": {
+    "sum-bits": {
+      "against_before": {
+        "inference_seconds": {
+          "candidate_median": 0.021942375,
+          "baseline_median": 0.022348708,
+          "median_ratio": 0.981818501543803,
+          "paired_bootstrap_95pct_ratio": [0.9722629900041002, 0.9892841864018335]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.1838940830000002,
+          "baseline_median": 0.18694437500000305,
+          "median_ratio": 0.9836834245480626,
+          "paired_bootstrap_95pct_ratio": [0.9757679605518278, 0.9946850629264753]
+        }
+      },
+      "against_ordinary_fast": {
+        "inference_seconds": {
+          "candidate_median": 0.021942375,
+          "baseline_median": 0.021296333,
+          "median_ratio": 1.0303358329342427,
+          "paired_bootstrap_95pct_ratio": [1.0246289719878827, 1.0391109309797317]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 0.1838940830000002,
+          "baseline_median": 0.14406275000000024,
+          "median_ratio": 1.2764859965535844,
+          "paired_bootstrap_95pct_ratio": [1.266765552637443, 1.2885984730178262]
+        }
+      },
+      "phase_medians": {
+        "before": {
+          "load_seconds": 0.115561833,
+          "setup_seconds": 0.002610083,
+          "inference_seconds": 0.022348708,
+          "export_seconds": 0.006749583,
+          "unattributed_wall_seconds": 0.03898529099999992
+        },
+        "slots": {
+          "load_seconds": 0.114409375,
+          "setup_seconds": 0.002573792,
+          "inference_seconds": 0.021942375,
+          "export_seconds": 0.006715625,
+          "unattributed_wall_seconds": 0.03909800099999741
+        }
+      }
+    },
+    "raytrace": {
+      "against_before": {
+        "inference_seconds": {
+          "candidate_median": 7.820618875,
+          "baseline_median": 7.942399667,
+          "median_ratio": 0.9846670027817929,
+          "paired_bootstrap_95pct_ratio": [0.9605093043523777, 0.9892378087603055]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 14.467450084000006,
+          "baseline_median": 16.689136083000022,
+          "median_ratio": 0.8668783100604541,
+          "paired_bootstrap_95pct_ratio": [0.8557610290062431, 0.873315104659392]
+        }
+      },
+      "against_ordinary_fast": {
+        "inference_seconds": {
+          "candidate_median": 7.820618875,
+          "baseline_median": 7.680632542,
+          "median_ratio": 1.018225885984587,
+          "paired_bootstrap_95pct_ratio": [1.0092925351465538, 1.0278924699110712]
+        },
+        "process_wall_seconds": {
+          "candidate_median": 14.467450084000006,
+          "baseline_median": 10.277165458000013,
+          "median_ratio": 1.4077276602312718,
+          "paired_bootstrap_95pct_ratio": [1.3858075125808487, 1.4161127987939948]
+        }
+      },
+      "phase_medians": {
+        "before": {
+          "load_seconds": 0.555143709,
+          "setup_seconds": 0.002973833,
+          "inference_seconds": 7.942399667,
+          "export_seconds": 1.902311542,
+          "unattributed_wall_seconds": 6.298113538999985
+        },
+        "slots": {
+          "load_seconds": 0.553314541,
+          "setup_seconds": 0.002906209,
+          "inference_seconds": 7.820618875,
+          "export_seconds": 1.938068125,
+          "unattributed_wall_seconds": 4.14532854199998
+        }
+      }
+    }
+  },
+  "accepted_over_before": true,
+  "accepted_over_ordinary_fast": false,
+  "caveats": ["equal-length executable/input symlinks and numeric output paths; fresh processes interleaved", "process wall includes loading, validation, setup, export and report diagnostics", "sum-bits uses 31 samples per lane; Raytrace uses 7; one warmup each", "profiling and Bake are offline, shared between before/after, excluded from runtime timing", "candidate counts derive exact active references only when requested; their extra slice scans are charged", "retained inactive slots and boundaries may increase empty dispatch work", "unattributed wall time includes reporting, serialization, teardown and process overhead; it is not an inference metric"]
+}

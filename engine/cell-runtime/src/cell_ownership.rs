@@ -6,7 +6,7 @@ use std::cell::Cell as Counter;
 use std::rc::Rc;
 #[path = "ownership_slices.rs"]
 pub mod slices;
-use slices::{Binding as SignalBinding, PortProgram, Signal};
+use slices::{PortProgram, Signal};
 #[path = "ownership_composition.rs"]
 pub mod composition;
 
@@ -173,6 +173,7 @@ struct Stats {
     signal_binding_reads: u64,
     signal_bindings_created: u64,
     signal_bindings_retired: u64,
+    component_signal_retire_visits: u64,
     signal_bindings_live: u64,
     signal_port_attaches: u64,
     signal_port_detaches: u64,
@@ -187,6 +188,7 @@ struct Stats {
     boundary_signal_routes: u64,
     domain_planning_calls: Counter<u64>,
     domain_planning_signals: Counter<u64>,
+    domain_planning_slice_steps: Counter<u64>,
     domain_signal_visits: Counter<u64>,
     domain_slice_steps: Counter<u64>,
 }
@@ -208,7 +210,6 @@ struct Barrier {
 pub(super) struct Runtime {
     composition: composition::Runtime,
     boundaries: HashMap<u64, crate::tiny_set::TinySet<Signal>>,
-    signals: HashMap<Signal, SignalBinding>,
     pending: BTreeSet<FactRef>,
     pub(super) tables: Vec<usize>,
     stats: Stats,
@@ -255,7 +256,6 @@ impl Graph {
         self.ownership = Some(Runtime {
             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
             boundaries: HashMap::default(),
-            signals: HashMap::default(),
             pending: BTreeSet::new(),
             tables: vec![0; self.program.tables.len()],
             stats: Stats::default(),
@@ -363,7 +363,11 @@ impl Graph {
             .native
             .get(&slot)?;
         let signal = self.composed_signal(cell, local);
-        m.signals.get(&signal).filter(|b| b.root == id)?;
+        (m.composition.components[signal.component as usize]
+            .as_ref()?
+            .signals[signal.symbol]
+            == Some(id))
+        .then_some(())?;
         Some(signal)
     }
     fn boundary(&mut self, root: u64, signal: Signal) {
@@ -396,65 +400,42 @@ impl Graph {
             let signal = self.composed_signal(f.cell, symbol);
             let native = self.signal_is_native(signal, id);
             let m = self.ownership.as_mut().unwrap();
-            m.stats.signal_port_attaches += 1;
-            m.stats.signal_binding_reads += 1;
             m.stats.internal_ports_seen += u64::from(native);
             m.stats.boundary_ports_seen += u64::from(!native);
-            if let Some(binding) = m.signals.get_mut(&signal) {
-                assert_eq!(binding.root, id, "symbolic alias disagrees with live port");
-                binding.live_ports += 1;
-                m.composition
-                    .observe_shared_binding(f.cell, symbol, signal.symbol);
+            m.stats.signal_port_attaches += 1;
+            m.stats.signal_binding_reads += 1;
+            let slot = &mut m.composition.components[signal.component as usize]
+                .as_mut()
+                .unwrap()
+                .signals[signal.symbol];
+            if let Some(bound) = *slot {
+                assert_eq!(bound, id, "symbolic alias disagrees with live port");
+                if m.composition.training.is_some() {
+                    let frame = m.composition.frames[&f.cell];
+                    let c = m.composition.components[signal.component as usize]
+                        .as_ref()
+                        .unwrap();
+                    let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                    // A retained slot with no live producer is not an observed
+                    // cross-frame reuse. Profiling must still count real uses.
+                    if shape.signals[signal.symbol].iter().any(|step| {
+                        step.frame < frame.ordinal
+                            && self
+                                .cells
+                                .get(&c.frames[step.frame])
+                                .and_then(|cell| cell.facts.get(&step.op))
+                                .is_some_and(|fact| fact.owned)
+                    }) {
+                        m.composition
+                            .observe_shared_binding(f.cell, symbol, signal.symbol);
+                    }
+                }
             } else {
-                m.signals.insert(
-                    signal,
-                    SignalBinding {
-                        root: id,
-                        live_ports: 1,
-                    },
-                );
+                *slot = Some(id);
                 m.stats.signal_bindings_created += 1;
                 m.stats.signal_bindings_live += 1;
                 if !native {
                     self.boundary(id, signal);
-                }
-            }
-        }
-    }
-    fn detach_owned_signals(&mut self, f: FactRef) {
-        let template = self.cells[&f.cell].template;
-        let program = self.program.cell_ownership.markers[template]
-            .program
-            .clone();
-        let m = self.ownership.as_mut().unwrap();
-        let frame = m.composition.frames[&f.cell];
-        let shape = m.composition.components[frame.component as usize]
-            .as_ref()
-            .unwrap()
-            .shape;
-        for &symbol in program.fields[f.op as usize].iter().flatten() {
-            let signal = Signal {
-                component: frame.component,
-                symbol: m.composition.shapes[shape].as_ref().unwrap().ports[frame.ordinal][symbol],
-            };
-            m.stats.signal_port_detaches += 1;
-            m.stats.signal_binding_reads += 1;
-            let binding = m.signals.get_mut(&signal).unwrap();
-            binding.live_ports -= 1;
-            if binding.live_ports != 0 {
-                continue;
-            }
-            let id = binding.root;
-            m.signals.remove(&signal);
-            m.stats.signal_bindings_retired += 1;
-            m.stats.signal_bindings_live -= 1;
-            if let Some(set) = m.boundaries.get_mut(&id) {
-                if set.remove(&signal) {
-                    m.stats.boundary_live -= 1;
-                    m.stats.boundary_edges_removed += 1;
-                }
-                if set.is_empty() {
-                    m.boundaries.remove(&id);
                 }
             }
         }
@@ -570,7 +551,10 @@ impl Graph {
             let intrinsic = self.signal_is_native(signal, to);
             let m = self.ownership.as_mut().unwrap();
             m.stats.signal_activations += 1;
-            m.signals.get_mut(&signal).unwrap().root = to;
+            m.composition.components[signal.component as usize]
+                .as_mut()
+                .unwrap()
+                .signals[signal.symbol] = Some(to);
             if !intrinsic {
                 self.boundary(to, signal);
             }
@@ -688,7 +672,6 @@ impl Graph {
         if !self.cells[&f.cell].facts[&f.op].owned {
             return false;
         }
-        self.detach_owned_signals(f);
         self.composition_retire_fact(f.cell);
         let m = self.ownership.as_mut().unwrap();
         m.pending.remove(&f);
@@ -755,7 +738,25 @@ impl Graph {
                     .set(m.stats.domain_planning_signals.get() + signals.len() as u64);
                 let count = signals
                     .iter()
-                    .map(|s| m.signals[s].live_ports)
+                    .map(|s| {
+                        let c = m.composition.components[s.component as usize]
+                            .as_ref()
+                            .unwrap();
+                        let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                        shape.signals[s.symbol]
+                            .iter()
+                            .filter_map(|step| {
+                                m.stats
+                                    .domain_planning_slice_steps
+                                    .set(m.stats.domain_planning_slice_steps.get() + 1);
+                                self.cells
+                                    .get(&c.frames[step.frame])
+                                    .and_then(|cell| cell.facts.get(&step.op))
+                                    .filter(|fact| fact.owned)
+                                    .map(|_| step.columns.len())
+                            })
+                            .sum::<usize>()
+                    })
                     .sum::<usize>()
                     + self.uses.get(&id).map_or(0, UseSet::len);
                 Some((id, signals, count))
@@ -825,7 +826,15 @@ impl Graph {
                 m.boundaries.values().map(|x| x.len() as u64).sum::<u64>()
             );
             assert_eq!(m.stats.owned_live, m.tables.iter().sum::<usize>() as u64);
-            assert_eq!(m.stats.signal_bindings_live, m.signals.len() as u64);
+            assert_eq!(
+                m.stats.signal_bindings_live,
+                m.composition
+                    .components
+                    .iter()
+                    .flatten()
+                    .map(|c| c.signals.iter().flatten().count() as u64)
+                    .sum::<u64>()
+            );
             assert_eq!(
                 m.stats.components_live,
                 m.composition.components.iter().flatten().count() as u64
@@ -850,7 +859,13 @@ impl Graph {
             );
             for (&id, signals) in &m.boundaries {
                 for &signal in signals {
-                    assert_eq!(m.signals[&signal].root, id);
+                    assert_eq!(
+                        m.composition.components[signal.component as usize]
+                            .as_ref()
+                            .unwrap()
+                            .signals[signal.symbol],
+                        Some(id)
+                    );
                     assert!(!self.signal_is_native(signal, id));
                 }
             }
@@ -875,7 +890,13 @@ impl Graph {
                                 f.cell,
                                 program.fields[f.op as usize][column].unwrap(),
                             );
-                            assert_eq!(m.signals[&signal].root, *id);
+                            assert_eq!(
+                                m.composition.components[signal.component as usize]
+                                    .as_ref()
+                                    .unwrap()
+                                    .signals[signal.symbol],
+                                Some(*id)
+                            );
                             *references.entry(signal).or_default() += 1;
                             if self.signal_is_native(signal, *id) {
                                 internal += 1;
@@ -893,16 +914,11 @@ impl Graph {
                 }
             }
         }
-        if let Some(m) = &self.ownership {
-            assert_eq!(references.len(), m.signals.len());
-            for (signal, n) in references {
-                assert_eq!(m.signals[&signal].live_ports, n);
-            }
-            assert_eq!(
-                internal + boundary,
-                m.signals.values().map(|b| b.live_ports as u64).sum::<u64>()
-            );
-        }
+        assert_eq!(
+            internal + boundary,
+            references.values().sum::<usize>() as u64
+        );
+        let active_bindings = references.len();
         let programs = self
             .program
             .cell_ownership
@@ -913,7 +929,7 @@ impl Graph {
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":"eggfuse-ownership-markers/v4","port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
-            "inventory":{"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})

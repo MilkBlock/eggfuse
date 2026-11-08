@@ -117,7 +117,3 @@ pub(super) struct Signal {
     pub component: u32,
     pub symbol: usize,
 }
-pub(super) struct Binding {
-    pub root: u64,
-    pub live_ports: usize,
-}

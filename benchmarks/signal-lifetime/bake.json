@@ -1,0 +1,18 @@
+{
+  "scope": "Raytrace v4 artifact prepared by the unchanged 5ffdec1d compiler for both runtime versions",
+  "coverage": {
+    "scope": "typed compiler coverage, no workload execution or timing",
+    "templates": 983,
+    "covered_bodies": 15254,
+    "covered_tables": 241,
+    "entry_ports": 1454,
+    "shared_port_programs": 376,
+    "template_signal_steps": 42268,
+    "composition_initial_shapes": 376,
+    "composition_baked_shapes": 625,
+    "composition_transitions": 264,
+    "composition_input_sources": 1202
+  },
+  "program_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+  "profile_sha256": "3fc40263eb40a6a244c76a2eef442b018b05d2508e6f68127438fccf2442dc03"
+}

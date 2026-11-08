@@ -106,6 +106,15 @@ gate rejects acceleration despite zero runtime shape construction and fewer
 external bindings than uncomposed ownership. Remaining binding access, allocation
 and loading costs are recorded alongside exact semantic checks.
 
+[Component-lifetime signal slots](benchmarks/signal-lifetime/README.md) remove
+per-field detach reference counting and the global signal binding hash map.
+Existing fact liveness filters retained slots; final component retirement cleans
+their boundaries. Exact audits pass on sum-bits and Raytrace. Relative to the
+previous ownership implementation, inference improves 1.82% / 1.53% and complete
+process time improves 1.63% / 13.31%; both workloads pass the paired confidence
+gate. The ordinary fast baseline remains faster, so this is a local improvement
+to the opt-in path, not an overall acceleration claim.
+
 [Cross-stage query receipts](benchmarks/query-receipts/README.md) extend opt-in
 Bake to constructor and mutable query ports, with current-value checks and
 resumable catalogs. More checked reuse is learned, but the measured catalogs

@@ -1,0 +1,55 @@
+{
+  "scope": "execute allocator requests; separate diagnostic binaries; excludes setup/export; not RSS",
+  "before_runtime_sha256": "2559a183450edffb0260e779a6610287e305f3a4689adff5ef3007a42ad3d16a",
+  "slots_runtime_sha256": "b08bff3288ce9d5740c02a6580f207bf211ad5d6635bfc6d319cc28a7b496603",
+  "cases": {
+    "sum-bits": {
+      "before": {
+        "alloc_calls": 129207,
+        "free_calls": 101365,
+        "live_bytes_after": 151221034,
+        "live_bytes_before": 144645866,
+        "peak_live_requested_bytes": 151784994,
+        "realloc_calls": 18690,
+        "released_bytes": 21701294,
+        "requested_bytes": 28276462,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "slots": {
+        "alloc_calls": 130771,
+        "free_calls": 101552,
+        "live_bytes_after": 151183528,
+        "live_bytes_before": 144635952,
+        "peak_live_requested_bytes": 151740288,
+        "realloc_calls": 19540,
+        "released_bytes": 21587702,
+        "requested_bytes": 28135278,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      }
+    },
+    "raytrace": {
+      "before": {
+        "alloc_calls": 30534702,
+        "free_calls": 24624477,
+        "live_bytes_after": 1996368677,
+        "live_bytes_before": 465416780,
+        "peak_live_requested_bytes": 1996661501,
+        "realloc_calls": 3016226,
+        "released_bytes": 7312663683,
+        "requested_bytes": 8843615580,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "slots": {
+        "alloc_calls": 30983872,
+        "free_calls": 24681791,
+        "live_bytes_after": 1984897779,
+        "live_bytes_before": 465406866,
+        "peak_live_requested_bytes": 1985178507,
+        "realloc_calls": 3142535,
+        "released_bytes": 7273528107,
+        "requested_bytes": 8793019020,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      }
+    }
+  }
+}
