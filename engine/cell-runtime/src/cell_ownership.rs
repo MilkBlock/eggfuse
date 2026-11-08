@@ -662,6 +662,9 @@ impl Graph {
         let Some(r) = self.fact(f)? else {
             return Ok(());
         };
+        if self.port_keys_enabled(r.table) {
+            return self.complete_port_key(f, r);
+        }
         self.dirty_facts[r.table].remove(&f);
         self.ownership.as_mut().unwrap().stats.key_completions += 1;
         let h = hashkey(r.table, &r.values[..r.values.len() - 1]);

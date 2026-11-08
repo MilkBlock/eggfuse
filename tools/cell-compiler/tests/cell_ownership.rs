@@ -22,9 +22,31 @@ fn program(src: &str) -> Program {
 fn compare(src: &str) -> Executor {
     let p = program(src);
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
-    let mut b = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    let mut b = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
+    let mut port_keys = Executor::new(Graph::new_with_port_keys(p).unwrap(), true);
     a.execute().unwrap();
     b.execute().unwrap();
+    port_keys.execute().unwrap();
+    assert_eq!(a.initial_audit, port_keys.initial_audit);
+    assert_eq!(a.snapshots, port_keys.snapshots);
+    assert_eq!(a.binding_audit, port_keys.binding_audit);
+    assert_eq!(a.steps.len(), port_keys.steps.len());
+    for (x, y) in a.steps.iter().zip(&port_keys.steps) {
+        for k in [
+            "ordinal",
+            "ruleset",
+            "path",
+            "iterations",
+            "epoch",
+            "logical_matches",
+            "executed_bindings",
+            "changed",
+        ] {
+            assert_eq!(x[k], y[k], "port keys: {k}");
+        }
+    }
+    port_keys.graph.ownership_report();
+    port_keys.graph.stable_port_report();
     assert_eq!(a.initial_audit, b.initial_audit);
     assert_eq!(a.snapshots, b.snapshots);
     assert_eq!(a.binding_audit, b.binding_audit);

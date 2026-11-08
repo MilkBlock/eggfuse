@@ -22,12 +22,12 @@ phase does not establish completion of the objective.
 | Requirement | Evidence required | Current status |
 | --- | --- | --- |
 | Covered node fields use stable symbolic ports as authoritative storage | Addresses unchanged across union; read views match reference; no canonical Eq values stored in covered nodes | Verified by field fixtures and frozen sum-bits audit |
-| Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; bounded candidate sources; no operator-bucket scan disguised as indexing | Not implemented |
+| Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
 | Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Not implemented |
-| Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Not implemented |
+| Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
 | Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Not implemented |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Field deletion/rebirth and retained-consumer tests pass; queued-condition tests pending |
-| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Initial field counters only |
+| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field and key replacement-work counters included in Bake's ledger; scoped-condition and parallel accounting pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Not implemented |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
 | Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Existing fragments only; new structural metadata pending |
@@ -96,7 +96,69 @@ python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/fields
 python3 benchmarks/stable-port-congruence/collect-fields.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
-## Next structural steps
+## Port-equality constructor step
+
+`--port-keys` implies stable fields. The compiler's typed coverage admits scalar
+constructors with at least one equality input. Enabling verifies every existing
+fact in an admitted table has symbolic-port ownership; births assert the same
+invariant. A bound equality input reaches every possible matching constructor
+through the root's boundary signals or native signal and shared template slices.
+Exact table, scalar and corresponding port values establish the match. This
+does not scan the operator bucket and does not add a per-producer consumer list.
+Boundary domains may still be large; this step does not claim constant work.
+
+Existing index entries become immutable birth hints: they are inserted at birth,
+never relocated by union, and removed at fact retirement. A hint hit requires
+the same exact guards. A miss falls back to the complete port domain, so aliases
+cannot hide an existing constructor. During collision completion, pending facts
+are excluded until their source-ordered turn, preserving the legacy survivor and
+receipt order. Output equality, visibility merging and retirement remain real
+logical work. Uncovered tables retain their existing path.
+
+All 228 workspace tests pass (four preexisting ignored); 32 ownership/port
+fixtures pass in sparse and non-sparse configurations. The direct alias test
+requires a birth-hint miss to find the old constructor through its new equality
+domain, and deletion/rebirth rejects the old stable address. Further fixtures
+cover simultaneous key changes and scalar discrimination after equality merges.
+The minimal runtime without default features compiles.
+
+The final sum-bits audit again matches all 1,428 ordered Run observations and
+all state/RHS/write/resume/Spine digests. Canonical key completions, hash changes
+and repair index probes drop from 1,046 each to zero. The replacement still
+performs 1,046 equality completions and 878 result publications. It performs
+18,476 constructor probes, 11,171 successful birth hints, 7,305 port-domain
+probes, 18,080 candidate visits and 35,186 field comparisons. Port/root reads
+increase from 91,647 to 119,758. These include setup and audit accesses and are
+not timing or allocation results. An exploratory version without birth-hint
+probes needed 18,476 domain probes, 27,299 candidates and 51,478 comparisons;
+its intermediate counters are explicitly separated in the evidence.
+
+The new work is charged in `work_credit.rs`; counting only old repair probes
+would give false credit. We have not run a latency campaign for this structural
+step. Local compiled pair conditions and the global publication barrier are
+still outstanding. This is an implementation in the standalone Cell CPU, not
+a change to native egglog.
+
+Reproduce using the same artifact and build commands above, then:
+
+```sh
+# Save the workspace/focused/minimal logs under port-key-*.log, as consumed below.
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/port-key-runtime-final
+python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/port-key-runtime-final benchmarks/stable-port-congruence/port-key-audit-manifest.json out/stable-port-congruence/port-key-audit-final
+python3 benchmarks/stable-port-congruence/collect-port-keys.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Remaining structural work
+
+The latest catalog demonstrates 1,046 equality completions after removing key
+maintenance. Cross-Run fragments can share the local conditions and their
+dispatch; the remaining obligations are complete candidate coverage, live fact
+checks, all-input conjunction and boundary alias handling. Typed constructor
+schemas and checked Entry substitutions can prove local wiring, while operator
+tags must remain explicit: port-program identity alone does not imply the same
+constructor. The next experiment must report local versus boundary condition
+work against this port-key version, without claiming that all congruence work
+has disappeared.
 
 Constructor candidates must come from static marker positions or explicit boundary
 port domains. Exact corresponding input equality proves congruence; a fingerprint

@@ -73,6 +73,18 @@ impl Work {
             };
             work.insert(key,value);
         }
+        // Stable fields and equality-guarded keys replace maintenance with
+        // reads/guards. Their work must not disappear from Bake's ledger.
+        for field in ["rows_installed", "ports_installed", "row_views", "port_reads", "root_resolutions",
+            "notifications", "notified_columns", "legacy_key_enqueues", "equality_enqueues", "equality_completions",
+            "key_candidates", "key_field_comparisons", "pending_candidate_skips", "birth_hint_probes", "port_domain_probes"] {
+            let key = format!("stable_ports/stats/{field}");
+            let value = if report["stable_ports"]["enabled"] == true {
+                report["stable_ports"]["stats"][field].as_u64()
+                    .ok_or_else(||format!("missing stable-port work {field}"))?
+            } else { 0 };
+            work.insert(key, value);
+        }
         Ok(Self(work))
     }
     pub fn savings(&self, trial: &Self) -> (i128, J) {

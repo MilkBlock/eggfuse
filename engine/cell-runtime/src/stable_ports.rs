@@ -1,8 +1,10 @@
 //! Authoritative stable fields for covered scalar constructors. Canonical
 //! values are temporary read views; equality propagation never rewrites them
-//! into the stored node. Constructor indexing still uses the legacy key path
-//! until local congruence coverage and scoped completion are connected.
+//! into the stored node. Optional port-key matching uses immutable birth hints
+//! and complete symbolic domains; scoped completion remains a separate step.
 use super::*;
+#[path = "port_keys.rs"]
+mod keys;
 
 /// A shared symbolic address. Component IDs are monotonic and never recycled;
 /// a retired address is rejected rather than rebound to a later instance.
@@ -39,6 +41,16 @@ pub struct Stored {
 }
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
+    keys: bool,
+    key_lookups: Counter<u64>,
+    key_candidates: Counter<u64>,
+    key_field_comparisons: Counter<u64>,
+    pending_candidate_skips: Counter<u64>,
+    birth_hint_probes: Counter<u64>,
+    birth_hint_hits: Counter<u64>,
+    port_domain_probes: Counter<u64>,
+    equality_enqueues: u64,
+    equality_completions: u64,
     rows_installed: u64,
     ports_installed: u64,
     row_views: Counter<u64>,
@@ -207,8 +219,8 @@ impl Graph {
         })
     }
     /// Existing shared slices identify the changed columns. No stored field
-    /// needs an Eq(from) comparison or an Eq(to) write. The legacy key work
-    /// remains explicit until the congruence backend replaces that obligation.
+    /// needs an Eq(from) comparison or an Eq(to) write. Changed inputs enqueue
+    /// either canonical key work or an exact port-equality obligation.
     pub(in crate::graph) fn notify_stable_fields(&mut self, f: FactRef, columns: &[usize]) -> bool {
         let Some(stored) = self
             .cells
@@ -222,6 +234,7 @@ impl Graph {
             return true;
         }
         let table = stored.table;
+        let port_key = self.port_keys_enabled(table);
         // Dispatch coalesces disjoint columns from several signals, so their
         // concatenation need not be sorted.
         let key = columns.iter().any(|&i| i + 1 < stored.fields.len());
@@ -232,15 +245,16 @@ impl Graph {
             .facts
             .get_mut(&f.op)
             .unwrap();
-        let singleton = self
-            .intern
-            .get(&state.hash)
-            .is_some_and(|bucket| bucket.len() == 1 && bucket.first() == Some(&f));
+        let singleton = !port_key
+            && self
+                .intern
+                .get(&state.hash)
+                .is_some_and(|bucket| bucket.len() == 1 && bucket.first() == Some(&f));
         let m = self.ownership.as_mut().unwrap();
         let stats = self.stable_ports.as_mut().unwrap();
         stats.notifications += 1;
         stats.notified_columns += columns.len() as u64;
-        if !key && singleton && !m.pending.contains(&f) {
+        if !key && (port_key || singleton) && !m.pending.contains(&f) {
             state.epoch = self.epoch;
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(f));
@@ -249,7 +263,11 @@ impl Graph {
         } else {
             let added = u64::from(m.pending.insert(f));
             m.stats.key_enqueues += added;
-            stats.legacy_key_enqueues += added;
+            if port_key {
+                stats.equality_enqueues += added;
+            } else {
+                stats.legacy_key_enqueues += added;
+            }
             self.dirty_facts[table].insert(f);
         }
         true
@@ -275,8 +293,42 @@ impl Graph {
                 }
             }
         }
-        json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; canonical-key repair and global Run barrier still enabled",
+        let indexed_port_keys = self
+            .intern
+            .values()
+            .flat_map(|b| b.iter())
+            .filter(|&&f| {
+                self.dependency_table(Dependency::Fact(f))
+                    .is_some_and(|t| self.port_keys_enabled(t))
+            })
+            .count();
+        let port_key_facts = self
+            .program
+            .tables
+            .iter()
+            .enumerate()
+            .filter(|(t, _)| self.port_keys_enabled(*t))
+            .map(|(t, _)| self.witness_count(t))
+            .sum::<usize>();
+        assert_eq!(
+            indexed_port_keys, port_key_facts,
+            "immutable birth hints follow fact lifetime only"
+        );
+        let pending_canonical_keys = self
+            .ownership
+            .as_ref()
+            .unwrap()
+            .pending
+            .iter()
+            .filter(|&&f| {
+                self.dependency_table(Dependency::Fact(f))
+                    .is_some_and(|t| !self.port_keys_enabled(t))
+            })
+            .count();
+        json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
             "stats":stats,"live_stable_nodes":nodes,"live_port_fields":ports,
-            "pending_canonical_keys":self.ownership.as_ref().unwrap().pending.len()})
+            "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
+            "pending_canonical_keys":pending_canonical_keys,
+            "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})
     }
 }

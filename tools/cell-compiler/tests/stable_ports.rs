@@ -33,9 +33,40 @@ fn baked(src: &str) -> Program {
 fn compare(src: &str) -> Executor {
     let p = baked(src);
     let mut old = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
-    let mut new = Executor::new(Graph::new_with_stable_ports(p).unwrap(), true);
+    let mut new = Executor::new(Graph::new_with_stable_ports(p.clone()).unwrap(), true);
+    let mut keyed = Executor::new(Graph::new_with_port_keys(p).unwrap(), true);
     old.execute().unwrap();
     new.execute().unwrap();
+    keyed.execute().unwrap();
+    assert_eq!(old.initial_audit, keyed.initial_audit);
+    assert_eq!(old.snapshots, keyed.snapshots);
+    assert_eq!(old.binding_audit, keyed.binding_audit);
+    assert_eq!(old.steps.len(), keyed.steps.len());
+    for (a, b) in old.steps.iter().zip(&keyed.steps) {
+        for k in [
+            "ordinal",
+            "ruleset",
+            "path",
+            "iterations",
+            "epoch",
+            "logical_matches",
+            "executed_bindings",
+            "changed",
+        ] {
+            assert_eq!(a[k], b[k], "port keys: {k}");
+        }
+    }
+    keyed.graph.ownership_report();
+    assert!(
+        keyed.graph.stable_port_report()["birth_indexed_port_keys"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert_eq!(
+        keyed.graph.ownership_report()["stats"]["key_completions"],
+        0
+    );
     assert_eq!(old.initial_audit, new.initial_audit);
     assert_eq!(old.snapshots, new.snapshots);
     assert_eq!(old.binding_audit, new.binding_audit);
@@ -125,7 +156,7 @@ fn stable_address_survives_representative_change_and_expires_on_recreation() {
     let p = source("(datatype E (N i64) (F E)) (N 0) (N 1) (F (N 1)) (run-schedule (run))");
     let n = p.tables.iter().position(|t| t.name == "N").unwrap();
     let f = p.tables.iter().position(|t| t.name == "F").unwrap();
-    let mut g = Graph::new_with_stable_ports(p).unwrap();
+    let mut g = Graph::new_with_port_keys(p).unwrap();
     let a = g
         .lookup(n, &[Value::Int(0)])
         .unwrap()
@@ -156,7 +187,17 @@ fn stable_address_survives_representative_change_and_expires_on_recreation() {
         old.values[0], b,
         "a previously returned row is an immutable snapshot"
     );
+    let domains = g.stable_port_report()["stats"]["port_domain_probes"]
+        .as_u64()
+        .unwrap();
     assert_eq!(g.lookup(f, &[a.clone()]).unwrap().unwrap().values[0], a);
+    assert!(
+        g.stable_port_report()["stats"]["port_domain_probes"]
+            .as_u64()
+            .unwrap()
+            > domains,
+        "alias lookup must complete an immutable birth-hint miss"
+    );
     g.hide(f, &[a.clone()], true).unwrap();
     assert!(g.fact(witness).unwrap().is_none());
     assert!(
@@ -172,4 +213,41 @@ fn stable_address_survives_representative_change_and_expires_on_recreation() {
     assert!(g.read_port(address).is_err());
     g.ownership_report();
     g.stable_port_report();
+}
+
+#[test]
+fn simultaneous_input_changes_preserve_the_ordered_survivor() {
+    compare(
+        r#"
+(datatype E (N i64) (F E) (G E))
+(ruleset build) (ruleset merge)
+(rule ((= x (N 1)) (= y (N 2))) ((G (F x)) (G (F y))) :ruleset build)
+(rule ((= z (N 0)) (= x (N 1)) (= y (N 2))) ((union z x) (union z y)) :ruleset merge)
+(N 0) (N 1) (N 2)
+(run-schedule (seq (run build) (run merge)))
+(check (= (G (F (N 1))) (G (F (N 2)))))
+"#,
+    );
+}
+
+#[test]
+fn equal_input_ports_do_not_collapse_distinct_scalar_keys() {
+    let e = compare(
+        r#"
+(datatype E (N i64) (F i64 E))
+(ruleset build) (ruleset merge)
+(rule ((= x (N 0)) (= y (N 1))) ((F 10 x) (F 20 y)) :ruleset build)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(N 0) (N 1)
+(run-schedule (seq (run build) (run merge)))
+"#,
+    );
+    let f = e
+        .graph
+        .program
+        .tables
+        .iter()
+        .position(|t| t.name == "F")
+        .unwrap();
+    assert_eq!(e.graph.witness_count(f), 2);
 }

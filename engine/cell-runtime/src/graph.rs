@@ -1267,6 +1267,9 @@ impl Graph {
     #[inline]
     fn lookup_canonical_inner(&self, table: usize, key: &[Value]) -> Result<Option<Row>> {
         self.key_lookup_calls.set(self.key_lookup_calls.get() + 1);
+        if self.port_keys_enabled(table) {
+            return self.lookup_port_key(table, key, None);
+        }
         if key.is_empty() && self.program.tables[table].schema.len() == 1 {
             let members = &self.members[table];
             if members.len() <= 1 {
@@ -1441,12 +1444,16 @@ impl Graph {
         if hidden {
             self.visibility_tainted[t] = true;
         }
+        let port_key = self.port_keys_enabled(t);
+        // In port-key mode this is an immutable birth hint, not a promise
+        // that the hash follows future canonical representatives.
         let h = self.constructor_hash(t, key);
         let vs = Self::shared_fields(key, &v);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);
         let owned = self.owns_birth(f);
+        assert!(!port_key || owned, "port-key constructor lacks shared-template coverage");
         let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
         #[cfg(feature = "sparse-cells")]
         facts.reserve_first();
@@ -2369,10 +2376,13 @@ impl Graph {
         Ok(None)
     }
     fn commit_fact_repair(&mut self, f: FactRef, r: Row, h: u64, found: Option<Row>) -> Result<()> {
+        self.commit_constructor_collision(f, r, Some(h), found)
+    }
+    fn commit_constructor_collision(&mut self, f: FactRef, r: Row, h: Option<u64>, found: Option<Row>) -> Result<()> {
         let d = Dependency::Fact(f);
         let old = self.cells[&f.cell].facts[&f.op].hash;
-        self.stats.repair_key_hash_changes += u64::from(h != old);
-        if let Some(bucket) = self.intern.get_mut(&old) {
+        self.stats.repair_key_hash_changes += u64::from(h.is_some_and(|h|h != old));
+        if h.is_some() && let Some(bucket) = self.intern.get_mut(&old) {
             bucket.remove(&f);
             #[cfg(feature = "sparse-cells")]
             if bucket.is_empty() { self.intern.remove(&old); }
@@ -2405,7 +2415,7 @@ impl Graph {
             self.retire(f)?;
         } else {
             self.end_local_ownership(f, r.table, false);
-            self.intern.entry(h).or_default().insert(f);
+            if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
             let s = self
                 .cells
                 .get_mut(&f.cell)
@@ -2415,7 +2425,7 @@ impl Graph {
                 .unwrap();
 
             s.decoded = if s.ports.is_none() { Some((r.table, r.values.clone())) } else { None };
-            s.hash = h;
+            if let Some(h) = h { s.hash = h; }
             s.epoch = self.epoch;
             if self.cells[&f.cell].facts[&f.op].owned {
                 self.query_versions[r.table]+=1;
