@@ -159,6 +159,11 @@ impl Catalog {
             s.units.push(u);
         }
         if let Some(raw) = raw.get("rhs_handoffs") {
+            let congruence = match raw["schema"].as_str() {
+                Some("eggfuse-result-switch/v1") => false,
+                Some("eggfuse-result-switch/v2") => true,
+                _ => return Err("unsupported cross-Run RHS proof policy".into()),
+            };
             let reuse = raw["reuse_results"]
                 .as_bool()
                 .ok_or("missing result switch policy")?;
@@ -167,6 +172,7 @@ impl Catalog {
                 s.units.iter().map(|u| u.path.as_slice()),
                 &s.leaves,
                 reuse,
+                congruence,
             );
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
@@ -178,6 +184,12 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
+        Self::emit_policy(p, plan, reuse, false)
+    }
+    pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
+        Self::emit_policy(p, plan, true, true)
+    }
+    fn emit_policy(p: &Program, plan: &mut J, reuse: bool, congruence: bool) -> Result<()> {
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
@@ -187,6 +199,7 @@ impl Catalog {
             cat.units.iter().map(|u| u.path.as_slice()),
             &cat.leaves,
             reuse,
+            congruence,
         )
         .artifact();
         Ok(())
@@ -199,6 +212,29 @@ impl Catalog {
     }
     pub(crate) fn history_depth(&self) -> usize {
         self.switch.depth
+    }
+    /// A fully executed source rule can seed a unique admitted leaf. Keep this
+    /// restricted to v2 roots whose receipts a compiled continuation demands.
+    /// Training also observes unspecialized roots, so their first continuation
+    /// can enter the candidate set before any catalog demands those receipts.
+    pub(crate) fn root_state(&self, rule: usize, run: usize, collect_pairs: bool) -> Option<State> {
+        if !self.switch.congruence {
+            return None;
+        }
+        let pc = self.switch.unique_root(rule, !collect_pairs)?;
+        let unit = self.switch.active(pc);
+        Some(State {
+            pc,
+            active: Some(unit),
+            stack: if collect_pairs {
+                vec![Segment { unit, incoming: 0 }]
+            } else {
+                vec![]
+            },
+            last_run: run,
+            collect_pairs,
+            ..Default::default()
+        })
     }
     pub(crate) fn program(&self, s: &State) -> &[crate::result_handoff::Reuse] {
         self.switch
@@ -387,7 +423,7 @@ impl Catalog {
                     .program(self.switch.replay(&u.path))
                     .unwrap()
                     .reuse;
-                let proof = crate::result_handoff::terminal(p, &u.path);
+                let proof = crate::result_handoff::terminal(p, &u.path, self.switch.congruence);
                 let additional = proof
                     .reuse
                     .iter()
@@ -430,9 +466,13 @@ impl Catalog {
                         .unwrap()
                         .reuse;
                     let start_of_b = self.units[join.left].path.len();
-                    if crate::result_handoff::derive(p, &path).iter().any(|r| {
-                        path.len() - 1 - r.back < start_of_b && !old.iter().any(|x| x.op == r.op)
-                    }) {
+                    if crate::result_handoff::derive(p, &path, self.switch.congruence)
+                        .iter()
+                        .any(|r| {
+                            path.len() - 1 - r.back < start_of_b
+                                && !old.iter().any(|x| x.op == r.op)
+                        })
+                    {
                         e.bridge_support = e.bridge_support.max(w.visits.min(e.visits));
                     }
                 }

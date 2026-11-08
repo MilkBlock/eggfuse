@@ -186,6 +186,26 @@ impl Started {
             .collect()
     }
     #[cfg(feature = "iterative-bake")]
+    fn seed_root(
+        &mut self,
+        cat: &crate::iterative::Catalog,
+        rule: usize,
+        run: usize,
+        collect_pairs: bool,
+        stats: &mut Stats,
+    ) {
+        if matches!(self, Self::Root { .. })
+            && let Some(state) = cat.root_state(rule, run, collect_pairs)
+        {
+            self.cursor(stats);
+            let Self::Live(c) = self else {
+                unreachable!()
+            };
+            c.state = state;
+            stats.root_completion_seeds += 1;
+        }
+    }
+    #[cfg(feature = "iterative-bake")]
     fn remember(
         &mut self,
         cat: &crate::iterative::Catalog,
@@ -370,6 +390,7 @@ pub struct Stats {
     distinct_anchor_keys: u64,
     context_fact_publications: u64,
     completed_steps: u64,
+    root_completion_seeds: u64,
     port_refreshes: u64,
     pre_resume_port_lookups: u64,
     port_cache_fills: u64,
@@ -1007,6 +1028,13 @@ impl Programs {
         #[cfg(feature = "iterative-bake")]
         let step = {
             let mut s = step;
+            s.seed_root(
+                &g.program.iterative,
+                rid,
+                self.training.run,
+                self.training.collect_pairs,
+                &mut self.stats,
+            );
             s.remember(&g.program.iterative, rid, &query_fact, effects);
             s
         };
@@ -1104,6 +1132,13 @@ impl Programs {
         #[cfg(feature = "iterative-bake")]
         let step = {
             let mut s = step;
+            s.seed_root(
+                catalog,
+                rid,
+                self.training.run,
+                self.training.collect_pairs,
+                &mut self.stats,
+            );
             s.remember(catalog, rid, |i| query.get(i).map(Dependency::Fact), None);
             s
         };

@@ -45,3 +45,8 @@ unsupported. Application-wide performance gains are unproven.
 add an opt-in `--congruence-cells` path: immutable applications and shared
 equality premises can complete across Runs before table publication. This is
 an experimental representation, not yet a Bake-trained or parallel backend.
+
+[Compiler congruence and root continuations](benchmarks/compiler-congruence/README.md)
+add the opt-in `rhs-congruence` learning objective. It strengthens cross-Run
+constructor proofs and records a root producer's first useful continuation;
+measured extra reuse on the current narrow leaf catalog is still small.

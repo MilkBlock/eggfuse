@@ -354,9 +354,9 @@ fn spine_routes_live_witnesses_and_plans_the_rest_of_the_same_query() {
     {
         // Both residual atoms have a complete functional key. The register
         // matcher verifies B(2) and the late B(99) on the normal schedule.
-        assert_eq!(counts["free_join"]["entry_probes"].as_u64(),Some(0));
-        assert!(counts["register_answers"].as_u64().unwrap()>0);
-        assert!(spine["routed_matcher_seeds"].as_u64().unwrap()>0);
+        assert_eq!(counts["free_join"]["entry_probes"].as_u64(), Some(0));
+        assert!(counts["register_answers"].as_u64().unwrap() > 0);
+        assert!(spine["routed_matcher_seeds"].as_u64().unwrap() > 0);
     }
     assert_eq!(
         counts["consumer_seed_deliveries"].as_u64().unwrap(),
@@ -689,6 +689,17 @@ fn switched_rhs_carries_a_two_run_old_fact_and_restarts_on_a_deleted_sibling() {
     assert_eq!(counts["handoff_closed_fallback"], 1);
     assert_eq!(counts["handoff_deep"], 3);
     assert_eq!(counts["handoff_lets"], 3);
+    let mut enhanced = raw["iterative_bake"].clone();
+    Catalog::emit_congruence_handoffs(&program, &mut enhanced).unwrap();
+    let mut enhanced_raw = raw.clone();
+    enhanced_raw["iterative_bake"] = enhanced;
+    let enhanced_result = bench(enhanced_raw, "congruence.json");
+    assert_eq!(
+        base["final_state_sha256"],
+        enhanced_result["final_state_sha256"]
+    );
+    assert_eq!(enhanced_result["counts"]["handoff_closed"], 1);
+    assert_eq!(enhanced_result["counts"]["handoff_closed_fallback"], 1);
     let mut training_seed = program.artifact.clone();
     training_seed.as_object_mut().unwrap().remove("sha256");
     training_seed["sha256"] = artifact_digest(&training_seed).into();
@@ -818,6 +829,217 @@ fn keyed_context_tracks_correlated_ports_and_late_terminal_deltas() {
     let old = tmp.path().join("legacy.json");
     fs::write(&old, serde_json::to_vec(&legacy).unwrap()).unwrap();
     assert_eq!(stage_output(&program, "64"), stage_output(&old, "64"));
+}
+
+#[cfg(feature = "iterative-bake")]
+fn completion_seed(source: &str) -> (eggfuse_cell_runtime::program::Program, J) {
+    use eggfuse_cell_runtime::{
+        compiler,
+        iterative::{Catalog, Limits},
+        program::Program,
+    };
+    use std::collections::BTreeSet;
+    let core = eggfuse_bake::device_frontend::core("congruence-completion", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let rules = p.artifact["recipe"]["rules"].as_array().unwrap();
+    let id = |name: &str| {
+        rules
+            .iter()
+            .position(|r| r["metadata"]["name"] == name)
+            .unwrap()
+    };
+    let (producer, consumer) = (id("producer"), id("consumer"));
+    let publication = rules[producer]["effects"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|op| op["call"]["table"] == "Gateway")
+        .unwrap();
+    let profile = json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":[{"edge":[0,0,producer,0],"visits":2},{"edge":[0,0,consumer,0],"visits":2}]});
+    let leaves = compiler::bake_spine_blocks(&p, &profile, &p, 2).unwrap();
+    let leaf = |rid| {
+        leaves["entries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .position(|e| e["consumer"] == rid)
+            .unwrap()
+    };
+    let mut raw = p.artifact.clone();
+    raw["spine_blocks"] = leaves.clone();
+    let seed = Program::parse(raw.clone()).unwrap();
+    let mut plan = Catalog::seed(&seed, Limits::default()).unwrap();
+    plan["joins"] = json!([{"left":leaf(producer),"output":publication,"right":leaf(consumer)}]);
+    (seed, plan)
+}
+
+#[cfg(feature = "iterative-bake")]
+#[test]
+fn compiler_closes_committed_congruence_and_preserves_explicit_rhs_union() {
+    use eggfuse_cell_runtime::{
+        executor::Executor, graph::Graph, iterative::Catalog, program::Program,
+    };
+    let source = r#"
+        (datatype E (N i64) (Seed E E) (Start E E) (F E) (G E) (H E) (Gateway E))
+        (ruleset init) (ruleset make) (ruleset consume)
+        (rule ((Seed x y)) ((Start x y)) :ruleset init :name "seed")
+        (rule ((Start x y))
+          ((let fx (F x)) (let fy (F y)) (G fx) (H fx)
+           (union x y) (Gateway fy)) :ruleset make :name "producer")
+        (rule ((Gateway z)) ((let g (G z)) (let h (H z)) (union g h))
+          :ruleset consume :name "consumer")
+        (Seed (N 1) (N 2))
+        (run-schedule (seq (run init) (run make) (run consume)))
+        (check (= (G (F (N 1))) (H (F (N 2)))))
+    "#;
+    for cold in [false, true] {
+        let source = if cold {
+            source
+                .replace("(Seed (N 1) (N 2))", "(Start (N 1) (N 2))")
+                .replace(
+                    "(seq (run init) (run make) (run consume))",
+                    "(seq (run make) (run consume))",
+                )
+        } else {
+            source.to_owned()
+        };
+        let source = source.as_str();
+        let (seed, mut plan) = completion_seed(source);
+        let mut raw = seed.artifact.clone();
+        if cold {
+            let mut training = Catalog::seed(
+                &seed,
+                eggfuse_cell_runtime::iterative::Limits {
+                    support: 1,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            Catalog::emit_congruence_handoffs(&seed, &mut training).unwrap();
+            let mut training_raw = raw.clone();
+            training_raw["iterative_bake"] = training;
+            let mut learner = Executor::new(
+                Graph::new(Program::parse(training_raw).unwrap()).unwrap(),
+                false,
+            );
+            learner.collect_iterative_pairs();
+            learner.execute().unwrap();
+            let choices = learner
+                .graph
+                .program
+                .iterative
+                .select(&learner.graph.program, learner.iterative_training());
+            assert!(
+                choices
+                    .iter()
+                    .any(|(j, e)| json!(j) == plan["joins"][0] && e.predicted_key_reads == 2),
+                "a cold producer must teach its first useful continuation"
+            );
+        }
+        let mut reference = None;
+        for enhanced in [false, true] {
+            if enhanced {
+                Catalog::emit_congruence_handoffs(&seed, &mut plan).unwrap();
+            } else {
+                Catalog::emit_handoffs(&seed, &mut plan).unwrap();
+            }
+            raw["iterative_bake"] = plan.clone();
+            let program = Program::parse(raw.clone()).unwrap();
+            let mut e = Executor::new(Graph::new(program).unwrap(), true);
+            e.execute().unwrap();
+            let states: Vec<_> = e
+                .snapshots
+                .iter()
+                .map(|s| {
+                    let mut rows = s["rows"].as_array().unwrap().clone();
+                    rows.sort_by_cached_key(J::to_string);
+                    json!(rows)
+                })
+                .collect();
+            if let Some((old, bindings)) = &reference {
+                assert_eq!(&states, old);
+                assert_eq!(&e.binding_audit, bindings);
+            } else {
+                reference = Some((states, e.binding_audit.clone()));
+            }
+            assert_eq!(
+                e.graph.stats.handoff_closed,
+                u64::from(enhanced),
+                "plan={} report={}",
+                plan,
+                e.report()
+            );
+            assert_eq!(e.graph.stats.handoff_lets, if enhanced { 2 } else { 0 });
+            assert_eq!(
+                e.report()["stage_spine"]["stats"]["root_completion_seeds"],
+                u64::from(enhanced && cold)
+            );
+            assert_eq!(
+                e.graph.stats.unions, 3,
+                "two source unions and F congruence must still commit"
+            );
+        }
+        // A v2 proof cannot be relabeled as the weaker, byte-compatible v1 policy.
+        raw["iterative_bake"]["rhs_handoffs"]["schema"] = "eggfuse-result-switch/v1".into();
+        assert!(Program::parse(raw).is_err());
+        let mut native = egglog::EGraph::default();
+        native.parse_and_run_program(None, source).unwrap();
+    }
+}
+
+#[cfg(feature = "iterative-bake")]
+#[test]
+fn compiler_completion_does_not_use_a_union_before_its_source_barrier() {
+    use eggfuse_cell_runtime::{
+        executor::Executor, graph::Graph, iterative::Catalog, program::Program,
+    };
+    let source = r#"
+        (datatype E (N i64) (Seed E E) (Start E E) (F E) (G E) (Gateway E E))
+        (ruleset init) (ruleset make) (ruleset consume)
+        (rule ((Seed x y)) ((Start x y)) :ruleset init :name "seed")
+        (rule ((Start x y)) ((let fx (F x)) (F y) (G fx) (Gateway x y))
+            :ruleset make :name "producer")
+        (rule ((Gateway x y)) ((union x y) (G (F y)))
+            :ruleset consume :name "consumer")
+        (Seed (N 1) (N 2))
+        (run-schedule (seq (run init) (run make) (run consume)))
+        (check (= (G (F (N 1))) (G (F (N 2)))))
+    "#;
+    let (seed, mut plan) = completion_seed(source);
+    let mut raw = seed.artifact.clone();
+    let mut reference = None;
+    for enhanced in [false, true] {
+        if enhanced {
+            Catalog::emit_congruence_handoffs(&seed, &mut plan).unwrap();
+        } else {
+            Catalog::emit_handoffs(&seed, &mut plan).unwrap();
+        }
+        raw["iterative_bake"] = plan.clone();
+        let mut e = Executor::new(
+            Graph::new(Program::parse(raw.clone()).unwrap()).unwrap(),
+            true,
+        );
+        e.execute().unwrap();
+        assert_eq!(
+            e.graph.stats.handoff_closed, 0,
+            "G(F(y)) is unavailable before repair"
+        );
+        assert_eq!(
+            e.graph.stats.logical_facts_created, 9,
+            "the new G row must be created before repair"
+        );
+        assert_eq!(e.graph.stats.unions, 3);
+        let final_state = e.graph.export().unwrap();
+        if let Some((state, bindings)) = &reference {
+            assert_eq!(&final_state, state);
+            assert_eq!(&e.binding_audit, bindings);
+        } else {
+            reference = Some((final_state, e.binding_audit.clone()));
+        }
+    }
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, source).unwrap();
 }
 
 #[test]

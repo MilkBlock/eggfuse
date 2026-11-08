@@ -1448,7 +1448,6 @@ impl Graph {
                     suffix.insert(*dst, v);
                     continue;
                 }
-                #[cfg(feature = "structural-depth")]
                 Op::Union(a, b) => {
                     unions.push((arg(a, &suffix)?, arg(b, &suffix)?));
                     continue;

@@ -11,9 +11,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let reuse = match mode {
         [] => true,
         [s] if s == "--dispatch-only" => false,
-        _ => return Err("optional flag is --dispatch-only".into()),
+        [s] if s == "--congruence-completion" => true,
+        _ => return Err("optional flag is --dispatch-only or --congruence-completion".into()),
     };
-    Catalog::emit_switch(&p, &mut plan, reuse)?;
+    if mode.first().is_some_and(|s| s == "--congruence-completion") {
+        Catalog::emit_congruence_handoffs(&p, &mut plan)?;
+    } else {
+        Catalog::emit_switch(&p, &mut plan, reuse)?;
+    }
     let mut artifact = p.artifact;
     artifact["iterative_bake"] = plan;
     artifact.as_object_mut().unwrap().remove("sha256");

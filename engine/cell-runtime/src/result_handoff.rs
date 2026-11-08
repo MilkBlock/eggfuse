@@ -76,8 +76,37 @@ impl Symbols {
     fn same_key(&self, a: &[usize], b: &[usize]) -> bool {
         a.len() == b.len() && a.iter().zip(b).all(|(&x, &y)| self.root(x) == self.root(y))
     }
+
+    /// Compile-time closure over the surviving, witnessed constructor facts.
+    /// Call only at a source boundary or after collecting the complete LHS;
+    /// queued RHS unions must not become visible to earlier RHS instructions.
+    fn close(&mut self, facts: &[Fact]) {
+        loop {
+            let mut keys = BTreeMap::new();
+            let mut changed = false;
+            for f in facts {
+                let key = (
+                    f.table,
+                    f.key.iter().map(|&i| self.root(i)).collect::<Vec<_>>(),
+                );
+                if let Some(other) = keys.insert(key, f.result)
+                    && self.root(other) != self.root(f.result)
+                {
+                    self.equal(other, f.result);
+                    changed = true;
+                }
+            }
+            if !changed {
+                break;
+            }
+        }
+    }
 }
-pub(crate) fn derive(p: &Program, path: &[(Option<usize>, (usize, usize))]) -> Vec<Reuse> {
+pub(crate) fn derive(
+    p: &Program,
+    path: &[(Option<usize>, (usize, usize))],
+    congruence: bool,
+) -> Vec<Reuse> {
     if path.len() < 2 {
         return vec![];
     }
@@ -121,6 +150,9 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, (usize, usize))]) -> V
                 key,
                 result,
             });
+        }
+        if congruence {
+            symbols.close(&facts);
         }
         let publication = path.get(stage + 1).and_then(|s| s.0);
         let mut unions = vec![];
@@ -198,6 +230,9 @@ pub(crate) fn derive(p: &Program, path: &[(Option<usize>, (usize, usize))]) -> V
         for (a, b) in unions {
             symbols.equal(a, b);
         }
+        if congruence {
+            symbols.close(&facts);
+        }
     }
     program
 }
@@ -273,10 +308,14 @@ pub(crate) struct Terminal {
     pub reuse: Vec<Reuse>,
     pub complete: bool,
 }
-pub(crate) fn terminal(p: &Program, path: &[(Option<usize>, (usize, usize))]) -> Terminal {
-    let reuse = derive(p, path);
+pub(crate) fn terminal(
+    p: &Program,
+    path: &[(Option<usize>, (usize, usize))],
+    congruence: bool,
+) -> Terminal {
+    let reuse = derive(p, path, congruence);
     let r = path.last().unwrap().1.0;
-    let complete = is_complete(p, r, &reuse);
+    let complete = is_complete(p, r, &reuse, congruence);
     Terminal { reuse, complete }
 }
 
@@ -284,6 +323,7 @@ type Entry = (usize, usize);
 #[derive(Clone, Debug, Default)]
 pub(crate) struct Switch {
     reuse_results: bool,
+    pub(crate) congruence: bool,
     nodes: Vec<Node>,
     by_rule: Vec<Vec<Option<usize>>>,
     initial: Vec<usize>,
@@ -315,6 +355,7 @@ impl Switch {
         paths: impl Iterator<Item = &'a [(Option<usize>, Entry)]>,
         leaves: &BTreeMap<Entry, usize>,
         reuse_results: bool,
+        congruence: bool,
     ) -> Self {
         let mut prefixes = BTreeMap::new();
         let mut units = BTreeMap::new();
@@ -323,7 +364,7 @@ impl Switch {
             for i in 1..=path.len() {
                 prefixes.entry(path[..i].to_vec()).or_insert_with(|| {
                     if reuse_results {
-                        terminal(p, &path[..i])
+                        terminal(p, &path[..i], congruence)
                     } else {
                         Terminal::default()
                     }
@@ -368,7 +409,7 @@ impl Switch {
                 }
             }
             program.reuse.sort_by_key(|r| r.op);
-            program.complete = is_complete(p, entry.0, &program.reuse);
+            program.complete = is_complete(p, entry.0, &program.reuse, congruence);
             for r in &program.reuse {
                 let donor: usize = ids[&path[..path.len() - r.back]];
                 nodes[donor].supply.push(r.donor);
@@ -410,6 +451,7 @@ impl Switch {
         }
         Self {
             reuse_results,
+            congruence,
             nodes,
             by_rule,
             initial,
@@ -420,6 +462,15 @@ impl Switch {
     }
     pub(crate) fn leaf(&self, r: usize, p: usize) -> Option<usize> {
         self.by_rule.get(r)?.get(p).copied().flatten()
+    }
+    pub(crate) fn unique_root(&self, rule: usize, require_supply: bool) -> Option<usize> {
+        let mut leaves = self.by_rule.get(rule)?.iter().flatten();
+        let leaf = *leaves.next()?;
+        if leaves.next().is_some() {
+            return None;
+        }
+        let pc = self.initial[leaf];
+        (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc)
     }
     pub(crate) fn active(&self, pc: usize) -> usize {
         self.nodes[pc].unit
@@ -438,7 +489,7 @@ impl Switch {
         self.nodes.get(id).map(|n| &n.program)
     }
     pub(crate) fn artifact(&self) -> serde_json::Value {
-        serde_json::json!({"schema":"eggfuse-result-switch/v1","reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
+        serde_json::json!({"schema":if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
     }
     pub(crate) fn enabled(&self) -> bool {
         !self.nodes.is_empty()
@@ -450,11 +501,15 @@ impl Switch {
     }
 }
 
-fn is_complete(p: &Program, r: usize, reuse: &[Reuse]) -> bool {
+fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool {
     !reuse.is_empty()
         && p.templates[p.rules[r].template]
             .ops
             .iter()
             .enumerate()
-            .all(|(i, o)| matches!(o, Op::Copy(..)) || reuse.iter().any(|x| x.op == i))
+            .all(|(i, o)| {
+                matches!(o, Op::Copy(..))
+                    || (congruence && matches!(o, Op::Union(..)))
+                    || reuse.iter().any(|x| x.op == i)
+            })
 }

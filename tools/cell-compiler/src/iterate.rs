@@ -65,13 +65,14 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     if let Some(s) = opts.get("--min-support") {
         limits.support = s.parse()?
     }
-    let handoffs = match opts
+    let (handoffs, congruence) = match opts
         .get("--objective")
         .map(String::as_str)
         .unwrap_or("copies")
     {
-        "copies" => false,
-        "rhs-lookups" => true,
+        "copies" => (false, false),
+        "rhs-lookups" => (true, false),
+        "rhs-congruence" => (true, true),
         _ => return Err("unknown iterative Bake objective".into()),
     };
     let mut plan = Catalog::seed(&seed, limits)?;
@@ -80,7 +81,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let mut reference = None;
     let mut history = Vec::new();
     for round in 0..=rounds {
-        if handoffs {
+        if congruence {
+            Catalog::emit_congruence_handoffs(&seed, &mut plan)?;
+        } else if handoffs {
             Catalog::emit_handoffs(&seed, &mut plan)?;
         }
         let mut artifact = seed.artifact.clone();
