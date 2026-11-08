@@ -34,3 +34,7 @@ cargo test --release --locked --workspace --all-features
 ```
 
 [Compiler and audit commands](tools/cell-compiler/README.md) · [Workload and catalog provenance](workloads/pass3/README.md)
+
+[Experimental union-digest constructor matching](benchmarks/union-digest/README.md)
+is opt-in and currently slower than ordinary repair on its checked constructor
+fixtures. It retains source Run publication and rejects marker/function programs.

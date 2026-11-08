@@ -1,0 +1,984 @@
+{
+  "scope": "standalone Cell CPU; constructor-only synthetic workloads, no marker Bake or egglog runtime timing",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "groups": 256,
+  "depth": 32,
+  "repeat": 7,
+  "cases": {
+    "chain": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.001007166,
+              "inference_seconds": 0.01867825,
+              "peak_rss_through_inference_bytes": 43941888
+            },
+            {
+              "setup_seconds": 0.000948917,
+              "inference_seconds": 0.0187545,
+              "peak_rss_through_inference_bytes": 43925504
+            },
+            {
+              "setup_seconds": 0.000913209,
+              "inference_seconds": 0.019864792,
+              "peak_rss_through_inference_bytes": 43941888
+            },
+            {
+              "setup_seconds": 0.000981208,
+              "inference_seconds": 0.01853,
+              "peak_rss_through_inference_bytes": 43941888
+            },
+            {
+              "setup_seconds": 0.001002125,
+              "inference_seconds": 0.020134041,
+              "peak_rss_through_inference_bytes": 43941888
+            },
+            {
+              "setup_seconds": 0.001042375,
+              "inference_seconds": 0.0203555,
+              "peak_rss_through_inference_bytes": 43941888
+            },
+            {
+              "setup_seconds": 0.000889542,
+              "inference_seconds": 0.018921625,
+              "peak_rss_through_inference_bytes": 43941888
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 34140,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 8796,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.000981208,
+            "inference_seconds": 0.018921625,
+            "peak_rss_through_inference_bytes": 43941888
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001169792,
+              "inference_seconds": 0.038618291,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.001050791,
+              "inference_seconds": 0.033576791,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.00114525,
+              "inference_seconds": 0.034660667,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.001137417,
+              "inference_seconds": 0.039235,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.001079708,
+              "inference_seconds": 0.034198625,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.001180291,
+              "inference_seconds": 0.036852292,
+              "peak_rss_through_inference_bytes": 56967168
+            },
+            {
+              "setup_seconds": 0.001113292,
+              "inference_seconds": 0.037052541,
+              "peak_rss_through_inference_bytes": 56967168
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 34140,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 348,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 8796
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001137417,
+            "inference_seconds": 0.036852292,
+            "peak_rss_through_inference_bytes": 56967168
+          }
+        },
+        "parent": {
+          "samples": [
+            {
+              "setup_seconds": 0.000879042,
+              "inference_seconds": 0.019150458,
+              "peak_rss_through_inference_bytes": 43876352
+            },
+            {
+              "setup_seconds": 0.000888709,
+              "inference_seconds": 0.020381417,
+              "peak_rss_through_inference_bytes": 43876352
+            },
+            {
+              "setup_seconds": 0.000896792,
+              "inference_seconds": 0.019147083,
+              "peak_rss_through_inference_bytes": 43876352
+            },
+            {
+              "setup_seconds": 0.000833542,
+              "inference_seconds": 0.018648666,
+              "peak_rss_through_inference_bytes": 43876352
+            },
+            {
+              "setup_seconds": 0.000962042,
+              "inference_seconds": 0.020151208,
+              "peak_rss_through_inference_bytes": 43859968
+            },
+            {
+              "setup_seconds": 0.001007042,
+              "inference_seconds": 0.020572541,
+              "peak_rss_through_inference_bytes": 43876352
+            },
+            {
+              "setup_seconds": 0.000899833,
+              "inference_seconds": 0.018437625,
+              "peak_rss_through_inference_bytes": 43876352
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 34140,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 8796,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": null,
+          "median": {
+            "setup_seconds": 0.000896792,
+            "inference_seconds": 0.019150458,
+            "peak_rss_through_inference_bytes": 43876352
+          }
+        }
+      },
+      "program_file_sha256": "381d2153b1d6020641450dd9f0415b42df3c6e044782cd14cc5dc52ae86b4905",
+      "source_sha256": "074a5f0903ebe18326ce4783f17f9a6f7df1b64bc77c07be0f7edcee47d054b9"
+    },
+    "fanout": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.001004917,
+              "inference_seconds": 0.022255792,
+              "peak_rss_through_inference_bytes": 45137920
+            },
+            {
+              "setup_seconds": 0.001015375,
+              "inference_seconds": 0.020487458,
+              "peak_rss_through_inference_bytes": 45154304
+            },
+            {
+              "setup_seconds": 0.001064292,
+              "inference_seconds": 0.023965,
+              "peak_rss_through_inference_bytes": 45154304
+            },
+            {
+              "setup_seconds": 0.001012958,
+              "inference_seconds": 0.022094333,
+              "peak_rss_through_inference_bytes": 45154304
+            },
+            {
+              "setup_seconds": 0.0009815,
+              "inference_seconds": 0.021071375,
+              "peak_rss_through_inference_bytes": 45154304
+            },
+            {
+              "setup_seconds": 0.000875291,
+              "inference_seconds": 0.022028167,
+              "peak_rss_through_inference_bytes": 45137920
+            },
+            {
+              "setup_seconds": 0.000934917,
+              "inference_seconds": 0.020350416,
+              "peak_rss_through_inference_bytes": 45137920
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 36992,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 11648,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.001004917,
+            "inference_seconds": 0.022028167,
+            "peak_rss_through_inference_bytes": 45154304
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.00103525,
+              "inference_seconds": 0.031008416,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.000992291,
+              "inference_seconds": 0.032568834,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.000958417,
+              "inference_seconds": 0.032760042,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.001202083,
+              "inference_seconds": 0.033813833,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.001041291,
+              "inference_seconds": 0.032825,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.000949583,
+              "inference_seconds": 0.030177542,
+              "peak_rss_through_inference_bytes": 56098816
+            },
+            {
+              "setup_seconds": 0.001177375,
+              "inference_seconds": 0.033548583,
+              "peak_rss_through_inference_bytes": 56098816
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 36992,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 3200,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 16896,
+            "live_packets": 17152,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 8448,
+              "congruence_matches": 8192,
+              "duplicate_rows_retired": 8192,
+              "equality_events": 8448,
+              "full_key_checks": 8192,
+              "key_packets_updated": 8448,
+              "output_union_requests": 8192,
+              "peak_packets": 17152,
+              "publication_visits": 11648
+            }
+          },
+          "median": {
+            "setup_seconds": 0.00103525,
+            "inference_seconds": 0.032760042,
+            "peak_rss_through_inference_bytes": 56098816
+          }
+        },
+        "parent": {
+          "samples": [
+            {
+              "setup_seconds": 0.001031209,
+              "inference_seconds": 0.022719834,
+              "peak_rss_through_inference_bytes": 45088768
+            },
+            {
+              "setup_seconds": 0.00086175,
+              "inference_seconds": 0.0201535,
+              "peak_rss_through_inference_bytes": 45088768
+            },
+            {
+              "setup_seconds": 0.000803041,
+              "inference_seconds": 0.021584791,
+              "peak_rss_through_inference_bytes": 45088768
+            },
+            {
+              "setup_seconds": 0.000865708,
+              "inference_seconds": 0.021522375,
+              "peak_rss_through_inference_bytes": 45088768
+            },
+            {
+              "setup_seconds": 0.000875167,
+              "inference_seconds": 0.020535458,
+              "peak_rss_through_inference_bytes": 45072384
+            },
+            {
+              "setup_seconds": 0.000884625,
+              "inference_seconds": 0.021611875,
+              "peak_rss_through_inference_bytes": 45088768
+            },
+            {
+              "setup_seconds": 0.000886875,
+              "inference_seconds": 0.02156475,
+              "peak_rss_through_inference_bytes": 45088768
+            }
+          ],
+          "stats": {
+            "bindings": 8704,
+            "cells_created": 9216,
+            "constructor_requests": 24576,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 36992,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 34048,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 25344,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 8192,
+            "repair_key_hash_changes": 8448,
+            "repaired_dependencies": 11648,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 8448,
+            "unions": 8448
+          },
+          "union_digest": null,
+          "median": {
+            "setup_seconds": 0.000875167,
+            "inference_seconds": 0.02156475,
+            "peak_rss_through_inference_bytes": 45088768
+          }
+        }
+      },
+      "program_file_sha256": "dd0ed68e28ad8406120969542fca214e1473a87be8a78da2f2300ebc09bd7b80",
+      "source_sha256": "309229059a14b195dff185191536f5cc499586777037b8858e8d787cc53811ae"
+    },
+    "stable": {
+      "audit": "initial/per-Run/final rows, bindings and semantic schedule equal across lanes",
+      "lanes": {
+        "control": {
+          "samples": [
+            {
+              "setup_seconds": 0.000863833,
+              "inference_seconds": 0.018848,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.000982958,
+              "inference_seconds": 0.020348,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.000945167,
+              "inference_seconds": 0.0185315,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.000972625,
+              "inference_seconds": 0.018965041,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.000881042,
+              "inference_seconds": 0.01767875,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.001007667,
+              "inference_seconds": 0.018965667,
+              "peak_rss_through_inference_bytes": 67403776
+            },
+            {
+              "setup_seconds": 0.001020083,
+              "inference_seconds": 0.020610833,
+              "peak_rss_through_inference_bytes": 67403776
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": {
+            "enabled": false
+          },
+          "median": {
+            "setup_seconds": 0.000972625,
+            "inference_seconds": 0.018965041,
+            "peak_rss_through_inference_bytes": 67403776
+          }
+        },
+        "digest": {
+          "samples": [
+            {
+              "setup_seconds": 0.001243167,
+              "inference_seconds": 0.027972959,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.001113375,
+              "inference_seconds": 0.025144833,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.001119917,
+              "inference_seconds": 0.027061208,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.001202083,
+              "inference_seconds": 0.025879833,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.00094075,
+              "inference_seconds": 0.028209333,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.000945,
+              "inference_seconds": 0.027813542,
+              "peak_rss_through_inference_bytes": 83197952
+            },
+            {
+              "setup_seconds": 0.000981834,
+              "inference_seconds": 0.024201458,
+              "peak_rss_through_inference_bytes": 83197952
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": {
+            "enabled": true,
+            "hash_bits": 64,
+            "live_argument_postings": 33280,
+            "live_packets": 33536,
+            "scope": "constructor-only relational congruence; ordinary physical publication retained",
+            "stats": {
+              "changed_argument_positions": 0,
+              "congruence_matches": 0,
+              "duplicate_rows_retired": 0,
+              "equality_events": 0,
+              "full_key_checks": 0,
+              "key_packets_updated": 0,
+              "output_union_requests": 0,
+              "peak_packets": 33536,
+              "publication_visits": 0
+            }
+          },
+          "median": {
+            "setup_seconds": 0.001113375,
+            "inference_seconds": 0.027061208,
+            "peak_rss_through_inference_bytes": 83197952
+          }
+        },
+        "parent": {
+          "samples": [
+            {
+              "setup_seconds": 0.0009,
+              "inference_seconds": 0.0207515,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.000850208,
+              "inference_seconds": 0.019177917,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.000941,
+              "inference_seconds": 0.020303375,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.000828333,
+              "inference_seconds": 0.019393875,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.000867375,
+              "inference_seconds": 0.019633916,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.001037875,
+              "inference_seconds": 0.018858375,
+              "peak_rss_through_inference_bytes": 67387392
+            },
+            {
+              "setup_seconds": 0.000802583,
+              "inference_seconds": 0.019195542,
+              "peak_rss_through_inference_bytes": 67387392
+            }
+          ],
+          "stats": {
+            "bindings": 16896,
+            "cells_created": 17408,
+            "constructor_requests": 32768,
+            "constructor_reused": 0,
+            "decoded_rows": 0,
+            "delivery_events": 33536,
+            "direct_bindings": 512,
+            "direct_candidates": 0,
+            "distinct_delivery_events": 33536,
+            "empty_frames_released": 0,
+            "function_updates": 0,
+            "handoff_attempts": 0,
+            "handoff_closed": 0,
+            "handoff_closed_fallback": 0,
+            "handoff_deep": 0,
+            "handoff_lets": 0,
+            "handoff_missing": 0,
+            "handoff_noop_unions": 0,
+            "handoff_sets": 0,
+            "handoff_stale": 0,
+            "idle_scheduled_runs": 0,
+            "key_operations": 0,
+            "logical_facts_created": 33536,
+            "merge_calls": 0,
+            "merge_contract_calls": {},
+            "merge_port_reads": 0,
+            "merge_program_calls": 0,
+            "merge_program_constructs": 0,
+            "merge_program_operations": 0,
+            "native_free_join_calls": 0,
+            "native_table_reads": 0,
+            "native_table_writes": 0,
+            "register_answers": 0,
+            "register_seeds": 0,
+            "repair_collisions": 0,
+            "repair_key_hash_changes": 0,
+            "repaired_dependencies": 0,
+            "residual_candidates": 0,
+            "rhs_frames_avoided": 256,
+            "scalar_merge_calls": 0,
+            "scalar_old_projection": 0,
+            "scalar_unchanged": 0,
+            "shared_negative_hits": 0,
+            "shared_point_hits": 0,
+            "shared_point_requests": 0,
+            "single_writes": 0,
+            "sum_index_reads": 0,
+            "sum_index_skips": 0,
+            "transient_writes": 0,
+            "union_requests": 256,
+            "unions": 0
+          },
+          "union_digest": null,
+          "median": {
+            "setup_seconds": 0.000867375,
+            "inference_seconds": 0.019393875,
+            "peak_rss_through_inference_bytes": 67387392
+          }
+        }
+      },
+      "program_file_sha256": "89da5ff40c72e8c44bd2695349ff4e05d37f0540fc470cee7930f6df736c2068",
+      "source_sha256": "a169a753ba01960aef4a4310b7d70a8d5c1dab958e88fa26a83a8b9c517c38c1"
+    }
+  },
+  "binaries_sha256": {
+    "parent": "669eeedece196259b26c1288d55a8bf00b7e7d9f2e0792205caa28460c05e660",
+    "control": "0a4d3d6016283969502964ae2e3a7bba613d455b9ddb707e5238f920e995382c",
+    "digest": "0a4d3d6016283969502964ae2e3a7bba613d455b9ddb707e5238f920e995382c"
+  },
+  "fixture_sha256": "aa89b1df72a5280052d7fffda1b4e017d1ffa27e75c63742bb615de3c0d5181e",
+  "baseline_commit": "27f098a251b87449d25cc833aee7c32a7411d340",
+  "runtime_features": [
+    "sparse-cells",
+    "view-ports",
+    "storage-metrics"
+  ],
+  "build": "cargo build --release --offline --locked (no PGO, LTO override, or native CPU override)",
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+  "cpu": "Apple M3 Max"
+}

@@ -24,6 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
+        println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor-only matcher)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -39,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" => {
+            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -75,7 +76,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .filter(|v| !v.starts_with("--"))
                     .ok_or("missing keeper pairs")?;
             }
-            "--audit-stages" | "--inspect-program" => {}
+            "--audit-stages" | "--inspect-program" | "--union-digest" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -90,11 +91,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         return Ok(());
     }
+    let digest = args.iter().any(|x| x == "--union-digest");
+    if !digest && opt("--union-digest-hash-bits").is_some() {
+        return Err("--union-digest-hash-bits requires --union-digest".into());
+    }
     let out = PathBuf::from(opt("--output").ok_or("--output required")?);
-    std::fs::create_dir(&out)?;
     let start = Instant::now();
     let audit = args.iter().any(|x| x == "--audit-stages");
-    let mut runtime = Executor::new(Graph::new(program)?, audit);
+    let graph = if digest {
+        let bits = opt("--union-digest-hash-bits")
+            .map(|v| v.parse()).transpose()?.unwrap_or(64);
+        Graph::new_with_union_digest(program, bits)?
+    } else {
+        Graph::new(program)?
+    };
+    std::fs::create_dir(&out)?;
+    let mut runtime = Executor::new(graph, audit);
     #[cfg(feature = "structural-depth")]
     {
         let survey = args.iter().any(|x| x == "--structural-survey");

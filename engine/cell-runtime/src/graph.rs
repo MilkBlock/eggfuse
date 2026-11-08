@@ -256,6 +256,7 @@ pub struct Graph {
     pub changed: bool,
     pub stats: Stats,
     pub pending_unions: Vec<(u64, u64)>,
+    union_digest: Option<crate::union_digest::Matcher>,
 
     pub(crate) changes: crate::change_batch::ChangeBatch,
     pub anchors: Vec<(String, String, u64)>,
@@ -400,6 +401,16 @@ impl Graph {
     }
 
     pub fn new(program: Program) -> Result<Self> {
+        Self::new_mode(program, None)
+    }
+    pub fn new_with_union_digest(program: Program, hash_bits: u32) -> Result<Self> {
+        crate::union_digest::Matcher::validate(&program)?;
+        Self::new_mode(
+            program,
+            Some(crate::union_digest::Matcher::new(hash_bits)?),
+        )
+    }
+    fn new_mode(program: Program, union_digest: Option<crate::union_digest::Matcher>) -> Result<Self> {
         let n = program.tables.len();
         let initial = program.initial.clone();
 
@@ -468,6 +479,7 @@ impl Graph {
             scalar_merge: cfg!(feature = "sparse-cells"),
             merge_programs_enabled: true,
             pending_unions: vec![],
+            union_digest,
 
             changes: crate::change_batch::ChangeBatch::new(n),
             anchors: vec![],
@@ -1389,6 +1401,12 @@ impl Graph {
         self.changes.touch(t, Dependency::Fact(f));
         self.stats.logical_facts_created += 1;
 
+        if let Some(matcher) = self.union_digest.as_mut() {
+            let outputs = matcher.insert(f, t, key, &vs[vs.len() - 1])?;
+            self.stats.union_requests += outputs.len() as u64;
+            self.pending_unions.extend(outputs);
+        }
+
         self.changed = true;
         Ok(())
     }
@@ -1668,6 +1686,11 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }
         self.parents.insert(hi, lo);
+        if let Some(matcher) = self.union_digest.as_mut() {
+            let outputs = matcher.equality(hi, lo);
+            self.stats.union_requests += outputs.len() as u64;
+            self.pending_unions.extend(outputs);
+        }
         let mut affected = self.uses.remove(&hi).unwrap_or_default();
         // Only displaced identities change row fields. Re-stamping the already
         // canonical side can re-run an unchanged LHS and create extra custom
@@ -2107,6 +2130,9 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            if let Some(matcher) = self.union_digest.as_mut() {
+                matcher.remove(f);
+            }
             self.changes.retire(r.table, Dependency::Fact(f));
             self.query_versions[r.table] += 1;
             let s = self
@@ -2139,6 +2165,9 @@ impl Graph {
         self.visibility_tainted[t]
     }
     pub fn hide(&mut self, t: usize, key: &[Value], delete: bool) -> Result<bool> {
+        if self.union_digest.is_some() {
+            return Err("union digest does not support deletion or subsumption".into());
+        }
         #[cfg(feature = "sparse-cells")]
         {
             self.visibility_tainted[t] = true;
@@ -2218,6 +2247,9 @@ impl Graph {
             && self.dirty_markers.is_empty() && self.garbage.is_empty()
     }
     pub fn repair(&mut self) -> Result<()> {
+        if self.union_digest.is_some() {
+            return self.propagate_union_digests();
+        }
         loop {
             if !self.pending_unions.is_empty() {
                 let pairs = std::mem::take(&mut self.pending_unions);
@@ -2407,6 +2439,80 @@ impl Graph {
             }
         }
 
+        Ok(())
+    }
+
+    pub fn union_digest_report(&self) -> J {
+        self.union_digest
+            .as_ref()
+            .map(|m| m.report())
+            .unwrap_or_else(|| json!({"enabled": false}))
+    }
+
+    /// Equality is consumed by the constructor matcher until its delta stream
+    /// settles. Physical publication remains at the original source boundary.
+    /// No ordinary constructor collision-repair pass is invoked in this mode.
+    fn propagate_union_digests(&mut self) -> Result<()> {
+        while !self.pending_unions.is_empty() {
+            let pairs = std::mem::take(&mut self.pending_unions);
+            for (a, b) in pairs {
+                self.union(a, b)?;
+            }
+        }
+        for f in self.union_digest.as_mut().unwrap().take_duplicates() {
+            if self.union_digest.as_ref().unwrap().survivor(f) != f {
+                self.dirty.insert(Dependency::Fact(f));
+            }
+        }
+        while let Some(d) = self.dirty.pop_first() {
+            let Dependency::Fact(f) = d else {
+                return Err("function entered constructor-only digest publication".into());
+            };
+            if let Some(table) = self.dependency_table(d) {
+                self.dirty_facts[table].remove(&f);
+            }
+            if self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)).is_none() {
+                continue;
+            }
+            let matcher = self.union_digest.as_mut().unwrap();
+            matcher.stats.publication_visits += 1;
+            let keep = matcher.survivor(f);
+            let (table, mut fields, result) = matcher.fields(f);
+            if keep != f {
+                matcher.stats.duplicate_rows_retired += 1;
+                // Equal keys were checked by the matcher; equal result classes
+                // alone would never justify retirement of a constructor row.
+                let target = self.cells.get_mut(&keep.cell).unwrap()
+                    .facts.get_mut(&keep.op).unwrap();
+                target.epoch = self.epoch;
+                self.query_versions[table] += 1;
+                self.changes.touch(table, Dependency::Fact(keep));
+                if self.receipt_tracking {
+                    self.receipt_forwards.insert(d, Dependency::Fact(keep));
+                }
+                self.retire(f)?;
+                continue;
+            }
+            let h = hashkey(table, &fields);
+            let old = self.cells[&f.cell].facts[&f.op].hash;
+            self.stats.repair_key_hash_changes += u64::from(h != old);
+            if let Some(bucket) = self.intern.get_mut(&old) {
+                bucket.remove(&f);
+                #[cfg(feature = "sparse-cells")]
+                if bucket.is_empty() {
+                    self.intern.remove(&old);
+                }
+            }
+            fields.push(Value::Eq(root(&self.parents, result)));
+            let fields = row_fields(fields);
+            let state = self.cells.get_mut(&f.cell).unwrap().facts.get_mut(&f.op).unwrap();
+            state.hash = h;
+            state.epoch = self.epoch;
+            state.decoded = Some((table, fields.clone()));
+            self.intern.entry(h).or_default().insert(f);
+            self.subscribe(table, d, &fields);
+            self.changes.touch(table, d);
+        }
         Ok(())
     }
 
