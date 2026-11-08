@@ -60,3 +60,8 @@ report separately records the limited extra reuse from complete stage lowering.
 let typed source executions supply cross-Run proofs without a matching entry.
 An exact compiler fact index makes the larger candidate audit practical;
 measured extra receipt reuse has not improved application throughput.
+
+[Typed result-port repair](benchmarks/result-port-repair/README.md) adds an
+opt-in `--repair-ports` path. A compiler-checked key footprint lets result-only
+equality changes update a constructor's output without reindexing its body.
+Key changes and collision handling retain the ordinary repair algorithm.

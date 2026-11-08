@@ -1,6 +1,8 @@
 //! Rows are temporary views of shared recipes, never a constructor row store.
 #[path = "union_digest.rs"]
 mod union_digest;
+#[path = "repair_ports.rs"]
+pub(crate) mod repair_ports;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -260,6 +262,7 @@ pub struct Graph {
     pub stats: Stats,
     pub pending_unions: Vec<(u64, u64)>,
     union_digest: Option<union_digest::Matcher>,
+    repair_ports: Option<repair_ports::Runtime>,
 
     pub(crate) changes: crate::change_batch::ChangeBatch,
     pub anchors: Vec<(String, String, u64)>,
@@ -484,6 +487,7 @@ impl Graph {
             merge_programs_enabled: true,
             pending_unions: vec![],
             union_digest,
+            repair_ports: None,
 
             changes: crate::change_batch::ChangeBatch::new(n),
             anchors: vec![],
@@ -1694,7 +1698,7 @@ impl Graph {
         if self.union_digest.is_some() {
             self.match_equality_digest(hi, lo, &affected)?;
         } else {
-            self.mark_affected(&affected);
+            self.mark_affected(&affected, hi, lo);
         }
         #[cfg(not(feature = "sparse-cells"))]
         {
@@ -1721,8 +1725,14 @@ impl Graph {
     /// Complete visible scalar equality incidences from the existing reverse
     /// dependency index, including non-root argument positions.
 
-    fn mark_affected(&mut self, affected: &UseSet) {
+    fn mark_affected(&mut self, affected: &UseSet, from: u64, to: u64) {
         for d in affected.iter() {
+            if self.repair_ports.is_some()
+                && let Dependency::Fact(f) = d
+                && self.finish_result_port(*f, from, to)
+            {
+                continue;
+            }
             let table = self.dependency_table(*d);
             if let Dependency::Function(i) = d {
                 self.functions[*i].decoded = None;

@@ -178,6 +178,7 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         ("neighbor_entries", json!(&p.neighbor_plans)),
         ("row_kernels", json!(&p.kernels)),
         ("physical_plan", json!(&p.physical)),
+        ("repair_ports", json!(&p.repair_ports)),
         (
             "merge_contracts",
             json!({"schema":"eggfuse-merge-contracts/v1","tables":p.tables.iter().map(|t|crate::merge_contract::table(&p,t)).collect::<Result<Vec<_>>>()?}),

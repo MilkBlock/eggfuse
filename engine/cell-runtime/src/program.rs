@@ -79,6 +79,8 @@ pub struct Program {
     pub(crate) kernels: crate::row_kernel::Kernels,
     #[serde(default)]
     pub(crate) physical: Rc<crate::physical_plan::Plan>,
+    #[serde(default)]
+    pub(crate) repair_ports: crate::graph::repair_ports::Plan,
     #[serde(skip)]
     pub(crate) entry_join: Option<Rc<crate::entry_join::Plan>>,
     #[serde(default)]
@@ -352,6 +354,7 @@ impl Program {
             kernels,
             writes: vec![],
             physical: Default::default(),
+            repair_ports: Default::default(),
             known_results: Default::default(),
             merge_programs: Default::default(),
 
@@ -377,6 +380,12 @@ impl Program {
         };
         p.validate()?;
         p.physical = Rc::new(crate::physical_plan::Plan::derive(&p));
+        p.repair_ports = crate::graph::repair_ports::Plan::derive(&p);
+        if let Some(raw) = p.artifact.get("repair_ports")
+            && *raw != serde_json::json!(p.repair_ports)
+        {
+            return Err("repair port footprint differs from typed recipe".into());
+        }
         p.writes = crate::row_kernel::writes(&p);
         p.neighbor_plans = crate::neighbor::derive(&p);
         if let Some(raw) = p.artifact.get("neighbor_entries")

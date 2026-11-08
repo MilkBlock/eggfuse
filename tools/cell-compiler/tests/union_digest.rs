@@ -112,6 +112,26 @@ fn differential(init: &str, runs: &[&str]) {
             .map(|s| rows(s["rows"].clone()))
             .collect::<Vec<_>>();
         assert_eq!(reference, expected, "ordinary Cell/native mismatch");
+        let mut ports = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
+        ports.execute().unwrap();
+        let port_rows = std::iter::once(ports.initial_audit.as_ref().unwrap())
+            .chain(ports.snapshots.iter())
+            .map(|s| rows(s["rows"].clone()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            port_rows, expected,
+            "result ports/native mismatch, reversed={reverse}"
+        );
+        assert_eq!(ports.binding_audit, control.binding_audit);
+        for (a, b) in ports.steps.iter().zip(&control.steps) {
+            for k in [
+                "ordinal", "ruleset", "path", "iterations", "epoch",
+                "logical_matches", "executed_bindings", "changed",
+            ] {
+                assert_eq!(a[k], b[k], "{k}");
+            }
+        }
+        assert_eq!(ports.steps.len(), control.steps.len());
         for (nodes, bits) in [(false, 0), (false, 64), (true, 0), (true, 64)] {
             let mut digest = Executor::new(mode_graph(p.clone(), bits, nodes).unwrap(), true);
             digest.execute().unwrap();

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Interleave fresh processes and compare graph + semantic schedule every run.
 
-SPEC: {case: {lane: {runtime: PATH, program: PATH}}}. One warmup per lane.
+SPEC: {case: {lane: {runtime: PATH, program: PATH, args?: [FLAG]}}}.
+One warmup per lane.
 Large generated exports are removed only after a verified summary is saved.
 """
 import argparse
@@ -33,7 +34,7 @@ def measure(spec, output, repeat):
     output.mkdir()
     result = {'repeat': repeat, 'warmups': 1, 'scope': 'standalone Cell CPU; inference excludes setup and export', 'cases': {}}
     for case, lanes in spec.items():
-        rows = {label: dict(runtime_sha256=sha(v['runtime']), program_file_sha256=sha(v['program']), samples=[])
+        rows = {label: dict(runtime_sha256=sha(v['runtime']), program_file_sha256=sha(v['program']), args=v.get('args', []), samples=[])
                 for label, v in lanes.items()}
         result['cases'][case] = rows
         reference = None
@@ -45,7 +46,7 @@ def measure(spec, output, repeat):
                 config = lanes[label]
                 directory = output / f'{case}-{label}-{iteration}'
                 with (output / f'{directory.name}.log').open('w') as log:
-                    subprocess.run([config['runtime'], '--program', config['program'], '--output', str(directory)],
+                    subprocess.run([config['runtime'], '--program', config['program'], '--output', str(directory), *config.get('args', [])],
                                    stdout=log, stderr=subprocess.STDOUT, check=True)
                 report = json.loads((directory / 'report.json').read_text())
                 assert report['status'] == 'complete'
@@ -58,6 +59,9 @@ def measure(spec, output, repeat):
                     'peak_rss_through_inference_bytes', 'stats')}
                 record.update(iteration=iteration, state_file_sha256=stamp[0], schedule_sha256=stamp[1],
                               stage_spine=report['stage_spine']['stats'])
+                record['phases'] = {k: sum(s['phases'][k] for s in report['steps'])
+                                    for k in report['steps'][0]['phases']}
+                record['repair_ports'] = report.get('repair_ports', {}).get('stats')
                 if iteration < 0:
                     rows[label]['warmup'] = record
                 else:

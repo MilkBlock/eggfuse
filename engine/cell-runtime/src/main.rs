@@ -26,6 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
+        println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -77,7 +78,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .filter(|v| !v.starts_with("--"))
                     .ok_or("missing keeper pairs")?;
             }
-            "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" => {}
+            "--audit-stages" | "--inspect-program" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -94,6 +95,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let digest = args.iter().any(|x| x == "--union-digest");
     let expressions = args.iter().any(|x| x == "--congruence-cells");
+    let ports = args.iter().any(|x| x == "--repair-ports");
+    if ports && (digest || expressions) {
+        return Err("repair ports currently require the ordinary repair backend".into());
+    }
     if digest && expressions {
         return Err("choose --union-digest or --congruence-cells".into());
     }
@@ -111,6 +116,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         } else {
             Graph::new_with_union_digest(program, bits)?
         }
+    } else if ports {
+        Graph::new_with_repair_ports(program)?
     } else {
         Graph::new(program)?
     };
@@ -225,6 +232,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     report["inference_seconds"] = seconds.into();
     report["setup_seconds"] = setup.into();
+    report["repair_ports"] = runtime.graph.repair_port_report();
     let export_start = Instant::now();
     let mut writer = std::io::BufWriter::new(std::fs::File::create(out.join("state.json"))?);
     runtime.graph.write_export(&mut writer)?;
