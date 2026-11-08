@@ -14,14 +14,19 @@ pub(in crate::graph) struct Counts {
     pub cause_probes: u64,
     pub cause_comparisons: u64,
     pub cause_growths: u64,
+    pub mixed_epoch_inserts: u64,
+    pub advanced_task_epochs: u64,
+    pub completion_epoch_checks: u64,
+    pub completion_epoch_joins: u64,
 }
 pub(in crate::graph) struct Pending {
     flat: Option<BTreeSet<FactRef>>,
-    tables: Vec<BTreeSet<FactRef>>,
+    tables: Vec<BTreeMap<FactRef, u64>>,
     heads: BTreeSet<(FactRef, usize)>,
     epochs: Vec<Option<u64>>,
     causes: Option<Vec<smallvec::SmallVec<[u64; 2]>>>,
     len: usize,
+    mixed_epochs: bool,
     pub counts: Counts,
 }
 impl Default for Pending {
@@ -33,6 +38,7 @@ impl Default for Pending {
             epochs: vec![],
             causes: None,
             len: 0,
+            mixed_epochs: false,
             counts: Counts::default(),
         }
     }
@@ -44,9 +50,22 @@ impl Pending {
             "enable scoped queues at a settled boundary"
         );
         if self.flat.take().is_some() {
-            self.tables = vec![BTreeSet::new(); n];
+            self.tables = vec![BTreeMap::new(); n];
             self.epochs = vec![None; n];
         }
+    }
+    pub fn enable_mixed_epochs(&mut self) {
+        assert!(self.scoped() && self.is_empty());
+        self.mixed_epochs = true;
+    }
+    pub fn completion_epoch(&mut self, epoch: u64, row: u64, peer: Option<u64>) -> u64 {
+        if !self.mixed_epochs {
+            return epoch;
+        }
+        self.counts.completion_epoch_checks += 1;
+        let joined = epoch.max(row).max(peer.unwrap_or(0));
+        self.counts.completion_epoch_joins += u64::from(joined > epoch);
+        joined
     }
     pub fn enable_causes(&mut self) {
         assert!(self.scoped() && self.is_empty());
@@ -82,10 +101,10 @@ impl Pending {
     pub fn contains(&self, table: usize, f: &FactRef) -> bool {
         self.flat
             .as_ref()
-            .map_or_else(|| self.tables[table].contains(f), |s| s.contains(f))
+            .map_or_else(|| self.tables[table].contains_key(f), |s| s.contains(f))
     }
     fn refresh(&mut self, table: usize, before: Option<FactRef>) {
-        let after = self.tables[table].first().copied();
+        let after = self.tables[table].first_key_value().map(|(&f, _)| f);
         if after != before {
             if let Some(old) = before {
                 self.heads.remove(&(old, table));
@@ -106,13 +125,27 @@ impl Pending {
         if let Some(flat) = &mut self.flat {
             return flat.insert(f);
         }
-        let before = self.tables[table].first().copied();
+        let before = self.tables[table].first_key_value().map(|(&f, _)| f);
         assert!(
-            self.epochs[table].is_none_or(|e| e == epoch),
+            self.mixed_epochs || self.epochs[table].is_none_or(|e| e == epoch),
             "uncompleted table crossed a dependent source epoch"
         );
-        self.epochs[table] = Some(epoch);
-        let added = self.tables[table].insert(f);
+        self.counts.mixed_epoch_inserts +=
+            u64::from(self.epochs[table].is_some_and(|e| e != epoch));
+        self.epochs[table].get_or_insert(epoch);
+        let added = match self.tables[table].entry(f) {
+            std::collections::btree_map::Entry::Vacant(entry) => {
+                entry.insert(epoch);
+                true
+            }
+            std::collections::btree_map::Entry::Occupied(mut entry) => {
+                if epoch > *entry.get() {
+                    self.counts.advanced_task_epochs += 1;
+                    *entry.get_mut() = epoch;
+                }
+                false
+            }
+        };
         self.len += usize::from(added);
         self.refresh(table, before);
         added
@@ -121,8 +154,8 @@ impl Pending {
         if let Some(flat) = &mut self.flat {
             return flat.remove(f);
         }
-        let before = self.tables[table].first().copied();
-        let removed = self.tables[table].remove(f);
+        let before = self.tables[table].first_key_value().map(|(&f, _)| f);
+        let removed = self.tables[table].remove(f).is_some();
         self.len -= usize::from(removed);
         self.refresh(table, before);
         removed
@@ -144,7 +177,7 @@ impl Pending {
             assert!(flat.remove(&f));
             return None;
         }
-        let epoch = self.epochs[table];
+        let epoch = self.tables[table].get(&f).copied();
         assert!(self.remove(table, &f));
         epoch
     }
@@ -152,7 +185,7 @@ impl Pending {
         self.flat
             .iter()
             .flat_map(|s| s.iter())
-            .chain(self.tables.iter().flat_map(|s| s.iter()))
+            .chain(self.tables.iter().flat_map(|s| s.keys()))
     }
     pub fn active_tables(&self) -> impl Iterator<Item = usize> + '_ {
         self.heads.iter().map(|&(_, t)| t)

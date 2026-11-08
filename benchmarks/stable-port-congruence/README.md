@@ -646,6 +646,93 @@ python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/staged
 python3 benchmarks/stable-port-congruence/collect-staged-scopes.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
 
+## Bound constructor effects and pure source epochs
+
+The preceding audit's seven RHS waits all occur in `type-helpers`, rules 576 and
+577. The six apparent access waits include the future result-union expansion of
+`TypeList-ith` Set; they are not six direct reads of `Base` and its consumers.
+Optional `CELL_CPU_PROGRESS` output now lists the actual matched rules and their
+conflicting pending/access tables. It adds no work when progress output is off.
+
+The new opt-in `--pure-epochs` path keeps query readiness, then checks the bound
+RHS. Its compiler class admits copies, checked i64 arithmetic, explicit union and
+shared-owned constructor Set. Set tables must already be complete. An already
+true union or Set has no new equality effect. Other candidates require a closed
+pure influence proof using the existing root domains and shared template
+wiring. The supplied result of every Set is included, even when its key is
+absent: two bindings may otherwise collide with each other's newly born facts.
+Mutable/legacy users, missing code and budget overflow retain the old wait.
+No custom merge is executed during this preview.
+
+The table queue now stores the original epoch with each pending fact. The new
+mode admits multiple pure source epochs in one table; repeated notification of
+one fact keeps the maximum epoch. Completion also joins the current task epoch
+with both rows' epochs before publishing a collision equality, so an older task
+cannot backdate a result after a newer peer has completed. Ordinary scoped modes retain their table-wide
+assertion and the default flat queue remains unchanged. This adds one u64 epoch
+payload per table-queued fact; it does not add a producer/consumer reverse index.
+The reference ordering of table heads and facts remains intact.
+
+Eight fixtures establish actual progress across pure epochs, preserved row epochs
+under repeated input changes and a newer completed collision peer, colliding absent-key Sets, no-op effects with a
+mutable user, a live mutable-boundary rejection and the bounded-walk fallback.
+They also exercise resumed shared Entries after two-dimensional key collisions.
+Removing the peer-epoch join in a negative control backdates the final G row to
+epoch one instead of two; restoring it makes the fixture pass.
+The progress fixture commits one source union and two new facts, then consumes
+the new result while old congruence remains pending in the same table. Effective
+source unions are now counted separately from logical bindings, fact births and
+function updates. Tests verify the final state and ordered source observations.
+These are standalone single-thread Cell CPU results, not native egglog or worker
+scaling results.
+The workspace passes 275 tests (four ignored), and all 77 focused tests pass in
+both sparse and non-sparse configurations. The minimal runtime compile check
+also passes.
+
+Sum-bits retains all 1,428 ordered source observations and the exact state, RHS,
+effective-write, resume and Spine hashes from `e30c2e1d`. However, its three
+admitted batches are **all no-ops**. Twelve bindings execute while work remains
+pending, but zero new facts, function updates or effective source unions do so.
+The total ten completion waits remain: three query/seven RHS becomes six
+query/four RHS. Three additional empty Runs lose the fully-settled idle shortcut
+(767 becomes 764), and partial publication passes increase from twelve to
+eighteen without increasing the 25 published table batches.
+
+The four candidates with actual changes all hit `TypeList-length`. The current
+proof includes Set key roots and both sides of each union. It therefore includes
+unchanged inputs in the potential effect closure. This rejection does not prove
+that these four RHSs actually write `TypeList-length`; the next proof needs to
+separate reads, displaced roots and complete operator-filtered collision outputs.
+Removing that boundary without such a proof is not justified.
+
+This remains unadmitted as a performance improvement. The extra preview performs
+25 key lookups, 105 bytecode operations, 275 copied/inserted value slots and 83
+tracked scratch growths. Ordinary key lookups rise from 19,326 to 19,351. The
+influence proof adds 172 static steps (150,901 to 151,073), while readiness checks
+rise from 4,878 to 7,268. Pure mode also performs 1,046 completion-epoch checks
+without joining any different epochs on this workload. These operation counters
+and selected growth events are not a complete allocation census or a latency
+model. Bake's heuristic ledger
+charges the new preview and epoch bookkeeping; no timing claim is made.
+
+Reproduce with the same frozen program and separate builds as above. Save the
+workspace, focused, non-sparse and minimal logs under `pure-epochs-*.log`, add
+`--test pure_epochs` to the preceding six-suite focused commands, and set
+`PURE_EPOCH_EVIDENCE="$PWD/out/stable-port-congruence/pure-epochs-fixture.json"`
+only for the sparse focused run. To reproduce the negative control, temporarily
+replace `epoch.max(row).max(peer.unwrap_or(0))` with `epoch` in
+`ownership_pending.rs`, run only
+`an_older_task_cannot_backdate_a_collision_with_a_completed_newer_peer`, and save
+`pure-epochs-peer-negative.log`. Restore the source before rerunning the focused
+suite. Do not run concurrent builds during that mutation. Then:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp target/release/eggfuse-cell-runtime out/stable-port-congruence/pure-epochs-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/pure-epochs-runtime benchmarks/stable-port-congruence/pure-epochs-audit-manifest.json out/stable-port-congruence/pure-epochs-final-audit
+python3 benchmarks/stable-port-congruence/collect-pure-epochs.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
 Reproduce with the frozen artifact and separate compiler/runtime builds described
 above. Use `scoped-executor-{workspace-tests,tests,non-sparse-tests,minimal-check}`
 log names. The focused compiler test command adds `--test scoped_completion`;

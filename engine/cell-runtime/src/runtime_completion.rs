@@ -35,6 +35,16 @@ pub(super) struct Counts {
     pub peak_matched_origin_slots: usize,
     pub rhs_fact_births_while_pending: u64,
     pub rhs_function_updates_while_pending: u64,
+    pub source_unions_while_pending: u64,
+    pub bound_rhs_attempts: u64,
+    pub bound_rhs_rule_checks: u64,
+    pub bound_rhs_accepts: u64,
+    pub bound_rhs_noop_accepts: u64,
+    pub bound_rhs_bindings: u64,
+    pub bound_rhs_ops: u64,
+    pub bound_rhs_key_reads: u64,
+    pub bound_rhs_value_slots: u64,
+    pub bound_rhs_scratch_growths: u64,
     pub deferred_rows_carried: u64,
     pub peak_retained_changes: usize,
     pub peak_retained_anchors: usize,
@@ -44,7 +54,8 @@ pub(super) struct Counts {
 pub(super) struct State {
     can_defer: bool,
     port_scopes: bool,
-    forecast: Option<Forecast>,
+    pub(super) forecast: Option<Forecast>,
+    pub(super) pure_epochs: bool,
     matched: bool,
     rhs_demand: Vec<usize>,
     rhs_seen: Vec<bool>,
@@ -84,6 +95,7 @@ impl Executor {
             can_defer,
             port_scopes: false,
             forecast: None,
+            pure_epochs: false,
             matched: false,
             rhs_demand: Vec::new(),
             rhs_seen: Vec::new(),
@@ -112,6 +124,14 @@ impl Executor {
             .resize(self.graph.program.tables.len(), false);
         Ok(())
     }
+    pub fn use_pure_epochs(&mut self) -> Result<()> {
+        self.use_port_scopes()?;
+        if !self.completion.as_ref().unwrap().pure_epochs {
+            self.graph.enable_pure_epochs();
+            self.completion.as_mut().unwrap().pure_epochs = true;
+        }
+        Ok(())
+    }
     fn global_completion_observer(&self) -> bool {
         let global = self.audit
             || cfg!(any(
@@ -131,6 +151,7 @@ impl Executor {
         json!({"enabled":true,"stats":state.stats,
             "compiler_admits_deferral":self.graph.program.completion_plan.as_ref().unwrap().deferrable.iter().any(|&v|v),
             "port_scopes":state.port_scopes,
+            "pure_epochs":state.pure_epochs,
             "global_observer":self.global_completion_observer(),
             "pending_anchors":anchors,"retained_contexts":contexts,
             "retained_forwards":self.graph.receipt_forwards.len(),
@@ -223,6 +244,15 @@ impl Executor {
             state.stats.rhs_empty_skips += 1;
             return Ok(());
         }
+        if state.pure_epochs {
+            if state.forecast.is_none() {
+                state.forecast = Some(self.graph.forecast_port_completion()?);
+            }
+            if self.admit_pure_epoch(patch)? {
+                return Ok(());
+            }
+        }
+        let state = self.completion.as_mut().unwrap();
         for (rid, _) in &patch.groups {
             state.stats.rhs_selected_rules += 1;
             for &table in &plan.rule_demands[*rid].rhs {
@@ -241,6 +271,23 @@ impl Executor {
             Some(f) => f,
             None => self.graph.forecast_port_completion()?,
         };
+        if self.progress {
+            let rules = patch
+                .groups
+                .iter()
+                .map(|(rid, bindings)| {
+                    json!({
+                        "rule":rid,"bindings":bindings.len(),
+                        "access_conflicts":forecast.conflicts(&plan.rule_demands[*rid].accesses),
+                        "all_conflicts":forecast.conflicts(&plan.rule_demands[*rid].rhs),
+                    })
+                })
+                .collect::<Vec<_>>();
+            eprintln!(
+                "[cell-cpu] completion-rhs {}",
+                json!({"ordinal":self.steps.len()+1,"ruleset":self.current_stage,"rules":rules})
+            );
+        }
         let mut access_ready = true;
         let mut checks = 0;
         for (rid, _) in &patch.groups {
@@ -279,14 +326,22 @@ impl Executor {
         }
         Ok(())
     }
-    pub(super) fn complete_source_run(&mut self) -> Result<()> {
+    pub(super) fn complete_source_run(&mut self, rhs_started_with_pending: bool) -> Result<()> {
         if self.completion.is_none() || self.global_completion_observer() {
             if let Some(state) = &mut self.completion {
                 state.stats.global_observation_fences += 1;
             }
             self.graph.repair()?;
         } else if self.completion.as_ref().unwrap().port_scopes {
+            let before = self.graph.stats.unions;
             self.graph.commit_scoped_unions()?;
+            if rhs_started_with_pending {
+                self.completion
+                    .as_mut()
+                    .unwrap()
+                    .stats
+                    .source_unions_while_pending += self.graph.stats.unions - before;
+            }
             if self.graph.pending_completion_tasks() == 0 {
                 self.completion.as_mut().unwrap().forecast = None;
             } else if !self.graph.changed && self.completion.as_ref().unwrap().forecast.is_some() {

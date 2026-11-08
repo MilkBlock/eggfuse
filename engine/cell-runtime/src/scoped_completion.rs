@@ -5,6 +5,15 @@ use crate::completion_plan::{Plan, Scope};
 use std::rc::Rc;
 
 impl Graph {
+    #[inline]
+    pub(super) fn join_constructor_epoch(&mut self, row: &Row, peer: Option<&Row>) {
+        if let Some(owner) = &mut self.ownership {
+            self.epoch =
+                owner
+                    .pending
+                    .completion_epoch(self.epoch, row.epoch, peer.map(|r| r.epoch));
+        }
+    }
     pub fn new_with_scoped_completion(program: Program) -> Result<Self> {
         let mut graph = Self::new_with_local_congruence(program)?;
         graph.use_scoped_completion()?;

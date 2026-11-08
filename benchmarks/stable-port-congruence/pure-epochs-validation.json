@@ -1,0 +1,23 @@
+{
+  "workspace-tests": {
+    "passed": 275,
+    "failed": 0,
+    "ignored": 4
+  },
+  "tests": {
+    "passed": 77,
+    "failed": 0,
+    "ignored": 0
+  },
+  "non-sparse-tests": {
+    "passed": 77,
+    "failed": 0,
+    "ignored": 0
+  },
+  "no_default_features": "compile check passed",
+  "peer_epoch_negative_control": {
+    "mutation": "temporarily use the current task epoch without joining the completed peer epoch",
+    "observed_failure": "the final G row is stamped at epoch 1 instead of its causal epoch 2",
+    "production_source_restored_and_focused_tests_passed": true
+  }
+}

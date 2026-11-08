@@ -17,8 +17,9 @@ The ordinary mode retains its original flat set.
 
 Connectivity is committed before scope readiness can be reported. Incomplete
 readiness means unknown, not a failed equality test. Owned tasks retain their
-origin epoch; callers cannot enqueue a new dependent epoch into an unfinished
-table. Queue membership and delayed epochs are independent of condition-node
+origin epoch. Ordinary scoped callers cannot enqueue a new dependent epoch into
+an unfinished table. The opt-in pure-epoch proof described below admits multiple
+source epochs in one table only after checking the actual RHS. Queue membership and delayed epochs are independent of condition-node
 lifetime: conditions still read current live facts, and fact/component IDs are
 not reused. The API assumes the compiler-typed graph contract, including
 same-sort equality endpoints; direct mutation of public internals is outside
@@ -102,6 +103,48 @@ and new RHS-demand bookkeeping are additional costs. Six RHS waits intersect
 the access footprint; one comes solely from incoming-union expansion. Do not admit this as a
 speedup. Bound access/effect proofs, same-table regional ownership, concurrent
 workers and full-cost admission remain open.
+
+## Closed pure source epochs
+
+`--pure-epochs` extends port scopes with a restricted bound-effect proof. The
+compiler accepts only copies, checked i64 arithmetic, explicit union and Set
+operations for constructors covered by shared ownership. Each Set table must be
+complete before its key is probed. No custom merge, deletion, fresh constructor
+call or opaque equality is previewed. All source matching remains sealed first.
+
+If every union is already true and every Set finds the same existing result,
+the RHS cannot create a new equality or fact. Otherwise, its input/output roots
+are conservatively closed through the existing native/boundary signal domains
+and shared template wiring. New Set outputs are included even for absent keys:
+two bindings that both saw an absent key can later collide. A live legacy user,
+missing code or a bounded-walk failure keeps the previous wait. This analysis
+does not establish any speculative congruence equality. At most 4,096 supplied
+seeds and 4,096 root/signal/step/legacy visits are accepted by the proof.
+
+The scoped queue stores an epoch with each existing pending fact, retaining its
+source-ordered head directory. Multiple inputs can re-notify the same fact; its
+pending epoch becomes the maximum notification epoch. Only the pure-epoch mode
+relaxes the table-wide epoch assertion. Collision completion joins the task and
+both row epochs before enqueueing the result equality, including when an older
+task meets an already completed newer peer. This is pending work metadata, not a
+new producer/consumer reverse index. The ordinary flat queue is unchanged.
+
+The short fixture commits one source union and two fact births, and consumes the
+new result while prior congruence is still pending in the same table. Other
+fixtures cover repeated input notifications with the final row stamped at epoch
+two, colliding absent-key Sets, a no-op union with a mutable user, an actual
+mutable-boundary rejection, and the walk-budget fallback. This establishes the
+single-thread protocol, not concurrent access safety.
+
+On sum-bits, all three admitted batches are no-ops. Twelve bindings execute
+before pending completion, but zero effective source unions, fact births or
+function updates do so. The four nontrivial candidates reach `TypeList-length`
+and fall back. The proof currently includes Set input roots and both sides of
+union, so this is potential influence, not evidence of four actual mutable
+writes. The next refinement must separate unchanged inputs from displaced roots
+and retain complete operator-filtered collision peers. All ten waits remain;
+their position changes. Do not remove the mutable boundary or claim speedup from
+the increased executed-binding count. See `pure-epochs-audit.json` for the costs.
 
 ## Executor contract (implemented for conservative table scopes)
 

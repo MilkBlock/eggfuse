@@ -7,6 +7,9 @@ pub struct Rule {
     pub query: Vec<usize>,
     pub rhs: Vec<usize>,
     pub accesses: Vec<usize>,
+    /// Direct reads for a bound Copy/i64 arithmetic/Union/constructor-Set RHS.
+    /// This classifies instructions only; concrete closure must still be proved.
+    pub pure_writes: Option<Vec<usize>>,
 }
 impl Rule {
     pub fn derive(
@@ -91,6 +94,47 @@ impl Rule {
             query: query.into_iter().collect(),
             rhs: rhs.into_iter().collect(),
             accesses,
+            pure_writes: pure_writes(p, rid),
         }
     }
+}
+
+fn pure_writes(p: &Program, rid: usize) -> Option<Vec<usize>> {
+    let t = &p.templates[p.rules[rid].template];
+    let scalar = |a: &Arg| match a {
+        Arg::Slot(s) => matches!(t.sorts[*s]["kind"].as_str(), Some("eq" | "i64")),
+        Arg::Literal(Value::Int(_)) => true,
+        _ => false,
+    };
+    let integer = |a: &Arg| match a {
+        Arg::Slot(s) => t.sorts[*s]["kind"] == "i64",
+        Arg::Literal(Value::Int(_)) => true,
+        _ => false,
+    };
+    let mut writes = BTreeSet::new();
+    for op in t.ops.iter() {
+        match op {
+            Op::Copy(_, a) if scalar(a) => (),
+            Op::Union(a, b) if scalar(a) && scalar(b) => (),
+            Op::Let(_, Call::Primitive(name, output), args)
+                if output == "i64"
+                    && args.len() == 2
+                    && matches!(name.as_str(), "+" | "-" | "*")
+                    && args.iter().all(integer) =>
+            {
+                ()
+            }
+            Op::Set(table, args, value)
+                if p.tables[*table].constructor
+                    && p.cell_ownership.tables[*table]
+                    && args.len() <= 4
+                    && args.iter().all(scalar)
+                    && scalar(value) =>
+            {
+                writes.insert(*table);
+            }
+            _ => return None,
+        }
+    }
+    Some(writes.into_iter().collect())
 }

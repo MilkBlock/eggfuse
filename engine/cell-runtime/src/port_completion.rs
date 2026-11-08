@@ -29,6 +29,12 @@ pub(crate) struct Counts {
     scratch_growths: u64,
     scope_completions: u64,
     bypassed_tasks: u64,
+    pure_epoch_proofs: u64,
+    pure_epoch_accepts: u64,
+    pure_epoch_boundary_rejections: u64,
+    pure_epoch_boundary_tables: BTreeMap<usize, u64>,
+    pure_epoch_budget_rejections: u64,
+    pure_epoch_peak_visits: u64,
 }
 struct Influence {
     table: usize,
@@ -42,6 +48,18 @@ pub(crate) struct Forecast {
     groups: Vec<Influence>,
 }
 impl Forecast {
+    /// Optional progress diagnostics; this is not part of the scope proof.
+    pub(crate) fn conflicts(&self, demand: &[usize]) -> Vec<(usize, usize)> {
+        self.groups
+            .iter()
+            .flat_map(|g| {
+                demand
+                    .iter()
+                    .filter(|&&t| g.tables[t])
+                    .map(move |&t| (g.table, t))
+            })
+            .collect()
+    }
     /// Selecting one table also selects every pending group stored in that
     /// table. Close over their complete future effects before running repair.
     pub(crate) fn select(&self, demand: &[usize], eager: bool) -> (Vec<bool>, u64) {
@@ -115,6 +133,126 @@ impl Forecast {
     }
 }
 impl Graph {
+    pub(crate) fn enable_pure_epochs(&mut self) {
+        self.ownership
+            .as_mut()
+            .unwrap()
+            .pending
+            .enable_mixed_epochs();
+    }
+    /// Close over every current user of the bound RHS equality endpoints and
+    /// supplied constructor outputs. Newly born Set facts can only connect
+    /// these supplied endpoints. A legacy/mutable user rejects the whole batch.
+    /// No equality is assumed and no union or producer subscription is created.
+    pub(crate) fn pure_epoch_closure(&mut self, seeds: &[u64]) -> Result<bool> {
+        let mut counts = self
+            .ownership
+            .as_mut()
+            .unwrap()
+            .port_completion
+            .take()
+            .unwrap();
+        counts.pure_epoch_proofs += 1;
+        let before = visits(&counts);
+        let result = (|| {
+            if seeds.len() > MAX_VISITS as usize {
+                counts.pure_epoch_budget_rejections += 1;
+                return Ok(false);
+            }
+            let runtime = self.ownership.as_ref().unwrap();
+            let plan = &self.program.cell_ownership.composition;
+            let mut roots = smallvec::SmallVec::<[u64; 16]>::new();
+            let mut seen = FxHashSet::default();
+            for &seed in seeds {
+                offer(
+                    root(&self.parents, seed),
+                    &mut roots,
+                    &mut seen,
+                    &mut counts,
+                );
+            }
+            let mut next = 0;
+            while next < roots.len() {
+                if visits(&counts) - before >= MAX_VISITS {
+                    counts.pure_epoch_budget_rejections += 1;
+                    return Ok(false);
+                }
+                let root = roots[next];
+                next += 1;
+                counts.root_visits += 1;
+                for &dep in self.uses.get(&root).into_iter().flat_map(|s| s.iter()) {
+                    if visits(&counts) - before >= MAX_VISITS {
+                        counts.pure_epoch_budget_rejections += 1;
+                        return Ok(false);
+                    }
+                    counts.legacy_boundaries += 1;
+                    if let Some(table) = self.dependency_table(dep) {
+                        counts.pure_epoch_boundary_rejections += 1;
+                        *counts.pure_epoch_boundary_tables.entry(table).or_default() += 1;
+                        return Ok(false);
+                    }
+                }
+                for signal in runtime
+                    .boundaries
+                    .get(&root)
+                    .into_iter()
+                    .flat_map(|s| s.iter().copied())
+                    .chain(self.native_signal(root))
+                {
+                    if visits(&counts) - before >= MAX_VISITS {
+                        counts.pure_epoch_budget_rejections += 1;
+                        return Ok(false);
+                    }
+                    counts.signal_visits += 1;
+                    let component = runtime.composition.components[signal.component as usize]
+                        .as_ref()
+                        .ok_or("expired pure-epoch component")?;
+                    let Some(code) = plan.effects.get(component.shape) else {
+                        counts.pure_epoch_boundary_rejections += 1;
+                        return Ok(false);
+                    };
+                    for step in &code.signals[signal.symbol] {
+                        if visits(&counts) - before >= MAX_VISITS {
+                            counts.pure_epoch_budget_rejections += 1;
+                            return Ok(false);
+                        }
+                        counts.static_steps += 1;
+                        let fact = FactRef {
+                            cell: component.frames[step.frame],
+                            op: step.op,
+                        };
+                        let Some(_state) = self
+                            .cells
+                            .get(&fact.cell)
+                            .and_then(|c| c.facts.get(&fact.op))
+                            .filter(|s| s.owned)
+                        else {
+                            counts.inactive_steps += 1;
+                            continue;
+                        };
+                        if let Some(output) = step.output {
+                            counts.output_reads += 1;
+                            let value = component.signals[output]
+                                .ok_or("live pure-epoch output is unbound")?;
+                            offer(
+                                crate::value::root(&self.parents, value),
+                                &mut roots,
+                                &mut seen,
+                                &mut counts,
+                            );
+                        }
+                    }
+                }
+            }
+            Ok(true)
+        })();
+        counts.pure_epoch_peak_visits = counts.pure_epoch_peak_visits.max(visits(&counts) - before);
+        if matches!(result, Ok(true)) {
+            counts.pure_epoch_accepts += 1;
+        }
+        self.ownership.as_mut().unwrap().port_completion = Some(counts);
+        result
+    }
     pub(crate) fn use_port_completion(&mut self) -> Result<()> {
         self.use_scoped_completion()?;
         if self.ownership.as_ref().unwrap().port_completion.is_some() {

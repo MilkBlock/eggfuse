@@ -2495,6 +2495,7 @@ impl Graph {
                     let Some(r) = self.fact(f)? else { continue };
                     let h = hashkey(r.table, &r.values[..r.values.len() - 1]);
                     let found = self.find_repair_collision(f, &r, h)?;
+                    self.join_constructor_epoch(&r, found.as_ref());
                     if let Some(other) = &found && self.program.tables[r.table].constructor {
                         self.enqueue_union(r.values.last().unwrap().clone(), other.values.last().unwrap().clone())?;
                     }

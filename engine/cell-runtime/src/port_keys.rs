@@ -134,6 +134,7 @@ impl Graph {
         } else {
             self.lookup_port_key(row.table, &row.values[..row.values.len() - 1], Some(f))?
         };
+        self.join_constructor_epoch(&row, found.as_ref());
         if let Some(other) = &found {
             self.enqueue_union(
                 row.values.last().unwrap().clone(),

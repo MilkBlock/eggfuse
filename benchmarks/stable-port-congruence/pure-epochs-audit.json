@@ -1,0 +1,990 @@
+{
+  "scope": "standalone single-thread Cell CPU Executor; no timing or parallel claim",
+  "baseline_revision": "e30c2e1d",
+  "runtime_sha256": "20b1b673e7626fc692a1031466ba57ffc9b89ed0c8710a12c0ded12323928f1f",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "admitted_as_performance_improvement": false,
+  "port_completion": {
+    "enabled": true,
+    "scope": "conservative concrete-port influence; static shared wiring and existing boundaries; table-granular pending groups",
+    "shared_plans": 630,
+    "shared_steps": 7559,
+    "stats": {
+      "boundary_global_shortcuts": 0,
+      "bypassed_tasks": 90,
+      "forecasts": 97,
+      "forest_global_shortcuts": 0,
+      "global_boundaries_by_table": {},
+      "groups": 264,
+      "inactive_steps": 48191,
+      "legacy_boundaries": 17725,
+      "membership_checks": 677634,
+      "output_reads": 58910,
+      "peak_group_visits": 4096,
+      "pending_global_by_table": {},
+      "pending_global_shortcuts": 0,
+      "pure_epoch_accepts": 0,
+      "pure_epoch_boundary_rejections": 4,
+      "pure_epoch_boundary_tables": {
+        "360": 4
+      },
+      "pure_epoch_budget_rejections": 0,
+      "pure_epoch_peak_visits": 67,
+      "pure_epoch_proofs": 4,
+      "pure_groups": 59,
+      "root_visits": 23301,
+      "scope_completions": 87,
+      "scratch_growths": 1359,
+      "seed_candidates": 1107,
+      "seed_roots": 403,
+      "signal_visits": 89693,
+      "static_steps": 151073,
+      "typed_fallbacks": 60
+    },
+    "visit_budget_per_group": 4096
+  },
+  "scoped_completion": {
+    "enabled": true,
+    "pending_owned_tables": [],
+    "pending_tasks": 0,
+    "plan": {
+      "deferrable_tables": 71,
+      "dependency_edges": 30664,
+      "merge_birth_edges": 5,
+      "merge_read_edges": 5,
+      "merges": [
+        {
+          "births": [
+            324
+          ],
+          "opaque": false,
+          "reads": [
+            324
+          ],
+          "table": 205
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 232
+        },
+        {
+          "births": [
+            231
+          ],
+          "opaque": false,
+          "reads": [
+            231
+          ],
+          "table": 234
+        },
+        {
+          "births": [
+            385
+          ],
+          "opaque": false,
+          "reads": [
+            385
+          ],
+          "table": 387
+        },
+        {
+          "births": [
+            384
+          ],
+          "opaque": false,
+          "reads": [
+            384
+          ],
+          "table": 393
+        }
+      ],
+      "opaque_tables": [],
+      "scope": "typed conservative completion dependencies; same-sort regions may be coarser than Cell wiring",
+      "tables": 401,
+      "wait_edges": 42294
+    },
+    "scope": "compiler-scoped Graph completion; Executor mode reported separately",
+    "stats": {
+      "advanced_task_epochs": 0,
+      "bypassed_tasks": 0,
+      "cause_comparisons": 4238,
+      "cause_growths": 36,
+      "cause_probes": 1110,
+      "completion_epoch_checks": 1046,
+      "completion_epoch_joins": 0,
+      "head_probes": 1059,
+      "head_updates": 1599,
+      "legacy_frontier_probes": 938,
+      "mixed_epoch_inserts": 0,
+      "opaque_full_completions": 0,
+      "scope_requests": 0
+    }
+  },
+  "scoped_executor": {
+    "compiler_admits_deferral": true,
+    "enabled": true,
+    "global_observer": false,
+    "pending_anchors": 0,
+    "port_scopes": true,
+    "pure_epochs": true,
+    "retained_contexts": 0,
+    "retained_forwards": 0,
+    "scope": "standalone single-thread Executor; conservative typed scopes, selective publication; no parallel workers",
+    "stats": {
+      "already_ready_waits": 12,
+      "bound_rhs_accepts": 3,
+      "bound_rhs_attempts": 7,
+      "bound_rhs_bindings": 12,
+      "bound_rhs_key_reads": 25,
+      "bound_rhs_noop_accepts": 3,
+      "bound_rhs_ops": 105,
+      "bound_rhs_rule_checks": 13,
+      "bound_rhs_scratch_growths": 83,
+      "bound_rhs_value_slots": 275,
+      "compiler_full_completion_runs": 0,
+      "deferred_rows_carried": 25,
+      "eager_waits": 0,
+      "executed_bindings_while_pending": 12,
+      "global_observation_fences": 0,
+      "partial_publications": 18,
+      "peak_matched_origin_slots": 0,
+      "peak_retained_anchors": 6,
+      "peak_retained_changes": 8,
+      "peak_retained_contexts": 7,
+      "peak_retained_forwards": 4,
+      "publication_table_checks": 32,
+      "published_tables_while_pending": 25,
+      "query_bindings_while_pending": 40,
+      "query_completions": 6,
+      "query_runs_while_pending": 12,
+      "readiness_dependency_checks": 7268,
+      "rhs_access_completions": 4,
+      "rhs_completions": 4,
+      "rhs_demand_growths": 8,
+      "rhs_demand_probes": 2224,
+      "rhs_empty_skips": 5,
+      "rhs_fact_births_while_pending": 0,
+      "rhs_function_updates_while_pending": 0,
+      "rhs_selected_rules": 8,
+      "rhs_union_completions": 0,
+      "ruleset_waits": 1428,
+      "runs_with_unrelated_pending": 8,
+      "source_unions_while_pending": 0,
+      "unchanged_influence_reuses": 8
+    },
+    "unpublished_changes": 0
+  },
+  "ordinary_runtime_counter_changes": {
+    "idle_scheduled_runs": {
+      "before": 767,
+      "after": 764
+    }
+  },
+  "key_lookup_calls": {
+    "before": 19326,
+    "after": 19351
+  },
+  "counter_changes_from_staged_scopes": {
+    "port_completion": {
+      "inactive_steps": {
+        "before": 48126,
+        "after": 48191,
+        "delta": 65
+      },
+      "legacy_boundaries": {
+        "before": 17721,
+        "after": 17725,
+        "delta": 4
+      },
+      "membership_checks": {
+        "before": 677445,
+        "after": 677634,
+        "delta": 189
+      },
+      "output_reads": {
+        "before": 58859,
+        "after": 58910,
+        "delta": 51
+      },
+      "pure_epoch_boundary_rejections": {
+        "before": 0,
+        "after": 4,
+        "delta": 4
+      },
+      "pure_epoch_peak_visits": {
+        "before": 0,
+        "after": 67,
+        "delta": 67
+      },
+      "pure_epoch_proofs": {
+        "before": 0,
+        "after": 4,
+        "delta": 4
+      },
+      "root_visits": {
+        "before": 23286,
+        "after": 23301,
+        "delta": 15
+      },
+      "scratch_growths": {
+        "before": 1343,
+        "after": 1359,
+        "delta": 16
+      },
+      "signal_visits": {
+        "before": 89646,
+        "after": 89693,
+        "delta": 47
+      },
+      "static_steps": {
+        "before": 150901,
+        "after": 151073,
+        "delta": 172
+      }
+    },
+    "scoped_completion": {
+      "completion_epoch_checks": {
+        "before": 0,
+        "after": 1046,
+        "delta": 1046
+      }
+    },
+    "scoped_executor": {
+      "already_ready_waits": {
+        "before": 9,
+        "after": 12,
+        "delta": 3
+      },
+      "bound_rhs_accepts": {
+        "before": 0,
+        "after": 3,
+        "delta": 3
+      },
+      "bound_rhs_attempts": {
+        "before": 0,
+        "after": 7,
+        "delta": 7
+      },
+      "bound_rhs_bindings": {
+        "before": 0,
+        "after": 12,
+        "delta": 12
+      },
+      "bound_rhs_key_reads": {
+        "before": 0,
+        "after": 25,
+        "delta": 25
+      },
+      "bound_rhs_noop_accepts": {
+        "before": 0,
+        "after": 3,
+        "delta": 3
+      },
+      "bound_rhs_ops": {
+        "before": 0,
+        "after": 105,
+        "delta": 105
+      },
+      "bound_rhs_rule_checks": {
+        "before": 0,
+        "after": 13,
+        "delta": 13
+      },
+      "bound_rhs_scratch_growths": {
+        "before": 0,
+        "after": 83,
+        "delta": 83
+      },
+      "bound_rhs_value_slots": {
+        "before": 0,
+        "after": 275,
+        "delta": 275
+      },
+      "executed_bindings_while_pending": {
+        "before": 0,
+        "after": 12,
+        "delta": 12
+      },
+      "partial_publications": {
+        "before": 12,
+        "after": 18,
+        "delta": 6
+      },
+      "peak_retained_forwards": {
+        "before": 12,
+        "after": 4,
+        "delta": -8
+      },
+      "query_completions": {
+        "before": 3,
+        "after": 6,
+        "delta": 3
+      },
+      "query_runs_while_pending": {
+        "before": 9,
+        "after": 12,
+        "delta": 3
+      },
+      "readiness_dependency_checks": {
+        "before": 4878,
+        "after": 7268,
+        "delta": 2390
+      },
+      "rhs_access_completions": {
+        "before": 6,
+        "after": 4,
+        "delta": -2
+      },
+      "rhs_completions": {
+        "before": 7,
+        "after": 4,
+        "delta": -3
+      },
+      "rhs_demand_probes": {
+        "before": 3614,
+        "after": 2224,
+        "delta": -1390
+      },
+      "rhs_empty_skips": {
+        "before": 2,
+        "after": 5,
+        "delta": 3
+      },
+      "rhs_selected_rules": {
+        "before": 13,
+        "after": 8,
+        "delta": -5
+      },
+      "rhs_union_completions": {
+        "before": 1,
+        "after": 0,
+        "delta": -1
+      },
+      "runs_with_unrelated_pending": {
+        "before": 2,
+        "after": 8,
+        "delta": 6
+      },
+      "unchanged_influence_reuses": {
+        "before": 2,
+        "after": 8,
+        "delta": 6
+      }
+    }
+  },
+  "prior_rhs_conflicts": [
+    {
+      "ordinal": 17,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 5,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 5,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 18,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 3,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 5,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 19,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 2,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 3,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 20,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 2,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 3,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 21,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 1,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 4,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 84,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 1,
+          "rule": 576
+        }
+      ],
+      "ruleset": "type-helpers"
+    },
+    {
+      "ordinal": 167,
+      "rules": [
+        {
+          "access_conflicts": [],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 1,
+          "rule": 576
+        },
+        {
+          "access_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "all_conflicts": [
+            [
+              "Base",
+              "Base"
+            ],
+            [
+              "Base",
+              "ExpectType"
+            ],
+            [
+              "Base",
+              "HasType"
+            ],
+            [
+              "Base",
+              "PureType"
+            ],
+            [
+              "Base",
+              "bop-of-type"
+            ],
+            [
+              "Base",
+              "bpred-of-type"
+            ]
+          ],
+          "bindings": 5,
+          "rule": 577
+        }
+      ],
+      "ruleset": "type-helpers"
+    }
+  ],
+  "rejected_boundary_tables": {
+    "TypeList-length": 4
+  },
+  "interpretation": "All workload admissions are no-op RHSs. No effective union, new fact or function update runs ahead of pending work. Ten completions remain, shifted from three query/seven RHS to six query/four RHS; three more empty Runs lose the settled-idle shortcut.",
+  "remaining": "Distinguish read-only Set inputs, displaced union roots and operator-filtered collision outputs. The current all-root closure can reach TypeList-length through unchanged inputs; the rejection is potential influence, not proof of an actual mutable write. Concurrent ownership, workers and complete-cost admission remain open."
+}

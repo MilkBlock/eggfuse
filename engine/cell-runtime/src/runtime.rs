@@ -20,6 +20,8 @@ mod execute_kernel;
 mod ready_sets;
 #[path = "runtime_completion.rs"]
 mod completion;
+#[path = "runtime_pure_epochs.rs"]
+mod pure_epochs;
 #[cfg(feature="sparse-cells")]
 #[path = "point_ports.rs"]
 mod point_ports;
@@ -2773,7 +2775,7 @@ impl Executor {
         self.graph
             .proof
             .before_repair(&self.graph.parents, &self.graph.pending_unions);
-        self.complete_source_run()?;
+        self.complete_source_run(independent_rhs)?;
         #[cfg(feature = "rhs-work-audit")]
         {
             let mut births = std::mem::take(&mut self.graph.rhs_births);

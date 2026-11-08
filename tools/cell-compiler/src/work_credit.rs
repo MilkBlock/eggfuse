@@ -97,14 +97,14 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
-        for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths"] {
+        for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths", "mixed_epoch_inserts", "advanced_task_epochs", "completion_epoch_checks", "completion_epoch_joins"] {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
                 report["scoped_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped completion work {field}"))?
             } else { 0 };
             work.insert(key,value);
         }
-        for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks", "rhs_demand_probes", "rhs_demand_growths", "rhs_selected_rules"] {
+        for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks", "rhs_demand_probes", "rhs_demand_growths", "rhs_selected_rules", "bound_rhs_attempts", "bound_rhs_rule_checks", "bound_rhs_ops", "bound_rhs_key_reads", "bound_rhs_value_slots", "bound_rhs_scratch_growths"] {
             let key = format!("scoped_executor/stats/{field}");
             let value = if report["scoped_executor"]["enabled"] == true {
                 report["scoped_executor"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped execution work {field}"))?

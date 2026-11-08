@@ -31,6 +31,9 @@ impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
     pub fn len(&self) -> usize {
         self.0.len()
     }
+    pub(crate) fn capacity(&self) -> usize {
+        self.0.capacity()
+    }
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }

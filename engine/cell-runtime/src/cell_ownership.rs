@@ -675,6 +675,7 @@ impl Graph {
         self.ownership.as_mut().unwrap().stats.key_completions += 1;
         let h = hashkey(r.table, &r.values[..r.values.len() - 1]);
         let found = self.find_repair_collision(f, &r, h)?;
+        self.join_constructor_epoch(&r, found.as_ref());
         if let Some(other) = &found {
             self.enqueue_union(
                 r.values.last().unwrap().clone(),
