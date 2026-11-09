@@ -1,0 +1,114 @@
+{
+  "scope": "standalone Cell CPU; shared field-use index; no timing or allocation sampling",
+  "baseline_commit": "cd20519b (runtime b01f9984)",
+  "candidate_commit": "f760e24f",
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 299,
+  "work_metric_changes": {
+    "report:/stable_ports/local_conditions/stats/boundary_indexed_steps [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 15777
+      }
+    },
+    "report:/stable_ports/local_conditions/stats/boundary_uncompiled_steps [value]": {
+      "before": {
+        "status": "observed",
+        "value": 1542
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    },
+    "report:/stable_ports/stats/node_lookups [value]": {
+      "before": {
+        "status": "observed",
+        "value": 64493
+      },
+      "after": {
+        "status": "observed",
+        "value": 64347
+      }
+    }
+  },
+  "coverage_note": "boundary_indexed_steps is newly observed, not a cost increase from an assumed zero. The 146 fewer boundary sites account for all 146 fewer node lookups; candidate results and logical executions are unchanged.",
+  "cases": {
+    "sum_bits": {
+      "runs": 1428,
+      "ordered_hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+      },
+      "runtime_and_ownership_counters_identical": true,
+      "stable_counter_changes_limited_to_actual_field_routes_and_node_reads": true
+    },
+    "port_fixture": {
+      "runs": 3,
+      "ordered_hashes": {
+        "state.json": "41c7455d120dbaef1c0b24c5b4c2199a2f1de461857520418f2b2d6d7f14ae02",
+        "stages.json": "0b7c4896bdaf976a5197a12e62a41d679bb2aac6afc84212cef253cadb7c4aa8",
+        "binding-audit.json": "3e743ca2621b1afd334093bb4e5185fdcdb7e5d5adff06e737d904e57a196a9d"
+      },
+      "runtime_and_ownership_counters_identical": true,
+      "stable_counter_changes_limited_to_actual_field_routes_and_node_reads": true
+    }
+  },
+  "tests": {
+    "budget": {
+      "passed": 1,
+      "log_sha256": "fbaa2cb6ffdf51d13ebedbac7e7aeb029a0a211453e73d8acbda12c092d9a3bb"
+    },
+    "unique": {
+      "passed": 10,
+      "log_sha256": "42708580a499cfc86daac7b26b78bd587bd23603de9788571f6dce215d477f9d"
+    },
+    "classes": {
+      "passed": 5,
+      "log_sha256": "cab2e53d30c638732fd334cf2bb7b48e733120f0199c44925de60409b741cef0"
+    },
+    "batches": {
+      "passed": 1,
+      "log_sha256": "1acbf682c0f69b124ad57bf763b2e775f0f405bf77d5826318d2ffaf50657588"
+    },
+    "aliases": {
+      "passed": 1,
+      "log_sha256": "77484cd38aa99f5269bfc11f938e186190a0467478aed2f27052bf644f279e46"
+    },
+    "credit": {
+      "passed": 1,
+      "log_sha256": "8a4734126c6cd3c309f009c4bca8987edf4984ac3954cf5a08a52276b44776c9"
+    }
+  },
+  "minimal_features_check": "pass",
+  "binaries": {
+    "baseline": "b093b0d29bca69bf26580b14624218a88954d4ab3f1c2a1fc0ff3b21a82cfc56",
+    "candidate": "ff4a4a525fa5d0501828c8dc7bfd59d3f2ebfc10079237b0640ceef553a33650"
+  },
+  "programs": {
+    "sum": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+    "port": "101aa5bc04a8867c9c03d0c4d2378e3bb2e8ee244040834d5a1ffdfa07465220"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "24c4ae8a",
+    "implementation_commits_since_timing": 3
+  },
+  "boundary_work": {
+    "baseline": {
+      "boundary_sites": 14596,
+      "boundary_uncompiled_steps": 1542,
+      "boundary_indexed_steps": null,
+      "boundary_candidates": 2419,
+      "node_lookups": 64493
+    },
+    "candidate": {
+      "boundary_sites": 14450,
+      "boundary_uncompiled_steps": 0,
+      "boundary_indexed_steps": 15777,
+      "boundary_candidates": 2419,
+      "node_lookups": 64347
+    }
+  }
+}

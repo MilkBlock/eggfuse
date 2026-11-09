@@ -1,5 +1,5 @@
 {
-  "objective": "一个一个部分重写然后紧紧用 cell 概念连接，避免存在不同路径和不同接口定义并维持运行速度和常用指标，因为这可以度量你是否完全重写了所有重要优化点",
+  "objective": "一个一个部分重写然后紧紧用 cell 概念连接，避免存在不同路径和不同接口定义并维持运行速度和常用指标，因为这可以度量你是否完全重写了所有重要优化点。 确认重写完之后再将多线程重新跑通并尝试清除其中的非本质堵点",
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
@@ -227,7 +227,8 @@
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
       "symbol_checks": "benchmarks/cell-unification/symbols-check.json",
       "port_read_checks": "benchmarks/cell-unification/port-read-results.json",
-      "propagation_checks": "benchmarks/cell-unification/propagation-check.json"
+      "propagation_checks": "benchmarks/cell-unification/propagation-check.json",
+      "field_use_checks": "benchmarks/cell-unification/field-uses-check.json"
     },
     {
       "id": "schedule_parallel",
@@ -238,6 +239,12 @@
       "id": "bake_marker",
       "status": "pending",
       "requirement": "Compose and select the same Cell definitions and Entries; update optional marker materialization boundaries during iteration."
+    },
+    {
+      "id": "multithread_after_rewrite",
+      "status": "pending",
+      "prerequisite": "Requirement-by-requirement audit proves the common Cell rewrite complete; counters alone are insufficient.",
+      "requirement": "Restore complete multithreaded execution after rewriting, compare with serial semantics and actual workloads, then identify and attempt to remove avoidable preparation, discarded-task, ordered-handoff and repair waits while preserving essential source-order dependencies."
     },
     {
       "id": "acceptance",
@@ -399,7 +406,8 @@
       "title": "局部 congruence 条件与 typed dispatch",
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "G2",
-      "remaining": "Foreign domains and uniqueness share Cell field-use indexing independently of the pair-condition bound. Local condition planning, candidate storage, guard scheduling and broader performance acceptance remain."
+      "remaining": "Foreign domains and uniqueness share Cell field-use indexing independently of the pair-condition bound. Local condition planning, candidate storage, guard scheduling and broader performance acceptance remain.",
+      "evidence": "benchmarks/cell-unification/field-uses-check.json"
     },
     {
       "id": "G3",
@@ -444,5 +452,6 @@
       "metrics_from_catalog": "I1"
     }
   ],
-  "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate."
+  "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",
+  "phase_order": "Finish the common Cell rewrite and audit every optimization first; then restore complete multithreaded runs and attempt removal of nonessential stalls. Focused concurrency regressions during rewriting do not count as completion of that later phase."
 }

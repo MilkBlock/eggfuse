@@ -132,3 +132,7 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 编译字段索引不受最多 16 个条件 site 的界限影响，较大 shape 也按字段直接寻址。未见过的训练 shape 保留完整静态 wiring 扫描；没有为任何实例维护消费者列表。唯一性证明按真实访问数执行既有预算，省掉无关字段后可能证明更多合法实例，不能靠提高预算掩盖成本。
 
 新增 `boundary_indexed_steps`，与剩余 `boundary_uncompiled_steps` 一同进入目录和 Bake 评分。旧报告没有新计数应显示缺失，不能当作零。19 项短检查覆盖条件容量回退、唯一性、未来 class 过滤/训练回退、多输入别名、超大 shape 的并行完成及评分缺项拒绝；最小特性编译通过。相对上次测速是第 3 个实现提交，本步不计时。
+
+本步检查见 [field-uses-check.json](field-uses-check.json)：sum-bits 语义 pass，1,428 个 Run 与最终 state 相同。目录新增两项已有/新成本后，299 项指标值或状态保持，boundary 未编译扫描 1,542 → 0、node lookup 64,493 → 64,347；boundary site 恰减少 146，实际返回候选不变。新增 indexed steps 为 15,777，旧报告缺项，没有把它当零；不能由这些数字推出总成本或速度收益。短 port fixture 的逐阶段 state/bindings 保持。当前普通构建与冻结 `out/cell-propagation-unified/runtime-candidate` 使用同一 sum/port 输入，输出和目录提取保存在 `out/cell-field-uses-unified`；无新增时间或分配采样。
+
+用户追加了后续目标：完成统一重写并逐项确认后，再恢复完整多线程运行，尝试清除非本质阻塞。coverage 中记录了该顺序和独立验收阶段；本步的并行短回归仅用于避免破坏已有语义，不算该后续阶段完成。
