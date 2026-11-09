@@ -245,8 +245,15 @@ fn source_union_includes_hidden_read_only_callbacks_in_its_write_fence() {
     let callback = table(&p, "callback");
     assert!(!plan.affects(callback, port));
     assert!(plan.completion_reads[callback].contains(&port));
-    assert!(!plan.port_accesses["seed"].contains(&port));
-    assert!(plan.port_demands["seed"].contains(&port));
+    // Check the per-Cell demands consumed by the actual matched-RHS wait.
+    assert!(p.sets["seed"].iter().all(|&r| {
+        let demand = &plan.rule_demands[r];
+        !demand.query.contains(&port) && !demand.accesses.contains(&port)
+    }));
+    assert!(p.sets["seed"].iter().any(|&r| {
+        let demand = &plan.rule_demands[r];
+        demand.query.contains(&port) || demand.rhs.contains(&port)
+    }));
 }
 
 #[test]

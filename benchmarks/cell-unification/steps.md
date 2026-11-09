@@ -178,3 +178,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 目录 H2 补入已有的 11 项证明成本/覆盖计数，不新增运行时计数器。两种模式分别使用相同目录抽取前后报告，313 项工作指标的值及缺失状态均一致；正常模式中的缺失计数不视为零。本步不采样速度或分配，历史速度回退仍待确认，距上次计时累计 1 个实现提交。`bound_rhs_birth_sites/source_pairs` 是证明中的候选，不是已提交 mutation。
 
 复现：构建普通 release 后用同一 `sum/program.json` 分别运行 `--local-congruence` 和 `--pure-epochs`；用 catalog.py extract 抽取两版两模式报告。`cargo test --locked -p eggfuse-cell-compiler --all-features --test pure_epochs` 覆盖算术、跨阶段 visibility、碰撞和预算；`cargo check --locked -p eggfuse-cell-runtime --no-default-features` 检查最小编译。既有 choice_diagnosis.py 以 pure 两版最终状态及保存的 native 导出为输入。具体结果见 `bound-check.json`。
+
+## 删除历史 ruleset 效果汇总
+
+基线 `390077a7`（运行时 `b6bda1d3`）。上一步 pure sum-bits 的实际调度选择 8 个 RHS 规则，访问 2,224 项 Cell 需求；运行时的 query 等待使用 `query_demands`，匹配后的等待使用各个 `rule_demands`。源码检索确认旧 `port_demands/port_accesses` 仅被三个测试断言使用，不参与执行。
+
+删除两个历史汇总 map、每个 ruleset 的对应 BTreeSet 构造/归并及名称/数组保存。保守 scope 直接合入同一份 Cell query/RHS 结论。query 与 RHS 的阶段差异仍有必要：未匹配 Cell 的 RHS 不能阻塞其他绑定。测试改为检查运行时真正读取的单 Cell 需求；all/any 与原聚合集合的包含关系等价。
+
+隐式 merge 回调读依赖、未匹配 RHS 不阻塞、跨 sort congruence 传播三项短检查通过。普通和 pure 两模式的 sum-bits 最终状态、1,428 个 Run、全部 scoped/port/runtime 计数保持，既有语义验收通过；未新增测速或分配采样。这一步删除的是 setup/常驻结构，不据此推断运行时已加速。距上次计时累计 2 个实现提交，检查方式沿用上一节，输出保存在 `out/cell-demand-unified`，证据见 `demand-check.json`。

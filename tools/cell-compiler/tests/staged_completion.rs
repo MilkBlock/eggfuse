@@ -59,7 +59,10 @@ fn an_unmatched_rhs_does_not_block_other_bindings_and_their_consumers() {
     let mut new = executor(SOURCE, true);
     let ga = table(&new, "Ga");
     let plan = new.graph.program.completion_plan.as_ref().unwrap();
-    assert!(plan.port_demands["b"].contains(&ga));
+    assert!(new.graph.program.sets["b"].iter().any(|&r| {
+        let demand = &plan.rule_demands[r];
+        demand.query.contains(&ga) || demand.rhs.contains(&ga)
+    }));
     assert!(!plan.query_demands["b"].contains(&ga));
     old.execute().unwrap();
     new.execute_until(Some(3)).unwrap();

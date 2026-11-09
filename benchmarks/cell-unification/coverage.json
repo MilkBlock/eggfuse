@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "d81b0cb2",
-    "implementation_commits_since_timing": 1,
+    "implementation_commits_since_timing": 2,
     "evidence": "benchmarks/cell-unification/lifecycle-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -239,8 +239,15 @@
     },
     {
       "id": "schedule_parallel",
-      "status": "pending",
-      "requirement": "Derive completion scopes, workers and ordered publication from Cell dependencies; retain profitable optimizations and charge discarded work."
+      "status": "in_progress",
+      "requirement": "Derive completion scopes, workers and ordered publication from Cell dependencies; retain profitable optimizations and charge discarded work.",
+      "completed_structure": [
+        "Remove unused ruleset-wide port_demands/port_accesses copies and their union-building passes. Runtime readiness and its tests use source query demands and the actual matched Cells' effect demands."
+      ],
+      "remaining": [
+        "Unify the remaining scope, source-boundary and worker-read interfaces; preserve query readiness before matching and delayed effect obligations only for matched Cells. Full multithreading restoration remains after the complete rewrite audit."
+      ],
+      "demand_checks": "benchmarks/cell-unification/demand-check.json"
     },
     {
       "id": "bake_marker",
@@ -428,8 +435,10 @@
     {
       "id": "H1",
       "title": "编译 scope 与按需完成",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "H1"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "H1",
+      "evidence": "benchmarks/cell-unification/demand-check.json",
+      "remaining": "Unused historical ruleset effect aggregates are removed. Typed reachability, readiness, source observations and selective publication remain necessary and still need the broader Cell-interface audit."
     },
     {
       "id": "G4",

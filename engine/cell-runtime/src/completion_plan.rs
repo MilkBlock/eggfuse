@@ -39,12 +39,6 @@ pub struct Plan {
     /// Mutable merges can allocate nodes or have source-ordered effects.
     pub deferrable: Vec<bool>,
     pub rulesets: BTreeMap<String, Scope>,
-    /// Direct table observations/effects, for a proved concrete port influence.
-    /// An empty list observes nothing; unknown implicit effects demand all.
-    pub port_demands: BTreeMap<String, Vec<usize>>,
-    /// Historical aggregate before incoming-union expansion. Runtime port
-    /// scopes instead use the query footprint and actually matched rules.
-    pub port_accesses: BTreeMap<String, Vec<usize>>,
     /// Mandatory source snapshot reads, before any RHS can run.
     pub query_demands: BTreeMap<String, Vec<usize>>,
     /// Separate source reads, RHS accesses, and conservative union effects.
@@ -198,8 +192,6 @@ impl Plan {
                 .map(|(i, t)| t.constructor && t.virtual_fact && !sorts[i].1)
                 .collect(),
             rulesets: BTreeMap::new(),
-            port_demands: BTreeMap::new(),
-            port_accesses: BTreeMap::new(),
             query_demands: BTreeMap::new(),
             rule_demands: Vec::new(),
         };
@@ -216,14 +208,11 @@ impl Plan {
             .collect();
         for (name, rules) in &p.sets {
             let mut tables = BTreeSet::new();
-            let mut direct = BTreeSet::new();
-            let mut accesses = BTreeSet::new();
             let mut queries = BTreeSet::new();
             for &rid in rules {
                 let demand = &plan.rule_demands[rid];
                 queries.extend(demand.query.iter().copied());
-                direct.extend(demand.query.iter().chain(&demand.rhs).copied());
-                accesses.extend(demand.query.iter().chain(&demand.accesses).copied());
+                tables.extend(demand.query.iter().chain(&demand.rhs).copied());
                 let template = &p.templates[p.rules[rid].template];
                 let (reads, unknown) = eq_sorts(&template.sorts);
                 for (t, (names, opaque)) in sorts.iter().enumerate() {
@@ -232,15 +221,10 @@ impl Plan {
                     }
                 }
             }
-            tables.extend(&direct);
             plan.rulesets.insert(
                 name.clone(),
                 plan.scope(&tables.into_iter().collect::<Vec<_>>())?,
             );
-            plan.port_demands
-                .insert(name.clone(), direct.into_iter().collect());
-            plan.port_accesses
-                .insert(name.clone(), accesses.into_iter().collect());
             plan.query_demands
                 .insert(name.clone(), queries.into_iter().collect());
         }
