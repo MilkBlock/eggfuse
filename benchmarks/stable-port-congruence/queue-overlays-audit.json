@@ -1,0 +1,528 @@
+{
+  "scope": "standalone Cell CPU; immutable pending queues with fact overlays and monotone base heads",
+  "previous_revision": "0d46bc42",
+  "runtime_sha256": "4410a946a82dd54382789d8692de5813ad2663fa5a2fa0dadf6327266259e05d",
+  "allocator_runtime_sha256": "92dc3fa0cdebceea85e204025908d85791d60e55204e070bbbbd7d417f22b9b4",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "validation": {
+    "workspace-tests": {
+      "passed": 324,
+      "failed": 0,
+      "ignored": 4
+    },
+    "tests": {
+      "passed": 116,
+      "failed": 0,
+      "ignored": 0
+    },
+    "non-sparse-tests": {
+      "passed": 116,
+      "failed": 0,
+      "ignored": 0
+    },
+    "no_default_features": "compile check passed"
+  },
+  "exact_ordered_semantics_match": true,
+  "guard_dispatch_source_wait_and_committed_effect_work_unchanged": true,
+  "all_four_snapshot_layers_copy_zero_values": true,
+  "lanes": {
+    "pure_epochs": {
+      "queue_overlay": {
+        "retained_shadow_slots": 0,
+        "retained_tables": 0,
+        "scope": "fact overlays and monotone base heads; snapshot queues are never cloned",
+        "stats": {
+          "base_head_reads": 0,
+          "base_probes": 0,
+          "base_successor_ranges": 0,
+          "base_successor_steps": 0,
+          "changed_facts": 0,
+          "live_inserts": 0,
+          "live_probes": 0,
+          "live_removes": 0,
+          "merge_live_probes": 0,
+          "overlay_head_reads": 0,
+          "shadow_insert_attempts": 0,
+          "shadow_probes": 0,
+          "table_activations": 0,
+          "table_probes": 0
+        },
+        "touched_table_capacity": 0
+      }
+    },
+    "batch_two": {
+      "queue_overlay": {
+        "retained_shadow_slots": 0,
+        "retained_tables": 0,
+        "scope": "fact overlays and monotone base heads; snapshot queues are never cloned",
+        "stats": {
+          "base_head_reads": 0,
+          "base_probes": 0,
+          "base_successor_ranges": 0,
+          "base_successor_steps": 0,
+          "changed_facts": 0,
+          "live_inserts": 0,
+          "live_probes": 0,
+          "live_removes": 0,
+          "merge_live_probes": 0,
+          "overlay_head_reads": 0,
+          "shadow_insert_attempts": 0,
+          "shadow_probes": 0,
+          "table_activations": 0,
+          "table_probes": 0
+        },
+        "touched_table_capacity": 0
+      }
+    },
+    "overlap_two": {
+      "queue_overlay": {
+        "retained_shadow_slots": 306,
+        "retained_tables": 29,
+        "scope": "fact overlays and monotone base heads; snapshot queues are never cloned",
+        "stats": {
+          "base_head_reads": 704,
+          "base_probes": 3340,
+          "base_successor_ranges": 622,
+          "base_successor_steps": 427,
+          "changed_facts": 1144,
+          "live_inserts": 530,
+          "live_probes": 1707,
+          "live_removes": 1002,
+          "merge_live_probes": 1144,
+          "overlay_head_reads": 4456,
+          "shadow_insert_attempts": 1532,
+          "shadow_probes": 5371,
+          "table_activations": 352,
+          "table_probes": 11739
+        },
+        "touched_table_capacity": 16
+      },
+      "previous_queue_work": {
+        "copied_units": 1011,
+        "growths": 3,
+        "merged_entries": 352,
+        "writes": 2404
+      },
+      "current_queue_work": {
+        "copied_units": 0,
+        "growths": 71,
+        "merged_entries": 1144,
+        "writes": 2404
+      },
+      "current_all_layer_work": {
+        "copied_units": 0,
+        "growths": 86,
+        "merged_entries": 2688,
+        "writes": 3948
+      },
+      "merge_units": "Previous queues merged whole table slots; current queues merge unique shadowed facts. These counts are not comparable units."
+    },
+    "overlap_four": {
+      "queue_overlay": {
+        "retained_shadow_slots": 306,
+        "retained_tables": 29,
+        "scope": "fact overlays and monotone base heads; snapshot queues are never cloned",
+        "stats": {
+          "base_head_reads": 704,
+          "base_probes": 3340,
+          "base_successor_ranges": 622,
+          "base_successor_steps": 427,
+          "changed_facts": 1144,
+          "live_inserts": 530,
+          "live_probes": 1707,
+          "live_removes": 1002,
+          "merge_live_probes": 1144,
+          "overlay_head_reads": 4456,
+          "shadow_insert_attempts": 1532,
+          "shadow_probes": 5371,
+          "table_activations": 352,
+          "table_probes": 11739
+        },
+        "touched_table_capacity": 16
+      },
+      "previous_queue_work": {
+        "copied_units": 1011,
+        "growths": 3,
+        "merged_entries": 352,
+        "writes": 2404
+      },
+      "current_queue_work": {
+        "copied_units": 0,
+        "growths": 71,
+        "merged_entries": 1144,
+        "writes": 2404
+      },
+      "current_all_layer_work": {
+        "copied_units": 0,
+        "growths": 86,
+        "merged_entries": 2688,
+        "writes": 3948
+      },
+      "merge_units": "Previous queues merged whole table slots; current queues merge unique shadowed facts. These counts are not comparable units."
+    },
+    "overlap_small": {
+      "queue_overlay": {
+        "retained_shadow_slots": 232,
+        "retained_tables": 29,
+        "scope": "fact overlays and monotone base heads; snapshot queues are never cloned",
+        "stats": {
+          "base_head_reads": 1098,
+          "base_probes": 3347,
+          "base_successor_ranges": 696,
+          "base_successor_steps": 480,
+          "changed_facts": 1220,
+          "live_inserts": 530,
+          "live_probes": 1474,
+          "live_removes": 996,
+          "merge_live_probes": 1220,
+          "overlay_head_reads": 4236,
+          "shadow_insert_attempts": 1526,
+          "shadow_probes": 5208,
+          "table_activations": 548,
+          "table_probes": 11681
+        },
+        "touched_table_capacity": 16
+      },
+      "previous_queue_work": {
+        "copied_units": 2424,
+        "growths": 3,
+        "merged_entries": 549,
+        "writes": 2393
+      },
+      "current_queue_work": {
+        "copied_units": 0,
+        "growths": 63,
+        "merged_entries": 1220,
+        "writes": 2393
+      },
+      "current_all_layer_work": {
+        "copied_units": 0,
+        "growths": 76,
+        "merged_entries": 2755,
+        "writes": 3928
+      },
+      "merge_units": "Previous queues merged whole table slots; current queues merge unique shadowed facts. These counts are not comparable units."
+    }
+  },
+  "allocator_requests": {
+    "pure_epochs": {
+      "setup_allocations": {
+        "alloc_calls": 103756,
+        "free_calls": 61864,
+        "live_bytes_after": 147012235,
+        "live_bytes_before": 141477962,
+        "peak_live_requested_bytes": 147032395,
+        "realloc_calls": 2261,
+        "released_bytes": 6720049,
+        "requested_bytes": 12254322,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 256926,
+        "free_calls": 220515,
+        "live_bytes_after": 154792603,
+        "live_bytes_before": 147012235,
+        "peak_live_requested_bytes": 155282790,
+        "realloc_calls": 39371,
+        "released_bytes": 45765860,
+        "requested_bytes": 53546228,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_previous_same_lane": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      },
+      "additional_retained_execute_bytes": 0,
+      "delta_from_current_pure_epochs": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      },
+      "delta_from_current_batch_two": {
+        "setup_allocations": {
+          "alloc_calls": -49,
+          "realloc_calls": -2,
+          "requested_bytes": -20086
+        },
+        "allocations": {
+          "alloc_calls": -330,
+          "realloc_calls": -2,
+          "requested_bytes": -655632
+        }
+      }
+    },
+    "batch_two": {
+      "setup_allocations": {
+        "alloc_calls": 103805,
+        "free_calls": 61871,
+        "live_bytes_after": 147032083,
+        "live_bytes_before": 141478096,
+        "peak_live_requested_bytes": 147052243,
+        "realloc_calls": 2263,
+        "released_bytes": 6720421,
+        "requested_bytes": 12274408,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 257256,
+        "free_calls": 220843,
+        "live_bytes_after": 154812563,
+        "live_bytes_before": 147032083,
+        "peak_live_requested_bytes": 155302750,
+        "realloc_calls": 39373,
+        "released_bytes": 46421380,
+        "requested_bytes": 54201860,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_previous_same_lane": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      },
+      "additional_retained_execute_bytes": 0,
+      "delta_from_current_pure_epochs": {
+        "setup_allocations": {
+          "alloc_calls": 49,
+          "realloc_calls": 2,
+          "requested_bytes": 20086
+        },
+        "allocations": {
+          "alloc_calls": 330,
+          "realloc_calls": 2,
+          "requested_bytes": 655632
+        }
+      },
+      "delta_from_current_batch_two": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      }
+    },
+    "overlap_two": {
+      "setup_allocations": {
+        "alloc_calls": 103805,
+        "free_calls": 61871,
+        "live_bytes_after": 147032131,
+        "live_bytes_before": 141478144,
+        "peak_live_requested_bytes": 147052291,
+        "realloc_calls": 2263,
+        "released_bytes": 6720421,
+        "requested_bytes": 12274408,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 258626,
+        "free_calls": 222182,
+        "live_bytes_after": 154829591,
+        "live_bytes_before": 147032131,
+        "peak_live_requested_bytes": 155319778,
+        "realloc_calls": 39375,
+        "released_bytes": 46969844,
+        "requested_bytes": 54767304,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_previous_same_lane": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": -146,
+          "realloc_calls": 2,
+          "requested_bytes": -28068
+        }
+      },
+      "additional_retained_execute_bytes": 7836,
+      "delta_from_current_pure_epochs": {
+        "setup_allocations": {
+          "alloc_calls": 49,
+          "realloc_calls": 2,
+          "requested_bytes": 20086
+        },
+        "allocations": {
+          "alloc_calls": 1700,
+          "realloc_calls": 4,
+          "requested_bytes": 1221076
+        }
+      },
+      "delta_from_current_batch_two": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 1370,
+          "realloc_calls": 2,
+          "requested_bytes": 565444
+        }
+      }
+    },
+    "overlap_four": {
+      "setup_allocations": {
+        "alloc_calls": 103841,
+        "free_calls": 61875,
+        "live_bytes_after": 147046823,
+        "live_bytes_before": 141478146,
+        "peak_live_requested_bytes": 147066983,
+        "realloc_calls": 2265,
+        "released_bytes": 6720537,
+        "requested_bytes": 12289214,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 258934,
+        "free_calls": 222490,
+        "live_bytes_after": 154844283,
+        "live_bytes_before": 147046823,
+        "peak_live_requested_bytes": 155334470,
+        "realloc_calls": 39375,
+        "released_bytes": 47291364,
+        "requested_bytes": 55088824,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_previous_same_lane": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": -146,
+          "realloc_calls": 2,
+          "requested_bytes": -29172
+        }
+      },
+      "additional_retained_execute_bytes": 7836,
+      "delta_from_current_pure_epochs": {
+        "setup_allocations": {
+          "alloc_calls": 85,
+          "realloc_calls": 4,
+          "requested_bytes": 34892
+        },
+        "allocations": {
+          "alloc_calls": 2008,
+          "realloc_calls": 4,
+          "requested_bytes": 1542596
+        }
+      },
+      "delta_from_current_batch_two": {
+        "setup_allocations": {
+          "alloc_calls": 36,
+          "realloc_calls": 2,
+          "requested_bytes": 14806
+        },
+        "allocations": {
+          "alloc_calls": 1678,
+          "realloc_calls": 2,
+          "requested_bytes": 886964
+        }
+      }
+    },
+    "overlap_small": {
+      "setup_allocations": {
+        "alloc_calls": 103805,
+        "free_calls": 61871,
+        "live_bytes_after": 147032134,
+        "live_bytes_before": 141478147,
+        "peak_live_requested_bytes": 147052294,
+        "realloc_calls": 2263,
+        "released_bytes": 6720421,
+        "requested_bytes": 12274408,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260091,
+        "free_calls": 223647,
+        "live_bytes_after": 154825670,
+        "live_bytes_before": 147032134,
+        "peak_live_requested_bytes": 155315857,
+        "realloc_calls": 39373,
+        "released_bytes": 47405616,
+        "requested_bytes": 55199152,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_previous_same_lane": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": -429,
+          "realloc_calls": 2,
+          "requested_bytes": -86604
+        }
+      },
+      "additional_retained_execute_bytes": 7080,
+      "delta_from_current_pure_epochs": {
+        "setup_allocations": {
+          "alloc_calls": 49,
+          "realloc_calls": 2,
+          "requested_bytes": 20086
+        },
+        "allocations": {
+          "alloc_calls": 3165,
+          "realloc_calls": 2,
+          "requested_bytes": 1652924
+        }
+      },
+      "delta_from_current_batch_two": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 2835,
+          "realloc_calls": 0,
+          "requested_bytes": 997292
+        }
+      }
+    }
+  },
+  "admitted_as_performance_improvement": false,
+  "proof": "The no-birth read window freezes original pending membership. A shadowed base key stays masked until join; reinsertion uses the live ordered overlay. The base head only advances, while minimum(base head, live head) preserves queue order. Per-fact source epochs, causes, liveness and both-endpoint invalidation retain their checks. Repeated-epoch differential and held-reader/panic-retry fixtures pass.",
+  "accounting": "Queue writes still count mutation API attempts including no-ops. Merge entries now count unique changed facts, not whole tables. Table/shadow/live/base probes count logical container operations, not internal comparisons. Growths count the delta directory, shadow sets and touched-table vector; internal BTree allocation is captured by the allocator build. changed_facts decomposes merged_entries and is not charged twice.",
+  "limits": "Additional hash/tree queries, ordered live edits, retained shadow capacities and merge work remain. One ordered writer, the epoch-end join, six query waits and four RHS waits remain. Zero copying and one allocator observation do not prove elapsed-time or scaling benefit. Parsing/export and native thread stacks are excluded."
+}

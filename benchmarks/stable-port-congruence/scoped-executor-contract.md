@@ -334,8 +334,9 @@ Before dispatch, four base containers move into immutable shared ownership:
 parent links, stable nodes, component records, and scoped queue tables. Creating
 these bases copies no container body. Current coordinator reads first consult
 their write overlays. New parent links use a small delta map; retired nodes use
-tombstones. A queue table is copied on its first write in this epoch, and
-subsequent writes reuse that copy. Component bindings are immutable within an
+tombstones. Pending queues shadow individual changed facts while retaining the
+original table maps for readers; they never copy a whole touched table.
+Component bindings are immutable within an
 epoch; retirement records a tombstone without copying them. The ordinary non-epoch path still
 reads and writes its local containers. All overlays merge back after scoped
 workers join, including when an error or panic exits the epoch.
@@ -380,14 +381,56 @@ order are scheduling-dependent, separate from deterministic work counters.
 This protocol removes the mandatory all-readers join before every ordered commit.
 It retains an epoch-end join, ordered writes and the existing source-Run fences.
 Snapshot handles, task projection, slot publication/read operations, activity
-atomics, retained results, copied queue entries and overlay merge work are costs,
+atomics, retained results, queue-overlay queries/updates and merge work are costs,
 not inferred savings. The activity counter is retained across epochs; two atomic
 updates bracket each reader lane. The sampled active-reader observation describes
 an unfinished lane, not measured CPU utilization. Strided grouping can reduce
 load balancing flexibility; fewer allocations alone do not establish a speedup.
-Copies of whole touched queue tables can be expensive; compiler/Bake selection
-must account for them. Independent source matching/publication and parallel
+All four epoch layers copy zero values, but this does not remove their overlay
+queries or merges. Compiler/Bake selection must account for these costs.
+Independent source matching/publication and parallel
 writers remain separate requirements.
+
+### Ordered pending-fact overlays
+
+The same no-birth window gives workers immutable pending membership, while the
+coordinator retains current ordered queue semantics. Each touched table has a
+shadow set of changed facts, an ordered map of current inserted/requeued facts
+with their source epochs, and a head into the original table. Shadow membership
+is monotone within an epoch: a removed base key that is requeued goes into the
+live map, even if it sorts before the current base head. The current queue head
+is the smaller of the unshadowed base head and live-map head.
+
+When the base head becomes shadowed, a range search advances it past all shadowed
+successors. It never moves backward during the epoch. Repeatedly inserting and
+removing an earlier key therefore does not repeatedly scan the deleted prefix.
+Each crossed base entry is examined at most once per epoch; each advance still
+pays a tree range search. Queue membership and source-epoch reads consult the
+shadow/live overlay before the base. Duplicate insertions advance an existing
+task's epoch only when newer; removal followed by reinsertion starts a new task,
+which may have an earlier epoch. Global heads, table causes and pending length
+retain their existing update protocol.
+
+After readers join, each unique shadowed fact causes one final base-map mutation,
+then all shadow/live membership is cleared. The per-table hash capacities and
+touched-table vector capacity remain reusable. No all-table scan is required to
+begin or merge an epoch; touched-table IDs select the deltas. No new
+producer/consumer dependency index is introduced. Ordinary synchronous readers
+and batch-prefix construction require a settled epoch; overlap workers borrow
+the frozen maps explicitly. Diagnostic membership enumeration during an epoch
+does not promise table-key order and is not used for scheduling.
+
+Queue `writes` still counts every mutation API attempt, including no-ops. Queue
+`merged_entries` now counts unique shadowed **facts**, whereas the old copy path
+counted whole table slots. These units must not be compared as a work saving.
+The report separately counts table/shadow/live/base probes, head reads,
+activations, shadow insertion attempts, live inserts/removes, successor range
+searches/steps, merge probes and retained capacity. They are logical container
+operations, not individual tree comparisons. Growths cover the delta directory,
+shadow sets and touched-table vector; allocator diagnostics capture internal
+tree allocation. Bake charges the new operations and rejects missing counters.
+`changed_facts` decomposes the already charged merge count rather than adding
+duplicate credit or cost.
 
 ### Stable signal bindings and component lifetime
 
@@ -413,15 +456,16 @@ The last retirement removes current frame/domain membership and records one
 component tombstone. A reader keeps the old component until the scope joins;
 its answer still needs current liveness checks before committing. Component IDs
 are not recycled. Shape extension and first-time binding are allowed only outside
-an epoch; Component deliberately implements neither Clone nor EpochValue, so
-ordinary slot mutation cannot silently introduce copy-on-write during a read.
+an epoch; Component deliberately does not implement Clone, and the generic slot
+copy-on-write interface has been removed. Ordinary slot mutation is rejected
+during a read epoch.
 
 Avoiding canonical writes can lengthen parent walks. Ownership binding roots,
 port/guard reads, and their parent-directory probes are charged explicitly, as
 are lifetime updates/growths. Probe counts include the terminating lookup and
 are logical directory operations: an epoch overlay may perform two physical map
 lookups for one probe. These counts do not establish a speedup or remove the
-remaining boundary migration, queue copies, ordered writer or epoch-end join.
+remaining boundary migration, queue-overlay work, ordered writer or epoch-end join.
 
 ## Gates that must remain open
 

@@ -3,11 +3,7 @@
 //! No epoch is nested and no base container is cloned to create a snapshot.
 use rustc_hash::FxHashMap as HashMap;
 use serde::Serialize;
-use std::{
-    hash::Hash,
-    ops::{Index, IndexMut},
-    sync::Arc,
-};
+use std::{hash::Hash, ops::Index, sync::Arc};
 
 #[derive(Clone, Copy, Debug, Default, Serialize)]
 pub(crate) struct Work {
@@ -120,10 +116,6 @@ impl<K: Eq + Hash, V> MapRead<'_, K, V> {
     }
 }
 
-pub(crate) trait EpochValue: Clone {
-    /// Logical values copied, not allocator bytes or a latency estimate.
-    fn copy_units(&self) -> usize;
-}
 pub(crate) struct Slots<T> {
     local: Vec<T>,
     base: Option<Arc<Vec<T>>>,
@@ -150,7 +142,7 @@ impl<T> From<Vec<T>> for Slots<T> {
 }
 impl<T> Slots<T> {
     /// Birth/shape updates are forbidden while workers retain a read epoch.
-    /// Unlike IndexMut, this path does not require or permit cloning a value.
+    /// This accessor never clones a value.
     pub fn local_mut(&mut self, index: usize) -> &mut T {
         assert!(self.base.is_none(), "slot mutation during a read epoch");
         &mut self.local[index]
@@ -218,21 +210,6 @@ impl<T> Slots<Option<T>> {
         }
     }
 }
-impl<T: EpochValue> IndexMut<usize> for Slots<T> {
-    fn index_mut(&mut self, index: usize) -> &mut T {
-        let Some(base) = &self.base else {
-            return &mut self.local[index];
-        };
-        self.work.writes += 1;
-        if !self.changes.contains_key(&index) {
-            let before = self.changes.capacity();
-            self.work.copied_units += base[index].copy_units() as u64;
-            self.changes.insert(index, base[index].clone());
-            self.work.growths += u64::from(self.changes.capacity() != before);
-        }
-        self.changes.get_mut(&index).unwrap()
-    }
-}
 pub(crate) struct SlotsRead<'a, T> {
     pub base: &'a [T],
     pub changes: Option<&'a HashMap<usize, T>>,
@@ -271,29 +248,26 @@ mod tests {
         *slots.local_mut(0) = Some(NonClone(8));
         assert_eq!(slots[0].as_ref().unwrap().0, 8);
     }
-    impl EpochValue for Vec<u64> {
-        fn copy_units(&self) -> usize {
-            self.len()
-        }
-    }
     #[test]
-    fn snapshots_move_bases_and_copy_only_written_slots() {
+    fn snapshots_move_slot_storage_and_reject_in_epoch_mutation() {
         let mut slots: Slots<Vec<u64>> = vec![vec![1, 2, 3]; 128].into();
         let original = slots.reader().base.as_ptr();
         let snapshot = slots.freeze();
         assert_eq!(snapshot.as_ptr(), original);
-        slots[7][0] = 9;
-        slots[7][1] = 8;
+        let failed = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            slots.local_mut(7)[0] = 9;
+        }));
+        assert!(failed.is_err());
         assert_eq!(snapshot[7], [1, 2, 3]);
-        assert_eq!(slots[7], [9, 8, 3]);
         drop(snapshot);
         let work = slots.thaw();
         assert_eq!(
             (work.writes, work.copied_units, work.merged_entries),
-            (2, 3, 1)
+            (0, 0, 0)
         );
         assert_eq!(slots.reader().base.as_ptr(), original);
-        assert_eq!(slots[7], [9, 8, 3]);
+        slots.local_mut(7)[0] = 9;
+        assert_eq!(slots[7], [9, 2, 3]);
     }
     #[test]
     fn retired_nodes_remain_in_the_snapshot_only_until_readers_join() {

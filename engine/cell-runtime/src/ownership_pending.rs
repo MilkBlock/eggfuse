@@ -2,11 +2,8 @@
 //! Scoped completion indexes only each nonempty table's head, not every pair
 //! of producers and consumers. Membership remains in one queue per fact.
 use super::*;
-impl crate::read_epoch::EpochValue for BTreeMap<FactRef, u64> {
-    fn copy_units(&self) -> usize {
-        self.len()
-    }
-}
+#[path = "pending_epoch.rs"]
+mod epoch;
 
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Counts {
@@ -26,7 +23,7 @@ pub(in crate::graph) struct Counts {
 }
 pub(in crate::graph) struct Pending {
     flat: Option<BTreeSet<FactRef>>,
-    tables: crate::read_epoch::Slots<BTreeMap<FactRef, u64>>,
+    tables: epoch::Tables,
     heads: BTreeSet<(FactRef, usize)>,
     epochs: Vec<Option<u64>>,
     causes: Option<Vec<smallvec::SmallVec<[u64; 2]>>>,
@@ -39,25 +36,19 @@ pub(in crate::graph) struct Pending {
 #[derive(Clone, Copy)]
 pub(in crate::graph) struct ReadView<'a> {
     flat: Option<&'a BTreeSet<FactRef>>,
-    tables: crate::read_epoch::SlotsRead<'a, BTreeMap<FactRef, u64>>,
+    tables: &'a [BTreeMap<FactRef, u64>],
 }
 impl ReadView<'_> {
     pub fn contains(&self, table: usize, fact: &FactRef) -> bool {
         self.flat.map_or_else(
-            || self.tables.get(table).unwrap().contains_key(fact),
+            || self.tables[table].contains_key(fact),
             |s| s.contains(fact),
         )
     }
 }
 impl<'a> ReadView<'a> {
     pub fn frozen(tables: &'a [BTreeMap<FactRef, u64>]) -> Self {
-        Self {
-            flat: None,
-            tables: crate::read_epoch::SlotsRead {
-                base: tables,
-                changes: None,
-            },
-        }
+        Self { flat: None, tables }
     }
 }
 impl Default for Pending {
@@ -85,8 +76,11 @@ impl Pending {
     pub fn reader(&self) -> ReadView<'_> {
         ReadView {
             flat: self.flat.as_ref(),
-            tables: self.tables.reader(),
+            tables: self.tables.plain(),
         }
+    }
+    pub fn epoch_report(&self) -> J {
+        self.tables.report()
     }
     pub fn enable_scopes(&mut self, n: usize) {
         assert!(
@@ -148,10 +142,10 @@ impl Pending {
     pub fn contains(&self, table: usize, f: &FactRef) -> bool {
         self.flat
             .as_ref()
-            .map_or_else(|| self.tables[table].contains_key(f), |s| s.contains(f))
+            .map_or_else(|| self.tables.get(table, f).is_some(), |s| s.contains(f))
     }
     fn refresh(&mut self, table: usize, before: Option<FactRef>) {
-        let after = self.tables[table].first_key_value().map(|(&f, _)| f);
+        let after = self.tables.first(table);
         if after != before {
             if let Some(old) = before {
                 self.heads.remove(&(old, table));
@@ -172,7 +166,7 @@ impl Pending {
         if let Some(flat) = &mut self.flat {
             return flat.insert(f);
         }
-        let before = self.tables[table].first_key_value().map(|(&f, _)| f);
+        let before = self.tables.first(table);
         assert!(
             self.mixed_epochs || self.epochs[table].is_none_or(|e| e == epoch),
             "uncompleted table crossed a dependent source epoch"
@@ -180,19 +174,8 @@ impl Pending {
         self.counts.mixed_epoch_inserts +=
             u64::from(self.epochs[table].is_some_and(|e| e != epoch));
         self.epochs[table].get_or_insert(epoch);
-        let added = match self.tables[table].entry(f) {
-            std::collections::btree_map::Entry::Vacant(entry) => {
-                entry.insert(epoch);
-                true
-            }
-            std::collections::btree_map::Entry::Occupied(mut entry) => {
-                if epoch > *entry.get() {
-                    self.counts.advanced_task_epochs += 1;
-                    *entry.get_mut() = epoch;
-                }
-                false
-            }
-        };
+        let (added, advanced) = self.tables.insert(table, f, epoch);
+        self.counts.advanced_task_epochs += u64::from(advanced);
         self.len += usize::from(added);
         self.refresh(table, before);
         added
@@ -201,8 +184,8 @@ impl Pending {
         if let Some(flat) = &mut self.flat {
             return flat.remove(f);
         }
-        let before = self.tables[table].first_key_value().map(|(&f, _)| f);
-        let removed = self.tables[table].remove(f).is_some();
+        let before = self.tables.first(table);
+        let removed = self.tables.remove(table, f);
         self.len -= usize::from(removed);
         self.refresh(table, before);
         removed
@@ -224,7 +207,7 @@ impl Pending {
             assert!(flat.remove(&f));
             return None;
         }
-        let epoch = self.tables[table].get(&f).copied();
+        let epoch = self.tables.get(table, &f);
         assert!(self.remove(table, &f));
         epoch
     }
@@ -232,7 +215,7 @@ impl Pending {
         self.flat
             .iter()
             .flat_map(|s| s.iter())
-            .chain(self.tables.iter().flat_map(|s| s.keys()))
+            .chain(self.tables.keys())
     }
     /// A bounded, non-consuming merge of table queues. Only active heads and
     /// successors needed for this prefix are visited; no table-body scan.
@@ -249,7 +232,6 @@ impl Pending {
         u64,
         usize,
     ) {
-        use std::ops::Bound::{Excluded, Unbounded};
         assert!(self.scoped());
         let mut heads = smallvec::SmallVec::<[(FactRef, usize); 16]>::new();
         let mut visits = 0;
@@ -279,7 +261,7 @@ impl Pending {
             out.push((f, table));
             if out.len() < limit {
                 successors += 1;
-                if let Some((&next, _)) = self.tables[table].range((Excluded(f), Unbounded)).next()
+                if let Some(next) = self.tables.successor(table, f)
                     && before.is_none_or(|d| Dependency::Fact(next) <= d)
                 {
                     heads.push((next, table));
@@ -294,5 +276,138 @@ impl Pending {
     }
     pub fn active_tables(&self) -> impl Iterator<Item = usize> + '_ {
         self.heads.iter().map(|&(_, t)| t)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn fact(n: u32) -> FactRef {
+        FactRef { cell: n, op: n % 3 }
+    }
+    fn pending() -> Pending {
+        let mut p = Pending::default();
+        p.enable_scopes(3);
+        p.enable_mixed_epochs();
+        p.enable_causes();
+        p
+    }
+    #[test]
+    fn queue_snapshot_preserves_membership_while_live_epochs_advance() {
+        let mut p = pending();
+        p.insert(0, fact(3), 1);
+        p.insert(0, fact(5), 2);
+        p.insert(1, fact(1), 3);
+        p.cause(0, 100);
+        let snapshot = p.freeze();
+        let reader = ReadView::frozen(&snapshot);
+        assert!(p.remove(0, &fact(3)));
+        assert!(!p.contains(0, &fact(3)));
+        assert!(reader.contains(0, &fact(3)));
+        assert!(p.insert(0, fact(3), 9));
+        assert!(!p.insert(0, fact(5), 8));
+        assert!(!p.insert(0, fact(5), 4));
+        assert_eq!(p.first(Some(&[true, false, false])), Some((fact(3), 0)));
+        assert_eq!(p.pop(fact(3), 0), Some(9));
+        // Re-enqueue after removal starts a new task, even at an earlier epoch.
+        assert!(p.insert(0, fact(3), 2));
+        assert_eq!(p.pop(fact(3), 0), Some(2));
+        assert_eq!(p.pop(fact(5), 0), Some(8));
+        assert!(p.causes(0).is_empty());
+        assert_eq!(snapshot[0][&fact(3)], 1);
+        assert_eq!(snapshot[0][&fact(5)], 2);
+        drop(snapshot);
+        let work = p.thaw();
+        assert_eq!(work.copied_units, 0);
+        assert_eq!(work.merged_entries, 2);
+        assert_eq!(p.first(None), Some((fact(1), 1)));
+        assert_eq!(p.pop(fact(1), 1), Some(3));
+        assert!(p.is_empty());
+    }
+    #[test]
+    fn epoch_queue_deltas_match_ordered_reference_through_reinsertion() {
+        let (mut live, mut reference) = (pending(), pending());
+        for n in 0..120 {
+            live.insert(n as usize % 3, fact(n), n as u64 % 5);
+            reference.insert(n as usize % 3, fact(n), n as u64 % 5);
+        }
+        let original = live.tables.plain().as_ptr();
+        let snapshot = live.freeze();
+        assert_eq!(snapshot.as_ptr(), original);
+        let mut seed = 7u64;
+        for step in 0..2000 {
+            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
+            let n = ((seed >> 32) % 180) as u32;
+            let table = n as usize % 3;
+            match seed % 4 {
+                0 | 1 => {
+                    let epoch = (seed >> 16) % 11;
+                    assert_eq!(
+                        live.insert(table, fact(n), epoch),
+                        reference.insert(table, fact(n), epoch)
+                    );
+                }
+                2 => assert_eq!(
+                    live.remove(table, &fact(n)),
+                    reference.remove(table, &fact(n))
+                ),
+                _ => {
+                    let mask = [true, step % 2 == 0, step % 3 == 0];
+                    let first = reference.first(Some(&mask));
+                    assert_eq!(live.first(Some(&mask)), first);
+                    if let Some((f, t)) = first {
+                        assert_eq!(live.pop(f, t), reference.pop(f, t));
+                    }
+                }
+            }
+            assert_eq!(live.len(), reference.len());
+            assert_eq!(live.first(None), reference.first(None));
+            assert_eq!(
+                live.contains(table, &fact(n)),
+                reference.contains(table, &fact(n))
+            );
+            assert_eq!(
+                live.iter().copied().collect::<BTreeSet<_>>(),
+                reference.iter().copied().collect()
+            );
+        }
+        assert_eq!(snapshot.iter().map(BTreeMap::len).sum::<usize>(), 120);
+        drop(snapshot);
+        assert_eq!(live.thaw().copied_units, 0);
+        assert_eq!(live.tables.plain().as_ptr(), original);
+        assert_eq!(live.tables.plain(), reference.tables.plain());
+        assert_eq!(
+            serde_json::to_value(&live.counts).unwrap(),
+            serde_json::to_value(&reference.counts).unwrap()
+        );
+        assert_eq!(
+            live.prefix_before(None, None, 16),
+            reference.prefix_before(None, None, 16)
+        );
+        // Retained delta capacities must carry no membership or old head into
+        // a later epoch, including after ordinary writes between epochs.
+        for round in 0..3 {
+            let f = fact(200 + round);
+            live.insert(0, f, 1);
+            reference.insert(0, f, 1);
+            let expected = reference.tables.plain().to_vec();
+            let snapshot = live.freeze();
+            for n in 0..40 {
+                let table = n as usize % 3;
+                assert_eq!(
+                    live.remove(table, &fact(n)),
+                    reference.remove(table, &fact(n))
+                );
+                assert_eq!(
+                    live.insert(table, fact(n), round as u64),
+                    reference.insert(table, fact(n), round as u64)
+                );
+                assert_eq!(live.first(None), reference.first(None));
+            }
+            assert_eq!(*snapshot, expected);
+            drop(snapshot);
+            assert_eq!(live.thaw().copied_units, 0);
+            assert_eq!(live.tables.plain(), reference.tables.plain());
+        }
     }
 }

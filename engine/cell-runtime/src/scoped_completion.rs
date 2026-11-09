@@ -173,6 +173,7 @@ impl Graph {
         };
         let pending = &self.ownership.as_ref().unwrap().pending;
         json!({"enabled":true,"plan":plan.report(),"stats":pending.counts,
+            "queue_overlay":pending.epoch_report(),
             "pending_tasks":self.pending_completion_tasks(),
             "pending_owned_tables":pending.active_tables().collect::<Vec<_>>(),
             "scope":"compiler-scoped Graph completion; Executor mode reported separately"})

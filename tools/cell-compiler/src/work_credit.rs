@@ -146,6 +146,13 @@ impl Work {
             } else { 0 };
             work.insert(key,value);
         }
+        for field in ["table_probes", "shadow_probes", "live_probes", "base_probes", "base_head_reads", "overlay_head_reads", "table_activations", "shadow_insert_attempts", "live_inserts", "live_removes", "base_successor_ranges", "base_successor_steps", "merge_live_probes"] {
+            let value = if report["scoped_completion"]["enabled"] == true {
+                report["scoped_completion"]["queue_overlay"]["stats"][field].as_u64()
+                    .ok_or_else(||format!("missing queue overlay work {field}"))?
+            } else { 0 };
+            work.insert(format!("scoped_completion/queue_overlay/{field}"), value);
+        }
         for field in ["attempts", "pending_checks", "order_checks", "anchor_reads", "signal_visits", "static_steps", "site_checks", "operator_checks", "publications"] {
             let proof = &report["stable_ports"]["unique_publication"];
             let value = if proof["enabled"] == true {
@@ -246,7 +253,11 @@ mod tests {
         assert!(overlap.0["cell_ownership/stats/signal_parent_probes"] > 0);
         assert_eq!(overlap.0["stable_ports/completion_batches/overlap/channel_builds"], 0);
         assert!(overlap.0["stable_ports/completion_batches/overlap/slot_collection_reads"] > 0);
+        assert!(overlap.0["scoped_completion/queue_overlay/shadow_probes"] > 0);
         assert!(serial.savings(&overlap).0 < 0);
+        let mut missing_queue = overlap_report.clone();
+        missing_queue["scoped_completion"]["queue_overlay"]["stats"].as_object_mut().unwrap().remove("base_successor_steps");
+        assert!(Work::read(&missing_queue).unwrap_err().contains("missing queue overlay work base_successor_steps"));
         overlap_report["stable_ports"]["completion_batches"]["overlap"]["stats"]["overlay"].as_object_mut().unwrap().remove("copied_units");
         assert!(Work::read(&overlap_report).unwrap_err().contains("missing overlay work copied_units"));
         after["stable_ports"]["parallel_guards"]["stats"]["prepared_candidates"] = 0.into();

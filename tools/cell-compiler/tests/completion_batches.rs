@@ -69,6 +69,10 @@ fn compare_mode(source: &str, workers: usize, limit: usize, overlap: bool) -> se
             report["stats"]["committed_tasks"]
         );
         assert_eq!(slots["activity_allocations"], 1);
+        assert_eq!(
+            slots["overlay"]["copied_units"], 0,
+            "all epoch bases must stay immutable without whole-slot copies"
+        );
         let components = &report["overlap"]["stats"]["layers"]["components"];
         assert_eq!(
             components["copied_units"], 0,
@@ -408,12 +412,7 @@ fn an_effective_union_commits_while_a_snapshot_reader_is_held() {
         components["merged_entries"].as_u64().unwrap() > 0,
         "the held-reader fixture must actually retire components"
     );
-    assert!(
-        report["overlap"]["stats"]["overlay"]["copied_units"]
-            .as_u64()
-            .unwrap()
-            > 0
-    );
+    assert_eq!(report["overlap"]["stats"]["overlay"]["copied_units"], 0);
     parallel.graph.stable_port_report();
     parallel.graph.ownership_report();
 }
