@@ -283,7 +283,7 @@ fn accepts(m: &Member, d: &Tuple, p: &Row) -> bool {
     })
 }
 impl Group {
-    fn emit(&mut self, d: &Tuple, p: &Row, spine: &crate::stage_spine::Programs) {
+    fn emit(&mut self, d: &Tuple, p: &Row, g: &Graph, spine: &crate::stage_spine::Programs) {
         if d.port(self.plan.driver_key) != &p.values[self.plan.peer_key] {
             return;
         }
@@ -295,11 +295,11 @@ impl Group {
                 std::cmp::Ordering::Greater => branch.greater,
             };
             self.counts.comparison_dispatches += 1;
-            self.emit_member(member, d, p, spine);
+            self.emit_member(member, d, p, g, spine);
         } else {
             for i in 0..self.plan.members.len() {
                 if accepts(&self.plan.members[i], d, p) {
-                    self.emit_member(i, d, p, spine);
+                    self.emit_member(i, d, p, g, spine);
                 }
             }
         }
@@ -309,6 +309,7 @@ impl Group {
         ordinal: usize,
         d: &Tuple,
         p: &Row,
+        g: &Graph,
         spine: &crate::stage_spine::Programs,
     ) {
         let m = &self.plan.members[ordinal];
@@ -317,7 +318,7 @@ impl Group {
             .iter()
             .map(|&(slot, port)| (slot, field(port, d, p).clone()))
             .collect();
-        let mut known = spine.alias_query_facts(m.rule);
+        let mut known = spine.alias_query_facts(g, m.rule);
         known.record(m.driver_atom, Some(d.witness));
         known.record(m.peer_atom, Some(p.witness));
         self.streams[ordinal].as_mut().unwrap().push(Binding {
@@ -385,7 +386,7 @@ impl Group {
                     if let Some(p) = g.row(w)?
                         && !p.hidden
                     {
-                        self.emit(&d, &p, spine);
+                        self.emit(&d, &p, g, spine);
                     }
                 }
             }
@@ -400,7 +401,7 @@ impl Group {
                     self.counts.candidate_visits += rows.len() as u64;
                     for &i in rows {
                         if dir.rows[&i].epoch < watermark {
-                            self.emit(&dir.rows[&i], &p, spine);
+                            self.emit(&dir.rows[&i], &p, g, spine);
                         } else {
                             self.counts.epoch_skips += 1;
                         }
@@ -418,7 +419,7 @@ impl Group {
                     for &w in rows.iter() {
                         if g.visible_epoch(w).is_some_and(|e| e < watermark) {
                             if let Some(d) = g.row(w)? {
-                                self.emit(&Tuple::flat(&d), &p, spine);
+                                self.emit(&Tuple::flat(&d), &p, g, spine);
                             }
                         } else {
                             self.counts.epoch_skips += 1;

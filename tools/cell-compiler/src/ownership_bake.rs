@@ -10,10 +10,15 @@ use serde_json::json;
 use std::{fs, path::Path};
 pub(crate) fn run(args: Vec<String>) -> Result<()> {
     if args.iter().any(|s| s == "--help") {
-        println!("bake-cell-ownership --program FILE [--profile FILE] --output NEW_DIR");
+        println!("bake-cell-ownership --program FILE [--profile FILE] [--query-classes true|false] --output NEW_DIR");
         return Ok(());
     }
-    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile"])?;
+    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile", "--query-classes"])?;
+    let classes = match opts.get("--query-classes").map(String::as_str) {
+        None | Some("false") => false,
+        Some("true") => true,
+        _ => return Err("--query-classes must be true or false".into()),
+    };
     let mut raw = super::read(Path::new(
         opts.get("--program").ok_or("--program required")?,
     ))?;
@@ -32,6 +37,18 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let out = Path::new(opts.get("--output").ok_or("--output required")?);
     let markers = p.cell_ownership.artifact(&p);
     let mut raw = p.artifact.clone();
+    if opts.get("--query-classes").is_some_and(|s| s == "false") {
+        if let Some(fragments) = raw["ownership_fragments"].as_object_mut() {
+            fragments.remove("query_classes");
+        }
+    }
+    if classes {
+        if raw.get("ownership_fragments").is_none() {
+            raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+                "source":composition::source_digest(&raw),"fragments":[]});
+        }
+        raw["ownership_fragments"]["query_classes"] = p.bake_query_classes()?;
+    }
     raw.as_object_mut().unwrap().remove("sha256");
     raw["ownership_markers"] = markers.clone();
     raw["sha256"] = artifact_digest(&raw).into();
@@ -49,6 +66,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         "composition_initial_shapes":p.cell_ownership.programs.len(),
         "composition_baked_shapes":p.cell_ownership.composition.shapes.len(),
         "composition_transitions":p.cell_ownership.composition.transitions.len(),
+        "query_classes":checked.cell_ownership.query_classes.as_ref().map(|p|p.report()),
         "composition_input_sources":p.cell_ownership.composition.sources.iter().map(Vec::len).sum::<usize>()}),
     )?;
     Ok(())

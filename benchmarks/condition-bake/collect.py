@@ -7,6 +7,7 @@ import runpy
 import statistics
 
 common = runpy.run_path(str(Path(__file__).parents[1] / 'raytrace-parallel' / 'collect.py'))
+timing_helpers = runpy.run_path(str(Path(__file__).parents[1] / 'raytrace-parallel' / 'measure.py'))
 
 
 def collect(root, output, reference):
@@ -16,6 +17,7 @@ def collect(root, output, reference):
     result = {key: raw[key] for key in ('scope', 'repeat', 'warmups', 'started_at_utc',
                                        'finished_at_utc', 'semantic_reference', 'process_wait', 'execution_order')}
     result['reference'] = reference
+    result['timing_accounting'] = timing_helpers['TIMING_ACCOUNTING']
     result['lanes'] = {}
     result['comparisons'] = {}
     fast_names = sorted(set(raw['lanes']) & {'fast_archive', 'archived-fast', 'fast_archived'})
@@ -28,11 +30,12 @@ def collect(root, output, reference):
         'use measured inference and whole-process time.')
     for name, lane in raw['lanes'].items():
         rows = sorted(lane['samples'], key=lambda row: row['iteration'])
+        for row in rows:
+            timing_helpers['add_timing_residuals'](row)
         assert [row['iteration'] for row in rows] == list(range(raw['repeat']))
         assert all(all(row[k] == v for k, v in raw['semantic_reference'].items()) for row in rows)
         timing = {key: common['distribution']([row[key] for row in rows]) for key in
-                  ('inference_seconds', 'process_wall_seconds', 'load_seconds', 'setup_seconds',
-                   'export_seconds', 'peak_rss_through_inference_bytes')
+                  timing_helpers['TIMING_FIELDS']
                   if all(key in row for row in rows)}
         counter_groups = ('key_lookup_calls', 'cell_ownership_stats', 'stable_ports_stats',
                           'birth_absence_directory', 'stats')
@@ -42,11 +45,12 @@ def collect(root, output, reference):
                 assert row.get(key) == expected, (name, row['iteration'], key, 'counter mismatch')
         result['lanes'][name] = {key: lane[key] for key in ('args', 'runtime_sha256', 'program_file_sha256')}
         result['lanes'][name].update(timing=timing, counters=counters,
+            report_timing_available=all(isinstance(row.get('report_seconds'), (int, float)) for row in rows),
             deterministic_counter_check={'groups': counter_groups, 'measured_samples': len(rows),
                 'warmup_samples': len(lane['warmup_samples']), 'all_equal': True},
             phases={key: statistics.median(row['phases'][key] for row in rows) for key in rows[0]['phases']},
-            samples=[{key: row[key] for key in ('iteration', 'inference_seconds', 'process_wall_seconds',
-                'process_user_seconds', 'process_system_seconds')} for row in rows])
+            samples=[{key: row[key] for key in ('iteration', 'process_user_seconds', 'process_system_seconds',
+                *timing_helpers['TIMING_FIELDS']) if key in row} for row in rows])
         if name != reference:
             before = sorted(raw['lanes'][reference]['samples'], key=lambda row: row['iteration'])
             result['comparisons'][name] = {key: common['paired_ratio'](

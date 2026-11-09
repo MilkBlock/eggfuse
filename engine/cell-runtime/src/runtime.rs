@@ -282,7 +282,7 @@ impl Executor {
         let mut query_indexes = QueryIndexes::default();
         query_indexes.track_changes = sieve.enabled;
         let mut stage_spine = crate::stage_spine::Programs::new(&graph.program);
-        if graph.ownership_enabled() {stage_spine.enable_owner_queries(&graph.program);}
+        if graph.ownership_enabled() {stage_spine.enable_owner_queries();}
         stage_spine.audit_receipts = audit;
         #[cfg(feature = "sparse-cells")]
         {
@@ -1133,7 +1133,7 @@ impl Executor {
         let query_facts = if probe {
             QueryFacts::None
         } else {
-            self.stage_spine.alias_query_facts(rid)
+            self.stage_spine.alias_query_facts(&self.graph, rid)
         };
         let scheduled_entry = !probe && self.entry_schedule.accepts(rid);
         // A necessary join summary can reject an empty domain before either route.

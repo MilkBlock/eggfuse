@@ -1,0 +1,16 @@
+{
+  "scope": "standalone Cell CPU; adaptive normal pilot and parent-run checks",
+  "workspace": {
+    "command": "cargo test --locked --workspace --all-features -j 2",
+    "log": "out/condition-bake/query-class-adaptive-workspace.log",
+    "sha256": "94860949b27423f2620e7e45ea050b04be40a5649fae4d9b68f0b93389ce83f2",
+    "passed": 344,
+    "ignored": 4
+  },
+  "normal_state_and_schedule_equal": true,
+  "normal_counter_groups_equal_within_each_lane": true,
+  "normal_performance_gate_passed": false,
+  "gate_reason": "sum-bits whole-process paired interval crosses one; archived-fast is faster on both workloads",
+  "full_ordered_and_allocation_audit": "not executed; prepared manifests unused because bounded lookahead was withdrawn",
+  "candidate_status": "withdrawn bounded-lookahead ablation; report.contains retained independently"
+}

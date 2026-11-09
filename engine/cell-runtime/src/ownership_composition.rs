@@ -19,6 +19,9 @@ pub struct Shape {
     pub programs: Vec<usize>,
     pub ports: Vec<Rc<Vec<usize>>>,
     pub signals: Vec<Rc<Vec<Instruction>>>,
+    /// First introduction of each shared symbol. Appending preserves origins.
+    #[serde(skip)]
+    pub origins: Vec<(usize, usize)>,
     pub last_substitutions: usize,
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq, Hash)]
@@ -52,6 +55,7 @@ impl Shape {
                 } else {
                     let new = shape.signals.len();
                     shape.signals.push(Rc::new(Vec::new()));
+                    shape.origins.push((frame, local));
                     new
                 };
             ports.push(symbol);
@@ -471,6 +475,14 @@ pub(super) struct Runtime {
     pub columns: Vec<usize>,
 }
 impl Runtime {
+    fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
+        let class = plan.query_classes.as_ref().map_or(0, |classes| {
+            let c = self.components[component as usize].as_ref().unwrap();
+            let (frame, local) = self.shapes[c.shape].as_ref().unwrap().origins[symbol];
+            classes.symbols[self.frames[&c.frames[frame]].code][local]
+        });
+        Signal { class, component, symbol }
+    }
     pub fn new(p: &Plan) -> Self {
         Self {
             components: Default::default(),
@@ -759,13 +771,16 @@ impl Graph {
         );
     }
     pub(super) fn composed_signal(&self, cell: u32, local: usize) -> Signal {
+        let port = self.composed_port(cell, local);
+        self.ownership.as_ref().unwrap().composition.signal(
+            &self.program.cell_ownership, port.component, port.symbol)
+    }
+    pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::PortRef {
         let m = &self.ownership.as_ref().unwrap().composition;
         let f = m.frames[&cell];
         let shape = m.components[f.component as usize].as_ref().unwrap().shape;
-        Signal {
-            component: f.component,
-            symbol: m.shapes[shape].as_ref().unwrap().ports[f.ordinal][local],
-        }
+        ports::PortRef { component: f.component,
+            symbol: m.shapes[shape].as_ref().unwrap().ports[f.ordinal][local] }
     }
     pub(super) fn composition_retire_fact(&mut self, cell: u32) {
         let m = self.ownership.as_mut().unwrap();
@@ -780,10 +795,7 @@ impl Graph {
                 m.stats.component_signal_retire_visits += 1;
                 let Some(id) = id else { continue };
                 let id = m.stats.signal_root(&self.parents, *id);
-                let signal = Signal {
-                    component: f.component,
-                    symbol,
-                };
+                let signal = m.composition.signal(&self.program.cell_ownership, f.component, symbol);
                 m.stats.signal_bindings_live -= 1;
                 m.stats.signal_bindings_retired += 1;
                 if let Some(set) = m.boundaries.get_mut(&id) {

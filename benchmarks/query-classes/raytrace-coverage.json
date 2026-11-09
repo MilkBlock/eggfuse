@@ -1,0 +1,19 @@
+{
+  "scope": "typed compiler coverage, no workload execution or timing",
+  "templates": 983,
+  "covered_bodies": 15254,
+  "covered_tables": 241,
+  "entry_ports": 1454,
+  "shared_port_programs": 376,
+  "template_signal_steps": 42268,
+  "composition_initial_shapes": 376,
+  "composition_baked_shapes": 625,
+  "composition_transitions": 264,
+  "query_classes": {
+    "classes": 583,
+    "mask_words": 4074,
+    "symbol_slots": 15666,
+    "all_operator_slots": 0
+  },
+  "composition_input_sources": 1202
+}

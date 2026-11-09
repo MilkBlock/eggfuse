@@ -81,6 +81,16 @@ internal ownership across stages, and reports coverage and remaining maintenance
 All eligible live scalar bodies are covered, but the final CPU campaign regresses
 25.7% / 52.6% on sum-bits / Raytrace: coarse owner traversal remains too expensive.
 
+The experimental `bake-cell-ownership --query-classes true` option compiles
+[possible operator use across frozen continuations](benchmarks/stable-port-congruence/query-class-design.md).
+The runtime checks the certificate, then skips incompatible groups in its
+existing boundary index before visiting instances. It retains exact Eq,
+lifetime and ordered-publication checks. Training uses the complete unfiltered
+path; absent certificates retain ordinary lookup. This is an opt-in standalone
+Cell CPU feature. The [final campaign](benchmarks/query-classes/final/README.md)
+improves inference against the preceding shared-code experiment, but does not
+establish a whole-process improvement on both workloads or beat the fastest path.
+
 [Shared symbolic repair slices](benchmarks/ownership-slices/README.md) replace
 that owner traversal with compiled port programs and incremental boundary bindings.
 The sum-bits audit uses 2,098 port checks versus 3,773 in the ordinary backend

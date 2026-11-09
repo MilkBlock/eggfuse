@@ -1,0 +1,798 @@
+{
+  "scope": "standalone Cell CPU; real process wall and inference timing; not native egglog",
+  "repeat": 2,
+  "warmups": 0,
+  "started_at_utc": "2026-11-09T06:09:33.274188+00:00",
+  "finished_at_utc": "2026-11-09T06:11:13.313146+00:00",
+  "semantic_reference": {
+    "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+    "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+  },
+  "process_wait": "blocking waitpid with a separate timeout watchdog; no polling sleeps",
+  "execution_order": [
+    {
+      "iteration": 0,
+      "lanes": [
+        "baseline",
+        "final",
+        "fast_archived"
+      ]
+    },
+    {
+      "iteration": 1,
+      "lanes": [
+        "baseline",
+        "fast_archived",
+        "final"
+      ]
+    }
+  ],
+  "reference": "baseline",
+  "timing_accounting": {
+    "process_unattributed_seconds": "wall minus load, setup, inference and export; includes report construction, output, teardown and other unmeasured intervals",
+    "report_seconds": "reported runtime.report and report additions before export; absent for old binaries, never imputed as zero",
+    "process_after_report_residual_seconds": "process_unattributed_seconds minus measured report_seconds; only available when report is measured; includes serialization/output, teardown and other unmeasured intervals",
+    "interpretation": "Residuals are differences of measured intervals, not isolated measurements of serialization or drop; medians of separate phases need not sum to median wall"
+  },
+  "lanes": {
+    "baseline": {
+      "args": [
+        "--local-congruence"
+      ],
+      "runtime_sha256": "a3459621655df175206708da53f6bdfef1011b87f476e24aee534433d54cb0ff",
+      "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+      "timing": {
+        "inference_seconds": {
+          "median": 13.627478354,
+          "minimum": 13.497516458,
+          "maximum": 13.75744025,
+          "median_absolute_deviation": 0.1299618960000002
+        },
+        "process_wall_seconds": {
+          "median": 23.183502750005573,
+          "minimum": 23.122665541013703,
+          "maximum": 23.244339958997443,
+          "median_absolute_deviation": 0.060837208991870284
+        },
+        "load_seconds": {
+          "median": 0.538857208,
+          "minimum": 0.535299708,
+          "maximum": 0.542414708,
+          "median_absolute_deviation": 0.0035574999999999912
+        },
+        "setup_seconds": {
+          "median": 0.0048538750000000006,
+          "minimum": 0.004317625,
+          "maximum": 0.005390125,
+          "median_absolute_deviation": 0.0005362499999999998
+        },
+        "export_seconds": {
+          "median": 1.773063,
+          "minimum": 1.7598319999999998,
+          "maximum": 1.786294,
+          "median_absolute_deviation": 0.013231000000000104
+        },
+        "process_unattributed_seconds": {
+          "median": 7.239250313005572,
+          "minimum": 7.160988375997441,
+          "maximum": 7.317512250013703,
+          "median_absolute_deviation": 0.078261937008131
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 2153693184.0,
+          "minimum": 2152677376,
+          "maximum": 2154708992,
+          "median_absolute_deviation": 1015808.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4330682,
+        "cell_ownership_stats": {
+          "adopted_existing": 128,
+          "body_visits": 0,
+          "boundary_body_reads": 0,
+          "boundary_edges_created": 1662134,
+          "boundary_edges_removed": 442112,
+          "boundary_insert_attempts": 1662134,
+          "boundary_live": 1220022,
+          "boundary_owner_routes": 0,
+          "boundary_ports_seen": 1383071,
+          "boundary_probes": 226523,
+          "boundary_rebuilds": 0,
+          "boundary_signal_routes": 247952,
+          "carried_components": 1995198565,
+          "carried_facts": 3493147562,
+          "changed_ports": 0,
+          "coalesced_slice_steps": 21865,
+          "component_lifetime_growths": 18,
+          "component_lifetime_updates": 982208,
+          "component_signal_retire_visits": 292166,
+          "components_created": 433073,
+          "components_live": 372967,
+          "components_retired": 60106,
+          "composition_baked_hits": 153985,
+          "composition_cache_hits": 153985,
+          "composition_capacity_cuts": 212824,
+          "composition_cross_stage_joins": 153985,
+          "composition_entry_reads": 1216985,
+          "composition_frames": 587058,
+          "composition_materializations": 0,
+          "composition_missing_sources": 0,
+          "composition_requests": 153985,
+          "composition_shape_builds": 0,
+          "composition_shape_steps": 0,
+          "composition_substituted_ports": 209096,
+          "composition_transition_probes": 1004161,
+          "composition_unbaked_fallbacks": 850176,
+          "dispatch_comparisons": 844988,
+          "dispatch_heap_pops": 452736,
+          "dispatch_heap_pushes": 452736,
+          "dispatch_scratch_bytes": 8224,
+          "dispatch_scratch_growths": 8,
+          "domain_body_visits": 0,
+          "domain_column_checks": 0,
+          "domain_legacy_fact_probes": 0,
+          "domain_legacy_visits": 5457044,
+          "domain_owner_visits": 0,
+          "domain_planning_calls": 1962583,
+          "domain_planning_signals": 0,
+          "domain_planning_slice_steps": 0,
+          "domain_queries": 1962583,
+          "domain_results": 6235405,
+          "domain_route_probes": 55413157,
+          "domain_signal_visits": 55413157,
+          "domain_slice_steps": 63490061,
+          "domain_type_guards": 63490061,
+          "domain_type_rejections": 53395879,
+          "inactive_slice_steps": 196519,
+          "internal_ports_seen": 1029184,
+          "key_completions": 0,
+          "key_enqueues": 224478,
+          "marker_anchor_reads": 0,
+          "marker_entries": 903027,
+          "marker_union_requests": 115423,
+          "native_owner_routes": 0,
+          "native_signal_routes": 188946,
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "owned_retirements": 161769,
+          "owner_visits": 0,
+          "port_checks": 0,
+          "result_publications": 182870,
+          "retired_result_boundaries": 0,
+          "row_copies": 0,
+          "signal_activations": 436898,
+          "signal_binding_reads": 2412255,
+          "signal_bindings_created": 1976286,
+          "signal_bindings_live": 1742844,
+          "signal_bindings_retired": 233442,
+          "signal_parent_probes": 402401,
+          "signal_port_attaches": 2412255,
+          "signal_port_detaches": 0,
+          "signal_root_queries": 235572,
+          "slice_steps": 649255,
+          "stage_barriers": 9332,
+          "unbound_query_calls": 0,
+          "unbound_query_rows": 0,
+          "unchanged_port_checks": 0,
+          "uncovered_births": 0
+        },
+        "stable_ports_stats": {
+          "birth_hint_hits": 2063540,
+          "birth_hint_probes": 4021212,
+          "equality_completions": 224478,
+          "equality_enqueues": 224478,
+          "key_candidates": 8475767,
+          "key_field_comparisons": 13742679,
+          "key_lookups": 4026123,
+          "keys": true,
+          "legacy_key_enqueues": 0,
+          "node_lookups": 30037468,
+          "node_retirement_probes": 161769,
+          "nodes_retired": 161769,
+          "notifications": 430871,
+          "notified_columns": 457480,
+          "pending_candidate_skips": 37788,
+          "port_domain_probes": 1962583,
+          "port_reads": 33755311,
+          "ports_installed": 2412255,
+          "result_publications": 182870,
+          "root_parent_probes": 37083372,
+          "root_resolutions": 33755311,
+          "row_views": 7982965,
+          "rows_installed": 820439
+        },
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 0,
+          "repaired_dependencies": 255111,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "report_timing_available": false,
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.0211733965,
+        "query_update": 1.8706754700000001,
+        "repair": 1.023395583,
+        "rhs": 3.8817127715,
+        "search": 6.8256266445
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "process_user_seconds": 22.46865,
+          "process_system_seconds": 0.59028,
+          "inference_seconds": 13.75744025,
+          "process_wall_seconds": 23.244339958997443,
+          "load_seconds": 0.535299708,
+          "setup_seconds": 0.004317625,
+          "export_seconds": 1.786294,
+          "process_unattributed_seconds": 7.160988375997441,
+          "peak_rss_through_inference_bytes": 2152677376
+        },
+        {
+          "iteration": 1,
+          "process_user_seconds": 22.30970899999999,
+          "process_system_seconds": 0.658657,
+          "inference_seconds": 13.497516458,
+          "process_wall_seconds": 23.122665541013703,
+          "load_seconds": 0.542414708,
+          "setup_seconds": 0.005390125,
+          "export_seconds": 1.7598319999999998,
+          "process_unattributed_seconds": 7.317512250013703,
+          "peak_rss_through_inference_bytes": 2154708992
+        }
+      ]
+    },
+    "final": {
+      "args": [
+        "--local-congruence"
+      ],
+      "runtime_sha256": "07a0863144730e4d1f89d2a7b3e122c88bf5d18c9d64abc035431679196523a7",
+      "program_file_sha256": "023b027bcd0e0cf449486d9bbb7b73e3bf018d8bdfee7504ae6ead069cff8a1a",
+      "timing": {
+        "inference_seconds": {
+          "median": 12.234465291500001,
+          "minimum": 11.946787083,
+          "maximum": 12.5221435,
+          "median_absolute_deviation": 0.28767820850000003
+        },
+        "process_wall_seconds": {
+          "median": 15.525109082984272,
+          "minimum": 15.186013999977149,
+          "maximum": 15.864204165991396,
+          "median_absolute_deviation": 0.3390950830071233
+        },
+        "load_seconds": {
+          "median": 0.5450064585000001,
+          "minimum": 0.531310167,
+          "maximum": 0.55870275,
+          "median_absolute_deviation": 0.013696291500000013
+        },
+        "setup_seconds": {
+          "median": 0.004760271,
+          "minimum": 0.004322959,
+          "maximum": 0.005197583,
+          "median_absolute_deviation": 0.00043731200000000003
+        },
+        "export_seconds": {
+          "median": 1.759806542,
+          "minimum": 1.754240209,
+          "maximum": 1.765372875,
+          "median_absolute_deviation": 0.005566332999999979
+        },
+        "report_seconds": {
+          "median": 0.698143521,
+          "minimum": 0.661523834,
+          "maximum": 0.734763208,
+          "median_absolute_deviation": 0.036619686999999956
+        },
+        "process_unattributed_seconds": {
+          "median": 0.9810705199842715,
+          "minimum": 0.937346291977148,
+          "maximum": 1.024794747991395,
+          "median_absolute_deviation": 0.0437242280071235
+        },
+        "process_after_report_residual_seconds": {
+          "median": 0.28292699898427154,
+          "minimum": 0.275822457977148,
+          "maximum": 0.2900315399913951,
+          "median_absolute_deviation": 0.007104541007123544
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 2131673088.0,
+          "minimum": 2127200256,
+          "maximum": 2136145920,
+          "median_absolute_deviation": 4472832.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4330682,
+        "cell_ownership_stats": {
+          "adopted_existing": 128,
+          "body_visits": 0,
+          "boundary_body_reads": 0,
+          "boundary_edges_created": 1662134,
+          "boundary_edges_removed": 442112,
+          "boundary_insert_attempts": 1662134,
+          "boundary_live": 1220022,
+          "boundary_owner_routes": 0,
+          "boundary_ports_seen": 1383071,
+          "boundary_probes": 226523,
+          "boundary_rebuilds": 0,
+          "boundary_signal_routes": 247952,
+          "carried_components": 1995198565,
+          "carried_facts": 3493147562,
+          "changed_ports": 0,
+          "coalesced_slice_steps": 21865,
+          "component_lifetime_growths": 18,
+          "component_lifetime_updates": 982208,
+          "component_signal_retire_visits": 292166,
+          "components_created": 433073,
+          "components_live": 372967,
+          "components_retired": 60106,
+          "composition_baked_hits": 153985,
+          "composition_cache_hits": 153985,
+          "composition_capacity_cuts": 212824,
+          "composition_cross_stage_joins": 153985,
+          "composition_entry_reads": 1216985,
+          "composition_frames": 587058,
+          "composition_materializations": 0,
+          "composition_missing_sources": 0,
+          "composition_requests": 153985,
+          "composition_shape_builds": 0,
+          "composition_shape_steps": 0,
+          "composition_substituted_ports": 209096,
+          "composition_transition_probes": 1004161,
+          "composition_unbaked_fallbacks": 850176,
+          "dispatch_comparisons": 887137,
+          "dispatch_heap_pops": 452736,
+          "dispatch_heap_pushes": 452736,
+          "dispatch_scratch_bytes": 8224,
+          "dispatch_scratch_growths": 8,
+          "domain_body_visits": 0,
+          "domain_column_checks": 0,
+          "domain_legacy_fact_probes": 0,
+          "domain_legacy_visits": 5457044,
+          "domain_owner_visits": 0,
+          "domain_planning_calls": 1962583,
+          "domain_planning_signals": 0,
+          "domain_planning_slice_steps": 0,
+          "domain_queries": 1962583,
+          "domain_results": 6235405,
+          "domain_route_probes": 14543598,
+          "domain_signal_visits": 14543598,
+          "domain_slice_steps": 14378473,
+          "domain_type_guards": 14378473,
+          "domain_type_rejections": 4284291,
+          "inactive_slice_steps": 196519,
+          "internal_ports_seen": 1029184,
+          "key_completions": 0,
+          "key_enqueues": 224478,
+          "marker_anchor_reads": 0,
+          "marker_entries": 903027,
+          "marker_union_requests": 115423,
+          "native_owner_routes": 0,
+          "native_signal_routes": 188946,
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "owned_retirements": 161769,
+          "owner_visits": 0,
+          "port_checks": 0,
+          "query_class_probes": 16067446,
+          "query_class_range_jumps": 11076813,
+          "result_publications": 182870,
+          "retired_result_boundaries": 0,
+          "row_copies": 0,
+          "signal_activations": 436898,
+          "signal_binding_reads": 2412255,
+          "signal_bindings_created": 1976286,
+          "signal_bindings_live": 1742844,
+          "signal_bindings_retired": 233442,
+          "signal_parent_probes": 402401,
+          "signal_port_attaches": 2412255,
+          "signal_port_detaches": 0,
+          "signal_root_queries": 235572,
+          "slice_steps": 649255,
+          "stage_barriers": 9332,
+          "unbound_query_calls": 0,
+          "unbound_query_rows": 0,
+          "unchanged_port_checks": 0,
+          "uncovered_births": 0
+        },
+        "stable_ports_stats": {
+          "birth_hint_hits": 2063540,
+          "birth_hint_probes": 4021212,
+          "equality_completions": 224478,
+          "equality_enqueues": 224478,
+          "key_candidates": 8475767,
+          "key_field_comparisons": 13742679,
+          "key_lookups": 4026123,
+          "keys": true,
+          "legacy_key_enqueues": 0,
+          "node_lookups": 27063531,
+          "node_retirement_probes": 161769,
+          "nodes_retired": 161769,
+          "notifications": 430871,
+          "notified_columns": 457480,
+          "pending_candidate_skips": 37788,
+          "port_domain_probes": 1962583,
+          "port_reads": 33755311,
+          "ports_installed": 2412255,
+          "result_publications": 182870,
+          "root_parent_probes": 37083372,
+          "root_resolutions": 33755311,
+          "row_views": 7982965,
+          "rows_installed": 820439
+        },
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 0,
+          "repaired_dependencies": 255111,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "report_timing_available": true,
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.0211893055,
+        "query_update": 1.845678977,
+        "repair": 0.927269568,
+        "rhs": 3.687319254,
+        "search": 5.7481850525
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "process_user_seconds": 15.167717999999997,
+          "process_system_seconds": 0.5504699999999999,
+          "inference_seconds": 12.5221435,
+          "process_wall_seconds": 15.864204165991396,
+          "load_seconds": 0.55870275,
+          "setup_seconds": 0.004322959,
+          "export_seconds": 1.754240209,
+          "report_seconds": 0.734763208,
+          "process_unattributed_seconds": 1.024794747991395,
+          "process_after_report_residual_seconds": 0.2900315399913951,
+          "peak_rss_through_inference_bytes": 2127200256
+        },
+        {
+          "iteration": 1,
+          "process_user_seconds": 14.596495999999988,
+          "process_system_seconds": 0.5344500000000001,
+          "inference_seconds": 11.946787083,
+          "process_wall_seconds": 15.186013999977149,
+          "load_seconds": 0.531310167,
+          "setup_seconds": 0.005197583,
+          "export_seconds": 1.765372875,
+          "report_seconds": 0.661523834,
+          "process_unattributed_seconds": 0.937346291977148,
+          "process_after_report_residual_seconds": 0.275822457977148,
+          "peak_rss_through_inference_bytes": 2136145920
+        }
+      ]
+    },
+    "fast_archived": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ],
+      "runtime_sha256": "9d5aa6db095301ed2285ce8b365c0f7124853b17138b0420a1cf97a10d93d3aa",
+      "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+      "timing": {
+        "inference_seconds": {
+          "median": 8.269727396,
+          "minimum": 8.173640792,
+          "maximum": 8.365814,
+          "median_absolute_deviation": 0.09608660399999991
+        },
+        "process_wall_seconds": {
+          "median": 10.631354125100188,
+          "minimum": 10.454503792105243,
+          "maximum": 10.808204458095133,
+          "median_absolute_deviation": 0.17685033299494535
+        },
+        "setup_seconds": {
+          "median": 0.0037588745,
+          "minimum": 0.003528916,
+          "maximum": 0.003988833,
+          "median_absolute_deviation": 0.0002299584999999999
+        },
+        "export_seconds": {
+          "median": 1.56471325,
+          "minimum": 1.509056625,
+          "maximum": 1.620369875,
+          "median_absolute_deviation": 0.055656625000000015
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 1997119488.0,
+          "minimum": 1995554816,
+          "maximum": 1998684160,
+          "median_absolute_deviation": 1564672.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4420726,
+        "cell_ownership_stats": null,
+        "stable_ports_stats": null,
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 224478,
+          "repaired_dependencies": 479589,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "report_timing_available": false,
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.020369128,
+        "query_update": 1.6225891805,
+        "repair": 0.5775820505,
+        "rhs": 2.2203096185,
+        "search": 3.8231104919999996
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "process_user_seconds": 10.008621000000005,
+          "process_system_seconds": 0.6208629999999999,
+          "inference_seconds": 8.365814,
+          "process_wall_seconds": 10.808204458095133,
+          "setup_seconds": 0.003528916,
+          "export_seconds": 1.620369875,
+          "peak_rss_through_inference_bytes": 1995554816
+        },
+        {
+          "iteration": 1,
+          "process_user_seconds": 9.896913000000012,
+          "process_system_seconds": 0.518958,
+          "inference_seconds": 8.173640792,
+          "process_wall_seconds": 10.454503792105243,
+          "setup_seconds": 0.003988833,
+          "export_seconds": 1.509056625,
+          "peak_rss_through_inference_bytes": 1998684160
+        }
+      ]
+    }
+  },
+  "comparisons": {
+    "final": {
+      "inference_seconds": {
+        "paired_median_ratio": 0.8976594223674077,
+        "ratio_of_medians": 0.8977791029041616,
+        "paired_bootstrap_95_interval": [
+          0.8851100215491213,
+          0.9102088231856941
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      },
+      "process_wall_seconds": {
+        "paired_median_ratio": 0.6696281538912311,
+        "ratio_of_medians": 0.6696619251368536,
+        "paired_bootstrap_95_interval": [
+          0.6567587968195552,
+          0.682497510962907
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      }
+    },
+    "fast_archived": {
+      "inference_seconds": {
+        "paired_median_ratio": 0.606830034208562,
+        "ratio_of_medians": 0.6068420863477381,
+        "paired_bootstrap_95_interval": [
+          0.6055662771320772,
+          0.6080937912850467
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      },
+      "process_wall_seconds": {
+        "paired_median_ratio": 0.4585572492359628,
+        "ratio_of_medians": 0.4585741093458206,
+        "paired_bootstrap_95_interval": [
+          0.45213229303350094,
+          0.46498220543842467
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      }
+    }
+  },
+  "concurrent_fast_reference_lanes": [
+    "fast_archived"
+  ],
+  "limits": "A bounded single-thread pilot; small-sample intervals are descriptive. An archived-fast reference was included in this same campaign: fast_archived. Counter reductions alone do not establish a speedup; use measured inference and whole-process time."
+}

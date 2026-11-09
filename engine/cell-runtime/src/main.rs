@@ -305,6 +305,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_rhs_work(&out)?;
     #[cfg(feature = "keeper-proof")]
     runtime.write_keepers(&out)?;
+    let report_start = Instant::now();
     let mut report = runtime.report();
     #[cfg(feature = "allocation-metrics")]
     {
@@ -327,6 +328,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     report["load_seconds"] = load_seconds.into();
     report["load_setup_inference_seconds"] = (load_seconds + setup + seconds).into();
     report["repair_ports"] = runtime.graph.repair_port_report();
+    report["report_seconds"] = report_start.elapsed().as_secs_f64().into();
     let export_start = Instant::now();
     let mut writer = std::io::BufWriter::new(std::fs::File::create(out.join("state.json"))?);
     runtime.graph.write_export(&mut writer)?;

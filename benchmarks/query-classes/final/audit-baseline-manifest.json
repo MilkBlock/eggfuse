@@ -1,0 +1,18 @@
+{
+  "sum-bits": {
+    "local": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  },
+  "raytrace": {
+    "local": {
+      "program": "/private/tmp/eggfuse-signal-lifetime/out/signal-lifetime/baked-raytrace/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

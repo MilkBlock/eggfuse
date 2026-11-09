@@ -14,6 +14,24 @@ import threading
 import time
 
 KEYS = ('ordinal', 'ruleset', 'path', 'iterations', 'epoch', 'logical_matches', 'executed_bindings', 'changed')
+TIMING_FIELDS = ('inference_seconds', 'process_wall_seconds', 'load_seconds', 'setup_seconds',
+                 'export_seconds', 'report_seconds', 'process_unattributed_seconds',
+                 'process_after_report_residual_seconds', 'peak_rss_through_inference_bytes')
+TIMING_ACCOUNTING = {
+    'process_unattributed_seconds': 'wall minus load, setup, inference and export; includes report construction, output, teardown and other unmeasured intervals',
+    'report_seconds': 'reported runtime.report and report additions before export; absent for old binaries, never imputed as zero',
+    'process_after_report_residual_seconds': 'process_unattributed_seconds minus measured report_seconds; only available when report is measured; includes serialization/output, teardown and other unmeasured intervals',
+    'interpretation': 'Residuals are differences of measured intervals, not isolated measurements of serialization or drop; medians of separate phases need not sum to median wall',
+}
+
+
+def add_timing_residuals(row):
+    """Keep the shared residual comparable without inventing old report times."""
+    phases = ('load_seconds', 'setup_seconds', 'inference_seconds', 'export_seconds')
+    if all(isinstance(row.get(key), (int, float)) for key in ('process_wall_seconds', *phases)):
+        row['process_unattributed_seconds'] = row['process_wall_seconds'] - sum(row[key] for key in phases)
+        if isinstance(row.get('report_seconds'), (int, float)):
+            row['process_after_report_residual_seconds'] = row['process_unattributed_seconds'] - row['report_seconds']
 
 
 def sha(path):
@@ -65,6 +83,7 @@ def measure(spec, output, repeat, warmups, timeout):
               'started_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'path_policy': 'equal-length executable/input links and numeric output names',
               'process_wait': 'blocking waitpid with a separate timeout watchdog; no polling sleeps',
+              'timing_accounting': TIMING_ACCOUNTING,
               'lanes': {}, 'execution_order': [], 'semantic_reference': None}
     for index, (label, config) in enumerate(lanes.items()):
         entry = dict(config)
@@ -128,7 +147,8 @@ def measure(spec, output, repeat, warmups, timeout):
                    'process_user_seconds': after_cpu.ru_utime - before_cpu.ru_utime,
                    'process_system_seconds': after_cpu.ru_stime - before_cpu.ru_stime}
             row.update({key: report[key] for key in ('load_seconds', 'setup_seconds', 'inference_seconds',
-                        'export_seconds', 'peak_rss_through_inference_bytes') if key in report})
+                        'export_seconds', 'report_seconds', 'peak_rss_through_inference_bytes') if key in report})
+            add_timing_residuals(row)
             row['phases'] = {key: sum(step['phases'][key] for step in report['steps'])
                              for key in report['steps'][0]['phases']}
             row['stats'] = report['stats']
@@ -152,8 +172,7 @@ def measure(spec, output, repeat, warmups, timeout):
     for lane in result['lanes'].values():
         if lane['samples']:
             lane['medians'] = {key: statistics.median(s[key] for s in lane['samples'])
-                              for key in ('inference_seconds', 'process_wall_seconds', 'load_seconds',
-                                          'setup_seconds', 'export_seconds', 'peak_rss_through_inference_bytes')
+                              for key in TIMING_FIELDS
                               if all(key in s for s in lane['samples'])}
     save(output / 'samples.json', result)
 

@@ -1,0 +1,18 @@
+{
+  "sum-bits": {
+    "local": {
+      "program": "out/condition-bake/query-classes-sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  },
+  "raytrace": {
+    "local": {
+      "program": "out/condition-bake/query-classes-ray/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

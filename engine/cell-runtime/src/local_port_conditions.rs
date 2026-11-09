@@ -280,14 +280,8 @@ impl Graph {
         // Root-level boundary ownership already belongs to symbolic ports.
         // Probe shared code; no producer gets a runtime consumer list.
         let m = self.ownership.as_ref().unwrap();
-        let signals = m
-            .boundaries
-            .get(&id)
-            .into_iter()
-            .flat_map(|s| s.iter().copied())
-            .chain(self.native_signal(id));
         let mut work = BoundaryWork::default();
-        for signal in signals {
+        for signal in self.query_signals(table, id) {
             work.signals += 1;
             if signal.component == component {
                 continue;
@@ -363,6 +357,7 @@ impl Graph {
             "reflexive_inputs_elided":plans.iter().map(|p|p.reflexive_inputs_elided).sum::<usize>(),
             "duplicate_inputs_elided":plans.iter().map(|p|p.duplicate_inputs_elided).sum::<usize>(),
             "shared_typed_codes":self.program.cell_ownership.code_programs.len(),
+            "query_classes":self.program.cell_ownership.query_classes.as_ref().map(|p|p.report()),
             "shared_operator_slots":self.program.cell_ownership.code_operators.iter().map(Vec::len).sum::<usize>(),
             "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
                 .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),

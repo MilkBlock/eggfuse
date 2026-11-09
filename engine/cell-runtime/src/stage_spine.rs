@@ -1018,8 +1018,14 @@ impl Programs {
     pub fn capture_receipts(&self, rid: usize) -> bool {
         self.enabled && self.receipts && self.anchor_ops.get(rid).is_some_and(|ops| !ops.is_empty())
     }
-    pub(crate) fn alias_query_facts(&self, rid: usize) -> QueryFacts {
-        let base = if self.receipts || self.owner_queries {
+    pub(crate) fn alias_query_facts(&self, g: &Graph, rid: usize) -> QueryFacts {
+        // Only an admitted continuation (or explicit fragment training) reads
+        // the ownership Entry receipts. Keep the original Spine alias plan
+        // intact: unrelated rules must not clone a full query-width packet.
+        // Check at consumption, since training can start after Executor::new.
+        let base = if self.owner_queries && g.needs_ownership_entry(rid) {
+            QueryFacts::Ports(vec![None; g.program.rules[rid].query.len()])
+        } else if self.receipts || self.owner_queries {
             self.alias_query_facts.get(rid).cloned().unwrap_or_default()
         } else {
             QueryFacts::None
@@ -1030,13 +1036,10 @@ impl Programs {
         }
         base
     }
-    pub(crate) fn enable_owner_queries(&mut self,p:&Program) {
-        self.owner_queries=true;
-        for (rid,ports) in p.cell_ownership.entries.iter().enumerate() {
-            if !ports.is_empty() {
-                self.alias_query_facts[rid]=QueryFacts::Ports(vec![None;p.rules[rid].query.len()]);
-            }
-        }
+    pub(crate) fn enable_owner_queries(&mut self) {
+        // Enabling ownership never overwrites the independent static alias
+        // requirements; repeated configuration cannot broaden their scope.
+        self.owner_queries = true;
     }
     /// Query witnesses are used only as receipts for proved RHS aliases.
     pub fn capture(

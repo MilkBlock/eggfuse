@@ -27,14 +27,6 @@ impl From<Signal> for PortRef {
         }
     }
 }
-impl From<PortRef> for Signal {
-    fn from(p: PortRef) -> Self {
-        Self {
-            component: p.component,
-            symbol: p.symbol,
-        }
-    }
-}
 #[derive(Clone, Debug)]
 enum Field {
     Port(PortRef),
@@ -135,7 +127,7 @@ impl Graph {
                 if let Some(symbol) = symbol {
                     assert!(matches!(v, Value::Eq(_)), "typed equality field");
                     count += 1;
-                    Field::Port(self.composed_signal(f.cell, *symbol).into())
+                    Field::Port(self.composed_port(f.cell, *symbol))
                 } else {
                     assert!(
                         !matches!(v, Value::Eq(_) | Value::Set(_)),

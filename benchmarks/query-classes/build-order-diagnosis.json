@@ -1,0 +1,16 @@
+{
+  "scope": "diagnostic only; no timing admission",
+  "cause": "JSON object key order differs; exact parsed content and all array order agree",
+  "likely_build_difference": "joint runtime+compiler Cargo build unifies serde_json preserve_order via compiler dependency graph; must rebuild standalone runtime to match baseline dependency features",
+  "raw_state_sha256": {
+    "baseline": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "receipts_and_classes": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d"
+  },
+  "parsed_states_exactly_equal": true,
+  "rows": 4045,
+  "anchors": 128,
+  "diagnostic_directory": "out/condition-bake/query-class-state-diagnosis",
+  "invalid_pilot_directory": "out/condition-bake/query-class-sum-pilot",
+  "resolution": "Rebuilt runtime package alone with the same normal features; raw exported-state SHA restored to baseline, then ran a new complete campaign without relaxing equality",
+  "replacement_runtime_sha256": "3a08768d1f22ec248d2f905c93fa24728f3a0732fe9798636660f0afb174624e"
+}

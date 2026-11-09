@@ -1,0 +1,33 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/condition-bake/runtime-code",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "receipts": {
+      "runtime": "out/condition-bake/runtime-query-classes-isolated",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "classes": {
+      "runtime": "out/condition-bake/runtime-query-classes-isolated",
+      "program": "out/condition-bake/query-classes-sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "fast_archived": {
+      "runtime": "out/raytrace-parallel/fast-runtime",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  }
+}

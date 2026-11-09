@@ -22,6 +22,13 @@ impl<'a, T> Iterator for Iter<'a, T> {
     }
 }
 impl<T: Ord + Copy> TinySet<T> {
+    pub fn contains(&self, value: &T) -> bool {
+        match self {
+            Self::Empty => false,
+            Self::One(x) => x == value,
+            Self::Tree(xs) => xs.contains(value),
+        }
+    }
     pub fn iter(&self) -> Iter<'_, T> {
         match self {
             Self::Empty => Iter::Slice([].iter()),

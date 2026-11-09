@@ -1,0 +1,1142 @@
+diff --git a/engine/cell-runtime/src/cell_ownership.rs b/engine/cell-runtime/src/cell_ownership.rs
+index 41ad75a0..887bfdd0 100644
+--- a/engine/cell-runtime/src/cell_ownership.rs
++++ b/engine/cell-runtime/src/cell_ownership.rs
+@@ -11,6 +11,8 @@ use slices::{PortProgram, Signal};
+ pub mod composition;
+ #[path = "stable_ports.rs"]
+ pub mod ports;
++#[path = "ownership_query_classes.rs"]
++pub mod query_classes;
+ #[path = "ownership_pending.rs"]
+ mod ready;
+ #[path = "port_completion.rs"]
+@@ -27,6 +29,8 @@ pub struct Plan {
+     pub code_programs: Vec<Rc<PortProgram>>,
+     #[serde(skip)]
+     pub code_operators: Vec<Vec<usize>>,
++    #[serde(skip)]
++    pub query_classes: Option<Rc<query_classes::Plan>>,
+     pub composition: composition::Plan,
+     pub entries: Vec<Vec<usize>>,
+     /// Shared publication table -> scheduled typed entry ports. Producer body
+@@ -103,10 +107,11 @@ impl Plan {
+             }
+         }
+         let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
+-        let plan = Self {
++        let mut plan = Self {
+             programs,
+             code_programs: vec![],
+             code_operators: vec![],
++            query_classes: None,
+             composition,
+             tables,
+             markers,
+@@ -118,6 +123,10 @@ impl Plan {
+                 return Err("ownership marker differs from typed entry/body wiring".into());
+             }
+         }
++        if let Some(raw) = p.artifact["ownership_fragments"].get("query_classes") {
++            plan.prepare_codes(&p.templates);
++            plan.query_classes = Some(Rc::new(query_classes::Plan::validate(raw, p, &plan)?));
++        }
+         Ok(plan)
+     }
+     fn prepare_codes(&mut self, templates: &[Template]) {
+@@ -237,6 +246,8 @@ struct Stats {
+     domain_legacy_fact_probes: Counter<u64>,
+     domain_type_guards: Counter<u64>,
+     domain_type_rejections: Counter<u64>,
++    query_class_probes: Counter<u64>,
++    query_class_range_jumps: Counter<u64>,
+ }
+ impl Stats {
+     fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
+@@ -815,14 +826,9 @@ impl Graph {
+         let s = &owner.stats;
+         s.domain_queries.set(s.domain_queries.get() + 1);
+         let mut result = BTreeSet::new();
+-        let native = self.native_signal(id);
+-        // Borrow only the selected bucket. A native signal can also be a
+-        // boundary; visit it once. The result set preserves witness order.
+-        let signals = owner.boundaries.get(&id).into_iter()
+-            .flat_map(|set| set.iter()).copied()
+-            .filter(|signal| Some(*signal) != native)
+-            .chain(native);
+-        for signal in signals {
++        // Jump over incompatible classes before touching any instance. The
++        // result set still preserves witness order across all retained classes.
++        for signal in self.query_signals(table, id) {
+             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
+             let m = &self.ownership.as_ref().unwrap().composition;
+             let component = m.components[signal.component as usize].as_ref().unwrap();
+diff --git a/engine/cell-runtime/src/local_port_conditions.rs b/engine/cell-runtime/src/local_port_conditions.rs
+index 90e5861e..67e582d3 100644
+--- a/engine/cell-runtime/src/local_port_conditions.rs
++++ b/engine/cell-runtime/src/local_port_conditions.rs
+@@ -280,14 +280,8 @@ impl Graph {
+         // Root-level boundary ownership already belongs to symbolic ports.
+         // Probe shared code; no producer gets a runtime consumer list.
+         let m = self.ownership.as_ref().unwrap();
+-        let signals = m
+-            .boundaries
+-            .get(&id)
+-            .into_iter()
+-            .flat_map(|s| s.iter().copied())
+-            .chain(self.native_signal(id));
+         let mut work = BoundaryWork::default();
+-        for signal in signals {
++        for signal in self.query_signals(table, id) {
+             work.signals += 1;
+             if signal.component == component {
+                 continue;
+@@ -363,6 +357,7 @@ impl Graph {
+             "reflexive_inputs_elided":plans.iter().map(|p|p.reflexive_inputs_elided).sum::<usize>(),
+             "duplicate_inputs_elided":plans.iter().map(|p|p.duplicate_inputs_elided).sum::<usize>(),
+             "shared_typed_codes":self.program.cell_ownership.code_programs.len(),
++            "query_classes":self.program.cell_ownership.query_classes.as_ref().map(|p|p.report()),
+             "shared_operator_slots":self.program.cell_ownership.code_operators.iter().map(Vec::len).sum::<usize>(),
+             "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
+                 .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),
+diff --git a/engine/cell-runtime/src/main.rs b/engine/cell-runtime/src/main.rs
+index b84d2538..e653e3a8 100644
+--- a/engine/cell-runtime/src/main.rs
++++ b/engine/cell-runtime/src/main.rs
+@@ -305,6 +305,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+     runtime.write_rhs_work(&out)?;
+     #[cfg(feature = "keeper-proof")]
+     runtime.write_keepers(&out)?;
++    let report_start = Instant::now();
+     let mut report = runtime.report();
+     #[cfg(feature = "allocation-metrics")]
+     {
+@@ -327,6 +328,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+     report["load_seconds"] = load_seconds.into();
+     report["load_setup_inference_seconds"] = (load_seconds + setup + seconds).into();
+     report["repair_ports"] = runtime.graph.repair_port_report();
++    report["report_seconds"] = report_start.elapsed().as_secs_f64().into();
+     let export_start = Instant::now();
+     let mut writer = std::io::BufWriter::new(std::fs::File::create(out.join("state.json"))?);
+     runtime.graph.write_export(&mut writer)?;
+diff --git a/engine/cell-runtime/src/ownership_composition.rs b/engine/cell-runtime/src/ownership_composition.rs
+index f371469a..7ed8fa1e 100644
+--- a/engine/cell-runtime/src/ownership_composition.rs
++++ b/engine/cell-runtime/src/ownership_composition.rs
+@@ -19,6 +19,9 @@ pub struct Shape {
+     pub programs: Vec<usize>,
+     pub ports: Vec<Rc<Vec<usize>>>,
+     pub signals: Vec<Rc<Vec<Instruction>>>,
++    /// First introduction of each shared symbol. Appending preserves origins.
++    #[serde(skip)]
++    pub origins: Vec<(usize, usize)>,
+     pub last_substitutions: usize,
+ }
+ #[derive(Clone, Debug, Serialize, PartialEq, Eq, Hash)]
+@@ -52,6 +55,7 @@ impl Shape {
+                 } else {
+                     let new = shape.signals.len();
+                     shape.signals.push(Rc::new(Vec::new()));
++                    shape.origins.push((frame, local));
+                     new
+                 };
+             ports.push(symbol);
+@@ -471,6 +475,14 @@ pub(super) struct Runtime {
+     pub columns: Vec<usize>,
+ }
+ impl Runtime {
++    fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
++        let class = plan.query_classes.as_ref().map_or(0, |classes| {
++            let c = self.components[component as usize].as_ref().unwrap();
++            let (frame, local) = self.shapes[c.shape].as_ref().unwrap().origins[symbol];
++            classes.symbols[self.frames[&c.frames[frame]].code][local]
++        });
++        Signal { class, component, symbol }
++    }
+     pub fn new(p: &Plan) -> Self {
+         Self {
+             components: Default::default(),
+@@ -759,13 +771,16 @@ impl Graph {
+         );
+     }
+     pub(super) fn composed_signal(&self, cell: u32, local: usize) -> Signal {
++        let port = self.composed_port(cell, local);
++        self.ownership.as_ref().unwrap().composition.signal(
++            &self.program.cell_ownership, port.component, port.symbol)
++    }
++    pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::PortRef {
+         let m = &self.ownership.as_ref().unwrap().composition;
+         let f = m.frames[&cell];
+         let shape = m.components[f.component as usize].as_ref().unwrap().shape;
+-        Signal {
+-            component: f.component,
+-            symbol: m.shapes[shape].as_ref().unwrap().ports[f.ordinal][local],
+-        }
++        ports::PortRef { component: f.component,
++            symbol: m.shapes[shape].as_ref().unwrap().ports[f.ordinal][local] }
+     }
+     pub(super) fn composition_retire_fact(&mut self, cell: u32) {
+         let m = self.ownership.as_mut().unwrap();
+@@ -780,10 +795,7 @@ impl Graph {
+                 m.stats.component_signal_retire_visits += 1;
+                 let Some(id) = id else { continue };
+                 let id = m.stats.signal_root(&self.parents, *id);
+-                let signal = Signal {
+-                    component: f.component,
+-                    symbol,
+-                };
++                let signal = m.composition.signal(&self.program.cell_ownership, f.component, symbol);
+                 m.stats.signal_bindings_live -= 1;
+                 m.stats.signal_bindings_retired += 1;
+                 if let Some(set) = m.boundaries.get_mut(&id) {
+diff --git a/engine/cell-runtime/src/ownership_slices.rs b/engine/cell-runtime/src/ownership_slices.rs
+index 45888315..3158dc38 100644
+--- a/engine/cell-runtime/src/ownership_slices.rs
++++ b/engine/cell-runtime/src/ownership_slices.rs
+@@ -114,6 +114,9 @@ impl PortProgram {
+ /// and escaped aliases retain canonical-root boundary entries.
+ #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+ pub(in crate::graph) struct Signal {
++    /// Immutable possible-use class, derived from the origin's shared code.
++    /// Class-first order permits skipping an incompatible tree range.
++    pub class: u32,
+     pub component: u32,
+     pub symbol: usize,
+ }
+diff --git a/engine/cell-runtime/src/runtime.rs b/engine/cell-runtime/src/runtime.rs
+index 4abeabd2..c469129c 100644
+--- a/engine/cell-runtime/src/runtime.rs
++++ b/engine/cell-runtime/src/runtime.rs
+@@ -282,7 +282,7 @@ impl Executor {
+         let mut query_indexes = QueryIndexes::default();
+         query_indexes.track_changes = sieve.enabled;
+         let mut stage_spine = crate::stage_spine::Programs::new(&graph.program);
+-        if graph.ownership_enabled() {stage_spine.enable_owner_queries(&graph.program);}
++        if graph.ownership_enabled() {stage_spine.enable_owner_queries();}
+         stage_spine.audit_receipts = audit;
+         #[cfg(feature = "sparse-cells")]
+         {
+@@ -1133,7 +1133,7 @@ impl Executor {
+         let query_facts = if probe {
+             QueryFacts::None
+         } else {
+-            self.stage_spine.alias_query_facts(rid)
++            self.stage_spine.alias_query_facts(&self.graph, rid)
+         };
+         let scheduled_entry = !probe && self.entry_schedule.accepts(rid);
+         // A necessary join summary can reject an empty domain before either route.
+diff --git a/engine/cell-runtime/src/stable_ports.rs b/engine/cell-runtime/src/stable_ports.rs
+index a8609d5b..c8458c41 100644
+--- a/engine/cell-runtime/src/stable_ports.rs
++++ b/engine/cell-runtime/src/stable_ports.rs
+@@ -27,14 +27,6 @@ impl From<Signal> for PortRef {
+         }
+     }
+ }
+-impl From<PortRef> for Signal {
+-    fn from(p: PortRef) -> Self {
+-        Self {
+-            component: p.component,
+-            symbol: p.symbol,
+-        }
+-    }
+-}
+ #[derive(Clone, Debug)]
+ enum Field {
+     Port(PortRef),
+@@ -135,7 +127,7 @@ impl Graph {
+                 if let Some(symbol) = symbol {
+                     assert!(matches!(v, Value::Eq(_)), "typed equality field");
+                     count += 1;
+-                    Field::Port(self.composed_signal(f.cell, *symbol).into())
++                    Field::Port(self.composed_port(f.cell, *symbol))
+                 } else {
+                     assert!(
+                         !matches!(v, Value::Eq(_) | Value::Set(_)),
+diff --git a/engine/cell-runtime/src/stage_spine.rs b/engine/cell-runtime/src/stage_spine.rs
+index 52892291..f1339d9c 100644
+--- a/engine/cell-runtime/src/stage_spine.rs
++++ b/engine/cell-runtime/src/stage_spine.rs
+@@ -1018,8 +1018,14 @@ impl Programs {
+     pub fn capture_receipts(&self, rid: usize) -> bool {
+         self.enabled && self.receipts && self.anchor_ops.get(rid).is_some_and(|ops| !ops.is_empty())
+     }
+-    pub(crate) fn alias_query_facts(&self, rid: usize) -> QueryFacts {
+-        let base = if self.receipts || self.owner_queries {
++    pub(crate) fn alias_query_facts(&self, g: &Graph, rid: usize) -> QueryFacts {
++        // Only an admitted continuation (or explicit fragment training) reads
++        // the ownership Entry receipts. Keep the original Spine alias plan
++        // intact: unrelated rules must not clone a full query-width packet.
++        // Check at consumption, since training can start after Executor::new.
++        let base = if self.owner_queries && g.needs_ownership_entry(rid) {
++            QueryFacts::Ports(vec![None; g.program.rules[rid].query.len()])
++        } else if self.receipts || self.owner_queries {
+             self.alias_query_facts.get(rid).cloned().unwrap_or_default()
+         } else {
+             QueryFacts::None
+@@ -1030,13 +1036,10 @@ impl Programs {
+         }
+         base
+     }
+-    pub(crate) fn enable_owner_queries(&mut self,p:&Program) {
+-        self.owner_queries=true;
+-        for (rid,ports) in p.cell_ownership.entries.iter().enumerate() {
+-            if !ports.is_empty() {
+-                self.alias_query_facts[rid]=QueryFacts::Ports(vec![None;p.rules[rid].query.len()]);
+-            }
+-        }
++    pub(crate) fn enable_owner_queries(&mut self) {
++        // Enabling ownership never overwrites the independent static alias
++        // requirements; repeated configuration cannot broaden their scope.
++        self.owner_queries = true;
+     }
+     /// Query witnesses are used only as receipts for proved RHS aliases.
+     pub fn capture(
+diff --git a/engine/cell-runtime/src/view_exec.rs b/engine/cell-runtime/src/view_exec.rs
+index 965cad3c..3909c0ea 100644
+--- a/engine/cell-runtime/src/view_exec.rs
++++ b/engine/cell-runtime/src/view_exec.rs
+@@ -283,7 +283,7 @@ fn accepts(m: &Member, d: &Tuple, p: &Row) -> bool {
+     })
+ }
+ impl Group {
+-    fn emit(&mut self, d: &Tuple, p: &Row, spine: &crate::stage_spine::Programs) {
++    fn emit(&mut self, d: &Tuple, p: &Row, g: &Graph, spine: &crate::stage_spine::Programs) {
+         if d.port(self.plan.driver_key) != &p.values[self.plan.peer_key] {
+             return;
+         }
+@@ -295,11 +295,11 @@ impl Group {
+                 std::cmp::Ordering::Greater => branch.greater,
+             };
+             self.counts.comparison_dispatches += 1;
+-            self.emit_member(member, d, p, spine);
++            self.emit_member(member, d, p, g, spine);
+         } else {
+             for i in 0..self.plan.members.len() {
+                 if accepts(&self.plan.members[i], d, p) {
+-                    self.emit_member(i, d, p, spine);
++                    self.emit_member(i, d, p, g, spine);
+                 }
+             }
+         }
+@@ -309,6 +309,7 @@ impl Group {
+         ordinal: usize,
+         d: &Tuple,
+         p: &Row,
++        g: &Graph,
+         spine: &crate::stage_spine::Programs,
+     ) {
+         let m = &self.plan.members[ordinal];
+@@ -317,7 +318,7 @@ impl Group {
+             .iter()
+             .map(|&(slot, port)| (slot, field(port, d, p).clone()))
+             .collect();
+-        let mut known = spine.alias_query_facts(m.rule);
++        let mut known = spine.alias_query_facts(g, m.rule);
+         known.record(m.driver_atom, Some(d.witness));
+         known.record(m.peer_atom, Some(p.witness));
+         self.streams[ordinal].as_mut().unwrap().push(Binding {
+@@ -385,7 +386,7 @@ impl Group {
+                     if let Some(p) = g.row(w)?
+                         && !p.hidden
+                     {
+-                        self.emit(&d, &p, spine);
++                        self.emit(&d, &p, g, spine);
+                     }
+                 }
+             }
+@@ -400,7 +401,7 @@ impl Group {
+                     self.counts.candidate_visits += rows.len() as u64;
+                     for &i in rows {
+                         if dir.rows[&i].epoch < watermark {
+-                            self.emit(&dir.rows[&i], &p, spine);
++                            self.emit(&dir.rows[&i], &p, g, spine);
+                         } else {
+                             self.counts.epoch_skips += 1;
+                         }
+@@ -418,7 +419,7 @@ impl Group {
+                     for &w in rows.iter() {
+                         if g.visible_epoch(w).is_some_and(|e| e < watermark) {
+                             if let Some(d) = g.row(w)? {
+-                                self.emit(&Tuple::flat(&d), &p, spine);
++                                self.emit(&Tuple::flat(&d), &p, g, spine);
+                             }
+                         } else {
+                             self.counts.epoch_skips += 1;
+diff --git a/tools/cell-compiler/src/ownership_bake.rs b/tools/cell-compiler/src/ownership_bake.rs
+index b3781975..6c680ec2 100644
+--- a/tools/cell-compiler/src/ownership_bake.rs
++++ b/tools/cell-compiler/src/ownership_bake.rs
+@@ -10,10 +10,15 @@ use serde_json::json;
+ use std::{fs, path::Path};
+ pub(crate) fn run(args: Vec<String>) -> Result<()> {
+     if args.iter().any(|s| s == "--help") {
+-        println!("bake-cell-ownership --program FILE [--profile FILE] --output NEW_DIR");
++        println!("bake-cell-ownership --program FILE [--profile FILE] [--query-classes true|false] --output NEW_DIR");
+         return Ok(());
+     }
+-    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile"])?;
++    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile", "--query-classes"])?;
++    let classes = match opts.get("--query-classes").map(String::as_str) {
++        None | Some("false") => false,
++        Some("true") => true,
++        _ => return Err("--query-classes must be true or false".into()),
++    };
+     let mut raw = super::read(Path::new(
+         opts.get("--program").ok_or("--program required")?,
+     ))?;
+@@ -32,6 +37,18 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
+     let out = Path::new(opts.get("--output").ok_or("--output required")?);
+     let markers = p.cell_ownership.artifact(&p);
+     let mut raw = p.artifact.clone();
++    if opts.get("--query-classes").is_some_and(|s| s == "false") {
++        if let Some(fragments) = raw["ownership_fragments"].as_object_mut() {
++            fragments.remove("query_classes");
++        }
++    }
++    if classes {
++        if raw.get("ownership_fragments").is_none() {
++            raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
++                "source":composition::source_digest(&raw),"fragments":[]});
++        }
++        raw["ownership_fragments"]["query_classes"] = p.bake_query_classes()?;
++    }
+     raw.as_object_mut().unwrap().remove("sha256");
+     raw["ownership_markers"] = markers.clone();
+     raw["sha256"] = artifact_digest(&raw).into();
+@@ -49,6 +66,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
+         "composition_initial_shapes":p.cell_ownership.programs.len(),
+         "composition_baked_shapes":p.cell_ownership.composition.shapes.len(),
+         "composition_transitions":p.cell_ownership.composition.transitions.len(),
++        "query_classes":checked.cell_ownership.query_classes.as_ref().map(|p|p.report()),
+         "composition_input_sources":p.cell_ownership.composition.sources.iter().map(Vec::len).sum::<usize>()}),
+     )?;
+     Ok(())
+diff --git a/tools/cell-compiler/src/work_credit.rs b/tools/cell-compiler/src/work_credit.rs
+index d2b829e6..1e9c85c7 100644
+--- a/tools/cell-compiler/src/work_credit.rs
++++ b/tools/cell-compiler/src/work_credit.rs
+@@ -64,7 +64,7 @@ impl Work {
+             "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
+             "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows",
+             "signal_binding_reads","signal_root_queries","signal_parent_probes","component_lifetime_updates","component_lifetime_growths","signal_bindings_created","signal_bindings_retired","component_signal_retire_visits","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
+-            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_planning_slice_steps","domain_signal_visits","domain_slice_steps","domain_route_probes","domain_column_checks","domain_legacy_fact_probes","domain_type_guards",
++            "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_planning_slice_steps","domain_signal_visits","domain_slice_steps","domain_route_probes","domain_column_checks","domain_legacy_fact_probes","domain_type_guards","query_class_probes","query_class_range_jumps",
+             "components_created","components_retired","composition_entry_reads","composition_missing_sources",
+             "composition_transition_probes","composition_unbaked_fallbacks","composition_requests","composition_shape_builds","composition_materializations","composition_shape_steps","composition_frames",
+             "dispatch_heap_pushes","dispatch_heap_pops","dispatch_comparisons","dispatch_scratch_growths"] {
+diff --git a/engine/cell-runtime/src/ownership_query_classes.rs b/engine/cell-runtime/src/ownership_query_classes.rs
+new file mode 100644
+index 00000000..569265ff
+--- /dev/null
++++ b/engine/cell-runtime/src/ownership_query_classes.rs
+@@ -0,0 +1,369 @@
++//! Offline possible-operator closure. A certificate covers immutable body uses
++//! and every admitted Entry substitution. It never proves equality or liveness.
++use super::*;
++
++const SCHEMA: &str = "eggfuse-query-classes/v1";
++const MAX_WORDS: usize = 1_048_576;
++
++#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
++pub struct Plan {
++    schema: String,
++    /// Class 0 accepts all operators. Other masks are interned dense bitsets.
++    masks: Vec<Vec<u64>>,
++    /// Concrete shared code -> local port symbol -> immutable class.
++    pub symbols: Vec<Vec<u32>>,
++}
++
++fn code_groups(plan: &super::Plan) -> Vec<Vec<usize>> {
++    let mut groups = vec![Vec::new(); plan.programs.len()];
++    for marker in &plan.markers {
++        if !groups[marker.program_id].contains(&marker.code) {
++            groups[marker.program_id].push(marker.code);
++        }
++    }
++    groups
++}
++
++/// Shape interning deliberately forgets concrete operator identity. Cover all
++/// codes of the source layout, constrained only by the actual checked Entry.
++fn edges(p: &Program, plan: &super::Plan, mut visit: impl FnMut((usize, usize), (usize, usize))) {
++    let groups = code_groups(plan);
++    for (key, _) in &plan.composition.transitions {
++        let hop = &key.hop;
++        let Some(&atom) = plan.entries[hop.rule].get(hop.entry) else {
++            continue;
++        };
++        let rule = &p.rules[hop.rule];
++        let Call::Table(table) = rule.query[atom].call else {
++            continue;
++        };
++        let program = plan.composition.shapes[key.shape].programs[hop.source_frame];
++        let receiver = plan.markers[rule.template].code;
++        for &code in &groups[program] {
++            if plan.code_operators[code].get(hop.op as usize) != Some(&table) {
++                continue;
++            }
++            for source in plan.composition.sources[hop.rule]
++                .iter()
++                .filter(|s| s.entry == hop.entry)
++            {
++                let local = plan.programs[program].fields[hop.op as usize][source.column]
++                    .expect("checked substitution field");
++                visit((code, local), (receiver, source.symbol));
++            }
++        }
++    }
++}
++
++fn close(masks: &mut [Vec<u64>], incoming: &[BTreeSet<usize>]) {
++    let mut pending = (0..masks.len()).collect::<std::collections::VecDeque<_>>();
++    let mut queued = vec![true; masks.len()];
++    while let Some(target) = pending.pop_front() {
++        queued[target] = false;
++        for &source in &incoming[target] {
++            let mut changed = false;
++            for word in 0..masks[target].len() {
++                let value = masks[source][word] | masks[target][word];
++                changed |= value != masks[source][word];
++                masks[source][word] = value;
++            }
++            if changed && !queued[source] {
++                queued[source] = true;
++                pending.push_back(source);
++            }
++        }
++    }
++}
++
++impl Plan {
++    fn all(plan: &super::Plan) -> Self {
++        Self {
++            schema: SCHEMA.into(),
++            masks: vec![vec![]],
++            symbols: plan
++                .code_programs
++                .iter()
++                .map(|p| vec![0; p.signals.len()])
++                .collect(),
++        }
++    }
++    pub(super) fn bake(p: &Program, plan: &super::Plan) -> Self {
++        let mut offsets = vec![0];
++        for program in &plan.code_programs {
++            offsets.push(offsets.last().unwrap() + program.signals.len());
++        }
++        let nodes = *offsets.last().unwrap();
++        let width = p.tables.len().div_ceil(64);
++        // A budget cut accepts all operators; it must never truncate a proof.
++        if nodes.saturating_mul(width.max(1)) > MAX_WORDS {
++            return Self::all(plan);
++        }
++        let mut masks = vec![vec![0u64; width]; nodes];
++        for (code, program) in plan.code_programs.iter().enumerate() {
++            for (symbol, steps) in program.signals.iter().enumerate() {
++                for step in steps {
++                    let table = plan.code_operators[code][step.op as usize];
++                    masks[offsets[code] + symbol][table / 64] |= 1 << (table % 64);
++                }
++            }
++        }
++        // Bake-only reverse edges support the fixed point, including cycles.
++        // These are code vertices; no runtime instance gets a consumer list.
++        let mut incoming = vec![BTreeSet::new(); nodes];
++        edges(p, plan, |(a, x), (b, y)| {
++            incoming[offsets[b] + y].insert(offsets[a] + x);
++        });
++        close(&mut masks, &incoming);
++        let mut result = Self::all(plan);
++        let mut intern = BTreeMap::new();
++        for (code, symbols) in result.symbols.iter_mut().enumerate() {
++            for (symbol, class) in symbols.iter_mut().enumerate() {
++                let mask = &masks[offsets[code] + symbol];
++                *class = if let Some(&id) = intern.get(mask) {
++                    id
++                } else {
++                    let id = u32::try_from(result.masks.len()).expect("bounded classes");
++                    intern.insert(mask.clone(), id);
++                    result.masks.push(mask.clone());
++                    id
++                };
++            }
++        }
++        result
++    }
++    pub(super) fn validate(raw: &J, p: &Program, plan: &super::Plan) -> Result<Self> {
++        let result: Self =
++            serde_json::from_value(raw.clone()).map_err(|e| format!("query classes: {e}"))?;
++        let width = p.tables.len().div_ceil(64);
++        if result.schema != SCHEMA
++            || result.masks.first() != Some(&vec![])
++            || result.masks.iter().skip(1).any(|m| m.len() != width)
++            || result.masks.len().saturating_mul(width.max(1)) > MAX_WORDS + width.max(1)
++            || result.symbols.len() != plan.code_programs.len()
++        {
++            return Err("invalid query class certificate dimensions".into());
++        }
++        for (code, program) in plan.code_programs.iter().enumerate() {
++            if result.symbols[code].len() != program.signals.len() {
++                return Err("query class symbol coverage differs".into());
++            }
++            for (symbol, steps) in program.signals.iter().enumerate() {
++                let class = result.symbols[code][symbol];
++                if class as usize >= result.masks.len() {
++                    return Err("query class out of bounds".into());
++                }
++                for step in steps {
++                    if !result.contains(class, plan.code_operators[code][step.op as usize]) {
++                        return Err("query class omits a current body operator".into());
++                    }
++                }
++            }
++        }
++        let mut closed = true;
++        edges(p, plan, |(a, x), (b, y)| {
++            let source = result.symbols[a][x];
++            let target = result.symbols[b][y];
++            if source != 0
++                && (target == 0
++                    || result.masks[source as usize]
++                        .iter()
++                        .zip(&result.masks[target as usize])
++                        .any(|(a, b)| b & !a != 0))
++            {
++                closed = false;
++            }
++        });
++        if !closed {
++            return Err("query class omits a future Entry use".into());
++        }
++        Ok(result)
++    }
++    #[inline]
++    pub(super) fn contains(&self, class: u32, table: usize) -> bool {
++        class == 0
++            || self.masks[class as usize]
++                .get(table / 64)
++                .is_some_and(|word| word & (1 << (table % 64)) != 0)
++    }
++    pub fn report(&self) -> J {
++        json!({"classes":self.masks.len(), "mask_words":self.masks.iter().map(Vec::len).sum::<usize>(),
++            "symbol_slots":self.symbols.iter().map(Vec::len).sum::<usize>(),
++            "all_operator_slots":self.symbols.iter().flatten().filter(|&&c| c == 0).count()})
++    }
++}
++
++impl Program {
++    /// Explicit offline compilation; production only checks the certificate.
++    pub fn bake_query_classes(&mut self) -> Result<J> {
++        self.prepare_cell_ownership()?;
++        self.cell_ownership.prepare_codes(&self.templates);
++        serde_json::to_value(Plan::bake(self, &self.cell_ownership)).map_err(|e| e.to_string())
++    }
++}
++
++enum Members<'a> {
++    Plain(crate::tiny_set::Iter<'a, Signal>),
++    One(Option<Signal>),
++    Groups {
++        set: &'a BTreeSet<Signal>,
++        range: std::collections::btree_set::Range<'a, Signal>,
++        accepted: Option<u32>,
++    },
++}
++struct Signals<'a> {
++    members: Members<'a>,
++    plan: Option<&'a Plan>,
++    table: usize,
++    stats: &'a Stats,
++}
++impl<'a> Signals<'a> {
++    fn new(
++        set: Option<&'a crate::tiny_set::TinySet<Signal>>,
++        plan: Option<&'a Plan>,
++        table: usize,
++        stats: &'a Stats,
++    ) -> Self {
++        use crate::tiny_set::TinySet;
++        let members = match (set, plan) {
++            (Some(set), None) => Members::Plain(set.iter()),
++            (Some(TinySet::Tree(set)), Some(_)) => Members::Groups {
++                set,
++                range: set.range(..),
++                accepted: None,
++            },
++            (Some(TinySet::One(signal)), Some(_)) => Members::One(Some(*signal)),
++            _ => Members::One(None),
++        };
++        Self {
++            members,
++            plan,
++            table,
++            stats,
++        }
++    }
++}
++impl Iterator for Signals<'_> {
++    type Item = Signal;
++    fn next(&mut self) -> Option<Signal> {
++        match &mut self.members {
++            Members::Plain(iter) => iter.next().copied(),
++            Members::One(signal) => {
++                let signal = signal.take()?;
++                self.stats
++                    .query_class_probes
++                    .set(self.stats.query_class_probes.get() + 1);
++                self.plan
++                    .unwrap()
++                    .contains(signal.class, self.table)
++                    .then_some(signal)
++            }
++            Members::Groups {
++                set,
++                range,
++                accepted,
++            } => loop {
++                let signal = *range.next()?;
++                if *accepted == Some(signal.class) {
++                    return Some(signal);
++                }
++                self.stats
++                    .query_class_probes
++                    .set(self.stats.query_class_probes.get() + 1);
++                if self.plan.unwrap().contains(signal.class, self.table) {
++                    *accepted = Some(signal.class);
++                    return Some(signal);
++                }
++                // Do not enumerate rejected members to count "saved work".
++                // Jump directly to the next actual class in this root bucket.
++                let end = Signal {
++                    class: signal.class,
++                    component: u32::MAX,
++                    symbol: usize::MAX,
++                };
++                *range = set.range((std::ops::Bound::Excluded(end), std::ops::Bound::Unbounded));
++                self.stats
++                    .query_class_range_jumps
++                    .set(self.stats.query_class_range_jumps.get() + 1);
++            },
++        }
++    }
++}
++impl Graph {
++    pub(super) fn query_signals(&self, table: usize, id: u64) -> impl Iterator<Item = Signal> + '_ {
++        let owner = self.ownership.as_ref().unwrap();
++        // Training may introduce edges absent from the frozen certificate.
++        // It disables filtering, never changes an already inserted Signal key.
++        let plan = self
++            .program
++            .cell_ownership
++            .query_classes
++            .as_deref()
++            .filter(|_| owner.composition.training.is_none());
++        let native = self.native_signal(id).filter(|s| {
++            plan.is_none_or(|plan| {
++                owner
++                    .stats
++                    .query_class_probes
++                    .set(owner.stats.query_class_probes.get() + 1);
++                plan.contains(s.class, table)
++            })
++        });
++        Signals::new(owner.boundaries.get(&id), plan, table, &owner.stats)
++            .filter(move |signal| Some(*signal) != native)
++            .chain(native)
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn cyclic_continuations_reach_a_fixed_point_without_merging_distinct_ports() {
++        let mut masks = vec![vec![1], vec![2], vec![4], vec![8], vec![16]];
++        // 0 -> 1 -> 2 -> 1; 2 -> 3. Symbol 4 is unrelated.
++        let incoming = vec![
++            BTreeSet::new(),
++            BTreeSet::from([0, 2]),
++            BTreeSet::from([1]),
++            BTreeSet::from([2]),
++            BTreeSet::new(),
++        ];
++        close(&mut masks, &incoming);
++        assert_eq!(masks, [vec![15], vec![14], vec![14], vec![8], vec![16]]);
++    }
++    #[test]
++    fn incompatible_range_is_skipped_with_one_class_probe() {
++        let plan = Plan {
++            schema: SCHEMA.into(),
++            masks: vec![vec![], vec![1], vec![2]],
++            symbols: vec![],
++        };
++        let stats = Stats::default();
++        let mut set = crate::tiny_set::TinySet::default();
++        for component in 0..4096 {
++            set.insert(Signal {
++                class: 1,
++                component,
++                symbol: 0,
++            });
++        }
++        let kept = Signal {
++            class: 2,
++            component: 4096,
++            symbol: 0,
++        };
++        set.insert(kept);
++        assert_eq!(
++            Signals::new(Some(&set), Some(&plan), 1, &stats).collect::<Vec<_>>(),
++            [kept]
++        );
++        assert_eq!(stats.query_class_probes.get(), 2);
++        assert_eq!(stats.query_class_range_jumps.get(), 1);
++        #[cfg(target_pointer_width = "64")]
++        assert_eq!(
++            std::mem::size_of::<Signal>(),
++            16,
++            "class occupies the previous padding"
++        );
++    }
++}
+diff --git a/tools/cell-compiler/tests/query_classes.rs b/tools/cell-compiler/tests/query_classes.rs
+new file mode 100644
+index 00000000..d37a5cb2
+--- /dev/null
++++ b/tools/cell-compiler/tests/query_classes.rs
+@@ -0,0 +1,220 @@
++use eggfuse_cell_runtime::{
++    checksum::artifact_digest, compiler, executor::Executor, graph::Graph, program::Program,
++    value::Value,
++};
++use serde_json::{Value as J, json};
++
++fn parse(mut raw: J) -> Result<Program, String> {
++    raw.as_object_mut().unwrap().remove("sha256");
++    raw["sha256"] = artifact_digest(&raw).into();
++    Program::parse(raw)
++}
++fn source(src: &str) -> Program {
++    let core = eggfuse_bake::device_frontend::core("query-classes", src).unwrap();
++    Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap()
++}
++fn fragments(p: &Program) -> Program {
++    let mut g = Graph::new_with_cell_ownership(p.clone()).unwrap();
++    g.train_ownership_fragments().unwrap();
++    let mut e = Executor::new(g, false);
++    e.execute().unwrap();
++    let profile = e.graph.ownership_fragment_profile().unwrap();
++    let mut raw = p.artifact.clone();
++    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
++        "source":profile["source"], "fragments":profile["records"].as_array().unwrap()
++            .iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
++    parse(raw).unwrap()
++}
++fn classified(mut p: Program) -> Program {
++    let classes = p.bake_query_classes().unwrap();
++    let mut raw = p.artifact.clone();
++    if raw.get("ownership_fragments").is_none() {
++        raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
++            "source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
++            "fragments":[]});
++    }
++    raw["ownership_fragments"]["query_classes"] = classes;
++    parse(raw).unwrap()
++}
++
++const STAGES: &str = r#"
++(datatype E (N i64) (F E) (G E) (H E) (Pair E E))
++(ruleset a) (ruleset b) (ruleset c) (ruleset merge)
++(rule ((= x (N n))) ((F x)) :ruleset a)
++(rule ((= f (F x))) ((G x) (Pair x x)) :ruleset b)
++(rule ((= g (G x))) ((F x) (H x)) :ruleset c)
++(rule ((= left (N 0)) (= right (N 1))) ((union left right)) :ruleset merge)
++(N 0) (N 1) (G (N 2))
++(run-schedule (seq (run a) (run merge) (run b) (run c) (run b)))
++"#;
++
++#[test]
++fn future_uses_survive_equalities_late_activation_and_retirement() {
++    let p = fragments(&source(STAGES));
++    let c = classified(p.clone());
++    let mut expected = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
++    let mut actual = Executor::new(Graph::new_with_local_congruence(c).unwrap(), true);
++    for stage in 1..=5 {
++        expected.execute_until(Some(stage)).unwrap();
++        actual.execute_until(Some(stage)).unwrap();
++        assert_eq!(
++            expected.graph.export().unwrap(),
++            actual.graph.export().unwrap()
++        );
++        assert_eq!(expected.snapshots, actual.snapshots);
++        assert_eq!(expected.binding_audit, actual.binding_audit);
++        // Compare true matches, not the deliberately over-approximated domain.
++        for table in 0..actual.graph.program.tables.len() {
++            for witness in actual.graph.witnesses(table) {
++                let row = actual.graph.row(witness).unwrap().unwrap();
++                for (column, value) in row.values.iter().enumerate() {
++                    if !matches!(value, Value::Eq(_)) {
++                        continue;
++                    }
++                    let mut bound = vec![None; row.values.len()];
++                    bound[column] = Some(value.clone());
++                    let matches = |g: &Graph| {
++                        g.candidates(table, &bound)
++                            .into_iter()
++                            .filter(|&d| {
++                                g.row(d)
++                                    .unwrap()
++                                    .is_some_and(|r| r.values[column] == *value)
++                            })
++                            .collect::<Vec<_>>()
++                    };
++                    assert_eq!(matches(&expected.graph), matches(&actual.graph));
++                }
++            }
++        }
++    }
++    let g = &mut actual.graph;
++    let n = g.program.tables.iter().position(|t| t.name == "N").unwrap();
++    let f = g.program.tables.iter().position(|t| t.name == "F").unwrap();
++    let h = g.program.tables.iter().position(|t| t.name == "H").unwrap();
++    let a = g.lookup(n, &[Value::Int(0)]).unwrap().unwrap().values[1].clone();
++    // Producer retirement leaves the later frame and original symbol alive.
++    g.hide(f, &[a.clone()], true).unwrap();
++    assert!(g.lookup(h, &[a.clone()]).unwrap().is_some());
++    g.dynamic_construct(f, vec![a.clone()]).unwrap();
++    assert!(g.lookup(f, &[a]).unwrap().is_some());
++    let report = g.ownership_report();
++    assert!(
++        report["stats"]["composition_cross_stage_joins"]
++            .as_u64()
++            .unwrap()
++            > 0
++    );
++    assert!(report["stats"]["query_class_range_jumps"].as_u64().unwrap() > 0);
++}
++
++#[test]
++fn certificate_rejects_missing_current_or_future_uses_even_with_valid_checksum() {
++    let plain = source(STAGES);
++    let baked = fragments(&plain);
++    let mut current = classified(baked.clone()).artifact;
++    let masks = current["ownership_fragments"]["query_classes"]["masks"]
++        .as_array_mut()
++        .unwrap();
++    for mask in masks.iter_mut().skip(1) {
++        for word in mask.as_array_mut().unwrap() {
++            *word = 0.into();
++        }
++    }
++    assert!(
++        parse(current)
++            .unwrap_err()
++            .contains("current body operator")
++    );
++
++    // A no-continuation proof covers all bodies but cannot certify this new
++    // continuation graph. Source digests deliberately exclude fragments.
++    let mut local = plain.clone();
++    let proof = local.bake_query_classes().unwrap();
++    let mut future = baked.artifact;
++    future["ownership_fragments"]["query_classes"] = proof;
++    assert!(parse(future).unwrap_err().contains("future Entry use"));
++}
++
++#[test]
++fn training_and_unbaked_continuations_use_complete_fallback() {
++    let plain = source(STAGES);
++    for training in [false, true] {
++        let mut a = Graph::new_with_local_congruence(plain.clone()).unwrap();
++        let mut b = Graph::new_with_local_congruence(classified(plain.clone())).unwrap();
++        if training {
++            a.train_ownership_fragments().unwrap();
++            b.train_ownership_fragments().unwrap();
++        }
++        let mut a = Executor::new(a, true);
++        let mut b = Executor::new(b, true);
++        a.execute().unwrap();
++        b.execute().unwrap();
++        assert_eq!(a.graph.export().unwrap(), b.graph.export().unwrap());
++        assert_eq!(a.snapshots, b.snapshots);
++        assert_eq!(a.binding_audit, b.binding_audit);
++        let report = b.graph.ownership_report();
++        if training {
++            assert_eq!(report["stats"]["query_class_probes"], 0);
++        } else {
++            assert_eq!(report["stats"]["composition_cross_stage_joins"], 0);
++            assert!(report["stats"]["boundary_live"].as_u64().unwrap() > 0);
++        }
++    }
++}
++
++#[test]
++fn different_operators_of_one_layout_do_not_share_runtime_class() {
++    let p = classified(source(
++        r#"
++(datatype E (N i64) (F E) (G E))
++(F (N 0)) (G (N 0)) (F (N 1)) (G (N 1))
++(run-schedule (run))
++"#,
++    ));
++    let n = p.tables.iter().position(|t| t.name == "N").unwrap();
++    let f = p.tables.iter().position(|t| t.name == "F").unwrap();
++    let g = p.tables.iter().position(|t| t.name == "G").unwrap();
++    let mut graph = Graph::new_with_local_congruence(p).unwrap();
++    let a = graph.lookup(n, &[Value::Int(0)]).unwrap().unwrap().values[1].clone();
++    assert_eq!(graph.candidates(f, &[Some(a.clone()), None]).len(), 1);
++    assert_eq!(graph.candidates(g, &[Some(a.clone()), None]).len(), 1);
++    graph.hide(f, &[a.clone()], true).unwrap();
++    graph.hide(g, &[a.clone()], true).unwrap();
++    assert!(graph.candidates(f, &[Some(a.clone()), None]).is_empty());
++    graph.dynamic_construct(f, vec![a.clone()]).unwrap();
++    assert_eq!(graph.candidates(f, &[Some(a), None]).len(), 1);
++    graph.ownership_report(); // validates lifetime counts and retained boundaries
++}
++
++#[test]
++fn grouping_never_proves_a_multi_input_equality() {
++    let p = fragments(&source(
++        r#"
++(datatype E (N i64) (Pair E E) (F E))
++(ruleset build) (ruleset first) (ruleset second)
++(rule ((= x (N 0)) (= y (N 1)) (= z (N 2)) (= w (N 3)))
++      ((F (Pair x z)) (F (Pair y w))) :ruleset build)
++(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset first)
++(rule ((= z (N 2)) (= w (N 3))) ((union z w)) :ruleset second)
++(N 0) (N 1) (N 2) (N 3)
++(run-schedule (seq (run build) (run first) (run second)))
++"#,
++    ));
++    let pair = p.tables.iter().position(|t| t.name == "Pair").unwrap();
++    let mut reference = Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(), true);
++    let mut actual = Executor::new(
++        Graph::new_with_local_congruence(classified(p)).unwrap(),
++        true,
++    );
++    for stage in 1..=3 {
++        reference.execute_until(Some(stage)).unwrap();
++        actual.execute_until(Some(stage)).unwrap();
++        assert_eq!(reference.snapshots, actual.snapshots);
++        assert_eq!(reference.binding_audit, actual.binding_audit);
++        assert_eq!(
++            actual.graph.witness_count(pair),
++            if stage == 3 { 1 } else { 2 }
++        );
++    }
++}
+diff --git a/tools/cell-compiler/tests/ownership_receipts.rs b/tools/cell-compiler/tests/ownership_receipts.rs
+new file mode 100644
+index 00000000..286ddb74
+--- /dev/null
++++ b/tools/cell-compiler/tests/ownership_receipts.rs
+@@ -0,0 +1,108 @@
++use eggfuse_cell_runtime::{
++    checksum::artifact_digest, compiler, executor::Executor, graph::Graph, program::Program,
++};
++use serde_json::json;
++
++fn source(src: &str) -> Program {
++    let core = eggfuse_bake::device_frontend::core("ownership-receipts", src).unwrap();
++    Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap()
++}
++
++fn assert_ordered_equal(expected: &Executor, actual: &Executor) {
++    assert_eq!(expected.initial_audit, actual.initial_audit);
++    assert_eq!(expected.snapshots, actual.snapshots);
++    assert_eq!(expected.binding_audit, actual.binding_audit);
++    assert_eq!(expected.graph.export().unwrap(), actual.graph.export().unwrap());
++    assert_eq!(expected.steps.len(), actual.steps.len());
++    for (a, b) in expected.steps.iter().zip(&actual.steps) {
++        for key in ["ordinal", "ruleset", "path", "iterations", "epoch", "logical_matches",
++                    "executed_bindings", "changed"] {
++            assert_eq!(a[key], b[key], "ordered Run field {key}");
++        }
++    }
++}
++
++const STAGES: &str = r#"
++(datatype E (N i64) (F E) (G E) (H E) (Seen E))
++(ruleset a) (ruleset b) (ruleset c) (ruleset merge)
++(rule ((= x (N n))) ((G (F x))) :ruleset a)
++(rule ((= x (G y))) ((H x)) :ruleset b)
++(rule ((= x (H y))) ((Seen x)) :ruleset c)
++(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
++(N 0) (N 1)
++(run-schedule (seq (run a) (run b) (run merge) (run c)))
++"#;
++
++#[test]
++fn fragment_training_can_begin_after_executor_construction() {
++    let p = source(STAGES);
++    let mut early_graph = Graph::new_with_cell_ownership(p.clone()).unwrap();
++    early_graph.train_ownership_fragments().unwrap();
++    let mut early = Executor::new(early_graph, true);
++    let mut late = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
++    // Ownership has already adopted imported facts and configured Spine.
++    // Receipt demand must observe this later training activation.
++    late.graph.train_ownership_fragments().unwrap();
++    early.execute().unwrap();
++    late.execute().unwrap();
++    assert_ordered_equal(&early, &late);
++    let a = early.graph.ownership_fragment_profile().unwrap();
++    let b = late.graph.ownership_fragment_profile().unwrap();
++    assert_eq!(a, b);
++    assert!(!b["records"].as_array().unwrap().is_empty());
++    assert!(late.graph.ownership_report()["stats"]["composition_cross_stage_joins"]
++        .as_u64().unwrap() > 0);
++}
++
++#[test]
++fn admitted_receivers_keep_receipts_and_unbaked_rules_keep_original_order() {
++    let p = source(STAGES);
++    let mut training = Graph::new_with_cell_ownership(p.clone()).unwrap();
++    training.train_ownership_fragments().unwrap();
++    let mut training = Executor::new(training, false);
++    training.execute().unwrap();
++    let profile = training.graph.ownership_fragment_profile().unwrap();
++    // Admit only the final receiver. Other covered RHS rules must use the
++    // unchanged Spine alias requirements and ordinary boundary fallback.
++    let receiver = p.sets["c"][0];
++    let mut raw = p.artifact;
++    let fragments = profile["records"].as_array().unwrap().iter()
++        .map(|record| &record["fragment"])
++        .filter(|fragment| fragment["hops"].as_array().unwrap().iter()
++            .all(|hop| hop["rule"].as_u64() == Some(receiver as u64)))
++        .cloned().collect::<Vec<_>>();
++    assert!(!fragments.is_empty());
++    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
++        "source":profile["source"], "fragments":fragments});
++    raw.as_object_mut().unwrap().remove("sha256");
++    raw["sha256"] = artifact_digest(&raw).into();
++    let p = Program::parse(raw).unwrap();
++    assert!(p.cell_ownership.composition.active_rules[receiver]);
++    assert_eq!(p.cell_ownership.composition.active_rules.iter().filter(|&&active| active).count(), 1);
++    let mut expected = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
++    let mut actual = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
++    expected.execute().unwrap();
++    actual.execute().unwrap();
++    assert_ordered_equal(&expected, &actual);
++    let report = actual.graph.ownership_report();
++    assert!(report["stats"]["composition_baked_hits"].as_u64().unwrap() > 0);
++}
++
++#[test]
++fn inactive_ownership_receiver_preserves_static_query_alias_publication() {
++    let p = source(r#"
++(datatype E (N i64) (F E) (G E) (H E))
++(ruleset alias) (ruleset consume)
++(rule ((= f (F x))) ((F x) (G f)) :ruleset alias)
++(rule ((= g (G x))) ((H g)) :ruleset consume)
++(F (N 0)) (F (N 1))
++(run-schedule (seq (run alias) (run consume)))
++"#);
++    let mut expected = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
++    let mut actual = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
++    assert!(actual.graph.program.cell_ownership.composition.active_rules.iter().all(|&active| !active));
++    expected.execute().unwrap();
++    actual.execute().unwrap();
++    assert_ordered_equal(&expected, &actual);
++    assert!(actual.report()["stage_spine"]["stats"]["alias_query_forwards"].as_u64().unwrap() > 0);
++}

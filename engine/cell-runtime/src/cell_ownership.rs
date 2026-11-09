@@ -11,6 +11,8 @@ use slices::{PortProgram, Signal};
 pub mod composition;
 #[path = "stable_ports.rs"]
 pub mod ports;
+#[path = "ownership_query_classes.rs"]
+pub mod query_classes;
 #[path = "ownership_pending.rs"]
 mod ready;
 #[path = "port_completion.rs"]
@@ -27,6 +29,8 @@ pub struct Plan {
     pub code_programs: Vec<Rc<PortProgram>>,
     #[serde(skip)]
     pub code_operators: Vec<Vec<usize>>,
+    #[serde(skip)]
+    pub query_classes: Option<Rc<query_classes::Plan>>,
     pub composition: composition::Plan,
     pub entries: Vec<Vec<usize>>,
     /// Shared publication table -> scheduled typed entry ports. Producer body
@@ -103,10 +107,11 @@ impl Plan {
             }
         }
         let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
-        let plan = Self {
+        let mut plan = Self {
             programs,
             code_programs: vec![],
             code_operators: vec![],
+            query_classes: None,
             composition,
             tables,
             markers,
@@ -117,6 +122,10 @@ impl Plan {
             if *raw != plan.artifact(p) {
                 return Err("ownership marker differs from typed entry/body wiring".into());
             }
+        }
+        if let Some(raw) = p.artifact["ownership_fragments"].get("query_classes") {
+            plan.prepare_codes(&p.templates);
+            plan.query_classes = Some(Rc::new(query_classes::Plan::validate(raw, p, &plan)?));
         }
         Ok(plan)
     }
@@ -237,6 +246,8 @@ struct Stats {
     domain_legacy_fact_probes: Counter<u64>,
     domain_type_guards: Counter<u64>,
     domain_type_rejections: Counter<u64>,
+    query_class_probes: Counter<u64>,
+    query_class_range_jumps: Counter<u64>,
 }
 impl Stats {
     fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
@@ -815,14 +826,9 @@ impl Graph {
         let s = &owner.stats;
         s.domain_queries.set(s.domain_queries.get() + 1);
         let mut result = BTreeSet::new();
-        let native = self.native_signal(id);
-        // Borrow only the selected bucket. A native signal can also be a
-        // boundary; visit it once. The result set preserves witness order.
-        let signals = owner.boundaries.get(&id).into_iter()
-            .flat_map(|set| set.iter()).copied()
-            .filter(|signal| Some(*signal) != native)
-            .chain(native);
-        for signal in signals {
+        // Jump over incompatible classes before touching any instance. The
+        // result set still preserves witness order across all retained classes.
+        for signal in self.query_signals(table, id) {
             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
             let m = &self.ownership.as_ref().unwrap().composition;
             let component = m.components[signal.component as usize].as_ref().unwrap();
@@ -963,7 +969,7 @@ impl Graph {
                                 assert!(
                                     m.boundaries
                                         .get(id)
-                                        .is_some_and(|b| b.iter().any(|s| *s == signal)),
+                                        .is_some_and(|b| b.contains(&signal)),
                                     "missing owner boundary"
                                 );
                             }

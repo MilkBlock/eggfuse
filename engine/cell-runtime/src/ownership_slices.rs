@@ -114,6 +114,9 @@ impl PortProgram {
 /// and escaped aliases retain canonical-root boundary entries.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(in crate::graph) struct Signal {
+    /// Immutable possible-use class, derived from the origin's shared code.
+    /// Class-first order permits skipping an incompatible tree range.
+    pub class: u32,
     pub component: u32,
     pub symbol: usize,
 }

@@ -1,0 +1,74 @@
+{
+  "scope": "standalone Cell CPU; parent-run source checks; performance and full ordered binary audit are separate",
+  "environment": {
+    "CARGO_TARGET_DIR": "/private/tmp/eggfuse-union-digest/target",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "checks": {
+    "workspace": {
+      "command": "cargo test --locked --workspace --all-features -j 2",
+      "log": "out/condition-bake/query-class-workspace.log",
+      "sha256": "68c3f1416eaeed350b8b01775bd4aa6a080270fa11d5c142d49b51ae5a426fdb",
+      "passed": 343,
+      "failed": 0,
+      "ignored": 4,
+      "test_groups": 36
+    },
+    "non_sparse": {
+      "command": "cargo test --locked -p eggfuse-cell-compiler --features iterative-bake --test query_classes --test ownership_receipts --test condition_compilation --test stable_ports --test cell_ownership -j 2",
+      "log": "out/condition-bake/query-class-non-sparse.log",
+      "sha256": "8a39b5f073402fee7b37727b08e28a7e054775975d3b738a31d524cd1a7a4ef9",
+      "passed": 49,
+      "failed": 0,
+      "ignored": 0,
+      "test_groups": 5
+    },
+    "focused_final": {
+      "command": "cargo test --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports,iterative-bake --test ownership_receipts --test query_classes --lib -j 2",
+      "log": "out/condition-bake/query-class-final-focused.log",
+      "sha256": "d9df77670984fc3ddf79cc467131072c945489baf7ad76921803016ba3a37e62",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "test_groups": 3
+    },
+    "minimal": {
+      "command": "cargo check --locked -p eggfuse-cell-runtime --no-default-features -j 2",
+      "log": "out/condition-bake/query-class-minimal.log",
+      "sha256": "e3628a5433aa630fdee46347705fab722d8ff13fde8fe9d9dac70f1f9ba4b396",
+      "check_completed": true
+    }
+  },
+  "source_boundary": "Workspace and non-sparse logs precede restoring the conservative receipts || owner_queries fallback; final focused log follows that one-line change. Normal execution has receipts=true.",
+  "initial_timing_campaign": "stopped at sum-bits warmup due to raw JSON object-order checksum mismatch; see build-order-diagnosis.json",
+  "normal_campaign": {
+    "raw_root": "out/query-classes",
+    "strict_raw_state_and_ordered_schedule_equal": true,
+    "counter_groups_deterministic_within_each_lane": true,
+    "performance_gate_passed": false,
+    "gate_reason": "sum-bits whole-process time has no demonstrated improvement; archived-fast remains faster on both workloads",
+    "samples": {
+      "sum-bits": {
+        "measured_per_lane": 15,
+        "warmups_per_lane": 1,
+        "semantic_reference": {
+          "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        },
+        "runs": 1428
+      },
+      "raytrace": {
+        "measured_per_lane": 2,
+        "warmups_per_lane": 0,
+        "semantic_reference": {
+          "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+          "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+        },
+        "runs": 16883
+      }
+    },
+    "complete_ordered_effect_audit": "not yet run for this candidate; normal state/schedule equality does not substitute for a full ordered RHS/writes/resumes/Spine audit"
+  }
+}
