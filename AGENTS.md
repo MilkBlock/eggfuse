@@ -10,6 +10,39 @@
 
 Before optimizing the Cell CPU path, check whether a new iteration can learn from the last catalog's actual executions, which work a scheduled block switch could discharge across Runs, and which typed compiler facts can prove that work redundant. Record the opportunity, the obligations that remain live, and the measured change against the current branch.
 
+## Cell unification direction
+
+- Use Cell templates and their actual instances as the common structural
+  representation for query completion, execution and iterative Bake. Shared
+  Entry projects the existing instance slots into a consumer's query. Derive
+  established facts from the template's matched inputs and completed operations;
+  do not introduce a parallel runtime fact graph or a second copy of the bindings.
+- An independent source marker relation is optional materialization, not a
+  required intermediate representation. Keep `.egg` marker emission available
+  where useful for native comparison or measured sharing. Do not require new
+  markers merely to expose information already available through a Cell Entry.
+- Template assumptions need evidence from a successful match or completed
+  operation. Actual returned values may refer to an existing constructor owned
+  by another Cell; `(producer Cell, operation)` is not a universal result address.
+  Preserve residual enumeration, late-input and union-enabled matches, delta
+  ownership, visibility and any necessary retirement/generation checks.
+- Keep ordinary query atoms, effect instructions, existing Entry projections
+  and source Run boundaries authoritative. Constructor facts, equality tests,
+  scalar guards and mutable reads are properties of those operations, not four
+  additional maintained representations. Reuse existing lifecycle metadata.
+- Bake composition must derive consumer Entries and any materialization
+  boundaries from the same Cell definitions. A newly combined Cell must be able
+  to replace an intermediate handoff and its maintenance, not only add another
+  execution catalog over a fixed marker layout. Preserve original Run/effect
+  ordering when crossing stages.
+- For each implemented takeover, identify and remove the redundant query,
+  binding, history/receipt or publication work within its proven coverage.
+  Template-internal connections remain static wiring; do not recreate them as
+  per-producer consumer lists. Charge uncovered boundary work and new storage
+  or dispatch costs. Count a saved operation only once across marker and Cell
+  paths. A specification, shared registry or new counter alone is not a completed
+  takeover or evidence of a speedup.
+
 ## Semantic acceptance
 
 - Use `python3 benchmarks/marker-handoff/choice_diagnosis.py ARTIFACT_ROOT OUTPUT.json`
