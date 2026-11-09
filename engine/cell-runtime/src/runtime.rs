@@ -1978,6 +1978,10 @@ impl Executor {
         }
         let facts = self.graph.stats.logical_facts_created;
         let updates = self.graph.stats.function_updates;
+        #[cfg(feature = "structural-depth")]
+        let full_effects = self.stage_spine.structural.capture_rule(rid);
+        #[cfg(not(feature = "structural-depth"))]
+        let full_effects = false;
 
         if origin.is_none()
             && let Some(write) = self.graph.program.writes[rid].clone()
@@ -2005,11 +2009,12 @@ impl Executor {
                 .apply_write(template, b.values, b.parent, &write, keep_key)?;
             #[cfg(feature = "structural-depth")]
             if self.stage_spine.structural.capture_rule(rid) {
-                let mut rs = vec![None; write.op + 1];
-                rs[write.op] = Some(Dependency::Function(index));
+                let mut rs = self.stage_spine.begin_effects(&self.graph, rid, true, false);
+                rs.record(write.op, Dependency::Function(index));
                 self.stage_spine
                     .structural
                     .capture(&self.graph, rid, &b.known, &rs);
+                self.stage_spine.finish_effects(rs, false);
             }
             if let Some(step) = stage_cursor {
                 self.stage_spine.effects(0, u64::from(changed), 0);
@@ -2057,8 +2062,9 @@ impl Executor {
                 .as_ref()
                 .is_some_and(|s| s.closed(&self.graph.program.iterative))
         {
-            if let Some((cell, mut keys, receipts, unions)) =
-                self.graph.finish_handoff(template, &b.values, &available)?
+            let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
+            if let Some((cell, mut keys, unions)) =
+                self.graph.finish_handoff(template, &b.values, &available, &mut receipts)?
             {
                 #[cfg(feature = "structural-depth")]
                 self.stage_spine
@@ -2071,7 +2077,7 @@ impl Executor {
                     cell,
                     stage_cursor.unwrap(),
                     |i| b.known.receipt(i),
-                    Some(&receipts),
+                    receipts,
                     |i, _| {
                         keys[i]
                             .take()
@@ -2080,46 +2086,52 @@ impl Executor {
                 )?;
                 return Ok(());
             }
+            self.stage_spine.abort_effects(receipts);
             self.graph.stats.handoff_closed_fallback += 1;
         }
         #[cfg(feature = "structural-depth")]
         if self.stage_spine.structural.execute
             && origin.is_none()
             && let Some(d) = closed
-            && let Some((cell, mut keys, receipts, unions)) =
-                self.graph.finish_handoff(template, &b.values, &ports)?
         {
-            #[cfg(feature = "rhs-work-audit")]
-            if !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))) {
-                self.ledger.closed(&self.graph, rid, &b.values);
+            let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
+            if let Some((cell, mut keys, unions)) =
+                self.graph.finish_handoff(template, &b.values, &ports, &mut receipts)?
+            {
+                #[cfg(feature = "rhs-work-audit")]
+                if !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))) {
+                    self.ledger.closed(&self.graph, rid, &b.values);
+                }
+                self.stage_spine.structural.closed(
+                    d,
+                    matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))),
+                );
+                for &(_, d) in &proven {
+                    self.stage_spine.structural.accepted(d as usize);
+                }
+                self.stage_spine
+                    .structural
+                    .capture(&self.graph, rid, &b.known, &receipts);
+                if let Some(cursor) = stage_cursor {
+                    self.stage_spine.effects(0, 0, unions);
+                    self.stage_spine.capture_keys(
+                        &self.graph,
+                        rid,
+                        cell,
+                        cursor,
+                        |i| b.known.receipt(i),
+                        receipts,
+                        |i, _| {
+                            keys[i]
+                                .take()
+                                .ok_or("missing structural publication key".into())
+                        },
+                    )?;
+                }
+                else { self.stage_spine.finish_effects(receipts, false); }
+                return Ok(());
             }
-            self.stage_spine.structural.closed(
-                d,
-                matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))),
-            );
-            for &(_, d) in &proven {
-                self.stage_spine.structural.accepted(d as usize);
-            }
-            self.stage_spine
-                .structural
-                .capture(&self.graph, rid, &b.known, &receipts);
-            if let Some(cursor) = stage_cursor {
-                self.stage_spine.effects(0, 0, unions);
-                self.stage_spine.capture_keys(
-                    &self.graph,
-                    rid,
-                    cell,
-                    cursor,
-                    |i| b.known.receipt(i),
-                    Some(&receipts),
-                    |i, _| {
-                        keys[i]
-                            .take()
-                            .ok_or("missing structural publication key".into())
-                    },
-                )?;
-            }
-            return Ok(());
+            self.stage_spine.abort_effects(receipts);
         }
         #[cfg(feature = "structural-depth")]
         let available = {
@@ -2150,15 +2162,7 @@ impl Executor {
                 .cloned()
         };
         let aliases = static_skip.as_deref().map(Vec::as_slice).filter(|_| true);
-        #[cfg(feature = "structural-depth")]
-        let capture = self
-            .stage_spine
-            .structural
-            .capture_rule(rid)
-            .then(|| vec![None; self.graph.program.templates[template].ops.len()]);
-        #[cfg(not(feature = "structural-depth"))]
-        let capture: Option<Vec<Option<Dependency>>> = None;
-        let mut effect_receipts = capture;
+        let mut effect_receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, false);
         #[cfg(feature = "rhs-locals")]
         let local = if self.local_width > 0
             && self.local_selection.as_ref().is_none_or(|s| s[rid])
@@ -2178,7 +2182,7 @@ impl Executor {
         // frame; on the first miss the original suffix resumes after it.
         let ordinary = |me: &mut Self,
                         values: crate::slots::Slots,
-                        _receipts: &mut Option<Vec<Option<Dependency>>>|
+                        _receipts: &mut crate::cell::Effects|
          -> Result<Option<(u32, usize)>> {
             if me.graph.program.rules[rid].constructor_only
                 && stage_cursor.is_none()
@@ -2190,7 +2194,7 @@ impl Executor {
                     b.parent,
                     aliases,
                     #[cfg(feature = "structural-depth")]
-                    _receipts.as_deref_mut(),
+                    _receipts,
                 )
             } else {
                 Ok(Some((
@@ -2207,16 +2211,12 @@ impl Executor {
         };
         #[cfg(feature = "rhs-locals")]
         let start = if let Some(block) = local {
-            if effect_receipts.is_none() && self.stage_spine.capture_receipts(rid) {
-                effect_receipts =
-                    Some(vec![None; self.graph.program.templates[template].ops.len()]);
-            }
             match self.graph.local_rhs(
                 template,
                 b.values,
                 b.parent,
                 &block,
-                effect_receipts.as_deref_mut(),
+                &mut effect_receipts,
                 &mut self.local_counts,
             )? {
                 crate::graph::local_rhs_exec::Start::Promoted { cell, next_op } => {
@@ -2228,7 +2228,7 @@ impl Executor {
                         &self.graph,
                         rid,
                         &b.known,
-                        effect_receipts.as_deref().unwrap_or(&[]),
+                        &effect_receipts,
                     );
                     if let Some(cursor) = stage_cursor {
                         let (c, f, u) = stage_counts.unwrap();
@@ -2244,10 +2244,10 @@ impl Executor {
                             cell,
                             cursor,
                             |i| b.known.receipt(i),
-                            effect_receipts.as_deref(),
+                            effect_receipts,
                             |_, args| g.local_key(cell, &frame, args),
                         )?;
-                    }
+                    } else { self.stage_spine.finish_effects(effect_receipts, false); }
                     return Ok(());
                 }
             }
@@ -2262,8 +2262,9 @@ impl Executor {
                 &self.graph,
                 rid,
                 &b.known,
-                effect_receipts.as_deref().unwrap_or(&[]),
+                &effect_receipts,
             );
+            self.stage_spine.finish_effects(effect_receipts, false);
             return Ok(());
         };
 
@@ -2278,11 +2279,6 @@ impl Executor {
             self.continuation_stats.max_depth = self.continuation_stats.max_depth.max(depth);
         }
         let ops = self.graph.program.templates[template].ops.clone();
-        let mut effect_receipts = effect_receipts.or_else(|| {
-            self.stage_spine
-                .capture_receipts(rid)
-                .then(|| vec![None; ops.len()])
-        });
         let mut completed = true;
         let mut completed_prefix = first_op;
         #[cfg(feature = "iterative-bake")]
@@ -2324,9 +2320,7 @@ impl Executor {
                             }
                             _ => unreachable!(),
                         }
-                        if let Some(e) = &mut effect_receipts {
-                            e[i] = Some(row.witness);
-                        }
+                        effect_receipts.record(i, row.witness);
                         #[cfg(feature = "structural-depth")]
                         if self.stage_spine.structural.execute
                             && origin.is_none()
@@ -2347,7 +2341,7 @@ impl Executor {
                 Op::Copy(..) => {}
                 Op::Let(dst, Call::Table(t), aa) => {
                     if self.graph.program.tables[*t].virtual_fact {
-                        if let Some(receipts) = &mut effect_receipts {
+                        if let Some(receipt) = effect_receipts.slot(i) {
                             let mut visible = false;
                             self.graph.construct_recorded(
                                 cell,
@@ -2355,7 +2349,7 @@ impl Executor {
                                 *t,
                                 aa,
                                 *dst,
-                                &mut receipts[i],
+                                receipt,
                                 &mut visible,
                             )?;
                         } else {
@@ -2369,9 +2363,7 @@ impl Executor {
                                 self.graph.program.tables[*t].name
                             )
                         })?;
-                        if let Some(receipts) = &mut effect_receipts {
-                            receipts[i] = Some(row.witness);
-                        }
+                        effect_receipts.record(i, row.witness);
                         self.graph
                             .rhs_frame_mut(cell)
                             .unwrap()
@@ -2405,7 +2397,7 @@ impl Executor {
                         aa,
                         v,
                         None,
-                        effect_receipts.as_mut().map(|rs| &mut rs[i]),
+                        effect_receipts.slot(i),
                         source,
                     )?;
                 }
@@ -2451,7 +2443,7 @@ impl Executor {
                 &self.graph,
                 rid,
                 &b.known,
-                effect_receipts.as_deref().unwrap_or(&[]),
+                &effect_receipts,
             );
         }
         if completed && let Some(cursor) = stage_cursor {
@@ -2461,8 +2453,12 @@ impl Executor {
                 cell,
                 cursor,
                 |i| b.known.receipt(i),
-                effect_receipts.as_deref(),
+                effect_receipts,
             )?;
+        } else if !completed {
+            self.stage_spine.abort_effects(effect_receipts);
+        } else {
+            self.stage_spine.finish_effects(effect_receipts, false);
         }
         #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
         if let (Some(block), root) = inspect_births {

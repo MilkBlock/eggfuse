@@ -17,7 +17,7 @@ impl Graph {
         values: crate::slots::Slots,
         parent: Option<FactRef>,
         plan: &Block,
-        mut receipts: Option<&mut [Option<Dependency>]>,
+        receipts: &mut crate::cell::Effects,
         stats: &mut Counts,
     ) -> Result<Start> {
         let cell = self.reserve_cell_id()?;
@@ -59,9 +59,7 @@ impl Graph {
                         }
                     }
                 }
-                if let Some(rs) = receipts.as_mut() {
-                    rs[step.op] = Some(row.witness);
-                }
+                receipts.record(step.op, row.witness);
             } else {
                 self.store_cell(cell, frame);
                 let fact = FactRef {
@@ -76,9 +74,7 @@ impl Graph {
                         self.activate(fact, step.table, &key, assigned.unwrap(), false)?;
                     }
                 }
-                if let Some(rs) = receipts.as_mut() {
-                    rs[step.op] = Some(Dependency::Fact(fact));
-                }
+                receipts.record(step.op, Dependency::Fact(fact));
                 stats.promoted += 1;
                 stats.prefix_lets_on_promotion += local_lets;
                 return Ok(Start::Promoted {

@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-effects-unified/runtime-baseline",
+      "program": "out/cell-effects-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-effects-unified/runtime-candidate",
+      "program": "out/cell-effects-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

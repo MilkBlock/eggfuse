@@ -216,11 +216,11 @@ impl Depth {
         r: usize,
         s: Site,
         known: &QueryFacts,
-        effect: &[Option<Dependency>],
+        effect: &crate::cell::Effects,
     ) -> Option<Dependency> {
         match s {
             Site::Query(i) => known.tracked(i),
-            Site::Effect(i) => effect.get(i).copied().flatten().or_else(|| {
+            Site::Effect(i) => effect.get(i).or_else(|| {
                 match g
                     .program
                     .known_results
@@ -231,17 +231,17 @@ impl Depth {
                     .flatten()?
                 {
                     Site::Query(a) => known.tracked(a),
-                    Site::Effect(a) => effect.get(a).copied().flatten(),
+                    Site::Effect(a) => effect.get(a),
                 }
             }),
         }
     }
-    pub fn capture(
+    pub(crate) fn capture(
         &mut self,
         g: &Graph,
         r: usize,
         known: &QueryFacts,
-        effect: &[Option<Dependency>],
+        effect: &crate::cell::Effects,
     ) {
         if !self.capture_rule(r) {
             return;

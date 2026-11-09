@@ -15,6 +15,9 @@ pub(crate) use results::{Capture, ResultPort, Results};
 #[path = "cell_query.rs"]
 mod query;
 pub(crate) use query::{Access, Queries, Query, query_order};
+#[path = "cell_effects.rs"]
+mod effects;
+pub(crate) use effects::{EffectPlan, Effects};
 #[cfg(feature = "spine-blocks")]
 pub(crate) use query::Field;
 

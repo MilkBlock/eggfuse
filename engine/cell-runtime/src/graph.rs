@@ -698,7 +698,7 @@ impl Graph {
         values: crate::slots::Slots,
         parent: Option<FactRef>,
         aliases: Option<&[bool]>,
-        #[cfg(feature = "structural-depth")] mut receipts: Option<&mut [Option<Dependency>]>,
+        #[cfg(feature = "structural-depth")] receipts: &mut crate::cell::Effects,
     ) -> Result<Option<(u32, usize)>> {
         let id = self.reserve_cell_id()?;
         #[cfg(feature = "sparse-cells")]
@@ -725,20 +725,13 @@ impl Graph {
             if let Some(row) = self.lookup_canonical(table, &key)? {
                 self.stats.constructor_reused += 1;
                 #[cfg(feature = "structural-depth")]
-                if let Some(ref mut rs) = receipts {
-                    rs[op] = Some(row.witness);
-                }
+                receipts.record(op, row.witness);
                 frame.values.insert(dst, row.values.last().unwrap().clone());
             } else {
                 self.store_cell(id, frame);
                 self.insert_constructor(id, op, table, &key, dst)?;
                 #[cfg(feature = "structural-depth")]
-                if let Some(ref mut rs) = receipts {
-                    rs[op] = Some(Dependency::Fact(FactRef {
-                        cell: id,
-                        op: op as u32,
-                    }));
-                }
+                receipts.record(op, Dependency::Fact(FactRef { cell: id, op: op as u32 }));
                 return Ok(Some((id, op + 1)));
             }
         }
@@ -1501,9 +1494,9 @@ impl Graph {
         template: usize,
         inputs: &crate::slots::Slots,
         transfers: &[crate::result_handoff::Input],
-    ) -> Result<Option<(u32, Vec<Option<Vec<Value>>>, Vec<Option<Dependency>>, u64)>> {
+        receipts: &mut crate::cell::Effects,
+    ) -> Result<Option<(u32, Vec<Option<Vec<Value>>>, u64)>> {
         let ops = self.program.templates[template].ops.clone();
-        let mut receipts = vec![None; ops.len()];
         let mut keys = vec![None; ops.len()];
         let mut suffix = crate::slots::Slots::default();
         let mut unions = vec![];
@@ -1575,7 +1568,7 @@ impl Graph {
                 }
                 _ => unreachable!(),
             }
-            receipts[op] = Some(row.witness);
+            receipts.record(op, row.witness);
             keys[op] = Some(key);
             deep += u64::from(input.back > 1);
         }
@@ -1591,7 +1584,7 @@ impl Graph {
         self.stats.handoff_lets += lets;
         self.stats.handoff_sets += sets;
         self.stats.handoff_deep += deep;
-        Ok(Some((cell, keys, receipts, count)))
+        Ok(Some((cell, keys, count)))
     }
     #[cfg(feature = "structural-depth")]
     pub(crate) fn checked_constructor(

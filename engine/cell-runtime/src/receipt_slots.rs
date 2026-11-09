@@ -80,13 +80,13 @@ impl Slots {
     pub fn get(&self, g: &Graph, w: Dependency) -> Option<&Packet> {
         self.bundles.sealed(g.previous_port_slot(w))
     }
-    pub fn capture(
+    pub(crate) fn capture(
         &mut self,
         g: &Graph,
         focus: &focus::Focus,
         r: usize,
         known: &QueryFacts,
-        effects: &[Option<Dependency>],
+        effects: &crate::cell::Effects,
         stats: &mut Stats,
         profile: bool,
     ) {

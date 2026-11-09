@@ -492,6 +492,13 @@ pub struct Stats {
     completion_order_checks: u64,
     completion_cell_visits: u64,
     completion_cursor_moves: u64,
+    effect_frames: u64,
+    effect_slots_initialized: u64,
+    effect_slot_probes: u64,
+    effect_slot_targets: u64,
+    effect_outputs_reused: u64,
+    effect_output_copies: u64,
+    effect_aborted_frames: u64,
     cell_output_spans: u64,
     cell_output_slots: u64,
     cell_output_receipts: u64,
@@ -593,6 +600,9 @@ pub struct Programs {
     active_tables: Vec<usize>,
     // Anchor-producing operations and their optional proven receipt sources.
     outputs: Vec<Vec<crate::cell::Output>>,
+    effect_plans: Vec<OnceCell<Rc<crate::cell::EffectPlan>>>,
+    #[cfg(feature = "structural-depth")]
+    full_effect_plans: Vec<OnceCell<Rc<crate::cell::EffectPlan>>>,
     alias_query_facts: Vec<QueryFacts>,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
@@ -607,7 +617,6 @@ pub struct Programs {
     cell_output_rules: Vec<bool>,
     #[cfg(feature = "sparse-cells")]
     cell_outputs_pending: usize,
-    #[cfg(feature = "sparse-cells")]
     cell_outputs: Vec<Option<Dependency>>,
     pending_anchors: Vec<(usize, Vec<Value>, Publication)>,
     marker_root: Vec<bool>,
@@ -903,6 +912,9 @@ impl Programs {
             #[cfg(feature = "iterative-bake")]
             training: Default::default(),
             outputs: vec![],
+            effect_plans: vec![OnceCell::new(); p.rules.len()],
+            #[cfg(feature = "structural-depth")]
+            full_effect_plans: vec![OnceCell::new(); p.rules.len()],
             alias_query_facts: vec![],
             owner_queries: false,
             pending_steps: vec![],
@@ -917,7 +929,6 @@ impl Programs {
             cell_output_rules: vec![false; p.rules.len()],
             #[cfg(feature = "sparse-cells")]
             cell_outputs_pending: 0,
-            #[cfg(feature = "sparse-cells")]
             cell_outputs: vec![],
             marker_root: p.rules.iter().map(|r| p.templates[r.template].ops.iter().any(|op| match op {
                 Op::Set(t, _, _) | Op::Let(_, Call::Table(t), _) => p.marker_tables.contains(t),
@@ -1159,24 +1170,35 @@ impl Programs {
         // requirements; repeated configuration cannot broaden their scope.
         self.owner_queries = true;
     }
-    /// Query witnesses are used only as receipts for proved RHS aliases.
-    pub fn capture(
-        &mut self,
-        g: &Graph,
-        rid: usize,
-        cell: u32,
-        cursor: Cursor,
-        query: Option<&[Option<Dependency>]>,
-        effects: Option<&[Option<Dependency>]>,
-    ) -> Result<()> {
-        self.capture_step(
-            g,
-            rid,
-            cell,
-            Started::Live(cursor),
-            |atom| query.and_then(|rows| rows.get(atom).copied().flatten()),
-            effects,
-        )
+    /// Lend the pending arena to one source RHS. Its suffix is private until
+    /// capture_keys seals it; matching and publication never run during this loan.
+    pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool) -> crate::cell::Effects {
+        if !force && !full && !self.capture_receipts(rid) { return Default::default(); }
+        let outputs = self.outputs.get(rid).map_or(&[][..], Vec::as_slice);
+        let plans = &self.effect_plans;
+        #[cfg(feature = "structural-depth")]
+        let plans = if full { &self.full_effect_plans } else { plans };
+        let plan = plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, full))).clone();
+        #[cfg(feature = "sparse-cells")]
+        let keep = self.compiled_commits && self.receipts && !self.audit_receipts
+            && self.cell_output_rules[rid] && outputs.iter().all(|o| !g.has_visibility_changes(o.table));
+        #[cfg(not(feature = "sparse-cells"))]
+        let keep = false;
+        crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
+    }
+    pub(crate) fn finish_effects(&mut self, effects: crate::cell::Effects, publish: bool) {
+        if let Some((buffer, slots, probes, targets)) = effects.finish(publish) {
+            debug_assert!(self.cell_outputs.is_empty(), "one executing Cell owns the output arena");
+            self.cell_outputs = buffer;
+            self.stats.effect_frames += 1;
+            self.stats.effect_slots_initialized += slots as u64;
+            self.stats.effect_slot_probes += probes;
+            self.stats.effect_slot_targets += targets;
+        }
+    }
+    pub(crate) fn abort_effects(&mut self, effects: crate::cell::Effects) {
+        self.stats.effect_aborted_frames += 1;
+        self.finish_effects(effects, false);
     }
     pub(crate) fn capture_step(
         &mut self,
@@ -1185,7 +1207,7 @@ impl Programs {
         cell: u32,
         step: Started,
         query_fact: impl Fn(usize) -> Option<Dependency>,
-        effects: Option<&[Option<Dependency>]>,
+        effects: crate::cell::Effects,
     ) -> Result<()> {
         self.capture_keys(g, rid, cell, step, query_fact, effects, |_, args| {
             g.arguments(cell, args)
@@ -1198,11 +1220,12 @@ impl Programs {
         _cell: u32,
         step: Started,
         query_fact: impl Fn(usize) -> Option<Dependency>,
-        effects: Option<&[Option<Dependency>]>,
+        mut effects: crate::cell::Effects,
         mut key: impl FnMut(usize, &[Arg]) -> Result<Vec<Value>>,
     ) -> Result<()> {
         self.stats.completed_steps += 1;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
+            self.finish_effects(effects, false);
             return Ok(());
         }
         let clock = Instant::now();
@@ -1221,14 +1244,14 @@ impl Programs {
                 &mut self.stats,
             );
             s.remember(&g.program.iterative, rid,
-                &query_fact, |i| effects.and_then(|e| e[i]), &mut self.stats);
+                &query_fact, |i| effects.get(i), &mut self.stats);
             s
         };
         self.pending_steps.push(Completion::new(step));
         for position in 0..self.outputs[rid].len() {
             let output = self.outputs[rid][position];
             let (i, table, source) = (output.operation, output.table, output.receipt_source);
-            let receipt = effects.and_then(|rows| rows[i]).or_else(|| {
+            let receipt = effects.get(i).or_else(|| {
                 if !self.receipts {
                     return None;
                 }
@@ -1239,7 +1262,7 @@ impl Programs {
                         Some(w)
                     }
                     Site::Effect(op) => {
-                        let w = effects?[op]?;
+                        let w = effects.get(op)?;
                         self.stats.alias_effect_forwards += 1;
                         Some(w)
                     }
@@ -1264,7 +1287,7 @@ impl Programs {
                 && !self.audit_receipts
                 && let Some(w) = receipt
             {
-                self.capture_receipt(rid, slot, _cell, position, table, publication, w);
+                self.capture_receipt(rid, slot, _cell, position, table, publication, w, Some(&mut effects));
                 self.stats.unmaterialized_anchor_keys += 1;
                 self.stats.captured_anchors += 1;
                 continue;
@@ -1277,6 +1300,11 @@ impl Programs {
                 .push((table, key(i, args)?, publication));
             self.stats.captured_anchors += 1;
         }
+        #[cfg(feature = "sparse-cells")]
+        let publish = self.pending_steps[slot].delivery.is_some();
+        #[cfg(not(feature = "sparse-cells"))]
+        let publish = false;
+        self.finish_effects(effects, publish);
         self.stats.captured_contexts += 1;
         self.stats.capture_seconds += clock.elapsed().as_secs_f64();
         Ok(())
@@ -1343,7 +1371,7 @@ impl Programs {
             self.pending_anchors.push((table, key, publication));
         } else {
             #[cfg(feature = "sparse-cells")]
-            self.capture_receipt(rid, slot, _cell, 0, table, publication, w);
+            self.capture_receipt(rid, slot, _cell, 0, table, publication, w, None);
             #[cfg(not(feature = "sparse-cells"))]
             unreachable!("ordinary publication needs a key");
         }
@@ -1352,7 +1380,7 @@ impl Programs {
     }
     #[cfg(feature = "sparse-cells")]
     fn capture_receipt(&mut self, rid: usize, slot: usize, _cell: u32, position: usize,
-        table: usize, publication: Publication, receipt: Dependency,
+        table: usize, publication: Publication, receipt: Dependency, mut effects: Option<&mut crate::cell::Effects>,
     ) {
         if !self.cell_output_rules[rid] {
             self.stats.direct_publication_hash_probes += 1;
@@ -1361,11 +1389,14 @@ impl Programs {
         }
         let width = self.outputs[rid].len();
         let delivery = self.pending_steps[slot].delivery.get_or_insert_with(|| {
-            let first = self.cell_outputs.len();
-            self.cell_outputs.resize(first + width, None);
+            let first = if let Some(effects) = &effects { effects.output_first() } else {
+                let first = self.cell_outputs.len();
+                self.cell_outputs.resize(first + width, None);
+                first
+            };
             self.stats.cell_output_spans += 1;
             self.stats.cell_output_slots += width as u64;
-            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(self.cell_outputs.len());
+            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
             Delivery {
                 rule: u32::try_from(rid).ok().and_then(|r| r.checked_add(1))
                     .and_then(std::num::NonZeroU32::new).expect("Cell rule index exhausted"),
@@ -1374,7 +1405,13 @@ impl Programs {
                 cell: _cell,
             }
         });
-        self.cell_outputs[delivery.first as usize + position] = Some(receipt);
+        if let Some(effects) = effects.as_mut() {
+            if effects.retain_output(position, receipt) { self.stats.effect_output_copies += 1; }
+            else { self.stats.effect_outputs_reused += 1; }
+        } else {
+            self.cell_outputs[delivery.first as usize + position] = Some(receipt);
+            self.stats.effect_output_copies += 1;
+        }
         self.cell_outputs_pending += 1;
         self.stats.cell_output_receipts += 1;
         // Preserve the historical multi-output coverage metric as a subset of
@@ -2300,8 +2337,12 @@ impl Programs {
             .filter_map(|root| root.and_then(|r| r.context.get()));
         let live_materialized = materialized.clone().count();
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
+        let effect_plan_cache_bytes = self.effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
+        #[cfg(feature = "structural-depth")]
+        let effect_plan_cache_bytes = effect_plan_cache_bytes
+            + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
         let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
-            "keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
+            "effect_plan_cache_bytes":effect_plan_cache_bytes,"keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]

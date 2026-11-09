@@ -211,12 +211,12 @@ impl Focus {
         assemble(&self.rules[r][i].copies, anchor, |slot| sources[slot], read)
     }
     #[cfg(not(feature = "receipt-slots"))]
-    pub fn capture<'a>(
+    pub(crate) fn capture<'a>(
         &self,
         g: &Graph,
         r: usize,
         known: &QueryFacts,
-        effects: &[Option<Dependency>],
+        effects: &crate::cell::Effects,
         read: impl Fn(Dependency) -> Option<&'a Packet>,
         mut emit: impl FnMut(Dependency, usize, Packet),
     ) {

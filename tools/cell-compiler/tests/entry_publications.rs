@@ -157,3 +157,33 @@ fn single_output_cells_keep_last_source_without_receipt_hash_coalescing() {
     assert_eq!(s["direct_publication_hash_probes"], 0);
     assert!(report["entry_schedule"]["stats"]["publication_loser_skips"].as_u64().unwrap() > 0);
 }
+
+#[test]
+fn interrupted_rhs_discards_only_its_private_receipts_and_keeps_prior_cell_outputs() {
+    let source = r#"
+(datatype E (N i64) (Start E) (F E) (H E) (Missing E) (Gateway E) (Out E))
+(ruleset make) (ruleset consume)
+(rule ((Start x)) ((F x) (Gateway x)) :ruleset make)
+(rule ((Start x)) ((F x) (delete (Missing x)) (Gateway x)) :ruleset make)
+(rule ((Start x)) ((H x) (Gateway x)) :ruleset make)
+(rule ((Gateway x) (F x) (H x)) ((Out x)) :ruleset consume)
+(Start (N 1))
+(run-schedule (seq (run make) (run consume)))
+(check (F (N 1)) (H (N 1)) (Out (N 1)))
+"#;
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    assert_eq!(s["effect_aborted_frames"], 1, "{s}");
+    // Only the first and third producer complete. The middle rule's earlier
+    // graph effects remain, but it must not supply a continuation or overwrite
+    // any completed Cell's receipts.
+    // Initialization also supplies the Start Entry: three completed contexts,
+    // five proposals and four distinct published anchors in total.
+    assert_eq!(s["captured_contexts"], 3);
+    assert_eq!(s["captured_anchors"], 5);
+    assert_eq!(s["anchor_publications"], 4);
+    assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+    assert!(s["effect_outputs_reused"].as_u64().unwrap() > 0);
+}

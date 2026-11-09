@@ -178,6 +178,14 @@
           "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/capture-timing-spec.json out/cell-capture-unified/timing --repeat 7 --warmups 1",
           "python3 benchmarks/cell-unification/collect.py out/cell-capture-unified benchmarks/cell-unification/capture-results.json --part capture"
         ]
+      },
+      "effects": {
+        "status": "semantics_and_takeover_verified_performance_pending",
+        "baseline_commit": "e8faa816",
+        "evidence": "benchmarks/cell-unification/effects-results.json",
+        "opportunity": "Per-RHS full-width receipt arrays copied actual references into final Cell output slots.",
+        "live_obligations": "Private suffix until source-scheduled completion, raw history before alias fill, actual foreign-Cell results, interrupted RHS and partial-scope lifetime.",
+        "verification": "Common Effects removes temporary receipt arrays; 4,454 outputs retain their slots. Existing work, 1,428 Runs and ordered hashes unchanged; semantic pass. Execute allocations -6,198, requested bytes -386,804; setup +4,656 bytes. Paired timing includes parity; no speedup claim."
       }
     },
     {
@@ -278,8 +286,10 @@
     {
       "id": "D2",
       "title": "单写 RHS、稀疏 frame 与 merge program",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "D2"
+      "status": "partially_rewritten",
+      "metrics_from_catalog": "D2",
+      "evidence": "benchmarks/cell-unification/effects-results.json",
+      "remaining": "Receipt dataflow is shared; ordinary/local/closed execution, single-write and merge control still need unification."
     },
     {
       "id": "E1",
@@ -301,8 +311,8 @@
       "title": "Cell 输出 capture 与片段 publication",
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "E3",
-      "evidence": "benchmarks/cell-unification/capture-results.json",
-      "remaining": "Owned single/multiple outputs now share Cell completion slots. Temporary RHS receipts, Results/history retention, unknown boundaries/legacy owners and final performance acceptance remain."
+      "evidence": "benchmarks/cell-unification/effects-results.json",
+      "remaining": "Owned outputs and RHS receipts share Cell slots. Necessary Results/history, unknown boundaries/legacy owners and final performance acceptance remain."
     },
     {
       "id": "F1",
