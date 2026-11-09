@@ -39,7 +39,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[markers.rs](../../tools/cell-compiler/src/markers.rs) · [marker_ir.rs](../../tools/cell-compiler/src/marker_ir.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_symbols.rs](../../engine/cell-runtime/src/cell_symbols.rs)
+代码：[markers.rs](../../tools/cell-compiler/src/markers.rs) · [marker_ir.rs](../../tools/cell-compiler/src/marker_ir.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_symbols.rs](../../engine/cell-runtime/src/cell_symbols.rs) · [cell_binding.rs](../../engine/cell-runtime/src/cell_binding.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -47,7 +47,7 @@
 | 成本 / 剩余工作 | `report:/setup_seconds [value]`<br>`report:/setup_allocations/requested_bytes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/marker_tables [count]`<br>`program:/entry_schedule/nodes [count]` |
 
-解释与缺口：marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred.
+解释与缺口：marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

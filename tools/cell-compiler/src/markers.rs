@@ -1,7 +1,7 @@
 //! Select correlated constructor fragments and materialize exact source views.
 use crate::{Result, surface::*};
 use eggfuse_cell_runtime::checksum::canonical;
-use eggfuse_cell_runtime::cell::Symbols;
+use eggfuse_cell_runtime::cell::{Symbols, Operand, bind_operand};
 use microlp::{ComparisonOp, OptimizationDirection, Problem, Variable};
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -911,28 +911,30 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
         {
             continue;
         }
-        let mut partial = vec![BTreeMap::<String, usize>::new()];
-        for (depth, f) in view.body.iter().enumerate() {
+        // Lower source operands once for this proof. An absent literal cannot
+        // match any local row; no candidate branch needs to parse it again.
+        let patterns = view.body.iter().map(|f| {
             let c = &f["args"][1];
+            let fields = a(&c["args"]).iter().chain([&f["args"][0]])
+                .map(|pat| if pat["kind"] == "var" {
+                    Some(Operand::Slot(s(&pat["name"])))
+                } else {
+                    cg.ids.get(&term(pat)).copied().map(Operand::Literal)
+                }).collect::<Option<Vec<_>>>()?;
+            Some((s(&c["head"]), fields))
+        }).collect::<Option<Vec<_>>>();
+        let Some(patterns) = patterns else { continue };
+        let mut partial = vec![BTreeMap::<&str, usize>::new()];
+        for (depth, (table, fields)) in patterns.iter().enumerate() {
             let mut next = BTreeSet::new();
             for m in partial {
                 let mut matched = BTreeSet::new();
-                for row in &rows[s(&c["head"])] {
+                for row in &rows[*table] {
                     let mut ext = m.clone();
-                    if a(&c["args"])
-                        .iter()
-                        .chain([&f["args"][0]])
+                    let equal = |a: &usize, b: &usize| cg.symbols.root(*a) == cg.symbols.root(*b);
+                    if fields.len() == row.len() && fields.iter()
                         .zip(row)
-                        .all(|(pat, &i)| {
-                            if pat["kind"] == "var" {
-                                let old = ext.entry(s(&pat["name"]).into()).or_insert(i);
-                                cg.symbols.root(*old) == cg.symbols.root(i)
-                            } else {
-                                cg.ids
-                                    .get(&term(pat))
-                                    .is_some_and(|p| cg.symbols.root(*p) == cg.symbols.root(i))
-                            }
-                        })
+                        .all(|(pat, i)| bind_operand(pat, i, &mut ext, equal, equal))
                     {
                         matched.insert(ext);
                     }
@@ -948,7 +950,7 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
         }
         for m in partial {
             let params = (0..view.sorts.len())
-                .map(|i| cg.nodes[m[&format!("{SLOT}{i}")]].expression.clone())
+                .map(|i| cg.nodes[m[format!("{SLOT}{i}").as_str()]].expression.clone())
                 .collect::<Vec<_>>();
             if params.iter().all(|x| pure(x, sig)) {
                 let w = write(&view.name, params);

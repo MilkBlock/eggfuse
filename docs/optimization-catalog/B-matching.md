@@ -15,7 +15,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs)
+代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs) · [cell_binding.rs](../../engine/cell-runtime/src/cell_binding.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -23,7 +23,7 @@
 | 成本 / 剩余工作 | `report:/stats/register_seeds [value]`<br>`report:/stats/shared_point_requests [value]`<br>`report:/stats/residual_candidates [value]`<br>`report:/key_lookup_calls [value]`<br>`report:/stats/register_result_writes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/row_kernels [count]`<br>`report:/stats/register_expansion_rows [value]` |
 
-解释与缺口：register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result.
+解释与缺口：register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

@@ -20,6 +20,9 @@ def check(root, compiler, phase='construction'):
             '(rule ((= a (N 0))) ((Edge a 99)) :ruleset later)\n(ruleset make)')
             .replace('(run read) (run keep)',
                      '(run merge) (run read) (run later) (run read) (run keep)')}
+    elif phase == 'bindings':
+        bodies = {'handoff': source,
+                  'bindings': Path('tools/cell-compiler/tests/fixtures/marker-bindings.egg').read_text()}
     options = ('--marker-handoff', 'values')
     run(root, compiler, bodies, options)
     records = []
@@ -43,6 +46,6 @@ def check(root, compiler, phase='construction'):
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('root', type=Path)
-    p.add_argument('--phase', choices=('construction', 'symbols'), default='construction')
+    p.add_argument('--phase', choices=('construction', 'symbols', 'bindings'), default='construction')
     args = p.parse_args()
     check(args.root, args.root / 'compiler-candidate', args.phase)

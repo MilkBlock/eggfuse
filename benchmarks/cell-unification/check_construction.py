@@ -31,7 +31,7 @@ def collect(root, commit, phase='construction'):
                         if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     assert metrics[0] == metrics[1]
     fixtures = {}
-    for name in ('handoff', 'union' if phase == 'symbols' else 'computed'):
+    for name in ('handoff', {'symbols': 'union', 'bindings': 'bindings'}.get(phase, 'computed')):
         path = root / f'fixture-{name}'
         for bits in (64, 0):
             f = pair(path, (f'baseline-{bits}', f'candidate-{bits}'), path / 'compiled/program.json',
@@ -46,6 +46,8 @@ def collect(root, commit, phase='construction'):
     tests = {}
     expected = (('symbols', 1), ('symbols-nonsparse', 1), ('closure', 1), ('marker', 6), ('barrier', 1), ('committed', 1)) if phase == 'symbols' else (
         ('construction', 1), ('construction-nonsparse', 1), ('cell', 2), ('marker', 6), ('witness', 8))
+    if phase == 'bindings':
+        expected = (('cell', 14), ('binding-nonsparse', 1), ('marker', 7), ('witness', 8))
     for name, count in expected:
         path = root / f'test-{name}.log'
         assert sum(map(int, re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text()))) == count
@@ -79,6 +81,11 @@ def collect(root, commit, phase='construction'):
             removed='Independent marker union-find and congruence key/fixed-point loop. Marker publication and typed cross-stage handoffs now execute Cell Symbols; source operands are resolved once instead of repeatedly rendering terms and looking up child IDs during closure and row projection.',
             limits='The source adapter retains expressions only for .egg emission and caches child symbols during compilation. Source publication admission, matching, materialization selection and iterative boundary composition remain separate. Source effects become equality evidence only at the publication boundary; typed queued unions keep their original barriers. Generic source-name keys and cached operand storage have not been timing/allocation-profiled; no new runtime credit or repair takeover is claimed.',
             timing_cadence=dict(last_timed_commit='cc472d0f', implementation_commits_since_timing=3))
+    elif phase == 'bindings':
+        result.update(baseline_commit='08c6b90b',
+            removed='Independent field-binding logic in runtime queries, typed producer-local projections, and source marker publication. Arg is the typed Cell Operand alias; all three use Cell Bindings and bind_operand. Marker fields are lowered once per proof, eliminating candidate-loop JSON dispatch, literal term lookup and owned variable-name copies.',
+            limits='Runtime bindings remain in the existing query/Entry frame. Static projections require exact typed operands; source symbols require equality at their publication boundary; runtime literals use the repaired graph. These distinct evidence obligations are preserved. Candidate enumeration, materialization selection and iterative boundary composition are not yet unified. The temporary source pattern and generic binder have not been allocation/timing-profiled; unchanged counters do not establish speed preservation.',
+            timing_cadence=dict(last_timed_commit='cc472d0f', implementation_commits_since_timing=4))
     return result
 
 
@@ -87,6 +94,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('construction', 'symbols'), default='construction')
+    p.add_argument('--phase', choices=('construction', 'symbols', 'bindings'), default='construction')
     args = p.parse_args()
     args.output.write_text(json.dumps(collect(args.root, args.commit, args.phase), indent=2) + '\n')

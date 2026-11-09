@@ -343,4 +343,8 @@ mod tests {
             "((Out (G (F x)) n) (Keep (Out (G (F x)) (+ n 1))))");
         compare(&source);
     }
+    #[test]
+    fn literal_and_repeated_marker_fields_reject_other_local_rows() {
+        compare(include_str!("../tests/fixtures/marker-bindings.egg"));
+    }
 }

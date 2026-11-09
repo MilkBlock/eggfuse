@@ -479,3 +479,16 @@ sum-bits 的 1,428 个 Run、最终 state 与 346 项工作指标保持，语义
 11 项相关测试和最小 feature 编译通过，涵盖 source-name 多参数全等条件、嵌套传播、正常/非稀疏布局、typed 条件闭包、原生 marker 语义和两个 union barrier 回归。两个短样例（已有结果交接、union 后迟到输入）采用相同 feature 的冻结编译器：.egg、marker 选择、marker IR、program 四项逐字节一致；正常/全碰撞哈希下 state/stages/binding-audit 及工作量一致。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个组件重新 lowering 一致。产物 out/cell-marker-symbols，复核 check_construction.py ROOT OUTPUT --commit COMMIT --phase symbols。
 
 运行时检查仍为 standalone Cell CPU；native 执行仅用于短样例语义验证。本次是 cc472d0f 后第 3 个实现提交，不单独测速，也未宣称消除运行时 repair 或完成整体重写。
+
+
+## 编译期投影和运行时查询共享 Cell 操作数与绑定
+
+上一目录的 marker 发布证明仍与 multistage::extend、运行时 bind_query 分别解释“字面量、未绑定槽、重复槽”。冻结 sum-bits 还包含 106 条源 marker 发布 action；原生前端在每个候选字段里重复读取 JSON、格式化字面量并分配变量名。这些是同一局部关系补全操作中的表示维护，不是新的匹配事实。现在 Cell Operand 成为公共操作数，program::Arg 只是其 typed 别名，序列化形状保持；Cell Bindings 借用调用方现有存储，bind_operand 统一三个路径的字段绑定。删除 multistage::extend 的独立匹配实现，投影生成与证书验证均改用 Cell 的关系检查。
+
+等价依据仍分别保留：typed 投影要求源操作数严格相同，不能提前假设未来 union；marker 使用发布边界上的符号等价；运行时字面量通过当前已修复图 canonicalize。重复绑定保留首次实际结果，失败字段不覆盖旧值；整行失败时，调用方继续负责分支回滚。运行时沿用原 QueryEnv、Entry Inputs、prefix frame，没有新增实例绑定、事实图或反向消费者列表。
+
+marker 的字段在候选枚举前 lowering，缺少字面量证据时直接排除该局部投影；候选循环不再解释 JSON 或按字段复制 String，绑定表借用模板变量名。候选枚举、去重与歧义策略保持原样。临时 pattern 存储和通用绑定器的代码生成成本尚未测速/分析分配，不能将源代码减少视作运行时收益。
+
+30 项相关测试及最小 feature 编译通过，包括共享字段绑定、普通/非稀疏 Cell、实际外部见证、退役/迟到输入、原生 marker 与含字面量及重复字段的多参数样例。两个短样例的新旧 .egg、marker 选择、marker IR、program JSON 逐字节一致；正常/全碰撞哈希下 state/stages/binding-audit 与工作量一致。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个组件重新 lowering 一致。产物 out/cell-projection-binding，复核 check_construction.py ROOT OUTPUT --commit COMMIT --phase bindings。运行时结果仅覆盖 standalone Cell CPU，native 执行仅作短样例语义对照。
+
+本次是 cc472d0f 后第 4 个实现提交，未单独测速。源候选发现、匹配枚举及物化边界与迭代 Bake 的统一仍未完成，最终多线程阶段继续留在完整重写验收之后。

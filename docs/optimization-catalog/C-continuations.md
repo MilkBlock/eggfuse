@@ -39,7 +39,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [iterative.rs](../../engine/cell-runtime/src/iterative.rs)
+代码：[result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [iterative.rs](../../engine/cell-runtime/src/iterative.rs) · [cell_binding.rs](../../engine/cell-runtime/src/cell_binding.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -47,7 +47,7 @@
 | 成本 / 剩余工作 | `report:/stats/handoff_attempts [value]`<br>`report:/stats/handoff_stale [value]`<br>`report:/stats/handoff_missing [value]`<br>`report:/stage_spine/stats/history_capture_reads [value]`<br>`report:/stage_spine/stats/history_slots_written [value]`<br>`report:/stage_spine/stats/history_allocations [value]`<br>`report:/stage_spine/stats/query_receipt_stale [value]`<br>`report:/stage_spine/stats/history_result_reads [value]`<br>`report:/stage_spine/stats/history_empty_slots_written [value]` |
 | 覆盖 / 规模 / 回退 | `program:/iterative_bake/rhs_handoffs/states [count]` |
 
-解释与缺口：实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads.
+解释与缺口：实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

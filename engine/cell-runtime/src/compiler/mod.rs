@@ -6,8 +6,7 @@ mod spine_blocks;
 pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
 use crate::{
-    cell::{Definition, Site},
-    multistage::extend,
+    cell::{Definition, Site, bind_relation},
     program::*,
 };
 use serde_json::{Value as J, json};
@@ -78,7 +77,7 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
             for &(consumer, anchor) in &readers[*t] {
                 let q = &p.rules[consumer].query;
                 let mut mapping = BTreeMap::new();
-                if extend(&q[anchor], *t, cols, &mut mapping).is_err() {
+                if bind_relation(&q[anchor], *t, cols, &mut mapping).is_err() {
                     continue;
                 }
                 let mut remaining = (0..q.len())
@@ -107,7 +106,7 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                                 continue;
                             }
                             let mut m = mapping.clone();
-                            if extend(a, *table, row, &mut m).is_ok() {
+                            if bind_relation(a, *table, row, &mut m).is_ok() {
                                 matches.entry(row).or_insert((site, m));
                                 if matches.len() > 1 {
                                     break;

@@ -179,7 +179,8 @@
         "tools/cell-compiler/src/markers.rs",
         "tools/cell-compiler/src/marker_ir.rs",
         "engine/cell-runtime/src/compiler/mod.rs",
-        "engine/cell-runtime/src/cell_symbols.rs"
+        "engine/cell-runtime/src/cell_symbols.rs",
+        "engine/cell-runtime/src/cell_binding.rs"
       ],
       "metrics": {
         "benefit": [
@@ -214,7 +215,7 @@
           }
         ]
       },
-      "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred.",
+      "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
       "evidence": [
         "tools/cell-compiler/README.md",
         "benchmarks/cell-unification/marker-symbols-check.json"
@@ -318,7 +319,8 @@
       "sources": [
         "engine/cell-runtime/src/cell_query.rs",
         "engine/cell-runtime/src/row_kernel.rs",
-        "engine/cell-runtime/src/execute_kernel.rs"
+        "engine/cell-runtime/src/execute_kernel.rs",
+        "engine/cell-runtime/src/cell_binding.rs"
       ],
       "metrics": {
         "benefit": [
@@ -373,7 +375,7 @@
           }
         ]
       },
-      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result.",
+      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
       "evidence": [
         "README.md",
         "benchmarks/cell-unification/residual.md",
@@ -781,7 +783,8 @@
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
         "engine/cell-runtime/src/result_handoff.rs",
-        "engine/cell-runtime/src/iterative.rs"
+        "engine/cell-runtime/src/iterative.rs",
+        "engine/cell-runtime/src/cell_binding.rs"
       ],
       "metrics": {
         "benefit": [
@@ -866,7 +869,7 @@
           }
         ]
       },
-      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads.",
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
       "evidence": [
         "benchmarks/query-receipts/README.md",
         "benchmarks/compiler-congruence/README.md"

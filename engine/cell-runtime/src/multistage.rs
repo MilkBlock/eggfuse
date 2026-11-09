@@ -1,7 +1,7 @@
 //! Verified producer-local projections and their source-schedule permissions.
 //! A projection never certifies uniqueness after union; the executor checks that
 //! obligation against the current Run snapshot before bypassing an atom.
-use crate::{cell::{Definition, Site}, program::*};
+use crate::{cell::{Definition, Site, bind_relation}, program::*};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as J;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -59,33 +59,7 @@ pub struct MultiStage {
     pub entries: HashMap<(usize, usize), Rc<Vec<usize>>>,
     pub finishes: Vec<Rc<Vec<usize>>>,
 }
-pub(crate) fn extend(
-    atom: &Atom,
-    table: usize,
-    columns: &[Arg],
-    mapping: &mut BTreeMap<usize, Arg>,
-) -> Result<()> {
-    if !matches!(atom.call,Call::Table(t) if t==table) || atom.args.len() != columns.len() {
-        return Err("continuation operator/arity differs".into());
-    }
-    for (to, from) in atom.args.iter().zip(columns) {
-        match to {
-            Arg::Slot(slot) => {
-                if let Some(old) = mapping.get(slot) {
-                    if old != from {
-                        return Err("continuation relative binding differs".into());
-                    }
-                } else {
-                    mapping.insert(*slot, from.clone());
-                }
-            }
-            _ if to != from => return Err("continuation literal differs".into()),
-            _ => {}
-        }
-    }
-    Ok(())
-}
-/// extend() verifies literals, repeated slots and agreement with the pivot.
+/// bind_relation() verifies literals, repeated slots and agreement with the pivot.
 /// A physically identical pivot already bound those slots in the shared packet.
 pub(crate) fn assignments(pivot: &Atom, atom: &Atom, columns: &[Arg]) -> Vec<(usize, Arg)> {
     let mut seen: BTreeSet<_> = pivot
@@ -247,7 +221,7 @@ impl MultiStage {
             let cell = Definition::new(program, producer)?;
             let (table, cols) = cell.local_columns(Site::Effect(effect))?;
             let mut mapping = BTreeMap::new();
-            extend(
+            bind_relation(
                 target.query.get(anchor).ok_or("continuation anchor")?,
                 table,
                 &cols,
@@ -266,7 +240,7 @@ impl MultiStage {
                 }
                 let site = Site::parse(kind, index)?;
                 let (table, columns) = cell.local_columns(site)?;
-                extend(
+                bind_relation(
                     target.query.get(atom).ok_or("continuation atom index")?,
                     table,
                     &columns,

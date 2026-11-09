@@ -1,5 +1,6 @@
 //! Cell query dataflow, including residual enumeration. Catalog selection does not change its executor.
 use crate::{
+    cell::{QueryFrame, bind_operand},
     graph::{Graph, Row},
     program::*,
     value::{Value, canon},
@@ -7,15 +8,6 @@ use crate::{
 use serde::Serialize;
 use serde_json::json;
 use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
-
-/// The current bindings of a Cell query. Storage and rollback belong to the
-/// caller: an Entry overlay, a retained prefix or a Run-local search trail.
-/// This interface borrows those bindings; it creates no second frame or facts.
-pub(crate) trait QueryFrame {
-    fn slot(&self, slot: usize) -> Option<&Value>;
-    /// Called only after the common binder proves this slot is unbound.
-    fn bind_slot(&mut self, slot: usize, value: Value);
-}
 
 impl QueryFrame for crate::entry_schedule::Inputs {
     #[inline]
@@ -44,16 +36,7 @@ pub(crate) fn query_operand<F: QueryFrame + ?Sized>(a: &Arg, frame: &F, g: &Grap
 /// the caller's responsibility, including earlier fields of a rejected row.
 #[inline]
 pub(crate) fn bind_query<F: QueryFrame + ?Sized>(a: &Arg, value: &Value, frame: &mut F, g: &Graph) -> bool {
-    match a {
-        Arg::Literal(v) => canon(v, &g.parents) == *value,
-        Arg::Slot(slot) => match frame.slot(*slot) {
-            Some(old) => old == value,
-            None => {
-                frame.bind_slot(*slot, value.clone());
-                true
-            }
-        },
-    }
+    bind_operand(a, value, frame, PartialEq::eq, |expected, value| canon(expected, &g.parents) == *value)
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
@@ -630,7 +613,7 @@ mod tests {
     use super::*;
     #[test]
     fn guarded_pair_preserves_bound_results_and_folds_guard_outputs() {
-        use Arg::Slot;
+        use crate::cell::Operand::Slot;
         let mut rule = Rule {
             constructor_only: false, template: 0, seminaive: true, direct: None,
             inputs: Rc::new(vec![0, 3, 4, 2]),
@@ -655,7 +638,7 @@ mod tests {
     }
     #[test]
     fn staged_ports_preserve_dependencies_guards_and_bound_results() {
-        use Arg::{Literal, Slot};
+        use crate::cell::Operand::{Literal, Slot};
         let mut rule = Rule {
             constructor_only: false,
             template: 0,
@@ -697,7 +680,7 @@ mod tests {
     }
     #[test]
     fn residual_expansion_never_certifies_a_complete_entry() {
-        use Arg::Slot;
+        use crate::cell::Operand::Slot;
         let rule = Rule {
             constructor_only: false,
             template: 0,
@@ -731,7 +714,7 @@ mod tests {
     }
     #[test]
     fn keyed_port_preserves_bound_result_constraints_and_slot_order() {
-        use Arg::{Literal, Slot};
+        use crate::cell::Operand::{Literal, Slot};
         let rule = Rule {
             constructor_only: false,
             template: 3,

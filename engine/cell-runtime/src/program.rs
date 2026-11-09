@@ -4,11 +4,7 @@ use serde_json::Value as J;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 pub type Result<T> = std::result::Result<T, String>;
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub enum Arg {
-    Slot(usize),
-    Literal(Value),
-}
+pub type Arg = crate::cell::Operand<Value, usize>;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum Call {
     Table(usize),

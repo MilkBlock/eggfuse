@@ -9,6 +9,12 @@ use std::{borrow::Cow, collections::BTreeSet};
 #[path = "cell_construction.rs"]
 pub mod construction;
 
+#[path = "cell_binding.rs"]
+mod binding;
+pub use binding::{Bindings, Operand, bind_operand};
+pub(crate) use binding::Bindings as QueryFrame;
+pub(crate) use binding::bind_relation;
+
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_results.rs"]
 mod results;
@@ -21,7 +27,7 @@ mod query;
 mod matched;
 pub(crate) use matched::{Matched, QueryFacts};
 pub(crate) use query::{Access, Queries, Query, query_order};
-pub(crate) use query::{QueryFrame, bind_query, query_operand, ScopedStep};
+pub(crate) use query::{bind_query, query_operand, ScopedStep};
 #[path = "cell_links.rs"]
 mod links;
 pub(crate) use links::QueryLinks;
