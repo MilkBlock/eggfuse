@@ -32,11 +32,12 @@ pub(crate) struct Kernel {
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Prefix {
+    pub producer: usize,
     pub template: usize,
     pub publication: usize,
     /// One entry for each leading kernel instruction. None is a primitive that
-    /// must still execute; Some is the producer's existing fact operation.
-    pub effects: Vec<Option<u32>>,
+    /// must still execute; Some is the normalized query/effect donor.
+    pub effects: Vec<Option<crate::multistage::WitnessSource>>,
 }
 
 /// Actual work of the residual register matcher's optional producer prefix.
@@ -54,6 +55,13 @@ pub struct PrefixStats {
     pub donor_reads: u64,
     pub donor_hits: u64,
     pub stale_fallbacks: u64,
+    pub misses: crate::graph::producer::WitnessMisses,
+    pub publication_probes: u64,
+    pub receipt_probes: u64,
+    pub receipt_steps: u64,
+    pub receipt_hits: u64,
+    pub row_reads: u64,
+    pub history_borrows: u64,
     pub key_fallbacks: u64,
     pub field_checks: u64,
     pub key_fields: u64,
@@ -86,17 +94,14 @@ pub(crate) fn attach_prefixes(p: &mut Program) {
                     let Some(read) = route.reads.iter().find(|r| r.atom == step.atom) else {
                         break;
                     };
-                    // Function locations live in a separate directory, not at
-                    // context_fact(cell, op). Leave those reads on the old path.
-                    let Some(effect) = read.effect.filter(|_| p.tables[read.table].virtual_fact)
-                        .and_then(|op| u32::try_from(op).ok()) else { break };
+                    let Some(effect) = read.witness else { break };
                     effects.push(Some(effect));
                     reads += 1;
                 }
             }
         }
         if reads != 0 {
-            Rc::make_mut(kernel).prefixes.push(Prefix { template, publication, effects });
+            Rc::make_mut(kernel).prefixes.push(Prefix { producer: route.producer, template, publication, effects });
         }
     }
     for kernel in p.kernels.iter_mut().flatten().flatten() {
@@ -105,6 +110,7 @@ pub(crate) fn attach_prefixes(p: &mut Program) {
         }
     }
 }
+
 pub(crate) type Kernels = Vec<Vec<Option<Rc<Kernel>>>>;
 pub(crate) fn derive(rules: &[Rule]) -> Kernels {
     rules

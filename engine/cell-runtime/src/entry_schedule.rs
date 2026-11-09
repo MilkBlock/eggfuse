@@ -704,6 +704,13 @@ impl Scheduler {
         self.publication_nodes[table].map_or(0, |id| self.states[id].publications)
     }
     #[cfg(feature = "sparse-cells")]
+    pub(crate) fn publication(&self, table: usize, w: Dependency) -> Option<&crate::stage_spine::Published> {
+        let state = &self.states[self.publication_nodes[table]?];
+        let Entries::Owned(rows) = &state.rows else { return None };
+        let id = rows.get(&w)?.publication?;
+        self.publications[id.get() - 1].as_ref()?.live()
+    }
+    #[cfg(feature = "sparse-cells")]
     pub(crate) fn publications(&self) -> impl Iterator<Item = &crate::stage_spine::Published> {
         self.publications.iter().filter_map(|p| p.as_ref().and_then(PublicationSlot::live))
     }

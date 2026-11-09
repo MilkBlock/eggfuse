@@ -35,7 +35,7 @@ fn points(
     }
     order
 }
-fn multistage(p: &Program) -> J {
+fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
     let mut readers = vec![vec![]; p.tables.len()];
     let (mut entries, mut finishes, mut routes, mut loaders) = (vec![], vec![], vec![], vec![]);
     for (rid, r) in p.rules.iter().enumerate() {
@@ -103,6 +103,15 @@ fn multistage(p: &Program) -> J {
                         }
                         let mut matches = BTreeMap::new();
                         for (kind, idx, table, row) in &local {
+                            // An elided RHS constructor is the same witness as
+                            // its earlier query/effect donor. Its distinct SSA
+                            // output must not create a second ambiguous match.
+                            // Keep it as a publication anchor above; only omit
+                            // it from donor selection here.
+                            if *kind == "effect" && known.static_sources
+                                .get(producer).and_then(|sources| sources[*idx]).is_some() {
+                                continue;
+                            }
                             let mut m = mapping.clone();
                             if extend(a, *table, row, &mut m).is_ok() {
                                 matches.entry(row).or_insert((kind, idx, m));
@@ -158,7 +167,8 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
     }
     let mut j = json!({"schema":"eggfuse-cell-runtime/v1","initial":core["initial"],"requirements":recipe::requirements(&core),"source_core":core,"recipe":ir,"templates":templates,"contract":{"storage":"shared effect recipes plus instance slots and fact-position masks","native_runtime_dependency":false,"native_free_join":false,"completeness":"exact residual virtual-fact matching; no learned exclusion"}});
     let p = Program::load(j, true)?;
-    let multi = multistage(&p);
+    let (known_results, known_json) = crate::known_results::Plans::derive(&p)?;
+    let multi = multistage(&p, &known_results);
     let contexts = crate::local_context::derive(&p, &multi["stage_entries"]);
     let spine = multi["stage_entries"]
         .as_array()
@@ -166,9 +176,6 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         .iter()
         .map(|x| x["rule"].as_u64().unwrap() as usize)
         .collect();
-    let (known_results, known_json) = crate::known_results::Plans::derive(&p)?;
-    #[cfg(not(feature = "rhs-locals"))]
-    let _ = known_results;
     let plans = [
         (
             "view_consumer_blocks",

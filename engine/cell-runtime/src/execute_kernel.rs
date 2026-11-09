@@ -110,31 +110,57 @@ impl Registers {
     ) -> Result<Option<(usize, u64)>> {
         exec.graph.stats.register_prefix.eligible_seeds += 1;
         exec.graph.stats.register_prefix.context_reads += 1;
-        let Some(context) = exec.graph.continuation_context(seed.witness) else {
+        let context = exec.graph.continuation_context(seed.witness);
+        #[cfg(feature = "iterative-bake")]
+        let history = {
+            exec.graph.stats.register_prefix.publication_probes += 1;
+            exec.stage_spine.witness_history(&exec.entry_schedule, seed.table, seed.witness)
+                .map(|(rule, output, history)| {
+                    exec.graph.stats.register_prefix.history_borrows += 1;
+                    (rule, output, history.clone())
+                })
+        };
+        #[cfg(feature = "iterative-bake")]
+        let published = history.as_ref().map(|(r, op, _)| (exec.graph.program.rules[*r].template, *op));
+        #[cfg(not(feature = "iterative-bake"))]
+        let published: Option<(usize, usize)> = None;
+        let Some(address) = published.or_else(|| context.map(|c| (c.template, c.op))) else {
             exec.graph.stats.register_prefix.context_missing += 1;
             return Ok(Some((0, seed.epoch)));
         };
         exec.graph.stats.register_prefix.plan_lookups += 1;
         let Ok(plan) = k.prefixes.binary_search_by_key(
-            &(context.template, context.op), |p| {
+            &address, |p| {
                 exec.graph.stats.register_prefix.plan_comparisons += 1;
                 (p.template, p.publication)
             },
         ) else { return Ok(Some((0, seed.epoch))) };
         exec.graph.stats.register_prefix.plan_hits += 1;
+        let context = context.filter(|c| (c.template, c.op) == address);
         let mut epoch = seed.epoch;
         let owner = (seed.epoch, seed.witness);
         let mut pc = 0;
         for (ins, effect) in k.steps.iter().zip(&k.prefixes[plan].effects) {
             let a = &r.query[ins.atom];
             let result = match (&a.call, effect) {
-                (Call::Table(table), Some(op)) => {
+                (Call::Table(table), Some(source)) => {
                     exec.graph.stats.register_prefix.donor_reads += 1;
-                    let fact = exec.graph.context_fact(context, *op as usize);
-                    let row = exec.graph.fact(fact)?;
-                    let Some(row) = row.filter(|row| {
-                        !row.hidden && row.table == *table && row.values.len() == a.args.len()
-                    }) else {
+                    #[cfg(feature = "iterative-bake")]
+                    let receipt = history.as_ref().filter(|_| source.retained).and_then(|(_, _, history)| {
+                        exec.graph.stats.register_prefix.receipt_probes += 1;
+                        history.current_source(k.prefixes[plan].producer, source.source,
+                            &mut exec.graph.stats.register_prefix.receipt_steps)
+                    });
+                    #[cfg(not(feature = "iterative-bake"))]
+                    let receipt = None;
+                    exec.graph.stats.register_prefix.receipt_hits += u64::from(receipt.is_some());
+                    let mut misses = std::mem::take(&mut exec.graph.stats.register_prefix.misses);
+                    let mut reads = 0;
+                    let row = exec.graph.context_witness_row(context, source.source, receipt,
+                        *table, a.args.len(), &mut misses, &mut reads)?;
+                    exec.graph.stats.register_prefix.row_reads += reads;
+                    exec.graph.stats.register_prefix.misses = misses;
+                    let Some(row) = row else {
                         exec.graph.stats.register_prefix.stale_fallbacks += 1;
                         break;
                     };
@@ -146,6 +172,7 @@ impl Registers {
                         });
                     if !keys_match {
                         exec.graph.stats.register_prefix.key_fallbacks += 1;
+                        exec.graph.stats.register_prefix.misses.key += 1;
                         break;
                     }
                     exec.graph.stats.register_prefix.donor_hits += 1;

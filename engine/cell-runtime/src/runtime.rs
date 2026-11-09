@@ -3104,6 +3104,6 @@ impl Executor {
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
-            "multi_stage":{"stats":self.continuation_stats},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
+            "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
     }
 }

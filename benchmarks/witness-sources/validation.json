@@ -1,0 +1,40 @@
+{
+  "scope": "standalone Cell CPU; no timing campaign",
+  "baseline_commit": "595a079f",
+  "logs": {
+    "workspace-tests-final.log": {
+      "sha256": "b0d12b5568988178bfd368493c66279267278b57cfd37b0760fdddf1455fa27b",
+      "counts": {
+        "passed": 363,
+        "failed": 0,
+        "ignored": 4
+      },
+      "completed": "all test suites passed"
+    },
+    "non-sparse-tests.log": {
+      "sha256": "5136c44c9a21a3fbbd7387934810fb1c608086189585221ccc1cc6aa0bb764ef",
+      "counts": {
+        "passed": 23,
+        "failed": 0,
+        "ignored": 0
+      },
+      "completed": "all test suites passed"
+    },
+    "minimal-check.log": {
+      "sha256": "f75bdd23fed6838d3ef734bae9ee8c3b8e342c9391f29c9fcdea0c85f06f987a",
+      "counts": null,
+      "completed": "    Finished `dev` profile [unoptimized] target(s) in 2.39s"
+    },
+    "final-build.log": {
+      "sha256": "97f06944d6998e0bc8ff46e8991577057c18d8a2d79fc8f2ac1f16f1f751ad05",
+      "counts": null,
+      "completed": "    Finished `release` profile [optimized] target(s) in 35.51s"
+    }
+  },
+  "ordered_short_audit": "comparison.json",
+  "commands": [
+    "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked --workspace --all-features -j 2",
+    "CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked -j 2 -p eggfuse-cell-compiler --features iterative-bake --test witness_sources --test register_prefix --test local_witness --test query_receipts",
+    "CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo check --locked -j 2 -p eggfuse-cell-runtime --no-default-features"
+  ]
+}

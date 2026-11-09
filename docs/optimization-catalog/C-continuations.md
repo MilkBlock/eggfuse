@@ -53,50 +53,50 @@
 
 证据：[benchmarks/query-receipts/README.md](../../benchmarks/query-receipts/README.md) · [benchmarks/compiler-congruence/README.md](../../benchmarks/compiler-congruence/README.md)
 
-## C3 · 已有 effect 见证直达
+## C3 · 已有见证的实际来源直达
 
-启用条件：有静态 effect route 的完整 Spine Entry。
+启用条件：完整 Spine 的非空完整 key 读取。
 
-编译期依据：真实 Entry 的当前 producer + 当前完整 key 校验。
+编译期依据：已验证的实际 query/effect 来源；静态别名归并；仅使用已有目录保留的 receipt；排除零参数单例读取。
 
 替代的旧工作：history/cache 未命中后的完整查询。
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs)
+代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stage_spine/stats/local_witness_hits [value]` |
-| 成本 / 剩余工作 | `report:/stage_spine/stats/local_witness_contexts [value]`<br>`report:/stage_spine/stats/local_witness_route_probes [value]`<br>`report:/stage_spine/stats/local_witness_route_steps [value]`<br>`report:/stage_spine/stats/local_witness_key_fields [value]`<br>`report:/stage_spine/stats/local_witness_stale [value]`<br>`report:/key_lookup_calls [value]` |
-| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/local_witness_routes [value]`<br>`report:/stage_spine/stats/local_witness_reads [value]` |
+| 成本 / 剩余工作 | `report:/stage_spine/stats/local_witness_contexts [value]`<br>`report:/stage_spine/stats/local_witness_route_probes [value]`<br>`report:/stage_spine/stats/local_witness_route_steps [value]`<br>`report:/stage_spine/stats/local_witness_key_fields [value]`<br>`report:/stage_spine/stats/local_witness_stale [value]`<br>`report:/key_lookup_calls [value]`<br>`report:/stage_spine/stats/local_witness_receipt_probes [value]`<br>`report:/stage_spine/stats/local_witness_receipt_steps [value]`<br>`report:/stage_spine/stats/local_witness_history_borrows [value]`<br>`report:/stage_spine/stats/local_witness_row_reads [value]` |
+| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/local_witness_routes [value]`<br>`report:/stage_spine/stats/local_witness_reads [value]`<br>`report:/stage_spine/stats/local_witness_misses/cell_missing [value]`<br>`report:/stage_spine/stats/local_witness_misses/fact_missing [value]`<br>`report:/stage_spine/stats/local_witness_misses/receipt_missing [value]`<br>`report:/stage_spine/stats/local_witness_misses/hidden [value]`<br>`report:/stage_spine/stats/local_witness_misses/shape [value]`<br>`report:/stage_spine/stats/local_witness_misses/key [value]`<br>`report:/stage_spine/stats/local_witness_receipt_hits [value]`<br>`report:/multi_stage/witness_plan/new_capture_slots [value]`<br>`report:/multi_stage/witness_plan/retained_receipt_reads [value]`<br>`report:/multi_stage/witness_plan/physical_fallback_reads [value]`<br>`report:/multi_stage/witness_plan/excluded_reads [value]` |
 
-解释与缺口：命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。
+解释与缺口：receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。
 
-状态：已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减。
+状态：真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论。
 
-证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md)
+证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md) · [benchmarks/witness-sources/README.md](../../benchmarks/witness-sources/README.md)
 
 ## C4 · 匹配前缀接续
 
-启用条件：含 Expand 且存在 producer-local effect 前缀的 register kernel。
+启用条件：含 Expand 的 register kernel，具有非空完整 key 的连续前缀。
 
-编译期依据：连续完整 key 前缀；保留 delta owner、guards 与全部 residual Expand。
+编译期依据：已验证的实际 query/effect 来源；静态别名归并；仅使用已有目录保留的 receipt；排除零参数单例读取。
 
 替代的旧工作：从 PC=0 重做已有事实前缀。
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs)
+代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stats/register_prefix/key_reads_avoided [value]`<br>`report:/stats/register_prefix/resumes [value]` |
-| 成本 / 剩余工作 | `report:/stats/register_prefix/context_reads [value]`<br>`report:/stats/register_prefix/plan_comparisons [value]`<br>`report:/stats/register_prefix/donor_reads [value]`<br>`report:/stats/register_prefix/key_fields [value]`<br>`report:/stats/register_prefix/stale_fallbacks [value]`<br>`report:/stats/register_prefix/key_fallbacks [value]` |
-| 覆盖 / 规模 / 回退 | `report:/stats/register_prefix/eligible_seeds [value]`<br>`report:/stats/register_prefix/plan_hits [value]`<br>`report:/stats/register_prefix/owner_rejections [value]` |
+| 成本 / 剩余工作 | `report:/stats/register_prefix/context_reads [value]`<br>`report:/stats/register_prefix/plan_comparisons [value]`<br>`report:/stats/register_prefix/donor_reads [value]`<br>`report:/stats/register_prefix/key_fields [value]`<br>`report:/stats/register_prefix/stale_fallbacks [value]`<br>`report:/stats/register_prefix/key_fallbacks [value]`<br>`report:/stats/register_prefix/receipt_probes [value]`<br>`report:/stats/register_prefix/receipt_steps [value]`<br>`report:/stats/register_prefix/history_borrows [value]`<br>`report:/stats/register_prefix/row_reads [value]`<br>`report:/stats/register_prefix/publication_probes [value]` |
+| 覆盖 / 规模 / 回退 | `report:/stats/register_prefix/eligible_seeds [value]`<br>`report:/stats/register_prefix/plan_hits [value]`<br>`report:/stats/register_prefix/owner_rejections [value]`<br>`report:/stats/register_prefix/misses/cell_missing [value]`<br>`report:/stats/register_prefix/misses/fact_missing [value]`<br>`report:/stats/register_prefix/misses/receipt_missing [value]`<br>`report:/stats/register_prefix/misses/hidden [value]`<br>`report:/stats/register_prefix/misses/shape [value]`<br>`report:/stats/register_prefix/misses/key [value]`<br>`report:/stats/register_prefix/receipt_hits [value]`<br>`report:/multi_stage/witness_plan/new_capture_slots [value]` |
 
-解释与缺口：key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。
+解释与缺口：receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。
 
-状态：已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减。
+状态：真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论。
 
-证据：[benchmarks/witness-prefix/register-prefix-design.md](../../benchmarks/witness-prefix/register-prefix-design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md)
+证据：[benchmarks/witness-prefix/register-prefix-design.md](../../benchmarks/witness-prefix/register-prefix-design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md) · [benchmarks/witness-sources/README.md](../../benchmarks/witness-sources/README.md)

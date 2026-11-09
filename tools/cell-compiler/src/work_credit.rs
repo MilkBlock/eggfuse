@@ -19,6 +19,7 @@ impl Work {
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards",
                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
                 "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
+                "local_witness_receipt_probes", "local_witness_receipt_steps", "local_witness_history_borrows",
                 "direct_publication_hash_probes", "fragment_packets", "fragment_receipts", "fragment_receipt_spills", "fragment_delivery_checks",
             ]),
             ("entry_schedule/stats", &[
@@ -30,7 +31,8 @@ impl Work {
             // replace the identical original kernel instructions: charging
             // their prefix-only subset would penalize moving unchanged work.
             ("stats/register_prefix", &[
-                "context_reads", "plan_comparisons", "donor_reads", "key_fields",
+                "context_reads", "plan_comparisons", "row_reads", "key_fields",
+                "publication_probes", "receipt_probes", "receipt_steps", "history_borrows",
             ]),
             ("publication", &["row_reads", "column_rows", "range_rows", "neighbor_rows"]),
         ] {
@@ -44,7 +46,7 @@ impl Work {
         // Positive receipt/prefix hits and *_avoided are outcomes, not negative
         // work. Actual lookup savings already lower key_lookup_calls (including
         // PointPorts hits that never queried the graph). Spine donor reads are
-        // already included in decoded_rows; local_witness_reads is that subset.
+        // already included in decoded_rows; local_witness_row_reads is that subset.
         // Entry slot probes cover ordinary and fragment publication equally;
         // fragment_slot_probes/replacements are subsets, not extra lookups.
         for field in ["attempts", "steps", "effect_steps", "port_writes", "row_copies"] {
@@ -238,9 +240,12 @@ mod tests {
         };
         let charged = [
             "/stats/register_prefix/context_reads", "/stats/register_prefix/plan_comparisons",
-            "/stats/register_prefix/donor_reads", "/stats/register_prefix/key_fields",
+            "/stats/register_prefix/row_reads", "/stats/register_prefix/key_fields",
+            "/stats/register_prefix/publication_probes", "/stats/register_prefix/receipt_probes", "/stats/register_prefix/receipt_steps",
+            "/stats/register_prefix/history_borrows", "/stage_spine/stats/local_witness_history_borrows",
             "/stage_spine/stats/local_witness_contexts", "/stage_spine/stats/local_witness_route_probes",
             "/stage_spine/stats/local_witness_route_steps", "/stage_spine/stats/local_witness_key_fields",
+            "/stage_spine/stats/local_witness_receipt_probes", "/stage_spine/stats/local_witness_receipt_steps",
             "/stage_spine/stats/direct_publication_hash_probes", "/stage_spine/stats/fragment_packets",
             "/stage_spine/stats/fragment_receipts", "/stage_spine/stats/fragment_receipt_spills",
             "/stage_spine/stats/fragment_delivery_checks", "/entry_schedule/stats/publication_slot_probes",
@@ -254,6 +259,7 @@ mod tests {
         for key in [
             "/stats/register_prefix/eligible_seeds", "/stats/register_prefix/plan_hits",
             "/stats/register_prefix/donor_hits", "/stats/register_prefix/key_reads_avoided",
+            "/stats/register_prefix/receipt_hits", "/stage_spine/stats/local_witness_receipt_hits",
             "/stats/register_prefix/field_writes", "/stats/register_prefix/primitive_checks",
             "/stage_spine/stats/local_witness_hits", "/stage_spine/stats/fragment_direct_inserts_avoided",
             "/stage_spine/stats/fragment_deliveries", "/entry_schedule/stats/fragment_slot_probes",
@@ -262,12 +268,12 @@ mod tests {
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
         // A Spine donor already increments decoded_rows: charging the donor's
         // subset counter again would count that same row access twice.
-        bump(&mut outcomes, "/stage_spine/stats/local_witness_reads");
+        bump(&mut outcomes, "/stage_spine/stats/local_witness_row_reads");
         bump(&mut outcomes, "/stats/decoded_rows");
         assert_eq!(baseline.savings(&Work::read(&outcomes).unwrap()).0, -1);
         let mut missing = report;
-        missing["stats"]["register_prefix"].as_object_mut().unwrap().remove("donor_reads");
-        assert!(Work::read(&missing).unwrap_err().contains("stats/register_prefix/donor_reads"));
+        missing["stats"]["register_prefix"].as_object_mut().unwrap().remove("row_reads");
+        assert!(Work::read(&missing).unwrap_err().contains("stats/register_prefix/row_reads"));
     }
     #[test]
     fn lookup_savings_must_pay_for_unused_capture_and_failed_reads() {

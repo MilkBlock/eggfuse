@@ -611,13 +611,17 @@
     {
       "id": "C3",
       "category": "C",
-      "title": "已有 effect 见证直达",
-      "activation": "有静态 effect route 的完整 Spine Entry",
-      "compile_fact": "真实 Entry 的当前 producer + 当前完整 key 校验",
+      "title": "已有见证的实际来源直达",
+      "activation": "完整 Spine 的非空完整 key 读取",
+      "compile_fact": "已验证的实际 query/effect 来源；静态别名归并；仅使用已有目录保留的 receipt；排除零参数单例读取",
       "replaces": "history/cache 未命中后的完整查询",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
-        "engine/cell-runtime/src/stage_spine.rs"
+        "engine/cell-runtime/src/stage_spine.rs",
+        "engine/cell-runtime/src/producer.rs",
+        "engine/cell-runtime/src/multistage.rs",
+        "engine/cell-runtime/src/result_handoff.rs",
+        "engine/cell-runtime/src/compiler/mod.rs"
       ],
       "metrics": {
         "benefit": [
@@ -657,6 +661,26 @@
             "source": "report",
             "pointer": "/key_lookup_calls",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_receipt_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_receipt_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_history_borrows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_row_reads",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -669,28 +693,88 @@
             "source": "report",
             "pointer": "/stage_spine/stats/local_witness_reads",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/cell_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/fact_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/receipt_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/hidden",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/shape",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_misses/key",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_receipt_hits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/new_capture_slots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/retained_receipt_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/physical_fallback_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/excluded_reads",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
-        "benchmarks/witness-prefix/normal/README.md"
+        "benchmarks/witness-prefix/normal/README.md",
+        "benchmarks/witness-sources/README.md"
       ],
-      "status": "已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减",
+      "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
     },
     {
       "id": "C4",
       "category": "C",
       "title": "匹配前缀接续",
-      "activation": "含 Expand 且存在 producer-local effect 前缀的 register kernel",
-      "compile_fact": "连续完整 key 前缀；保留 delta owner、guards 与全部 residual Expand",
+      "activation": "含 Expand 的 register kernel，具有非空完整 key 的连续前缀",
+      "compile_fact": "已验证的实际 query/effect 来源；静态别名归并；仅使用已有目录保留的 receipt；排除零参数单例读取",
       "replaces": "从 PC=0 重做已有事实前缀",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
         "engine/cell-runtime/src/row_kernel.rs",
-        "engine/cell-runtime/src/execute_kernel.rs"
+        "engine/cell-runtime/src/execute_kernel.rs",
+        "engine/cell-runtime/src/producer.rs",
+        "engine/cell-runtime/src/multistage.rs",
+        "engine/cell-runtime/src/result_handoff.rs",
+        "engine/cell-runtime/src/compiler/mod.rs"
       ],
       "metrics": {
         "benefit": [
@@ -735,6 +819,31 @@
             "source": "report",
             "pointer": "/stats/register_prefix/key_fallbacks",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/receipt_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/receipt_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/history_borrows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/row_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/publication_probes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -752,15 +861,56 @@
             "source": "report",
             "pointer": "/stats/register_prefix/owner_rejections",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/cell_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/fact_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/receipt_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/hidden",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/shape",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/misses/key",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/receipt_hits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/new_capture_slots",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。",
       "evidence": [
         "benchmarks/witness-prefix/register-prefix-design.md",
-        "benchmarks/witness-prefix/normal/README.md"
+        "benchmarks/witness-prefix/normal/README.md",
+        "benchmarks/witness-sources/README.md"
       ],
-      "status": "已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减",
+      "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
     },
     {

@@ -7,12 +7,21 @@ use serde_json::Value as J;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::rc::Rc;
 
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct WitnessSource {
+    pub source: crate::known_results::Source,
+    pub retained: bool,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct LocalRead {
     pub atom: usize,
     pub table: usize,
     pub columns: Vec<Arg>,
     pub effect: Option<usize>,
+    /// Normalize elided operations to their actual query/effect donor once.
+    #[serde(skip)]
+    pub(crate) witness: Option<WitnessSource>,
     #[serde(default)]
     pub(crate) assignments: Vec<(usize, Arg)>,
 }
@@ -128,6 +137,23 @@ pub(crate) fn assignments(pivot: &Atom, atom: &Atom, columns: &[Arg]) -> Vec<(us
         .collect()
 }
 impl MultiStage {
+    pub(crate) fn witness_report(&self) -> J {
+        let mut retained = 0;
+        let mut local = 0;
+        let mut skipped = 0;
+        for read in self.routes.values().flat_map(|r| &r.reads) {
+            match read.witness {
+                Some(w) => {
+                    retained += usize::from(w.retained);
+                    local += usize::from(matches!(w.source, crate::known_results::Source::Effect(_)));
+                }
+                None => skipped += 1,
+            }
+        }
+        serde_json::json!({"retained_receipt_reads":retained,"physical_fallback_reads":local,
+            "excluded_reads":skipped,"new_capture_slots":0,
+            "contract":"existing admitted receipts only; nonempty complete keys; full live row validation"})
+    }
     pub fn parse(program: &Program, raw: &J) -> Result<Self> {
         if raw.is_null() {
             return Ok(Self::default());
@@ -288,8 +314,16 @@ impl MultiStage {
                     assignments,
                     atom,
                     table,
-                    columns,
                     effect: (kind == "effect").then_some(index),
+                    // Empty keys already use a singleton directory read. A
+                    // receipt dispatch cannot remove hashing/field work there.
+                    witness: (program.tables[table].virtual_fact
+                        && columns.len() > 1).then(|| WitnessSource { retained: false, source:
+                        if kind == "query" { crate::known_results::Source::Query(index) }
+                        else { program.known_results.static_sources.get(producer)
+                            .and_then(|sources| sources[index])
+                            .unwrap_or(crate::known_results::Source::Effect(index)) } }),
+                    columns,
                 });
             }
             let residual = (0..target.query.len())
@@ -316,5 +350,27 @@ impl MultiStage {
             }
         }
         Ok(result)
+    }
+}
+
+/// Use only receipts already admitted by the catalog. Missing query receipts
+/// cannot be recovered by interpreting an equality representative as a row ID.
+pub(crate) fn compile_witnesses(p: &mut Program) {
+    for route in p.multi_stage.routes.values_mut() {
+        let producer = route.producer;
+        for read in &mut Rc::make_mut(route).reads {
+            let Some(witness) = &mut read.witness else { continue };
+            #[cfg(feature = "iterative-bake")]
+            {
+                use crate::{known_results::Source, result_handoff::Donor};
+                let donor = match witness.source { Source::Query(i) => Donor::Query(i), Source::Effect(i) => Donor::Effect(i) };
+                witness.retained = p.iterative.exports(producer).contains(&donor);
+            }
+            #[cfg(not(feature = "iterative-bake"))]
+            let _ = producer;
+            if !witness.retained && matches!(witness.source, crate::known_results::Source::Query(_)) {
+                read.witness = None;
+            }
+        }
     }
 }

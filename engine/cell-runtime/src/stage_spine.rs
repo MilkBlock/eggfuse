@@ -56,6 +56,10 @@ pub(crate) struct Published {
 }
 #[cfg(feature = "sparse-cells")]
 impl Published {
+    pub(crate) fn witness_history(&self) -> Option<(usize, usize, &crate::result_handoff::History)> {
+        let PublishedBase::Active(c) = &self.base else { return None };
+        Some((c.producer, self.output, &c.state.history))
+    }
     fn root_info(&self) -> (u64, Option<&Root>) {
         match &self.base {
             PublishedBase::Root(r, _) => (r.id, Some(r)),
@@ -100,6 +104,10 @@ impl Published {
 pub(crate) type Published = Cursor;
 #[cfg(not(feature = "sparse-cells"))]
 impl Cursor {
+    #[cfg(feature = "iterative-bake")]
+    pub(crate) fn witness_history(&self) -> Option<(usize, usize, &crate::result_handoff::History)> {
+        Some((self.producer, self.state.output, &self.state.history))
+    }
     pub(crate) fn expand(&self) -> Self {
         self.clone()
     }
@@ -421,6 +429,12 @@ pub struct Stats {
     local_witness_reads: u64,
     local_witness_hits: u64,
     local_witness_stale: u64,
+    local_witness_misses: crate::graph::producer::WitnessMisses,
+    local_witness_receipt_probes: u64,
+    local_witness_receipt_steps: u64,
+    local_witness_receipt_hits: u64,
+    local_witness_row_reads: u64,
+    local_witness_history_borrows: u64,
     fragment_packets: u64,
     fragment_receipts: u64,
     fragment_receipt_spills: u64,
@@ -607,6 +621,12 @@ fn record_answer(
         }
     }
 }
+struct LocalWitness {
+    context: Option<crate::graph::producer::Context>,
+    route: Rc<crate::multistage::Continuation>,
+    #[cfg(feature = "iterative-bake")]
+    history: crate::result_handoff::History,
+}
 fn read_port(
     g: &mut Graph,
     cursor: &Cursor,
@@ -614,7 +634,7 @@ fn read_port(
     table: usize,
     args: PortKey,
     stats: &mut Stats,
-    local: Option<&(crate::graph::producer::Context, Rc<crate::multistage::Continuation>)>,
+    local: Option<&LocalWitness>,
     #[cfg(feature = "structural-depth")] structural: (&mut crate::depth_runtime::Depth, Dependency),
 ) -> Result<Option<Row>> {
     let key = (table, args);
@@ -652,23 +672,36 @@ fn read_port(
         None
     };
     if row.is_none() {
-        if let Some((context, route)) = local
-            && let Some(op) = route.reads.iter().find(|read| {
+        if let Some(local) = local
+            && let Some(source) = local.route.reads.iter().find(|read| {
                 stats.local_witness_route_steps += 1;
                 read.atom == _atom
-            }).and_then(|r| r.effect)
+            }).and_then(|r| r.witness)
         {
             stats.local_witness_reads += 1;
-            g.stats.decoded_rows += 1;
             // This is a current positive witness, never a cached value or a
-            // negative lookup proof. Reused/retired producer slots fall back.
-            row = g.fact(g.context_fact(*context, op))?.filter(|r| {
-                r.table == table && !r.hidden && r.values.len() == key.1.len() + 1
-                    && r.values.iter().zip(key.1.iter()).all(|(actual, expected)| {
+            // negative lookup proof. Missing or retired receipts fall back.
+            #[cfg(feature = "iterative-bake")]
+            let receipt = if source.retained {
+                stats.local_witness_receipt_probes += 1;
+                local.history.current_source(local.route.producer, source.source,
+                    &mut stats.local_witness_receipt_steps)
+            } else { None };
+            #[cfg(not(feature = "iterative-bake"))]
+            let receipt = None;
+            stats.local_witness_receipt_hits += u64::from(receipt.is_some());
+            let mut reads = 0;
+            row = g.context_witness_row(local.context, source.source, receipt, table, key.1.len() + 1,
+                &mut stats.local_witness_misses, &mut reads)?.filter(|r| {
+                let equal = r.values.iter().zip(key.1.iter()).all(|(actual, expected)| {
                         stats.local_witness_key_fields += 1;
                         actual == expected
-                    })
+                    });
+                stats.local_witness_misses.key += u64::from(!equal);
+                equal
             });
+            stats.local_witness_row_reads += reads;
+            g.stats.decoded_rows += reads;
             if row.is_some() {
                 stats.local_witness_hits += 1;
             } else {
@@ -774,6 +807,17 @@ impl Context {
     }
 }
 impl Programs {
+    #[cfg(feature = "iterative-bake")]
+    pub(crate) fn witness_history<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
+        table: usize, w: Dependency) -> Option<(usize, usize, &'a crate::result_handoff::History)> {
+        #[cfg(feature = "sparse-cells")]
+        if self.entry_owned_tables[table] {
+            return entries.publication(table, w)?.witness_history();
+        }
+        #[cfg(not(feature = "sparse-cells"))]
+        let _ = (entries, table);
+        self.entries.get(&w)?.witness_history()
+    }
     pub fn new(p: &Program) -> Self {
         let enabled = true;
         #[cfg(feature = "sparse-cells")]
@@ -813,8 +857,7 @@ impl Programs {
             local_witness_entries: {
                 let mut entries = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
                 for (&(.., rid, pivot), route) in &p.multi_stage.routes {
-                    entries[rid][pivot] |= route.reads.iter().any(|read| read.effect.is_some()
-                        && p.tables[read.table].virtual_fact);
+                    entries[rid][pivot] |= route.reads.iter().any(|read| read.witness.is_some());
                 }
                 entries
             },
@@ -1183,7 +1226,8 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(&g.program.iterative, rid, &query_fact, |i| effects.and_then(|e| e[i]), &mut self.stats);
+            s.remember(&g.program.iterative, rid,
+                &query_fact, |i| effects.and_then(|e| e[i]), &mut self.stats);
             s
         };
         self.pending_steps.push(step);
@@ -1308,7 +1352,8 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(catalog, rid, |i| query.receipt(i), |i| (i == op).then_some(w), &mut self.stats);
+            s.remember(catalog, rid,
+                |i| query.receipt(i), |i| (i == op).then_some(w), &mut self.stats);
             s
         };
         self.pending_steps.push(step);
@@ -1980,12 +2025,27 @@ impl Programs {
             let mut epoch = row.epoch;
             let local = if self.local_witness_entries[rid][pivot] {
                 self.stats.local_witness_contexts += 1;
-                g.continuation_context(row.witness).and_then(|context| {
+                let context = g.continuation_context(row.witness);
+                #[cfg(feature = "iterative-bake")]
+                let published = Some((g.program.rules[cursor.producer].template, cursor.state.output));
+                #[cfg(not(feature = "iterative-bake"))]
+                let published: Option<(usize, usize)> = None;
+                published.or_else(|| context.map(|c| (c.template, c.op))).and_then(|(template, output)| {
                     self.stats.local_witness_route_probes += 1;
                     let route = g.program.multi_stage.routes
-                        .get(&(context.template, context.op, rid, pivot))?.clone();
+                        .get(&(template, output, rid, pivot))?.clone();
                     self.stats.local_witness_routes += 1;
-                    Some((context, route))
+                    #[cfg(feature = "iterative-bake")]
+                    { self.stats.local_witness_history_borrows += 1; }
+                    Some(LocalWitness {
+                        context: context.filter(|c| (c.template, c.op) == (template, output)),
+                        route,
+                        // A consumer absent from the iterative catalog resets
+                        // its state during dispatch. The current producer's
+                        // already retained receipts still serve this match.
+                        #[cfg(feature = "iterative-bake")]
+                        history: cursor.state.history.clone(),
+                    })
                 })
             } else { None };
             #[cfg(feature = "spine-shapes")]

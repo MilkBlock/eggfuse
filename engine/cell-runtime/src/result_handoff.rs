@@ -380,6 +380,15 @@ pub(crate) struct CaptureWork {
     pub allocations: usize,
 }
 impl History {
+    pub(crate) fn current_source(&self, rule: usize, source: Source, steps: &mut u64) -> Option<Dependency> {
+        let e = match self.0.as_deref()? {
+            Trail::One(e) => e,
+            Trail::Many(v) => v.last()?.as_deref()?,
+        };
+        if e.rule != rule { return None; }
+        let donor = match source { Source::Query(i) => Donor::Query(i), Source::Effect(i) => Donor::Effect(i) };
+        e.rows.iter().find(|x| { *steps += 1; x.0 == donor }).map(|x| x.1)
+    }
     pub(crate) fn capture(
         &mut self,
         limit: usize,

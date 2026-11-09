@@ -35,11 +35,13 @@
 
 | 工作 | 目录条目 | 当前完成范围 |
 |---|---|---|
-| 已有见证直达＋匹配前缀接续 | C3、C4 | 完整 Spine 使用当前 producer effect；含 Expand 的 kernel 接续连续完整 key 前缀，残余匹配保持完整 |
+| 已有见证直达＋匹配前缀接续 | C3、C4 | 按实际 query/effect 来源读取已保存的 receipt；分派前保留本次匹配需要的历史引用；非空完整 key 前缀可接续，残余匹配保持完整 |
 | 片段内部发布 | E3 | 多 anchor、permanent、Entry-owned 的 RHS 片段；在现有 Entry 槽位选择最后发布者，未知边界回退 |
 | 扩大并行完成范围 | H4 | 超过局部条件容量的形状可用完整端口候选域进入读取批次；有序提交和 union 失效仍保留 |
 
-这三项的代码/验证记录在 [本轮实验目录](../../benchmarks/witness-prefix/README.md)。C3/C4 在当前 sum-bits、Raytrace 中实际命中为 0，未减少查询；E3 已触发，H4 在真实并行诊断中接管了额外任务。合测没有通过双工作负载推理收益门槛，不能给前两条路径记收益。前一轮跨阶段分组另有可追溯结果：[query-classes 最终报告](../../benchmarks/query-classes/final/README.md)；不同轮次和基线不能混用。
+这三项的初次代码/验证记录在 [witness-prefix 实验目录](../../benchmarks/witness-prefix/README.md)。该版本 C3/C4 在 sum-bits、Raytrace 中实际命中为 0，未减少查询；E3 已触发，H4 在真实并行诊断中接管了额外任务。合测没有通过双工作负载推理收益门槛，不能给前两条路径记收益。
+
+后续 [实际来源与无效分派清理](../../benchmarks/witness-sources/README.md) 只做短样例诊断：sum-bits 的 Spine context/route probes 从各 90 降到各 12，31 次失败 donor 尝试归零；实际查询仍为 19,222，捕获和分配未增加。真实 receipt 直达由专项回归覆盖，当前短样例仍是零命中；没有新的整体加速结论或 Raytrace 计时。前一轮跨阶段分组另有可追溯结果：[query-classes 最终报告](../../benchmarks/query-classes/final/README.md)；不同轮次和基线不能混用。
 
 ## 读取现有报告，不触发新实测
 
