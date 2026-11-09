@@ -120,3 +120,7 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 没有把出生 hint 当 canonical key 维护。批量路径保留提交时刷新过的实际 result，不能回用旧 row 的输出；非构造子 relation 不发布输出 union。显式 repair Cell 已执行的源 Union 不重复执行，它的 publish 指令调用共同终结效果。候选完整性、源序排队和存活判断不因共享提交而省略。
 
 预取跨 result union 复用、批量 key/result delta 的 merge/visibility/retirement、晚到边界 union、容器回退和重复初始桶的现有短用例通过；最小特性编译通过。上次速度检查后的第 2 个实现提交，不单独计时。
+
+这两项合做一次普通构建 sum-bits 核对，见 [propagation-check.json](propagation-check.json)：语义入口 pass，300 项非时间/RSS指标、1,428 个 Run 与最终 state 保持。1,046 次 equality completion 实际经过共同提交。短 port fixture 的逐阶段状态、binding audit、runtime/ownership/stable-port 工作计数也一致；16 项针对性短测试通过。没有新增计时或 allocation 审计。
+
+复现输出使用冻结 `out/cell-port-reader-unified/runtime-candidate` 作前版，当前源码普通 release 构建作后版，分别运行相同的 `sum/program.json --local-congruence` 与 `port-program.json --local-congruence --audit-stages`，输出保存在 `out/cell-propagation-unified`。沿用 `catalog.py extract` 的工作指标及 `choice_diagnosis.py` 的 semantic 入口，比较上述 Run 字段、完整工作计数和状态摘要；binary/program SHA 与短测试日志 SHA 记录在结果文件。

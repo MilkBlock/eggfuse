@@ -1,0 +1,75 @@
+{
+  "scope": "standalone Cell CPU; grouped field propagation and collision completion check; no timing or allocation sampling",
+  "baseline_commit": "53bdc930 (runtime 24c4ae8a)",
+  "implementation_commits": [
+    "230dbc51",
+    "b01f9984"
+  ],
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 300,
+  "cases": {
+    "sum_bits": {
+      "runs": 1428,
+      "ordered_hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+      },
+      "runtime_ownership_and_stable_counters_identical": true,
+      "port_reads": 118304,
+      "equality_completions": 1046
+    },
+    "port_fixture": {
+      "runs": 3,
+      "ordered_hashes": {
+        "state.json": "41c7455d120dbaef1c0b24c5b4c2199a2f1de461857520418f2b2d6d7f14ae02",
+        "stages.json": "0b7c4896bdaf976a5197a12e62a41d679bb2aac6afc84212cef253cadb7c4aa8",
+        "binding-audit.json": "3e743ca2621b1afd334093bb4e5185fdcdb7e5d5adff06e737d904e57a196a9d"
+      },
+      "runtime_ownership_and_stable_counters_identical": true,
+      "port_reads": 92,
+      "equality_completions": 2
+    }
+  },
+  "tests": {
+    "unique": {
+      "passed": 10,
+      "log_sha256": "286c4c47ccb9d963f534e83504cc49bf92f4ce01c5e302e41d130dce34b89f4b"
+    },
+    "legacy": {
+      "passed": 1,
+      "log_sha256": "95d6651c1b74178acde0253037724e6309964906861b2a39014e818bd2a6f6a5"
+    },
+    "parallel": {
+      "passed": 1,
+      "log_sha256": "377bf730b2e616483be6f814902190be748b811c56263c88d80ffed4ff0e8895"
+    },
+    "batch": {
+      "passed": 1,
+      "log_sha256": "58ec597a86358119b0262e7b601c30d12fed3d042935cb04675817efabee11bf"
+    },
+    "repair": {
+      "passed": 1,
+      "log_sha256": "4dbb5b0d862906c08537e2fc9f1db02a55b577393446090194992c4baee587fb"
+    },
+    "owner": {
+      "passed": 1,
+      "log_sha256": "b4b56084dd23822592e83ae0f13aa596f6e0e65542b0248a49f675ebee515271"
+    },
+    "fallback": {
+      "passed": 1,
+      "log_sha256": "a20e41308e7024b5709cd8dd296b294283a4d7d28e0cbddd1cdbfe27f68bdf3c"
+    }
+  },
+  "minimal_features_check": "pass",
+  "binaries": {
+    "baseline": "84bd1306536034629dc3fe774e041d924a78c70ed22809d3b4f52521f45132cc",
+    "candidate": "b093b0d29bca69bf26580b14624218a88954d4ab3f1c2a1fc0ff3b21a82cfc56"
+  },
+  "programs": {
+    "sum": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+    "port": "101aa5bc04a8867c9c03d0c4d2378e3bb2e8ee244040834d5a1ffdfa07465220"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "24c4ae8a",
+    "implementation_commits_since_timing": 2
+  }
+}

@@ -4,6 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "24c4ae8a",
+    "implementation_commits_since_timing": 2,
     "evidence": "benchmarks/cell-unification/port-read-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign."
   },
@@ -224,7 +225,8 @@
       ],
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
       "symbol_checks": "benchmarks/cell-unification/symbols-check.json",
-      "port_read_checks": "benchmarks/cell-unification/port-read-results.json"
+      "port_read_checks": "benchmarks/cell-unification/port-read-results.json",
+      "propagation_checks": "benchmarks/cell-unification/propagation-check.json"
     },
     {
       "id": "schedule_parallel",
@@ -359,8 +361,9 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "F2",
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
-      "remaining": "Source symbols, incidence coverage and congruence closure share Cell definitions. Ownership/deferred completion lifecycles, incidence routing and full internal repair takeover remain.",
-      "symbol_checks": "benchmarks/cell-unification/symbols-check.json"
+      "remaining": "Source symbols, coverage, congruence closure, field publication and collision completion share Cell implementations. Component lifetime, incidence routing and full internal repair takeover remain.",
+      "symbol_checks": "benchmarks/cell-unification/symbols-check.json",
+      "propagation_checks": "benchmarks/cell-unification/propagation-check.json"
     },
     {
       "id": "F3",
@@ -377,14 +380,18 @@
     {
       "id": "F5",
       "title": "稳定字段 PortRef",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "F5"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "F5",
+      "evidence": "benchmarks/cell-unification/propagation-check.json",
+      "remaining": "Coordinator and worker port reads, change publication and completion share code. Stable-node installation, field storage and component lifetime remain to unify; no speedup established."
     },
     {
       "id": "G1",
       "title": "端口等价构造子判重与 birth hint",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "G1"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "G1",
+      "evidence": "benchmarks/cell-unification/propagation-check.json",
+      "remaining": "Exact-key and port-key collisions share ordered completion; stable hints remain immutable. Candidate domain lookup and birth indexing still have distinct implementations."
     },
     {
       "id": "G2",
