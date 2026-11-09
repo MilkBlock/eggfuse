@@ -64,11 +64,40 @@ general validation should check candidate legality, cost, supported semantic
 equivalence and visible effects, while keeping deterministic-state checks as
 a separate property.
 
-Reproduce the read-only diagnosis:
+## Default semantic acceptance
+
+Per the repository workflow, this script is now the semantic acceptance
+entrypoint for the reviewed sum-bits final-state contract. Strict graph equality
+remains a separate determinism check. A tie already covered by the proofs above
+does not fail semantic acceptance merely because the strict graph differs.
+
+The JSON report exposes an overall `status` and one status for each comparison:
+
+| Status | Exit code | Meaning |
+|---|---:|---|
+| `pass` | 0 | All conditions of the stated final-state contract passed. |
+| `difference` | 1 | A checked condition differs, such as core visibility, selected cost or candidate legality. |
+| `inconclusive` | 2 | Inputs, source contract or required identities are not covered; this is not a pass. |
+
+The baseline `source_core` fingerprint binds the proof to the source actually
+reviewed. A new workload/source needs an explicit contract review and extension;
+do not simply change the fingerprint or ignore new tables to obtain a pass.
+Unknown term identities are inconclusive, since failure to prove equivalence
+does not itself prove inequivalence. Cost equality by itself never suffices.
+Python `-O` is rejected because assertions are part of the checker.
+
+Use completed exports in `ARTIFACT_ROOT`: `native-source.json`,
+`native-legacy.json`, `native-values.json`, `run-legacy/state.json`,
+`run-values/state.json`, and `sum-legacy/program.json`. These are the same inputs
+as the original diagnosis. Changes to scheduling, deletion or cross-stage
+visibility still require their relevant Run-boundary checks; this script does
+not turn final-state agreement into an intermediate-state proof.
+
+Run the read-only acceptance check:
 
 ```sh
 python3 benchmarks/marker-handoff/choice_diagnosis.py \
-  out/marker-handoff out/marker-handoff/choice-diagnosis.json
+  out/marker-handoff out/marker-handoff/semantic-acceptance.json
 ```
 
 [choice-diagnosis.json](choice-diagnosis.json) records input hashes and the
@@ -76,3 +105,11 @@ specific first difference. Negative checks rejected a changed selected cost,
 a selection outside the candidate set, a division operand swap, and a changed
 core visibility bit. The diagnostic is separate from [audit.py](audit.py) and
 does not turn its failed strict comparison into a pass.
+
+[semantic-acceptance.json](semantic-acceptance.json) records the successful
+acceptance of those same saved inputs. The regression suite uses them without
+rerunning workloads:
+
+```sh
+python3 benchmarks/marker-handoff/test_choice_diagnosis.py out/marker-handoff
+```

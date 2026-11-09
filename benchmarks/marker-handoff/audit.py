@@ -20,6 +20,10 @@ def key(v):
     return json.dumps(v, sort_keys=True, separators=(',', ':'))
 
 
+class UnresolvedState(AssertionError):
+    """Grounded propagation cannot distinguish unequal and unrooted states."""
+
+
 def states(path):
     """Stream a JSON array of snapshots instead of retaining gigabytes of rows."""
     decoder = json.JSONDecoder()
@@ -103,7 +107,8 @@ def equivalent(left, right, tables=None, anchors=True, mapping_out=None):
                 bind(r['values'][-1], other['values'][-1])
             except KeyError:
                 rest.append(r)
-        assert len(rest) < len(todo), ('unresolved or unequal state', len(rest))
+        if len(rest) == len(todo):
+            raise UnresolvedState(('unresolved or unequal state', len(rest)))
         todo = rest
     assert sorted(key(mapped(r)) for r in aa) == sorted(key(canonical(r)) for r in bb), 'full row/visibility mismatch'
     if mapping_out is not None:

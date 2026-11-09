@@ -5,6 +5,11 @@ on `7725da71`. Use `--marker-handoff values`; `legacy` remains the default and
 reproduces the frozen sum-bits recipe hash. See [design.md](design.md) for the
 opportunity and proof obligations recorded before implementation.
 
+For subsequent changes, use the [semantic acceptance entrypoint](choice-diagnosis.md#default-semantic-acceptance).
+Only `status: pass` / exit 0 satisfies its reviewed contract. Keep raw full-graph
+equality as a separate determinism diagnostic, and retain relevant Run-boundary
+checks for scheduling and visibility changes.
+
 The marker already contains the correlated constructor outputs. The old emitter
 removed their original LHS atoms but left nested constructor calls in the RHS.
 The new emitter uses the bound outputs directly. Schematically:

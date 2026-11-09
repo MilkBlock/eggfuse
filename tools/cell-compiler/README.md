@@ -35,3 +35,11 @@ operation count: validate any claimed speedup separately with single-thread
 timings against the same frozen artifact and the fastest control.
 
 The frozen suite uses marked recipes produced by the compiler. Per-Run equality on this branch is measured against the prior standalone Cell CPU executor. Comparisons against native egglog require its original unmarked eggcc input.
+
+For semantic acceptance of the reviewed sum-bits extraction contract, run
+`python3 benchmarks/marker-handoff/choice_diagnosis.py ARTIFACT_ROOT OUTPUT.json`.
+Accept only `pass` / exit 0; `difference` / exit 1 and `inconclusive` / exit 2
+are not acceptance. See [inputs, proof rules and limits](../../benchmarks/marker-handoff/choice-diagnosis.md#default-semantic-acceptance).
+Strict graph equality is a separate determinism diagnostic. Source contracts
+outside the reviewed fingerprint require extending the proof; scheduling and
+visibility changes still require the relevant Run-boundary checks.
