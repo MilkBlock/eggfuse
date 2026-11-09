@@ -1,0 +1,21 @@
+{
+  "scope": "standalone Cell CPU; grouped semantic/work check; no timing or allocation campaign",
+  "baseline_commit": "fc5e7883",
+  "candidate_commit": "e06cd8b9",
+  "metrics": 311,
+  "unchanged_work_metrics": 300,
+  "ordered_runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "semantic_acceptance": "pass",
+  "report_sha256": "ca2c5574eb9619fb0a92e2b64ac608b9e7f8e9fecbadc64bde2fe50e7ccded7f",
+  "runtime_sha256": "10402c98ad67b6f01cf45575ade4ae9612d4f6ae9bf7494f3d0d92b29e68397c",
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "merge_work": {
+    "merge_calls": 2817,
+    "merge_port_reads": 0,
+    "merge_program_calls": 197,
+    "merge_program_constructs": 194,
+    "merge_program_operations": 194
+  },
+  "coverage_note": "sum-bits exercises shared call execution; local plans and merge function reads are covered by targeted tests and frozen-artifact relowering"
+}
