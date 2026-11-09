@@ -152,3 +152,9 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 异 component 检查仍在 native slot 查询之前。地址只表示归属，不代替 equality：`native_signal` 仍验证实际绑定及其当前根，然后才生成带 class 的 signal。保留被删除 producer 的必要地址，直到整个 component 退休；不以地址存在推断事实存活。
 
 多轮 union 后 native alias、retained inactive 候选剔除、五项 query-class 证书/跨阶段/训练回退检查以及最小特性编译通过。至此距上次测速累计 5 个实现提交，下面统一进行普通构建的工作量和速度检查。
+
+## 速度检查发现共享投影的额外调用
+
+五提交检查的首组采样中，`9f767036` 相对 `24c4ae8a` 的推理配对中位比为 1.027，区间 1.020–1.029，不能按速度保持验收。分段重测波动较大，尚不能完全归因；汇编确认 `FieldUses::fact` 在 owned candidates、local candidates 和 union 的三个热点循环中成为独立调用。这是静态调用位置数，不是运行时调用计数。
+
+给这个借用访问器加 inline 提示，使固定的输入/全字段访问模式能在调用点特化，避免每个候选重新传递视图。结构仍是同一实现，没有恢复重复枚举。条件容量回退短检查通过；保留首组和定位采样，修订后重新验证调用与速度。

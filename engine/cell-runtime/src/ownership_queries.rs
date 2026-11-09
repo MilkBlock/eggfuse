@@ -59,6 +59,9 @@ impl FieldUses<'_> {
     pub fn len(&self) -> usize {
         self.positions.map_or(self.steps.len(), <[_]>::len)
     }
+    // Each caller fixes the access mode. Inline the borrowed projection so
+    // candidate loops specialize that mode without a call or view reload.
+    #[inline]
     pub fn fact(&self, position: usize, inputs_only: bool) -> Option<FactRef> {
         let step = if let Some(positions) = self.positions {
             let Position(encoded) = positions[position];
