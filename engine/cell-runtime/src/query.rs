@@ -163,6 +163,63 @@ impl Columns {
         }
         (if old.is_some() { changed } else { 0 }, changed)
     }
+    /// Consume a selection made against this current index. Both ordinary
+    /// Cell enumeration and retained-prefix reads use this exact refinement.
+    #[inline]
+    fn candidates(
+        &mut self,
+        bound: &[Option<Value>],
+        (col, key, size): (usize, u64, usize),
+        bits: u32,
+        intersection: bool,
+        stats: &mut RefinementStats,
+    ) -> Rc<Vec<Dependency>> {
+        if size == 0 {
+            return Rc::new(vec![]);
+        }
+        let bucket = self.values[col].get_mut().expect("selected column").get_mut(&key).unwrap();
+        let view = bucket
+            .view
+            .get_or_insert_with(|| Rc::new(bucket.facts.iter().copied().collect()))
+            .clone();
+        if !intersection {
+            return view;
+        }
+        let selectors = bound
+            .iter()
+            .enumerate()
+            .filter_map(|(c, v)| {
+                if c == col {
+                    None
+                } else {
+                    v.as_ref().map(|v| (c, fingerprint(v, bits)))
+                }
+            })
+            .collect::<Vec<_>>();
+        if selectors.is_empty() {
+            return view;
+        }
+        stats.requests += 1;
+        if let Some(hit) = bucket.refinements.get(&selectors) {
+            stats.hits += 1;
+            stats.avoided += (view.len() - hit.len()) as u64;
+            return hit.clone();
+        }
+        stats.examined += view.len() as u64;
+        let result = Rc::new(
+            view.iter()
+                .copied()
+                .filter(|w| { let hashes = &self.keys[w]; selectors.iter().all(|(c,k)|hashes[*c]==*k) })
+                .collect::<Vec<_>>(),
+        );
+        stats.avoided += (view.len() - result.len()) as u64;
+        // Cache only nonempty proper partitions, not a history of missing keys.
+        // Any changed tuple removes/reinserts its witness in ALL its buckets.
+        if !result.is_empty() && result.len() < view.len() {
+            bucket.refinements.insert(selectors, result.clone());
+        }
+        result
+    }
     fn best(&self, bound: &[Option<Value>], bits: u32) -> Option<(usize, u64, usize)> {
         let mut best = None;
         for (col, v) in bound.iter().enumerate() {
@@ -308,39 +365,49 @@ impl Default for QueryIndexes {
     }
 }
 impl QueryIndexes {
-    /// Subscription to a candidate superset without pinning historical bucket
-    /// vectors. Contexts consume old+new row notifications at each publication.
-
-    pub fn read_stamp(
+    /// Read one Cell expansion and its exact-value lease from the same selected
+    /// bucket. None means over budget; an empty domain still returns a lease so
+    /// later matching insertions invalidate a cached negative prefix.
+    pub(crate) fn leased_candidates(
         &mut self,
         graph: &Graph,
         table: usize,
         bound: &[Option<Value>],
-    ) -> Result<ReadStamp> {
-        self.ensure(graph, table)?;
-        let index = self.tables.get_mut(&table).unwrap();
-        // This table supplies exact read evidence. Do not impose its lease
-        // invalidation work on unrelated indexes used only for ordinary joins.
-        index.leased_reads = true;
-        if let Some((column, hash, _)) = index.best(bound, self.bits) {
-            let view = index.values[column].get_mut().expect("selected column").get_mut(&hash).map(|bucket| {
-                bucket
-                    .view
-                    .get_or_insert_with(|| Rc::new(bucket.facts.iter().copied().collect()))
-                    .clone()
-            });
-            Ok(ReadStamp::Bucket {
-                table,
-                column,
-                hash,
-                view,
-            })
+        limit: usize,
+    ) -> Result<Option<(Rc<Vec<Dependency>>, ReadStamp)>> {
+        let selected = if bound.iter().any(Option::is_some) {
+            self.ensure_selected(graph, table, bound.iter().enumerate()
+                .filter_map(|(c, v)| v.as_ref().map(|_| c)))?;
+            let best = self.tables[&table].best(bound, self.bits).unwrap();
+            if best.2 > limit { return Ok(None); }
+            Some(best)
         } else {
-            Ok(ReadStamp::Table {
-                table,
-                version: index.version,
-            })
-        }
+            if graph.witness_count(table) > limit { return Ok(None); }
+            self.ensure(graph, table)?;
+            None
+        };
+        let index = self.tables.get_mut(&table).unwrap();
+        // Exact cached matches must observe changed values even when all
+        // fingerprints and candidate identities happen to remain unchanged.
+        index.leased_reads = true;
+        #[cfg(feature = "family-overlap")]
+        let clock = crate::family_overlap::clock();
+        let (rows, stamp) = if let Some(best) = selected {
+            let rows = index.candidates(bound, best, self.bits, self.intersection, &mut self.refinements);
+            let (column, hash, _) = best;
+            // Lease the complete base bucket, not just a refined subset. An
+            // excluded row can change into a match without changing membership.
+            let view = index.values[column].get().unwrap().get(&hash)
+                .and_then(|bucket| bucket.view.clone());
+            (rows, ReadStamp::Bucket { table, column, hash, view })
+        } else {
+            (Rc::new(graph.witnesses(table)), ReadStamp::Table { table, version: index.version })
+        };
+        #[cfg(feature = "family-overlap")]
+        crate::family_overlap::physical(table, 2, clock, || {
+            bound.iter().enumerate().filter_map(|(i, v)| Some((i, v.as_ref()?.clone()))).collect()
+        });
+        Ok(Some((rows, stamp)))
     }
     #[cfg(feature = "projection-stamps")]
     pub(crate) fn projection_stamp(
@@ -549,52 +616,8 @@ impl QueryIndexes {
         }
         self.ensure_selected(graph,table,bound.iter().enumerate().filter_map(|(c,v)|v.as_ref().map(|_|c)))?;
         let index = self.tables.get_mut(&table).unwrap();
-        let (col, key, size) = index.best(bound, self.bits).unwrap();
-        if size == 0 {
-            return Ok(Rc::new(vec![]));
-        }
-        let bucket = index.values[col].get_mut().expect("selected column").get_mut(&key).unwrap();
-        let view = bucket
-            .view
-            .get_or_insert_with(|| Rc::new(bucket.facts.iter().copied().collect()))
-            .clone();
-        if !self.intersection {
-            return Ok(view);
-        }
-        let selectors = bound
-            .iter()
-            .enumerate()
-            .filter_map(|(c, v)| {
-                if c == col {
-                    None
-                } else {
-                    v.as_ref().map(|v| (c, fingerprint(v, self.bits)))
-                }
-            })
-            .collect::<Vec<_>>();
-        if selectors.is_empty() {
-            return Ok(view);
-        }
-        self.refinements.requests += 1;
-        if let Some(hit) = bucket.refinements.get(&selectors) {
-            self.refinements.hits += 1;
-            self.refinements.avoided += (view.len() - hit.len()) as u64;
-            return Ok(hit.clone());
-        }
-        self.refinements.examined += view.len() as u64;
-        let result = Rc::new(
-            view.iter()
-                .copied()
-                .filter(|w| { let hashes = &index.keys[w]; selectors.iter().all(|(c,k)|hashes[*c]==*k) })
-                .collect::<Vec<_>>(),
-        );
-        self.refinements.avoided += (view.len() - result.len()) as u64;
-        // Cache only nonempty proper partitions, not a history of missing keys.
-        // Any changed tuple removes/reinserts its witness in ALL its buckets.
-        if !result.is_empty() && result.len() < view.len() {
-            bucket.refinements.insert(selectors, result.clone());
-        }
-        Ok(result)
+        let best = index.best(bound, self.bits).unwrap();
+        Ok(index.candidates(bound, best, self.bits, self.intersection, &mut self.refinements))
     }
     pub(crate) fn fingerprint(&self, value: &Value) -> u64 {
         fingerprint(value, self.bits)
@@ -825,6 +848,68 @@ pub(crate) fn test_projection_graph() -> Graph {
     let mut graph = Graph::new(p).unwrap();
     graph.merge_programs_enabled = false; // This fixture exercises storage updates without a compiled RHS.
     graph
+}
+
+#[cfg(all(test, feature = "projection-stamps"))]
+mod lease_tests {
+    use super::*;
+
+    #[test]
+    fn lease_covers_excluded_rows_and_absent_buckets() {
+        let mut g = test_projection_graph();
+        let mut ix = test_projection_indexes(64);
+        let key = |a, b| vec![Value::Int(a), Value::Int(b)];
+        for (a, b, v) in [(1, 0, 7), (1, 1, 8), (2, 0, 7)] {
+            g.set_function(0, key(a, b), Value::Int(v)).unwrap();
+        }
+        g.changes.clear();
+        let bound = [Some(Value::Int(1)), None, Some(Value::Int(7))];
+        let (rows, lease) = ix.leased_candidates(&g, 0, &bound, 2).unwrap().unwrap();
+        assert_eq!(rows.len(), 1);
+        assert!(ix.valid_read(&g, &lease));
+        assert_eq!(*rows, *ix.candidates(&g, 0, &bound).unwrap());
+        let missing = [Some(Value::Int(3)), None, None];
+        let (empty, absent) = ix.leased_candidates(&g, 0, &missing, 0).unwrap().unwrap();
+        assert!(empty.is_empty());
+        g.set_function(0, key(4, 0), Value::Int(6)).unwrap();
+        ix.update(&mut g).unwrap();
+        g.changes.clear();
+        assert!(ix.valid_read(&g, &lease));
+        assert!(ix.valid_read(&g, &absent));
+        // The previously excluded row enters the refined result. A lease on
+        // only the returned subset would miss this exact-value change.
+        g.set_function(0, key(1, 1), Value::Int(7)).unwrap();
+        g.set_function(0, key(3, 0), Value::Int(7)).unwrap();
+        ix.update(&mut g).unwrap();
+        assert!(!ix.valid_read(&g, &lease));
+        assert!(!ix.valid_read(&g, &absent));
+        assert_eq!(ix.leased_candidates(&g, 0, &bound, 2).unwrap().unwrap().0.len(), 2);
+    }
+
+    #[test]
+    fn exact_lease_rejects_colliding_changes_and_budget_is_not_absence() {
+        let mut g = test_projection_graph();
+        let mut ix = test_projection_indexes(0);
+        let key = vec![Value::Int(1), Value::Int(0)];
+        g.set_function(0, key.clone(), Value::Int(7)).unwrap();
+        g.changes.clear();
+        let unbound = [None, None, None];
+        assert!(ix.leased_candidates(&g, 0, &unbound, 0).unwrap().is_none());
+        assert_eq!(ix.builds, 0);
+        let (_, table) = ix.leased_candidates(&g, 0, &unbound, 1).unwrap().unwrap();
+        let bound = [Some(Value::Int(1)), None, None];
+        assert!(ix.leased_candidates(&g, 0, &bound, 0).unwrap().is_none());
+        let (rows, bucket) = ix.leased_candidates(&g, 0, &bound, 1).unwrap().unwrap();
+        let identity = rows[0];
+        g.set_function(0, key, Value::Int(8)).unwrap();
+        ix.update(&mut g).unwrap();
+        assert!(!ix.valid_read(&g, &table));
+        assert!(!ix.valid_read(&g, &bucket));
+        let (now, lease) = ix.leased_candidates(&g, 0, &bound, 1).unwrap().unwrap();
+        assert_eq!(now.as_slice(), &[identity]);
+        assert!(ix.valid_read(&g, &lease));
+        assert_eq!(g.row(identity).unwrap().unwrap().values.last(), Some(&Value::Int(8)));
+    }
 }
 
 #[cfg(all(test, feature = "projection-stamps"))]

@@ -397,3 +397,14 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 每次成功读取向当前 prefix 推入一个见证，递归返回后撤销；成功、失败、预算退出及 Result 错误都恢复父层，再清理原有值作用域和 epoch。保留 leases、当前 key/存活校验、跨 Run 失效和迟到输入处理。现有 prefix_slots_copied 反映保留数组实际长度，sum-bits 14→13，branches 77→56、terminal 51→36、roots 77→56；复制次数、clear 次数和其余 345 项工作指标保持。计数包含值与见证槽位，不等于字节或分配次数；push/pop 的长度维护和静态投影遍历未按机器指令计费，静态 width 也替代了布尔元数据。
 
 15 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过；sum-bits 1,428 个 Run 和最终 state 一致、语义脚本 pass，三个短样例的 state/stages/binding-audit 一致。输出 `out/cell-prefix-witnesses`，验证 `check_context.py ROOT OUTPUT --commit COMMIT --phase witness`。上次测速后第 2 个实现提交，不单独测速度。prefix 的实际见证与生命周期仍保留；下一步需继续统一缓存失效和查询索引的生命周期，不能将这次紧凑存储当作完整接管。
+
+
+## Cell 前缀读取与缓存凭证来自同一次索引选择
+
+检查上一轮实际执行：sum-bits 有 33 次 context 调用、32 次 root 复用、3 次 prefix port probe。每次可接受的前缀表读取原先依次 count、read_stamp、candidates，各自准备/确认索引并选择最小 bucket。前缀读取的 Cell Expansion 和 bound 在这三次调用之间完全相同，且匹配阶段没有图写入。现在 leased_candidates 一次准备和选择，返回候选及对应的精确值 ReadStamp；删除独立 read_stamp API。普通查询与前缀查询共用 Columns::candidates 的同一分区实现，refinement 缓存、候选顺序和计数保持。
+
+仍必须区分三种结果：超预算是性能回退；空 bucket 是可被后续插入推翻的否定凭证；非空精确读取需要观察真实值更新，不能只看 fingerprint 或成员集合。ReadStamp 保留原始完整 bucket 的 view，而非过滤后的子集，因此被排除的行后来进入匹配也会失效。leased_reads 继续使相同 fingerprint 的已变行清除旧 view。成员投影的 ProjectionStamp 具有更弱的义务，未将其与精确匹配凭证混同；全表读取保留 table version。
+
+12 次相关测试通过，含稀疏/非稀疏精确凭证、空 bucket、预算回退、强制碰撞、已排除行变成命中、迟到输入和普通 Free Join 回归。最小 feature 编译、22 个组件重新 lowering、sum-bits 语义脚本均通过；1,428 个 Run、state、346 项工作指标不变，三个短 context 样例的 state/stages/binding-audit 一致。输出 `out/cell-leased-query`，验证 `check_context.py ROOT OUTPUT --commit COMMIT --phase lease`。3→1 指可接受前缀读取的源代码准备/选择调用数，未作为采样得到的机器指令或时间收益；现有 port_probes 也不是 committed mutations。
+
+上次测速后第 3 个实现提交，不单独测速。跨 Run scope 版本快照、context admission 和其他查询索引/缓存生命周期仍待统一，完整重写与最终多线程验收尚未完成。

@@ -54,7 +54,7 @@ def check_prefix(root, commit, phase="prefix"):
     changes = {k: [v, metrics[1][k]] for k, v in metrics[0].items() if v != metrics[1][k]}
     assert list(changes) == (['report:/local_context/rules/*/prefix_slots_copied [sum]'] if phase in ('compact', 'witness') else [])
     fixtures = {}
-    for name in (('branches', 'terminal', 'roots') if phase in ('root', 'compact', 'witness') else ('branches', 'terminal')):
+    for name in (('branches', 'terminal', 'roots') if phase in ('root', 'compact', 'witness', 'lease') else ('branches', 'terminal')):
         path = root / f'fixture-{name}'
         fixtures[name] = pair(path, path / 'program.json', ('baseline', 'candidate'))
         assert any(row['calls'] > 0 for row in fixtures[name]['context_work'].values())
@@ -62,6 +62,7 @@ def check_prefix(root, commit, phase="prefix"):
     tests = {}
     checks = [('query', 3), ('context', 1), ('cuts', 1), ('budget', 1), ('entry', 1)]
     if phase in ('root', 'compact', 'witness'): checks.append(('witness', 8))
+    if phase == 'lease': checks.extend((('lease', 2), ('lease-nonsparse', 2), ('free-join', 1)))
     for name, count in checks:
         path = root / f'test-{name}.log'
         passed = re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text())
@@ -71,15 +72,15 @@ def check_prefix(root, commit, phase="prefix"):
     assert 'Finished `dev` profile' in path.read_text()
     tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
     result = dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
-        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc', 'witness': '3bd9d21e'}[phase], candidate_commit=commit, semantic_acceptance='pass',
+        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc', 'witness': '3bd9d21e', 'lease': 'c4e74d7c'}[phase], candidate_commit=commit, semantic_acceptance='pass',
         unchanged_report_groups_excluding=counters, compared_report_groups=GROUPS,
         unchanged_work_metrics=len(metrics[0]) - len(changes), changed_work_metrics=changes,
         fixtures=fixtures, tests=tests,
         binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
         timing_cadence={'last_timed_commit': '7f4e24c2' if phase == 'prefix' else 'c8ef6edc',
-                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3, 'witness': 2}[phase]},
+                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3, 'witness': 2, 'lease': 3}[phase]},
         limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
-    if phase in ('root', 'compact', 'witness'):
+    if phase in ('root', 'compact', 'witness', 'lease'):
         program = load(root / 'sum/program.json')
         audit = load(root / 'relower.json')
         assert audit['status'] == 'pass' and audit['program_sha256'] == program['sha256']
@@ -98,6 +99,9 @@ def check_prefix(root, commit, phase="prefix"):
     if phase == 'witness':
         result['timing_cadence']['last_timed_commit'] = 'f1c69507'
         result['limits'] = ('Prefix witnesses are dense in shared Cell instruction order. Scalars and terminal/suffix atoms have no retained witness slots. The existing branching flag is replaced by the required witness width, which also bounds scratch capacity. Projection uses those same static instructions; no runtime source map or reverse dependencies are added. Recursive failure/error/budget exits unwind the witness stack. Leases, visibility, epochs, invalidation and all matched table witnesses remain. Copied-slot counts are not allocation calls or a time model; push/pop and static projection traversal are not separately instruction-counted. Full query/cache integration and speed acceptance remain pending.')
+    if phase == 'lease':
+        result['timing_cadence']['last_timed_commit'] = 'f1c69507'
+        result['limits'] = ('A Cell prefix read prepares/selects its index once and returns both candidates and an exact-value lease; ordinary candidate reads use the same refinement implementation. The standalone read_stamp API and repeated count/stamp/candidates sequence are removed. The lease pins the base bucket, not just a refined result, and an empty bucket is distinct from budget rejection. Exact-row invalidation still differs from membership-only projection stamps. Existing work counters do not instrument removed preparation/selection calls; no allocation or speed claim. Cache scope invalidation and other query/index lifetimes remain.')
     if phase == 'selection':
         program = load(root / 'sum/program.json')
         all_cuts = program['context_cuts']
@@ -122,7 +126,7 @@ def check_prefix(root, commit, phase="prefix"):
 
 
 def check(root, commit, phase='branches'):
-    if phase in ('prefix', 'selection', 'root', 'compact', 'witness'):
+    if phase in ('prefix', 'selection', 'root', 'compact', 'witness', 'lease'):
         return check_prefix(root, commit, phase)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
@@ -229,6 +233,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact', 'witness'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact', 'witness', 'lease'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')

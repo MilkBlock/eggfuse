@@ -572,12 +572,12 @@ fn extend(
     let expansion = step.expansion.as_ref().expect("prefix expansion");
     let bound = expansion.bind::<Vec<_>>(|field|
         field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], None));
-    if ix.count(g, t, &bound)? > PREFIX_LIMIT {
+    let Some((candidates, lease)) = ix.leased_candidates(g, t, &bound, PREFIX_LIMIT)? else {
         return Ok(false);
-    }
-    root.leases.push(ix.read_stamp(g, t, &bound)?);
+    };
+    root.leases.push(lease);
     stats.port_probes += 1;
-    for &w in ix.candidates(g, t, &bound)?.iter() {
+    for &w in candidates.iter() {
         if *work_left == 0 {
             return Ok(false);
         }
