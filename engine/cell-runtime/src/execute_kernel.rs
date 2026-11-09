@@ -1,5 +1,5 @@
 use super::*;
-use crate::row_kernel::{Access, Kernel};
+use crate::{cell::Access, row_kernel::Kernel};
 use smallvec::SmallVec;
 
 #[cfg(feature = "sparse-cells")]

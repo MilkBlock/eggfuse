@@ -60,7 +60,7 @@ pub(crate) fn derive(p: &Program) -> Vec<Option<Plan>> {
                     k.steps
                         .iter()
                         .all(|s| {
-                            !matches!(s.access, crate::row_kernel::Access::Expand)
+                            !matches!(s.access, crate::cell::Access::Expand)
                                 || s.atom == structure
                         })
                         .then_some(pivot)

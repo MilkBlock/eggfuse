@@ -1,9 +1,9 @@
-//! Repair entries use the source Cell Block binder, ordered dataflow composition,
+//! Repair entries use the source Cell Query binder, ordered dataflow composition,
 //! and typed host capabilities. Tables bind a shape; class/row IDs are inputs.
 //! Only committed union deltas may enter a delta cell. The ordinary dirty queue
 //! remains the ordering authority for exact-key completion and its effects.
 use super::*;
-use crate::spine_blocks::{Block, Field};
+use crate::cell::{Field, Query};
 use std::rc::Rc;
 
 #[derive(Clone, Debug, Default)]
@@ -15,15 +15,15 @@ pub struct Catalog {
 #[derive(Clone, Debug, Serialize)]
 struct Shape {
     schema: Vec<J>,
-    key_ports: Block,
-    result_port: Block,
-    delta: Block,
-    key: Block,
+    key_ports: Query,
+    result_port: Query,
+    delta: Query,
+    key: Query,
     collision: Template,
     vacant: Template,
 }
-// Lower through the same Rule -> Block compiler used by ordinary stage entries.
-fn block(width: usize, calls: Vec<(&str, Vec<Arg>, usize)>, inputs: Vec<usize>) -> Block {
+// Lower through the same Rule -> Query compiler used by ordinary stage entries.
+fn block(width: usize, calls: Vec<(&str, Vec<Arg>, usize)>, inputs: Vec<usize>) -> Query {
     let mut query = vec![Atom {
         call: Call::Primitive("repair-entry".into(), "Unit".into()),
         args: (0..width).map(Arg::Slot).collect(),
@@ -36,7 +36,7 @@ fn block(width: usize, calls: Vec<(&str, Vec<Arg>, usize)>, inputs: Vec<usize>) 
         }
     }));
     let order = (1..query.len()).collect::<Vec<_>>();
-    Block::staged_entry(
+    Query::compile(
         &Rule {
             constructor_only: false,
             template: 0,
@@ -243,7 +243,6 @@ fn field(f: &Field, anchor: impl Fn(usize) -> Value, values: &[Value]) -> Value 
         Field::Anchor(i) => anchor(*i),
         Field::StepResult(i) => values[*i].clone(),
         Field::Literal(v) => v.clone(),
-        Field::PortResult => unreachable!("staged repair entry"),
     }
 }
 impl Graph {

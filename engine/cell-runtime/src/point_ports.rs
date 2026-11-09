@@ -1,7 +1,7 @@
 //! Share complete unary point reads for compiler-selected table consumers
 //! during the immutable matching phase. The source Run epoch seals each slot.
 use super::*;
-use crate::row_kernel::Access;
+use crate::cell::Access;
 
 struct Receipt {
     epoch: u64,

@@ -1707,6 +1707,8 @@ fn complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts() {
         e
     };
     let base = exec(p);
+    assert_eq!(base.report()["stage_spine"]["stats"]["block_entries"], 0);
+    assert!(base.report()["stage_spine"]["stats"]["cell_query_entries"].as_u64().unwrap() > 0);
     assert_eq!(
         base.steps
             .iter()
@@ -1718,6 +1720,8 @@ fn complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts() {
     );
     {
         let fast = exec(Program::parse(raw.clone()).unwrap());
+        assert!(fast.report()["stage_spine"]["stats"]["block_entries"].as_u64().unwrap() > 0);
+        assert!(fast.report()["stage_spine"]["stats"]["cell_query_steps"].as_u64().unwrap() > 0);
         let mut a = Vec::new();
         let mut b = Vec::new();
         base.graph.write_export(&mut a).unwrap();

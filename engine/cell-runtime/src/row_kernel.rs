@@ -1,14 +1,8 @@
 //! Checked register programs for connected queries with at most one index
 //! expansion. Every other read is a complete key or a bound primitive.
-use crate::program::*;
+use crate::{cell::Access, program::*};
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeSet, rc::Rc};
-#[derive(Clone, Copy, Debug, Serialize)]
-pub(crate) enum Access {
-    Key,
-    Expand,
-    Primitive,
-}
 #[derive(Clone, Debug, Serialize)]
 pub(crate) struct Step {
     pub atom: usize,
@@ -136,40 +130,10 @@ fn plan(r: &Rule, pivot: usize) -> Option<Kernel> {
             seed.push((col, *s));
         }
     }
-    let mut remaining = (0..r.query.len())
-        .filter(|&i| i != pivot)
-        .collect::<BTreeSet<_>>();
-    let mut expanded = false;
     let mut steps = vec![];
-    while !remaining.is_empty() {
-        let available =
-            |v: &Arg| matches!(v, Arg::Literal(_)) || matches!(v,Arg::Slot(s) if known.contains(s));
-        let (rank, atom) = remaining
-            .iter()
-            .filter_map(|&i| {
-                let a = &r.query[i];
-                let (_, keys) = a.args.split_last()?;
-                if keys.iter().all(available) {
-                    Some((usize::from(matches!(a.call, Call::Table(_))), i))
-                } else if !expanded
-                    && matches!(a.call, Call::Table(_))
-                    && a.args.iter().any(available)
-                {
-                    Some((2, i))
-                } else {
-                    None
-                }
-            })
-            .min()?;
+    for (atom, access) in crate::cell::query_order(r, pivot, 1)? {
         let a = &r.query[atom];
-        let access = match (&a.call, rank) {
-            (Call::Primitive(..), _) => Access::Primitive,
-            (_, 2) => {
-                expanded = true;
-                Access::Expand
-            }
-            _ => Access::Key,
-        };
+        let available = |v: &Arg| matches!(v, Arg::Literal(_)) || matches!(v, Arg::Slot(s) if known.contains(s));
         let bound = a
             .args
             .iter()
@@ -196,7 +160,6 @@ fn plan(r: &Rule, pivot: usize) -> Option<Kernel> {
             check,
             bound,
         });
-        remaining.remove(&atom);
     }
     #[cfg(feature = "sparse-cells")]
     let sum_filter = steps.windows(2).find_map(|pair| {

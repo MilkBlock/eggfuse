@@ -1,334 +1,51 @@
-//! Profile selection proposes entries. Loading independently reconstructs their
-//! exact dataflow from the target query and its complete stage entry.
-use crate::{
-    graph::{Graph, Row},
-    program::*,
-    value::{Value, canon},
-};
-use serde::Serialize;
+//! Bake admits Cell queries for cross-stage composition; it owns no second
+//! query representation or execution path.
+use crate::{cell::Query, program::*};
 use serde_json::{Value as J, json};
-use std::{collections::BTreeMap, rc::Rc};
 
-#[derive(Clone, Debug, Serialize)]
-pub(super) enum Field {
-    Anchor(usize),
-    PortResult,
-    StepResult(usize),
-    Literal(Value),
-}
-impl Field {
-    pub(super) fn get(&self, g: &Graph, row: &Row, port: Option<&Row>) -> Value {
-        match self {
-            Self::Anchor(col) => row.values[*col].clone(),
-            Self::PortResult => port.expect("validated port").values.last().unwrap().clone(),
-            Self::StepResult(_) => unreachable!("staged field in legacy block"),
-            Self::Literal(v) => canon(v, &g.parents),
-        }
-    }
-    pub(super) fn staged(&self, g: &Graph, row: &Row, results: &[Value]) -> Value {
-        match self {
-            Self::StepResult(i) => results[*i].clone(),
-            _ => self.get(g, row, None),
-        }
-    }
-}
-#[derive(Clone, Debug, Serialize)]
-pub(super) struct Port {
-    pub atom: usize,
-    pub table: usize,
-    pub key: Vec<Field>,
-    pub check_result: Option<Field>,
-}
-#[derive(Clone, Debug, Serialize)]
-pub(super) struct Block {
-    pub port: Option<Port>,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub steps: Vec<Step>,
-    pub inputs: Vec<Field>,
-}
-#[derive(Clone, Debug, Serialize)]
-pub(super) struct Step {
-    pub atom: usize,
-    pub call: Call,
-    pub key: Vec<Field>,
-    pub check_result: Option<Field>,
-}
-/// Shared binding/checking instruction used by source entries and repair cells.
-/// The host supplies typed table/primitive capabilities; a failed predicate
-/// never publishes an effect.
-pub(crate) struct BoundStep<A> {
-    args: A,
-    expected: Option<Value>,
-}
-impl Step {
-    pub(crate) fn bind<A: FromIterator<Value>>(
-        &self,
-        mut field: impl FnMut(&Field) -> Value,
-    ) -> BoundStep<A> {
-        BoundStep {
-            args: self.key.iter().map(&mut field).collect(),
-            expected: self.check_result.as_ref().map(field),
-        }
-    }
-}
-impl<A> BoundStep<A> {
-    pub(crate) fn evaluate(
-        self,
-        call: impl FnOnce(A) -> Result<Option<Value>>,
-    ) -> Result<Option<Value>> {
-        Ok(call(self.args)?.filter(|v| self.expected.as_ref().is_none_or(|e| e == v)))
-    }
-}
-impl Block {
-    /// Substitute a complete block's outputs into the next block's anchor.
-    /// This is dataflow composition: no intermediate row or slot map is needed.
-    pub(crate) fn then(&self, next: &Self) -> Option<Self> {
-        if self.port.is_some() || next.port.is_some() {
-            return None;
-        }
-        let field = |f: &Field| -> Option<Field> {
-            Some(match f {
-                Field::Anchor(i) => self.inputs.get(*i)?.clone(),
-                Field::StepResult(i) => Field::StepResult(self.steps.len() + i),
-                Field::Literal(v) => Field::Literal(v.clone()),
-                Field::PortResult => return None,
-            })
-        };
-        let mut steps = self.steps.clone();
-        for step in &next.steps {
-            steps.push(Step {
-                atom: self.steps.len() + step.atom,
-                call: step.call.clone(),
-                key: step.key.iter().map(&field).collect::<Option<_>>()?,
-                check_result: match &step.check_result {
-                    Some(f) => Some(field(f)?),
-                    None => None,
-                },
-            });
-        }
-        Some(Self {
-            port: None,
-            steps,
-            inputs: next.inputs.iter().map(field).collect::<Option<_>>()?,
-        })
-    }
-    pub(crate) fn lower(p: &Program, r: usize, pivot: usize) -> Option<Self> {
-        let (_, _, order) = p
-            .multi_stage
-            .stage_entries
-            .iter()
-            .find(|(i, a, _)| (*i, *a) == (r, pivot))?;
-        Self::lower_entry(&p.rules[r], pivot, order)
-    }
-    pub(crate) fn lower_staged(p: &Program, r: usize, pivot: usize) -> Option<Self> {
-        let (_, _, order) = p
-            .multi_stage
-            .stage_entries
-            .iter()
-            .find(|(i, a, _)| (*i, *a) == (r, pivot))?;
-        Self::lower_entry(&p.rules[r], pivot, order)
-            .or_else(|| Self::staged_entry(&p.rules[r], pivot, order))
-    }
-    pub(crate) fn staged_entry(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
-        let mut sources = BTreeMap::new();
-        for (col, arg) in rule.query.get(pivot)?.args.iter().enumerate() {
-            if let Arg::Slot(s) = arg {
-                sources.entry(*s).or_insert(Field::Anchor(col));
-            }
-        }
-        let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
-            Arg::Slot(s) => map.get(s).cloned(),
-            Arg::Literal(v) => Some(Field::Literal(v.clone())),
-        };
-        let mut seen = std::collections::BTreeSet::from([pivot]);
-        let mut steps = Vec::new();
-        for &atom in order {
-            if !seen.insert(atom) {
-                return None;
-            }
-            let a = rule.query.get(atom)?;
-            let (out, keys) = a.args.split_last()?;
-            let key = keys
-                .iter()
-                .map(|a| field(a, &sources))
-                .collect::<Option<_>>()?;
-            let check_result = field(out, &sources);
-            if let Arg::Slot(s) = out {
-                sources.entry(*s).or_insert(Field::StepResult(steps.len()));
-            }
-            steps.push(Step {
-                atom,
-                call: a.call.clone(),
-                key,
-                check_result,
-            });
-        }
-        Some(Self {
-            port: None,
-            steps,
-            inputs: rule
-                .inputs
-                .iter()
-                .map(|s| sources.get(s).cloned())
-                .collect::<Option<_>>()?,
-        })
-    }
-    fn lower_entry(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
-        let mut sources = BTreeMap::new();
-        for (col, arg) in rule.query[pivot].args.iter().enumerate() {
-            if let Arg::Slot(s) = arg {
-                sources.entry(*s).or_insert(Field::Anchor(col));
-            }
-        }
-        let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
-            Arg::Slot(s) => map.get(s).cloned(),
-            Arg::Literal(v) => Some(Field::Literal(v.clone())),
-        };
-        let port = match order {
-            [] => None,
-            &[atom] => {
-                let a = &rule.query[atom];
-                let Call::Table(table) = a.call else {
-                    return None;
-                };
-                let (out, keys) = a.args.split_last()?;
-                let key = keys
-                    .iter()
-                    .map(|a| field(a, &sources))
-                    .collect::<Option<_>>()?;
-                let check_result = field(out, &sources);
-                if let Arg::Slot(s) = out {
-                    sources.entry(*s).or_insert(Field::PortResult);
-                }
-                Some(Port {
-                    atom,
-                    table,
-                    key,
-                    check_result,
-                })
-            }
-            _ => return None,
-        };
-        Some(Self {
-            port,
-            steps: vec![],
-            inputs: rule
-                .inputs
-                .iter()
-                .map(|s| sources.get(s).cloned())
-                .collect::<Option<_>>()?,
-        })
-    }
+pub(crate) fn select(p: &Program, r: usize, pivot: usize, staged: bool) -> Option<&Query> {
+    let query = p.cell_queries.get(r, pivot)?.as_ref();
+    (staged
+        || query.steps.is_empty()
+        || matches!(query.steps.as_slice(), [step] if matches!(step.call, Call::Table(_))))
+    .then_some(query)
 }
 #[derive(Clone, Debug, Default)]
 pub struct Catalog {
-    entries: Vec<Vec<Option<Rc<Block>>>>,
+    entries: Vec<Vec<bool>>,
 }
 impl Catalog {
-    pub(super) fn get(&self, r: usize, pivot: usize) -> Option<Rc<Block>> {
-        self.entries.get(r)?.get(pivot)?.clone()
+    pub(crate) fn contains(&self, r: usize, pivot: usize) -> bool {
+        self.entries
+            .get(r)
+            .and_then(|v| v.get(pivot))
+            .copied()
+            .unwrap_or(false)
     }
     pub(crate) fn parse(p: &Program, raw: &J) -> Result<Self> {
         if raw.is_null() {
             return Ok(Self::default());
         }
-        let lower = match raw["schema"].as_str() {
-            Some("eggfuse-spine-blocks/v1") => Block::lower,
-            Some("eggfuse-spine-blocks/v2") => Block::lower_staged,
+        let staged = match raw["schema"].as_str() {
+            Some("eggfuse-spine-blocks/v1") => false,
+            Some("eggfuse-spine-blocks/v2") => true,
             _ => return Err("unsupported spine block policy".into()),
         };
         if raw["recipe_sha256"] != p.artifact["recipe"]["sha256"] {
             return Err("spine block recipe mismatch".into());
         }
-        let mut entries: Vec<Vec<_>> = p.rules.iter().map(|r| vec![None; r.query.len()]).collect();
+        let mut entries: Vec<Vec<_>> = p.rules.iter().map(|r| vec![false; r.query.len()]).collect();
         for e in raw["entries"].as_array().ok_or("missing spine blocks")? {
             let r = e["consumer"].as_u64().ok_or("block consumer")? as usize;
             let a = e["pivot"].as_u64().ok_or("block pivot")? as usize;
-            let block = lower(p, r, a).ok_or("uncertified spine entry")?;
+            let block = select(p, r, a, staged).ok_or("uncertified spine entry")?;
             if e["rhs_template"] != p.rules[r].template
                 || e["block"] != json!(block)
-                || entries[r][a].replace(Rc::new(block)).is_some()
+                || std::mem::replace(&mut entries[r][a], true)
             {
                 return Err("invalid spine block wiring or duplicate entry".into());
             }
         }
         Ok(Self { entries })
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn staged_ports_preserve_dependencies_guards_and_bound_results() {
-        use Arg::{Literal, Slot};
-        let mut rule = Rule {
-            constructor_only: false,
-            template: 0,
-            seminaive: true,
-            direct: None,
-            inputs: Rc::new(vec![3, 0, 1]),
-            query: Rc::new(vec![
-                Atom {
-                    call: Call::Table(0),
-                    args: vec![Slot(0), Slot(1)],
-                },
-                Atom {
-                    call: Call::Table(1),
-                    args: vec![Slot(0), Slot(2)],
-                },
-                Atom {
-                    call: Call::Primitive("+".into(), "i64".into()),
-                    args: vec![Slot(2), Literal(Value::Int(1)), Slot(3)],
-                },
-                Atom {
-                    call: Call::Table(2),
-                    args: vec![Slot(3), Slot(1)],
-                },
-            ]),
-        };
-        let b = Block::staged_entry(&rule, 0, &[1, 2, 3]).unwrap();
-        assert_eq!(json!(b.steps[1].key[0]), json!({"StepResult":0}));
-        assert_eq!(json!(b.steps[2].key), json!([{"StepResult":1}]));
-        assert_eq!(json!(b.steps[2].check_result), json!({"Anchor":1}));
-        assert_eq!(
-            json!(b.inputs),
-            json!([{"StepResult":1},{"Anchor":0},{"Anchor":1}])
-        );
-        assert!(Block::lower_entry(&rule, 0, &[1, 2, 3]).is_none());
-        assert!(Block::staged_entry(&rule, 0, &[2, 1, 3]).is_none());
-        assert!(Block::staged_entry(&rule, 0, &[1, 2, 3, 3]).is_none());
-        Rc::make_mut(&mut rule.query)[1].args[0] = Slot(9);
-        assert!(Block::staged_entry(&rule, 0, &[1, 2, 3]).is_none());
-    }
-    #[test]
-    fn keyed_port_preserves_bound_result_constraints_and_slot_order() {
-        use Arg::{Literal, Slot};
-        let rule = Rule {
-            constructor_only: false,
-            template: 3,
-            seminaive: true,
-            direct: None,
-            inputs: Rc::new(vec![1, 0]),
-            query: Rc::new(vec![
-                Atom {
-                    call: Call::Table(1),
-                    args: vec![Slot(0), Slot(1), Slot(0)],
-                },
-                Atom {
-                    call: Call::Table(2),
-                    args: vec![Slot(1), Literal(Value::Int(7)), Slot(0)],
-                },
-            ]),
-        };
-        let b = Block::lower_entry(&rule, 0, &[1]).unwrap();
-        let p = b.port.unwrap();
-        assert_eq!(json!(p.key), json!([{"Anchor":1},{"Literal":{"Int":7}}]));
-        assert_eq!(json!(p.check_result), json!({"Anchor":0}));
-        assert_eq!(json!(b.inputs), json!([{"Anchor":1},{"Anchor":0}]));
-        assert!(Block::lower_entry(&rule, 0, &[1, 1]).is_none());
-        let mut rule = rule;
-        Rc::make_mut(&mut rule.query)[1].args[0] = Slot(9);
-        assert!(Block::lower_entry(&rule, 0, &[1]).is_none());
     }
 }

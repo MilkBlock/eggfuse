@@ -7,7 +7,7 @@
 
 ## C1 · 完整 stage Entry 与 Spine block
 
-启用条件：编译计划及已验证 block catalog。
+启用条件：已证明完整 key 覆盖的 Cell Entry；Bake catalog 只决定跨阶段组合。
 
 编译期依据：函数 key 流可完成全部 atom，primitive 顺序明确。
 
@@ -15,19 +15,19 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [spine_blocks.rs](../../engine/cell-runtime/src/spine_blocks.rs)
+代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [spine_blocks.rs](../../engine/cell-runtime/src/spine_blocks.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stage_spine/stats/query_takeovers [value]`<br>`report:/stage_spine/stats/block_resumptions [value]`<br>`report:/stage_spine/stats/pivots_skipped [value]` |
-| 成本 / 剩余工作 | `report:/stage_spine/stats/guards [value]`<br>`report:/stage_spine/stats/port_refreshes [value]`<br>`report:/stage_spine/stats/origin_map_writes [value]`<br>`report:/stage_spine/stats/context_reads [value]` |
-| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/routed_spine_seeds [value]`<br>`report:/stage_spine/stats/routed_matcher_seeds [value]`<br>`report:/stage_spine/stats/uncovered_queries [value]`<br>`program:/spine_blocks/entries [count]` |
+| 成本 / 剩余工作 | `report:/stage_spine/stats/guards [value]`<br>`report:/stage_spine/stats/port_refreshes [value]`<br>`report:/stage_spine/stats/origin_map_writes [value]`<br>`report:/stage_spine/stats/context_reads [value]`<br>`report:/stage_spine/stats/cell_query_steps [value]`<br>`report:/stage_spine/stats/cell_query_result_writes [value]` |
+| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/routed_spine_seeds [value]`<br>`report:/stage_spine/stats/routed_matcher_seeds [value]`<br>`report:/stage_spine/stats/uncovered_queries [value]`<br>`program:/spine_blocks/entries [count]`<br>`report:/stage_spine/stats/cell_query_entries [value]` |
 
-解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。
+解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举共用排序编译器，但寄存器执行器尚未统一。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[benchmarks/leaf-completion/README.md](../../benchmarks/leaf-completion/README.md)
+证据：[benchmarks/leaf-completion/README.md](../../benchmarks/leaf-completion/README.md) · [benchmarks/cell-unification/query.md](../../benchmarks/cell-unification/query.md)
 
 ## C2 · RHS handoff 与 query receipt
 

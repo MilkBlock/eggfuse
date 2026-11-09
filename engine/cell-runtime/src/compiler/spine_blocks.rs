@@ -1,5 +1,5 @@
 //! Select frequently applied consumer entries and lower them against the target recipe.
-use crate::{program::*, spine_blocks::Block};
+use crate::{program::*, spine_blocks::select};
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
 // Keep rule-local variable names and debug labels out of the cross-recipe key.
@@ -43,11 +43,7 @@ fn bake(
     limit: usize,
     staged: bool,
 ) -> Result<J> {
-    let lower = if staged {
-        Block::lower_staged
-    } else {
-        Block::lower
-    };
+    let lower = |p: &Program, r, a| select(p, r, a, staged).is_some();
     if profile["schema"] != "eggfuse-spine-shapes/v1"
         || profile["program_sha256"] != training.artifact["sha256"]
     {
@@ -66,7 +62,7 @@ fn bake(
     }
     let mut ranked = frequencies
         .into_iter()
-        .filter(|((r, a), _)| lower(training, *r, *a).is_some())
+        .filter(|((r, a), _)| lower(training, *r, *a))
         .collect::<Vec<_>>();
     ranked.sort_by_key(|(entry, count)| (std::cmp::Reverse(*count), *entry));
     let mut ids = BTreeMap::<String, Vec<usize>>::new();
@@ -88,7 +84,7 @@ fn bake(
         if !seen.insert((consumer, pivot)) {
             continue;
         }
-        if let Some(block) = lower(target, consumer, pivot) {
+        if let Some(block) = select(target, consumer, pivot, staged) {
             entries.push(json!({"consumer":consumer,"pivot":pivot,"rhs_template":target.rules[consumer].template,"block":block,
                 "training_rule":r,"training_visits":n}));
         }

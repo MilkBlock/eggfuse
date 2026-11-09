@@ -453,6 +453,9 @@ pub struct Stats {
     fragment_deliveries: u64,
     direct_publication_hash_probes: u64,
     guards: u64,
+    cell_query_entries: u64,
+    cell_query_steps: u64,
+    cell_query_result_writes: u64,
     guard_rejections: u64,
     bindings: u64,
     steps_executed: u64,
@@ -524,7 +527,7 @@ pub struct Programs {
     table_readers: Vec<Vec<usize>>,
     // Number of distinct planned input tables with at least one live anchor.
     live_inputs: Vec<usize>,
-    orders: BTreeMap<(usize, usize), Vec<usize>>,
+    queries: Rc<crate::cell::Queries>,
     local_witness_entries: Vec<Vec<bool>>,
     entries: HashMap<Dependency, Published>,
     #[cfg(feature = "sparse-cells")]
@@ -746,58 +749,14 @@ fn read_port(
     }
     Ok(row.filter(|r| !r.hidden))
 }
-fn operand(a: &Arg, input: &Inputs, g: &Graph) -> Option<Value> {
-    match a {
-        Arg::Literal(v) => Some(canon(v, &g.parents)),
-        Arg::Slot(i) => input.get(*i).cloned(),
-    }
-}
-fn order(rule: &Rule, pivot: usize) -> Option<Vec<usize>> {
-    let mut known = rule.query[pivot]
-        .args
-        .iter()
-        .filter_map(|a| if let Arg::Slot(i) = a { Some(*i) } else { None })
-        .collect::<BTreeSet<_>>();
-    let mut pending = (0..rule.query.len())
-        .filter(|i| *i != pivot)
-        .collect::<BTreeSet<_>>();
-    let mut out = vec![];
-    while !pending.is_empty() {
-        let i = pending
-            .iter()
-            .copied()
-            .filter(|i| {
-                rule.query[*i].args[..rule.query[*i].args.len() - 1]
-                    .iter()
-                    .all(|a| {
-                        matches!(a, Arg::Literal(_))
-                            || matches!(a,Arg::Slot(s) if known.contains(s))
-                    })
-            })
-            .min_by_key(|i| {
-                (
-                    usize::from(matches!(rule.query[*i].call, Call::Table(_))),
-                    *i,
-                )
-            })?;
-        pending.remove(&i);
-        out.push(i);
-        known.extend(
-            rule.query[i]
-                .args
-                .iter()
-                .filter_map(|a| if let Arg::Slot(s) = a { Some(*s) } else { None }),
-        );
-    }
-    rule.inputs.iter().all(|i| known.contains(i)).then_some(out)
-}
 pub fn compile_entries(p: &Program) -> J {
     let mut entries = vec![];
     for (rid, r) in p.rules.iter().enumerate() {
         if r.seminaive {
             for (pivot, a) in r.query.iter().enumerate() {
                 if let Call::Table(t) = a.call {
-                    if let Some(atoms) = order(r, pivot) {
+                    if let Some(order) = crate::cell::query_order(r, pivot, 0) {
+                        let atoms = order.iter().map(|(i, _)| *i).collect::<Vec<_>>();
                         entries.push(json!({"rule":rid,"anchor":pivot,"table":p.tables[t].name,"atoms":atoms}));
                     }
                 }
@@ -865,7 +824,7 @@ impl Programs {
             row_cache: HashMap::default(),
             table_readers: vec![Vec::new(); p.tables.len()],
             live_inputs: vec![0; p.rules.len()],
-            orders: BTreeMap::new(),
+            queries: if enabled { p.cell_queries.clone() } else { Default::default() },
             local_witness_entries: {
                 let mut entries = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
                 for (&(.., rid, pivot), route) in &p.multi_stage.routes {
@@ -933,8 +892,7 @@ impl Programs {
             return s;
         }
         let mut anchor_tables = BTreeSet::new();
-        for (rid, pivot, order) in &p.multi_stage.stage_entries {
-            s.orders.insert((*rid, *pivot), order.as_ref().clone());
+        for (rid, pivot, _) in &p.multi_stage.stage_entries {
             let Call::Table(t) = p.rules[*rid].query[*pivot].call else {
                 unreachable!()
             };
@@ -1801,7 +1759,7 @@ impl Programs {
                     if !matches!(a.call, Call::Table(table) if table == t) {
                         continue;
                     }
-                    if self.entries.contains_key(&w) && self.orders.contains_key(&(rid, pivot)) {
+                    if self.entries.contains_key(&w) && self.queries.get(rid, pivot).is_some() {
                         eligible.insert(pivot);
                     } else {
                         self.record_fallbacks(rid, pivot, 1);
@@ -1853,21 +1811,21 @@ impl Programs {
                 let Some(cursor) = self
                     .entries
                     .get(&w)
-                    .filter(|_| self.orders.contains_key(&(rid, pivot)))
+                    .filter(|_| self.queries.get(rid, pivot).is_some())
                     .map(Published::expand)
                 else {
                     self.record_fallbacks(rid, pivot, 1);
                     self.stats.uncovered_queries += 1;
                     return Ok(None);
                 };
-                ready.push((pivot, row.clone(), input, cursor));
+                ready.push((pivot, row.clone(), cursor));
                 covered.insert((pivot, w));
             }
         }
         self.finish_answers(
             g,
             rid,
-            ready.into_iter().map(|(a, r, i, c)| (a, r, move || i, c)),
+            ready.into_iter(),
             covered,
             complete,
             watermark,
@@ -1904,7 +1862,7 @@ impl Programs {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn entry_owns(&self, rid: usize, pivot: usize, table: usize) -> bool {
-        self.enabled && self.entry_owned_tables[table] && self.orders.contains_key(&(rid, pivot))
+        self.enabled && self.entry_owned_tables[table] && self.queries.get(rid, pivot).is_some()
     }
 
     /// A live cursor only owns this pivot if the compiler supplied an exhaustive
@@ -1923,7 +1881,7 @@ impl Programs {
                 { true }
             }
             && self.active_tables[table] != 0
-            && self.orders.contains_key(&(rid, pivot)))
+            && self.queries.get(rid, pivot).is_some())
         .then_some(&self.entries)
     }
 
@@ -1944,7 +1902,7 @@ impl Programs {
             return self.finish_answers(
                 g,
                 rid,
-                std::iter::empty::<(usize, Rc<Row>, fn() -> Inputs, Cursor)>(),
+                std::iter::empty::<(usize, Rc<Row>, Cursor)>(),
                 BTreeSet::new(),
                 true,
                 watermark,
@@ -1993,8 +1951,7 @@ impl Programs {
         routes.sort_unstable_by_key(|(i, _)| (seeds[*i].packet.row.witness, seeds[*i].atom()));
         let mut covered = BTreeSet::new();
         // A complete takeover has no residual consumer for the coverage set.
-        // Stream the producer packet into its block; only the uncompiled route
-        // needs a mutable slot environment.
+        // Stream each validated Entry directly into its Cell query program.
         if !complete {
             covered.extend(
                 routes
@@ -2007,7 +1964,6 @@ impl Programs {
             (
                 seed.atom(),
                 seed.packet.row.clone(),
-                move || Inputs::shared(seed.clone()),
                 cursor,
             )
         });
@@ -2015,11 +1971,11 @@ impl Programs {
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
     }
-    fn finish_answers<F: FnOnce() -> Inputs>(
+    fn finish_answers(
         &mut self,
         g: &mut Graph,
         rid: usize,
-        ready: impl ExactSizeIterator<Item = (usize, Rc<Row>, F, Cursor)>,
+        ready: impl ExactSizeIterator<Item = (usize, Rc<Row>, Cursor)>,
         covered: BTreeSet<(usize, Dependency)>,
         complete: bool,
         watermark: u64,
@@ -2033,7 +1989,7 @@ impl Programs {
         #[cfg(not(feature = "sparse-cells"))]
         let mut results = Winners::new();
         let covered_count = if complete { ready.len() } else { covered.len() };
-        'answer: for (pivot, row, make_input, cursor) in ready {
+        'answer: for (pivot, row, cursor) in ready {
             let mut epoch = row.epoch;
             let local = if self.local_witness_entries[rid][pivot] {
                 self.stats.local_witness_contexts += 1;
@@ -2071,182 +2027,61 @@ impl Programs {
             let mut cursor = cursor;
             #[cfg(feature = "spine-blocks")]
             {
-                cursor.via_block = false;
                 #[cfg(feature = "iterative-bake")]
                 let selected = if g.program.iterative.enabled() {
                     cursor.state.collect_pairs = self.training.collect_pairs;
-                    g.program.iterative.dispatch(
-                        &mut cursor.state,
-                        rid,
-                        pivot,
-                        complete,
-                        row.witness,
-                    )
-                } else {
-                    g.program.spine_blocks.get(rid, pivot)
-                };
+                    g.program.iterative.dispatch(&mut cursor.state, rid, pivot, complete, row.witness)
+                } else { g.program.spine_blocks.contains(rid, pivot) };
                 #[cfg(not(feature = "iterative-bake"))]
-                let selected = { g.program.spine_blocks.get(rid, pivot) };
-                if let Some(block) = selected {
-                    self.stats.block_entries += 1;
-                    if !block.steps.is_empty() {
-                        let mut values = smallvec::SmallVec::<[value::Value; 4]>::new();
-                        let mut witnesses = vec![None; rule.query.len()];
-                        witnesses[pivot] = Some(row.witness);
-                        for step in &block.steps {
-                            let bound = step.bind::<PortKey>(|v| v.staged(g, &row, &values));
-                            let result = bound.evaluate(|args| match &step.call {
-                                Call::Table(table) => {
-                                    let Some(found) = read_port(
-                                        g, &cursor, step.atom, *table, args, &mut self.stats, local.as_ref(),
-                                        #[cfg(feature = "structural-depth")]
-                                        (&mut self.structural, row.witness),
-                                    )? else { return Ok(None); };
-                                    epoch = epoch.max(found.epoch);
-                                    witnesses[step.atom] = Some(found.witness);
-                                    Ok(Some(found.values.last().unwrap().clone()))
-                                }
-                                Call::Primitive(name, output) => {
-                                    self.stats.guards += 1;
-                                    if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
-                                    value::primitive(name, &args, output, g.program.key_nodes())
-                                }
-                            })?;
-                            let Some(result) = result else {
-                                if matches!(step.call, Call::Primitive(..)) { self.stats.guard_rejections += 1; }
-                                continue 'answer;
-                            };
-                            values.push(result);
-                        }
-                        if epoch >= watermark {
-                            let inputs = block
-                                .inputs
-                                .iter()
-                                .map(|v| v.staged(g, &row, &values))
-                                .collect();
-                            cursor.via_block = true;
-                            #[cfg(feature = "iterative-bake")]
-                            if cursor.state.direct {
-                                self.training.seal_moves += block.inputs.len() as u64;
-                            }
-                            record_answer(&mut results, inputs, witnesses, epoch, cursor);
-                        }
-                        continue;
-                    }
-                    let port = if let Some(p) = &block.port {
-                        let args = p.key.iter().map(|v| v.get(g, &row, None)).collect();
-                        let Some(found) = read_port(
-                            g,
-                            &cursor,
-                            p.atom,
-                            p.table,
-                            args,
-                            &mut self.stats,
-                            local.as_ref(),
-                            #[cfg(feature = "structural-depth")]
-                            (&mut self.structural, row.witness),
-                        )?
-                        else {
-                            continue;
-                        };
-                        if p.check_result
-                            .as_ref()
-                            .is_some_and(|v| v.get(g, &row, None) != *found.values.last().unwrap())
-                        {
-                            continue;
-                        }
-                        epoch = epoch.max(found.epoch);
-                        Some(found)
-                    } else {
-                        None
-                    };
-                    if epoch >= watermark {
-                        let mut witnesses = vec![None; rule.query.len()];
-                        witnesses[pivot] = Some(row.witness);
-                        if let Some((p, r)) = block.port.as_ref().zip(port.as_ref()) {
-                            witnesses[p.atom] = Some(r.witness);
-                        }
-                        let values = block
-                            .inputs
-                            .iter()
-                            .map(|v| v.get(g, &row, port.as_ref()))
-                            .collect();
-                        cursor.via_block = true;
-                        #[cfg(feature = "iterative-bake")]
-                        if cursor.state.direct {
-                            self.training.seal_moves += block.inputs.len() as u64;
-                        }
-                        record_answer(&mut results, values, witnesses, epoch, cursor);
-                    }
-                    continue;
-                }
+                let selected = g.program.spine_blocks.contains(rid, pivot);
+                // Selection credits retain their original meaning. Compilation
+                // alone does not authorize a composed cross-stage continuation.
+                cursor.via_block = selected;
+                self.stats.block_entries += u64::from(selected);
             }
-            let mut input = make_input();
-            let mut witnesses = vec![None; rule.query.len()];
-            witnesses[pivot] = Some(row.witness);
-            let mut valid = true;
-            let order = &self.orders[&(rid, pivot)];
-            for &i in order {
-                let a = &rule.query[i];
-                let args = a.args[..a.args.len() - 1]
-                    .iter()
-                    .map(|a| operand(a, &input, g).ok_or_else(|| String::from("unbound stage recipe key")))
-                    .collect::<Result<PortKey>>()?;
-                match &a.call {
-                    Call::Table(t) => {
-                        let Some(row) = read_port(
-                            g,
-                            &cursor,
-                            i,
-                            *t,
-                            args,
-                            &mut self.stats,
-                            local.as_ref(),
+            let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
+            self.stats.cell_query_entries += 1;
+            let mut values = smallvec::SmallVec::<[Value; 4]>::new();
+            // Keep rejected queries off the heap in the common short case. Only
+            // successful matches materialize the externally required witness map.
+            let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
+            for step in &query.steps {
+                self.stats.cell_query_steps += 1;
+                let bound = step.bind::<PortKey>(|v| v.read(g, &row, &values));
+                let result = bound.evaluate(|args| match &step.call {
+                    Call::Table(table) => {
+                        let Some(found) = read_port(
+                            g, &cursor, step.atom, *table, args, &mut self.stats, local.as_ref(),
                             #[cfg(feature = "structural-depth")]
                             (&mut self.structural, row.witness),
-                        )?
-                        else {
-                            valid = false;
-                            break;
-                        };
-                        if !a
-                            .args
-                            .iter()
-                            .zip(row.values.iter())
-                            .all(|(a, v)| bind(a, v, &mut input, g))
-                        {
-                            valid = false;
-                            break;
-                        }
-                        epoch = epoch.max(row.epoch);
-                        witnesses[i] = Some(row.witness);
+                        )? else { return Ok(None); };
+                        epoch = epoch.max(found.epoch);
+                        found_witnesses.push((step.atom, found.witness));
+                        Ok(Some(found.values.last().unwrap().clone()))
                     }
                     Call::Primitive(name, output) => {
                         self.stats.guards += 1;
-                        if name.starts_with("cell-key-") {
-                            g.stats.key_operations += 1;
-                        }
-                        let value = value::primitive(name, &args, output, g.program.key_nodes())?;
-                        if value
-                            .as_ref()
-                            .is_none_or(|v| !bind(a.args.last().unwrap(), v, &mut input, g))
-                        {
-                            self.stats.guard_rejections += 1;
-                            valid = false;
-                            break;
-                        }
+                        if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
+                        value::primitive(name, &args, output, g.program.key_nodes())
                     }
-                }
+                })?;
+                let Some(result) = result else {
+                    if matches!(step.call, Call::Primitive(..)) { self.stats.guard_rejections += 1; }
+                    continue 'answer;
+                };
+                self.stats.cell_query_result_writes += 1;
+                values.push(result);
             }
-            if valid && epoch >= watermark {
-                let values = rule
-                    .inputs
-                    .iter()
-                    .map(|i| {
-                        input.get(*i).cloned().ok_or_else(|| String::from("incomplete stage recipe input"))
-                    })
-                    .collect::<Result<Vec<_>>>()?;
-                record_answer(&mut results, values, witnesses, epoch, cursor);
+            if epoch >= watermark {
+                let inputs = query.inputs.iter().map(|v| v.read(g, &row, &values)).collect();
+                let mut witnesses = vec![None; rule.query.len()];
+                witnesses[pivot] = Some(row.witness);
+                for (atom, witness) in found_witnesses { witnesses[atom] = Some(witness); }
+                #[cfg(feature = "iterative-bake")]
+                if cursor.via_block && cursor.state.direct {
+                    self.training.seal_moves += query.inputs.len() as u64;
+                }
+                record_answer(&mut results, inputs, witnesses, epoch, cursor);
             }
         }
         #[cfg(feature = "sparse-cells")]
@@ -2398,7 +2233,7 @@ impl Programs {
         }
         self.stats.fallback_pivots += count;
         *self.stats.fallback_by_rule.entry(rid).or_default() += count;
-        if self.orders.contains_key(&(rid, pivot)) {
+        if self.queries.get(rid, pivot).is_some() {
             self.stats.missing_context_pivots += count;
         } else {
             self.stats.unsupported_key_pivots += count;
@@ -2430,7 +2265,7 @@ impl Programs {
         let live_materialized = materialized.clone().count();
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
         let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.anchor_ops.iter().filter(|ops| !ops.is_empty()).count(),
-            "keyed_entries":self.orders.len(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
+            "keyed_entries":self.queries.len(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]

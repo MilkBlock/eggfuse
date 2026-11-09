@@ -105,6 +105,8 @@ pub struct Program {
     pub iterative: crate::iterative::Catalog,
     #[serde(default)]
     pub marker_tables: std::collections::BTreeSet<usize>,
+    #[serde(skip)]
+    pub(crate) cell_queries: Rc<crate::cell::Queries>,
     pub multi_stage: crate::multistage::MultiStage,
     pub entry_schedule: crate::entry_schedule::Plan,
 
@@ -386,6 +388,7 @@ impl Program {
             depth_plan: Default::default(),
             view_blocks: Default::default(),
             marker_tables: Default::default(),
+            cell_queries: Default::default(),
             multi_stage: crate::multistage::MultiStage::default(),
             entry_schedule: crate::entry_schedule::Plan::default(),
             entry_join: None,
@@ -514,6 +517,7 @@ impl Program {
             }
         }
         p.multi_stage = crate::multistage::MultiStage::parse(&p, &p.artifact["multi_stage"])?;
+        p.cell_queries = Rc::new(crate::cell::Queries::compile(&p)?);
         let spine = p
             .multi_stage
             .stage_entries

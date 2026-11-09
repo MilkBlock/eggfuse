@@ -26,7 +26,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def entry_diagnostics(root):
+def entry_diagnostics(root, delivery=True):
     cases = {}
     for name in ('reused', 'replaced'):
         directories = [root / 'fixtures' / f'{name}-{lane}' for lane in ('baseline', 'candidate')]
@@ -40,16 +40,20 @@ def entry_diagnostics(root):
             hashes[file] = sha(directories[0] / file)
             assert hashes[file] == sha(directories[1] / file), (name, file)
         a, b = [r['stats']['register_prefix'] for r in reports]
-        assert b['entry_publication_reads'] == a['publication_probes'] > 0
-        assert b['publication_probes'] == 0
-        assert b['context_reads'] < a['context_reads']
-        if name == 'reused':
-            assert b['context_reads'] == 0
+        if delivery:
+            assert b['entry_publication_reads'] == a['publication_probes'] > 0
+            assert b['publication_probes'] == 0
+            assert b['context_reads'] < a['context_reads']
+            if name == 'reused':
+                assert b['context_reads'] == 0
+            else:
+                assert b['context_reads'] > 0  # the uncovered replacement still recovers its physical source
+                assert reports[1]['entry_schedule']['stats']['entry_publications_retired'] > 0
+            assert b['receipt_hits'] > 0
+            assert all(b[k] == v for k, v in a.items() if k not in ('context_reads', 'publication_probes'))
         else:
-            assert b['context_reads'] > 0  # the uncovered replacement still recovers its physical source
-            assert reports[1]['entry_schedule']['stats']['entry_publications_retired'] > 0
-        assert b['receipt_hits'] > 0
-        assert all(b[k] == v for k, v in a.items() if k not in ('context_reads', 'publication_probes'))
+            assert a == b, (name, 'prefix work')
+            assert b['receipt_hits'] > 0
         assert reports[0]['key_lookup_calls'] == reports[1]['key_lookup_calls']
         cases[name] = {
             'scope': 'short standalone Cell CPU diagnostic; source fixtures shared with differential/native-check tests',
@@ -67,6 +71,7 @@ def entry_diagnostics(root):
 def collect(root, part='definition'):
     result_ports = part == 'result-ports'
     entry_delivery = part == 'entry-delivery'
+    query = part == 'query'
     catalog = load(REPO / 'docs/optimization-catalog/catalog.json')
     coverage = load(REPO / 'benchmarks/cell-unification/coverage.json')
     assert {x['id'] for x in coverage['optimizations']} == {x['id'] for x in catalog['optimizations']}
@@ -91,12 +96,16 @@ def collect(root, part='definition'):
     work = {k: v for k, v in before.items() if not resource(k)}
     changes = {k: {'before': v, 'after': after[k]} for k, v in work.items() if v != after[k]}
     added = {}
-    if result_ports or entry_delivery:
+    if result_ports or entry_delivery or query:
         # New counters are reported as newly observed, never as a reduction
         # from an invented zero in the older runtime.
-        new_fields = (('/history_result_reads', '/history_empty_slots_written',
-                       '/local_witness_slot_reads', '/register_prefix/receipt_slot_reads')
-                      if result_ports else ('/entry_schedule/seed_bytes', '/register_prefix/entry_publication_reads'))
+        new_fields = {
+            'result-ports': ('/history_result_reads', '/history_empty_slots_written',
+                             '/local_witness_slot_reads', '/register_prefix/receipt_slot_reads'),
+            'entry-delivery': ('/entry_schedule/seed_bytes', '/register_prefix/entry_publication_reads'),
+            'query': ('/stage_spine/stats/cell_query_entries', '/stage_spine/stats/cell_query_steps',
+                      '/stage_spine/stats/cell_query_result_writes'),
+        }[part]
         added = {k: v for k, v in changes.items() if any(f in k for f in new_fields)}
         assert len(added) == len(new_fields), added
         assert all(v['before']['status'] == 'missing_counter' and
@@ -116,11 +125,11 @@ def collect(root, part='definition'):
     fields = ('alloc_calls', 'realloc_calls', 'free_calls', 'requested_bytes', 'released_bytes')
     for region in ('setup_allocations', 'allocations'):
         a, b = [r[region] for r in audit]
-        if result_ports or entry_delivery:
+        if result_ports or entry_delivery or query:
             # Runtime result retention must not add allocations. Compile-time
             # layout storage belongs to program loading (outside these two
             # allocation regions); process wall time and RSS include it.
-            if region == 'allocations' or entry_delivery:
+            if region == 'allocations' or entry_delivery or query:
                 assert all(b[k] <= a[k] for k in fields), region
         elif region == 'allocations':
             assert all(a[k] == b[k] for k in fields), region
@@ -128,7 +137,7 @@ def collect(root, part='definition'):
             # Setup's producer classification now inspects the borrowed Cell
             # relation instead of allocating and normalizing a column vector.
             assert all(b[k] <= a[k] for k in fields), region
-        if not (result_ports or entry_delivery):
+        if not (result_ports or entry_delivery or query):
             assert a['live_bytes_after'] - a['live_bytes_before'] == b['live_bytes_after'] - b['live_bytes_before']
         allocations[region] = {'baseline': a, 'candidate': b,
                                'saved': {k: a[k] - b[k] for k in fields}}
@@ -155,6 +164,12 @@ def collect(root, part='definition'):
         groups = re.findall(r'test result: (\w+)\. (\d+) passed; (\d+) failed', log.read_text())
         assert groups and all(status == 'ok' and int(failed) == 0 for status, _, failed in groups)
         tests[name] = {'passed': sum(int(passed) for _, passed, _ in groups), 'log_sha256': sha(log)}
+    supplemental = None
+    if query:
+        log = root / 'test-query-integration.log'
+        assert re.search(r'test result: ok\. 1 passed; 0 failed', log.read_text())
+        supplemental = {'passed': 1, 'log_sha256': sha(log),
+                        'scope': 'repeat of the stage-entry integration test after adding shared-path coverage assertions; not an additional distinct test'}
     earlier = None
     if (result_ports or entry_delivery) and (root / 'first-attempt/results.json').exists():
         trial = load(root / 'first-attempt/results.json')
@@ -169,23 +184,24 @@ def collect(root, part='definition'):
         }
     return {
         'scope': f'standalone Cell CPU; {part} rewrite, not completion of the unification goal',
-        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db'}[part],
+        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db', 'query': '4b5070cf'}[part],
         'program_file_sha256': sha(program),
         'binaries': {name: sha(root / name) for name in ('runtime-baseline', 'runtime-candidate',
                                                        'runtime-baseline-audit', 'runtime-candidate-audit')},
         'normal_features': 'sparse-cells,view-ports,storage-metrics',
         'diagnostic_extra_features': 'allocation-metrics,slot-transfer-audit,spine-shapes',
         'build_provenance': ('frozen previous-step binaries; candidate built in this worktree only, separate normal/audit target directories'
-                             if result_ports or entry_delivery else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
+                             if result_ports or entry_delivery or query else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
         'semantic_acceptance': semantics, 'compiler_components': relower,
         'native_reference_scope': 'source emitter unchanged; native legacy/values labels intentionally share the same marked-source export',
         'ordered_runs': len(schedule[0]), 'ordered_audit_hashes': hashes, 'tests': tests,
+        'supplemental_test': supplemental,
         'metric_count': len(before), 'preserved_work_metric_statuses': dict(Counter(v['status'] for k, v in work.items() if k not in added)),
         'optimization_groups_tracked': len(coverage['optimizations']),
         'work_metric_changes': changes, 'newly_observed_metrics': added, 'allocations': allocations,
         'timing': timing, 'paired_timing_ratios': ratios, 'repeat': raw['repeat'], 'warmups': raw['warmups'],
         'earlier_attempt': earlier,
-        'entry_diagnostics': entry_diagnostics(root) if entry_delivery else None,
+        'entry_diagnostics': entry_diagnostics(root, delivery=entry_delivery) if entry_delivery or query else None,
         'entry_accessor_call_sites': ({'calls': load(root / 'entry-view-calls.json'),
                                       'scope': 'static disassembly call sites, not runtime call counts'}
                                      if entry_delivery and (root / 'entry-view-calls.json').exists() else None),
@@ -202,7 +218,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
-    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery'), default='definition')
+    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery', 'query'), default='definition')
     args = p.parse_args()
     if not __debug__:
         raise SystemExit('run without -O; assertions are verification checks')

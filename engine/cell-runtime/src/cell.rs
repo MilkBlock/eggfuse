@@ -12,6 +12,12 @@ mod results;
 #[cfg(feature = "iterative-bake")]
 pub(crate) use results::{Capture, ResultPort, Results};
 
+#[path = "cell_query.rs"]
+mod query;
+pub(crate) use query::{Access, Queries, query_order};
+#[cfg(feature = "spine-blocks")]
+pub(crate) use query::{Field, Query};
+
 /// A position in a Cell definition, never a physical address of its result.
 /// Keep the wire representation shared by existing recipe and Bake artifacts.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]

@@ -1187,7 +1187,7 @@ impl Executor {
                                 .as_ref()
                                 .is_some_and(|k| {
                                     k.steps.iter().all(|s| {
-                                        !matches!(s.access, crate::row_kernel::Access::Expand)
+                                        !matches!(s.access, crate::cell::Access::Expand)
                                     })
                                 });
                         #[cfg(not(feature = "sparse-cells"))]
@@ -1614,7 +1614,7 @@ impl Executor {
                     .filter(|k| {
                         self.range_index.is_none()
                             || !k.steps.iter().any(|s| {
-                                matches!(s.access, crate::row_kernel::Access::Expand)
+                                matches!(s.access, crate::cell::Access::Expand)
                                     && !self.graph.program.physical.ranges[rid][s.atom].is_empty()
                             })
                     });

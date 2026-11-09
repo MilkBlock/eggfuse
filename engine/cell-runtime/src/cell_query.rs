@@ -1,0 +1,385 @@
+//! Complete Cell query dataflow. Catalog selection does not change its executor.
+use crate::{
+    graph::{Graph, Row},
+    program::*,
+    value::{Value, canon},
+};
+use serde::Serialize;
+use serde_json::json;
+use std::{collections::BTreeMap, rc::Rc};
+
+#[derive(Clone, Debug, Serialize)]
+pub(crate) enum Field {
+    Anchor(usize),
+    StepResult(usize),
+    Literal(Value),
+}
+impl Field {
+    pub(crate) fn read(&self, g: &Graph, row: &Row, results: &[Value]) -> Value {
+        match self {
+            Self::Anchor(col) => row.values[*col].clone(),
+            Self::StepResult(i) => results[*i].clone(),
+            Self::Literal(v) => canon(v, &g.parents),
+        }
+    }
+}
+#[derive(Clone, Debug)]
+pub(crate) struct Query {
+    pub steps: Vec<Step>,
+    pub inputs: Vec<Field>,
+}
+#[derive(Clone, Debug, Serialize)]
+pub(crate) struct Step {
+    pub atom: usize,
+    pub call: Call,
+    pub key: Vec<Field>,
+    pub check_result: Option<Field>,
+}
+/// Shared binding/checking instruction used by source entries and repair cells.
+/// The host supplies typed table/primitive capabilities; a failed predicate
+/// never publishes an effect.
+pub(crate) struct BoundStep<A> {
+    args: A,
+    expected: Option<Value>,
+}
+impl Step {
+    pub(crate) fn bind<A: FromIterator<Value>>(
+        &self,
+        mut field: impl FnMut(&Field) -> Value,
+    ) -> BoundStep<A> {
+        BoundStep {
+            args: self.key.iter().map(&mut field).collect(),
+            expected: self.check_result.as_ref().map(field),
+        }
+    }
+}
+impl<A> BoundStep<A> {
+    pub(crate) fn evaluate(
+        self,
+        call: impl FnOnce(A) -> Result<Option<Value>>,
+    ) -> Result<Option<Value>> {
+        Ok(call(self.args)?.filter(|v| self.expected.as_ref().is_none_or(|e| e == v)))
+    }
+}
+impl Query {
+    /// Substitute a complete block's outputs into the next block's anchor.
+    /// This is dataflow composition: no intermediate row or slot map is needed.
+    #[cfg(feature = "spine-blocks")]
+    pub(crate) fn then(&self, next: &Self) -> Option<Self> {
+        let field = |f: &Field| -> Option<Field> {
+            Some(match f {
+                Field::Anchor(i) => self.inputs.get(*i)?.clone(),
+                Field::StepResult(i) => Field::StepResult(self.steps.len() + i),
+                Field::Literal(v) => Field::Literal(v.clone()),
+            })
+        };
+        let mut steps = self.steps.clone();
+        for step in &next.steps {
+            steps.push(Step {
+                atom: self.steps.len() + step.atom,
+                call: step.call.clone(),
+                key: step.key.iter().map(&field).collect::<Option<_>>()?,
+                check_result: match &step.check_result {
+                    Some(f) => Some(field(f)?),
+                    None => None,
+                },
+            });
+        }
+        Some(Self {
+            steps,
+            inputs: next.inputs.iter().map(field).collect::<Option<_>>()?,
+        })
+    }
+    pub(crate) fn compile(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
+        let mut sources = BTreeMap::new();
+        for (col, arg) in rule.query.get(pivot)?.args.iter().enumerate() {
+            if let Arg::Slot(s) = arg {
+                sources.entry(*s).or_insert(Field::Anchor(col));
+            }
+        }
+        let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
+            Arg::Slot(s) => map.get(s).cloned(),
+            Arg::Literal(v) => Some(Field::Literal(v.clone())),
+        };
+        let mut seen = std::collections::BTreeSet::from([pivot]);
+        let mut steps = Vec::new();
+        for &atom in order {
+            if !seen.insert(atom) {
+                return None;
+            }
+            let a = rule.query.get(atom)?;
+            let (out, keys) = a.args.split_last()?;
+            let key = keys
+                .iter()
+                .map(|a| field(a, &sources))
+                .collect::<Option<_>>()?;
+            let check_result = field(out, &sources);
+            if let Arg::Slot(s) = out {
+                sources.entry(*s).or_insert(Field::StepResult(steps.len()));
+            }
+            steps.push(Step {
+                atom,
+                call: a.call.clone(),
+                key,
+                check_result,
+            });
+        }
+        if seen.len() != rule.query.len() {
+            return None;
+        }
+        Some(Self {
+            steps,
+            inputs: rule
+                .inputs
+                .iter()
+                .map(|s| sources.get(s).cloned())
+                .collect::<Option<_>>()?,
+        })
+    }
+}
+
+/// Legacy Bake JSON is a wire format only. Every loaded entry executes Query;
+/// PortResult is never retained as a second runtime operand kind.
+impl Serialize for Query {
+    fn serialize<S: serde::Serializer>(
+        &self,
+        serializer: S,
+    ) -> std::result::Result<S::Ok, S::Error> {
+        let wire = if let [
+            Step {
+                atom,
+                call: Call::Table(table),
+                key,
+                check_result,
+            },
+        ] = self.steps.as_slice()
+        {
+            let inputs = self
+                .inputs
+                .iter()
+                .map(|f| match f {
+                    Field::StepResult(0) => json!("PortResult"),
+                    _ => json!(f),
+                })
+                .collect::<Vec<_>>();
+            json!({"port":{"atom":atom,"table":table,"key":key,"check_result":check_result},"inputs":inputs})
+        } else if self.steps.is_empty() {
+            json!({"port":null,"inputs":self.inputs})
+        } else {
+            json!({"port":null,"steps":self.steps,"inputs":self.inputs})
+        };
+        wire.serialize(serializer)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Serialize)]
+pub(crate) enum Access {
+    Key,
+    Expand,
+    Primitive,
+}
+
+/// One deterministic scheduler for complete Entries and residual enumeration.
+/// The caller chooses its coverage budget; expansion still needs delta ownership.
+pub(crate) fn query_order(
+    rule: &Rule,
+    pivot: usize,
+    mut expansions: usize,
+) -> Option<Vec<(usize, Access)>> {
+    use std::collections::BTreeSet;
+    let mut known = rule
+        .query
+        .get(pivot)?
+        .args
+        .iter()
+        .filter_map(|a| match a {
+            Arg::Slot(s) => Some(*s),
+            _ => None,
+        })
+        .collect::<BTreeSet<_>>();
+    let mut pending = (0..rule.query.len())
+        .filter(|&i| i != pivot)
+        .collect::<BTreeSet<_>>();
+    let mut out = Vec::with_capacity(pending.len());
+    while !pending.is_empty() {
+        let available = |v: &Arg| {
+            matches!(v, Arg::Literal(_)) || matches!(v, Arg::Slot(s) if known.contains(s))
+        };
+        let (rank, atom) = pending
+            .iter()
+            .filter_map(|&i| {
+                let a = &rule.query[i];
+                let (_, keys) = a.args.split_last()?;
+                if keys.iter().all(available) {
+                    Some((usize::from(matches!(a.call, Call::Table(_))), i))
+                } else if expansions != 0
+                    && matches!(a.call, Call::Table(_))
+                    && a.args.iter().any(available)
+                {
+                    Some((2, i))
+                } else {
+                    None
+                }
+            })
+            .min()?;
+        let access = match rank {
+            0 => Access::Primitive,
+            1 => Access::Key,
+            _ => {
+                expansions -= 1;
+                Access::Expand
+            }
+        };
+        pending.remove(&atom);
+        known.extend(rule.query[atom].args.iter().filter_map(|a| match a {
+            Arg::Slot(s) => Some(*s),
+            _ => None,
+        }));
+        out.push((atom, access));
+    }
+    rule.inputs.iter().all(|i| known.contains(i)).then_some(out)
+}
+
+/// Shared by execution and Bake selection. The source stage-entry certificate
+/// remains authoritative; this table owns no live instance facts.
+#[derive(Clone, Debug, Default)]
+pub(crate) struct Queries {
+    entries: Vec<Vec<Option<Rc<Query>>>>,
+    count: usize,
+}
+impl Queries {
+    pub(crate) fn compile(p: &Program) -> Result<Self> {
+        let mut entries = p
+            .rules
+            .iter()
+            .map(|r| vec![None; r.query.len()])
+            .collect::<Vec<_>>();
+        for (rid, pivot, order) in &p.multi_stage.stage_entries {
+            entries[*rid][*pivot] = Some(Rc::new(
+                Query::compile(&p.rules[*rid], *pivot, order)
+                    .ok_or("invalid Cell query certificate")?,
+            ));
+        }
+        Ok(Self {
+            entries,
+            count: p.multi_stage.stage_entries.len(),
+        })
+    }
+    #[inline]
+    pub(crate) fn get(&self, rid: usize, pivot: usize) -> Option<&Rc<Query>> {
+        self.entries.get(rid)?.get(pivot)?.as_ref()
+    }
+    pub(crate) fn len(&self) -> usize {
+        self.count
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn staged_ports_preserve_dependencies_guards_and_bound_results() {
+        use Arg::{Literal, Slot};
+        let mut rule = Rule {
+            constructor_only: false,
+            template: 0,
+            seminaive: true,
+            direct: None,
+            inputs: Rc::new(vec![3, 0, 1]),
+            query: Rc::new(vec![
+                Atom {
+                    call: Call::Table(0),
+                    args: vec![Slot(0), Slot(1)],
+                },
+                Atom {
+                    call: Call::Table(1),
+                    args: vec![Slot(0), Slot(2)],
+                },
+                Atom {
+                    call: Call::Primitive("+".into(), "i64".into()),
+                    args: vec![Slot(2), Literal(Value::Int(1)), Slot(3)],
+                },
+                Atom {
+                    call: Call::Table(2),
+                    args: vec![Slot(3), Slot(1)],
+                },
+            ]),
+        };
+        let b = Query::compile(&rule, 0, &[1, 2, 3]).unwrap();
+        assert_eq!(json!(b.steps[1].key[0]), json!({"StepResult":0}));
+        assert_eq!(json!(b.steps[2].key), json!([{"StepResult":1}]));
+        assert_eq!(json!(b.steps[2].check_result), json!({"Anchor":1}));
+        assert_eq!(
+            json!(b.inputs),
+            json!([{"StepResult":1},{"Anchor":0},{"Anchor":1}])
+        );
+        assert!(Query::compile(&rule, 0, &[1]).is_none());
+        assert!(Query::compile(&rule, 0, &[2, 1, 3]).is_none());
+        assert!(Query::compile(&rule, 0, &[1, 2, 3, 3]).is_none());
+        Rc::make_mut(&mut rule.query)[1].args[0] = Slot(9);
+        assert!(Query::compile(&rule, 0, &[1]).is_none());
+    }
+    #[test]
+    fn residual_expansion_never_certifies_a_complete_entry() {
+        use Arg::Slot;
+        let rule = Rule {
+            constructor_only: false,
+            template: 0,
+            seminaive: true,
+            direct: None,
+            inputs: Rc::new(vec![3]),
+            query: Rc::new(vec![
+                Atom {
+                    call: Call::Table(0),
+                    args: vec![Slot(0), Slot(1)],
+                },
+                Atom {
+                    call: Call::Table(1),
+                    args: vec![Slot(0), Slot(2), Slot(3)],
+                },
+                Atom {
+                    call: Call::Primitive("=".into(), "Unit".into()),
+                    args: vec![Slot(3), Slot(1), Slot(4)],
+                },
+            ]),
+        };
+        assert!(query_order(&rule, 0, 0).is_none());
+        assert_eq!(
+            json!(query_order(&rule, 0, 1).unwrap()),
+            json!([[1, "Expand"], [2, "Primitive"]])
+        );
+        assert!(Query::compile(&rule, 0, &[1, 2]).is_none());
+        let mut disconnected = rule;
+        Rc::make_mut(&mut disconnected.query)[1].args[0] = Slot(9);
+        assert!(query_order(&disconnected, 0, 1).is_none());
+    }
+    #[test]
+    fn keyed_port_preserves_bound_result_constraints_and_slot_order() {
+        use Arg::{Literal, Slot};
+        let rule = Rule {
+            constructor_only: false,
+            template: 3,
+            seminaive: true,
+            direct: None,
+            inputs: Rc::new(vec![1, 0]),
+            query: Rc::new(vec![
+                Atom {
+                    call: Call::Table(1),
+                    args: vec![Slot(0), Slot(1), Slot(0)],
+                },
+                Atom {
+                    call: Call::Table(2),
+                    args: vec![Slot(1), Literal(Value::Int(7)), Slot(0)],
+                },
+            ]),
+        };
+        let b = Query::compile(&rule, 0, &[1]).unwrap();
+        let p = &b.steps[0];
+        assert_eq!(json!(p.key), json!([{"Anchor":1},{"Literal":{"Int":7}}]));
+        assert_eq!(json!(p.check_result), json!({"Anchor":0}));
+        assert_eq!(json!(b.inputs), json!([{"Anchor":1},{"Anchor":0}]));
+        assert!(Query::compile(&rule, 0, &[1, 1]).is_none());
+        let mut rule = rule;
+        Rc::make_mut(&mut rule.query)[1].args[0] = Slot(9);
+        assert!(Query::compile(&rule, 0, &[1]).is_none());
+    }
+}

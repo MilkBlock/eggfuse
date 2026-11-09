@@ -1,6 +1,6 @@
 //! Frozen, append-only binary continuations. Leaves refer to validated matching
 //! entries or completed typed producers. IDs are scoped to the catalog/recipe.
-use crate::{program::*, spine_blocks::Block};
+use crate::program::*;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as J, json};
 use std::{
@@ -60,7 +60,7 @@ struct Unit {
     first: Entry,
     last: Entry,
     path: Vec<(Option<usize>, Entry)>,
-    terminal: Option<Rc<Block>>,
+    terminal: bool,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Catalog {
@@ -153,10 +153,9 @@ impl Catalog {
                 e["consumer"].as_u64().unwrap() as usize,
                 Some(e["pivot"].as_u64().unwrap() as usize),
             );
-            let terminal = p
-                .spine_blocks
-                .get(entry.0, entry.1.unwrap())
-                .ok_or("invalid leaf entry")?;
+            if !p.spine_blocks.contains(entry.0, entry.1.unwrap()) {
+                return Err("invalid leaf entry".into());
+            }
             let path = vec![(None, entry)];
             let id = s.units.len();
             s.leaves.insert(entry, id);
@@ -165,7 +164,7 @@ impl Catalog {
                 first: entry,
                 last: entry,
                 path,
-                terminal: Some(terminal),
+                terminal: true,
             });
         }
         for rule in roots {
@@ -177,7 +176,7 @@ impl Catalog {
                 first: entry,
                 last: entry,
                 path,
-                terminal: None,
+                terminal: false,
             });
         }
         for j in array(&raw["joins"])? {
@@ -328,7 +327,7 @@ impl Catalog {
             first: l.first,
             last: r.last,
             path,
-            terminal: r.terminal.clone(),
+            terminal: r.terminal,
         })
     }
     pub(crate) fn enabled(&self) -> bool {
@@ -343,11 +342,11 @@ impl Catalog {
         pivot: usize,
         complete: bool,
         witness: crate::graph::Dependency,
-    ) -> Option<Rc<Block>> {
+    ) -> bool {
         if self.switch.enabled() {
             let Some(leaf) = self.switch.leaf(rule, pivot) else {
                 *state = State::default();
-                return None;
+                return false;
             };
             state.pc = self.switch.advance(state.pc, state.output, leaf);
             let unit = self.switch.active(state.pc);
@@ -400,11 +399,11 @@ impl Catalog {
                     .count();
                 state.stack.drain(..state.stack.len() - keep);
             }
-            return self.units[unit].terminal.clone();
+            return self.units[unit].terminal;
         }
         let Some(&id) = self.leaves.get(&(rule, Some(pivot))) else {
             *state = State::default();
-            return None;
+            return false;
         };
         let mut right = Segment {
             unit: id,
@@ -451,7 +450,7 @@ impl Catalog {
             })
             .count();
         state.stack.drain(..state.stack.len() - keep);
-        self.units[right.unit].terminal.clone()
+        self.units[right.unit].terminal
     }
     pub fn entries(&self) -> Vec<J> {
         self.units
@@ -672,18 +671,13 @@ mod tests {
     use crate::graph::Dependency;
     #[test]
     fn two_reduced_operands_can_join_without_repeating_the_prefix() {
-        let terminal = Rc::new(Block {
-            port: None,
-            steps: vec![],
-            inputs: vec![],
-        });
         let mut c = Catalog::default();
         for i in 0..4 {
             c.leaves.insert((i, Some(0)), i);
             c.units.push(Unit {
                 first: (i, Some(0)),
                 last: (i, Some(0)),
-                terminal: Some(terminal.clone()),
+                terminal: true,
                 path: vec![(None, (i, Some(0)))],
             });
         }
@@ -696,7 +690,7 @@ mod tests {
                 first: c.units[l].first,
                 last: c.units[r].last,
                 path,
-                terminal: Some(terminal.clone()),
+                terminal: true,
             };
             c.jumps.insert(
                 Join {
@@ -710,18 +704,12 @@ mod tests {
         }
         let mut state = State::default();
         for i in 0..4 {
-            assert!(
-                c.dispatch(&mut state, i, 0, true, Dependency::Function(0))
-                    .is_some()
-            );
+            assert!(c.dispatch(&mut state, i, 0, true, Dependency::Function(0)));
         }
         assert_eq!(state.stack.len(), 1);
         assert_eq!(state.stack[0].unit, 6);
         assert!(state.direct);
-        assert!(
-            c.dispatch(&mut state, 99, 0, true, Dependency::Function(0))
-                .is_none()
-        );
+        assert!(!c.dispatch(&mut state, 99, 0, true, Dependency::Function(0)));
         assert!(state.stack.is_empty() && !state.direct);
     }
     #[test]

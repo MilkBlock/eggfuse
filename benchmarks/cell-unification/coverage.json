@@ -32,7 +32,7 @@
         "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed."
       ],
       "remaining": [
-        "Compile full and partial continuation plans under the shared Cell Entry and hand over the execution position; prefix plan comparisons still occur.",
+        "Complete Entry query execution is now shared; still unify residual/prefix operands and execution position, removing the remaining route comparisons.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
@@ -68,8 +68,34 @@
     },
     {
       "id": "query",
-      "status": "pending",
-      "requirement": "Compile residual queries from the same Cell and Entry; preserve register, join, sieve, range and neighbor optimizations under the common contract."
+      "status": "in_progress",
+      "requirement": "Compile residual queries from the same Cell and Entry; preserve register, join, sieve, range and neighbor optimizations under the common contract.",
+      "baseline_commit": "4b5070cf",
+      "evidence": "benchmarks/cell-unification/query-results.json",
+      "completed_structure": [
+        "One complete Cell query compiler/executor replaces ordinary slot interpretation, single-Port execution and staged Block execution.",
+        "Program, Bake admission and iterative composition share the query definition; remove catalog-owned Block data and dispatch reference clones.",
+        "Complete Entry and residual register planning share one deterministic query-order compiler with explicit expansion budgets.",
+        "Repair Cells use the same query instruction binder and static dataflow composition."
+      ],
+      "remaining": [
+        "Unify residual register/prefix operand layout and execution position with the complete Cell query path.",
+        "Preserve and integrate join, sieve, range and neighbor capabilities; retain exact delta ownership and late-input fallback.",
+        "Finish boundary publication and scope/parallel rewrites before the historical-fastest and Raytrace acceptance campaign."
+      ],
+      "opportunity": "Previous sum-bits execution had 5,738 full entries, only 3,828 admitted by Bake. The other entries still constructed query environments; the selected entries split into two executors.",
+      "live_obligations": "Exact current-key reads and output checks, pivot validation, witness identity/visibility, source Run boundaries and winner ordering; residual enumeration retains its own delta ownership.",
+      "verification": "300 test executions across compiler/runtime feature sets, 22 identical re-lowered compiler components, semantic acceptance pass and identical Run/state/ordered mutation diagnostics. Normal short sum-bits inference median 24.719125 ms -> 24.285 ms; no general-workload or whole-goal performance claim.",
+      "reproduction": [
+        "cargo test --locked -p eggfuse-cell-compiler --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+        "cargo run --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-query-unified/sum/program.json out/cell-query-unified/relower.json",
+        "python3 benchmarks/cell-unification/run_entry_fixtures.py out/cell-query-unified",
+        "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-query-unified/semantic out/cell-query-unified/semantic-acceptance.json",
+        "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/query-timing-spec.json out/cell-query-unified/timing --repeat 7 --warmups 1",
+        "python3 benchmarks/cell-unification/collect.py out/cell-query-unified benchmarks/cell-unification/query-results.json --part query"
+      ]
     },
     {
       "id": "rhs_publication",
@@ -119,8 +145,10 @@
     {
       "id": "B1",
       "title": "寄存器 join 与共享 point 读取",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "B1"
+      "status": "partially_rewritten",
+      "metrics_from_catalog": "B1",
+      "evidence": "benchmarks/cell-unification/query-results.json",
+      "remaining": "Residual register/prefix execution and operand layout still separate."
     },
     {
       "id": "B2",
@@ -137,8 +165,10 @@
     {
       "id": "C1",
       "title": "完整 stage Entry 与 Spine block",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "C1"
+      "status": "partially_rewritten",
+      "metrics_from_catalog": "C1",
+      "evidence": "benchmarks/cell-unification/query-results.json",
+      "remaining": "Full query executor unified; residual handoff and publication boundaries still remain."
     },
     {
       "id": "C2",
