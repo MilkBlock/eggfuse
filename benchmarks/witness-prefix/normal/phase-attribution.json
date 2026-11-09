@@ -1,0 +1,345 @@
+{
+  "scope": "All paired samples retained; mean phase differences add to mean wall difference, separate medians need not.",
+  "cases": {
+    "sum-bits": {
+      "lanes": {
+        "baseline": {
+          "phase_medians": {
+            "inference_seconds": 0.030771542,
+            "process_wall_seconds": 0.1977897500000001,
+            "load_seconds": 0.115650875,
+            "setup_seconds": 0.003241125,
+            "export_seconds": 0.006802166,
+            "report_seconds": 0.010413708,
+            "process_unattributed_seconds": 0.03962958400000016,
+            "process_after_report_residual_seconds": 0.02921587600000016
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 0.16810299999999995,
+              "process_system_seconds": 0.020547999999999997,
+              "inference_seconds": 0.031193458,
+              "process_wall_seconds": 0.1977897500000001,
+              "load_seconds": 0.113190125,
+              "setup_seconds": 0.003241125,
+              "export_seconds": 0.006802166,
+              "report_seconds": 0.010496792,
+              "process_unattributed_seconds": 0.043362876000000106,
+              "process_after_report_residual_seconds": 0.03286608400000011,
+              "peak_rss_through_inference_bytes": 181862400
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 0.1734340000000001,
+              "process_system_seconds": 0.021256999999999998,
+              "inference_seconds": 0.030771542,
+              "process_wall_seconds": 0.19862487500000015,
+              "load_seconds": 0.118051333,
+              "setup_seconds": 0.003211833,
+              "export_seconds": 0.006960583,
+              "report_seconds": 0.010413708,
+              "process_unattributed_seconds": 0.03962958400000016,
+              "process_after_report_residual_seconds": 0.02921587600000016,
+              "peak_rss_through_inference_bytes": 181878784
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 0.17128999999999994,
+              "process_system_seconds": 0.01902200000000001,
+              "inference_seconds": 0.030518167,
+              "process_wall_seconds": 0.19464658299999993,
+              "load_seconds": 0.115650875,
+              "setup_seconds": 0.003308667,
+              "export_seconds": 0.006587833,
+              "report_seconds": 0.009685375,
+              "process_unattributed_seconds": 0.03858104099999993,
+              "process_after_report_residual_seconds": 0.028895665999999928,
+              "peak_rss_through_inference_bytes": 181878784
+            }
+          ]
+        },
+        "candidate": {
+          "phase_medians": {
+            "inference_seconds": 0.031459292,
+            "process_wall_seconds": 0.1877631249999998,
+            "load_seconds": 0.111392166,
+            "setup_seconds": 0.003341625,
+            "export_seconds": 0.006421917,
+            "report_seconds": 0.010409667,
+            "process_unattributed_seconds": 0.03852970900000002,
+            "process_after_report_residual_seconds": 0.027888959000000026
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 0.16571400000000003,
+              "process_system_seconds": 0.01882700000000001,
+              "inference_seconds": 0.032234625,
+              "process_wall_seconds": 0.1877631249999998,
+              "load_seconds": 0.111392166,
+              "setup_seconds": 0.003341625,
+              "export_seconds": 0.005438791,
+              "report_seconds": 0.009566375,
+              "process_unattributed_seconds": 0.03535591799999982,
+              "process_after_report_residual_seconds": 0.025789542999999818,
+              "peak_rss_through_inference_bytes": 181108736
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 0.163335,
+              "process_system_seconds": 0.019788999999999987,
+              "inference_seconds": 0.029738,
+              "process_wall_seconds": 0.186550875,
+              "load_seconds": 0.108625875,
+              "setup_seconds": 0.0032285,
+              "export_seconds": 0.006428791,
+              "report_seconds": 0.01064075,
+              "process_unattributed_seconds": 0.03852970900000002,
+              "process_after_report_residual_seconds": 0.027888959000000026,
+              "peak_rss_through_inference_bytes": 181125120
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 0.172331,
+              "process_system_seconds": 0.019545000000000007,
+              "inference_seconds": 0.031459292,
+              "process_wall_seconds": 0.19378029099999994,
+              "load_seconds": 0.113472542,
+              "setup_seconds": 0.003371583,
+              "export_seconds": 0.006421917,
+              "report_seconds": 0.010409667,
+              "process_unattributed_seconds": 0.039054956999999946,
+              "process_after_report_residual_seconds": 0.02864528999999995,
+              "peak_rss_through_inference_bytes": 181108736
+            }
+          ]
+        },
+        "fast_archived": {
+          "phase_medians": {
+            "inference_seconds": 0.021437,
+            "process_wall_seconds": 0.14714591599999993,
+            "setup_seconds": 0.002456917,
+            "export_seconds": 0.005923333
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 0.12713200000000002,
+              "process_system_seconds": 0.019030999999999992,
+              "inference_seconds": 0.021462875,
+              "process_wall_seconds": 0.14955354099999996,
+              "setup_seconds": 0.002478041,
+              "export_seconds": 0.005923333,
+              "peak_rss_through_inference_bytes": 174112768
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 0.1247069999999999,
+              "process_system_seconds": 0.018843,
+              "inference_seconds": 0.021437,
+              "process_wall_seconds": 0.14714591599999993,
+              "setup_seconds": 0.002410375,
+              "export_seconds": 0.005792042,
+              "peak_rss_through_inference_bytes": 174112768
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 0.12270700000000012,
+              "process_system_seconds": 0.017160999999999982,
+              "inference_seconds": 0.020862917,
+              "process_wall_seconds": 0.14398404200000003,
+              "setup_seconds": 0.002456917,
+              "export_seconds": 0.005967708,
+              "peak_rss_through_inference_bytes": 174129152
+            }
+          ]
+        }
+      },
+      "paired_mean_decomposition": {
+        "candidate_minus_baseline": {
+          "unit": "seconds",
+          "components": {
+            "load_seconds": -0.004467250000000002,
+            "setup_seconds": 6.0027666666666715e-05,
+            "inference_seconds": 0.0003162500000000017,
+            "export_seconds": -0.000687027666666667,
+            "report_seconds": 6.972333333332924e-06,
+            "process_after_report_residual_seconds": -0.0028846113333334685
+          },
+          "whole_process_delta": -0.00765563900000014
+        }
+      }
+    },
+    "raytrace": {
+      "lanes": {
+        "baseline": {
+          "phase_medians": {
+            "inference_seconds": 12.556746666,
+            "process_wall_seconds": 15.920221749999996,
+            "load_seconds": 0.558688375,
+            "setup_seconds": 0.0044255,
+            "export_seconds": 1.766652917,
+            "report_seconds": 0.724699834,
+            "process_unattributed_seconds": 1.0093306669999986,
+            "process_after_report_residual_seconds": 0.2922668759999987
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 15.310015,
+              "process_system_seconds": 0.5369749999999998,
+              "inference_seconds": 12.593897666,
+              "process_wall_seconds": 15.920221749999996,
+              "load_seconds": 0.548786708,
+              "setup_seconds": 0.004415,
+              "export_seconds": 1.725858209,
+              "report_seconds": 0.730698334,
+              "process_unattributed_seconds": 1.0472641669999962,
+              "process_after_report_residual_seconds": 0.3165658329999963,
+              "peak_rss_through_inference_bytes": 2129166336
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 15.234124000000008,
+              "process_system_seconds": 0.5573379999999997,
+              "inference_seconds": 12.556746666,
+              "process_wall_seconds": 15.947098208,
+              "load_seconds": 0.607996875,
+              "setup_seconds": 0.006371083,
+              "export_seconds": 1.766652917,
+              "report_seconds": 0.717063791,
+              "process_unattributed_seconds": 1.0093306669999986,
+              "process_after_report_residual_seconds": 0.2922668759999987,
+              "peak_rss_through_inference_bytes": 2136522752
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 15.147857000000002,
+              "process_system_seconds": 0.5222350000000002,
+              "inference_seconds": 12.354424792,
+              "process_wall_seconds": 15.692986666999985,
+              "load_seconds": 0.558688375,
+              "setup_seconds": 0.0044255,
+              "export_seconds": 1.779251041,
+              "report_seconds": 0.724699834,
+              "process_unattributed_seconds": 0.9961969589999864,
+              "process_after_report_residual_seconds": 0.27149712499998635,
+              "peak_rss_through_inference_bytes": 2127872000
+            }
+          ]
+        },
+        "candidate": {
+          "phase_medians": {
+            "inference_seconds": 12.335173542,
+            "process_wall_seconds": 15.649061791000008,
+            "load_seconds": 0.5479295,
+            "setup_seconds": 0.004192042,
+            "export_seconds": 1.743107042,
+            "report_seconds": 0.734441541,
+            "process_unattributed_seconds": 1.0146778759999968,
+            "process_after_report_residual_seconds": 0.2802363349999968
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 15.23893799999999,
+              "process_system_seconds": 0.5230769999999998,
+              "inference_seconds": 12.487831833,
+              "process_wall_seconds": 15.801900458999995,
+              "load_seconds": 0.534721417,
+              "setup_seconds": 0.0040365,
+              "export_seconds": 1.7606328329999998,
+              "report_seconds": 0.734441541,
+              "process_unattributed_seconds": 1.0146778759999968,
+              "process_after_report_residual_seconds": 0.2802363349999968,
+              "peak_rss_through_inference_bytes": 2127773696
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 14.934983000000003,
+              "process_system_seconds": 0.6174330000000001,
+              "inference_seconds": 12.328514917,
+              "process_wall_seconds": 15.645244665999996,
+              "load_seconds": 0.5479295,
+              "setup_seconds": 0.004471875,
+              "export_seconds": 1.707911959,
+              "report_seconds": 0.721974334,
+              "process_unattributed_seconds": 1.0564164149999957,
+              "process_after_report_residual_seconds": 0.33444208099999573,
+              "peak_rss_through_inference_bytes": 2126708736
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 15.10960399999999,
+              "process_system_seconds": 0.5136080000000005,
+              "inference_seconds": 12.335173542,
+              "process_wall_seconds": 15.649061791000008,
+              "load_seconds": 0.556214917,
+              "setup_seconds": 0.004192042,
+              "export_seconds": 1.743107042,
+              "report_seconds": 0.736303083,
+              "process_unattributed_seconds": 1.0103742480000086,
+              "process_after_report_residual_seconds": 0.2740711650000086,
+              "peak_rss_through_inference_bytes": 2128330752
+            }
+          ]
+        },
+        "fast_archived": {
+          "phase_medians": {
+            "inference_seconds": 8.1304245,
+            "process_wall_seconds": 10.468942665999997,
+            "setup_seconds": 0.00277725,
+            "export_seconds": 1.579737042
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "process_user_seconds": 9.898114,
+              "process_system_seconds": 0.48893600000000026,
+              "inference_seconds": 8.222350125,
+              "process_wall_seconds": 10.468942665999997,
+              "setup_seconds": 0.002458917,
+              "export_seconds": 1.532487625,
+              "peak_rss_through_inference_bytes": 1996603392
+            },
+            {
+              "iteration": 1,
+              "process_user_seconds": 9.740735,
+              "process_system_seconds": 0.4801869999999999,
+              "inference_seconds": 7.919147708,
+              "process_wall_seconds": 10.244805291999995,
+              "setup_seconds": 0.003356458,
+              "export_seconds": 1.579737042,
+              "peak_rss_through_inference_bytes": 1996439552
+            },
+            {
+              "iteration": 2,
+              "process_user_seconds": 9.892676999999992,
+              "process_system_seconds": 0.4735649999999998,
+              "inference_seconds": 8.1304245,
+              "process_wall_seconds": 10.491876625000003,
+              "setup_seconds": 0.00277725,
+              "export_seconds": 1.609002792,
+              "peak_rss_through_inference_bytes": 1996701696
+            }
+          ]
+        }
+      },
+      "paired_mean_decomposition": {
+        "candidate_minus_baseline": {
+          "unit": "seconds",
+          "components": {
+            "load_seconds": -0.025535374666666666,
+            "setup_seconds": -0.0008370553333333329,
+            "inference_seconds": -0.1178496106666671,
+            "export_seconds": -0.02003677766666671,
+            "report_seconds": 0.0067523330000000365,
+            "process_after_report_residual_seconds": 0.002806582333339932
+          },
+          "whole_process_delta": -0.1546999029999938
+        }
+      }
+    }
+  }
+}

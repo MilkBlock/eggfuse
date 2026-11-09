@@ -27,9 +27,9 @@ Charge context/route probes, donor reads, stale reads, verified witness hits and
 remaining global lookups separately. A hit discharges an actual fallback lookup,
 not a committed mutation. No new Cell or receipt packet is allocated for a hint.
 
-## Next: fragment publication and completion scope
+## Fragment publication and completion scope
 
-Only proceed after the witness/prefix checks pass. Reuse immutable fragment
+After the witness/prefix checks, reuse immutable fragment
 wiring and existing instance locations for internal delivery. Preserve ordered
 last-writer selection, receipt forwarding, visibility, and independently timed
 consumer Runs. Expand completion read scope only with complete candidate and
@@ -59,3 +59,9 @@ touches an input class; output/epoch/visibility refresh and ordered retirement
 remain at commit. Count these exact-domain tasks and their candidate preparation
 separately from shared-condition tasks, and do not infer parallel speedup from
 larger batches.
+
+Implementation and final evidence are recorded in [README.md](README.md),
+[validation.json](validation.json) and the [normal campaign](normal/README.md).
+The actual workloads produced zero local witness/prefix hits. The experiment
+does not pass the joint inference/process performance gate; these routes must
+not be credited for the small observed combined timing changes.

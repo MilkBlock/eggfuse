@@ -48,6 +48,8 @@ def walk(value, parts):
     if not parts:
         return [value]
     head, *tail = parts
+    if isinstance(value, dict) and value.get('enabled') is False and head != 'enabled':
+        raise Missing('disabled')
     if head == '*':
         if not isinstance(value, (list, dict)):
             raise Missing('missing_counter')

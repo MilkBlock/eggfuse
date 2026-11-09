@@ -1,0 +1,22 @@
+{
+  "sum-bits": {
+    "local": {
+      "program": "out/condition-bake/query-classes-sum/program.json",
+      "args": ["--local-congruence"]
+    },
+    "parallel": {
+      "program": "out/condition-bake/query-classes-sum/program.json",
+      "args": ["--local-congruence", "--guard-workers", "2", "--completion-batch-tasks", "16", "--overlap-completion"]
+    }
+  },
+  "raytrace": {
+    "local": {
+      "program": "out/condition-bake/query-classes-ray/program.json",
+      "args": ["--local-congruence"]
+    },
+    "parallel": {
+      "program": "out/condition-bake/query-classes-ray/program.json",
+      "args": ["--local-congruence", "--guard-workers", "2", "--completion-batch-tasks", "16", "--overlap-completion"]
+    }
+  }
+}

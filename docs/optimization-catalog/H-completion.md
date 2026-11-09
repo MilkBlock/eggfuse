@@ -77,7 +77,7 @@
 
 证据：[benchmarks/raytrace-parallel/README.md](../../benchmarks/raytrace-parallel/README.md)
 
-## H4-new · 大 Cell 的完整域并行完成
+## H4 · 大 Cell 的完整域并行完成
 
 启用条件：已有 completion batch 模式自动扩大可读范围。
 
@@ -97,6 +97,6 @@
 
 解释与缺口：覆盖扩大不是速度改善；原条件代码容量界不变，提交仍按序且必须允许失效回退。
 
-状态：本轮实现；正确性与性能见本轮验证记录。
+状态：完整回归及真实双线程按序诊断通过；sum/Raytrace 额外接管 6/4426 个 exact-domain task；未重测普通构建线程扩展性。
 
-证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md)
+证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/README.md](../../benchmarks/witness-prefix/README.md)

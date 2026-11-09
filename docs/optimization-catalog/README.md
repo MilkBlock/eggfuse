@@ -1,6 +1,6 @@
 # Cell CPU 优化分类与度量目录
 
-这份目录按**被替代的运行时工作**分类，不按实验出现的先后顺序分类。覆盖当前分支的 9 类、27 组优化；一组可以包含紧密耦合的几个实现，不把每个微优化算成独立 feature。
+这份目录按**被替代的运行时工作**分类，不按实验出现的先后顺序分类。覆盖当前分支的 9 类、28 组优化；一组可以包含紧密耦合的几个实现，不把每个微优化算成独立 feature。
 
 适用对象是 **standalone Cell CPU**。native egglog 在前端/Bake 中作为工具使用，不能把本目录的运行时结果描述为 native egglog 加速。历史实验的报告仅证明其冻结版本和配置，不能自动继承为当前代码的性能结论。
 
@@ -12,7 +12,7 @@
 | [D RHS](D-rhs.md) | known results、静态别名、单写、稀疏 frame、merge program | 被消除的构造与 frame、实际分配下降 | 结果验证、merge 指令、剩余构造查询 |
 | [E 发布](E-publication.md) | 变更批次、共享 Entry、publication ownership、片段发布 | 参数复制、重复索引与临时哈希下降 | 槽位访问、forwarding、最后写入者选择、延迟发布状态 |
 | [F 端口与生命周期](F-ports.md) | repair ports、ownership、slices、composition、signal 槽、稳定字段 | 订阅/解绑/字段重写下降 | 端口读取、静态 slice 分派、边界维护、滞留空间 |
-| [G 判重与等价](G-congruence.md) | port keys、局部 congruence、typed dispatch、跨阶段分组 | 候选访问、key 重建与哈希下降 | Eq/标量检查、边界搜索、分组跳转、静态代码体积 |
+| [G 判重与等价](G-congruence.md) | port keys、局部 congruence、typed dispatch、跨阶段分组及替代后端 | 候选访问、key 重建与哈希下降 | Eq/标量检查、边界搜索、分组跳转、静态代码体积 |
 | [H 调度与并行](H-completion.md) | scope、port influence、pure epoch、并行 guard/batch/overlap、大 Cell 完成 | 独立进展、有效完成任务、真实线程扩展性 | influence 证明、分派、snapshot、失效与废弃工作、有序提交 |
 | [I Bake admission](I-admission.md) | 模板选择、迭代 catalog、实际工作 credit | 同源执行真正减少的工作 | 新机制全部维护/分配/编译成本，以及最终整进程时间 |
 
@@ -39,7 +39,7 @@
 | 片段内部发布 | E3 | 多 anchor、permanent、Entry-owned 的 RHS 片段；在现有 Entry 槽位选择最后发布者，未知边界回退 |
 | 扩大并行完成范围 | H4 | 超过局部条件容量的形状可用完整端口候选域进入读取批次；有序提交和 union 失效仍保留 |
 
-这三项的代码/验证记录在 [本轮实验目录](../../benchmarks/witness-prefix/design.md)。这里不预设性能提升。前一轮跨阶段分组已有可追溯结果：[query-classes 最终报告](../../benchmarks/query-classes/final/README.md)；它相对上一版本改善了部分时间，但没有在两个工作负载的整进程时间上都胜出，也没有超过历史 fast 基线。
+这三项的代码/验证记录在 [本轮实验目录](../../benchmarks/witness-prefix/README.md)。C3/C4 在当前 sum-bits、Raytrace 中实际命中为 0，未减少查询；E3 已触发，H4 在真实并行诊断中接管了额外任务。合测没有通过双工作负载推理收益门槛，不能给前两条路径记收益。前一轮跨阶段分组另有可追溯结果：[query-classes 最终报告](../../benchmarks/query-classes/final/README.md)；不同轮次和基线不能混用。
 
 ## 读取现有报告，不触发新实测
 

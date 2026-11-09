@@ -53,7 +53,7 @@
 
 证据：[benchmarks/query-receipts/README.md](../../benchmarks/query-receipts/README.md) · [benchmarks/compiler-congruence/README.md](../../benchmarks/compiler-congruence/README.md)
 
-## C3-new · 已有 effect 见证直达
+## C3 · 已有 effect 见证直达
 
 启用条件：有静态 effect route 的完整 Spine Entry。
 
@@ -71,13 +71,13 @@
 | 成本 / 剩余工作 | `report:/stage_spine/stats/local_witness_contexts [value]`<br>`report:/stage_spine/stats/local_witness_route_probes [value]`<br>`report:/stage_spine/stats/local_witness_route_steps [value]`<br>`report:/stage_spine/stats/local_witness_key_fields [value]`<br>`report:/stage_spine/stats/local_witness_stale [value]`<br>`report:/key_lookup_calls [value]` |
 | 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/local_witness_routes [value]`<br>`report:/stage_spine/stats/local_witness_reads [value]` |
 
-解释与缺口：命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。
+解释与缺口：命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。
 
-状态：本轮实现；正确性与性能见本轮验证记录。
+状态：已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减。
 
-证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md)
+证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md)
 
-## C4-new · 匹配前缀接续
+## C4 · 匹配前缀接续
 
 启用条件：含 Expand 且存在 producer-local effect 前缀的 register kernel。
 
@@ -95,8 +95,8 @@
 | 成本 / 剩余工作 | `report:/stats/register_prefix/context_reads [value]`<br>`report:/stats/register_prefix/plan_comparisons [value]`<br>`report:/stats/register_prefix/donor_reads [value]`<br>`report:/stats/register_prefix/key_fields [value]`<br>`report:/stats/register_prefix/stale_fallbacks [value]`<br>`report:/stats/register_prefix/key_fallbacks [value]` |
 | 覆盖 / 规模 / 回退 | `report:/stats/register_prefix/eligible_seeds [value]`<br>`report:/stats/register_prefix/plan_hits [value]`<br>`report:/stats/register_prefix/owner_rejections [value]` |
 
-解释与缺口：key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。
+解释与缺口：key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。
 
-状态：本轮实现；正确性与性能见本轮验证记录。
+状态：已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减。
 
-证据：[benchmarks/witness-prefix/register-prefix-design.md](../../benchmarks/witness-prefix/register-prefix-design.md)
+证据：[benchmarks/witness-prefix/register-prefix-design.md](../../benchmarks/witness-prefix/register-prefix-design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md)

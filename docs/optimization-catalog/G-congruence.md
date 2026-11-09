@@ -76,3 +76,27 @@
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
 证据：[benchmarks/query-classes/final/README.md](../../benchmarks/query-classes/final/README.md)
+
+## G4 · union digest、显式 congruence cells 与 repair blocks（替代实验后端）
+
+启用条件：--union-digest / --congruence-cells，以及所选 repair-cell catalog；与现行 local-congruence 区分。
+
+编译期依据：typed scalar/Unit 范围、精确 key 与显式 Eq premises；digest 不能代替证明。
+
+替代的旧工作：传统修复中的部分表示、匹配与 typed repair 解释。
+
+运行时仍须满足：保留源 Run 发布和普通 dirty queue 顺序；有副作用的 merge、容器等不受支持时明确拒绝或走其既定回退。
+
+代码：[union_digest.rs](../../engine/cell-runtime/src/union_digest.rs) · [congruence_cells.rs](../../engine/cell-runtime/src/congruence_cells.rs) · [repair_cells.rs](../../engine/cell-runtime/src/repair_cells.rs)
+
+| 指标用途 | 精确数据路径 |
+|---|---|
+| 收益观察（需基线差值） | `report:/union_digest/stats/congruence_matches [value]`<br>`report:/union_digest/congruence_cells/stats/completed_across_runs [value]` |
+| 成本 / 剩余工作 | `report:/union_digest/stats/shared_incidence_visits [value]`<br>`report:/union_digest/stats/full_key_checks [value]`<br>`report:/union_digest/stats/key_packets_updated [value]`<br>`report:/union_digest/congruence_cells/stats/waiter_visits [value]`<br>`report:/repair_cells/stats/steps [value]`<br>`report:/repair_cells/stats/row_copies [value]` |
+| 覆盖 / 规模 / 回退 | `report:/union_digest/enabled [value]`<br>`report:/union_digest/congruence_cells/waiting_cells [value]`<br>`report:/repair_cells/enabled [value]` |
+
+解释与缺口：这些是替代后端，不能把它们的命中和现行 shared-port 路径相加；早期显式 waiter/index 方案不等于已消除反向依赖。运行级加速未被这些计数证明。
+
+状态：保留的可选实验；不作为当前默认路径的加速结论。
+
+证据：[benchmarks/union-digest/UNIT.md](../../benchmarks/union-digest/UNIT.md) · [benchmarks/congruence-cells/README.md](../../benchmarks/congruence-cells/README.md) · [benchmarks/repair-cells/README.md](../../benchmarks/repair-cells/README.md)

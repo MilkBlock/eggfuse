@@ -53,7 +53,7 @@
 
 证据：[benchmarks/entry-publications/README.md](../../benchmarks/entry-publications/README.md)
 
-## E3-new · 片段内部 publication
+## E3 · 片段内部 publication
 
 启用条件：至少两个 anchor；全为 permanent、Entry-owned，非 audit_receipts。
 
@@ -73,6 +73,6 @@
 
 解释与缺口：这是有覆盖证明的 RHS 片段交付；未知边界仍走旧路径。audit_receipts 会主动禁用该快路，验证不能只用 audit 模式。
 
-状态：本轮实现；正确性与性能见本轮验证记录。
+状态：真实样例已触发；与其他改动合测，独立性能贡献未归因；整组尚未通过双工作负载推理收益门槛。
 
-证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md)
+证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md)

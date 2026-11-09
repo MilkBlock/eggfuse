@@ -1,0 +1,53 @@
+{
+  "scope": "standalone Cell CPU; frozen normal binaries, three paired single-thread repetitions per workload",
+  "two_workload_inference_and_process_gate_passed": false,
+  "historical_fast_beaten": false,
+  "gate_rule": "All paired candidate inference/process times below baseline on both workloads; three pairs remain a bounded pilot, not robust general performance proof.",
+  "allocation_validation": "not collected in normal timing; diagnostic audit handled separately",
+  "cases": {
+    "sum-bits": {
+      "raw_state_and_ordered_run_sha_equal": true,
+      "semantic_reference": {
+        "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+      },
+      "all_counters_deterministic_including_warmup": true,
+      "candidate_pairs_faster": {
+        "inference_seconds": 1,
+        "process_wall_seconds": 3
+      },
+      "key_lookup_calls": {
+        "baseline": 19222,
+        "candidate": 19222
+      },
+      "prefix_key_reads_avoided": 0,
+      "spine_local_witness_hits": 0,
+      "candidate_over_fast_median_ratio": {
+        "inference_seconds": 1.4675230675934132,
+        "process_wall_seconds": 1.276033546184183
+      }
+    },
+    "raytrace": {
+      "raw_state_and_ordered_run_sha_equal": true,
+      "semantic_reference": {
+        "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+        "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+      },
+      "all_counters_deterministic_including_warmup": true,
+      "candidate_pairs_faster": {
+        "inference_seconds": 3,
+        "process_wall_seconds": 3
+      },
+      "key_lookup_calls": {
+        "baseline": 4330682,
+        "candidate": 4330682
+      },
+      "prefix_key_reads_avoided": 0,
+      "spine_local_witness_hits": 0,
+      "candidate_over_fast_median_ratio": {
+        "inference_seconds": 1.5171623009352093,
+        "process_wall_seconds": 1.4948082428441885
+      }
+    }
+  }
+}

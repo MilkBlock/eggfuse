@@ -1,0 +1,560 @@
+{
+  "scope": "standalone Cell CPU; not native egglog",
+  "implementation_commit": "094fb2ed",
+  "metrics_commit": "f5bc98ca",
+  "checks": {
+    "workspace_all_features": {
+      "passed": 357,
+      "failed": 0,
+      "ignored": 4,
+      "log": "out/witness-prefix/workspace-tests-final.log",
+      "log_sha256": "400b455d0501ece5952051a225e0743b9afd2b8073723c3dc164d64ab06561a7"
+    },
+    "non_sparse": {
+      "passed": 28,
+      "failed": 0,
+      "ignored": 0,
+      "log": "out/witness-prefix/non-sparse-tests-final.log",
+      "log_sha256": "c985545cdc54208abc1849a21cfa9b08cd674128f0552f3b39271a07870dd70a"
+    },
+    "minimal": {
+      "exit_code": 0,
+      "log": "out/witness-prefix/minimal-check.log",
+      "log_sha256": "e05e74b2884796a7a92bcfa96ec1ec6c2310f5f8e2533e1a77025875e95b89c3"
+    },
+    "catalog": {
+      "categories": 9,
+      "optimization_groups": 28,
+      "check": "python3 docs/optimization-catalog/catalog.py check",
+      "historical_report_missing_fields": "not imputed as zero",
+      "current_parallel_report_extraction": {
+        "observed": 219,
+        "disabled": 21
+      },
+      "current_parallel_report_missing_or_wrong_type": 0
+    }
+  },
+  "normal_binary_sha256": "31b135fc7da867f42df931d9e55ab5aa80d2ba48bc3382ead26bfcc4671993cd",
+  "diagnostic_binary_sha256": "c4166882dd28a3e4121b2cb280dcdb2e97ed0a1f2ba99cc9217366db2d84426d",
+  "diagnostic_features": "sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics",
+  "cases": {
+    "sum-bits": {
+      "runs": 1428,
+      "ordered_comparison": {
+        "prior_final_and_candidate_local_and_candidate_parallel_equal": true,
+        "hashes": {
+          "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+          "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+          "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        }
+      },
+      "allocations_diagnostic": {
+        "prior_final": {
+          "alloc_calls": 203944,
+          "free_calls": 167641,
+          "live_bytes_after": 154661659,
+          "live_bytes_before": 146909811,
+          "peak_live_requested_bytes": 155137542,
+          "realloc_calls": 20731,
+          "released_bytes": 27903818,
+          "requested_bytes": 35655666,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "candidate_local": {
+          "alloc_calls": 203945,
+          "free_calls": 167640,
+          "live_bytes_after": 154733420,
+          "live_bytes_before": 146986244,
+          "peak_live_requested_bytes": 155204439,
+          "realloc_calls": 20743,
+          "released_bytes": 27898658,
+          "requested_bytes": 35645834,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "candidate_parallel": {
+          "alloc_calls": 205595,
+          "free_calls": 169227,
+          "live_bytes_after": 155597379,
+          "live_bytes_before": 147827263,
+          "peak_live_requested_bytes": 156068398,
+          "realloc_calls": 20747,
+          "released_bytes": 29079954,
+          "requested_bytes": 36850070,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations_diagnostic": {
+        "prior_final": {
+          "alloc_calls": 68061,
+          "free_calls": 25888,
+          "live_bytes_after": 146909811,
+          "live_bytes_before": 142062249,
+          "peak_live_requested_bytes": 146909811,
+          "realloc_calls": 2235,
+          "released_bytes": 3054105,
+          "requested_bytes": 7901667,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "candidate_local": {
+          "alloc_calls": 69004,
+          "free_calls": 25888,
+          "live_bytes_after": 146986244,
+          "live_bytes_before": 142090763,
+          "peak_live_requested_bytes": 146986244,
+          "realloc_calls": 2243,
+          "released_bytes": 3078585,
+          "requested_bytes": 7974066,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "candidate_parallel": {
+          "alloc_calls": 108190,
+          "free_calls": 62092,
+          "live_bytes_after": 147827263,
+          "live_bytes_before": 142090951,
+          "peak_live_requested_bytes": 147827263,
+          "realloc_calls": 2245,
+          "released_bytes": 6590324,
+          "requested_bytes": 12326636,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "prefix": {
+        "context_missing": 0,
+        "context_reads": 6,
+        "donor_hits": 0,
+        "donor_reads": 6,
+        "eligible_seeds": 6,
+        "field_checks": 0,
+        "field_writes": 0,
+        "key_fallbacks": 0,
+        "key_fields": 0,
+        "key_reads_avoided": 0,
+        "owner_rejections": 0,
+        "plan_comparisons": 26,
+        "plan_hits": 6,
+        "plan_lookups": 6,
+        "primitive_checks": 0,
+        "primitive_rejections": 0,
+        "result_rejections": 0,
+        "resumed_instructions": 0,
+        "resumes": 0,
+        "stale_fallbacks": 6
+      },
+      "local_witness": {
+        "local_witness_contexts": 90,
+        "local_witness_hits": 0,
+        "local_witness_key_fields": 0,
+        "local_witness_reads": 25,
+        "local_witness_route_probes": 90,
+        "local_witness_route_steps": 25,
+        "local_witness_routes": 26,
+        "local_witness_stale": 25
+      },
+      "fragment": {
+        "fragment_deliveries": 3421,
+        "fragment_delivery_checks": 3421,
+        "fragment_direct_inserts_avoided": 3421,
+        "fragment_packets": 1447,
+        "fragment_receipt_spills": 0,
+        "fragment_receipts": 3421
+      },
+      "parallel": {
+        "stats": {
+          "attempts": 83,
+          "bridged_tasks": 403,
+          "candidate_fact_lookups": 1624,
+          "candidate_positions": 2704,
+          "collected_tasks": 684,
+          "committed_tasks": 609,
+          "conflicting_unions": 14,
+          "dispatches": 83,
+          "exact_domain_candidates": 7,
+          "exact_domain_tasks": 6,
+          "guard_candidates": 1624,
+          "interleaved_stops": 0,
+          "order_checks": 1012,
+          "peak_tasks": 16,
+          "pending_probes": 1522,
+          "preflight_checks": 684,
+          "preparation_errors": 0,
+          "prepared_candidates": 0,
+          "prepared_tasks": 684,
+          "queue_comparisons": 971,
+          "queue_head_visits": 246,
+          "queue_successor_reads": 665,
+          "read_set_comparisons": 10264,
+          "read_set_queries": 1004,
+          "read_set_slots": 1289,
+          "recorded_answers": 596,
+          "result_refreshes": 352,
+          "reused_after_union": 352,
+          "scratch_allocations": 92,
+          "scratch_bytes_requested": 484640,
+          "selection_checks": 487,
+          "selection_dead_skips": 0,
+          "selection_pending_skips": 0,
+          "short_prefixes": 0,
+          "uncovered_stops": 0,
+          "unsubmitted_tasks": 0,
+          "unused_tasks": 75,
+          "worker_early_stops": 517
+        },
+        "worker_tasks": [
+          410,
+          274
+        ],
+        "overlap": {
+          "enabled": true,
+          "observed": {
+            "effective_unions_with_active_readers": 3
+          },
+          "performance_admission": false,
+          "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+          "stats": {
+            "activity_allocations": 1,
+            "base_snapshots": 332,
+            "channel_builds": 0,
+            "channel_receives": 0,
+            "epochs": 83,
+            "input_buffer_allocations": 83,
+            "input_buffer_bytes": 43776,
+            "layers": {
+              "components": {
+                "copied_units": 0,
+                "growths": 4,
+                "merged_entries": 222,
+                "writes": 222
+              },
+              "nodes": {
+                "copied_units": 0,
+                "growths": 6,
+                "merged_entries": 826,
+                "writes": 826
+              },
+              "parents": {
+                "copied_units": 0,
+                "growths": 5,
+                "merged_entries": 502,
+                "writes": 502
+              },
+              "queues": {
+                "copied_units": 0,
+                "growths": 71,
+                "merged_entries": 1154,
+                "writes": 2440
+              }
+            },
+            "ordered_slot_reads": 609,
+            "overlay": {
+              "copied_units": 0,
+              "growths": 86,
+              "merged_entries": 2704,
+              "writes": 3990
+            },
+            "projected_tasks": 684,
+            "reader_activity_updates": 332,
+            "result_buffer_allocations": 166,
+            "result_buffer_bytes": 247568,
+            "row_handle_clones": 609,
+            "slot_abandons": 0,
+            "slot_collection_reads": 684,
+            "slot_publications": 684,
+            "task_spawns": 166
+          }
+        },
+        "interpretation": "real worker execution and ordered correctness only; instrumented times are not scaling measurements"
+      },
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 5853,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 5853,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "raytrace": {
+      "runs": 16883,
+      "ordered_comparison": {
+        "prior_final_and_candidate_local_and_candidate_parallel_equal": true,
+        "hashes": {
+          "state.json": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+          "rhs.json": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+          "writes.json": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+          "resumes.json": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d",
+          "shape_without_program_hash": "62e995ce3d27206362334ae1b10169ab3bcfb571a78a8798888b0573b31a3311",
+          "schedule": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+        }
+      },
+      "allocations_diagnostic": {
+        "prior_final": {
+          "alloc_calls": 45700561,
+          "free_calls": 38822240,
+          "live_bytes_after": 2115846137,
+          "live_bytes_before": 471190112,
+          "peak_live_requested_bytes": 2116156289,
+          "realloc_calls": 3344754,
+          "released_bytes": 8970656715,
+          "requested_bytes": 10615312740,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "candidate_local": {
+          "alloc_calls": 45700562,
+          "free_calls": 38822239,
+          "live_bytes_after": 2115409874,
+          "live_bytes_before": 471376441,
+          "peak_live_requested_bytes": 2115720026,
+          "realloc_calls": 3344780,
+          "released_bytes": 8970033635,
+          "requested_bytes": 10614067068,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "candidate_parallel": {
+          "alloc_calls": 45944368,
+          "free_calls": 39065955,
+          "live_bytes_after": 2116606313,
+          "live_bytes_before": 472218300,
+          "peak_live_requested_bytes": 2116916465,
+          "realloc_calls": 3350845,
+          "released_bytes": 9293482283,
+          "requested_bytes": 10937870296,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations_diagnostic": {
+        "prior_final": {
+          "alloc_calls": 119071,
+          "free_calls": 39619,
+          "live_bytes_after": 471190112,
+          "live_bytes_before": 463548658,
+          "peak_live_requested_bytes": 471190112,
+          "realloc_calls": 2718,
+          "released_bytes": 4842601,
+          "requested_bytes": 12484055,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "candidate_local": {
+          "alloc_calls": 120014,
+          "free_calls": 39619,
+          "live_bytes_after": 471376441,
+          "live_bytes_before": 463577172,
+          "peak_live_requested_bytes": 471376441,
+          "realloc_calls": 2726,
+          "released_bytes": 4867081,
+          "requested_bytes": 12666350,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "candidate_parallel": {
+          "alloc_calls": 213258,
+          "free_calls": 129881,
+          "live_bytes_after": 472218300,
+          "live_bytes_before": 463577360,
+          "peak_live_requested_bytes": 472218300,
+          "realloc_calls": 2728,
+          "released_bytes": 8609376,
+          "requested_bytes": 17250316,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "prefix": {
+        "context_missing": 0,
+        "context_reads": 317,
+        "donor_hits": 0,
+        "donor_reads": 239,
+        "eligible_seeds": 317,
+        "field_checks": 0,
+        "field_writes": 0,
+        "key_fallbacks": 0,
+        "key_fields": 0,
+        "key_reads_avoided": 0,
+        "owner_rejections": 0,
+        "plan_comparisons": 1145,
+        "plan_hits": 239,
+        "plan_lookups": 317,
+        "primitive_checks": 0,
+        "primitive_rejections": 0,
+        "result_rejections": 0,
+        "resumed_instructions": 0,
+        "resumes": 0,
+        "stale_fallbacks": 239
+      },
+      "local_witness": {
+        "local_witness_contexts": 41945,
+        "local_witness_hits": 0,
+        "local_witness_key_fields": 0,
+        "local_witness_reads": 1380,
+        "local_witness_route_probes": 41945,
+        "local_witness_route_steps": 1465,
+        "local_witness_routes": 1406,
+        "local_witness_stale": 1380
+      },
+      "fragment": {
+        "fragment_deliveries": 593054,
+        "fragment_delivery_checks": 593054,
+        "fragment_direct_inserts_avoided": 593054,
+        "fragment_packets": 237782,
+        "fragment_receipt_spills": 0,
+        "fragment_receipts": 593054
+      },
+      "parallel": {
+        "stats": {
+          "attempts": 11219,
+          "bridged_tasks": 62662,
+          "candidate_fact_lookups": 1237106,
+          "candidate_positions": 2155347,
+          "collected_tasks": 173196,
+          "committed_tasks": 160933,
+          "conflicting_unions": 1219,
+          "dispatches": 11219,
+          "exact_domain_candidates": 929719,
+          "exact_domain_tasks": 4426,
+          "guard_candidates": 1237106,
+          "interleaved_stops": 0,
+          "order_checks": 223595,
+          "peak_tasks": 16,
+          "pending_probes": 1221862,
+          "preflight_checks": 173196,
+          "preparation_errors": 0,
+          "prepared_candidates": 0,
+          "prepared_tasks": 173196,
+          "queue_comparisons": 963586,
+          "queue_head_visits": 73125,
+          "queue_successor_reads": 162645,
+          "read_set_comparisons": 2652680,
+          "read_set_queries": 206180,
+          "read_set_slots": 328132,
+          "recorded_answers": 118648,
+          "result_refreshes": 85714,
+          "reused_after_union": 85714,
+          "scratch_allocations": 19263,
+          "scratch_bytes_requested": 180730656,
+          "selection_checks": 109923,
+          "selection_dead_skips": 1965,
+          "selection_pending_skips": 0,
+          "short_prefixes": 0,
+          "uncovered_stops": 0,
+          "unsubmitted_tasks": 0,
+          "unused_tasks": 12263,
+          "worker_early_stops": 114298
+        },
+        "worker_tasks": [
+          98319,
+          74877
+        ],
+        "overlap": {
+          "enabled": true,
+          "observed": {
+            "effective_unions_with_active_readers": 2462
+          },
+          "performance_admission": false,
+          "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+          "stats": {
+            "activity_allocations": 1,
+            "base_snapshots": 44876,
+            "channel_builds": 0,
+            "channel_receives": 0,
+            "epochs": 11219,
+            "input_buffer_allocations": 11219,
+            "input_buffer_bytes": 11084544,
+            "layers": {
+              "components": {
+                "copied_units": 0,
+                "growths": 9,
+                "merged_entries": 59746,
+                "writes": 59746
+              },
+              "nodes": {
+                "copied_units": 0,
+                "growths": 11,
+                "merged_entries": 161067,
+                "writes": 161067
+              },
+              "parents": {
+                "copied_units": 0,
+                "growths": 10,
+                "merged_entries": 103090,
+                "writes": 103090
+              },
+              "queues": {
+                "copied_units": 0,
+                "growths": 198,
+                "merged_entries": 276662,
+                "writes": 512103
+              }
+            },
+            "ordered_slot_reads": 160933,
+            "overlay": {
+              "copied_units": 0,
+              "growths": 228,
+              "merged_entries": 600565,
+              "writes": 836006
+            },
+            "projected_tasks": 173196,
+            "reader_activity_updates": 44876,
+            "result_buffer_allocations": 22438,
+            "result_buffer_bytes": 62530064,
+            "row_handle_clones": 160933,
+            "slot_abandons": 0,
+            "slot_collection_reads": 173196,
+            "slot_publications": 173196,
+            "task_spawns": 22438
+          }
+        },
+        "interpretation": "real worker execution and ordered correctness only; instrumented times are not scaling measurements"
+      },
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 1222040,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 1222040,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    }
+  },
+  "performance_admission": {
+    "both_workload_inference_and_process_win": false,
+    "beats_archived_fast": false,
+    "reason": "sum inference median regresses and paired interval crosses 1; witness/prefix hits zero in both actual workloads; see normal campaign for all samples",
+    "parallel_scaling": "not newly measured; diagnostic worker activity is not speedup"
+  }
+}

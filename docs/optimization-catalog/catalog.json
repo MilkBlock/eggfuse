@@ -609,7 +609,7 @@
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
     {
-      "id": "C3-new",
+      "id": "C3",
       "category": "C",
       "title": "已有 effect 见证直达",
       "activation": "有静态 effect route 的完整 Spine Entry",
@@ -672,14 +672,16 @@
           }
         ]
       },
-      "gaps": "命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。",
+      "gaps": "命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。",
       "evidence": [
-        "benchmarks/witness-prefix/design.md"
+        "benchmarks/witness-prefix/design.md",
+        "benchmarks/witness-prefix/normal/README.md"
       ],
-      "status": "本轮实现；正确性与性能见本轮验证记录"
+      "status": "已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减",
+      "introduced_in": "094fb2ed"
     },
     {
-      "id": "C4-new",
+      "id": "C4",
       "category": "C",
       "title": "匹配前缀接续",
       "activation": "含 Expand 且存在 producer-local effect 前缀的 register kernel",
@@ -753,11 +755,13 @@
           }
         ]
       },
-      "gaps": "key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。",
+      "gaps": "key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。 当前地址策略在真实样例均回退；不能把本轮整体时间变化归因于见证直达。静态 route 尚无独立的收益准入。",
       "evidence": [
-        "benchmarks/witness-prefix/register-prefix-design.md"
+        "benchmarks/witness-prefix/register-prefix-design.md",
+        "benchmarks/witness-prefix/normal/README.md"
       ],
-      "status": "本轮实现；正确性与性能见本轮验证记录"
+      "status": "已实现并通过回归；当前 sum-bits/Raytrace 实测命中均为 0，未获得实际查询缩减",
+      "introduced_in": "094fb2ed"
     },
     {
       "id": "D1",
@@ -1049,7 +1053,7 @@
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
     {
-      "id": "E3-new",
+      "id": "E3",
       "category": "E",
       "title": "片段内部 publication",
       "activation": "至少两个 anchor；全为 permanent、Entry-owned，非 audit_receipts",
@@ -1125,9 +1129,11 @@
       },
       "gaps": "这是有覆盖证明的 RHS 片段交付；未知边界仍走旧路径。audit_receipts 会主动禁用该快路，验证不能只用 audit 模式。",
       "evidence": [
-        "benchmarks/witness-prefix/design.md"
+        "benchmarks/witness-prefix/design.md",
+        "benchmarks/witness-prefix/normal/README.md"
       ],
-      "status": "本轮实现；正确性与性能见本轮验证记录"
+      "status": "真实样例已触发；与其他改动合测，独立性能贡献未归因；整组尚未通过双工作负载推理收益门槛",
+      "introduced_in": "094fb2ed"
     },
     {
       "id": "F1",
@@ -1734,6 +1740,90 @@
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
     {
+      "id": "G4",
+      "category": "G",
+      "title": "union digest、显式 congruence cells 与 repair blocks（替代实验后端）",
+      "activation": "--union-digest / --congruence-cells，以及所选 repair-cell catalog；与现行 local-congruence 区分",
+      "compile_fact": "typed scalar/Unit 范围、精确 key 与显式 Eq premises；digest 不能代替证明",
+      "replaces": "传统修复中的部分表示、匹配与 typed repair 解释",
+      "live_obligations": "保留源 Run 发布和普通 dirty queue 顺序；有副作用的 merge、容器等不受支持时明确拒绝或走其既定回退。",
+      "sources": [
+        "engine/cell-runtime/src/union_digest.rs",
+        "engine/cell-runtime/src/congruence_cells.rs",
+        "engine/cell-runtime/src/repair_cells.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/union_digest/stats/congruence_matches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/union_digest/congruence_cells/stats/completed_across_runs",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/union_digest/stats/shared_incidence_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/union_digest/stats/full_key_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/union_digest/stats/key_packets_updated",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/union_digest/congruence_cells/stats/waiter_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/repair_cells/stats/steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/repair_cells/stats/row_copies",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/union_digest/enabled",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/union_digest/congruence_cells/waiting_cells",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/repair_cells/enabled",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "这些是替代后端，不能把它们的命中和现行 shared-port 路径相加；早期显式 waiter/index 方案不等于已消除反向依赖。运行级加速未被这些计数证明。",
+      "evidence": [
+        "benchmarks/union-digest/UNIT.md",
+        "benchmarks/congruence-cells/README.md",
+        "benchmarks/repair-cells/README.md"
+      ],
+      "status": "保留的可选实验；不作为当前默认路径的加速结论"
+    },
+    {
       "id": "H2",
       "category": "H",
       "title": "concrete-port influence 与 pure epoch",
@@ -1872,7 +1962,7 @@
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
     {
-      "id": "H4-new",
+      "id": "H4",
       "category": "H",
       "title": "大 Cell 的完整域并行完成",
       "activation": "已有 completion batch 模式自动扩大可读范围",
@@ -1932,9 +2022,11 @@
       },
       "gaps": "覆盖扩大不是速度改善；原条件代码容量界不变，提交仍按序且必须允许失效回退。",
       "evidence": [
-        "benchmarks/witness-prefix/design.md"
+        "benchmarks/witness-prefix/design.md",
+        "benchmarks/witness-prefix/README.md"
       ],
-      "status": "本轮实现；正确性与性能见本轮验证记录"
+      "status": "完整回归及真实双线程按序诊断通过；sum/Raytrace 额外接管 6/4426 个 exact-domain task；未重测普通构建线程扩展性",
+      "introduced_in": "094fb2ed"
     },
     {
       "id": "I1",
