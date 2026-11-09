@@ -162,3 +162,7 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 普通 inline 提示仅消除一个静态调用位置，local candidates 和 union 中仍有调用。改用 `inline(always)` 后，普通 release 汇编中的三个调用位置全部消除。最终 sum-bits 的语义验收通过，1,428 个 Run、最终状态和 302 项工作指标的值/缺失状态与直接前版一致；端口短样例的三个 Run、逐阶段状态和绑定审计一致。
 
 调用消除没有证明速度收益：最后一组相对上次计时版的推理配对中位比为 1.0140，95% 小样本区间 1.0000–1.0444；整进程为 1.0004，区间 0.9854–1.0091。首组出现的回退不能因此宣布消失。保留全部四组采样，速度保持仍待确认，不为获得更好数字反复采样；后续重写继续减少实际冗余，按五个实现提交的节奏复查。
+
+本次完整证据在 `lifecycle-results.json`：普通 standalone Cell CPU，单进程 sum-bits，非原生 egglog 性能结论；没有新增分配审计。五个结构重写后额外进行了两次有具体调用证据的内联修改，最后的计时源码为 `d81b0cb2`。证据提交不计入下一组五次实现提交，历史 `24c4ae8a` 对照仍保留，以免滚动基线掩盖回退。
+
+复现使用本工作树的普通 release 构建（`sparse-cells,view-ports,storage-metrics`），各源码提交对应的冻结二进制及同一份 sum-bits program；四组输入分别为 `lifecycle-timing-spec.json`、`lifecycle-localization-timing-spec.json`、`lifecycle-inline-timing-spec.json`、`lifecycle-final-timing-spec.json`，输出目录为 `out/cell-lifecycle-unified/timing{,-localization,-inline,-final}`。每组通过 `benchmarks/witness-prefix/measure.py SPEC OUTPUT --repeat 7 --warmups 1` 执行，交错顺序及原始样本摘要保留在证据文件中。使用已有语义脚本重新检查最终二进制结果，再运行 `python3 benchmarks/cell-unification/collect_lifecycle.py out/cell-lifecycle-unified benchmarks/cell-unification/lifecycle-results.json` 汇总，收集器会验证状态、Run 顺序、指标来源哈希、二进制身份和所有计时样本。

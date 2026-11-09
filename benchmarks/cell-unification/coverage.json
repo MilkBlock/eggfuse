@@ -3,10 +3,11 @@
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
-    "last_timed_commit": "24c4ae8a",
-    "implementation_commits_since_timing": 7,
-    "evidence": "benchmarks/cell-unification/port-read-results.json",
-    "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign."
+    "last_timed_commit": "d81b0cb2",
+    "implementation_commits_since_timing": 0,
+    "evidence": "benchmarks/cell-unification/lifecycle-results.json",
+    "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign.",
+    "checkpoint_status": "preservation_unresolved_no_speedup_established"
   },
   "baseline_commit": "27f1c503",
   "catalog": "docs/optimization-catalog/catalog.json",
@@ -224,13 +225,15 @@
       ],
       "remaining": [
         "Unify remaining table footprints, stable-port lifecycle, incidence routing and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",
-        "Legacy artifact IDs retain original grouping during decode; fresh Bake emits the new shared layout. Broader runtime speed acceptance remains pending."
+        "Legacy artifact IDs retain original grouping during decode; fresh Bake emits the new shared layout. Broader runtime speed acceptance remains pending.",
+        "Resolve speed preservation: the five-commit checkpoint showed a 2.7% paired inference regression. Inlining removes all three field-use call sites, but noisy follow-ups do not establish recovery; keep the historical checkpoint in subsequent timing comparisons."
       ],
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
       "symbol_checks": "benchmarks/cell-unification/symbols-check.json",
       "port_read_checks": "benchmarks/cell-unification/port-read-results.json",
       "propagation_checks": "benchmarks/cell-unification/propagation-check.json",
-      "field_use_checks": "benchmarks/cell-unification/field-uses-check.json"
+      "field_use_checks": "benchmarks/cell-unification/field-uses-check.json",
+      "lifecycle_checks": "benchmarks/cell-unification/lifecycle-results.json"
     },
     {
       "id": "schedule_parallel",
@@ -384,8 +387,10 @@
     {
       "id": "F4",
       "title": "直接 signal 槽与 component 生命周期",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "F4"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "F4",
+      "evidence": "benchmarks/cell-unification/lifecycle-results.json",
+      "remaining": "Birth binding and stable field installation use one resolved Cell map; native ownership and signal queries share address resolution. Retirement, boundary registration and snapshot lifetime still need integration; retained frames remain necessary for surviving component ports."
     },
     {
       "id": "F5",
@@ -393,7 +398,8 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "F5",
       "evidence": "benchmarks/cell-unification/propagation-check.json",
-      "remaining": "Coordinator and worker port reads, change publication and completion share code. Stable-node installation, field storage and component lifetime remain to unify; no speedup established."
+      "remaining": "Coordinator and worker reads, publication, completion and birth field installation share Cell code. Field storage and retirement lifetime remain to audit; speed preservation is unresolved.",
+      "lifecycle_checks": "benchmarks/cell-unification/lifecycle-results.json"
     },
     {
       "id": "G1",

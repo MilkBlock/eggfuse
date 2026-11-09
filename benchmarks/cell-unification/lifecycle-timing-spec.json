@@ -1,0 +1,25 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-lifecycle-unified/runtime-baseline",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-lifecycle-unified/runtime-candidate",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "checkpoint": {
+      "runtime": "out/cell-lifecycle-unified/runtime-checkpoint",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "lanes": {
+    "checkpoint": {
+      "runtime": "out/cell-port-reader-unified/runtime-candidate",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "propagation": {
+      "runtime": "out/cell-propagation-unified/runtime-candidate",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "field_uses": {
+      "runtime": "out/cell-field-uses-unified/runtime-candidate",
+      "program": "out/cell-lifecycle-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
