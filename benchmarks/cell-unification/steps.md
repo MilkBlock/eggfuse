@@ -214,3 +214,13 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 all-features 与非 sparse 的 iterative-bake 两种配置各 18 项针对性检查通过，最小特性编译通过。普通构建 sum-bits 语义 pass，1,428 个 Run 和最终状态保持；物理恢复 12→0，其余 325 项工作指标的值/缺失状态保持。完整查询 fixture 的恢复 2→0，四个短 fixture 的逐阶段 state/binding audit 和其他 runtime/ownership/port/Spine 计数保持。现有 Bake 成本计数直接反映减少的恢复，没有新增收益计数或重复计分。实际覆盖很小，不据此推断大幅速度收益。
 
 输出在 `out/cell-producer-unified`，运行及 semantic/catalog 命令与上一节相同。使用 `check_producer.py ROOT benchmarks/cell-unification/producer-check.json --commit COMMIT` 验证保存的日志、指标来源、状态和二进制身份。此步不新增计时/分配审计，是本轮五提交周期的第 1 个实现提交；上轮速度回退仍未解决。
+
+## 消费者直接借用生产者的 Results
+
+接续 `50e12acf`。完整查询原来每选中一条见证路线，就克隆一次 History 句柄，目的是跨过消费者 dispatch 可能触发的状态重置。这个临时副本的生命期与当前匹配完全相同，没有理由成为第二个历史拥有者。
+
+dispatch 现在在重置状态时移出原 History；已接纳的消费者仍由原 state 持有历史。完整查询从这两个互斥来源借用同一份 Cell Results，删除 LocalWitness 的 History 字段及克隆，并直接用原结果端口读取。没有 local witness 时，被移出的历史在 dispatch 后立即释放；有见证时也只保留到本次查询结束，绝不接回未被 catalog 接纳的消费者状态。旧 history_borrows 指标保留并降为零，不把必需的跨阶段历史存储算作已删除。
+
+见证来源与 query receipt 的 15 项短检查、2 项 dispatch/训练检查和最小特性编译通过；在既有 dispatch 检查中同时验证重置后的 state 为空，而移出的原结果仍能供当前查询使用。普通 sum-bits 语义 pass，1,428 个 Run、最终状态及 326 项工作指标保持。full fixture 的历史句柄复制 2→0，逐阶段 state、绑定顺序及其他工作计数保持；物理恢复继续为零。sum-bits 不命中该见证路线，因此这里的行为证据来自短 fixture，不能用 sum-bits 的稳定指标宣称该路径已加速。
+
+输出保存在 `out/cell-history-unified`，仅重跑受影响的 full fixture 和一次普通 sum-bits，未采样时间/分配。复现命令沿用上一节，检查器增加 `--phase history`，结果写入 `history-check.json`。这是本轮第 2 个实现提交；整个 Cell 重写和速度验收仍未完成，多线程恢复阶段尚未启动。

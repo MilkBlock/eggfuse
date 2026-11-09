@@ -335,6 +335,9 @@ impl Catalog {
     }
     // Executed only on an originally scheduled and checked anchor. Reductions
     // consume adjacent, non-overlapping segments of this particular cursor.
+    // A reset transfers the previous history to the current query. It may use
+    // the producer's existing witnesses, but cannot carry that history into a
+    // future consumer that the catalog did not admit.
     pub(crate) fn dispatch(
         &self,
         state: &mut State,
@@ -342,11 +345,10 @@ impl Catalog {
         pivot: usize,
         complete: bool,
         witness: crate::graph::Dependency,
-    ) -> bool {
+    ) -> (bool, crate::result_handoff::History) {
         if self.switch.enabled() {
             let Some(leaf) = self.switch.leaf(rule, pivot) else {
-                *state = State::default();
-                return false;
+                return (false, std::mem::take(state).history);
             };
             state.pc = self.switch.advance(state.pc, state.output, leaf);
             let unit = self.switch.active(state.pc);
@@ -399,11 +401,10 @@ impl Catalog {
                     .count();
                 state.stack.drain(..state.stack.len() - keep);
             }
-            return self.units[unit].terminal;
+            return (self.units[unit].terminal, Default::default());
         }
         let Some(&id) = self.leaves.get(&(rule, Some(pivot))) else {
-            *state = State::default();
-            return false;
+            return (false, std::mem::take(state).history);
         };
         let mut right = Segment {
             unit: id,
@@ -450,7 +451,7 @@ impl Catalog {
             })
             .count();
         state.stack.drain(..state.stack.len() - keep);
-        self.units[right.unit].terminal
+        (self.units[right.unit].terminal, Default::default())
     }
     pub fn entries(&self) -> Vec<J> {
         self.units
@@ -704,12 +705,18 @@ mod tests {
         }
         let mut state = State::default();
         for i in 0..4 {
-            assert!(c.dispatch(&mut state, i, 0, true, Dependency::Function(0)));
+            assert!(c.dispatch(&mut state, i, 0, true, Dependency::Function(0)).0);
         }
         assert_eq!(state.stack.len(), 1);
         assert_eq!(state.stack[0].unit, 6);
         assert!(state.direct);
-        assert!(!c.dispatch(&mut state, 99, 0, true, Dependency::Function(0)));
+        let port = crate::cell::ResultPort::new(0, 0);
+        state.history.capture(1, 0, &[crate::cell::Capture { site: crate::cell::Site::Effect(0), port }],
+            |_| None, |_| Some(Dependency::Function(7)));
+        let (selected, previous) = c.dispatch(&mut state, 99, 0, true, Dependency::Function(0));
+        assert!(!selected);
+        assert_eq!(previous.get(1, port), Some(Dependency::Function(7)));
+        assert!(state.history.current().is_none());
         assert!(state.stack.is_empty() && !state.direct);
     }
     #[test]

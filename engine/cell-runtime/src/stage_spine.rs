@@ -706,8 +706,6 @@ fn record_answer(
 struct LocalWitness {
     producer: crate::cell::Producer,
     route: Rc<crate::multistage::Continuation>,
-    #[cfg(feature = "iterative-bake")]
-    history: crate::result_handoff::History,
 }
 fn read_port(
     g: &mut Graph,
@@ -717,6 +715,7 @@ fn read_port(
     args: PortKey,
     stats: &mut Stats,
     local: Option<&mut LocalWitness>,
+    #[cfg(feature = "iterative-bake")] local_results: Option<&crate::cell::Results>,
     #[cfg(feature = "structural-depth")] structural: (&mut crate::depth_runtime::Depth, Dependency),
 ) -> Result<Option<Row>> {
     let key = (table, args);
@@ -769,7 +768,7 @@ fn read_port(
                 stats.local_witness_receipt_probes += 1;
                 stats.local_witness_slot_reads += 1;
                 stats.history_result_reads += 1;
-                local.history.get(1, port)
+                local_results.and_then(|results| results.get(port))
             } else { None };
             #[cfg(not(feature = "iterative-bake"))]
             let receipt = None;
@@ -2016,16 +2015,9 @@ impl Programs {
                     self.stats.local_witness_route_comparisons += comparisons;
                     let route = route?.clone();
                     self.stats.local_witness_routes += 1;
-                    #[cfg(feature = "iterative-bake")]
-                    { self.stats.local_witness_history_borrows += 1; }
                     Some(LocalWitness {
                         producer,
                         route,
-                        // A consumer absent from the iterative catalog resets
-                        // its state during dispatch. The current producer's
-                        // already retained receipts still serve this match.
-                        #[cfg(feature = "iterative-bake")]
-                        history: cursor.state.history.clone(),
                     })
                 })
             } else { None };
@@ -2038,12 +2030,19 @@ impl Programs {
             };
             #[cfg(feature = "spine-blocks")]
             let mut cursor = cursor;
+            #[cfg(feature = "iterative-bake")]
+            let mut displaced_history = crate::result_handoff::History::default();
             #[cfg(feature = "spine-blocks")]
             {
                 #[cfg(feature = "iterative-bake")]
                 let selected = if g.program.iterative.enabled() {
                     cursor.state.collect_pairs = self.training.collect_pairs;
-                    g.program.iterative.dispatch(&mut cursor.state, rid, pivot, complete, row.witness)
+                    let (selected, previous) = g.program.iterative.dispatch(
+                        &mut cursor.state, rid, pivot, complete, row.witness);
+                    // No local witness consumer: release the old history at
+                    // dispatch as before, without extending its lifetime.
+                    if local.is_some() { displaced_history = previous; }
+                    selected
                 } else { g.program.spine_blocks.contains(rid, pivot) };
                 #[cfg(not(feature = "iterative-bake"))]
                 let selected = g.program.spine_blocks.contains(rid, pivot);
@@ -2052,6 +2051,12 @@ impl Programs {
                 cursor.via_block = selected;
                 self.stats.block_entries += u64::from(selected);
             }
+            #[cfg(feature = "iterative-bake")]
+            let local_results = if local.is_some() {
+                // Dispatch keeps admitted history in the cursor, or moves it
+                // here on reset. Either way, borrow its original result slots.
+                displaced_history.current().or_else(|| cursor.state.history.current())
+            } else { None };
             let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
             self.stats.cell_query_entries += 1;
             let mut values = smallvec::SmallVec::<[Value; 4]>::new();
@@ -2065,6 +2070,8 @@ impl Programs {
                     Call::Table(table) => {
                         let Some(found) = read_port(
                             g, &cursor, step.atom, *table, args, &mut self.stats, local.as_mut(),
+                            #[cfg(feature = "iterative-bake")]
+                            local_results,
                             #[cfg(feature = "structural-depth")]
                             (&mut self.structural, row.witness),
                         )? else { return Ok(None); };

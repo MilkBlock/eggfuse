@@ -751,7 +751,8 @@
         "engine/cell-runtime/src/result_handoff.rs",
         "engine/cell-runtime/src/compiler/mod.rs",
         "engine/cell-runtime/src/cell_routes.rs",
-        "engine/cell-runtime/src/cell_producer.rs"
+        "engine/cell-runtime/src/cell_producer.rs",
+        "engine/cell-runtime/src/iterative.rs"
       ],
       "metrics": {
         "benefit": [
