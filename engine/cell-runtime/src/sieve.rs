@@ -296,14 +296,17 @@ impl Sieve {
             self.stats.reused_summaries += 1;
             return Ok(());
         }
-        let spec = self.specs[id].clone();
-        for guard in &spec.guards {
-            self.ensure(guard.child, g, index)?
+        // Cell-derived wiring is immutable during preparation. Copy just the
+        // next child address across recursion, not the spec and its vectors.
+        for position in 0..self.specs[id].guards.len() {
+            let child = self.specs[id].guards[position].child;
+            self.ensure(child, g, index)?
         }
-        index.ensure(g, spec.table)?;
+        let table = self.specs[id].table;
+        index.ensure(g, table)?;
         // Child summaries are already complete. Building a support union
         // depends only on the set of row projections, not on witness order.
-        for hashes in index.fingerprints(spec.table) {
+        for hashes in index.fingerprints(table) {
             self.stats.build_rows += 1;
             self.admit_into::<true>(id, hashes);
         }
@@ -324,10 +327,10 @@ impl Sieve {
             self.stats.reused_summaries += 1;
             return Ok(());
         }
-        let targets = self.rules[rid].clone();
-        for guards in targets {
-            for guard in guards {
-                self.ensure(guard.child, g, index)?
+        for atom in 0..self.rules[rid].len() {
+            for position in 0..self.rules[rid][atom].len() {
+                let child = self.rules[rid][atom][position].child;
+                self.ensure(child, g, index)?
             }
         }
         // A receiver may not otherwise be indexed (e.g. delta root). Ensure it

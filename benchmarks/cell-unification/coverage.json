@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "ab33d47c",
-    "implementation_commits_since_timing": 4,
+    "implementation_commits_since_timing": 5,
     "evidence": "benchmarks/cell-unification/routes-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not count. User authorized this checkpoint after three implementation commits; next interval is five.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -307,7 +307,7 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B2",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "Static shared-column wiring is common and consumed by existing filters. Range guards, dynamic join choice, local-context prefixes, candidate index lifecycle and runtime speed acceptance remain."
+      "remaining": "Static shared-column wiring is common and Sieve preparation borrows it without cloning nested specs/rule targets. Range guards, dynamic join choice, local-context prefixes, candidate index lifecycle and runtime speed acceptance remain."
     },
     {
       "id": "B3",

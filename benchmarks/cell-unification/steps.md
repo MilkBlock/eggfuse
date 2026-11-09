@@ -244,3 +244,11 @@ Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Fre
 使用已保存的 `563e4ab0` sum-bits 普通报告，这 19 项合计 125,534 个等权计数单位；它们此前已经执行，并非本次新增工作，更不是已提交 mutation 数。目录 B2 补入缺少的 13 项已有成本观察。评分仍是未经时间标定的代理，不能把一个合计值解释成纳秒或速度提升。
 
 四项 Work 账本检查和一次真实 iterate 的 measured-work 选择回归通过。扩展既有账本回归验证：减少 1 次 lookup、增加 1 次 Entry probe 和 1 次 summary update，净分为 -1；缺少必要计数必须报错，不能按零处理。真实短样例继续拒绝不能覆盖历史维护成本的候选。此改动只影响 Bake 的评分，不改冻结产物的 runtime 执行；复用上一节已验收的 runtime 报告，不重跑 sum-bits。结果见 `filter-credit-check.json`。这是本轮第 4 个实现提交，随下一项一起测速。
+
+## Sieve 准备直接遍历共享静态连接
+
+接续 `6dd18b55`，运行时直接前版为 `563e4ab0`。Sieve 的 Cell 派生 wiring 在运行期间不变；此前递归准备 summary 时却克隆整份 Spec 及其数组，准备规则时又克隆嵌套的 target/guard 数组。现在按原位置遍历，每次仅复制下一项 child 编号，再进入递归。删除这两处完整复制；保留子 summary 先于父 summary 完成、原始遍历顺序、增量 support 传播及失效清理。运行时状态没有另建副本。
+
+两项 Sieve 单元检查、晚到 bridge 与循环 join/哈希碰撞两项集成检查及最小特性编译通过。普通 sum-bits 的语义验收 pass；1,428 个 Run、最终状态、339 项工作指标的值或缺失状态及完整过滤计数保持。526 次成功 summary build 对应旧源码中 526 次已删除的 Spec clone；这是由既有 build 计数推导的源码工作量，不是实测分配次数。嵌套 target 复制也已删除，但不从混合的 reused_summaries 计数推算次数。
+
+这是本轮第 5 个实现提交。使用 `out/cell-sieve-unified` 保存冻结二进制及检查输出；`collect_sieve.py ROOT OUTPUT --commit COMMIT` 验证已有语义、Run、状态、工作指标来源与测试日志。提交后按 `sieve-timing-spec.json` 进行一次 7 轮交错普通构建测速（每条配置预热一次），直接前版、上次计时 `ab33d47c`、历史 `24c4ae8a` 同时保留。通过 `--timing` 收集同一组样本，不因为结果不理想重复采样。此处是 standalone Cell CPU，不是 native egglog 性能结论；必要的 summaries 和 index 生命周期仍未完成统一。

@@ -1,0 +1,32 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-sieve-unified/runtime-baseline",
+      "program": "out/cell-sieve-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-sieve-unified/runtime-candidate",
+      "program": "out/cell-sieve-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "last_timed": {
+      "runtime": "out/cell-sieve-unified/runtime-last_timed",
+      "program": "out/cell-sieve-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "historical": {
+      "runtime": "out/cell-sieve-unified/runtime-historical",
+      "program": "out/cell-sieve-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
