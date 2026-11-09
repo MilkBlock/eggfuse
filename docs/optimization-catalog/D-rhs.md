@@ -27,7 +27,7 @@
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/RHS_BLOCK_WORK.md](../../docs/RHS_BLOCK_WORK.md) · [benchmarks/cell-unification/match-completion-results.json](../../benchmarks/cell-unification/match-completion-results.json)
+证据：[docs/RHS_BLOCK_WORK.md](../../docs/RHS_BLOCK_WORK.md) · [benchmarks/cell-unification/match-completion-results.json](../../benchmarks/cell-unification/match-completion-results.json) · [benchmarks/cell-unification/construction-check.json](../../benchmarks/cell-unification/construction-check.json)
 
 ## D2 · 单写 RHS、稀疏 frame 与 merge program
 

@@ -75,4 +75,4 @@
 
 状态：实验模式已实现；短样例减少查询和分配；尚未完成新目录及历史最快配置的性能验收。
 
-证据：[benchmarks/marker-handoff/design.md](../../benchmarks/marker-handoff/design.md) · [benchmarks/marker-handoff/README.md](../../benchmarks/marker-handoff/README.md) · [benchmarks/marker-handoff/choice-diagnosis.md](../../benchmarks/marker-handoff/choice-diagnosis.md)
+证据：[benchmarks/marker-handoff/design.md](../../benchmarks/marker-handoff/design.md) · [benchmarks/marker-handoff/README.md](../../benchmarks/marker-handoff/README.md) · [benchmarks/marker-handoff/choice-diagnosis.md](../../benchmarks/marker-handoff/choice-diagnosis.md) · [benchmarks/cell-unification/construction-check.json](../../benchmarks/cell-unification/construction-check.json)

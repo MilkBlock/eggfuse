@@ -316,7 +316,8 @@
       "remaining": [
         "Unify source fragment selection and iterative Cell composition, derive consumer Entries and optional marker materialization boundaries from the same definitions, and remove the replaced boundary maintenance. Shared constructor-result propagation alone does not complete this takeover.",
         "Preserve source lexical bindings/purity admission, typed SSA and deletion invalidation, actual returned values and original Run/effect ordering. Compile/setup layout costs and runtime speed acceptance remain unmeasured for this step."
-      ]
+      ],
+      "construction_checks": "benchmarks/cell-unification/construction-check.json"
     },
     {
       "id": "multithread_after_rewrite",
@@ -348,7 +349,8 @@
       "title": ".egg marker 结果变量交接",
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "A3",
-      "remaining": "Constructor-result propagation is shared; source marker selection/materialization and general iterative Bake composition remain separate."
+      "remaining": "Constructor-result propagation is shared; source marker selection/materialization and general iterative Bake composition remain separate.",
+      "construction_checks": "benchmarks/cell-unification/construction-check.json"
     },
     {
       "id": "B1",
@@ -447,7 +449,8 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "D1",
       "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json",
-      "remaining": "Static constructor source/alias propagation shares Cell construction proof with marker emission. Dynamic donor planning, read validity, and full iterative composition still require integration."
+      "remaining": "Static constructor source/alias propagation shares Cell construction proof with marker emission. Dynamic donor planning, read validity, and full iterative composition still require integration.",
+      "construction_checks": "benchmarks/cell-unification/construction-check.json"
     },
     {
       "id": "D2",
