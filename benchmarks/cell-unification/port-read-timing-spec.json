@@ -1,0 +1,25 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-port-reader-unified/runtime-baseline",
+      "program": "out/cell-port-reader-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-port-reader-unified/runtime-candidate",
+      "program": "out/cell-port-reader-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "checkpoint": {
+      "runtime": "out/cell-port-reader-unified/runtime-checkpoint",
+      "program": "out/cell-port-reader-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

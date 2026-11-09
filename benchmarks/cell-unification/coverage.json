@@ -1,6 +1,12 @@
 {
   "objective": "一个一个部分重写然后紧紧用 cell 概念连接，避免存在不同路径和不同接口定义并维持运行速度和常用指标，因为这可以度量你是否完全重写了所有重要优化点",
   "goal_status": "active",
+  "timing_cadence": {
+    "implementation_commits_between_checks": 5,
+    "last_timed_commit": "24c4ae8a",
+    "evidence": "benchmarks/cell-unification/port-read-results.json",
+    "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign."
+  },
   "baseline_commit": "27f1c503",
   "catalog": "docs/optimization-catalog/catalog.json",
   "acceptance_rule": "Each optimization needs removed duplicate implementation, common Cell wiring, exercised semantic checks, preserved/reduced net work and relevant timing; unchanged counters alone do not prove a rewrite.",
@@ -215,7 +221,8 @@
         "Legacy artifact IDs retain original grouping during decode; fresh Bake emits the new shared layout. Broader runtime speed acceptance remains pending."
       ],
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
-      "symbol_checks": "benchmarks/cell-unification/symbols-check.json"
+      "symbol_checks": "benchmarks/cell-unification/symbols-check.json",
+      "port_read_checks": "benchmarks/cell-unification/port-read-results.json"
     },
     {
       "id": "schedule_parallel",

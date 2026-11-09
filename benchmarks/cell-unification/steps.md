@@ -98,3 +98,9 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 保留 coordinator 的当前 overlay、worker 的冻结快照及端口删除失效；没有复制绑定、建立反向依赖或放松多输入 conjunction。既有共享 guard、有效 union 与快照共存、端口代表变化/删除重建检查和最小特性编译通过。通知后的发布/排队路径仍待合并。
 
 按用户更新的节奏，本项实现提交后运行一次 sum-bits 配对计时；此后每累计约五个实现提交检查实际速度，期间继续相关短检查。证据提交不单独触发一次计时。计时是 standalone Cell CPU，不能表述为 native egglog 性能。
+
+`24c4ae8a` 的检查见 [port-read-results.json](port-read-results.json)：语义 pass，300 项工作指标、1,428 个 Run 和最终 state 保持；端口 fixture 的逐阶段 state/bindings 与全部 runtime、ownership、稳定端口工作计数保持。普通构建采用每组一次预热、七次交错采样，同时重测直接前版与上次计时版本 `ff23dc09`。
+
+相对直接前版，推理配对中位比为 0.976（95% bootstrap 区间 0.908–1.012），进程为 0.996（0.977–1.041）；相对上次计时版本分别为 1.004（0.968–1.028）与 0.998（0.937–1.049）。两项都不足以判定加速或退步，不用独立中位数差值替代配对比较。相对上次版本，setup 配对中位比 0.906（0.819–0.946），但推理及整体收益尚未成立；RSS 中位数约增加 0.72 MiB，分配未另行采样。没有新增 Raytrace 或历史最快配置扫描。
+
+复现计时：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/port-read-timing-spec.json out/cell-port-reader-unified/timing --repeat 7 --warmups 1`（输出目录须不存在）；核对已有输出：`python3 benchmarks/cell-unification/port-read-check.py out/cell-port-reader-unified benchmarks/cell-unification/port-read-results.json`。语义、目录指标及源运行输出使用上述既有入口生成；冻结 binary 的 SHA 保存在结果中。
