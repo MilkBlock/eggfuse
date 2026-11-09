@@ -1,0 +1,216 @@
+//! Structural access to the existing Cell definition. This module borrows the
+//! typed rule and effect template; it owns no second fact graph or instance state.
+//! A relation describes an operation's operands, not proof that it has executed,
+//! remains visible, or won a mutable merge. Those obligations stay at its use.
+use crate::program::{Arg, Call, Op, Program, Result, Rule, Table, Template};
+use serde::{Deserialize, Serialize};
+use std::{borrow::Cow, collections::BTreeMap};
+
+/// A position in a Cell definition, never a physical address of its result.
+/// Keep the wire representation shared by existing recipe and Bake artifacts.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
+pub enum Site {
+    Query(usize),
+    Effect(usize),
+}
+impl Site {
+    pub fn parse(kind: &str, index: usize) -> Result<Self> {
+        match kind {
+            "query" => Ok(Self::Query(index)),
+            "effect" => Ok(Self::Effect(index)),
+            _ => Err("unknown Cell relation source".into()),
+        }
+    }
+    pub fn coordinates(self) -> (&'static str, usize) {
+        match self {
+            Self::Query(i) => ("query", i),
+            Self::Effect(i) => ("effect", i),
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct Definition<'a> {
+    pub rule: &'a Rule,
+    pub template: &'a Template,
+    tables: &'a [Table],
+}
+pub struct Relation<'a> {
+    pub site: Site,
+    pub table: usize,
+    pub keys: &'a [Arg],
+    pub result: Cow<'a, Arg>,
+}
+impl Relation<'_> {
+    pub fn columns(&self) -> impl Iterator<Item = &Arg> {
+        self.keys
+            .iter()
+            .chain(std::iter::once(self.result.as_ref()))
+    }
+}
+impl<'a> Definition<'a> {
+    pub fn new(program: &'a Program, rule: usize) -> Result<Self> {
+        let rule = program.rules.get(rule).ok_or("Cell rule index")?;
+        Ok(Self {
+            rule,
+            template: &program.templates[rule.template],
+            tables: &program.tables,
+        })
+    }
+    pub fn relation(&self, site: Site) -> Option<Relation<'a>> {
+        let (table, keys, result) = match site {
+            Site::Query(i) => {
+                let atom = self.rule.query.get(i)?;
+                let Call::Table(table) = atom.call else {
+                    return None;
+                };
+                let (result, keys) = atom.args.split_last()?;
+                (table, keys, Cow::Borrowed(result))
+            }
+            Site::Effect(i) => match self.template.ops.get(i)? {
+                Op::Let(dst, Call::Table(table), keys) => {
+                    (*table, keys.as_slice(), Cow::Owned(Arg::Slot(*dst)))
+                }
+                Op::Set(table, keys, result) => (*table, keys.as_slice(), Cow::Borrowed(result)),
+                _ => return None,
+            },
+        };
+        Some(Relation {
+            site,
+            table,
+            keys,
+            result,
+        })
+    }
+    pub fn relations(&self) -> impl Iterator<Item = Relation<'a>> + '_ {
+        (0..self.rule.query.len())
+            .map(Site::Query)
+            .chain((0..self.template.ops.len()).map(Site::Effect))
+            .filter_map(|site| self.relation(site))
+    }
+    /// Receipt-based local projections may use any matched row, a virtual
+    /// constructor result, or a write. An ordinary function read is still a
+    /// relation, but does not gain publication authority by sharing this API.
+    pub fn local_relation(&self, site: Site) -> Option<Relation<'a>> {
+        let relation = self.relation(site)?;
+        self.local(&relation).then_some(relation)
+    }
+    fn local(&self, relation: &Relation<'_>) -> bool {
+        !matches!(relation.site, Site::Effect(i)
+            if !self.tables[relation.table].virtual_fact && matches!(self.template.ops[i], Op::Let(..)))
+    }
+    pub fn local_relations(&self) -> impl Iterator<Item = Relation<'a>> + '_ {
+        self.relations().filter(|r| self.local(r))
+    }
+    pub fn local_columns(&self, site: Site) -> Result<(usize, Vec<Arg>)> {
+        let relation = self
+            .local_relation(site)
+            .ok_or("Cell site cannot provide a local relation")?;
+        Ok((
+            relation.table,
+            relation
+                .columns()
+                .map(|a| self.template.resolve_copy(a))
+                .collect(),
+        ))
+    }
+}
+
+fn resolve<'a>(mut arg: &'a Arg, lookup: impl Fn(usize) -> Option<&'a Arg>) -> Arg {
+    while let Arg::Slot(slot) = arg {
+        let Some(next) = lookup(*slot) else { break };
+        arg = next;
+    }
+    arg.clone()
+}
+impl Template {
+    /// Only SSA Copy definitions are aliases here. Union is visible according
+    /// to the original schedule and must not rewrite an earlier query or read.
+    pub fn resolve_copy(&self, arg: &Arg) -> Arg {
+        resolve(arg, |slot| {
+            match self.defs.get(&slot).and_then(|&op| self.ops.get(op)) {
+                Some(Op::Copy(_, from)) => Some(from),
+                _ => None,
+            }
+        })
+    }
+}
+pub(crate) fn resolve_alias(arg: &Arg, aliases: &BTreeMap<usize, Arg>) -> Arg {
+    resolve(arg, |slot| aliases.get(&slot))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{program::Atom, value::Value};
+    use std::rc::Rc;
+
+    #[test]
+    fn copies_do_not_make_queued_union_visible() {
+        let template = Template {
+            name: "ordered".into(),
+            sorts: vec![],
+            parent_columns: BTreeMap::new(),
+            defs: BTreeMap::from([(1, 0), (2, 1)]),
+            ops: Rc::new(vec![
+                Op::Copy(1, Arg::Slot(0)),
+                Op::Copy(2, Arg::Slot(1)),
+                Op::Union(Arg::Slot(0), Arg::Slot(3)),
+            ]),
+        };
+        assert_eq!(template.resolve_copy(&Arg::Slot(2)), Arg::Slot(0));
+        assert_eq!(template.resolve_copy(&Arg::Slot(3)), Arg::Slot(3));
+    }
+
+    #[test]
+    fn mutable_reads_and_merge_proposals_keep_distinct_authority() {
+        let rule = Rule {
+            constructor_only: false,
+            template: 0,
+            query: Rc::new(vec![Atom {
+                call: Call::Table(0),
+                args: vec![Arg::Slot(0), Arg::Slot(1)],
+            }]),
+            inputs: Rc::new(vec![0, 1]),
+            seminaive: true,
+            direct: Some(0),
+        };
+        let template = Template {
+            name: "mutable".into(),
+            sorts: vec![],
+            defs: BTreeMap::from([(2, 0)]),
+            parent_columns: BTreeMap::new(),
+            ops: Rc::new(vec![
+                Op::Let(2, Call::Table(0), vec![Arg::Slot(0)]),
+                Op::Set(0, vec![Arg::Slot(0)], Arg::Literal(Value::Int(7))),
+                Op::Hide(0, vec![Arg::Slot(0)], true),
+            ]),
+        };
+        let tables = vec![Table {
+            name: "cost".into(),
+            schema: vec![],
+            constructor: false,
+            virtual_fact: false,
+            merge: serde_json::json!({"var":"old"}),
+            internal: false,
+        }];
+        let cell = Definition {
+            rule: &rule,
+            template: &template,
+            tables: &tables,
+        };
+        assert!(cell.local_relation(Site::Query(0)).is_some());
+        assert!(cell.relation(Site::Effect(0)).is_some());
+        assert!(cell.local_relation(Site::Effect(0)).is_none());
+        // The write exposes the proposed operand, never a fictitious merged result.
+        assert_eq!(
+            *cell.relation(Site::Effect(1)).unwrap().result,
+            Arg::Literal(Value::Int(7))
+        );
+        assert!(cell.relation(Site::Effect(2)).is_none());
+        assert_eq!(
+            cell.local_relations().map(|r| r.site).collect::<Vec<_>>(),
+            vec![Site::Query(0), Site::Effect(1)]
+        );
+    }
+}

@@ -1,0 +1,665 @@
+{
+  "scope": "standalone Cell CPU; first Cell-definition rewrite, not completion of the unification goal",
+  "baseline_commit": "27f1c503",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "binaries": {
+    "runtime-baseline": "21e2399b59d22439519932e48015d7dfacf972a864bcda2a136428b9060db640",
+    "runtime-candidate": "ae63dded6d6f7fca63b5bf36f5ffd0d6602c8a06ec299a1a85635e91069276d4",
+    "runtime-baseline-audit": "26756406a08fed0d30383c6b214b673152625fa9ed4c45dea167516e73f21c0e",
+    "runtime-candidate-audit": "68573166c2417e145edf62600698d69179e88d7c4e788225b3ddd6019148e600"
+  },
+  "normal_features": "sparse-cells,view-ports,storage-metrics",
+  "diagnostic_extra_features": "allocation-metrics,slot-transfer-audit,spine-shapes",
+  "invalid_diagnostic_discarded": "shared Cargo target reused baseline; candidate rebuilt in target/cell-unification-audit",
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "compiler_components": {
+    "components": [
+      {
+        "component": "context_cuts",
+        "sha256": "bc39ae4f61b68d115a880ea6edeab26da022830af8738e74fe92d9b6455ce176"
+      },
+      {
+        "component": "contract",
+        "sha256": "ec905de43329a4aec6df06f4ef6ecafa8945e445f1de4f6aa608c0ca3402aa5f"
+      },
+      {
+        "component": "entry_schedule",
+        "sha256": "e801a5122ab9e0bcab75d604d0aa5b9786e23e4a528b9db7bec01bfbb8717290"
+      },
+      {
+        "component": "free_join_entry",
+        "sha256": "2960fa3ea3091dc6cec3e48f822ad3bd0027fc371801f73d3e1f61d7bec24d9c"
+      },
+      {
+        "component": "initial",
+        "sha256": "c388c9090bd1ebd929af57c6254d93d50b71071f4f90484298ba5361f2a62634"
+      },
+      {
+        "component": "known_results",
+        "sha256": "ca209764b5c662eb24f0801c0d8af09ead5f6715718c5a517f02929108ffca7c"
+      },
+      {
+        "component": "local_contexts",
+        "sha256": "c53c3727a49732e88a1fa653533ca5d3ce43428884c25ddba74a838cb27a154c"
+      },
+      {
+        "component": "marker_tables",
+        "sha256": "cb3860fe0e2a2849b6a538f2a6a603d71020a58900d912d1691f65892ed5a8c3"
+      },
+      {
+        "component": "merge_contracts",
+        "sha256": "35dcf73bc52842dc222e22e5787b3f82d115393778bc01b645a2d008024e72c7"
+      },
+      {
+        "component": "merge_programs",
+        "sha256": "7138486472f299d5c95a488eb7a107b53b09901e151cacfbd8fbc30cd58acde8"
+      },
+      {
+        "component": "multi_stage",
+        "sha256": "131ca5a83ecf4e44f608d9b89bca71c65e30ed7976f4d389fa9610514cf8066d"
+      },
+      {
+        "component": "neighbor_entries",
+        "sha256": "099530f2de43e97352f413a9fc9e574e91059aeba6dc5804f4aa8de8a987a4af"
+      },
+      {
+        "component": "physical_plan",
+        "sha256": "7aa003ef05d9ef31caf044188bf22e3fc7637e3cd5e94f98ece509b1a2a8093a"
+      },
+      {
+        "component": "recipe",
+        "sha256": "181ac2a149c851a0f7d647a21b5ac8a6f23923d06e603ea37066233aac59a5a9"
+      },
+      {
+        "component": "repair_ports",
+        "sha256": "1de2949e232369bf8de761c83945174ce597fa8f7b0384845e5760695728e884"
+      },
+      {
+        "component": "requirements",
+        "sha256": "fc93e379dc114af3ddcfe267a7437450e4606c1a1f5aaa5afa92cadf8e47f778"
+      },
+      {
+        "component": "row_kernels",
+        "sha256": "f6da6fd92fbca5fac09ae6a62b36494d714a564a4002e4c5bbe463701f6befa2"
+      },
+      {
+        "component": "schema",
+        "sha256": "3a171fa0f0327ead2640fcaf7f7581bfc3a518a9487f69461b7ef8cc65a8d46b"
+      },
+      {
+        "component": "single_writes",
+        "sha256": "a154543227ec4bddec8dd33104f851af46e89009af9e5a19f18282dfb885fc64"
+      },
+      {
+        "component": "source_core",
+        "sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5"
+      },
+      {
+        "component": "templates",
+        "sha256": "bbc874c22d85b5693f444834f56443652b2341a0f0fa50f08959f3a45e6a103d"
+      },
+      {
+        "component": "view_consumer_blocks",
+        "sha256": "a54f34a13512a809556198d6b944687db18e557b577aea559620d1401ed0b34e"
+      }
+    ],
+    "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+    "scope": "compiler plans and attached catalog validation; not a runtime semantic or timing check",
+    "status": "pass"
+  },
+  "native_reference_scope": "source emitter unchanged; native legacy/values labels intentionally share the same marked-source export",
+  "ordered_runs": 1428,
+  "ordered_audit_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+  },
+  "tests": {
+    "compiler": {
+      "passed": 214,
+      "log_sha256": "d86d6be61d68cd36ed2677187e615f07db1d32240beac92b6455f67046257200"
+    },
+    "runtime-all": {
+      "passed": 49,
+      "log_sha256": "585f4c2e2c4fc4772cd180de01266e281b8cf9f67c2dd8e0d1521630072d8965"
+    },
+    "runtime-minimal": {
+      "passed": 30,
+      "log_sha256": "711bec1702343b00fa0bc2641c6505a4b13ca194ebe7fc43859ab0bf1258e68e"
+    }
+  },
+  "metric_count": 270,
+  "preserved_work_metric_statuses": {
+    "observed": 215,
+    "missing_counter": 7,
+    "disabled": 37
+  },
+  "optimization_groups_tracked": 29,
+  "work_metric_changes": {},
+  "allocations": {
+    "setup_allocations": {
+      "baseline": {
+        "alloc_calls": 106205,
+        "free_calls": 54186,
+        "live_bytes_after": 136228792,
+        "live_bytes_before": 130898472,
+        "peak_live_requested_bytes": 136228792,
+        "realloc_calls": 3517,
+        "released_bytes": 5743441,
+        "requested_bytes": 11073761,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "candidate": {
+        "alloc_calls": 105485,
+        "free_calls": 53466,
+        "live_bytes_after": 136228794,
+        "live_bytes_before": 130898474,
+        "peak_live_requested_bytes": 136228794,
+        "realloc_calls": 3187,
+        "released_bytes": 5685041,
+        "requested_bytes": 11015361,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "saved": {
+        "alloc_calls": 720,
+        "realloc_calls": 330,
+        "free_calls": 720,
+        "requested_bytes": 58400,
+        "released_bytes": 58400
+      }
+    },
+    "allocations": {
+      "baseline": {
+        "alloc_calls": 196906,
+        "free_calls": 159833,
+        "live_bytes_after": 144111336,
+        "live_bytes_before": 136228792,
+        "peak_live_requested_bytes": 144560027,
+        "realloc_calls": 20870,
+        "released_bytes": 27710338,
+        "requested_bytes": 35592882,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "candidate": {
+        "alloc_calls": 196906,
+        "free_calls": 159833,
+        "live_bytes_after": 144111338,
+        "live_bytes_before": 136228794,
+        "peak_live_requested_bytes": 144560029,
+        "realloc_calls": 20870,
+        "released_bytes": 27710338,
+        "requested_bytes": 35592882,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "saved": {
+        "alloc_calls": 0,
+        "realloc_calls": 0,
+        "free_calls": 0,
+        "requested_bytes": 0,
+        "released_bytes": 0
+      }
+    }
+  },
+  "timing": {
+    "baseline": {
+      "inference_seconds": {
+        "median": 0.02468525,
+        "minimum": 0.02397725,
+        "maximum": 0.025890042,
+        "median_absolute_deviation": 0.00037312499999999846
+      },
+      "process_wall_seconds": {
+        "median": 0.1306417500000001,
+        "minimum": 0.1274072089999998,
+        "maximum": 0.13726899999999997,
+        "median_absolute_deviation": 0.002767833000000053
+      },
+      "peak_rss_through_inference_bytes": {
+        "median": 177520640,
+        "minimum": 177504256,
+        "maximum": 177520640,
+        "median_absolute_deviation": 0
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.025890042,
+          "process_wall_seconds": 0.13726899999999997
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.025461375,
+          "process_wall_seconds": 0.13536179199999998
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.024312125,
+          "process_wall_seconds": 0.12839574999999992
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.02468525,
+          "process_wall_seconds": 0.1306417500000001
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.024341334,
+          "process_wall_seconds": 0.1274072089999998
+        },
+        {
+          "iteration": 5,
+          "inference_seconds": 0.02397725,
+          "process_wall_seconds": 0.12787391700000006
+        },
+        {
+          "iteration": 6,
+          "inference_seconds": 0.025023583,
+          "process_wall_seconds": 0.13233549999999994
+        }
+      ]
+    },
+    "candidate": {
+      "inference_seconds": {
+        "median": 0.024576625,
+        "minimum": 0.024183208,
+        "maximum": 0.025612166,
+        "median_absolute_deviation": 0.0002735840000000003
+      },
+      "process_wall_seconds": {
+        "median": 0.12832362500000016,
+        "minimum": 0.12749133300000004,
+        "maximum": 0.132919375,
+        "median_absolute_deviation": 0.00044041700000008177
+      },
+      "peak_rss_through_inference_bytes": {
+        "median": 177504256,
+        "minimum": 177504256,
+        "maximum": 177520640,
+        "median_absolute_deviation": 0
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.025612166,
+          "process_wall_seconds": 0.132919375
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.025312792,
+          "process_wall_seconds": 0.13172866699999985
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.024183208,
+          "process_wall_seconds": 0.12844016700000016
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.0245445,
+          "process_wall_seconds": 0.12749133300000004
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.024643958,
+          "process_wall_seconds": 0.12832362500000016
+        },
+        {
+          "iteration": 5,
+          "inference_seconds": 0.024303041,
+          "process_wall_seconds": 0.12826108299999994
+        },
+        {
+          "iteration": 6,
+          "inference_seconds": 0.024576625,
+          "process_wall_seconds": 0.12788320800000008
+        }
+      ]
+    }
+  },
+  "paired_timing_ratios": {
+    "inference_seconds": {
+      "paired_median_ratio": 0.9942982145208171,
+      "ratio_of_medians": 0.9955995989507905,
+      "paired_bootstrap_95_interval": [
+        0.9892670703276573,
+        1.0124325149969184
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    },
+    "process_wall_seconds": {
+      "paired_median_ratio": 0.9758850673693511,
+      "ratio_of_medians": 0.9822558638413834,
+      "paired_bootstrap_95_interval": [
+        0.9683131296942502,
+        1.003027716746957
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    }
+  },
+  "repeat": 7,
+  "warmups": 1,
+  "limitations": [
+    "short sum-bits preservation check; no new Raytrace or historical-fastest campaign",
+    "same work counts do not prove the remaining execution paths have been rewritten",
+    "whole-graph hashes are determinism diagnostics in addition to the semantic acceptance script"
+  ]
+}

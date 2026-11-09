@@ -70,9 +70,9 @@ struct Emitter {
     op: usize,
     table: usize,
     #[cfg(not(feature = "receipt-slots"))]
-    copies: Vec<CopyPort<Source>>,
+    copies: Vec<CopyPort<Site>>,
     #[cfg(feature = "receipt-slots")]
-    sources: Vec<Source>,
+    sources: Vec<Site>,
     #[cfg(feature = "receipt-slots")]
     copies: Vec<CopyPort<usize>>,
 }
@@ -153,7 +153,7 @@ impl Focus {
                     #[cfg(feature = "receipt-slots")]
                     let (sources, copies) = {
                         let mut sources = Vec::new();
-                        let mut index = |s: Source| {
+                        let mut index = |s: Site| {
                             sources.iter().position(|x| *x == s).unwrap_or_else(|| {
                                 sources.push(s);
                                 sources.len() - 1
@@ -193,7 +193,7 @@ impl Focus {
         !self.rules[r].is_empty()
     }
     #[cfg(feature = "receipt-slots")]
-    pub fn outputs(&self, r: usize) -> impl Iterator<Item = (usize, usize, usize, &[Source])> {
+    pub fn outputs(&self, r: usize) -> impl Iterator<Item = (usize, usize, usize, &[Site])> {
         self.rules[r]
             .iter()
             .enumerate()
@@ -222,7 +222,7 @@ impl Focus {
     ) {
         let receipt = |s| Depth::source(g, r, s, known, effects);
         for out in &self.rules[r] {
-            let Some(anchor) = receipt(Source::Effect(out.op)) else {
+            let Some(anchor) = receipt(Site::Effect(out.op)) else {
                 continue;
             };
             let packet = assemble(&out.copies, anchor, receipt, &read);

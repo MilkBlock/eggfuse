@@ -1,6 +1,6 @@
 //! A Unit view can deliver sealed rows directly to a family of binary joins.
 //! Every rule reader is accounted for. Unsupported query shapes keep the normal plan.
-use crate::{multistage::normalize, program::*, value::Value};
+use crate::{program::*, value::Value};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -287,7 +287,7 @@ fn write(p: &Program, rid: usize, op: usize, table: usize, view_atom: usize) -> 
         return None;
     }
     let old = &r.query[view_atom].args[..p.tables[table].schema.len() - 1];
-    let next: Vec<_> = args.iter().map(|a| normalize(t, a)).collect();
+    let next: Vec<_> = args.iter().map(|a| t.resolve_copy(a)).collect();
     if old == next
         || old
             .iter()

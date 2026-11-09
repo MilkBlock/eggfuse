@@ -1,6 +1,6 @@
 //! Reverse demand for witnessed structural ports. A path proposes a receipt;
 //! only the target's complete key and current visibility authorize a read.
-use crate::program::*;
+use crate::{cell::{Definition, Site}, program::*};
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
@@ -8,11 +8,6 @@ pub(crate) const MAX_DEPTH: usize = 3;
 pub(crate) const BUDGET: usize = 8;
 const MAX_NODES: usize = 64;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
-pub(crate) enum Source {
-    Query(usize),
-    Effect(usize),
-}
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub(crate) struct Path {
     pub len: u8,
@@ -33,10 +28,10 @@ impl Path {
 }
 #[derive(Clone, Debug, Serialize)]
 pub(crate) struct Export {
-    pub src: Source,
+    pub src: Site,
     pub table: usize,
     pub path: Path,
-    pub via: Vec<Source>,
+    pub via: Vec<Site>,
 }
 #[derive(Clone, Debug, Serialize)]
 pub(crate) struct Output {
@@ -73,7 +68,7 @@ fn unify(ps: &mut [usize], a: usize, b: usize) -> bool {
 }
 struct Node {
     table: usize,
-    src: Source,
+    src: Site,
     fields: Vec<Arg>,
 }
 fn keyed(rule: &Rule, pivot: usize) -> Vec<usize> {
@@ -134,8 +129,9 @@ impl Plan {
                 }
             }
         }
-        for r in &p.rules {
-            let tpl = &p.templates[r.template];
+        for (rid, r) in p.rules.iter().enumerate() {
+            let cell = Definition::new(p, rid).expect("typed Cell");
+            let tpl = cell.template;
             let mut recipe = Recipe::default();
             recipe.orders = (0..r.query.len())
                 .map(|i| {
@@ -158,22 +154,11 @@ impl Plan {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => is_ctor(*t),
                     _ => false,
                 });
-            let mut nodes: Vec<_> = r
-                .query
-                .iter()
-                .enumerate()
-                .filter_map(|(i, a)| {
-                    if let Call::Table(t) = a.call {
-                        Some(Node {
-                            table: t,
-                            src: Source::Query(i),
-                            fields: a.args.clone(),
-                        })
-                    } else {
-                        None
-                    }
-                })
-                .collect();
+            let mut nodes = (0..r.query.len()).filter_map(|i| {
+                let relation = cell.relation(Site::Query(i))?;
+                Some(Node { table: relation.table, src: relation.site,
+                    fields: relation.columns().cloned().collect() })
+            }).collect::<Vec<_>>();
             if tpl.ops.len() > MAX_NODES * 3 || nodes.len() + recipe.ctor_ops > MAX_NODES {
                 plan.capped_recipes += 1;
                 plan.recipes.push(recipe);
@@ -181,7 +166,7 @@ impl Plan {
             }
             let mut parents: Vec<_> = (0..tpl.sorts.len()).collect();
             for (i, op) in tpl.ops.iter().enumerate() {
-                let (t, args, result) = match op {
+                match op {
                     Op::Copy(dst, Arg::Slot(src)) => {
                         unify(&mut parents, *dst, *src);
                         continue;
@@ -190,17 +175,12 @@ impl Plan {
                         unify(&mut parents, *a, *b);
                         continue;
                     }
-                    Op::Let(dst, Call::Table(t), aa) => (*t, aa, Arg::Slot(*dst)),
-                    Op::Set(t, aa, v) => (*t, aa, v.clone()),
-                    _ => continue,
-                };
-                let mut fields = args.clone();
-                fields.push(result);
-                nodes.push(Node {
-                    table: t,
-                    src: Source::Effect(i),
-                    fields,
-                });
+                    _ => (),
+                }
+                if let Some(relation) = cell.relation(Site::Effect(i)) {
+                    nodes.push(Node { table: relation.table, src: relation.site,
+                        fields: relation.columns().cloned().collect() });
+                }
             }
             if nodes.len() > MAX_NODES {
                 plan.capped_recipes += 1;
@@ -250,12 +230,12 @@ impl Plan {
                 }
             }
             for (i, n) in nodes.iter().enumerate() {
-                let Source::Effect(op) = n.src else { continue };
+                let Site::Effect(op) = n.src else { continue };
                 if needs[n.table].is_empty() {
                     continue;
                 }
                 let mut seen = BTreeSet::from([i]);
-                let mut queue = VecDeque::from([(i, Path::default(), Vec::<Source>::new())]);
+                let mut queue = VecDeque::from([(i, Path::default(), Vec::<Site>::new())]);
                 let mut donors = vec![];
                 while let Some((from, path, via)) = queue.pop_front() {
                     if path.len as usize == MAX_DEPTH {

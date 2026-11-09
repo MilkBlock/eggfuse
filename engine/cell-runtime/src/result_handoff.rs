@@ -4,7 +4,7 @@
 use crate::{
     graph::{Dependency, FactRef},
     iterative::Entry,
-    known_results::Source,
+    cell::{Definition, Site},
     program::*,
     value::Value,
 };
@@ -14,25 +14,20 @@ use std::{
     rc::Rc,
 };
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
-pub(crate) enum Donor {
-    Query(usize),
-    Effect(usize),
-}
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 pub(crate) struct Reuse {
     pub equal_output: bool,
     pub op: usize,
     pub back: usize,
     pub rule: usize,
-    pub donor: Donor,
+    pub donor: Site,
 }
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 pub(crate) struct QueryReuse {
     pub atom: usize,
     pub back: usize,
     pub rule: usize,
-    pub donor: Donor,
+    pub donor: Site,
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Input {
@@ -45,7 +40,7 @@ pub(crate) struct Input {
 struct Fact {
     stage: usize,
     rule: usize,
-    source: Donor,
+    source: Site,
     table: usize,
     key: Vec<usize>,
     result: usize,
@@ -188,8 +183,9 @@ fn derive_stage(
     let mut program = vec![];
     let mut queries = vec![];
     for (stage, &(_, (rid, pivot))) in path.iter().enumerate() {
-        let r = &p.rules[rid];
-        let t = &p.templates[r.template];
+        let cell = Definition::new(p, rid).expect("validated Cell path");
+        let r = cell.rule;
+        let t = cell.template;
         let mut slots = (0..t.sorts.len())
             .map(|_| symbols.fresh())
             .collect::<Vec<_>>();
@@ -221,15 +217,14 @@ fn derive_stage(
         };
         let query_ordered = order.is_some();
         for atom in order.unwrap_or_else(|| (0..r.query.len()).collect()) {
-            let a = &r.query[atom];
-            let Call::Table(table) = a.call else { continue };
+            let Some(relation) = cell.relation(Site::Query(atom)) else { continue };
+            let table = relation.table;
             let constructor = p.tables[table].constructor;
             if !constructor && !query_ports {
                 continue;
             }
-            let (value, keys) = a.args.split_last().unwrap();
-            let result = symbols.arg(value, &slots);
-            let key = keys
+            let result = symbols.arg(&relation.result, &slots);
+            let key = relation.keys
                 .iter()
                 .map(|a| symbols.arg(a, &slots))
                 .collect::<Vec<_>>();
@@ -252,7 +247,7 @@ fn derive_stage(
             facts.push(Fact {
                 stage,
                 rule: rid,
-                source: Donor::Query(atom),
+                source: Site::Query(atom),
                 table,
                 key,
                 result,
@@ -265,7 +260,7 @@ fn derive_stage(
         let publication = path.get(stage + 1).and_then(|s| s.0);
         let mut unions = vec![];
         for (op, ins) in t.ops.iter().enumerate() {
-            let (table, keys, result_arg) = match ins {
+            match ins {
                 Op::Copy(dst, a) => {
                     slots[*dst] = symbols.arg(a, &slots);
                     continue;
@@ -279,15 +274,15 @@ fn derive_stage(
                     index.clear(&mut symbols);
                     continue;
                 }
-                Op::Let(dst, Call::Table(t), a) => (*t, a, Arg::Slot(*dst)),
-                Op::Set(t, a, v) => (*t, a, v.clone()),
-                _ => continue,
-            };
-            let key = keys
+                _ => (),
+            }
+            let Some(relation) = cell.relation(Site::Effect(op)) else { continue };
+            let table = relation.table;
+            let key = relation.keys
                 .iter()
                 .map(|a| symbols.arg(a, &slots))
                 .collect::<Vec<_>>();
-            let value = symbols.arg(&result_arg, &slots);
+            let value = symbols.arg(&relation.result, &slots);
             if Some(op) == publication {
                 published = key.clone();
                 // A mutable function's published result can change by the next Run.
@@ -300,7 +295,7 @@ fn derive_stage(
                     facts.push(Fact {
                         stage,
                         rule: rid,
-                        source: Donor::Effect(op),
+                        source: Site::Effect(op),
                         table,
                         key,
                         result: value,
@@ -330,11 +325,8 @@ fn derive_stage(
                     symbols.equal(value, f.result);
                 }
             }
-            let source = match p.known_results.static_sources.get(rid).and_then(|s| s[op]) {
-                Some(Source::Query(i)) => Donor::Query(i),
-                Some(Source::Effect(i)) => Donor::Effect(i),
-                None => Donor::Effect(op),
-            };
+            let source = p.known_results.static_sources.get(rid).and_then(|s| s[op])
+                .unwrap_or(Site::Effect(op));
             facts.push(Fact {
                 stage,
                 rule: rid,
@@ -362,7 +354,7 @@ fn derive_stage(
 #[derive(Clone, Debug)]
 struct Exports {
     rule: usize,
-    rows: smallvec::SmallVec<[(Donor, Dependency); 2]>,
+    rows: smallvec::SmallVec<[(Site, Dependency); 2]>,
 }
 /// Shared by copied/published cursors. Empty stages maintain real offsets;
 /// trimming at the largest compiled distance bounds the history.
@@ -380,20 +372,19 @@ pub(crate) struct CaptureWork {
     pub allocations: usize,
 }
 impl History {
-    pub(crate) fn current_source(&self, rule: usize, source: Source, steps: &mut u64) -> Option<Dependency> {
+    pub(crate) fn current_source(&self, rule: usize, source: Site, steps: &mut u64) -> Option<Dependency> {
         let e = match self.0.as_deref()? {
             Trail::One(e) => e,
             Trail::Many(v) => v.last()?.as_deref()?,
         };
         if e.rule != rule { return None; }
-        let donor = match source { Source::Query(i) => Donor::Query(i), Source::Effect(i) => Donor::Effect(i) };
-        e.rows.iter().find(|x| { *steps += 1; x.0 == donor }).map(|x| x.1)
+        e.rows.iter().find(|x| { *steps += 1; x.0 == source }).map(|x| x.1)
     }
     pub(crate) fn capture(
         &mut self,
         limit: usize,
         rid: usize,
-        wanted: &[Donor],
+        wanted: &[Site],
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
@@ -403,8 +394,8 @@ impl History {
         let mut rows = smallvec::SmallVec::new();
         for &d in wanted {
             let w = match d {
-                Donor::Query(i) => read(i),
-                Donor::Effect(i) => effect(i),
+                Site::Query(i) => read(i),
+                Site::Effect(i) => effect(i),
             };
             if let Some(w) = w {
                 rows.push((d, w));
@@ -443,7 +434,7 @@ impl History {
     pub(crate) fn get_query(&self, r: &QueryReuse) -> Option<Dependency> {
         self.get_donor(r.back, r.rule, r.donor)
     }
-    fn get_donor(&self, back: usize, rule: usize, donor: Donor) -> Option<Dependency> {
+    fn get_donor(&self, back: usize, rule: usize, donor: Site) -> Option<Dependency> {
         let e = match self.0.as_deref()? {
             Trail::One(e) if back == 1 => e,
             Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_deref()?,
@@ -481,7 +472,7 @@ pub(crate) struct Switch {
     roots: Vec<Option<usize>>,
     initial: Vec<usize>,
     leaves: BTreeMap<Entry, usize>,
-    pub exports: Vec<Vec<Donor>>,
+    pub exports: Vec<Vec<Site>>,
     pub depth: usize,
 }
 #[derive(Clone, Debug, Serialize)]
@@ -490,7 +481,7 @@ struct Node {
     failure: usize,
     program: Terminal,
     next: Vec<((usize, usize), usize)>,
-    supply: Vec<Donor>,
+    supply: Vec<Site>,
 }
 impl Default for Terminal {
     fn default() -> Self {
@@ -659,7 +650,7 @@ impl Switch {
             .find(|(k, _)| *k == (op, leaf))
             .map_or(self.initial[leaf], |x| x.1)
     }
-    pub(crate) fn supply(&self, id: usize) -> &[Donor] {
+    pub(crate) fn supply(&self, id: usize) -> &[Site] {
         self.nodes.get(id).map_or(&[], |n| n.supply.as_slice())
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
@@ -714,7 +705,7 @@ mod tests {
             facts.push(Fact {
                 stage: step,
                 rule: 0,
-                source: Donor::Effect(step),
+                source: Site::Effect(step),
                 table,
                 key,
                 result,
@@ -770,7 +761,7 @@ mod tests {
                 facts.push(Fact {
                     stage: turn,
                     rule: 0,
-                    source: Donor::Effect(turn),
+                    source: Site::Effect(turn),
                     table,
                     key: key.clone(),
                     result: next() % 64,

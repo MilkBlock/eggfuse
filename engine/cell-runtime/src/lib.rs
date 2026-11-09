@@ -1,6 +1,7 @@
 mod change_batch;
 mod read_epoch;
 pub mod checksum;
+pub mod cell;
 pub mod completion_plan;
 mod depth_plan;
 #[cfg(feature = "structural-depth")]

@@ -1,8 +1,9 @@
 //! Bounded port completion on the original single-thread Run schedule.
 use crate::{
-    depth_plan::{BUDGET, MAX_DEPTH, Path, Plan, Source},
+    cell::Site,
+    depth_plan::{BUDGET, MAX_DEPTH, Path, Plan},
     graph::{Dependency, FactRef, Graph, Row},
-    known_results::{QueryFacts, Source as Alias},
+    known_results::QueryFacts,
     program::*,
     result_handoff::Input,
     slots::Slots,
@@ -213,13 +214,13 @@ impl Depth {
     fn source(
         g: &Graph,
         r: usize,
-        s: Source,
+        s: Site,
         known: &QueryFacts,
         effect: &[Option<Dependency>],
     ) -> Option<Dependency> {
         match s {
-            Source::Query(i) => known.tracked(i),
-            Source::Effect(i) => effect.get(i).copied().flatten().or_else(|| {
+            Site::Query(i) => known.tracked(i),
+            Site::Effect(i) => effect.get(i).copied().flatten().or_else(|| {
                 match g
                     .program
                     .known_results
@@ -229,8 +230,8 @@ impl Depth {
                     .copied()
                     .flatten()?
                 {
-                    Alias::Query(a) => known.tracked(a),
-                    Alias::Effect(a) => effect.get(a).copied().flatten(),
+                    Site::Query(a) => known.tracked(a),
+                    Site::Effect(a) => effect.get(a).copied().flatten(),
                 }
             }),
         }
@@ -279,7 +280,7 @@ impl Depth {
             return;
         }
         for o in &self.plan.recipes[r].outputs {
-            let Some(anchor) = Self::source(g, r, Source::Effect(o.op), known, effect) else {
+            let Some(anchor) = Self::source(g, r, Site::Effect(o.op), known, effect) else {
                 continue;
             };
             let mut packet = Packet::default();
@@ -792,14 +793,14 @@ impl Depth {
             let static_alias = g.program.known_results.static_skip[rid][op];
             let original = if static_alias {
                 match g.program.known_results.static_sources[rid][op] {
-                    Some(Alias::Query(a)) => known.tracked(a).and_then(|w| {
+                    Some(Site::Query(a)) => known.tracked(a).and_then(|w| {
                         if let Dependency::Fact(f) = w {
                             Some(f)
                         } else {
                             None
                         }
                     }),
-                    Some(Alias::Effect(o)) => receipts.get(&o).copied(),
+                    Some(Site::Effect(o)) => receipts.get(&o).copied(),
                     None => None,
                 }
             } else {

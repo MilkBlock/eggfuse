@@ -1,0 +1,236 @@
+{
+  "objective": "一个一个部分重写然后紧紧用 cell 概念连接，避免存在不同路径和不同接口定义并维持运行速度和常用指标，因为这可以度量你是否完全重写了所有重要优化点",
+  "goal_status": "active",
+  "baseline_commit": "27f1c503",
+  "catalog": "docs/optimization-catalog/catalog.json",
+  "acceptance_rule": "Each optimization needs removed duplicate implementation, common Cell wiring, exercised semantic checks, preserved/reduced net work and relevant timing; unchanged counters alone do not prove a rewrite.",
+  "parts": [
+    {
+      "id": "definition",
+      "status": "rewritten_verified",
+      "requirement": "One Cell Site/Definition for relation operands and SSA aliases; remove the duplicate known-results, continuation, structural-port and iterative-Bake source definitions.",
+      "evidence": "benchmarks/cell-unification/definition-results.json",
+      "reproduction": [
+        "cargo test --locked -p eggfuse-cell-compiler --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+        "cargo run --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-unification/sum/program.json out/cell-unification/relower.json",
+        "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-unification/semantic out/cell-unification/semantic-acceptance.json",
+        "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/timing-spec.json out/cell-unification/timing --repeat 7 --warmups 1",
+        "python3 benchmarks/cell-unification/collect.py out/cell-unification benchmarks/cell-unification/definition-results.json"
+      ]
+    },
+    {
+      "id": "entry",
+      "status": "pending",
+      "requirement": "Shared Entry supplies Cell bindings and established query facts; remove covered history/route recovery while preserving late inputs and delta ownership."
+    },
+    {
+      "id": "query",
+      "status": "pending",
+      "requirement": "Compile residual queries from the same Cell and Entry; preserve register, join, sieve, range and neighbor optimizations under the common contract."
+    },
+    {
+      "id": "rhs_publication",
+      "status": "pending",
+      "requirement": "Use Cell result slots for RHS reuse and final Entry publication; remove covered per-anchor packets and Pending round trips."
+    },
+    {
+      "id": "ports_congruence",
+      "status": "pending",
+      "requirement": "One Cell wiring and lifecycle for stable ports, symbolic composition and equality conditions; prove coverage before removing old maintenance."
+    },
+    {
+      "id": "schedule_parallel",
+      "status": "pending",
+      "requirement": "Derive completion scopes, workers and ordered publication from Cell dependencies; retain profitable optimizations and charge discarded work."
+    },
+    {
+      "id": "bake_marker",
+      "status": "pending",
+      "requirement": "Compose and select the same Cell definitions and Entries; update optional marker materialization boundaries during iteration."
+    },
+    {
+      "id": "acceptance",
+      "status": "pending",
+      "requirement": "Audit all optimization groups structurally and dynamically, then compare sum-bits and Raytrace with the pre-rewrite and historical fastest controls."
+    }
+  ],
+  "optimizations": [
+    {
+      "id": "A1",
+      "title": "结构 key 与有界 native Bake",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "A1"
+    },
+    {
+      "id": "A2",
+      "title": "marker 选择与 Recipe lowering",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "A2"
+    },
+    {
+      "id": "A3",
+      "title": ".egg marker 结果变量交接",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "A3"
+    },
+    {
+      "id": "B1",
+      "title": "寄存器 join 与共享 point 读取",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "B1"
+    },
+    {
+      "id": "B2",
+      "title": "Free Join、Sieve 与范围过滤",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "B2"
+    },
+    {
+      "id": "B3",
+      "title": "邻居、局部 context 与 view 消费",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "B3"
+    },
+    {
+      "id": "C1",
+      "title": "完整 stage Entry 与 Spine block",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "C1"
+    },
+    {
+      "id": "C2",
+      "title": "RHS handoff 与 query receipt",
+      "status": "common_definition_only",
+      "metrics_from_catalog": "C2"
+    },
+    {
+      "id": "C3",
+      "title": "已有见证的实际来源直达",
+      "status": "common_definition_only",
+      "metrics_from_catalog": "C3"
+    },
+    {
+      "id": "C4",
+      "title": "匹配前缀接续",
+      "status": "common_definition_only",
+      "metrics_from_catalog": "C4"
+    },
+    {
+      "id": "D1",
+      "title": "静态构造子别名与 known results",
+      "status": "common_definition_only",
+      "metrics_from_catalog": "D1"
+    },
+    {
+      "id": "D2",
+      "title": "单写 RHS、稀疏 frame 与 merge program",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "D2"
+    },
+    {
+      "id": "E1",
+      "title": "Run 变更批次与共享 Entry 参数",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "E1"
+    },
+    {
+      "id": "E2",
+      "title": "Entry 持有 producer publication",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "E2"
+    },
+    {
+      "id": "E3",
+      "title": "片段内部 publication",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "E3"
+    },
+    {
+      "id": "F1",
+      "title": "result-only repair ports",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "F1"
+    },
+    {
+      "id": "F2",
+      "title": "Cell ownership 与共享 repair slices",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "F2"
+    },
+    {
+      "id": "F3",
+      "title": "跨模板共享符号与 frozen fragments",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "F3"
+    },
+    {
+      "id": "F4",
+      "title": "直接 signal 槽与 component 生命周期",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "F4"
+    },
+    {
+      "id": "F5",
+      "title": "稳定字段 PortRef",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "F5"
+    },
+    {
+      "id": "G1",
+      "title": "端口等价构造子判重与 birth hint",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "G1"
+    },
+    {
+      "id": "G2",
+      "title": "局部 congruence 条件与 typed dispatch",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "G2"
+    },
+    {
+      "id": "G3",
+      "title": "跨阶段候选域分组跳过",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "G3"
+    },
+    {
+      "id": "H1",
+      "title": "编译 scope 与按需完成",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "H1"
+    },
+    {
+      "id": "G4",
+      "title": "union digest、显式 congruence cells 与 repair blocks（替代实验后端）",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "G4"
+    },
+    {
+      "id": "H2",
+      "title": "concrete-port influence 与 pure epoch",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "H2"
+    },
+    {
+      "id": "H3",
+      "title": "并行 guard、跨 task 读取与 overlap",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "H3"
+    },
+    {
+      "id": "H4",
+      "title": "大 Cell 的完整域并行完成",
+      "status": "not_rewritten",
+      "metrics_from_catalog": "H4"
+    },
+    {
+      "id": "I1",
+      "title": "模板选择、迭代 catalog 与实际工作 credit",
+      "status": "common_definition_only",
+      "metrics_from_catalog": "I1"
+    }
+  ],
+  "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate."
+}

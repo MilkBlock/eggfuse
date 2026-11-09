@@ -276,7 +276,7 @@ pub(crate) fn writes(p: &Program) -> Vec<Option<Rc<Write>>> {
             {
                 return None;
             }
-            let norm = |a: &Arg| crate::multistage::normalize(t, a);
+            let norm = |a: &Arg| t.resolve_copy(a);
             let mut calc = vec![];
             for ins in prefix {
                 match ins {

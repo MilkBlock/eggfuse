@@ -249,10 +249,10 @@ impl Catalog {
         .artifact();
         Ok(())
     }
-    pub(crate) fn exports(&self, rid: usize) -> &[crate::result_handoff::Donor] {
+    pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
         self.switch.exports.get(rid).map_or(&[], Vec::as_slice)
     }
-    pub(crate) fn capture_sources(&self, s: &State) -> &[crate::result_handoff::Donor] {
+    pub(crate) fn capture_sources(&self, s: &State) -> &[crate::cell::Site] {
         self.switch.supply(s.pc)
     }
     pub(crate) fn history_depth(&self) -> usize {

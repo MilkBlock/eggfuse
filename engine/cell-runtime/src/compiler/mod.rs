@@ -6,7 +6,8 @@ mod spine_blocks;
 pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
 use crate::{
-    multistage::{extend, source},
+    cell::{Definition, Site},
+    multistage::extend,
     program::*,
 };
 use serde_json::{Value as J, json};
@@ -67,20 +68,13 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
             loaders.push(producer);
             continue;
         }
-        let local = [
-            ("query", r.query.len()),
-            ("effect", p.templates[r.template].ops.len()),
-        ]
-        .into_iter()
-        .flat_map(|(kind, len)| {
-            (0..len).filter_map(move |i| {
-                source(p, producer, kind, i)
-                    .ok()
-                    .map(|(t, cols)| (kind, i, t, cols))
-            })
-        })
-        .collect::<Vec<_>>();
-        for (_, effect, t, cols) in local.iter().filter(|a| a.0 == "effect") {
+        let cell = Definition::new(p, producer).expect("typed Cell");
+        let local = cell.local_relations().map(|relation| {
+            (relation.site, relation.table,
+                relation.columns().map(|a| cell.template.resolve_copy(a)).collect::<Vec<_>>())
+        }).collect::<Vec<_>>();
+        for (site, t, cols) in &local {
+            let Site::Effect(effect) = *site else { continue };
             for &(consumer, anchor) in &readers[*t] {
                 let q = &p.rules[consumer].query;
                 let mut mapping = BTreeMap::new();
@@ -102,29 +96,30 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                             continue;
                         }
                         let mut matches = BTreeMap::new();
-                        for (kind, idx, table, row) in &local {
+                        for (site, table, row) in &local {
                             // An elided RHS constructor is the same witness as
                             // its earlier query/effect donor. Its distinct SSA
                             // output must not create a second ambiguous match.
                             // Keep it as a publication anchor above; only omit
                             // it from donor selection here.
-                            if *kind == "effect" && known.static_sources
-                                .get(producer).and_then(|sources| sources[*idx]).is_some() {
+                            if let Site::Effect(op) = *site
+                                && known.static_sources.get(producer).and_then(|sources| sources[op]).is_some() {
                                 continue;
                             }
                             let mut m = mapping.clone();
                             if extend(a, *table, row, &mut m).is_ok() {
-                                matches.entry(row).or_insert((kind, idx, m));
+                                matches.entry(row).or_insert((site, m));
                                 if matches.len() > 1 {
                                     break;
                                 }
                             }
                         }
                         if matches.len() == 1 {
-                            let (columns, (kind, idx, m)) = matches.into_iter().next().unwrap();
+                            let (columns, (site, m)) = matches.into_iter().next().unwrap();
+                            let (kind, idx) = site.coordinates();
                             mapping = m;
                             let mut step = json!({"atom":i,"source_kind":kind,"source_index":idx});
-                            if *kind == "effect" {
+                            if kind == "effect" {
                                 step["assignments"] =
                                     json!(crate::multistage::assignments(&q[anchor], a, columns));
                             }

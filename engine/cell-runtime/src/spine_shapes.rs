@@ -1,6 +1,6 @@
 //! Diagnostic-only lineage for the winning origin of an applied consumer.
 //! A shared root may fork. Each applied occurrence tracks its own children.
-use crate::{graph::FactRef, known_results::Source, program::*};
+use crate::{graph::FactRef, cell::Site, program::*};
 use serde::Serialize;
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -31,7 +31,7 @@ pub(super) struct Profile {
     static_counts: J,
 }
 impl Profile {
-    pub(super) fn catalog(&mut self, p: &Program, anchors: &[Vec<(usize, Option<Source>)>]) {
+    pub(super) fn catalog(&mut self, p: &Program, anchors: &[Vec<(usize, Option<Site>)>]) {
         let mut consumers = BTreeMap::<usize, Vec<(usize, usize)>>::new();
         for (r, pivot, _) in &p.multi_stage.stage_entries {
             let Call::Table(t) = p.rules[*r].query[*pivot].call else {

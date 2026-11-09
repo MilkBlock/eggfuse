@@ -4,7 +4,8 @@
 use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
-    known_results::{QueryFacts, Source},
+    cell::Site,
+    known_results::QueryFacts,
     program::*,
     value::{self, Value, canon},
 };
@@ -525,7 +526,7 @@ pub struct Programs {
     published_bases: Vec<Option<PublishedBase>>,
     active_tables: Vec<usize>,
     // Anchor-producing operations and their optional proven receipt sources.
-    anchor_ops: Vec<Vec<(usize, Option<Source>)>>,
+    anchor_ops: Vec<Vec<(usize, Option<Site>)>>,
     alias_query_facts: Vec<QueryFacts>,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
@@ -954,7 +955,7 @@ impl Programs {
                 .collect::<Vec<_>>();
             let is_producer = ops
                 .iter()
-                .any(|&i| crate::multistage::source(p, rid, "effect", i).is_ok());
+                .any(|&i| crate::cell::Definition::new(p, rid).expect("typed Cell").local_relation(Site::Effect(i)).is_some());
             let mut query_facts = QueryFacts::None;
             let mut anchors = Vec::new();
             if is_producer {
@@ -964,7 +965,7 @@ impl Programs {
                         .static_sources
                         .get(rid)
                         .and_then(|rows| rows[op]);
-                    if let Some(Source::Query(atom)) = source {
+                    if let Some(Site::Query(atom)) = source {
                         match query_facts {
                             QueryFacts::None => query_facts = QueryFacts::One(atom, None),
                             QueryFacts::One(first, _) if first != atom => {
@@ -984,7 +985,7 @@ impl Programs {
             s.anchor_ops.push(anchors);
             #[cfg(feature = "iterative-bake")]
             for src in p.iterative.exports(rid) {
-                if let crate::result_handoff::Donor::Query(i) = *src {
+                if let crate::cell::Site::Query(i) = *src {
                     if matches!(r.query[i].call, Call::Table(t) if !p.tables[t].constructor) {
                         query_facts = QueryFacts::Ports(vec![None; r.query.len()]);
                         continue;
@@ -1250,12 +1251,12 @@ impl Programs {
                     return None;
                 }
                 match source? {
-                    Source::Query(atom) => {
+                    Site::Query(atom) => {
                         let w = query_fact(atom)?;
                         self.stats.alias_query_forwards += 1;
                         Some(w)
                     }
-                    Source::Effect(op) => {
+                    Site::Effect(op) => {
                         let w = effects?[op]?;
                         self.stats.alias_effect_forwards += 1;
                         Some(w)

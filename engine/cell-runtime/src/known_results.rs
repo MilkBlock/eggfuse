@@ -1,25 +1,21 @@
 //! Constructor knowledge carried by live recipe instances, not a global memo.
 use crate::graph::{Dependency, FactRef};
+use crate::cell::{Definition, Site, resolve_alias};
 use crate::program::{Arg, Call, Op, Program, Result, array};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
-pub enum Source {
-    Query(usize),
-    Effect(usize),
-}
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Plans {
     pub static_slots: Vec<Vec<Option<Arg>>>,
     pub static_skip: Vec<Rc<Vec<bool>>>,
     /// Original matched atom or constructor operation for each statically aliased slot's defining operation.
     #[serde(default)]
-    pub static_sources: Vec<Vec<Option<Source>>>,
+    pub static_sources: Vec<Vec<Option<Site>>>,
     pub values: BTreeMap<usize, Rc<Vec<Option<Arg>>>>,
-    pub rules: BTreeMap<usize, Vec<Option<Source>>>,
+    pub rules: BTreeMap<usize, Vec<Option<Site>>>,
     pub queries: BTreeSet<usize>,
     pub remember: BTreeMap<usize, BTreeSet<usize>>,
 }
@@ -96,17 +92,6 @@ impl QueryFacts {
         }
     }
 }
-fn normalize(a: &Arg, copies: &BTreeMap<usize, Arg>) -> Arg {
-    let mut a = a.clone();
-    while let Arg::Slot(s) = a {
-        if let Some(b) = copies.get(&s) {
-            a = b.clone()
-        } else {
-            break;
-        }
-    }
-    a
-}
 impl Plans {
     pub fn parse(p: &Program, raw: &J) -> Result<Self> {
         let (result, mut expected) = Self::derive(p)?;
@@ -127,39 +112,13 @@ impl Plans {
         let mut plans = vec![];
         let mut result = Self::default();
         for (rid, r) in p.rules.iter().enumerate() {
+            let cell = Definition::new(p, rid)?;
             let ops = &p.templates[r.template].ops;
-            let copies = ops
-                .iter()
-                .filter_map(|e| {
-                    if let Op::Copy(dst, a) = e {
-                        Some((*dst, a.clone()))
-                    } else {
-                        None
-                    }
-                })
-                .collect::<BTreeMap<_, _>>();
-            let norm = |aa: &[Arg]| aa.iter().map(|a| normalize(a, &copies)).collect::<Vec<_>>();
-            let mut rows = vec![];
-            for (i, a) in r.query.iter().enumerate() {
-                if let Call::Table(t) = a.call {
-                    rows.push((Source::Query(i), t, norm(&a.args)));
-                }
-            }
-            for (i, e) in ops.iter().enumerate() {
-                match e {
-                    Op::Let(dst, Call::Table(t), aa) if p.tables[*t].virtual_fact => {
-                        let mut aa = norm(aa);
-                        aa.push(normalize(&Arg::Slot(*dst), &copies));
-                        rows.push((Source::Effect(i), *t, aa));
-                    }
-                    Op::Set(t, aa, value) => {
-                        let mut aa = norm(aa);
-                        aa.push(normalize(value, &copies));
-                        rows.push((Source::Effect(i), *t, aa));
-                    }
-                    _ => (),
-                }
-            }
+            let norm = |aa: &[Arg]| aa.iter().map(|a| cell.template.resolve_copy(a)).collect::<Vec<_>>();
+            let rows = cell.local_relations().map(|relation| {
+                (relation.site, relation.table,
+                    relation.columns().map(|a| cell.template.resolve_copy(a)).collect::<Vec<_>>())
+            }).collect::<Vec<_>>();
             for (op, e) in ops.iter().enumerate() {
                 let Op::Let(_, Call::Table(t), aa) = e else {
                     continue;
@@ -169,16 +128,16 @@ impl Plans {
                 }
                 let key = norm(aa);
                 for (source, table, values) in &rows {
-                    if matches!(source,Source::Effect(i) if *i>=op) {
+                    if matches!(source,Site::Effect(i) if *i>=op) {
                         continue;
                     }
                     if table == t && values[..values.len() - 1] == key {
                         let (kind, index) = match source {
-                            Source::Query(i) => {
+                            Site::Query(i) => {
                                 result.queries.insert(rid);
                                 ("query", i)
                             }
-                            Source::Effect(i) => {
+                            Site::Effect(i) => {
                                 result.remember.entry(rid).or_default().insert(*i);
                                 ("effect", i)
                             }
@@ -188,8 +147,8 @@ impl Plans {
                             .rules
                             .entry(rid)
                             .or_insert_with(|| vec![None; ops.len()])[op] = Some(*source);
-                        if matches!(source, Source::Query(_))
-                            || matches!(source,Source::Effect(i) if matches!(ops[*i],Op::Let(..)))
+                        if matches!(source, Site::Query(_))
+                            || matches!(source,Site::Effect(i) if matches!(ops[*i],Op::Let(..)))
                         {
                             Rc::make_mut(
                                 result
@@ -219,7 +178,7 @@ impl Plans {
         for (rid, r) in p.rules.iter().enumerate() {
             let t = &p.templates[r.template];
             let mut aliases = BTreeMap::new();
-            let mut known: BTreeMap<(usize, Vec<Arg>), (Arg, J, Source)> = BTreeMap::new();
+            let mut known: BTreeMap<(usize, Vec<Arg>), (Arg, J, Site)> = BTreeMap::new();
             let mut slots = vec![None; t.sorts.len()];
             let mut skip = vec![false; t.ops.len()];
             let mut sources = vec![None; t.ops.len()];
@@ -238,18 +197,18 @@ impl Plans {
                                 .last()
                                 .unwrap()
                                 .clone(),
-                            Source::Query(i),
+                            Site::Query(i),
                         ));
                 }
             }
             for (i, e) in t.ops.iter().enumerate() {
                 match e {
                     Op::Copy(dst, a) => {
-                        aliases.insert(*dst, normalize(a, &aliases));
+                        aliases.insert(*dst, resolve_alias(a, &aliases));
                     }
                     Op::Hide(t, _, true) => known.retain(|(table, _), _| table != t),
                     Op::Let(dst, Call::Table(t), aa) if p.tables[*t].constructor => {
-                        let key = (*t, aa.iter().map(|a| normalize(a, &aliases)).collect());
+                        let key = (*t, aa.iter().map(|a| resolve_alias(a, &aliases)).collect());
                         if let Some((value, j, source)) = known.get(&key) {
                             sources[i] = Some(*source);
                             slots[*dst] = Some(value.clone());
@@ -260,7 +219,7 @@ impl Plans {
                         } else {
                             known.insert(
                                 key,
-                                (Arg::Slot(*dst), json!({"slot":dst}), Source::Effect(i)),
+                                (Arg::Slot(*dst), json!({"slot":dst}), Site::Effect(i)),
                             );
                         }
                     }

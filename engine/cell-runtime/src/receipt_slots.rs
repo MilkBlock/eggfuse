@@ -92,7 +92,7 @@ impl Slots {
     ) {
         let receipt = |s| Depth::source(g, r, s, known, effects);
         for (emitter, op, table, sources) in focus.outputs(r) {
-            let Some(anchor) = receipt(Source::Effect(op)) else {
+            let Some(anchor) = receipt(Site::Effect(op)) else {
                 continue;
             };
             stats.captured += 1;

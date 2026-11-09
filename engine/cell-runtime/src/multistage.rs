@@ -1,7 +1,7 @@
 //! Verified producer-local projections and their source-schedule permissions.
 //! A projection never certifies uniqueness after union; the executor checks that
 //! obligation against the current Run snapshot before bypassing an atom.
-use crate::program::*;
+use crate::{cell::{Definition, Site}, program::*};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as J;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -9,7 +9,7 @@ use std::rc::Rc;
 
 #[derive(Clone, Copy, Debug)]
 pub(crate) struct WitnessSource {
-    pub source: crate::known_results::Source,
+    pub source: crate::cell::Site,
     pub retained: bool,
 }
 
@@ -39,56 +39,6 @@ pub struct MultiStage {
     pub routes: HashMap<(usize, usize, usize, usize), Rc<Continuation>>,
     pub entries: HashMap<(usize, usize), Rc<Vec<usize>>>,
     pub finishes: Vec<Rc<Vec<usize>>>,
-}
-pub(crate) fn normalize(template: &Template, arg: &Arg) -> Arg {
-    if let Arg::Slot(slot) = arg {
-        if let Some(op) = template.defs.get(slot) {
-            if let Op::Copy(_, source) = &template.ops[*op] {
-                return normalize(template, source);
-            }
-        }
-    }
-    arg.clone()
-}
-pub(crate) fn source(
-    program: &Program,
-    producer: usize,
-    kind: &str,
-    index: usize,
-) -> Result<(usize, Vec<Arg>)> {
-    let rule = program.rules.get(producer).ok_or("continuation producer")?;
-    let template = &program.templates[rule.template];
-    let (table, columns) = match kind {
-        "query" => {
-            let atom = rule.query.get(index).ok_or("continuation query source")?;
-            let Call::Table(t) = atom.call else {
-                return Err("primitive is not a local fact".into());
-            };
-            (t, atom.args.clone())
-        }
-        "effect" => match template
-            .ops
-            .get(index)
-            .ok_or("continuation effect source")?
-        {
-            Op::Let(dst, Call::Table(t), args) if program.tables[*t].virtual_fact => {
-                let mut columns = args.clone();
-                columns.push(Arg::Slot(*dst));
-                (*t, columns)
-            }
-            Op::Set(t, args, value) => {
-                let mut columns = args.clone();
-                columns.push(value.clone());
-                (*t, columns)
-            }
-            _ => return Err("effect cannot provide a local fact".into()),
-        },
-        _ => return Err("unknown local fact source".into()),
-    };
-    Ok((
-        table,
-        columns.iter().map(|a| normalize(template, a)).collect(),
-    ))
 }
 pub(crate) fn extend(
     atom: &Atom,
@@ -145,7 +95,7 @@ impl MultiStage {
             match read.witness {
                 Some(w) => {
                     retained += usize::from(w.retained);
-                    local += usize::from(matches!(w.source, crate::known_results::Source::Effect(_)));
+                    local += usize::from(matches!(w.source, crate::cell::Site::Effect(_)));
                 }
                 None => skipped += 1,
             }
@@ -274,7 +224,8 @@ impl MultiStage {
             let consumer = number("consumer")?;
             let anchor = number("anchor")?;
             let target = program.rules.get(consumer).ok_or("continuation consumer")?;
-            let (table, cols) = source(program, producer, "effect", effect)?;
+            let cell = Definition::new(program, producer)?;
+            let (table, cols) = cell.local_columns(Site::Effect(effect))?;
             let mut mapping = BTreeMap::new();
             extend(
                 target.query.get(anchor).ok_or("continuation anchor")?,
@@ -293,7 +244,8 @@ impl MultiStage {
                 if !covered.insert(atom) {
                     return Err("duplicate continuation atom".into());
                 }
-                let (table, columns) = source(program, producer, kind, index)?;
+                let site = Site::parse(kind, index)?;
+                let (table, columns) = cell.local_columns(site)?;
                 extend(
                     target.query.get(atom).ok_or("continuation atom index")?,
                     table,
@@ -319,10 +271,10 @@ impl MultiStage {
                     // receipt dispatch cannot remove hashing/field work there.
                     witness: (program.tables[table].virtual_fact
                         && columns.len() > 1).then(|| WitnessSource { retained: false, source:
-                        if kind == "query" { crate::known_results::Source::Query(index) }
+                        if kind == "query" { crate::cell::Site::Query(index) }
                         else { program.known_results.static_sources.get(producer)
                             .and_then(|sources| sources[index])
-                            .unwrap_or(crate::known_results::Source::Effect(index)) } }),
+                            .unwrap_or(crate::cell::Site::Effect(index)) } }),
                     columns,
                 });
             }
@@ -362,13 +314,11 @@ pub(crate) fn compile_witnesses(p: &mut Program) {
             let Some(witness) = &mut read.witness else { continue };
             #[cfg(feature = "iterative-bake")]
             {
-                use crate::{known_results::Source, result_handoff::Donor};
-                let donor = match witness.source { Source::Query(i) => Donor::Query(i), Source::Effect(i) => Donor::Effect(i) };
-                witness.retained = p.iterative.exports(producer).contains(&donor);
+                witness.retained = p.iterative.exports(producer).contains(&witness.source);
             }
             #[cfg(not(feature = "iterative-bake"))]
             let _ = producer;
-            if !witness.retained && matches!(witness.source, crate::known_results::Source::Query(_)) {
+            if !witness.retained && matches!(witness.source, crate::cell::Site::Query(_)) {
                 read.witness = None;
             }
         }

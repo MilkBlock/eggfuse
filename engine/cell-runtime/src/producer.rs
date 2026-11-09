@@ -20,10 +20,10 @@ pub struct Context {
 }
 impl Graph {
     pub(crate) fn context_witness_row(&self, context: Option<Context>,
-        source: crate::known_results::Source, receipt: Option<Dependency>,
+        source: crate::cell::Site, receipt: Option<Dependency>,
         table: usize, arity: usize, misses: &mut WitnessMisses, row_reads: &mut u64) -> Result<Option<Row>> {
         let witness = if let Some(w) = receipt { w }
-            else if let (Some(c), crate::known_results::Source::Effect(op)) = (context, source) {
+            else if let (Some(c), crate::cell::Site::Effect(op)) = (context, source) {
                 Dependency::Fact(self.context_fact(c, op))
             } else { misses.receipt_missing += 1; return Ok(None) };
         *row_reads += 1;

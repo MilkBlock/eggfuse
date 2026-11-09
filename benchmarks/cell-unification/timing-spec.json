@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-unification/runtime-baseline",
+      "program": "out/cell-unification/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-unification/runtime-candidate",
+      "program": "out/cell-unification/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
