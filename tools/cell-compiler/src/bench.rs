@@ -10,6 +10,7 @@ pub(super) fn run(args: Vec<String>) -> Result<()> {
             "--bake-source",
             "--case",
             "--catalog",
+            "--marker-handoff",
             "--program",
             "--repeat",
             #[cfg(feature = "rhs-locals")]

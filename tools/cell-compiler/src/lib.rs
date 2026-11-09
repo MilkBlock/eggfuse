@@ -10,6 +10,7 @@ mod ownership_bake;
 mod work_credit;
 mod keys;
 mod marker_ir;
+mod marker_handoff;
 mod markers;
 mod surface;
 mod witness;
@@ -129,6 +130,10 @@ fn compile(
     if !matches!(locality, "identity" | "all") {
         return Err("unknown marker locality".into());
     }
+    let handoff = opts.get("--marker-handoff").map(String::as_str).unwrap_or("legacy");
+    if !matches!(handoff, "legacy" | "values") {
+        return Err("unknown marker handoff mode; use legacy or values".into());
+    }
     let cells = witness::load(&analysis)?;
     let (marked, report, names) = markers::rewrite(
         "source_sk.egg",
@@ -136,6 +141,7 @@ fn compile(
         &cells,
         profile.as_ref(),
         locality == "identity",
+        handoff == "values",
     )?;
     let core = eggfuse_bake::device_frontend::core("source_sk_mk.egg", &marked)?;
     eprintln!("Cell compiler: lower and validate standalone CPU plans");
@@ -305,7 +311,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
     }
     if cmd == "help" || args.iter().any(|a| a == "--help") {
         println!(
-            "cargo cell-compile (--case NAME | --source FILE [--bake-source FILE]) --output DIR [--catalog FILE] [--profile FILE] [--marker-locality identity|all]\ncargo cell-bench (--case NAME | --source FILE | --program FILE) [--repeat N] [--reference-program FILE]\ncargo cell-iterate --program SEED --output DIR --rounds N"
+            "cargo cell-compile (--case NAME | --source FILE [--bake-source FILE]) --output DIR [--catalog FILE] [--profile FILE] [--marker-locality identity|all] [--marker-handoff legacy|values]\ncargo cell-bench (--case NAME | --source FILE | --program FILE) [--repeat N] [--reference-program FILE]\ncargo cell-iterate --program SEED --output DIR --rounds N"
         );
         return Ok(());
     }
@@ -331,6 +337,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
                     "--catalog",
                     "--profile",
                     "--marker-locality",
+                    "--marker-handoff",
                 ],
             )?;
             let input = inputs(&opts)?;

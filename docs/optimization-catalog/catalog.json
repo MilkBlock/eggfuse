@@ -220,6 +220,89 @@
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
     {
+      "id": "A3",
+      "category": "A",
+      "title": ".egg marker 结果变量交接",
+      "activation": "编译参数 --marker-handoff values；默认 legacy 保持冻结目录",
+      "compile_fact": "原始永久构造子 LHS 与完整 marker 参数证明结果；按原求值位置捕获生产者返回值",
+      "replaces": "消费者 RHS 重建已知构造子及生成 marker 参数时的重复构造",
+      "live_obligations": "剩余 LHS、可变函数、数值 guard 和原 Run 继续执行；可删除或 subsume 的构造子不进入证明；旧 completion 路径仍保留。",
+      "sources": [
+        "tools/cell-compiler/src/marker_handoff.rs",
+        "tools/cell-compiler/src/markers.rs",
+        "tools/cell-compiler/src/marker_ir.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/key_lookup_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/fragment_pending_writes",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/allocations/alloc_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/allocations/realloc_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/allocations/requested_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/setup_allocations/alloc_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/setup_allocations/requested_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/fragment_pending_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/publication_slot_probes",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/marker_tables",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/recipe/rules/*/effects",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "静态替换详情在 marker-selection.json/result_handoff；不能当运行时 credit。必须重编译源程序；旧目录绑定不同 recipe，不能搬用。sum-bits 的旧 native/standalone 完整等价对照存在差异，新旧 marker 各自行为一致，不代表整条工具链通过 native 验证。",
+      "evidence": [
+        "benchmarks/marker-handoff/design.md",
+        "benchmarks/marker-handoff/README.md"
+      ],
+      "status": "实验模式已实现；短样例减少查询和分配；尚未完成新目录及历史最快配置的性能验收"
+    },
+    {
       "id": "B1",
       "category": "B",
       "title": "寄存器 join 与共享 point 读取",

@@ -4,6 +4,14 @@
 
 `--bake-source FILE` supplies a separate training input for a custom source. `--profile FILE` and `--marker-locality identity|all` control offline marker selection. An optional `--catalog FILE` attaches recipe-bound Spine blocks, iterative transitions and admitted query contexts after lowering. The catalog's recipe hash and each executable component are checked. Changes to marker selection can produce a different recipe; supply a matching catalog in that case.
 
+`--marker-handoff values` rewrites the generated `.egg` to forward permanent
+constructor results already bound by a marker. Consumers use those variables
+directly, and producers capture actual results for marker publication. Residual
+conditions and source Run boundaries remain live. The default `legacy` preserves
+the frozen suite recipes; a values-mode artifact requires its own matching
+catalog. Static substitution counts in `marker-selection.json/result_handoff`
+are compiler diagnostics, not measured runtime savings.
+
 `cargo cell-run --program FILE --output DIR` executes the complete source schedule and writes `state.json` and `report.json`. The report separates inference from setup and export. For small inputs, `--audit-stages` saves every logical graph and binding snapshot. `--inspect-program` validates an artifact and reports its admitted context plans.
 
 `cargo cell-bench --program FILE --repeat N` starts a fresh graph for each repetition, checks the final graph digest and reports inference samples and their median. It can also compile `--source FILE` or `--case NAME` before the timed runs. `--reference-program FILE` adds per-Run comparison before timing. `--lane` and `--modules` belong to the research CLI.

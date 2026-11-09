@@ -183,6 +183,11 @@ pub fn build(core: &J, report: &J, marked: &str, analysis: &[u8]) -> Result<J> {
         ms.push(json!({"name":name,"fields":a(&v["sorts"]).iter().enumerate().map(|(i,sort)|json!({"slot":i,"sort":sort,"variable":format!("cell_spine_slot{i}")})).collect::<Vec<_>>(),"guarantee":v["body"],"witness_cells":v["cells"],"layout":"full correlated tuple","consumers":reads,"publishers":writes,"completion":repair,"maintenance":{"initial":"complete before first consumer","insert":"committed RHS publication plus completion","union":"canonicalize complete tuple and complete newly enabled bindings","removal":"source view tables are statically excluded if subsumable/deletable","ports":"mutable functions and numeric guards remain in consumer LHS"},"effects":"original consumer RHS; no closure endpoint substitution"}))
     }
     let mut j = json!({"schema":"eggfuse-marker-program/v2","source_sha256":crate::sha(marked.as_bytes()),"analysis_sha256":crate::sha(analysis),"typed_program":{"tables":core["tables"],"rulesets":core["rulesets"],"schedule":core["schedule"]},"markers":ms,"continuations":continuations(core,report)?,"state_representation":"prefix presence + live original ports + successful application receipts; original control owns stage and repeat","schedule":core["schedule"],"cost_model":report["cost_model"],"selection_scope":report["selection_scope"],"closure_authority":"none; complete positive source views only","obligations":["SK versus marked native projection","marked native versus standalone Cell CPU","original visible stage boundaries"]});
+    if let Some(handoff) = report.get("result_handoff") {
+        j["result_handoff"] = handoff.clone();
+        j["result_handoff"]["representation"] = json!("ordinary Eq/scalar marker fields; no physical producer address or extra receipt history");
+        j["result_handoff"]["execution"] = json!("forwarded variables in typed consumer RHS and producer marker writes; residual LHS owns current checks");
+    }
     j["sha256"] = json!(eggfuse_cell_runtime::checksum::artifact_digest(&j));
     Ok(j)
 }

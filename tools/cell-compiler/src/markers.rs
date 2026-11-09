@@ -448,6 +448,7 @@ pub fn rewrite(
     cells: &[crate::witness::Cell],
     profile: Option<&J>,
     identity: bool,
+    handoff: bool,
 ) -> Result<(String, J, BTreeSet<String>)> {
     if let Some(p) = profile
         && (p["schema"] != "marker-cost-profile/v1"
@@ -464,6 +465,7 @@ pub fn rewrite(
         [PREFIX, SHADOW, SLOT, REPAIR, "CellSpineApplied"]
             .iter()
             .any(|n| s(&c["text"]).contains(n))
+            || handoff && s(&c["text"]).contains(crate::marker_handoff::RESULT)
     }) {
         return Err("reserved marker namespace".into());
     }
@@ -547,6 +549,7 @@ pub fn rewrite(
     let mut sets = BTreeSet::new();
     let mut applied = vec![];
     let mut pubs = 0;
+    let mut handoffs = vec![];
     for (rid, r) in rules.iter().enumerate() {
         let selected = used.get(&rid);
         let mut body = a(&r["body"]).to_vec();
@@ -587,12 +590,12 @@ pub fn rewrite(
             }
         }
         let f = flats.get(&rid);
-        let original_body = if selected.is_some() {
+        let original_body = if selected.is_some() || handoff && f.is_some() {
             f.unwrap().body.as_slice()
         } else {
             a(&r["body"])
         };
-        let original_head = if selected.is_some() {
+        let original_head = if selected.is_some() || handoff && f.is_some() {
             f.unwrap().head.as_slice()
         } else {
             a(&r["head"])
@@ -604,8 +607,24 @@ pub fn rewrite(
         };
         pubs += extra.len();
         if selected.is_some() || !extra.is_empty() {
+            // Forward from the original proof before its constructor atoms are
+            // hidden behind a marker. Producers with no selected view also need
+            // the flattened body so their actual matched values are in scope.
+            if handoff && selected.is_none() && let Some(f) = f {
+                body = f.body.clone();
+                head = f.head.clone();
+            }
+            let publication_at = head.len();
             head.extend(extra);
             head.extend(receipt);
+            if handoff && let Some(f) = f {
+                let (forwarded, stats) = crate::marker_handoff::forward(
+                    &f.body, &head, publication_at, sig, &changed,
+                );
+                head = forwarded;
+                handoffs.push(json!({"rule":rid,"consumer_result_uses":stats.consumer_result_uses,
+                    "publication_result_uses":stats.publication_result_uses,"captured_results":stats.captured_results}));
+            }
             replacements.insert(
                 r["command_ordinal"].as_u64().unwrap() as usize,
                 (
@@ -708,6 +727,12 @@ pub fn rewrite(
         }
     }
     let report = json!({"offered":offered,"offered_fragments":offers,"locality":if identity{"identity"}else{"all"},"selection_scope":"exact positive source views; training observations provide witnesses","cost_model":if profile.is_some(){"profile-supplied lifecycle nanoseconds"}else{"structural baseline; not a runtime performance estimate"},"receipt_tables":applied.iter().map(|v|&v.0).collect::<Vec<_>>(),"selected":selected,"publish_actions":pubs,"markers":views.iter().map(|v|json!({"name":v.name,"body":v.body,"completion_body":v.completion,"sorts":v.sorts,"cells":crate::witness::matches(cells,&v.body,&v.sorts),"consumers":v.uses.iter().map(|o|o.rid).collect::<Vec<_>>() })).collect::<Vec<_>>()});
+    let mut report = report;
+    if handoff {
+        report["result_handoff"] = json!({"mode":"values","rules":handoffs,"new_marker_fields":0,
+            "proof":"original permanent constructor atoms carried by complete correlated markers",
+            "resume":"marker table and consumer rule select the residual LHS; original Run remains authoritative"});
+    }
     Ok((
         lines.join("\n") + "\n",
         report,

@@ -1,0 +1,40 @@
+{
+  "scope": "standalone Cell CPU; source emitter experiment; native reference separate; no end-to-end speedup claim",
+  "base_commit": "7725da715a61babce187beee86d1846f31fd89f8",
+  "checks": {
+    "compiler-tests": {
+      "passed": 214,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "8d4631eabf5dd71014184573be72ea16f99091e05ff3a4f72200c843947e9f9a"
+    },
+    "non-sparse-tests": {
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "03a55b22f6820b7ecc9a3d4e28eea5fa019c3f9a37e290e9aaab84ec9f6e5ee4"
+    }
+  },
+  "runtime": {
+    "path": "out/witness-address/runtime-final",
+    "sha256": "a333b205a45d9d255a3ba6448e95d771b72c5493b5650b49d7c987193a992c99",
+    "features": "sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics",
+    "unchanged_runtime_source": true
+  },
+  "compiler_sha256": "1e3fcb763b34de5189d78ab360345ed6dd4bd1829fc9c72cd13dfc2effbc3dc8",
+  "source_manifest": {
+    "tools/cell-compiler/src/marker_handoff.rs": "1c0cef19e96baeaaa695f21de5cb51fbd6f9f7ec137a2463938f6ef3febe9360",
+    "tools/cell-compiler/src/markers.rs": "daee715f95642409175c5aeb5b6e56cc26aa04ef3d95301788602e1caa54c183",
+    "tools/cell-compiler/src/marker_ir.rs": "6cf907c2b6a7f3d8f222e5e6c0c1f41052225339791e8aa808b06413181508cf",
+    "tools/cell-compiler/src/lib.rs": "1c4845b59b2495284cde25e0614b248676c7a9f31c9dfbeee70f2f0ee6275d7e",
+    "tools/cell-compiler/src/bench.rs": "f43271a6e7f80927eb16623f275b832dc6f4c0e591b26d7c30551a0ff500411a",
+    "tools/cell-compiler/examples/marker_reference.rs": "676514f6d605a53154c4fc611cb5af8ebd2b9971399dfe658e5ecbe9bb27aa97",
+    "benchmarks/marker-handoff/audit.py": "2d226c7d97611fd1b60f1d59f11a7ce48f4c32d2d076072fef720210aa26ebe3"
+  },
+  "legacy_recipe_matches_frozen": true,
+  "comparison_sha256": "3494e157af857d4182bfa0ef306f554efd5ee6fa4121ad598f98d87e24078601",
+  "independent_native_controls": "failed in legacy and values; retained as full_native_validation=false",
+  "audit_negative_controls": "changed scalar and visibility rejected; consistent ID rename accepted",
+  "timing_campaign": false,
+  "raytrace_run": false
+}
