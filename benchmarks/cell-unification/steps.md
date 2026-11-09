@@ -457,3 +457,14 @@ writer 只临时借用原有存储，不引入另一个运行时事实图、消�
 7 次相关测试通过，包含稀疏/非稀疏的实际共享 ChangeBatch、两表分批发布、同键退役顺序及负读取恢复；最小 feature 编译通过。分阶段 Executor 测试的 global_observer=false，实际在有未完成工作时发布 3 张表，最终 state 与逐 Run 绑定一致，未进行最终多线程验收。两个短样例在正常/全碰撞哈希下各与冻结旧版本对照；neighbor 实际刷新 3 次、退役 2 次，range 使用 3 次、更新 4 行且只构建一次，state/stages/binding-audit 和工作计数保持。这里的构建/更新是查询索引工作，不是规则提交数。
 
 sum-bits 的 1,428 个 Run、最终 state 与 346 项工作指标保持，语义脚本 pass，22 个编译组件重新 lowering 一致。删除的订阅扫描、重复表查找与版本写入未有机器指令/分配计数，不能由指标不变推出性能改善。产物 out/cell-read-publication，复核 check_read_publication.py。本次是 cc472d0f 后第 1 个实现提交，不单独测速；完整查询/目录生命周期、Bake/marker 接管及最终多线程验收仍未完成。
+
+
+## Marker 与 typed Cell 共用构造子结果推导
+
+上一目录 sum-bits 已有 5,853 次静态构造子消除；这些收益已经存在，不能再计一次。检查 Bake 的输入后发现，native marker 转发与 typed known-results 仍各自维护构造子结果表、选择首次匹配的见证、处理后续重复构造。现在二者执行同一 Cell construction 推导：用已匹配输入建立结果，按原效果顺序处理构造，只有缺少已知结果时才调用宿主的新建操作。typed Copy 与删除失效也归入该实现。删除两套结果选择逻辑和独立 resolve_alias 入口，typed 证明表不再保存每个结果的 JSON 副本，仅在旧 artifact 输出处由原来源恢复。
+
+保留的是实际 query 结果或已执行效果的 SSA 槽，而非假定 (Cell, operation) 是物理节点地址。首次见证不会被后续别名覆盖；未执行、不可安全提升的源表达式不成为已知事实。native 的词法绑定、纯度和可删除构造子准入仍由前端负责；typed 删除后清除对应表的已知结果。所有结构仅用于编译，不给运行时实例增加事实图、历史或消费者列表。新的 key/别名表布局仍有编译和 setup 成本，尚未测量，不能从删除代码推断分配或速度收益。
+
+18 项相关测试及最小 feature 编译通过，包含正常/非稀疏结果推导、原见证保留、失效后重建、实际外部复用、marker 原生语义及含计算参数的效果顺序。两个短 marker 样例使用相同 feature 的冻结新旧编译器，source_sk_mk.egg、marker-selection.json、marker-program.json、program.json 均逐字节一致，新增 marker 字段为零；运行时各在正常/全碰撞哈希下对照，state/stages/binding-audit 和工作量相同。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个编译组件重新 lowering 一致。产物 out/cell-construction-proof；复核 check_construction.py ROOT OUTPUT --commit COMMIT。这里运行时对照是 standalone Cell CPU，native 原生执行只用于短样例语义检查。
+
+这是 cc472d0f 后第 2 个实现提交，未单独测速。Bake/marker 从 pending 改为 in_progress，只表示结果推导核心已接通；A1/A2 仍未重写，模板选取、迭代组合、可选 marker 物化边界及相应维护路径的统一仍须继续。不能把共用结果推导当作整个 Bake 接管完成，最终多线程阶段尚未开始。

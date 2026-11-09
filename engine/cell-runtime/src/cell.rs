@@ -4,7 +4,10 @@
 //! remains visible, or won a mutable merge. Those obligations stay at its use.
 use crate::program::{Arg, Call, Op, Program, Result, Rule, Table, Template};
 use serde::{Deserialize, Serialize};
-use std::{borrow::Cow, collections::{BTreeMap, BTreeSet}};
+use std::{borrow::Cow, collections::BTreeSet};
+
+#[path = "cell_construction.rs"]
+pub mod construction;
 
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_results.rs"]
@@ -218,15 +221,11 @@ impl Op {
         }
     }
 }
-pub(crate) fn resolve_alias(arg: &Arg, aliases: &BTreeMap<usize, Arg>) -> Arg {
-    resolve(arg, |slot| aliases.get(&slot))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::{program::Atom, value::Value};
-    use std::rc::Rc;
+    use std::{collections::BTreeMap, rc::Rc};
 
     #[test]
     fn copies_do_not_make_queued_union_visible() {

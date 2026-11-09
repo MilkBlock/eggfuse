@@ -1,0 +1,11 @@
+
+(datatype E (N i64) (F E) (G E) (Out E i64) (Keep E))
+(relation Edge (E i64))
+(ruleset make) (ruleset read) (ruleset keep)
+(rule ((= x (N n))) ((G (F x))) :ruleset make :name "producer")
+(rule ((= f (F x)) (= g (G f)) (Edge x n))
+ ((Out (G (F x)) n)) :ruleset read :name "consumer")
+(rule ((= f (F x)) (= g (G f))) ((Keep (G (F x)))) :ruleset keep :name "keeper")
+(G (F (N 0))) (N 1) (Edge (N 0) 10) (Edge (N 1) 11) (Edge (N 1) 12)
+(run-schedule (seq (run make) (run read) (run keep)))
+(check (Out (G (F (N 0))) 10) (Out (G (F (N 1))) 11) (Out (G (F (N 1))) 12))

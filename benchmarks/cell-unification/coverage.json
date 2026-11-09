@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "cc472d0f",
-    "implementation_commits_since_timing": 1,
+    "implementation_commits_since_timing": 2,
     "evidence": "benchmarks/cell-unification/view-query-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -308,8 +308,15 @@
     },
     {
       "id": "bake_marker",
-      "status": "pending",
-      "requirement": "Compose and select the same Cell definitions and Entries; update optional marker materialization boundaries during iteration."
+      "status": "in_progress",
+      "requirement": "Compose and select the same Cell definitions and Entries; update optional marker materialization boundaries during iteration.",
+      "completed_structure": [
+        "Native marker forwarding and typed Cell known-result planning now share the construction proof over matched inputs and ordered effects. Separate result memo/selection and typed alias resolver are removed."
+      ],
+      "remaining": [
+        "Unify source fragment selection and iterative Cell composition, derive consumer Entries and optional marker materialization boundaries from the same definitions, and remove the replaced boundary maintenance. Shared constructor-result propagation alone does not complete this takeover.",
+        "Preserve source lexical bindings/purity admission, typed SSA and deletion invalidation, actual returned values and original Run/effect ordering. Compile/setup layout costs and runtime speed acceptance remain unmeasured for this step."
+      ]
     },
     {
       "id": "multithread_after_rewrite",
@@ -339,8 +346,9 @@
     {
       "id": "A3",
       "title": ".egg marker 结果变量交接",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "A3"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "A3",
+      "remaining": "Constructor-result propagation is shared; source marker selection/materialization and general iterative Bake composition remain separate."
     },
     {
       "id": "B1",
@@ -436,9 +444,10 @@
     {
       "id": "D1",
       "title": "静态构造子别名与 known results",
-      "status": "common_definition_only",
+      "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "D1",
-      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json",
+      "remaining": "Static constructor source/alias propagation shares Cell construction proof with marker emission. Dynamic donor planning, read validity, and full iterative composition still require integration."
     },
     {
       "id": "D2",

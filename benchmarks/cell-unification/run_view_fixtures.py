@@ -9,7 +9,7 @@ import time
 from check_links import sha
 
 
-def run(root, compiler, bodies=None):
+def run(root, compiler, bodies=None, compile_args=()):
     source = Path('tools/cell-compiler/tests/fixtures/view-consumers.egg').read_text()
     bodies = bodies or {
         'dispatch': source,
@@ -25,7 +25,7 @@ def run(root, compiler, bodies=None):
         source_path.write_text(body)
         with (fixture / 'compile.log').open('w') as log:
             subprocess.run([str(compiler), 'compile', '--source', str(source_path),
-                '--output', str(fixture / 'compiled')], stdout=log, stderr=subprocess.STDOUT, check=True)
+                '--output', str(fixture / 'compiled'), *compile_args], stdout=log, stderr=subprocess.STDOUT, check=True)
         program = fixture / 'compiled/program.json'
         for bits in (64, 0):
             for lane in ('baseline', 'candidate'):

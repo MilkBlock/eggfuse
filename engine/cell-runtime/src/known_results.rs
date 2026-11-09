@@ -1,5 +1,5 @@
 //! Constructor knowledge carried by live recipe instances, not a global memo.
-use crate::cell::{Definition, Site, resolve_alias};
+use crate::cell::{Definition, Site, construction::{Construction, Known}};
 use crate::program::{Arg, Call, Op, Program, Result, array};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as J, json};
@@ -103,8 +103,7 @@ impl Plans {
             .collect::<BTreeSet<_>>();
         for (rid, r) in p.rules.iter().enumerate() {
             let t = &p.templates[r.template];
-            let mut aliases = BTreeMap::new();
-            let mut known: BTreeMap<(usize, Vec<Arg>), (Arg, J, Site)> = BTreeMap::new();
+            let mut construction = Construction::default();
             let mut slots = vec![None; t.sorts.len()];
             let mut skip = vec![false; t.ops.len()];
             let mut sources = vec![None; t.ops.len()];
@@ -113,40 +112,34 @@ impl Plans {
                     && p.tables[t].constructor
                     && !deleted.contains(&t)
                 {
-                    known
-                        .entry((t, a.args[..a.args.len() - 1].to_vec()))
-                        .or_insert((
-                            a.args.last().unwrap().clone(),
-                            p.artifact["recipe"]["rules"][rid]["query"][i]["args"]
-                                .as_array()
-                                .unwrap()
-                                .last()
-                                .unwrap()
-                                .clone(),
-                            Site::Query(i),
-                        ));
+                    construction.matched(t, a.args[..a.args.len() - 1].to_vec(),
+                        a.args.last().unwrap().clone(), Site::Query(i));
                 }
             }
             for (i, e) in t.ops.iter().enumerate() {
                 match e {
                     Op::Copy(dst, a) => {
-                        aliases.insert(*dst, resolve_alias(a, &aliases));
+                        construction.copy(Arg::Slot(*dst), a);
                     }
-                    Op::Hide(t, _, true) => known.retain(|(table, _), _| table != t),
+                    Op::Hide(t, _, true) => construction.forget(t),
                     Op::Let(dst, Call::Table(t), aa) if p.tables[*t].constructor => {
-                        let key = (*t, aa.iter().map(|a| resolve_alias(a, &aliases)).collect());
-                        if let Some((value, j, source)) = known.get(&key) {
-                            sources[i] = Some(*source);
-                            slots[*dst] = Some(value.clone());
+                        let (known, reused) = construction.construct(*t, aa.iter().cloned(), || {
+                            Some(Known { value: Arg::Slot(*dst), source: Site::Effect(i) })
+                        }).expect("typed construction always has a result");
+                        if reused {
+                            sources[i] = Some(known.source);
+                            slots[*dst] = Some(known.value.clone());
                             skip[i] = true;
-                            aliases.insert(*dst, value.clone());
-                            static_aliases
-                                .push(json!({"rule":rid,"operation":i,"dst":dst,"value":j}));
-                        } else {
-                            known.insert(
-                                key,
-                                (Arg::Slot(*dst), json!({"slot":dst}), Site::Effect(i)),
-                            );
+                            construction.copy(Arg::Slot(*dst), &known.value);
+                            let value = match known.source {
+                                Site::Query(atom) => p.artifact["recipe"]["rules"][rid]["query"][atom]["args"]
+                                    .as_array().unwrap().last().unwrap().clone(),
+                                Site::Effect(_) => match known.value {
+                                    Arg::Slot(slot) => json!({"slot":slot}),
+                                    _ => unreachable!("an executed constructor exports its SSA slot"),
+                                },
+                            };
+                            static_aliases.push(json!({"rule":rid,"operation":i,"dst":dst,"value":value}));
                         }
                     }
                     _ => (),
