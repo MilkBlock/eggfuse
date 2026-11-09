@@ -200,8 +200,17 @@
     },
     {
       "id": "ports_congruence",
-      "status": "pending",
-      "requirement": "One Cell wiring and lifecycle for stable ports, symbolic composition and equality conditions; prove coverage before removing old maintenance."
+      "status": "in_progress",
+      "requirement": "One Cell wiring and lifecycle for stable ports, symbolic composition and equality conditions; prove coverage before removing old maintenance.",
+      "completed_structure": [
+        "Source Cell union instructions are the sole runtime union definition; shared port programs no longer retain union operands or depend on them for new-code interning.",
+        "Cell coverage derives from shared port fields; per-marker body arrays and active flags removed. Legacy artifact fields are transient source projections only."
+      ],
+      "remaining": [
+        "Unify remaining symbolic derivation, stable-port lifecycle and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",
+        "Legacy artifact IDs retain original grouping during decode; fresh Bake emits the new shared layout. Broader runtime speed acceptance remains pending."
+      ],
+      "evidence": "benchmarks/cell-unification/port-plan-check.json"
     },
     {
       "id": "schedule_parallel",
@@ -299,7 +308,7 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "D2",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; marker artifacts still retain legacy union operands. The disabled-compiled-merge AST control remains for differential/storage tests."
+      "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; legacy union operands exist only in checked artifact projections, not executable port plans. The disabled-compiled-merge AST control remains for differential/storage tests."
     },
     {
       "id": "E1",
@@ -333,8 +342,10 @@
     {
       "id": "F2",
       "title": "Cell ownership 与共享 repair slices",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "F2"
+      "status": "partially_rewritten",
+      "metrics_from_catalog": "F2",
+      "evidence": "benchmarks/cell-unification/port-plan-check.json",
+      "remaining": "Union source/port code and coverage definitions unified; lifecycle, incidence routing and full internal repair takeover remain."
     },
     {
       "id": "F3",

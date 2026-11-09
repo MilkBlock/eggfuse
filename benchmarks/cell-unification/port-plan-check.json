@@ -1,0 +1,43 @@
+{
+  "scope": "standalone Cell CPU; grouped source-wiring and semantic checks, no timing/allocation campaign",
+  "baseline_commit": "3e051d5d",
+  "candidate_commit": "f7105177",
+  "short_fixture": {
+    "source": "tools/cell-compiler/tests/support/port_sharing.rs",
+    "generator": "tools/cell-compiler/examples/emit_port_sharing.rs",
+    "baseline_generator_note": "Emitter source frozen with pre-change runtime/compiler before port-plan edits",
+    "programs_before": 7,
+    "programs_after": 6,
+    "composition_shapes_before": 10,
+    "composition_shapes_after": 9,
+    "observed_fragments": 3,
+    "selection": "All actually observed continuations admitted only for this semantic fixture; production repeated-use ranking correctly selects none",
+    "cross_stage_joins": 2,
+    "unchanged_work_metrics": 300,
+    "runtime_and_ownership_counters_identical": true,
+    "runs": 3,
+    "ordered_evidence": {
+      "state.json": "41c7455d120dbaef1c0b24c5b4c2199a2f1de461857520418f2b2d6d7f14ae02",
+      "stages.json": "0b7c4896bdaf976a5197a12e62a41d679bb2aac6afc84212cef253cadb7c4aa8",
+      "binding-audit.json": "3e743ca2621b1afd334093bb4e5185fdcdb7e5d5adff06e737d904e57a196a9d"
+    },
+    "legacy_port_program_union_positions_removed": 21,
+    "per_marker_body_positions_removed": 22,
+    "storage_note": "Removed source representation positions, not measured allocation totals"
+  },
+  "sum_bits": {
+    "semantic_acceptance": "pass",
+    "unchanged_work_metrics": 300,
+    "runs": 1428,
+    "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "binaries": {
+    "baseline": "3749653ce3b7d870795ea376c31fc3837e8f178a95fee0b3e61f792ae2717950",
+    "candidate": "afb73724d6d3d67d2b498e26f421277acbacc44e2958bc13b4c15ec82f83aca7"
+  },
+  "programs": {
+    "legacy": "4b26cd4cb5625dfde805dab922677d2cc7730c2ea30c8a3ae7d1c92c882ef0ad",
+    "current": "101aa5bc04a8867c9c03d0c4d2378e3bb2e8ee244040834d5a1ffdfa07465220"
+  },
+  "compatibility": "Frozen v4 marker and v1 profile load/rebake; new v5 marker and v2 profile. Full typed certificates remain checked. New sharing applies to newly baked Cell addresses; legacy addresses retain their original numbering."
+}

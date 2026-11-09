@@ -71,3 +71,9 @@
 接续 `8f60229c`。删除每个 marker 的 `bodies: Vec<bool>` 和 `active` 副本；操作覆盖由共享 PortProgram 的字段布局判断，是否活跃只在共享程序缓存一次。规则准入、事实激活和 operator 代码准备读取同一份布局。产物里的覆盖字段在序列化时投影生成，现有 v4/v5 证书仍逐项检查；执行期不保留第二个覆盖数组。
 
 共享 union 用例、三个 ownership receipt/源顺序检查、Bake 输出及最小特性编译通过。没有新增测试或单项计时。
+
+两项改动的合并核对见 [port-plan-check.json](port-plan-check.json)。短 fixture 的共享程序 7 → 6、composition shape 10 → 9；实际完成的跨阶段 join 仍为 2，全部 runtime/ownership 工作计数相同，逐 Run 的 state、bindings 与最终 state 相同。冻结旧产物在旧/新 binary 上的 300 项非时间/RSS指标相同，新布局也保持这些工作指标。fixture 包含三条真实观察到的 continuation；为检查地址兼容而全部纳入诊断，生产 ranking 仍正确地不选择这些仅使用一次的片段。
+
+复现入口是 `emit_port_sharing` example（源代码在 `tests/support/port_sharing.rs`）；从其 profile 的全部 `records[].fragment` 构造相应 v1/v2 `ownership_fragments`，重算 checksum，再以 `bake-cell-ownership --query-classes true` 校验和生成证书，使用冻结的旧/新 runtime `--local-congruence --audit-stages` 比较。新规则仍由源 Cell 执行 union；程序数量下降不等于已测得速度提升。
+
+同组只运行一次 sum-bits：语义脚本 pass，300 项工作指标、1,428 个 Run 和最终状态保持。sum-bits 没有替代上面的 ownership 专项检查；本轮没有计时采样或分配审计。
