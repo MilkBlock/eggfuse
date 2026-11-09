@@ -21,7 +21,7 @@ pub(crate) struct Plan {
     ports: Vec<ScopedStep>,
     witness_slots: usize,
     columns: Vec<usize>,
-    versions: Vec<usize>,
+    read_tables: Vec<usize>,
     identity_literal: bool,
     query: Query,
 }
@@ -29,6 +29,15 @@ impl Plan {
     fn root(&self) -> usize { self.root.step.atom }
     fn tail(&self) -> usize { self.query.steps[0].atom }
     fn slots(&self) -> usize { self.ports.last().unwrap_or(&self.root).end() }
+    fn tables(&self) -> (usize, usize) {
+        match (&self.root.step.call, &self.query.steps[0].call) {
+            (Call::Table(root), Call::Table(tail)) => (*root, *tail),
+            _ => unreachable!("compiled context endpoints"),
+        }
+    }
+    fn versions<'a>(&'a self, g: &'a Graph) -> impl Iterator<Item = u64> + 'a {
+        self.read_tables.iter().map(|&t| g.query_versions[t])
+    }
     fn witness_atoms(&self) -> impl Iterator<Item = usize> + '_ {
         std::iter::once(&self.root).chain(&self.ports)
             .filter(|s| matches!(s.step.call, Call::Table(_))).map(|s| s.step.atom)
@@ -131,10 +140,9 @@ fn project(
     post: Vec<usize>,
 ) -> Option<Plan> {
     let q = &r.query;
-    let prefix = std::iter::once(root).chain(ports.iter().copied());
     let (known, mut steps) = Query::scoped_prefix(r, root, &ports)?;
-    let versions = prefix
-        .filter_map(|i| match q[i].call {
+    let read_tables = steps.iter()
+        .filter_map(|s| match s.step.call {
             Call::Table(t) => Some(t),
             _ => None,
         })
@@ -155,7 +163,7 @@ fn project(
         root: steps.remove(0),
         ports: steps,
         columns,
-        versions,
+        read_tables,
         identity_literal,
         query,
     })
@@ -186,7 +194,7 @@ struct Group {
 }
 #[derive(Default)]
 struct Context {
-    orientation: Option<(usize, usize)>,
+    plan: Option<Rc<Plan>>,
     versions: Vec<u64>,
     unions: u64,
     roots: Map<Dependency, Root>,
@@ -261,7 +269,6 @@ impl Contexts {
         ix: &mut QueryIndexes,
         entries: &mut Scheduler,
     ) -> Result<Option<Vec<Matched>>> {
-        let rule = g.program.rules[rid].clone();
         let stats = self.stats.entry(rid).or_default();
         if spine_active {
             stats.spine_deferrals += 1;
@@ -274,8 +281,9 @@ impl Contexts {
             let best = g.program.context_cuts[rid]
                 .iter()
                 .filter_map(|p| {
-                    let roots = g.witness_count(table(&rule.query[p.root()]));
-                    let tails = g.witness_count(table(&rule.query[p.tail()]));
+                    let (root, tail) = p.tables();
+                    let roots = g.witness_count(root);
+                    let tails = g.witness_count(tail);
                     (roots <= ROOT_LIMIT && roots <= tails)
                         .then_some(((roots, std::cmp::Reverse(tails), p.root()), p))
                 })
@@ -287,9 +295,8 @@ impl Contexts {
             };
             p.clone()
         };
-        let root_table = table(&rule.query[plan.root()]);
+        let (root_table, terminal) = plan.tables();
         let tail = &plan.query.steps[0];
-        let Call::Table(terminal) = tail.call else { unreachable!("terminal table") };
         let expansion = tail.expansion.as_ref().expect("terminal expansion");
         let roots = g.witness_count(root_table);
         if roots > ROOT_LIMIT || roots > g.witness_count(terminal) {
@@ -298,10 +305,9 @@ impl Contexts {
             return Ok(None);
         }
         let c = self.states.entry(rid).or_default();
-        let orientation = Some((plan.root(), plan.tail()));
-        if c.orientation != orientation {
+        if c.plan.as_ref().is_none_or(|old| !Rc::ptr_eq(old, &plan)) {
             *c = Context {
-                orientation,
+                plan: Some(plan.clone()),
                 ..Default::default()
             };
         }
@@ -311,7 +317,7 @@ impl Contexts {
         if self.general
             && c.blocked
             && !plan
-                .versions
+                .read_tables
                 .iter()
                 .zip(&c.oversized_at)
                 .any(|(&t, &old)| g.witness_count(t) < old)
@@ -319,14 +325,12 @@ impl Contexts {
             stats.fallbacks += 1;
             return Ok(None);
         }
-        let versions = plan
-            .versions
-            .iter()
-            .map(|&t| g.query_versions[t])
-            .collect::<Vec<_>>();
-        if c.versions != versions || (plan.identity_literal && c.unions != g.stats.unions) {
+        if !c.versions.iter().copied().eq(plan.versions(g))
+            || (plan.identity_literal && c.unions != g.stats.unions)
+        {
             let reset = plan.identity_literal && c.unions != g.stats.unions;
-            c.versions = versions;
+            c.versions.clear();
+            c.versions.extend(plan.versions(g));
             c.unions = g.stats.unions;
             c.blocked = false;
             let mut changed = reset;
@@ -398,7 +402,7 @@ impl Contexts {
                 c.roots.insert(w, root);
             }
             if c.blocked {
-                c.oversized_at = plan.versions.iter().map(|&t| g.witness_count(t)).collect();
+                c.oversized_at = plan.read_tables.iter().map(|&t| g.witness_count(t)).collect();
                 c.roots.clear();
                 c.groups.clear();
             } else if changed || !previous.is_empty() {

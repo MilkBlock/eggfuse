@@ -52,7 +52,7 @@ impl Serialize for Plan {
         let post = self.query.steps.iter().skip(1).map(|s| s.atom).collect::<Vec<_>>();
         let expansion = self.query.steps[0].expansion.as_ref().expect("terminal expansion");
         Wire { root: self.root(), ports: &ports, tail: self.tail(), columns: &self.columns,
-            versions: &self.versions, identity_literal: self.identity_literal,
+            versions: &self.read_tables, identity_literal: self.identity_literal,
             output: Outputs(if post.is_empty() { &self.query.inputs } else { &[] }, self),
             checks: Checks(&expansion.checks, self), post: &post }.serialize(s)
     }

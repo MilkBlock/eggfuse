@@ -54,7 +54,9 @@ def check_prefix(root, commit, phase="prefix"):
     changes = {k: [v, metrics[1][k]] for k, v in metrics[0].items() if v != metrics[1][k]}
     assert list(changes) == (['report:/local_context/rules/*/prefix_slots_copied [sum]'] if phase in ('compact', 'witness') else [])
     fixtures = {}
-    for name in (('branches', 'terminal', 'roots') if phase in ('root', 'compact', 'witness', 'lease') else ('branches', 'terminal')):
+    fixture_names = ('branches', 'terminal', 'roots') if phase in ('root', 'compact', 'witness', 'lease', 'scope') else ('branches', 'terminal')
+    if phase == 'scope': fixture_names += ('switch',)
+    for name in fixture_names:
         path = root / f'fixture-{name}'
         fixtures[name] = pair(path, path / 'program.json', ('baseline', 'candidate'))
         assert any(row['calls'] > 0 for row in fixtures[name]['context_work'].values())
@@ -72,15 +74,15 @@ def check_prefix(root, commit, phase="prefix"):
     assert 'Finished `dev` profile' in path.read_text()
     tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
     result = dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
-        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc', 'witness': '3bd9d21e', 'lease': 'c4e74d7c'}[phase], candidate_commit=commit, semantic_acceptance='pass',
+        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc', 'witness': '3bd9d21e', 'lease': 'c4e74d7c', 'scope': 'fdc9179c'}[phase], candidate_commit=commit, semantic_acceptance='pass',
         unchanged_report_groups_excluding=counters, compared_report_groups=GROUPS,
         unchanged_work_metrics=len(metrics[0]) - len(changes), changed_work_metrics=changes,
         fixtures=fixtures, tests=tests,
         binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
         timing_cadence={'last_timed_commit': '7f4e24c2' if phase == 'prefix' else 'c8ef6edc',
-                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3, 'witness': 2, 'lease': 3}[phase]},
+                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3, 'witness': 2, 'lease': 3, 'scope': 4}[phase]},
         limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
-    if phase in ('root', 'compact', 'witness', 'lease'):
+    if phase in ('root', 'compact', 'witness', 'lease', 'scope'):
         program = load(root / 'sum/program.json')
         audit = load(root / 'relower.json')
         assert audit['status'] == 'pass' and audit['program_sha256'] == program['sha256']
@@ -102,6 +104,11 @@ def check_prefix(root, commit, phase="prefix"):
     if phase == 'lease':
         result['timing_cadence']['last_timed_commit'] = 'f1c69507'
         result['limits'] = ('A Cell prefix read prepares/selects its index once and returns both candidates and an exact-value lease; ordinary candidate reads use the same refinement implementation. The standalone read_stamp API and repeated count/stamp/candidates sequence are removed. The lease pins the base bucket, not just a refined result, and an empty bucket is distinct from budget rejection. Exact-row invalidation still differs from membership-only projection stamps. Existing work counters do not instrument removed preparation/selection calls; no allocation or speed claim. Cache scope invalidation and other query/index lifetimes remain.')
+    if phase == 'scope':
+        result['timing_cadence']['last_timed_commit'] = 'f1c69507'
+        switched = fixtures['switch']['context_work']
+        assert any(len(row['orientations']) >= 2 for row in switched.values()), 'exercise selection of another Cell template'
+        result['limits'] = ('Context instances retain the selected immutable Cell plan, not a separate root/tail identity. Endpoints and read tables come from compiled instructions, eliminating runtime source Rule lookup/cloning. Version equality reads the current graph directly; only an invalidated scope refreshes its existing snapshot allocation. Plan switches discard old state, while exact root/read leases and canonical-literal union resets remain. The added shared plan reference is retained until this cache is dropped or switched. Existing counters do not measure metadata bytes or removed temporary allocations; no speed claim and no full cache/index takeover.')
     if phase == 'selection':
         program = load(root / 'sum/program.json')
         all_cuts = program['context_cuts']
@@ -126,7 +133,7 @@ def check_prefix(root, commit, phase="prefix"):
 
 
 def check(root, commit, phase='branches'):
-    if phase in ('prefix', 'selection', 'root', 'compact', 'witness', 'lease'):
+    if phase in ('prefix', 'selection', 'root', 'compact', 'witness', 'lease', 'scope'):
         return check_prefix(root, commit, phase)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
@@ -233,6 +240,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact', 'witness', 'lease'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact', 'witness', 'lease', 'scope'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')

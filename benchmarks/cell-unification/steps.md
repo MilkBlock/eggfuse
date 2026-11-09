@@ -408,3 +408,14 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 12 次相关测试通过，含稀疏/非稀疏精确凭证、空 bucket、预算回退、强制碰撞、已排除行变成命中、迟到输入和普通 Free Join 回归。最小 feature 编译、22 个组件重新 lowering、sum-bits 语义脚本均通过；1,428 个 Run、state、346 项工作指标不变，三个短 context 样例的 state/stages/binding-audit 一致。输出 `out/cell-leased-query`，验证 `check_context.py ROOT OUTPUT --commit COMMIT --phase lease`。3→1 指可接受前缀读取的源代码准备/选择调用数，未作为采样得到的机器指令或时间收益；现有 port_probes 也不是 committed mutations。
 
 上次测速后第 3 个实现提交，不单独测速。跨 Run scope 版本快照、context admission 和其他查询索引/缓存生命周期仍待统一，完整重写与最终多线程验收尚未完成。
+
+
+## Context 实例绑定共享 Cell 模板及其读取范围
+
+上一轮已把候选与精确读取凭证合为一次操作。本次继续检查跨 Run 的上层有效性：Context 还用独立的 (root, tail) 编号标识缓存来源，运行时又查找/克隆源 Rule 获得端点表，每次验证还构造新的版本 Vec。现在实例保留实际选中的不可变 Rc<Plan>，切换模板即丢弃旧状态；端点及前缀 read_tables 来自共享 Cell 指令，运行时不再读取源 Rule。编译器仍验证原始 query 及全部 cut 证书，旧 artifact 的 versions 字段只是 read_tables 的序列化视图。
+
+版本相等性直接比较现有快照与图中的当前 table versions；只有失效时才 clear/extend 原有快照，复用容量。root epoch、精确 ReadStamp、含等价类字面量的 union reset、超预算退回及迟到输入均保留。新增的缓存模板引用与原模板共享，不是第二份定义或运行时事实图；它只在切换/释放缓存时撤销。没有将版本快照等价误当作绕过精确行检查的证明。
+
+新增 context-switch.egg 让最小根随表规模改变再恢复；guarded-prefix 的实际 orientations 为 {0: 2, 2: 1}。与冻结旧二进制比较，四个短样例的 state/stages/binding-audit 及所有工作组一致。7 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过；sum-bits 1,428 个 Run、最终 state 和 346 项工作指标保持，语义脚本 pass。输出 `out/cell-context-scope`，复核 `check_context.py ROOT OUTPUT --commit COMMIT --phase scope`。现有指标没有计量被删除的临时 Vec 和 Rule clone，不据此给出分配数或速度收益。
+
+上次测速后第 4 个实现提交，未单独测速。该步完成 context 的模板身份与版本范围接管，其他候选索引、neighbor/view、边界及 Bake 的统一仍须继续，尚未完成整体重写或最终多线程验收。
