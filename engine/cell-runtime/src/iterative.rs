@@ -254,11 +254,8 @@ impl Catalog {
     pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
         self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
     }
-    pub(crate) fn capture_sources(&self, s: &State) -> &[crate::cell::Capture] {
-        self.switch.supply(s.pc)
-    }
-    pub(crate) fn history_depth(&self) -> usize {
-        self.switch.depth
+    pub(crate) fn capture(&self, s: &State) -> (&[crate::cell::Capture], usize) {
+        self.switch.capture(s.pc)
     }
     /// A fully executed rule seeds its producer node, or a unique legacy leaf.
     /// Keep this restricted to v2 receipts a compiled continuation demands.

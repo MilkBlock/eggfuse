@@ -519,3 +519,17 @@ marker 的字段在候选枚举前 lowering，缺少字面量证据时直接排�
 同轮配对候选/对照的推理比值依次为 1.009696 [0.965620, 1.023126]、0.998222 [0.973120, 1.031604]、1.018132 [0.989110, 1.037652]；进程比值依次为 1.006821 [0.978585, 1.027212]、1.003338 [0.974319, 1.077412]、0.997258 [0.976302, 1.032162]，方括号为配对 bootstrap 95% 区间。全部跨 1，没有建立加速或严格速度保持；单独中位数之比不替代配对结果。RSS 分别多 16、16、272 KiB，这是进程峰值而非分配次数。setup 也是运行时加载计划后的准备阶段，不是 native 编译器耗时。
 
 各路全部正式样本的最终 state 和 Run 序列一致，未混入分配诊断或最终多线程测试。源/typed 局部证明实现已共享，整体 Cell 统一和物化边界接管仍未完成；本批不能据此宣称 native egglog 加速。测速节奏从 acab2911 归零。
+
+## 按编译后 Cell 的后续读取裁剪结果历史
+
+上一目录 sum-bits 的 history_allocations=663、history_slots_written=1508、history_result_reads=592，没有深层 handoff。检查当前组合发现，所有 Cell 完成后仍采用整个 catalog 的最大 back 距离保存历史；一个深层模板会让浅层生产者也创建多阶段容器。现改由同一 Switch 的实际 RHS/query 读取、继承跳转和默认重启计算每个状态的保留深度。每次 Bake 重建组合时一起重算，运行时只读取该状态的静态界限，删除全局深度的捕获接口。
+
+转移 i→j 时，i 必须保留 j 直接读取的 back 层，以及 j 后续所需深度减一；有当前输出的状态至少保留一层供普通见证读取。固定点只在共享模板上运行，不新增实例依赖图或生产者消费者列表。History 支持一层/多层之间转换，复用已发布的单层 Rc，保留空阶段的真实偏移；裁剪当前分支不影响已经发布的兄弟实例。存活、完整 key、原 Run 顺序和退役回退继续执行。
+
+22 项相关测试和最小 feature 编译通过，覆盖变深/变浅、空阶段、已发布历史、两 Run 以前的结果、删除后回退和 Bake credit。新增 history-retention.egg 与 emit_cell_retention 示例固定构造 A→AB→ABC 组合；这是用于覆盖深层行为的人工目录，不是 profile 学得的提速结论。两个短样例分别保留/删除一个结果，在普通和全碰撞哈希下对照冻结 acab2911。各样例的历史容器分配 10→6，历史槽位写入 10→8；正常链实际深层复用 4 次，删除链 3 次，其他工作计数、state、逐 Run stage 和 binding audit 全部相同。8 个进程均小于 1 秒，耗时只作样例预算检查。
+
+sum-bits 的 1,428 个 Run、state、346 项工作指标保持，语义验收脚本 pass，22 个编译组件重新 lowering 一致；这个样例没有新的历史计数收益。运行对象是 standalone Cell CPU。history_allocations 是现有结构容器计数，不能作为整个分配器调用/字节或加速证据。新增每状态一个深度字、深层单帧的 Trail 标签和编译期固定点成本尚未测速；原全局 max_back 保留为 wire 证书，实例保存深度由当前 Cell 组合决定。
+
+产物 out/cell-retention-scope。复核：`python3 benchmarks/cell-unification/check_retention.py out/cell-retention-scope OUTPUT.json --commit COMMIT`。冻结普通 release runtime 使用 sparse-cells,view-ports,storage-metrics；`cargo run --release --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --example emit_cell_retention -- OUTPUT_ROOT` 生成两个深层样例，ROOT 中准备 runtime-baseline/candidate 后执行 `python3 benchmarks/cell-unification/run_retention_fixtures.py ROOT`。测试构建与普通 release 分离。
+
+这是 acab2911 测速后的第 1 个实现提交，不单独测速。源 marker 物化边界、全局片段选取及整体 Bake 接管仍未完成；本次只使结果历史的保留边界随已编译 Cell 组合变化。

@@ -315,7 +315,9 @@ fn derive_stage(
 #[derive(Debug)]
 enum Trail {
     One(Results),
-    Many(Vec<Option<Rc<Results>>>),
+    // Each entry is empty or One. Reuse an existing One when a later Cell
+    // needs a deeper history; do not copy its results into another owner.
+    Many(Vec<History>),
 }
 #[derive(Clone, Debug, Default)]
 pub(crate) struct History(Option<Rc<Trail>>);
@@ -336,7 +338,11 @@ impl History {
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
-        if limit == 0 || (wanted.is_empty() && self.0.is_none()) {
+        if limit == 0 {
+            self.0 = None;
+            return CaptureWork::default();
+        }
+        if wanted.is_empty() && self.0.is_none() {
             return CaptureWork::default();
         }
         let mut results = Results::new(rid);
@@ -360,10 +366,11 @@ impl History {
         }
         let prev = match self.0.as_deref() {
             Some(Trail::Many(v)) => v.as_slice(),
+            Some(Trail::One(_)) => std::slice::from_ref(self),
             _ => &[],
         };
         let prev = &prev[prev.len().saturating_sub(limit - 1)..];
-        if frame.is_none() && !prev.iter().any(Option::is_some) {
+        if frame.is_none() && !prev.iter().any(|h| h.0.is_some()) {
             self.0 = None;
             return work;
         }
@@ -371,7 +378,7 @@ impl History {
         work.allocations = 2 + usize::from(frame.is_some());
         let mut v = Vec::with_capacity(prev.len() + 1);
         v.extend_from_slice(prev);
-        v.push(frame.map(Rc::new));
+        v.push(History(frame.map(|f| Rc::new(Trail::One(f)))));
         self.0 = Some(Rc::new(Trail::Many(v)));
         work
     }
@@ -381,7 +388,10 @@ impl History {
     fn frame(&self, back: usize) -> Option<&Results> {
         match self.0.as_deref()? {
             Trail::One(e) if back == 1 => Some(e),
-            Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_deref(),
+            Trail::Many(v) => match v.get(v.len().checked_sub(back)?)?.0.as_deref()? {
+                Trail::One(result) => Some(result),
+                Trail::Many(_) => unreachable!("Cell history entries contain one completed frame"),
+            },
             _ => return None,
         }
     }
@@ -423,6 +433,27 @@ struct Node {
     program: Terminal,
     next: Vec<((usize, usize), usize)>,
     supply: Vec<Capture>,
+    #[serde(skip)]
+    keep_history: usize,
+}
+
+/// Liveness after this Cell completes. A successor's direct read needs `back`
+/// frames; its future retention needs one fewer before it adds its own frame.
+/// Include inherited edges and default restarts, not just trie children.
+fn retained_depths(nodes: &[Node], initial: &[usize]) -> Vec<usize> {
+    let reads = nodes.iter().map(|n| n.program.reuse.iter().map(|r| r.back)
+        .chain(n.program.queries.iter().map(|r| r.back)).max().unwrap_or(0)).collect::<Vec<_>>();
+    let mut keep = nodes.iter().map(|n| usize::from(!n.supply.is_empty())).collect::<Vec<_>>();
+    loop {
+        let fallback = initial.iter().map(|&j| reads[j].max(keep[j].saturating_sub(1))).max().unwrap_or(0);
+        let mut changed = false;
+        for (i, node) in nodes.iter().enumerate() {
+            let need = node.next.iter().map(|&(_, j)| reads[j].max(keep[j].saturating_sub(1)))
+                .max().unwrap_or(0).max(fallback);
+            if need > keep[i] { keep[i] = need; changed = true; }
+        }
+        if !changed { return keep; }
+    }
 }
 impl Default for Terminal {
     fn default() -> Self {
@@ -466,6 +497,7 @@ impl Switch {
             program: Default::default(),
             next: vec![],
             supply: vec![],
+            keep_history: 0,
         };
         let mut nodes = vec![blank()];
         let mut ids = BTreeMap::new();
@@ -543,6 +575,10 @@ impl Switch {
             s.sort_unstable();
             s.dedup();
         }
+        let keep = retained_depths(&nodes, &initial);
+        for (node, keep) in nodes.iter_mut().zip(keep) {
+            node.keep_history = keep;
+        }
         // Every reader and writer uses this one Cell result layout. Runtime
         // frames no longer repeat Site tags or search them on each access.
         let port = |rule: usize, site: Site| ResultPort::new(rule,
@@ -608,8 +644,8 @@ impl Switch {
             .find(|(k, _)| *k == (op, leaf))
             .map_or(self.initial[leaf], |x| x.1)
     }
-    pub(crate) fn supply(&self, id: usize) -> &[Capture] {
-        self.nodes.get(id).map_or(&[], |n| n.supply.as_slice())
+    pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize) {
+        self.nodes.get(id).map_or((&[], 0), |n| (n.supply.as_slice(), n.keep_history))
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| &n.program)
@@ -683,6 +719,51 @@ mod tests {
         history.capture(3, 8, &[], |_| None, |_| None);
         assert_eq!(history.get(2, port), Some(new));
         assert_eq!(history.get(4, port), None);
+    }
+    #[test]
+    fn changing_cell_retention_preserves_shared_frames_and_empty_stages() {
+        let port = ResultPort::new(4, 0);
+        let capture = [Capture { site: Site::Effect(2), port }];
+        let old = Dependency::Function(9);
+        let new = Dependency::Function(12);
+        let mut history = History::default();
+        assert_eq!(history.capture(1, 4, &capture, |_| None, |_| Some(old)).allocations, 1);
+        let published = history.clone();
+        assert_eq!(history.capture(2, 8, &[], |_| None, |_| None).allocations, 2);
+        assert_eq!(history.get(1, port), None);
+        assert_eq!(history.get(2, port), Some(old));
+        history.capture(1, 4, &capture, |_| None, |_| Some(new));
+        assert_eq!(history.get(1, port), Some(new));
+        assert_eq!(history.get(2, port), None);
+        history.capture(3, 8, &[], |_| None, |_| None);
+        history.capture(3, 8, &[], |_| None, |_| None);
+        assert_eq!(history.get(3, port), Some(new));
+        history.capture(0, 8, &[], |_| None, |_| None);
+        assert!(history.0.is_none());
+        assert_eq!(published.get(1, port), Some(old));
+    }
+    #[test]
+    fn completed_cells_retain_only_reachable_future_reads() {
+        let node = |supply: bool, back, next| Node {
+            unit: 0, failure: 0,
+            program: Terminal {
+                reuse: if back == 0 { vec![] } else { vec![Reuse {
+                    equal_output: true, op: 0, back, rule: 4,
+                    donor: Site::Effect(2), port: None,
+                }] }, ..Default::default()
+            },
+            next, supply: if supply { vec![Capture {
+                site: Site::Effect(2), port: ResultPort::new(4, 0),
+            }] } else { vec![] }, keep_history: 0,
+        };
+        let nodes = [node(false, 0, vec![]),
+            node(true, 0, vec![((0, 0), 2)]),
+            node(false, 0, vec![((0, 0), 3)]),
+            node(false, 2, vec![((0, 0), 1)]),
+            node(false, 0, vec![])];
+        // A saves one current result, AB carries it through an empty stage,
+        // ABC consumes it and can release history, including on restart.
+        assert_eq!(retained_depths(&nodes, &[1, 4]), vec![0, 1, 2, 0, 0]);
     }
     #[test]
     fn conditional_closure_matches_full_scan_through_hides_and_pending_unions() {

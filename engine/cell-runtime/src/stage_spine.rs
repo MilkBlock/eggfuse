@@ -274,14 +274,12 @@ impl Started {
         effect: impl Fn(usize) -> Option<Dependency>,
         stats: &mut Stats,
     ) {
-        if cat.history_depth() == 0 {
-            return;
-        }
         if let Self::Live(c) = self {
+            let (sources, depth) = cat.capture(&c.state);
             let work = c.state.history.capture(
-                cat.history_depth(),
+                depth,
                 rid,
-                cat.capture_sources(&c.state),
+                sources,
                 read,
                 effect,
             );
