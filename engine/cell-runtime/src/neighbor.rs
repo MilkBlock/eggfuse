@@ -42,13 +42,17 @@ pub(crate) fn derive(p: &Program) -> Vec<Option<Plan>> {
                     continue;
                 }
                 if let Call::Table(t) = atom.call {
-                    let [key @ Arg::Slot(_), _] = atom.args.as_slice() else {
+                    let [Arg::Slot(_), _] = atom.args.as_slice() else {
                         return None;
                     };
                     if t != write.table || p.tables[t].schema[0]["kind"] != "eq" {
                         return None;
                     }
-                    children.push((i, fields.iter().position(|arg| arg == key)?));
+                    let link = p.cell_links[rid].between(structure, i)?;
+                    let column = link.columns.iter().find(|(_, to, _)| *to == 0)?.2;
+                    // Neighbor queries require a constructor input, not its result.
+                    if column >= fields.len() { return None; }
+                    children.push((i, column));
                 }
             }
             // Each expansion must enumerate this constructor through a bound expression.

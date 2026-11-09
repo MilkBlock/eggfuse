@@ -15,6 +15,9 @@ pub(crate) use results::{Capture, ResultPort, Results};
 #[path = "cell_query.rs"]
 mod query;
 pub(crate) use query::{Access, Queries, Query, query_order};
+#[path = "cell_links.rs"]
+mod links;
+pub(crate) use links::QueryLinks;
 #[path = "cell_effects.rs"]
 mod effects;
 pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};

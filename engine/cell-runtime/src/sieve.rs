@@ -3,13 +3,13 @@
 //! Interned by table/columns/dependencies, not ruleset or source variable names.
 use crate::{
     graph::{Dependency, Graph},
-    program::{Arg, Call, Program, Result},
+    program::{Call, Program, Result},
     query::QueryIndexes,
 };
 use rustc_hash::FxHashMap as HashMap;
 #[cfg(not(feature = "sparse-cells"))]
 use rustc_hash::FxHashSet as HashSet;
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::VecDeque;
 use std::hash::{Hash, Hasher};
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -160,41 +160,17 @@ impl Sieve {
             },
         };
         let mut intern = HashMap::default();
-        for rule in &program.rules {
+        for (rid, rule) in program.rules.iter().enumerate() {
             let q = &rule.query;
+            let links = &program.cell_links[rid];
             let mut targets = vec![vec![]; q.len()];
             if enabled {
                 // One deterministic spanning forest; never enumerate paths or
                 // combinations. O(atoms^2) planning, <=2*(atoms-1) messages.
-                let slots = q
-                    .iter()
-                    .map(|a| {
-                        a.args
-                            .iter()
-                            .enumerate()
-                            .filter_map(|(i, a)| match a {
-                                Arg::Slot(s) => Some((*s, i)),
-                                _ => None,
-                            })
-                            .fold(BTreeMap::new(), |mut m, (s, c)| {
-                                m.entry(s).or_insert(c);
-                                m
-                            })
-                    })
-                    .collect::<Vec<_>>();
                 let mut edges = vec![];
                 for a in 0..q.len() {
-                    if !matches!(q[a].call, Call::Table(_)) {
-                        continue;
-                    }
-                    for b in a + 1..q.len() {
-                        if !matches!(q[b].call, Call::Table(_)) {
-                            continue;
-                        }
-                        let count = slots[a].keys().filter(|s| slots[b].contains_key(s)).count();
-                        if count > 0 {
-                            edges.push((std::cmp::Reverse(count), a, b))
-                        }
+                    for link in links.from(a).iter().filter(|link| link.atom > a) {
+                        edges.push((std::cmp::Reverse(link.distinct().count()), a, link.atom));
                     }
                 }
                 edges.sort();
@@ -216,7 +192,7 @@ impl Sieve {
                     s: &mut Sieve,
                     intern: &mut HashMap<Spec, usize>,
                     q: &[crate::program::Atom],
-                    slots: &[BTreeMap<usize, usize>],
+                    links: &crate::cell::QueryLinks,
                     tree: &[Vec<usize>],
                     from: usize,
                     to: usize,
@@ -226,10 +202,8 @@ impl Sieve {
                         return v.clone();
                     }
                     // Order by sender columns, independent of slot numbering.
-                    let mut shared = slots[from]
-                        .iter()
-                        .filter_map(|(v, c)| slots[to].get(v).map(|d| (*c, *d)))
-                        .collect::<Vec<_>>();
+                    let mut shared = links.between(from, to).expect("connected Cell atoms").distinct()
+                        .map(|(to, from)| (from, to)).collect::<Vec<_>>();
                     shared.sort();
                     let cols = shared.iter().map(|(c, _)| *c).collect();
                     let receiver = shared.iter().map(|(_, d)| *d).collect::<Vec<_>>();
@@ -237,7 +211,7 @@ impl Sieve {
                         .iter()
                         .filter(|n| **n != to)
                         .map(|n| {
-                            let (child, cols) = message(s, intern, q, slots, tree, *n, from, memo);
+                            let (child, cols) = message(s, intern, q, links, tree, *n, from, memo);
                             Guard { cols, child }
                         })
                         .collect::<Vec<_>>();
@@ -269,7 +243,7 @@ impl Sieve {
                 for to in 0..q.len() {
                     for from in &tree[to] {
                         let (child, cols) =
-                            message(&mut s, &mut intern, q, &slots, &tree, *from, to, &mut memo);
+                            message(&mut s, &mut intern, q, links, &tree, *from, to, &mut memo);
                         // A bare table membership is ordinary index filtering, not
                         // new fragment reuse. Only install genuinely joined summaries.
                         if !s.specs[child].guards.is_empty() {

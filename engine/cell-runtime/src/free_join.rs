@@ -90,7 +90,6 @@ pub(super) struct FreeJoin {
     pub survey: projection_survey::Survey,
     pub enabled: bool,
     pub stats: Stats,
-    plans: Vec<Vec<Vec<Subatom>>>,
     disjoint: DisjointPlan,
     expansion: Vec<Vec<Option<usize>>>,
     entry: Option<Rc<crate::entry_join::Plan>>,
@@ -138,12 +137,6 @@ impl DisjointPlan {
         result
     }
 }
-struct Subatom {
-    atom: usize,
-    table: usize,
-    // (shared slot, column in the follower, column in the cover)
-    links: Vec<(usize, usize, usize)>,
-}
 struct Probe {
     atom: usize,
     table: usize,
@@ -151,47 +144,10 @@ struct Probe {
     projection: SmallVec<[(usize, usize); 4]>,
 }
 
-fn subatoms(query: &[Atom], cover: usize) -> Vec<Subatom> {
-    if !matches!(query[cover].call, Call::Table(_)) {
-        return Vec::new();
-    }
-    let mut probes = Vec::new();
-    for (atom, follower) in query.iter().enumerate() {
-        let Call::Table(table) = follower.call else {
-            continue;
-        };
-        if atom == cover {
-            continue;
-        }
-        let links = follower
-            .args
-            .iter()
-            .enumerate()
-            .filter_map(|(col, arg)| {
-                let Arg::Slot(slot) = arg else { return None };
-                query[cover]
-                    .args
-                    .iter()
-                    .position(|v| v == arg)
-                    .map(|source| (*slot, col, source))
-            })
-            .collect::<Vec<_>>();
-        if !links.is_empty() {
-            probes.push(Subatom { atom, table, links });
-        }
-    }
-    probes
-}
-
 impl FreeJoin {
     pub fn new(p: &Program) -> Self {
         let enabled = true;
         let planned = true;
-        let plans = p
-            .rules
-            .iter()
-            .map(|r| (0..r.query.len()).map(|i| subatoms(&r.query, i)).collect())
-            .collect();
         let entry = Some(
             p.entry_join
                 .clone()
@@ -223,7 +179,6 @@ impl FreeJoin {
             }).collect()).collect(),
             epoch: None,
             results: HashMap::default(),
-            plans,
             stats: Stats::default(),
         }
     }
@@ -613,12 +568,13 @@ impl FreeJoin {
         };
         let mut columns = SmallVec::<[usize; 4]>::new();
         let mut probes = SmallVec::<[Probe; 2]>::new();
-        for sub in &self.plans[rid][cover] {
+        for sub in g.program.cell_links[rid].from(cover) {
             if !remaining[sub.atom] {
                 continue;
             }
+            let Call::Table(table) = query[sub.atom].call else { unreachable!("Cell column link") };
             let mut projection = SmallVec::new();
-            for &(slot, col, pos) in &sub.links {
+            for &(slot, col, pos) in &sub.columns {
                 if env.values.get(slot).is_some() {
                     continue;
                 }
@@ -644,10 +600,10 @@ impl FreeJoin {
                     *col = selectors.len();
                     selectors.push((source_col, 0));
                 }
-                index.ensure_selected(g,sub.table,selectors.iter().map(|(col,_)|*col))?;
+                index.ensure_selected(g,table,selectors.iter().map(|(col,_)|*col))?;
                 probes.push(Probe {
                     atom: sub.atom,
-                    table: sub.table,
+                    table,
                     selectors,
                     projection,
                 });

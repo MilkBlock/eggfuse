@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "ab33d47c",
-    "implementation_commits_since_timing": 2,
+    "implementation_commits_since_timing": 3,
     "evidence": "benchmarks/cell-unification/routes-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not count. User authorized this checkpoint after three implementation commits; next interval is five.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -94,7 +94,8 @@
         "Residual Query uses the same Field and Step definitions; old register Step/seed/assign execution and source-slot readers removed.",
         "Anchor and current candidate columns are borrowed; computed values and prefix continuations use the common Cell instruction positions.",
         "Complete and residual entries reuse the same Rc<Query> when their certified order agrees; 177 shared plans on sum-bits.",
-        "Common BoundStep borrows expected output values, including source entries and repair Cells."
+        "Common BoundStep borrows expected output values, including source entries and repair Cells.",
+        "Free Join entry projection, runtime partitioning, Sieve forests and neighbor child projection share Cell QueryLinks. The independent runtime Subatom plan and repeated slot/column discovery are removed; duplicate-column roles and original filter order remain."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
@@ -133,7 +134,8 @@
           "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/residual-timing-spec.json out/cell-residual-unified/timing --repeat 7 --warmups 1",
           "python3 benchmarks/cell-unification/collect.py out/cell-residual-unified benchmarks/cell-unification/residual-results.json --part residual"
         ]
-      }
+      },
+      "links_checks": "benchmarks/cell-unification/links-check.json"
     },
     {
       "id": "rhs_publication",
@@ -302,14 +304,18 @@
     {
       "id": "B2",
       "title": "Free Join、Sieve 与范围过滤",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "B2"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "B2",
+      "evidence": "benchmarks/cell-unification/links-check.json",
+      "remaining": "Static shared-column wiring is common and consumed by existing filters. Range guards, dynamic join choice, local-context prefixes, candidate index lifecycle and runtime speed acceptance remain."
     },
     {
       "id": "B3",
       "title": "邻居、局部 context 与 view 消费",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "B3"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "B3",
+      "evidence": "benchmarks/cell-unification/links-check.json",
+      "remaining": "Static shared-column wiring is common and consumed by existing filters. Range guards, dynamic join choice, local-context prefixes, candidate index lifecycle and runtime speed acceptance remain."
     },
     {
       "id": "C1",

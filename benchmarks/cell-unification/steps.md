@@ -224,3 +224,15 @@ dispatch 现在在重置状态时移出原 History；已接纳的消费者仍由
 见证来源与 query receipt 的 15 项短检查、2 项 dispatch/训练检查和最小特性编译通过；在既有 dispatch 检查中同时验证重置后的 state 为空，而移出的原结果仍能供当前查询使用。普通 sum-bits 语义 pass，1,428 个 Run、最终状态及 326 项工作指标保持。full fixture 的历史句柄复制 2→0，逐阶段 state、绑定顺序及其他工作计数保持；物理恢复继续为零。sum-bits 不命中该见证路线，因此这里的行为证据来自短 fixture，不能用 sum-bits 的稳定指标宣称该路径已加速。
 
 输出保存在 `out/cell-history-unified`，仅重跑受影响的 full fixture 和一次普通 sum-bits，未采样时间/分配。复现命令沿用上一节，检查器增加 `--phase history`，结果写入 `history-check.json`。这是本轮第 2 个实现提交；整个 Cell 重写和速度验收仍未完成，多线程恢复阶段尚未启动。
+
+## Free Join、Sieve 与邻居投影共用 Cell 字段连接
+
+基线 `78836033`。此前 sum-bits 执行 810 次 Free Join 分组、21,635 次入口探测，Sieve 建立 526 个 summary。入口编译、FreeJoin::new、Sieve::new 分别搜索原子间共享字段；邻居计划又单独定位构造子字段。原子编号、slot 和列之间的关系都来自同一份已验证 Cell query，不需要各自解释一次。
+
+Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Free Join 入口、运行时分组、Sieve 的确定性 spanning forest 和邻居 child 投影直接消费这份静态连接。删除 FreeJoin 的独立 Subatom 类型、plans 数组和建图循环，删除 Sieve 的 slot→列 map 构造及独立求交；邻居查询不再独立扫描构造子字段。runtime 分组仍直接读取预编译 binding slot，未为了缩小布局而改成逐列重新解码 Arg。目标表从原 query 指令获取。
+
+连接保留 follower 的每一次重复列，driver 选择原来的首次出现；Sieve 使用其去重视图，仍按 sender 列排序和原子序打破平局。字面量不是共享 slot，primitive 不是表候选，邻居关系只能指向构造子输入。入口约束的排序、半朴素归属、碰撞后的完整验证、失效版本、Sieve 更新和未知边界处理均保持。原产物格式不变，装载时仍从 typed query 独立校验 emitted 计划；旧的缺失计划也使用同一 Cell wiring 补齐。
+
+最终普通构建的 sum-bits 语义 pass，1,428 个 Run、最终状态、326 项工作指标和完整 Free Join/Sieve/neighbor 计数保持。源 recipe 有 3,018 对有向原子连接、3,231 项列连接；这是静态覆盖量，不是运行时匹配或已提交 mutation。短检查覆盖重复列/字面量、循环连接和晚到行、强制哈希碰撞、晚到 bridge、邻居值替换/删除重建/union repair、旧产物与损坏计划拒绝；4 项针对性测试及最小编译通过。
+
+这一步删除重复准备并统一静态连接，未把必要的 runtime summaries、候选索引或范围过滤宣称为已删除，也不从计数相同推出加速。范围条件、动态 join 选择、local-context prefix 及 index 生命周期仍待统一。输出在 `out/cell-links-checked`，sum 和 semantic/catalog 命令沿用前节；`check_links.py ROOT benchmarks/cell-unification/links-check.json --commit COMMIT` 校验结果。测试命令记录在 `test-{final-unit,free-join,sieve,neighbor,final-minimal}.log`：分别为 runtime 的 `cell::links::tests`，compiler 集成测试 `free_join_preserves_cyclic_matches_and_late_rows_under_collisions`、`a_late_bridge_wakes_a_rule_with_an_empty_join_summary`、`changed_child_ports_follow_value_replacement_and_key_repair`，以及 no-default-features compile。本轮第 3 个实现提交，不新增速度/分配采样，历史回退仍未解决。

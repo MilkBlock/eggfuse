@@ -44,35 +44,30 @@ impl Plan {
         let mut ids = BTreeMap::new();
         let mut projections = vec![];
         let mut entries = Vec::with_capacity(p.rules.len());
-        for rule in &p.rules {
+        for (rid, rule) in p.rules.iter().enumerate() {
             let mut pivots = vec![vec![]; rule.query.len()];
             if rule.seminaive && rule.direct.is_none() {
                 for (pivot, driver) in rule.query.iter().enumerate() {
                     if !matches!(driver.call, Call::Table(_)) {
                         continue;
                     }
-                    for (atom, other) in rule.query.iter().enumerate() {
+                    for link in p.cell_links[rid].from(pivot) {
+                        let atom = link.atom;
+                        let other = &rule.query[atom];
                         let Call::Table(table) = other.call else {
                             continue;
                         };
-                        if atom == pivot {
-                            continue;
-                        }
                         let mut columns = vec![];
-                        let mut shared = false;
+                        let mut shared = link.columns.iter().peekable();
                         for (col, arg) in other.args.iter().enumerate() {
                             match arg {
                                 Arg::Literal(v) => columns.push((col, Source::Literal(v.clone()))),
                                 Arg::Slot(_) => {
-                                    if let Some(i) = driver.args.iter().position(|x| x == arg) {
-                                        columns.push((col, Source::Cover(i)));
-                                        shared = true;
+                                    if shared.peek().is_some_and(|(_, to, _)| *to == col) {
+                                        columns.push((col, Source::Cover(shared.next().unwrap().2)));
                                     }
                                 }
                             }
-                        }
-                        if !shared {
-                            continue;
                         }
                         let projection = Projection { table, columns };
                         let index = *ids.entry(projection.clone()).or_insert_with(|| {

@@ -39,7 +39,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[entry_join.rs](../../engine/cell-runtime/src/entry_join.rs) · [free_join.rs](../../engine/cell-runtime/src/free_join.rs) · [sieve.rs](../../engine/cell-runtime/src/sieve.rs) · [physical_plan.rs](../../engine/cell-runtime/src/physical_plan.rs)
+代码：[entry_join.rs](../../engine/cell-runtime/src/entry_join.rs) · [free_join.rs](../../engine/cell-runtime/src/free_join.rs) · [sieve.rs](../../engine/cell-runtime/src/sieve.rs) · [physical_plan.rs](../../engine/cell-runtime/src/physical_plan.rs) · [cell_links.rs](../../engine/cell-runtime/src/cell_links.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -47,11 +47,11 @@
 | 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]` |
 | 覆盖 / 规模 / 回退 | `program:/free_join_entry [count]`<br>`program:/physical_plan/ranges [count]` |
 
-解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。
+解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md)
+证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md)
 
 ## B3 · 邻居、局部 context 与 view 消费
 
@@ -63,7 +63,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[neighbor.rs](../../engine/cell-runtime/src/neighbor.rs) · [local_context.rs](../../engine/cell-runtime/src/local_context.rs) · [view_plan.rs](../../engine/cell-runtime/src/view_plan.rs)
+代码：[neighbor.rs](../../engine/cell-runtime/src/neighbor.rs) · [local_context.rs](../../engine/cell-runtime/src/local_context.rs) · [view_plan.rs](../../engine/cell-runtime/src/view_plan.rs) · [cell_links.rs](../../engine/cell-runtime/src/cell_links.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -71,8 +71,8 @@
 | 成本 / 剩余工作 | `report:/neighbor_context/rules/*/stats/build_visits [sum]`<br>`report:/neighbor_context/publication/refreshed [value]`<br>`report:/view_consumers/port_payload_deliveries [value]` |
 | 覆盖 / 规模 / 回退 | `report:/neighbor_context/demanded_keys [value]`<br>`report:/local_context/cut_rules [value]`<br>`report:/view_consumers/groups [count]` |
 
-解释与缺口：每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。
+解释与缺口：每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/VIEW_CONSUMER_BLOCKS.md](../../docs/VIEW_CONSUMER_BLOCKS.md)
+证据：[docs/VIEW_CONSUMER_BLOCKS.md](../../docs/VIEW_CONSUMER_BLOCKS.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md)
