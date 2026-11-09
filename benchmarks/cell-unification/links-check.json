@@ -1,0 +1,98 @@
+{
+  "scope": "standalone Cell CPU; normal release sum-bits; no new timing/allocation audit",
+  "baseline_commit": "78836033",
+  "candidate_commit": "563e4ab0",
+  "semantic_acceptance": "pass",
+  "runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "unchanged_work_metric_values_or_missing_status": 326,
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical"
+  ],
+  "static_source_wiring": {
+    "directed_atom_pairs": 3018,
+    "column_links": 3231,
+    "scope": "computed from typed recipe, not executed matches or mutations"
+  },
+  "free_join": {
+    "bucket_rows_examined": 1359,
+    "bucket_rows_materialized": 130,
+    "cache_capacity_resets": 0,
+    "cover_rows": 1196,
+    "disjoint_key_reads": 3064,
+    "disjoint_rule_skips": 239,
+    "empty_entry_batches": 4474,
+    "entry_bucket_rows_examined": 927,
+    "entry_bucket_rows_materialized": 5056,
+    "entry_cache_hits": 33,
+    "entry_delta_rejections": 1530,
+    "entry_domains": 7266,
+    "entry_point_uses": 304,
+    "entry_probes": 21635,
+    "entry_rejections": 11223,
+    "entry_rows": 19074,
+    "key_groups": 1154,
+    "membership_only": 1652,
+    "probes": 1407,
+    "rejected_cover_rows": 165,
+    "reverse_empty": 186,
+    "reverse_epoch_bins": 3621,
+    "reverse_keys": 762,
+    "reverse_refs": 705,
+    "reverse_stages": 301,
+    "shared_column_reads": 19287,
+    "single_domain_seeds": 5254,
+    "stages": 810,
+    "subtrie_uses": 2089
+  },
+  "sieve_stats": {
+    "added_keys": 7102,
+    "build_rows": 12076,
+    "builds": 526,
+    "dependency_rows": 2494,
+    "empty_join_skips": 474,
+    "probes": 15561,
+    "rejected": 10319,
+    "reused_summaries": 4965,
+    "rule_uses": 4447,
+    "update_rows": 30833
+  },
+  "tests": {
+    "final-unit": {
+      "passed": 1,
+      "log_sha256": "2fe32fc4865b3191007a4f7059245699eb2cc3a58cbf25ad1188159f45f3361c"
+    },
+    "free-join": {
+      "passed": 1,
+      "log_sha256": "7c989c8a912ec40ed338ab4e78e30fc8bc82fcacc30fa4adbcbfc3eba8f68979"
+    },
+    "sieve": {
+      "passed": 1,
+      "log_sha256": "9b40f49f830d703658e4f57022bb2ba32af04b2acc252d221bb029763fa71125"
+    },
+    "neighbor": {
+      "passed": 1,
+      "log_sha256": "31847ad57a31bd8680f0de265c4f57bf11ea7c28d4277b4ea888bed29c8e4266"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "eb61a52ee309fa49926c7017343710b651761bd67d34c6d1a062845af5bc514c"
+    }
+  },
+  "binaries": {
+    "baseline": "d3783719c81a6f90ea8d2473fe63d9561a953dc2338f7345cd6532814b0dda40",
+    "candidate": "5375f3d925e4601b5c7f435264549e89c62af60e671e35fc1b48f1689b62ef41"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "ab33d47c",
+    "implementation_commits_since_timing": 3
+  },
+  "limits": "Common static wiring removes duplicate preparation; filters and live indexes remain necessary. No speedup or full B2/B3 takeover claimed; prior timing regression remains unresolved."
+}
