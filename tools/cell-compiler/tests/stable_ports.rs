@@ -419,6 +419,52 @@ fn stable_address_survives_representative_change_and_expires_on_recreation() {
 }
 
 #[test]
+fn dynamic_miss_reuses_lookup_without_changing_slots_ids_or_alias_semantics() {
+    use eggfuse_cell_runtime::program::Arg;
+    use std::collections::BTreeMap;
+
+    let p = source("(datatype E (N i64) (F E)) (N 0) (N 1) (run-schedule (run))");
+    let n = p.tables.iter().position(|t| t.name == "N").unwrap();
+    let f = p.tables.iter().position(|t| t.name == "F").unwrap();
+    for ports in [false, true] {
+        let make = |p| if ports { Graph::new_with_local_congruence(p) }
+            else { Graph::new_with_repair_ports(p) }.unwrap();
+        let mut actual = make(p.clone());
+        let mut reference = make(p.clone());
+        let a = actual.lookup(n, &[Value::Int(0)]).unwrap().unwrap().values[1].clone();
+        let b = actual.lookup(n, &[Value::Int(1)]).unwrap().unwrap().values[1].clone();
+        for graph in [&mut actual, &mut reference] {
+            graph.enqueue_union(a.clone(), b.clone()).unwrap();
+            graph.repair().unwrap();
+        }
+        // b is an old, noncanonical alias. Exercise miss, canonical hit,
+        // deletion and recreation, comparing the former two-lookup path.
+        for (i, input) in [b.clone(), a.clone(), b.clone()].into_iter().enumerate() {
+            if i == 2 {
+                actual.hide(f, &[b.clone()], true).unwrap();
+                reference.hide(f, &[b.clone()], true).unwrap();
+            }
+            let before = actual.key_lookup_calls.get();
+            let value = actual.dynamic_construct(f, vec![input.clone()]).unwrap();
+            assert_eq!(actual.key_lookup_calls.get() - before, 1);
+            let old = if let Some(row) = reference.lookup(f, &[input.clone()]).unwrap() {
+                row.values.last().unwrap().clone()
+            } else {
+                let frame = reference.frame(reference.program.table_templates[f],
+                    BTreeMap::from([(0, input)])).unwrap();
+                reference.construct(frame, 0, f, &[Arg::Slot(0)], 1).unwrap()
+            };
+            assert_eq!(value, old, "result IDs must stay stable");
+            assert_eq!(actual.export().unwrap(), reference.export().unwrap());
+            assert_eq!(actual.stats.constructor_requests, reference.stats.constructor_requests);
+            assert_eq!(actual.stats.constructor_reused, reference.stats.constructor_reused);
+            assert_eq!(actual.stats.cells_created, reference.stats.cells_created);
+            assert_eq!(actual.lookup(f, &[b.clone()]).unwrap().unwrap().values[0], a);
+        }
+    }
+}
+
+#[test]
 fn simultaneous_input_changes_preserve_the_ordered_survivor() {
     compare(
         r#"

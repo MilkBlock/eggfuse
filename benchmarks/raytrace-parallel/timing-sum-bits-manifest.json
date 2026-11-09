@@ -1,0 +1,42 @@
+{
+  "lanes": {
+    "fast_archived": {
+      "runtime": "out/raytrace-parallel/fast-runtime",
+      "program": "/private/tmp/eggfuse-union-digest/out/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "fast_before": {
+      "runtime": "out/raytrace-parallel/runtime",
+      "program": "/private/tmp/eggfuse-union-digest/out/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "fast_current": {
+      "runtime": "out/raytrace-parallel/runtime-fixed",
+      "program": "/private/tmp/eggfuse-union-digest/out/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    },
+    "local_serial": {
+      "runtime": "out/raytrace-parallel/runtime-fixed",
+      "program": "/private/tmp/eggfuse-union-digest/out/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "local_before": {
+      "runtime": "out/raytrace-parallel/runtime",
+      "program": "/private/tmp/eggfuse-union-digest/out/ownership-fragments/baked-sum-final/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

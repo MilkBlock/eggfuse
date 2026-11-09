@@ -731,22 +731,7 @@ impl Graph {
             });
         }
     }
-    fn signal_domain(&self, id: u64) -> BTreeSet<Signal> {
-        let m = self.ownership.as_ref().unwrap();
-        let mut signals = m
-            .boundaries
-            .get(&id)
-            .map(|set| set.iter().copied().collect::<BTreeSet<_>>())
-            .unwrap_or_default();
-        if let Some(signal) = self.native_signal(id) {
-            signals.insert(signal);
-        }
-        signals
-    }
-    fn smallest_signal_domain(
-        &self,
-        bound: &[Option<Value>],
-    ) -> Option<(u64, BTreeSet<Signal>, usize)> {
+    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<u64> {
         let m = self.ownership.as_ref()?;
         m.stats
             .domain_planning_calls
@@ -758,49 +743,29 @@ impl Graph {
                     return None;
                 };
                 let id = root(&self.parents, *id);
-                let signals = self.signal_domain(id);
-                m.stats
-                    .domain_planning_signals
-                    .set(m.stats.domain_planning_signals.get() + signals.len() as u64);
-                let count = signals
-                    .iter()
-                    .map(|s| {
-                        let c = m.composition.components[s.component as usize]
-                            .as_ref()
-                            .unwrap();
-                        let shape = m.composition.shapes[c.shape].as_ref().unwrap();
-                        shape.signals[s.symbol]
-                            .iter()
-                            .filter_map(|step| {
-                                m.stats
-                                    .domain_planning_slice_steps
-                                    .set(m.stats.domain_planning_slice_steps.get() + 1);
-                                self.cells
-                                    .get(&c.frames[step.frame])
-                                    .and_then(|cell| cell.facts.get(&step.op))
-                                    .filter(|fact| fact.owned)
-                                    .map(|_| step.columns.len())
-                            })
-                            .sum::<usize>()
-                    })
-                    .sum::<usize>()
+                // Choosing a domain is only a heuristic. Reading bucket sizes
+                // avoids allocating and walking every losing domain just to
+                // choose one. A signal may cover many fields, so this estimate
+                // must never be used as a candidate-count upper bound.
+                let count = m.boundaries.get(&id).map_or(0, |s| s.len())
+                    + usize::from(self.native_signal(id).is_some())
                     + self.uses.get(&id).map_or(0, UseSet::len);
-                Some((id, signals, count))
+                Some((id, count))
             })
-            .min_by_key(|x| x.2)
+            .min_by_key(|x| x.1)
+            .map(|x| x.0)
     }
-    pub(super) fn owned_candidate_count(&self, table: usize, bound: &[Option<Value>]) -> usize {
-        self.smallest_signal_domain(bound)
-            .map_or(self.witness_count(table), |(_, _, n)| {
-                n.min(self.witness_count(table))
-            })
+    pub(super) fn owned_candidate_count(&self, table: usize, _bound: &[Option<Value>]) -> usize {
+        // Keep the public upper-bound contract without enumerating signal
+        // slices. The cheap domain-selection score is not a row count.
+        self.witness_count(table)
     }
     pub(super) fn owned_candidates(
         &self,
         table: usize,
         bound: &[Option<Value>],
     ) -> Vec<Dependency> {
-        let Some((id, signals, _)) = self.smallest_signal_domain(bound) else {
+        let Some(id) = self.smallest_signal_domain(bound) else {
             let rows = self.witnesses(table);
             let s = &self.ownership.as_ref().unwrap().stats;
             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
@@ -808,9 +773,17 @@ impl Graph {
                 .set(s.unbound_query_rows.get() + rows.len() as u64);
             return rows;
         };
-        let s = &self.ownership.as_ref().unwrap().stats;
+        let owner = self.ownership.as_ref().unwrap();
+        let s = &owner.stats;
         s.domain_queries.set(s.domain_queries.get() + 1);
         let mut result = BTreeSet::new();
+        let native = self.native_signal(id);
+        // Borrow only the selected bucket. A native signal can also be a
+        // boundary; visit it once. The result set preserves witness order.
+        let signals = owner.boundaries.get(&id).into_iter()
+            .flat_map(|set| set.iter()).copied()
+            .filter(|signal| Some(*signal) != native)
+            .chain(native);
         for signal in signals {
             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
             let m = &self.ownership.as_ref().unwrap().composition;

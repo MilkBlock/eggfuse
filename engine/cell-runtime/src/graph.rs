@@ -1724,7 +1724,11 @@ impl Graph {
     }
 
     pub fn dynamic_construct(&mut self, t: usize, args: Vec<Value>) -> Result<Value> {
-        if let Some(row) = self.lookup(t, &args)? {
+        let key = args
+            .iter()
+            .map(|v| canon(v, &self.parents))
+            .collect::<smallvec::SmallVec<[Value; 4]>>();
+        if let Some(row) = self.lookup_canonical(t, &key)? {
             return Ok(row.values.last().unwrap().clone());
         }
         let dst = args.len();
@@ -1732,13 +1736,12 @@ impl Graph {
             self.program.table_templates[t],
             args.into_iter().enumerate().collect(),
         )?;
-        self.construct(
-            cell,
-            0,
-            t,
-            &(0..dst).map(Arg::Slot).collect::<Vec<_>>(),
-            dst,
-        )
+        // Creating this empty frame changes neither Parents nor the constructor
+        // index. The lookup miss above still proves that this canonical key is
+        // absent; do not repeat the (potentially expensive) port-domain lookup.
+        // As before, dynamic hits do not enter the RHS constructor path.
+        self.stats.constructor_requests += 1;
+        self.insert_constructor(cell, 0, t, &key, dst)
     }
     pub fn enqueue_union(&mut self, a: Value, b: Value) -> Result<()> {
         self.stats.union_requests += 1;

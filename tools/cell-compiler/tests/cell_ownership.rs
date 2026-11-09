@@ -762,6 +762,8 @@ fn retained_inactive_routes_do_not_return_deleted_candidates() {
                 let mut bound = vec![None; schema.schema.len()];
                 bound[column] = Some(root.clone());
                 let candidates = g.candidates(table, &bound);
+                assert!(candidates.windows(2).all(|pair| pair[0] < pair[1]),
+                    "candidate witnesses must remain sorted and unique");
                 assert!(candidates.iter().all(|w| g.row(*w).unwrap().is_some()));
                 let expected = rows
                     .iter()
@@ -780,7 +782,9 @@ fn retained_inactive_routes_do_not_return_deleted_candidates() {
             .unwrap()
             > 0
     );
-    assert!(r["stats"]["domain_planning_slice_steps"].as_u64().unwrap() > 0);
+    assert!(r["stats"]["domain_queries"].as_u64().unwrap() > 0);
+    assert_eq!(r["stats"]["domain_planning_signals"], 0);
+    assert_eq!(r["stats"]["domain_planning_slice_steps"], 0);
     assert_eq!(r["stats"]["signal_port_detaches"], 0);
     egglog::EGraph::default()
         .parse_and_run_program(None, src)

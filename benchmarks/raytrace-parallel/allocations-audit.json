@@ -1,0 +1,183 @@
+{
+  "scope": "Separate allocator and ordered-effect audit executable; no diagnostic timings admitted",
+  "cases": {
+    "sum-bits": {
+      "before-audit/fast": {
+        "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+        "args": [
+          "--repair-ports",
+          "--entry-publications"
+        ],
+        "runs": 1428,
+        "hashes": {
+          "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+          "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+          "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+          "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        },
+        "allocations": {
+          "alloc_calls": 121280,
+          "free_calls": 89450,
+          "live_bytes_after": 151446077,
+          "live_bytes_before": 144540333,
+          "peak_live_requested_bytes": 151914392,
+          "realloc_calls": 18772,
+          "released_bytes": 22149778,
+          "requested_bytes": 29055522,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 19326
+      },
+      "before-audit/local": {
+        "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+        "args": [
+          "--local-congruence"
+        ],
+        "runs": 1428,
+        "hashes": {
+          "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+          "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+          "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+          "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        },
+        "allocations": {
+          "alloc_calls": 252581,
+          "free_calls": 216268,
+          "live_bytes_after": 153507711,
+          "live_bytes_before": 145753943,
+          "peak_live_requested_bytes": 153997898,
+          "realloc_calls": 38910,
+          "released_bytes": 42831754,
+          "requested_bytes": 50585522,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 19326
+      },
+      "fix-audit/fast": {
+        "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+        "args": [
+          "--repair-ports",
+          "--entry-publications"
+        ],
+        "runs": 1428,
+        "hashes": {
+          "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+          "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+          "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+          "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        },
+        "allocations": {
+          "alloc_calls": 120982,
+          "free_calls": 89152,
+          "live_bytes_after": 151446071,
+          "live_bytes_before": 144540327,
+          "peak_live_requested_bytes": 151914386,
+          "realloc_calls": 18772,
+          "released_bytes": 22140242,
+          "requested_bytes": 29045986,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 19222
+      },
+      "fix-audit/local": {
+        "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+        "args": [
+          "--local-congruence"
+        ],
+        "runs": 1428,
+        "hashes": {
+          "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+          "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+          "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+          "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+          "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+          "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+        },
+        "allocations": {
+          "alloc_calls": 213720,
+          "free_calls": 177407,
+          "live_bytes_after": 153507705,
+          "live_bytes_before": 145753937,
+          "peak_live_requested_bytes": 153997892,
+          "realloc_calls": 20731,
+          "released_bytes": 28437274,
+          "requested_bytes": 36191042,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 19222
+      }
+    },
+    "raytrace": {
+      "fix-audit/fast": {
+        "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+        "args": [
+          "--repair-ports",
+          "--entry-publications"
+        ],
+        "runs": 16883,
+        "hashes": {
+          "state.json": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+          "rhs.json": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+          "writes.json": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+          "resumes.json": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d",
+          "spine-shapes.json": "c81ed61157c8e464d67ae150d3eea1b2a47b2ca0861fe8bf125932878f180b0e",
+          "shape_without_program_hash": "62e995ce3d27206362334ae1b10169ab3bcfb571a78a8798888b0573b31a3311",
+          "schedule": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+        },
+        "allocations": {
+          "alloc_calls": 26931718,
+          "free_calls": 20929183,
+          "live_bytes_after": 1958851233,
+          "live_bytes_before": 465311444,
+          "peak_live_requested_bytes": 1959081921,
+          "realloc_calls": 3025102,
+          "released_bytes": 7446636875,
+          "requested_bytes": 8940176664,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 4330682
+      },
+      "fix-audit/local": {
+        "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+        "args": [
+          "--local-congruence"
+        ],
+        "runs": 16883,
+        "hashes": {
+          "state.json": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+          "rhs.json": "9525458df47d9b6ab987d6e657ecb97576453631352c4d762d7e1bc5fa32f58e",
+          "writes.json": "48295f40c16c56c057fffd01757d6be752f5a50d774e02e838adc0cd14fbfab0",
+          "resumes.json": "49edbeefc5f2e4330b49f82b773694fd7a21f8a6182a14c86392c3fb95e01e9d",
+          "spine-shapes.json": "c81ed61157c8e464d67ae150d3eea1b2a47b2ca0861fe8bf125932878f180b0e",
+          "shape_without_program_hash": "62e995ce3d27206362334ae1b10169ab3bcfb571a78a8798888b0573b31a3311",
+          "schedule": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+        },
+        "allocations": {
+          "alloc_calls": 50334671,
+          "free_calls": 43454618,
+          "live_bytes_after": 2111449235,
+          "live_bytes_before": 466449722,
+          "peak_live_requested_bytes": 2111767019,
+          "realloc_calls": 3344769,
+          "released_bytes": 9368736271,
+          "requested_bytes": 11013735784,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "key_lookup_calls": 4330682
+      }
+    }
+  },
+  "before-audit_runtime_sha256": "827d8569a4750c158ef59a2153b326fb4a0e54d1ded68a9fc913e91f2c5eca88",
+  "fix-audit_runtime_sha256": "735ac6ac897a879472d73af6ff9d1747f3a4e507f7204f5a7b9bf8868020b132",
+  "limit": "No completed pre-fix local Raytrace allocator run: it was already over the normal 180 s cap. Fixed local is also compared to fixed fast; requested allocation bytes are not RSS."
+}

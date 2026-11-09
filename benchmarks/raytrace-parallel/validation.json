@@ -1,0 +1,24 @@
+{
+  "fix-focused-tests.log": {
+    "passed": 79,
+    "failed": 0,
+    "ignored": 0,
+    "log_sha256": "e9df5c83921342c941428bdc646791bedfd93a13ccfbc86208352ffef302b74c"
+  },
+  "fix-workspace-tests.log": {
+    "passed": 329,
+    "failed": 0,
+    "ignored": 4,
+    "log_sha256": "99e64750fad658c594de6dd2f0fcede87dc6d457088ac5ac94dffa02959a656b"
+  },
+  "fix-non-sparse-tests.log": {
+    "passed": 38,
+    "failed": 0,
+    "ignored": 0,
+    "log_sha256": "8dcec4ed314b151a4374a8aecb1850502f17dd71df9258f9e8ae4ddf9710d040"
+  },
+  "no_default_features_check": {
+    "passed": true,
+    "log_sha256": "a90de484451375aca75c57484d6227b9cce185708d5d41db985e8cf94dd85022"
+  }
+}
