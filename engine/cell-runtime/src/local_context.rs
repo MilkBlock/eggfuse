@@ -19,7 +19,7 @@ use std::{
 pub(crate) struct Plan {
     root: ScopedStep,
     ports: Vec<ScopedStep>,
-    branching: bool,
+    witness_slots: usize,
     columns: Vec<usize>,
     versions: Vec<usize>,
     identity_literal: bool,
@@ -29,6 +29,10 @@ impl Plan {
     fn root(&self) -> usize { self.root.step.atom }
     fn tail(&self) -> usize { self.query.steps[0].atom }
     fn slots(&self) -> usize { self.ports.last().unwrap_or(&self.root).end() }
+    fn witness_atoms(&self) -> impl Iterator<Item = usize> + '_ {
+        std::iter::once(&self.root).chain(&self.ports)
+            .filter(|s| matches!(s.step.call, Call::Table(_))).map(|s| s.step.atom)
+    }
 }
 #[path = "context_wire.rs"]
 mod wire;
@@ -147,7 +151,7 @@ fn project(
     let columns = query.steps[0].expansion.as_ref()?.bound.iter().filter_map(|(col, field)|
         matches!(field, Field::Anchor(_)).then_some(*col)).collect();
     Some(Plan {
-        branching: ports.iter().any(|&i| matches!(q[i].call, Call::Table(_))),
+        witness_slots: steps.iter().filter(|s| matches!(s.step.call, Call::Table(_))).count(),
         root: steps.remove(0),
         ports: steps,
         columns,
@@ -166,7 +170,9 @@ const PREFIX_LIMIT: usize = 4096;
 #[derive(Clone)]
 struct Prefix {
     values: Vec<Option<Value>>,
-    witnesses: Vec<Option<Dependency>>,
+    // Dense in the shared prefix instruction order; scalar and terminal atoms
+    // have no slots. Every retained prefix has completed all of these reads.
+    witnesses: Vec<Dependency>,
     epoch: u64,
 }
 struct Root {
@@ -346,9 +352,11 @@ impl Contexts {
                     stats.root_rows += 1;
                     g.stats.residual_candidates += 1;
                     let row = g.row(w)?.ok_or("missing visible root")?;
+                    let mut witnesses = Vec::with_capacity(plan.witness_slots);
+                    witnesses.push(w);
                     let mut p = Prefix {
                         values: vec![None; plan.slots()],
-                        witnesses: vec![None; rule.query.len()],
+                        witnesses,
                         epoch,
                     };
                     let mut root = Root {
@@ -357,9 +365,8 @@ impl Contexts {
                         outputs: vec![],
                     };
                     if plan.root.bind_row(g, &row, p.values.as_mut_slice()) {
-                        p.witnesses[plan.root()] = Some(w);
                         stats.root_rebuilds += 1;
-                        let complete = if plan.branching {
+                        let complete = if plan.witness_slots > 1 {
                             extend(g, ix, &plan.ports, &mut p,
                                 &mut root, size, &mut work_left, stats)?
                         } else if size + root.leases.len() + root.outputs.len() >= PREFIX_LIMIT {
@@ -553,7 +560,6 @@ fn extend(
         return Ok(true);
     };
     let step = &scoped.step;
-    let atom = step.atom;
     if matches!(step.call, Call::Primitive(..)) {
         let result = (|| {
             if !scalar(g, scoped, &mut p.values)? { return Ok(true); }
@@ -579,14 +585,15 @@ fn extend(
         stats.port_candidates += 1;
         g.stats.residual_candidates += 1;
         if let Some(row) = g.row(w)? {
-            let (epoch, witness) = (p.epoch, p.witnesses[atom]);
+            let epoch = p.epoch;
             let result = if scoped.bind_row(g, &row, p.values.as_mut_slice()) {
-                p.witnesses[atom] = Some(w);
+                p.witnesses.push(w);
                 p.epoch = p.epoch.max(row.epoch);
-                extend(g, ix, rest, p, root, size, work_left, stats)
+                let result = extend(g, ix, rest, p, root, size, work_left, stats);
+                p.witnesses.pop();
+                result
             } else { Ok(true) };
             clear_scope(p, scoped, stats);
-            p.witnesses[atom] = witness;
             p.epoch = epoch;
             if !result? { return Ok(false); }
         }
@@ -645,8 +652,8 @@ fn emit(
         }
         let values = query.inputs.iter().map(|f| f.read(g,
             |slot| p.values[slot].as_ref().unwrap(), &results, expanded)).collect();
-        let facts = facts.with_rows(p.witnesses.iter().enumerate()
-            .filter_map(|(atom, &w)| w.map(|w| (atom, w)))
+        debug_assert_eq!(p.witnesses.len(), plan.witness_slots);
+        let facts = facts.with_rows(plan.witness_atoms().zip(p.witnesses.iter().copied())
             .chain(std::iter::once((plan.tail(), row.witness))));
         out.push(Matched {
             #[cfg(feature = "iterative-bake")]

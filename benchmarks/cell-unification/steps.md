@@ -388,3 +388,12 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 原有 DirectOrigin 是 source Run 所有的 move-only 续接 token，随赢家放入 Matched，并未重新创建来源历史或绑定表。维持最大深度优先、同深度首个来源、部分覆盖与后续普通枚举的顺序。当前只将所需事实投影提前至去重前，不能从 3,034 个输出推出删除的数组/分配次数。context 记录增加一个空的可选来源槽；完整 Entry 的 witness scratch、当前 key/可见性、retirement 和 delta 归属检查保留。公共 stage Answer/answers_scheduled 不再是兼容接口；内部执行改用 Cell 完成记录，未增加兼容执行路径。
 
 31 项相关测试通过，覆盖稀疏/非稀疏见证消费、可变函数 receipt、退役重建、ordered resume/mutation digests 与匹配后完成前的来源存活；最小 feature 编译和 22 个组件重新 lowering 通过。普通 release 的 sum-bits 1,428 个 Run、state、346 项工作指标不变。四个短 Entry 样例对照冻结旧二进制，state/stages/binding-audit 一致，每进程少于 1 秒。输出 `out/cell-match-entry`，复核 `check_match_completion.py ROOT OUTPUT --commit COMMIT --phase entry`；语义入口仍为 choice_diagnosis.py。上次测速后第 1 个实现提交，不单独测速度。完整 Cell 重写、缓存生命周期、其他类别及最终多线程仍未完成。
+
+
+## Prefix 见证使用 Cell 指令的稠密顺序
+
+完成 Entry 交接后检查仍保留的 prefix 见证：旧数组按整个 query 的原始 atom 编号分配，scalar、terminal 和后置条件对应的空槽随每个 prefix 克隆。见证实际只在前缀表指令成功时产生；其存活由已有 root epoch 和 ReadStamp leases 检查。本次保留所有真实见证，改为按共享 ScopedStep 的表读取顺序保存 Vec<Dependency>，从相同静态指令恢复 source atom，交给已有 Cell 事实投影。没有新增反向索引或运行时 atom 映射。静态 witness width 取代旧 branching bool，同时预留构造 scratch 的容量；表宽大于 1 即需要前缀枚举。
+
+每次成功读取向当前 prefix 推入一个见证，递归返回后撤销；成功、失败、预算退出及 Result 错误都恢复父层，再清理原有值作用域和 epoch。保留 leases、当前 key/存活校验、跨 Run 失效和迟到输入处理。现有 prefix_slots_copied 反映保留数组实际长度，sum-bits 14→13，branches 77→56、terminal 51→36、roots 77→56；复制次数、clear 次数和其余 345 项工作指标保持。计数包含值与见证槽位，不等于字节或分配次数；push/pop 的长度维护和静态投影遍历未按机器指令计费，静态 width 也替代了布尔元数据。
+
+15 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过；sum-bits 1,428 个 Run 和最终 state 一致、语义脚本 pass，三个短样例的 state/stages/binding-audit 一致。输出 `out/cell-prefix-witnesses`，验证 `check_context.py ROOT OUTPUT --commit COMMIT --phase witness`。上次测速后第 2 个实现提交，不单独测速度。prefix 的实际见证与生命周期仍保留；下一步需继续统一缓存失效和查询索引的生命周期，不能将这次紧凑存储当作完整接管。

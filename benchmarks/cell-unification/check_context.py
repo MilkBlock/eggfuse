@@ -24,7 +24,7 @@ def prior(value, counters=COUNTERS):
 
 def check_prefix(root, commit, phase="prefix"):
     assert load(root / 'semantic-acceptance.json')['status'] == 'pass'
-    counters = ('prefix_slots_copied',) if phase == 'compact' else ()
+    counters = ('prefix_slots_copied',) if phase in ('compact', 'witness') else ()
     stable = lambda value: prior(work(value), counters)
     def pair(path, program, lanes):
         reports = [load(path / lane / 'report.json') for lane in lanes]
@@ -38,7 +38,7 @@ def check_prefix(root, commit, phase="prefix"):
         assert all(sha(path / lanes[1] / f) == digest for f, digest in hashes.items())
         result = {'runs': len(a['steps']), 'ordered_hashes': hashes,
                   'program_file_sha256': sha(program), 'context_work': b['local_context']['rules']}
-        if phase == 'compact':
+        if phase in ('compact', 'witness'):
             before, after = [sum(row['prefix_slots_copied'] for row in r['local_context']['rules'].values()) for r in (a, b)]
             assert after < before
             result['copied_prefix_slots'] = [before, after]
@@ -52,16 +52,16 @@ def check_prefix(root, commit, phase="prefix"):
         metrics.append({k: v for k, v in data['metrics'].items()
                         if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     changes = {k: [v, metrics[1][k]] for k, v in metrics[0].items() if v != metrics[1][k]}
-    assert list(changes) == (['report:/local_context/rules/*/prefix_slots_copied [sum]'] if phase == 'compact' else [])
+    assert list(changes) == (['report:/local_context/rules/*/prefix_slots_copied [sum]'] if phase in ('compact', 'witness') else [])
     fixtures = {}
-    for name in (('branches', 'terminal', 'roots') if phase in ('root', 'compact') else ('branches', 'terminal')):
+    for name in (('branches', 'terminal', 'roots') if phase in ('root', 'compact', 'witness') else ('branches', 'terminal')):
         path = root / f'fixture-{name}'
         fixtures[name] = pair(path, path / 'program.json', ('baseline', 'candidate'))
         assert any(row['calls'] > 0 for row in fixtures[name]['context_work'].values())
         fixtures[name]['source_sha256'] = sha(Path(__file__).resolve().with_name(f'context-{name}.egg'))
     tests = {}
     checks = [('query', 3), ('context', 1), ('cuts', 1), ('budget', 1), ('entry', 1)]
-    if phase in ('root', 'compact'): checks.append(('witness', 8))
+    if phase in ('root', 'compact', 'witness'): checks.append(('witness', 8))
     for name, count in checks:
         path = root / f'test-{name}.log'
         passed = re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text())
@@ -71,15 +71,15 @@ def check_prefix(root, commit, phase="prefix"):
     assert 'Finished `dev` profile' in path.read_text()
     tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
     result = dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
-        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc'}[phase], candidate_commit=commit, semantic_acceptance='pass',
+        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0', 'compact': '7d773cdc', 'witness': '3bd9d21e'}[phase], candidate_commit=commit, semantic_acceptance='pass',
         unchanged_report_groups_excluding=counters, compared_report_groups=GROUPS,
         unchanged_work_metrics=len(metrics[0]) - len(changes), changed_work_metrics=changes,
         fixtures=fixtures, tests=tests,
         binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
         timing_cadence={'last_timed_commit': '7f4e24c2' if phase == 'prefix' else 'c8ef6edc',
-                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3}[phase]},
+                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2, 'compact': 3, 'witness': 2}[phase]},
         limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
-    if phase in ('root', 'compact'):
+    if phase in ('root', 'compact', 'witness'):
         program = load(root / 'sum/program.json')
         audit = load(root / 'relower.json')
         assert audit['status'] == 'pass' and audit['program_sha256'] == program['sha256']
@@ -93,8 +93,11 @@ def check_prefix(root, commit, phase="prefix"):
                 slots = [a['slot'] for a in args if 'slot' in a]
                 assert len(slots) > len(set(slots)), 'fixture must exercise a repeated-field root'
         result['limits'] = ('Root and internal context rows use the same scoped Cell binder; candidate domains use common Expansion fields with register queries. All context Arg interpretation is removed. Static root instructions add metadata; existing counters do not measure this footprint or removed interpretation. Context retention, index lifetime and full speed acceptance remain pending.')
-    if phase == 'compact':
+    if phase in ('compact', 'witness'):
         result['limits'] = ('Prefix fields have dense Cell addresses; original source-slot names remain solely in static projection provenance. No runtime translation map or second frame is introduced. Copied slot counts include witness slots and empty fields; these are not allocator calls or bytes. Each scoped instruction adds one static base word; wire serialization recovers original names from those same projections. Root/cache lifetime, witness storage and full speed acceptance remain pending.')
+    if phase == 'witness':
+        result['timing_cadence']['last_timed_commit'] = 'f1c69507'
+        result['limits'] = ('Prefix witnesses are dense in shared Cell instruction order. Scalars and terminal/suffix atoms have no retained witness slots. The existing branching flag is replaced by the required witness width, which also bounds scratch capacity. Projection uses those same static instructions; no runtime source map or reverse dependencies are added. Recursive failure/error/budget exits unwind the witness stack. Leases, visibility, epochs, invalidation and all matched table witnesses remain. Copied-slot counts are not allocation calls or a time model; push/pop and static projection traversal are not separately instruction-counted. Full query/cache integration and speed acceptance remain pending.')
     if phase == 'selection':
         program = load(root / 'sum/program.json')
         all_cuts = program['context_cuts']
@@ -119,7 +122,7 @@ def check_prefix(root, commit, phase="prefix"):
 
 
 def check(root, commit, phase='branches'):
-    if phase in ('prefix', 'selection', 'root', 'compact'):
+    if phase in ('prefix', 'selection', 'root', 'compact', 'witness'):
         return check_prefix(root, commit, phase)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
@@ -226,6 +229,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root', 'compact', 'witness'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')
