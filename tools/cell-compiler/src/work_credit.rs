@@ -21,7 +21,12 @@ impl Work {
                 "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
                 "local_witness_route_comparisons", "local_witness_read_index_probes",
                 "local_witness_receipt_probes", "local_witness_receipt_steps", "local_witness_history_borrows",
-                "direct_publication_hash_probes", "fragment_packets", "fragment_receipts", "fragment_receipt_spills", "fragment_delivery_checks",
+                "direct_publication_hash_probes", "fragment_packets", "fragment_receipt_spills",
+                // Charge every Cell output, including single/mixed Cells, and
+                // the boundary work that a compiled output can replace.
+                // Fragment coverage/check counters are subsets, not extra work.
+                "cell_output_receipts", "cell_output_slot_reads", "effect_output_copies", "receipt_attempts",
+                "completion_boundary_records", "completion_boundary_reads", "completion_order_checks", "completion_cell_visits",
             ]),
             ("entry_schedule/stats", &[
                 "entry_publication_writes", "entry_retirement_checks", "predicate_checks", "row_decodes",
@@ -298,8 +303,11 @@ mod tests {
             "/stage_spine/stats/local_witness_route_comparisons", "/stage_spine/stats/local_witness_read_index_probes",
             "/stage_spine/stats/local_witness_receipt_probes", "/stage_spine/stats/local_witness_receipt_steps",
             "/stage_spine/stats/direct_publication_hash_probes", "/stage_spine/stats/fragment_packets",
-            "/stage_spine/stats/fragment_receipts", "/stage_spine/stats/fragment_receipt_spills",
-            "/stage_spine/stats/fragment_delivery_checks", "/entry_schedule/stats/publication_slot_probes",
+            "/stage_spine/stats/fragment_receipt_spills", "/entry_schedule/stats/publication_slot_probes",
+            "/stage_spine/stats/cell_output_receipts", "/stage_spine/stats/cell_output_slot_reads",
+            "/stage_spine/stats/effect_output_copies", "/stage_spine/stats/receipt_attempts",
+            "/stage_spine/stats/completion_boundary_records", "/stage_spine/stats/completion_boundary_reads",
+            "/stage_spine/stats/completion_order_checks", "/stage_spine/stats/completion_cell_visits",
             "/entry_schedule/stats/publication_pending_pushes", "/entry_schedule/stats/fragment_pending_writes",
             "/entry_schedule/stats/fragment_pending_reads",
             "/free_join/entry_rows", "/free_join/entry_probes", "/free_join/entry_cache_hits",
@@ -322,6 +330,8 @@ mod tests {
             "/stage_spine/stats/local_witness_hits", "/stage_spine/stats/fragment_direct_inserts_avoided",
             "/stage_spine/stats/local_witness_route_index_probes",
             "/stage_spine/stats/fragment_deliveries", "/entry_schedule/stats/fragment_slot_probes",
+            "/stage_spine/stats/fragment_receipts", "/stage_spine/stats/fragment_delivery_checks",
+            "/stage_spine/stats/cell_output_checks", "/stage_spine/stats/effect_outputs_reused",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
@@ -339,7 +349,8 @@ mod tests {
         bump(&mut shifted, "/free_join/entry_probes");
         bump(&mut shifted, "/sieve/stats/update_rows");
         assert_eq!(baseline.savings(&Work::read(&shifted).unwrap()).0, -1);
-        for (group, field) in [("/free_join", "entry_probes"), ("/sieve/stats", "update_rows")] {
+        for (group, field) in [("/free_join", "entry_probes"), ("/sieve/stats", "update_rows"),
+            ("/stage_spine/stats", "completion_boundary_reads"), ("/stage_spine/stats", "cell_output_slot_reads")] {
             let mut missing = report.clone();
             missing.pointer_mut(group).unwrap().as_object_mut().unwrap().remove(field);
             assert!(Work::read(&missing).unwrap_err().contains(&format!("{}/{field}", &group[1..])));

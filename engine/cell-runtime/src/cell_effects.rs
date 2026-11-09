@@ -1,5 +1,6 @@
-//! The actual receipts of one executing Cell. Required output slots come first
-//! and can become the completed Cell's publication storage without a copy.
+//! The actual receipts of one executing Cell. Retained output slots come first
+//! and become its publication storage without a copy. Boundary receipts follow
+//! in the same frame and are released after completion.
 //! The buffer is lent exclusively by the source-scheduled executor; no Entry
 //! can observe its unsealed suffix. Aborted RHS execution discards that suffix.
 use super::{Definition, Output, Site};
@@ -33,9 +34,9 @@ pub(crate) struct EffectPlan {
     pub outputs: usize,
 }
 impl EffectPlan {
-    pub fn compile(p: &Program, rule: usize, outputs: &[Output], full: bool) -> Self {
+    pub fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize, full: bool) -> Self {
         let cell = Definition::new(p, rule).expect("typed Cell");
-        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: outputs.len() };
+        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published };
         for output in outputs { plan.require(output.operation); }
         for output in outputs {
             if let Some(Site::Effect(op)) = output.receipt_source { plan.require(op); }
@@ -85,6 +86,8 @@ impl Effects {
     pub fn record(&mut self, operation: usize, receipt: Dependency) {
         if let Some(slot) = self.slot(operation) { *slot = Some(receipt); }
     }
+    #[cfg(feature = "sparse-cells")]
+    pub fn keeps_outputs(&self) -> bool { self.keep != 0 }
     #[cfg(feature = "sparse-cells")]
     pub fn output_first(&self) -> usize {
         assert!(self.keep != 0, "Cell outputs need a reserved completion span");

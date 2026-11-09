@@ -187,3 +187,20 @@ fn interrupted_rhs_discards_only_its_private_receipts_and_keeps_prior_cell_outpu
     assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
     assert!(s["effect_outputs_reused"].as_u64().unwrap() > 0);
 }
+
+#[test]
+fn mixed_cell_outputs_keep_direct_slots_beside_retirable_boundaries() {
+    let source = include_str!("fixtures/mixed-cell-outputs.egg");
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    // Gateway has a permanent Entry; F can disappear. Both results belong to
+    // the same completed producer, including when another producer reused it.
+    assert!(s["fragment_receipts"].as_u64().unwrap() > 0, "{s}");
+    assert!(s["completion_boundary_records"].as_u64().unwrap() > 0, "{s}");
+    assert!(s["effect_outputs_reused"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(s["direct_publication_hash_probes"], 0, "{s}");
+    assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+    assert!(report["entry_schedule"]["stats"]["entry_publications_retired"].as_u64().unwrap() > 0);
+}

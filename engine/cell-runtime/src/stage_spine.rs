@@ -611,7 +611,7 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     direct_publications: HashMap<Dependency, (usize, Publication)>,
     #[cfg(feature = "sparse-cells")]
-    cell_output_rules: Vec<bool>,
+    cell_output_widths: Vec<usize>,
     #[cfg(feature = "sparse-cells")]
     cell_outputs_pending: usize,
     cell_outputs: Vec<Option<Dependency>>,
@@ -910,7 +910,7 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             direct_publications: Default::default(),
             #[cfg(feature = "sparse-cells")]
-            cell_output_rules: vec![false; p.rules.len()],
+            cell_output_widths: vec![0; p.rules.len()],
             #[cfg(feature = "sparse-cells")]
             cell_outputs_pending: 0,
             cell_outputs: vec![],
@@ -1159,13 +1159,17 @@ impl Programs {
     pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool) -> crate::cell::Effects {
         if !force && !full && !self.capture_receipts(rid) { return Default::default(); }
         let outputs = self.outputs.get(rid).map_or(&[][..], Vec::as_slice);
+        #[cfg(feature = "sparse-cells")]
+        let published = self.cell_output_widths[rid];
+        #[cfg(not(feature = "sparse-cells"))]
+        let published = 0;
         let plans = &self.effect_plans;
         #[cfg(feature = "structural-depth")]
         let plans = if full { &self.full_effect_plans } else { plans };
-        let plan = plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, full))).clone();
+        let plan = plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, published, full))).clone();
         #[cfg(feature = "sparse-cells")]
         let keep = self.compiled_commits && self.receipts && !self.audit_receipts
-            && self.cell_output_rules[rid] && outputs.iter().all(|o| !g.has_visibility_changes(o.table));
+            && published != 0 && outputs[..published].iter().all(|o| !g.has_visibility_changes(o.table));
         #[cfg(not(feature = "sparse-cells"))]
         let keep = false;
         crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
@@ -1296,12 +1300,16 @@ impl Programs {
     fn capture_receipt(&mut self, rid: usize, slot: usize, _cell: u32, position: usize,
         table: usize, publication: Publication, receipt: Dependency, mut effects: Option<&mut crate::cell::Effects>,
     ) {
-        if !self.cell_output_rules[rid] {
+        // Only the retained prefix belongs to final Entry delivery. A mixed
+        // Cell's boundary outputs must not force its other results through the
+        // receipt hash table. A frame which could not reserve that prefix still
+        // uses exact boundary publication (including dynamic visibility loss).
+        let width = self.cell_output_widths[rid];
+        if position >= width || effects.as_ref().is_some_and(|e| !e.keeps_outputs()) {
             self.stats.direct_publication_hash_probes += 1;
             self.direct_publications.insert(receipt, (table, publication));
             return;
         }
-        let width = self.outputs[rid].len();
         let delivery = self.pending_steps[slot].delivery.get_or_insert_with(|| {
             let first = if let Some(effects) = &effects { effects.output_first() } else {
                 let first = self.cell_outputs.len();
@@ -1330,7 +1338,7 @@ impl Programs {
         self.stats.cell_output_receipts += 1;
         // Preserve the historical multi-output coverage metric as a subset of
         // common Cell output delivery, without maintaining a fragment packet.
-        if width >= 2 {
+        if self.outputs[rid].len() >= 2 {
             self.stats.fragment_receipts += 1;
             self.stats.fragment_direct_inserts_avoided += 1;
         }
@@ -1584,7 +1592,7 @@ impl Programs {
             }
             if let Some(w) = witness {
                 #[cfg(feature = "sparse-cells")]
-                {
+                if !self.direct_publications.is_empty() {
                     self.stats.direct_publication_hash_probes += 1;
                     if let Some((_, direct)) = self.direct_publications.get(&w) {
                         self.stats.distinct_anchor_keys -= 1;
@@ -1628,7 +1636,8 @@ impl Programs {
                     if let Some(delivery) = self.pending_steps[slot].delivery {
                         let mut pending = false;
                         let rule = delivery.rule.get() as usize - 1;
-                        let width = self.outputs[rule].len();
+                        let width = self.cell_output_widths[rule];
+                        let fragment = self.outputs[rule].len() >= 2;
                         for position in (0..width).rev() {
                             self.stats.cell_output_slot_reads += 1;
                             let index = delivery.first as usize + position;
@@ -1636,7 +1645,7 @@ impl Programs {
                             let output = self.outputs[rule][position];
                             let table = output.table;
                             self.stats.cell_output_checks += 1;
-                            if width >= 2 { self.stats.fragment_delivery_checks += 1; }
+                            if fragment { self.stats.fragment_delivery_checks += 1; }
                             if ready.is_some_and(|r| !r[table]) { pending = true; continue; }
                             while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.output > output.operation) {
                                 self.finish_boundary(slot, entries);
@@ -1653,7 +1662,7 @@ impl Programs {
                             let installed = entries.install_publication(table, w, || self.materialize_publication(publication));
                             self.stats.distinct_anchor_keys += u64::from(installed);
                             self.stats.cell_output_deliveries += 1;
-                            if width >= 2 { self.stats.fragment_deliveries += 1; }
+                            if fragment { self.stats.fragment_deliveries += 1; }
                             self.stats.receipt_attempts += 1;
                             self.stats.receipt_hits += 1;
                             self.stats.receipt_redirects += u64::from(w != old);
@@ -1832,9 +1841,16 @@ impl Programs {
     pub(crate) fn configure_entry_owners(&mut self, scheduler: &mut crate::entry_schedule::Scheduler, excluded: impl Fn(usize) -> bool) {
         self.entry_owned_tables = scheduler.own_publications(|t| self.enabled && !self.table_readers[t].is_empty() && !excluded(t));
         self.entry_owned_ids = self.entry_owned_tables.iter().enumerate().filter_map(|(t, &owned)| owned.then_some(t)).collect();
-        for (rid, outputs) in self.outputs.iter().enumerate() {
-            self.cell_output_rules[rid] = !outputs.is_empty()
-                && outputs.iter().all(|o| self.permanent[o.table] && self.entry_owned_tables[o.table]);
+        for (rid, outputs) in self.outputs.iter_mut().enumerate() {
+            let retained = |o: &crate::cell::Output| self.permanent[o.table] && self.entry_owned_tables[o.table];
+            // One Cell layout: its retained outputs precede transient boundary
+            // receipts. Stable partition preserves effect order within each
+            // part; publication merges them by the original operation position.
+            outputs.sort_by_key(|o| !retained(o));
+            self.cell_output_widths[rid] = outputs.iter().take_while(|o| retained(o)).count();
+            self.effect_plans[rid].take();
+            #[cfg(feature = "structural-depth")]
+            self.full_effect_plans[rid].take();
         }
     }
     #[cfg(feature = "sparse-cells")]

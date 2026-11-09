@@ -533,3 +533,19 @@ sum-bits 的 1,428 个 Run、state、346 项工作指标保持，语义验收脚
 产物 out/cell-retention-scope。复核：`python3 benchmarks/cell-unification/check_retention.py out/cell-retention-scope OUTPUT.json --commit COMMIT`。冻结普通 release runtime 使用 sparse-cells,view-ports,storage-metrics；`cargo run --release --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --example emit_cell_retention -- OUTPUT_ROOT` 生成两个深层样例，ROOT 中准备 runtime-baseline/candidate 后执行 `python3 benchmarks/cell-unification/run_retention_fixtures.py ROOT`。测试构建与普通 release 分离。
 
 这是 acab2911 测速后的第 1 个实现提交，不单独测速。源 marker 物化边界、全局片段选取及整体 Bake 接管仍未完成；本次只使结果历史的保留边界随已编译 Cell 组合变化。
+
+## 混合输出 Cell 的发布范围与实际工作评分
+
+上一目录 sum-bits 有 7,573 次 direct_publication_hash_probes、1,687 条 completion_boundary_records。源码检查发现 cell_output_rules 用 all 判断整个 RHS；一个输出需要可见性边界处理，就让同一 Cell 内其他永久 Entry 输出退回独立 receipt 哈希表。源 marker 的前缀物化仍是另一处边界，但单消费者也可能跨 Run 复用，不能仅按引用数删除；本次先接管有现成安全证明的执行期边界。
+
+Cell 的唯一输出布局改为“永久且由 Entry 接管的输出前缀＋临时边界结果”。稳定分区只改结果存储顺序，真实 RHS 仍按原顺序执行；两段各自保留效果顺序，发布时按原 operation 位置合并，保证最后生产者获胜。EffectPlan 直接采用这段保留宽度，混合 Cell 的已覆盖字段不再写入 receipt 哈希表或 ReadyPublication。边界字段、动态可见性检查、实际外部复用引用和中断丢弃仍保留；没有新建实例事实图/消费者列表。配置时失效旧 effect plan；空 receipt 表不再被探测。静态宽度替换每规则一个 bool，分区在配置时执行。
+
+普通 sum-bits：receipt 哈希探测 7,573→4,680，边界记录及读取各 1,687→253，边界排序检查 1,262→111。另一方面，Entry 槽探测 7,740→9,027，Cell 输出读取 6,053→8,774，receipt 尝试 10,299→11,586，输出补写 1,599→1,808，峰值保留输出槽 587→872。查询/解码、历史捕获、实际 Entry 写入和图执行工作不变。不能只报告旧维护的减少：被旧哈希表合并的重复候选现在进入 Entry，增加了这些检查。
+
+Bake Work::read 以前只收费 fragment_receipts/fragment_delivery_checks 子集，并漏掉边界记录/读取/排序。本次改收所有 Cell 的输出登记、槽读取、补写、receipt 尝试和边界维护；fragment 覆盖/检查子集不重复收费，缺失必需字段拒绝评分。用同一修正口径比较冻结前后报告，sum-bits 净节省为 **-1,313**（等权操作增加），不能宣称提速。哈希探测合计下降 1,606 次也不是纳秒模型；下一步须减少统一发布路径中的重复候选成本。
+
+27 项针对性测试通过：完整配置 7 项发布测试、普通配置 7 项发布测试、8 项实际见证来源、4 项评分账本、1 项无全局观察栅栏的部分 scope 发布；最小 feature 编译通过。scope 检查确实在其他任务尚未完成时发布了 3 张表，最终状态和顺序绑定一致。本次不恢复/验收多线程。
+
+新短样例 mixed-cell-outputs.egg 含交错永久/可删除输出、union、重复发布、删除重建；派生样例再含查询别名及 RHS 中断。源 marker 编译与直接 typed Cell 编译各作普通/全碰撞哈希的逐阶段对照。audit-stages 会关闭编译后的 receipt 直达，所以另对直接编译的样例运行正常模式，明确验证实际接管：哈希探测分别 18→0、16→0，边界记录均 8→4，已有输出槽直接复用 3→11、3→9；等权净节省分别为 6、12。24 个短进程均小于 1 秒，仅作预算检查；所有 state/Run 顺序及适用的 stage/binding audit 相同。sum-bits 的 1,428 个 Run、最终 state 保持，322 项目录工作指标不变、24 项发布指标按上述接管变化；choice_diagnosis pass，22 个编译组件重新 lowering 一致。
+
+产物 out/cell-mixed-outputs；复核 `python3 benchmarks/cell-unification/check_mixed_outputs.py ROOT OUTPUT --commit COMMIT`。直接源样例由 `cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --example emit_cell_source -- SOURCE.egg OUTPUT_DIRECTORY` 生成；run_mixed_outputs.py 支持 --direct-emitter，正常模式用 run_retention_fixtures.run(ROOT, ('mixed','aliased'), audit=False)。这是 standalone Cell CPU 的工作量检查，没有时间/分配器采样；源码 marker 物化、一般 Bake 组合、剩余边界及整体速度验收仍未完成。本次是 acab2911 后第 2 个实现提交。
