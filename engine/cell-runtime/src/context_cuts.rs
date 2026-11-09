@@ -4,11 +4,12 @@ use std::cmp::Reverse;
 
 pub(crate) type Cuts = Vec<Vec<Rc<Plan>>>;
 /// The artifact needs only atom order. Slot wiring is derived from the checked IR.
-pub(crate) fn layout(cuts: &Cuts) -> Vec<Vec<(usize, &[usize], usize, &[usize])>> {
+pub(crate) fn layout(cuts: &Cuts) -> Vec<Vec<(usize, Vec<usize>, usize, Vec<usize>)>> {
     cuts.iter()
         .map(|rule| {
             rule.iter()
-                .map(|p| (p.root, p.ports.as_slice(), p.tail, p.post.as_slice()))
+                .map(|p| (p.root, p.ports.iter().map(|s| s.step.atom).collect(), p.tail,
+                    p.query.steps.iter().skip(1).map(|s| s.atom).collect()))
                 .collect()
         })
         .collect()

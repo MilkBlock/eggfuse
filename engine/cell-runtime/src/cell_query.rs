@@ -56,23 +56,6 @@ pub(crate) fn bind_query<F: QueryFrame + ?Sized>(a: &Arg, value: &Value, frame: 
     }
 }
 
-/// Slots introduced by each step of an ordered Cell prefix. Matching only
-/// assigns previously unbound slots, so these static scopes also describe
-/// exactly what a failed/completed branch may clear. No instance trail is
-/// needed when the atom order is already fixed by the template.
-pub(crate) fn query_scopes(query: &[Atom], pivot: usize, order: &[usize])
-    -> (std::collections::BTreeSet<usize>, Vec<Vec<usize>>) {
-    let mut known = query[pivot].args.iter().filter_map(|a| match a {
-        Arg::Slot(s) => Some(*s), Arg::Literal(_) => None,
-    }).collect::<std::collections::BTreeSet<_>>();
-    let scopes = order.iter().map(|&atom| {
-        query[atom].args.iter().filter_map(|a| match a {
-            Arg::Slot(s) if known.insert(*s) => Some(*s), _ => None,
-        }).collect()
-    }).collect();
-    (known, scopes)
-}
-
 #[derive(Clone, Debug, Serialize)]
 pub(crate) enum Field {
     Anchor(usize),
@@ -158,6 +141,14 @@ pub(crate) struct Expansion {
     pub bound: Vec<(usize, Field)>,
     pub checks: Vec<(usize, Field)>,
 }
+/// A shared query instruction whose newly introduced fields are retained in
+/// the caller's original frame. These static writes are also its rollback scope;
+/// no per-branch trail or separate scalar interpreter is required.
+#[derive(Clone, Debug)]
+pub(crate) struct ScopedStep {
+    pub step: Step,
+    pub bindings: Vec<(usize, Field)>,
+}
 /// Shared binding/checking instruction used by source entries and repair cells.
 /// The host supplies typed table/primitive capabilities; a failed predicate
 /// never publishes an effect.
@@ -166,6 +157,66 @@ pub(crate) struct BoundStep<'a, A> {
     expected: Option<Cow<'a, Value>>,
 }
 impl Step {
+    fn lower(rule: &Rule, atom: usize, access: Access, position: usize,
+        sources: &mut BTreeMap<usize, Field>) -> Option<Self> {
+        let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
+            Arg::Slot(s) => map.get(s).cloned(),
+            Arg::Literal(v) => Some(Field::Literal(v.clone())),
+        };
+        let a = rule.query.get(atom)?;
+        let (out, keys) = a.args.split_last()?;
+        if matches!(access, Access::Expand) {
+            if !matches!(a.call, Call::Table(_)) {
+                return None;
+            }
+            let bound = a
+                .args
+                .iter()
+                .enumerate()
+                .filter_map(|(c, a)| Some((c, field(a, sources)?)))
+                .collect();
+            let mut checks = Vec::new();
+            for (column, a) in a.args.iter().enumerate() {
+                if let Some(source) = field(a, sources) {
+                    checks.push((column, source));
+                } else if let Arg::Slot(s) = a {
+                    sources.insert(
+                        *s,
+                        Field::Column {
+                            step: position,
+                            column,
+                        },
+                    );
+                }
+            }
+            return Some(Step {
+                atom,
+                call: a.call.clone(),
+                key: vec![],
+                check_result: None,
+                expansion: Some(Box::new(Expansion {
+                    width: a.args.len(),
+                    bound,
+                    checks,
+                })),
+            });
+        }
+        let key = keys
+            .iter()
+            .map(|a| field(a, sources))
+            .collect::<Option<_>>()?;
+        let check_result = field(out, sources);
+        if let Arg::Slot(s) = out {
+            sources.entry(*s).or_insert(Field::StepResult(position));
+        }
+        Some(Step {
+            atom,
+            call: a.call.clone(),
+            key,
+            check_result,
+            expansion: None,
+        })
+    }
     pub(crate) fn access(&self) -> Access {
         if self.expansion.is_some() {
             Access::Expand
@@ -277,6 +328,30 @@ impl Query {
     pub(crate) fn residual(rule: &Rule, pivot: usize) -> Option<Self> {
         Self::lower(rule, pivot, &query_order(rule, pivot, 1)?)
     }
+    /// Compile a retained prefix with the same lowering used by ordinary
+    /// queries. Each completed instruction makes its new fields available from
+    /// the existing frame; candidate rows never outlive their enumeration.
+    pub(crate) fn scoped_prefix(rule: &Rule, pivot: usize, order: &[usize])
+        -> Option<(std::collections::BTreeSet<usize>, Vec<ScopedStep>)> {
+        let mut sources = rule.query.get(pivot)?.args.iter().filter_map(|a| match a {
+            Arg::Slot(s) => Some((*s, Field::Anchor(*s))), _ => None,
+        }).collect::<BTreeMap<_, _>>();
+        let mut seen = std::collections::BTreeSet::from([pivot]);
+        let mut steps = Vec::with_capacity(order.len());
+        for &atom in order {
+            if !seen.insert(atom) { return None; }
+            let access = match rule.query.get(atom)?.call {
+                Call::Table(_) => Access::Expand, Call::Primitive(..) => Access::Primitive,
+            };
+            let step = Step::lower(rule, atom, access, 0, &mut sources)?;
+            let bindings = sources.iter_mut().filter_map(|(&slot, field)| {
+                if matches!(field, Field::Anchor(_)) { None }
+                else { Some((slot, std::mem::replace(field, Field::Anchor(slot)))) }
+            }).collect();
+            steps.push(ScopedStep { step, bindings });
+        }
+        Some((sources.keys().copied().collect(), steps))
+    }
     /// Resume an already matched prefix from its existing slots, then borrow
     /// the terminal row and execute the original remaining scalar operations.
     /// `known` is the slot set derived from that prefix's Cell scopes.
@@ -306,69 +381,10 @@ impl Query {
     }
     fn lower_from(rule: &Rule, mut sources: BTreeMap<usize, Field>,
         mut seen: std::collections::BTreeSet<usize>, order: &[(usize, Access)]) -> Option<Self> {
-        let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
-            Arg::Slot(s) => map.get(s).cloned(),
-            Arg::Literal(v) => Some(Field::Literal(v.clone())),
-        };
         let mut steps = Vec::new();
         for &(atom, access) in order {
-            if !seen.insert(atom) {
-                return None;
-            }
-            let a = rule.query.get(atom)?;
-            let (out, keys) = a.args.split_last()?;
-            if matches!(access, Access::Expand) {
-                if !matches!(a.call, Call::Table(_)) {
-                    return None;
-                }
-                let bound = a
-                    .args
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(c, a)| Some((c, field(a, &sources)?)))
-                    .collect();
-                let mut checks = Vec::new();
-                for (column, a) in a.args.iter().enumerate() {
-                    if let Some(source) = field(a, &sources) {
-                        checks.push((column, source));
-                    } else if let Arg::Slot(s) = a {
-                        sources.insert(
-                            *s,
-                            Field::Column {
-                                step: steps.len(),
-                                column,
-                            },
-                        );
-                    }
-                }
-                steps.push(Step {
-                    atom,
-                    call: a.call.clone(),
-                    key: vec![],
-                    check_result: None,
-                    expansion: Some(Box::new(Expansion {
-                        width: a.args.len(),
-                        bound,
-                        checks,
-                    })),
-                });
-                continue;
-            }
-            let key = keys
-                .iter()
-                .map(|a| field(a, &sources))
-                .collect::<Option<_>>()?;
-            let check_result = field(out, &sources);
-            if let Arg::Slot(s) = out {
-                sources.entry(*s).or_insert(Field::StepResult(steps.len()));
-            }
-            steps.push(Step {
-                atom,
-                call: a.call.clone(),
-                key,
-                check_result,
-                expansion: None,
-            });
+            if !seen.insert(atom) { return None; }
+            steps.push(Step::lower(rule, atom, access, steps.len(), &mut sources)?);
         }
         if seen.len() != rule.query.len() {
             return None;

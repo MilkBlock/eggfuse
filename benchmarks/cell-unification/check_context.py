@@ -22,7 +22,56 @@ def prior(value, counters=COUNTERS):
     return [prior(v, counters) for v in value] if isinstance(value, list) else value
 
 
+def check_prefix(root, commit):
+    assert load(root / 'semantic-acceptance.json')['status'] == 'pass'
+    def pair(path, program, lanes):
+        reports = [load(path / lane / 'report.json') for lane in lanes]
+        assert all(r['status'] == 'complete' and r['program_sha256'] == load(program)['sha256'] for r in reports)
+        a, b = reports
+        assert [[s[k] for k in RUN_KEYS] for s in a['steps']] == [[s[k] for k in RUN_KEYS] for s in b['steps']]
+        for group in GROUPS:
+            assert work(a[group]) == work(b[group]), (path, group)
+        files = ('state.json',) if path == root else ('state.json', 'stages.json', 'binding-audit.json')
+        hashes = {f: sha(path / lanes[0] / f) for f in files}
+        assert all(sha(path / lanes[1] / f) == digest for f, digest in hashes.items())
+        return {'runs': len(a['steps']), 'ordered_hashes': hashes,
+                'program_file_sha256': sha(program), 'context_work': b['local_context']['rules']}
+    result = pair(root, root / 'sum/program.json', ('run-baseline', 'run-candidate'))
+    metrics = []
+    for lane in ('baseline', 'candidate'):
+        data = load(root / f'metrics-{lane}.json')
+        assert data['sources']['report']['sha256'] == sha(root / f'run-{lane}/report.json')
+        assert data['sources']['program']['sha256'] == sha(root / 'sum/program.json')
+        metrics.append({k: v for k, v in data['metrics'].items()
+                        if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
+    assert metrics[0] == metrics[1]
+    fixtures = {}
+    for name in ('branches', 'terminal'):
+        path = root / f'fixture-{name}'
+        fixtures[name] = pair(path, path / 'program.json', ('baseline', 'candidate'))
+        assert any(row['calls'] > 0 for row in fixtures[name]['context_work'].values())
+        fixtures[name]['source_sha256'] = sha(Path(__file__).resolve().with_name(f'context-{name}.egg'))
+    tests = {}
+    for name, count in (('query', 3), ('context', 1), ('cuts', 1), ('budget', 1), ('entry', 1)):
+        path = root / f'test-{name}.log'
+        passed = re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text())
+        assert sum(map(int, passed)) == count, name
+        tests[name] = {'passed': count, 'log_sha256': sha(path)}
+    path = root / 'test-minimal.log'
+    assert 'Finished `dev` profile' in path.read_text()
+    tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
+    return dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
+        baseline_commit='0b3231c2', candidate_commit=commit, semantic_acceptance='pass',
+        unchanged_report_groups=GROUPS, unchanged_work_metrics=len(metrics[0]),
+        fixtures=fixtures, tests=tests,
+        binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
+        timing_cadence={'last_timed_commit': '7f4e24c2', 'implementation_commits_since_timing': 4},
+        limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
+
+
 def check(root, commit, phase='branches'):
+    if phase == 'prefix':
+        return check_prefix(root, commit)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
     stable = lambda value: prior(work(value), counters)
@@ -128,6 +177,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')

@@ -1,7 +1,7 @@
 //! Retain a connected prefix and expand its final table at the scheduled Run.
 //! Only correlated prefixes survive Run boundaries; terminal answers do not.
 use crate::{
-    cell::{Query, bind_query as bind, query_operand as operand},
+    cell::{Query, ScopedStep, bind_query as bind, query_operand as operand},
     entry_schedule::Scheduler,
     graph::{Dependency, Graph, Row},
     program::*,
@@ -18,9 +18,7 @@ use std::{
 #[derive(Debug, Clone)]
 pub(crate) struct Plan {
     root: usize,
-    ports: Vec<usize>,
-    // Derived from the same checked Cell query, not another artifact contract.
-    scopes: Vec<Vec<usize>>,
+    ports: Vec<ScopedStep>,
     branching: bool,
     tail: usize,
     columns: Vec<usize>,
@@ -28,7 +26,6 @@ pub(crate) struct Plan {
     identity_literal: bool,
     query: Query,
     result_slots: usize,
-    post: Vec<usize>,
 }
 #[path = "context_wire.rs"]
 mod wire;
@@ -128,7 +125,7 @@ fn project(
 ) -> Option<Plan> {
     let q = &r.query;
     let prefix = std::iter::once(root).chain(ports.iter().copied());
-    let (known, scopes) = crate::cell::query_scopes(q, root, &ports);
+    let (known, steps) = Query::scoped_prefix(r, root, &ports)?;
     let versions = prefix
         .filter_map(|i| match q[i].call {
             Call::Table(t) => Some(t),
@@ -151,17 +148,15 @@ fn project(
     let query = Query::continuation(r, std::iter::once(root).chain(ports.iter().copied()),
         &known, tail, &post)?;
     Some(Plan {
-        scopes,
         branching: ports.iter().any(|&i| matches!(q[i].call, Call::Table(_))),
         root,
-        ports,
+        ports: steps,
         tail,
         columns,
         versions,
         identity_literal,
         result_slots: query.result_slots(),
         query,
-        post,
     })
 }
 
@@ -250,7 +245,7 @@ impl Contexts {
     }
     pub fn report(&self, program: &Program) -> serde_json::Value {
         let (cut_rules, cut_orientations) = program.context_cut_counts();
-        let plans = program.local_contexts.iter().enumerate().filter_map(|(rid,p)| p.as_ref().map(|p| serde_json::json!({"rule":rid,"root":p.root,"ports":p.ports,"terminal":p.tail}))).collect::<Vec<_>>();
+        let plans = program.local_contexts.iter().enumerate().filter_map(|(rid,p)| p.as_ref().map(|p| serde_json::json!({"rule":rid,"root":p.root,"ports":p.ports.iter().map(|s| s.step.atom).collect::<Vec<_>>(),"terminal":p.tail}))).collect::<Vec<_>>();
         serde_json::json!({"enabled":self.enabled,"root_limit":ROOT_LIMIT,"prefix_limit":PREFIX_LIMIT,"plans":plans,"general":self.general,"cut_rules":cut_rules,"cut_orientations":cut_orientations,"rules":self.stats})
     }
     pub fn matches(
@@ -367,14 +362,18 @@ impl Contexts {
                         p.witnesses[plan.root] = Some(w);
                         stats.root_rebuilds += 1;
                         let complete = if plan.branching {
-                            extend(g, ix, &rule, &plan.ports, &plan.scopes, &mut p,
+                            extend(g, ix, &plan.ports, &mut p,
                                 &mut root, size, &mut work_left, stats)?
                         } else if size + root.leases.len() + root.outputs.len() >= PREFIX_LIMIT {
                             false
                         } else {
                             // With no enumerated prefix table there are no
                             // siblings: keep the original move into the cache.
-                            if finish_guards(g, &rule, &plan.ports, &mut p.values)? {
+                            let mut matched = true;
+                            for step in &plan.ports {
+                                if !scalar(g, step, &mut p.values)? { matched = false; break; }
+                            }
+                            if matched {
                                 root.outputs.push(Rc::new(p));
                             }
                             true
@@ -555,9 +554,7 @@ fn bind_row(g: &Graph, atom: &Atom, row: &Row, values: &mut [Option<Value>]) -> 
 fn extend(
     g: &mut Graph,
     ix: &mut QueryIndexes,
-    r: &Rule,
-    ports: &[usize],
-    scopes: &[Vec<usize>],
+    ports: &[ScopedStep],
     p: &mut Prefix,
     root: &mut Root,
     size: usize,
@@ -567,29 +564,29 @@ fn extend(
     if size + root.leases.len() + root.outputs.len() >= PREFIX_LIMIT {
         return Ok(false);
     }
-    let Some((&atom, rest)) = ports.split_first() else {
+    let Some((scoped, rest)) = ports.split_first() else {
         // Only retained successful prefixes need independent storage.
         stats.prefix_copies += 1;
         stats.prefix_slots_copied += (p.values.len() + p.witnesses.len()) as u64;
         root.outputs.push(Rc::new(p.clone()));
         return Ok(true);
     };
-    let (scope, scopes) = scopes.split_first().expect("Cell prefix scope");
-    let a = &r.query[atom];
-    if matches!(a.call, Call::Primitive(..)) {
+    let step = &scoped.step;
+    let atom = step.atom;
+    if matches!(step.call, Call::Primitive(..)) {
         let result = (|| {
-            if !finish_guards(g, r, &[atom], &mut p.values)? { return Ok(true); }
-            extend(g, ix, r, rest, scopes, p, root, size, work_left, stats)
+            if !scalar(g, scoped, &mut p.values)? { return Ok(true); }
+            extend(g, ix, rest, p, root, size, work_left, stats)
         })();
-        clear_scope(p, scope, stats);
+        clear_scope(p, scoped, stats);
         return result;
     }
-    let t = table(a);
-    let bound = a
-        .args
-        .iter()
-        .map(|v| operand(v, p.values.as_slice(), g))
-        .collect::<Vec<_>>();
+    let Call::Table(t) = step.call else { unreachable!() };
+    let expansion = step.expansion.as_ref().expect("prefix expansion");
+    let mut bound = vec![None; expansion.width];
+    for (col, field) in &expansion.bound {
+        bound[*col] = Some(field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], None));
+    }
     if ix.count(g, t, &bound)? > PREFIX_LIMIT {
         return Ok(false);
     }
@@ -604,12 +601,19 @@ fn extend(
         g.stats.residual_candidates += 1;
         if let Some(row) = g.row(w)? {
             let (epoch, witness) = (p.epoch, p.witnesses[atom]);
-            let result = if bind_row(g, a, &row, &mut p.values) {
+            let expanded = Some((0, &row));
+            let matches = !row.hidden && row.table == t && expansion.checks.iter().all(|(col, field)|
+                field.agrees(&row.values[*col], g, |slot| p.values[slot].as_ref().unwrap(), &[], expanded));
+            let result = if matches {
+                for (slot, field) in &scoped.bindings {
+                    let value = field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], expanded);
+                    p.values[*slot] = Some(value);
+                }
                 p.witnesses[atom] = Some(w);
                 p.epoch = p.epoch.max(row.epoch);
-                extend(g, ix, r, rest, scopes, p, root, size, work_left, stats)
+                extend(g, ix, rest, p, root, size, work_left, stats)
             } else { Ok(true) };
-            clear_scope(p, scope, stats);
+            clear_scope(p, scoped, stats);
             p.witnesses[atom] = witness;
             p.epoch = epoch;
             if !result? { return Ok(false); }
@@ -618,11 +622,11 @@ fn extend(
     Ok(true)
 }
 #[inline]
-fn clear_scope(p: &mut Prefix, slots: &[usize], stats: &mut Stats) {
+fn clear_scope(p: &mut Prefix, step: &ScopedStep, stats: &mut Stats) {
     // Some fields may not have been assigned before a predicate failed. Clear
     // the compiled scope anyway; it never contains a parent/sibling binding.
-    stats.branch_slot_clears += slots.len() as u64;
-    for &slot in slots { p.values[slot] = None; }
+    stats.branch_slot_clears += step.bindings.len() as u64;
+    for &(slot, _) in &step.bindings { p.values[slot] = None; }
 }
 fn emit(
     g: &mut Graph,
@@ -685,31 +689,20 @@ fn emit(
     Ok(prefixes.len() as u64)
 }
 
-fn finish_guards(
-    g: &mut Graph,
-    r: &Rule,
-    post: &[usize],
-    values: &mut [Option<Value>],
-) -> Result<bool> {
-    for &i in post {
-        let a = &r.query[i];
-        let Call::Primitive(name, sort) = &a.call else {
-            unreachable!()
-        };
-        let (dst, args) = a.args.split_last().unwrap();
-        let inputs = args
-            .iter()
-            .map(|arg| operand(arg, values, g).unwrap())
-            .collect::<Vec<_>>();
-        if name.starts_with("cell-key-") {
-            g.stats.key_operations += 1;
-        }
-        let Some(v) = crate::value::primitive(name, &inputs, sort, g.program.key_nodes())? else {
-            return Ok(false);
-        };
-        if !bind(dst, &v, values, g) {
-            return Ok(false);
-        }
+fn scalar(g: &mut Graph, scoped: &ScopedStep, values: &mut [Option<Value>]) -> Result<bool> {
+    let step = &scoped.step;
+    let bound = step.bind::<smallvec::SmallVec<[Value; 4]>>(|field|
+        field.operand(g, |slot| values[slot].as_ref().unwrap(), &[], None));
+    let result = bound.evaluate(|args| {
+        let Call::Primitive(name, sort) = &step.call else { unreachable!("scalar prefix") };
+        if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
+        crate::value::primitive(name, &args, sort, g.program.key_nodes())
+    })?;
+    let Some(value) = result else { return Ok(false); };
+    if let [(slot, _)] = scoped.bindings.as_slice() {
+        // Newly produced values move into the original prefix. Bound results
+        // have already been checked by the shared instruction and need no write.
+        values[*slot] = Some(value);
     }
     Ok(true)
 }

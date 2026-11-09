@@ -15,7 +15,7 @@ pub(crate) use results::{Capture, ResultPort, Results};
 #[path = "cell_query.rs"]
 mod query;
 pub(crate) use query::{Access, Queries, Query, query_order};
-pub(crate) use query::{QueryFrame, bind_query, query_operand, query_scopes};
+pub(crate) use query::{QueryFrame, bind_query, query_operand, ScopedStep};
 #[path = "cell_links.rs"]
 mod links;
 pub(crate) use links::QueryLinks;

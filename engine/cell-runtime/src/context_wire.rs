@@ -44,10 +44,12 @@ impl Serialize for Plan {
             #[serde(skip_serializing_if = "Vec::is_empty")]
             post: &'a Vec<usize>,
         }
+        let ports = self.ports.iter().map(|s| s.step.atom).collect::<Vec<_>>();
+        let post = self.query.steps.iter().skip(1).map(|s| s.atom).collect::<Vec<_>>();
         let expansion = self.query.steps[0].expansion.as_ref().expect("terminal expansion");
-        Wire { root: self.root, ports: &self.ports, tail: self.tail, columns: &self.columns,
+        Wire { root: self.root, ports: &ports, tail: self.tail, columns: &self.columns,
             versions: &self.versions, identity_literal: self.identity_literal,
-            output: Outputs(if self.post.is_empty() { &self.query.inputs } else { &[] }),
-            checks: Checks(&expansion.checks), post: &self.post }.serialize(s)
+            output: Outputs(if post.is_empty() { &self.query.inputs } else { &[] }),
+            checks: Checks(&expansion.checks), post: &post }.serialize(s)
     }
 }
