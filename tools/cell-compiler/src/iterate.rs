@@ -14,18 +14,40 @@ use std::{fs, path::Path};
 use crate::work_credit::Work;
 type Result<T> = eggfuse_bake::pipeline::Result<T>;
 pub(crate) type Stamp = (String, String, Vec<String>, Vec<(u64, String)>, Vec<(u64, String)>);
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 pub(crate) struct Execution {
     pub entry_publications: bool,
     pub repair_ports: bool,
     pub repair_cells: bool,
     pub local_unions: bool,
     pub cell_ownership: bool,
+    pub stable_ports: bool,
+    pub port_keys: bool,
+    pub local_congruence: bool,
+}
+impl Execution {
+    fn checked(mut self) -> Result<Self> {
+        self.port_keys |= self.local_congruence;
+        self.stable_ports |= self.port_keys;
+        self.cell_ownership |= self.stable_ports;
+        if self.cell_ownership && (self.repair_cells || self.local_unions) {
+            return Err("cell ownership requires its own completion backend".into());
+        }
+        self.repair_ports |= self.cell_ownership;
+        if self.entry_publications && !cfg!(feature = "sparse-cells") {
+            return Err("entry publications require the sparse-cells build".into());
+        }
+        Ok(self)
+    }
 }
 pub(crate) fn replay(p: Program, collect: bool, config: Execution) -> Result<(Executor, Stamp)> {
+    let config = config.checked()?;
     let mut graph = if config.repair_cells { Graph::new_with_repair_cells(p)? } else if config.repair_ports { Graph::new_with_repair_ports(p)? } else { Graph::new(p)? };
     if config.local_unions { graph.use_local_union_cells()?; }
     if config.cell_ownership { graph.use_cell_ownership()?; }
+    if config.stable_ports { graph.use_stable_port_fields()?; }
+    if config.port_keys { graph.use_port_constructor_matching()?; }
+    if config.local_congruence { graph.use_local_port_conditions()?; }
     let mut exec = Executor::new(graph, false);
     #[cfg(feature = "sparse-cells")]
     if config.entry_publications && !config.cell_ownership { exec.use_entry_publications()?; }
@@ -56,6 +78,39 @@ fn save(path: &Path, value: &J) -> Result<()> {
     f.persist(path)?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn condition_replay_runs_and_scores_the_requested_backend() {
+        let source = r#"
+(datatype E (N i64) (F E))
+(F (N 0)) (F (N 1))
+(ruleset merge)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
+(run-schedule (run merge))
+"#;
+        let core = eggfuse_bake::device_frontend::core("condition-replay", source).unwrap();
+        let raw = eggfuse_cell_runtime::compiler::compile(core, &Default::default()).unwrap();
+        let p = Program::parse(raw).unwrap();
+        let (_, baseline) = replay(p.clone(), false, Execution { repair_ports: true, ..Default::default() }).unwrap();
+        for collect in [false, true] {
+            let (exec, stamp) = replay(p.clone(), collect, Execution { local_congruence: true, ..Default::default() }).unwrap();
+            assert_eq!(baseline, stamp, "all ordered semantic stamps must match");
+            let report = exec.report();
+            assert_eq!(report["stable_ports"]["enabled"], true);
+            assert_eq!(report["stable_ports"]["local_conditions"]["enabled"], true);
+            let work = Work::read(&report).unwrap();
+            assert!(work.0["stable_ports/stats/equality_completions"] > 0);
+            assert!(work.0["stable_ports/local_conditions/stats/attempts"] > 0);
+            assert_eq!(work.0["cell_ownership/stats/key_completions"], 0);
+        }
+        assert!(Execution { local_congruence: true, repair_cells: true, ..Default::default() }.checked().is_err());
+        assert!(Execution { port_keys: true, local_unions: true, ..Default::default() }.checked().is_err());
+    }
+}
 pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let opts = super::options(
         args.into_iter(),
@@ -79,6 +134,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "--repair-cells",
             "--local-unions",
             "--cell-ownership",
+            "--stable-ports",
+            "--port-keys",
+            "--local-congruence",
         ],
     )?;
     let measured = match opts.get("--score").map(String::as_str).unwrap_or("measured-work") {
@@ -89,10 +147,8 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let trial_limit = opts.get("--trial-limit").map(|s| s.parse()).transpose()?.unwrap_or(8usize);
     if trial_limit == 0 { return Err("trial limit must be positive".into()); }
     let flag = |name| -> Result<bool> { Ok(opts.get(name).map(|s| s.parse()).transpose()?.unwrap_or(false)) };
-    let config = Execution { entry_publications: flag("--entry-publications")?, repair_ports: flag("--repair-ports")?, repair_cells: flag("--repair-cells")?, local_unions: flag("--local-unions")?, cell_ownership:flag("--cell-ownership")? };
-    if config.entry_publications && !cfg!(feature = "sparse-cells") {
-        return Err("entry publications require the sparse-cells build".into());
-    }
+    let config = Execution { entry_publications: flag("--entry-publications")?, repair_ports: flag("--repair-ports")?, repair_cells: flag("--repair-cells")?, local_unions: flag("--local-unions")?, cell_ownership:flag("--cell-ownership")?,
+        stable_ports:flag("--stable-ports")?, port_keys:flag("--port-keys")?, local_congruence:flag("--local-congruence")? }.checked()?;
     let path = opts
         .get("--program")
         .ok_or("--program SEED_PROGRAM required")?;
@@ -254,7 +310,8 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         let report = exec.report();
         drop(exec);
         let mut credit = json!({"policy":if measured {"measured-work"} else {"static"},
-            "entry_publications":config.entry_publications,"repair_ports":config.repair_ports,"repair_cells":config.repair_cells,"local_unions":config.local_unions,"cell_ownership":config.cell_ownership});
+            "entry_publications":config.entry_publications,"repair_ports":config.repair_ports,"repair_cells":config.repair_cells,"local_unions":config.local_unions,"cell_ownership":config.cell_ownership,
+            "stable_ports":config.stable_ports,"port_keys":config.port_keys,"local_congruence":config.local_congruence});
         if measured && !admitted.is_empty() {
             // Pair discovery can force producer roots into existence. Score
             // with collection disabled in BOTH executions, as in inference.

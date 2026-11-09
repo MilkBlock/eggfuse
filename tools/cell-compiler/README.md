@@ -17,4 +17,13 @@ cargo run --release --locked -p eggfuse-cell-runtime \
 
 To learn blocks for another workload, run a training artifact with `spine-shapes` to collect observed prefixes. Create a seed using `cargo run --release --locked -p eggfuse-cell-runtime --example bake_spine_blocks -- TRAIN_PROGRAM TRAIN_SHAPES TARGET_PROGRAM NEW_PROGRAM 32`. Use `cargo cell-iterate --program NEW_PROGRAM --output out/learned --rounds 4 --objective rhs-lookups` to grow bounded adjacent units. The iterative command checks ordered RHS inputs across rounds. The separate `bake_contexts` example can transfer admission evidence from paired discovery profiles collected with the research executor.
 
+For conditional-template experiments, pass `--local-congruence true` to
+`cell-iterate`. Both discovery and scored replays then use stable port fields,
+port constructor matching and shared local conditions. `--port-keys true` and
+`--stable-ports true` also select their respective prerequisite backends.
+Credit records the resolved configuration; these modes cannot be combined with
+local-union or repair-cell completion. Measured-work remains an uncalibrated
+operation count: validate any claimed speedup separately with single-thread
+timings against the same frozen artifact and the fastest control.
+
 The frozen suite uses marked recipes produced by the compiler. Per-Run equality on this branch is measured against the prior standalone Cell CPU executor. Comparisons against native egglog require its original unmarked eggcc input.
