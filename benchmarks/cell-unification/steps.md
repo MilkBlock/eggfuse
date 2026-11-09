@@ -89,3 +89,5 @@ port wiring 仍不提前使用源 union，局部 repair 的预测仍生成运行
 接续 `0ac8dde9`。port wiring 和局部 repair 共用 Copy/构造子扫描；各自仅处理不同的剩余源效果（Set incidence 或待验证 union）。短字段保留内联，port wiring 在闭包后投影一次，删除原来的 `ports.clone()`。没有源 union 的 Cell 在建立符号数组前直接跳过局部 repair 分析。局部完成计划删除另一份 union 操作数，原证书只在序列化时借用源操作投影。
 
 handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key 也采用内联存储。五项 local-union、不同 union 共享局部连接、四项 handoff 索引/闭包、多参数 equality 条件及最小特性编译通过；没有新增测试或单项计时。
+
+两项合并核对见 [symbols-check.json](symbols-check.json)：一次 sum-bits 语义 pass，300 项非时间/RSS指标、1,428 个 Run、最终 state 与完整 local-union 证书保持。ownership 短 fixture 的 runtime/ownership 计数、三个 Run 的 state/bindings 和 local-union 证书相同。冻结的旧/新地址格式各 24 个编译组件重新生成一致，附带 port/composition 证书通过原校验。未做计时采样或分配审计；静态存储与重复代码的删除不单独视为速度结论。

@@ -1,0 +1,41 @@
+{
+  "scope": "standalone Cell CPU; shared compile-time symbol analysis; grouped semantic/work check, no timing or allocation sampling",
+  "baseline_commit": "664b4189",
+  "candidate_commit": "05c1fd9a",
+  "sum_bits": {
+    "semantic_acceptance": "pass",
+    "unchanged_work_metrics": 300,
+    "runs": 1428,
+    "local_union_certificates_identical": true,
+    "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "port_fixture": {
+    "runtime_and_ownership_counters_identical": true,
+    "local_union_certificates_identical": true,
+    "runs": 3,
+    "ordered_evidence": {
+      "state.json": "41c7455d120dbaef1c0b24c5b4c2199a2f1de461857520418f2b2d6d7f14ae02",
+      "stages.json": "0b7c4896bdaf976a5197a12e62a41d679bb2aac6afc84212cef253cadb7c4aa8",
+      "binding-audit.json": "3e743ca2621b1afd334093bb4e5185fdcdb7e5d5adff06e737d904e57a196a9d"
+    }
+  },
+  "compiler_relower": {
+    "legacy": {
+      "status": "pass",
+      "components": 24
+    },
+    "current": {
+      "status": "pass",
+      "components": 24
+    }
+  },
+  "binaries": {
+    "baseline": "afb73724d6d3d67d2b498e26f421277acbacc44e2958bc13b4c15ec82f83aca7",
+    "candidate": "ca6eb48c15777c8825384d6924a8643d1d11fe073ae034641ef28bc0dced7ca8"
+  },
+  "programs": {
+    "sum": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+    "port": "101aa5bc04a8867c9c03d0c4d2378e3bb2e8ee244040834d5a1ffdfa07465220"
+  },
+  "coverage_note": "Source union boundaries, missing/deleted operands, multiple-parameter congruence and conditional donor-index invalidation also checked with existing short tests."
+}

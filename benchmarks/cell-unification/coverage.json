@@ -204,13 +204,17 @@
       "requirement": "One Cell wiring and lifecycle for stable ports, symbolic composition and equality conditions; prove coverage before removing old maintenance.",
       "completed_structure": [
         "Source Cell union instructions are the sole runtime union definition; shared port programs no longer retain union operands or depend on them for new-code interning.",
-        "Cell coverage derives from shared port fields; per-marker body arrays and active flags removed. Legacy artifact fields are transient source projections only."
+        "Cell coverage derives from shared port fields; per-marker body arrays and active flags removed. Legacy artifact fields are transient source projections only.",
+        "Port wiring, deferred local-union repair and cross-stage handoff share one Cell symbol allocator, equality solver and constructor closure; donor-index invalidation remains a compile-time observer.",
+        "Port wiring and local repair scan source Copy/constructor operations once through the same builder; the duplicate constructor-port copy and retained local-union operands are removed.",
+        "Canonical symbol keys share inline storage in closure and the handoff donor index; templates without source unions skip inapplicable repair analysis before allocating symbols."
       ],
       "remaining": [
-        "Unify remaining symbolic derivation, stable-port lifecycle and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",
+        "Unify remaining table footprints, stable-port lifecycle, incidence routing and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",
         "Legacy artifact IDs retain original grouping during decode; fresh Bake emits the new shared layout. Broader runtime speed acceptance remains pending."
       ],
-      "evidence": "benchmarks/cell-unification/port-plan-check.json"
+      "evidence": "benchmarks/cell-unification/port-plan-check.json",
+      "symbol_checks": "benchmarks/cell-unification/symbols-check.json"
     },
     {
       "id": "schedule_parallel",
@@ -345,7 +349,8 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "F2",
       "evidence": "benchmarks/cell-unification/port-plan-check.json",
-      "remaining": "Union source/port code and coverage definitions unified; lifecycle, incidence routing and full internal repair takeover remain."
+      "remaining": "Source symbols, incidence coverage and congruence closure share Cell definitions. Ownership/deferred completion lifecycles, incidence routing and full internal repair takeover remain.",
+      "symbol_checks": "benchmarks/cell-unification/symbols-check.json"
     },
     {
       "id": "F3",
