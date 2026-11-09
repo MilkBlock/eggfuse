@@ -167,7 +167,7 @@ impl Work {
             } else { 0 };
             work.insert(key,value);
         }
-        for field in ["forecasts", "seed_roots", "seed_candidates", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths", "pure_epoch_source_steps", "pure_epoch_birth_checks", "pure_epoch_order_checks"] {
+        for field in ["forecasts", "seed_roots", "seed_candidates", "root_visits", "signal_visits", "static_steps", "output_reads", "legacy_boundaries", "membership_checks", "scratch_growths", "pure_epoch_source_steps", "pure_epoch_birth_checks", "pure_epoch_order_checks", "pure_epoch_order_refinements", "pure_epoch_frontier_roots", "pure_epoch_frontier_checks"] {
             let key = format!("port_completion/stats/{field}");
             let value = if report["port_completion"]["enabled"] == true {
                 report["port_completion"]["stats"][field].as_u64().ok_or_else(||format!("missing port completion work {field}"))?
@@ -266,5 +266,29 @@ mod tests {
         let mut missing_delivery = overlap_report;
         missing_delivery["stable_ports"]["completion_batches"]["overlap"]["stats"].as_object_mut().unwrap().remove("slot_publications");
         assert!(Work::read(&missing_delivery).unwrap_err().contains("missing overlap work slot_publications"));
+    }
+    #[test]
+    fn frontier_independence_cannot_hide_its_membership_probes() {
+        use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
+        let source = r#"
+(datatype E (N i64) (F E))
+(F (N 0)) (F (N 1)) (F (N 2)) (F (N 3))
+(ruleset a) (ruleset b)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (N 2)) (= y (N 3))) ((union x y)) :ruleset b)
+(run-schedule (seq (run a) (run b)))
+"#;
+        let core = eggfuse_bake::device_frontend::core("frontier-credit", source).unwrap();
+        let program = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
+        let mut executor = Executor::new(Graph::new_with_scoped_completion(program).unwrap(), false);
+        executor.use_pure_epochs().unwrap();
+        executor.execute().unwrap();
+        let mut report = executor.report();
+        let work = Work::read(&report).unwrap();
+        if report["scoped_executor"]["global_observer"] == false {
+            assert!(work.0["port_completion/stats/pure_epoch_frontier_checks"] > 0);
+        }
+        report["port_completion"]["stats"].as_object_mut().unwrap().remove("pure_epoch_frontier_checks");
+        assert!(Work::read(&report).unwrap_err().contains("missing port completion work pure_epoch_frontier_checks"));
     }
 }

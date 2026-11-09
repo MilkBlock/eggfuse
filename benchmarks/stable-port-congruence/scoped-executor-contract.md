@@ -143,15 +143,39 @@ sets reuse the existing forecast's visited-root sets, and are retained only in
 pure-epoch mode. They are not per-producer consumer lists.
 
 A live legacy/mutable user on a displaced root or possible result rejects the
-batch; unchanged unrelated input users do not. A new affected operator must also
-be outside every older pending completion footprint, including effects reached
-through output wiring. Pure constructors alone do not prove this: merging tasks
-from overlapping epochs in FactRef order can change the surviving witness.
+batch; unchanged unrelated input users do not. A new affected operator outside
+every older pending table footprint retains the existing order proof. When the
+table footprints overlap, a refinement can prove separate equality regions:
+
+- Every pending group must have a complete retained output-root frontier.
+  A typed fallback supplies no such proof, even if its type footprint is pure.
+- Both endpoints of every explicit source union, and every equality key/output
+  of a new Set site, must be outside all these frontiers. This check is cached
+  only within the immutable bound-RHS proof; it cannot survive a graph mutation.
+- Each possibly affected constructor result at an overlapping table must also
+  be outside all older frontiers. The existing shared-wiring closure continues
+  through downstream consumers and source classes, so first-layer independence
+  cannot hide a later shared condition. Complete influence includes result-only
+  uses, hence a result in an older frontier necessarily marks its owning table
+  affected; the table-disjoint fast path cannot bypass that conflict.
+
+These checks conservatively separate source writes and potential congruence
+outputs. A newly added site cannot extend the older closure through an input or
+alias its result, and the newer closure cannot modify an older result or reach
+one of its collision classes. Within each region, pending/witness order remains
+unchanged. The proof uses equality-class membership, never the numeric ordering
+of root IDs. It reuses existing forecast sets and adds no persistent dependency
+index or per-producer consumer list.
+
+Pure constructors alone do not establish this property: merging interacting
+tasks from different epochs in FactRef order can change the surviving witness.
 Unknown same-operator independence retains the source fence; a shared Eq sort
 alone does not require one. Missing wiring and budget overflow
 retain the previous wait. The preview accepts at most 4,096 expression/effect/overlay
-steps; the proof also charges root/signal/static/legacy/source/birth/order checks
-against its 4,096-visit budget.
+steps; the proof also charges root/signal/static/legacy/source/birth/order and
+frontier-root/membership checks against its 4,096-visit budget. Refinement attempts
+and membership work are included in Bake's strict ledger. Per-site disjoint
+checks are not accepted source batches or committed mutations.
 These counters and scratch growths are charged to Bake's heuristic work ledger;
 they do not provide a complete allocator census or a latency model.
 
@@ -164,8 +188,12 @@ task meets an already completed newer peer. This is pending work metadata, not a
 new producer/consumer reverse index. The ordinary flat queue is unchanged.
 
 Fixtures commit an independent H equality while F remains pending in the same
-Eq sort, and publish/consume independent births. Overlapping constructor epochs
-now retain a source fence. Other fixtures cover row epoch preservation, colliding
+Eq sort, and publish/consume independent births. Two disjoint F/G regions can
+now commit their source unions across epochs despite sharing both operators.
+Another fixture lets the first F outputs be separate but joins them through a
+two-input G: it must retain the fence. Removing the refinement's disjointness
+checks reproduces the old ordered-witness regression. Interacting constructor
+epochs retain their source fence. Other fixtures cover row epoch preservation, colliding
 absent-key Sets, no-op unions, mutable boundaries and walk-budget fallback. This
 establishes a single-thread protocol, not concurrent access safety.
 

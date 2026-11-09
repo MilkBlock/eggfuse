@@ -41,6 +41,12 @@ work are charged; all four snapshot layers copy zero values. The two-worker,
 16-task overlap lane still requests 1,370 more allocation calls, two more
 reallocations and 565,444 more bytes than synchronous batches. Neither this
 representation change nor the overall parallel path has performance admission.
+The pure-epoch order proof now admits disjoint regions sharing the same
+constructors when complete retained equality frontiers certify independence.
+The fixture commits a newer source union while two tasks remain pending.
+Sum-bits still requires all ten waits: its four RHS batches encounter overlapping
+frontiers. Refinement adds 77 counted proof events, three allocations and 132
+requested bytes per execution; this is a proof extension, not a workload speedup.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -60,7 +66,7 @@ phase does not establish completion of the objective.
 | Covered constructor lookup uses operator/scalar discrimination plus exact port equality | Same lookup answers before/after aliasing; static positions or explicit boundary port domains; no operator-bucket scan disguised as indexing | Verified for scalar constructors with an equality input; immutable birth hints plus complete port domains |
 | Local congruence uses shared template conditions and static wiring | Multi-input conjunction, shared cross-stage chains, unrelated-noise invariance; no per-instance producer-to-consumer index | Bounded shared conditions and foreign candidates execute in one ordered pass; all-input, cross-stage, noise and mixed-boundary tests pass |
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
-| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance, publish and consume independent regions of the same Eq sort; no useful main-workload bypass, same-table independence still open |
+| Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance independent regions, including source unions affecting disjoint uses of the same constructors; main-workload waits and table-granular query/publication limits remain |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; worker preparation, dispatch, collection, speculation and allocator requests recorded; speed/scaling admission pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Grouped snapshot reads overlap ordered commits without value copies; overlay query/merge cost, concurrent writers, source publication ownership and useful task grouping remain open |
@@ -1931,4 +1937,109 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/queue-overlays-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/queue-overlays-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/queue-overlays-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-queue-overlays.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Same-operator source epochs use complete frontier independence
+
+The `8e20df0c` execution still had six query waits and four RHS waits. The pure
+RHS proof stopped at the first affected operator also present in an older pending
+table footprint. That preserves survivor order but rejects separate regions
+using the same constructor. The compiler already supplies a bounded, pure
+source-effect program and complete local wiring; pure-epoch forecasts retain
+their visited equality-root sets. Those existing facts expose a narrower proof
+without adding a persistent consumer index or another topology representation.
+
+The table-disjoint fast path remains. On a table conflict, the refinement checks
+the complete retained frontiers of all older pending groups. Every explicit
+source-union endpoint and every equality key/result of a new Set site must be
+outside them. This source check is reused only during the current immutable
+proof. Each potentially affected result at an overlapping table must also be
+outside the old frontiers. The ordinary shared-wiring traversal continues through
+downstream conditions and source aliases. An incomplete frontier, a live mutable
+boundary, a shared result or exhaustion of the existing 4,096-visit budget keeps
+the fence. Both frontier-root visits and membership queries consume that budget.
+Different symbol numbers alone never certify different equality classes.
+
+The positive fixture creates two F/G chains with interleaved witness order,
+unions their inputs in separate source Runs, then observes the G results. After
+Run 2, two tasks remain pending, one effective source union has committed while
+pending, and no RHS completion wait occurred. Four same-operator sites pass
+refinement using six root visits and six membership checks. Final ordered state
+and source observations equal the fully completed reference. Sparse and
+non-sparse fixture reports match exactly. This establishes a larger admissible
+single-writer execution region, not parallel mutation or a timing improvement.
+
+The downstream counterexample starts with separate F outputs but connects both
+regions through a two-input G. It passes the first local independence checks,
+then detects the shared downstream frontier and retains the RHS wait. Unit
+checks also reject unavailable frontiers, source aliases into old results, birth
+inputs/results touching old frontiers and exhausted budgets. Temporarily
+bypassing the disjointness checks reproduces the older source-epoch regression:
+ordered exported witnesses differ, although its scalar record value remains
+equal. The correct checks are restored before the final suites and audits.
+
+On sum-bits, all five lanes retain exactly the previous 1,428 Run state, ordered
+RHS, effective-write, resume, Spine and schedule hashes. All non-proof work,
+including dispatch, guards, queue overlays, publication and waits, is unchanged.
+The four RHS batches still encounter overlapping conservative frontiers. Three
+individual sites pass refinement before later conflicts reject their batches;
+these are neither accepted source batches nor committed unions.
+
+| Sum-bits proof work, each lane | `8e20df0c` | Current |
+| --- | ---: | ---: |
+| Query / RHS waits | 6 / 4 | 6 / 4 |
+| Accepted non-noop source batches | 0 | 0 |
+| Table-order checks | 4 | 7 |
+| Frontier-root visits / membership queries | 0 / 0 | 29 / 29 |
+| Refinement attempts / individually disjoint sites | 0 / 0 | 7 / 3 |
+| Order rejections | 4 | 4 |
+| Peak proof visits | 64 | 78 |
+
+Membership insertion checks, source steps and tracked scratch growths each
+increase by three. Bake charges 77 additional logical work events, including the
+seven attempts and all new root/membership checks. Its regression fixture rejects
+a report missing frontier-membership costs. These event units are a heuristic,
+not a cycle model. No credit is assigned merely for passing a site check.
+
+The allocator build matches all deterministic counters of the normal build.
+Every sum-bits lane adds three execution allocation calls and 132 requested bytes,
+with no reallocation or setup-request change. The proof therefore adds cost on
+this workload without removing a wait; it is **not admitted as a performance
+improvement**. Pure epochs remain optional. No elapsed-time/scaling measurement
+is included here. These are standalone Cell CPU results, not native egglog;
+allocator requests exclude parsing/export and native thread stacks.
+
+Validation passes 328 workspace tests (four ignored), 121 compiler-library and
+focused integration tests in each storage configuration, and the minimal compile
+check. Held-reader and both panic-recovery gates also pass. See
+[the frozen evidence](disjoint-order-audit.json) and
+[the source-epoch contract](scoped-executor-contract.md).
+
+This step does not remove table-granular query/publication demands, the single
+writer or epoch-end joins. The complete frontiers are conservative possible
+effects; an intersection does not prove an actual collision or an intrinsic
+wait. Finer conditional summaries and compiler evidence are still needed before
+those obligations can be discharged.
+
+Reproduce the preceding workspace, eleven focused suites and minimal checks with
+the `disjoint-order-` log prefix. Add `--lib` to both focused commands. Set
+`DISJOINT_ORDER_EVIDENCE` to the absolute path of
+`out/stable-port-congruence/disjoint-order-fixture.json` for the sparse command,
+and `disjoint-order-non-sparse-fixture.json` for the non-sparse command. For the
+negative control, temporarily replace the `disjoint` expression in
+`pure_order.rs` with `true`, run only
+`separate_source_epochs_preserve_ordered_merge_observations` in the
+`unique_publication` suite without global observer features, record the expected
+failure as `disjoint-order-negative.log`, and restore the source. Preserve
+`queue-overlays-audit` and `queue-overlays-allocator-audit` for comparison.
+Standalone audit builds omit diagnostic gates:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/disjoint-order-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/disjoint-order-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/disjoint-order-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/disjoint-order-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/disjoint-order-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/disjoint-order-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-disjoint-order.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

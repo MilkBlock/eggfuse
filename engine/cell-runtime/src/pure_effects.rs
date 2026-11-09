@@ -3,6 +3,8 @@
 //! outputs of the same operators through complete shared signal domains.
 use super::*;
 use smallvec::SmallVec;
+#[path = "pure_order.rs"]
+mod order;
 
 pub(crate) struct Birth {
     pub table: usize,
@@ -25,9 +27,15 @@ struct Proof<'a> {
     // Set collisions in the sealed snapshot. It never proves congruence.
     parents: HashMap<u64, u64>,
     groups: HashMap<u64, Roots>,
+    order: order::Order,
 }
 fn cost(c: &Counts) -> u64 {
-    visits(c) + c.pure_epoch_source_steps + c.pure_epoch_birth_checks + c.pure_epoch_order_checks
+    visits(c)
+        + c.pure_epoch_source_steps
+        + c.pure_epoch_birth_checks
+        + c.pure_epoch_order_checks
+        + c.pure_epoch_frontier_roots
+        + c.pure_epoch_frontier_checks
 }
 impl Proof<'_> {
     fn room(&self) -> bool {
@@ -90,23 +98,6 @@ impl Proof<'_> {
             }
         }
         Some(true)
-    }
-    fn preserves_order(&mut self, table: usize, forecast: &Forecast) -> bool {
-        // Pure constructors still have ordered survivor selection. If a newer
-        // epoch adds key tasks to an older unfinished closure, FactRef order
-        // can retire a different witness than completing the epochs in order.
-        // A shared sort alone is not a conflict; require an affected operator.
-        let (ready, checks) = forecast.readiness(&[table]);
-        self.counts.pure_epoch_order_checks += checks;
-        if !ready {
-            self.counts.pure_epoch_order_rejections += 1;
-            *self
-                .counts
-                .pure_epoch_order_tables
-                .entry(table)
-                .or_default() += 1;
-        }
-        ready
     }
     /// A transient visitor, not an instance-owned consumer index. No table or
     /// operator bucket is scanned; every live site comes from shared wiring.
@@ -242,8 +233,16 @@ impl Proof<'_> {
                 }
                 self.counts.pure_epoch_source_steps += 1;
                 if operators.contains(&table) {
-                    if !self.preserves_order(table, forecast) {
-                        return Ok(Some(false));
+                    match self.order.preserves(
+                        table,
+                        output,
+                        self.batch,
+                        forecast,
+                        self.counts,
+                        self.before,
+                    ) {
+                        Some(true) => (),
+                        other => return Ok(other),
                     }
                     offer(output, &mut roots, &mut seen, self.counts);
                 }
@@ -275,21 +274,21 @@ impl Proof<'_> {
                     offer(peer, &mut roots, &mut seen, self.counts);
                 }
             }
-            let mut order_ready = true;
-            if !self.outputs(id, |table, output, counts| {
-                let (ready, checks) = forecast.readiness(&[table]);
-                counts.pure_epoch_order_checks += checks;
-                if !ready {
-                    counts.pure_epoch_order_rejections += 1;
-                    *counts.pure_epoch_order_tables.entry(table).or_default() += 1;
-                    order_ready = false;
+            let mut order_ready = Some(true);
+            let mut order = std::mem::take(&mut self.order);
+            let (batch, before) = (self.batch, self.before);
+            let complete = self.outputs(id, |table, output, counts| {
+                if order_ready == Some(true) {
+                    order_ready = order.preserves(table, output, batch, forecast, counts, before);
                 }
                 offer(output, &mut roots, &mut seen, counts)
-            })? {
+            })?;
+            self.order = order;
+            if !complete {
                 return Ok(None);
             }
-            if !order_ready {
-                return Ok(Some(false));
+            if order_ready != Some(true) {
+                return Ok(order_ready);
             }
         }
         Ok(Some(true))
@@ -318,6 +317,7 @@ impl Graph {
             before,
             parents: HashMap::default(),
             groups: HashMap::default(),
+            order: order::Order::default(),
         }
         .prove(forecast);
         counts.pure_epoch_peak_visits = counts.pure_epoch_peak_visits.max(cost(&counts) - before);

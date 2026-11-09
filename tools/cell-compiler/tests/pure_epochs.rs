@@ -405,6 +405,93 @@ fn separate_operators_of_the_same_sort_can_cross_source_epochs() {
 }
 
 #[test]
+fn disjoint_regions_of_the_same_operators_can_cross_source_epochs() {
+    let source = r#"
+(datatype E (N i64) (F E) (G E) (Seen E))
+(ruleset a) (ruleset b) (ruleset observe)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (N 2)) (= y (N 3))) ((union x y)) :ruleset b)
+(rule ((= x (G y))) ((Seen x)) :ruleset observe)
+(N 0) (N 1) (N 2) (N 3)
+(G (F (N 3))) (G (F (N 1))) (G (F (N 2))) (G (F (N 0)))
+(run-schedule (seq (run a) (run b) (run observe)))
+"#;
+    let mut old = executor(source, false);
+    let mut new = executor(source, true);
+    old.execute().unwrap();
+    new.execute_until(Some(2)).unwrap();
+    let checkpoint = new.scoped_execution_report();
+    let ports = new.graph.port_completion_report();
+    let pending = new.graph.pending_completion_tasks();
+    if checkpoint["global_observer"] == false {
+        assert!(pending > 0);
+        assert_eq!(checkpoint["stats"]["rhs_completions"], 0);
+        assert_eq!(checkpoint["stats"]["source_unions_while_pending"], 1);
+        assert_eq!(checkpoint["stats"]["bound_rhs_accepts"], 1);
+        assert!(
+            ports["stats"]["pure_epoch_order_disjoint"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert_eq!(ports["stats"]["pure_epoch_order_rejections"], 0);
+    }
+    new.execute().unwrap();
+    compare(&old, &new);
+    if let Ok(path) = std::env::var("DISJOINT_ORDER_EVIDENCE") {
+        std::fs::write(
+            path,
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "scope":"standalone Cell CPU; same-operator disjoint source epochs",
+                "checkpoint":checkpoint,"ports":ports,"pending_tasks":pending,
+                "exact_final_state_and_ordered_bindings":true,
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+    }
+}
+
+#[test]
+fn disjoint_first_outputs_cannot_hide_a_shared_downstream_condition() {
+    let source = r#"
+(datatype E (N i64) (F E) (G E E) (Seen E))
+(ruleset a) (ruleset b) (ruleset observe)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset a)
+(rule ((= x (N 2)) (= y (N 3))) ((union x y)) :ruleset b)
+(rule ((= x (G y z))) ((Seen x)) :ruleset observe)
+(N 0) (N 1) (N 2) (N 3)
+(G (F (N 0)) (F (N 2))) (G (F (N 1)) (F (N 3)))
+(run-schedule (seq (run a) (run b) (run observe)))
+"#;
+    let mut old = executor(source, false);
+    let mut new = executor(source, true);
+    old.execute().unwrap();
+    new.execute_until(Some(2)).unwrap();
+    let checkpoint = new.scoped_execution_report();
+    let ports = new.graph.port_completion_report();
+    if checkpoint["global_observer"] == false {
+        assert!(
+            ports["stats"]["pure_epoch_order_disjoint"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert!(
+            ports["stats"]["pure_epoch_frontier_conflicts"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert_eq!(checkpoint["stats"]["bound_rhs_accepts"], 0);
+        assert_eq!(checkpoint["stats"]["source_unions_while_pending"], 0);
+        assert_eq!(checkpoint["stats"]["rhs_completions"], 1);
+    }
+    new.execute().unwrap();
+    compare(&old, &new);
+}
+
+#[test]
 fn unchanged_input_peers_of_the_same_operator_keep_the_mutable_boundary() {
     check_displaced(
         "same-operator-peer",
