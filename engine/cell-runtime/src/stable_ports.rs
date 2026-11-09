@@ -54,6 +54,8 @@ pub(in crate::graph) struct Runtime {
     conditions: Option<conditions::Stats>,
     #[serde(skip)]
     parallel: Option<conditions::parallel::Runtime>,
+    #[serde(skip)]
+    batches: Option<conditions::batches::Runtime>,
     key_lookups: Counter<u64>,
     key_candidates: Counter<u64>,
     key_field_comparisons: Counter<u64>,
@@ -351,7 +353,7 @@ impl Graph {
             })
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
-            "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
+            "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
             "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})

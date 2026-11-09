@@ -252,12 +252,51 @@ in original candidate order. Later speculative results cannot change the chosen
 survivor or create an error the serial path would not observe. All executed
 guards, including discarded results, contribute to work counts.
 
-Only candidates for one popped completion task share the read epoch. Different
-completion tasks are not speculated together: a prior task may change aliases,
-pending eligibility, liveness or the ordered survivor. Small lists keep their
-serial path. This is a synchronous read phase, not asynchronous generation-safe
-publication or independent progress during mutation. Pending task generations,
-concurrent mutation and asynchronous publication remain separate obligations.
+The candidate-only mode gives one popped task a read epoch. The optional
+`--completion-batch-tasks 2..64` mode instead uses the following certificate to
+read several queued tasks in one pool dispatch. Both remain synchronous read
+phases; concurrent Graph mutation and asynchronous publication are separate
+obligations.
+
+## Certified completion read batches
+
+1. Merge a bounded prefix of the existing scoped table queues, stopping before
+   an earlier legacy task. The compiler's scalar constructor key footprint and
+   complete local condition plan must cover every prefetched source. No table
+   bucket or graph body is scanned to discover work.
+2. Borrow the same immutable equality relation for all worker tasks. Include
+   earlier pending peers in guard evaluation: they may become completed peers
+   before this source's turn. Later pending peers remain ineligible. Cache exact
+   true/error answers in candidate order, stopping only at a pre-existing
+   completed exact peer. The unchanged-input certificate also protects this
+   peer: it cannot become a key task without an input-class change.
+3. Record the canonical input classes from **every** compiler-declared equality
+   key column in a transient `(class, task)` vector. This is one read window's
+   certificate, not a persistent producer/consumer subscription index. Scalar
+   fields, operators and node addresses are immutable during pure completion.
+4. Before each derived union, check both result classes against unread inputs.
+   Either an absorbed class or the absorbing class can invalidate equality
+   predicates and candidate-domain completeness. Keep only the prefix before
+   the first affected task. A no-op union changes no class membership.
+5. At commit, recheck the live queue head, candidate liveness and pending state;
+   then select the first still-eligible cached answer in original order. Read
+   current visibility and epoch. After an effective intervening union, resolve
+   the retained result ID again; certified inputs need no re-read. The original
+   constructor collision path owns union, retirement and publication.
+6. A newly queued earlier pure port-key constructor runs serially at its original
+   position. Its derived union goes through the same certificate check, including
+   the next uncommitted cached source. Unaffected reads survive this interruption.
+   A legacy or opaque effect ends the window before it can allocate a new peer,
+   mutate scalar data or otherwise violate the no-birth assumption.
+
+The induction is over ordered commits: if no union touches a future source's
+input classes, exact key equality with each surviving peer is unchanged and its
+previously complete candidate domain remains complete. Retirement only removes
+peers and is checked at selection. Earlier pending peers becoming eligible are
+already represented. This admits independent nodes of the **same Eq sort**;
+sharing a sort alone does not require waiting. Results never cross a source Run
+or survive an uncertified mutable effect. Invalid/unused reads, preparation,
+certificate searches, extra queue probes, dispatches and allocations are charged.
 
 ## Gates that must remain open
 

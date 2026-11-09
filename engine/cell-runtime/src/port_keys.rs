@@ -137,6 +137,14 @@ impl Graph {
         } else {
             self.lookup_port_key(row.table, &row.values[..row.values.len() - 1], Some(f))?
         };
+        self.commit_port_key(f, row, found)
+    }
+    pub(super) fn commit_port_key(
+        &mut self,
+        f: FactRef,
+        row: Row,
+        found: Option<Row>,
+    ) -> Result<()> {
         self.join_constructor_epoch(&row, found.as_ref());
         if let Some(other) = &found {
             self.enqueue_union(

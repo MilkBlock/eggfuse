@@ -15,6 +15,9 @@ Earlier sections retain historical measurements, not current admission claims.
 Optional `--guard-workers` now dispatches completion-candidate reads to a private
 persistent pool. This does not remove the ten source waits or parallelize commits;
 the experiment remains default-off and has no performance admission.
+`--completion-batch-tasks` extends that read phase across queued tasks using the
+compiler's complete key footprint. Certified reads survive intervening pure
+constructor completion; a key-class conflict or legacy effect ends their reuse.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -38,7 +41,7 @@ phase does not establish completion of the objective.
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; worker preparation, dispatch, collection, speculation and allocator requests recorded; speed/scaling admission pending |
 | Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Exact guards use immutable Send + Sync views and local counters; opt-in persistent workers execute them; mutable commits, publication ownership and useful task grouping remain open |
-| Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Partial: actual completion-candidate reads run on persistent workers with ordered commits; concurrent mutation, independent task progress and scaling remain open |
+| Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Partial: persistent workers read across completion tasks, with input-class certificates and ordered commits; concurrent mutation, asynchronous publication and scaling remain open |
 | Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, source-union effects, shared influence wiring and compiled bound expressions; cheaper coverage/order proofs and useful parallel task grouping remain open |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
@@ -1189,4 +1192,121 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/parallel-guards-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/parallel-guards-allocator-runtime benchmarks/stable-port-congruence/parallel-guards-audit-manifest.json out/stable-port-congruence/parallel-guards-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-parallel-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Completion reads retained across certified unions
+
+The preceding actual execution showed that one-task guard lists are too small:
+the fine-grain worker lane needed 1,379 synchronous pool rounds. This iteration
+uses the compiler's complete equality-key columns and local condition plans to
+read several ordered completion tasks together. It discharges no additional
+cross-Run work; the six query waits and four RHS waits remain. The opportunity is
+inside a completion window: a result union need not invalidate another task's
+already computed key predicates when their concrete input classes are disjoint.
+Sharing an Eq sort alone does not establish dependence.
+
+`--completion-batch-tasks 2..64` requires `--guard-workers` and enables scoped
+queues. A bounded merge of existing table queues supplies the prefix. Workers
+borrow immutable guard inputs, while the coordinator retains original commit
+order. A transient sorted `(input class, task)` vector checks **both** classes of
+each derived union. The first affected unread task and its suffix are discarded.
+This checks class membership, including changes to the absorbing class whose
+representative number survives. There is no persistent per-producer subscription.
+Candidate liveness and pending state, source visibility, result root and epoch
+are rechecked or refreshed at commit. Earlier pending candidates are evaluated
+up front because they can become eligible before the source is committed.
+
+An initial draft abandoned a whole suffix whenever a newly queued child preceded
+the next prefetched task. The implemented protocol instead executes such a pure
+port-key constructor in its original position and applies the same union check
+to its effects. Unaffected reads remain usable. A legacy/opaque task still ends
+the window; no birth, scalar mutation or source Run can occur inside it. The
+full invariant and remaining obligations are in
+[the executor contract](scoped-executor-contract.md#certified-completion-read-batches).
+
+The frozen sum-bits audit preserves all 1,428 Run state/RHS/effective-write/resume/
+Spine/schedule hashes in five lanes. General committed-effect counters and source
+waits equal the serial control. The disabled and previous fine-worker controls
+also preserve every deterministic counter from `8c9c4fd8`. Two and four workers
+produce identical batch-work counts; worker assignment itself is nondeterministic.
+
+| Configuration | Pool rounds | Prepared tasks | Cached tasks committed | Intervening pure tasks completed | Unused prepared tasks | Read-set comparisons |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Serial control | 0 | 0 | 0 | 0 | 0 | 0 |
+| Prior 2-worker candidate mode, grain 1 | 1,379 | — | — | — | — | — |
+| 2 or 4 workers, 16 tasks | 84 | 697 | 622 | 380 | 75 | 10,282 |
+| 2 workers, 4 tasks | 188 | 706 | 696 | 300 | 10 | 6,350 |
+
+Batch lanes use the default candidate grain of 32; no per-candidate fallback
+dispatches occur in this workload. The 16-task lane retains 365 cached tasks
+across effective intervening unions and invalidates suffixes at 14 conflicting
+unions. Its 622 cached and 380 intervening completions account for 1,002 of the
+same 1,046 equality completion tasks executed by the serial control; these are
+task counts, not additional committed source mutations. All configured workers
+participate, with uneven load. Fewer rounds than the previous parallel experiment
+do not constitute a speedup over the zero-dispatch serial control.
+
+Preparation and speculative work remain significant. The 16-task lane prepares
+3,229 candidate positions, performs 2,699 candidate fact lookups and 998 input-set
+queries, and requests 1,323,584 bytes across 194 counted batch scratch allocation
+events. Relative to serial it adds 90 key-candidate visits, 195 key-field
+comparisons, 605 port reads, 970 root resolutions and 106 local condition visits.
+Its 75 extra row views correspond to the discarded prepared tasks. The ordinary
+guard counters include speculative work; the Bake ledger additionally charges
+preparation, dispatch, queue checks, read-set construction/search and collection.
+The credit fixture assigns negative net work savings to this parallelization of
+small guards and rejects an omitted read-set cost. Event weights remain an
+uncalibrated latency proxy.
+
+The separate allocator diagnostic matches the normal audit's exact traces and
+deterministic work counters. The following are increments over its serial control:
+
+| Configuration | Setup allocations / reallocations | Setup requested bytes | Execute allocations / reallocations | Execute requested bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 2 workers, 16 tasks | 48 / 2 | 20,062 | 348 / 2 | 1,336,000 |
+| 4 workers, 16 tasks | 84 / 4 | 34,868 | 348 / 2 | 1,336,000 |
+| 2 workers, 4 tasks | 48 / 2 | 20,062 | 427 / 0 | 1,349,280 |
+
+These allocator requests include task preparation and pool/scheduler activity in
+their respective intervals, exclude parsing/export and native thread stacks,
+and are neither RSS nor a scheduling-independent bound. The scratch counters are
+a subset of this work and must not be added to allocator totals.
+
+Validation passes 313 workspace tests (four ignored), 112 focused tests in each
+storage configuration and the minimal compile check. Nine new fixtures cover
+same-sort independence, pending/retired peers, both union endpoints, intervening
+child tasks, dependent child unions, bounded configuration, selective progress,
+partial multi-input predicates and deletion/recreation. Two temporary negative
+controls separately remove input invalidation and the intervening child's union
+check; both produce duplicate H constructors. The correct checks were restored
+before the final builds and audits.
+
+This is **default-off standalone Cell CPU parallel reading, not native egglog or
+an admitted speedup**. No wall-clock or scaling campaign was run. Reads still
+join before mutation, and commits remain serial: retaining independent read
+results does not yet permit independent matching/publication during a mutation.
+The next cost to remove is repeated task/descriptor preparation and lookup using
+the existing stable storage and shared wiring. Larger useful query-matching
+kernels, concurrent publication ownership and the remaining source waits also
+need their own protocols; simply adding workers cannot discharge those duties.
+
+Reproduce with the previous ten focused suites plus `--test completion_batches`
+and `completion-batches-` log prefixes for workspace, sparse, non-sparse and
+minimal checks. Preserve `parallel-guards-final-audit/results.json` as the prior
+control. The negative controls change `*end = (*end).min(task)` to a no-op for
+`a_derived_input_alias_invalidates_prefetched_conditions`, and separately bypass
+the `commit_batch_unions(..., index, ...)` check for
+`a_bridged_child_union_invalidates_its_dependent_prefetched_suffix`. Record their
+expected failures in `completion-batches-negative-input.log` and
+`completion-batches-negative-bridge.log`, restoring the implementation after each.
+Build the standalone audit binaries separately from compiler tests:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/completion-batches-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/completion-batches-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/completion-batches-final-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/completion-batches-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/completion-batches-allocator-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/completion-batches-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-completion-batches.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

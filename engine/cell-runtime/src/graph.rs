@@ -2465,6 +2465,7 @@ impl Graph {
             }
 
             let next = self.next_scoped_dirty(allowed);
+            if self.complete_port_read_batch(next, allowed)? { continue; }
             if let Some(f)=self.pop_owned_before(next, allowed) {
                 self.complete_owned_key(f)?;
                 continue;

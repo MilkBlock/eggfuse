@@ -190,6 +190,64 @@ impl Pending {
             .flat_map(|s| s.iter())
             .chain(self.tables.iter().flat_map(|s| s.keys()))
     }
+    /// A bounded, non-consuming merge of table queues. Only active heads and
+    /// successors needed for this prefix are visited; no table-body scan.
+    pub fn prefix_before(
+        &self,
+        before: Option<Dependency>,
+        allowed: Option<&[bool]>,
+        limit: usize,
+    ) -> (
+        smallvec::SmallVec<[(FactRef, usize); 16]>,
+        u64,
+        u64,
+        u64,
+        u64,
+        usize,
+    ) {
+        use std::ops::Bound::{Excluded, Unbounded};
+        assert!(self.scoped());
+        let mut heads = smallvec::SmallVec::<[(FactRef, usize); 16]>::new();
+        let mut visits = 0;
+        for &(f, table) in &self.heads {
+            visits += 1;
+            if before.is_some_and(|d| d < Dependency::Fact(f)) {
+                break;
+            }
+            if allowed.is_none_or(|a| a[table]) {
+                heads.push((f, table));
+            }
+            if heads.len() == limit {
+                break;
+            }
+        }
+        let mut out = smallvec::SmallVec::new();
+        let mut comparisons = 0;
+        let mut successors = 0;
+        while out.len() < limit && !heads.is_empty() {
+            let index = (0..heads.len())
+                .min_by(|&a, &b| {
+                    comparisons += 1;
+                    heads[a].cmp(&heads[b])
+                })
+                .unwrap();
+            let (f, table) = heads.swap_remove(index);
+            out.push((f, table));
+            if out.len() < limit {
+                successors += 1;
+                if let Some((&next, _)) = self.tables[table].range((Excluded(f), Unbounded)).next()
+                    && before.is_none_or(|d| Dependency::Fact(next) <= d)
+                {
+                    heads.push((next, table));
+                }
+            }
+        }
+        let allocations = u64::from(out.spilled()) + u64::from(heads.spilled());
+        let bytes = (if out.spilled() { out.capacity() } else { 0 }
+            + if heads.spilled() { heads.capacity() } else { 0 })
+            * std::mem::size_of::<(FactRef, usize)>();
+        (out, visits, comparisons, successors, allocations, bytes)
+    }
     pub fn active_tables(&self) -> impl Iterator<Item = usize> + '_ {
         self.heads.iter().map(|&(_, t)| t)
     }

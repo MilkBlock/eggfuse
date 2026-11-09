@@ -1,8 +1,10 @@
-//! Execute compiler-derived local congruence conditions. No satisfied-condition
-//! cache or per-instance reverse graph is maintained. Each visit checks current
+//! Execute compiler-derived local congruence conditions. No persistent satisfied-
+//! condition cache or per-instance reverse graph is maintained. Each visit checks current
 //! fact liveness; the queue contains facts, not stale condition incarnations.
 use super::*;
 use composition::conditions::Plan;
+#[path = "completion_read_batches.rs"]
+pub(super) mod batches;
 #[path = "parallel_port_guards.rs"]
 pub(super) mod parallel;
 
@@ -39,6 +41,11 @@ struct Candidate {
     condition: Option<usize>,
 }
 type Candidates = smallvec::SmallVec<[Candidate; 16]>;
+struct CandidateSet {
+    component: u32,
+    plan: Rc<Plan>,
+    candidates: Candidates,
+}
 #[derive(Default)]
 struct BoundaryWork {
     signals: u64,
@@ -72,11 +79,11 @@ impl Graph {
     /// Shared conditions cover the local component. One input domain supplies
     /// foreign candidates. Their ordered union is complete, even when open.
     /// None is reserved for an uncovered source shape.
-    pub(super) fn local_port_collision(
+    fn local_port_candidates(
         &mut self,
         f: FactRef,
         row: &Row,
-    ) -> Result<Option<Option<Row>>> {
+    ) -> Result<Option<CandidateSet>> {
         if self.stable_ports.as_ref().unwrap().conditions.is_none() {
             return Ok(None);
         }
@@ -149,8 +156,27 @@ impl Graph {
             });
             candidates.dedup_by_key(|c| c.fact);
         }
+        Ok(Some(CandidateSet {
+            component: frame.component,
+            plan,
+            candidates,
+        }))
+    }
+    pub(super) fn local_port_collision(
+        &mut self,
+        f: FactRef,
+        row: &Row,
+    ) -> Result<Option<Option<Row>>> {
+        let Some(CandidateSet {
+            component,
+            plan,
+            candidates,
+        }) = self.local_port_candidates(f, row)?
+        else {
+            return Ok(None);
+        };
         if self.dispatch_port_guards(candidates.len()) {
-            return self.parallel_port_collision(f, row, &plan, frame.component, &candidates);
+            return self.parallel_port_collision(f, row, &plan, component, &candidates);
         }
         for candidate in candidates {
             let target = candidate.fact;
@@ -194,7 +220,7 @@ impl Graph {
                 Ok(false)
             } else {
                 self.stable_port_reader()?.condition_matches(
-                    frame.component,
+                    component,
                     condition,
                     stored,
                     &row.values,

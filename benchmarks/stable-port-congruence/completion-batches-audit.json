@@ -1,0 +1,569 @@
+{
+  "scope": "standalone Cell CPU; real persistent workers across completion tasks",
+  "previous_revision": "8c9c4fd8",
+  "runtime_sha256": "5ca878a8ed50699b72f4b09e343d4d6c8e882c4b406835129fef367dc7a19c51",
+  "allocator_runtime_sha256": "e732478a415179a7d43682964f37d1aa58df3b4eb6f90d7accb7f9f5f6f17895",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "validation": {
+    "workspace-tests": {
+      "passed": 313,
+      "failed": 0,
+      "ignored": 4
+    },
+    "tests": {
+      "passed": 112,
+      "failed": 0,
+      "ignored": 0
+    },
+    "non-sparse-tests": {
+      "passed": 112,
+      "failed": 0,
+      "ignored": 0
+    },
+    "no_default_features": "compile check passed",
+    "negative_control": "Removing input-class invalidation leaves duplicate H constructors in exact export.",
+    "bridge_negative_control": "Omitting the child-union certificate leaves two H constructors instead of one."
+  },
+  "disabled_deterministic_work_unchanged": true,
+  "exact_ordered_semantics_match": true,
+  "source_waits_and_committed_effects_unchanged": true,
+  "previous_fine_candidate_rounds": 1379,
+  "lanes": {
+    "batch_two": {
+      "batches": {
+        "enabled": true,
+        "performance_admission": false,
+        "proof": "complete compiler key footprint; both union classes checked; live/pending peers and queue order rechecked; invalid suffix discarded",
+        "scope": "standalone Cell CPU; batched immutable reads with input-class certificates and ordered commits",
+        "stats": {
+          "attempts": 107,
+          "bridged_tasks": 380,
+          "candidate_fact_lookups": 2699,
+          "collected_tasks": 697,
+          "committed_tasks": 622,
+          "conflicting_unions": 14,
+          "dispatches": 84,
+          "guard_candidates": 1791,
+          "interleaved_stops": 0,
+          "order_checks": 1002,
+          "peak_tasks": 16,
+          "pending_probes": 3229,
+          "preflight_checks": 707,
+          "preparation_errors": 0,
+          "prepared_candidates": 3229,
+          "prepared_tasks": 697,
+          "queue_comparisons": 1956,
+          "queue_head_visits": 358,
+          "queue_successor_reads": 823,
+          "read_set_comparisons": 10282,
+          "read_set_queries": 998,
+          "read_set_slots": 1307,
+          "recorded_answers": 608,
+          "result_refreshes": 365,
+          "reused_after_union": 365,
+          "scratch_allocations": 194,
+          "scratch_bytes_requested": 1323584,
+          "selection_checks": 499,
+          "selection_dead_skips": 0,
+          "selection_pending_skips": 0,
+          "short_prefixes": 23,
+          "uncovered_stops": 10,
+          "unsubmitted_tasks": 0,
+          "unused_tasks": 75,
+          "worker_early_stops": 529
+        },
+        "task_limit": 16,
+        "worker_tasks": [
+          647,
+          50
+        ]
+      },
+      "total_pool_rounds": 84,
+      "fallback_candidate_rounds": 0,
+      "stable_port_work": {
+        "birth_hint_hits": 11190,
+        "birth_hint_probes": 17455,
+        "equality_completions": 1046,
+        "equality_enqueues": 1046,
+        "key_candidates": 18170,
+        "key_field_comparisons": 35516,
+        "key_lookups": 17465,
+        "keys": true,
+        "legacy_key_enqueues": 0,
+        "notifications": 1988,
+        "notified_columns": 2098,
+        "pending_candidate_skips": 0,
+        "port_domain_probes": 6275,
+        "port_reads": 121099,
+        "ports_installed": 10122,
+        "result_publications": 878,
+        "root_resolutions": 121464,
+        "row_views": 35696,
+        "rows_installed": 3739
+      },
+      "local_condition_work": {
+        "anchor_probes": 2078,
+        "attempts": 1121,
+        "boundary_candidates": 3012,
+        "boundary_collisions": 733,
+        "boundary_signals": 21847,
+        "boundary_sites": 17974,
+        "boundary_uncompiled_steps": 3319,
+        "candidate_buffer_growths": 44,
+        "candidate_buffer_spills": 27,
+        "candidate_sort_comparisons": 9526,
+        "closed_domain_probes": 218,
+        "completed_conditions": 108,
+        "condition_visits": 717,
+        "cross_stage_conditions": 96,
+        "equality_guards": 404,
+        "inactive_sites": 218,
+        "local_candidates": 2461,
+        "open_domains": 893,
+        "operator_guards": 499,
+        "pending_sites": 386,
+        "scalar_guards": 119,
+        "shared_symbol_guards": 99,
+        "uncovered_shapes": 10
+      },
+      "scoped_queue_work": {
+        "advanced_task_epochs": 0,
+        "bypassed_tasks": 0,
+        "cause_comparisons": 4238,
+        "cause_growths": 36,
+        "cause_probes": 1110,
+        "completion_epoch_checks": 1046,
+        "completion_epoch_joins": 0,
+        "head_probes": 2061,
+        "head_updates": 1599,
+        "legacy_frontier_probes": 939,
+        "mixed_epoch_inserts": 0,
+        "opaque_full_completions": 0,
+        "scope_requests": 0
+      }
+    },
+    "batch_four": {
+      "batches": {
+        "enabled": true,
+        "performance_admission": false,
+        "proof": "complete compiler key footprint; both union classes checked; live/pending peers and queue order rechecked; invalid suffix discarded",
+        "scope": "standalone Cell CPU; batched immutable reads with input-class certificates and ordered commits",
+        "stats": {
+          "attempts": 107,
+          "bridged_tasks": 380,
+          "candidate_fact_lookups": 2699,
+          "collected_tasks": 697,
+          "committed_tasks": 622,
+          "conflicting_unions": 14,
+          "dispatches": 84,
+          "guard_candidates": 1791,
+          "interleaved_stops": 0,
+          "order_checks": 1002,
+          "peak_tasks": 16,
+          "pending_probes": 3229,
+          "preflight_checks": 707,
+          "preparation_errors": 0,
+          "prepared_candidates": 3229,
+          "prepared_tasks": 697,
+          "queue_comparisons": 1956,
+          "queue_head_visits": 358,
+          "queue_successor_reads": 823,
+          "read_set_comparisons": 10282,
+          "read_set_queries": 998,
+          "read_set_slots": 1307,
+          "recorded_answers": 608,
+          "result_refreshes": 365,
+          "reused_after_union": 365,
+          "scratch_allocations": 194,
+          "scratch_bytes_requested": 1323584,
+          "selection_checks": 499,
+          "selection_dead_skips": 0,
+          "selection_pending_skips": 0,
+          "short_prefixes": 23,
+          "uncovered_stops": 10,
+          "unsubmitted_tasks": 0,
+          "unused_tasks": 75,
+          "worker_early_stops": 529
+        },
+        "task_limit": 16,
+        "worker_tasks": [
+          440,
+          178,
+          55,
+          24
+        ]
+      },
+      "total_pool_rounds": 84,
+      "fallback_candidate_rounds": 0,
+      "stable_port_work": {
+        "birth_hint_hits": 11190,
+        "birth_hint_probes": 17455,
+        "equality_completions": 1046,
+        "equality_enqueues": 1046,
+        "key_candidates": 18170,
+        "key_field_comparisons": 35516,
+        "key_lookups": 17465,
+        "keys": true,
+        "legacy_key_enqueues": 0,
+        "notifications": 1988,
+        "notified_columns": 2098,
+        "pending_candidate_skips": 0,
+        "port_domain_probes": 6275,
+        "port_reads": 121099,
+        "ports_installed": 10122,
+        "result_publications": 878,
+        "root_resolutions": 121464,
+        "row_views": 35696,
+        "rows_installed": 3739
+      },
+      "local_condition_work": {
+        "anchor_probes": 2078,
+        "attempts": 1121,
+        "boundary_candidates": 3012,
+        "boundary_collisions": 733,
+        "boundary_signals": 21847,
+        "boundary_sites": 17974,
+        "boundary_uncompiled_steps": 3319,
+        "candidate_buffer_growths": 44,
+        "candidate_buffer_spills": 27,
+        "candidate_sort_comparisons": 9526,
+        "closed_domain_probes": 218,
+        "completed_conditions": 108,
+        "condition_visits": 717,
+        "cross_stage_conditions": 96,
+        "equality_guards": 404,
+        "inactive_sites": 218,
+        "local_candidates": 2461,
+        "open_domains": 893,
+        "operator_guards": 499,
+        "pending_sites": 386,
+        "scalar_guards": 119,
+        "shared_symbol_guards": 99,
+        "uncovered_shapes": 10
+      },
+      "scoped_queue_work": {
+        "advanced_task_epochs": 0,
+        "bypassed_tasks": 0,
+        "cause_comparisons": 4238,
+        "cause_growths": 36,
+        "cause_probes": 1110,
+        "completion_epoch_checks": 1046,
+        "completion_epoch_joins": 0,
+        "head_probes": 2061,
+        "head_updates": 1599,
+        "legacy_frontier_probes": 939,
+        "mixed_epoch_inserts": 0,
+        "opaque_full_completions": 0,
+        "scope_requests": 0
+      }
+    },
+    "batch_small": {
+      "batches": {
+        "enabled": true,
+        "performance_admission": false,
+        "proof": "complete compiler key footprint; both union classes checked; live/pending peers and queue order rechecked; invalid suffix discarded",
+        "scope": "standalone Cell CPU; batched immutable reads with input-class certificates and ordered commits",
+        "stats": {
+          "attempts": 211,
+          "bridged_tasks": 300,
+          "candidate_fact_lookups": 2817,
+          "collected_tasks": 706,
+          "committed_tasks": 696,
+          "conflicting_unions": 7,
+          "dispatches": 188,
+          "guard_candidates": 1838,
+          "interleaved_stops": 0,
+          "order_checks": 996,
+          "peak_tasks": 4,
+          "pending_probes": 3364,
+          "preflight_checks": 716,
+          "preparation_errors": 0,
+          "prepared_candidates": 3364,
+          "prepared_tasks": 706,
+          "queue_comparisons": 1104,
+          "queue_head_visits": 571,
+          "queue_successor_reads": 576,
+          "read_set_comparisons": 6350,
+          "read_set_queries": 996,
+          "read_set_slots": 1315,
+          "recorded_answers": 566,
+          "result_refreshes": 304,
+          "reused_after_union": 304,
+          "scratch_allocations": 402,
+          "scratch_bytes_requested": 1344064,
+          "selection_checks": 556,
+          "selection_dead_skips": 0,
+          "selection_pending_skips": 0,
+          "short_prefixes": 23,
+          "uncovered_stops": 10,
+          "unsubmitted_tasks": 0,
+          "unused_tasks": 10,
+          "worker_early_stops": 551
+        },
+        "task_limit": 4,
+        "worker_tasks": [
+          528,
+          178
+        ]
+      },
+      "total_pool_rounds": 188,
+      "fallback_candidate_rounds": 0,
+      "stable_port_work": {
+        "birth_hint_hits": 11190,
+        "birth_hint_probes": 17455,
+        "equality_completions": 1046,
+        "equality_enqueues": 1046,
+        "key_candidates": 18096,
+        "key_field_comparisons": 35351,
+        "key_lookups": 17465,
+        "keys": true,
+        "legacy_key_enqueues": 0,
+        "notifications": 1988,
+        "notified_columns": 2098,
+        "pending_candidate_skips": 0,
+        "port_domain_probes": 6275,
+        "port_reads": 120579,
+        "ports_installed": 10122,
+        "result_publications": 878,
+        "root_resolutions": 120883,
+        "row_views": 35631,
+        "rows_installed": 3739
+      },
+      "local_condition_work": {
+        "anchor_probes": 1943,
+        "attempts": 1056,
+        "boundary_candidates": 2907,
+        "boundary_collisions": 733,
+        "boundary_signals": 20870,
+        "boundary_sites": 17357,
+        "boundary_uncompiled_steps": 3225,
+        "candidate_buffer_growths": 44,
+        "candidate_buffer_spills": 27,
+        "candidate_sort_comparisons": 9206,
+        "closed_domain_probes": 192,
+        "completed_conditions": 108,
+        "condition_visits": 641,
+        "cross_stage_conditions": 96,
+        "equality_guards": 324,
+        "inactive_sites": 197,
+        "local_candidates": 2223,
+        "open_domains": 854,
+        "operator_guards": 444,
+        "pending_sites": 321,
+        "scalar_guards": 118,
+        "shared_symbol_guards": 91,
+        "uncovered_shapes": 10
+      },
+      "scoped_queue_work": {
+        "advanced_task_epochs": 0,
+        "bypassed_tasks": 0,
+        "cause_comparisons": 4238,
+        "cause_growths": 36,
+        "cause_probes": 1110,
+        "completion_epoch_checks": 1046,
+        "completion_epoch_joins": 0,
+        "head_probes": 2055,
+        "head_updates": 1599,
+        "legacy_frontier_probes": 939,
+        "mixed_epoch_inserts": 0,
+        "opaque_full_completions": 0,
+        "scope_requests": 0
+      }
+    }
+  },
+  "allocator_requests": {
+    "pure_epochs": {
+      "setup_allocations": {
+        "alloc_calls": 103876,
+        "free_calls": 61858,
+        "live_bytes_after": 147008907,
+        "live_bytes_before": 141477970,
+        "peak_live_requested_bytes": 147029067,
+        "realloc_calls": 2256,
+        "released_bytes": 6709669,
+        "requested_bytes": 12240606,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260533,
+        "free_calls": 221355,
+        "live_bytes_after": 154796155,
+        "live_bytes_before": 147008907,
+        "peak_live_requested_bytes": 155279934,
+        "realloc_calls": 39367,
+        "released_bytes": 45662172,
+        "requested_bytes": 53449420,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      }
+    },
+    "two_workers_fine": {
+      "setup_allocations": {
+        "alloc_calls": 103923,
+        "free_calls": 61865,
+        "live_bytes_after": 147028717,
+        "live_bytes_before": 141478106,
+        "peak_live_requested_bytes": 147048877,
+        "realloc_calls": 2258,
+        "released_bytes": 6710041,
+        "requested_bytes": 12260652,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260556,
+        "free_calls": 221376,
+        "live_bytes_after": 154816077,
+        "live_bytes_before": 147028717,
+        "peak_live_requested_bytes": 155299856,
+        "realloc_calls": 39367,
+        "released_bytes": 45694092,
+        "requested_bytes": 53481452,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 47,
+          "realloc_calls": 2,
+          "requested_bytes": 20046
+        },
+        "allocations": {
+          "alloc_calls": 23,
+          "realloc_calls": 0,
+          "requested_bytes": 32032
+        }
+      }
+    },
+    "batch_two": {
+      "setup_allocations": {
+        "alloc_calls": 103924,
+        "free_calls": 61865,
+        "live_bytes_after": 147028731,
+        "live_bytes_before": 141478104,
+        "peak_live_requested_bytes": 147048891,
+        "realloc_calls": 2258,
+        "released_bytes": 6710041,
+        "requested_bytes": 12260668,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260881,
+        "free_calls": 221701,
+        "live_bytes_after": 154816091,
+        "live_bytes_before": 147028731,
+        "peak_live_requested_bytes": 155299870,
+        "realloc_calls": 39369,
+        "released_bytes": 46998060,
+        "requested_bytes": 54785420,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 48,
+          "realloc_calls": 2,
+          "requested_bytes": 20062
+        },
+        "allocations": {
+          "alloc_calls": 348,
+          "realloc_calls": 2,
+          "requested_bytes": 1336000
+        }
+      }
+    },
+    "batch_four": {
+      "setup_allocations": {
+        "alloc_calls": 103960,
+        "free_calls": 61869,
+        "live_bytes_after": 147043423,
+        "live_bytes_before": 141478106,
+        "peak_live_requested_bytes": 147063583,
+        "realloc_calls": 2260,
+        "released_bytes": 6710157,
+        "requested_bytes": 12275474,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260881,
+        "free_calls": 221701,
+        "live_bytes_after": 154830783,
+        "live_bytes_before": 147043423,
+        "peak_live_requested_bytes": 155314562,
+        "realloc_calls": 39369,
+        "released_bytes": 46998060,
+        "requested_bytes": 54785420,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 84,
+          "realloc_calls": 4,
+          "requested_bytes": 34868
+        },
+        "allocations": {
+          "alloc_calls": 348,
+          "realloc_calls": 2,
+          "requested_bytes": 1336000
+        }
+      }
+    },
+    "batch_small": {
+      "setup_allocations": {
+        "alloc_calls": 103924,
+        "free_calls": 61865,
+        "live_bytes_after": 147028734,
+        "live_bytes_before": 141478107,
+        "peak_live_requested_bytes": 147048894,
+        "realloc_calls": 2258,
+        "released_bytes": 6710041,
+        "requested_bytes": 12260668,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260960,
+        "free_calls": 221780,
+        "live_bytes_after": 154816094,
+        "live_bytes_before": 147028734,
+        "peak_live_requested_bytes": 155299873,
+        "realloc_calls": 39367,
+        "released_bytes": 47011340,
+        "requested_bytes": 54798700,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 48,
+          "realloc_calls": 2,
+          "requested_bytes": 20062
+        },
+        "allocations": {
+          "alloc_calls": 427,
+          "realloc_calls": 0,
+          "requested_bytes": 1349280
+        }
+      }
+    }
+  },
+  "admitted_as_performance_improvement": false,
+  "proof": "Complete compiler key columns; snapshot candidate domains; both derived-union classes checked against future input classes; current peer liveness/pending and source order rechecked. New earlier pure constructor tasks run in serial order and certify their unions too. Legacy/opaque effects preempt the suffix.",
+  "limits": "No Graph mutation during worker reads; commits and source fences remain serial. Transient read sets and task preparation are new work, not persistent producer subscriptions. Counts include discarded work; allocator intervals include setup and execute but exclude native stacks, parsing and export. No timing or scaling admission."
+}

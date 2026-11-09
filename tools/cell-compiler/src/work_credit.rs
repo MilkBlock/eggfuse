@@ -114,6 +114,16 @@ impl Work {
             } else { 0 };
             work.insert(format!("stable_ports/parallel_guards/{field}"), value);
         }
+        let batches = &report["stable_ports"]["completion_batches"];
+        for field in ["attempts", "queue_head_visits", "queue_comparisons", "queue_successor_reads",
+            "preflight_checks", "dispatches", "prepared_tasks", "prepared_candidates", "pending_probes",
+            "candidate_fact_lookups", "read_set_slots", "read_set_comparisons", "read_set_queries",
+            "result_refreshes", "collected_tasks", "recorded_answers", "selection_checks", "order_checks", "scratch_allocations"] {
+            let value = if batches["enabled"] == true {
+                batches["stats"][field].as_u64().ok_or_else(|| format!("missing completion batch work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/completion_batches/stats/{field}"), value);
+        }
         for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths", "mixed_epoch_inserts", "advanced_task_epochs", "completion_epoch_checks", "completion_epoch_joins"] {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
@@ -187,15 +197,16 @@ mod tests {
 "#;
         let core = eggfuse_bake::device_frontend::core("guard-credit", source).unwrap();
         let compiled = compiler::compile(core, &Default::default()).unwrap();
-        let run = |parallel| {
+        let run = |parallel, batch| {
             let mut graph = Graph::new_with_local_congruence(Program::parse(compiled.clone()).unwrap()).unwrap();
             if parallel { graph.use_parallel_port_guards(2, 1).unwrap(); }
+            if batch { graph.use_completion_read_batches(16).unwrap(); }
             let mut executor = Executor::new(graph, false);
             executor.execute().unwrap();
             (executor.graph.export().unwrap(), executor.report())
         };
-        let (before_state, before) = run(false);
-        let (after_state, mut after) = run(true);
+        let (before_state, before) = run(false, false);
+        let (after_state, mut after) = run(true, false);
         assert_eq!(before_state, after_state);
         let serial = Work::read(&before).unwrap();
         let parallel = Work::read(&after).unwrap();
@@ -204,5 +215,12 @@ mod tests {
         assert!(serial.savings(&parallel).0 < 0);
         after["stable_ports"]["parallel_guards"]["stats"].as_object_mut().unwrap().remove("prepared_fact_lookups");
         assert!(Work::read(&after).unwrap_err().contains("missing parallel guard work prepared_fact_lookups"));
+        let (batch_state, mut batch_report) = run(true, true);
+        assert_eq!(before_state, batch_state);
+        let batch = Work::read(&batch_report).unwrap();
+        assert!(batch.0["stable_ports/completion_batches/stats/dispatches"] > 0);
+        assert!(serial.savings(&batch).0 < 0);
+        batch_report["stable_ports"]["completion_batches"]["stats"].as_object_mut().unwrap().remove("read_set_comparisons");
+        assert!(Work::read(&batch_report).unwrap_err().contains("missing completion batch work read_set_comparisons"));
     }
 }

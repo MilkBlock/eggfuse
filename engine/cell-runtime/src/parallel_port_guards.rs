@@ -1,7 +1,8 @@
 //! Opt-in parallel reads for one ordered completion task. A round borrows plain
 //! template/port data, finishes all reads, then selects the first match/error in
 //! source candidate order. No Graph, Rc, mutable counter or commit enters the
-//! pool. Multiple completion tasks are deliberately not speculated together.
+//! pool. This mode handles one task; completion_read_batches adds certified
+//! reads across tasks while retaining the same pool and ordered commits.
 use super::*;
 use rayon::prelude::*;
 
@@ -29,7 +30,7 @@ struct Stats {
 }
 
 pub(in super::super) struct Runtime {
-    pool: rayon::ThreadPool,
+    pub(super) pool: rayon::ThreadPool,
     grain: usize,
     width: usize,
     stats: Stats,
@@ -47,7 +48,7 @@ struct Job<'a> {
     worker: usize,
 }
 
-fn add_work(total: &mut guard::Work, work: &guard::Work) {
+pub(super) fn add_work(total: &mut guard::Work, work: &guard::Work) {
     total.port_reads += work.port_reads;
     total.key_fields += work.key_fields;
     total.scalar_guards += work.scalar_guards;

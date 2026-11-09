@@ -40,6 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
+        println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
         println!("  --pure-epochs (experimental bound pure-congruence batches across source Runs)");
         println!("  --unique-port-publication (experimental ordered publication through complete input-domain uniqueness)");
@@ -63,7 +64,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" => {
+            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -125,14 +126,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cells = args.iter().any(|x| x == "--repair-cells");
     let local = args.iter().any(|x| x == "--local-unions");
     let unique_publication = args.iter().any(|x| x == "--unique-port-publication");
+    let completion_batch_tasks: Option<usize> = opt("--completion-batch-tasks").map(|v| v.parse()).transpose()?;
     let pure_epochs = unique_publication || args.iter().any(|x| x == "--pure-epochs");
     let port_scopes = pure_epochs || args.iter().any(|x| x == "--port-scopes");
     let scoped_execution = port_scopes || args.iter().any(|x| x == "--scoped-execution");
-    let scoped_queues = scoped_execution || args.iter().any(|x| x == "--scoped-queues");
+    let scoped_queues = completion_batch_tasks.is_some() || scoped_execution || args.iter().any(|x| x == "--scoped-queues");
     let guard_workers: Option<usize> = opt("--guard-workers").map(|v| v.parse()).transpose()?;
     let guard_grain: usize = opt("--guard-grain").map(|v| v.parse()).transpose()?.unwrap_or(32);
     if opt("--guard-grain").is_some() && guard_workers.is_none() {
         return Err("--guard-grain requires --guard-workers".into());
+    }
+    if completion_batch_tasks.is_some() && guard_workers.is_none() {
+        return Err("--completion-batch-tasks requires --guard-workers".into());
     }
     let local_conditions = guard_workers.is_some() || scoped_queues || args.iter().any(|x| x == "--local-congruence");
     let port_keys = local_conditions || args.iter().any(|x| x == "--port-keys");
@@ -181,6 +186,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if local_conditions { graph.use_local_port_conditions()?; }
     if scoped_queues { graph.use_scoped_completion()?; }
     if let Some(workers) = guard_workers { graph.use_parallel_port_guards(workers, guard_grain)?; }
+    if let Some(limit) = completion_batch_tasks { graph.use_completion_read_batches(limit)?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     if scoped_execution { runtime.use_scoped_execution()?; }

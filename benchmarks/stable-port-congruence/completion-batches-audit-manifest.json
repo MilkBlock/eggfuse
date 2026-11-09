@@ -1,0 +1,24 @@
+{
+  "sum-bits": {
+    "pure_epochs": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs"]
+    },
+    "two_workers_fine": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--guard-grain", "1"]
+    },
+    "batch_two": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--completion-batch-tasks", "16"]
+    },
+    "batch_four": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "4", "--completion-batch-tasks", "16"]
+    },
+    "batch_small": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--completion-batch-tasks", "4"]
+    }
+  }
+}
