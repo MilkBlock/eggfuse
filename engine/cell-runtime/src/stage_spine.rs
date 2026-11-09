@@ -179,6 +179,18 @@ struct Completion {
     started: Started,
     #[cfg(feature = "sparse-cells")]
     ready: Option<std::num::NonZeroUsize>,
+    #[cfg(feature = "sparse-cells")]
+    delivery: Option<Delivery>,
+}
+/// Address of this Cell's output slots in the pending arena. Port meanings and
+/// order come from the shared Cell definition, including for single outputs.
+#[cfg(feature = "sparse-cells")]
+#[derive(Clone, Copy)]
+struct Delivery {
+    rule: std::num::NonZeroU32,
+    first: u32,
+    #[cfg(feature = "spine-shapes")]
+    cell: u32,
 }
 #[cfg(feature = "sparse-cells")]
 enum CompletionPhase {
@@ -195,6 +207,8 @@ impl Completion {
             started,
             #[cfg(feature = "sparse-cells")]
             ready: None,
+            #[cfg(feature = "sparse-cells")]
+            delivery: None,
         }
     }
 }
@@ -478,6 +492,14 @@ pub struct Stats {
     completion_order_checks: u64,
     completion_cell_visits: u64,
     completion_cursor_moves: u64,
+    cell_output_spans: u64,
+    cell_output_slots: u64,
+    cell_output_receipts: u64,
+    cell_output_slot_reads: u64,
+    cell_output_checks: u64,
+    cell_output_deliveries: u64,
+    peak_cell_output_slots: usize,
+    // Removed packet allocation counters remain zero for historical comparison.
     fragment_packets: u64,
     fragment_receipts: u64,
     fragment_receipt_spills: u64,
@@ -519,8 +541,6 @@ pub struct Stats {
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Publication {
-    #[cfg(feature = "sparse-cells")]
-    pub(crate) ordinal: u64,
     #[cfg(feature = "iterative-bake")]
     output: usize,
     slot: usize,
@@ -528,18 +548,8 @@ pub(crate) struct Publication {
     #[cfg(feature = "spine-shapes")]
     source: crate::graph::FactRef,
 }
-#[cfg(feature = "sparse-cells")]
-struct FragmentPublication {
-    rule: usize,
-    slot: usize,
-    ordinal: u64,
-    #[cfg(feature = "spine-shapes")]
-    cell: u32,
-    // Positions are in the rule's shared anchor_ops, not repeated descriptors.
-    receipts: smallvec::SmallVec<[Option<Dependency>; 4]>,
-}
-/// Only boundary-normalized exports use this scratch list. Fragment exports
-/// already have shared template order and stay in their existing receipt array.
+/// Only boundary-normalized exports use this scratch list. Cell exports
+/// already have shared template order and stay in their completion slots.
 #[cfg(feature = "sparse-cells")]
 #[derive(Clone, Copy)]
 struct ReadyPublication {
@@ -582,7 +592,7 @@ pub struct Programs {
     ready_publications: Vec<ReadyPublication>,
     active_tables: Vec<usize>,
     // Anchor-producing operations and their optional proven receipt sources.
-    anchor_ops: Vec<Vec<(usize, Option<Site>)>>,
+    outputs: Vec<Vec<crate::cell::Output>>,
     alias_query_facts: Vec<QueryFacts>,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
@@ -594,13 +604,11 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     direct_publications: HashMap<Dependency, (usize, Publication)>,
     #[cfg(feature = "sparse-cells")]
-    fragment_rules: Vec<bool>,
+    cell_output_rules: Vec<bool>,
     #[cfg(feature = "sparse-cells")]
-    fragment_tables: Vec<Vec<usize>>,
+    cell_outputs_pending: usize,
     #[cfg(feature = "sparse-cells")]
-    fragment_receipts_pending: usize,
-    #[cfg(feature = "sparse-cells")]
-    fragment_publications: Vec<FragmentPublication>,
+    cell_outputs: Vec<Option<Dependency>>,
     pending_anchors: Vec<(usize, Vec<Value>, Publication)>,
     marker_root: Vec<bool>,
     root_set: Rc<str>,
@@ -821,6 +829,12 @@ impl Context {
         self.unions = g.stats.unions;
     }
 }
+impl Publication {
+    /// Captures append one completed source Cell at a time; its effects retain
+    /// source order. Deferred scopes keep these slots until all outputs drain.
+    #[cfg(feature = "sparse-cells")]
+    fn order(&self) -> (usize, usize) { (self.slot, self.output) }
+}
 impl Programs {
     #[cfg(feature = "iterative-bake")]
     pub(crate) fn cell_results<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
@@ -888,7 +902,7 @@ impl Programs {
             shapes: Default::default(),
             #[cfg(feature = "iterative-bake")]
             training: Default::default(),
-            anchor_ops: vec![],
+            outputs: vec![],
             alias_query_facts: vec![],
             owner_queries: false,
             pending_steps: vec![],
@@ -900,13 +914,11 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             direct_publications: Default::default(),
             #[cfg(feature = "sparse-cells")]
-            fragment_rules: vec![false; p.rules.len()],
+            cell_output_rules: vec![false; p.rules.len()],
             #[cfg(feature = "sparse-cells")]
-            fragment_tables: vec![],
+            cell_outputs_pending: 0,
             #[cfg(feature = "sparse-cells")]
-            fragment_receipts_pending: 0,
-            #[cfg(feature = "sparse-cells")]
-            fragment_publications: vec![],
+            cell_outputs: vec![],
             marker_root: p.rules.iter().map(|r| p.templates[r.template].ops.iter().any(|op| match op {
                 Op::Set(t, _, _) | Op::Let(_, Call::Table(t), _) => p.marker_tables.contains(t),
                 _ => false,
@@ -949,53 +961,21 @@ impl Programs {
         // Store one cursor per committed anchor. Consumer programs attach only
         // on their own Run, rather than preparing the entire fanout at publish.
         for (rid, r) in p.rules.iter().enumerate() {
-            let ops = p.templates[r.template]
-                .ops
-                .iter()
-                .enumerate()
-                .filter_map(|(i, op)| {
-                    // A participating RHS can also read a function whose current
-                    // row is an anchor. Preserve that publication, as with a write.
-                    match op {
-                        Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _)
-                            if anchor_tables.contains(t) =>
-                        {
-                            Some(i)
-                        }
-                        _ => None,
-                    }
-                })
-                .collect::<Vec<_>>();
-            let is_producer = ops
-                .iter()
-                .any(|&i| crate::cell::Definition::new(p, rid).expect("typed Cell").local_relation(Site::Effect(i)).is_some());
+            let outputs = crate::cell::Definition::new(p, rid).expect("typed Cell")
+                .outputs(&anchor_tables, p.known_results.static_sources.get(rid).map(Vec::as_slice).unwrap_or(&[]));
             let mut query_facts = QueryFacts::None;
-            let mut anchors = Vec::new();
-            if is_producer {
-                for op in ops {
-                    let source = p
-                        .known_results
-                        .static_sources
-                        .get(rid)
-                        .and_then(|rows| rows[op]);
-                    if let Some(Site::Query(atom)) = source {
-                        match query_facts {
-                            QueryFacts::None => query_facts = QueryFacts::One(atom, None),
-                            QueryFacts::One(first, _) if first != atom => {
-                                query_facts = QueryFacts::All(vec![None; r.query.len()])
-                            }
-                            _ => {}
+            for output in &outputs {
+                if let Some(Site::Query(atom)) = output.receipt_source {
+                    match query_facts {
+                        QueryFacts::None => query_facts = QueryFacts::One(atom, None),
+                        QueryFacts::One(first, _) if first != atom => {
+                            query_facts = QueryFacts::All(vec![None; r.query.len()])
                         }
+                        _ => {}
                     }
-                    anchors.push((op, source));
                 }
             }
-            #[cfg(feature = "sparse-cells")]
-            s.fragment_tables.push(anchors.iter().map(|&(op, _)| match &p.templates[r.template].ops[op] {
-                Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
-                _ => unreachable!("typed publication"),
-            }).collect());
-            s.anchor_ops.push(anchors);
+            s.outputs.push(outputs);
             #[cfg(feature = "iterative-bake")]
             for src in p.iterative.exports(rid) {
                 if let crate::cell::Site::Query(i) = *src {
@@ -1015,7 +995,7 @@ impl Programs {
             s.alias_query_facts.push(query_facts);
         }
         #[cfg(feature = "spine-shapes")]
-        s.shapes.catalog(p, &s.anchor_ops);
+        s.shapes.catalog(p, &s.outputs);
         s
     }
     pub fn begin(
@@ -1071,7 +1051,7 @@ impl Programs {
                 .collect();
             bucket.remove(key.as_slice())
         });
-        if previous.is_none() && self.anchor_ops.get(rid).is_none_or(Vec::is_empty) {
+        if previous.is_none() && self.outputs.get(rid).is_none_or(Vec::is_empty) {
             return None;
         }
         #[cfg(feature = "sparse-cells")]
@@ -1151,10 +1131,10 @@ impl Programs {
     }
     #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
     pub(crate) fn anchor_at(&self, r: usize, op: usize) -> bool {
-        self.anchor_ops[r].iter().any(|&(i, _)| i == op)
+        self.outputs[r].iter().any(|o| o.operation == op)
     }
     pub fn capture_receipts(&self, rid: usize) -> bool {
-        self.enabled && self.receipts && self.anchor_ops.get(rid).is_some_and(|ops| !ops.is_empty())
+        self.enabled && self.receipts && self.outputs.get(rid).is_some_and(|ops| !ops.is_empty())
     }
     pub(crate) fn alias_query_facts(&self, g: &Graph, rid: usize) -> QueryFacts {
         // Only an admitted continuation (or explicit fragment training) reads
@@ -1222,7 +1202,7 @@ impl Programs {
         mut key: impl FnMut(usize, &[Arg]) -> Result<Vec<Value>>,
     ) -> Result<()> {
         self.stats.completed_steps += 1;
-        if self.anchor_ops.get(rid).is_none_or(Vec::is_empty) {
+        if self.outputs.get(rid).is_none_or(Vec::is_empty) {
             return Ok(());
         }
         let clock = Instant::now();
@@ -1245,18 +1225,9 @@ impl Programs {
             s
         };
         self.pending_steps.push(Completion::new(step));
-        #[cfg(feature = "sparse-cells")]
-        let mut fragment = self.fragment_rules[rid].then(|| FragmentPublication {
-            rule: rid, slot, ordinal: self.stats.captured_anchors,
-            #[cfg(feature = "spine-shapes")]
-            cell: _cell,
-            receipts: smallvec::smallvec![None; self.anchor_ops[rid].len()],
-        });
-        for (_position, &(i, source)) in self.anchor_ops[rid].iter().enumerate() {
-            let (table, args) = match &template.ops[i] {
-                Op::Let(_, Call::Table(t), args) | Op::Set(t, args, _) => (*t, args),
-                _ => unreachable!("validated anchor operation"),
-            };
+        for position in 0..self.outputs[rid].len() {
+            let output = self.outputs[rid][position];
+            let (i, table, source) = (output.operation, output.table, output.receipt_source);
             let receipt = effects.and_then(|rows| rows[i]).or_else(|| {
                 if !self.receipts {
                     return None;
@@ -1275,8 +1246,6 @@ impl Programs {
                 }
             });
             let publication = Publication {
-                #[cfg(feature = "sparse-cells")]
-                ordinal: self.stats.captured_anchors,
                 slot,
                 receipt,
                 #[cfg(feature = "iterative-bake")]
@@ -1295,28 +1264,18 @@ impl Programs {
                 && !self.audit_receipts
                 && let Some(w) = receipt
             {
-                if let Some(fragment) = &mut fragment {
-                    fragment.receipts[_position] = Some(w);
-                    self.stats.fragment_receipts += 1;
-                    self.fragment_receipts_pending += 1;
-                    self.stats.fragment_direct_inserts_avoided += 1;
-                } else {
-                    self.stats.direct_publication_hash_probes += 1;
-                    self.direct_publications.insert(w, (table, publication));
-                }
+                self.capture_receipt(rid, slot, _cell, position, table, publication, w);
                 self.stats.unmaterialized_anchor_keys += 1;
                 self.stats.captured_anchors += 1;
                 continue;
             }
+            let args = match &template.ops[i] {
+                Op::Let(_, Call::Table(_), args) | Op::Set(_, args, _) => args,
+                _ => unreachable!("validated Cell output"),
+            };
             self.pending_anchors
                 .push((table, key(i, args)?, publication));
             self.stats.captured_anchors += 1;
-        }
-        #[cfg(feature = "sparse-cells")]
-        if let Some(fragment) = fragment.filter(|f| f.receipts.iter().any(Option::is_some)) {
-            self.stats.fragment_packets += 1;
-            self.stats.fragment_receipt_spills += u64::from(fragment.receipts.spilled());
-            self.fragment_publications.push(fragment);
         }
         self.stats.captured_contexts += 1;
         self.stats.capture_seconds += clock.elapsed().as_secs_f64();
@@ -1347,11 +1306,11 @@ impl Programs {
         #[cfg(feature = "iterative-bake")] query: &QueryFacts,
     ) {
         self.stats.completed_steps += 1;
-        if self.anchor_ops[rid].is_empty() {
+        if self.outputs[rid].is_empty() {
             return;
         }
-        debug_assert_eq!(self.anchor_ops[rid].len(), 1);
-        debug_assert_eq!(self.anchor_ops[rid][0].0, op);
+        debug_assert_eq!(self.outputs[rid].len(), 1);
+        debug_assert_eq!(self.outputs[rid][0].operation, op);
         self.capture_unions.get_or_insert(unions);
         let slot = self.pending_steps.len();
         #[cfg(feature = "iterative-bake")]
@@ -1370,8 +1329,6 @@ impl Programs {
         };
         self.pending_steps.push(Completion::new(step));
         let publication = Publication {
-            #[cfg(feature = "sparse-cells")]
-            ordinal: self.stats.captured_anchors,
             slot,
             receipt: self.receipts.then_some(w),
             #[cfg(feature = "iterative-bake")]
@@ -1386,26 +1343,46 @@ impl Programs {
             self.pending_anchors.push((table, key, publication));
         } else {
             #[cfg(feature = "sparse-cells")]
-            if self.fragment_rules[rid] {
-                self.fragment_publications.push(FragmentPublication {
-                    rule: rid, slot, ordinal: publication.ordinal,
-                    #[cfg(feature = "spine-shapes")]
-                    cell: _cell,
-                    receipts: smallvec::smallvec![Some(w)],
-                });
-                self.stats.fragment_packets += 1;
-                self.stats.fragment_receipts += 1;
-                self.fragment_receipts_pending += 1;
-                self.stats.fragment_direct_inserts_avoided += 1;
-            } else {
-                self.stats.direct_publication_hash_probes += 1;
-                self.direct_publications.insert(w, (table, publication));
-            }
+            self.capture_receipt(rid, slot, _cell, 0, table, publication, w);
             #[cfg(not(feature = "sparse-cells"))]
             unreachable!("ordinary publication needs a key");
         }
         self.stats.captured_anchors += 1;
         self.stats.captured_contexts += 1;
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn capture_receipt(&mut self, rid: usize, slot: usize, _cell: u32, position: usize,
+        table: usize, publication: Publication, receipt: Dependency,
+    ) {
+        if !self.cell_output_rules[rid] {
+            self.stats.direct_publication_hash_probes += 1;
+            self.direct_publications.insert(receipt, (table, publication));
+            return;
+        }
+        let width = self.outputs[rid].len();
+        let delivery = self.pending_steps[slot].delivery.get_or_insert_with(|| {
+            let first = self.cell_outputs.len();
+            self.cell_outputs.resize(first + width, None);
+            self.stats.cell_output_spans += 1;
+            self.stats.cell_output_slots += width as u64;
+            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(self.cell_outputs.len());
+            Delivery {
+                rule: u32::try_from(rid).ok().and_then(|r| r.checked_add(1))
+                    .and_then(std::num::NonZeroU32::new).expect("Cell rule index exhausted"),
+                first: u32::try_from(first).expect("Cell output arena exhausted"),
+                #[cfg(feature = "spine-shapes")]
+                cell: _cell,
+            }
+        });
+        self.cell_outputs[delivery.first as usize + position] = Some(receipt);
+        self.cell_outputs_pending += 1;
+        self.stats.cell_output_receipts += 1;
+        // Preserve the historical multi-output coverage metric as a subset of
+        // common Cell output delivery, without maintaining a fragment packet.
+        if width >= 2 {
+            self.stats.fragment_receipts += 1;
+            self.stats.fragment_direct_inserts_avoided += 1;
+        }
     }
     fn materialize_publication(&mut self, publication: Publication) -> Published {
         let slot = publication.slot;
@@ -1417,7 +1394,7 @@ impl Programs {
                     unreachable!("Cell completion promotion");
                 };
                 let base = match started {
-                    Started::Root { id, producer, epoch, set } if self.anchor_ops[producer].len() == 1 => {
+                    Started::Root { id, producer, epoch, set } if self.outputs[producer].len() == 1 => {
                         self.stats.deferred_single_roots += 1;
                         PublishedBase::Solo { id, producer, epoch, stage: set, root: OnceCell::new() }
                     }
@@ -1470,7 +1447,7 @@ impl Programs {
             let mut next = self.pending_steps[slot].ready;
             while let Some(i) = next {
                 self.stats.completion_order_checks += 1;
-                if self.ready_publications[i.get() - 1].publication.ordinal <= publication.ordinal { break; }
+                if self.ready_publications[i.get() - 1].publication.order() <= publication.order() { break; }
                 previous = Some(i);
                 next = self.ready_publications[i.get() - 1].next;
             }
@@ -1507,7 +1484,7 @@ impl Programs {
     pub(crate) fn settled(&self)->bool {
         self.pending_steps.is_empty() && self.pending_anchors.is_empty()
             && self.ready_publications.is_empty() && self.direct_publications.is_empty()
-            && self.fragment_publications.is_empty()
+            && self.cell_outputs.is_empty()
             && self.sealed_cursors.is_empty() && self.origin_rules.is_empty()
             && self.capture_unions.is_none() && self.entry_cache.is_empty() && self.row_cache.is_empty()
     }
@@ -1521,7 +1498,7 @@ impl Programs {
     pub(crate) fn pending_publication_counts(&self) -> (usize, usize) {
         let anchors = self.pending_anchors.len();
         #[cfg(feature = "sparse-cells")]
-        let anchors = anchors + self.direct_publications.len() + self.fragment_receipts_pending;
+        let anchors = anchors + self.direct_publications.len() + self.cell_outputs_pending;
         (anchors, self.pending_steps.len())
     }
     pub(crate) fn publish_selected(&mut self, g: &mut Graph,
@@ -1587,23 +1564,25 @@ impl Programs {
         }
         self.stats.distinct_anchor_keys += anchors.len() as u64;
         #[cfg(feature = "sparse-cells")]
-        for &old in g.receipt_forwards.keys() {
-            if let Some(ready) = ready {
-                self.stats.scoped_receipt_checks += 1;
+        if !self.direct_publications.is_empty() {
+            for &old in g.receipt_forwards.keys() {
+                if let Some(ready) = ready {
+                    self.stats.scoped_receipt_checks += 1;
+                    self.stats.direct_publication_hash_probes += 1;
+                    if self.direct_publications.get(&old).is_some_and(|(t, _)| !ready[*t]) { continue; }
+                }
                 self.stats.direct_publication_hash_probes += 1;
-                if self.direct_publications.get(&old).is_some_and(|(t, _)| !ready[*t]) { continue; }
-            }
-            self.stats.direct_publication_hash_probes += 1;
-            if let Some(incoming) = self.direct_publications.remove(&old) {
-                let target = g.resolve_receipt(old);
-                self.stats.direct_publication_hash_probes += 1;
-                match self.direct_publications.entry(target) {
-                    std::collections::hash_map::Entry::Vacant(e) => {
-                        e.insert(incoming);
-                    }
-                    std::collections::hash_map::Entry::Occupied(mut e) => {
-                        if incoming.1.ordinal > e.get().1.ordinal {
+                if let Some(incoming) = self.direct_publications.remove(&old) {
+                    let target = g.resolve_receipt(old);
+                    self.stats.direct_publication_hash_probes += 1;
+                    match self.direct_publications.entry(target) {
+                        std::collections::hash_map::Entry::Vacant(e) => {
                             e.insert(incoming);
+                        }
+                        std::collections::hash_map::Entry::Occupied(mut e) => {
+                            if incoming.1.order() > e.get().1.order() {
+                                e.insert(incoming);
+                            }
                         }
                     }
                 }
@@ -1658,7 +1637,7 @@ impl Programs {
                     self.stats.direct_publication_hash_probes += 1;
                     if let Some((_, direct)) = self.direct_publications.get(&w) {
                         self.stats.distinct_anchor_keys -= 1;
-                        if direct.ordinal > publication.ordinal {
+                        if direct.order() > publication.order() {
                             continue;
                         }
                         self.stats.direct_publication_hash_probes += 1;
@@ -1689,53 +1668,51 @@ impl Programs {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(entries) = entries.as_deref_mut() {
-            if !self.ready_publications.is_empty() || !self.fragment_publications.is_empty() {
+            if !self.ready_publications.is_empty() || self.cell_outputs_pending != 0 {
                 entries.begin_publication();
-                // Both source Cells and each fragment's static ports are in
-                // capture order. Reverse traversal sees each final winner first.
-                let mut fragments = std::mem::take(&mut self.fragment_publications);
-                let mut next_fragment = fragments.len();
+                // Source Cells and their shared output positions are in capture
+                // order. Reverse traversal sees the final Entry winner first.
                 for slot in (0..self.pending_steps.len()).rev() {
                     self.stats.completion_cell_visits += 1;
-                    let fragment = if next_fragment != 0 && fragments[next_fragment - 1].slot == slot {
-                        next_fragment -= 1;
-                        Some(&mut fragments[next_fragment])
-                    } else { None };
-                    if let Some(fragment) = fragment {
-                        for (position, receipt) in fragment.receipts.iter_mut().enumerate().rev() {
-                            let Some(old) = *receipt else { continue };
-                            let table = self.fragment_tables[fragment.rule][position];
-                            self.stats.fragment_delivery_checks += 1;
-                            if ready.is_some_and(|r| !r[table]) { continue; }
-                            let ordinal = fragment.ordinal + position as u64;
-                            while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.ordinal > ordinal) {
+                    if let Some(delivery) = self.pending_steps[slot].delivery {
+                        let mut pending = false;
+                        let rule = delivery.rule.get() as usize - 1;
+                        let width = self.outputs[rule].len();
+                        for position in (0..width).rev() {
+                            self.stats.cell_output_slot_reads += 1;
+                            let index = delivery.first as usize + position;
+                            let Some(old) = self.cell_outputs[index] else { continue };
+                            let output = self.outputs[rule][position];
+                            let table = output.table;
+                            self.stats.cell_output_checks += 1;
+                            if width >= 2 { self.stats.fragment_delivery_checks += 1; }
+                            if ready.is_some_and(|r| !r[table]) { pending = true; continue; }
+                            while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.output > output.operation) {
                                 self.finish_boundary(slot, entries);
                             }
                             let w = g.resolve_receipt(old);
                             if !g.receipt_visible(w, table) {
-                                return Err("permanent fragment receipt lost visibility".into());
+                                return Err("permanent Cell output lost visibility".into());
                             }
-                            let (op, _) = self.anchor_ops[fragment.rule][position];
                             let publication = Publication {
-                                slot, ordinal, receipt: Some(old), output: op,
+                                slot, receipt: Some(old), output: output.operation,
                                 #[cfg(feature = "spine-shapes")]
-                                source: crate::graph::FactRef { cell: fragment.cell, op: op as u32 },
+                                source: crate::graph::FactRef { cell: delivery.cell, op: output.operation as u32 },
                             };
                             let installed = entries.install_publication(table, w, || self.materialize_publication(publication));
                             self.stats.distinct_anchor_keys += u64::from(installed);
-                            self.stats.fragment_deliveries += 1;
+                            self.stats.cell_output_deliveries += 1;
+                            if width >= 2 { self.stats.fragment_deliveries += 1; }
                             self.stats.receipt_attempts += 1;
                             self.stats.receipt_hits += 1;
                             self.stats.receipt_redirects += u64::from(w != old);
-                            *receipt = None;
-                            self.fragment_receipts_pending -= 1;
+                            self.cell_outputs[index] = None;
+                            self.cell_outputs_pending -= 1;
                         }
+                        self.pending_steps[slot].delivery = pending.then_some(delivery);
                     }
                     while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries); }
                 }
-                debug_assert_eq!(next_fragment, 0);
-                fragments.retain(|f| f.receipts.iter().any(Option::is_some));
-                self.fragment_publications = fragments;
                 self.ready_publications.clear();
             }
         }
@@ -1751,6 +1728,8 @@ impl Programs {
         // New source Runs append contexts; release the arena only when drained.
         if self.pending_publication_counts().0 == 0 {
             self.pending_steps.clear();
+            #[cfg(feature = "sparse-cells")]
+            self.cell_outputs.clear();
             self.capture_unions = None;
         }
         if !self.retain_matched_origins {
@@ -1899,9 +1878,9 @@ impl Programs {
     pub(crate) fn configure_entry_owners(&mut self, scheduler: &mut crate::entry_schedule::Scheduler, excluded: impl Fn(usize) -> bool) {
         self.entry_owned_tables = scheduler.own_publications(|t| self.enabled && !self.table_readers[t].is_empty() && !excluded(t));
         self.entry_owned_ids = self.entry_owned_tables.iter().enumerate().filter_map(|(t, &owned)| owned.then_some(t)).collect();
-        for (rid, tables) in self.fragment_tables.iter().enumerate() {
-            self.fragment_rules[rid] = tables.len() >= 2
-                && tables.iter().all(|&table| self.permanent[table] && self.entry_owned_tables[table]);
+        for (rid, outputs) in self.outputs.iter().enumerate() {
+            self.cell_output_rules[rid] = !outputs.is_empty()
+                && outputs.iter().all(|o| self.permanent[o.table] && self.entry_owned_tables[o.table]);
         }
     }
     #[cfg(feature = "sparse-cells")]
@@ -2321,7 +2300,7 @@ impl Programs {
             .filter_map(|root| root.and_then(|r| r.context.get()));
         let live_materialized = materialized.clone().count();
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
-        let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.anchor_ops.iter().filter(|ops| !ops.is_empty()).count(),
+        let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
             "keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});

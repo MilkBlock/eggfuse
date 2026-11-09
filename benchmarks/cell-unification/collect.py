@@ -81,6 +81,7 @@ def collect(root, part='definition'):
     query = part == 'query'
     residual = part == 'residual'
     publication = part == 'publication'
+    capture = part == 'capture'
     catalog = load(REPO / 'docs/optimization-catalog/catalog.json')
     coverage = load(REPO / 'benchmarks/cell-unification/coverage.json')
     assert {x['id'] for x in coverage['optimizations']} == {x['id'] for x in catalog['optimizations']}
@@ -105,7 +106,7 @@ def collect(root, part='definition'):
     work = {k: v for k, v in before.items() if not resource(k)}
     changes = {k: {'before': v, 'after': after[k]} for k, v in work.items() if v != after[k]}
     added = {}
-    if result_ports or entry_delivery or query or residual or publication:
+    if result_ports or entry_delivery or query or residual or publication or capture:
         # New counters are reported as newly observed, never as a reduction
         # from an invented zero in the older runtime.
         new_fields = {
@@ -117,6 +118,9 @@ def collect(root, part='definition'):
                             '/stage_spine/stats/completion_boundary_records', '/stage_spine/stats/completion_boundary_reads',
                             '/stage_spine/stats/completion_order_checks', '/stage_spine/stats/completion_cell_visits',
                             '/stage_spine/stats/completion_cursor_moves'),
+            'capture': tuple('/stage_spine/stats/' + name for name in (
+                'cell_output_spans', 'cell_output_slots', 'cell_output_receipts', 'cell_output_slot_reads',
+                'cell_output_checks', 'cell_output_deliveries', 'peak_cell_output_slots')),
             'query': ('/stage_spine/stats/cell_query_entries', '/stage_spine/stats/cell_query_steps',
                       '/stage_spine/stats/cell_query_result_writes'),
         }[part]
@@ -139,6 +143,29 @@ def collect(root, part='definition'):
         for name in ('fragment_pending_reads', 'fragment_pending_writes', 'fragment_slot_probes',
                      'fragment_slot_replacements', 'fragment_older_skips'):
             assert entries[name] == 0
+    elif capture:
+        reductions = ('completion_boundary_reads', 'completion_boundary_records',
+                      'direct_publication_hash_probes', 'fragment_packets')
+        increases = ('publication_candidate_checks', 'publication_loser_skips', 'publication_slot_probes',
+                     'receipt_attempts', 'receipt_hits', 'publication_pending_reuses')
+        assert len(changes) == len(reductions) + len(increases), changes
+        for key, values in changes.items():
+            assert all(v['status'] == 'observed' for v in values.values())
+            name = key.split('/')[-1].split(' ')[0]
+            delta = values['after']['value'] - values['before']['value']
+            assert (name in reductions and delta < 0) or (name in increases and delta > 0), (key, delta)
+        old, new = [r['entry_schedule']['stats'] for r in reports]
+        a, b = [r['stage_spine']['stats'] for r in reports]
+        extra = new['publication_candidate_checks'] - old['publication_candidate_checks']
+        assert new['publication_loser_skips'] - old['publication_loser_skips'] == extra
+        assert new['publication_slot_probes'] - old['publication_slot_probes'] == extra
+        assert b['receipt_attempts'] - a['receipt_attempts'] == b['receipt_hits'] - a['receipt_hits'] == extra
+        assert b['receipt_hits_by_source']['effect'] - a['receipt_hits_by_source']['effect'] == extra
+        assert new['entry_publication_writes'] == old['entry_publication_writes']
+        assert b['fragment_packets'] == 0
+        assert b['completion_boundary_records'] == b['completion_boundary_reads']
+        assert b['cell_output_receipts'] == b['cell_output_checks'] == b['cell_output_deliveries']
+        assert b['cell_output_receipts'] > b['fragment_receipts'] == a['fragment_receipts']
     else:
         assert not changes, changes
 
@@ -154,11 +181,20 @@ def collect(root, part='definition'):
     fields = ('alloc_calls', 'realloc_calls', 'free_calls', 'requested_bytes', 'released_bytes')
     for region in ('setup_allocations', 'allocations'):
         a, b = [r[region] for r in audit]
-        if result_ports or entry_delivery or query or residual or publication:
+        if capture:
+            # The common output arena adds one geometric growth in this fixed
+            # sum-bits case. Keep it visible; require lower byte requests and
+            # lower combined setup+execute allocation calls, not a blanket waiver.
+            assert all(b[k] <= a[k] for k in fields if k != 'realloc_calls'), region
+            if region == 'allocations':
+                assert b['realloc_calls'] == a['realloc_calls'] + 1
+            else:
+                assert b['realloc_calls'] < a['realloc_calls']
+        elif result_ports or entry_delivery or query or residual or publication:
             # Runtime result retention must not add allocations. Compile-time
             # layout storage belongs to program loading (outside these two
             # allocation regions); process wall time and RSS include it.
-            if region == 'allocations' or entry_delivery or query or residual or publication:
+            if region == 'allocations' or entry_delivery or query or residual or publication or capture:
                 assert all(b[k] <= a[k] for k in fields), region
         elif region == 'allocations':
             assert all(a[k] == b[k] for k in fields), region
@@ -166,10 +202,13 @@ def collect(root, part='definition'):
             # Setup's producer classification now inspects the borrowed Cell
             # relation instead of allocating and normalizing a column vector.
             assert all(b[k] <= a[k] for k in fields), region
-        if not (result_ports or entry_delivery or query or residual or publication):
+        if not (result_ports or entry_delivery or query or residual or publication or capture):
             assert a['live_bytes_after'] - a['live_bytes_before'] == b['live_bytes_after'] - b['live_bytes_before']
         allocations[region] = {'baseline': a, 'candidate': b,
                                'saved': {k: a[k] - b[k] for k in fields}}
+    if capture:
+        for key in ('alloc_calls', 'realloc_calls', 'requested_bytes'):
+            assert sum(audit[1][r][key] for r in allocations) < sum(audit[0][r][key] for r in allocations), key
     assert sha(root / 'runtime-baseline-audit') != sha(root / 'runtime-candidate-audit'), 'check isolated build provenance'
 
     raw = load(root / 'timing/samples.json')
@@ -199,11 +238,17 @@ def collect(root, part='definition'):
         assert re.search(r'test result: ok\. 1 passed; 0 failed', log.read_text())
         supplemental = {'passed': 1, 'log_sha256': sha(log),
                         'scope': 'repeat of the stage-entry integration test after adding shared-path coverage assertions; not an additional distinct test'}
-    if publication:
-        log = root / 'test-publication-partial.log'
+    if publication or capture:
+        log = root / ('test-capture-partial.log' if capture else 'test-publication-partial.log')
         assert re.search(r'test result: ok\. 1 passed; 0 failed', log.read_text())
         supplemental = {'passed': 1, 'log_sha256': sha(log),
                         'scope': 'partial-scope fragment publication without global audit fences; same test also included in compiler suite'}
+    source_order = None
+    if capture:
+        log = root / 'test-capture-order.log'
+        assert re.search(r'test result: ok\. 5 passed; 0 failed', log.read_text())
+        source_order = {'passed': 5, 'log_sha256': sha(log),
+                        'scope': 'same five Entry tests repeated with ordered RHS/write/resume-root comparisons; not five additional distinct tests'}
     earlier = None
     if (result_ports or entry_delivery or residual) and (root / 'first-attempt/results.json').exists():
         trial = load(root / 'first-attempt/results.json')
@@ -220,32 +265,33 @@ def collect(root, part='definition'):
         }
     return {
         'scope': f'standalone Cell CPU; {part} rewrite, not completion of the unification goal',
-        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db', 'query': '4b5070cf', 'residual': '9dfe6986', 'publication': 'ec6586d4'}[part],
+        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db', 'query': '4b5070cf', 'residual': '9dfe6986', 'publication': 'ec6586d4', 'capture': 'f995cea7'}[part],
         'program_file_sha256': sha(program),
         'binaries': {name: sha(root / name) for name in ('runtime-baseline', 'runtime-candidate',
                                                        'runtime-baseline-audit', 'runtime-candidate-audit')},
         'normal_features': 'sparse-cells,view-ports,storage-metrics',
         'diagnostic_extra_features': 'allocation-metrics,slot-transfer-audit,spine-shapes',
         'build_provenance': ('frozen previous-step binaries; candidate built in this worktree only, separate normal/audit target directories'
-                             if result_ports or entry_delivery or query or residual or publication else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
+                             if result_ports or entry_delivery or query or residual or publication or capture else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
         'semantic_acceptance': semantics, 'compiler_components': relower,
         'native_reference_scope': 'source emitter unchanged; native legacy/values labels intentionally share the same marked-source export',
         'ordered_runs': len(schedule[0]), 'ordered_audit_hashes': hashes, 'tests': tests,
-        'supplemental_test': supplemental,
+        'supplemental_test': supplemental, 'source_order_tests': source_order,
         'metric_count': len(before), 'preserved_work_metric_statuses': dict(Counter(v['status'] for k, v in work.items() if k not in added and k not in changes)),
         'optimization_groups_tracked': len(coverage['optimizations']),
         'work_metric_changes': changes, 'newly_observed_metrics': added, 'allocations': allocations,
         'timing': timing, 'paired_timing_ratios': ratios, 'repeat': raw['repeat'], 'warmups': raw['warmups'],
         'earlier_attempt': earlier,
-        'entry_diagnostics': (entry_diagnostics(root, delivery=entry_delivery, names=('reused', 'replaced', 'borrowed') if residual or publication else ('reused', 'replaced'))
-                              if entry_delivery or query or residual or publication else None),
+        'entry_diagnostics': (entry_diagnostics(root, delivery=entry_delivery, names=('reused', 'replaced', 'borrowed') if residual or publication or capture else ('reused', 'replaced'))
+                              if entry_delivery or query or residual or publication or capture else None),
         'entry_accessor_call_sites': ({'calls': load(root / 'entry-view-calls.json'),
                                       'scope': 'static disassembly call sites, not runtime call counts'}
                                      if entry_delivery and (root / 'entry-view-calls.json').exists() else None),
         'performance_acceptance': ('unresolved: short-sample inference median is slightly slower and paired interval is wide; structural takeover does not prove an end-to-end speedup'
                                    if entry_delivery else 'unresolved: paired inference and process intervals include parity; peak RSS remains higher despite lower execute allocation bytes'
                                    if residual else 'inference unresolved: paired interval includes parity; process wall interval is below parity in this short sample only; no general workload or overall-goal performance claim'
-                                   if publication else 'see paired samples; no general workload claim'),
+                                   if publication else 'unresolved: both inference and process paired intervals include parity; fewer publication structures and lower allocations do not establish a speedup'
+                                   if capture else 'see paired samples; no general workload claim'),
         'limitations': ['short sum-bits preservation check; no new Raytrace or historical-fastest campaign',
                         'allocation regions exclude program loading; process wall time and RSS include that cost',
                         'same work counts do not prove the remaining execution paths have been rewritten',
@@ -257,7 +303,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
-    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery', 'query', 'residual', 'publication'), default='definition')
+    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery', 'query', 'residual', 'publication', 'capture'), default='definition')
     args = p.parse_args()
     if not __debug__:
         raise SystemExit('run without -O; assertions are verification checks')

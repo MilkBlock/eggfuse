@@ -4,7 +4,7 @@
 //! remains visible, or won a mutable merge. Those obligations stay at its use.
 use crate::program::{Arg, Call, Op, Program, Result, Rule, Table, Template};
 use serde::{Deserialize, Serialize};
-use std::{borrow::Cow, collections::BTreeMap};
+use std::{borrow::Cow, collections::{BTreeMap, BTreeSet}};
 
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_results.rs"]
@@ -52,6 +52,14 @@ pub struct Relation<'a> {
     pub table: usize,
     pub keys: &'a [Arg],
     pub result: Cow<'a, Arg>,
+}
+/// A shared projection of a Cell effect used by a later Entry. The operation
+/// remains authoritative for its operands; this is not a second runtime fact.
+#[derive(Clone, Copy)]
+pub(crate) struct Output {
+    pub operation: usize,
+    pub table: usize,
+    pub receipt_source: Option<Site>,
 }
 impl Relation<'_> {
     pub fn columns(&self) -> impl Iterator<Item = &Arg> {
@@ -125,6 +133,20 @@ impl<'a> Definition<'a> {
                 .map(|a| self.template.resolve_copy(a))
                 .collect(),
         ))
+    }
+    pub(crate) fn outputs(&self, demanded: &BTreeSet<usize>, sources: &[Option<Site>]) -> Vec<Output> {
+        let outputs = (0..self.template.ops.len()).filter_map(|operation| {
+            let relation = self.relation(Site::Effect(operation))?;
+            demanded.contains(&relation.table).then(|| Output {
+                operation, table: relation.table,
+                receipt_source: sources.get(operation).copied().flatten(),
+            })
+        }).collect::<Vec<_>>();
+        // An ordinary function read can accompany a producing Cell, but alone
+        // it does not authorize a continuation, matching the original contract.
+        if outputs.iter().any(|o| self.local_relation(Site::Effect(o.operation)).is_some()) {
+            outputs
+        } else { Vec::new() }
     }
 }
 

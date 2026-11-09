@@ -11,8 +11,25 @@ fn compare_mode(source: &str, audit: bool) -> (Executor, Executor) {
     let mut old = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), audit);
     let mut nodes = Executor::new(Graph::new_with_repair_ports(p).unwrap(), audit);
     nodes.use_entry_publications().unwrap();
-    old.execute().unwrap();
-    nodes.execute().unwrap();
+    #[cfg(feature = "iterative-bake")]
+    {
+        let execute = |runtime: &mut Executor| {
+            use eggfuse_cell_runtime::transfer_audit as audit;
+            audit::set_active(true);
+            audit::enable_write_audit();
+            runtime.execute().unwrap();
+            audit::set_active(false);
+            (audit::take_digests(), audit::take_write_digests(), audit::take_resume_digests())
+        };
+        // Equal final facts alone cannot identify which producer continuation
+        // won. Compare the ordered RHS, mutation and resume-root digests too.
+        assert_eq!(execute(&mut old), execute(&mut nodes));
+    }
+    #[cfg(not(feature = "iterative-bake"))]
+    {
+        old.execute().unwrap();
+        nodes.execute().unwrap();
+    }
     assert_eq!(old.snapshots, nodes.snapshots);
     assert_eq!(old.binding_audit, nodes.binding_audit);
     assert_eq!(old.graph.export().unwrap(), nodes.graph.export().unwrap());
@@ -85,7 +102,9 @@ fn fragment_receipts_use_entry_slots_after_union_and_duplicate_publications() {
     let (_, nodes) = compare_mode(source, false);
     let report = nodes.report();
     let spine = &report["stage_spine"]["stats"];
-    assert!(spine["fragment_packets"].as_u64().unwrap() > 0, "{spine}");
+    assert!(spine["cell_output_spans"].as_u64().unwrap() > 0, "{spine}");
+    assert_eq!(spine["fragment_packets"], 0);
+    assert!(spine["fragment_receipts"].as_u64().unwrap() > 0, "{spine}");
     assert_eq!(spine["fragment_receipts"], spine["fragment_direct_inserts_avoided"]);
     assert_eq!(spine["fragment_receipts"], spine["fragment_deliveries"]);
     let entries = &report["entry_schedule"]["stats"];
@@ -114,4 +133,27 @@ fn repeated_fragment_publications_queue_a_new_packet_once() {
     let stats = &report["entry_schedule"]["stats"];
     assert!(stats["publication_pending_pushes"].as_u64().unwrap() > 0, "{stats}");
     assert!(stats["publication_pending_reuses"].as_u64().unwrap() > 0, "{stats}");
+}
+
+#[test]
+fn single_output_cells_keep_last_source_without_receipt_hash_coalescing() {
+    let source = r#"
+(datatype E (N i64) (Start E i64) (Gateway E) (Out E))
+(ruleset make) (ruleset consume) (ruleset merge)
+(rule ((Start x n)) ((Gateway x)) :ruleset make)
+(rule ((Gateway x)) ((Out x)) :ruleset consume)
+(rule ((= a (N 1)) (= b (N 2))) ((union a b)) :ruleset merge)
+(Start (N 1) 10) (Start (N 1) 20) (Start (N 2) 30)
+(run-schedule (seq (run make) (run merge) (run consume) (run make) (run consume)))
+(check (Out (N 1)) (Out (N 2)))
+"#;
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    assert!(s["cell_output_receipts"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+    assert_eq!(s["fragment_receipts"], 0);
+    assert_eq!(s["direct_publication_hash_probes"], 0);
+    assert!(report["entry_schedule"]["stats"]["publication_loser_skips"].as_u64().unwrap() > 0);
 }

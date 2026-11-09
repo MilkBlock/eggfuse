@@ -53,26 +53,26 @@
 
 证据：[benchmarks/entry-publications/README.md](../../benchmarks/entry-publications/README.md)
 
-## E3 · 片段内部 publication
+## E3 · Cell 输出 capture 与片段 publication
 
-启用条件：至少两个 anchor；全为 permanent、Entry-owned，非 audit_receipts。
+启用条件：非 audit_receipts；Cell 的全部待发布输出均为 permanent、Entry-owned；单输出和多输出使用同一槽位机制。
 
-编译期依据：共享 Cell 输出 wiring、源 Cell/RHS 顺序、permanent 与 Entry ownership 证明。
+编译期依据：共享 Cell Output 描述、源 Cell/内部 effect 顺序、permanent 与 Entry ownership 证明。
 
-替代的旧工作：已覆盖 Entry 的 Pending 写入/回读和 staged-id 队列；Cell 完成状态替代并行 Started/published-base 数组。
+替代的旧工作：已覆盖输出的 direct-publication 哈希登记与边界转换、独立 FragmentPublication 包和表编号数组；Entry Pending 往返及重复 completion 存储已在上一轮删除。
 
 运行时仍须满足：仅在合法发布边界投递；同一 Entry 必须选择源顺序最后的候选。收据 forwarding、存活与可见性、部分 scope 发布及世代仍需验证。
 
-代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [entry_schedule.rs](../../engine/cell-runtime/src/entry_schedule.rs)
+代码：[cell.rs](../../engine/cell-runtime/src/cell.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [entry_schedule.rs](../../engine/cell-runtime/src/entry_schedule.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stage_spine/stats/fragment_direct_inserts_avoided [value]`<br>`report:/stage_spine/stats/fragment_deliveries [value]` |
-| 成本 / 剩余工作 | `report:/stage_spine/stats/fragment_packets [value]`<br>`report:/stage_spine/stats/fragment_receipt_spills [value]`<br>`report:/stage_spine/stats/fragment_delivery_checks [value]`<br>`report:/stage_spine/stats/direct_publication_hash_probes [value]`<br>`report:/entry_schedule/stats/publication_slot_probes [value]`<br>`report:/entry_schedule/stats/fragment_pending_writes [value]`<br>`report:/entry_schedule/stats/fragment_pending_reads [value]`<br>`report:/entry_schedule/stats/publication_pending_pushes [value]`<br>`report:/entry_schedule/stats/publication_candidate_checks [value]`<br>`report:/entry_schedule/stats/publication_loser_skips [value]`<br>`report:/stage_spine/stats/completion_boundary_records [value]`<br>`report:/stage_spine/stats/completion_boundary_reads [value]`<br>`report:/stage_spine/stats/completion_order_checks [value]`<br>`report:/stage_spine/stats/completion_cell_visits [value]`<br>`report:/stage_spine/stats/completion_cursor_moves [value]`<br>`report:/entry_schedule/stats/fragment_slot_probes [value]`<br>`report:/entry_schedule/stats/fragment_slot_replacements [value]`<br>`report:/entry_schedule/stats/fragment_older_skips [value]` |
+| 成本 / 剩余工作 | `report:/stage_spine/stats/fragment_packets [value]`<br>`report:/stage_spine/stats/fragment_receipt_spills [value]`<br>`report:/stage_spine/stats/fragment_delivery_checks [value]`<br>`report:/stage_spine/stats/direct_publication_hash_probes [value]`<br>`report:/entry_schedule/stats/publication_slot_probes [value]`<br>`report:/entry_schedule/stats/fragment_pending_writes [value]`<br>`report:/entry_schedule/stats/fragment_pending_reads [value]`<br>`report:/entry_schedule/stats/publication_pending_pushes [value]`<br>`report:/entry_schedule/stats/publication_candidate_checks [value]`<br>`report:/entry_schedule/stats/publication_loser_skips [value]`<br>`report:/stage_spine/stats/completion_boundary_records [value]`<br>`report:/stage_spine/stats/completion_boundary_reads [value]`<br>`report:/stage_spine/stats/completion_order_checks [value]`<br>`report:/stage_spine/stats/completion_cell_visits [value]`<br>`report:/stage_spine/stats/completion_cursor_moves [value]`<br>`report:/entry_schedule/stats/fragment_slot_probes [value]`<br>`report:/entry_schedule/stats/fragment_slot_replacements [value]`<br>`report:/entry_schedule/stats/fragment_older_skips [value]`<br>`report:/stage_spine/stats/cell_output_spans [value]`<br>`report:/stage_spine/stats/cell_output_slots [value]`<br>`report:/stage_spine/stats/cell_output_receipts [value]`<br>`report:/stage_spine/stats/cell_output_slot_reads [value]`<br>`report:/stage_spine/stats/cell_output_checks [value]`<br>`report:/stage_spine/stats/cell_output_deliveries [value]`<br>`report:/stage_spine/stats/peak_cell_output_slots [value]`<br>`report:/stage_spine/stats/receipt_attempts [value]`<br>`report:/stage_spine/stats/receipt_hits [value]`<br>`report:/stage_spine/stats/receipt_redirects [value]`<br>`report:/entry_schedule/stats/publication_pending_reuses [value]` |
 | 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/fragment_receipts [value]` |
 
-解释与缺口：输出逆序只消除重复暂存，不消除必要的胜者裁决。新增边界记录、Cell 遍历、Eq/visibility 检查必须计费。fragment receipts 与未知边界的 key/receipt 归一化仍保留；单项不代表整体发布路径已重写。audit_receipts 会禁用 fragment 快路，验证同时使用普通路径与非 audit-stages 的诊断构建。
+解释与缺口：每个完成 Cell 保存输出槽区间，含源 effect 顺序；实际 receipt 可属于其他物理 Cell。取消早期哈希去重会增加最终 Entry 候选检查，须和减少的哈希、边界记录、分配及耗时共同验收。fragment_receipts/deliveries 仅为多输出子集，不能再与共同 cell_output_* 计数相加。未知边界、legacy owner、effect 收据临时数组与必要 history 尚未完全统一。
 
-状态：Cell 完成状态与最终 Entry 发布已接管；短 sum-bits 语义和旧工作保持，Pending 路径归零；推理配对区间跨持平，整体性能验收未完成。
+状态：Cell 单/多输出槽已统一，独立 fragment 包归零；短样例语义与源顺序保持，新增候选和扩容已计费；推理及整进程配对区间仍跨持平。
 
-证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md) · [benchmarks/cell-unification/publication.md](../../benchmarks/cell-unification/publication.md) · [benchmarks/cell-unification/publication-results.json](../../benchmarks/cell-unification/publication-results.json)
+证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/normal/README.md](../../benchmarks/witness-prefix/normal/README.md) · [benchmarks/cell-unification/publication.md](../../benchmarks/cell-unification/publication.md) · [benchmarks/cell-unification/publication-results.json](../../benchmarks/cell-unification/publication-results.json) · [benchmarks/cell-unification/capture.md](../../benchmarks/cell-unification/capture.md) · [benchmarks/cell-unification/capture-results.json](../../benchmarks/cell-unification/capture-results.json)

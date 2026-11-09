@@ -132,14 +132,18 @@
         "One Completion moves Started into its published base once; all winning exports share it, including later scopes.",
         "Cell source order and shared fragment output positions choose final Entry winners before materializing continuations.",
         "Remove Entry Pending enum, staged-id vector and stage/pop/finish APIs; Entry writes only final publications.",
-        "Track boundary export records/reads, insertion comparisons, Cell visits, candidate checks/skips and Cursor promotions; retain old removed-path counters as zero."
+        "Track boundary export records/reads, insertion comparisons, Cell visits, candidate checks/skips and Cursor promotions; retain old removed-path counters as zero.",
+        "Cell Definition derives one Output projection for capture, Entry ownership, publication and Bake shape statistics; duplicate anchor/table arrays removed.",
+        "Single and multiple owned permanent outputs share completion slots and one receipt sink; standalone FragmentPublication packets removed.",
+        "Source completion/effect order replaces duplicated per-output/global ordinal storage; partially published Cell slots stay stable until drained."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
-        "Unify capture receipt/result retention and boundary key normalization with Cell definitions; fragment receipt arrays and direct-publication hashing remain.",
-        "Reduce or compile away boundary output ordering and scans of retained Cell completions where a proof permits it.",
-        "Confirm inference speed across stable final paths; the current short paired inference interval includes parity.",
-        "No general workload, parallel or overall unification acceptance until remaining optimization families are rewritten and measured."
+        "Unify temporary effect receipt arrays, required Results/history capture and boundary key normalization with the same Cell definition; retain only downstream-required references.",
+        "Handle legacy owners and unknown boundaries before removing their remaining direct-publication hash table and key coalescing.",
+        "Reduce uncovered boundary ordering and scans of deferred Cell completions with a proof of coverage.",
+        "Confirm inference speed across stable final paths; short capture and publication paired intervals still include parity.",
+        "No general workload, parallel or overall unification acceptance until all optimization families are rewritten and measured."
       ],
       "verification": "217 compiler + 52 runtime all-feature + 33 minimal test executions; one partial-scope test also run without global audit fences. 22 compiler components, 1,428 source Runs and ordered state/RHS/write/resume evidence unchanged; semantic script pass. Pending reads/writes zero, execute requests -16,544 bytes, inference paired median 0.98684 with 95% interval [0.95565, 1.00593].",
       "reproduction": [
@@ -153,7 +157,28 @@
         "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-publication-unified/semantic out/cell-publication-unified/semantic-acceptance.json",
         "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/publication-timing-spec.json out/cell-publication-unified/timing --repeat 7 --warmups 1",
         "python3 benchmarks/cell-unification/collect.py out/cell-publication-unified benchmarks/cell-unification/publication-results.json --part publication"
-      ]
+      ],
+      "capture": {
+        "status": "semantics_and_takeover_verified_performance_pending",
+        "baseline_commit": "f995cea7",
+        "evidence": "benchmarks/cell-unification/capture-results.json",
+        "opportunity": "Owned single-output captures entered a receipt hash map while multiple outputs entered independent fragment packets; both later fed the same Entry winner arbitration.",
+        "live_obligations": "Actual returned receipt may belong to another physical Cell; source Cell/effect order, partial-scope slot lifetime, visibility, forwarding, late inputs and source Runs remain authoritative.",
+        "verification": "303 test executions plus targeted repeats with no global audit fence and ordered resume-root checks; 22 identical components and 1,428 Runs; semantic pass and ordered state/RHS/write/resume match. Fragment packets 1,447 -> 0; hash probes -2,865, boundary records/reads -2,026 each, final candidates +606. Setup requests -55,968 bytes and execute -39,136 bytes; execute reallocation +1 is explicitly charged. Paired inference interval includes parity.",
+        "reproduction": [
+          "cargo test --locked -p eggfuse-cell-compiler --all-features",
+          "cargo test --locked -p eggfuse-cell-runtime --all-features",
+          "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+          "cargo test --locked -p eggfuse-cell-compiler --all-features --test entry_publications",
+          "cargo test --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --test scoped_completion cell_completion_shares_one_continuation_across_partial_fragment_publication",
+          "cargo run --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-capture-unified/sum/program.json out/cell-capture-unified/relower.json",
+          "cargo run --locked -p eggfuse-cell-compiler --all-features --example emit_cell_entry_fixtures -- out/cell-capture-unified/fixtures",
+          "python3 benchmarks/cell-unification/run_entry_fixtures.py out/cell-capture-unified --cases reused replaced borrowed",
+          "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-capture-unified/semantic out/cell-capture-unified/semantic-acceptance.json",
+          "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/capture-timing-spec.json out/cell-capture-unified/timing --repeat 7 --warmups 1",
+          "python3 benchmarks/cell-unification/collect.py out/cell-capture-unified benchmarks/cell-unification/capture-results.json --part capture"
+        ]
+      }
     },
     {
       "id": "ports_congruence",
@@ -273,11 +298,11 @@
     },
     {
       "id": "E3",
-      "title": "片段内部 publication",
+      "title": "Cell 输出 capture 与片段 publication",
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "E3",
-      "evidence": "benchmarks/cell-unification/publication-results.json",
-      "remaining": "Final Entry publication and Cell completion state unified; capture receipts, boundary normalization/ordering, visibility fallback and inference performance acceptance remain."
+      "evidence": "benchmarks/cell-unification/capture-results.json",
+      "remaining": "Owned single/multiple outputs now share Cell completion slots. Temporary RHS receipts, Results/history retention, unknown boundaries/legacy owners and final performance acceptance remain."
     },
     {
       "id": "F1",

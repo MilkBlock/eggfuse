@@ -1,6 +1,6 @@
 //! Diagnostic-only lineage for the winning origin of an applied consumer.
 //! A shared root may fork. Each applied occurrence tracks its own children.
-use crate::{graph::FactRef, cell::Site, program::*};
+use crate::{graph::FactRef, program::*};
 use serde::Serialize;
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -31,7 +31,7 @@ pub(super) struct Profile {
     static_counts: J,
 }
 impl Profile {
-    pub(super) fn catalog(&mut self, p: &Program, anchors: &[Vec<(usize, Option<Site>)>]) {
+    pub(super) fn catalog(&mut self, p: &Program, anchors: &[Vec<crate::cell::Output>]) {
         let mut consumers = BTreeMap::<usize, Vec<(usize, usize)>>::new();
         for (r, pivot, _) in &p.multi_stage.stage_entries {
             let Call::Table(t) = p.rules[*r].query[*pivot].call else {
@@ -44,11 +44,8 @@ impl Profile {
             (0usize, 0usize, 0usize, 0usize);
         for (producer, ops) in anchors.iter().enumerate() {
             let template = p.rules[producer].template;
-            for &(op, _) in ops {
-                let table = match &p.templates[template].ops[op] {
-                    Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
-                    _ => unreachable!(),
-                };
+            for output in ops {
+                let (op, table) = (output.operation, output.table);
                 outputs += 1;
                 for &(consumer, pivot) in &consumers[&table] {
                     edges += 1;
