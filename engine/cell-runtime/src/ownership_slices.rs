@@ -25,19 +25,18 @@ impl PortProgram {
     pub fn active(&self) -> bool { self.active }
     pub fn covers(&self, op: usize) -> bool { !self.fields[op].is_empty() }
     pub(super) fn derive(p: &Program, t: &Template, covered: &[bool]) -> Self {
-        let mut symbols = super::super::local_union_cells::Symbols::default();
-        symbols.parents = (0..t.sorts.len()).collect();
+        let mut symbols = crate::cell::Symbols::with_slots(t.sorts.len());
         let mut facts = Vec::new();
         let mut bodies = vec![Vec::new(); t.ops.len()];
         let mut native = Vec::new();
         for (op, instruction) in t.ops.iter().enumerate() {
             match instruction {
                 Op::Copy(dst, a) => {
-                    let a = symbols.arg(a);
-                    symbols.union(*dst, a);
+                    let a = symbols.arg(a, |i| i);
+                    symbols.equal(*dst, a);
                 }
                 Op::Let(dst, Call::Table(table), args) if covered[*table] => {
-                    let mut ports = args.iter().map(|a| symbols.arg(a)).collect::<Vec<_>>();
+                    let mut ports = args.iter().map(|a| symbols.arg(a, |i| i)).collect::<Vec<_>>();
                     ports.push(*dst);
                     facts.push((op, *table, ports.clone()));
                     bodies[op] = ports
@@ -55,7 +54,7 @@ impl PortProgram {
                         .chain(std::iter::once(result))
                         .enumerate()
                         .map(|(c, a)| {
-                            (p.tables[*table].schema[c]["kind"] == "eq").then(|| symbols.arg(a))
+                            (p.tables[*table].schema[c]["kind"] == "eq").then(|| symbols.arg(a, |i| i))
                         })
                         .collect();
                 }
@@ -71,7 +70,7 @@ impl PortProgram {
             .iter()
             .any(|op| matches!(op, Op::Hide(..) | Op::Panic))
         {
-            symbols.close(&facts);
+            symbols.close_constructors(facts.iter().map(|(_, table, ports)| (*table, &ports[..ports.len() - 1], *ports.last().unwrap())));
         }
         let mut names = BTreeMap::new();
         for body in &mut bodies {

@@ -16,63 +16,11 @@ struct TemplatePlan {
     ports: BTreeMap<usize, Vec<usize>>,
     obligations: BTreeMap<usize, Vec<(Arg, Arg)>>,
 }
-#[derive(Default)]
-pub(super) struct Symbols {
-    pub(super) parents: Vec<usize>,
-    literals: BTreeMap<Value, usize>,
-}
-impl Symbols {
-    pub(super) fn root(&self, mut i: usize) -> usize {
-        while self.parents[i] != i {
-            i = self.parents[i];
-        }
-        i
-    }
-    pub(super) fn union(&mut self, a: usize, b: usize) -> bool {
-        let (a, b) = (self.root(a), self.root(b));
-        self.parents[a.max(b)] = a.min(b);
-        a != b
-    }
-    pub(super) fn arg(&mut self, a: &Arg) -> usize {
-        match a {
-            Arg::Slot(i) => *i,
-            Arg::Literal(v) => *self.literals.entry(v.clone()).or_insert_with(|| {
-                let i = self.parents.len();
-                self.parents.push(i);
-                i
-            }),
-        }
-    }
-    pub(super) fn close(&mut self, facts: &[(usize, usize, Vec<usize>)]) {
-        loop {
-            let mut keys = BTreeMap::new();
-            let mut changed = false;
-            for (_, table, ports) in facts {
-                let key = (
-                    *table,
-                    ports[..ports.len() - 1]
-                        .iter()
-                        .map(|&p| self.root(p))
-                        .collect::<Vec<_>>(),
-                );
-                if let Some(other) = keys.insert(key, *ports.last().unwrap()) {
-                    changed |= self.union(other, *ports.last().unwrap());
-                }
-            }
-            if !changed {
-                break;
-            }
-        }
-    }
-}
 impl Plan {
     pub(crate) fn derive(p: &Program) -> Result<Self> {
         let mut plans = vec![];
         for t in &p.templates {
-            let mut s = Symbols {
-                parents: (0..t.sorts.len()).collect(),
-                ..Default::default()
-            };
+            let mut s = crate::cell::Symbols::with_slots(t.sorts.len());
             let mut facts = vec![];
             let mut unions = vec![];
             // Delete/subsume invalidate symbolic constructor witnesses.
@@ -83,17 +31,17 @@ impl Plan {
             for (op, ins) in t.ops.iter().enumerate() {
                 match ins {
                     Op::Copy(dst, a) => {
-                        let a = s.arg(a);
-                        s.union(*dst, a);
+                        let a = s.arg(a, |i| i);
+                        s.equal(*dst, a);
                     }
                     Op::Union(a, b) => {
-                        let (a, b) = (s.arg(a), s.arg(b));
+                        let (a, b) = (s.arg(a, |i| i), s.arg(b, |i| i));
                         unions.push((a, b));
                     }
                     Op::Let(dst, Call::Table(table), args)
                         if p.repair_ports.key_eq_columns[*table].is_some() =>
                     {
-                        let mut ports = args.iter().map(|a| s.arg(a)).collect::<Vec<_>>();
+                        let mut ports = args.iter().map(|a| s.arg(a, |i| i)).collect::<Vec<_>>();
                         ports.push(*dst);
                         facts.push((op, *table, ports));
                     }
@@ -104,12 +52,12 @@ impl Plan {
                 plans.push(None);
                 continue;
             }
-            s.close(&facts);
-            let before = (0..s.parents.len()).map(|i| s.root(i)).collect::<Vec<_>>();
+            s.close_constructors(facts.iter().map(|(_, table, ports)| (*table, &ports[..ports.len() - 1], *ports.last().unwrap())));
+            let before = (0..s.len()).map(|i| s.root(i)).collect::<Vec<_>>();
             for &(a, b) in &unions {
-                s.union(a, b);
+                s.equal(a, b);
             }
-            s.close(&facts);
+            s.close_constructors(facts.iter().map(|(_, table, ports)| (*table, &ports[..ports.len() - 1], *ports.last().unwrap())));
             let mut groups = BTreeMap::<usize, BTreeSet<usize>>::new();
             for (i, &old) in before.iter().enumerate() {
                 groups.entry(s.root(i)).or_default().insert(old);
@@ -141,13 +89,7 @@ impl Plan {
             // Each row waits only for its own affected classes, not for the
             // entire graph. Copies and already-congruent constructors share
             // one pre-union representative, so they add no redundant tests.
-            let argument = |i: usize| {
-                if i < t.sorts.len() {
-                    Arg::Slot(i)
-                } else {
-                    Arg::Literal(s.literals.iter().find(|(_, n)| **n == i).unwrap().0.clone())
-                }
-            };
+            let argument = |i: usize| s.source_arg(i, t.sorts.len());
             let obligations = facts
                 .iter()
                 .filter_map(|(op, _, fields)| {

@@ -2576,10 +2576,10 @@ mod sealed_input_tests {
         let values=std::iter::once((0,Value::Eq(9))).collect();
         graph.sealed_generation=Some(graph.stats.unions);
         graph.trust_sealed_frame(42);
-        assert_eq!(graph.slot_fields(42,0,None,&values,0).unwrap(),Value::Eq(9));
+        assert_eq!(graph.slot_fields(42,0,None,&values,None,0).unwrap(),Value::Eq(9));
         graph.union(9,2).unwrap();
         assert_eq!(graph.sealed_input_cell,None);
-        assert_eq!(graph.slot_fields(42,0,None,&values,0).unwrap(),Value::Eq(2));
+        assert_eq!(graph.slot_fields(42,0,None,&values,None,0).unwrap(),Value::Eq(2));
         graph.trust_sealed_frame(43);
         assert_eq!(graph.sealed_input_cell,None);
     }

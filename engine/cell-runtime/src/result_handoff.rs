@@ -6,7 +6,6 @@ use crate::{
     iterative::Entry,
     cell::{Capture, Definition, ResultPort, Results, Site},
     program::*,
-    value::Value,
 };
 use serde::Serialize;
 use std::{
@@ -51,48 +50,23 @@ struct Fact {
     constructor: bool,
 }
 #[derive(Clone, Default)]
-struct Symbols {
-    parents: Vec<usize>,
-    literals: BTreeMap<Value, usize>,
+struct KeyFootprint {
     indexed_roots: BTreeSet<usize>,
     key_epoch: usize,
     congruence_dirty: bool,
 }
-impl Symbols {
-    fn fresh(&mut self) -> usize {
-        let i = self.parents.len();
-        self.parents.push(i);
-        i
-    }
-    fn root(&self, mut i: usize) -> usize {
-        while self.parents[i] != i {
-            i = self.parents[i]
-        }
-        i
-    }
-    fn equal(&mut self, a: usize, b: usize) {
-        let a = self.root(a);
-        let b = self.root(b);
+impl crate::cell::SymbolObserver for KeyFootprint {
+    fn key(&mut self, roots: &[usize]) { self.indexed_roots.extend(roots); }
+    fn merged(&mut self, from: usize, _: usize) {
         // Fresh output aliases normally do not change any existing fact key.
-        if a != b && self.indexed_roots.contains(&a.max(b)) {
+        if self.indexed_roots.contains(&from) {
             self.key_epoch += 1;
             self.congruence_dirty = true;
         }
-        self.parents[a.max(b)] = a.min(b);
     }
-    fn arg(&mut self, a: &Arg, slots: &[usize]) -> usize {
-        match a {
-            Arg::Slot(s) => slots[*s],
-            Arg::Literal(v) => {
-                if let Some(&i) = self.literals.get(v) {
-                    return i;
-                }
-                let i = self.fresh();
-                self.literals.insert(v.clone(), i);
-                i
-            }
-        }
-    }
+}
+type Symbols = crate::cell::Symbols<KeyFootprint>;
+impl Symbols {
     #[cfg(test)]
     fn same_key(&self, a: &[usize], b: &[usize]) -> bool {
         a.len() == b.len() && a.iter().zip(b).all(|(&x, &y)| self.root(x) == self.root(y))
@@ -102,35 +76,14 @@ impl Symbols {
     /// Call only at a source boundary or after collecting the complete LHS;
     /// queued RHS unions must not become visible to earlier RHS instructions.
     fn close(&mut self, facts: &[Fact]) {
-        if self.congruence_dirty {
+        if self.observer.congruence_dirty {
             self.close_full(facts);
         }
     }
     fn close_full(&mut self, facts: &[Fact]) {
-        loop {
-            let mut keys = BTreeMap::new();
-            let mut changed = false;
-            for f in facts {
-                if !f.constructor {
-                    continue;
-                }
-                let key = (
-                    f.table,
-                    f.key.iter().map(|&i| self.root(i)).collect::<Vec<_>>(),
-                );
-                self.indexed_roots.extend(&key.1);
-                if let Some(other) = keys.insert(key, f.result)
-                    && self.root(other) != self.root(f.result)
-                {
-                    self.equal(other, f.result);
-                    changed = true;
-                }
-            }
-            if !changed {
-                break;
-            }
-        }
-        self.congruence_dirty = false;
+        self.close_constructors(facts.iter().filter(|f| f.constructor)
+            .map(|f| (f.table, f.key.as_slice(), f.result)));
+        self.observer.congruence_dirty = false;
     }
 }
 /// Exact canonical keys, retaining the most recent donor like the reverse scan.
@@ -155,19 +108,19 @@ impl FactIndex {
         table: usize,
         key: &[usize],
     ) -> Option<usize> {
-        if self.epoch != symbols.key_epoch {
+        if self.epoch != symbols.observer.key_epoch {
             self.clear(symbols);
         }
         for (i, f) in facts.iter().enumerate().skip(self.indexed) {
             let key = f.key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
-            symbols.indexed_roots.extend(&key);
+            symbols.observer.indexed_roots.extend(&key);
             self.keys.insert((f.table, key), i);
         }
         self.indexed = facts.len();
-        self.epoch = symbols.key_epoch;
+        self.epoch = symbols.observer.key_epoch;
         let key = key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
         // Register the pending fact too, before its source-boundary unions.
-        symbols.indexed_roots.extend(&key);
+        symbols.observer.indexed_roots.extend(&key);
         self.keys.get(&(table, key)).copied()
     }
 }
@@ -195,7 +148,7 @@ fn derive_stage(
             .collect::<Vec<_>>();
         if let Some(pivot) = pivot {
             for (arg, col) in r.query[pivot].args.iter().zip(published.drain(..)) {
-                let into = symbols.arg(arg, &slots);
+                let into = symbols.arg(arg, |i| slots[i]);
                 symbols.equal(into, col);
             }
         } else {
@@ -227,10 +180,10 @@ fn derive_stage(
             if !constructor && !query_ports {
                 continue;
             }
-            let result = symbols.arg(&relation.result, &slots);
+            let result = symbols.arg(&relation.result, |i| slots[i]);
             let key = relation.keys
                 .iter()
-                .map(|a| symbols.arg(a, &slots))
+                .map(|a| symbols.arg(a, |i| slots[i]))
                 .collect::<Vec<_>>();
             if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
                 let f = &facts[i];
@@ -267,11 +220,11 @@ fn derive_stage(
         for (op, ins) in t.ops.iter().enumerate() {
             match ins {
                 Op::Copy(dst, a) => {
-                    slots[*dst] = symbols.arg(a, &slots);
+                    slots[*dst] = symbols.arg(a, |i| slots[i]);
                     continue;
                 }
                 Op::Union(a, b) => {
-                    unions.push((symbols.arg(a, &slots), symbols.arg(b, &slots)));
+                    unions.push((symbols.arg(a, |i| slots[i]), symbols.arg(b, |i| slots[i])));
                     continue;
                 }
                 Op::Hide(t, ..) => {
@@ -285,9 +238,9 @@ fn derive_stage(
             let table = relation.table;
             let key = relation.keys
                 .iter()
-                .map(|a| symbols.arg(a, &slots))
+                .map(|a| symbols.arg(a, |i| slots[i]))
                 .collect::<Vec<_>>();
-            let value = symbols.arg(&relation.result, &slots);
+            let value = symbols.arg(&relation.result, |i| slots[i]);
             if Some(op) == publication {
                 published = key.clone();
                 // A mutable function's published result can change by the next Run.
@@ -769,14 +722,14 @@ mod tests {
                 let mut reference = symbols.clone();
                 reference.close_full(&facts);
                 symbols.close(&facts);
-                for i in 0..symbols.parents.len() {
+                for i in 0..symbols.len() {
                     assert_eq!(
                         symbols.root(i),
                         reference.root(i),
                         "step={step}, symbol={i}"
                     );
                 }
-                assert!(!symbols.congruence_dirty);
+                assert!(!symbols.observer.congruence_dirty);
             }
         }
     }

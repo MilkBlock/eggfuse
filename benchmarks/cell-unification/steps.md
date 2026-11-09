@@ -77,3 +77,9 @@
 复现入口是 `emit_port_sharing` example（源代码在 `tests/support/port_sharing.rs`）；从其 profile 的全部 `records[].fragment` 构造相应 v1/v2 `ownership_fragments`，重算 checksum，再以 `bake-cell-ownership --query-classes true` 校验和生成证书，使用冻结的旧/新 runtime `--local-congruence --audit-stages` 比较。新规则仍由源 Cell 执行 union；程序数量下降不等于已测得速度提升。
 
 同组只运行一次 sum-bits：语义脚本 pass，300 项工作指标、1,428 个 Run 和最终状态保持。sum-bits 没有替代上面的 ownership 专项检查；本轮没有计时采样或分配审计。
+
+## 共享 Cell 符号与 congruence 求解
+
+基线 `664b4189`。port wiring、局部 union completion 和跨阶段 handoff 共用 `cell_symbols` 的符号分配、literal、等价根和构造子闭包；删除 local-union 与 handoff 两套求解器。闭包借用当前仍有效的构造子 key/result，短 key 使用内联存储，不另存一份事实图。handoff 仅附带原有 key footprint/epoch 观察器，保留条件闭包和 donor 索引失效条件；普通 wiring 不承担这个状态。
+
+port wiring 仍不提前使用源 union，局部 repair 的预测仍生成运行时 equality obligation；handoff 只在原有源屏障关闭 congruence。五项 local-union、四项 handoff 索引/闭包、两个源 union 屏障及删除重建用例通过。库测试编译还发现此前 `slot_fields` 新增借用输入参数后遗留的两处测试调用，补上 `None` 后 sealed-input union 失效检查通过。没有新增计时。

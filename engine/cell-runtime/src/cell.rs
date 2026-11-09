@@ -21,6 +21,9 @@ pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
 #[path = "cell_eval.rs"]
 mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};
+#[path = "cell_symbols.rs"]
+mod symbols;
+pub(crate) use symbols::{SymbolObserver, Symbols};
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_handoff.rs"]
 mod handoff;
