@@ -1,6 +1,6 @@
 //! Execute the existing Cell Let instruction. Storage and table capabilities
 //! differ during ordered merge callbacks, but operand/call dispatch is shared.
-use crate::{graph::Graph, program::{Arg, Call, Result}, value::{self, Value}};
+use crate::{graph::{Cell, Graph}, program::{Arg, Call, Result}, value::{self, Value}};
 use super::Effects;
 use smallvec::SmallVec;
 
@@ -11,7 +11,7 @@ pub(crate) trait CallFrame {
     fn assign(&mut self, g: &mut Graph, slot: usize, value: Value) -> Result<()>;
     fn construct(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Arg], dst: usize) -> Result<()>;
     fn read(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Value]) -> Result<Value>;
-    fn failed_primitive(&self, name: &str) -> String;
+    fn failed_primitive(&self, name: &str) -> String { format!("RHS primitive failed: {name}") }
 }
 
 pub(crate) fn evaluate_call(g: &mut Graph, frame: &mut impl CallFrame,
@@ -60,7 +60,28 @@ impl CallFrame for RhsCall<'_> {
         self.receipts.record(op, row.witness);
         Ok(row.values.last().unwrap().clone())
     }
-    fn failed_primitive(&self, name: &str) -> String { format!("RHS primitive failed: {name}") }
+}
+
+/// A checked pure prefix uses the same Cell frame and call executor before the
+/// writer is committed. It has no permission to create/read table facts.
+pub(crate) struct LocalCall<'a> {
+    pub cell: u32,
+    pub frame: &'a mut Cell,
+}
+impl CallFrame for LocalCall<'_> {
+    fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments> {
+        g.frame_arguments(self.cell, self.frame, None, args)
+    }
+    fn assign(&mut self, _: &mut Graph, slot: usize, value: Value) -> Result<()> {
+        self.frame.values.insert(slot, value);
+        Ok(())
+    }
+    fn construct(&mut self, _: &mut Graph, _: usize, _: usize, _: &[Arg], _: usize) -> Result<()> {
+        Err("constructor in scalar Cell prefix".into())
+    }
+    fn read(&mut self, _: &mut Graph, _: usize, _: usize, _: &[Value]) -> Result<Value> {
+        Err("table read in scalar Cell prefix".into())
+    }
 }
 
 pub(crate) struct MergeFrame {

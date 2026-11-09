@@ -35,3 +35,9 @@
 基线 `f887a07f`。删除 `start_constructor_rhs` 和独立 `local_rhs_exec`，统一为 `start_cell`。策略只选择源操作及计数，查找、复用、首次 miss 后保存同一 Cell 和接续位置、完成返回共用实现。源前缀的短 key 使用内联数组，局部路径原有内联形式不变。输入信任、别名计数及收据范围维持原准入；不会为已完成的前缀重复执行效果。
 
 既有局部完成/首次 miss/选择用例、六项 Entry 顺序检查及三阶段结构性交接通过。尚未统一闭合 handoff 的预检与一般效果调度；本步不作耗时声明。
+
+## 单写标量前缀引用源 Cell
+
+接续 `609f76ae`。单写前缀只保留源操作位置，删除独立保存的 primitive 名称、sort 和参数数组；直接通过共同 Cell 调用执行器计算临时 writer frame。PortWrite 的直接整数投影仍由源指令派生，最终写入的规范化 key/value 投影保留。旧 artifact 的 prefix 由源指令投影生成。
+
+带函数写入的 register 用例及六项 Entry 顺序检查通过；前者的整数 key 不能进入 Eq-key PortWrite，确实经过共同标量执行器。没有独立计时。

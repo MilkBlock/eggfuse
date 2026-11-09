@@ -173,15 +173,15 @@ pub(crate) fn wire(rules: &[Rule], kernels: &Kernels) -> serde_json::Value {
 
 /// A single functional write with a pure operand prefix. Its committed tuple
 /// is also the only possible published anchor of this RHS.
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug)]
 pub(crate) struct Write {
     #[cfg(feature="sparse-cells")]
-    #[serde(skip)] pub(crate) ports: Option<PortWrite>,
+    pub(crate) ports: Option<PortWrite>,
     pub op: usize,
     pub table: usize,
     pub key: Vec<Arg>,
     pub value: Arg,
-    pub prefix: Vec<(usize, String, String, Vec<Arg>)>,
+    pub prefix: Vec<usize>,
 }
 #[cfg(feature="sparse-cells")]
 #[derive(Clone,Debug)]
@@ -190,16 +190,20 @@ pub(crate) struct PortWrite {
 }
 #[cfg(feature="sparse-cells")]
 impl PortWrite {
-    fn derive(p:&Program,r:&Rule,table:usize,keys:&[Arg],value:&Arg,ops:&[(usize,String,String,Vec<Arg>)])->Option<Self>{
+    fn derive(p:&Program,r:&Rule,table:usize,keys:&[Arg],value:&Arg,ops:&[usize])->Option<Self>{
         let [Arg::Slot(key)]=keys else{return None};
         if p.tables[table].schema[0]["kind"]!="eq" || p.tables[table].schema.last()?["kind"]!="i64" || !r.inputs.contains(key){return None}
         let input=|a:&Arg|match a {Arg::Slot(s)=>r.inputs.contains(s) && p.templates[r.template].sorts[*s]["kind"]=="i64",Arg::Literal(crate::value::Value::Int(_))=>true,_=>false};
         let add=match ops {
             [] if input(value)=>None,
-            [(dst,op,sort,args)] if op=="+" && sort=="i64" && value==&Arg::Slot(*dst)=>{
+            [position]=>{
+                let template=&p.templates[r.template];
+                let Op::Let(dst,Call::Primitive(op,sort),args)=&template.ops[*position] else{return None};
+                if op!="+" || sort!="i64" || value!=&Arg::Slot(*dst){return None}
                 let [a,b]=args.as_slice() else{return None};
-                if !input(a)||!input(b){return None}
-                Some((*dst,a.clone(),b.clone()))
+                let (a,b)=(template.resolve_copy(a),template.resolve_copy(b));
+                if !input(&a)||!input(&b){return None}
+                Some((*dst,a,b))
             },
             _=>return None,
         };
@@ -228,18 +232,13 @@ pub(crate) fn writes(p: &Program) -> Vec<Option<Rc<Write>>> {
             }
             let norm = |a: &Arg| t.resolve_copy(a);
             let mut calc = vec![];
-            for ins in prefix {
+            for (position, ins) in prefix.iter().enumerate() {
                 match ins {
                     Op::Copy(..) => {}
-                    Op::Let(dst, Call::Primitive(name, sort), args)
+                    Op::Let(_, Call::Primitive(name, _), _)
                         if !name.starts_with("cell-key-") =>
                     {
-                        calc.push((
-                            *dst,
-                            name.clone(),
-                            sort.clone(),
-                            args.iter().map(norm).collect(),
-                        ))
+                        calc.push(position)
                     }
                     _ => return None,
                 }
@@ -257,4 +256,21 @@ pub(crate) fn writes(p: &Program) -> Vec<Option<Rc<Write>>> {
             }))
         })
         .collect()
+}
+
+/// Preserve the existing artifact from source Cell instructions. The runtime
+/// retains the scalar prefix's positions, never a second primitive program.
+pub(crate) fn writes_wire(p: &Program) -> serde_json::Value {
+    use serde_json::{Value as J, json};
+    J::Array(p.writes.iter().enumerate().map(|(rid, write)| {
+        let Some(write) = write else { return J::Null };
+        let template = &p.templates[p.rules[rid].template];
+        let prefix = write.prefix.iter().map(|&position| {
+            let Op::Let(dst, Call::Primitive(name, sort), args) = &template.ops[position] else {
+                unreachable!("validated scalar Cell prefix")
+            };
+            json!([dst, name, sort, args.iter().map(|a| template.resolve_copy(a)).collect::<Vec<_>>()])
+        }).collect::<Vec<_>>();
+        json!({"op":write.op,"table":write.table,"key":write.key,"value":write.value,"prefix":prefix})
+    }).collect())
 }

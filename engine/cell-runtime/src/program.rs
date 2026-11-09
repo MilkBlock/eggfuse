@@ -424,7 +424,7 @@ impl Program {
             return Err("invalid delta neighbor plan".into());
         }
         if let Some(raw) = p.artifact.get("single_writes")
-            && *raw != serde_json::json!(p.writes)
+            && *raw != crate::row_kernel::writes_wire(&p)
         {
             return Err("invalid functional write plan".into());
         }

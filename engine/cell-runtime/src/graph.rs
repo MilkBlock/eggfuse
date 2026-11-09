@@ -715,14 +715,11 @@ impl Graph {
             return Ok((id, i, keep_key.then(|| vec![key]), changed));
         }
         let mut frame = self.new_cell(template, values, parent);
-        for (dst, name, sort, args) in &write.prefix {
-            let args = args
-                .iter()
-                .map(|a| self.argument_in(id, &frame, None, a))
-                .collect::<Result<smallvec::SmallVec<[Value; 4]>>>()?;
-            let v = value::primitive(name, &args, sort, self.program.key_nodes())?
-                .ok_or_else(|| format!("RHS primitive failed: {name}"))?;
-            frame.values.insert(*dst, v);
+        let ops = self.program.templates[template].ops.clone();
+        for &op in &write.prefix {
+            let Op::Let(dst, call, args) = &ops[op] else { unreachable!("validated scalar Cell prefix") };
+            crate::cell::evaluate_call(self, &mut crate::cell::LocalCall { cell: id, frame: &mut frame },
+                op, *dst, call, args)?;
         }
         let key = write
             .key

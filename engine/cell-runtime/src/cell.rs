@@ -20,7 +20,7 @@ mod effects;
 pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
 #[path = "cell_eval.rs"]
 mod eval;
-pub(crate) use eval::{MergeFrame, RhsCall, evaluate_call};
+pub(crate) use eval::{LocalCall, MergeFrame, RhsCall, evaluate_call};
 #[cfg(feature = "spine-blocks")]
 pub(crate) use query::Field;
 
