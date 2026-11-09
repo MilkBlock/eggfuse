@@ -1,7 +1,7 @@
 //! Retain a connected prefix and expand its final table at the scheduled Run.
 //! Only correlated prefixes survive Run boundaries; terminal answers do not.
 use crate::{
-    cell::{Field, Query, ScopedStep},
+    cell::{Field, Matched, Query, QueryFacts, ScopedStep},
     entry_schedule::Scheduler,
     graph::{Dependency, Graph, Row},
     program::*,
@@ -249,12 +249,12 @@ impl Contexts {
         &mut self,
         rid: usize,
         watermark: u64,
-        save_witnesses: bool,
+        facts: &QueryFacts,
         spine_active: bool,
         g: &mut Graph,
         ix: &mut QueryIndexes,
         entries: &mut Scheduler,
-    ) -> Result<Option<Vec<Answer>>> {
+    ) -> Result<Option<Vec<Matched>>> {
         let rule = g.program.rules[rid].clone();
         let stats = self.stats.entry(rid).or_default();
         if spine_active {
@@ -445,7 +445,7 @@ impl Contexts {
                             &group.rows[fresh..]
                         },
                         &row,
-                        save_witnesses,
+                        facts,
                         &mut answers,
                         stats,
                     )?;
@@ -492,7 +492,7 @@ impl Contexts {
                                 &plan,
                                 &group.rows,
                                 &packet.row,
-                                save_witnesses,
+                                facts,
                                 &mut answers,
                                 stats,
                             )?;
@@ -516,7 +516,7 @@ impl Contexts {
                             &plan,
                             &group.rows,
                             row,
-                            save_witnesses,
+                            facts,
                             &mut answers,
                             stats,
                         )?;
@@ -605,8 +605,8 @@ fn emit(
     plan: &Plan,
     prefixes: &[Rc<Prefix>],
     row: &Row,
-    save_witnesses: bool,
-    out: &mut Vec<Answer>,
+    facts: &QueryFacts,
+    out: &mut Vec<Matched>,
     stats: &mut Stats,
 ) -> Result<u64> {
     let query = &plan.query;
@@ -645,18 +645,10 @@ fn emit(
         }
         let values = query.inputs.iter().map(|f| f.read(g,
             |slot| p.values[slot].as_ref().unwrap(), &results, expanded)).collect();
-        let witnesses = if save_witnesses {
-            let mut w = p.witnesses.clone();
-            w[plan.tail()] = Some(row.witness);
-            w
-        } else {
-            vec![]
-        };
-        out.push(Answer {
-            values,
-            witnesses,
-            epoch,
-        });
+        let facts = facts.with_rows(p.witnesses.iter().enumerate()
+            .filter_map(|(atom, &w)| w.map(|w| (atom, w)))
+            .chain(std::iter::once((plan.tail(), row.witness))));
+        out.push(Matched { values, facts, epoch });
     }
     Ok(prefixes.len() as u64)
 }
@@ -677,10 +669,4 @@ fn scalar(g: &mut Graph, scoped: &ScopedStep, values: &mut [Option<Value>]) -> R
         values[scoped.base] = Some(value);
     }
     Ok(true)
-}
-
-pub struct Answer {
-    pub values: Vec<Value>,
-    pub witnesses: Vec<Option<Dependency>>,
-    pub epoch: u64,
 }

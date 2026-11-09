@@ -25,7 +25,7 @@ mod pure_epochs;
 #[cfg(feature="sparse-cells")]
 #[path = "point_ports.rs"]
 mod point_ports;
-use crate::known_results::QueryFacts;
+use crate::cell::QueryFacts;
 use crate::schedule::{self, Task};
 use crate::{
     cell::{QueryFrame, bind_query as bind, query_operand as operand},
@@ -51,6 +51,22 @@ struct Binding {
     parent: Option<FactRef>,
     continuation: Option<(usize, u32, bool)>,
     compiled: bool,
+}
+impl Binding {
+    fn matched(rule: &Rule, matched: crate::cell::Matched) -> Self {
+        Self {
+            #[cfg(feature = "view-consumers")]
+            view_source: None,
+            #[cfg(feature = "iterative-bake")]
+            direct: None,
+            values: rule.inputs.iter().copied().zip(matched.values).collect(),
+            known: matched.facts,
+            epoch: matched.epoch,
+            parent: None,
+            continuation: None,
+            compiled: true,
+        }
+    }
 }
 #[derive(Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
@@ -1051,33 +1067,6 @@ impl Executor {
             .or_default() += n;
         Ok(true)
     }
-    fn context_bindings(
-        rule: &Rule,
-        answers: Vec<crate::local_context::Answer>,
-        facts: &QueryFacts,
-    ) -> Vec<Binding> {
-        answers
-            .into_iter()
-            .map(|answer| {
-                let mut known = facts.clone();
-                for (i, w) in answer.witnesses.into_iter().enumerate() {
-                    known.record(i, w);
-                }
-                Binding {
-                    #[cfg(feature = "view-consumers")]
-                    view_source: None,
-                    #[cfg(feature = "iterative-bake")]
-                    direct: None,
-                    values: rule.inputs.iter().copied().zip(answer.values).collect(),
-                    known,
-                    epoch: answer.epoch,
-                    parent: None,
-                    continuation: None,
-                    compiled: true,
-                }
-            })
-            .collect()
-    }
     fn empty_by_sieve(&mut self, rid: usize) -> Result<bool> {
         self.sieve
             .prepare(rid, &self.graph, &mut self.query_indexes)?;
@@ -1135,7 +1124,7 @@ impl Executor {
             && let Some(answers) = self.local_context.matches(
                 rid,
                 self.watermarks[rid],
-                !matches!(query_facts, QueryFacts::None),
+                &query_facts,
                 self.stage_spine.active_for_rule(rid),
                 &mut self.graph,
                 &mut self.query_indexes,
@@ -1143,7 +1132,7 @@ impl Executor {
             )?
         {
             self.pending[rid].clear();
-            return Ok(Self::context_bindings(&rule, answers, &query_facts));
+            return Ok(answers.into_iter().map(|answer| Binding::matched(&rule, answer)).collect());
         }
         if early_sieve && !sieve_first && self.empty_by_sieve(rid)? {
             return Ok(vec![]);
@@ -1389,10 +1378,8 @@ impl Executor {
                     .answers
                     .into_iter()
                     .map(|a| {
-                        let mut known = query_facts.clone();
-                        for (i, w) in a.witnesses.into_iter().enumerate() {
-                            known.record(i, w);
-                        }
+                        let known = query_facts.with_rows(a.witnesses.into_iter().enumerate()
+                            .filter_map(|(atom, w)| w.map(|w| (atom, w))));
 
                         Binding {
                             #[cfg(feature = "view-consumers")]

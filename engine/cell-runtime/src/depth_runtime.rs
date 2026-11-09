@@ -3,7 +3,7 @@ use crate::{
     cell::Site,
     depth_plan::{BUDGET, MAX_DEPTH, Path, Plan},
     graph::{Dependency, FactRef, Graph, Row},
-    known_results::QueryFacts,
+    cell::QueryFacts,
     program::*,
     result_handoff::Input,
     slots::Slots,

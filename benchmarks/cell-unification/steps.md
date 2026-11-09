@@ -354,3 +354,12 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 输出 `out/cell-context-compact`。choice_diagnosis 最终 pass；首次校验因历史 sum 符号链接层数超过文件系统上限而 inconclusive，原报告保留为 semantic-input-link-error.json，将本实验 sum 链接改为直接指向原产物后复用已有执行结果重新校验，未改比较规则或重跑负载。1,428 个 Run/state、三个 fixture 的逐阶段 state/binding audit 保持，22 个重新生成的编译组件一致。15 项针对性检查和最小配置编译通过。`check_context.py ROOT OUTPUT --phase compact --commit 3d814c3a` 读取保存证据；后续实验应直接链接规范产物路径，避免继续接长链接链。
 
 此步为当前周期 3/5；没有新增速度/分配测试。槽复制是实际工作计数，不是分配次数或时间。完整 context 生命周期、view/候选索引与其他优化族仍须继续统一，多线程阶段尚未开始。
+
+
+## Context 直接交付 Cell 匹配事实
+
+检查上一轮 compact 的实际执行和仍需跨 Run 保存的义务后，本次选择删除输出交接的中间数组：context 原先先克隆全宽 witness 数组，执行器再按规则需求写入 QueryFacts。缓存内 witness、root/read leases、可见性、世代和增量归属仍然有效，不能据此删除。QueryFacts 移入 Cell，并由 Cell Matched 携带实际参数、所需事实和 epoch。context 直接投影所需事实；删除独立 Answer 及 context_bindings 转换循环。register 与完整 Entry 的旧转换调用同一投影函数；完整 Entry 本身的中间 witness 数组尚未删除。
+
+每次投影使用规则的空需求模板，保持 One/All 的构造子事实语义，以及 Ports/Tracked 对可变行身份的保存。None 不遍历见证。现在 context 在答案去重前生成最终投影，原先在这里复制全宽数组、去重后才生成投影；重复答案可能增加最终投影次数，不能用去重后的 bindings 数推断分配节省。未增加第二份运行时事实图、绑定历史或消费者列表。
+
+25 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过。sum-bits 1,428 个 Run、最终 state 和 346 项工作指标不变；三个短 context 样例的 state、stages、binding-audit 一致。验证入口为 `check_match_completion.py ROOT OUTPUT --commit COMMIT`，数据位于 `out/cell-match-context`。这次是上次测速后的第 4 个实现提交；用户明确允许当前提交后测速，执行一次四配置交错 sum-bits 测量，然后恢复每 5 个实现提交的节奏。这些是 standalone Cell CPU 检查，不能解释为原生 egglog 加速或完整统一已经完成。

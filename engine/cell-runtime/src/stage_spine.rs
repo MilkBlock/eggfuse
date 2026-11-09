@@ -5,7 +5,7 @@ use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
     cell::{QueryFrame, Site, bind_query as bind},
-    known_results::QueryFacts,
+    cell::QueryFacts,
     program::*,
     value::{self, Value, canon},
 };

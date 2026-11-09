@@ -376,12 +376,8 @@ impl Frame {
                 self.results[position] = result;
             }
         }
-        let mut facts = known.clone();
-        if !matches!(facts, QueryFacts::None) {
-            for (i, &w) in self.witnesses.iter().enumerate() {
-                facts.record(i, w);
-            }
-        }
+        let facts = known.with_rows(self.witnesses.iter().enumerate()
+            .filter_map(|(atom, &w)| w.map(|w| (atom, w))));
         exec.graph.stats.register_answers += 1;
         out.push(Binding {
             #[cfg(feature = "view-consumers")]
