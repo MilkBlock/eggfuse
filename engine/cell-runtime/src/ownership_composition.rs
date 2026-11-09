@@ -474,6 +474,14 @@ pub(super) struct Runtime {
     pub columns: Vec<usize>,
 }
 impl Runtime {
+    #[inline]
+    pub(super) fn port(&self, frame: Frame, local: usize) -> ports::PortRef {
+        let shape = self.components[frame.component as usize].as_ref().unwrap().shape;
+        ports::PortRef {
+            component: frame.component,
+            symbol: self.shapes[shape].as_ref().unwrap().ports[frame.ordinal][local],
+        }
+    }
     pub(super) fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
         let class = plan.query_classes.as_ref().map_or(0, |classes| {
             let c = self.components[component as usize].as_ref().unwrap();
@@ -776,10 +784,7 @@ impl Graph {
     }
     pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::PortRef {
         let m = &self.ownership.as_ref().unwrap().composition;
-        let f = m.frames[&cell];
-        let shape = m.components[f.component as usize].as_ref().unwrap().shape;
-        ports::PortRef { component: f.component,
-            symbol: m.shapes[shape].as_ref().unwrap().ports[f.ordinal][local] }
+        m.port(m.frames[&cell], local)
     }
     pub(super) fn composition_retire_fact(&mut self, cell: u32) {
         let m = self.ownership.as_mut().unwrap();

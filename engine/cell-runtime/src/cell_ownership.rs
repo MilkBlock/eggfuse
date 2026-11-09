@@ -394,43 +394,38 @@ impl Graph {
         m.stats.owned_live += 1;
         self.initialize_cell_fields::<true>(f, t, fields);
     }
-    fn signal_is_native(&self, signal: Signal, id: u64) -> bool {
-        let cell = (id >> 32) as u32;
-        let Some(slot) = (id as u32).checked_sub(1) else {
-            return false;
-        };
-        let m = &self.ownership.as_ref().unwrap().composition;
-        let Some(frame) = m.frames.get(&cell) else {
-            return false;
-        };
-        if frame.component != signal.component {
-            return false;
-        }
-        let Some(&local) = self.program.cell_ownership.code_programs[frame.code]
-            .native
-            .get(&(slot as usize))
-        else {
-            return false;
-        };
-        let c = m.components[frame.component as usize].as_ref().unwrap();
-        m.shapes[c.shape].as_ref().unwrap().ports[frame.ordinal][local] == signal.symbol
-    }
-    pub(super) fn native_signal(&self, id: u64) -> Option<Signal> {
+    /// Resolve the address encoded by an equality ID. This is not an equality
+    /// proof: native_signal still validates the actual retained symbol binding.
+    #[inline]
+    fn native_port(&self, id: u64, expected_component: Option<u32>) -> Option<ports::PortRef> {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
         let frame = m.composition.frames.get(&cell)?;
+        // Preserve the cheap foreign-component rejection before the local
+        // native-slot map, as used by binding and union dispatch.
+        if expected_component.is_some_and(|expected| frame.component != expected) {
+            return None;
+        }
         let local = *self.program.cell_ownership.code_programs[frame.code]
             .native
             .get(&slot)?;
-        let signal = self.composed_signal(cell, local);
-        let bound = m.composition.components[signal.component as usize]
+        Some(m.composition.port(*frame, local))
+    }
+    fn signal_is_native(&self, signal: Signal, id: u64) -> bool {
+        self.native_port(id, Some(signal.component))
+            .is_some_and(|port| port.symbol == signal.symbol)
+    }
+    pub(super) fn native_signal(&self, id: u64) -> Option<Signal> {
+        let port = self.native_port(id, None)?;
+        let m = self.ownership.as_ref().unwrap();
+        let bound = m.composition.components[port.component as usize]
             .as_ref()?
-            .signals[signal.symbol]?;
+            .signals[port.symbol]?;
         if bound != id && m.stats.signal_root(&self.parents, bound) != id {
             return None;
         }
-        Some(signal)
+        Some(m.composition.signal(&self.program.cell_ownership, port.component, port.symbol))
     }
     fn boundary(&mut self, root: u64, signal: Signal) {
         let m = self.ownership.as_mut().unwrap();

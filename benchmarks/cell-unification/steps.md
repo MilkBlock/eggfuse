@@ -144,3 +144,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 已有 ownership 导入使用同一初始化；之后启用 stable representation 时只投影字段，不重绑 signal、不重复增加 component 的 live-fact 计数。保留别名一致性、训练时真实跨阶段复用检查及原 scalar/port 校验。retire 接口删除未使用的字段参数，存活和 retired port 行为保持。
 
 稳定地址随代表变化/删除重建、跨阶段共享绑定、inactive slot 退休清理、stable/decoded/keyed/local 差分的四项既有短检查及最小特性编译通过。上次测速后的第 4 个实现提交，随下一项集中核对指标与时间。
+
+## native 地址使用共同 Cell 解析
+
+接续 `6bc74cf3`。`signal_is_native` 与 `native_signal` 共用 ID → frame/local slot → PortRef 的地址解析；后者不再通过 `composed_signal/composed_port` 重复查同一 frame。frame → component symbol 的映射也收敛到同一个实现。出生使用上一项已解析的整行映射，无需逐字段再进入解析器。
+
+异 component 检查仍在 native slot 查询之前。地址只表示归属，不代替 equality：`native_signal` 仍验证实际绑定及其当前根，然后才生成带 class 的 signal。保留被删除 producer 的必要地址，直到整个 component 退休；不以地址存在推断事实存活。
+
+多轮 union 后 native alias、retained inactive 候选剔除、五项 query-class 证书/跨阶段/训练回退检查以及最小特性编译通过。至此距上次测速累计 5 个实现提交，下面统一进行普通构建的工作量和速度检查。
