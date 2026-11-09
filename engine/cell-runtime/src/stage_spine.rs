@@ -2053,7 +2053,7 @@ impl Programs {
             let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
             for step in &query.steps {
                 self.stats.cell_query_steps += 1;
-                let bound = step.bind::<PortKey>(|v| v.operand(g, &row, &values, None));
+                let bound = step.bind::<PortKey>(|v| v.operand(g, |col| &row.values[col], &values, None));
                 let result = bound.evaluate(|args| match &step.call {
                     Call::Table(table) => {
                         let Some(found) = read_port(
@@ -2081,7 +2081,7 @@ impl Programs {
                 values.push(result);
             }
             if epoch >= watermark {
-                let inputs = query.inputs.iter().map(|v| v.read(g, &row, &values, None)).collect();
+                let inputs = query.inputs.iter().map(|v| v.read(g, |col| &row.values[col], &values, None)).collect();
                 let mut witnesses = vec![None; rule.query.len()];
                 witnesses[pivot] = Some(row.witness);
                 for (atom, witness) in found_witnesses { witnesses[atom] = Some(witness); }

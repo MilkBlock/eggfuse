@@ -1,12 +1,12 @@
 //! Retain a connected prefix and expand its final table at the scheduled Run.
 //! Only correlated prefixes survive Run boundaries; terminal answers do not.
 use crate::{
-    cell::{bind_query as bind, query_operand as operand},
+    cell::{Query, bind_query as bind, query_operand as operand},
     entry_schedule::Scheduler,
     graph::{Dependency, Graph, Row},
     program::*,
     query::{QueryIndexes, ReadStamp},
-    value::{Value, canon},
+    value::Value,
 };
 use rustc_hash::FxHashMap as Map;
 use serde::Serialize;
@@ -15,46 +15,24 @@ use std::{
     rc::Rc,
 };
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone)]
 pub(crate) struct Plan {
     root: usize,
     ports: Vec<usize>,
     // Derived from the same checked Cell query, not another artifact contract.
-    #[serde(skip)]
     scopes: Vec<Vec<usize>>,
-    #[serde(skip)]
     branching: bool,
     tail: usize,
     columns: Vec<usize>,
     versions: Vec<usize>,
     identity_literal: bool,
-    output: Vec<Field>,
-    checks: Vec<(usize, Field)>,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    query: Query,
+    result_slots: usize,
     post: Vec<usize>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-enum Field {
-    Prefix(usize),
-    Tail(usize),
-    Literal(Value),
-}
-impl Field {
-    fn read(&self, p: &Prefix, t: &Row, g: &Graph) -> Value {
-        match self {
-            Self::Prefix(s) => p.values[*s].as_ref().unwrap().clone(),
-            Self::Tail(col) => t.values[*col].clone(),
-            Self::Literal(v) => canon(v, &g.parents),
-        }
-    }
-    fn agrees(&self, col: usize, p: &Prefix, t: &Row, g: &Graph) -> bool {
-        match self {
-            Self::Prefix(s) => p.values[*s].as_ref() == Some(&t.values[col]),
-            Self::Tail(c) => t.values[*c] == t.values[col],
-            Self::Literal(v) => canon(v, &g.parents) == t.values[col],
-        }
-    }
-}
+#[path = "context_wire.rs"]
+mod wire;
+
 fn slots(args: &[Arg]) -> BTreeSet<usize> {
     args.iter()
         .filter_map(|a| match a {
@@ -170,35 +148,8 @@ fn project(
             .iter()
             .any(|v| matches!(v,Arg::Literal(v) if identity(v)))
     });
-    let mut fields: BTreeMap<_, _> = known.into_iter().map(|s| (s, Field::Prefix(s))).collect();
-    let mut checks = vec![];
-    for (col, arg) in q[tail].args.iter().enumerate() {
-        match arg {
-            Arg::Literal(v) => checks.push((col, Field::Literal(v.clone()))),
-            Arg::Slot(s) => match fields.entry(*s) {
-                std::collections::btree_map::Entry::Occupied(e) => {
-                    checks.push((col, e.get().clone()))
-                }
-                std::collections::btree_map::Entry::Vacant(e) => {
-                    e.insert(Field::Tail(col));
-                }
-            },
-        }
-    }
-    if !post.is_empty() {
-        let supplied: BTreeSet<_> = q.iter().flat_map(|a| slots(&a.args)).collect();
-        if !r.inputs.iter().all(|s| supplied.contains(s)) {
-            return None;
-        }
-    }
-    let output = if post.is_empty() {
-        r.inputs
-            .iter()
-            .map(|s| fields.get(s).cloned())
-            .collect::<Option<_>>()?
-    } else {
-        vec![]
-    };
+    let query = Query::continuation(r, std::iter::once(root).chain(ports.iter().copied()),
+        &known, tail, &post)?;
     Some(Plan {
         scopes,
         branching: ports.iter().any(|&i| matches!(q[i].call, Call::Table(_))),
@@ -208,8 +159,8 @@ fn project(
         columns,
         versions,
         identity_literal,
-        output,
-        checks,
+        result_slots: query.result_slots(),
+        query,
         post,
     })
 }
@@ -259,6 +210,10 @@ pub(crate) struct Stats {
     prefix_copies: u64,
     prefix_slots_copied: u64,
     branch_slot_clears: u64,
+    terminal_binding_copies: u64,
+    terminal_slots_copied: u64,
+    terminal_scratch_slots: u64,
+    terminal_result_writes: u64,
     full_terminal_rows: u64,
     delta_terminal_rows: u64,
     reverse_reads: u64,
@@ -492,7 +447,6 @@ impl Contexts {
                     stats.terminal_pairs += emit(
                         g,
                         &plan,
-                        &rule,
                         if row.epoch >= watermark {
                             &group.rows
                         } else {
@@ -501,6 +455,7 @@ impl Contexts {
                         &row,
                         save_witnesses,
                         &mut answers,
+                        stats,
                     )?;
                 }
             }
@@ -546,11 +501,11 @@ impl Contexts {
                             stats.terminal_pairs += emit(
                                 g,
                                 &plan,
-                                &rule,
                                 &group.rows,
                                 &packet.row,
                                 save_witnesses,
                                 &mut answers,
+                                stats,
                             )?;
                         }
                     }
@@ -570,11 +525,11 @@ impl Contexts {
                         stats.terminal_pairs += emit(
                             g,
                             &plan,
-                            &rule,
                             &group.rows,
                             row,
                             save_witnesses,
                             &mut answers,
+                            stats,
                         )?;
                     }
                 }
@@ -672,37 +627,48 @@ fn clear_scope(p: &mut Prefix, slots: &[usize], stats: &mut Stats) {
 fn emit(
     g: &mut Graph,
     plan: &Plan,
-    rule: &Rule,
     prefixes: &[Rc<Prefix>],
     row: &Row,
     save_witnesses: bool,
     out: &mut Vec<Answer>,
+    stats: &mut Stats,
 ) -> Result<u64> {
+    let query = &plan.query;
+    let expansion = query.steps[0].expansion.as_ref().expect("terminal expansion");
+    let expanded = Some((0, row));
     if row.hidden
-        || !plan
-            .checks
+        || !expansion.checks
             .iter()
-            .all(|(col, f)| f.agrees(*col, &prefixes[0], row, g))
+            .all(|(col, f)| f.agrees(&row.values[*col], g,
+                |slot| prefixes[0].values[slot].as_ref().unwrap(), &[], expanded))
     {
         return Ok(0);
     }
-    for p in prefixes {
+    // The terminal row and prefix slots stay borrowed. Only scalar results
+    // need storage; reuse this scratch for the whole correlated group.
+    let mut results = smallvec::SmallVec::<[Value; 4]>::new();
+    if plan.result_slots != 0 {
+        results.resize(plan.result_slots, Value::Int(0));
+        stats.terminal_scratch_slots += results.len() as u64;
+    }
+    'prefix: for p in prefixes {
         let epoch = p.epoch.max(row.epoch);
-        let values = if plan.post.is_empty() {
-            plan.output.iter().map(|f| f.read(p, row, g)).collect()
-        } else {
-            let mut slots = p.values.clone();
-            if !bind_row(g, &rule.query[plan.tail], row, &mut slots) {
-                continue;
+        for (position, step) in query.steps.iter().enumerate().skip(1) {
+            let bound = step.bind::<smallvec::SmallVec<[Value; 4]>>(|f| f.operand(g,
+                |slot| p.values[slot].as_ref().unwrap(), &results, expanded));
+            let result = bound.evaluate(|args| {
+                let Call::Primitive(name, sort) = &step.call else { unreachable!("scalar suffix") };
+                if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
+                crate::value::primitive(name, &args, sort, g.program.key_nodes())
+            })?;
+            let Some(value) = result else { continue 'prefix; };
+            if step.check_result.is_none() {
+                results[position] = value;
+                stats.terminal_result_writes += 1;
             }
-            if !finish_guards(g, rule, &plan.post, &mut slots)? {
-                continue;
-            }
-            rule.inputs
-                .iter()
-                .map(|s| slots[*s].as_ref().unwrap().clone())
-                .collect()
-        };
+        }
+        let values = query.inputs.iter().map(|f| f.read(g,
+            |slot| p.values[slot].as_ref().unwrap(), &results, expanded)).collect();
         let witnesses = if save_witnesses {
             let mut w = p.witnesses.clone();
             w[plan.tail] = Some(row.witness);

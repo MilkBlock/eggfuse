@@ -1,0 +1,15 @@
+; Suffixes borrow the prefix and terminal fields. A computed result can
+; introduce an output or check a value already bound by the prefix.
+(relation Start (i64)) (relation Edge (i64 i64)) (relation Tail (i64 i64))
+(relation Hit (i64 i64)) (relation BoundHit (i64 i64 i64))
+(ruleset see) (ruleset grow) (ruleset cut)
+(rule ((Start x) (Edge x y) (Tail y z) (= w (+ x z)) (< w 10))
+      ((Hit x w)) :ruleset see :name "guarded-suffix")
+(rule ((Start x) (Edge x y) (Tail y z) (= x (+ z 1)))
+      ((BoundHit x y z)) :ruleset see :name "bound-suffix")
+(rule ((Start x)) ((Tail 3 4)) :ruleset grow)
+(rule ((Start x)) ((delete (Edge x 3))) :ruleset cut)
+(Start 1) (Edge 1 3) (Edge 1 2) (Tail 2 7) (Tail 3 90) (Tail 2 0)
+(Start 2) (Edge 2 2)
+(run-schedule (seq (run see) (run grow) (run see) (run cut) (run see)))
+(check (Hit 1 8) (Hit 1 5) (Hit 1 1) (Hit 2 9) (Hit 2 2) (BoundHit 1 2 0))

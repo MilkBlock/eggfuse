@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "7f4e24c2",
-    "implementation_commits_since_timing": 2,
+    "implementation_commits_since_timing": 3,
     "evidence": "benchmarks/cell-unification/sieve-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -97,7 +97,8 @@
         "Common BoundStep borrows expected output values, including source entries and repair Cells.",
         "Free Join entry projection, runtime partitioning, Sieve forests and neighbor child projection share Cell QueryLinks. The independent runtime Subatom plan and repeated slot/column discovery are removed; duplicate-column roles and original filter order remain.",
         "Ordinary search, retained context, stage Entry and first shared-seed checks share Cell QueryFrame binding and operand semantics. Removed four independent binders and two operand readers; original storage/trail/copy accounting stays at each caller.",
-        "Ordered context prefixes use Cell-compiled slot scopes to reuse one transient prefix across candidates, clear only newly introduced slots and restore witness/epoch state. Intermediate prefix copies and a runtime undo trail are unnecessary; only successful retained leaves are copied, while branch-free prefixes still move directly."
+        "Ordered context prefixes use Cell-compiled slot scopes to reuse one transient prefix across candidates, clear only newly introduced slots and restore witness/epoch state. Intermediate prefix copies and a runtime undo trail are unnecessary; only successful retained leaves are copied, while branch-free prefixes still move directly.",
+        "Context terminal expansion, output projection and scalar post-guards compile through the common Cell Query lowerer. Register, stage Entry and context borrow anchor fields through the same Field reader; the context-only executable Field and per-pair binding array copy are removed. Bound output constraints and computed result slots follow the common Step binder."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
@@ -320,7 +321,7 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B3",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "Shared Cell scopes eliminate intermediate context prefix copies. Cached successful prefixes, terminal post-guard binding copies/projections, candidate index lifecycle and runtime speed acceptance remain.",
+      "remaining": "Terminal expansion/projection and post-guards share Cell Query. Cached successful prefixes, prefix scalar interpretation, context admission/index lifetime, metadata sharing and runtime speed acceptance remain.",
       "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json"
     },

@@ -7,8 +7,7 @@ from pathlib import Path
 import subprocess
 
 
-def run(root, compiler):
-    source = Path(__file__).resolve().with_name('context-branches.egg')
+def run(root, compiler, source):
     fixture = root / 'fixture'
     fixture.mkdir(exist_ok=True)
     with (fixture / 'compile.log').open('w') as log:
@@ -18,7 +17,7 @@ def run(root, compiler):
     # Explicit test admission of a compiler-certified context, not learned
     # performance evidence. The parser re-derives and validates all cuts.
     ids = [i for i, r in enumerate(raw['recipe']['rules'])
-           if r['metadata']['name'] in ('guarded-prefix', 'linear-prefix')]
+           if r['metadata']['name'] in ('guarded-prefix', 'linear-prefix', 'guarded-suffix', 'bound-suffix')]
     assert len(ids) == 2 and all(raw['context_cuts'][rid] for rid in ids)
     raw['context_admission'] = {'schema': 'eggfuse-context-admission/v1',
         'recipe': raw['recipe']['sha256'], 'rules': ids}
@@ -39,5 +38,7 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('--compiler', type=Path,
                    default=Path('target/cell-unification-tests/debug/eggfuse-cell-compiler'))
+    p.add_argument('--source', type=Path,
+                   default=Path(__file__).resolve().with_name('context-branches.egg'))
     args = p.parse_args()
-    run(args.root, args.compiler)
+    run(args.root, args.compiler, args.source)

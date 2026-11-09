@@ -60,7 +60,8 @@ impl Work {
         // hide work by adding/removing a per-rule key from the comparison.
         let contexts = report["local_context"]["rules"].as_object()
             .ok_or("missing context work report")?;
-        for field in ["prefix_copies", "prefix_slots_copied", "branch_slot_clears"] {
+        for field in ["prefix_copies", "prefix_slots_copied", "branch_slot_clears",
+            "terminal_binding_copies", "terminal_slots_copied", "terminal_scratch_slots", "terminal_result_writes"] {
             let mut total = 0;
             for stats in contexts.values() {
                 total += stats[field].as_u64().ok_or_else(|| format!("missing context work {field}"))?;
@@ -264,14 +265,19 @@ mod tests {
         let mut context = report.clone();
         context["local_context"]["rules"]["scope-ledger"] = json!({
             "prefix_copies": 1, "prefix_slots_copied": 8, "branch_slot_clears": 0,
+            "terminal_binding_copies": 0, "terminal_slots_copied": 0, "terminal_scratch_slots": 0, "terminal_result_writes": 0,
         });
         let copied = Work::read(&context).unwrap();
         assert_eq!(baseline.savings(&copied).0, -9);
         context["local_context"]["rules"]["scope-ledger"] = json!({
             "prefix_copies": 0, "prefix_slots_copied": 0, "branch_slot_clears": 10,
+            "terminal_binding_copies": 0, "terminal_slots_copied": 0, "terminal_scratch_slots": 0, "terminal_result_writes": 0,
         });
         // Replacing a copy with more charged clears must not earn credit.
         assert_eq!(copied.savings(&Work::read(&context).unwrap()).0, -1);
+        context["local_context"]["rules"]["scope-ledger"]["terminal_scratch_slots"] = json!(2);
+        context["local_context"]["rules"]["scope-ledger"]["terminal_result_writes"] = json!(3);
+        assert_eq!(copied.savings(&Work::read(&context).unwrap()).0, -6);
         context["local_context"]["rules"]["scope-ledger"].as_object_mut().unwrap().remove("branch_slot_clears");
         assert!(Work::read(&context).unwrap_err().contains("missing context work branch_slot_clears"));
         // Start from a real complete report, then isolate ledger behavior. This

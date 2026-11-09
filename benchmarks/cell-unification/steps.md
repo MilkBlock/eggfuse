@@ -290,3 +290,15 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 三项已有 context/cuts/超预算恢复集成检查、四项 Work 账本检查及最小特性编译通过。新增静态 scope 数组有准备和存储成本，标量 epoch/witness 保存恢复也有成本；等权复制/清理计数不是完整指令成本或速度模型。成功缓存、ReadStamp、终端 post-guard 的槽复制仍必要或待后续统一。本步不测速度/分配，是当前周期第 2 个实现提交。
 
 复现基线：在隔离的 `7b8ed749` 工作树应用 `context-copy-baseline.patch`，使用普通 release 特性 `sparse-cells,view-ports,storage-metrics` 构建并冻结 `runtime-baseline`；`runtime-original` 为未插桩版本，`runtime-candidate` 为本步版本。输出目录 `out/cell-context-branches`；sum 和 semantic/catalog 命令沿用前节。`run_context_fixture.py ROOT --compiler COMPILER` 在新的 fixture 目录编译并运行两版短样例；`check_context.py ROOT OUTPUT --commit COMMIT` 校验已有运行、计数来源、插桩差异、逐阶段输出和测试日志，不重复启动负载。
+
+## terminal 与 post-guard 接入共同 Cell Query
+
+基线 `a02f2148`。context 原来有独立的 Prefix/Tail/Literal Field 编译和读取；post-guard 为每个 prefix/tail 配对复制全宽槽数组，再绑定已经验证过的 tail 行，并解释原始 Arg。现在 prefix 的已绑定槽、terminal 的借用字段和后续 scalar 结果统一编译成 Cell Query 的 Anchor/Column/StepResult。与完整 Entry、residual register 共用同一个 lowerer、Field 读取和 Step 结果约束，不在本地重新定义计算指令。
+
+删除 context 专用可执行 Field、独立字段映射循环、逐配对 prefix 槽复制、重复 tail 绑定和该路径的原始 Arg guard 解释。匹配组内只校验一次相同的 terminal 条件，每个 prefix 的不同参数仍直接借用原值，post-guard 按顺序运行。只有实际引入结果的指令需要 scratch 槽；检查已绑定输出的指令不写结果，也不为全为此类指令的后缀分配 scratch。原运行时计划仍保留必要的 prefix/cache 生命周期；原产物的字段名仅由 `context_wire.rs` 的临时借用视图序列化，旧产物继续接受完整验证。
+
+用 `context-terminal-baseline.patch` 给旧路径增加四项计数后冻结对照，确认其 sum-bits 状态、Run 和旧统计与未插桩版本一致。新短样例 `context-terminal.egg` 专门覆盖同一 tail 匹配多个 prefix、依赖各自参数的计算、失败 guard、已绑定结果约束、删除和晚到数据。最终样例中终端绑定复制 11→0 次、复制槽位 100→0；新增 scratch 初始化 12 槽、计算结果写入 11 次。只检查已有结果的规则两项新成本均为零。逐 Run state、binding audit 和其余工作计数完全一致。计数包括失败候选，不把匹配次数当作提交 mutation；等权净分不是时间模型。
+
+普通 sum-bits 的语义脚本 pass，1,428 个 Run 和最终状态保持；旧 342 项工作指标保持，新增四项均为零，当前目录共 346 项。sum-bits 不命中 post-guard，不能用它证明终端接管收益；该路径的动态证据来自短样例。三项 Cell Query 单元检查、context/cuts/stage Entry 三项集成检查、四项 Work 账本检查以及最小特性编译通过。账本计入复制、scratch 初始化和结果写入，并保留缺失计数拒绝规则。
+
+输出在 `out/cell-context-terminal`。基线构建和 sum/semantic/catalog 方式沿用前节；在 `a02f2148` 上应用本节计数 patch。`run_context_fixture.py ROOT --source benchmarks/cell-unification/context-terminal.egg --compiler COMPILER` 执行短样例；`check_context.py ROOT OUTPUT --commit COMMIT --phase terminal` 校验保存的结果。每次运行使用新输出目录，收集器不执行负载。本步是当前周期第 3 个实现提交，不新增计时或分配采样；prefix 标量解释、缓存/index 生命周期和速度验收仍未完成。

@@ -1,0 +1,56 @@
+diff --git a/engine/cell-runtime/src/local_context.rs b/engine/cell-runtime/src/local_context.rs
+index ac570630..0450eaa4 100644
+--- a/engine/cell-runtime/src/local_context.rs
++++ b/engine/cell-runtime/src/local_context.rs
+@@ -259,6 +259,10 @@ pub(crate) struct Stats {
+     prefix_copies: u64,
+     prefix_slots_copied: u64,
+     branch_slot_clears: u64,
++    terminal_binding_copies: u64,
++    terminal_slots_copied: u64,
++    terminal_scratch_slots: u64,
++    terminal_result_writes: u64,
+     full_terminal_rows: u64,
+     delta_terminal_rows: u64,
+     reverse_reads: u64,
+@@ -501,6 +505,7 @@ impl Contexts {
+                         &row,
+                         save_witnesses,
+                         &mut answers,
++                        stats,
+                     )?;
+                 }
+             }
+@@ -551,6 +556,7 @@ impl Contexts {
+                                 &packet.row,
+                                 save_witnesses,
+                                 &mut answers,
++                                stats,
+                             )?;
+                         }
+                     }
+@@ -575,6 +581,7 @@ impl Contexts {
+                             row,
+                             save_witnesses,
+                             &mut answers,
++                            stats,
+                         )?;
+                     }
+                 }
+@@ -677,6 +684,7 @@ fn emit(
+     row: &Row,
+     save_witnesses: bool,
+     out: &mut Vec<Answer>,
++    stats: &mut Stats,
+ ) -> Result<u64> {
+     if row.hidden
+         || !plan
+@@ -691,6 +699,8 @@ fn emit(
+         let values = if plan.post.is_empty() {
+             plan.output.iter().map(|f| f.read(p, row, g)).collect()
+         } else {
++            stats.terminal_binding_copies += 1;
++            stats.terminal_slots_copied += p.values.len() as u64;
+             let mut slots = p.values.clone();
+             if !bind_row(g, &rule.query[plan.tail], row, &mut slots) {
+                 continue;

@@ -47,7 +47,6 @@ mod handoff;
 pub(crate) use handoff::{HandoffCounts, HandoffFrame, Preflight, apply_handoff, complete_handoff};
 #[cfg(feature = "iterative-bake")]
 pub(crate) use eval::CellFrame;
-#[cfg(feature = "spine-blocks")]
 pub(crate) use query::Field;
 
 /// A position in a Cell definition, never a physical address of its result.

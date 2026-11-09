@@ -161,7 +161,7 @@ impl Frame {
                         .zip(row.values.iter()).all(|(arg, value)| {
                             exec.graph.stats.register_prefix.field_checks += 1;
                             exec.graph.stats.register_prefix.key_fields += 1;
-                            arg.agrees(value, &exec.graph, seed, &self.results, None)
+                            arg.agrees(value, &exec.graph, |col| &seed.values[col], &self.results, None)
                         });
                     if !keys_match {
                         exec.graph.stats.register_prefix.key_fallbacks += 1;
@@ -183,7 +183,7 @@ impl Frame {
                     exec.graph.stats.register_prefix.primitive_checks += 1;
                     if name.starts_with("cell-key-") { exec.graph.stats.key_operations += 1; }
                     let args: SmallVec<[Value; 4]> = ins.key.iter()
-                        .map(|arg| arg.read(&exec.graph, seed, &self.results, None)).collect();
+                        .map(|arg| arg.read(&exec.graph, |col| &seed.values[col], &self.results, None)).collect();
                     let Some(value) = value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
                     else {
                         exec.graph.stats.register_prefix.primitive_rejections += 1;
@@ -194,7 +194,7 @@ impl Frame {
             };
             if let Some(arg) = &ins.check_result {
                 exec.graph.stats.register_prefix.field_checks += 1;
-                if !arg.agrees(&result, &exec.graph, seed, &self.results, None) {
+                if !arg.agrees(&result, &exec.graph, |col| &seed.values[col], &self.results, None) {
                     exec.graph.stats.register_prefix.result_rejections += 1;
                     return Ok(None);
                 }
@@ -237,7 +237,7 @@ impl Frame {
                 } else {
                     let mut bound = smallvec::smallvec![None; expansion.width];
                     for (col, arg) in &expansion.bound {
-                        bound[*col] = Some(arg.read(&exec.graph, seed, &self.results, expanded));
+                        bound[*col] = Some(arg.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
                     }
                     let bound: SmallVec<[Option<Value>; 6]> = bound;
                     exec.query_indexes.candidates(&exec.graph, t, &bound)?
@@ -246,7 +246,7 @@ impl Frame {
                 let refs = if !LOCAL && refs.len() >= 8 && refs.len() <= 65536
                     && let Some((atom, left, right, target)) = &k.sum_filter
                     && *atom == ins.atom
-                    && let Value::Int(value) = target.read(&exec.graph, seed, &self.results, expanded) {
+                    && let Value::Int(value) = target.read(&exec.graph, |col| &seed.values[col], &self.results, expanded) {
                     SumDomain::select(exec, (rid, k.pivot), t, *left, *right, value, refs)?
                 } else { refs };
                 let mut access = if LOCAL {
@@ -264,7 +264,7 @@ impl Frame {
                     // Repeated fresh variables refer to this row's first
                     // occurrence directly; no assignments or undo log.
                     if !expansion.checks.iter().all(|(col, arg)| {
-                        arg.agrees(&row.values[*col], &exec.graph, seed, &self.results, Some((position, row)))
+                        arg.agrees(&row.values[*col], &exec.graph, |col| &seed.values[col], &self.results, Some((position, row)))
                     }) { return Ok(()); }
                     self.witnesses[ins.atom] = Some(w);
                     self.step::<LOCAL>(
@@ -333,7 +333,7 @@ impl Frame {
                 }
                 return Ok(());
             }
-            let bound = ins.bind::<SmallVec<[Value; 4]>>(|arg| arg.operand(&exec.graph, seed, &self.results, expanded));
+            let bound = ins.bind::<SmallVec<[Value; 4]>>(|arg| arg.operand(&exec.graph, |col| &seed.values[col], &self.results, expanded));
             let result = bound.evaluate(|args| match &ins.call {
                 Call::Table(t) => {
                     let neighbor = LOCAL && !exec.graph.program.tables[*t].virtual_fact;
@@ -389,7 +389,7 @@ impl Frame {
             direct: None,
             known: facts,
             values: r.inputs.iter().zip(&k.query.inputs)
-                .map(|(s, field)| (*s, field.read(&exec.graph, seed, &self.results, expanded)))
+                .map(|(s, field)| (*s, field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded)))
                 .collect(),
             epoch,
             parent: None,

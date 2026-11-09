@@ -85,12 +85,12 @@ impl Field {
     /// returns. No row binding is retained across mutation or the next Run.
     fn value<'a>(
         &'a self,
-        row: &'a Row,
+        anchor: impl FnOnce(usize) -> &'a Value,
         results: &'a [Value],
         expanded: Option<(usize, &'a Row)>,
     ) -> &'a Value {
         match self {
-            Self::Anchor(col) => &row.values[*col],
+            Self::Anchor(col) => anchor(*col),
             Self::StepResult(i) => &results[*i],
             Self::Column { step, column } => {
                 let (current, row) = expanded.expect("validated expansion operand");
@@ -103,38 +103,38 @@ impl Field {
     pub(crate) fn operand<'a>(
         &'a self,
         g: &Graph,
-        row: &'a Row,
+        anchor: impl FnOnce(usize) -> &'a Value,
         results: &'a [Value],
         expanded: Option<(usize, &'a Row)>,
     ) -> Cow<'a, Value> {
         match self {
             Self::Literal(v) => Cow::Owned(canon(v, &g.parents)),
-            _ => Cow::Borrowed(self.value(row, results, expanded)),
+            _ => Cow::Borrowed(self.value(anchor, results, expanded)),
         }
     }
-    pub(crate) fn read(
-        &self,
+    pub(crate) fn read<'a>(
+        &'a self,
         g: &Graph,
-        row: &Row,
-        results: &[Value],
-        expanded: Option<(usize, &Row)>,
+        anchor: impl FnOnce(usize) -> &'a Value,
+        results: &'a [Value],
+        expanded: Option<(usize, &'a Row)>,
     ) -> Value {
         match self {
             Self::Literal(v) => canon(v, &g.parents),
-            _ => self.value(row, results, expanded).clone(),
+            _ => self.value(anchor, results, expanded).clone(),
         }
     }
-    pub(crate) fn agrees(
-        &self,
+    pub(crate) fn agrees<'a>(
+        &'a self,
         v: &Value,
         g: &Graph,
-        row: &Row,
-        results: &[Value],
-        expanded: Option<(usize, &Row)>,
+        anchor: impl FnOnce(usize) -> &'a Value,
+        results: &'a [Value],
+        expanded: Option<(usize, &'a Row)>,
     ) -> bool {
         match self {
             Self::Literal(l) => canon(l, &g.parents) == *v,
-            _ => self.value(row, results, expanded) == v,
+            _ => self.value(anchor, results, expanded) == v,
         }
     }
 }
@@ -194,6 +194,12 @@ impl<A> BoundStep<'_, A> {
     }
 }
 impl Query {
+    /// Computed outputs retain instruction-position addresses. Expansion rows
+    /// stay borrowed, and a checked existing result needs no new value slot.
+    pub(crate) fn result_slots(&self) -> usize {
+        self.steps.iter().rposition(|s| s.expansion.is_none() && s.check_result.is_none())
+            .map_or(0, |i| i + 1)
+    }
     /// Substitute a complete block's outputs into the next block's anchor.
     /// This is dataflow composition: no intermediate row or slot map is needed.
     #[cfg(feature = "spine-blocks")]
@@ -271,6 +277,24 @@ impl Query {
     pub(crate) fn residual(rule: &Rule, pivot: usize) -> Option<Self> {
         Self::lower(rule, pivot, &query_order(rule, pivot, 1)?)
     }
+    /// Resume an already matched prefix from its existing slots, then borrow
+    /// the terminal row and execute the original remaining scalar operations.
+    /// `known` is the slot set derived from that prefix's Cell scopes.
+    pub(crate) fn continuation(rule: &Rule, prefix: impl Iterator<Item = usize>,
+        known: &std::collections::BTreeSet<usize>, tail: usize, post: &[usize]) -> Option<Self> {
+        let sources = known.iter().map(|&slot| (slot, Field::Anchor(slot))).collect();
+        let mut seen = std::collections::BTreeSet::new();
+        for atom in prefix {
+            rule.query.get(atom)?;
+            if !seen.insert(atom) { return None; }
+        }
+        let mut order = vec![(tail, Access::Expand)];
+        for &atom in post {
+            if !matches!(rule.query.get(atom)?.call, Call::Primitive(..)) { return None; }
+            order.push((atom, Access::Primitive));
+        }
+        Self::lower_from(rule, sources, seen, &order)
+    }
     fn lower(rule: &Rule, pivot: usize, order: &[(usize, Access)]) -> Option<Self> {
         let mut sources = BTreeMap::new();
         for (col, arg) in rule.query.get(pivot)?.args.iter().enumerate() {
@@ -278,11 +302,14 @@ impl Query {
                 sources.entry(*s).or_insert(Field::Anchor(col));
             }
         }
+        Self::lower_from(rule, sources, std::collections::BTreeSet::from([pivot]), order)
+    }
+    fn lower_from(rule: &Rule, mut sources: BTreeMap<usize, Field>,
+        mut seen: std::collections::BTreeSet<usize>, order: &[(usize, Access)]) -> Option<Self> {
         let field = |a: &Arg, map: &BTreeMap<usize, Field>| match a {
             Arg::Slot(s) => map.get(s).cloned(),
             Arg::Literal(v) => Some(Field::Literal(v.clone())),
         };
-        let mut seen = std::collections::BTreeSet::from([pivot]);
         let mut steps = Vec::new();
         for &(atom, access) in order {
             if !seen.insert(atom) {
