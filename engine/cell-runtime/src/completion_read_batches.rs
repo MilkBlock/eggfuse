@@ -356,7 +356,7 @@ impl Graph {
             self.commit_cached_source(
                 source.fact,
                 source.row,
-                source.answers,
+                &source.answers,
                 initial_unions,
                 next,
                 allowed,
@@ -416,7 +416,7 @@ impl Graph {
         &mut self,
         fact: FactRef,
         mut row: Row,
-        answers: Answers,
+        answers: &[Answer],
         initial_unions: u64,
         next: Option<Dependency>,
         allowed: Option<&[bool]>,
@@ -468,7 +468,7 @@ impl Graph {
                 self.batch_stats().selection_pending_skips += 1;
                 continue;
             }
-            answer.result?;
+            answer.result.as_ref().map_err(Clone::clone)?;
             let row = self.read_stable_fact(f, state, stored)?;
             let cross = self.cells[&fact.cell].started_epoch != self.cells[&f.cell].started_epoch;
             let local = self.local_condition_stats();

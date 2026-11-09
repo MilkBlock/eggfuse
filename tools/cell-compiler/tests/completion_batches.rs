@@ -55,6 +55,20 @@ fn compare_mode(source: &str, workers: usize, limit: usize, overlap: bool) -> se
     assert_eq!(parallel.graph.pending_completion_tasks(), 0);
     let report = parallel.graph.completion_batch_report();
     if overlap {
+        let slots = &report["overlap"]["stats"];
+        assert_eq!(slots["channel_builds"], 0);
+        assert_eq!(slots["channel_receives"], 0);
+        assert_eq!(slots["slot_abandons"], 0);
+        assert_eq!(
+            slots["slot_publications"],
+            report["stats"]["prepared_tasks"]
+        );
+        assert_eq!(slots["projected_tasks"], report["stats"]["prepared_tasks"]);
+        assert_eq!(
+            slots["ordered_slot_reads"],
+            report["stats"]["committed_tasks"]
+        );
+        assert_eq!(slots["activity_allocations"], 1);
         let components = &report["overlap"]["stats"]["layers"]["components"];
         assert_eq!(
             components["copied_units"], 0,
@@ -513,4 +527,49 @@ fn partial_multi_input_guards_and_recreated_facts_keep_their_lifetimes() {
             .unwrap()
             >= 2
     );
+}
+
+#[cfg(feature = "completion-overlap-probes")]
+#[test]
+fn a_first_reader_panic_abandons_its_slots_and_releases_the_coordinator() {
+    let (send, receive) = std::sync::mpsc::sync_channel(1);
+    let thread = std::thread::spawn(move || {
+        let (mut serial, mut parallel) = held_reader_fixture();
+        parallel
+            .graph
+            .use_completion_overlap_early_panic_probe()
+            .unwrap();
+        serial.graph.repair().unwrap();
+        let failure =
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| parallel.graph.repair()));
+        assert!(failure.is_err());
+        let report = parallel.graph.completion_batch_report();
+        assert_eq!(report["stats"]["committed_tasks"], 0);
+        assert!(
+            report["overlap"]["stats"]["slot_abandons"]
+                .as_u64()
+                .unwrap()
+                > 0
+        );
+        assert_eq!(
+            report["overlap"]["stats"]["slot_publications"]
+                .as_u64()
+                .unwrap()
+                + report["overlap"]["stats"]["slot_abandons"]
+                    .as_u64()
+                    .unwrap(),
+            report["stats"]["prepared_tasks"].as_u64().unwrap()
+        );
+        parallel.graph.repair().unwrap();
+        assert_eq!(
+            serial.graph.export().unwrap(),
+            parallel.graph.export().unwrap()
+        );
+        parallel.graph.ownership_report();
+        send.send(()).unwrap();
+    });
+    receive
+        .recv_timeout(std::time::Duration::from_secs(10))
+        .expect("an abandoned first slot must release the coordinator");
+    thread.join().unwrap();
 }

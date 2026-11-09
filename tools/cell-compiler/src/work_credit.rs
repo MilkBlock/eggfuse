@@ -127,7 +127,7 @@ impl Work {
             work.insert(format!("stable_ports/completion_batches/stats/{field}"), value);
         }
         let overlap = &batches["overlap"];
-        for field in ["epochs", "base_snapshots", "task_spawns", "reader_activity_updates", "channel_builds", "channel_receives", "row_handle_clones", "result_buffer_allocations"] {
+        for field in ["epochs", "base_snapshots", "task_spawns", "projected_tasks", "input_buffer_allocations", "activity_allocations", "reader_activity_updates", "channel_builds", "channel_receives", "slot_publications", "slot_abandons", "slot_collection_reads", "ordered_slot_reads", "row_handle_clones", "result_buffer_allocations"] {
             let value = if overlap["enabled"] == true {
                 overlap["stats"][field].as_u64().ok_or_else(|| format!("missing overlap work {field}"))?
             } else { 0 };
@@ -244,11 +244,16 @@ mod tests {
         assert!(overlap.0["stable_ports/completion_batches/overlap/task_spawns"] > 0);
         assert!(overlap.0["stable_ports/stats/root_parent_probes"] > 0);
         assert!(overlap.0["cell_ownership/stats/signal_parent_probes"] > 0);
+        assert_eq!(overlap.0["stable_ports/completion_batches/overlap/channel_builds"], 0);
+        assert!(overlap.0["stable_ports/completion_batches/overlap/slot_collection_reads"] > 0);
         assert!(serial.savings(&overlap).0 < 0);
         overlap_report["stable_ports"]["completion_batches"]["overlap"]["stats"]["overlay"].as_object_mut().unwrap().remove("copied_units");
         assert!(Work::read(&overlap_report).unwrap_err().contains("missing overlay work copied_units"));
         after["stable_ports"]["parallel_guards"]["stats"]["prepared_candidates"] = 0.into();
         after["stable_ports"]["stats"].as_object_mut().unwrap().remove("root_parent_probes");
         assert!(Work::read(&after).unwrap_err().contains("missing stable-port work root_parent_probes"));
+        let mut missing_delivery = overlap_report;
+        missing_delivery["stable_ports"]["completion_batches"]["overlap"]["stats"].as_object_mut().unwrap().remove("slot_publications");
+        assert!(Work::read(&missing_delivery).unwrap_err().contains("missing overlap work slot_publications"));
     }
 }

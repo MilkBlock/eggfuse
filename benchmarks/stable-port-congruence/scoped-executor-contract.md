@@ -349,26 +349,42 @@ current liveness and pending membership are rechecked, and no new peer/birth or
 opaque mutation may enter the window. The current result root is passed to the
 shared collision commit separately from the immutable source-row inputs.
 
-A bounded result channel returns task outcomes. The coordinator buffers arrivals
-and waits only for the next ordered source, after completing any earlier pure
-child tasks. It may abandon a dependent suffix, but must collect and charge all
-spawned work. Channel capacity admits all task results, so abandoning a suffix
-cannot leave a sender blocked behind the scope's final join. Graph and its Rc
-owners stay on the calling thread; only projected immutable borrows and disjoint
-worker-local results cross into the pool. No unsafe Send/Sync implementation is
-used.
+A bounded array of one-time result slots receives task outcomes. The compiler's
+complete input footprint and the no-birth window permit fixed strided groups of
+independent snapshot reads; at most one scoped job per configured worker is
+spawned for the epoch. A small task-level input array projects plain borrows from
+Prepared, whose Rc owners remain on the coordinator. No candidate fields are
+materialized or copied during that projection.
+
+Each lane writes only its own slots. The coordinator waits only for the next
+ordered source, after completing any earlier pure child tasks, and borrows its
+published answers directly. Out-of-order completion is represented by initialized
+slots; there is no result channel, cloned answer payload or receive/reordering
+pass. It may abandon a dependent suffix, but every reader continues and all
+completed work is counted after the scoped join. A lane unwinding on panic
+publishes abandonment to every remaining slot it owns before its panic is
+propagated by Rayon. This releases a coordinator waiting on a missing answer.
+Once all readers have joined, the epoch overlays are restored before the panic
+is resumed. No unsafe Send/Sync implementation is used.
 
 The optional `completion-overlap-probes` test feature holds the second reader
 until the first effective union commits. A coordinator that waits for the entire
 read batch cannot pass this test. A second probe panics that reader after the
 union; retrying completion must preserve the prior commit and start a new epoch.
+A third probe panics the first lane before its first answer; the coordinator must
+exit its slot wait and restore the epoch. Disabling lane abandonment is a negative
+control that fails this test's bounded timeout.
 Production audit executables exclude these gates. Observed overlap and arrival
 order are scheduling-dependent, separate from deterministic work counters.
 
 This protocol removes the mandatory all-readers join before every ordered commit.
 It retains an epoch-end join, ordered writes and the existing source-Run fences.
-Snapshot handles, channel operations, activity atomics, retained results, copied
-queue entries and overlay merge work are costs, not inferred savings.
+Snapshot handles, task projection, slot publication/read operations, activity
+atomics, retained results, copied queue entries and overlay merge work are costs,
+not inferred savings. The activity counter is retained across epochs; two atomic
+updates bracket each reader lane. The sampled active-reader observation describes
+an unfinished lane, not measured CPU utilization. Strided grouping can reduce
+load balancing flexibility; fewer allocations alone do not establish a speedup.
 Copies of whole touched queue tables can be expensive; compiler/Bake selection
 must account for them. Independent source matching/publication and parallel
 writers remain separate requirements.

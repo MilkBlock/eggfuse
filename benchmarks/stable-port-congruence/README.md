@@ -30,6 +30,10 @@ Signal bindings now retain their first equality ID. Union no longer rewrites
 them, lifetime counts are coordinator-only, and component retirement uses a
 tombstone without copying the reader's bindings. Queue copies, boundary routing
 and parent-walk costs remain explicit; no additional source wait is removed.
+Overlap readers now run in bounded strided groups and publish directly to ordered
+result slots. The coordinator borrows answers in place; result channels and
+per-task pool jobs are removed. This reduces allocation requests while preserving
+the same guard work, queue copies, source waits and ordered writer.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -1678,4 +1682,123 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/immutable-signals-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/immutable-signals-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/immutable-signals-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-immutable-signals.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Grouped readers publish directly to ordered result slots
+
+The `db2d2929` execution removed component copies but retained 697 scoped pool
+jobs and 84 result channels for its two-worker, 16-task overlap lane. It still
+requested 2,390 more allocations than synchronous batches. The complete compiler
+input footprint and the existing bounded no-birth window already prove that
+these guards can read one immutable snapshot independently. This iteration uses
+that fact to group dispatch and give each result a fixed destination. It removes
+no additional source-Run wait and assumes no future union or congruence outcome.
+
+An epoch projects one small plain-borrow input record per task. It then spawns
+at most one scoped job per configured worker, capped by the number of tasks.
+Each job handles a strided group of task positions. Completed outcomes initialize
+their own `OnceLock<Option<Outcome>>` slots. The coordinator waits only for its
+next source position and borrows the answer in place; earlier pure child tasks,
+input-class invalidation, current liveness and survivor selection retain their
+original protocol. No channel or separate receive/reordering pass is maintained. No candidate node
+fields or answer payloads are cloned. The input array is task-level dispatch data,
+not a producer/consumer index.
+
+After an early invalidation or commit error, readers can finish without waiting
+for a consumer to drain a channel. The scoped join precedes final accounting,
+but does not precede the ordered commit loop. Every completed guard is counted,
+including unused answers. If a lane panics, its destructor marks every remaining
+owned slot abandoned before Rayon propagates the panic. This wakes a coordinator
+waiting for a result that will never arrive. After joining, all four storage
+overlays are restored before unwinding continues. A new diagnostic fixture
+panics the first reader before its first answer, verifies zero cached commits,
+checks publication/abandonment conservation, then retries to the serial result.
+Removing the destructor's abandonment loop makes that fixture fail its ten-second
+timeout. The correct loop is restored before all production checks and audits.
+Existing held-reader and post-commit panic-retry gates also pass.
+
+The activity counter is allocated once per configured overlap runtime, retained
+across epochs, and updated twice per lane. Its sampled observation now describes
+an unfinished lane rather than one unfinished task, so these samples are not
+comparable utilization or speed measurements. Strided groups also reduce the
+scheduler's ability to balance individual long guards. Grouping is a structural
+allocation change; its elapsed-time benefit remains unproven.
+
+All five frozen sum-bits lanes preserve the preceding 1,428 ordered Run state/
+RHS/effective-write/resume/Spine/schedule hashes. The collector permits only the
+new delivery counters and four changed dispatch/channel counters. All previous
+guard, parent-read, queue, overlay, notification, source-wait and committed-effect
+work remains identical. Serial and synchronous controls also retain exactly the
+same allocator requests as `db2d2929`.
+
+| Two workers, 16-task epochs | `db2d2929` | Current |
+| --- | ---: | ---: |
+| Prepared / collected read tasks | 697 / 697 | 697 / 697 |
+| Cached commits / unused reads | 622 / 75 | 622 / 75 |
+| Scoped pool jobs | 697 | 168 |
+| Reader activity atomic updates | 1,394 | 336 |
+| Result channels / receives | 84 / 697 | 0 / 0 |
+| Component / queue copy units | 0 / 1,011 | 0 / 1,011 |
+
+The 84 new input arrays request 44,608 bytes for 697 projected task records.
+There are 697 slot publications, 697 final collection reads, 622 ordered result
+reads and zero abandonments in the normal run. Result-slot/distribution buffers
+retain the previous 252,264 requested bytes; slot state replaces the old outcome
+index without growing those buffers. Snapshot handles and row-handle clones also
+remain unchanged. Bake charges task projection, input allocation, slot reads and
+publication, activity setup and updates, and all retained work. Its regression
+fixture rejects a report missing slot publication costs and still assigns this
+small-guard pipeline negative net event savings against serial.
+
+Four workers produce the same guard/overlay work using 306 jobs; small epochs
+with fewer than four tasks cap their lane count. The four-task/two-worker lane
+uses 376 jobs for 706 tasks and 188 input arrays requesting 45,184 bytes. These
+counts are independent of which pool thread happens to execute each job.
+
+The allocator build matches every deterministic counter of the normal build.
+Execution differences against the same lane in `db2d2929` are:
+
+| Configuration | Allocation calls | Reallocation calls | Requested bytes |
+| --- | ---: | ---: | ---: |
+| Serial pure epochs | 0 | 0 | 0 |
+| Synchronous, 2 workers, 16 tasks | 0 | 0 | 0 |
+| Overlap, 2 workers, 16 tasks | -874 | 0 | -404,440 |
+| Overlap, 4 workers, 16 tasks | -722 | 0 | -380,344 |
+| Overlap, 2 workers, 4 tasks | -1,079 | 0 | -459,224 |
+
+Setup requests are unchanged in every lane. Two-worker overlap still adds 1,516
+allocations and 593,512 requested bytes relative to the current synchronous lane.
+Scheduler and parking behavior may vary by execution; these are one allocator
+observation, excluding parsing/export and native thread stacks. No timing or
+scaling campaign was run; overlap remains default-off standalone Cell CPU code,
+not native egglog or an admitted acceleration.
+
+Validation passes 321 workspace tests (four ignored), 116 focused tests in each
+storage configuration and the minimal compile check. Diagnostic gates are absent
+from final audit executables. See [the frozen evidence](slot-delivery-audit.json)
+and [the executor contract](scoped-executor-contract.md#overlapped-completion-epochs).
+The remaining 1,011 queue copy units expose the next representation problem:
+readers need epoch membership, while the coordinator needs mutable ordered queue
+operations. Separating those requirements must preserve first-task selection,
+re-enqueue behavior, source epochs and bounded lifetime; replacing copies with
+unmetered searches or a new reverse dependency list would not discharge the work.
+Parallel writers and source publication/matching remain open beyond that step.
+
+Reproduce the preceding workspace, eleven focused suites and minimal checks
+using the `slot-delivery-` log prefix and both feature sets with
+`completion-overlap-probes`. For the negative control, temporarily empty the
+`Lane` destructor in `completion_overlap.rs`, run only
+`a_first_reader_panic_abandons_its_slots_and_releases_the_coordinator`, record the
+expected failure as `slot-delivery-negative-abandon.log`, and restore the source.
+Preserve `immutable-signals-audit` and `immutable-signals-allocator-audit` artifacts.
+Standalone audit builds omit diagnostic gate features:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/slot-delivery-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/slot-delivery-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/slot-delivery-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/slot-delivery-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/slot-delivery-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/slot-delivery-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-slot-delivery.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

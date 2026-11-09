@@ -2,9 +2,8 @@
 //! path are shared with synchronous batches; only result delivery is different.
 use super::*;
 use std::sync::{
-    Arc,
+    Arc, OnceLock,
     atomic::{AtomicUsize, Ordering},
-    mpsc,
 };
 
 #[derive(Default, Serialize)]
@@ -12,9 +11,17 @@ struct Stats {
     epochs: u64,
     base_snapshots: u64,
     task_spawns: u64,
+    projected_tasks: u64,
+    input_buffer_allocations: u64,
+    input_buffer_bytes: u64,
+    activity_allocations: u64,
     reader_activity_updates: u64,
     channel_builds: u64,
     channel_receives: u64,
+    slot_publications: u64,
+    slot_abandons: u64,
+    slot_collection_reads: u64,
+    ordered_slot_reads: u64,
     row_handle_clones: u64,
     result_buffer_allocations: u64,
     result_buffer_bytes: u64,
@@ -23,7 +30,6 @@ struct Stats {
 }
 #[derive(Default, Serialize)]
 struct Observed {
-    ordered_receives: u64,
     effective_unions_with_active_readers: u64,
 }
 #[derive(Default)]
@@ -42,6 +48,7 @@ struct Probe {
     state: std::sync::Mutex<(bool, bool)>,
     changed: std::sync::Condvar,
     panic_after_commit: bool,
+    panic_first: bool,
 }
 #[cfg(feature = "completion-overlap-probes")]
 impl Probe {
@@ -56,6 +63,10 @@ impl Probe {
         assert!(!timeout.timed_out(), "overlap probe timed out: {state:?}");
     }
     fn begin(&self, index: usize) {
+        if self.panic_first {
+            assert!(index != 0, "injected first completion reader panic");
+            return;
+        }
         if index == 1 {
             self.state.lock().unwrap().0 = true;
             self.changed.notify_all();
@@ -64,7 +75,7 @@ impl Probe {
         }
     }
     fn end(&self, index: usize) {
-        if index == 0 {
+        if index == 0 && !self.panic_first {
             self.wait(0);
         }
     }
@@ -79,16 +90,71 @@ impl Runtime {
             return json!({"enabled":false});
         }
         json!({"enabled":true,"stats":self.stats,"observed":self.observed,
-            "scope":"immutable epoch bases with coordinator write overlays; ordered per-task result delivery",
+            "scope":"immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
             "performance_admission":false})
     }
 }
 
 struct Outcome {
-    index: usize,
     answers: Answers,
     counts: Counts,
     worker: usize,
+}
+/// Plain projected borrows only; Prepared owns Rc values and never crosses
+/// into the worker pool. One input per task, no per-candidate descriptors.
+#[derive(Clone, Copy)]
+struct Input<'a> {
+    fact: FactRef,
+    table: usize,
+    component: u32,
+    values: &'a [Value],
+    candidates: &'a [Candidate],
+    plan: &'a Plan,
+}
+impl Input<'_> {
+    fn run(self, view: guard::ReadView<'_>, ready: ready::ReadView<'_>) -> Outcome {
+        let mut answers = Answers::new();
+        let mut worker = usize::MAX;
+        let mut task = Task {
+            fact: self.fact,
+            table: self.table,
+            component: self.component,
+            values: self.values,
+            candidates: self.candidates,
+            plan: self.plan,
+            answers: &mut answers,
+            counts: Counts::default(),
+            worker: &mut worker,
+        };
+        task.run(view, ready);
+        let counts = task.counts;
+        Outcome {
+            answers,
+            counts,
+            worker,
+        }
+    }
+}
+type Slot = OnceLock<Option<Outcome>>;
+/// Each lane owns distinct positions. If it unwinds, publish abandonment to
+/// every unfilled position so the coordinator cannot wait for a lost result.
+struct Lane<'a> {
+    slots: &'a [Slot],
+    next: usize,
+    stride: usize,
+}
+impl Lane<'_> {
+    fn publish(&mut self, outcome: Outcome) {
+        assert!(self.slots[self.next].set(Some(outcome)).is_ok());
+        self.next += self.stride;
+    }
+}
+impl Drop for Lane<'_> {
+    fn drop(&mut self) {
+        for index in (self.next..self.slots.len()).step_by(self.stride) {
+            let _ = self.slots[index].set(None);
+        }
+    }
 }
 struct ActiveRead<'a>(&'a AtomicUsize);
 impl Drop for ActiveRead<'_> {
@@ -124,6 +190,15 @@ impl Graph {
         self.use_overlapped_completion()?;
         self.overlap_runtime().probe = Some(Arc::new(Probe {
             panic_after_commit: true,
+            ..Probe::default()
+        }));
+        Ok(())
+    }
+    #[cfg(feature = "completion-overlap-probes")]
+    pub fn use_completion_overlap_early_panic_probe(&mut self) -> Result<()> {
+        self.use_overlapped_completion()?;
+        self.overlap_runtime().probe = Some(Arc::new(Probe {
+            panic_first: true,
             ..Probe::default()
         }));
         Ok(())
@@ -186,7 +261,13 @@ impl Graph {
             .pool
             .clone();
         let snapshot = self.freeze_completion_reads();
-        let active = Arc::new(AtomicUsize::new(0));
+        let runtime = self.overlap_runtime();
+        let activity_allocations = u64::from(runtime.active.is_none());
+        let active = runtime
+            .active
+            .get_or_insert_with(|| Arc::new(AtomicUsize::new(0)))
+            .clone();
+        debug_assert_eq!(active.load(Ordering::Acquire), 0);
         #[cfg(feature = "completion-overlap-probes")]
         let probe = self
             .overlap_runtime()
@@ -194,10 +275,19 @@ impl Graph {
             .as_ref()
             .filter(|p| !p.claimed.swap(true, Ordering::AcqRel))
             .cloned();
-        self.overlap_runtime().active = Some(active.clone());
-        let (send, receive) = mpsc::sync_channel::<Outcome>(count);
-        let mut buffered: Vec<Option<Outcome>> =
-            std::iter::repeat_with(|| None).take(count).collect();
+        let inputs: Vec<_> = prepared
+            .iter()
+            .map(|source| Input {
+                fact: source.fact,
+                table: source.row.table,
+                component: source.context.component,
+                values: &source.row.values,
+                candidates: &source.context.candidates,
+                plan: &source.context.plan,
+            })
+            .collect();
+        let slots: Vec<Slot> = std::iter::repeat_with(OnceLock::new).take(count).collect();
+        let lanes = count.min(pool.current_num_threads());
         let mut total = Counts::default();
         let mut collected = 0;
         let mut recorded_answers = 0;
@@ -205,143 +295,120 @@ impl Graph {
         let mut end = count;
         let initial_unions = self.stats.unions;
         let mut distribution = vec![0u64; pool.current_num_threads()];
-        let mut ordered_receives = 0;
-        // Rayon joins spawned tasks even on error/unwind. Restore the writable
-        // containers before propagating a panic; never leave a frozen Graph.
+        let mut ordered_slot_reads = 0;
+        // Rayon joins spawned lanes even on error/unwind. A lane's Drop fills
+        // missing slots before its panic propagates, releasing ordered waiters.
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             pool.in_place_scope_fifo(|scope| {
-                for (index, source) in prepared.iter().enumerate() {
-                    let sender = send.clone();
+                for first in 0..lanes {
+                    let inputs = &inputs;
+                    let mut lane = Lane {
+                        slots: &slots,
+                        next: first,
+                        stride: lanes,
+                    };
                     let active = &active;
                     let view = snapshot.reader();
                     let ready = snapshot.ready();
-                    // Explicitly project Send borrows; no Rc owner crosses the scope.
-                    let (fact, table, component) =
-                        (source.fact, source.row.table, source.context.component);
-                    let values: &[Value] = &source.row.values;
-                    let candidates: &[Candidate] = &source.context.candidates;
-                    let plan: &Plan = &source.context.plan;
                     #[cfg(feature = "completion-overlap-probes")]
                     let probe = probe.as_ref();
                     scope.spawn_fifo(move |_| {
                         active.fetch_add(1, Ordering::AcqRel);
-                        let active_read = ActiveRead(active);
-                        #[cfg(feature = "completion-overlap-probes")]
-                        if let Some(probe) = probe {
-                            probe.begin(index);
+                        let _active_read = ActiveRead(active);
+                        while lane.next < lane.slots.len() {
+                            let index = lane.next;
+                            #[cfg(feature = "completion-overlap-probes")]
+                            if let Some(probe) = probe {
+                                probe.begin(index);
+                            }
+                            let outcome = inputs[index].run(view, ready);
+                            #[cfg(feature = "completion-overlap-probes")]
+                            if let Some(probe) = probe {
+                                probe.end(index);
+                            }
+                            lane.publish(outcome);
                         }
-                        let mut answers = Answers::new();
-                        let mut worker = usize::MAX;
-                        let mut task = Task {
-                            fact,
-                            table,
-                            component,
-                            values,
-                            candidates,
-                            plan,
-                            answers: &mut answers,
-                            counts: Counts::default(),
-                            worker: &mut worker,
-                        };
-                        task.run(view, ready);
-                        let counts = task.counts;
-                        #[cfg(feature = "completion-overlap-probes")]
-                        if let Some(probe) = probe {
-                            probe.end(index);
-                        }
-                        drop(active_read);
-                        let _ = sender.send(Outcome {
-                            index,
-                            answers,
-                            counts,
-                            worker,
-                        });
                     });
                 }
-                drop(send);
-                let mut receive_one = |buffered: &mut Vec<Option<Outcome>>| -> Result<()> {
-                    let outcome = receive
-                        .recv()
-                        .map_err(|_| "completion reader disconnected")?;
-                    collected += 1;
-                    recorded_answers += outcome.answers.len() as u64;
-                    collect_counts(&mut total, &outcome.counts);
-                    distribution[outcome.worker] += 1;
-                    let index = outcome.index;
-                    assert!(buffered[index].replace(outcome).is_none());
-                    Ok(())
-                };
-                let result = (|| -> Result<bool> {
-                    for (index, source) in prepared.iter().enumerate() {
-                        if index >= end {
-                            break;
-                        }
-                        let next = if index == 0 {
-                            next
-                        } else {
-                            self.next_scoped_dirty(allowed)
-                        };
-                        let Some(next) = self.advance_cached_source(
-                            index,
-                            source.fact,
-                            source.row.table,
-                            reads,
-                            &mut end,
-                            next,
-                            allowed,
-                        )?
-                        else {
-                            break;
-                        };
-                        while buffered[index].is_none() {
-                            ordered_receives += 1;
-                            receive_one(&mut buffered)?;
-                        }
-                        let outcome = buffered[index].take().unwrap();
-                        // This shares immutable canonical inputs with the reader.
-                        // The refreshed output travels separately to the commit.
-                        self.commit_cached_source(
-                            source.fact,
-                            source.row.clone(),
-                            outcome.answers,
-                            initial_unions,
-                            next,
-                            allowed,
-                        )?;
-                        committed += 1;
-                        self.commit_batch_unions(reads, index + 1, &mut end)?;
+                for (index, source) in prepared.iter().enumerate() {
+                    if index >= end {
+                        break;
                     }
-                    Ok(committed != 0)
-                })();
-                // Charge discarded work too. A full channel holds every job,
-                // so early abandonment cannot strand a sender behind a join.
-                while let Ok(outcome) = receive.recv() {
-                    collected += 1;
-                    recorded_answers += outcome.answers.len() as u64;
-                    collect_counts(&mut total, &outcome.counts);
-                    distribution[outcome.worker] += 1;
+                    let next = if index == 0 {
+                        next
+                    } else {
+                        self.next_scoped_dirty(allowed)
+                    };
+                    let Some(next) = self.advance_cached_source(
+                        index,
+                        source.fact,
+                        source.row.table,
+                        reads,
+                        &mut end,
+                        next,
+                        allowed,
+                    )?
+                    else {
+                        break;
+                    };
+                    ordered_slot_reads += 1;
+                    let outcome = slots[index]
+                        .wait()
+                        .as_ref()
+                        .ok_or("completion reader abandoned its lane")?;
+                    // Borrow the published answer in place. Refreshed output
+                    // travels separately from the immutable canonical inputs.
+                    self.commit_cached_source(
+                        source.fact,
+                        source.row.clone(),
+                        &outcome.answers,
+                        initial_unions,
+                        next,
+                        allowed,
+                    )?;
+                    committed += 1;
+                    self.commit_batch_unions(reads, index + 1, &mut end)?;
                 }
-                result
+                Ok(committed != 0)
             })
         }));
-        self.overlap_runtime().active = None;
+        debug_assert_eq!(active.load(Ordering::Acquire), 0);
         drop(snapshot);
         let overlay = self.thaw_completion_reads();
+        // Joining happens before collection, not before commits. Discarded
+        // answers are charged too, with no receive queue or result reshuffling.
+        for slot in &slots {
+            if let Some(outcome) = slot
+                .get()
+                .expect("every lane publishes or abandons its slots")
+            {
+                collected += 1;
+                recorded_answers += outcome.answers.len() as u64;
+                collect_counts(&mut total, &outcome.counts);
+                distribution[outcome.worker] += 1;
+            }
+        }
         let runtime = self.overlap_runtime();
         runtime.stats.epochs += 1;
         runtime.stats.base_snapshots += 4;
-        runtime.stats.task_spawns += count as u64;
-        runtime.stats.reader_activity_updates += 2 * count as u64;
-        runtime.stats.channel_builds += 1;
-        runtime.stats.channel_receives += collected;
+        runtime.stats.task_spawns += lanes as u64;
+        runtime.stats.projected_tasks += count as u64;
+        runtime.stats.input_buffer_allocations += 1;
+        runtime.stats.input_buffer_bytes +=
+            (inputs.capacity() * std::mem::size_of::<Input<'_>>()) as u64;
+        runtime.stats.activity_allocations += activity_allocations;
+        runtime.stats.reader_activity_updates += 2 * lanes as u64;
+        runtime.stats.slot_publications += collected;
+        runtime.stats.slot_abandons += count as u64 - collected;
+        runtime.stats.slot_collection_reads += count as u64;
+        runtime.stats.ordered_slot_reads += ordered_slot_reads;
         runtime.stats.row_handle_clones += committed;
         runtime.stats.result_buffer_allocations += 2;
-        runtime.stats.result_buffer_bytes +=
-            (buffered.capacity() * std::mem::size_of::<Option<Outcome>>()
-                + distribution.capacity() * std::mem::size_of::<u64>()) as u64;
+        runtime.stats.result_buffer_bytes += (slots.capacity() * std::mem::size_of::<Slot>()
+            + distribution.capacity() * std::mem::size_of::<u64>())
+            as u64;
         runtime.stats.overlay.add(overlay.total());
         runtime.stats.layers.add(overlay);
-        runtime.observed.ordered_receives += ordered_receives;
         self.record_guard_reads(&total.work);
         let stable = self.stable_ports.as_mut().unwrap();
         stable
