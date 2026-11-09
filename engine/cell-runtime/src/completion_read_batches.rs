@@ -5,6 +5,8 @@
 use super::*;
 use parallel::add_work;
 use rayon::prelude::*;
+#[path = "completion_overlap.rs"]
+mod overlap;
 
 #[derive(Default, Serialize)]
 struct Stats {
@@ -49,6 +51,7 @@ pub(in super::super) struct Runtime {
     limit: usize,
     stats: Stats,
     worker_tasks: Vec<u64>,
+    overlap: overlap::Runtime,
 }
 
 struct Answer {
@@ -180,6 +183,7 @@ impl Graph {
             limit,
             stats: Stats::default(),
             worker_tasks: vec![0; workers],
+            overlap: Default::default(),
         });
         Ok(())
     }
@@ -311,114 +315,52 @@ impl Graph {
             a.cmp(b)
         });
         reads.dedup();
+        if self
+            .stable_ports
+            .as_ref()
+            .unwrap()
+            .batches
+            .as_ref()
+            .unwrap()
+            .overlap
+            .enabled
+        {
+            return self.overlap_completion_tasks(prepared, &reads, next, allowed);
+        }
         self.evaluate_completion_tasks(&mut prepared)?;
         let count = prepared.len();
         let mut end = count;
         let mut committed = 0;
         let initial_unions = self.stats.unions;
-        'tasks: for (index, mut source) in prepared.into_iter().enumerate() {
+        for (index, source) in prepared.into_iter().enumerate() {
             if index >= end {
                 break;
             }
-            let mut next = if index == 0 {
+            let next = if index == 0 {
                 next
             } else {
                 self.next_scoped_dirty(allowed)
             };
-            loop {
-                if index >= end {
-                    break 'tasks;
-                }
-                self.batch_stats().order_checks += 1;
-                let head = self.ownership.as_ref().unwrap().pending.first(allowed);
-                if allowed.is_some_and(|mask| self.pending_opaque_completion(mask))
-                    || head.is_none()
-                    || next.is_some_and(|d| d < Dependency::Fact(head.unwrap().0))
-                {
-                    self.batch_stats().interleaved_stops += 1;
-                    break 'tasks;
-                }
-                let (head, table) = head.unwrap();
-                if (head, table) == (source.fact, source.row.table) {
-                    break;
-                }
-                // A new earlier pure constructor can run in the original
-                // order without abandoning unrelated prefetched reads. Legacy
-                // effects/births remain a boundary, never a speculative bridge.
-                if head >= source.fact || !self.port_keys_enabled(table) {
-                    self.batch_stats().interleaved_stops += 1;
-                    break 'tasks;
-                }
-                assert_eq!(self.pop_owned_before(next, allowed), Some(head));
-                self.complete_owned_key(head)?;
-                self.batch_stats().bridged_tasks += 1;
-                self.commit_batch_unions(&reads, index, &mut end)?;
-                next = self.next_scoped_dirty(allowed);
-            }
-            // Input values are certified unchanged. Result, visibility and
-            // epoch are current commit-time data, not prefetched metadata.
-            let state = &self.cells[&source.fact.cell].facts[&source.fact.op];
-            source.row.hidden = state.hidden;
-            source.row.epoch = state.epoch;
-            if self.stats.unions != initial_unions {
-                // During this read/commit window only union can change a
-                // result. Its old ID still names the same class; following
-                // parents avoids re-reading the component/port directory.
-                let Value::Eq(id) = source.row.values.last().unwrap() else {
-                    return Err("typed batch result".into());
-                };
-                let output = Value::Eq(root(&self.parents, *id));
-                let stable = self.stable_ports.as_ref().unwrap();
-                stable
-                    .root_resolutions
-                    .set(stable.root_resolutions.get() + 1);
-                *Rc::get_mut(&mut source.row.values)
-                    .expect("batch owns its row view")
-                    .last_mut()
-                    .unwrap() = output;
-                self.batch_stats().result_refreshes += 1;
-            }
-            let mut found = None;
-            for answer in source.answers {
-                self.batch_stats().selection_checks += 1;
-                let f = answer.candidate.fact;
-                let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
-                    self.batch_stats().selection_dead_skips += 1;
-                    continue;
-                };
-                let Some(stored) = self.stable_node(f) else {
-                    self.batch_stats().selection_dead_skips += 1;
-                    continue;
-                };
-                if self
-                    .ownership
-                    .as_ref()
-                    .unwrap()
-                    .pending
-                    .contains(stored.table, &f)
-                {
-                    self.batch_stats().selection_pending_skips += 1;
-                    continue;
-                }
-                answer.result?;
-                let row = self.read_stable_fact(f, state, stored)?;
-                let cross = self.cells[&source.fact.cell].started_epoch
-                    != self.cells[&f.cell].started_epoch;
-                let local = self.local_condition_stats();
-                if answer.candidate.condition.is_some() {
-                    local.completed_conditions += 1;
-                    local.cross_stage_conditions += u64::from(cross);
-                } else {
-                    local.boundary_collisions += 1;
-                }
-                found = Some(row);
+            let Some(next) = self.advance_cached_source(
+                index,
+                source.fact,
+                source.row.table,
+                &reads,
+                &mut end,
+                next,
+                allowed,
+            )?
+            else {
                 break;
-            }
-            assert_eq!(self.pop_owned_before(next, allowed), Some(source.fact));
-            self.dirty_facts[source.row.table].remove(&source.fact);
-            self.stable_ports.as_mut().unwrap().equality_completions += 1;
-            self.batch_stats().reused_after_union += u64::from(self.stats.unions > initial_unions);
-            self.commit_port_key(source.fact, source.row, found)?;
+            };
+            self.commit_cached_source(
+                source.fact,
+                source.row,
+                source.answers,
+                initial_unions,
+                next,
+                allowed,
+            )?;
             committed += 1;
             self.commit_batch_unions(&reads, index + 1, &mut end)?;
         }
@@ -426,6 +368,121 @@ impl Graph {
         stats.committed_tasks += committed;
         stats.unused_tasks += count as u64 - committed;
         Ok(committed != 0)
+    }
+
+    fn advance_cached_source(
+        &mut self,
+        index: usize,
+        fact: FactRef,
+        table: usize,
+        reads: &[(u64, usize)],
+        end: &mut usize,
+        mut next: Option<Dependency>,
+        allowed: Option<&[bool]>,
+    ) -> Result<Option<Option<Dependency>>> {
+        loop {
+            if index >= *end {
+                return Ok(None);
+            }
+            self.batch_stats().order_checks += 1;
+            let head = self.ownership.as_ref().unwrap().pending.first(allowed);
+            if allowed.is_some_and(|mask| self.pending_opaque_completion(mask))
+                || head.is_none()
+                || next.is_some_and(|d| d < Dependency::Fact(head.unwrap().0))
+            {
+                self.batch_stats().interleaved_stops += 1;
+                return Ok(None);
+            }
+            let (head, head_table) = head.unwrap();
+            if (head, head_table) == (fact, table) {
+                return Ok(Some(next));
+            }
+            // A new earlier pure constructor can run in the original
+            // order without abandoning unrelated prefetched reads. Legacy
+            // effects/births remain a boundary, never a speculative bridge.
+            if head >= fact || !self.port_keys_enabled(head_table) {
+                self.batch_stats().interleaved_stops += 1;
+                return Ok(None);
+            }
+            assert_eq!(self.pop_owned_before(next, allowed), Some(head));
+            self.complete_owned_key(head)?;
+            self.batch_stats().bridged_tasks += 1;
+            self.commit_batch_unions(&reads, index, end)?;
+            next = self.next_scoped_dirty(allowed);
+        }
+    }
+
+    fn commit_cached_source(
+        &mut self,
+        fact: FactRef,
+        mut row: Row,
+        answers: Answers,
+        initial_unions: u64,
+        next: Option<Dependency>,
+        allowed: Option<&[bool]>,
+    ) -> Result<()> {
+        // Input values are certified unchanged. Result, visibility and
+        // epoch are current commit-time data, not prefetched metadata.
+        let state = &self.cells[&fact.cell].facts[&fact.op];
+        row.hidden = state.hidden;
+        row.epoch = state.epoch;
+        let mut refreshed_result = None;
+        if self.stats.unions != initial_unions {
+            // During this read/commit window only union can change a
+            // result. Its old ID still names the same class; following
+            // parents avoids re-reading the component/port directory.
+            let Value::Eq(id) = row.values.last().unwrap() else {
+                return Err("typed batch result".into());
+            };
+            let output = Value::Eq(root(&self.parents, *id));
+            let stable = self.stable_ports.as_ref().unwrap();
+            stable
+                .root_resolutions
+                .set(stable.root_resolutions.get() + 1);
+            refreshed_result = Some(output);
+            self.batch_stats().result_refreshes += 1;
+        }
+        let mut found = None;
+        for answer in answers {
+            self.batch_stats().selection_checks += 1;
+            let f = answer.candidate.fact;
+            let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+                self.batch_stats().selection_dead_skips += 1;
+                continue;
+            };
+            let Some(stored) = self.stable_node(f) else {
+                self.batch_stats().selection_dead_skips += 1;
+                continue;
+            };
+            if self
+                .ownership
+                .as_ref()
+                .unwrap()
+                .pending
+                .contains(stored.table, &f)
+            {
+                self.batch_stats().selection_pending_skips += 1;
+                continue;
+            }
+            answer.result?;
+            let row = self.read_stable_fact(f, state, stored)?;
+            let cross = self.cells[&fact.cell].started_epoch != self.cells[&f.cell].started_epoch;
+            let local = self.local_condition_stats();
+            if answer.candidate.condition.is_some() {
+                local.completed_conditions += 1;
+                local.cross_stage_conditions += u64::from(cross);
+            } else {
+                local.boundary_collisions += 1;
+            }
+            found = Some(row);
+            break;
+        }
+        assert_eq!(self.pop_owned_before(next, allowed), Some(fact));
+        self.dirty_facts[row.table].remove(&fact);
+        self.stable_ports.as_mut().unwrap().equality_completions += 1;
+        self.batch_stats().reused_after_union += u64::from(self.stats.unions > initial_unions);
+        self.commit_port_key_result(fact, row, found, refreshed_result)?;
+        Ok(())
     }
 
     fn commit_batch_unions(
@@ -461,7 +518,7 @@ impl Graph {
             }
             self.batch_stats().conflicting_unions += u64::from(*end < previous_end);
         }
-        self.commit_union_batch(pairs)
+        self.commit_epoch_unions(pairs)
     }
 
     fn evaluate_completion_tasks(&mut self, prepared: &mut [Prepared]) -> Result<()> {
@@ -552,7 +609,7 @@ impl Graph {
             return json!({"enabled":false});
         };
         json!({"enabled":true,"task_limit":runtime.limit,"stats":runtime.stats,
-            "worker_tasks":runtime.worker_tasks,
+            "worker_tasks":runtime.worker_tasks,"overlap":runtime.overlap.report(),
             "scope":"standalone Cell CPU; batched immutable reads with input-class certificates and ordered commits",
             "proof":"complete compiler key footprint; both union classes checked; live/pending peers and queue order rechecked; invalid suffix discarded",
             "performance_admission":false})

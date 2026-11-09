@@ -13,10 +13,9 @@ pub enum Value {
 #[cfg(feature = "sparse-cells")]
 #[path = "root_directory.rs"]
 mod root_directory;
-#[cfg(feature = "sparse-cells")]
-pub use root_directory::Parents;
-#[cfg(not(feature = "sparse-cells"))]
-pub type Parents = rustc_hash::FxHashMap<u64, u64>;
+#[path = "parent_epoch.rs"]
+pub(crate) mod parent_epoch;
+pub use parent_epoch::Parents;
 pub fn root(parents: &Parents, mut x: u64) -> u64 {
     while let Some(&y) = parents.get(&x) {
         if x == y {

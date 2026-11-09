@@ -126,6 +126,19 @@ impl Work {
             } else { 0 };
             work.insert(format!("stable_ports/completion_batches/stats/{field}"), value);
         }
+        let overlap = &batches["overlap"];
+        for field in ["epochs", "base_snapshots", "task_spawns", "reader_activity_updates", "channel_builds", "channel_receives", "row_handle_clones", "result_buffer_allocations"] {
+            let value = if overlap["enabled"] == true {
+                overlap["stats"][field].as_u64().ok_or_else(|| format!("missing overlap work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/completion_batches/overlap/{field}"), value);
+        }
+        for field in ["writes", "growths", "copied_units", "merged_entries"] {
+            let value = if overlap["enabled"] == true {
+                overlap["stats"]["overlay"][field].as_u64().ok_or_else(|| format!("missing overlay work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/completion_batches/overlay/{field}"), value);
+        }
         for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths", "mixed_epoch_inserts", "advanced_task_epochs", "completion_epoch_checks", "completion_epoch_joins"] {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
@@ -199,16 +212,17 @@ mod tests {
 "#;
         let core = eggfuse_bake::device_frontend::core("guard-credit", source).unwrap();
         let compiled = compiler::compile(core, &Default::default()).unwrap();
-        let run = |parallel, batch| {
+        let run = |parallel, batch, overlap| {
             let mut graph = Graph::new_with_local_congruence(Program::parse(compiled.clone()).unwrap()).unwrap();
             if parallel { graph.use_parallel_port_guards(2, 1).unwrap(); }
             if batch { graph.use_completion_read_batches(16).unwrap(); }
+            if overlap { graph.use_overlapped_completion().unwrap(); }
             let mut executor = Executor::new(graph, false);
             executor.execute().unwrap();
             (executor.graph.export().unwrap(), executor.report())
         };
-        let (before_state, before) = run(false, false);
-        let (after_state, mut after) = run(true, false);
+        let (before_state, before) = run(false, false, false);
+        let (after_state, mut after) = run(true, false, false);
         assert_eq!(before_state, after_state);
         let serial = Work::read(&before).unwrap();
         let parallel = Work::read(&after).unwrap();
@@ -217,12 +231,19 @@ mod tests {
         assert!(serial.savings(&parallel).0 < 0);
         after["stable_ports"]["parallel_guards"]["stats"].as_object_mut().unwrap().remove("prepared_candidates");
         assert!(Work::read(&after).unwrap_err().contains("missing parallel guard work prepared_candidates"));
-        let (batch_state, mut batch_report) = run(true, true);
+        let (batch_state, mut batch_report) = run(true, true, false);
         assert_eq!(before_state, batch_state);
         let batch = Work::read(&batch_report).unwrap();
         assert!(batch.0["stable_ports/completion_batches/stats/dispatches"] > 0);
         assert!(serial.savings(&batch).0 < 0);
         batch_report["stable_ports"]["completion_batches"]["stats"].as_object_mut().unwrap().remove("read_set_comparisons");
         assert!(Work::read(&batch_report).unwrap_err().contains("missing completion batch work read_set_comparisons"));
+        let (overlap_state, mut overlap_report) = run(true, true, true);
+        assert_eq!(before_state, overlap_state);
+        let overlap = Work::read(&overlap_report).unwrap();
+        assert!(overlap.0["stable_ports/completion_batches/overlap/task_spawns"] > 0);
+        assert!(serial.savings(&overlap).0 < 0);
+        overlap_report["stable_ports"]["completion_batches"]["overlap"]["stats"]["overlay"].as_object_mut().unwrap().remove("copied_units");
+        assert!(Work::read(&overlap_report).unwrap_err().contains("missing overlay work copied_units"));
     }
 }

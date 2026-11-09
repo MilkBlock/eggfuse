@@ -312,13 +312,20 @@ impl Plan {
     }
     pub fn prepare_effects(&mut self, programs: &[Rc<PortProgram>]) {
         if self.effects.is_empty() {
-            self.effects = self.shapes.iter().map(|shape| Rc::new(effects::Plan::derive(shape, programs))).collect();
+            self.effects = self
+                .shapes
+                .iter()
+                .map(|shape| Rc::new(effects::Plan::derive(shape, programs)))
+                .collect();
         }
     }
     pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
         if self.conditions.is_empty() {
-            self.conditions = self.shapes.iter()
-                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs))).collect();
+            self.conditions = self
+                .shapes
+                .iter()
+                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs)))
+                .collect();
         }
     }
     fn substitutions(
@@ -364,6 +371,7 @@ pub(super) struct Training {
     joined: HashMap<u32, usize>,
     seen: BTreeSet<(u32, usize)>,
 }
+#[derive(Clone)]
 pub(super) struct Component {
     pub shape: usize,
     pub frames: smallvec::SmallVec<[u32; 4]>,
@@ -371,6 +379,12 @@ pub(super) struct Component {
     // Instance values only. Static use lists remain in Shape; live facts are
     // already recorded by Graph. Slots survive until the component retires.
     pub signals: Vec<Option<u64>>,
+}
+impl crate::read_epoch::EpochValue for Option<Component> {
+    fn copy_units(&self) -> usize {
+        self.as_ref()
+            .map_or(1, |c| 1 + c.frames.len() + c.signals.len())
+    }
 }
 #[derive(Clone, Copy)]
 pub(super) struct Frame {
@@ -436,7 +450,7 @@ pub(super) struct Cursor {
     pub fact: FactRef,
 }
 pub(super) struct Runtime {
-    pub components: Vec<Option<Component>>,
+    pub components: crate::read_epoch::Slots<Option<Component>>,
     pub frames: Frames,
     pub shapes: Vec<Option<Rc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
@@ -450,7 +464,7 @@ pub(super) struct Runtime {
 impl Runtime {
     pub fn new(p: &Plan) -> Self {
         Self {
-            components: vec![],
+            components: Default::default(),
             frames: Frames::default(),
             shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),

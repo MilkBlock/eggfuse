@@ -323,6 +323,55 @@ collection needs no intermediate answer array. Commit-time liveness and input
 certificates remain unchanged. Node queries, directory lifetime operations,
 pending probes, task preparation and allocator costs remain explicit in credit.
 
+## Overlapped completion epochs
+
+`--overlap-completion` extends the certified batch protocol. It requires a
+configured completion batch and persistent pool. The coordinator remains the
+sole writer and preserves task/union/publication order, but it can commit an
+earlier task while later tasks are still evaluating guards.
+
+Before dispatch, four base containers move into immutable shared ownership:
+parent links, stable nodes, component records, and scoped queue tables. Creating
+these bases copies no container body. Current coordinator reads first consult
+their write overlays. New parent links use a small delta map; retired nodes use
+tombstones. A component or queue table is copied on its first write in this
+epoch, and subsequent writes reuse that copy. The ordinary non-epoch path still
+reads and writes its local containers. All overlays merge back after scoped
+workers join, including when an error or panic exits the epoch.
+
+Workers retain the original equality relation, stable fields, component bindings
+and pending membership throughout the epoch. Exact guard results therefore have
+the same meaning as in a synchronous batch, even if the coordinator has since
+retired a peer or changed a representative. They do not authorize a commit by
+themselves: both union endpoints still invalidate dependent unread sources,
+current liveness and pending membership are rechecked, and no new peer/birth or
+opaque mutation may enter the window. The current result root is passed to the
+shared collision commit separately from the immutable source-row inputs.
+
+A bounded result channel returns task outcomes. The coordinator buffers arrivals
+and waits only for the next ordered source, after completing any earlier pure
+child tasks. It may abandon a dependent suffix, but must collect and charge all
+spawned work. Channel capacity admits all task results, so abandoning a suffix
+cannot leave a sender blocked behind the scope's final join. Graph and its Rc
+owners stay on the calling thread; only projected immutable borrows and disjoint
+worker-local results cross into the pool. No unsafe Send/Sync implementation is
+used.
+
+The optional `completion-overlap-probes` test feature holds the second reader
+until the first effective union commits. A coordinator that waits for the entire
+read batch cannot pass this test. A second probe panics that reader after the
+union; retrying completion must preserve the prior commit and start a new epoch.
+Production audit executables exclude these gates. Observed overlap and arrival
+order are scheduling-dependent, separate from deterministic work counters.
+
+This protocol removes the mandatory all-readers join before every ordered commit.
+It retains an epoch-end join, ordered writes and the existing source-Run fences.
+Snapshot handles, channel operations, activity atomics, retained results, copied
+components/queue entries and overlay merge work are costs, not inferred savings.
+Copies of whole touched queue tables can be expensive; compiler/Bake selection
+must account for them. Independent source matching/publication and parallel
+writers remain separate requirements.
+
 ## Gates that must remain open
 
 - Through the actual Executor, A retains outstanding congruence while B matches,

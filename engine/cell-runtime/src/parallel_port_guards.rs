@@ -30,7 +30,7 @@ struct Stats {
 }
 
 pub(in super::super) struct Runtime {
-    pub(super) pool: rayon::ThreadPool,
+    pub(super) pool: std::sync::Arc<rayon::ThreadPool>,
     grain: usize,
     width: usize,
     stats: Stats,
@@ -130,7 +130,7 @@ impl Graph {
             .map_err(|e| e.to_string())?;
         self.use_local_port_conditions()?;
         self.stable_ports.as_mut().unwrap().parallel = Some(Runtime {
-            pool,
+            pool: std::sync::Arc::new(pool),
             grain,
             width,
             stats: Stats::default(),

@@ -51,7 +51,7 @@ pub(in crate::graph) struct Runtime {
     /// The sole owner of stable fields. Plain values let workers borrow the
     /// directory without borrowing Cell metadata or its Rc-backed recipe cache.
     #[serde(skip)]
-    pub(super) nodes: HashMap<FactRef, Stored>,
+    pub(super) nodes: crate::read_epoch::Map<FactRef, Stored>,
     node_lookups: Counter<u64>,
     node_retirement_probes: u64,
     nodes_retired: u64,
@@ -169,7 +169,7 @@ impl Graph {
     pub(in crate::graph) fn retire_stable_node(&mut self, f: FactRef) {
         if let Some(runtime) = self.stable_ports.as_mut() {
             runtime.node_retirement_probes += 1;
-            runtime.nodes_retired += u64::from(runtime.nodes.remove(&f).is_some());
+            runtime.nodes_retired += u64::from(runtime.nodes.remove(&f));
         }
     }
     fn port_value(&self, port: PortRef, meter: bool) -> Result<Value> {

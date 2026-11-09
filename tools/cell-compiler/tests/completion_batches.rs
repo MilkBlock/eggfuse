@@ -13,7 +13,26 @@ fn executors(source: &str, workers: usize, limit: usize) -> (Executor, Executor)
     (Executor::new(serial, false), Executor::new(parallel, false))
 }
 fn compare(source: &str, workers: usize, limit: usize) -> serde_json::Value {
+    let synchronous = compare_mode(source, workers, limit, false);
+    let overlap = compare_mode(source, workers, limit, true);
+    let mut left = synchronous["stats"].clone();
+    let mut right = overlap["stats"].clone();
+    for key in ["scratch_allocations", "scratch_bytes_requested"] {
+        left.as_object_mut().unwrap().remove(key);
+        right.as_object_mut().unwrap().remove(key);
+    }
+    assert_eq!(
+        left, right,
+        "overlap must preserve actual guard work and commit order"
+    );
+    assert!(overlap["overlap"]["stats"]["epochs"].as_u64().unwrap() > 0);
+    synchronous
+}
+fn compare_mode(source: &str, workers: usize, limit: usize, overlap: bool) -> serde_json::Value {
     let (mut serial, mut parallel) = executors(source, workers, limit);
+    if overlap {
+        parallel.graph.use_overlapped_completion().unwrap();
+    }
     serial.execute().unwrap();
     parallel.execute().unwrap();
     assert_eq!(
@@ -168,9 +187,25 @@ fn an_absorbing_input_class_is_checked_even_when_its_root_number_survives() {
 }
 
 fn earlier_child(dependent: bool) -> serde_json::Value {
+    let synchronous = earlier_child_mode(dependent, false);
+    let overlap = earlier_child_mode(dependent, true);
+    for key in [
+        "bridged_tasks",
+        "conflicting_unions",
+        "committed_tasks",
+        "unused_tasks",
+    ] {
+        assert_eq!(synchronous["stats"][key], overlap["stats"][key]);
+    }
+    overlap
+}
+fn earlier_child_mode(dependent: bool, overlap: bool) -> serde_json::Value {
     use eggfuse_cell_runtime::value::Value;
     let source = "(datatype E (N i64) (F E i64) (G E) (H E E))\n(N 0) (N 1) (N 10) (N 11) (N 2) (N 3)\n(ruleset empty) (run-schedule (run empty))";
     let (mut serial, mut parallel) = executors(source, 2, 16);
+    if overlap {
+        parallel.graph.use_overlapped_completion().unwrap();
+    }
     for executor in [&mut serial, &mut parallel] {
         executor.execute().unwrap();
         let graph = &mut executor.graph;
@@ -273,6 +308,7 @@ fn batch_configuration_is_bounded_and_requires_a_pool() {
     .unwrap();
     let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
     let mut graph = Graph::new_with_scoped_completion(p).unwrap();
+    assert!(graph.use_overlapped_completion().is_err());
     assert!(graph.use_completion_read_batches(16).is_err());
     graph.use_parallel_port_guards(2, 32).unwrap();
     for limit in [0, 1, 65, usize::MAX] {
@@ -281,6 +317,93 @@ fn batch_configuration_is_bounded_and_requires_a_pool() {
     graph.use_completion_read_batches(16).unwrap();
     graph.use_completion_read_batches(16).unwrap();
     assert!(graph.use_completion_read_batches(8).is_err());
+}
+
+#[cfg(feature = "completion-overlap-probes")]
+fn held_reader_fixture() -> (Executor, Executor) {
+    use eggfuse_cell_runtime::value::Value;
+    let input = siblings(false, true, false);
+    let source = format!(
+        "{}\n(ruleset empty) (run-schedule (run empty))",
+        input.split("(ruleset merge)").next().unwrap()
+    );
+    let (mut serial, mut parallel) = executors(&source, 2, 16);
+    parallel.graph.use_overlapped_completion().unwrap();
+    for executor in [&mut serial, &mut parallel] {
+        executor.execute().unwrap();
+        let graph = &mut executor.graph;
+        let table = graph
+            .program
+            .tables
+            .iter()
+            .position(|t| t.name == "N")
+            .unwrap();
+        let values = [0, 1, 2].map(|i| {
+            graph
+                .lookup(table, &[Value::Int(i)])
+                .unwrap()
+                .unwrap()
+                .values
+                .last()
+                .unwrap()
+                .clone()
+        });
+        graph
+            .enqueue_union(values[0].clone(), values[1].clone())
+            .unwrap();
+        graph
+            .enqueue_union(values[0].clone(), values[2].clone())
+            .unwrap();
+    }
+    (serial, parallel)
+}
+
+#[cfg(feature = "completion-overlap-probes")]
+#[test]
+fn an_effective_union_commits_while_a_snapshot_reader_is_held() {
+    let (mut serial, mut parallel) = held_reader_fixture();
+    parallel.graph.use_completion_overlap_probe().unwrap();
+    serial.graph.repair().unwrap();
+    parallel.graph.repair().unwrap();
+    assert_eq!(
+        serial.graph.export().unwrap(),
+        parallel.graph.export().unwrap()
+    );
+    let report = parallel.graph.completion_batch_report();
+    assert!(
+        report["overlap"]["observed"]["effective_unions_with_active_readers"]
+            .as_u64()
+            .unwrap()
+            > 0,
+        "{report}"
+    );
+    assert!(
+        report["overlap"]["stats"]["overlay"]["copied_units"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    parallel.graph.stable_port_report();
+    parallel.graph.ownership_report();
+}
+
+#[cfg(feature = "completion-overlap-probes")]
+#[test]
+fn a_reader_panic_joins_workers_and_restores_committed_overlays() {
+    let (mut serial, mut parallel) = held_reader_fixture();
+    parallel.graph.use_completion_overlap_panic_probe().unwrap();
+    serial.graph.repair().unwrap();
+    let failure =
+        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| parallel.graph.repair()));
+    assert!(failure.is_err());
+    // A second epoch must be able to start, preserving the first one's commits.
+    parallel.graph.repair().unwrap();
+    assert_eq!(
+        serial.graph.export().unwrap(),
+        parallel.graph.export().unwrap()
+    );
+    assert_eq!(parallel.graph.pending_completion_tasks(), 0);
+    parallel.graph.stable_port_report();
 }
 
 #[test]
@@ -298,6 +421,7 @@ fn selective_batches_leave_unrelated_same_sort_completion_pending() {
 (run-schedule (seq (run seed) (run b) (run a)))
 "#;
     let (mut serial, mut parallel) = executors(source, 2, 16);
+    parallel.graph.use_overlapped_completion().unwrap();
     serial.use_port_scopes().unwrap();
     parallel.use_port_scopes().unwrap();
     serial.execute().unwrap();
@@ -349,6 +473,7 @@ fn partial_multi_input_guards_and_recreated_facts_keep_their_lifetimes() {
 (run-schedule (seq (run first) (run second) (run erase) (run recreate)))
 "#;
     let (mut serial, mut parallel) = executors(source, 2, 16);
+    parallel.graph.use_overlapped_completion().unwrap();
     parallel.execute_until(Some(1)).unwrap();
     let f = parallel
         .graph

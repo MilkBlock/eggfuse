@@ -2,6 +2,11 @@
 //! Scoped completion indexes only each nonempty table's head, not every pair
 //! of producers and consumers. Membership remains in one queue per fact.
 use super::*;
+impl crate::read_epoch::EpochValue for BTreeMap<FactRef, u64> {
+    fn copy_units(&self) -> usize {
+        self.len()
+    }
+}
 
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Counts {
@@ -21,7 +26,7 @@ pub(in crate::graph) struct Counts {
 }
 pub(in crate::graph) struct Pending {
     flat: Option<BTreeSet<FactRef>>,
-    tables: Vec<BTreeMap<FactRef, u64>>,
+    tables: crate::read_epoch::Slots<BTreeMap<FactRef, u64>>,
     heads: BTreeSet<(FactRef, usize)>,
     epochs: Vec<Option<u64>>,
     causes: Option<Vec<smallvec::SmallVec<[u64; 2]>>>,
@@ -34,21 +39,32 @@ pub(in crate::graph) struct Pending {
 #[derive(Clone, Copy)]
 pub(in crate::graph) struct ReadView<'a> {
     flat: Option<&'a BTreeSet<FactRef>>,
-    tables: &'a [BTreeMap<FactRef, u64>],
+    tables: crate::read_epoch::SlotsRead<'a, BTreeMap<FactRef, u64>>,
 }
 impl ReadView<'_> {
     pub fn contains(&self, table: usize, fact: &FactRef) -> bool {
         self.flat.map_or_else(
-            || self.tables[table].contains_key(fact),
+            || self.tables.get(table).unwrap().contains_key(fact),
             |s| s.contains(fact),
         )
+    }
+}
+impl<'a> ReadView<'a> {
+    pub fn frozen(tables: &'a [BTreeMap<FactRef, u64>]) -> Self {
+        Self {
+            flat: None,
+            tables: crate::read_epoch::SlotsRead {
+                base: tables,
+                changes: None,
+            },
+        }
     }
 }
 impl Default for Pending {
     fn default() -> Self {
         Self {
             flat: Some(BTreeSet::new()),
-            tables: vec![],
+            tables: Default::default(),
             heads: BTreeSet::new(),
             epochs: vec![],
             causes: None,
@@ -59,10 +75,17 @@ impl Default for Pending {
     }
 }
 impl Pending {
+    pub fn freeze(&mut self) -> std::sync::Arc<Vec<BTreeMap<FactRef, u64>>> {
+        assert!(self.scoped());
+        self.tables.freeze()
+    }
+    pub fn thaw(&mut self) -> crate::read_epoch::Work {
+        self.tables.thaw()
+    }
     pub fn reader(&self) -> ReadView<'_> {
         ReadView {
             flat: self.flat.as_ref(),
-            tables: &self.tables,
+            tables: self.tables.reader(),
         }
     }
     pub fn enable_scopes(&mut self, n: usize) {
@@ -71,7 +94,7 @@ impl Pending {
             "enable scoped queues at a settled boundary"
         );
         if self.flat.take().is_some() {
-            self.tables = vec![BTreeMap::new(); n];
+            self.tables = vec![BTreeMap::new(); n].into();
             self.epochs = vec![None; n];
         }
     }

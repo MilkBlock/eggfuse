@@ -143,10 +143,19 @@ impl Graph {
         row: Row,
         found: Option<Row>,
     ) -> Result<()> {
+        self.commit_port_key_result(f, row, found, None)
+    }
+    pub(super) fn commit_port_key_result(
+        &mut self,
+        f: FactRef,
+        row: Row,
+        found: Option<Row>,
+        result: Option<Value>,
+    ) -> Result<()> {
         self.join_constructor_epoch(&row, found.as_ref());
         if let Some(other) = &found {
             self.enqueue_union(
-                row.values.last().unwrap().clone(),
+                result.unwrap_or_else(|| row.values.last().unwrap().clone()),
                 other.values.last().unwrap().clone(),
             )?;
         }

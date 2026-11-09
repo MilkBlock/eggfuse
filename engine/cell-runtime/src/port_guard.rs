@@ -1,8 +1,60 @@
 //! Borrowed, immutable inputs for constructor guards. Workers return local
 //! counts and a match result; liveness, candidate ordering and commits remain
-//! with the executor. The borrow prevents mutation while a guard is running.
+//! with the executor. Borrowed bases stay immutable; during an epoch the
+//! coordinator can commit changes to separate overlays.
 use super::*;
 use composition::conditions::Condition;
+use std::sync::Arc;
+
+pub(super) struct Snapshot {
+    parents: Arc<crate::value::parent_epoch::Base>,
+    nodes: Arc<HashMap<FactRef, Stored>>,
+    components: Arc<Vec<Option<composition::Component>>>,
+    pending: Arc<Vec<BTreeMap<FactRef, u64>>>,
+}
+#[derive(Clone, Copy, Default, Serialize)]
+pub(super) struct EpochWork {
+    parents: crate::read_epoch::Work,
+    nodes: crate::read_epoch::Work,
+    components: crate::read_epoch::Work,
+    queues: crate::read_epoch::Work,
+}
+impl EpochWork {
+    pub fn add(&mut self, other: Self) {
+        self.parents.add(other.parents);
+        self.nodes.add(other.nodes);
+        self.components.add(other.components);
+        self.queues.add(other.queues);
+    }
+    pub fn total(&self) -> crate::read_epoch::Work {
+        let mut total = self.parents;
+        total.add(self.nodes);
+        total.add(self.components);
+        total.add(self.queues);
+        total
+    }
+}
+impl Snapshot {
+    pub fn reader(&self) -> ReadView<'_> {
+        ReadView {
+            parents: crate::value::parent_epoch::Read {
+                base: &self.parents,
+                delta: None,
+            },
+            nodes: crate::read_epoch::MapRead {
+                base: &self.nodes,
+                changes: None,
+            },
+            components: crate::read_epoch::SlotsRead {
+                base: &self.components,
+                changes: None,
+            },
+        }
+    }
+    pub fn ready(&self) -> ready::ReadView<'_> {
+        ready::ReadView::frozen(&self.pending)
+    }
+}
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Work {
@@ -18,9 +70,9 @@ pub struct Work {
 /// relation. It contains no Graph, Rc, interior counters, locks or copied rows.
 #[derive(Clone, Copy)]
 pub struct ReadView<'a> {
-    parents: &'a Parents,
-    components: &'a [Option<composition::Component>],
-    nodes: &'a HashMap<FactRef, Stored>,
+    parents: crate::value::parent_epoch::Read<'a>,
+    components: crate::read_epoch::SlotsRead<'a, Option<composition::Component>>,
+    nodes: crate::read_epoch::MapRead<'a, FactRef, Stored>,
 }
 
 pub struct KeyGuard<'a> {
@@ -54,7 +106,7 @@ impl ReadView<'_> {
             .and_then(|c| c.signals.get(port.symbol))
             .copied()
             .flatten()
-            .map(|id| Value::Eq(root(self.parents, id)))
+            .map(|id| Value::Eq(self.parents.root(id)))
             .ok_or_else(|| "expired stable port".into())
     }
 
@@ -123,7 +175,7 @@ impl ReadView<'_> {
                     .flatten()
                     .ok_or("expired stable port")?;
                 work.port_reads += 1;
-                Ok(root(self.parents, id))
+                Ok(self.parents.root(id))
             };
             if resolve(a)? != resolve(b)? {
                 return Ok(false);
@@ -134,14 +186,46 @@ impl ReadView<'_> {
 }
 
 impl Graph {
+    pub(super) fn freeze_completion_reads(&mut self) -> Snapshot {
+        let parents = self.parents.freeze();
+        let nodes = self.stable_ports.as_mut().unwrap().nodes.freeze();
+        let owner = self.ownership.as_mut().unwrap();
+        let components = owner.composition.components.freeze();
+        let pending = owner.pending.freeze();
+        Snapshot {
+            parents,
+            nodes,
+            components,
+            pending,
+        }
+    }
+    pub(super) fn thaw_completion_reads(&mut self) -> EpochWork {
+        let parents = self.parents.thaw();
+        let nodes = self.stable_ports.as_mut().unwrap().nodes.thaw();
+        let owner = self.ownership.as_mut().unwrap();
+        let components = owner.composition.components.thaw();
+        let queues = owner.pending.thaw();
+        EpochWork {
+            parents,
+            nodes,
+            components,
+            queues,
+        }
+    }
     pub fn stable_port_reader(&self) -> Result<ReadView<'_>> {
         if self.stable_ports.is_none() {
             return Err("stable fields disabled".into());
         }
         Ok(ReadView {
-            parents: &self.parents,
-            components: &self.ownership.as_ref().unwrap().composition.components,
-            nodes: &self.stable_ports.as_ref().unwrap().nodes,
+            parents: self.parents.reader(),
+            components: self
+                .ownership
+                .as_ref()
+                .unwrap()
+                .composition
+                .components
+                .reader(),
+            nodes: self.stable_ports.as_ref().unwrap().nodes.reader(),
         })
     }
 
@@ -209,9 +293,15 @@ mod tests {
         let mut work = Work::default();
         assert!(
             !ReadView {
-                parents: &parents,
-                components: &components,
-                nodes: &HashMap::default(),
+                parents: parents.reader(),
+                components: crate::read_epoch::SlotsRead {
+                    base: &components,
+                    changes: None
+                },
+                nodes: crate::read_epoch::MapRead {
+                    base: &HashMap::default(),
+                    changes: None
+                },
             }
             .condition_matches(0, &condition, &target, &[Value::Int(8)], &mut work)
             .unwrap()
@@ -221,9 +311,15 @@ mod tests {
         let mut work = Work::default();
         assert!(
             !ReadView {
-                parents: &parents,
-                components: &components,
-                nodes: &HashMap::default(),
+                parents: parents.reader(),
+                components: crate::read_epoch::SlotsRead {
+                    base: &components,
+                    changes: None
+                },
+                nodes: crate::read_epoch::MapRead {
+                    base: &HashMap::default(),
+                    changes: None
+                },
             }
             .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
             .unwrap()
@@ -240,9 +336,15 @@ mod tests {
         let mut work = Work::default();
         assert!(
             ReadView {
-                parents: &parents,
-                components: &components,
-                nodes: &HashMap::default(),
+                parents: parents.reader(),
+                components: crate::read_epoch::SlotsRead {
+                    base: &components,
+                    changes: None
+                },
+                nodes: crate::read_epoch::MapRead {
+                    base: &HashMap::default(),
+                    changes: None
+                },
             }
             .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
             .unwrap()
@@ -273,9 +375,15 @@ mod tests {
         })];
         let nodes = HashMap::default();
         let view = ReadView {
-            parents: &parents,
-            components: &components,
-            nodes: &nodes,
+            parents: parents.reader(),
+            components: crate::read_epoch::SlotsRead {
+                base: &components,
+                changes: None,
+            },
+            nodes: crate::read_epoch::MapRead {
+                base: &nodes,
+                changes: None,
+            },
         };
         let condition = Condition {
             sites: [0, 1],

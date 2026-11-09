@@ -41,6 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
         println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
+        println!("  --overlap-completion (experimental snapshot reads overlapping ordered commits; requires completion batches)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
         println!("  --pure-epochs (experimental bound pure-congruence batches across source Runs)");
         println!("  --unique-port-publication (experimental ordered publication through complete input-domain uniqueness)");
@@ -102,7 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             #[cfg(feature = "spine-blocks")]
             "--repair-cells" => {}
-            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" => {}
+            "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" | "--overlap-completion" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             _ => return Err(format!("unknown option {flag}").into()),
@@ -127,6 +128,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let local = args.iter().any(|x| x == "--local-unions");
     let unique_publication = args.iter().any(|x| x == "--unique-port-publication");
     let completion_batch_tasks: Option<usize> = opt("--completion-batch-tasks").map(|v| v.parse()).transpose()?;
+    let overlap_completion = args.iter().any(|x| x == "--overlap-completion");
+    if overlap_completion && completion_batch_tasks.is_none() {
+        return Err("--overlap-completion requires --completion-batch-tasks".into());
+    }
     let pure_epochs = unique_publication || args.iter().any(|x| x == "--pure-epochs");
     let port_scopes = pure_epochs || args.iter().any(|x| x == "--port-scopes");
     let scoped_execution = port_scopes || args.iter().any(|x| x == "--scoped-execution");
@@ -187,6 +192,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if scoped_queues { graph.use_scoped_completion()?; }
     if let Some(workers) = guard_workers { graph.use_parallel_port_guards(workers, guard_grain)?; }
     if let Some(limit) = completion_batch_tasks { graph.use_completion_read_batches(limit)?; }
+    if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     if scoped_execution { runtime.use_scoped_execution()?; }

@@ -1,0 +1,24 @@
+{
+  "sum-bits": {
+    "pure_epochs": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs"]
+    },
+    "batch_two": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--completion-batch-tasks", "16"]
+    },
+    "overlap_two": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--completion-batch-tasks", "16", "--overlap-completion"]
+    },
+    "overlap_four": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "4", "--completion-batch-tasks", "16", "--overlap-completion"]
+    },
+    "overlap_small": {
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": ["--pure-epochs", "--guard-workers", "2", "--completion-batch-tasks", "4", "--overlap-completion"]
+    }
+  }
+}

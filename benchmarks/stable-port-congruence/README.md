@@ -22,6 +22,10 @@ Stable fields now live in one authoritative fact directory. Batch workers borrow
 that directory and the ready queues directly, avoiding eager per-candidate guard
 descriptors. This changes storage and preparation costs, not the source waits or
 the ordered commit protocol.
+Optional `--overlap-completion` now lets an earlier completion commit while later
+workers read immutable epoch bases. A coordinator write overlay preserves the
+current state. The deterministic held-reader fixture proves this overlap; source
+waits, ordered writes and the epoch-end join remain, and no speedup is admitted.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -44,7 +48,7 @@ phase does not establish completion of the objective.
 | Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance, publish and consume independent regions of the same Eq sort; no useful main-workload bypass, same-table independence still open |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
 | Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; worker preparation, dispatch, collection, speculation and allocator requests recorded; speed/scaling admission pending |
-| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Exact guards use immutable Send + Sync views and local counters; opt-in persistent workers execute them; mutable commits, publication ownership and useful task grouping remain open |
+| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Snapshot guard reads overlap ordered commits with certified invalidation; copy/merge cost, concurrent writers, source publication ownership and useful task grouping remain open |
 | Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Partial: persistent workers read across completion tasks, with input-class certificates and ordered commits; concurrent mutation, asynchronous publication and scaling remain open |
 | Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, source-union effects, shared influence wiring and compiled bound expressions; cheaper coverage/order proofs and useful parallel task grouping remain open |
 
@@ -1410,4 +1414,138 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/direct-guards-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/direct-guards-allocator-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/direct-guards-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-direct-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Snapshot readers overlap ordered completion commits
+
+The preceding execution at `6578af2b` removed eager candidate descriptors but
+still joined every reader before any commit. A long guard could therefore hold
+up an earlier independent task whose answer was already available. This iteration
+uses the existing compiler-certified input footprint and no-birth completion
+window to retain read-epoch semantics while the coordinator commits. It removes
+that mandatory batch-wide pre-commit join. It discharges no additional source-Run
+wait: six query and four RHS waits remain, and source writes are still ordered.
+
+`--overlap-completion` requires `--completion-batch-tasks` and its guard pool.
+Parent links, stable nodes, component records and table queues move into four
+immutable shared bases. Their bodies are not copied at snapshot creation. Live
+coordinator reads consult write overlays; workers keep the old bases. Parent
+links use a delta map, retirement uses tombstones, and a component or queue table
+is cloned on first mutation in that epoch. The pool's in-place scope keeps Graph
+and Rc owners on the calling thread. Worker results arrive through a bounded
+channel and are consumed in source order. Completed earlier child tasks retain
+their original ordering and certify their unions as before. The refreshed source
+result is supplied separately to the common collision path, avoiding a copy of
+canonical source inputs still borrowed by workers.
+
+The same input-class and liveness checks remain mandatory. A conflicting union
+discards the dependent suffix; a legacy/opaque effect ends the window. Every
+spawned job is collected and charged, even when its answer is unused. Once the
+scope has joined, the bases return to ordinary storage and overlays merge back.
+The cleanup also runs after a worker panic. An epoch cannot span a source Run or
+create a new peer. There is one coordinator writer and no unsafe Send/Sync code.
+See [the epoch contract](scoped-executor-contract.md#overlapped-completion-epochs)
+for the full obligations.
+
+The test-only `completion-overlap-probes` feature holds the second reader until
+the first effective union commits. It passes with real workers in both storage
+configurations. A temporary negative control requiring all reader results before
+the first commit times out at that gate and fails. Another probe panics the held
+reader after a union: retrying completion preserves that commit and reaches the
+serial reference. These gates are excluded from production audit builds. Unit
+tests independently verify base storage moves without cloning, only written
+slots are copied, old parent roots remain fixed, and retired nodes remain visible
+only in the old snapshot.
+
+All five frozen sum-bits lanes preserve the exact 1,428 Run state/RHS/effective-
+write/resume/Spine/schedule hashes. Disabled and synchronous controls preserve
+every previous deterministic work counter. Overlap preserves actual candidate
+and guard work, task ordering, invalidation, liveness outcomes, source waits and
+committed effects. The only pre-existing counter changes are the replaced task
+scratch buffers and spare signal capacity: cloning touched signal vectors drops
+allocated slots from 10,300 to 9,652. That capacity reduction is not counted as
+saved logical work.
+
+The 16-task lane still has 84 epochs, 697 prepared tasks, 622 cached commits,
+380 intervening completions and 75 discarded reads. Two and four workers do the
+same deterministic completion/overlay work. Their final normal executions sample
+four and seven effective unions, respectively, with a reader active at entry to
+the union helper; the four-task lane samples one. These samples depend on
+scheduling and are not speed, parallelism efficiency or a scaling result. The
+controlled gate is the evidence that a real commit can precede reader completion.
+
+| 16-task overlay layer | Mutable accesses | First-write logical values copied | Entries merged at epoch end |
+| --- | ---: | ---: | ---: |
+| Parent links | 499 | 0 | 499 |
+| Stable-node retirement | 823 | 0 | 823 |
+| Components | 1,978 | 8,067 | 689 |
+| Scoped table queues | 2,404 | 1,011 | 352 |
+
+Component copy units count a header plus frame IDs and signal slots; queue copy
+units count map entries. These are operation proxies, not equivalent bytes or
+latencies. The 16-task lane also creates 336 base snapshot handles, spawns and
+receives 697 tasks, performs 1,394 activity-counter updates, clones 622 row handles
+without cloning their values, and creates 84 result channels. Its explicit result
+buffers request 246,688 bytes with two workers. The remaining batch scratch
+requests 492,664 bytes; neither subtotal includes all channel, scheduler or
+copy-on-write allocations. Bake charges snapshot/channel/task setup, collection,
+activity updates, row handles, overlay writes/growth/copies/merges and scratch.
+The actual-execution credit fixture rejects missing copy costs and gives this
+small-guard pipeline negative net event savings against serial. Equal weights
+still do not establish elapsed-time savings.
+
+The allocator diagnostic matches all deterministic counters of the normal build.
+Execution increments over the current serial control are:
+
+| Configuration | Extra allocations | Extra reallocations | Extra requested bytes |
+| --- | ---: | ---: | ---: |
+| Synchronous, 2 workers, 16 tasks | 330 | 2 | 650,056 |
+| Overlap, 2 workers, 16 tasks | 3,409 | 7 | 1,742,552 |
+| Overlap, 4 workers, 16 tasks | 3,567 | 7 | 2,041,304 |
+| Overlap, 2 workers, 4 tasks | 5,466 | 5 | 2,302,952 |
+
+Thus the two-worker overlap path adds 3,079 allocations and 1,092,496 requested
+bytes over the synchronous batch path. This is a substantial additional cost.
+Scheduler/channel requests can depend on interleaving; these figures are one
+execution's requests, not bounds or RSS. Setup is reported separately in
+[the audit](overlap-epochs-audit.json), including the shared pool handle. Parsing,
+export and native thread stacks are excluded from allocation intervals.
+
+Validation passes 319 workspace tests (four ignored), 115 focused tests in each
+storage configuration and the minimal compile check. The final per-layer counters
+were additionally checked by 14 compiler-library/completion tests in each storage
+configuration and both final audit builds; these are repeat checks, not extra
+unique tests. Existing semantic fixtures now exercise both synchronous and
+overlapped batches, including child unions, partial multi-input guards,
+retired/recreated peers and independent scoped progress.
+
+This is **default-off standalone Cell CPU overlap, not native egglog or an
+admitted acceleration**. No timing or scaling campaign was run. Most snapshot
+copy units come from components. The next structural opportunity is to separate
+their mutable lifetime metadata from the data guards read, and examine whether
+rewriting signal representatives is still necessary when port reads already
+resolve the equality relation. This needs its own lifetime/domain proof. Global
+source waits, general query matching, publication ownership and parallel writers
+remain open; the present work does not complete the overall objective.
+
+Reproduce the preceding eleven focused suites with
+`completion-overlap-probes` added to both feature sets, using `overlap-epochs-`
+log prefixes. The final per-layer checks use the same feature sets with
+`--lib --test completion_batches`, recorded as `overlap-epochs-layer-tests.log`
+and `overlap-epochs-layer-non-sparse-tests.log`. Preserve the prior
+`direct-guards-final-audit/results.json`. For the negative control, temporarily
+receive every buffered outcome before the ordered commit loop in
+`completion_overlap.rs`, run
+`an_effective_union_commits_while_a_snapshot_reader_is_held`, record its expected
+timeout/failure in `overlap-epochs-negative-join.log`, then restore the loop.
+Standalone audit builds exclude the diagnostic gate feature:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/overlap-epochs-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/overlap-epochs-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/overlap-epochs-final-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/overlap-epochs-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/overlap-epochs-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/overlap-epochs-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-overlap-epochs.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
