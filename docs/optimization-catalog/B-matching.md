@@ -44,10 +44,10 @@
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/free_join/entry_rejections [value]`<br>`report:/free_join/disjoint_rule_skips [value]`<br>`report:/sieve/stats/rejected [value]` |
-| 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]` |
+| 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]`<br>`report:/free_join/entry_rows [value]`<br>`report:/free_join/entry_probes [value]`<br>`report:/free_join/entry_cache_hits [value]`<br>`report:/free_join/cover_rows [value]`<br>`report:/free_join/key_groups [value]`<br>`report:/free_join/bucket_rows_examined [value]`<br>`report:/free_join/bucket_rows_materialized [value]`<br>`report:/free_join/reverse_keys [value]`<br>`report:/free_join/reverse_refs [value]`<br>`report:/free_join/reverse_epoch_bins [value]`<br>`report:/free_join/disjoint_key_reads [value]`<br>`report:/sieve/stats/rule_uses [value]`<br>`report:/sieve/stats/dependency_rows [value]` |
 | 覆盖 / 规模 / 回退 | `program:/free_join_entry [count]`<br>`program:/physical_plan/ranges [count]` |
 
-解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup.
+解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

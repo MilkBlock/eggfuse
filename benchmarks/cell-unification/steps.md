@@ -236,3 +236,11 @@ Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Fre
 最终普通构建的 sum-bits 语义 pass，1,428 个 Run、最终状态、326 项工作指标和完整 Free Join/Sieve/neighbor 计数保持。源 recipe 有 3,018 对有向原子连接、3,231 项列连接；这是静态覆盖量，不是运行时匹配或已提交 mutation。短检查覆盖重复列/字面量、循环连接和晚到行、强制哈希碰撞、晚到 bridge、邻居值替换/删除重建/union repair、旧产物与损坏计划拒绝；4 项针对性测试及最小编译通过。
 
 这一步删除重复准备并统一静态连接，未把必要的 runtime summaries、候选索引或范围过滤宣称为已删除，也不从计数相同推出加速。范围条件、动态 join 选择、local-context prefix 及 index 生命周期仍待统一。输出在 `out/cell-links-checked`，sum 和 semantic/catalog 命令沿用前节；`check_links.py ROOT benchmarks/cell-unification/links-check.json --commit COMMIT` 校验结果。测试命令记录在 `test-{final-unit,free-join,sieve,neighbor,final-minimal}.log`：分别为 runtime 的 `cell::links::tests`，compiler 集成测试 `free_join_preserves_cyclic_matches_and_late_rows_under_collisions`、`a_late_bridge_wakes_a_rule_with_an_empty_join_summary`、`changed_child_ports_follow_value_replacement_and_key_repair`，以及 no-default-features compile。本轮第 3 个实现提交，不新增速度/分配采样，历史回退仍未解决。
+
+## Bake 对候选过滤计费
+
+静态连接统一后继续检查 credit，发现 Work 未覆盖 Free Join/Sieve 的解码前工作。新增 19 项已有计数：Entry 与缓存探测、bucket 检查/物化、分组、反向枚举、disjoint key 检查，以及 Sieve 的准备、构建、更新和依赖传播。它们没有包含在普通 key_lookup_calls 或 decoded_rows 中；membership_only/shared_column_reads 和 reused_summaries 是已收费计数的子集，不再重复收费，拒绝/skip 数也不直接换取收益。
+
+使用已保存的 `563e4ab0` sum-bits 普通报告，这 19 项合计 125,534 个等权计数单位；它们此前已经执行，并非本次新增工作，更不是已提交 mutation 数。目录 B2 补入缺少的 13 项已有成本观察。评分仍是未经时间标定的代理，不能把一个合计值解释成纳秒或速度提升。
+
+四项 Work 账本检查和一次真实 iterate 的 measured-work 选择回归通过。扩展既有账本回归验证：减少 1 次 lookup、增加 1 次 Entry probe 和 1 次 summary update，净分为 -1；缺少必要计数必须报错，不能按零处理。真实短样例继续拒绝不能覆盖历史维护成本的候选。此改动只影响 Bake 的评分，不改冻结产物的 runtime 执行；复用上一节已验收的 runtime 报告，不重跑 sum-bits。结果见 `filter-credit-check.json`。这是本轮第 4 个实现提交，随下一项一起测速。

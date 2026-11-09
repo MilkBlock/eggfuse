@@ -444,6 +444,71 @@
             "source": "report",
             "pointer": "/publication/range_rows",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_cache_hits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/cover_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/key_groups",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/bucket_rows_examined",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/bucket_rows_materialized",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/reverse_keys",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/reverse_refs",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/reverse_epoch_bins",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/disjoint_key_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/rule_uses",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/dependency_rows",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -459,7 +524,7 @@
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model.",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
@@ -2726,7 +2791,7 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。",
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md"

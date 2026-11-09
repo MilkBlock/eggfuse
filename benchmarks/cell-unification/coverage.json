@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "ab33d47c",
-    "implementation_commits_since_timing": 3,
+    "implementation_commits_since_timing": 4,
     "evidence": "benchmarks/cell-unification/routes-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not count. User authorized this checkpoint after three implementation commits; next interval is five.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -487,8 +487,10 @@
     {
       "id": "I1",
       "title": "模板选择、迭代 catalog 与实际工作 credit",
-      "status": "common_definition_only",
-      "metrics_from_catalog": "I1"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "I1",
+      "filter_credit_checks": "benchmarks/cell-unification/filter-credit-check.json",
+      "remaining": "Measured Cell trials charge pre-decode filtering as well as result/repair maintenance. Common iterative composition/materialization authority, remaining filter families and calibrated speed acceptance still need work; equal-weight credit is not time."
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",

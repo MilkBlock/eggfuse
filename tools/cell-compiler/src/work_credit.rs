@@ -37,6 +37,16 @@ impl Work {
                 "publication_probes", "receipt_probes", "receipt_steps", "history_borrows",
             ]),
             ("publication", &["row_reads", "column_rows", "range_rows", "neighbor_rows"]),
+            // Hash/index work precedes row decoding, so it is not represented
+            // by decoded_rows or key_lookup_calls. Include failed admission,
+            // grouping, reverse enumeration and summary maintenance.
+            ("free_join", &[
+                "entry_rows", "entry_probes", "entry_cache_hits",
+                "entry_bucket_rows_examined", "entry_bucket_rows_materialized",
+                "cover_rows", "key_groups", "probes", "bucket_rows_examined", "bucket_rows_materialized",
+                "reverse_keys", "reverse_refs", "reverse_epoch_bins", "disjoint_key_reads",
+            ]),
+            ("sieve/stats", &["rule_uses", "build_rows", "update_rows", "dependency_rows", "probes"]),
         ] {
             for field in fields {
                 let key = if group.is_empty() { field.to_string() } else { format!("{group}/{field}") };
@@ -53,6 +63,9 @@ impl Work {
         // fragment_slot_probes/replacements are subsets, not extra lookups.
         // local_witness_route_index_probes is the direct-index subset of
         // local_witness_route_probes, not another dispatch to charge.
+        // Free Join membership_only/shared_column_reads are entry_probes
+        // subsets. Sieve reused_summaries is a rule_uses subset. Rejections,
+        // skips and successful filter outcomes do not earn additional credit.
         for field in ["attempts", "steps", "effect_steps", "port_writes", "row_copies"] {
             let key = format!("repair_cells/stats/{field}");
             let stats = &report["repair_cells"]["stats"];
@@ -257,6 +270,13 @@ mod tests {
             "/stage_spine/stats/fragment_delivery_checks", "/entry_schedule/stats/publication_slot_probes",
             "/entry_schedule/stats/publication_pending_pushes", "/entry_schedule/stats/fragment_pending_writes",
             "/entry_schedule/stats/fragment_pending_reads",
+            "/free_join/entry_rows", "/free_join/entry_probes", "/free_join/entry_cache_hits",
+            "/free_join/entry_bucket_rows_examined", "/free_join/entry_bucket_rows_materialized",
+            "/free_join/cover_rows", "/free_join/key_groups", "/free_join/probes",
+            "/free_join/bucket_rows_examined", "/free_join/bucket_rows_materialized",
+            "/free_join/reverse_keys", "/free_join/reverse_refs", "/free_join/reverse_epoch_bins", "/free_join/disjoint_key_reads",
+            "/sieve/stats/rule_uses", "/sieve/stats/build_rows", "/sieve/stats/update_rows",
+            "/sieve/stats/dependency_rows", "/sieve/stats/probes",
         ];
         let mut costs = report.clone();
         for key in charged { bump(&mut costs, key); }
@@ -271,6 +291,9 @@ mod tests {
             "/stage_spine/stats/local_witness_route_index_probes",
             "/stage_spine/stats/fragment_deliveries", "/entry_schedule/stats/fragment_slot_probes",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
+            "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
+            "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
+            "/sieve/stats/empty_join_skips",
         ] { bump(&mut outcomes, key); }
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
         // A Spine donor already increments decoded_rows: charging the donor's
@@ -278,6 +301,17 @@ mod tests {
         bump(&mut outcomes, "/stage_spine/stats/local_witness_row_reads");
         bump(&mut outcomes, "/stats/decoded_rows");
         assert_eq!(baseline.savings(&Work::read(&outcomes).unwrap()).0, -1);
+        // Removing a lookup is a loss when it adds more pre-decode filtering.
+        let mut shifted = report.clone();
+        shifted["key_lookup_calls"] = json!(report["key_lookup_calls"].as_u64().unwrap().checked_sub(1).unwrap());
+        bump(&mut shifted, "/free_join/entry_probes");
+        bump(&mut shifted, "/sieve/stats/update_rows");
+        assert_eq!(baseline.savings(&Work::read(&shifted).unwrap()).0, -1);
+        for (group, field) in [("/free_join", "entry_probes"), ("/sieve/stats", "update_rows")] {
+            let mut missing = report.clone();
+            missing.pointer_mut(group).unwrap().as_object_mut().unwrap().remove(field);
+            assert!(Work::read(&missing).unwrap_err().contains(&format!("{}/{field}", &group[1..])));
+        }
         let mut missing = report;
         missing["stats"]["register_prefix"].as_object_mut().unwrap().remove("row_reads");
         assert!(Work::read(&missing).unwrap_err().contains("stats/register_prefix/row_reads"));
