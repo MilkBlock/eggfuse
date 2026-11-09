@@ -26,6 +26,10 @@ Optional `--overlap-completion` now lets an earlier completion commit while late
 workers read immutable epoch bases. A coordinator write overlay preserves the
 current state. The deterministic held-reader fixture proves this overlap; source
 waits, ordered writes and the epoch-end join remain, and no speedup is admitted.
+Signal bindings now retain their first equality ID. Union no longer rewrites
+them, lifetime counts are coordinator-only, and component retirement uses a
+tombstone without copying the reader's bindings. Queue copies, boundary routing
+and parent-walk costs remain explicit; no additional source wait is removed.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -1548,4 +1552,130 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/overlap-epochs-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/overlap-epochs-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/overlap-epochs-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-overlap-epochs.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Immutable signal bindings remove component copy-on-write
+
+The `c05e4cc2` catalog identified 8,067 component copy units and 1,011 queue copy
+units in the two-worker, 16-task overlap lane. Its stable field reads already
+resolved bindings through Parents, but `propagate_owned_union` still rewrote each
+activated signal's canonical ID. Fact retirement also mutably borrowed a whole
+component to decrement one counter. Both operations copied reader data during an
+epoch. The compiler's checked symbolic aliases and no-birth completion window
+supply the relevant proof: existing signal bindings need not change, and no shape
+extension or new binding may enter that window. This iteration removes those
+writes and copies. It discharges no additional source-Run wait; the six query and
+four RHS waits remain.
+
+A signal now retains its first bound equality ID. A later frame reuses it only
+after checking its current root against the actual input. Native routing is
+captured **before** adding the union parent link; resolving the old domain after
+that write could otherwise miss it. Union still migrates boundary records and
+runs the same shared signal programs. Cleanup resolves retained bindings to
+current roots, including inactive producer slots, before removing boundaries.
+No new per-producer consumer index is introduced.
+
+Live-fact counts move to a coordinator-only dense vector. Component records are
+not Clone and do not implement the copy-on-write slot interface. Shape extension
+and initial binding use a mutable accessor that rejects an active read epoch;
+the only epoch mutation is whole-component retirement. That operation records a
+tombstone without copying the old component. Workers retain its old frames and
+bindings until they join, and current liveness still gates every commit. The
+lifetime vector adds ten growth events, including setup, and retains 16,384 bytes
+of capacity in this sample; its 4,583 updates equal adopted facts plus births and
+retirements. Moving the count out also shrinks each component record.
+
+All five frozen sum-bits lanes preserve the previous 1,428 ordered state/RHS/
+effective-write/resume/Spine/schedule hashes. The collector requires every prior
+guard, notification, boundary, source-wait and committed-effect counter to remain
+identical. It allows only the declared storage changes and the extra counter
+space. Each of the 1,841 actual signal activations still runs its notification
+program; its formerly unconditional representative write is gone.
+
+| Two workers, 16-task epochs | `c05e4cc2` | Current |
+| --- | ---: | ---: |
+| Component logical values copied | 8,067 | 0 |
+| Component overlay writes | 1,978 | 222 |
+| Component entries merged | 689 | 222 |
+| Total overlay logical values copied | 9,078 | 1,011 |
+| Total overlay writes | 5,704 | 3,948 |
+| Total overlay entries merged | 2,363 | 1,896 |
+
+All remaining copy units belong to queue tables. The 222 component writes are
+one-time retirements. Parents, stable-node and queue overlay work is unchanged.
+Four workers do the same deterministic work. The four-task lane removes 9,408
+component copy units, retaining 2,424 queue copy units and 219 component tombstones.
+Because signal vectors are no longer cloned with reduced spare capacity, live
+allocated signal slots return from 9,652 to 10,300. This is neither a logical
+regression nor a saving; it is recorded as retained capacity.
+
+Avoiding representative writes increases some read-time parent walks. The
+16-task lane makes the same 121,464 port/result root resolutions as before;
+these now account for 138,754 logical parent-directory probes. Ownership and
+influence analysis make 59,819 counted root resolutions and 71,123 probes. Of
+those resolutions, 58,894 are the existing influence-output reads; 925 are newly
+required route/attachment/cleanup queries. These counts include terminating
+lookups. An overlay can consult two physical maps per logical probe, so the
+counts are not cycle estimates or a complete measure of cache traffic. Bake
+charges these probes and lifetime operations; the unit fixture rejects a report
+that omits the parent cost. Adding a u64 to worker-local counts also requests
+5,576 more result-buffer bytes in the 697-task lane, explicitly retained in the
+comparison.
+
+The final allocator diagnostic agrees with the normal build's deterministic
+work. Execution differences against the same lane in `c05e4cc2` are:
+
+| Configuration | Allocation calls | Reallocation calls | Requested bytes |
+| --- | ---: | ---: | ---: |
+| Serial pure epochs | 0 | +4 | 0 |
+| Synchronous, 2 workers, 16 tasks | 0 | +4 | +5,576 |
+| Overlap, 2 workers, 16 tasks | -689 | -1 | -88,968 |
+| Overlap, 4 workers, 16 tasks | -691 | -1 | -89,192 |
+| Overlap, 2 workers, 4 tasks | -793 | -1 | -104,200 |
+
+Setup adds one allocation and five reallocations in every lane, with the same
+total requested bytes: the separate lifetime vector offsets the smaller component
+records. Two-worker overlap still exceeds the **current synchronous lane** by
+2,390 allocation calls and 997,952 requested bytes. Scheduler/channel allocations
+can vary with interleaving; these are one diagnostic execution, excluding
+parsing/export and native thread stacks. This is a verified removal of component
+maintenance, **not a timing or scaling admission**. Overlap remains default-off.
+
+Validation passes 320 workspace tests (four ignored), 115 focused tests in each
+storage configuration and the minimal compile check. The final influence-root
+cost accounting additionally passes 40 compiler-library/completion/influence
+checks in each configuration; these are repeat checks, not additional unique
+tests. The two-link alias fixture requires three parent probes from the original
+binding, so a hidden canonical rewrite cannot pass it. The lifetime fixture now
+merges roots between producer deletion and final component retirement. A unit
+fixture retires a non-Clone entry while its snapshot remains readable. Existing
+held-reader and panic-recovery gates continue to pass; the held-reader fixture
+must retire components and must copy zero component values.
+
+See [the frozen evidence](immutable-signals-audit.json) and
+[the binding/lifetime contract](scoped-executor-contract.md#stable-signal-bindings-and-component-lifetime).
+The next costs to address are queue copies and per-task dispatch/result delivery.
+The compiler already supplies a bounded no-birth window and complete read
+footprints; using those facts to share delivery buffers or group worker tasks
+must preserve ordered survivor selection, invalidation and discarded-work
+accounting. Parallel writers, source matching/publication ownership and the
+remaining source waits are still open parts of the overall objective.
+
+Reproduce the preceding workspace, eleven focused suites and minimal checks
+with the `immutable-signals-` log prefix. The final cost checks use
+`--lib --test pure_epochs --test port_completion --test completion_batches` with
+the same sparse/non-sparse feature sets, including `completion-overlap-probes`;
+record them as `immutable-signals-cost-tests.log` and
+`immutable-signals-cost-non-sparse-tests.log`. Preserve the preceding
+`overlap-epochs-final-audit` and `overlap-epochs-allocator-audit` artifacts.
+Standalone audit builds omit diagnostic gate features:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/immutable-signals-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/immutable-signals-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/immutable-signals-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/immutable-signals-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/immutable-signals-allocator-runtime benchmarks/stable-port-congruence/overlap-epochs-audit-manifest.json out/stable-port-congruence/immutable-signals-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-immutable-signals.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

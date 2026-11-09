@@ -434,11 +434,15 @@ impl Graph {
             let Value::Eq(id) = row.values.last().unwrap() else {
                 return Err("typed batch result".into());
             };
-            let output = Value::Eq(root(&self.parents, *id));
+            let (id, probes) = self.parents.reader().root_counted(*id);
+            let output = Value::Eq(id);
             let stable = self.stable_ports.as_ref().unwrap();
             stable
                 .root_resolutions
                 .set(stable.root_resolutions.get() + 1);
+            stable
+                .root_parent_probes
+                .set(stable.root_parent_probes.get() + probes);
             refreshed_result = Some(output);
             self.batch_stats().result_refreshes += 1;
         }

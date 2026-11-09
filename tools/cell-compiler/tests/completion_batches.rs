@@ -54,6 +54,17 @@ fn compare_mode(source: &str, workers: usize, limit: usize, overlap: bool) -> se
     }
     assert_eq!(parallel.graph.pending_completion_tasks(), 0);
     let report = parallel.graph.completion_batch_report();
+    if overlap {
+        let components = &report["overlap"]["stats"]["layers"]["components"];
+        assert_eq!(
+            components["copied_units"], 0,
+            "union and retirement must never copy component bindings"
+        );
+        assert_eq!(
+            components["writes"], components["merged_entries"],
+            "the only component overlay writes are one-time retirements"
+        );
+    }
     assert!(
         report["stats"]["dispatches"].as_u64().unwrap() > 0,
         "{report}"
@@ -376,6 +387,12 @@ fn an_effective_union_commits_while_a_snapshot_reader_is_held() {
             .unwrap()
             > 0,
         "{report}"
+    );
+    let components = &report["overlap"]["stats"]["layers"]["components"];
+    assert_eq!(components["copied_units"], 0);
+    assert!(
+        components["merged_entries"].as_u64().unwrap() > 0,
+        "the held-reader fixture must actually retire components"
     );
     assert!(
         report["overlap"]["stats"]["overlay"]["copied_units"]

@@ -81,18 +81,29 @@ pub(crate) struct Read<'a> {
     pub delta: Option<&'a FxHashMap<u64, u64>>,
 }
 impl Read<'_> {
-    pub fn root(&self, mut id: u64) -> u64 {
-        while let Some(&to) = self
-            .delta
-            .and_then(|d| d.get(&id))
-            .or_else(|| self.base.get(&id))
-        {
+    #[cfg(test)]
+    pub fn root(&self, id: u64) -> u64 {
+        self.root_counted(id).0
+    }
+    /// Logical parent-directory probes, including the terminating lookup.
+    /// An overlay probe can consult both the delta and the base map.
+    pub fn root_counted(&self, mut id: u64) -> (u64, u64) {
+        let mut probes = 0;
+        loop {
+            probes += 1;
+            let Some(&to) = self
+                .delta
+                .and_then(|d| d.get(&id))
+                .or_else(|| self.base.get(&id))
+            else {
+                break;
+            };
             if to == id {
                 break;
             }
             id = to;
         }
-        id
+        (id, probes)
     }
 }
 

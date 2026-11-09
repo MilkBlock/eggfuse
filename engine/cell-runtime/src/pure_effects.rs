@@ -151,7 +151,11 @@ impl Proof<'_> {
                 };
                 let output = component.signals[output].ok_or("unbound live effect output")?;
                 self.counts.output_reads += 1;
-                use_output(stored.table, root(&self.graph.parents, output), self.counts);
+                use_output(
+                    stored.table,
+                    runtime.stats.signal_root(&self.graph.parents, output),
+                    self.counts,
+                );
             }
         }
         // New Set sites are finite RHS-local data, discarded with this proof.

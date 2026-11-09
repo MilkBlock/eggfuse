@@ -334,8 +334,9 @@ Before dispatch, four base containers move into immutable shared ownership:
 parent links, stable nodes, component records, and scoped queue tables. Creating
 these bases copies no container body. Current coordinator reads first consult
 their write overlays. New parent links use a small delta map; retired nodes use
-tombstones. A component or queue table is copied on its first write in this
-epoch, and subsequent writes reuse that copy. The ordinary non-epoch path still
+tombstones. A queue table is copied on its first write in this epoch, and
+subsequent writes reuse that copy. Component bindings are immutable within an
+epoch; retirement records a tombstone without copying them. The ordinary non-epoch path still
 reads and writes its local containers. All overlays merge back after scoped
 workers join, including when an error or panic exits the epoch.
 
@@ -367,10 +368,44 @@ order are scheduling-dependent, separate from deterministic work counters.
 This protocol removes the mandatory all-readers join before every ordered commit.
 It retains an epoch-end join, ordered writes and the existing source-Run fences.
 Snapshot handles, channel operations, activity atomics, retained results, copied
-components/queue entries and overlay merge work are costs, not inferred savings.
+queue entries and overlay merge work are costs, not inferred savings.
 Copies of whole touched queue tables can be expensive; compiler/Bake selection
 must account for them. Independent source matching/publication and parallel
 writers remain separate requirements.
+
+### Stable signal bindings and component lifetime
+
+A symbolic signal stores its first bound equality ID, not a cached canonical
+representative. Union changes Parents and the existing boundary domain; it does
+not rewrite component signals. Matching, influence and publication resolve the
+binding through the appropriate current or snapshot Parents. Typed symbolic
+wiring proves which columns share a signal; it does not prove equality between
+distinct signals. Attaching a later frame must compare a retained binding's
+current root with the actual input value before reusing that slot.
+
+Capture the displaced native signal before inserting a union parent link.
+After that insertion, resolving its retained binding could reach the new root
+and wrongly reject the old domain. Boundary migration and shared-program
+notifications still execute in their original order; no new reverse consumer
+index is installed. Component retirement resolves every initialized binding to
+its current root before removing the corresponding boundary record, including
+signals whose last producer was deleted in an earlier stage.
+
+The coordinator's live-fact counts are separate from the component records
+workers read. Decrementing a count does not create a component overlay entry.
+The last retirement removes current frame/domain membership and records one
+component tombstone. A reader keeps the old component until the scope joins;
+its answer still needs current liveness checks before committing. Component IDs
+are not recycled. Shape extension and first-time binding are allowed only outside
+an epoch; Component deliberately implements neither Clone nor EpochValue, so
+ordinary slot mutation cannot silently introduce copy-on-write during a read.
+
+Avoiding canonical writes can lengthen parent walks. Ownership binding roots,
+port/guard reads, and their parent-directory probes are charged explicitly, as
+are lifetime updates/growths. Probe counts include the terminating lookup and
+are logical directory operations: an epoch overlay may perform two physical map
+lookups for one probe. These counts do not establish a speedup or remove the
+remaining boundary migration, queue copies, ordered writer or epoch-end join.
 
 ## Gates that must remain open
 

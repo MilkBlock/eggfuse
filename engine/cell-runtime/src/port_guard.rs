@@ -60,6 +60,7 @@ impl Snapshot {
 pub struct Work {
     pub node_lookups: u64,
     pub port_reads: u64,
+    pub parent_probes: u64,
     pub key_fields: u64,
     pub scalar_guards: u64,
     pub equality_guards: u64,
@@ -100,22 +101,28 @@ impl ReadView<'_> {
         self.nodes.get(&fact)
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
-        self.components
+        self.read_port_counted(port).map(|(value, _)| value)
+    }
+    fn read_port_counted(&self, port: PortRef) -> Result<(Value, u64)> {
+        let id = self
+            .components
             .get(port.component as usize)
             .and_then(Option::as_ref)
             .and_then(|c| c.signals.get(port.symbol))
             .copied()
             .flatten()
-            .map(|id| Value::Eq(self.parents.root(id)))
-            .ok_or_else(|| "expired stable port".into())
+            .ok_or("expired stable port")?;
+        let (id, probes) = self.parents.root_counted(id);
+        Ok((Value::Eq(id), probes))
     }
 
     fn field_matches(&self, field: &Field, value: &Value, work: &mut Work) -> Result<bool> {
         match field {
             Field::Scalar(stored) => Ok(stored == value),
             Field::Port(port) => {
-                let current = self.read_port(*port)?;
+                let (current, probes) = self.read_port_counted(*port)?;
                 work.port_reads += 1;
+                work.parent_probes += probes;
                 Ok(current == *value)
             }
         }
@@ -175,7 +182,9 @@ impl ReadView<'_> {
                     .flatten()
                     .ok_or("expired stable port")?;
                 work.port_reads += 1;
-                Ok(self.parents.root(id))
+                let (id, probes) = self.parents.root_counted(id);
+                work.parent_probes += probes;
+                Ok(id)
             };
             if resolve(a)? != resolve(b)? {
                 return Ok(false);
@@ -261,6 +270,9 @@ impl Graph {
             .root_resolutions
             .set(stats.root_resolutions.get() + work.port_reads);
         stats
+            .root_parent_probes
+            .set(stats.root_parent_probes.get() + work.parent_probes);
+        stats
             .key_field_comparisons
             .set(stats.key_field_comparisons.get() + work.key_fields);
     }
@@ -277,7 +289,6 @@ mod tests {
         let components = vec![Some(composition::Component {
             shape: 0,
             frames: smallvec::smallvec![1],
-            live_facts: 2,
             signals: vec![Some(10), Some(11), Some(20), Some(21), Some(30)],
         })];
         let condition = Condition {
@@ -370,7 +381,6 @@ mod tests {
         let components = vec![Some(composition::Component {
             shape: 0,
             frames: smallvec::smallvec![1],
-            live_facts: 2,
             signals: vec![Some(10), Some(11)],
         })];
         let nodes = HashMap::default();

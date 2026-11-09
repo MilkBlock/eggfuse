@@ -77,6 +77,7 @@ pub(in crate::graph) struct Runtime {
     row_views: Counter<u64>,
     port_reads: Counter<u64>,
     root_resolutions: Counter<u64>,
+    root_parent_probes: Counter<u64>,
     notifications: u64,
     notified_columns: u64,
     legacy_key_enqueues: u64,
@@ -182,12 +183,16 @@ impl Graph {
             .copied()
             .flatten()
             .ok_or("expired stable port")?;
+        let (id, probes) = self.parents.reader().root_counted(binding);
         if meter {
             let stats = self.stable_ports.as_ref().ok_or("stable fields disabled")?;
             stats.port_reads.set(stats.port_reads.get() + 1);
             stats.root_resolutions.set(stats.root_resolutions.get() + 1);
+            stats
+                .root_parent_probes
+                .set(stats.root_parent_probes.get() + probes);
         }
-        Ok(Value::Eq(root(&self.parents, binding)))
+        Ok(Value::Eq(id))
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
         self.port_value(port, true)

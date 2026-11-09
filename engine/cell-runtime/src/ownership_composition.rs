@@ -371,20 +371,13 @@ pub(super) struct Training {
     joined: HashMap<u32, usize>,
     seen: BTreeSet<(u32, usize)>,
 }
-#[derive(Clone)]
 pub(super) struct Component {
     pub shape: usize,
     pub frames: smallvec::SmallVec<[u32; 4]>,
-    pub live_facts: usize,
     // Instance values only. Static use lists remain in Shape; live facts are
-    // already recorded by Graph. Slots survive until the component retires.
+    // already recorded by Graph. A bound slot never changes; equality is read
+    // through Parents. Slots survive until the component retires.
     pub signals: Vec<Option<u64>>,
-}
-impl crate::read_epoch::EpochValue for Option<Component> {
-    fn copy_units(&self) -> usize {
-        self.as_ref()
-            .map_or(1, |c| 1 + c.frames.len() + c.signals.len())
-    }
 }
 #[derive(Clone, Copy)]
 pub(super) struct Frame {
@@ -451,6 +444,8 @@ pub(super) struct Cursor {
 }
 pub(super) struct Runtime {
     pub components: crate::read_epoch::Slots<Option<Component>>,
+    // Coordinator-only lifetime metadata. Guards never consult these counts.
+    pub live_facts: Vec<usize>,
     pub frames: Frames,
     pub shapes: Vec<Option<Rc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
@@ -465,6 +460,7 @@ impl Runtime {
     pub fn new(p: &Plan) -> Self {
         Self {
             components: Default::default(),
+            live_facts: vec![],
             frames: Frames::default(),
             shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),
@@ -688,7 +684,10 @@ impl Graph {
             }
         }
         let (component, ordinal) = if let Some((component, shape, cross_stage)) = selected {
-            let c = m.composition.components[component as usize]
+            let c = m
+                .composition
+                .components
+                .local_mut(component as usize)
                 .as_mut()
                 .unwrap();
             let ordinal = c.frames.len();
@@ -718,7 +717,6 @@ impl Graph {
             m.composition.components.push(Some(Component {
                 shape: program,
                 frames: smallvec::smallvec![cell],
-                live_facts: 0,
                 signals: vec![
                     None;
                     m.composition.shapes[program]
@@ -728,6 +726,10 @@ impl Graph {
                         .len()
                 ],
             }));
+            let before = m.composition.live_facts.capacity();
+            m.composition.live_facts.push(0);
+            m.stats.component_lifetime_growths +=
+                u64::from(before != m.composition.live_facts.capacity());
             m.stats.components_created += 1;
             m.stats.components_live += 1;
             (id, 0)
@@ -754,34 +756,36 @@ impl Graph {
     pub(super) fn composition_retire_fact(&mut self, cell: u32) {
         let m = self.ownership.as_mut().unwrap();
         let f = m.composition.frames[&cell];
-        let c = m.composition.components[f.component as usize]
-            .as_mut()
-            .unwrap();
-        c.live_facts -= 1;
-        if c.live_facts == 0 {
+        m.composition.live_facts[f.component as usize] -= 1;
+        m.stats.component_lifetime_updates += 1;
+        if m.composition.live_facts[f.component as usize] == 0 {
+            let c = m.composition.components[f.component as usize]
+                .as_ref()
+                .unwrap();
             for (symbol, id) in c.signals.iter().enumerate() {
                 m.stats.component_signal_retire_visits += 1;
                 let Some(id) = id else { continue };
+                let id = m.stats.signal_root(&self.parents, *id);
                 let signal = Signal {
                     component: f.component,
                     symbol,
                 };
                 m.stats.signal_bindings_live -= 1;
                 m.stats.signal_bindings_retired += 1;
-                if let Some(set) = m.boundaries.get_mut(id) {
+                if let Some(set) = m.boundaries.get_mut(&id) {
                     if set.remove(&signal) {
                         m.stats.boundary_live -= 1;
                         m.stats.boundary_edges_removed += 1;
                     }
                     if set.is_empty() {
-                        m.boundaries.remove(id);
+                        m.boundaries.remove(&id);
                     }
                 }
             }
             for id in &c.frames {
                 m.composition.frames.remove(id);
             }
-            m.composition.components[f.component as usize] = None;
+            m.composition.components.retire(f.component as usize);
             m.stats.components_live -= 1;
             m.stats.components_retired += 1;
         }

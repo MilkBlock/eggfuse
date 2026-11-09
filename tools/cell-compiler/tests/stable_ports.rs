@@ -333,7 +333,7 @@ fn deleted_producer_retains_consumers_across_a_late_union() {
 
 #[test]
 fn stable_address_survives_representative_change_and_expires_on_recreation() {
-    let p = source("(datatype E (N i64) (F E)) (N 0) (N 1) (F (N 1)) (run-schedule (run))");
+    let p = source("(datatype E (N i64) (F E)) (N 0) (N 1) (N 2) (F (N 2)) (run-schedule (run))");
     let n = p.tables.iter().position(|t| t.name == "N").unwrap();
     let f = p.tables.iter().position(|t| t.name == "F").unwrap();
     let mut g = Graph::new_with_port_keys(p).unwrap();
@@ -353,18 +353,41 @@ fn stable_address_survives_representative_change_and_expires_on_recreation() {
         .last()
         .unwrap()
         .clone();
-    let old = g.lookup(f, &[b.clone()]).unwrap().unwrap();
+    let c = g
+        .lookup(n, &[Value::Int(2)])
+        .unwrap()
+        .unwrap()
+        .values
+        .last()
+        .unwrap()
+        .clone();
+    assert!(a < b && b < c, "fixture requires a two-link parent chain");
+    let old = g.lookup(f, &[c.clone()]).unwrap().unwrap();
     let Dependency::Fact(witness) = old.witness else {
         panic!("constructor fact")
     };
     let address = g.fact_port(witness, 0).unwrap();
+    assert_eq!(g.read_port(address).unwrap(), c);
+    g.enqueue_union(b.clone(), c.clone()).unwrap();
+    g.repair().unwrap();
     assert_eq!(g.read_port(address).unwrap(), b);
     g.enqueue_union(a.clone(), b.clone()).unwrap();
     g.repair().unwrap();
     assert_eq!(g.fact_port(witness, 0), Some(address));
+    let probes = g.stable_port_report()["stats"]["root_parent_probes"]
+        .as_u64()
+        .unwrap();
     assert_eq!(g.read_port(address).unwrap(), a);
     assert_eq!(
-        old.values[0], b,
+        g.stable_port_report()["stats"]["root_parent_probes"]
+            .as_u64()
+            .unwrap()
+            - probes,
+        3,
+        "the original binding follows both links; union must not rewrite it"
+    );
+    assert_eq!(
+        old.values[0], c,
         "a previously returned row is an immutable snapshot"
     );
     let domains = g.stable_port_report()["stats"]["port_domain_probes"]

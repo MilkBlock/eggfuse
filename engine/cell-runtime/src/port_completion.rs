@@ -265,7 +265,12 @@ impl Graph {
                     counts.output_reads += 1;
                     let value =
                         component.signals[output].ok_or("live seed lacks output binding")?;
-                    offer(root(&self.parents, value), &mut roots, &mut seen, counts);
+                    offer(
+                        runtime.stats.signal_root(&self.parents, value),
+                        &mut roots,
+                        &mut seen,
+                        counts,
+                    );
                 }
             }
         }
@@ -346,7 +351,7 @@ impl Graph {
                         let value =
                             component.signals[output].ok_or("live output lacks signal binding")?;
                         offer(
-                            crate::value::root(&self.parents, value),
+                            runtime.stats.signal_root(&self.parents, value),
                             &mut roots,
                             &mut seen,
                             counts,

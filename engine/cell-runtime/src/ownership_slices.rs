@@ -113,7 +113,7 @@ impl PortProgram {
 /// Checked Entry substitutions share symbols within a component. Foreign inputs
 /// and escaped aliases retain canonical-root boundary entries.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub(super) struct Signal {
+pub(in crate::graph) struct Signal {
     pub component: u32,
     pub symbol: usize,
 }

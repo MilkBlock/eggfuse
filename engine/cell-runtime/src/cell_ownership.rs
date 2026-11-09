@@ -177,6 +177,10 @@ struct Stats {
     dispatch_scratch_growths: u64,
     dispatch_scratch_bytes: usize,
     signal_binding_reads: u64,
+    signal_root_queries: Counter<u64>,
+    signal_parent_probes: Counter<u64>,
+    component_lifetime_updates: u64,
+    component_lifetime_growths: u64,
     signal_bindings_created: u64,
     signal_bindings_retired: u64,
     component_signal_retire_visits: u64,
@@ -197,6 +201,14 @@ struct Stats {
     domain_planning_slice_steps: Counter<u64>,
     domain_signal_visits: Counter<u64>,
     domain_slice_steps: Counter<u64>,
+}
+impl Stats {
+    fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
+        let (id, probes) = parents.reader().root_counted(id);
+        self.signal_root_queries.set(self.signal_root_queries.get() + 1);
+        self.signal_parent_probes.set(self.signal_parent_probes.get() + probes);
+        id
+    }
 }
 #[derive(Serialize)]
 struct Barrier {
@@ -363,7 +375,7 @@ impl Graph {
         let c = m.components[frame.component as usize].as_ref().unwrap();
         m.shapes[c.shape].as_ref().unwrap().ports[frame.ordinal][local] == signal.symbol
     }
-    fn native_signal(&self, id: u64) -> Option<Signal> {
+    pub(super) fn native_signal(&self, id: u64) -> Option<Signal> {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
@@ -372,11 +384,12 @@ impl Graph {
             .native
             .get(&slot)?;
         let signal = self.composed_signal(cell, local);
-        (m.composition.components[signal.component as usize]
+        let bound = m.composition.components[signal.component as usize]
             .as_ref()?
-            .signals[signal.symbol]
-            == Some(id))
-        .then_some(())?;
+            .signals[signal.symbol]?;
+        if bound != id && m.stats.signal_root(&self.parents, bound) != id {
+            return None;
+        }
         Some(signal)
     }
     fn boundary(&mut self, root: u64, signal: Signal) {
@@ -391,10 +404,8 @@ impl Graph {
         self.ensure_composition_frame(f.cell);
         let m = self.ownership.as_mut().unwrap();
         let component = m.composition.frames[&f.cell].component;
-        m.composition.components[component as usize]
-            .as_mut()
-            .unwrap()
-            .live_facts += 1;
+        m.composition.live_facts[component as usize] += 1;
+        m.stats.component_lifetime_updates += 1;
         let template = self.cells[&f.cell].template;
         let program = self.program.cell_ownership.markers[template]
             .program
@@ -413,12 +424,13 @@ impl Graph {
             m.stats.boundary_ports_seen += u64::from(!native);
             m.stats.signal_port_attaches += 1;
             m.stats.signal_binding_reads += 1;
-            let slot = &mut m.composition.components[signal.component as usize]
-                .as_mut()
+            let slot = m.composition.components[signal.component as usize]
+                .as_ref()
                 .unwrap()
                 .signals[signal.symbol];
-            if let Some(bound) = *slot {
-                assert_eq!(bound, id, "symbolic alias disagrees with live port");
+            if let Some(bound) = slot {
+                assert!(bound == id || m.stats.signal_root(&self.parents, bound) == id,
+                    "symbolic alias disagrees with live port");
                 if m.composition.training.is_some() {
                     let frame = m.composition.frames[&f.cell];
                     let c = m.composition.components[signal.component as usize]
@@ -440,7 +452,8 @@ impl Graph {
                     }
                 }
             } else {
-                *slot = Some(id);
+                m.composition.components.local_mut(signal.component as usize)
+                    .as_mut().unwrap().signals[signal.symbol] = Some(id);
                 m.stats.signal_bindings_created += 1;
                 m.stats.signal_bindings_live += 1;
                 if !native {
@@ -541,11 +554,10 @@ impl Graph {
         }
         Some(out)
     }
-    pub(super) fn propagate_owned_union(&mut self, from: u64, to: u64) {
+    pub(super) fn propagate_owned_union(&mut self, from: u64, to: u64, native: Option<Signal>) {
         if self.ownership.is_none() {
             return;
         }
-        let native = self.native_signal(from);
         let m = self.ownership.as_mut().unwrap();
         m.stats.boundary_probes += 1;
         let signals = m.boundaries.remove(&from).unwrap_or_default();
@@ -560,10 +572,8 @@ impl Graph {
             let intrinsic = self.signal_is_native(signal, to);
             let m = self.ownership.as_mut().unwrap();
             m.stats.signal_activations += 1;
-            m.composition.components[signal.component as usize]
-                .as_mut()
-                .unwrap()
-                .signals[signal.symbol] = Some(to);
+            // The initial binding remains stable. Only equality and boundary
+            // routing change; shared signal programs still receive this event.
             if !intrinsic {
                 self.boundary(to, signal);
             }
@@ -859,10 +869,9 @@ impl Graph {
             assert_eq!(
                 m.stats.owned_live,
                 m.composition
-                    .components
+                    .live_facts
                     .iter()
-                    .flatten()
-                    .map(|c| c.live_facts as u64)
+                    .map(|&n| n as u64)
                     .sum::<u64>()
             );
             assert_eq!(
@@ -880,7 +889,7 @@ impl Graph {
                         m.composition.components[signal.component as usize]
                             .as_ref()
                             .unwrap()
-                            .signals[signal.symbol],
+                            .signals[signal.symbol].map(|bound| root(&self.parents, bound)),
                         Some(id)
                     );
                     assert!(!self.signal_is_native(signal, id));
@@ -907,7 +916,7 @@ impl Graph {
                                 m.composition.components[signal.component as usize]
                                     .as_ref()
                                     .unwrap()
-                                    .signals[signal.symbol],
+                                    .signals[signal.symbol].map(|bound| root(&self.parents, bound)),
                                 Some(*id)
                             );
                             *references.entry(signal).or_default() += 1;
@@ -942,7 +951,7 @@ impl Graph {
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":"eggfuse-ownership-markers/v4","port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
-            "inventory":{"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})

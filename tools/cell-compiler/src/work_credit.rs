@@ -63,7 +63,7 @@ impl Work {
         for field in ["marker_entries","marker_anchor_reads","boundary_insert_attempts","boundary_probes",
             "owner_visits","body_visits","port_checks","row_copies","key_completions","boundary_rebuilds","boundary_body_reads",
             "domain_queries","domain_owner_visits","domain_body_visits","domain_legacy_visits","domain_results","unbound_query_calls","unbound_query_rows",
-            "signal_binding_reads","signal_bindings_created","signal_bindings_retired","component_signal_retire_visits","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
+            "signal_binding_reads","signal_root_queries","signal_parent_probes","component_lifetime_updates","component_lifetime_growths","signal_bindings_created","signal_bindings_retired","component_signal_retire_visits","signal_port_attaches","signal_port_detaches","signal_activations","slice_steps",
             "marker_union_requests","domain_planning_calls","domain_planning_signals","domain_planning_slice_steps","domain_signal_visits","domain_slice_steps",
             "components_created","components_retired","composition_entry_reads","composition_missing_sources",
             "composition_transition_probes","composition_unbaked_fallbacks","composition_requests","composition_shape_builds","composition_materializations","composition_shape_steps","composition_frames",
@@ -76,7 +76,7 @@ impl Work {
         }
         // Stable fields and equality-guarded keys replace maintenance with
         // reads/guards. Their work must not disappear from Bake's ledger.
-        for field in ["rows_installed", "node_retirement_probes", "node_lookups", "ports_installed", "row_views", "port_reads", "root_resolutions",
+        for field in ["rows_installed", "node_retirement_probes", "node_lookups", "ports_installed", "row_views", "port_reads", "root_resolutions", "root_parent_probes",
             "notifications", "notified_columns", "legacy_key_enqueues", "equality_enqueues", "equality_completions",
             "key_candidates", "key_field_comparisons", "pending_candidate_skips", "birth_hint_probes", "port_domain_probes"] {
             let key = format!("stable_ports/stats/{field}");
@@ -242,8 +242,13 @@ mod tests {
         assert_eq!(before_state, overlap_state);
         let overlap = Work::read(&overlap_report).unwrap();
         assert!(overlap.0["stable_ports/completion_batches/overlap/task_spawns"] > 0);
+        assert!(overlap.0["stable_ports/stats/root_parent_probes"] > 0);
+        assert!(overlap.0["cell_ownership/stats/signal_parent_probes"] > 0);
         assert!(serial.savings(&overlap).0 < 0);
         overlap_report["stable_ports"]["completion_batches"]["overlap"]["stats"]["overlay"].as_object_mut().unwrap().remove("copied_units");
         assert!(Work::read(&overlap_report).unwrap_err().contains("missing overlay work copied_units"));
+        after["stable_ports"]["parallel_guards"]["stats"]["prepared_candidates"] = 0.into();
+        after["stable_ports"]["stats"].as_object_mut().unwrap().remove("root_parent_probes");
+        assert!(Work::read(&after).unwrap_err().contains("missing stable-port work root_parent_probes"));
     }
 }

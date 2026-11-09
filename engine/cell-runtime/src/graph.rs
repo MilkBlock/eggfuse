@@ -1759,9 +1759,12 @@ impl Graph {
 
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }
+        // Capture the old native domain while hi is still a root. Stable
+        // signal bindings resolve through Parents and must not see this link.
+        let native = self.native_signal(hi);
         self.parents.insert(hi, lo);
         self.unique_union_frontier(hi);
-        self.propagate_owned_union(hi, lo);
+        self.propagate_owned_union(hi, lo, native);
         self.maintenance.union_frontier_probes += 1;
         let mut affected = self.uses.remove(&hi).unwrap_or_default();
         let displaced = affected.len();

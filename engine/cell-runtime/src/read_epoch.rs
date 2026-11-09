@@ -149,6 +149,12 @@ impl<T> From<Vec<T>> for Slots<T> {
     }
 }
 impl<T> Slots<T> {
+    /// Birth/shape updates are forbidden while workers retain a read epoch.
+    /// Unlike IndexMut, this path does not require or permit cloning a value.
+    pub fn local_mut(&mut self, index: usize) -> &mut T {
+        assert!(self.base.is_none(), "slot mutation during a read epoch");
+        &mut self.local[index]
+    }
     pub fn len(&self) -> usize {
         self.base.as_ref().map_or(self.local.len(), |b| b.len())
     }
@@ -197,6 +203,21 @@ impl<T> Index<usize> for Slots<T> {
         self.get(index).expect("slot index")
     }
 }
+impl<T> Slots<Option<T>> {
+    /// Retire a whole entry without first copying it. Its old value remains
+    /// in the immutable base until every reader has joined.
+    pub fn retire(&mut self, index: usize) {
+        assert!(self[index].is_some(), "retire a live slot once");
+        if self.base.is_none() {
+            self.local[index] = None;
+        } else {
+            let before = self.changes.capacity();
+            self.changes.insert(index, None);
+            self.work.writes += 1;
+            self.work.growths += u64::from(self.changes.capacity() != before);
+        }
+    }
+}
 impl<T: EpochValue> IndexMut<usize> for Slots<T> {
     fn index_mut(&mut self, index: usize) -> &mut T {
         let Some(base) = &self.base else {
@@ -233,6 +254,23 @@ impl<T> SlotsRead<'_, T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn whole_slot_retirement_keeps_nonclone_snapshot_without_copying() {
+        struct NonClone(u64);
+        let mut slots: Slots<Option<NonClone>> = vec![Some(NonClone(7))].into();
+        let snapshot = slots.freeze();
+        slots.retire(0);
+        assert!(slots[0].is_none());
+        assert_eq!(snapshot[0].as_ref().unwrap().0, 7);
+        drop(snapshot);
+        let work = slots.thaw();
+        assert_eq!(
+            (work.writes, work.copied_units, work.merged_entries),
+            (1, 0, 1)
+        );
+        *slots.local_mut(0) = Some(NonClone(8));
+        assert_eq!(slots[0].as_ref().unwrap().0, 8);
+    }
     impl EpochValue for Vec<u64> {
         fn copy_units(&self) -> usize {
             self.len()

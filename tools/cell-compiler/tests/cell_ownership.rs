@@ -686,12 +686,13 @@ fn active_marker_with_an_unseen_prefix_falls_back_without_expanding_code() {
 fn component_retirement_cleans_previously_inactive_signal_slots() {
     let src = r#"
 (datatype E (N i64) (F E) (Keep E))
-(ruleset make) (ruleset erase) (ruleset finish)
+(ruleset make) (ruleset erase) (ruleset merge) (ruleset finish)
 (rule ((= x (N 0)) (= y (N 1))) ((Keep y) (F x)) :ruleset make)
 (rule ((= x (N 0))) ((delete (F x))) :ruleset erase)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
 (rule ((= y (N 1))) ((delete (Keep y))) :ruleset finish)
 (N 0) (N 1)
-(run-schedule (seq (run make) (run erase) (run finish)))
+(run-schedule (seq (run make) (run erase) (run merge) (run finish)))
 "#;
     let p = raw_program(src);
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);

@@ -51,6 +51,7 @@ struct Job<'a> {
 pub(super) fn add_work(total: &mut guard::Work, work: &guard::Work) {
     total.node_lookups += work.node_lookups;
     total.port_reads += work.port_reads;
+    total.parent_probes += work.parent_probes;
     total.key_fields += work.key_fields;
     total.scalar_guards += work.scalar_guards;
     total.equality_guards += work.equality_guards;
