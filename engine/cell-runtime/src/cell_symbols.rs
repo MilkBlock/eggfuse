@@ -8,14 +8,14 @@ pub(crate) type SymbolKey = SmallVec<[usize; 4]>;
 
 /// Optional compiler-index invalidation. Plain local wiring carries no index
 /// footprint; a cross-stage donor index observes key reads and displaced roots.
-pub(crate) trait SymbolObserver {
+pub trait SymbolObserver {
     fn key(&mut self, _roots: &[usize]) {}
     fn merged(&mut self, _from: usize, _to: usize) {}
 }
 impl SymbolObserver for () {}
 
 #[derive(Clone, Default)]
-pub(crate) struct Symbols<W = ()> {
+pub struct Symbols<W = ()> {
     parents: Vec<usize>,
     literals: BTreeMap<Value, usize>,
     pub observer: W,
@@ -93,8 +93,8 @@ impl<W: SymbolObserver> Symbols<W> {
     /// Borrow constructor keys/results from the caller's surviving facts. The
     /// table operator is part of the key; all parameters must be equal. Explicit
     /// unions take effect only when the caller invokes `equal` at its boundary.
-    pub fn close_constructors<'a>(&mut self,
-        facts: impl Iterator<Item = (usize, &'a [usize], usize)> + Clone) {
+    pub fn close_constructors<'a, T: Ord>(&mut self,
+        facts: impl Iterator<Item = (T, &'a [usize], usize)> + Clone) {
         loop {
             let mut keys = BTreeMap::new();
             let mut changed = false;
@@ -107,5 +107,30 @@ impl<W: SymbolObserver> Symbols<W> {
             }
             if !changed { break; }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn source_named_relations_require_every_input_and_propagate_nested_results() {
+        let mut symbols = Symbols::with_slots(9);
+        let facts = [
+            ("Pair", vec![0, 2], 4), ("Pair", vec![1, 3], 5),
+            ("Wrap", vec![4], 6), ("Wrap", vec![5], 7),
+            ("Other", vec![1, 3], 8),
+        ];
+        let rows = || facts.iter().map(|(name, key, result)| (*name, key.as_slice(), *result));
+        symbols.equal(0, 1);
+        symbols.close_constructors(rows());
+        assert_ne!(symbols.root(4), symbols.root(5));
+        assert_ne!(symbols.root(6), symbols.root(7));
+        symbols.equal(2, 3);
+        symbols.close_constructors(rows());
+        assert_eq!(symbols.root(4), symbols.root(5));
+        assert_eq!(symbols.root(6), symbols.root(7));
+        assert_ne!(symbols.root(5), symbols.root(8));
     }
 }

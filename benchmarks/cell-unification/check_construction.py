@@ -9,7 +9,7 @@ from check_context import RUN_KEYS, GROUPS
 from check_view_query import stable
 
 
-def collect(root, commit):
+def collect(root, commit, phase='construction'):
     assert load(root / 'semantic-acceptance.json')['status'] == 'pass'
     groups = (*GROUPS, 'publication', 'entry_schedule', 'view_consumers', 'view_storage', 'known_results')
     def pair(directory, lanes, program, files):
@@ -31,7 +31,7 @@ def collect(root, commit):
                         if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     assert metrics[0] == metrics[1]
     fixtures = {}
-    for name in ('handoff', 'computed'):
+    for name in ('handoff', 'union' if phase == 'symbols' else 'computed'):
         path = root / f'fixture-{name}'
         for bits in (64, 0):
             f = pair(path, (f'baseline-{bits}', f'candidate-{bits}'), path / 'compiled/program.json',
@@ -44,7 +44,9 @@ def collect(root, commit):
         assert r['runtime_sha256'] == sha(root / f'runtime-{r["lane"]}')
         assert r['program_sha256'] == sha(root / f'fixture-{r["case"]}/compiled/program.json')
     tests = {}
-    for name, count in (('construction', 1), ('construction-nonsparse', 1), ('cell', 2), ('marker', 6), ('witness', 8)):
+    expected = (('symbols', 1), ('symbols-nonsparse', 1), ('closure', 1), ('marker', 6), ('barrier', 1), ('committed', 1)) if phase == 'symbols' else (
+        ('construction', 1), ('construction-nonsparse', 1), ('cell', 2), ('marker', 6), ('witness', 8))
+    for name, count in expected:
         path = root / f'test-{name}.log'
         assert sum(map(int, re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text()))) == count
         tests[name] = dict(passed=count, log_sha256=sha(path))
@@ -55,6 +57,8 @@ def collect(root, commit):
     assert len(emissions) == 2
     for row in emissions:
         fixture = root / f'fixture-{row["case"]}'
+        assert row['source_sha256'] == sha(fixture / 'source.egg')
+        assert set(row['unchanged_files']) == {'source_sk_mk.egg', 'marker-selection.json', 'marker-program.json', 'program.json'}
         for name, digest in row['unchanged_files'].items():
             assert digest == sha(fixture / 'compiled' / name) == sha(fixture / 'compiled-baseline' / name)
         for lane, digest in row['compiler_sha256'].items(): assert digest == sha(root / f'compiler-{lane}')
@@ -70,6 +74,11 @@ def collect(root, commit):
         removed='Separate marker constructor-result memo/selection and typed static source propagation; standalone resolve_alias entrypoint. Both frontends use the Cell construction flow for first-witness preservation, ordered fresh construction and reuse. The typed frontend also uses its Copy propagation and table invalidation.',
         limits='This is compile-time propagation over existing query/effect operands, not a runtime fact graph. Native lexical bindings, purity/deletion admission and typed SSA/deletion policy remain host obligations. Marker selection, iterative materialization boundaries and general Bake composition are not yet unified. The 5853 sum-bits static eliminations were already present and are preserved, not new savings. New operand keys and temporary proof-state layout have not been allocation/timing-profiled.',
         timing_cadence=dict(last_timed_commit='cc472d0f', implementation_commits_since_timing=2))
+    if phase == 'symbols':
+        result.update(baseline_commit='46aa864b',
+            removed='Independent marker union-find and congruence key/fixed-point loop. Marker publication and typed cross-stage handoffs now execute Cell Symbols; source operands are resolved once instead of repeatedly rendering terms and looking up child IDs during closure and row projection.',
+            limits='The source adapter retains expressions only for .egg emission and caches child symbols during compilation. Source publication admission, matching, materialization selection and iterative boundary composition remain separate. Source effects become equality evidence only at the publication boundary; typed queued unions keep their original barriers. Generic source-name keys and cached operand storage have not been timing/allocation-profiled; no new runtime credit or repair takeover is claimed.',
+            timing_cadence=dict(last_timed_commit='cc472d0f', implementation_commits_since_timing=3))
     return result
 
 
@@ -78,5 +87,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
+    p.add_argument('--phase', choices=('construction', 'symbols'), default='construction')
     args = p.parse_args()
-    args.output.write_text(json.dumps(collect(args.root, args.commit), indent=2) + '\n')
+    args.output.write_text(json.dumps(collect(args.root, args.commit, args.phase), indent=2) + '\n')

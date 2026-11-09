@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "cc472d0f",
-    "implementation_commits_since_timing": 2,
+    "implementation_commits_since_timing": 3,
     "evidence": "benchmarks/cell-unification/view-query-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -311,7 +311,8 @@
       "status": "in_progress",
       "requirement": "Compose and select the same Cell definitions and Entries; update optional marker materialization boundaries during iteration.",
       "completed_structure": [
-        "Native marker forwarding and typed Cell known-result planning now share the construction proof over matched inputs and ordered effects. Separate result memo/selection and typed alias resolver are removed."
+        "Native marker forwarding and typed Cell known-result planning now share the construction proof over matched inputs and ordered effects. Separate result memo/selection and typed alias resolver are removed.",
+        "Source marker publication and typed cross-stage result/repair proofs share Cell Symbols for equality and congruence. The source adapter retains emission expressions and pre-resolved operand symbols; independent marker union-find and closure are removed."
       ],
       "remaining": [
         "Unify source fragment selection and iterative Cell composition, derive consumer Entries and optional marker materialization boundaries from the same definitions, and remove the replaced boundary maintenance. Shared constructor-result propagation alone does not complete this takeover.",
@@ -341,8 +342,9 @@
     {
       "id": "A2",
       "title": "marker 选择与 Recipe lowering",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "A2"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "A2",
+      "remaining": "Marker publication equality now uses Cell Symbols. Fragment discovery, measured selection, source publication matching and iterative materialization boundaries still need a common Cell authority; no runtime repair or boundary removal is claimed."
     },
     {
       "id": "A3",

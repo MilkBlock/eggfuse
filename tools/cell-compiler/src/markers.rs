@@ -1,6 +1,7 @@
 //! Select correlated constructor fragments and materialize exact source views.
 use crate::{Result, surface::*};
 use eggfuse_cell_runtime::checksum::canonical;
+use eggfuse_cell_runtime::cell::Symbols;
 use microlp::{ComparisonOp, OptimizationDirection, Problem, Variable};
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -783,70 +784,35 @@ fn infer_types(body: &[J], sig: &J, types: &mut BTreeMap<String, String>) {
     }
 }
 
-#[derive(Default)]
-struct Congruence {
-    ids: BTreeMap<String, usize>,
-    expr: Vec<J>,
-    parents: Vec<usize>,
+struct SourceNode {
+    expression: J,
+    inputs: Vec<usize>,
 }
-impl Congruence {
+/// Source spellings are retained only to emit .egg operands. Equality and
+/// congruence belong to the same Cell proof used for cross-stage handoffs.
+#[derive(Default)]
+struct SourceSymbols {
+    ids: BTreeMap<String, usize>,
+    nodes: Vec<SourceNode>,
+    symbols: Symbols,
+}
+impl SourceSymbols {
     fn add(&mut self, e: &J) -> usize {
         let k = term(e);
         if let Some(i) = self.ids.get(&k) {
             return *i;
         }
-        for a in a(&e["args"]) {
-            self.add(a);
-        }
-        let id = self.expr.len();
-        self.expr.push(e.clone());
-        self.parents.push(id);
+        let inputs = a(&e["args"]).iter().map(|arg| self.add(arg)).collect();
+        let id = self.symbols.fresh();
+        debug_assert_eq!(id, self.nodes.len());
+        self.nodes.push(SourceNode { expression: e.clone(), inputs });
         self.ids.insert(k, id);
         id
-    }
-    fn root(&self, mut i: usize) -> usize {
-        while self.parents[i] != i {
-            i = self.parents[i]
-        }
-        i
-    }
-    fn join(&mut self, a: usize, b: usize) -> bool {
-        let (a, b) = (self.root(a), self.root(b));
-        if a == b {
-            return false;
-        }
-        self.parents[a.max(b)] = a.min(b);
-        true
     }
     fn equal(&mut self, a: &J, b: &J) {
         let x = self.add(a);
         let y = self.add(b);
-        self.join(x, y);
-    }
-    fn close(&mut self) {
-        loop {
-            let mut keys = BTreeMap::new();
-            let mut change = false;
-            for i in 0..self.expr.len() {
-                let e = &self.expr[i];
-                if e["kind"] != "call" {
-                    continue;
-                }
-                let k = (
-                    s(&e["head"]).to_owned(),
-                    a(&e["args"])
-                        .iter()
-                        .map(|v| self.root(self.ids[&term(v)]))
-                        .collect::<Vec<_>>(),
-                );
-                if let Some(old) = keys.insert(k, i) {
-                    change |= self.join(i, old);
-                }
-            }
-            if !change {
-                break;
-            }
-        }
+        self.symbols.equal(x, y);
     }
 }
 fn pure(v: &J, sig: &J) -> bool {
@@ -858,13 +824,13 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
     if views.is_empty() || names(&json!([body, head])).contains("_") {
         return vec![];
     }
-    let mut cg = Congruence::default();
+    let mut cg = SourceSymbols::default();
     let mut observed = vec![];
     let mut created = BTreeSet::new();
     fn observe(
         e: &J,
         sig: &J,
-        cg: &mut Congruence,
+        cg: &mut SourceSymbols,
         obs: &mut Vec<usize>,
         made: &mut BTreeSet<String>,
         rhs: bool,
@@ -911,26 +877,25 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
             cg.equal(&act["args"][0], &act["args"][1]);
         }
     }
-    cg.close();
+    // Only at this publication boundary may the source head's unions justify
+    // a marker write. They never authorize replacing an earlier RHS read.
+    cg.symbols.close_constructors(cg.nodes.iter().enumerate().filter_map(|(i, node)| {
+        (node.expression["kind"] == "call")
+            .then(|| (s(&node.expression["head"]), node.inputs.as_slice(), i))
+    }));
     let mut reps = BTreeMap::new();
-    for (i, e) in cg.expr.iter().enumerate() {
-        if e["kind"] == "var" {
-            reps.entry(cg.root(i)).or_insert(i);
+    for (i, node) in cg.nodes.iter().enumerate() {
+        if node.expression["kind"] == "var" {
+            reps.entry(cg.symbols.root(i)).or_insert(i);
         }
     }
     let mut rows = BTreeMap::<String, BTreeSet<Vec<usize>>>::new();
     for i in observed {
-        let e = &cg.expr[i];
-        let mut row = a(&e["args"])
-            .iter()
-            .map(|v| cg.ids[&term(v)])
-            .collect::<Vec<_>>();
-        row.push(i);
-        let row = row
-            .into_iter()
-            .map(|i| *reps.get(&cg.root(i)).unwrap_or(&i))
+        let node = &cg.nodes[i];
+        let row = node.inputs.iter().copied().chain([i])
+            .map(|i| *reps.get(&cg.symbols.root(i)).unwrap_or(&i))
             .collect();
-        rows.entry(s(&e["head"]).into()).or_default().insert(row);
+        rows.entry(s(&node.expression["head"]).into()).or_default().insert(row);
     }
     let mut out = vec![];
     let mut emitted = BTreeSet::new();
@@ -961,11 +926,11 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
                         .all(|(pat, &i)| {
                             if pat["kind"] == "var" {
                                 let old = ext.entry(s(&pat["name"]).into()).or_insert(i);
-                                cg.root(*old) == cg.root(i)
+                                cg.symbols.root(*old) == cg.symbols.root(i)
                             } else {
                                 cg.ids
                                     .get(&term(pat))
-                                    .is_some_and(|p| cg.root(*p) == cg.root(i))
+                                    .is_some_and(|p| cg.symbols.root(*p) == cg.symbols.root(i))
                             }
                         })
                     {
@@ -983,7 +948,7 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
         }
         for m in partial {
             let params = (0..view.sorts.len())
-                .map(|i| cg.expr[m[&format!("{SLOT}{i}")]].clone())
+                .map(|i| cg.nodes[m[&format!("{SLOT}{i}")]].expression.clone())
                 .collect::<Vec<_>>();
             if params.iter().all(|x| pure(x, sig)) {
                 let w = write(&view.name, params);

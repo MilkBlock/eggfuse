@@ -468,3 +468,14 @@ sum-bits 的 1,428 个 Run、最终 state 与 346 项工作指标保持，语义
 18 项相关测试及最小 feature 编译通过，包含正常/非稀疏结果推导、原见证保留、失效后重建、实际外部复用、marker 原生语义及含计算参数的效果顺序。两个短 marker 样例使用相同 feature 的冻结新旧编译器，source_sk_mk.egg、marker-selection.json、marker-program.json、program.json 均逐字节一致，新增 marker 字段为零；运行时各在正常/全碰撞哈希下对照，state/stages/binding-audit 和工作量相同。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个编译组件重新 lowering 一致。产物 out/cell-construction-proof；复核 check_construction.py ROOT OUTPUT --commit COMMIT。这里运行时对照是 standalone Cell CPU，native 原生执行只用于短样例语义检查。
 
 这是 cc472d0f 后第 2 个实现提交，未单独测速。Bake/marker 从 pending 改为 in_progress，只表示结果推导核心已接通；A1/A2 仍未重写，模板选取、迭代组合、可选 marker 物化边界及相应维护路径的统一仍须继续。不能把共用结果推导当作整个 Bake 接管完成，最终多线程阶段尚未开始。
+
+
+## Marker 发布与跨阶段 Cell 共用等价推导
+
+冻结 sum-bits 目录选择了 30 个 marker，含前缀共 34 个，生成 106 条发布 action；这些是编译计划规模，不是运行时提交数。前一轮接通结果转发后，继续检查这些发布的证明来源：marker 仍自带 parents、root/join 和 congruence 闭包，而跨阶段 handoff、结构端口已使用 Cell Symbols。本次删除 marker 的独立等价求解器；源表名与 typed 表编号通过同一泛型闭包执行，运算符和全部输入仍组成完整 key。
+
+源适配器只负责把源表达式映射到符号及恢复 .egg 参数。第一次访问表达式时即解析子符号，闭包和发布行投影不再反复 term 格式化、查找子表达式或复制运算符名。缓存子符号增加编译期存储，未作分配/时间度量；运行时实例不增加事实图、消费者列表或缓存。源发布仍在原效果之后使用 union 证明，不能倒推取消更早的 RHS 读取；typed 路径继续保留原始 union barrier 和失效义务。候选发现、发布匹配与可选物化边界还没有合并，不能将共享求解器视作这些工作的完成。
+
+11 项相关测试和最小 feature 编译通过，涵盖 source-name 多参数全等条件、嵌套传播、正常/非稀疏布局、typed 条件闭包、原生 marker 语义和两个 union barrier 回归。两个短样例（已有结果交接、union 后迟到输入）采用相同 feature 的冻结编译器：.egg、marker 选择、marker IR、program 四项逐字节一致；正常/全碰撞哈希下 state/stages/binding-audit 及工作量一致。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个组件重新 lowering 一致。产物 out/cell-marker-symbols，复核 check_construction.py ROOT OUTPUT --commit COMMIT --phase symbols。
+
+运行时检查仍为 standalone Cell CPU；native 执行仅用于短样例语义验证。本次是 cc472d0f 后第 3 个实现提交，不单独测速，也未宣称消除运行时 repair 或完成整体重写。

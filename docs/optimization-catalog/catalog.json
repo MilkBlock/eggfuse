@@ -178,7 +178,8 @@
       "sources": [
         "tools/cell-compiler/src/markers.rs",
         "tools/cell-compiler/src/marker_ir.rs",
-        "engine/cell-runtime/src/compiler/mod.rs"
+        "engine/cell-runtime/src/compiler/mod.rs",
+        "engine/cell-runtime/src/cell_symbols.rs"
       ],
       "metrics": {
         "benefit": [
@@ -213,7 +214,7 @@
           }
         ]
       },
-      "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。",
+      "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred.",
       "evidence": [
         "tools/cell-compiler/README.md"
       ],

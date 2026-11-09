@@ -8,11 +8,18 @@ from check_links import load, sha
 from run_view_fixtures import run
 
 
-def check(root, compiler):
+def check(root, compiler, phase='construction'):
     source = Path('tools/cell-compiler/tests/fixtures/marker-construction.egg').read_text()
     bodies = {'handoff': source,
         'computed': source.replace('((Out (G (F x)) n))',
                                   '((Out (G (F x)) n) (Keep (Out (G (F x)) (+ n 1))))')}
+    if phase == 'symbols':
+        bodies = {'handoff': source, 'union': source.replace('(ruleset make)',
+            '(ruleset merge) (ruleset later)\n'
+            '(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)\n'
+            '(rule ((= a (N 0))) ((Edge a 99)) :ruleset later)\n(ruleset make)')
+            .replace('(run read) (run keep)',
+                     '(run merge) (run read) (run later) (run read) (run keep)')}
     options = ('--marker-handoff', 'values')
     run(root, compiler, bodies, options)
     records = []
@@ -36,5 +43,6 @@ def check(root, compiler):
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('root', type=Path)
+    p.add_argument('--phase', choices=('construction', 'symbols'), default='construction')
     args = p.parse_args()
-    check(args.root, args.root / 'compiler-candidate')
+    check(args.root, args.root / 'compiler-candidate', args.phase)
