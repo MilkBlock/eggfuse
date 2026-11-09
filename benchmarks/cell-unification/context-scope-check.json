@@ -1,0 +1,369 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "context_work": {
+    "249": {
+      "bindings": 4,
+      "branch_slot_clears": 6,
+      "calls": 33,
+      "delta_terminal_rows": 1,
+      "fallbacks": 0,
+      "full_terminal_rows": 4,
+      "orientations": {
+        "0": 33
+      },
+      "peak_prefix_rows": 1,
+      "peak_roots": 1,
+      "port_candidates": 3,
+      "port_probes": 3,
+      "prefix_copies": 1,
+      "prefix_slots_copied": 13,
+      "reverse_groups": 0,
+      "reverse_reads": 0,
+      "root_rebuilds": 1,
+      "root_reuses": 32,
+      "root_rows": 1,
+      "spine_deferrals": 0,
+      "terminal_binding_copies": 0,
+      "terminal_pairs": 4,
+      "terminal_result_writes": 0,
+      "terminal_scratch_slots": 0,
+      "terminal_slots_copied": 0
+    }
+  },
+  "scope": "standalone Cell CPU; normal release; no timing or allocation audit",
+  "baseline_commit": "fdc9179c",
+  "candidate_commit": "f9cea51c",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups_excluding": [],
+  "compared_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context"
+  ],
+  "unchanged_work_metrics": 346,
+  "changed_work_metrics": {},
+  "fixtures": {
+    "branches": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "26a6568ccc8c026ef510dfc03bc8268aa2526df79a314f7b109f72caa81b07f6",
+        "stages.json": "90aa69bffcb960283dd5e58c7f1657f0f962ce0e1a1bc56653d82b85e967adbf",
+        "binding-audit.json": "6d792e241f7555f4a3b662a245265c2eb1898ec0f1e12efd0ab8193ce273fdbf"
+      },
+      "program_file_sha256": "18954bb7a8b22e3b280823f4d9a12395c1a81b361fcc19d4ddc382e3b7f4e216",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 1,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 56,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 0,
+          "root_rows": 3,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 1,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 1,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "2a9ca53cb7febc4c87ed85937368c84dea66022ff39f0f5295520c886aa0bd6a"
+    },
+    "terminal": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8fe1b39063a4d04dfcc0e3f6c848a2a37f4e0c8cf7391eebc8987c2dd4a01834",
+        "stages.json": "b64891564ff28ffefbdeb1183cab7b15f7267bd643a7ec33c2a513703f1dea6b",
+        "binding-audit.json": "2a7937cb2d4c9167b4f4736fe267a28f2829e600a9af0110de77c034dd78e1c8"
+      },
+      "program_file_sha256": "eec0e254deedb3594cc20079b36124435f197be4c12d5568aebac802dedbf2ad",
+      "context_work": {
+        "3": {
+          "bindings": 5,
+          "branch_slot_clears": 6,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 18,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 6,
+          "terminal_result_writes": 11,
+          "terminal_scratch_slots": 12,
+          "terminal_slots_copied": 0
+        },
+        "4": {
+          "bindings": 1,
+          "branch_slot_clears": 6,
+          "calls": 1,
+          "delta_terminal_rows": 0,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 1
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 18,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 1,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 5,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "ab672609af2f721d11b97af5791fd45e044e2845bad649ae04a982403adad1e1"
+    },
+    "roots": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "3f7768e6d9cd0e1a1e3549fb3827dbf9663f0aebce8d7fadef1404c52edca5c6",
+        "stages.json": "0cd6454d2f489f0057353f63d13543ecc4b8718a68de98afd2ecc7f8147b18c3",
+        "binding-audit.json": "69914de28c9bc815202401f7b0bacdbe0987ab7d7197c6758d907a0e6534fe22"
+      },
+      "program_file_sha256": "0848e8ae3027c6731a0a97f543e77ba41e6a9370bfb3828f94e499731ef8a925",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 56,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 2,
+          "root_rows": 4,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 2,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "c36c315665c3c023b7f97b3848c2b57333e5f13b68680f95e5bd72fd96bbd733"
+    },
+    "switch": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "7598308a1bd374d3ed79d93ff725829f9c737c354a87f56b58419cda0db18f65",
+        "stages.json": "222a2bd0652cf4f92f06023284c2842d12e4f1ca68df68a86f416ce0d0266e94",
+        "binding-audit.json": "b8c0574f0f006b06c94f47124e606b360bb06c092ba961dc56c69f9b4630fe42"
+      },
+      "program_file_sha256": "97822c52d2574fb586c5c961eeb772d212178b1528c74f83a58b0ba22a38af06",
+      "context_work": {
+        "3": {
+          "bindings": 5,
+          "branch_slot_clears": 16,
+          "calls": 3,
+          "delta_terminal_rows": 5,
+          "fallbacks": 0,
+          "full_terminal_rows": 2,
+          "orientations": {
+            "0": 2,
+            "2": 1
+          },
+          "peak_prefix_rows": 4,
+          "peak_roots": 2,
+          "port_candidates": 8,
+          "port_probes": 4,
+          "prefix_copies": 8,
+          "prefix_slots_copied": 52,
+          "reverse_groups": 1,
+          "reverse_reads": 0,
+          "root_rebuilds": 4,
+          "root_reuses": 0,
+          "root_rows": 4,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 5,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "4": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 1,
+          "delta_terminal_rows": 4,
+          "fallbacks": 0,
+          "full_terminal_rows": 0,
+          "orientations": {
+            "1": 1
+          },
+          "peak_prefix_rows": 2,
+          "peak_roots": 2,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 2,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "0dda4654795cc65f8ee2a3f06f4e8e523a8989346a2b01474668205da3fdb926"
+    }
+  },
+  "tests": {
+    "query": {
+      "passed": 3,
+      "log_sha256": "d2cfab428a5d7708202d4afe83e58644caca5c1a2d7119845de78b14bb382ac1"
+    },
+    "context": {
+      "passed": 1,
+      "log_sha256": "90ab46912fe4292188c7ecf99e93613bea8c9a1bd96be069ac198a1bf638a7b6"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "e7ed4bc0cdbd863d45441ee508de9995e91bb8512b1b2f70e25ca2017bb40c75"
+    },
+    "budget": {
+      "passed": 1,
+      "log_sha256": "159d1e8c95993cedcf9df4b5b86c4fa4f9a58f37dfcb9e51f3ff97e66bf0c8d0"
+    },
+    "entry": {
+      "passed": 1,
+      "log_sha256": "80e3feaff4c26d69d7bfe8b6a99e61ce802c8794450e904e1c0bd9e9f6e678ac"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "809c9c08392b42a37d26b1324f3ba05aaf02c29ecdc1116609ae360e1a2e4213"
+    }
+  },
+  "binaries": {
+    "baseline": "711c4611aa0f02b5fbcd26ede8314cc696befd6487474cc389f0ba30cfddbd23",
+    "candidate": "d5b3764429cd2e1d39dc6addfb441215c3857cbbab9558392eed5b9a9b5f000a"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "f1c69507",
+    "implementation_commits_since_timing": 4
+  },
+  "limits": "Context instances retain the selected immutable Cell plan, not a separate root/tail identity. Endpoints and read tables come from compiled instructions, eliminating runtime source Rule lookup/cloning. Version equality reads the current graph directly; only an invalidated scope refreshes its existing snapshot allocation. Plan switches discard old state, while exact root/read leases and canonical-literal union resets remain. The added shared plan reference is retained until this cache is dropped or switched. Existing counters do not measure metadata bytes or removed temporary allocations; no speed claim and no full cache/index takeover.",
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  }
+}
