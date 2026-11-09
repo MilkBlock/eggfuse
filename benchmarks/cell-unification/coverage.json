@@ -32,7 +32,7 @@
         "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed."
       ],
       "remaining": [
-        "Complete Entry query execution is now shared; still unify residual/prefix operands and execution position, removing the remaining route comparisons.",
+        "Full and residual operands now share Cell Query; still remove divergent producer-route recovery and prefix plan comparisons across the Entry boundary.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
@@ -76,11 +76,16 @@
         "One complete Cell query compiler/executor replaces ordinary slot interpretation, single-Port execution and staged Block execution.",
         "Program, Bake admission and iterative composition share the query definition; remove catalog-owned Block data and dispatch reference clones.",
         "Complete Entry and residual register planning share one deterministic query-order compiler with explicit expansion budgets.",
-        "Repair Cells use the same query instruction binder and static dataflow composition."
+        "Repair Cells use the same query instruction binder and static dataflow composition.",
+        "Residual Query uses the same Field and Step definitions; old register Step/seed/assign execution and source-slot readers removed.",
+        "Anchor and current candidate columns are borrowed; computed values and prefix continuations use the common Cell instruction positions.",
+        "Complete and residual entries reuse the same Rc<Query> when their certified order agrees; 177 shared plans on sum-bits.",
+        "Common BoundStep borrows expected output values, including source entries and repair Cells."
       ],
       "remaining": [
-        "Unify residual register/prefix operand layout and execution position with the complete Cell query path.",
-        "Preserve and integrate join, sieve, range and neighbor capabilities; retain exact delta ownership and late-input fallback.",
+        "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
+        "Audit and integrate Free Join, sieve, range, local-context and view capabilities under Cell entries; preserve their coverage and delta ownership.",
+        "Resolve plan/loading/representation overhead: this residual rewrite has no demonstrated speedup and still increases peak RSS.",
         "Finish boundary publication and scope/parallel rewrites before the historical-fastest and Raytrace acceptance campaign."
       ],
       "opportunity": "Previous sum-bits execution had 5,738 full entries, only 3,828 admitted by Bake. The other entries still constructed query environments; the selected entries split into two executors.",
@@ -95,7 +100,26 @@
         "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-query-unified/semantic out/cell-query-unified/semantic-acceptance.json",
         "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/query-timing-spec.json out/cell-query-unified/timing --repeat 7 --warmups 1",
         "python3 benchmarks/cell-unification/collect.py out/cell-query-unified benchmarks/cell-unification/query-results.json --part query"
-      ]
+      ],
+      "residual": {
+        "status": "semantics_and_takeover_verified_performance_pending",
+        "baseline_commit": "9dfe6986",
+        "evidence": "benchmarks/cell-unification/residual-results.json",
+        "opportunity": "Residual matching copied seed fields into rule slots and assigned each candidate column before checking it; complete-query programs duplicated eligible residual programs.",
+        "live_obligations": "Borrow only current immutable matching rows; preserve repeated variables, scalar guards, residual enumeration, delta ownership, exact prefix fallback pc, Run barriers and active result witnesses.",
+        "verification": "301 test executions, unchanged 22 compiler components, sum-bits semantic pass and exact Run/state/mutation diagnostics; three frozen-runtime fixtures including repeated candidate aliases and late delta. Existing work counters unchanged; execute allocation requests -70,144 bytes. Timing acceptance remains unresolved.",
+        "reproduction": [
+          "cargo test --locked -p eggfuse-cell-compiler --all-features",
+          "cargo test --locked -p eggfuse-cell-runtime --all-features",
+          "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+          "cargo run --locked -p eggfuse-cell-compiler --all-features --example emit_cell_entry_fixtures -- out/cell-residual-unified/fixtures",
+          "python3 benchmarks/cell-unification/run_entry_fixtures.py out/cell-residual-unified --cases reused replaced borrowed",
+          "cargo run --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-residual-unified/sum/program.json out/cell-residual-unified/relower.json",
+          "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-residual-unified/semantic out/cell-residual-unified/semantic-acceptance.json",
+          "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/residual-timing-spec.json out/cell-residual-unified/timing --repeat 7 --warmups 1",
+          "python3 benchmarks/cell-unification/collect.py out/cell-residual-unified benchmarks/cell-unification/residual-results.json --part residual"
+        ]
+      }
     },
     {
       "id": "rhs_publication",
@@ -145,10 +169,10 @@
     {
       "id": "B1",
       "title": "寄存器 join 与共享 point 读取",
-      "status": "partially_rewritten",
+      "status": "semantics_and_takeover_verified_performance_pending",
       "metrics_from_catalog": "B1",
-      "evidence": "benchmarks/cell-unification/query-results.json",
-      "remaining": "Residual register/prefix execution and operand layout still separate."
+      "evidence": "benchmarks/cell-unification/residual-results.json",
+      "remaining": "Point-cache behavior preserved under shared Cell instructions; residual speed acceptance and higher peak RSS remain unresolved."
     },
     {
       "id": "B2",
@@ -168,7 +192,7 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "C1",
       "evidence": "benchmarks/cell-unification/query-results.json",
-      "remaining": "Full query executor unified; residual handoff and publication boundaries still remain."
+      "remaining": "Complete and residual instruction definitions now shared; boundary donor recovery, publication and coverage policies remain."
     },
     {
       "id": "C2",

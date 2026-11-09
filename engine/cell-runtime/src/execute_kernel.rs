@@ -1,5 +1,5 @@
 use super::*;
-use crate::{cell::Access, row_kernel::Kernel};
+use crate::row_kernel::Kernel;
 use smallvec::SmallVec;
 
 #[cfg(feature = "sparse-cells")]
@@ -40,11 +40,11 @@ impl SumDomain {
         Ok(subset)
     }
 }
-pub(super) struct Registers {
-    fields: Vec<Value>,
+pub(super) struct Frame {
+    results: Vec<Value>,
     witnesses: Vec<Option<Dependency>>,
 }
-impl Registers {
+impl Frame {
     fn producer_context(
         graph: &mut Graph,
         witness: Dependency,
@@ -57,20 +57,8 @@ impl Registers {
     }
     pub(super) fn new(r: &Rule) -> Self {
         Self {
-            fields: vec![Value::Int(0); r.inputs.iter().copied().max().map_or(0, |s| s + 1)],
+            results: vec![Value::Int(0); r.query.len().saturating_sub(1)],
             witnesses: vec![None; r.query.len()],
-        }
-    }
-    fn val(&self, a: &Arg, g: &Graph) -> Value {
-        match a {
-            Arg::Slot(s) => self.fields[*s].clone(),
-            Arg::Literal(v) => canon(v, &g.parents),
-        }
-    }
-    fn agrees(&self, a: &Arg, v: &Value, g: &Graph) -> bool {
-        match a {
-            Arg::Slot(s) => self.fields[*s] == *v,
-            Arg::Literal(l) => canon(l, &g.parents) == *v,
         }
     }
     pub(super) fn start<const LOCAL: bool>(
@@ -87,13 +75,10 @@ impl Registers {
         exec.graph.stats.register_seeds += 1;
         let seed = &entry.packet.row;
         self.witnesses[k.pivot] = Some(seed.witness);
-        for &(c, s) in &k.seed {
-            self.fields[s] = seed.values[c].clone();
-        }
         let (pc, epoch) = if k.prefixes.is_empty() {
             (0, seed.epoch)
         } else {
-            let Some(resume) = self.prefix(exec, r, k, entry)? else { return Ok(()) };
+            let Some(resume) = self.prefix(exec, k, entry)? else { return Ok(()) };
             resume
         };
         self.step::<LOCAL>(
@@ -102,6 +87,8 @@ impl Registers {
             r,
             k,
             pc,
+            seed,
+            None,
             (seed.epoch, seed.witness),
             epoch,
             domains,
@@ -115,7 +102,6 @@ impl Registers {
     fn prefix(
         &mut self,
         exec: &mut Executor,
-        r: &Rule,
         k: &Kernel,
         supplied: &crate::entry_schedule::Seed,
     ) -> Result<Option<(usize, u64)>> {
@@ -152,9 +138,8 @@ impl Registers {
         let mut epoch = seed.epoch;
         let owner = (seed.epoch, seed.witness);
         let mut pc = 0;
-        for (ins, effect) in k.steps.iter().zip(&k.prefixes[plan].effects) {
-            let a = &r.query[ins.atom];
-            let result = match (&a.call, effect) {
+        for (ins, effect) in k.query.steps.iter().zip(&k.prefixes[plan].effects) {
+            let result = match (&ins.call, effect) {
                 (Call::Table(table), Some(source)) => {
                     exec.graph.stats.register_prefix.donor_reads += 1;
                     #[cfg(feature = "iterative-bake")]
@@ -177,18 +162,18 @@ impl Registers {
                     let mut misses = std::mem::take(&mut exec.graph.stats.register_prefix.misses);
                     let mut reads = 0;
                     let row = exec.graph.context_witness_row(physical, source.source, receipt,
-                        *table, a.args.len(), &mut misses, &mut reads)?;
+                        *table, ins.key.len() + 1, &mut misses, &mut reads)?;
                     exec.graph.stats.register_prefix.row_reads += reads;
                     exec.graph.stats.register_prefix.misses = misses;
                     let Some(row) = row else {
                         exec.graph.stats.register_prefix.stale_fallbacks += 1;
                         break;
                     };
-                    let keys_match = a.args[..a.args.len() - 1].iter()
+                    let keys_match = ins.key.iter()
                         .zip(row.values.iter()).all(|(arg, value)| {
                             exec.graph.stats.register_prefix.field_checks += 1;
                             exec.graph.stats.register_prefix.key_fields += 1;
-                            self.agrees(arg, value, &exec.graph)
+                            arg.agrees(value, &exec.graph, seed, &self.results, None)
                         });
                     if !keys_match {
                         exec.graph.stats.register_prefix.key_fallbacks += 1;
@@ -209,8 +194,8 @@ impl Registers {
                 (Call::Primitive(name, sort), None) => {
                     exec.graph.stats.register_prefix.primitive_checks += 1;
                     if name.starts_with("cell-key-") { exec.graph.stats.key_operations += 1; }
-                    let args: SmallVec<[Value; 4]> = a.args[..a.args.len() - 1].iter()
-                        .map(|arg| self.val(arg, &exec.graph)).collect();
+                    let args: SmallVec<[Value; 4]> = ins.key.iter()
+                        .map(|arg| arg.read(&exec.graph, seed, &self.results, None)).collect();
                     let Some(value) = value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
                     else {
                         exec.graph.stats.register_prefix.primitive_rejections += 1;
@@ -220,16 +205,17 @@ impl Registers {
                 }
                 _ => unreachable!("validated register prefix instruction"),
             };
-            if let Some((_, arg)) = ins.check.first() {
+            if let Some(arg) = &ins.check_result {
                 exec.graph.stats.register_prefix.field_checks += 1;
-                if !self.agrees(arg, &result, &exec.graph) {
+                if !arg.agrees(&result, &exec.graph, seed, &self.results, None) {
                     exec.graph.stats.register_prefix.result_rejections += 1;
                     return Ok(None);
                 }
             }
-            if let Some(&(_, slot)) = ins.assign.first() {
+            if ins.check_result.is_none() {
                 exec.graph.stats.register_prefix.field_writes += 1;
-                self.fields[slot] = result;
+                exec.graph.stats.register_result_writes += 1;
+                self.results[pc] = result;
             }
             pc += 1;
         }
@@ -246,25 +232,25 @@ impl Registers {
         r: &Rule,
         k: &Kernel,
         pc: usize,
+        seed: &Row,
+        expanded: Option<(usize, &Row)>,
         owner: (u64, Dependency),
         mut epoch: u64,
         domains: &[Subtrie],
         known: &QueryFacts,
         out: &mut Vec<Binding>,
     ) -> Result<()> {
-        for (offset, ins) in k.steps[pc..].iter().enumerate() {
-            let a = &r.query[ins.atom];
-            let keys = &a.args[..a.args.len() - 1];
-            if let Access::Expand = ins.access {
-                let Call::Table(t) = a.call else {
+        for (position, ins) in k.query.steps.iter().enumerate().skip(pc) {
+            if let Some(expansion) = &ins.expansion {
+                let Call::Table(t) = ins.call else {
                     unreachable!()
                 };
                 let refs = if let Some(domain) = domains.iter().find(|d| d.atom == ins.atom) {
                     domain.rows.clone()
                 } else {
-                    let mut bound = smallvec::smallvec![None; a.args.len()];
-                    for (col, arg) in &ins.bound {
-                        bound[*col] = Some(self.val(arg, &exec.graph));
+                    let mut bound = smallvec::smallvec![None; expansion.width];
+                    for (col, arg) in &expansion.bound {
+                        bound[*col] = Some(arg.read(&exec.graph, seed, &self.results, expanded));
                     }
                     let bound: SmallVec<[Option<Value>; 6]> = bound;
                     exec.query_indexes.candidates(&exec.graph, t, &bound)?
@@ -273,7 +259,7 @@ impl Registers {
                 let refs = if !LOCAL && refs.len() >= 8 && refs.len() <= 65536
                     && let Some((atom, left, right, target)) = &k.sum_filter
                     && *atom == ins.atom
-                    && let Value::Int(value) = self.val(target, &exec.graph) {
+                    && let Value::Int(value) = target.read(&exec.graph, seed, &self.results, expanded) {
                     SumDomain::select(exec, (rid, k.pivot), t, *left, *right, value, refs)?
                 } else { refs };
                 let mut access = if LOCAL {
@@ -287,24 +273,21 @@ impl Registers {
                         exec.neighbor.stats(rid).expansion_visits += 1;
                     }
                     exec.graph.stats.residual_candidates += 1;
-                    // Repeated fresh variables compare against this row's first column.
-                    for &(col, s) in &ins.assign {
-                        self.fields[s] = row.values[col].clone();
-                    }
-                    if !ins
-                        .check
-                        .iter()
-                        .all(|(col, arg)| self.agrees(arg, &row.values[*col], &exec.graph))
-                    {
-                        return Ok(());
-                    }
+                    exec.graph.stats.register_expansion_rows += 1;
+                    // Repeated fresh variables refer to this row's first
+                    // occurrence directly; no assignments or undo log.
+                    if !expansion.checks.iter().all(|(col, arg)| {
+                        arg.agrees(&row.values[*col], &exec.graph, seed, &self.results, Some((position, row)))
+                    }) { return Ok(()); }
                     self.witnesses[ins.atom] = Some(w);
                     self.step::<LOCAL>(
                         exec,
                         rid,
                         r,
                         k,
-                        pc + offset + 1,
+                        position + 1,
+                        seed,
+                        Some((position, row)),
                         owner,
                         epoch.max(row.epoch),
                         domains,
@@ -363,9 +346,8 @@ impl Registers {
                 }
                 return Ok(());
             }
-            let args: SmallVec<[Value; 4]> =
-                keys.iter().map(|arg| self.val(arg, &exec.graph)).collect();
-            let result = match &a.call {
+            let bound = ins.bind::<SmallVec<[Value; 4]>>(|arg| arg.operand(&exec.graph, seed, &self.results, expanded));
+            let result = bound.evaluate(|args| match &ins.call {
                 Call::Table(t) => {
                     let neighbor = LOCAL && !exec.graph.program.tables[*t].virtual_fact;
                     let row = if neighbor {
@@ -378,15 +360,15 @@ impl Registers {
                         { exec.graph.lookup_canonical(*t, &args)? }
                     };
                     let Some(row) = row else {
-                        return Ok(());
+                        return Ok(None);
                     };
                     let stamp = (row.epoch, row.witness);
                     if row.hidden || stamp > owner || (stamp == owner && ins.atom < k.pivot) {
-                        return Ok(());
+                        return Ok(None);
                     }
                     epoch = epoch.max(row.epoch);
                     self.witnesses[ins.atom] = Some(row.witness);
-                    row.values.last().unwrap().clone()
+                    Ok(Some(row.values.last().unwrap().clone()))
                 }
                 Call::Primitive(name, sort) => {
                     if name.starts_with("cell-key-") {
@@ -395,18 +377,15 @@ impl Registers {
                     let Some(v) =
                         value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
                     else {
-                        return Ok(());
+                        return Ok(None);
                     };
-                    v
+                    Ok(Some(v))
                 }
-            };
-            if let Some((_, arg)) = ins.check.first()
-                && !self.agrees(arg, &result, &exec.graph)
-            {
-                return Ok(());
-            }
-            if let Some(&(_, s)) = ins.assign.first() {
-                self.fields[s] = result;
+            })?;
+            let Some(result) = result else { return Ok(()); };
+            if ins.check_result.is_none() {
+                exec.graph.stats.register_result_writes += 1;
+                self.results[position] = result;
             }
         }
         let mut facts = known.clone();
@@ -422,10 +401,8 @@ impl Registers {
             #[cfg(feature = "iterative-bake")]
             direct: None,
             known: facts,
-            values: r
-                .inputs
-                .iter()
-                .map(|s| (*s, self.fields[*s].clone()))
+            values: r.inputs.iter().zip(&k.query.inputs)
+                .map(|(s, field)| (*s, field.read(&exec.graph, seed, &self.results, expanded)))
                 .collect(),
             epoch,
             parent: None,

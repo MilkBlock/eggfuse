@@ -148,3 +148,15 @@ fn zero_argument_donors_keep_the_existing_singleton_read() {
     assert_eq!(new.graph.stats.register_prefix.eligible_seeds, 0);
     assert_eq!(new.graph.stats.register_prefix.publication_probes, 0);
 }
+
+#[test]
+fn borrowed_expansion_fields_follow_each_candidate_and_late_delta() {
+    let source = fixture::borrowed_source();
+    for stable in [false, true] {
+        let (_, new) = compare(&source, true, stable);
+        assert!(new.graph.stats.register_prefix.resumes > 0);
+        assert!(new.graph.stats.register_expansion_rows > 0);
+        assert!(new.graph.stats.register_result_writes > new.graph.stats.register_prefix.field_writes);
+    }
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+}

@@ -26,9 +26,9 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def entry_diagnostics(root, delivery=True):
+def entry_diagnostics(root, delivery=True, names=('reused', 'replaced')):
     cases = {}
-    for name in ('reused', 'replaced'):
+    for name in names:
         directories = [root / 'fixtures' / f'{name}-{lane}' for lane in ('baseline', 'candidate')]
         reports = [load(p / 'report.json') for p in directories]
         program = root / 'fixtures' / f'{name}.json'
@@ -55,11 +55,18 @@ def entry_diagnostics(root, delivery=True):
             assert a == b, (name, 'prefix work')
             assert b['receipt_hits'] > 0
         assert reports[0]['key_lookup_calls'] == reports[1]['key_lookup_calls']
+        borrowed_work = None
+        if name == 'borrowed':
+            stats = reports[1]['stats']
+            assert stats['register_expansion_rows'] > 0
+            assert stats['register_result_writes'] > b['field_writes']
+            borrowed_work = {k: stats[k] for k in ('register_expansion_rows', 'register_result_writes')}
         cases[name] = {
             'scope': 'short standalone Cell CPU diagnostic; source fixtures shared with differential/native-check tests',
             'program_file_sha256': sha(program), 'ordered_runs': len(reports[0]['steps']),
             'ordered_hashes': hashes, 'prefix': {'baseline': a, 'candidate': b},
             'seed_bytes': reports[1]['entry_schedule']['seed_bytes'],
+            'borrowed_field_work': borrowed_work,
         }
     runs = load(root / 'fixtures/runs.json')
     assert {(r['case'], r['lane']) for r in runs} == {(c, l) for c in cases for l in ('baseline', 'candidate')}
@@ -72,6 +79,7 @@ def collect(root, part='definition'):
     result_ports = part == 'result-ports'
     entry_delivery = part == 'entry-delivery'
     query = part == 'query'
+    residual = part == 'residual'
     catalog = load(REPO / 'docs/optimization-catalog/catalog.json')
     coverage = load(REPO / 'benchmarks/cell-unification/coverage.json')
     assert {x['id'] for x in coverage['optimizations']} == {x['id'] for x in catalog['optimizations']}
@@ -96,13 +104,14 @@ def collect(root, part='definition'):
     work = {k: v for k, v in before.items() if not resource(k)}
     changes = {k: {'before': v, 'after': after[k]} for k, v in work.items() if v != after[k]}
     added = {}
-    if result_ports or entry_delivery or query:
+    if result_ports or entry_delivery or query or residual:
         # New counters are reported as newly observed, never as a reduction
         # from an invented zero in the older runtime.
         new_fields = {
             'result-ports': ('/history_result_reads', '/history_empty_slots_written',
                              '/local_witness_slot_reads', '/register_prefix/receipt_slot_reads'),
             'entry-delivery': ('/entry_schedule/seed_bytes', '/register_prefix/entry_publication_reads'),
+            'residual': ('/stats/register_result_writes', '/stats/register_expansion_rows', '/stage_spine/shared_query_plans'),
             'query': ('/stage_spine/stats/cell_query_entries', '/stage_spine/stats/cell_query_steps',
                       '/stage_spine/stats/cell_query_result_writes'),
         }[part]
@@ -125,11 +134,11 @@ def collect(root, part='definition'):
     fields = ('alloc_calls', 'realloc_calls', 'free_calls', 'requested_bytes', 'released_bytes')
     for region in ('setup_allocations', 'allocations'):
         a, b = [r[region] for r in audit]
-        if result_ports or entry_delivery or query:
+        if result_ports or entry_delivery or query or residual:
             # Runtime result retention must not add allocations. Compile-time
             # layout storage belongs to program loading (outside these two
             # allocation regions); process wall time and RSS include it.
-            if region == 'allocations' or entry_delivery or query:
+            if region == 'allocations' or entry_delivery or query or residual:
                 assert all(b[k] <= a[k] for k in fields), region
         elif region == 'allocations':
             assert all(a[k] == b[k] for k in fields), region
@@ -137,7 +146,7 @@ def collect(root, part='definition'):
             # Setup's producer classification now inspects the borrowed Cell
             # relation instead of allocating and normalizing a column vector.
             assert all(b[k] <= a[k] for k in fields), region
-        if not (result_ports or entry_delivery or query):
+        if not (result_ports or entry_delivery or query or residual):
             assert a['live_bytes_after'] - a['live_bytes_before'] == b['live_bytes_after'] - b['live_bytes_before']
         allocations[region] = {'baseline': a, 'candidate': b,
                                'saved': {k: a[k] - b[k] for k in fields}}
@@ -171,27 +180,29 @@ def collect(root, part='definition'):
         supplemental = {'passed': 1, 'log_sha256': sha(log),
                         'scope': 'repeat of the stage-entry integration test after adding shared-path coverage assertions; not an additional distinct test'}
     earlier = None
-    if (result_ports or entry_delivery) and (root / 'first-attempt/results.json').exists():
+    if (result_ports or entry_delivery or residual) and (root / 'first-attempt/results.json').exists():
         trial = load(root / 'first-attempt/results.json')
         earlier = {
-            'status': ('revised after a roughly 1% paired inference regression' if result_ports
-                       else 'inconclusive timing; inspected and reduced out-of-line Entry return-value copies'),
+            'status': ('revised after a roughly 1% paired inference regression' if result_ports else
+                       'no demonstrated inference gain and higher peak RSS; removed redundant artifact JSON copying and borrowed bound-result checks' if residual else
+                       'inconclusive timing; inspected and reduced out-of-line Entry return-value copies'),
             'runtime_sha256': trial['binaries']['runtime-candidate'],
             'paired_timing_ratios': trial['paired_timing_ratios'],
-            'revision': ('compact ResultPort to 8 bytes; write present slots once; count padding during capture instead of scanning the frame again'
-                         if result_ports else 'add inline hint to the shared borrowed Entry accessor; matching closure and iterator call sites disappear'),
+            'revision': ('compact ResultPort to 8 bytes; write present slots once; count padding during capture instead of scanning the frame again' if result_ports else
+                         'move prebuilt wire JSON arrays into parents; common BoundStep borrows expected values instead of cloning them' if residual else
+                         'add inline hint to the shared borrowed Entry accessor; matching closure and iterator call sites disappear'),
             'scope': 'intermediate uncommitted implementation; retained as experiment history, not a second final acceptance run',
         }
     return {
         'scope': f'standalone Cell CPU; {part} rewrite, not completion of the unification goal',
-        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db', 'query': '4b5070cf'}[part],
+        'baseline_commit': {'definition': '27f1c503', 'result-ports': 'd36e0254', 'entry-delivery': 'e275f3db', 'query': '4b5070cf', 'residual': '9dfe6986'}[part],
         'program_file_sha256': sha(program),
         'binaries': {name: sha(root / name) for name in ('runtime-baseline', 'runtime-candidate',
                                                        'runtime-baseline-audit', 'runtime-candidate-audit')},
         'normal_features': 'sparse-cells,view-ports,storage-metrics',
         'diagnostic_extra_features': 'allocation-metrics,slot-transfer-audit,spine-shapes',
         'build_provenance': ('frozen previous-step binaries; candidate built in this worktree only, separate normal/audit target directories'
-                             if result_ports or entry_delivery or query else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
+                             if result_ports or entry_delivery or query or residual else 'shared Cargo target diagnostic discarded; candidate rebuilt in target/cell-unification-audit'),
         'semantic_acceptance': semantics, 'compiler_components': relower,
         'native_reference_scope': 'source emitter unchanged; native legacy/values labels intentionally share the same marked-source export',
         'ordered_runs': len(schedule[0]), 'ordered_audit_hashes': hashes, 'tests': tests,
@@ -201,12 +212,14 @@ def collect(root, part='definition'):
         'work_metric_changes': changes, 'newly_observed_metrics': added, 'allocations': allocations,
         'timing': timing, 'paired_timing_ratios': ratios, 'repeat': raw['repeat'], 'warmups': raw['warmups'],
         'earlier_attempt': earlier,
-        'entry_diagnostics': entry_diagnostics(root, delivery=entry_delivery) if entry_delivery or query else None,
+        'entry_diagnostics': (entry_diagnostics(root, delivery=entry_delivery, names=('reused', 'replaced', 'borrowed') if residual else ('reused', 'replaced'))
+                              if entry_delivery or query or residual else None),
         'entry_accessor_call_sites': ({'calls': load(root / 'entry-view-calls.json'),
                                       'scope': 'static disassembly call sites, not runtime call counts'}
                                      if entry_delivery and (root / 'entry-view-calls.json').exists() else None),
         'performance_acceptance': ('unresolved: short-sample inference median is slightly slower and paired interval is wide; structural takeover does not prove an end-to-end speedup'
-                                   if entry_delivery else 'see paired samples; no general workload claim'),
+                                   if entry_delivery else 'unresolved: paired inference and process intervals include parity; peak RSS remains higher despite lower execute allocation bytes'
+                                   if residual else 'see paired samples; no general workload claim'),
         'limitations': ['short sum-bits preservation check; no new Raytrace or historical-fastest campaign',
                         'allocation regions exclude program loading; process wall time and RSS include that cost',
                         'same work counts do not prove the remaining execution paths have been rewritten',
@@ -218,7 +231,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
-    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery', 'query'), default='definition')
+    p.add_argument('--part', choices=('definition', 'result-ports', 'entry-delivery', 'query', 'residual'), default='definition')
     args = p.parse_args()
     if not __debug__:
         raise SystemExit('run without -O; assertions are verification checks')

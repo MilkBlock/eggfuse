@@ -178,7 +178,7 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         ),
         ("single_writes", json!(&p.writes)),
         ("neighbor_entries", json!(&p.neighbor_plans)),
-        ("row_kernels", json!(&p.kernels)),
+        ("row_kernels", crate::row_kernel::wire(&p.rules, &p.kernels)),
         ("physical_plan", json!(&p.physical)),
         ("repair_ports", json!(&p.repair_ports)),
         (

@@ -52,3 +52,19 @@ pub fn replaced_source() -> String {
         + "\n(check (Out (A (N 0)) 100) (Out (A (N 1)) 101))\n"
 }
 
+
+// Candidate aliases and scalar results must follow each borrowed expansion row,
+// including a later delta whose owner is the expanded relation itself.
+pub fn borrowed_source() -> String {
+    SOURCE.replace("(Edge E i64)", "(Edge E i64 i64)")
+        .replace("(Edge x y)) ((Out a y))", "(Edge x y y) (= z (+ y n)) (< z 25)) ((Out a z))")
+        .replace("(Edge (N 0) 10)", "(Edge (N 0) 10 10)")
+        .replace("(Edge (N 0) 11)", "(Edge (N 0) 11 11)")
+        .replace("(Edge (N 1) 12)", "(Edge (N 1) 12 12) (Edge (N 0) 20 21) (Edge (N 0) 50 50)")
+        .replace("(ruleset make)", r#"
+(ruleset late)
+(rule ((= x (N 1))) ((Edge x 14 14)) :ruleset late)
+(ruleset make)"#)
+        .replace("(run keep)", "(run keep) (run late) (run consume)")
+        .replace("(Out (A (N 1)) 12)", "(Out (A (N 1)) 13) (Out (A (N 1)) 15)")
+}

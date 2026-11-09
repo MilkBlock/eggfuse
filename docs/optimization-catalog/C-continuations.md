@@ -21,9 +21,9 @@
 |---|---|
 | 收益观察（需基线差值） | `report:/stage_spine/stats/query_takeovers [value]`<br>`report:/stage_spine/stats/block_resumptions [value]`<br>`report:/stage_spine/stats/pivots_skipped [value]` |
 | 成本 / 剩余工作 | `report:/stage_spine/stats/guards [value]`<br>`report:/stage_spine/stats/port_refreshes [value]`<br>`report:/stage_spine/stats/origin_map_writes [value]`<br>`report:/stage_spine/stats/context_reads [value]`<br>`report:/stage_spine/stats/cell_query_steps [value]`<br>`report:/stage_spine/stats/cell_query_result_writes [value]` |
-| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/routed_spine_seeds [value]`<br>`report:/stage_spine/stats/routed_matcher_seeds [value]`<br>`report:/stage_spine/stats/uncovered_queries [value]`<br>`program:/spine_blocks/entries [count]`<br>`report:/stage_spine/stats/cell_query_entries [value]` |
+| 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/routed_spine_seeds [value]`<br>`report:/stage_spine/stats/routed_matcher_seeds [value]`<br>`report:/stage_spine/stats/uncovered_queries [value]`<br>`program:/spine_blocks/entries [count]`<br>`report:/stage_spine/stats/cell_query_entries [value]`<br>`report:/stage_spine/shared_query_plans [value]` |
 
-解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举共用排序编译器，但寄存器执行器尚未统一。
+解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

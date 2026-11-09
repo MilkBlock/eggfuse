@@ -217,8 +217,8 @@ impl FreeJoin {
             by_projection,
             disjoint: DisjointPlan::derive(p, entry.as_ref().unwrap()),
             expansion: p.kernels.iter().enumerate().map(|(r, ks)| ks.iter().map(|k| {
-                let at = k.as_ref()?.steps.iter()
-                    .find(|s| matches!(s.access,crate::cell::Access::Expand))?.atom;
+                let at = k.as_ref()?.query.steps.iter()
+                    .find(|s| matches!(s.access(),crate::cell::Access::Expand))?.atom;
                 p.physical.ranges.get(r)?.get(at)?.is_empty().then_some(at)
             }).collect()).collect(),
             epoch: None,

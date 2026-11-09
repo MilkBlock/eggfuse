@@ -357,7 +357,7 @@ impl Program {
         }
         let kernels = crate::row_kernel::derive(&rules);
         if let Some(raw) = j.get("row_kernels")
-            && *raw != serde_json::json!(kernels)
+            && *raw != crate::row_kernel::wire(&rules, &kernels)
         {
             return Err("invalid register join plan".into());
         }

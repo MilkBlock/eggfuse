@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-residual-unified/runtime-baseline",
+      "program": "out/cell-residual-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-residual-unified/runtime-candidate",
+      "program": "out/cell-residual-unified/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

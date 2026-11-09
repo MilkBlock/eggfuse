@@ -7,7 +7,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let path = std::path::Path::new(&path);
     std::fs::create_dir_all(path)?;
     for (name, source) in [("reused", fixture::SOURCE.to_owned()),
-                           ("replaced", fixture::replaced_source())] {
+                           ("replaced", fixture::replaced_source()),
+                           ("borrowed", fixture::borrowed_source())] {
         let program = fixture::program(&source);
         std::fs::write(path.join(format!("{name}.egg")), source)?;
         std::fs::write(path.join(format!("{name}.json")), serde_json::to_vec_pretty(&program.artifact)?)?;

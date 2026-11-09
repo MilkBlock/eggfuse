@@ -57,10 +57,10 @@ pub(crate) fn derive(p: &Program) -> Vec<Option<Plan>> {
                 .enumerate()
                 .filter_map(|(pivot, k)| {
                     let k = k.as_ref()?;
-                    k.steps
+                    k.query.steps
                         .iter()
                         .all(|s| {
-                            !matches!(s.access, crate::cell::Access::Expand)
+                            !matches!(s.access(), crate::cell::Access::Expand)
                                 || s.atom == structure
                         })
                         .then_some(pivot)

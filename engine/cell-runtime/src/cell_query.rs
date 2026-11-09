@@ -1,4 +1,4 @@
-//! Complete Cell query dataflow. Catalog selection does not change its executor.
+//! Cell query dataflow, including residual enumeration. Catalog selection does not change its executor.
 use crate::{
     graph::{Graph, Row},
     program::*,
@@ -6,20 +6,70 @@ use crate::{
 };
 use serde::Serialize;
 use serde_json::json;
-use std::{collections::BTreeMap, rc::Rc};
+use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
 
 #[derive(Clone, Debug, Serialize)]
 pub(crate) enum Field {
     Anchor(usize),
     StepResult(usize),
+    Column { step: usize, column: usize },
     Literal(Value),
 }
 impl Field {
-    pub(crate) fn read(&self, g: &Graph, row: &Row, results: &[Value]) -> Value {
+    /// Candidate fields are borrowed until the recursive enumeration call
+    /// returns. No row binding is retained across mutation or the next Run.
+    fn value<'a>(
+        &'a self,
+        row: &'a Row,
+        results: &'a [Value],
+        expanded: Option<(usize, &'a Row)>,
+    ) -> &'a Value {
         match self {
-            Self::Anchor(col) => row.values[*col].clone(),
-            Self::StepResult(i) => results[*i].clone(),
+            Self::Anchor(col) => &row.values[*col],
+            Self::StepResult(i) => &results[*i],
+            Self::Column { step, column } => {
+                let (current, row) = expanded.expect("validated expansion operand");
+                debug_assert_eq!(*step, current);
+                &row.values[*column]
+            }
+            Self::Literal(v) => v,
+        }
+    }
+    pub(crate) fn operand<'a>(
+        &'a self,
+        g: &Graph,
+        row: &'a Row,
+        results: &'a [Value],
+        expanded: Option<(usize, &'a Row)>,
+    ) -> Cow<'a, Value> {
+        match self {
+            Self::Literal(v) => Cow::Owned(canon(v, &g.parents)),
+            _ => Cow::Borrowed(self.value(row, results, expanded)),
+        }
+    }
+    pub(crate) fn read(
+        &self,
+        g: &Graph,
+        row: &Row,
+        results: &[Value],
+        expanded: Option<(usize, &Row)>,
+    ) -> Value {
+        match self {
             Self::Literal(v) => canon(v, &g.parents),
+            _ => self.value(row, results, expanded).clone(),
+        }
+    }
+    pub(crate) fn agrees(
+        &self,
+        v: &Value,
+        g: &Graph,
+        row: &Row,
+        results: &[Value],
+        expanded: Option<(usize, &Row)>,
+    ) -> bool {
+        match self {
+            Self::Literal(l) => canon(l, &g.parents) == *v,
+            _ => self.value(row, results, expanded) == v,
         }
     }
 }
@@ -34,31 +84,48 @@ pub(crate) struct Step {
     pub call: Call,
     pub key: Vec<Field>,
     pub check_result: Option<Field>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub expansion: Option<Box<Expansion>>,
+}
+#[derive(Clone, Debug, Serialize)]
+pub(crate) struct Expansion {
+    pub width: usize,
+    pub bound: Vec<(usize, Field)>,
+    pub checks: Vec<(usize, Field)>,
 }
 /// Shared binding/checking instruction used by source entries and repair cells.
 /// The host supplies typed table/primitive capabilities; a failed predicate
 /// never publishes an effect.
-pub(crate) struct BoundStep<A> {
+pub(crate) struct BoundStep<'a, A> {
     args: A,
-    expected: Option<Value>,
+    expected: Option<Cow<'a, Value>>,
 }
 impl Step {
-    pub(crate) fn bind<A: FromIterator<Value>>(
-        &self,
-        mut field: impl FnMut(&Field) -> Value,
-    ) -> BoundStep<A> {
+    pub(crate) fn access(&self) -> Access {
+        if self.expansion.is_some() {
+            Access::Expand
+        } else if matches!(self.call, Call::Primitive(..)) {
+            Access::Primitive
+        } else {
+            Access::Key
+        }
+    }
+    pub(crate) fn bind<'a, A: FromIterator<Value>>(
+        &'a self,
+        mut field: impl FnMut(&'a Field) -> Cow<'a, Value>,
+    ) -> BoundStep<'a, A> {
         BoundStep {
-            args: self.key.iter().map(&mut field).collect(),
+            args: self.key.iter().map(|f| field(f).into_owned()).collect(),
             expected: self.check_result.as_ref().map(field),
         }
     }
 }
-impl<A> BoundStep<A> {
+impl<A> BoundStep<'_, A> {
     pub(crate) fn evaluate(
         self,
         call: impl FnOnce(A) -> Result<Option<Value>>,
     ) -> Result<Option<Value>> {
-        Ok(call(self.args)?.filter(|v| self.expected.as_ref().is_none_or(|e| e == v)))
+        Ok(call(self.args)?.filter(|v| self.expected.as_ref().is_none_or(|e| e.as_ref() == v)))
     }
 }
 impl Query {
@@ -66,10 +133,25 @@ impl Query {
     /// This is dataflow composition: no intermediate row or slot map is needed.
     #[cfg(feature = "spine-blocks")]
     pub(crate) fn then(&self, next: &Self) -> Option<Self> {
+        // The current enumerator borrows at most one candidate row at a time.
+        if self
+            .steps
+            .iter()
+            .chain(&next.steps)
+            .filter(|s| s.expansion.is_some())
+            .count()
+            > 1
+        {
+            return None;
+        }
         let field = |f: &Field| -> Option<Field> {
             Some(match f {
                 Field::Anchor(i) => self.inputs.get(*i)?.clone(),
                 Field::StepResult(i) => Field::StepResult(self.steps.len() + i),
+                Field::Column { step, column } => Field::Column {
+                    step: self.steps.len() + step,
+                    column: *column,
+                },
                 Field::Literal(v) => Field::Literal(v.clone()),
             })
         };
@@ -83,6 +165,22 @@ impl Query {
                     Some(f) => Some(field(f)?),
                     None => None,
                 },
+                expansion: match &step.expansion {
+                    Some(e) => Some(Box::new(Expansion {
+                        width: e.width,
+                        bound: e
+                            .bound
+                            .iter()
+                            .map(|(c, f)| Some((*c, field(f)?)))
+                            .collect::<Option<_>>()?,
+                        checks: e
+                            .checks
+                            .iter()
+                            .map(|(c, f)| Some((*c, field(f)?)))
+                            .collect::<Option<_>>()?,
+                    })),
+                    None => None,
+                },
             });
         }
         Some(Self {
@@ -91,6 +189,24 @@ impl Query {
         })
     }
     pub(crate) fn compile(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
+        let order = order
+            .iter()
+            .map(|&atom| {
+                Some((
+                    atom,
+                    match rule.query.get(atom)?.call {
+                        Call::Table(_) => Access::Key,
+                        Call::Primitive(..) => Access::Primitive,
+                    },
+                ))
+            })
+            .collect::<Option<Vec<_>>>()?;
+        Self::lower(rule, pivot, &order)
+    }
+    pub(crate) fn residual(rule: &Rule, pivot: usize) -> Option<Self> {
+        Self::lower(rule, pivot, &query_order(rule, pivot, 1)?)
+    }
+    fn lower(rule: &Rule, pivot: usize, order: &[(usize, Access)]) -> Option<Self> {
         let mut sources = BTreeMap::new();
         for (col, arg) in rule.query.get(pivot)?.args.iter().enumerate() {
             if let Arg::Slot(s) = arg {
@@ -103,12 +219,49 @@ impl Query {
         };
         let mut seen = std::collections::BTreeSet::from([pivot]);
         let mut steps = Vec::new();
-        for &atom in order {
+        for &(atom, access) in order {
             if !seen.insert(atom) {
                 return None;
             }
             let a = rule.query.get(atom)?;
             let (out, keys) = a.args.split_last()?;
+            if matches!(access, Access::Expand) {
+                if !matches!(a.call, Call::Table(_)) {
+                    return None;
+                }
+                let bound = a
+                    .args
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(c, a)| Some((c, field(a, &sources)?)))
+                    .collect();
+                let mut checks = Vec::new();
+                for (column, a) in a.args.iter().enumerate() {
+                    if let Some(source) = field(a, &sources) {
+                        checks.push((column, source));
+                    } else if let Arg::Slot(s) = a {
+                        sources.insert(
+                            *s,
+                            Field::Column {
+                                step: steps.len(),
+                                column,
+                            },
+                        );
+                    }
+                }
+                steps.push(Step {
+                    atom,
+                    call: a.call.clone(),
+                    key: vec![],
+                    check_result: None,
+                    expansion: Some(Box::new(Expansion {
+                        width: a.args.len(),
+                        bound,
+                        checks,
+                    })),
+                });
+                continue;
+            }
             let key = keys
                 .iter()
                 .map(|a| field(a, &sources))
@@ -122,6 +275,7 @@ impl Query {
                 call: a.call.clone(),
                 key,
                 check_result,
+                expansion: None,
             });
         }
         if seen.len() != rule.query.len() {
@@ -151,6 +305,7 @@ impl Serialize for Query {
                 call: Call::Table(table),
                 key,
                 check_result,
+                expansion: None,
             },
         ] = self.steps.as_slice()
         {
@@ -246,6 +401,7 @@ pub(crate) fn query_order(
 pub(crate) struct Queries {
     entries: Vec<Vec<Option<Rc<Query>>>>,
     count: usize,
+    shared: usize,
 }
 impl Queries {
     pub(crate) fn compile(p: &Program) -> Result<Self> {
@@ -254,20 +410,42 @@ impl Queries {
             .iter()
             .map(|r| vec![None; r.query.len()])
             .collect::<Vec<_>>();
+        let mut shared_count = 0;
         for (rid, pivot, order) in &p.multi_stage.stage_entries {
-            entries[*rid][*pivot] = Some(Rc::new(
-                Query::compile(&p.rules[*rid], *pivot, order)
-                    .ok_or("invalid Cell query certificate")?,
-            ));
+            let shared = p.kernels[*rid][*pivot]
+                .as_ref()
+                .filter(|k| {
+                    k.query.steps.iter().all(|s| s.expansion.is_none())
+                        && k.query
+                            .steps
+                            .iter()
+                            .map(|s| s.atom)
+                            .eq(order.iter().copied())
+                })
+                .map(|k| k.query.clone());
+            entries[*rid][*pivot] = Some(match shared {
+                Some(query) => {
+                    shared_count += 1;
+                    query
+                }
+                None => Rc::new(
+                    Query::compile(&p.rules[*rid], *pivot, order)
+                        .ok_or("invalid Cell query certificate")?,
+                ),
+            });
         }
         Ok(Self {
             entries,
             count: p.multi_stage.stage_entries.len(),
+            shared: shared_count,
         })
     }
     #[inline]
     pub(crate) fn get(&self, rid: usize, pivot: usize) -> Option<&Rc<Query>> {
         self.entries.get(rid)?.get(pivot)?.as_ref()
+    }
+    pub(crate) fn shared(&self) -> usize {
+        self.shared
     }
     pub(crate) fn len(&self) -> usize {
         self.count

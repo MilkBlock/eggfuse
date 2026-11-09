@@ -185,6 +185,12 @@ pub struct Stats {
     pub handoff_closed_fallback: u64,
     #[serde(default)]
     pub register_seeds: u64,
+    /// Actual computed result stores, including the prefix subset. Entry and
+    /// expansion row fields are borrowed and do not need register assignments.
+    #[serde(default)]
+    pub register_result_writes: u64,
+    #[serde(default)]
+    pub register_expansion_rows: u64,
     #[serde(default)]
     pub register_prefix: crate::row_kernel::PrefixStats,
     #[serde(default)]

@@ -16,8 +16,8 @@ impl PointPorts {
         let mut consumers = vec![0usize; p.tables.len()];
         for (rid, kernels) in p.kernels.iter().enumerate() {
             for kernel in kernels.iter().flatten() {
-                for step in &kernel.steps {
-                    if !matches!(step.access, Access::Key) {
+                for step in &kernel.query.steps {
+                    if !matches!(step.access(), Access::Key) {
                         continue;
                     }
                     let atom = &p.rules[rid].query[step.atom];

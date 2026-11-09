@@ -2047,7 +2047,7 @@ impl Programs {
             let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
             for step in &query.steps {
                 self.stats.cell_query_steps += 1;
-                let bound = step.bind::<PortKey>(|v| v.read(g, &row, &values));
+                let bound = step.bind::<PortKey>(|v| v.operand(g, &row, &values, None));
                 let result = bound.evaluate(|args| match &step.call {
                     Call::Table(table) => {
                         let Some(found) = read_port(
@@ -2073,7 +2073,7 @@ impl Programs {
                 values.push(result);
             }
             if epoch >= watermark {
-                let inputs = query.inputs.iter().map(|v| v.read(g, &row, &values)).collect();
+                let inputs = query.inputs.iter().map(|v| v.read(g, &row, &values, None)).collect();
                 let mut witnesses = vec![None; rule.query.len()];
                 witnesses[pivot] = Some(row.witness);
                 for (atom, witness) in found_witnesses { witnesses[atom] = Some(witness); }
@@ -2265,7 +2265,7 @@ impl Programs {
         let live_materialized = materialized.clone().count();
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
         let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.anchor_ops.iter().filter(|ops| !ops.is_empty()).count(),
-            "keyed_entries":self.queries.len(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
+            "keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]

@@ -15,19 +15,19 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs)
+代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stats/register_answers [value]`<br>`report:/stats/shared_point_hits [value]` |
-| 成本 / 剩余工作 | `report:/stats/register_seeds [value]`<br>`report:/stats/shared_point_requests [value]`<br>`report:/stats/residual_candidates [value]`<br>`report:/key_lookup_calls [value]` |
-| 覆盖 / 规模 / 回退 | `program:/row_kernels [count]` |
+| 成本 / 剩余工作 | `report:/stats/register_seeds [value]`<br>`report:/stats/shared_point_requests [value]`<br>`report:/stats/residual_candidates [value]`<br>`report:/key_lookup_calls [value]`<br>`report:/stats/register_result_writes [value]` |
+| 覆盖 / 规模 / 回退 | `program:/row_kernels [count]`<br>`report:/stats/register_expansion_rows [value]` |
 
-解释与缺口：register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。
+解释与缺口：register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[README.md](../../README.md)
+证据：[README.md](../../README.md) · [benchmarks/cell-unification/residual.md](../../benchmarks/cell-unification/residual.md)
 
 ## B2 · Free Join、Sieve 与范围过滤
 

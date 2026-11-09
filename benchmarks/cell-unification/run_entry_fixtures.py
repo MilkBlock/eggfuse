@@ -13,9 +13,9 @@ import subprocess
 import time
 
 
-def run(root):
+def run(root, cases):
     records = []
-    for case in ('reused', 'replaced'):
+    for case in cases:
         for lane in ('baseline', 'candidate'):
             binary = root / f'runtime-{lane}-audit'
             program = root / 'fixtures' / f'{case}.json'
@@ -39,4 +39,6 @@ def run(root):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('root', type=Path)
-    run(parser.parse_args().root)
+    parser.add_argument('--cases', nargs='+', choices=('reused', 'replaced', 'borrowed'), default=('reused', 'replaced'))
+    args = parser.parse_args()
+    run(args.root, args.cases)

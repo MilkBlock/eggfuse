@@ -14,9 +14,9 @@ pub(crate) use results::{Capture, ResultPort, Results};
 
 #[path = "cell_query.rs"]
 mod query;
-pub(crate) use query::{Access, Queries, query_order};
+pub(crate) use query::{Access, Queries, Query, query_order};
 #[cfg(feature = "spine-blocks")]
-pub(crate) use query::{Field, Query};
+pub(crate) use query::Field;
 
 /// A position in a Cell definition, never a physical address of its result.
 /// Keep the wire representation shared by existing recipe and Bake artifacts.

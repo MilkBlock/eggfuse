@@ -1186,8 +1186,8 @@ impl Executor {
                             && self.graph.program.kernels[rid][atom]
                                 .as_ref()
                                 .is_some_and(|k| {
-                                    k.steps.iter().all(|s| {
-                                        !matches!(s.access, crate::cell::Access::Expand)
+                                    k.query.steps.iter().all(|s| {
+                                        !matches!(s.access(), crate::cell::Access::Expand)
                                     })
                                 });
                         #[cfg(not(feature = "sparse-cells"))]
@@ -1613,8 +1613,8 @@ impl Executor {
                     .flatten()
                     .filter(|k| {
                         self.range_index.is_none()
-                            || !k.steps.iter().any(|s| {
-                                matches!(s.access, crate::cell::Access::Expand)
+                            || !k.query.steps.iter().any(|s| {
+                                matches!(s.access(), crate::cell::Access::Expand)
                                     && !self.graph.program.physical.ranges[rid][s.atom].is_empty()
                             })
                     });
@@ -1683,7 +1683,7 @@ impl Executor {
                             continue;
                         }
                         let regs =
-                            regs.get_or_insert_with(|| execute_kernel::Registers::new(&rule));
+                            regs.get_or_insert_with(|| execute_kernel::Frame::new(&rule));
                         let domains = if early_join {
                             entry_domains[i].as_slice()
                         } else {

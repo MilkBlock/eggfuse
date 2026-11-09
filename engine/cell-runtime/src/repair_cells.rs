@@ -4,7 +4,7 @@
 //! remains the ordering authority for exact-key completion and its effects.
 use super::*;
 use crate::cell::{Field, Query};
-use std::rc::Rc;
+use std::{borrow::Cow, rc::Rc};
 
 #[derive(Clone, Debug, Default)]
 pub struct Catalog {
@@ -238,11 +238,12 @@ pub(super) enum Delta {
     Deferred,
     Published,
 }
-fn field(f: &Field, anchor: impl Fn(usize) -> Value, values: &[Value]) -> Value {
+fn field<'a>(f: &'a Field, anchor: impl Fn(usize) -> Value, values: &'a [Value]) -> Cow<'a, Value> {
     match f {
-        Field::Anchor(i) => anchor(*i),
-        Field::StepResult(i) => values[*i].clone(),
-        Field::Literal(v) => v.clone(),
+        Field::Anchor(i) => Cow::Owned(anchor(*i)),
+        Field::StepResult(i) => Cow::Borrowed(&values[*i]),
+        Field::Literal(v) => Cow::Borrowed(v),
+        Field::Column { .. } => unreachable!("repair entry has no enumeration"),
     }
 }
 impl Graph {

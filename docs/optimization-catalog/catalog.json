@@ -312,6 +312,7 @@
       "replaces": "通用环境、逐 atom 解释与重复 point 查找",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
+        "engine/cell-runtime/src/cell_query.rs",
         "engine/cell-runtime/src/row_kernel.rs",
         "engine/cell-runtime/src/execute_kernel.rs"
       ],
@@ -348,6 +349,11 @@
             "source": "report",
             "pointer": "/key_lookup_calls",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_result_writes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -355,12 +361,18 @@
             "source": "program",
             "pointer": "/row_kernels",
             "reduce": "count"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_expansion_rows",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。",
+      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count.",
       "evidence": [
-        "README.md"
+        "README.md",
+        "benchmarks/cell-unification/residual.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -607,10 +619,15 @@
             "source": "report",
             "pointer": "/stage_spine/stats/cell_query_entries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/shared_query_plans",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举共用排序编译器，但寄存器执行器尚未统一。",
+      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。",
       "evidence": [
         "benchmarks/leaf-completion/README.md",
         "benchmarks/cell-unification/query.md"
