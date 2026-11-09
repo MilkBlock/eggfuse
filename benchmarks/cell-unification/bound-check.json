@@ -1,0 +1,77 @@
+{
+  "scope": "standalone Cell CPU; ordinary and pure-epoch sum-bits checks; no timing or allocation sampling",
+  "baseline_commit": "34d564b1 (runtime d81b0cb2)",
+  "candidate_commit": "b6bda1d3",
+  "normal_features": "sparse-cells,view-ports,storage-metrics",
+  "semantic_acceptance": "pass",
+  "cases": {
+    "ordinary": {
+      "runs": 1428,
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "unchanged_work_metrics": 313,
+      "observed_work_metrics": 258,
+      "runtime_ownership_stable_scoped_and_port_counters_identical": true
+    },
+    "pure_epochs": {
+      "runs": 1428,
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "unchanged_work_metrics": 313,
+      "observed_work_metrics": 284,
+      "runtime_ownership_stable_scoped_and_port_counters_identical": true,
+      "proof_work": {
+        "bound_rhs_accepts": 3,
+        "bound_rhs_attempts": 7,
+        "bound_rhs_bindings": 12,
+        "bound_rhs_birth_sites": 6,
+        "bound_rhs_budget_rejections": 0,
+        "bound_rhs_expression_steps": 155,
+        "bound_rhs_input_reads": 105,
+        "bound_rhs_key_reads": 25,
+        "bound_rhs_noop_accepts": 3,
+        "bound_rhs_ops": 65,
+        "bound_rhs_overlay_checks": 4,
+        "bound_rhs_rule_checks": 13,
+        "bound_rhs_scratch_growths": 3,
+        "bound_rhs_source_pairs": 5,
+        "bound_rhs_value_slots": 155
+      },
+      "compiled_layout": {
+        "pure_rhs_copies_elided": 72,
+        "pure_rhs_effects": 60,
+        "pure_rhs_expressions": 146,
+        "pure_rhs_templates": 59
+      },
+      "proof_note": "birth_sites and source_pairs are preview candidates, not committed mutations; all accepted previews in this workload are no-ops."
+    }
+  },
+  "metric_note": "The catalog now includes 11 existing proof-work counters. Missing counters are compared as missing, never as zero.",
+  "removed_representation": "Independent Expr, Arithmetic and Effect instructions; Cell source operations supply operators, tables and literals. Dense temporary operand wiring and one shared source-code handle per template remain.",
+  "timing_cadence": {
+    "last_timed_commit": "d81b0cb2",
+    "implementation_commits_since_timing": 1,
+    "prior_performance_issue": "The lifecycle checkpoint regression remains unresolved."
+  },
+  "checks": {
+    "pure_epoch_tests": {
+      "passed": 21,
+      "log_sha256": "e16f0adbc61255214a9e9c47e9de97fa058c4255c10cfdfc8109416234e83ecd"
+    },
+    "minimal_features": {
+      "status": "pass",
+      "log_sha256": "a644550f637bb7406a9c9ef3a5a6e0c45c033e3364be9f23fda1158e13bc6a4a"
+    }
+  },
+  "binaries": {
+    "baseline": "160b53157235f517d3ca81347eff9be14943c843f9d7b91a63210f584e2cbcd3",
+    "candidate": "d1975787128edbfeac354ad21bfac90cd77b546c7fe431442174c7be9972e142"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "reproduction": [
+    "cargo test --locked -p eggfuse-cell-compiler --all-features --test pure_epochs",
+    "cargo check --locked -p eggfuse-cell-runtime --no-default-features",
+    "cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics",
+    "Run each frozen binary with --program out/cell-bound-unified/sum/program.json and --local-congruence or --pure-epochs, using fresh output directories.",
+    "python3 docs/optimization-catalog/catalog.py extract --report REPORT --program out/cell-bound-unified/sum/program.json --output METRICS",
+    "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-bound-unified/semantic out/cell-bound-unified/semantic-acceptance.json"
+  ]
+}
