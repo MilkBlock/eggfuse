@@ -9,24 +9,28 @@ enum WireField<'a> {
     Tail(usize),
     Literal(&'a Value),
 }
-fn field(f: &Field) -> WireField<'_> {
+fn field<'a>(f: &'a Field, plan: &Plan) -> WireField<'a> {
     match f {
-        Field::Anchor(slot) => WireField::Prefix(*slot),
+        Field::Anchor(slot) => {
+            let step = std::iter::once(&plan.root).chain(&plan.ports)
+                .find(|step| (step.base..step.end()).contains(slot)).expect("compiled prefix slot");
+            WireField::Prefix(step.bindings[*slot - step.base].0)
+        },
         Field::Column { step: 0, column } => WireField::Tail(*column),
         Field::Literal(v) => WireField::Literal(v),
         _ => unreachable!("scalar suffix results have no legacy projection"),
     }
 }
-struct Outputs<'a>(&'a [Field]);
+struct Outputs<'a>(&'a [Field], &'a Plan);
 impl Serialize for Outputs<'_> {
     fn serialize<S: serde::Serializer>(&self, s: S) -> std::result::Result<S::Ok, S::Error> {
-        s.collect_seq(self.0.iter().map(field))
+        s.collect_seq(self.0.iter().map(|f| field(f, self.1)))
     }
 }
-struct Checks<'a>(&'a [(usize, Field)]);
+struct Checks<'a>(&'a [(usize, Field)], &'a Plan);
 impl Serialize for Checks<'_> {
     fn serialize<S: serde::Serializer>(&self, s: S) -> std::result::Result<S::Ok, S::Error> {
-        s.collect_seq(self.0.iter().map(|(col, f)| (*col, field(f))))
+        s.collect_seq(self.0.iter().map(|(col, f)| (*col, field(f, self.1))))
     }
 }
 impl Serialize for Plan {
@@ -49,7 +53,7 @@ impl Serialize for Plan {
         let expansion = self.query.steps[0].expansion.as_ref().expect("terminal expansion");
         Wire { root: self.root(), ports: &ports, tail: self.tail(), columns: &self.columns,
             versions: &self.versions, identity_literal: self.identity_literal,
-            output: Outputs(if post.is_empty() { &self.query.inputs } else { &[] }),
-            checks: Checks(&expansion.checks), post: &post }.serialize(s)
+            output: Outputs(if post.is_empty() { &self.query.inputs } else { &[] }, self),
+            checks: Checks(&expansion.checks, self), post: &post }.serialize(s)
     }
 }

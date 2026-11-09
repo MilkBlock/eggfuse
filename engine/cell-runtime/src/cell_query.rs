@@ -158,9 +158,13 @@ impl Expansion {
 #[derive(Clone, Debug)]
 pub(crate) struct ScopedStep {
     pub step: Step,
+    /// Dense frame addresses are this base plus the projection index. Original
+    /// slot names stay in bindings for source/artifact provenance, not lookup.
+    pub base: usize,
     pub bindings: Vec<(usize, Field)>,
 }
 impl ScopedStep {
+    pub(crate) fn end(&self) -> usize { self.base + self.bindings.len() }
     /// Scoped instructions only write newly introduced slots. Check the whole
     /// candidate first (including repeated fields), then install its projection
     /// into the existing frame. Root and internal rows have the same semantics.
@@ -172,10 +176,11 @@ impl ScopedStep {
             field.agrees(&row.values[*col], g, |slot| frame.slot(slot).unwrap(), &[], expanded)) {
             return false;
         }
-        for (slot, field) in &self.bindings {
-            debug_assert!(frame.slot(*slot).is_none(), "scoped Cell write overwrites a live binding");
+        for (offset, (_, field)) in self.bindings.iter().enumerate() {
+            let slot = self.base + offset;
+            debug_assert!(frame.slot(slot).is_none(), "scoped Cell write overwrites a live binding");
             let value = field.read(g, |slot| frame.slot(slot).unwrap(), &[], expanded);
-            frame.bind_slot(*slot, value);
+            frame.bind_slot(slot, value);
         }
         true
     }
@@ -362,7 +367,7 @@ impl Query {
     /// queries. Each completed instruction makes its new fields available from
     /// the existing frame; candidate rows never outlive their enumeration.
     pub(crate) fn scoped_prefix(rule: &Rule, pivot: usize, order: &[usize])
-        -> Option<(std::collections::BTreeSet<usize>, Vec<ScopedStep>)> {
+        -> Option<(BTreeMap<usize, Field>, Vec<ScopedStep>)> {
         let mut sources = BTreeMap::new();
         let mut seen = std::collections::BTreeSet::new();
         let mut steps = Vec::with_capacity(order.len() + 1);
@@ -371,21 +376,27 @@ impl Query {
             let access = match rule.query.get(atom)?.call {
                 Call::Table(_) => Access::Expand, Call::Primitive(..) => Access::Primitive,
             };
+            let base = sources.len();
             let step = Step::lower(rule, atom, access, 0, &mut sources)?;
+            let mut next = base;
             let bindings = sources.iter_mut().filter_map(|(&slot, field)| {
                 if matches!(field, Field::Anchor(_)) { None }
-                else { Some((slot, std::mem::replace(field, Field::Anchor(slot)))) }
+                else {
+                    let previous = std::mem::replace(field, Field::Anchor(next));
+                    next += 1;
+                    Some((slot, previous))
+                }
             }).collect();
-            steps.push(ScopedStep { step, bindings });
+            steps.push(ScopedStep { step, base, bindings });
         }
-        Some((sources.keys().copied().collect(), steps))
+        Some((sources, steps))
     }
     /// Resume an already matched prefix from its existing slots, then borrow
     /// the terminal row and execute the original remaining scalar operations.
-    /// `known` is the slot set derived from that prefix's Cell scopes.
+    /// `sources` maps source slots to that prefix's compiled dense addresses.
+    /// The map is consumed during lowering; runtime fields address slots directly.
     pub(crate) fn continuation(rule: &Rule, prefix: impl Iterator<Item = usize>,
-        known: &std::collections::BTreeSet<usize>, tail: usize, post: &[usize]) -> Option<Self> {
-        let sources = known.iter().map(|&slot| (slot, Field::Anchor(slot))).collect();
+        sources: BTreeMap<usize, Field>, tail: usize, post: &[usize]) -> Option<Self> {
         let mut seen = std::collections::BTreeSet::new();
         for atom in prefix {
             rule.query.get(atom)?;

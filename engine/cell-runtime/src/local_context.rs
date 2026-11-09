@@ -28,6 +28,7 @@ pub(crate) struct Plan {
 impl Plan {
     fn root(&self) -> usize { self.root.step.atom }
     fn tail(&self) -> usize { self.query.steps[0].atom }
+    fn slots(&self) -> usize { self.ports.last().unwrap_or(&self.root).end() }
 }
 #[path = "context_wire.rs"]
 mod wire;
@@ -142,7 +143,7 @@ fn project(
             .any(|v| matches!(v,Arg::Literal(v) if identity(v)))
     });
     let query = Query::continuation(r, std::iter::once(root).chain(ports.iter().copied()),
-        &known, tail, &post)?;
+        known, tail, &post)?;
     let columns = query.steps[0].expansion.as_ref()?.bound.iter().filter_map(|(col, field)|
         matches!(field, Field::Anchor(_)).then_some(*col)).collect();
     Some(Plan {
@@ -346,7 +347,7 @@ impl Contexts {
                     g.stats.residual_candidates += 1;
                     let row = g.row(w)?.ok_or("missing visible root")?;
                     let mut p = Prefix {
-                        values: vec![None; g.program.templates[rule.template].sorts.len()],
+                        values: vec![None; plan.slots()],
                         witnesses: vec![None; rule.query.len()],
                         epoch,
                     };
@@ -597,7 +598,7 @@ fn clear_scope(p: &mut Prefix, step: &ScopedStep, stats: &mut Stats) {
     // Some fields may not have been assigned before a predicate failed. Clear
     // the compiled scope anyway; it never contains a parent/sibling binding.
     stats.branch_slot_clears += step.bindings.len() as u64;
-    for &(slot, _) in &step.bindings { p.values[slot] = None; }
+    p.values[step.base..step.end()].fill(None);
 }
 fn emit(
     g: &mut Graph,
@@ -670,10 +671,10 @@ fn scalar(g: &mut Graph, scoped: &ScopedStep, values: &mut [Option<Value>]) -> R
         crate::value::primitive(name, &args, sort, g.program.key_nodes())
     })?;
     let Some(value) = result else { return Ok(false); };
-    if let [(slot, _)] = scoped.bindings.as_slice() {
+    if scoped.bindings.len() == 1 {
         // Newly produced values move into the original prefix. Bound results
         // have already been checked by the shared instruction and need no write.
-        values[*slot] = Some(value);
+        values[scoped.base] = Some(value);
     }
     Ok(true)
 }
