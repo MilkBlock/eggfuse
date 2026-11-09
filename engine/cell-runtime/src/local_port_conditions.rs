@@ -79,11 +79,7 @@ impl Graph {
     /// Shared conditions cover the local component. One input domain supplies
     /// foreign candidates. Their ordered union is complete, even when open.
     /// None is reserved for an uncovered source shape.
-    fn local_port_candidates(
-        &mut self,
-        f: FactRef,
-        row: &Row,
-    ) -> Result<Option<CandidateSet>> {
+    fn local_port_candidates(&mut self, f: FactRef, row: &Row) -> Result<Option<CandidateSet>> {
         if self.stable_ports.as_ref().unwrap().conditions.is_none() {
             return Ok(None);
         }
@@ -207,11 +203,7 @@ impl Graph {
             self.local_condition_stats().condition_visits += 1;
             let condition = &plan.conditions[id];
             let FactRef { cell, op } = target;
-            let Some(state) = self.cells.get(&cell).and_then(|c| c.facts.get(&op)) else {
-                self.local_condition_stats().inactive_sites += 1;
-                continue;
-            };
-            let Some(stored) = state.ports.as_deref() else {
+            let Some(stored) = self.stable_node(target) else {
                 self.local_condition_stats().inactive_sites += 1;
                 continue;
             };
@@ -243,7 +235,7 @@ impl Graph {
             // interface, preserving visibility, receipts and ordered retirement.
             let state = &self.cells[&cell].facts[&op];
             return self
-                .read_stable_fact(target, state, state.ports.as_deref().unwrap())
+                .read_stable_fact(target, state, self.stable_node(target).unwrap())
                 .map(|r| Some(Some(r)));
         }
         Ok(Some(None))
@@ -352,13 +344,7 @@ impl Graph {
         Ok(work)
     }
     fn condition_candidate_table(&self, fact: FactRef) -> Option<usize> {
-        self.cells
-            .get(&fact.cell)?
-            .facts
-            .get(&fact.op)?
-            .ports
-            .as_ref()
-            .map(|s| s.table)
+        self.stable_node(fact).map(|s| s.table)
     }
     pub(super) fn local_condition_report(&self) -> J {
         let Some(stats) = self

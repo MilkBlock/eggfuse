@@ -49,6 +49,7 @@ struct Job<'a> {
 }
 
 pub(super) fn add_work(total: &mut guard::Work, work: &guard::Work) {
+    total.node_lookups += work.node_lookups;
     total.port_reads += work.port_reads;
     total.key_fields += work.key_fields;
     total.scalar_guards += work.scalar_guards;
@@ -196,10 +197,7 @@ impl Graph {
                     None
                 } else {
                     fact_lookups += 1;
-                    self.cells
-                        .get(&candidate.fact.cell)
-                        .and_then(|c| c.facts.get(&candidate.fact.op))
-                        .and_then(|state| state.ports.as_deref())
+                    self.stable_node(candidate.fact)
                 };
                 jobs.push(Job {
                     candidate,
@@ -336,7 +334,7 @@ impl Graph {
                 }
                 let state = &self.cells[&target.cell].facts[&target.op];
                 return self
-                    .read_stable_fact(target, state, state.ports.as_deref().unwrap())
+                    .read_stable_fact(target, state, self.stable_node(target).unwrap())
                     .map(|row| Some(Some(row)));
             }
         }

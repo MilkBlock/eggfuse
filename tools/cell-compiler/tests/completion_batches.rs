@@ -98,6 +98,24 @@ fn same_sort_tasks_reuse_reads_across_result_unions() {
 }
 
 #[test]
+fn direct_worker_reads_skip_preparation_and_unused_candidates() {
+    let report = compare(&siblings(false, true, false), 2, 16);
+    let stats = &report["stats"];
+    assert_eq!(stats["prepared_candidates"], 0);
+    assert!(stats["candidate_fact_lookups"].as_u64().unwrap() > 0);
+    assert_eq!(stats["candidate_fact_lookups"], stats["guard_candidates"]);
+    assert!(
+        stats["candidate_fact_lookups"].as_u64().unwrap()
+            < stats["candidate_positions"].as_u64().unwrap(),
+        "{report}"
+    );
+    assert!(
+        stats["pending_probes"].as_u64().unwrap()
+            <= stats["candidate_fact_lookups"].as_u64().unwrap()
+    );
+}
+
+#[test]
 fn pending_peers_can_become_survivors_and_retired_peers_are_rejected() {
     compare(&siblings(false, false, false), 2, 16);
     let retired = compare(&siblings(true, true, false), 2, 16);

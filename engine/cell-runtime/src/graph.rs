@@ -71,10 +71,6 @@ pub struct FactState {
     // Never checkpoint it.
     #[serde(skip)]
     decoded: Option<(usize, RowFields)>,
-    /// Authoritative immutable field representation in the stable-port backend.
-    /// Equality fields contain shared symbolic addresses, never copied roots.
-    #[serde(skip)]
-    ports: Option<std::rc::Rc<cell_ownership::ports::Stored>>,
     #[serde(default)]
     pub entry: Option<FactRef>,
     pub hidden: bool,
@@ -927,8 +923,7 @@ impl Graph {
         }
     }
     fn fact_column(&self, f: FactRef, col: usize) -> Result<Value> {
-        if let Some(stored) = self.cells.get(&f.cell)
-            .and_then(|c| c.facts.get(&f.op)).and_then(|s| s.ports.as_ref()) {
+        if let Some(stored) = self.stable_node(f) {
             return self.read_stable_column(stored, col);
         }
         // Recipe parameters are immutable even after this fact is hidden/deleted.
@@ -980,7 +975,7 @@ impl Graph {
         let Some(s) = c.facts.get(&f.op) else {
             return Ok(None);
         };
-        if let Some(stored) = &s.ports {
+        if let Some(stored) = self.stable_node(f) {
             return self.read_stable_fact(f, s, stored).map(Some);
         }
         if let Some((table, values)) = &s.decoded {
@@ -1467,7 +1462,6 @@ impl Graph {
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
                 decoded: Some((t, vs.clone())),
-                ports: None,
 
                 entry: None,
                 hidden,
@@ -2258,6 +2252,7 @@ impl Graph {
                 .facts
                 .remove(&f.op)
                 .unwrap();
+            self.retire_stable_node(f);
             #[cfg(feature = "receipt-slots")]
             if s.port_slot != 0 {
                 self.retired_port_slots
@@ -2427,7 +2422,7 @@ impl Graph {
                 .get_mut(&f.op)
                 .unwrap();
 
-            s.decoded = if s.ports.is_none() { Some((r.table, r.values.clone())) } else { None };
+            s.decoded = if self.stable_ports.is_none() || !s.owned { Some((r.table, r.values.clone())) } else { None };
             if let Some(h) = h { s.hash = h; }
             s.epoch = self.epoch;
             if self.cells[&f.cell].facts[&f.op].owned {

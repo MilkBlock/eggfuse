@@ -298,6 +298,31 @@ sharing a sort alone does not require waiting. Results never cross a source Run
 or survive an uncertified mutable effect. Invalid/unused reads, preparation,
 certificate searches, extra queue probes, dispatches and allocations are charged.
 
+## Direct worker access to stable nodes
+
+Stable fields have a single owner: a plain `FactRef -> Stored` directory in the
+stable-port runtime. Cell metadata no longer owns an `Rc<Stored>`. Directory keys
+are fact identities, never canonical equality representatives; union does not
+rewrite or rehash these keys. Birth installs the entry, retirement removes it,
+and missing entries are inactive candidates. Retained consumers of a deleted
+producer still use the existing recipe fallback. Report-time invariants check
+that directory entries and live owned facts correspond in both directions.
+
+The immutable worker view borrows this directory, the equality relation, shared
+component bindings, and a counter-free membership view of the authoritative
+pending queues. No node copy, per-worker index or producer/consumer subscription
+is created. These borrows still prohibit Graph mutation during the read phase;
+splitting storage alone does not establish independent progress during mutation.
+
+Batch tasks borrow candidate addresses and compiler condition code. A worker
+looks up a node only when it reaches that candidate, checks current read-epoch
+pending membership, and stops according to the existing ordered-match proof.
+The coordinator no longer builds a bound descriptor for every candidate before
+dispatch. Each worker writes answers into its task's disjoint result slots;
+collection needs no intermediate answer array. Commit-time liveness and input
+certificates remain unchanged. Node queries, directory lifetime operations,
+pending probes, task preparation and allocator costs remain explicit in credit.
+
 ## Gates that must remain open
 
 - Through the actual Executor, A retains outstanding congruence while B matches,

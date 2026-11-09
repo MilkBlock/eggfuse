@@ -145,20 +145,10 @@ impl Proof<'_> {
                     cell: component.frames[step.frame],
                     op: step.op,
                 };
-                let Some(state) = self
-                    .graph
-                    .cells
-                    .get(&fact.cell)
-                    .and_then(|c| c.facts.get(&fact.op))
-                    .filter(|s| s.owned)
-                else {
+                let Some(stored) = self.graph.stable_node(fact) else {
                     self.counts.inactive_steps += 1;
                     continue;
                 };
-                let stored = state
-                    .ports
-                    .as_ref()
-                    .ok_or("pure effect requires stable ports")?;
                 let output = component.signals[output].ok_or("unbound live effect output")?;
                 self.counts.output_reads += 1;
                 use_output(stored.table, root(&self.graph.parents, output), self.counts);

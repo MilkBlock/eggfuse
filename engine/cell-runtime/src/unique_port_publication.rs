@@ -96,7 +96,7 @@ impl Graph {
         before: u64,
     ) -> Option<bool> {
         let owner = self.ownership.as_ref().unwrap();
-        let stored = self.cells.get(&f.cell)?.facts.get(&f.op)?.ports.as_ref()?;
+        let stored = self.stable_node(f)?;
         let table = stored.table;
         counts.pending_checks += 1;
         if owner.pending.contains(table, &f) {
@@ -236,15 +236,7 @@ impl Graph {
         source_seen: &mut bool,
     ) -> bool {
         counts.site_checks += 1;
-        let Some(state) = self
-            .cells
-            .get(&fact.cell)
-            .and_then(|c| c.facts.get(&fact.op))
-            .filter(|s| s.owned)
-        else {
-            return false;
-        };
-        let Some(stored) = &state.ports else {
+        let Some(stored) = self.stable_node(fact) else {
             return false;
         };
         counts.operator_checks += 1;

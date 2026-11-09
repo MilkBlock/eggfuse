@@ -254,16 +254,10 @@ impl Graph {
                         cell: component.frames[step.frame],
                         op: step.op,
                     };
-                    let Some(state) = self
-                        .cells
-                        .get(&fact.cell)
-                        .and_then(|c| c.facts.get(&fact.op))
-                        .filter(|s| s.owned)
-                    else {
+                    let Some(stored) = self.stable_node(fact) else {
                         counts.inactive_steps += 1;
                         continue;
                     };
-                    let stored = state.ports.as_ref().ok_or("seed requires stable fields")?;
                     if stored.table != table {
                         continue;
                     }
@@ -342,19 +336,10 @@ impl Graph {
                         cell: component.frames[step.frame],
                         op: step.op,
                     };
-                    let Some(state) = self
-                        .cells
-                        .get(&fact.cell)
-                        .and_then(|c| c.facts.get(&fact.op))
-                        .filter(|s| s.owned)
-                    else {
+                    let Some(stored) = self.stable_node(fact) else {
                         counts.inactive_steps += 1;
                         continue;
                     };
-                    let stored = state
-                        .ports
-                        .as_ref()
-                        .ok_or("influence requires stable fields")?;
                     influence.tables[stored.table] = true;
                     if let Some(output) = step.output {
                         counts.output_reads += 1;

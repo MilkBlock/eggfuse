@@ -29,6 +29,21 @@ pub(in crate::graph) struct Pending {
     mixed_epochs: bool,
     pub counts: Counts,
 }
+/// Counter-free membership access into the authoritative queues. Borrowing it
+/// across a worker read phase prevents inserts/pops until all readers return.
+#[derive(Clone, Copy)]
+pub(in crate::graph) struct ReadView<'a> {
+    flat: Option<&'a BTreeSet<FactRef>>,
+    tables: &'a [BTreeMap<FactRef, u64>],
+}
+impl ReadView<'_> {
+    pub fn contains(&self, table: usize, fact: &FactRef) -> bool {
+        self.flat.map_or_else(
+            || self.tables[table].contains_key(fact),
+            |s| s.contains(fact),
+        )
+    }
+}
 impl Default for Pending {
     fn default() -> Self {
         Self {
@@ -44,6 +59,12 @@ impl Default for Pending {
     }
 }
 impl Pending {
+    pub fn reader(&self) -> ReadView<'_> {
+        ReadView {
+            flat: self.flat.as_ref(),
+            tables: &self.tables,
+        }
+    }
     pub fn enable_scopes(&mut self, n: usize) {
         assert!(
             self.is_empty(),

@@ -18,6 +18,10 @@ the experiment remains default-off and has no performance admission.
 `--completion-batch-tasks` extends that read phase across queued tasks using the
 compiler's complete key footprint. Certified reads survive intervening pure
 constructor completion; a key-class conflict or legacy effect ends their reuse.
+Stable fields now live in one authoritative fact directory. Batch workers borrow
+that directory and the ready queues directly, avoiding eager per-candidate guard
+descriptors. This changes storage and preparation costs, not the source waits or
+the ordered commit protocol.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -1309,4 +1313,101 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/completion-batches-allocator-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/completion-batches-allocator-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/completion-batches-allocator-audit
 python3 benchmarks/stable-port-congruence/collect-completion-batches.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Direct stable-node reads on workers
+
+The preceding execution at `c498415a` retained independent completion reads but
+still prepared every candidate on the coordinator. Cell metadata held an
+`Rc<Stored>`, so the worker could not borrow the fact directory directly. For the
+16-task lane this meant 3,229 bound candidate descriptors and 1,323,584 requested
+bytes of batch scratch. There is no newly discharged cross-Run obligation here:
+source snapshot, effect order, the six query waits and four RHS waits remain.
+The typed complete condition plan continues to authorize the candidate domain
+and input-class certificate, allowing the storage/projection layer to change
+without weakening congruence or publication checks.
+
+Stable fields now have one authoritative owner, a plain `FactRef -> Stored`
+directory; the per-fact Rc owner is removed. Its keys identify facts and do not
+depend on canonical representatives. Birth and retirement update the directory;
+union does not. Workers borrow the directory alongside component bindings and
+the equality relation. A separate immutable view exposes pending membership
+without the queue's mutable counters. No Graph clone, duplicate node index,
+per-worker subscription, atomic reference count or unsafe Sync implementation is
+introduced. Existing retained-parent recipes still serve deleted producers.
+
+Each batch task borrows its candidate list and shared condition plan. The worker
+resolves candidates lazily, checks pending membership, and stops at the same
+ordered winner as before. Disjoint answer slots are borrowed directly from the
+prepared tasks, removing the intermediate result array as well as the eager
+bound-candidate arrays. Candidate-list construction itself remains on the
+coordinator: `prepared_candidates = 0` means no bound descriptors, not zero
+candidate generation. `candidate_positions` records the still-existing lists.
+
+All five frozen sum-bits lanes match 1,428 Run state/RHS/effective-write/resume/
+Spine/schedule hashes. Apart from explicitly enumerated preparation counters and
+new directory counters, **every deterministic audit counter matches `c498415a`**.
+Thus task order, actual guard work, invalidations, source waits and committed
+effects are unchanged. The 16-task lane still dispatches 84 times, commits 622
+cached tasks, handles 380 intervening pure tasks and discards 75 prepared tasks.
+
+| Batch configuration | Bound descriptors before / after | Candidate node queries before / after | Pending probes before / after | Scratch allocations before / after | Scratch requested bytes before / after |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 16 tasks, 2 or 4 workers | 3,229 / 0 | 2,699 / 1,791 | 3,229 / 1,645 | 194 / 176 | 1,323,584 / 637,640 |
+| 4 tasks, 2 workers | 3,364 / 0 | 2,817 / 1,838 | 3,364 / 1,699 | 402 / 376 | 1,344,064 / 638,224 |
+
+The new directory is not free. The serial lane performs 282,103 metered node
+queries; the 16-task batch lane performs 284,594. These replace old Cell/field
+accesses, whose latency is not established by the new count. All lanes install
+3,739 stable nodes, retire 844 and retain 2,895. Directory lookup, insertion and
+retirement probes are charged to Bake. Worker/preparation lookup subtotals are
+not charged a second time. Report-time consistency checks inspect the directory
+without changing execution counters.
+
+Allocator diagnostics show the storage tradeoff as well as the batch saving.
+Against the same lane in the preceding revision, setup makes 121 fewer
+allocations but requests 13,716 more bytes in every lane. Serial execution makes
+3,607 fewer allocations but requests 96,808 more bytes: eliminating individual
+Rc allocations does not eliminate hash-directory capacity. The 16-task lane
+makes 3,625 fewer execution allocations and requests 589,136 fewer bytes. Its
+remaining increment over the **current serial control** is 330 allocations,
+two reallocations and 650,056 requested bytes, down from the previous 348/two/
+1,336,000 increment. The four-task lane retains an increment of 401 allocations,
+zero reallocations and 643,440 bytes. Pool setup increments remain separately
+reported in [the audit](direct-guards-audit.json). Requested bytes are not RSS;
+parsing/export and native thread stacks are excluded from these intervals.
+
+Validation passes 314 workspace tests (four ignored), 113 focused tests in each
+storage configuration and the minimal compile check. The new execution fixture
+checks lazy reads stop before unused candidates. Existing tests exercise hidden
+peers, deletion/recreation, aliasing, retained consumers and both union
+invalidation paths. A negative control omitting directory removal exposes a
+deleted fact as a live guard; correct retirement was restored before final
+builds and audits. Normal and allocator builds match all deterministic work.
+
+This remains a **standalone Cell CPU experiment without speed or scaling
+admission**. The directory removes a read-preparation obstacle to parallelism,
+but all workers still join before Graph mutation and commits remain serial.
+Candidate construction, canonical source-row views and per-batch task vectors
+remain costs. The equality relation and publication ownership still need a
+protocol permitting independent work during mutation; no global-stall removal
+is inferred from the allocation reduction. No timing campaign was run.
+
+Reproduce the preceding eleven focused suites with `direct-guards-` log prefixes
+for workspace, sparse, non-sparse and minimal checks. Preserve the previous
+`completion-batches-{final,allocator}-audit` directories for comparison. For the
+negative control, temporarily omit `retire_stable_node(f)` in `Graph::retire`,
+run the `read_guards` test
+`a_new_read_borrow_observes_aliases_and_rejects_retired_instances`, record its
+expected failure in `direct-guards-negative-retirement.log`, and restore the
+call. Build standalone audit executables separately from compiler tests:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/direct-guards-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/direct-guards-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/direct-guards-final-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/direct-guards-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/direct-guards-allocator-runtime benchmarks/stable-port-congruence/completion-batches-audit-manifest.json out/stable-port-congruence/direct-guards-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-direct-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```

@@ -19,6 +19,7 @@ struct Stats {
     dispatches: u64,
     prepared_tasks: u64,
     prepared_candidates: u64,
+    candidate_positions: u64,
     pending_probes: u64,
     candidate_fact_lookups: u64,
     read_set_slots: u64,
@@ -62,13 +63,6 @@ struct Prepared {
     answers: Answers,
     worker: usize,
 }
-struct Bound<'a> {
-    candidate: Candidate,
-    target: Option<&'a Stored>,
-    condition: Option<&'a composition::conditions::Condition>,
-    pending: bool,
-    skip: bool,
-}
 #[derive(Default)]
 struct Counts {
     work: guard::Work,
@@ -78,45 +72,53 @@ struct Counts {
     inactive: u64,
     pending: u64,
     candidates: u64,
+    pending_probes: u64,
     early_stops: u64,
     allocations: u64,
     bytes: u64,
 }
 struct Task<'a> {
+    fact: FactRef,
     table: usize,
     component: u32,
     values: &'a [Value],
-    inputs: smallvec::SmallVec<[Bound<'a>; 16]>,
-    answers: Answers,
+    candidates: &'a [Candidate],
+    plan: &'a Plan,
+    answers: &'a mut Answers,
     counts: Counts,
-    worker: usize,
+    worker: &'a mut usize,
 }
 impl Task<'_> {
-    fn run(&mut self, view: guard::ReadView<'_>) {
-        self.worker = rayon::current_thread_index().unwrap();
-        for bound in &self.inputs {
+    fn run(&mut self, view: guard::ReadView<'_>, ready: ready::ReadView<'_>) {
+        *self.worker = rayon::current_thread_index().unwrap();
+        for &candidate in self.candidates {
             self.counts.candidates += 1;
-            if bound.skip {
+            let target = view.node(candidate.fact, &mut self.counts.work);
+            let pending = target.is_some_and(|node| {
+                self.counts.pending_probes += 1;
+                ready.contains(node.table, &candidate.fact)
+            });
+            if pending && candidate.fact >= self.fact {
                 self.counts.pending += 1;
                 continue;
             }
-            if bound.condition.is_some() {
+            if candidate.condition.is_some() {
                 self.counts.visits += 1;
             } else {
                 self.counts.keys += 1;
             }
-            let Some(target) = bound.target else {
-                self.counts.inactive += u64::from(bound.condition.is_some());
+            let Some(target) = target else {
+                self.counts.inactive += u64::from(candidate.condition.is_some());
                 continue;
             };
-            let result = if let Some(condition) = bound.condition {
+            let result = if let Some(id) = candidate.condition {
                 self.counts.operators += 1;
                 if target.table != self.table {
                     Ok(false)
                 } else {
                     view.condition_matches(
                         self.component,
-                        condition,
+                        &self.plan.conditions[id],
                         target,
                         self.values,
                         &mut self.counts.work,
@@ -134,7 +136,7 @@ impl Task<'_> {
             if !matches!(result, Ok(false)) {
                 let capacity = self.answers.capacity();
                 self.answers.push(Answer {
-                    candidate: bound.candidate,
+                    candidate,
                     result: result.map(|_| ()),
                 });
                 if self.answers.capacity() != capacity {
@@ -146,7 +148,7 @@ impl Task<'_> {
             // A completed matching peer can only become a key task after an
             // input-class change. That change invalidates this cached source
             // before a bridged task could retire the peer.
-            if matched && !bound.pending {
+            if matched && !pending {
                 self.counts.early_stops += 1;
                 break;
             }
@@ -195,10 +197,7 @@ impl Graph {
         if !self.port_keys_enabled(table) {
             return false;
         }
-        let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
-            return false;
-        };
-        if state.ports.is_none() {
+        if self.stable_node(f).is_none() {
             return false;
         }
         let m = self.ownership.as_ref().unwrap();
@@ -387,7 +386,7 @@ impl Graph {
                     self.batch_stats().selection_dead_skips += 1;
                     continue;
                 };
-                let Some(stored) = state.ports.as_deref() else {
+                let Some(stored) = self.stable_node(f) else {
                     self.batch_stats().selection_dead_skips += 1;
                     continue;
                 };
@@ -469,58 +468,21 @@ impl Graph {
         let mut tasks = Vec::with_capacity(prepared.len());
         let mut allocations = 1;
         let mut bytes = (tasks.capacity() * std::mem::size_of::<Task<'_>>()) as u64;
-        let mut candidates = 0;
-        let mut fact_lookups = 0;
-        for source in prepared.iter() {
-            let mut inputs = smallvec::SmallVec::<[Bound<'_>; 16]>::with_capacity(
-                source.context.candidates.len(),
-            );
-            if inputs.spilled() {
-                allocations += 1;
-                bytes += (inputs.capacity() * std::mem::size_of::<Bound<'_>>()) as u64;
-            }
-            for &candidate in &source.context.candidates {
-                candidates += 1;
-                let pending = self
-                    .dependency_table(Dependency::Fact(candidate.fact))
-                    .is_some_and(|t| {
-                        self.ownership
-                            .as_ref()
-                            .unwrap()
-                            .pending
-                            .contains(t, &candidate.fact)
-                    });
-                let skip = pending && candidate.fact >= source.fact;
-                let target = if skip {
-                    None
-                } else {
-                    fact_lookups += 1;
-                    self.cells
-                        .get(&candidate.fact.cell)
-                        .and_then(|c| c.facts.get(&candidate.fact.op))
-                        .and_then(|s| s.ports.as_deref())
-                };
-                inputs.push(Bound {
-                    candidate,
-                    target,
-                    pending,
-                    skip,
-                    condition: candidate
-                        .condition
-                        .map(|i| &source.context.plan.conditions[i]),
-                });
-            }
+        for source in prepared.iter_mut() {
             tasks.push(Task {
+                fact: source.fact,
                 table: source.row.table,
                 component: source.context.component,
                 values: &source.row.values,
-                inputs,
-                answers: Answers::new(),
+                candidates: &source.context.candidates,
+                plan: &source.context.plan,
+                answers: &mut source.answers,
                 counts: Counts::default(),
-                worker: usize::MAX,
+                worker: &mut source.worker,
             });
         }
         let view = self.stable_port_reader()?;
+        let ready = self.ownership.as_ref().unwrap().pending.reader();
         self.stable_ports
             .as_ref()
             .unwrap()
@@ -529,33 +491,23 @@ impl Graph {
             .unwrap()
             .pool
             .install(|| {
-                tasks.par_iter_mut().for_each(|task| task.run(view));
+                tasks.par_iter_mut().for_each(|task| task.run(view, ready));
             });
         let mut total = Counts::default();
-        // Detach results from all Graph/template borrows before any mutation.
-        let results = tasks
-            .into_iter()
-            .map(|task| {
-                add_work(&mut total.work, &task.counts.work);
-                total.keys += task.counts.keys;
-                total.visits += task.counts.visits;
-                total.operators += task.counts.operators;
-                total.inactive += task.counts.inactive;
-                total.pending += task.counts.pending;
-                total.candidates += task.counts.candidates;
-                total.early_stops += task.counts.early_stops;
-                allocations += task.counts.allocations;
-                bytes += task.counts.bytes;
-                (task.answers, task.worker)
-            })
-            .collect::<smallvec::SmallVec<[_; 16]>>();
-        if results.spilled() {
-            allocations += 1;
-            bytes += (results.capacity() * std::mem::size_of::<(Answers, usize)>()) as u64;
-        }
-        for (source, (answers, worker)) in prepared.iter_mut().zip(results) {
-            source.answers = answers;
-            source.worker = worker;
+        // Dropping every borrowed task ends the read phase. Workers wrote
+        // only into disjoint answer slots; no result array is copied or rebuilt.
+        for task in tasks {
+            add_work(&mut total.work, &task.counts.work);
+            total.keys += task.counts.keys;
+            total.visits += task.counts.visits;
+            total.operators += task.counts.operators;
+            total.inactive += task.counts.inactive;
+            total.pending += task.counts.pending;
+            total.candidates += task.counts.candidates;
+            total.pending_probes += task.counts.pending_probes;
+            total.early_stops += task.counts.early_stops;
+            allocations += task.counts.allocations;
+            bytes += task.counts.bytes;
         }
         self.record_guard_reads(&total.work);
         let stable = self.stable_ports.as_mut().unwrap();
@@ -579,9 +531,14 @@ impl Graph {
         stats.prepared_tasks += prepared.len() as u64;
         stats.peak_tasks = stats.peak_tasks.max(prepared.len());
         stats.collected_tasks += prepared.len() as u64;
-        stats.prepared_candidates += candidates;
-        stats.pending_probes += candidates;
-        stats.candidate_fact_lookups += fact_lookups;
+        stats.candidate_positions += prepared
+            .iter()
+            .map(|s| s.context.candidates.len() as u64)
+            .sum::<u64>();
+        // No per-candidate descriptors are prepared. Node and membership
+        // lookups occur lazily on workers, only until the ordered early stop.
+        stats.pending_probes += total.pending_probes;
+        stats.candidate_fact_lookups += total.work.node_lookups;
         stats.recorded_answers += prepared.iter().map(|s| s.answers.len() as u64).sum::<u64>();
         stats.guard_candidates += total.candidates;
         stats.worker_early_stops += total.early_stops;

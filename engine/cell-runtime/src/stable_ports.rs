@@ -48,6 +48,13 @@ pub struct Stored {
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
     keys: bool,
+    /// The sole owner of stable fields. Plain values let workers borrow the
+    /// directory without borrowing Cell metadata or its Rc-backed recipe cache.
+    #[serde(skip)]
+    pub(super) nodes: HashMap<FactRef, Stored>,
+    node_lookups: Counter<u64>,
+    node_retirement_probes: u64,
+    nodes_retired: u64,
     #[serde(skip)]
     unique: Option<publication::Counts>,
     #[serde(skip)]
@@ -145,15 +152,25 @@ impl Graph {
             .facts
             .get_mut(&f.op)
             .unwrap();
-        assert!(
-            state.ports.is_none(),
-            "stable representation installed once per fact incarnation"
-        );
-        state.ports = Some(Rc::new(Stored { table, fields }));
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
+        assert!(
+            stats.nodes.insert(f, Stored { table, fields }).is_none(),
+            "stable representation installed once per fact incarnation"
+        );
         stats.rows_installed += 1;
         stats.ports_installed += count;
+    }
+    pub(in crate::graph) fn stable_node(&self, f: FactRef) -> Option<&Stored> {
+        let runtime = self.stable_ports.as_ref()?;
+        runtime.node_lookups.set(runtime.node_lookups.get() + 1);
+        runtime.nodes.get(&f)
+    }
+    pub(in crate::graph) fn retire_stable_node(&mut self, f: FactRef) {
+        if let Some(runtime) = self.stable_ports.as_mut() {
+            runtime.node_retirement_probes += 1;
+            runtime.nodes_retired += u64::from(runtime.nodes.remove(&f).is_some());
+        }
     }
     fn port_value(&self, port: PortRef, meter: bool) -> Result<Value> {
         let binding = self
@@ -176,14 +193,7 @@ impl Graph {
         self.port_value(port, true)
     }
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
-        let fields = &self
-            .cells
-            .get(&f.cell)?
-            .facts
-            .get(&f.op)?
-            .ports
-            .as_ref()?
-            .fields;
+        let fields = &self.stable_node(f)?.fields;
         match fields.get(column)? {
             Field::Port(p) => Some(*p),
             Field::Scalar(_) => None,
@@ -241,12 +251,7 @@ impl Graph {
         columns: &[usize],
         changed_root: u64,
     ) -> bool {
-        let Some(stored) = self
-            .cells
-            .get(&f.cell)
-            .and_then(|c| c.facts.get(&f.op))
-            .and_then(|s| s.ports.as_ref())
-        else {
+        let Some(stored) = self.stable_node(f) else {
             return false;
         };
         if columns.is_empty() {
@@ -305,9 +310,9 @@ impl Graph {
         };
         let mut nodes = 0;
         let mut ports = 0;
-        for (_, cell) in self.cells.iter() {
-            for (_, fact) in cell.facts.iter() {
-                if let Some(row) = &fact.ports {
+        for (&cell_id, cell) in self.cells.iter() {
+            for (&op, fact) in cell.facts.iter() {
+                if let Some(row) = stats.nodes.get(&FactRef { cell: cell_id, op }) {
                     assert!(fact.owned && fact.decoded.is_none());
                     nodes += 1;
                     ports += row
@@ -320,6 +325,12 @@ impl Graph {
                 }
             }
         }
+        assert_eq!(
+            nodes,
+            stats.nodes.len(),
+            "stable directory contains only live facts"
+        );
+        assert_eq!(stats.rows_installed - stats.nodes_retired, nodes as u64);
         let indexed_port_keys = self
             .intern
             .values()

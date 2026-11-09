@@ -113,10 +113,7 @@ impl Graph {
     ) -> Result<Option<Row>> {
         let stats = self.stable_ports.as_ref().unwrap();
         stats.key_candidates.set(stats.key_candidates.get() + 1);
-        let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
-            return Ok(None);
-        };
-        let Some(row) = &state.ports else {
+        let Some(row) = self.stable_node(f) else {
             return Ok(None);
         };
         let mut work = guard::Work::default();
@@ -127,7 +124,8 @@ impl Graph {
         if !matched? {
             return Ok(None);
         }
-        self.read_stable_fact(f, state, row).map(Some)
+        self.read_stable_fact(f, &self.cells[&f.cell].facts[&f.op], row)
+            .map(Some)
     }
     pub(in crate::graph) fn complete_port_key(&mut self, f: FactRef, row: Row) -> Result<()> {
         self.dirty_facts[row.table].remove(&f);

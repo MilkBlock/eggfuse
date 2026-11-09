@@ -76,7 +76,7 @@ impl Work {
         }
         // Stable fields and equality-guarded keys replace maintenance with
         // reads/guards. Their work must not disappear from Bake's ledger.
-        for field in ["rows_installed", "ports_installed", "row_views", "port_reads", "root_resolutions",
+        for field in ["rows_installed", "node_retirement_probes", "node_lookups", "ports_installed", "row_views", "port_reads", "root_resolutions",
             "notifications", "notified_columns", "legacy_key_enqueues", "equality_enqueues", "equality_completions",
             "key_candidates", "key_field_comparisons", "pending_candidate_skips", "birth_hint_probes", "port_domain_probes"] {
             let key = format!("stable_ports/stats/{field}");
@@ -100,9 +100,11 @@ impl Work {
         // Actual guards (including speculative reads) are already counted
         // above. Charge their dispatch/collection too, without counting the
         // speculative subset a second time or using worker-dependent loads.
+        // Candidate directory lookups are included in stable_ports/node_lookups;
+        // the worker and preparation lookup counts are subsets of that total.
         let parallel = &report["stable_ports"]["parallel_guards"];
         for field in ["candidate_batches", "rounds", "chunks", "prepared_candidates",
-            "prepared_fact_lookups", "collected_results", "scratch_allocations"] {
+            "collected_results", "scratch_allocations"] {
             let value = if parallel["enabled"] == true {
                 parallel["stats"][field].as_u64().ok_or_else(|| format!("missing parallel guard work {field}"))?
             } else { 0 };
@@ -117,7 +119,7 @@ impl Work {
         let batches = &report["stable_ports"]["completion_batches"];
         for field in ["attempts", "queue_head_visits", "queue_comparisons", "queue_successor_reads",
             "preflight_checks", "dispatches", "prepared_tasks", "prepared_candidates", "pending_probes",
-            "candidate_fact_lookups", "read_set_slots", "read_set_comparisons", "read_set_queries",
+            "read_set_slots", "read_set_comparisons", "read_set_queries",
             "result_refreshes", "collected_tasks", "recorded_answers", "selection_checks", "order_checks", "scratch_allocations"] {
             let value = if batches["enabled"] == true {
                 batches["stats"][field].as_u64().ok_or_else(|| format!("missing completion batch work {field}"))?
@@ -213,8 +215,8 @@ mod tests {
         assert!(parallel.0["stable_ports/parallel_guards/stats/rounds"] > 0);
         assert!(parallel.0["stable_ports/parallel_guards/stats/prepared_candidates"] > 0);
         assert!(serial.savings(&parallel).0 < 0);
-        after["stable_ports"]["parallel_guards"]["stats"].as_object_mut().unwrap().remove("prepared_fact_lookups");
-        assert!(Work::read(&after).unwrap_err().contains("missing parallel guard work prepared_fact_lookups"));
+        after["stable_ports"]["parallel_guards"]["stats"].as_object_mut().unwrap().remove("prepared_candidates");
+        assert!(Work::read(&after).unwrap_err().contains("missing parallel guard work prepared_candidates"));
         let (batch_state, mut batch_report) = run(true, true);
         assert_eq!(before_state, batch_state);
         let batch = Work::read(&batch_report).unwrap();

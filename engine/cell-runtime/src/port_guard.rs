@@ -6,6 +6,7 @@ use composition::conditions::Condition;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Work {
+    pub node_lookups: u64,
     pub port_reads: u64,
     pub key_fields: u64,
     pub scalar_guards: u64,
@@ -13,12 +14,13 @@ pub struct Work {
     pub shared_symbol_guards: u64,
 }
 
-/// This view borrows only plain port bindings and the equality relation. It
-/// contains no Graph, Rc, interior counters, locks or copied canonical rows.
+/// This view borrows the authoritative stable nodes, port bindings and equality
+/// relation. It contains no Graph, Rc, interior counters, locks or copied rows.
 #[derive(Clone, Copy)]
 pub struct ReadView<'a> {
     parents: &'a Parents,
     components: &'a [Option<composition::Component>],
+    nodes: &'a HashMap<FactRef, Stored>,
 }
 
 pub struct KeyGuard<'a> {
@@ -41,6 +43,10 @@ impl KeyGuard<'_> {
 }
 
 impl ReadView<'_> {
+    pub(super) fn node(&self, fact: FactRef, work: &mut Work) -> Option<&Stored> {
+        work.node_lookups += 1;
+        self.nodes.get(&fact)
+    }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
         self.components
             .get(port.component as usize)
@@ -135,6 +141,7 @@ impl Graph {
         Ok(ReadView {
             parents: &self.parents,
             components: &self.ownership.as_ref().unwrap().composition.components,
+            nodes: &self.stable_ports.as_ref().unwrap().nodes,
         })
     }
 
@@ -149,11 +156,7 @@ impl Graph {
         key: &'a [Value],
     ) -> Result<Option<KeyGuard<'a>>> {
         let view = self.stable_port_reader()?;
-        let target = self
-            .cells
-            .get(&fact.cell)
-            .and_then(|c| c.facts.get(&fact.op))
-            .and_then(|s| s.ports.as_deref());
+        let target = self.stable_node(fact);
         Ok(target.map(|target| KeyGuard {
             view,
             target,
@@ -164,6 +167,9 @@ impl Graph {
 
     pub(super) fn record_guard_reads(&self, work: &Work) {
         let stats = self.stable_ports.as_ref().unwrap();
+        stats
+            .node_lookups
+            .set(stats.node_lookups.get() + work.node_lookups);
         stats
             .port_reads
             .set(stats.port_reads.get() + work.port_reads);
@@ -204,7 +210,8 @@ mod tests {
         assert!(
             !ReadView {
                 parents: &parents,
-                components: &components
+                components: &components,
+                nodes: &HashMap::default(),
             }
             .condition_matches(0, &condition, &target, &[Value::Int(8)], &mut work)
             .unwrap()
@@ -215,7 +222,8 @@ mod tests {
         assert!(
             !ReadView {
                 parents: &parents,
-                components: &components
+                components: &components,
+                nodes: &HashMap::default(),
             }
             .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
             .unwrap()
@@ -233,7 +241,8 @@ mod tests {
         assert!(
             ReadView {
                 parents: &parents,
-                components: &components
+                components: &components,
+                nodes: &HashMap::default(),
             }
             .condition_matches(0, &condition, &target, &[Value::Int(7)], &mut work)
             .unwrap()
@@ -262,9 +271,11 @@ mod tests {
             live_facts: 2,
             signals: vec![Some(10), Some(11)],
         })];
+        let nodes = HashMap::default();
         let view = ReadView {
             parents: &parents,
             components: &components,
+            nodes: &nodes,
         };
         let condition = Condition {
             sites: [0, 1],

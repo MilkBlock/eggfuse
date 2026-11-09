@@ -812,7 +812,7 @@ impl Graph {
                     .cells
                     .get(&cell)
                     .and_then(|c| c.facts.get(&step.op))
-                    .is_some_and(|s| s.owned && s.ports.as_ref().map_or_else(
+                    .is_some_and(|s| s.owned && self.stable_node(FactRef { cell, op: step.op }).map_or_else(
                         || s.decoded.as_ref().unwrap().0, |p| p.table) == table)
                 {
                     result.insert(Dependency::Fact(FactRef { cell, op: step.op }));
@@ -893,7 +893,7 @@ impl Graph {
                     across += u64::from(s.born < self.epoch);
                     let program =
                         &self.program.cell_ownership.markers[self.cells[&f.cell].template].program;
-                    let values = if let Some(stored) = &s.ports {
+                    let values = if let Some(stored) = self.stable_ports.as_ref().and_then(|p| p.nodes.get(&f)) {
                         self.stable_values(stored, false).expect("read owned stable body")
                     } else { s.decoded.as_ref().expect("settled owned body").1.clone() };
                     for (column, v) in values.iter().enumerate() {
