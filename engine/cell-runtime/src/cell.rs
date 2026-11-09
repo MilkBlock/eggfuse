@@ -18,6 +18,9 @@ pub(crate) use query::{Access, Queries, Query, query_order};
 #[path = "cell_effects.rs"]
 mod effects;
 pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
+#[path = "cell_bound.rs"]
+mod bound;
+pub(crate) use bound::{BoundRhs, BoundValue};
 #[path = "cell_eval.rs"]
 mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};
@@ -185,6 +188,21 @@ impl Template {
                 _ => None,
             }
         })
+    }
+}
+impl Op {
+    /// Borrow source operands in call/key order, followed by a Set's value.
+    /// Layouts may address these columns without copying the operation.
+    pub(crate) fn operand(&self, column: usize) -> Option<&Arg> {
+        match self {
+            Self::Copy(_, arg) => (column == 0).then_some(arg),
+            Self::Union(a, b) => match column { 0 => Some(a), 1 => Some(b), _ => None },
+            Self::Let(_, _, args) | Self::Hide(_, args, _) => args.get(column),
+            Self::Set(_, args, value) => {
+                if column == args.len() { Some(value) } else { args.get(column) }
+            }
+            Self::Panic => None,
+        }
     }
 }
 pub(crate) fn resolve_alias(arg: &Arg, aliases: &BTreeMap<usize, Arg>) -> Arg {

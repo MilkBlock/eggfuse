@@ -166,3 +166,15 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 本次完整证据在 `lifecycle-results.json`：普通 standalone Cell CPU，单进程 sum-bits，非原生 egglog 性能结论；没有新增分配审计。五个结构重写后额外进行了两次有具体调用证据的内联修改，最后的计时源码为 `d81b0cb2`。证据提交不计入下一组五次实现提交，历史 `24c4ae8a` 对照仍保留，以免滚动基线掩盖回退。
 
 复现使用本工作树的普通 release 构建（`sparse-cells,view-ports,storage-metrics`），各源码提交对应的冻结二进制及同一份 sum-bits program；四组输入分别为 `lifecycle-timing-spec.json`、`lifecycle-localization-timing-spec.json`、`lifecycle-inline-timing-spec.json`、`lifecycle-final-timing-spec.json`，输出目录为 `out/cell-lifecycle-unified/timing{,-localization,-inline,-final}`。每组通过 `benchmarks/witness-prefix/measure.py SPEC OUTPUT --repeat 7 --warmups 1` 执行，交错顺序及原始样本摘要保留在证据文件中。使用已有语义脚本重新检查最终二进制结果，再运行 `python3 benchmarks/cell-unification/collect_lifecycle.py out/cell-lifecycle-unified benchmarks/cell-unification/lifecycle-results.json` 汇总，收集器会验证状态、Run 顺序、指标来源哈希、二进制身份和所有计时样本。
+
+## Bound RHS 直接引用 Cell 操作
+
+基线 `34d564b1`，冻结运行时为 `d81b0cb2`。先检查当前 sum-bits 的真实执行：普通模式不启用这条路径；`--pure-epochs` 执行 7 次证明尝试、155 次表达求值、105 次绑定读取、65 次算术/效果检查和 3 次 scratch 扩容。它仍保留一套独立的 Expr / Arithmetic / Effect 编译表示，重复保存算术种类、表编号和字面量。
+
+删除 `completion_rhs.rs` 中的第二套指令，改为 Cell 的 `BoundRhs` 操作数布局。布局共享原 `Template.ops`，只保留操作位置、输入位置及紧凑临时槽连接；Set/Union 从源指令取语义，算术与正式 RHS 共用 checked integer 实现。每个模板只保留一个布局，运行时不新增 opcode 副本、完整 slot 数组、绑定克隆或每绑定 Rc 克隆。Proof 仍只建立有界候选 overlay，不能发布事实。
+
+保留所有算术（包括结果未使用时的溢出）、原始效果次序、精确 key overlay、实际碰撞结果、完整 closure 检查和 4096 工作预算。21 项 pure-epoch 短测试与最小特性编译通过；新增未使用的算术溢出检查，确保它不能错误解除原效果等待。普通与 pure 模式各运行一次 sum-bits：1,428 个 Run、最终状态、全部 runtime/ownership/port/scoped 计数和临时槽工作均保持；语义脚本通过。
+
+目录 H2 补入已有的 11 项证明成本/覆盖计数，不新增运行时计数器。两种模式分别使用相同目录抽取前后报告，313 项工作指标的值及缺失状态均一致；正常模式中的缺失计数不视为零。本步不采样速度或分配，历史速度回退仍待确认，距上次计时累计 1 个实现提交。`bound_rhs_birth_sites/source_pairs` 是证明中的候选，不是已提交 mutation。
+
+复现：构建普通 release 后用同一 `sum/program.json` 分别运行 `--local-congruence` 和 `--pure-epochs`；用 catalog.py extract 抽取两版两模式报告。`cargo test --locked -p eggfuse-cell-compiler --all-features --test pure_epochs` 覆盖算术、跨阶段 visibility、碰撞和预算；`cargo check --locked -p eggfuse-cell-runtime --no-default-features` 检查最小编译。既有 choice_diagnosis.py 以 pure 两版最终状态及保存的 native 导出为输入。具体结果见 `bound-check.json`。

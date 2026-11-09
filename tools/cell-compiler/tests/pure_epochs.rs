@@ -643,6 +643,22 @@ fn compiled_effect_overflow_retains_the_original_failing_rhs() {
 }
 
 #[test]
+fn unused_arithmetic_failure_retains_the_original_effect_wait() {
+    let source = ARITHMETIC
+        .replace("(- (* (+ n 5) 3) 2)", "(+ n 9223372036854775807)")
+        .replace("(= n 0)", "(= n 1)")
+        .replace("(H copied k)", "(H copied 13)");
+    let mut old = executor(&source, false);
+    let mut new = executor(&source, true);
+    assert_eq!(old.execute().unwrap_err(), new.execute().unwrap_err());
+    if new.scoped_execution_report()["global_observer"] == false {
+        let stats = &new.scoped_execution_report()["stats"];
+        assert_eq!(stats["bound_rhs_attempts"], 1);
+        assert_eq!(stats["bound_rhs_accepts"], 0);
+    }
+}
+
+#[test]
 fn compiled_arithmetic_keys_select_the_actual_mutable_collision_result() {
     let source = DISPLACED
         .replace("(H B)", "(H B i64)")

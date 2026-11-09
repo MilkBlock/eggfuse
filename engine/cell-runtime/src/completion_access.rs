@@ -7,9 +7,9 @@ pub struct Rule {
     pub query: Vec<usize>,
     pub rhs: Vec<usize>,
     pub accesses: Vec<usize>,
-    /// Shared scalar expressions and ordered source effects. The concrete
+    /// Shared Cell operand wiring and ordered source positions. The concrete
     /// closure must still be proved; None retains the ordinary scoped path.
-    pub pure: Option<std::sync::Arc<super::rhs::Plan>>,
+    pub(crate) pure: Option<std::rc::Rc<crate::cell::BoundRhs>>,
 }
 impl Rule {
     pub fn derive(

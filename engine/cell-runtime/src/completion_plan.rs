@@ -10,8 +10,6 @@ use std::collections::{BTreeMap, BTreeSet};
 mod access;
 #[path = "completion_effects.rs"]
 mod effects;
-#[path = "completion_rhs.rs"]
-pub(crate) mod rhs;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Scope {
@@ -257,7 +255,7 @@ impl Plan {
             demand.pure = templates
                 .entry(template)
                 .or_insert_with(|| {
-                    rhs::Plan::derive(p, &p.templates[template]).map(std::sync::Arc::new)
+                    crate::cell::BoundRhs::derive(p, &p.templates[template]).map(std::rc::Rc::new)
                 })
                 .clone();
         }
@@ -294,7 +292,7 @@ impl Plan {
             .rule_demands
             .iter()
             .filter_map(|r| r.pure.as_ref())
-            .filter(|p| seen.insert(std::sync::Arc::as_ptr(p)))
+            .filter(|p| seen.insert(std::rc::Rc::as_ptr(p)))
             .collect::<Vec<_>>();
         serde_json::json!({"tables":self.affects.len(), "opaque_tables":self.opaque_tables,
             "pure_rhs_templates":pure.len(),

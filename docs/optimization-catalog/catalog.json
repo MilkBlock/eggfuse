@@ -2337,7 +2337,9 @@
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
         "engine/cell-runtime/src/port_completion.rs",
-        "engine/cell-runtime/src/pure_effects.rs"
+        "engine/cell-runtime/src/pure_effects.rs",
+        "engine/cell-runtime/src/cell_bound.rs",
+        "engine/cell-runtime/src/runtime_pure_epochs.rs"
       ],
       "metrics": {
         "benefit": [
@@ -2372,6 +2374,51 @@
             "source": "report",
             "pointer": "/port_completion/stats/pure_epoch_order_checks",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_rule_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_ops",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_expression_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_input_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_key_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_value_slots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_scratch_growths",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_overlay_checks",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -2389,10 +2436,20 @@
             "source": "report",
             "pointer": "/port_completion/stats/pure_epoch_order_rejections",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_accepts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/bound_rhs_budget_rejections",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "while_pending 的 binding/逻辑 match 不是 mutation；只有实际 birth/update/union 计数能说明执行。",
+      "gaps": "while_pending 的 binding/逻辑 match 不是 mutation；只有实际 birth/update/union 计数能说明执行。 Bound RHS 仅保留原 Cell 操作的位置和紧凑操作数布局；证明读取不是实际写入。布局统一的速度保持尚待后续计时确认。",
       "evidence": [
         "benchmarks/stable-port-congruence/scoped-executor-contract.md"
       ],

@@ -44,6 +44,20 @@ pub fn integer(v: &Value) -> Result<i64, String> {
         Err("expected integer".into())
     }
 }
+/// Shared checked integer semantics for execution and read-only Cell proofs.
+#[inline]
+pub(crate) fn checked_integer_binary(name: &str, a: i64, b: i64) -> Option<i64> {
+    match name {
+        "+" => a.checked_add(b),
+        "-" => a.checked_sub(b),
+        "*" => a.checked_mul(b),
+        "/" => a.checked_div(b),
+        "%" => a.checked_rem(b),
+        "min" => Some(a.min(b)),
+        "max" => Some(a.max(b)),
+        _ => None,
+    }
+}
 pub fn primitive(
     name: &str,
     args: &[Value],
@@ -146,15 +160,7 @@ pub fn primitive(
         "+" | "-" | "*" | "/" | "%" | "min" | "max" => {
             let a = integer(&args[0])?;
             let b = integer(&args[1])?;
-            let n = match name {
-                "+" => a.checked_add(b),
-                "-" => a.checked_sub(b),
-                "*" => a.checked_mul(b),
-                "/" => a.checked_div(b),
-                "%" => a.checked_rem(b),
-                "min" => Some(a.min(b)),
-                _ => Some(a.max(b)),
-            };
+            let n = checked_integer_binary(name, a, b);
             let Some(n) = n else { return Ok(None) };
             Value::Int(n)
         }

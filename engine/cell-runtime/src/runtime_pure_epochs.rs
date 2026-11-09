@@ -2,7 +2,7 @@
 //! equality and constructor Set. Whole-table reads remain ready before probing.
 //! It does not publish speculative writes or evaluate a custom merge.
 use super::*;
-use crate::completion_plan::rhs::{Effect, Expr};
+use crate::cell::BoundValue;
 use crate::graph::cell_ownership::completion::{Batch, Birth};
 
 impl Executor {
@@ -74,24 +74,36 @@ impl Executor {
                 work += 1;
                 expression_steps += 1;
                 let value = match *expression {
-                    Expr::Bound(slot) => {
-                        input_reads += 1;
-                        let Some(value @ (Value::Eq(_) | Value::Int(_))) =
-                            binding.values.get(&slot)
-                        else {
-                            valid = false;
-                            break 'bindings;
-                        };
-                        canon(value, &self.graph.parents)
-                    }
-                    Expr::Integer(n) => Value::Int(n),
-                    Expr::Arithmetic(operation, [a, b]) => {
+                    BoundValue::Operand { operation, column } => match code.ops[operation]
+                        .operand(column)
+                        .expect("checked Cell operand")
+                    {
+                        Arg::Slot(slot) => {
+                            input_reads += 1;
+                            let Some(value @ (Value::Eq(_) | Value::Int(_))) =
+                                binding.values.get(slot)
+                            else {
+                                valid = false;
+                                break 'bindings;
+                            };
+                            canon(value, &self.graph.parents)
+                        }
+                        Arg::Literal(Value::Int(n)) => Value::Int(*n),
+                        _ => unreachable!("checked bound Cell input"),
+                    },
+                    BoundValue::Result {
+                        operation,
+                        inputs: [a, b],
+                    } => {
                         ops += 1;
                         let (Value::Int(a), Value::Int(b)) = (&values[a], &values[b]) else {
                             valid = false;
                             break 'bindings;
                         };
-                        let Some(value) = operation.evaluate(*a, *b) else {
+                        let Op::Let(_, Call::Primitive(name, _), _) = &code.ops[operation] else {
+                            unreachable!("checked bound Cell result")
+                        };
+                        let Some(value) = crate::value::checked_integer_binary(name, *a, *b) else {
                             valid = false;
                             break 'bindings;
                         };
@@ -103,7 +115,8 @@ impl Executor {
                 slots += 1;
                 growths += u64::from(before != values.capacity());
             }
-            for effect in &code.effects {
+            let mut arguments = code.arguments.iter();
+            for &operation in &code.effects {
                 if work >= 4096 {
                     budget_rejected = true;
                     valid = false;
@@ -122,22 +135,19 @@ impl Executor {
                     }
                     Ok(())
                 };
-                match effect {
-                    Effect::Union([a, b]) => {
-                        let (a, b) = (&values[*a], &values[*b]);
+                match &code.ops[operation] {
+                    Op::Union(..) => {
+                        let a = &values[*arguments.next().unwrap()];
+                        let b = &values[*arguments.next().unwrap()];
                         all_noop &= a == b;
                         pair(a, b)?;
                     }
-                    Effect::Set {
-                        table: t,
-                        key,
-                        value,
-                    } => {
+                    Op::Set(t, key, _) => {
                         let key = key
                             .iter()
-                            .map(|&slot| values[slot].clone())
+                            .map(|_| values[*arguments.next().unwrap()].clone())
                             .collect::<smallvec::SmallVec<[Value; 4]>>();
-                        let value = &values[*value];
+                        let value = &values[*arguments.next().unwrap()];
                         reads += 1;
                         let old = self.graph.lookup_canonical(*t, &key)?;
                         if let Some(old) = old {
@@ -178,8 +188,10 @@ impl Executor {
                             }
                         }
                     }
+                    _ => unreachable!("checked bound Cell effect"),
                 }
             }
+            debug_assert!(arguments.next().is_none());
         }
         let stats = &mut self.completion.as_mut().unwrap().stats;
         stats.bound_rhs_attempts += 1;

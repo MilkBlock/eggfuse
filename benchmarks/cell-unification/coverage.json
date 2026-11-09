@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "d81b0cb2",
-    "implementation_commits_since_timing": 0,
+    "implementation_commits_since_timing": 1,
     "evidence": "benchmarks/cell-unification/lifecycle-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -152,7 +152,8 @@
         "Source constructor prefixes and selected local blocks share one temporary Cell executor, first-miss promotion and completion result; duplicate execution loops removed.",
         "Single-write scalar prefixes store source operation positions and use the common Cell call evaluator; duplicated primitive programs removed while direct integer projections remain.",
         "Closed preflight and live RHS reuse the same actual-witness field validation, result binding and constructor Set equality handling; preflight still defers graph effects until complete.",
-        "Ordinary effects execute in the common Cell frame; source unions no longer reload and clone a second marker instruction."
+        "Ordinary effects execute in the common Cell frame; source unions no longer reload and clone a second marker instruction.",
+        "Read-only bound-effect proofs borrow original Cell operations through a dense operand layout; duplicate Expr/Arithmetic/Effect instructions and copied table/literal/operator semantics are removed. Checked integer execution is shared with the ordinary RHS."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
@@ -204,7 +205,8 @@
         "live_obligations": "Private suffix until source-scheduled completion, raw history before alias fill, actual foreign-Cell results, interrupted RHS and partial-scope lifetime.",
         "verification": "Common Effects removes temporary receipt arrays; 4,454 outputs retain their slots. Existing work, 1,428 Runs and ordered hashes unchanged; semantic pass. Execute allocations -6,198, requested bytes -386,804; setup +4,656 bytes. Paired timing includes parity; no speedup claim."
       },
-      "quick_checks": "benchmarks/cell-unification/handoff-check.json"
+      "quick_checks": "benchmarks/cell-unification/handoff-check.json",
+      "bound_effect_checks": "benchmarks/cell-unification/bound-check.json"
     },
     {
       "id": "ports_congruence",
@@ -438,8 +440,10 @@
     {
       "id": "H2",
       "title": "concrete-port influence 与 pure epoch",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "H2"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "H2",
+      "evidence": "benchmarks/cell-unification/bound-check.json",
+      "remaining": "Bound effects use the original Cell operations and dense operand wiring. Port-influence traversal, pure closure, scoped readiness/publication and actual thread execution remain to unify; this step establishes no speedup."
     },
     {
       "id": "H3",

@@ -39,15 +39,15 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[port_completion.rs](../../engine/cell-runtime/src/port_completion.rs) · [pure_effects.rs](../../engine/cell-runtime/src/pure_effects.rs)
+代码：[port_completion.rs](../../engine/cell-runtime/src/port_completion.rs) · [pure_effects.rs](../../engine/cell-runtime/src/pure_effects.rs) · [cell_bound.rs](../../engine/cell-runtime/src/cell_bound.rs) · [runtime_pure_epochs.rs](../../engine/cell-runtime/src/runtime_pure_epochs.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/port_completion/stats/bypassed_tasks [value]`<br>`report:/scoped_executor/stats/rhs_fact_births_while_pending [value]` |
-| 成本 / 剩余工作 | `report:/port_completion/stats/root_visits [value]`<br>`report:/port_completion/stats/static_steps [value]`<br>`report:/port_completion/stats/pure_epoch_frontier_checks [value]`<br>`report:/port_completion/stats/pure_epoch_order_checks [value]` |
-| 覆盖 / 规模 / 回退 | `report:/port_completion/stats/pure_epoch_accepts [value]`<br>`report:/port_completion/stats/typed_fallbacks [value]`<br>`report:/port_completion/stats/pure_epoch_order_rejections [value]` |
+| 成本 / 剩余工作 | `report:/port_completion/stats/root_visits [value]`<br>`report:/port_completion/stats/static_steps [value]`<br>`report:/port_completion/stats/pure_epoch_frontier_checks [value]`<br>`report:/port_completion/stats/pure_epoch_order_checks [value]`<br>`report:/scoped_executor/stats/bound_rhs_attempts [value]`<br>`report:/scoped_executor/stats/bound_rhs_rule_checks [value]`<br>`report:/scoped_executor/stats/bound_rhs_ops [value]`<br>`report:/scoped_executor/stats/bound_rhs_expression_steps [value]`<br>`report:/scoped_executor/stats/bound_rhs_input_reads [value]`<br>`report:/scoped_executor/stats/bound_rhs_key_reads [value]`<br>`report:/scoped_executor/stats/bound_rhs_value_slots [value]`<br>`report:/scoped_executor/stats/bound_rhs_scratch_growths [value]`<br>`report:/scoped_executor/stats/bound_rhs_overlay_checks [value]` |
+| 覆盖 / 规模 / 回退 | `report:/port_completion/stats/pure_epoch_accepts [value]`<br>`report:/port_completion/stats/typed_fallbacks [value]`<br>`report:/port_completion/stats/pure_epoch_order_rejections [value]`<br>`report:/scoped_executor/stats/bound_rhs_accepts [value]`<br>`report:/scoped_executor/stats/bound_rhs_budget_rejections [value]` |
 
-解释与缺口：while_pending 的 binding/逻辑 match 不是 mutation；只有实际 birth/update/union 计数能说明执行。
+解释与缺口：while_pending 的 binding/逻辑 match 不是 mutation；只有实际 birth/update/union 计数能说明执行。 Bound RHS 仅保留原 Cell 操作的位置和紧凑操作数布局；证明读取不是实际写入。布局统一的速度保持尚待后续计时确认。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
