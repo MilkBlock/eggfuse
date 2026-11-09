@@ -51,7 +51,7 @@
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json)
+证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/sieve-results.json](../../benchmarks/cell-unification/sieve-results.json)
 
 ## B3 · 邻居、局部 context 与 view 消费
 

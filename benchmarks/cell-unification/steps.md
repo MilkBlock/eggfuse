@@ -252,3 +252,15 @@ Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Fre
 两项 Sieve 单元检查、晚到 bridge 与循环 join/哈希碰撞两项集成检查及最小特性编译通过。普通 sum-bits 的语义验收 pass；1,428 个 Run、最终状态、339 项工作指标的值或缺失状态及完整过滤计数保持。526 次成功 summary build 对应旧源码中 526 次已删除的 Spec clone；这是由既有 build 计数推导的源码工作量，不是实测分配次数。嵌套 target 复制也已删除，但不从混合的 reused_summaries 计数推算次数。
 
 这是本轮第 5 个实现提交。使用 `out/cell-sieve-unified` 保存冻结二进制及检查输出；`collect_sieve.py ROOT OUTPUT --commit COMMIT` 验证已有语义、Run、状态、工作指标来源与测试日志。提交后按 `sieve-timing-spec.json` 进行一次 7 轮交错普通构建测速（每条配置预热一次），直接前版、上次计时 `ab33d47c`、历史 `24c4ae8a` 同时保留。通过 `--timing` 收集同一组样本，不因为结果不理想重复采样。此处是 standalone Cell CPU，不是 native egglog 性能结论；必要的 summaries 和 index 生命周期仍未完成统一。
+
+`7f4e24c2` 测速结果：当前版推理中位数 25.241 ms，整进程 131.636 ms。以下使用同轮配对中位比，而不是两组中位数相除；小样本 95% bootstrap 区间保存在 `sieve-results.json`。
+
+| 对照 | 推理耗时比（95% 区间） | 整进程耗时比（95% 区间） |
+| --- | --- | --- |
+| 直接前版 `563e4ab0`（评分提交未改 runtime） | 1.00755（0.99229–1.01520） | 1.01274（1.00533–1.03121） |
+| 上次测速 `ab33d47c` | 0.99004（0.97125–1.01166） | 0.98531（0.96900–1.02490） |
+| 历史 `24c4ae8a` | 0.99992（0.97288–1.02309） | 0.98670（0.95816–1.01058） |
+
+推理未建立加速，直接前版的整进程对照仍出现回退，不能按速度保持验收。已有分段样本中，当前版与直接前版的 load 中位数为 66.409/64.286 ms，setup 为 3.000/3.058 ms；本次删除的 Sieve clone 位于推理阶段，故不能把整进程差异全部归因于这项修改。各阶段中位数不可相加作因果分解，也没有为此追加采样。当前版及直接前版截至推理结束的峰值 RSS 中位数均为 178,765,824 字节；没有分配审计。下一周期从本次实现提交起重新计数，所有历史结果和回退仍保留。
+
+复现：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/sieve-timing-spec.json out/cell-sieve-unified/timing --repeat 7 --warmups 1`，然后 `python3 benchmarks/cell-unification/collect_sieve.py out/cell-sieve-unified benchmarks/cell-unification/sieve-results.json --commit 7f4e24c2 --timing`。收集器只读取已有样本，不再次启动负载。

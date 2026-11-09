@@ -60,6 +60,10 @@ def collect(root, commit, timed):
     }
     if timed:
         result['timing'] = timing(root, commit)
+        result['performance_status'] = 'speedup_not_established_preservation_unresolved'
+        result['timing_cadence'] = {'last_timed_commit': commit,
+            'implementation_commits_since_timing': 0,
+            'implementation_commits_in_batch': ['50e12acf', '78836033', '563e4ab0', '6dd18b55', commit]}
     result['limits'] = ('Focused semantic/work checks and at most one short sum-bits timing campaign. '
         'No Raytrace, full multithread or whole Cell unification acceptance. '
         'Unchanged work counters do not prove speed preservation; prior regression remains under review.')
