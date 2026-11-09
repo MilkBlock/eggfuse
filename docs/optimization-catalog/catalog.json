@@ -1082,11 +1082,12 @@
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
-        "benchmarks/witness-sources/README.md"
+        "benchmarks/witness-sources/README.md",
+        "benchmarks/cell-unification/retention-check.json"
       ],
       "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
@@ -1262,11 +1263,12 @@
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes. 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes. 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
       "evidence": [
         "benchmarks/witness-prefix/register-prefix-design.md",
         "benchmarks/witness-prefix/normal/README.md",
-        "benchmarks/witness-sources/README.md"
+        "benchmarks/witness-sources/README.md",
+        "benchmarks/cell-unification/retention-check.json"
       ],
       "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
@@ -2819,7 +2821,8 @@
       "sources": [
         "tools/cell-compiler/src/ownership_bake.rs",
         "tools/cell-compiler/src/iterate.rs",
-        "tools/cell-compiler/src/work_credit.rs"
+        "tools/cell-compiler/src/work_credit.rs",
+        "engine/cell-runtime/src/result_handoff.rs"
       ],
       "metrics": {
         "benefit": [
@@ -2869,7 +2872,7 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Prefix copied-slot credit also reflects dense witness storage; it remains an uncalibrated count of copied fields, not allocation or speed evidence.",
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Prefix copied-slot credit also reflects dense witness storage; it remains an uncalibrated count of copied fields, not allocation or speed evidence. Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
@@ -2878,7 +2881,8 @@
         "benchmarks/cell-unification/query-storage-results.json",
         "benchmarks/cell-unification/context-selection-check.json",
         "benchmarks/cell-unification/context-compact-check.json",
-        "benchmarks/cell-unification/prefix-witness-check.json"
+        "benchmarks/cell-unification/prefix-witness-check.json",
+        "benchmarks/cell-unification/retention-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

@@ -1,0 +1,142 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "history_before_after": {
+    "history_allocations": [
+      663,
+      663
+    ],
+    "history_slots_written": [
+      1508,
+      1508
+    ]
+  },
+  "handoff_deep": 0,
+  "scope": "standalone Cell CPU; normal release work checks; no timing or allocation campaign",
+  "baseline_commit": "acab2911",
+  "candidate_commit": "3e622300",
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 346,
+  "fixtures": {
+    "chain-64": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2",
+        "stages.json": "e43c0eca2bc990fd2275328f556b271aa1829d9aa77dc162d04529945c88a4c9",
+        "binding-audit.json": "90742cea26da8190147e3907b180c854338c5c611a616466ac5843ed9adee7d0"
+      },
+      "program_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "history_before_after": {
+        "history_allocations": [
+          10,
+          6
+        ],
+        "history_slots_written": [
+          10,
+          8
+        ]
+      },
+      "handoff_deep": 4
+    },
+    "chain-0": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2",
+        "stages.json": "e43c0eca2bc990fd2275328f556b271aa1829d9aa77dc162d04529945c88a4c9",
+        "binding-audit.json": "90742cea26da8190147e3907b180c854338c5c611a616466ac5843ed9adee7d0"
+      },
+      "program_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "history_before_after": {
+        "history_allocations": [
+          10,
+          6
+        ],
+        "history_slots_written": [
+          10,
+          8
+        ]
+      },
+      "handoff_deep": 4
+    },
+    "retired-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4",
+        "stages.json": "aa35caa82d5b8286702021a0bfed64221ba1f612f4cf31b2e3e5761ab7137ded",
+        "binding-audit.json": "e5d2e571fecaa0938e9a9eaa1ff83452bbe17c62a9fe93b10e54ab84b3ca1960"
+      },
+      "program_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "history_before_after": {
+        "history_allocations": [
+          10,
+          6
+        ],
+        "history_slots_written": [
+          10,
+          8
+        ]
+      },
+      "handoff_deep": 3
+    },
+    "retired-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4",
+        "stages.json": "aa35caa82d5b8286702021a0bfed64221ba1f612f4cf31b2e3e5761ab7137ded",
+        "binding-audit.json": "e5d2e571fecaa0938e9a9eaa1ff83452bbe17c62a9fe93b10e54ab84b3ca1960"
+      },
+      "program_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "history_before_after": {
+        "history_allocations": [
+          10,
+          6
+        ],
+        "history_slots_written": [
+          10,
+          8
+        ]
+      },
+      "handoff_deep": 3
+    }
+  },
+  "tests": {
+    "history": {
+      "passed": 6,
+      "log_sha256": "ec9624537421550f121cdf4f5df0213f28ef9e11605b186d109110ea9cc00f5c"
+    },
+    "receipts": {
+      "passed": 7,
+      "log_sha256": "6306ae20ab1dbcf2c1dd8dafc8c8f9a4a94de67bebd68aa6f7b7a34428526260"
+    },
+    "witness": {
+      "passed": 8,
+      "log_sha256": "404cc49f2d77a2faaec3ebbb98ccf99811d130813daa9022c79ceb1e4f71abef"
+    },
+    "deep": {
+      "passed": 1,
+      "log_sha256": "18fe0d3193965bf64950a36f101a0efb32fadc982fb38fb7e3e1abf208f4ce83"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "507eb27617c05ba64c127e0fc65b958f4b26c8432e2a4d89214fb04920a4fc52"
+    }
+  },
+  "fixture_runs_sha256": "b3ebf6ffd79d5acc439376daa6d85bd22bdcfe7c24d848919f32e7ace7b90dc3",
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  },
+  "binaries": {
+    "baseline": "09cfb13bd011aa01151747e4f4f8b1a3bc7b316666d7571e2521b0bf5739ec8c",
+    "candidate": "d88bcba5169546bf931e1c3fac768fefe201e96e68cdf49d44381cc5b813521c"
+  },
+  "removed": "Global catalog-depth retention at every completed Cell. Shared compiled transitions and actual query/RHS reads now determine each state's required history, including inherited jumps and default restarts. Bake rebuilds the retention bound with its current composition.",
+  "limits": "History allocation counters count structural containers, not total allocator calls or bytes. Each switch state adds a retention word; deep saved frames now include the Trail enum tag. Fixed-point setup and storage changes are not timed. Current results remain available to ordinary witness readers; published sibling histories, visibility, deletion and Run offsets remain authoritative. No marker materialization or full Bake takeover claimed.",
+  "timing_cadence": {
+    "last_timed_commit": "acab2911",
+    "implementation_commits_since_timing": 1
+  }
+}

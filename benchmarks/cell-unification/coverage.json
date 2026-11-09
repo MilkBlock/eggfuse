@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "acab2911",
-    "implementation_commits_since_timing": 0,
+    "implementation_commits_since_timing": 1,
     "evidence": "benchmarks/cell-unification/projection-candidates-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -48,10 +48,11 @@
         "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed.",
         "Full query, residual prefix and continuation consumers share one static Cell route directory. Independent Prefix plans and copied witness sources are removed; exact sparse fallback and indexed original reads retain source coverage.",
         "Full and residual witness reads share a transient Cell Producer. Published addresses avoid physical recovery; uncovered effects recover once and must match the selected template/output. Root/Solo publications expose existing addresses without expanding roots.",
-        "Consumer dispatch transfers displaced original history on reset. Full witness reads borrow the original Cell Results just as residual prefixes do; the extra LocalWitness history handle and clone are removed."
+        "Consumer dispatch transfers displaced original history on reset. Full witness reads borrow the original Cell Results just as residual prefixes do; the extra LocalWitness history handle and clone are removed.",
+        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed."
       ],
       "remaining": [
-        "Source routing, physical fallback and current result slots are shared. Necessary multi-stage history, legacy boundary publication ownership, retention/lifetime policy and wider path coverage still require integration.",
+        "Source routing, physical fallback, current result slots and compiled continuation retention are shared. Legacy boundary publication ownership, wider path coverage and final performance acceptance still require integration.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
@@ -86,7 +87,8 @@
       },
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
-      "history_checks": "benchmarks/cell-unification/history-check.json"
+      "history_checks": "benchmarks/cell-unification/history-check.json",
+      "retention_checks": "benchmarks/cell-unification/retention-check.json"
     },
     {
       "id": "query",
@@ -314,7 +316,8 @@
         "Native marker forwarding and typed Cell known-result planning now share the construction proof over matched inputs and ordered effects. Separate result memo/selection and typed alias resolver are removed.",
         "Source marker publication and typed cross-stage result/repair proofs share Cell Symbols for equality and congruence. The source adapter retains emission expressions and pre-resolved operand symbols; independent marker union-find and closure are removed.",
         "Source publication, typed producer-local projections and runtime query/Entry frames now use the same Cell Operand and Bindings semantics. Independent per-field matching is removed; source fields are lowered before candidate enumeration and variable names are borrowed.",
-        "Source marker completion and typed local donor discovery share Cell row projection and first-equivalent uniqueness. Separate candidate binding loops and temporary uniqueness collections are removed. Operator filtering precedes typed frame cloning; source root enumeration retains deterministic deduplication."
+        "Source marker completion and typed local donor discovery share Cell row projection and first-equivalent uniqueness. Separate candidate binding loops and temporary uniqueness collections are removed. Operator filtering precedes typed frame cloning; source root enumeration retains deterministic deduplication.",
+        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed."
       ],
       "remaining": [
         "Unify source fragment selection and iterative Cell composition, derive consumer Entries and optional marker materialization boundaries from the same definitions, and remove the replaced boundary maintenance. Shared constructor-result propagation alone does not complete this takeover.",
@@ -323,7 +326,8 @@
       "construction_checks": "benchmarks/cell-unification/construction-check.json",
       "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json",
       "binding_checks": "benchmarks/cell-unification/projection-binding-check.json",
-      "candidate_checks": "benchmarks/cell-unification/projection-candidates-results.json"
+      "candidate_checks": "benchmarks/cell-unification/projection-candidates-results.json",
+      "retention_checks": "benchmarks/cell-unification/retention-check.json"
     },
     {
       "id": "multithread_after_rewrite",
@@ -444,7 +448,8 @@
       "remaining": "Source selection, physical fallback and borrowed current Results are shared. Necessary historical results, legacy publication boundaries, broader coverage and speed acceptance remain.",
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
-      "history_checks": "benchmarks/cell-unification/history-check.json"
+      "history_checks": "benchmarks/cell-unification/history-check.json",
+      "retention_checks": "benchmarks/cell-unification/retention-check.json"
     },
     {
       "id": "C4",
@@ -454,7 +459,8 @@
       "remaining": "Source selection, physical fallback and borrowed current Results are shared. Necessary historical results, legacy publication boundaries, broader coverage and speed acceptance remain.",
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
-      "history_checks": "benchmarks/cell-unification/history-check.json"
+      "history_checks": "benchmarks/cell-unification/history-check.json",
+      "retention_checks": "benchmarks/cell-unification/retention-check.json"
     },
     {
       "id": "D1",
@@ -604,7 +610,8 @@
       "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
       "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json",
       "prefix_witness_checks": "benchmarks/cell-unification/prefix-witness-check.json",
-      "view_query_checks": "benchmarks/cell-unification/view-query-results.json"
+      "view_query_checks": "benchmarks/cell-unification/view-query-results.json",
+      "retention_checks": "benchmarks/cell-unification/retention-check.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",
