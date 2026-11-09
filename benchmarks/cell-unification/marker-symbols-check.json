@@ -1,0 +1,323 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "known_results": {
+    "available": 0,
+    "avoided_lookups": 5853,
+    "deletion_guard_misses": 0,
+    "dirty": 0,
+    "effect_sources": 0,
+    "expired": 0,
+    "lazy_prefix_eliminated": 0,
+    "mismatched": 0,
+    "observed_other_value": 0,
+    "observed_other_witness": 0,
+    "observed_same_value": 0,
+    "observed_same_witness": 0,
+    "opportunities_by_table": {},
+    "planned": 0,
+    "query_sources": 0,
+    "requests": 0,
+    "retained_result_writes": 0,
+    "static_eliminated": 5853,
+    "static_observed_equal": 0,
+    "static_observed_other": 0,
+    "unavailable": 0,
+    "validated": 0,
+    "value_eligible": 0,
+    "value_reuses": 0
+  },
+  "scope": "standalone Cell CPU; normal release; no timing or allocation campaign",
+  "baseline_commit": "46aa864b",
+  "candidate_commit": "08c6b90b",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context",
+    "publication",
+    "entry_schedule",
+    "view_consumers",
+    "view_storage",
+    "known_results"
+  ],
+  "unchanged_work_metric_values_or_missing_status": 346,
+  "fixtures": {
+    "handoff-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "23760de104eadef223fd4eb658a3b4757880a5fce26686740c222e9e9aeebe0e",
+        "stages.json": "a03f43b53b16aadfdf2cf1078332b9e73d9d329441a040f86d8c8473fd25edc9",
+        "binding-audit.json": "0c7d4fc4c0441ab5c021f37a7383f2ae5f18a2a59a11a651c3ecc02cc8c2d43b"
+      },
+      "program_file_sha256": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "handoff-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "23760de104eadef223fd4eb658a3b4757880a5fce26686740c222e9e9aeebe0e",
+        "stages.json": "a03f43b53b16aadfdf2cf1078332b9e73d9d329441a040f86d8c8473fd25edc9",
+        "binding-audit.json": "0c7d4fc4c0441ab5c021f37a7383f2ae5f18a2a59a11a651c3ecc02cc8c2d43b"
+      },
+      "program_file_sha256": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "union-64": {
+      "runs": 9,
+      "ordered_hashes": {
+        "state.json": "3a4569f447911ffb077423253567889f248c880a7cb0464f6856481c88377713",
+        "stages.json": "763f699029c28081c87fd5d2af851a5651d410fe469135825a08a72789e9cb44",
+        "binding-audit.json": "fd7e94ca53b448c4b85639a166947e2814640476b00df169b1963de71539e80a"
+      },
+      "program_file_sha256": "1173a689cdfb6c8223d0bb5a285f98df85c2e420f039ae92be930fc64475ac03",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "union-0": {
+      "runs": 9,
+      "ordered_hashes": {
+        "state.json": "3a4569f447911ffb077423253567889f248c880a7cb0464f6856481c88377713",
+        "stages.json": "763f699029c28081c87fd5d2af851a5651d410fe469135825a08a72789e9cb44",
+        "binding-audit.json": "fd7e94ca53b448c4b85639a166947e2814640476b00df169b1963de71539e80a"
+      },
+      "program_file_sha256": "1173a689cdfb6c8223d0bb5a285f98df85c2e420f039ae92be930fc64475ac03",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    }
+  },
+  "fixture_runs_sha256": "176a745a96c7d7163593366b95727362b0c041114edfc1db2ef3db5a42746da0",
+  "tests": {
+    "symbols": {
+      "passed": 1,
+      "log_sha256": "9178f6dc03bd6672b348dc966087338ccfa6dc6a1c703435dd43d4ff960c2532"
+    },
+    "symbols-nonsparse": {
+      "passed": 1,
+      "log_sha256": "a48848c51038e71b1d7c51acaeabfc161f8ffe679662fc4e8bd4ad4161da8615"
+    },
+    "closure": {
+      "passed": 1,
+      "log_sha256": "da28a9d09d4f80e5962869c09637236753dddf2862fb7183988abd6ffe9dffad"
+    },
+    "marker": {
+      "passed": 6,
+      "log_sha256": "d2e2b7e8f8d2bfdab128abb06c5fcbeb30d0f9933369a8bc0605a7a286e2013f"
+    },
+    "barrier": {
+      "passed": 1,
+      "log_sha256": "730764a653c551cd5f46ab80bb00097bdc7d2d5953229db15cd86cb56b767783"
+    },
+    "committed": {
+      "passed": 1,
+      "log_sha256": "ff9e55e2c9e2f1a35b1b845e5ec18c45c0bdbf9313eb56feb373d5b5c39dea04"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "b0a7a3dfd0b2d06dd28de0186c0e97fcdc177f98e4947c38d600a6b11524cbce"
+    }
+  },
+  "marker_emission": [
+    {
+      "case": "handoff",
+      "source_sha256": "30696953044ef572589c8dd22fc48bcc6f585742039e119646657a866984f293",
+      "unchanged_files": {
+        "source_sk_mk.egg": "b8eef7c785de619933c7eaf6a5b86b8d5acd207012476f789598621af10006af",
+        "marker-selection.json": "27462f738273894888b4340c7151c25ab9799324559d8cf55d78713153377973",
+        "marker-program.json": "4035c22ef2c8c4e261f6498029d5c56977677a8cac2d8e74426d991b39c4636b",
+        "program.json": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41"
+      },
+      "result_handoff": {
+        "mode": "values",
+        "rules": [
+          {
+            "rule": 0,
+            "consumer_result_uses": 0,
+            "publication_result_uses": 3,
+            "captured_results": 2
+          },
+          {
+            "rule": 1,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          },
+          {
+            "rule": 2,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          }
+        ],
+        "new_marker_fields": 0,
+        "proof": "original permanent constructor atoms carried by complete correlated markers",
+        "resume": "marker table and consumer rule select the residual LHS; original Run remains authoritative"
+      },
+      "compiler_sha256": {
+        "baseline": "a335eca35f4e265361377db563b9dbe64e09095bf26850be9ef0bfe59f9f1348",
+        "candidate": "036ef60c0fd186c89425ea1a63483d00178a8c4256980f50e87406d4c0614e33"
+      }
+    },
+    {
+      "case": "union",
+      "source_sha256": "d6714d4c84da355976b9e89fb88c3b7a9769260c171d177be4256d9ddad8b058",
+      "unchanged_files": {
+        "source_sk_mk.egg": "e73cd3f0a065e34907290e03637f6de9cfa120095fdb07c9c45ae0a9f9d5c714",
+        "marker-selection.json": "4a9ba1112939ba48a485f1416fdaa248ebe2050e4ec1f666b9f98f5dd8b27eae",
+        "marker-program.json": "a416f0960512774c614e528957d619e09446e1dc50b39a5b8ce0440f10b987bb",
+        "program.json": "1173a689cdfb6c8223d0bb5a285f98df85c2e420f039ae92be930fc64475ac03"
+      },
+      "result_handoff": {
+        "mode": "values",
+        "rules": [
+          {
+            "rule": 2,
+            "consumer_result_uses": 0,
+            "publication_result_uses": 3,
+            "captured_results": 2
+          },
+          {
+            "rule": 3,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          },
+          {
+            "rule": 4,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          }
+        ],
+        "new_marker_fields": 0,
+        "proof": "original permanent constructor atoms carried by complete correlated markers",
+        "resume": "marker table and consumer rule select the residual LHS; original Run remains authoritative"
+      },
+      "compiler_sha256": {
+        "baseline": "a335eca35f4e265361377db563b9dbe64e09095bf26850be9ef0bfe59f9f1348",
+        "candidate": "036ef60c0fd186c89425ea1a63483d00178a8c4256980f50e87406d4c0614e33"
+      }
+    }
+  ],
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  },
+  "binaries": {
+    "baseline": "da4b0a1e8e781b2ec4b25df3fb96f28173aecd16492d174f20f6e09aa0361aa2",
+    "candidate": "d8ad440fb695ff8bcd39239d2fb1733c90dbc9a8d913269e04d455faf651b506"
+  },
+  "removed": "Independent marker union-find and congruence key/fixed-point loop. Marker publication and typed cross-stage handoffs now execute Cell Symbols; source operands are resolved once instead of repeatedly rendering terms and looking up child IDs during closure and row projection.",
+  "limits": "The source adapter retains expressions only for .egg emission and caches child symbols during compilation. Source publication admission, matching, materialization selection and iterative boundary composition remain separate. Source effects become equality evidence only at the publication boundary; typed queued unions keep their original barriers. Generic source-name keys and cached operand storage have not been timing/allocation-profiled; no new runtime credit or repair takeover is claimed.",
+  "timing_cadence": {
+    "last_timed_commit": "cc472d0f",
+    "implementation_commits_since_timing": 3
+  }
+}

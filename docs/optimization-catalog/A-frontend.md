@@ -51,7 +51,7 @@
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[tools/cell-compiler/README.md](../../tools/cell-compiler/README.md)
+证据：[tools/cell-compiler/README.md](../../tools/cell-compiler/README.md) · [benchmarks/cell-unification/marker-symbols-check.json](../../benchmarks/cell-unification/marker-symbols-check.json)
 
 ## A3 · .egg marker 结果变量交接
 
