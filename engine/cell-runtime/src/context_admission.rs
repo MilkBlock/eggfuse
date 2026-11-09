@@ -170,13 +170,13 @@ pub fn install(p: &Program, mut policy: J) -> Result<J> {
     let all_cuts = p
         .artifact
         .get("context_admission")
-        .map(|_| crate::local_context::derive_cuts(p));
-    let cuts = all_cuts.as_ref().unwrap_or(&p.context_cuts);
+        .map(|_| crate::local_context::select_cuts(p));
     let ids = p
         .rules
         .iter()
         .enumerate()
-        .filter(|(i, _)| !cuts[*i].is_empty())
+        .filter(|(i, _)| all_cuts.as_ref().map_or_else(
+            || !p.context_cuts[*i].is_empty(), |cuts| !cuts[*i].is_empty()))
         .filter_map(|(i, r)| winners.contains(family(p, r).as_str()).then_some(i))
         .collect::<Vec<_>>();
     policy["recipe"] = p.artifact["recipe"]["sha256"].clone();
@@ -184,7 +184,7 @@ pub fn install(p: &Program, mut policy: J) -> Result<J> {
     Ok(policy)
 }
 
-pub(crate) fn admitted(p: &Program, policy: &J) -> Result<Vec<bool>> {
+pub(crate) fn admitted(p: &Program, policy: &J, cuts: &crate::local_context::Selections) -> Result<Vec<bool>> {
     if policy["schema"] != "eggfuse-context-admission/v1"
         || policy["recipe"] != p.artifact["recipe"]["sha256"]
     {
@@ -196,7 +196,7 @@ pub(crate) fn admitted(p: &Program, policy: &J) -> Result<Vec<bool>> {
             .as_u64()
             .and_then(|v| usize::try_from(v).ok())
             .ok_or("invalid admitted rule")?;
-        if id >= keep.len() || keep[id] || p.context_cuts[id].is_empty() {
+        if id >= keep.len() || keep[id] || cuts[id].is_empty() {
             return Err("invalid admitted cut".into());
         }
         keep[id] = true;

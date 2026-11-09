@@ -192,9 +192,7 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         ("local_contexts", json!(contexts)),
         (
             "context_cuts",
-            json!(crate::local_context::layout(
-                &crate::local_context::derive_cuts(&p)
-            )),
+            json!(crate::local_context::select_cuts(&p)),
         ),
         ("marker_tables", json!(markers)),
     ];

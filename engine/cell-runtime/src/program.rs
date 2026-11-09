@@ -544,20 +544,18 @@ impl Program {
             }
             p.depth_plan = Rc::new(plan);
         }
-        p.context_cuts = crate::local_context::derive_cuts(&p);
+        // Validate all selection certificates, including rejected candidates,
+        // before admission. Only the retained selections need executable Cell
+        // instructions; Bake may later derive the full source selections again.
+        let cuts = crate::local_context::select_cuts(&p);
         if let Some(raw) = p.artifact.get("context_cuts")
-            && *raw != serde_json::json!(crate::local_context::layout(&p.context_cuts))
+            && *raw != serde_json::json!(&cuts)
         {
             return Err("invalid connected context cuts".into());
         }
-        if let Some(raw) = p.artifact.get("context_admission") {
-            let allowed = crate::context_admission::admitted(&p, raw)?;
-            for (plans, keep) in p.context_cuts.iter_mut().zip(allowed) {
-                if !keep {
-                    plans.clear();
-                }
-            }
-        }
+        let allowed = p.artifact.get("context_admission")
+            .map(|raw| crate::context_admission::admitted(&p, raw, &cuts)).transpose()?;
+        p.context_cuts = crate::local_context::compile_cuts(&p, cuts, allowed.as_deref())?;
 
         p.local_contexts =
             crate::local_context::derive(&p, &p.artifact["multi_stage"]["stage_entries"]);

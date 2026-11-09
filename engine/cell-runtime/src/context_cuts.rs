@@ -3,16 +3,20 @@ use super::*;
 use std::cmp::Reverse;
 
 pub(crate) type Cuts = Vec<Vec<Rc<Plan>>>;
-/// The artifact needs only atom order. Slot wiring is derived from the checked IR.
-pub(crate) fn layout(cuts: &Cuts) -> Vec<Vec<(usize, Vec<usize>, usize, Vec<usize>)>> {
-    cuts.iter()
-        .map(|rule| {
-            rule.iter()
-                .map(|p| (p.root, p.ports.iter().map(|s| s.step.atom).collect(), p.tail,
-                    p.query.steps.iter().skip(1).map(|s| s.atom).collect()))
-                .collect()
-        })
-        .collect()
+/// A source-order selection certificate, not executable dataflow. It is
+/// temporary during loading/Bake: only admitted cuts become Cell instructions.
+#[derive(Serialize)]
+pub(crate) struct Cut(usize, Vec<usize>, usize, Vec<usize>);
+pub(crate) type Selections = Vec<Vec<Cut>>;
+
+pub(crate) fn compile(p: &Program, selections: Selections, allowed: Option<&[bool]>) -> Result<Cuts> {
+    selections.into_iter().enumerate().map(|(rid, cuts)| {
+        if allowed.is_some_and(|a| !a[rid]) { return Ok(vec![]); }
+        cuts.into_iter().map(|Cut(root, ports, tail, post)| {
+            project(&p.rules[rid], root, ports, tail, post)
+                .map(Rc::new).ok_or_else(|| "invalid selected Cell context query".into())
+        }).collect()
+    }).collect()
 }
 const MAX_TABLES: usize = 8;
 
@@ -110,7 +114,7 @@ impl Shape {
             .then_some(((width, expansions, Reverse(boundary), tail), ports, post))
     }
 }
-pub(crate) fn derive_cuts(p: &Program) -> Cuts {
+pub(crate) fn select(p: &Program) -> Selections {
     p.rules
         .iter()
         .map(|r| {
@@ -118,7 +122,9 @@ pub(crate) fn derive_cuts(p: &Program) -> Cuts {
                 return vec![];
             }
             let s = Shape::new(r);
-            if !r.seminaive || !(2..=MAX_TABLES).contains(&s.tables.len()) {
+            if !r.seminaive || !(2..=MAX_TABLES).contains(&s.tables.len())
+                || r.inputs.iter().any(|slot| !s.vars.iter().any(|vars| vars.contains(slot)))
+            {
                 return vec![];
             }
             s.tables
@@ -130,7 +136,11 @@ pub(crate) fn derive_cuts(p: &Program) -> Cuts {
                         .filter(|&&tail| tail != root)
                         .filter_map(|&tail| s.cut(root, tail))
                         .min_by_key(|(score, _, _)| *score)?;
-                    project(r, root, ports, tail, post).map(Rc::new)
+                    // cut visits every table once and schedules each scalar
+                    // only after its keys are known. Together with input
+                    // coverage above, this proves the same completion accepted
+                    // by Query lowering, without allocating any Step/Field.
+                    Some(Cut(root, ports, tail, post))
                 })
                 .collect()
         })

@@ -1143,6 +1143,18 @@ fn connected_cuts_span_chains_and_transfer_evidence_to_renamed_relations() {
     let mut corrupt = raw.clone();
     corrupt["context_cuts"][rid] = json!([]);
     assert!(Program::parse(corrupt).is_err());
+    // Rejected cuts still belong to the checked artifact. Admission may avoid
+    // compiling their instructions, but must never hide invalid source wiring.
+    let mut deferred = raw.clone();
+    deferred["context_admission"] = json!({"schema":"eggfuse-context-admission/v1",
+        "recipe":raw["recipe"]["sha256"], "rules":[]});
+    deferred.as_object_mut().unwrap().remove("sha256");
+    deferred["sha256"] = artifact_digest(&deferred).into();
+    assert_eq!(Program::parse(deferred.clone()).unwrap().context_cut_counts(), (0, 0));
+    deferred["context_cuts"][rid] = json!([]);
+    deferred.as_object_mut().unwrap().remove("sha256");
+    deferred["sha256"] = artifact_digest(&deferred).into();
+    assert_eq!(Program::parse(deferred).unwrap_err(), "invalid connected context cuts");
     let p = Program::parse(raw).unwrap();
     let profile = |on: bool, visits: u64| {
         json!({"status":"complete","program_sha256":p.artifact["sha256"],

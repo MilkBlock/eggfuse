@@ -22,7 +22,7 @@ def prior(value, counters=COUNTERS):
     return [prior(v, counters) for v in value] if isinstance(value, list) else value
 
 
-def check_prefix(root, commit):
+def check_prefix(root, commit, phase="prefix"):
     assert load(root / 'semantic-acceptance.json')['status'] == 'pass'
     def pair(path, program, lanes):
         reports = [load(path / lane / 'report.json') for lane in lanes]
@@ -60,18 +60,40 @@ def check_prefix(root, commit):
     path = root / 'test-minimal.log'
     assert 'Finished `dev` profile' in path.read_text()
     tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
-    return dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
-        baseline_commit='0b3231c2', candidate_commit=commit, semantic_acceptance='pass',
+    result = dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
+        baseline_commit='c8ef6edc' if phase == 'selection' else '0b3231c2', candidate_commit=commit, semantic_acceptance='pass',
         unchanged_report_groups=GROUPS, unchanged_work_metrics=len(metrics[0]),
         fixtures=fixtures, tests=tests,
         binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
-        timing_cadence={'last_timed_commit': '7f4e24c2', 'implementation_commits_since_timing': 4},
+        timing_cadence={'last_timed_commit': 'c8ef6edc' if phase == 'selection' else '7f4e24c2',
+                       'implementation_commits_since_timing': 1 if phase == 'selection' else 4},
         limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
+    if phase == 'selection':
+        program = load(root / 'sum/program.json')
+        all_cuts = program['context_cuts']
+        allowed = set(program['context_admission']['rules'])
+        admitted = [cuts for rid, cuts in enumerate(all_cuts) if rid in allowed]
+        before, after = [sum(map(len, cuts)) for cuts in (all_cuts, admitted)]
+        report = load(root / 'run-candidate/report.json')
+        assert after == report['local_context']['cut_orientations'] < before
+        audit = load(root / 'relower.json')
+        assert audit['status'] == 'pass' and audit['program_sha256'] == program['sha256']
+        assert {'context_cuts', 'local_contexts', 'multi_stage', 'row_kernels'} <= {v['component'] for v in audit['components']}
+        result['relower'] = {'components': len(audit['components']), 'sha256': sha(root / 'relower.json')}
+        result['general_context_preparation'] = {
+            'instruction_plans_before_after': [before, after],
+            'instruction_steps_before_after': [sum(len(c[1]) + 1 + len(c[3]) for row in cuts for c in row) for cuts in (all_cuts, admitted)],
+            'basis': 'Exact source-path count inferred from validated candidates/admission: old code projects each selected shape before pruning; new code projects only admitted shapes. Not allocator or timed measurements.',
+            'all_selection_certificates_still_validated': before,
+            'default_narrow_context_path': 'unchanged; excluded from these counts'}
+        result['limits'] = ('Admission is a performance choice, not a correctness proof. Full candidate shape validation, selected Cell lowering, index/cache lifetime, root binding and ordinary fallback remain. Re-fitting can widen selection from source without constructing discarded instructions. No new speed or allocation claim; complete Cell unification remains unfinished.')
+    return result
+
 
 
 def check(root, commit, phase='branches'):
-    if phase == 'prefix':
-        return check_prefix(root, commit)
+    if phase in ('prefix', 'selection'):
+        return check_prefix(root, commit, phase)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
     stable = lambda value: prior(work(value), counters)
@@ -177,6 +199,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')

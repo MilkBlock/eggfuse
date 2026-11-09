@@ -160,7 +160,7 @@ fn project(
 
 #[path = "context_cuts.rs"]
 mod cuts;
-pub(crate) use cuts::{Cuts, derive_cuts, layout};
+pub(crate) use cuts::{Cuts, Selections, compile as compile_cuts, select as select_cuts};
 
 const ROOT_LIMIT: usize = 256;
 const PREFIX_LIMIT: usize = 4096;
