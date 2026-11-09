@@ -93,27 +93,29 @@ pub(crate) struct RangeIndex {
     tables: HashMap<usize, TableRanges>,
     pub stats: Stats,
 }
-impl RangeIndex {
-    pub(crate) fn observes(&self, table: usize) -> bool {
-        self.tables.contains_key(&table)
-    }
-
-    pub(crate) fn update_row(
-        &mut self,
-        t: usize,
-        version: u64,
-        witness: Dependency,
-        row: Option<&Row>,
-    ) -> Result<()> {
+/// Borrow the selected table once for the common Cell read-publication batch.
+/// Its version advances only after all current rows and retirements arrive.
+pub(crate) struct RangeWriter<'a> {
+    table: &'a mut TableRanges,
+    stats: &'a mut Stats,
+}
+impl RangeWriter<'_> {
+    pub(crate) fn update(&mut self, witness: Dependency, row: Option<&Row>) -> Result<()> {
         let clock = Instant::now();
-        let table = self.tables.get_mut(&t).expect("subscribed range table");
         self.stats.update_rows += 1;
-        for (&(prefix, column), axis) in &mut table.axes {
+        for (&(prefix, column), axis) in &mut self.table.axes {
             self.stats.changed_entries += u64::from(axis.update(witness, row, prefix, column)?);
         }
-        table.version = version;
         self.stats.maintenance_ns += clock.elapsed().as_nanos() as u64;
         Ok(())
+    }
+    pub(crate) fn finish(self, version: u64) {
+        self.table.version = version;
+    }
+}
+impl RangeIndex {
+    pub(crate) fn writer(&mut self, table: usize) -> Option<RangeWriter<'_>> {
+        Some(RangeWriter { table: self.tables.get_mut(&table)?, stats: &mut self.stats })
     }
     pub fn select(
         &mut self,

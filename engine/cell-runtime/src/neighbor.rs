@@ -127,7 +127,6 @@ const KEY_LIMIT: usize = 4096;
 const ROW_LIMIT: usize = 65536;
 pub(crate) struct Context {
     ports: Vec<Option<Ports>>,
-    subscribed: Vec<usize>,
     published: Publication,
     groups: FxHashMap<usize, Groups>,
     stats: Vec<Stats>,
@@ -137,7 +136,6 @@ impl Context {
     pub fn new(p: &Program, profiling: bool) -> Self {
         Self {
             ports: (0..p.tables.len()).map(|_| None).collect(),
-            subscribed: vec![],
             published: Publication::default(),
             groups: FxHashMap::default(),
             stats: (0..p.rules.len()).map(|_| Stats::default()).collect(),
@@ -181,7 +179,6 @@ impl Context {
             return Err("expected compiler-proved expression key".into());
         };
         let cache = self.ports[t].get_or_insert_with(|| {
-            self.subscribed.push(t);
             Ports {
                 version: g.query_versions[t],
                 ..Default::default()
@@ -221,62 +218,12 @@ impl Context {
         }
         Ok(row)
     }
-    pub(crate) fn observes(&self, t: usize) -> bool {
-        self.ports[t]
-            .as_ref()
-            .is_some_and(|cache| !cache.rows.is_empty())
-    }
-    /// A demanded but absent key must see an insertion. Replacement and
-    /// retirement can arrive in either order after same-key coalescence.
-    pub fn changed(&mut self, t: usize, fact: Dependency, row: Option<&Row>) {
-        let Some(cache) = self.ports[t].as_mut() else {
-            return;
-        };
-        let Dependency::Function(i) = fact else {
-            return;
-        };
-        let clock = self.profiling.then(Instant::now);
-        self.published.checked += 1;
-        let current =
-            row.filter(|r| r.table == t && !r.hidden)
-                .and_then(|r| match r.values.first() {
-                    Some(Value::Eq(k)) => Some((*k, r)),
-                    _ => None,
-                });
-        if let Some(&old) = cache.keys.get(&i)
-            && current.is_none_or(|(k, _)| k != old)
-        {
-            cache.keys.remove(&i);
-            if let Some(slot) = cache.rows.get_mut(&old)
-                && slot.as_ref().is_some_and(|r| r.witness == fact)
-            {
-                *slot = None;
-                self.published.retired += 1;
-            }
-        }
-        if let Some((k, row)) = current
-            && let Some(slot) = cache.rows.get_mut(&k)
-        {
-            *slot = Some(row.clone());
-            cache.keys.insert(i, k);
-            self.published.refreshed += 1;
-        }
-        if let Some(clock) = clock {
-            self.published.nanoseconds += clock.elapsed().as_nanos() as u64;
-        }
-    }
-    pub fn finish_publication(&mut self, g: &Graph) {
-        if self.subscribed.is_empty() {
-            return;
-        }
-        let clock = self.profiling.then(Instant::now);
-        for &t in &self.subscribed {
-            let cache = self.ports[t].as_mut().unwrap();
-            cache.version = g.query_versions[t];
-        }
-        if let Some(clock) = clock {
-            self.published.nanoseconds += clock.elapsed().as_nanos() as u64;
-        }
+    /// Borrow just this table's demanded Cell reads at the repaired publication
+    /// boundary. Completion advances only the table whose changes were delivered.
+    pub(crate) fn writer(&mut self, table: usize) -> Option<PortWriter<'_>> {
+        let cache = self.ports[table].as_mut()?;
+        if cache.rows.is_empty() { return None; }
+        Some(PortWriter { table, cache, published: &mut self.published, profiling: self.profiling })
     }
     pub fn neighborhood(
         &mut self,
@@ -339,6 +286,57 @@ impl Context {
         }
     }
 }
+/// Same table-scoped lifecycle as the query-column writer: update from the
+/// shared current row, then finish explicitly after every change was delivered.
+/// Dropping an unfinished writer never certifies a newer table version.
+pub(crate) struct PortWriter<'a> {
+    table: usize,
+    cache: &'a mut Ports,
+    published: &'a mut Publication,
+    profiling: bool,
+}
+impl PortWriter<'_> {
+    /// A demanded but absent key must see an insertion. Replacement and
+    /// retirement can arrive in either order after same-key coalescence.
+    pub(crate) fn update(&mut self, fact: Dependency, row: Option<&Row>) {
+        let cache = &mut self.cache;
+        let Dependency::Function(i) = fact else {
+            return;
+        };
+        let clock = self.profiling.then(Instant::now);
+        self.published.checked += 1;
+        let current =
+            row.filter(|r| r.table == self.table && !r.hidden)
+                .and_then(|r| match r.values.first() {
+                    Some(Value::Eq(k)) => Some((*k, r)),
+                    _ => None,
+                });
+        if let Some(&old) = cache.keys.get(&i)
+            && current.is_none_or(|(k, _)| k != old)
+        {
+            cache.keys.remove(&i);
+            if let Some(slot) = cache.rows.get_mut(&old)
+                && slot.as_ref().is_some_and(|r| r.witness == fact)
+            {
+                *slot = None;
+                self.published.retired += 1;
+            }
+        }
+        if let Some((k, row)) = current
+            && let Some(slot) = cache.rows.get_mut(&k)
+        {
+            *slot = Some(row.clone());
+            cache.keys.insert(i, k);
+            self.published.refreshed += 1;
+        }
+        if let Some(clock) = clock {
+            self.published.nanoseconds += clock.elapsed().as_nanos() as u64;
+        }
+    }
+    pub(crate) fn finish(self, version: u64) {
+        self.cache.version = version;
+    }
+}
 pub(crate) enum Access {
     Direct,
     Build(Vec<Row>),
@@ -370,20 +368,22 @@ mod tests {
             cache.keys.insert(3, 7);
             let mut ctx = Context {
                 ports: vec![Some(cache)],
-                subscribed: vec![0],
                 groups: Default::default(),
                 published: Default::default(),
                 stats: vec![],
                 profiling: false,
             };
+            let mut writer = ctx.writer(0).unwrap();
             if insert_first {
-                ctx.changed(0, replacement.witness, Some(&replacement));
+                writer.update(replacement.witness, Some(&replacement));
             }
-            ctx.changed(0, original.witness, None);
+            writer.update(original.witness, None);
             if !insert_first {
-                ctx.changed(0, replacement.witness, Some(&replacement));
+                writer.update(replacement.witness, Some(&replacement));
             }
+            writer.finish(2);
             let ports = ctx.ports[0].as_ref().unwrap();
+            assert_eq!(ports.version, 2);
             assert_eq!(
                 ports.rows[&7].as_ref().unwrap().witness,
                 replacement.witness
@@ -391,5 +391,79 @@ mod tests {
             assert_eq!(ports.keys.len(), 1);
             assert_eq!(ports.keys[&4], 7);
         }
+    }
+
+    #[test]
+    fn shared_publication_finishes_only_delivered_tables_and_refreshes_absence() {
+        use crate::{change_batch::{ChangeBatch, Publication}, physical_plan::Bound,
+                    query::QueryIndexes, range_index::RangeIndex};
+        use serde_json::json;
+        let tables = ["left", "right"].map(|name| json!({
+            "name":name,"schema":[{"kind":"eq","name":"E"},{"kind":"i64","name":"i64"}],
+            "constructor":false,"virtual_fact":false,"internal":false,"merge":{"var":"new"}
+        }));
+        let p = serde_json::from_value(json!({
+            "multi_stage":crate::multistage::MultiStage::default(),
+            "entry_schedule":crate::entry_schedule::Plan::default(),"tables":tables,"templates":[],"rules":[],
+            "sets":{},"control":[],"initial":[],"table_templates":[],"artifact":{}
+        })).unwrap();
+        let mut g = Graph::new(p).unwrap();
+        g.merge_programs_enabled = false;
+        let mut ctx = Context::new(&g.program, false);
+        ctx.stats.push(Stats::default());
+        let mut columns = QueryIndexes::default();
+        let mut ranges = RangeIndex::default();
+        let mut publication = Publication::default();
+        #[cfg(feature = "family-survey")]
+        let mut survey = crate::family_survey::Survey::new(&g.program);
+        let key = [Value::Eq(7)];
+        for table in 0..2 {
+            g.set_function(table, key.to_vec(), Value::Int(1)).unwrap();
+            assert!(ctx.point(&mut g, 0, table, &key).unwrap().is_some());
+            columns.ensure(&g, table).unwrap();
+            ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 10,
+                &Rc::new(g.witnesses(table))).unwrap();
+        }
+        let old = g.query_versions.clone();
+        g.changes.clear();
+        g.changes.enable_split();
+        let mut deferred = ChangeBatch::new(2);
+        deferred.enable_split();
+        for table in 0..2 { g.set_function(table, key.to_vec(), Value::Int(2)).unwrap(); }
+        g.changes.defer_unready(&[true, false], &mut deferred);
+        publication.publish(
+            #[cfg(feature = "family-survey")] (&mut survey, false),
+            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+        assert_eq!(ctx.ports[0].as_ref().unwrap().version, g.query_versions[0]);
+        assert_eq!(ctx.ports[1].as_ref().unwrap().version, old[1]);
+        assert_ne!(old[1], g.query_versions[1]);
+        assert_eq!(ctx.ports[1].as_ref().unwrap().rows[&7].as_ref().unwrap().values[1], Value::Int(1));
+        g.changes.clear();
+        std::mem::swap(&mut g.changes, &mut deferred);
+        publication.publish(
+            #[cfg(feature = "family-survey")] (&mut survey, false),
+            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+        for table in 0..2 {
+            assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().values[1], Value::Int(2));
+            let selected = ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 2,
+                &Rc::new(g.witnesses(table))).unwrap();
+            assert!(selected.is_empty());
+        }
+        assert_eq!(ranges.stats.builds, 2, "published axes survive both batches");
+        assert_eq!(ranges.stats.update_rows, 2);
+        assert_eq!(json!(&publication)["row_reads"], 2, "all read consumers share each row");
+        g.changes.clear();
+        g.hide(0, &key, true).unwrap();
+        publication.publish(
+            #[cfg(feature = "family-survey")] (&mut survey, false),
+            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+        assert!(ctx.point(&mut g, 0, 0, &key).unwrap().is_none());
+        g.changes.clear();
+        g.set_function(0, key.to_vec(), Value::Int(3)).unwrap();
+        publication.publish(
+            #[cfg(feature = "family-survey")] (&mut survey, false),
+            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+        assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().values[1], Value::Int(3));
+        assert_eq!(ctx.stats[0].point_probes, 2, "updates preserve positive and negative reads");
     }
 }

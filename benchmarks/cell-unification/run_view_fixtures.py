@@ -9,9 +9,9 @@ import time
 from check_links import sha
 
 
-def run(root, compiler):
+def run(root, compiler, bodies=None):
     source = Path('tools/cell-compiler/tests/fixtures/view-consumers.egg').read_text()
-    bodies = {
+    bodies = bodies or {
         'dispatch': source,
         'overlap': source.replace('(< cost bound)', '(<= cost bound)'),
         'reversed': source.replace('(< cost bound)', '(> bound cost)').replace('(> cost bound)', '(< bound cost)'),

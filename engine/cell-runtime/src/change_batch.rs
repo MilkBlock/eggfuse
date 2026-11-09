@@ -168,11 +168,11 @@ impl Publication {
             if writer.is_some() && g.has_view_plan(t) {
                 self.view_column_rows += count;
             }
-            let mut range = ranges.as_deref_mut().filter(|r| r.observes(t));
-            let neighbors = neighbor.observes(t);
+            let mut range = ranges.as_deref_mut().and_then(|r| r.writer(t));
+            let mut neighbors = neighbor.writer(t);
             #[cfg(feature = "family-survey")]
             let observed = (writer.is_some(), range.is_some());
-            if writer.is_none() && range.is_none() && !neighbors {
+            if writer.is_none() && range.is_none() && neighbors.is_none() {
                 #[cfg(feature = "family-survey")]
                 sample.0.table(
                     clock.elapsed().as_nanos() as u64,
@@ -189,7 +189,7 @@ impl Publication {
             }
             self.column_rows += count * u64::from(writer.is_some());
             self.range_rows += count * u64::from(range.is_some());
-            self.neighbor_rows += count * u64::from(neighbors);
+            self.neighbor_rows += count * u64::from(neighbors.is_some());
             for (&w, change) in changes {
                 let row = change.row(g, w)?;
                 self.row_reads += u64::from(*change == Change::Wake);
@@ -198,14 +198,22 @@ impl Publication {
                     writer.update(w, row);
                 }
                 if let Some(range) = &mut range {
-                    range.update_row(t, version, w, row)?;
+                    range.update(w, row)?;
                 }
-                if neighbors {
-                    neighbor.changed(t, w, row);
+                if let Some(neighbors) = &mut neighbors {
+                    neighbors.update(w, row);
                 }
             }
             if let Some(writer) = writer {
                 writer.finish(version);
+            }
+            if let Some(range) = range {
+                range.finish(version);
+            }
+            #[cfg(feature = "family-survey")]
+            let neighbors_observed = neighbors.is_some();
+            if let Some(neighbors) = neighbors {
+                neighbors.finish(version);
             }
             #[cfg(feature = "family-survey")]
             sample.0.table(
@@ -216,11 +224,10 @@ impl Publication {
                 sample.1,
                 observed.0,
                 observed.1,
-                neighbors,
+                neighbors_observed,
             );
         }
         columns.finish_publication();
-        neighbor.finish_publication(g);
         Ok(())
     }
 }

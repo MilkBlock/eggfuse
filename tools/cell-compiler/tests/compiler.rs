@@ -1214,24 +1214,7 @@ fn changed_child_ports_follow_value_replacement_and_key_repair() {
     let dest = dir.path().join("compiled");
     fs::write(
         &src,
-        r#"
-(datatype Tree (Item i64) (Fork Tree Tree) (One Tree))
-(function score (Tree) i64 :merge (max old new))
-(ruleset calc) (ruleset touch) (ruleset remove) (ruleset restore) (ruleset coalesce)
-(rule ((= t (Fork a b)) (= y (score b)) (= x (score a)) (= total (+ x y)))
-      ((set (score t) total)) :ruleset calc :name "combine")
-(rule ((= t (One a)) (= v (score a))) ((set (score t) v)) :ruleset calc :name "copy-score")
-(rule ((= t (Item 1))) ((set (score t) 7)) :ruleset touch)
-(rule ((= t (Item 2))) ((delete (score t))) :ruleset remove)
-(rule ((= t (Item 2))) ((set (score t) 13)) :ruleset restore)
-(rule ((= t (Item 3))) ((union t (Item 2))) :ruleset coalesce)
-(Fork (Item 1) (Item 2)) (Fork (Item 1) (Item 3)) (Fork (Item 1) (Item 4))
-(Fork (Item 2) (Item 1)) (Fork (Item 2) (Item 2)) (One (Item 1))
-(set (score (Item 1)) 1) (set (score (Item 2)) 2) (set (score (Item 3)) 3)
-(run-schedule (seq (run calc) (run remove) (run touch) (run calc) (run restore)
-                   (run calc) (run coalesce) (run calc)))
-(check (= (score (Fork (Item 1) (Item 2))) 20) (= (score (Fork (Item 2) (Item 2))) 26))
-"#,
+        include_str!("fixtures/neighbor-ports.egg"),
     )
     .unwrap();
     pass(&[

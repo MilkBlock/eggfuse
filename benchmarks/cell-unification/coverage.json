@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "cc472d0f",
-    "implementation_commits_since_timing": 0,
+    "implementation_commits_since_timing": 1,
     "evidence": "benchmarks/cell-unification/view-query-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -117,7 +117,8 @@
         "Retained prefix witnesses follow the shared Cell table-instruction order. Full query-width optional arrays are removed; the same instructions project witnesses to source atoms, and their static table width also determines branching/capacity.",
         "A Cell prefix expansion receives candidates and an exact-value lease from one prepared index selection. Ordinary and retained reads share candidate refinement; separate count/read_stamp/candidates preparation and the standalone read_stamp API are removed.",
         "Context instances retain their actual shared Cell plan. Compiled instructions provide endpoint tables and the prefix read scope; the separate orientation identity and runtime source-Rule lookup/clone are removed. Current versions are compared without a temporary vector, and invalidation refreshes the existing snapshot storage.",
-        "View pair predicates and output projection execute the shared Cell Query. Independent Port/Test/Comparison storage and the view scalar interpreter are removed; Unit results are folded after successful guards. Three-way dispatch derives from the same instructions; legacy wire fields are serialization projections."
+        "View pair predicates and output projection execute the shared Cell Query. Independent Port/Test/Comparison storage and the view scalar interpreter are removed; Unit results are folded after successful guards. Three-way dispatch derives from the same instructions; legacy wire fields are serialization projections.",
+        "Query columns, range axes and demanded neighbor ports finish through one repaired ChangeBatch. Table writers borrow each selected cache once; the neighbor subscription list/global version sweep and range per-row table resolution/version stores are removed. Deferred tables do not receive a completed version."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
@@ -364,7 +365,7 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B3",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "Neighbor/cache and dedicated view-directory lifecycles, broader candidate-index protocols, admission/Bake integration and runtime speed acceptance remain. View predicates/output now use Cell Query; necessary publication, retirement and original Run watermarks remain.",
+      "remaining": "Neighbor candidate-domain and dedicated view-directory lifecycles, broader candidate-index protocols, admission/Bake integration and runtime speed acceptance remain. Demanded neighbor ports now finish through the common table-scoped read-publication batch. Old-key identity, negative reads and original Run watermarks remain necessary.",
       "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
       "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
