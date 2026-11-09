@@ -40,6 +40,38 @@ pub fn bind_operand<L, S: Copy, V: Clone, F: Bindings<S, V> + ?Sized>(
     }
 }
 
+/// Project eligible local rows through the same Cell operands. The caller
+/// supplies only rows from the selected operator and source boundary. Keep
+/// source identity alongside bindings: equal bindings alone need not prove a
+/// unique runtime witness. Rejected candidates never modify the input frame.
+pub fn project_rows<'a, L: 'a, S: Copy + 'a, V: Clone + 'a,
+    F: Bindings<S, V> + Clone + 'a, T: 'a>(
+    fields: &'a [Operand<L, S>], base: &'a F,
+    rows: impl Iterator<Item = (T, &'a [V])> + 'a,
+    equal: impl Fn(&V, &V) -> bool + 'a,
+    literal: impl Fn(&L, &V) -> bool + 'a,
+) -> impl Iterator<Item = (T, F)> + 'a {
+    rows.filter_map(move |(source, row)| {
+        if fields.len() != row.len() { return None; }
+        let mut frame = base.clone();
+        fields.iter().zip(row)
+            .all(|(field, value)| bind_operand(field, value, &mut frame, &equal, &literal))
+            .then_some((source, frame))
+    })
+}
+
+/// Keep the first equivalent candidate. Stop at the first distinct one: no
+/// later candidate can restore uniqueness in this immutable local proof.
+/// The caller chooses binding or source-row identity according to its proof.
+pub fn unique_projection<T>(mut candidates: impl Iterator<Item = T>,
+    same: impl Fn(&T, &T) -> bool) -> Option<T> {
+    let first = candidates.next()?;
+    for candidate in candidates {
+        if !same(&first, &candidate) { return None; }
+    }
+    Some(first)
+}
+
 /// Compile or verify a producer-local projection from the authoritative typed
 /// query. Structural equality here does not anticipate a future runtime union.
 pub(crate) fn bind_relation(
@@ -87,5 +119,30 @@ mod tests {
         assert!(!bind_operand(&slot, &Operand::Slot(8), &mut projection, PartialEq::eq, literal));
         assert!(!bind_operand(&Operand::Literal(7), &Operand::Slot(7), &mut projection, PartialEq::eq, literal));
         assert!(bind_operand(&Operand::Literal(7), &Operand::Literal(7), &mut projection, PartialEq::eq, literal));
+    }
+
+    #[test]
+    fn projection_uniqueness_preserves_witness_identity_and_first_source() {
+        let rows = [vec![2], vec![3], vec![4]];
+        let fields = [Operand::<usize, &str>::Literal(2)];
+        let base = BTreeMap::new();
+        let same = |a: &usize, b: &usize| a / 2 == b / 2;
+        let candidates = || project_rows(&fields, &base,
+            rows.iter().enumerate().map(|(i, row)| (i, row.as_slice())), same, same);
+        let by_binding = unique_projection(candidates(), |a, b| a.1 == b.1).unwrap();
+        assert_eq!(by_binding.0, 0);
+        assert!(by_binding.1.is_empty());
+        assert!(unique_projection(candidates(), |a, b| rows[a.0] == rows[b.0]).is_none());
+        assert!(base.is_empty());
+        // Duplicate witnesses retain the first source; enumeration stops as
+        // soon as an actual ambiguity is proved, without visiting the tail.
+        let duplicates = [(0, 2), (1, 2)];
+        assert_eq!(unique_projection(duplicates.into_iter(), |a, b| a.1 == b.1), Some((0, 2)));
+        let ambiguous = [(0, 2), (1, 3)].into_iter()
+            .chain(std::iter::from_fn(|| panic!("ambiguity must stop projection")));
+        assert!(unique_projection(ambiguous, |a, b| a.1 == b.1).is_none());
+        let wrong_width = [Operand::<usize, &str>::Slot("x"), Operand::Slot("y")];
+        assert_eq!(project_rows(&wrong_width, &base,
+            rows.iter().map(|row| ((), row.as_slice())), same, same).count(), 0);
     }
 }

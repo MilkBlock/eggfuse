@@ -11,7 +11,7 @@ pub mod construction;
 
 #[path = "cell_binding.rs"]
 mod binding;
-pub use binding::{Bindings, Operand, bind_operand};
+pub use binding::{Bindings, Operand, bind_operand, project_rows, unique_projection};
 pub(crate) use binding::Bindings as QueryFrame;
 pub(crate) use binding::bind_relation;
 

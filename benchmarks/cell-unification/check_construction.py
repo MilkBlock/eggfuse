@@ -9,7 +9,7 @@ from check_context import RUN_KEYS, GROUPS
 from check_view_query import stable
 
 
-def collect(root, commit, phase='construction'):
+def collect(root, commit, phase='construction', timed=False):
     assert load(root / 'semantic-acceptance.json')['status'] == 'pass'
     groups = (*GROUPS, 'publication', 'entry_schedule', 'view_consumers', 'view_storage', 'known_results')
     def pair(directory, lanes, program, files):
@@ -31,7 +31,7 @@ def collect(root, commit, phase='construction'):
                         if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     assert metrics[0] == metrics[1]
     fixtures = {}
-    for name in ('handoff', {'symbols': 'union', 'bindings': 'bindings'}.get(phase, 'computed')):
+    for name in ('handoff', {'symbols': 'union', 'bindings': 'bindings', 'candidates': 'bindings'}.get(phase, 'computed')):
         path = root / f'fixture-{name}'
         for bits in (64, 0):
             f = pair(path, (f'baseline-{bits}', f'candidate-{bits}'), path / 'compiled/program.json',
@@ -48,6 +48,8 @@ def collect(root, commit, phase='construction'):
         ('construction', 1), ('construction-nonsparse', 1), ('cell', 2), ('marker', 6), ('witness', 8))
     if phase == 'bindings':
         expected = (('cell', 14), ('binding-nonsparse', 1), ('marker', 7), ('witness', 8))
+    elif phase == 'candidates':
+        expected = (('cell', 15), ('binding-nonsparse', 2), ('marker', 7), ('witness', 8))
     for name, count in expected:
         path = root / f'test-{name}.log'
         assert sum(map(int, re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text()))) == count
@@ -86,6 +88,18 @@ def collect(root, commit, phase='construction'):
             removed='Independent field-binding logic in runtime queries, typed producer-local projections, and source marker publication. Arg is the typed Cell Operand alias; all three use Cell Bindings and bind_operand. Marker fields are lowered once per proof, eliminating candidate-loop JSON dispatch, literal term lookup and owned variable-name copies.',
             limits='Runtime bindings remain in the existing query/Entry frame. Static projections require exact typed operands; source symbols require equality at their publication boundary; runtime literals use the repaired graph. These distinct evidence obligations are preserved. Candidate enumeration, materialization selection and iterative boundary composition are not yet unified. The temporary source pattern and generic binder have not been allocation/timing-profiled; unchanged counters do not establish speed preservation.',
             timing_cadence=dict(last_timed_commit='cc472d0f', implementation_commits_since_timing=4))
+    elif phase == 'candidates':
+        result.update(baseline_commit='c54780d8',
+            removed='Independent source/typed local candidate projection loops and temporary uniqueness maps/sets. Cell project_rows preserves source identity alongside original bindings, and unique_projection retains the first equivalent candidate and stops at ambiguity. Typed operator filtering precedes frame cloning; source root enumeration keeps deterministic deduplication.',
+            limits='Source publication uniqueness is by binding, typed donor uniqueness is by source row; the shared implementation preserves both obligations. Equality evidence, donor admission, global fragment discovery/selection, runtime candidate directories and iterative materialization boundaries remain separate. Deleted static scans, frame clones and temporary collections are not allocation counts or runtime credit.',
+            timing_cadence=dict(last_timed_commit=commit if timed else 'cc472d0f', implementation_commits_since_timing=0 if timed else 5,
+                implementation_commits_in_batch=['f6e44667','46aa864b','08c6b90b','c54780d8',commit]))
+    if timed:
+        assert phase == 'candidates'
+        from collect_sieve import timing
+        result['scope'] = 'standalone Cell CPU; normal release timing; not native egglog runtime; allocations not collected'
+        result['timing'] = timing(root, commit, commits=dict(baseline='c54780d8', candidate=commit,
+            last_timed='cc472d0f', historical='24c4ae8a'))
     return result
 
 
@@ -94,6 +108,7 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('construction', 'symbols', 'bindings'), default='construction')
+    p.add_argument('--phase', choices=('construction', 'symbols', 'bindings', 'candidates'), default='construction')
+    p.add_argument('--timing', action='store_true')
     args = p.parse_args()
-    args.output.write_text(json.dumps(collect(args.root, args.commit, args.phase), indent=2) + '\n')
+    args.output.write_text(json.dumps(collect(args.root, args.commit, args.phase, args.timing), indent=2) + '\n')

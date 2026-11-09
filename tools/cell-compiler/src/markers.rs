@@ -1,7 +1,7 @@
 //! Select correlated constructor fragments and materialize exact source views.
 use crate::{Result, surface::*};
 use eggfuse_cell_runtime::checksum::canonical;
-use eggfuse_cell_runtime::cell::{Symbols, Operand, bind_operand};
+use eggfuse_cell_runtime::cell::{Symbols, Operand, project_rows, unique_projection};
 use microlp::{ComparisonOp, OptimizationDirection, Problem, Variable};
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -928,20 +928,12 @@ fn publish(body: &[J], head: &[J], views: &[View], sig: &J) -> Vec<J> {
         for (depth, (table, fields)) in patterns.iter().enumerate() {
             let mut next = BTreeSet::new();
             for m in partial {
-                let mut matched = BTreeSet::new();
-                for row in &rows[*table] {
-                    let mut ext = m.clone();
-                    let equal = |a: &usize, b: &usize| cg.symbols.root(*a) == cg.symbols.root(*b);
-                    if fields.len() == row.len() && fields.iter()
-                        .zip(row)
-                        .all(|(pat, i)| bind_operand(pat, i, &mut ext, equal, equal))
-                    {
-                        matched.insert(ext);
-                    }
-                }
-                if depth == 0 || matched.len() == 1 {
-                    next.extend(matched);
-                }
+                let equal = |a: &usize, b: &usize| cg.symbols.root(*a) == cg.symbols.root(*b);
+                let candidates = project_rows(fields, &m,
+                    rows[*table].iter().map(|row| ((), row.as_slice())), equal, equal)
+                    .map(|(_, frame)| frame);
+                if depth == 0 { next.extend(candidates); }
+                else if let Some(frame) = unique_projection(candidates, PartialEq::eq) { next.insert(frame); }
             }
             partial = next.into_iter().collect();
             if partial.is_empty() {

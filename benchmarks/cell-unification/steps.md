@@ -492,3 +492,14 @@ marker 的字段在候选枚举前 lowering，缺少字面量证据时直接排�
 30 项相关测试及最小 feature 编译通过，包括共享字段绑定、普通/非稀疏 Cell、实际外部见证、退役/迟到输入、原生 marker 与含字面量及重复字段的多参数样例。两个短样例的新旧 .egg、marker 选择、marker IR、program JSON 逐字节一致；正常/全碰撞哈希下 state/stages/binding-audit 与工作量一致。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个组件重新 lowering 一致。产物 out/cell-projection-binding，复核 check_construction.py ROOT OUTPUT --commit COMMIT --phase bindings。运行时结果仅覆盖 standalone Cell CPU，native 执行仅作短样例语义对照。
 
 本次是 cc472d0f 后第 4 个实现提交，未单独测速。源候选发现、匹配枚举及物化边界与迭代 Bake 的统一仍未完成，最终多线程阶段继续留在完整重写验收之后。
+
+
+## 局部候选投影与唯一性共用 Cell 执行
+
+上一轮已经统一字段绑定，但 marker 发布与 typed donor 发现仍各自克隆候选 frame、匹配字段、维护临时唯一性集合。当前冻结目录的源发布与实际执行均保持原匹配规模，没有新增运行时 credit。本轮将这段局部候选处理交给 Cell project_rows 与 unique_projection：借用同一组操作数和原有初始绑定，保留候选的来源，成功才返回扩展绑定。typed 路径先过滤运算符及已消除的别名 donor，再复制 frame；不再为无关表创建绑定副本。删除两条路径的独立逐行投影与唯一性 BTreeMap/BTreeSet，发现第二个不同候选即可停止。
+
+唯一性依据不能混淆。marker 原策略按完整绑定去重；typed continuation 必须按完整源行判定 donor 唯一，绑定相同不等于只有一个物理见证。共享实现保留首次等价候选和原来源，重复相同行不会改变见证。源 root 的全量枚举及跨前缀的排序去重仍保留，后续局部投影继续要求唯一；候选歧义不会由后续候选消失。失败候选不修改输入 frame。全局片段发现、准入、物化边界和运行时候选目录仍不是本次接管范围。
+
+32 项相关测试及最小 feature 编译通过，新增检查覆盖绑定身份与行身份的区别、首个来源保留、歧义提前停止和 arity 不符。两个短样例的新旧 .egg、marker 选择、marker IR、program JSON 逐字节相同；正常/全碰撞哈希下 state/stages/binding-audit 与工作量一致。sum-bits 的 1,428 个 Run、最终 state、346 项工作指标保持，语义脚本 pass，22 个组件重新 lowering 一致。产物 out/cell-projection-candidates；复核 check_construction.py ROOT OUTPUT --commit COMMIT --phase candidates。删除的静态扫描、frame 副本和集合没有独立机器指令/分配计数，不据此宣称运行时收益。
+
+这是 cc472d0f 之后第 5 个实现提交。提交后以同一 sum-bits 程序、普通 release 配置，对候选、直接基线 c54780d8、上次测速 cc472d0f 和历史配置 24c4ae8a 做一次四路交错测速，每路 1 次预热、7 次测量。仅度量 standalone Cell CPU；整体重写与最终多线程阶段仍未完成。

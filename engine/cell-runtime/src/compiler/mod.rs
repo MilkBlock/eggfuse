@@ -6,7 +6,7 @@ mod spine_blocks;
 pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
 use crate::{
-    cell::{Definition, Site, bind_relation},
+    cell::{Definition, Site, bind_relation, project_rows, unique_projection},
     program::*,
 };
 use serde_json::{Value as J, json};
@@ -94,8 +94,9 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                         }) {
                             continue;
                         }
-                        let mut matches = BTreeMap::new();
-                        for (site, table, row) in &local {
+                        let Call::Table(target) = a.call else { continue };
+                        let candidates = local.iter().filter_map(|(site, table, row)| {
+                            if *table != target { return None; }
                             // An elided RHS constructor is the same witness as
                             // its earlier query/effect donor. Its distinct SSA
                             // output must not create a second ambiguous match.
@@ -103,18 +104,14 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                             // it from donor selection here.
                             if let Site::Effect(op) = *site
                                 && known.static_sources.get(producer).and_then(|sources| sources[op]).is_some() {
-                                continue;
+                                return None;
                             }
-                            let mut m = mapping.clone();
-                            if bind_relation(a, *table, row, &mut m).is_ok() {
-                                matches.entry(row).or_insert((site, m));
-                                if matches.len() > 1 {
-                                    break;
-                                }
-                            }
-                        }
-                        if matches.len() == 1 {
-                            let (columns, (site, m)) = matches.into_iter().next().unwrap();
+                            Some(((site, row), row.as_slice()))
+                        });
+                        let projections = project_rows(&a.args, &mapping, candidates, PartialEq::eq,
+                            |literal, value| matches!(value, Arg::Literal(v) if v == literal));
+                        if let Some(((site, columns), m)) = unique_projection(projections,
+                            |a, b| a.0.1 == b.0.1) {
                             let (kind, idx) = site.coordinates();
                             mapping = m;
                             let mut step = json!({"atom":i,"source_kind":kind,"source_index":idx});
