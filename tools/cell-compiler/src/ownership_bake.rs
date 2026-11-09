@@ -44,7 +44,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     }
     if classes {
         if raw.get("ownership_fragments").is_none() {
-            raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+            raw["ownership_fragments"] = json!({"schema":p.cell_ownership.fragment_schema(),
                 "source":composition::source_digest(&raw),"fragments":[]});
         }
         raw["ownership_fragments"]["query_classes"] = p.bake_query_classes()?;

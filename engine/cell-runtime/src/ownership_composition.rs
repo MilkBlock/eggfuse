@@ -142,9 +142,7 @@ pub fn source_digest(raw: &J) -> String {
 /// Rank repeated, actually used local continuations within a static code budget.
 /// The score is a proposal heuristic. Whole-execution timing admits speedups.
 pub fn select_profile(profile: &J) -> Result<J> {
-    if profile["schema"] != "eggfuse-ownership-fragment-profile/v1" {
-        return Err("invalid ownership fragment profile".into());
-    }
+    let format = wire::Format::profile(profile)?;
     let records = profile["records"]
         .as_array()
         .ok_or("missing fragment observations")?;
@@ -197,7 +195,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
         }
     }
     Ok(
-        json!({"schema":"eggfuse-ownership-fragments/v1","source":profile["source"],"fragments":selected,
+        json!({"schema":format.fragment_schema(),"source":profile["source"],"fragments":selected,
         "ranking":{"minimum_activations":2,"max_fragments":256,"instruction_handle_budget":16384,
             "charged_static_handles":handles,"sum_of_candidate_scores_not_global_savings":net,"alternatives_overlap":true,
             "rule":"rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
@@ -210,6 +208,7 @@ impl Plan {
         markers: &[Marker],
         programs: &[Rc<PortProgram>],
         entries: &[Vec<usize>],
+        format: wire::Format,
     ) -> Result<Self> {
         let sources = p
             .rules
@@ -262,7 +261,7 @@ impl Plan {
             .map(|(id, s)| ((**s).clone(), id))
             .collect();
         if let Some(raw) = p.artifact.get("ownership_fragments") {
-            if raw["schema"] != "eggfuse-ownership-fragments/v1"
+            if raw["schema"] != format.fragment_schema()
                 || raw["source"] != source_digest(&p.artifact)
             {
                 return Err("ownership fragments have a different source or schema".into());
@@ -606,7 +605,7 @@ impl Graph {
             "net_record_operations":2 * obs.binding_records_saved as i128 - obs.transition_probes as i128,
         })).collect::<Vec<_>>();
         Ok(
-            json!({"schema":"eggfuse-ownership-fragment-profile/v1","source":source_digest(&self.program.artifact),
+            json!({"schema":self.program.cell_ownership.format.profile_schema(),"source":source_digest(&self.program.artifact),
             "scope":"checked Entry applications with actual owned births; diagnostic training, not production latency",
             "alternatives_overlap":true,
             "credit":"one avoided binding creation plus one avoided boundary insertion per observed shared input, minus transition probes; uncalibrated ranking only",

@@ -57,3 +57,11 @@
 六项 Entry 有序检查、删除失败后不得执行后续 union、无关节点不得放大 repair 两项现有测试，以及最小特性编译通过。没有新增测试或单项计时。
 
 两项改动合做一次 sum-bits 检查，见 [handoff-check.json](handoff-check.json)：语义 pass，1,428 个 Run 与最终 state 相同，300 项非时间/RSS指标保持。共用执行器实际完成 165 个闭合交接，保留 58 次闭合回退和 155 次 stale；不是仅覆盖普通 RHS。ownership union 由上述短 fixture 单独覆盖。本轮没有计时采样或分配审计构建。
+
+## Port program 只保存 Cell 的局部连接
+
+基线 `3e051d5d`。union 已由源 Cell 直接执行，port program 中的 union 操作数及 marker 的 union 位置列表不再有运行时读者。本步删除它们，并从新计划的共享判重中去掉源 union 差异；同一局部连接可供不同源 union 的 Cell 共享。编译时 interner 使用 Rc，删除整份 PortProgram 的深拷贝。源 union 仍按原位置执行，不成为静态 equality 假设。
+
+新 marker/fragment/profile 格式分别为 v5/v2/v2，区分改变后的程序地址；旧 v4/v1/v1 加载时只借用源操作恢复旧编号，发出/校验产物时临时投影旧字段，没有第二套运行时 union 指令。完整字段校验、query class 证书和覆盖范围保持；混合地址版本拒绝加载。
+
+新短用例验证不同 union 共享同一个 Rc，并对照旧地址的逐阶段状态、bindings、union 请求和 native 源程序；现有 typed wiring 校验、八项 query-class/receipt 测试及 Bake 输出检查通过。冻结旧格式程序重新加载、旧 profile 再 Bake 也通过。未测时间。marker 的逐操作覆盖数组继续消除。

@@ -23,7 +23,7 @@ fn baked(src: &str) -> Program {
     let profile = e.graph.ownership_fragment_profile().unwrap();
     // These semantic fixtures exercise every observed local route. Production
     // ranking and performance admission are separate concerns.
-    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
         "source":profile["source"],"fragments":profile["records"].as_array().unwrap()
             .iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
     raw.as_object_mut().unwrap().remove("sha256");

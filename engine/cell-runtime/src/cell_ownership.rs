@@ -13,6 +13,8 @@ pub mod composition;
 pub mod ports;
 #[path = "ownership_query_classes.rs"]
 pub mod query_classes;
+#[path = "ownership_wire.rs"]
+mod wire;
 #[path = "ownership_pending.rs"]
 mod ready;
 #[path = "port_completion.rs"]
@@ -20,6 +22,8 @@ pub(crate) mod completion;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
+    #[serde(skip)]
+    format: wire::Format,
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
     pub programs: Vec<Rc<PortProgram>>,
@@ -42,7 +46,6 @@ pub struct Plan {
 pub struct Marker {
     pub active: bool,
     pub bodies: Vec<bool>,
-    pub unions: Vec<usize>,
     pub program_id: usize,
     #[serde(skip)]
     pub code: usize,
@@ -57,14 +60,17 @@ impl Plan {
             .iter()
             .map(Option::is_some)
             .collect::<Vec<_>>();
-        let mut shared = BTreeMap::<PortProgram, (usize, Rc<PortProgram>)>::new();
+        let format = wire::Format::program(p)?;
+        let mut shared = BTreeMap::new();
         let markers = p
             .templates
             .iter()
             .map(|t| {
-                let program = PortProgram::derive(p, t, &tables);
-                let id=shared.len();
-                let (program_id,program)=shared.entry(program.clone()).or_insert_with(|| (id,Rc::new(program))).clone();
+                let program = Rc::new(PortProgram::derive(p, t, &tables));
+                let legacy = (format == wire::Format::Legacy).then(|| wire::unions(t));
+                let id = shared.len();
+                let (program_id, program) = shared.entry((program.clone(), legacy))
+                    .or_insert((id, program)).clone();
                 Marker {
                 program, program_id, code: 0,
                 active: t.ops.iter().any(|op|matches!(op,Op::Let(_,Call::Table(table),_)|Op::Set(table,_,_) if tables[*table])),
@@ -72,12 +78,6 @@ impl Plan {
                     .ops
                     .iter()
                     .map(|op| matches!(op, Op::Let(_,Call::Table(table),_) | Op::Set(table,_,_) if tables[*table]))
-                    .collect(),
-                unions: t
-                    .ops
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(i, op)| matches!(op, Op::Union(..)).then_some(i))
                     .collect(),
             }})
             .collect::<Vec<_>>();
@@ -106,8 +106,9 @@ impl Plan {
                 }
             }
         }
-        let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
+        let composition = composition::Plan::derive(p, &markers, &programs, &entries, format)?;
         let mut plan = Self {
+            format,
             programs,
             code_programs: vec![],
             code_operators: vec![],
@@ -150,9 +151,10 @@ impl Plan {
             };
         }
     }
+    pub fn fragment_schema(&self) -> &'static str { self.format.fragment_schema() }
     pub fn artifact(&self, p: &Program) -> J {
-        json!({"schema":"eggfuse-ownership-markers/v4", "recipe":p.artifact["recipe"]["sha256"],
-            "entry_schedule":crate::checksum::artifact_digest(&p.artifact["entry_schedule"]),"plan":self,
+        json!({"schema":self.format.marker_schema(), "recipe":p.artifact["recipe"]["sha256"],
+            "entry_schedule":crate::checksum::artifact_digest(&p.artifact["entry_schedule"]),"plan":wire::plan(self, p),
             "contract":"checked scheduled bindings enter persistent scalar constructor owners; foreign roots are boundaries; no future union is assumed"})
     }
 }
@@ -987,7 +989,7 @@ impl Graph {
             .map(|m| Rc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
-        json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":"eggfuse-ownership-markers/v4","port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
+        json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "inventory":{"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),

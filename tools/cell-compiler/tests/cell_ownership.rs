@@ -13,7 +13,7 @@ fn program(src: &str) -> Program {
     // Semantic fixtures exercise every observed bounded continuation, including
     // single-use paths. Production selection has its own repeated-use test.
     let mut raw = raw;
-    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1", "source":profile["source"],
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2", "source":profile["source"],
         "fragments":profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
@@ -102,6 +102,57 @@ const STAGES: &str = r#"
 (N 0) (N 1)
 (run-schedule (seq (run a) (run b) (run c)))
 "#;
+
+#[path = "support/port_sharing.rs"]
+mod port_sharing;
+
+#[test]
+fn source_unions_do_not_split_cell_wiring_or_change_effect_order() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition;
+    let core = eggfuse_bake::device_frontend::core("port-sharing", port_sharing::SOURCE).unwrap();
+    let raw = compiler::compile(core, &Default::default()).unwrap();
+    let mut p = Program::parse(raw.clone()).unwrap();
+    p.prepare_cell_ownership().unwrap();
+    let a = p.rules[p.sets["a"][0]].template;
+    let b = p.rules[p.sets["b"][0]].template;
+    let markers = &p.cell_ownership.markers;
+    assert_eq!(markers[a].program_id, markers[b].program_id);
+    assert!(std::rc::Rc::ptr_eq(&markers[a].program, &markers[b].program));
+    let wire = p.cell_ownership.artifact(&p);
+    assert_eq!(wire["schema"], "eggfuse-ownership-markers/v5");
+    assert!(wire["plan"]["programs"].as_array().unwrap().iter().all(|x| x.get("unions").is_none()));
+    assert!(wire["plan"]["markers"].as_array().unwrap().iter().all(|x| x.get("unions").is_none()));
+
+    // Legacy addresses are reconstructed from borrowed source operations only
+    // while loading/emitting. Their full certificates are still checked.
+    let mut legacy = raw;
+    legacy["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+        "source":composition::source_digest(&legacy),"fragments":[]});
+    let old = reparse(legacy);
+    assert_ne!(old.cell_ownership.markers[a].program_id, old.cell_ownership.markers[b].program_id);
+    assert!(old.cell_ownership.programs.len() > p.cell_ownership.programs.len());
+    let mut bad = old.artifact.clone();
+    bad["ownership_markers"] = old.cell_ownership.artifact(&old);
+    let id = old.cell_ownership.markers[a].program_id;
+    let unions = bad["ownership_markers"]["plan"]["programs"][id]["unions"].as_array_mut().unwrap();
+    *unions.iter_mut().find(|v| !v.is_null()).unwrap() = json!(null);
+    bad.as_object_mut().unwrap().remove("sha256");
+    bad["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&bad).into();
+    assert!(Program::parse(bad).unwrap_err().contains("ownership marker"));
+
+    let mut legacy = Executor::new(Graph::new_with_cell_ownership(old).unwrap(), true);
+    let mut current = Executor::new(Graph::new_with_cell_ownership(p).unwrap(), true);
+    legacy.execute().unwrap();
+    current.execute().unwrap();
+    assert_eq!(legacy.initial_audit, current.initial_audit);
+    assert_eq!(legacy.snapshots, current.snapshots);
+    assert_eq!(legacy.binding_audit, current.binding_audit);
+    assert_eq!(legacy.graph.export().unwrap(), current.graph.export().unwrap());
+    assert_eq!(legacy.graph.stats.union_requests, current.graph.stats.union_requests);
+    // Also exercise trained continuations, native source checks and the existing
+    // repair/scoped backends with the newly shared program addresses.
+    compare(port_sharing::SOURCE);
+}
 #[test]
 fn live_bodies_cross_stages_without_internal_subscriptions() {
     let e = compare(STAGES);
@@ -239,7 +290,8 @@ fn bake_emits_checked_markers_without_executing_the_program() {
         p.cell_ownership
             .markers
             .iter()
-            .any(|m| m.active && m.unions.is_empty())
+            .enumerate()
+            .any(|(i, m)| m.active && !p.templates[i].ops.iter().any(|op| matches!(op, eggfuse_cell_runtime::program::Op::Union(..))))
     );
     assert!(p.cell_ownership.routes.iter().any(|r| !r.is_empty()));
     let temp = tempfile::tempdir().unwrap();

@@ -72,7 +72,7 @@ fn admitted_receivers_keep_receipts_and_unbaked_rules_keep_original_order() {
             .all(|hop| hop["rule"].as_u64() == Some(receiver as u64)))
         .cloned().collect::<Vec<_>>();
     assert!(!fragments.is_empty());
-    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
         "source":profile["source"], "fragments":fragments});
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"] = artifact_digest(&raw).into();

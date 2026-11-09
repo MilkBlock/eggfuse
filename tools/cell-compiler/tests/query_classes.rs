@@ -20,7 +20,7 @@ fn fragments(p: &Program) -> Program {
     e.execute().unwrap();
     let profile = e.graph.ownership_fragment_profile().unwrap();
     let mut raw = p.artifact.clone();
-    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
         "source":profile["source"], "fragments":profile["records"].as_array().unwrap()
             .iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
     parse(raw).unwrap()
@@ -29,7 +29,7 @@ fn classified(mut p: Program) -> Program {
     let classes = p.bake_query_classes().unwrap();
     let mut raw = p.artifact.clone();
     if raw.get("ownership_fragments").is_none() {
-        raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v1",
+        raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
             "source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
             "fragments":[]});
     }

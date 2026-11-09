@@ -12,8 +12,6 @@ pub struct PortProgram {
     /// Recipe result slot -> signal. This is an address, never an equality proof.
     pub native: BTreeMap<usize, usize>,
     pub slots: Vec<Option<usize>>,
-    /// Source-ordered union instructions, evaluated only when their RHS runs.
-    pub unions: Vec<Option<[Arg; 2]>>,
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Step {
@@ -27,14 +25,12 @@ impl PortProgram {
         let mut facts = Vec::new();
         let mut bodies = vec![Vec::new(); t.ops.len()];
         let mut native = Vec::new();
-        let mut unions = vec![None; t.ops.len()];
         for (op, instruction) in t.ops.iter().enumerate() {
             match instruction {
                 Op::Copy(dst, a) => {
                     let a = symbols.arg(a);
                     symbols.union(*dst, a);
                 }
-                Op::Union(a, b) => unions[op] = Some([a.clone(), b.clone()]),
                 Op::Let(dst, Call::Table(table), args) if covered[*table] => {
                     let mut ports = args.iter().map(|a| symbols.arg(a)).collect::<Vec<_>>();
                     ports.push(*dst);
@@ -97,7 +93,6 @@ impl PortProgram {
         Self {
             fields: bodies,
             signals,
-            unions,
             native: native
                 .into_iter()
                 .map(|(slot, symbol)| (slot, names[&symbols.root(symbol)]))
