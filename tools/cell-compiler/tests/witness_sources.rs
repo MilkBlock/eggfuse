@@ -83,6 +83,7 @@ fn full_spine_reads_the_published_receipt_before_a_key_lookup() {
     assert!(report["stage_spine"]["stats"]["local_witness_hits"].as_u64().unwrap() > 0);
     assert!(report["stage_spine"]["stats"]["local_witness_slot_reads"].as_u64().unwrap() > 0);
     assert_eq!(report["stage_spine"]["stats"]["local_witness_receipt_steps"], 0);
+    assert_eq!(report["stage_spine"]["stats"]["local_witness_contexts"], 0);
     assert!(new.graph.key_lookup_calls.get() < old.graph.key_lookup_calls.get());
 }
 

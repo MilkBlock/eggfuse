@@ -57,9 +57,14 @@ pub(crate) struct Published {
 }
 #[cfg(feature = "sparse-cells")]
 impl Published {
-    pub(crate) fn cell_results(&self) -> Option<(usize, usize, Option<&crate::cell::Results>)> {
-        let PublishedBase::Active(c) = &self.base else { return None };
-        Some((c.producer, self.output, c.state.history.current()))
+    pub(crate) fn cell_results(&self) -> (usize, usize, Option<&crate::cell::Results>) {
+        // A publication knows its logical producer even when it retained no
+        // results. Do not expand a root or recover a physical Cell to find it.
+        let (producer, results) = match &self.base {
+            PublishedBase::Active(c) => (c.producer, c.state.history.current()),
+            PublishedBase::Root(_, producer) | PublishedBase::Solo { producer, .. } => (*producer, None),
+        };
+        (producer, self.output, results)
     }
     fn root_info(&self) -> (u64, Option<&Root>) {
         match &self.base {
@@ -106,8 +111,8 @@ pub(crate) type Published = Cursor;
 #[cfg(not(feature = "sparse-cells"))]
 impl Cursor {
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn cell_results(&self) -> Option<(usize, usize, Option<&crate::cell::Results>)> {
-        Some((self.producer, self.state.output, self.state.history.current()))
+    pub(crate) fn cell_results(&self) -> (usize, usize, Option<&crate::cell::Results>) {
+        (self.producer, self.state.output, self.state.history.current())
     }
     pub(crate) fn expand(&self) -> Self {
         self.clone()
@@ -699,7 +704,7 @@ fn record_answer(
     }
 }
 struct LocalWitness {
-    context: Option<crate::graph::producer::Context>,
+    producer: crate::cell::Producer,
     route: Rc<crate::multistage::Continuation>,
     #[cfg(feature = "iterative-bake")]
     history: crate::result_handoff::History,
@@ -711,7 +716,7 @@ fn read_port(
     table: usize,
     args: PortKey,
     stats: &mut Stats,
-    local: Option<&LocalWitness>,
+    local: Option<&mut LocalWitness>,
     #[cfg(feature = "structural-depth")] structural: (&mut crate::depth_runtime::Depth, Dependency),
 ) -> Result<Option<Row>> {
     let key = (table, args);
@@ -770,8 +775,8 @@ fn read_port(
             let receipt = None;
             stats.local_witness_receipt_hits += u64::from(receipt.is_some());
             let mut reads = 0;
-            row = g.context_witness_row(local.context, source.source, receipt, table, key.1.len() + 1,
-                &mut stats.local_witness_misses, &mut reads)?.filter(|r| {
+            row = local.producer.row(g, source.source, receipt, table, key.1.len() + 1,
+                &mut stats.local_witness_misses, &mut stats.local_witness_contexts, &mut reads)?.filter(|r| {
                 let equal = r.values.iter().zip(key.1.iter()).all(|(actual, expected)| {
                         stats.local_witness_key_fields += 1;
                         actual == expected
@@ -853,11 +858,11 @@ impl Programs {
         seed: &Seed) -> Option<(usize, usize, Option<&'a crate::cell::Results>)> {
         #[cfg(feature = "sparse-cells")]
         if self.entry_owned_tables[seed.packet.row.table] {
-            return entries.publication(seed)?.cell_results();
+            return entries.publication(seed).map(Published::cell_results);
         }
         #[cfg(not(feature = "sparse-cells"))]
         let _ = entries;
-        self.entries.get(&seed.packet.row.witness)?.cell_results()
+        self.entries.get(&seed.packet.row.witness).map(Published::cell_results)
     }
     pub fn new(p: &Program) -> Self {
         let enabled = true;
@@ -1997,14 +2002,13 @@ impl Programs {
         let covered_count = if complete { ready.len() } else { covered.len() };
         'answer: for (pivot, row, cursor) in ready {
             let mut epoch = row.epoch;
-            let local = if self.local_witness_entries[rid][pivot] {
-                self.stats.local_witness_contexts += 1;
-                let context = g.continuation_context(row.witness);
+            let mut local = if self.local_witness_entries[rid][pivot] {
                 #[cfg(feature = "iterative-bake")]
                 let published = Some((g.program.rules[cursor.producer].template, cursor.state.output));
                 #[cfg(not(feature = "iterative-bake"))]
                 let published: Option<(usize, usize)> = None;
-                published.or_else(|| context.map(|c| (c.template, c.op))).and_then(|(template, output)| {
+                let mut producer = crate::cell::Producer::new(row.witness, published);
+                producer.address(g, &mut self.stats.local_witness_contexts).and_then(|(template, output)| {
                     self.stats.local_witness_route_probes += 1;
                     let (route, indexed, comparisons) = g.program.multi_stage.routes
                         .lookup(&(template, output, rid, pivot));
@@ -2015,7 +2019,7 @@ impl Programs {
                     #[cfg(feature = "iterative-bake")]
                     { self.stats.local_witness_history_borrows += 1; }
                     Some(LocalWitness {
-                        context: context.filter(|c| (c.template, c.op) == (template, output)),
+                        producer,
                         route,
                         // A consumer absent from the iterative catalog resets
                         // its state during dispatch. The current producer's
@@ -2060,7 +2064,7 @@ impl Programs {
                 let result = bound.evaluate(|args| match &step.call {
                     Call::Table(table) => {
                         let Some(found) = read_port(
-                            g, &cursor, step.atom, *table, args, &mut self.stats, local.as_ref(),
+                            g, &cursor, step.atom, *table, args, &mut self.stats, local.as_mut(),
                             #[cfg(feature = "structural-depth")]
                             (&mut self.structural, row.witness),
                         )? else { return Ok(None); };

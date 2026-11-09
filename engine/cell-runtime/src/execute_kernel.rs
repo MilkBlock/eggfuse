@@ -45,16 +45,6 @@ pub(super) struct Frame {
     witnesses: Vec<Option<Dependency>>,
 }
 impl Frame {
-    fn producer_context(
-        graph: &mut Graph,
-        witness: Dependency,
-        cache: &mut Option<Option<crate::graph::producer::Context>>,
-    ) -> Option<crate::graph::producer::Context> {
-        *cache.get_or_insert_with(|| {
-            graph.stats.register_prefix.context_reads += 1;
-            graph.continuation_context(witness)
-        })
-    }
     pub(super) fn new(r: &Rule) -> Self {
         Self {
             results: vec![Value::Int(0); r.query.len().saturating_sub(1)],
@@ -107,7 +97,6 @@ impl Frame {
     ) -> Result<Option<(usize, u64)>> {
         exec.graph.stats.register_prefix.eligible_seeds += 1;
         let seed = &supplied.packet.row;
-        let mut context = None;
         #[cfg(feature = "iterative-bake")]
         let entry = {
             #[cfg(feature = "sparse-cells")]
@@ -122,8 +111,11 @@ impl Frame {
         let published = entry.map(|(r, op, _)| (exec.graph.program.rules[r].template, op));
         #[cfg(not(feature = "iterative-bake"))]
         let published: Option<(usize, usize)> = None;
-        let Some(address) = published.or_else(|| Self::producer_context(&mut exec.graph, seed.witness, &mut context)
-            .map(|c| (c.template, c.op))) else {
+        let mut producer = crate::cell::Producer::new(seed.witness, published);
+        let mut context_reads = 0;
+        let address = producer.address(&exec.graph, &mut context_reads);
+        exec.graph.stats.register_prefix.context_reads += context_reads;
+        let Some(address) = address else {
             exec.graph.stats.register_prefix.context_missing += 1;
             return Ok(Some((0, seed.epoch)));
         };
@@ -154,18 +146,11 @@ impl Frame {
                     #[cfg(not(feature = "iterative-bake"))]
                     let receipt = None;
                     exec.graph.stats.register_prefix.receipt_hits += u64::from(receipt.is_some());
-                    // An Entry's actual result needs no recovery of the Cell
-                    // physically owning its anchor. Only the uncovered local
-                    // effect fallback needs that context, and at most once.
-                    let physical = if receipt.is_none()
-                        && matches!(source.source, crate::cell::Site::Effect(_)) {
-                        Self::producer_context(&mut exec.graph, seed.witness, &mut context)
-                            .filter(|c| (c.template, c.op) == address)
-                    } else { None };
                     let mut misses = std::mem::take(&mut exec.graph.stats.register_prefix.misses);
-                    let mut reads = 0;
-                    let row = exec.graph.context_witness_row(physical, source.source, receipt,
-                        *table, ins.key.len() + 1, &mut misses, &mut reads)?;
+                    let (mut reads, mut context_reads) = (0, 0);
+                    let row = producer.row(&exec.graph, source.source, receipt,
+                        *table, ins.key.len() + 1, &mut misses, &mut context_reads, &mut reads)?;
+                    exec.graph.stats.register_prefix.context_reads += context_reads;
                     exec.graph.stats.register_prefix.row_reads += reads;
                     exec.graph.stats.register_prefix.misses = misses;
                     let Some(row) = row else {

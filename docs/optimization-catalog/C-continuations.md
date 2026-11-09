@@ -63,7 +63,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_routes.rs](../../engine/cell-runtime/src/cell_routes.rs)
+代码：[stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_routes.rs](../../engine/cell-runtime/src/cell_routes.rs) · [cell_producer.rs](../../engine/cell-runtime/src/cell_producer.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -87,7 +87,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_routes.rs](../../engine/cell-runtime/src/cell_routes.rs)
+代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs) · [producer.rs](../../engine/cell-runtime/src/producer.rs) · [multistage.rs](../../engine/cell-runtime/src/multistage.rs) · [result_handoff.rs](../../engine/cell-runtime/src/result_handoff.rs) · [mod.rs](../../engine/cell-runtime/src/compiler/mod.rs) · [cell_routes.rs](../../engine/cell-runtime/src/cell_routes.rs) · [cell_producer.rs](../../engine/cell-runtime/src/cell_producer.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|

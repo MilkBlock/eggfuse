@@ -202,3 +202,15 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 实现提交 `ab33d47c` 后，按用户授权完成 1 次预热、7 轮四版本交错计时。当前 sum-bits 推理中位数 24.831 ms，整进程 131.000 ms；直接前版分别 24.699 ms、129.311 ms。当前/前版的配对中位比为推理 1.0058（95% 小样本区间 0.9830–1.0119），整进程 1.0095（1.0013–1.0368）。相对上次计时版 `d81b0cb2`，推理比 1.0125（0.9707–1.0206）；相对历史 `24c4ae8a`，推理比 0.9932（0.9715–1.0334），整进程比 1.0179（1.0145–1.0239）。配对中位比与两个中位数的比不是同一统计量，两者都保存在结果中。
 
 本组没有建立加速结论：推理差异不明确，整进程出现小幅回退。历史速度保持问题仍未解决；不通过反复采样挑选更好结果。sum-bits 没有命中残余前缀，四个前缀短样例仅验证语义及工作量；不能外推 Raytrace 或多线程速度。证据见 `routes-results.json`，后续五个实现提交的计时周期从 `ab33d47c` 开始。
+
+## Entry 只按需恢复物理生产者
+
+基线 `ab33d47c`。已有报告显示 sum-bits 做了 12 次完整查询的物理 Cell 恢复，但没有选中任何见证路线；完整查询 fixture 已有 2 次实际 receipt 命中，却仍先恢复物理生产者。残余前缀已经部分按需恢复，两条路径保留不同的临时状态及调用规则。
+
+两者现在共用一次查询内的 `Cell::Producer`：逻辑 publication 位置只选择静态 wiring；实际 receipt 直接定位行。缺少 receipt 的 effect 才恢复物理 Cell，并确认其模板/操作位置与所选路线一致。恢复成功或失败均缓存到本次查询结束；不跨查询快照保存，不增加实例反向索引或 heap 分配。缺少 query receipt、已有但退休的 receipt 都不能伪造物理地址，仍走原完整回退。行存活、hidden、表/arity、完整 key、结果约束和增量归属保持原验证。
+
+删除残余 Frame 的独立恢复器及 Graph 的见证行读取入口，统一来源选择和行验证。Root/Solo publication 也直接暴露它们已经保存的逻辑生产者/输出位置；没有 Results 不等于没有来源，读取来源无需展开根对象。完整查询仍保留必要的历史句柄，以跨过 dispatch 对消费者状态的重置；这部分生命周期尚未消除。
+
+all-features 与非 sparse 的 iterative-bake 两种配置各 18 项针对性检查通过，最小特性编译通过。普通构建 sum-bits 语义 pass，1,428 个 Run 和最终状态保持；物理恢复 12→0，其余 325 项工作指标的值/缺失状态保持。完整查询 fixture 的恢复 2→0，四个短 fixture 的逐阶段 state/binding audit 和其他 runtime/ownership/port/Spine 计数保持。现有 Bake 成本计数直接反映减少的恢复，没有新增收益计数或重复计分。实际覆盖很小，不据此推断大幅速度收益。
+
+输出在 `out/cell-producer-unified`，运行及 semantic/catalog 命令与上一节相同。使用 `check_producer.py ROOT benchmarks/cell-unification/producer-check.json --commit COMMIT` 验证保存的日志、指标来源、状态和二进制身份。此步不新增计时/分配审计，是本轮五提交周期的第 1 个实现提交；上轮速度回退仍未解决。

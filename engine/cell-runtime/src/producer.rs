@@ -19,27 +19,6 @@ pub struct Context {
     pub op: usize,
 }
 impl Graph {
-    pub(crate) fn context_witness_row(&self, context: Option<Context>,
-        source: crate::cell::Site, receipt: Option<Dependency>,
-        table: usize, arity: usize, misses: &mut WitnessMisses, row_reads: &mut u64) -> Result<Option<Row>> {
-        let witness = if let Some(w) = receipt { w }
-            else if let (Some(c), crate::cell::Site::Effect(op)) = (context, source) {
-                Dependency::Fact(self.context_fact(c, op))
-            } else { misses.receipt_missing += 1; return Ok(None) };
-        *row_reads += 1;
-        let Some(row) = self.row(witness)? else {
-            if matches!(witness, Dependency::Fact(f) if !self.cells.contains_key(&f.cell)) {
-                misses.cell_missing += 1;
-            } else { misses.fact_missing += 1; }
-            return Ok(None);
-        };
-        if row.hidden { misses.hidden += 1; return Ok(None); }
-        if row.table != table || row.values.len() != arity {
-            misses.shape += 1;
-            return Ok(None);
-        }
-        Ok(Some(row))
-    }
     pub(super) fn retain_reference(&mut self, f: FactRef) {
         *self.parent_users.entry(f.cell).or_default() += 1;
     }

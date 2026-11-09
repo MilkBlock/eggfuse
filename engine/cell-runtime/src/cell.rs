@@ -25,6 +25,9 @@ pub(crate) use bound::{BoundRhs, BoundValue};
 mod routes;
 pub use routes::Routes;
 pub(crate) use routes::Dispatch as RouteDispatch;
+#[path = "cell_producer.rs"]
+mod producer;
+pub(crate) use producer::Producer;
 #[path = "cell_eval.rs"]
 mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};

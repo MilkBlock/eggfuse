@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "ab33d47c",
-    "implementation_commits_since_timing": 0,
+    "implementation_commits_since_timing": 1,
     "evidence": "benchmarks/cell-unification/routes-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not count. User authorized this checkpoint after three implementation commits; next interval is five.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -38,10 +38,11 @@
         "Prefix reads borrow current Cell results without cloning the published History.",
         "One borrowed Cell Entry supplies the row, shared Consumer definition and publication location to every batch reader; packet/published_packet/seed(packet) APIs removed.",
         "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed.",
-        "Full query, residual prefix and continuation consumers share one static Cell route directory. Independent Prefix plans and copied witness sources are removed; exact sparse fallback and indexed original reads retain source coverage."
+        "Full query, residual prefix and continuation consumers share one static Cell route directory. Independent Prefix plans and copied witness sources are removed; exact sparse fallback and indexed original reads retain source coverage.",
+        "Full and residual witness reads share a transient Cell Producer. Published addresses avoid physical recovery; uncovered effects recover once and must match the selected template/output. Root/Solo publications expose existing addresses without expanding roots."
       ],
       "remaining": [
-        "Full and residual consumers share Cell Query and routing; physical producer-context recovery and uncovered boundary fallback remain to unify.",
+        "Full/residual source routing and physical fallback now share Cell code. Full queries still retain a History handle across consumer dispatch; boundary publication ownership and result lifetime remain to integrate.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
@@ -74,7 +75,8 @@
           "python3 benchmarks/cell-unification/collect.py out/cell-entry-delivery benchmarks/cell-unification/entry-delivery-results.json --part entry-delivery"
         ]
       },
-      "route_checks": "benchmarks/cell-unification/routes-results.json"
+      "route_checks": "benchmarks/cell-unification/routes-results.json",
+      "producer_checks": "benchmarks/cell-unification/producer-check.json"
     },
     {
       "id": "query",
@@ -327,16 +329,18 @@
       "title": "已有见证的实际来源直达",
       "status": "shared_cell_route_semantics_verified_performance_pending",
       "metrics_from_catalog": "C3",
-      "remaining": "Full and residual consumers share the Cell route selector and normalized witness sources. Producer context recovery, legacy publication boundaries, broader coverage and speed acceptance remain.",
-      "route_checks": "benchmarks/cell-unification/routes-results.json"
+      "remaining": "Cell source selection and physical fallback are shared. Full-query history retention, legacy publication boundaries, broader coverage and speed acceptance remain.",
+      "route_checks": "benchmarks/cell-unification/routes-results.json",
+      "producer_checks": "benchmarks/cell-unification/producer-check.json"
     },
     {
       "id": "C4",
       "title": "匹配前缀接续",
       "status": "shared_cell_route_semantics_verified_performance_pending",
       "metrics_from_catalog": "C4",
-      "remaining": "Full and residual consumers share the Cell route selector and normalized witness sources. Producer context recovery, legacy publication boundaries, broader coverage and speed acceptance remain.",
-      "route_checks": "benchmarks/cell-unification/routes-results.json"
+      "remaining": "Cell source selection and physical fallback are shared. Full-query history retention, legacy publication boundaries, broader coverage and speed acceptance remain.",
+      "route_checks": "benchmarks/cell-unification/routes-results.json",
+      "producer_checks": "benchmarks/cell-unification/producer-check.json"
     },
     {
       "id": "D1",
