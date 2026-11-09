@@ -363,3 +363,19 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 每次投影使用规则的空需求模板，保持 One/All 的构造子事实语义，以及 Ports/Tracked 对可变行身份的保存。None 不遍历见证。现在 context 在答案去重前生成最终投影，原先在这里复制全宽数组、去重后才生成投影；重复答案可能增加最终投影次数，不能用去重后的 bindings 数推断分配节省。未增加第二份运行时事实图、绑定历史或消费者列表。
 
 25 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过。sum-bits 1,428 个 Run、最终 state 和 346 项工作指标不变；三个短 context 样例的 state、stages、binding-audit 一致。验证入口为 `check_match_completion.py ROOT OUTPUT --commit COMMIT`，数据位于 `out/cell-match-context`。这次是上次测速后的第 4 个实现提交；用户明确允许当前提交后测速，执行一次四配置交错 sum-bits 测量，然后恢复每 5 个实现提交的节奏。这些是 standalone Cell CPU 检查，不能解释为原生 egglog 加速或完整统一已经完成。
+
+
+### 匹配事实提交后的实际速度检查
+
+实现 `f1c69507`，本批共 4 个实现提交（用户指定本提交后测，之后恢复每 5 个）。普通 release 配置 `sparse-cells,view-ports,storage-metrics`，每配置预热 1 次，7 次交错重复；完整保留所有样本。脚本：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/match-completion-timing-spec.json out/cell-match-context/timing --repeat 7 --warmups 1`，再运行 `check_match_completion.py ... --commit f1c69507 --timing`。结果见 `match-completion-results.json`，是 standalone Cell CPU，不是原生 egglog。
+
+| 配置 | 推理中位数 ms | 进程中位数 ms |
+| --- | ---: | ---: |
+| 当前 f1c69507 | 24.040500 | 125.373083 |
+| 本次改动前 3d814c3a | 24.087541 | 123.917709 |
+| 上次测速 c8ef6edc | 24.133125 | 126.386125 |
+| 历史对照 24c4ae8a | 24.422208 | 128.500875 |
+
+按同次交错样本配对的 当前/对照 比值（不是两个中位数相除）：推理相对改动前 0.992190 [0.976855, 1.029979]、相对上次测速 0.994960 [0.964456, 1.017490]、相对历史 0.984370 [0.976718, 1.037474]；进程分别为 1.003255 [0.978642, 1.021987]、0.983660 [0.948459, 1.028617]、0.974394 [0.967472, 1.007325]。方括号为 95% bootstrap 区间，全部包含 1；不宣称加速，也未解决严格的速度保持验收。峰值 RSS 中位数 179,683,328 字节，比改动前低 48 KiB、比上次测速和历史高 176 KiB；RSS 不是分配次数。
+
+语义通过，346 项现有工作指标保持。sum-bits 本身只有 4 个 context bindings，不能把此短样例的总体耗时解释为该局部改动的速度收益。完整 Entry 交接、prefix/index 生命周期、其他优化类别和最终多线程仍未完成。

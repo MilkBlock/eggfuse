@@ -15,7 +15,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[known_results.rs](../../engine/cell-runtime/src/known_results.rs)
+代码：[known_results.rs](../../engine/cell-runtime/src/known_results.rs) · [cell_match.rs](../../engine/cell-runtime/src/cell_match.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -23,11 +23,11 @@
 | 成本 / 剩余工作 | `report:/known_results/requests [value]`<br>`report:/known_results/dirty [value]`<br>`report:/known_results/mismatched [value]`<br>`report:/known_results/expired [value]` |
 | 覆盖 / 规模 / 回退 | `program:/known_results/static_aliases [count]`<br>`program:/known_results/plans [count]` |
 
-解释与缺口：本轮补导出已有 known_stats；旧 report 中缺失，不得补零。static plan 数不是运行时消除次数。
+解释与缺口：本轮补导出已有 known_stats；旧 report 中缺失，不得补零。static plan 数不是运行时消除次数。 QueryFacts and requested row projection now belong to Cell; the static alias plan remains here. Moving this representation does not establish full known-results takeover.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/RHS_BLOCK_WORK.md](../../docs/RHS_BLOCK_WORK.md)
+证据：[docs/RHS_BLOCK_WORK.md](../../docs/RHS_BLOCK_WORK.md) · [benchmarks/cell-unification/match-completion-results.json](../../benchmarks/cell-unification/match-completion-results.json)
 
 ## D2 · 单写 RHS、稀疏 frame 与 merge program
 

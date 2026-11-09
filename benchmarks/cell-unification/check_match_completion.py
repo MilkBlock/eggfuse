@@ -65,6 +65,7 @@ def check(root, commit, timed):
             'implementation_commits_in_batch': ['30394de0', '7d773cdc', '3d814c3a', commit],
             'authorization': 'User explicitly requested a timing check after the current commit; this batch has four implementation commits. Resume every five thereafter.'}}
     if timed:
+        result['performance_status'] = 'speedup_not_established_preservation_unresolved'
         result['timing'] = timing(root, commit, commits={'baseline': '3d814c3a', 'candidate': commit,
             'last_timed': 'c8ef6edc', 'historical': '24c4ae8a'})
     return result

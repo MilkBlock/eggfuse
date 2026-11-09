@@ -3,11 +3,12 @@
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
-    "last_timed_commit": "c8ef6edc",
-    "implementation_commits_since_timing": 3,
-    "evidence": "benchmarks/cell-unification/query-storage-results.json",
+    "last_timed_commit": "f1c69507",
+    "implementation_commits_since_timing": 0,
+    "evidence": "benchmarks/cell-unification/match-completion-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
-    "checkpoint_status": "preservation_unresolved_no_speedup_established"
+    "checkpoint_status": "preservation_unresolved_no_speedup_established",
+    "latest_batch_exception": "User requested a check after the current commit; four implementation commits since c8ef6edc were included. Resume the five-commit cadence from f1c69507."
   },
   "baseline_commit": "27f1c503",
   "catalog": "docs/optimization-catalog/catalog.json",
@@ -103,13 +104,15 @@
         "Compiled Cell Query owns the result storage bound. Context and register frames derive scratch width from it; complete Entries omit trailing bound-result writes. Result write credit charges full register/Entry totals once, not the prefix subset twice.",
         "Context selection/admission now precedes common Cell instruction lowering. All source-order certificates remain validated; compiler emission and Bake refitting no longer construct discarded executable plans.",
         "Context roots and internal rows use ScopedStep row binding. Terminal and register candidate keys share Expansion binding; correlation columns derive from the same fields. Context runtime no longer interprets Arg operands.",
-        "Retained prefixes store only densely addressed prefix fields. Scoped Cell instructions assign ranges and the continuation consumes their compile-time source map; no runtime source-slot translation or full RHS frame remains. Legacy wire names are recovered from the same static projections."
+        "Retained prefixes store only densely addressed prefix fields. Scoped Cell instructions assign ranges and the continuation consumes their compile-time source map; no runtime source-slot translation or full RHS frame remains. Legacy wire names are recovered from the same static projections.",
+        "Context outputs use Cell Matched values/QueryFacts/epoch directly. The intermediate full witness array and executor conversion loop are removed; register and stage adapters use the same requested-fact projection."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
         "Audit and integrate Free Join, sieve, range, local-context and view capabilities under Cell entries; preserve their coverage and delta ownership.",
         "Resolve plan/loading/representation overhead: this residual rewrite has no demonstrated speedup and still increases peak RSS.",
-        "Finish boundary publication and scope/parallel rewrites before the historical-fastest and Raytrace acceptance campaign."
+        "Finish boundary publication and scope/parallel rewrites before the historical-fastest and Raytrace acceptance campaign.",
+        "Full stage Entries still materialize a witness array before the common fact projection. Context fact projection now occurs before answer deduplication; measure broader coverage before inferring allocation savings."
       ],
       "opportunity": "Previous sum-bits execution had 5,738 full entries, only 3,828 admitted by Bake. The other entries still constructed query environments; the selected entries split into two executors.",
       "live_obligations": "Exact current-key reads and output checks, pivot validation, witness identity/visibility, source Run boundaries and winner ordering; residual enumeration retains its own delta ownership.",
@@ -151,7 +154,8 @@
       "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json",
       "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
       "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
-      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json"
+      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json",
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
     },
     {
       "id": "rhs_publication",
@@ -317,7 +321,8 @@
       "evidence": "benchmarks/cell-unification/residual-results.json",
       "remaining": "Point-cache behavior preserved under shared Cell instructions; residual speed acceptance and higher peak RSS remain unresolved.",
       "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
-      "context_root_checks": "benchmarks/cell-unification/context-root-check.json"
+      "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
     },
     {
       "id": "B2",
@@ -342,7 +347,8 @@
       "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
       "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
       "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
-      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json"
+      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json",
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
     },
     {
       "id": "C1",
@@ -358,7 +364,8 @@
       "title": "RHS handoff 与 query receipt",
       "status": "common_result_ports_verified",
       "metrics_from_catalog": "C2",
-      "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain."
+      "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain.",
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
     },
     {
       "id": "C3",
@@ -384,7 +391,8 @@
       "id": "D1",
       "title": "静态构造子别名与 known results",
       "status": "common_definition_only",
-      "metrics_from_catalog": "D1"
+      "metrics_from_catalog": "D1",
+      "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json"
     },
     {
       "id": "D2",
