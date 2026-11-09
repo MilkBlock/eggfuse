@@ -2239,8 +2239,36 @@ impl Graph {
         }
         Ok(None)
     }
-    fn commit_fact_repair(&mut self, f: FactRef, r: Row, h: u64, found: Option<Row>) -> Result<()> {
-        self.commit_constructor_collision(f, r, Some(h), found)
+    fn complete_canonical_cell(&mut self, f: FactRef, row: Row) -> Result<()> {
+        let hash = hashkey(row.table, &row.values[..row.values.len() - 1]);
+        let found = self.find_repair_collision(f, &row, hash)?;
+        self.complete_cell_collision(f, row, Some(hash), found, None)
+    }
+    /// A completed Cell lookup supplies the surviving witness. Canonical keys,
+    /// exact port guards and prefetched guards share the same ordered effects.
+    /// `result` is the current output when a batch reused only the input fields;
+    /// it must not be replaced by the output retained in that older row view.
+    fn complete_cell_collision(
+        &mut self,
+        f: FactRef,
+        row: Row,
+        hash: Option<u64>,
+        found: Option<Row>,
+        result: Option<Value>,
+    ) -> Result<()> {
+        self.join_constructor_epoch(&row, found.as_ref());
+        // Port-key coverage already proves this is a constructor. Canonical
+        // repair also serves relation facts, whose outputs must not be unioned.
+        if let Some(other) = &found
+            && (hash.is_none() || self.program.tables[row.table].constructor)
+        {
+            self.enqueue_union(
+                result.unwrap_or_else(|| row.values.last().unwrap().clone()),
+                other.values.last().unwrap().clone(),
+            )?;
+        }
+        // No hash means stable fields: do not rewrite or reindex a birth hint.
+        self.commit_constructor_collision(f, row, hash, found)
     }
     fn commit_constructor_collision(&mut self, f: FactRef, r: Row, h: Option<u64>, found: Option<Row>) -> Result<()> {
         let d = Dependency::Fact(f);
@@ -2354,13 +2382,7 @@ impl Graph {
                     #[cfg(feature = "spine-blocks")]
                     if self.repair_cells.is_some() && self.match_repair_key(f)? { continue; }
                     let Some(r) = self.fact(f)? else { continue };
-                    let h = hashkey(r.table, &r.values[..r.values.len() - 1]);
-                    let found = self.find_repair_collision(f, &r, h)?;
-                    self.join_constructor_epoch(&r, found.as_ref());
-                    if let Some(other) = &found && self.program.tables[r.table].constructor {
-                        self.enqueue_union(r.values.last().unwrap().clone(), other.values.last().unwrap().clone())?;
-                    }
-                    self.commit_fact_repair(f, r, h, found)?;
+                    self.complete_canonical_cell(f, r)?;
                 }
                 Dependency::Function(i) => {
                     let Some(row) = self.function(i) else {

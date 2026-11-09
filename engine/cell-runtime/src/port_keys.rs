@@ -136,32 +136,6 @@ impl Graph {
         } else {
             self.lookup_port_key(row.table, &row.values[..row.values.len() - 1], Some(f))?
         };
-        self.commit_port_key(f, row, found)
-    }
-    pub(super) fn commit_port_key(
-        &mut self,
-        f: FactRef,
-        row: Row,
-        found: Option<Row>,
-    ) -> Result<()> {
-        self.commit_port_key_result(f, row, found, None)
-    }
-    pub(super) fn commit_port_key_result(
-        &mut self,
-        f: FactRef,
-        row: Row,
-        found: Option<Row>,
-        result: Option<Value>,
-    ) -> Result<()> {
-        self.join_constructor_epoch(&row, found.as_ref());
-        if let Some(other) = &found {
-            self.enqueue_union(
-                result.unwrap_or_else(|| row.values.last().unwrap().clone()),
-                other.values.last().unwrap().clone(),
-            )?;
-        }
-        // The shared commit handles visibility, receipts and retirement only.
-        // None means no key hash, no canonical bucket removal/insertion.
-        self.commit_constructor_collision(f, row, None, found)
+        self.complete_cell_collision(f, row, None, found, None)
     }
 }

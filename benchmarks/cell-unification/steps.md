@@ -112,3 +112,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 唯一性证明仍检查完整 live domain、pending peer、union batch 和源顺序，不能被上述快路推断替代。其直接发布保留 completion epoch join 与原独立计数；普通结果发布、stable cause 通知及 decoded 未变化早退均保持。实际更新同一个 fact，未添加状态或反向边。
 
 10 项 unique publication、跨阶段 stable/decoded/keyed/local 差分、并行多输入与级联有序检查及最小特性编译通过。已有用例覆盖 hidden peer、旧 union 不得回退新 consumer epoch、删除重建和多个源阶段。上次速度检查后的第 1 个实现提交，本项不单独计时。
+
+## 碰撞完成共用 Cell 效果
+
+接续 `230dbc51`。普通 repair 与 owned canonical completion 共用 hash/精确候选查询；canonical、稳定端口和批量预取结果接入同一个 `complete_cell_collision`，删除各自的 epoch 合并和输出 union 实现，以及两层 port-key 提交包装。最终 visibility、receipt forward、退役与发布仍是原来的共同提交。
+
+没有把出生 hint 当 canonical key 维护。批量路径保留提交时刷新过的实际 result，不能回用旧 row 的输出；非构造子 relation 不发布输出 union。显式 repair Cell 已执行的源 Union 不重复执行，它的 publish 指令调用共同终结效果。候选完整性、源序排队和存活判断不因共享提交而省略。
+
+预取跨 result union 复用、批量 key/result delta 的 merge/visibility/retirement、晚到边界 union、容器回退和重复初始桶的现有短用例通过；最小特性编译通过。上次速度检查后的第 2 个实现提交，不单独计时。

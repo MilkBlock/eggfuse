@@ -522,7 +522,7 @@ impl Graph {
         self.dirty_facts[row.table].remove(&fact);
         self.stable_ports.as_mut().unwrap().equality_completions += 1;
         self.batch_stats().reused_after_union += u64::from(self.stats.unions > initial_unions);
-        self.commit_port_key_result(fact, row, found, refreshed_result)?;
+        self.complete_cell_collision(fact, row, None, found, refreshed_result)?;
         Ok(())
     }
 

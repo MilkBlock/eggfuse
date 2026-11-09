@@ -674,16 +674,7 @@ impl Graph {
         }
         self.dirty_facts[r.table].remove(&f);
         self.ownership.as_mut().unwrap().stats.key_completions += 1;
-        let h = hashkey(r.table, &r.values[..r.values.len() - 1]);
-        let found = self.find_repair_collision(f, &r, h)?;
-        self.join_constructor_epoch(&r, found.as_ref());
-        if let Some(other) = &found {
-            self.enqueue_union(
-                r.values.last().unwrap().clone(),
-                other.values.last().unwrap().clone(),
-            )?;
-        }
-        self.commit_fact_repair(f, r, h, found)
+        self.complete_canonical_cell(f, r)
     }
     pub(super) fn retire_owned(&mut self, f: FactRef, t: usize, _fields: &[Value]) -> bool {
         if !self.cells[&f.cell].facts[&f.op].owned {

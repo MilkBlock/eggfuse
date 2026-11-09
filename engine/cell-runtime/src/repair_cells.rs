@@ -405,7 +405,9 @@ impl Graph {
                 }
                 Op::Let(_, Call::Primitive(name, _), _) if name == "repair-publish" => {
                     let (r, found) = publication.take().expect("one checked publication effect");
-                    self.commit_fact_repair(f, r, h as u64, found)?;
+                    // The Cell's preceding source Union is already enqueued;
+                    // publish its terminal effect without issuing it again.
+                    self.commit_constructor_collision(f, r, Some(h as u64), found)?;
                 }
                 _ => unreachable!("validated repair effect"),
             }
