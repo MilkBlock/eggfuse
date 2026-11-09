@@ -55,3 +55,5 @@
 接续 `92c63be6`。普通 RHS 的效果执行归入 `RhsFrame`，调度器只维护源操作位置和完成边界。union 直接读取手中的源操作数，删除 ownership 分支重新查模板/marker、克隆第二份 union 指令的路径；实际 equality 入队、ownership 请求计数和信号激活语义保持。marker 产物中的旧 union 字段暂留兼容，其静态存储去重属于后续 port plan 整理。
 
 六项 Entry 有序检查、删除失败后不得执行后续 union、无关节点不得放大 repair 两项现有测试，以及最小特性编译通过。没有新增测试或单项计时。
+
+两项改动合做一次 sum-bits 检查，见 [handoff-check.json](handoff-check.json)：语义 pass，1,428 个 Run 与最终 state 相同，300 项非时间/RSS指标保持。共用执行器实际完成 165 个闭合交接，保留 58 次闭合回退和 155 次 stale；不是仅覆盖普通 RHS。ownership union 由上述短 fixture 单独覆盖。本轮没有计时采样或分配审计构建。

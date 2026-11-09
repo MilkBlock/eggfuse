@@ -1,0 +1,23 @@
+{
+  "scope": "standalone Cell CPU; grouped semantic/work check; no timing or allocation campaign",
+  "baseline_commit": "f672cabb",
+  "candidate_commit": "3f497b7e",
+  "metrics": 311,
+  "unchanged_work_metrics": 300,
+  "ordered_runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "semantic_acceptance": "pass",
+  "report_sha256": "b8be5fa7c18a9f74d64e043f010820d1dcc3a3ec2aea6f7a95a3ade3d04306ba",
+  "runtime_sha256": "3749653ce3b7d870795ea376c31fc3837e8f178a95fee0b3e61f792ae2717950",
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "coverage_note": "ordinary source effects exercised by sum-bits; closed handoff, stale deletion, committed congruence, ordered union and ownership paths also checked by existing targeted tests",
+  "handoff_execution": {
+    "attempts": 592,
+    "closed": 165,
+    "closed_fallback": 58,
+    "lets": 272,
+    "sets": 165,
+    "noop_unions": 165,
+    "stale": 155
+  }
+}

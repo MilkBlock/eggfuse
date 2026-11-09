@@ -142,7 +142,9 @@
         "Ordinary RHS and compiled ordered merges execute Let calls through one Cell evaluator; merge frames retain their complete-port read capability.",
         "Local RHS selection stores source operation positions and skip/coverage metadata; duplicate ResultUse, key and result operands removed.",
         "Source constructor prefixes and selected local blocks share one temporary Cell executor, first-miss promotion and completion result; duplicate execution loops removed.",
-        "Single-write scalar prefixes store source operation positions and use the common Cell call evaluator; duplicated primitive programs removed while direct integer projections remain."
+        "Single-write scalar prefixes store source operation positions and use the common Cell call evaluator; duplicated primitive programs removed while direct integer projections remain.",
+        "Closed preflight and live RHS reuse the same actual-witness field validation, result binding and constructor Set equality handling; preflight still defers graph effects until complete.",
+        "Ordinary effects execute in the common Cell frame; source unions no longer reload and clone a second marker instruction."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
@@ -194,7 +196,7 @@
         "live_obligations": "Private suffix until source-scheduled completion, raw history before alias fill, actual foreign-Cell results, interrupted RHS and partial-scope lifetime.",
         "verification": "Common Effects removes temporary receipt arrays; 4,454 outputs retain their slots. Existing work, 1,428 Runs and ordered hashes unchanged; semantic pass. Execute allocations -6,198, requested bytes -386,804; setup +4,656 bytes. Paired timing includes parity; no speedup claim."
       },
-      "quick_checks": "benchmarks/cell-unification/prefix-check.json"
+      "quick_checks": "benchmarks/cell-unification/handoff-check.json"
     },
     {
       "id": "ports_congruence",
@@ -297,7 +299,7 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "D2",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Calls, prefix execution/promotion, receipts and completion are shared. Closed handoff preflight, final single-write key/value projections, general effect dispatch and strategy selection remain. The disabled-compiled-merge AST control remains for differential/storage tests."
+      "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; marker artifacts still retain legacy union operands. The disabled-compiled-merge AST control remains for differential/storage tests."
     },
     {
       "id": "E1",
