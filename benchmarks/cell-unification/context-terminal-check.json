@@ -1,0 +1,132 @@
+{
+  "scope": "standalone Cell CPU; normal release; no timing or allocation audit",
+  "baseline_source_commit": "a02f2148",
+  "candidate_commit": "0b3231c2",
+  "baseline_instrumentation": {
+    "patch": "benchmarks/cell-unification/context-terminal-baseline.patch",
+    "sha256": "79618cf161aad702523895ab57dc13fa5fc7e02a491d55c8fea2b531a214175c",
+    "purpose": "Counters only, same old algorithm. Missing counters in the original report are not treated as zero."
+  },
+  "semantic_acceptance": "pass",
+  "runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "unchanged_report_groups_excluding_new_counters": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context"
+  ],
+  "unchanged_work_metrics": 346,
+  "changed_work_metrics": {},
+  "terminal_work": {
+    "baseline": {
+      "terminal_binding_copies": 0,
+      "terminal_slots_copied": 0,
+      "terminal_scratch_slots": 0,
+      "terminal_result_writes": 0
+    },
+    "candidate": {
+      "terminal_binding_copies": 0,
+      "terminal_slots_copied": 0,
+      "terminal_scratch_slots": 0,
+      "terminal_result_writes": 0
+    }
+  },
+  "terminal_work_net_equal_weight_units_saved": 0,
+  "tests": {
+    "query": {
+      "passed": 3,
+      "log_sha256": "e0e701b5cc7d98a6fc8be27eb0c8ad9f4abdaa15119bb2f5e634942d142112c5"
+    },
+    "context": {
+      "passed": 1,
+      "log_sha256": "aabb44579f75b6ee3deb5c242d773f23dd8c6c3aa93a144ec747aab88e53a6e6"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "d7dda30b836f143fa6acf58861900e45794b8ee52100d4c6db5bb9bd370dad4d"
+    },
+    "entry": {
+      "passed": 1,
+      "log_sha256": "c7f51a8368af5d947736b02c767b7077508246652e822f540321f8e13fa85bdd"
+    },
+    "credit": {
+      "passed": 4,
+      "log_sha256": "17b050c6393a7c937823f6f3491b8040b0eb31019ff956afd1b7fee7c511a914"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "af156fbb831497d887527647b1834ef40dae111eda1299ee07072d6cc9e04e13"
+    }
+  },
+  "guarded_fixture": {
+    "runs": 5,
+    "program_file_sha256": "eec0e254deedb3594cc20079b36124435f197be4c12d5568aebac802dedbf2ad",
+    "source_sha256": "ab672609af2f721d11b97af5791fd45e044e2845bad649ae04a982403adad1e1",
+    "ordered_hashes": {
+      "state.json": "8fe1b39063a4d04dfcc0e3f6c848a2a37f4e0c8cf7391eebc8987c2dd4a01834",
+      "stages.json": "b64891564ff28ffefbdeb1183cab7b15f7267bd643a7ec33c2a513703f1dea6b",
+      "binding-audit.json": "2a7937cb2d4c9167b4f4736fe267a28f2829e600a9af0110de77c034dd78e1c8"
+    },
+    "cases": {
+      "guarded-suffix": {
+        "terminal_binding_copies": [
+          6,
+          0
+        ],
+        "terminal_slots_copied": [
+          60,
+          0
+        ],
+        "terminal_scratch_slots": [
+          0,
+          12
+        ],
+        "terminal_result_writes": [
+          0,
+          11
+        ]
+      },
+      "bound-suffix": {
+        "terminal_binding_copies": [
+          5,
+          0
+        ],
+        "terminal_slots_copied": [
+          40,
+          0
+        ],
+        "terminal_scratch_slots": [
+          0,
+          0
+        ],
+        "terminal_result_writes": [
+          0,
+          0
+        ]
+      }
+    },
+    "admission": "explicitly enabled compiler-certified contexts; no performance training claimed"
+  },
+  "binaries": {
+    "original": "ffb79a3548a9016e43535df3e19535c74d0cd5df7cecb333ad5abb778ea2d7f1",
+    "baseline": "f7aa1a09c5d49510dcad266d9ec8174e0571ed104794d2b59d4fee5635b1b6b2",
+    "candidate": "6d7a1b5167aa154e2f95fddc4cadc665b0d7a6f22f7dc743fc7575b1431f818e"
+  },
+  "reports": {
+    "original": "0e9862992d4cf91f8359e56fe284140c5968805fd4a2775d0b2f8fe6f471398c",
+    "baseline": "2d359259defc9202d436825bf0bb2bbe1553355c86d07fbe309dc9e1315cff50",
+    "candidate": "1d2de66413ccf72091ec40e86aba511d2c3d7b7cde49ee9ee5da2c39420c32a0"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "7f4e24c2",
+    "implementation_commits_since_timing": 3
+  },
+  "limits": "Sum-bits does not exercise post-guards; suffix takeover is verified by the short differential fixture. Copies count source clone operations and array slots, including empty slots, not allocator calls or bytes. Scratch initialization and result writes are separately charged. Equal weights are not a time model or an exhaustive instruction count. Cached prefixes, leases, prefix scalar interpretation and index lifetime remain; no full context takeover, speedup or multithread acceptance claimed."
+}

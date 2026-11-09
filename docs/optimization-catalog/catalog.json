@@ -637,7 +637,8 @@
         "benchmarks/cell-unification/steps.md",
         "benchmarks/cell-unification/links-check.json",
         "benchmarks/cell-unification/query-frame-check.json",
-        "benchmarks/cell-unification/context-branches-check.json"
+        "benchmarks/cell-unification/context-branches-check.json",
+        "benchmarks/cell-unification/context-terminal-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -2834,7 +2835,8 @@
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
-        "benchmarks/cell-unification/context-branches-check.json"
+        "benchmarks/cell-unification/context-branches-check.json",
+        "benchmarks/cell-unification/context-terminal-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }
