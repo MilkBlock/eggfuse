@@ -2246,47 +2246,16 @@ impl Executor {
                     continue;
                 }
             }
-            match op {
-                Op::Copy(..) => {}
-                Op::Let(dst, call, args) => crate::cell::evaluate_call(
-                    &mut self.graph,
-                    &mut crate::cell::RhsCall { cell, receipts: &mut effect_receipts },
-                    i, *dst, call, args,
-                )?,
-                Op::Set(t, aa, v) => {
-                    #[cfg(feature = "view-consumers")]
-                    let source = b.view_source;
-                    #[cfg(not(feature = "view-consumers"))]
-                    let source = None;
-                    self.graph.set_inner(
-                        cell,
-                        i,
-                        *t,
-                        aa,
-                        v,
-                        None,
-                        effect_receipts.slot(i),
-                        source,
-                    )?;
-                }
-                Op::Union(a, b) => {
-                    if self.graph.ownership_enabled() {
-                        self.graph.enqueue_marker_union(cell, i)?;
-                    } else {
-                        let a = self.graph.argument(cell, &a)?;
-                        let b = self.graph.argument(cell, &b)?;
-                        self.graph.enqueue_union(a, b)?;
-                    }
-                }
-                Op::Hide(t, aa, delete) => {
-                    let key = self.graph.inline_arguments(cell, aa)?;
-                    if !self.graph.hide(*t, &key, *delete)? {
-                        completed_prefix = i + 1;
-                        completed = false;
-                        break;
-                    }
-                }
-                Op::Panic => return Err("source panic".into()),
+            #[cfg(feature = "view-consumers")]
+            let source = b.view_source;
+            #[cfg(not(feature = "view-consumers"))]
+            let source = None;
+            if !(crate::cell::RhsFrame { cell, receipts: &mut effect_receipts })
+                .execute(&mut self.graph, i, op, source)?
+            {
+                completed_prefix = i + 1;
+                completed = false;
+                break;
             }
             completed_prefix = i + 1;
         }

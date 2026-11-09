@@ -20,7 +20,7 @@ mod effects;
 pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
 #[path = "cell_eval.rs"]
 mod eval;
-pub(crate) use eval::{LocalCall, MergeFrame, RhsCall, evaluate_call};
+pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_handoff.rs"]
 mod handoff;

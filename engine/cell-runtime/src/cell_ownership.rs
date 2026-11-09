@@ -510,17 +510,13 @@ impl Graph {
             }
         }
     }
-    /// Execute the marker's original union instruction at its source position.
-    /// The resulting committed equality activates the shared signal programs;
-    /// neither an unexecuted instruction nor a predicted congruence is a proof.
-    pub(crate) fn enqueue_marker_union(&mut self, cell: u32, op: usize) -> Result<()> {
-        let template = self.rhs_frame(cell).ok_or("missing union frame")?.template;
-        let [a, b] = self.program.cell_ownership.markers[template].program.unions[op]
-            .clone()
-            .ok_or("missing union marker instruction")?;
-        let a = self.argument(cell, &a)?;
-        let b = self.argument(cell, &b)?;
-        self.ownership.as_mut().unwrap().stats.marker_union_requests += 1;
+    /// An explicit union reaches ownership at the original Cell effect position.
+    /// The caller already has its operands; the marker need not reload or clone
+    /// a second instruction. Committed equality still activates shared signals.
+    pub(crate) fn enqueue_source_union(&mut self, a: Value, b: Value) -> Result<()> {
+        if let Some(ownership) = &mut self.ownership {
+            ownership.stats.marker_union_requests += 1;
+        }
         self.enqueue_union(a, b)
     }
     fn next_composed_step(

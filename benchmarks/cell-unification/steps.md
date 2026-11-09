@@ -49,3 +49,9 @@
 基线 `f672cabb`。删除两套 handoff 字段校验和结果绑定：共同执行器按源 Cell 操作验证实际 receipt、完整当前字段、构造子结果，再写入结果或处理 Set 的 union。Cell frame 提供共同的参数读取和赋值；闭合预检借用输入，保留小型内联 union 队列，全部通过后才消费 ID、提交 union 和计数。普通路径即时提交当前操作；缺失和 stale 计数保持。没有新增匹配状态或反向订阅。
 
 闭合成功/删除回退、三阶段结构交接、显式 union 与 congruence，以及六项 Entry 顺序检查通过。未单独计时。一般效果分派和源 union 的重复 marker 读取继续处理。
+
+## 源 Cell 效果直接执行 union
+
+接续 `92c63be6`。普通 RHS 的效果执行归入 `RhsFrame`，调度器只维护源操作位置和完成边界。union 直接读取手中的源操作数，删除 ownership 分支重新查模板/marker、克隆第二份 union 指令的路径；实际 equality 入队、ownership 请求计数和信号激活语义保持。marker 产物中的旧 union 字段暂留兼容，其静态存储去重属于后续 port plan 整理。
+
+六项 Entry 有序检查、删除失败后不得执行后续 union、无关节点不得放大 repair 两项现有测试，以及最小特性编译通过。没有新增测试或单项计时。

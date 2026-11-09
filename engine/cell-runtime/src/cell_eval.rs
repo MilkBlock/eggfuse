@@ -1,6 +1,6 @@
-//! Execute the existing Cell Let instruction. Storage and table capabilities
-//! differ during ordered merge callbacks, but operand/call dispatch is shared.
-use crate::{graph::{Cell, Graph}, program::{Arg, Call, Result}, value::{self, Value}};
+//! Execute original Cell instructions. Calls share operand dispatch across
+//! ordered merge callbacks, local scalar prefixes and the executing RHS.
+use crate::{graph::{Cell, Graph}, program::{Arg, Call, Op, Result}, value::{self, Value}};
 use super::Effects;
 use smallvec::SmallVec;
 
@@ -37,11 +37,36 @@ pub(crate) fn evaluate_call(g: &mut Graph, frame: &mut impl CallFrame,
     frame.assign(g, dst, value)
 }
 
-pub(crate) struct RhsCall<'a> {
+pub(crate) struct RhsFrame<'a> {
     pub cell: u32,
     pub receipts: &'a mut Effects,
 }
-impl CellFrame for RhsCall<'_> {
+impl RhsFrame<'_> {
+    /// Execute one source effect. False means a failed Hide stopped the RHS;
+    /// effects from earlier instructions remain committed in source order.
+    pub fn execute(&mut self, g: &mut Graph, op: usize, instruction: &Op,
+        source: Option<usize>) -> Result<bool> {
+        match instruction {
+            Op::Copy(..) => {} // The common Cell operand reader projects copies lazily.
+            Op::Let(dst, call, args) => evaluate_call(g, self, op, *dst, call, args)?,
+            Op::Set(table, args, value) => {
+                g.set_inner(self.cell, op, *table, args, value, None, self.receipts.slot(op), source)?;
+            }
+            Op::Union(a, b) => {
+                let a = self.argument(g, a)?;
+                let b = self.argument(g, b)?;
+                g.enqueue_source_union(a, b)?;
+            }
+            Op::Hide(table, args, delete) => {
+                let key = self.arguments(g, args)?;
+                return g.hide(*table, &key, *delete);
+            }
+            Op::Panic => return Err("source panic".into()),
+        }
+        Ok(true)
+    }
+}
+impl CellFrame for RhsFrame<'_> {
     fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value> { g.argument(self.cell, arg) }
     fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments> {
         g.inline_arguments(self.cell, args)
@@ -51,7 +76,7 @@ impl CellFrame for RhsCall<'_> {
         Ok(())
     }
 }
-impl CallFrame for RhsCall<'_> {
+impl CallFrame for RhsFrame<'_> {
     fn construct(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Arg], dst: usize) -> Result<()> {
         if let Some(receipt) = self.receipts.slot(op) {
             g.construct_recorded(self.cell, op, table, args, dst, receipt, &mut false)?;

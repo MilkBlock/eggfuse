@@ -1,6 +1,6 @@
 //! Apply an actual constructor witness to the original Cell instruction. The
 //! same checks and bindings serve a live RHS and an uncommitted closed frame.
-use super::{Effects, eval::{CellFrame, RhsCall}};
+use super::{Effects, eval::{CellFrame, RhsFrame}};
 use crate::{graph::{Cell, Graph, Stats}, program::{Arg, Call, Op, Result},
     result_handoff::Input, slots::Slots, value::Value};
 use smallvec::SmallVec;
@@ -8,7 +8,7 @@ use smallvec::SmallVec;
 pub(crate) trait HandoffFrame: CellFrame {
     fn union(&mut self, g: &mut Graph, a: Value, b: Value) -> Result<()>;
 }
-impl HandoffFrame for RhsCall<'_> {
+impl HandoffFrame for RhsFrame<'_> {
     fn union(&mut self, g: &mut Graph, a: Value, b: Value) -> Result<()> { g.enqueue_union(a, b) }
 }
 
@@ -91,7 +91,7 @@ pub(crate) fn apply_handoff(g: &mut Graph, cell: u32, receipts: &mut Effects,
     instruction: &Op, input: &Input) -> Result<bool> {
     let mut counts = HandoffCounts::default();
     g.stats.handoff_attempts += 1;
-    if let Some(witness) = complete_handoff(g, &mut RhsCall { cell, receipts }, instruction, input, &mut counts)? {
+    if let Some(witness) = complete_handoff(g, &mut RhsFrame { cell, receipts }, instruction, input, &mut counts)? {
         receipts.record(input.op, witness);
         counts.commit(&mut g.stats);
         Ok(true)
