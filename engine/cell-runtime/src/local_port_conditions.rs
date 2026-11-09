@@ -3,6 +3,8 @@
 //! fact liveness; the queue contains facts, not stale condition incarnations.
 use super::*;
 use composition::conditions::Plan;
+#[path = "parallel_port_guards.rs"]
+pub(super) mod parallel;
 
 #[derive(Default, Serialize)]
 pub(super) struct Stats {
@@ -146,6 +148,9 @@ impl Graph {
                 a.fact.cmp(&b.fact)
             });
             candidates.dedup_by_key(|c| c.fact);
+        }
+        if self.dispatch_port_guards(candidates.len()) {
+            return self.parallel_port_collision(f, row, &plan, frame.component, &candidates);
         }
         for candidate in candidates {
             let target = candidate.fact;

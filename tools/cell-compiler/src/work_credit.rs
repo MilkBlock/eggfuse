@@ -97,6 +97,23 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
+        // Actual guards (including speculative reads) are already counted
+        // above. Charge their dispatch/collection too, without counting the
+        // speculative subset a second time or using worker-dependent loads.
+        let parallel = &report["stable_ports"]["parallel_guards"];
+        for field in ["candidate_batches", "rounds", "chunks", "prepared_candidates",
+            "prepared_fact_lookups", "collected_results", "scratch_allocations"] {
+            let value = if parallel["enabled"] == true {
+                parallel["stats"][field].as_u64().ok_or_else(|| format!("missing parallel guard work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/parallel_guards/stats/{field}"), value);
+        }
+        for field in ["pool_builds", "workers"] {
+            let value = if parallel["enabled"] == true {
+                parallel[field].as_u64().ok_or_else(|| format!("missing guard pool work {field}"))?
+            } else { 0 };
+            work.insert(format!("stable_ports/parallel_guards/{field}"), value);
+        }
         for field in ["scope_requests", "head_probes", "head_updates", "legacy_frontier_probes", "cause_probes", "cause_comparisons", "cause_growths", "mixed_epoch_inserts", "advanced_task_epochs", "completion_epoch_checks", "completion_epoch_joins"] {
             let key = format!("scoped_completion/stats/{field}");
             let value = if report["scoped_completion"]["enabled"] == true {
@@ -156,5 +173,36 @@ mod tests {
         assert_eq!(old.savings(&trial).0, -1);
         trial.0.insert("capture".into(), 2);
         assert_eq!(old.savings(&trial).0, 5);
+    }
+    #[test]
+    fn parallel_guard_dispatch_cannot_hide_preparation_from_bake_credit() {
+        use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
+        let source = r#"
+(datatype E (N i64) (F E i64))
+(F (N 0) 0) (F (N 1) 0) (F (N 0) 1) (F (N 1) 1)
+(F (N 0) 2) (F (N 1) 2) (F (N 0) 3) (F (N 1) 3)
+(ruleset merge)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset merge)
+(run-schedule (run merge))
+"#;
+        let core = eggfuse_bake::device_frontend::core("guard-credit", source).unwrap();
+        let compiled = compiler::compile(core, &Default::default()).unwrap();
+        let run = |parallel| {
+            let mut graph = Graph::new_with_local_congruence(Program::parse(compiled.clone()).unwrap()).unwrap();
+            if parallel { graph.use_parallel_port_guards(2, 1).unwrap(); }
+            let mut executor = Executor::new(graph, false);
+            executor.execute().unwrap();
+            (executor.graph.export().unwrap(), executor.report())
+        };
+        let (before_state, before) = run(false);
+        let (after_state, mut after) = run(true);
+        assert_eq!(before_state, after_state);
+        let serial = Work::read(&before).unwrap();
+        let parallel = Work::read(&after).unwrap();
+        assert!(parallel.0["stable_ports/parallel_guards/stats/rounds"] > 0);
+        assert!(parallel.0["stable_ports/parallel_guards/stats/prepared_candidates"] > 0);
+        assert!(serial.savings(&parallel).0 < 0);
+        after["stable_ports"]["parallel_guards"]["stats"].as_object_mut().unwrap().remove("prepared_fact_lookups");
+        assert!(Work::read(&after).unwrap_err().contains("missing parallel guard work prepared_fact_lookups"));
     }
 }

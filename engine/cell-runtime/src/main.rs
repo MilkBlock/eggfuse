@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --stable-ports (Cell ownership with stable stored equality fields)");
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
+        println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
         println!("  --pure-epochs (experimental bound pure-congruence batches across source Runs)");
         println!("  --unique-port-publication (experimental ordered publication through complete input-domain uniqueness)");
@@ -62,7 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" => {
+            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -128,7 +129,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let port_scopes = pure_epochs || args.iter().any(|x| x == "--port-scopes");
     let scoped_execution = port_scopes || args.iter().any(|x| x == "--scoped-execution");
     let scoped_queues = scoped_execution || args.iter().any(|x| x == "--scoped-queues");
-    let local_conditions = scoped_queues || args.iter().any(|x| x == "--local-congruence");
+    let guard_workers: Option<usize> = opt("--guard-workers").map(|v| v.parse()).transpose()?;
+    let guard_grain: usize = opt("--guard-grain").map(|v| v.parse()).transpose()?.unwrap_or(32);
+    if opt("--guard-grain").is_some() && guard_workers.is_none() {
+        return Err("--guard-grain requires --guard-workers".into());
+    }
+    let local_conditions = guard_workers.is_some() || scoped_queues || args.iter().any(|x| x == "--local-congruence");
     let port_keys = local_conditions || args.iter().any(|x| x == "--port-keys");
     let stable_ports = port_keys || args.iter().any(|x| x == "--stable-ports");
     let ownership = stable_ports || args.iter().any(|x| x == "--cell-ownership");
@@ -147,6 +153,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let out = PathBuf::from(opt("--output").ok_or("--output required")?);
     let start = Instant::now();
+    #[cfg(feature = "allocation-metrics")]
+    let setup_allocation_start = allocation_metrics::begin();
     let audit = args.iter().any(|x| x == "--audit-stages");
     let mut graph = if digest || expressions {
         let bits = opt("--union-digest-hash-bits")
@@ -172,6 +180,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if port_keys { graph.use_port_constructor_matching()?; }
     if local_conditions { graph.use_local_port_conditions()?; }
     if scoped_queues { graph.use_scoped_completion()?; }
+    if let Some(workers) = guard_workers { graph.use_parallel_port_guards(workers, guard_grain)?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
     if scoped_execution { runtime.use_scoped_execution()?; }
@@ -216,6 +225,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(all(unix, feature = "storage-metrics"))]
     let setup_peak_rss_bytes = peak_rss_bytes()?;
     let setup = start.elapsed().as_secs_f64();
+    #[cfg(feature = "allocation-metrics")]
+    let setup_allocation_delta = allocation_metrics::end(setup_allocation_start);
     let start = Instant::now();
     #[cfg(feature = "slot-transfer-audit")]
     {
@@ -285,6 +296,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut report = runtime.report();
     #[cfg(feature = "allocation-metrics")]
     {
+        report["setup_allocations"] = setup_allocation_delta.report();
+        report["setup_allocations"]["scope"] = "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests".into();
         report["allocations"] = allocation_delta.report();
     }
     #[cfg(all(unix, feature = "storage-metrics"))]

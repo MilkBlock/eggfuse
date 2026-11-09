@@ -244,10 +244,20 @@ snapshot is copied to make the evaluator Send + Sync.
 KeyGuard binds one live candidate to a key canonicalized in that same read epoch.
 A true guard establishes neither domain completeness nor permission to publish.
 The borrow prevents a union, deletion or rebinding while workers use the view.
-After mutation, a new borrow and new canonical key are required. Scoped worker
-fixtures demonstrate concurrent guard evaluation; the actual Executor still
-dispatches guards serially. Pending task generations, concurrent mutation and
-asynchronous publication are not established by this interface.
+After mutation, a new borrow and new canonical key are required. The optional
+`--guard-workers N --guard-grain M` path now dispatches bounded candidate rounds
+from the actual completion loop to a persistent private pool. A round finishes
+all borrowed reads before the coordinator selects the earliest match or error
+in original candidate order. Later speculative results cannot change the chosen
+survivor or create an error the serial path would not observe. All executed
+guards, including discarded results, contribute to work counts.
+
+Only candidates for one popped completion task share the read epoch. Different
+completion tasks are not speculated together: a prior task may change aliases,
+pending eligibility, liveness or the ordered survivor. Small lists keep their
+serial path. This is a synchronous read phase, not asynchronous generation-safe
+publication or independent progress during mutation. Pending task generations,
+concurrent mutation and asynchronous publication remain separate obligations.
 
 ## Gates that must remain open
 

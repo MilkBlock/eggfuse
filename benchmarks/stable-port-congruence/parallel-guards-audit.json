@@ -1,0 +1,374 @@
+{
+  "scope": "standalone Cell CPU; persistent workers execute actual completion-candidate guards",
+  "previous_revision": "94c2c0af",
+  "runtime_sha256": "481a0d737dd54b491631f8599e6b2c838bd3e9b62a58fd5f8cd6ee0eaf898fe4",
+  "allocator_runtime_sha256": "db9868eb5c6c0949712bc4fd3653a67676e2b91eba8db42565f1516c9777ecfe",
+  "program_file_sha256": "68d817ebab530d1668f16140186c9bfc52a5a16e99e0dd3146fb0bf3e0d8fe8f",
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e",
+    "spine-shapes.json": "350d0a5828f2b9a271d087fb4eebc2cb694b11489e610d6477ee933ea9dfe8bd",
+    "shape_without_program_hash": "c1c103b52ac1748afbb77f07c31f358bf947400b7a7d14b87d730aef0d971035",
+    "schedule": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2"
+  },
+  "exact_ordered_semantics_match": true,
+  "disabled_deterministic_work_unchanged": true,
+  "source_waits_and_committed_effects_unchanged": true,
+  "extra_port_and_key_reads_fully_accounted": true,
+  "admitted_as_performance_improvement": false,
+  "validation": {
+    "workspace-tests": {
+      "passed": 304,
+      "failed": 0,
+      "ignored": 4
+    },
+    "tests": {
+      "passed": 103,
+      "failed": 0,
+      "ignored": 0
+    },
+    "non-sparse-tests": {
+      "passed": 103,
+      "failed": 0,
+      "ignored": 0
+    },
+    "no_default_features": "compile check passed"
+  },
+  "lanes": {
+    "two_workers_fine": {
+      "candidate_histogram_bins": [
+        "0",
+        "1",
+        "2-3",
+        "4-7",
+        "8-15",
+        "16-31",
+        "32-63",
+        "64-127",
+        "128+"
+      ],
+      "enabled": true,
+      "grain": 1,
+      "limits": "No overlapping Graph mutation; counts exclude allocator-internal and thread-pool allocations. No speedup admission.",
+      "pool_builds": 1,
+      "round_width": 2,
+      "scope": "standalone Cell CPU; parallel candidate reads, ordered serial commits",
+      "stats": {
+        "below_grain_batches": 278,
+        "candidate_batches": 1036,
+        "candidate_histogram": [
+          30,
+          248,
+          272,
+          305,
+          155,
+          9,
+          17,
+          0,
+          0
+        ],
+        "candidate_sites": 4985,
+        "chunks": 2706,
+        "collected_results": 2706,
+        "dispatched_batches": 758,
+        "peak_candidates": 49,
+        "prepared_candidates": 2706,
+        "prepared_fact_lookups": 2370,
+        "prepared_live_guards": 1985,
+        "rounds": 1379,
+        "scratch_allocations": 0,
+        "scratch_bytes_requested": 0,
+        "speculative_candidates": 447,
+        "speculative_guard_work": {
+          "equality_guards": 56,
+          "key_fields": 187,
+          "port_reads": 255,
+          "scalar_guards": 16,
+          "shared_symbol_guards": 10
+        },
+        "speculative_key_candidates": 107,
+        "speculative_local_conditions": 298,
+        "speculative_pending_sites": 42
+      },
+      "worker_candidates": [
+        1524,
+        1182
+      ],
+      "workers": 2
+    },
+    "two_workers_coarse": {
+      "candidate_histogram_bins": [
+        "0",
+        "1",
+        "2-3",
+        "4-7",
+        "8-15",
+        "16-31",
+        "32-63",
+        "64-127",
+        "128+"
+      ],
+      "enabled": true,
+      "grain": 32,
+      "limits": "No overlapping Graph mutation; counts exclude allocator-internal and thread-pool allocations. No speedup admission.",
+      "pool_builds": 1,
+      "round_width": 64,
+      "scope": "standalone Cell CPU; parallel candidate reads, ordered serial commits",
+      "stats": {
+        "below_grain_batches": 1036,
+        "candidate_batches": 1036,
+        "candidate_histogram": [
+          30,
+          248,
+          272,
+          305,
+          155,
+          9,
+          17,
+          0,
+          0
+        ],
+        "candidate_sites": 4985,
+        "chunks": 0,
+        "collected_results": 0,
+        "dispatched_batches": 0,
+        "peak_candidates": 49,
+        "prepared_candidates": 0,
+        "prepared_fact_lookups": 0,
+        "prepared_live_guards": 0,
+        "rounds": 0,
+        "scratch_allocations": 0,
+        "scratch_bytes_requested": 0,
+        "speculative_candidates": 0,
+        "speculative_guard_work": {
+          "equality_guards": 0,
+          "key_fields": 0,
+          "port_reads": 0,
+          "scalar_guards": 0,
+          "shared_symbol_guards": 0
+        },
+        "speculative_key_candidates": 0,
+        "speculative_local_conditions": 0,
+        "speculative_pending_sites": 0
+      },
+      "worker_candidates": [
+        0,
+        0
+      ],
+      "workers": 2
+    },
+    "four_workers": {
+      "candidate_histogram_bins": [
+        "0",
+        "1",
+        "2-3",
+        "4-7",
+        "8-15",
+        "16-31",
+        "32-63",
+        "64-127",
+        "128+"
+      ],
+      "enabled": true,
+      "grain": 8,
+      "limits": "No overlapping Graph mutation; counts exclude allocator-internal and thread-pool allocations. No speedup admission.",
+      "pool_builds": 1,
+      "round_width": 32,
+      "scope": "standalone Cell CPU; parallel candidate reads, ordered serial commits",
+      "stats": {
+        "below_grain_batches": 1019,
+        "candidate_batches": 1036,
+        "candidate_histogram": [
+          30,
+          248,
+          272,
+          305,
+          155,
+          9,
+          17,
+          0,
+          0
+        ],
+        "candidate_sites": 4985,
+        "chunks": 81,
+        "collected_results": 630,
+        "dispatched_batches": 17,
+        "peak_candidates": 49,
+        "prepared_candidates": 630,
+        "prepared_fact_lookups": 470,
+        "prepared_live_guards": 458,
+        "rounds": 27,
+        "scratch_allocations": 0,
+        "scratch_bytes_requested": 0,
+        "speculative_candidates": 154,
+        "speculative_guard_work": {
+          "equality_guards": 0,
+          "key_fields": 158,
+          "port_reads": 158,
+          "scalar_guards": 0,
+          "shared_symbol_guards": 0
+        },
+        "speculative_key_candidates": 149,
+        "speculative_local_conditions": 5,
+        "speculative_pending_sites": 0
+      },
+      "worker_candidates": [
+        297,
+        113,
+        140,
+        80
+      ],
+      "workers": 4
+    }
+  },
+  "allocator_requests": {
+    "pure_epochs": {
+      "setup_allocations": {
+        "alloc_calls": 103876,
+        "free_calls": 61858,
+        "live_bytes_after": 147008901,
+        "live_bytes_before": 141477964,
+        "peak_live_requested_bytes": 147029061,
+        "realloc_calls": 2256,
+        "released_bytes": 6709669,
+        "requested_bytes": 12240606,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260533,
+        "free_calls": 221355,
+        "live_bytes_after": 154796149,
+        "live_bytes_before": 147008901,
+        "peak_live_requested_bytes": 155279928,
+        "realloc_calls": 39367,
+        "released_bytes": 45662172,
+        "requested_bytes": 53449420,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      }
+    },
+    "two_workers_fine": {
+      "setup_allocations": {
+        "alloc_calls": 103923,
+        "free_calls": 61865,
+        "live_bytes_after": 147028711,
+        "live_bytes_before": 141478100,
+        "peak_live_requested_bytes": 147048871,
+        "realloc_calls": 2258,
+        "released_bytes": 6710041,
+        "requested_bytes": 12260652,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260556,
+        "free_calls": 221376,
+        "live_bytes_after": 154816071,
+        "live_bytes_before": 147028711,
+        "peak_live_requested_bytes": 155299850,
+        "realloc_calls": 39367,
+        "released_bytes": 45694092,
+        "requested_bytes": 53481452,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 47,
+          "realloc_calls": 2,
+          "requested_bytes": 20046
+        },
+        "allocations": {
+          "alloc_calls": 23,
+          "realloc_calls": 0,
+          "requested_bytes": 32032
+        }
+      }
+    },
+    "two_workers_coarse": {
+      "setup_allocations": {
+        "alloc_calls": 103923,
+        "free_calls": 61865,
+        "live_bytes_after": 147028716,
+        "live_bytes_before": 141478105,
+        "peak_live_requested_bytes": 147048876,
+        "realloc_calls": 2258,
+        "released_bytes": 6710041,
+        "requested_bytes": 12260652,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260533,
+        "free_calls": 221355,
+        "live_bytes_after": 154815964,
+        "live_bytes_before": 147028716,
+        "peak_live_requested_bytes": 155299743,
+        "realloc_calls": 39367,
+        "released_bytes": 45662172,
+        "requested_bytes": 53449420,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 47,
+          "realloc_calls": 2,
+          "requested_bytes": 20046
+        },
+        "allocations": {
+          "alloc_calls": 0,
+          "realloc_calls": 0,
+          "requested_bytes": 0
+        }
+      }
+    },
+    "four_workers": {
+      "setup_allocations": {
+        "alloc_calls": 103959,
+        "free_calls": 61869,
+        "live_bytes_after": 147043377,
+        "live_bytes_before": 141478092,
+        "peak_live_requested_bytes": 147063537,
+        "realloc_calls": 2260,
+        "released_bytes": 6710157,
+        "requested_bytes": 12275442,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "allocations": {
+        "alloc_calls": 260535,
+        "free_calls": 221355,
+        "live_bytes_after": 154830737,
+        "live_bytes_before": 147043377,
+        "peak_live_requested_bytes": 155314516,
+        "realloc_calls": 39367,
+        "released_bytes": 45662172,
+        "requested_bytes": 53449532,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "delta_from_serial": {
+        "setup_allocations": {
+          "alloc_calls": 83,
+          "realloc_calls": 4,
+          "requested_bytes": 34836
+        },
+        "allocations": {
+          "alloc_calls": 2,
+          "realloc_calls": 0,
+          "requested_bytes": 112
+        }
+      }
+    }
+  },
+  "limits": "Per-candidate snapshot reads are parallel; one completion is committed at a time. Preparation, dispatch rounds, chunks, collection, scratch and speculative guards are counted. A separate diagnostic measures allocator requests during setup and execution, including the pool, but not native thread stacks or wall-clock contention. Worker distribution and allocator requests can depend on scheduling. No whole-executor parallelism, timing or stall-elimination claim."
+}

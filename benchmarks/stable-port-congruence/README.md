@@ -12,6 +12,9 @@ general overlapping-epoch proof from `3c5739e8`. Corrected sum-bits execution ha
 six query waits and four RHS waits. The optional uniqueness experiment removes
 17 queue obligations but no waits and is **not admitted as an optimization**.
 Earlier sections retain historical measurements, not current admission claims.
+Optional `--guard-workers` now dispatches completion-candidate reads to a private
+persistent pool. This does not remove the ten source waits or parallelize commits;
+the experiment remains default-off and has no performance admission.
 
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
@@ -33,9 +36,9 @@ phase does not establish completion of the objective.
 | Canonical key maintenance is removed where coverage is complete | Checked coverage certificate; zero rehash/index relocation for the admitted region; incomplete cases remain explicit boundaries | Removed for completely owned scalar constructors with equality inputs; logical congruence checks remain |
 | Completion waits follow actual dependencies | One region advances and publishes while another has pending congruence; dependent and negative observations wait correctly; queued work eventually reaches the same fixed point | Actual Executor fixtures advance, publish and consume independent regions of the same Eq sort; no useful main-workload bypass, same-table independence still open |
 | Lifetime and generation are safe | Partial births, deletion, retained consumers, rebirth, stale queued events, late unions and boundary aliases | Existing lifetime fixtures pass through local conditions; conditions retain no instance state and inspect live facts; future asynchronous queues need separate generation tests |
-| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; retention peaks reported; parallel and full-cost admission pending |
-| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Exact guards now use immutable Send + Sync views and local counters; mutable commits, publication ownership and worker scheduling remain open |
-| Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Not implemented |
+| Costs remain accountable | Read resolution, temporary views, exact Eq tests, condition visits, boundary notifications, queue operations and allocations all reported; semantics and whole-process baselines retained | Field, key, condition, scope and publication-selection operations included in Bake's ledger; worker preparation, dispatch, collection, speculation and allocator requests recorded; speed/scaling admission pending |
+| Other parallelism obstacles are removed | Audit and resolution of shared mutable state, equality-directory contention, publication ownership, effect order, allocator pressure, and global work queues | Exact guards use immutable Send + Sync views and local counters; opt-in persistent workers execute them; mutable commits, publication ownership and useful task grouping remain open |
+| Parallel inference is implemented and validated | Real concurrent workers; race/lifetime stress; correct boundary effects; scaling and full-cost baseline comparisons | Partial: actual completion-candidate reads run on persistent workers with ordered commits; concurrent mutation, independent task progress and scaling remain open |
 | Bake exploits compiler information | Checked candidate coverage, typed read/write footprints, static alias/lifetime facts and local wiring; selection charged against observed total runtime work | Checked merge reads/births, source-union effects, shared influence wiring and compiled bound expressions; cheaper coverage/order proofs and useful parallel task grouping remain open |
 
 For parallel claims, exercise the protocol with concurrent workers and contested
@@ -1073,4 +1076,117 @@ CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --fea
 cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/read-guards-runtime
 CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/read-guards-runtime benchmarks/stable-port-congruence/unique-publication-audit-manifest.json out/stable-port-congruence/read-guards-final-audit
 python3 benchmarks/stable-port-congruence/collect-read-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
+```
+
+## Persistent workers for completion-candidate reads
+
+The previous execution established immutable guard inputs but still invoked all
+guards on the coordinator. It also retained ten source waits. Earlier ordering
+regressions prohibit speculating across arbitrary completion tasks: committing
+one can change another's pending eligibility, aliases, liveness and survivor.
+This iteration therefore tests the narrower opportunity of evaluating candidates
+for one popped task concurrently. It discharges no additional cross-Run work.
+Shared typed wiring and complete candidate domains retain their existing proof;
+no new order or publication independence is inferred from Send + Sync.
+
+`--guard-workers N [--guard-grain M]` enables a private persistent Rayon pool;
+`N >= 2`, `M >= 1`, default `M = 32`. Lists shorter than `N * M` keep the existing
+serial path. Larger lists run bounded rounds of at most `N * M` candidates,
+divided into chunks of `M`. The pool is built once, not once per condition.
+[ThreadPool::install](https://docs.rs/rayon/1.12.0/rayon/struct.ThreadPool.html#method.install)
+allows these tasks to borrow the already separated read data and finish before
+the Graph is mutated. This does not require converting Graph to Arc, cloning
+canonical rows, adding unsafe Send implementations or maintaining worker-owned
+reverse indexes. The source row's values and target Stored nodes are borrowed;
+their Rc owners stay on the coordinator.
+
+The coordinator binds live candidates, preserving the original pending filter.
+Workers evaluate operator/scalar/Eq guards and return local work into bounded
+scratch descriptors. After every round has finished, selection consumes results
+in the original candidate order. Only the earliest match or error is observable;
+a speculative error after that point cannot override it. The selected result
+uses the original serial retirement/publication path. Every executed guard,
+including discarded results, is charged. No reads overlap a union or deletion,
+so this protocol needs no stale-result recovery, but also does not establish
+independent progress during mutation.
+
+The frozen sum-bits audit matches all 1,428 Runs and exact ordered state, RHS,
+effective-write, resume, Spine and schedule hashes in all four lanes. Disabling
+workers preserves every previous deterministic work counter. Enabling them
+leaves committed effects and source waits unchanged (six query, four RHS).
+Extra port/key reads exactly equal recorded speculative guard work.
+
+The measured candidate distribution explains the granularity limit: 1,036
+covered batches contain 4,985 candidate positions; 855 batches have fewer than
+eight positions, and the maximum is 49. The remaining ten source attempts use
+the existing uncovered-shape fallback.
+
+| Configuration | Dispatched candidate batches | Dispatch rounds | Prepared candidates | Live guard descriptors | Extra candidate visits after the ordered winner |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 2 workers, grain 1 | 758 | 1,379 | 2,706 | 1,985 | 447 |
+| 2 workers, grain 32 | 0 | 0 | 0 | 0 | 0 |
+| 4 workers, grain 8 | 17 | 27 | 630 | 458 | 154 |
+
+Both workers participate in the fine-grain execution, and all four participate
+in the four-worker execution. Distribution across workers is scheduling-dependent;
+the guard work above is deterministic. The fine-grain lane adds 255 port reads,
+187 key-field comparisons, 56 equality checks and 16 scalar checks. The four-worker
+lane adds 158 port reads/key-field comparisons. Candidate preparation, lookup,
+result collection, rounds, chunks and scratch requests have separate counters.
+Scratch descriptors fit inline in these lanes; a larger fixture exercises and
+charges the heap path. A zero scratch count does not mean zero scheduler cost.
+Bake's deterministic ledger also charges batch selection, task preparation,
+round/chunk dispatch, collection, scratch allocations and pool/worker creation.
+Speculative guard work is already included in the ordinary guard counters and
+is not charged twice. A real-execution credit fixture rejects missing dispatch
+counters and assigns negative net work savings to parallelizing the same guards.
+These equally weighted event counts remain an uncalibrated latency proxy.
+
+A separate allocator diagnostic includes Graph/runtime setup, pool construction
+and execution. Against its own serial control, the two-worker fine-grain lane
+adds 47 allocations and two reallocations during setup (20,046 requested bytes),
+then 23 allocations during execution (32,032 requested bytes). The idle coarse
+pool has the same measured setup increment and no execution increment. The
+four-worker lane adds 83 allocations and four reallocations during setup
+(34,836 requested bytes), then two allocations (112 requested bytes) during
+execution. These are one execution's allocator requests, not stable timing,
+RSS, thread-stack size or a bound on scheduling-dependent allocations. Parsing
+and export are outside those allocator intervals; common audit costs remain
+present in both control and worker lanes.
+
+Validation covers 304 workspace tests (four ignored), 103 focused tests in each
+storage configuration, and the minimal compile check. The focused coverage adds
+partial multi-input equality, wrong-operator/scalar peers, ordered cascades,
+deletion/recreation, small-list fallback and spilled scratch. The final extra
+scratch and credit tests are recorded separately from the earlier full suite,
+avoiding a repeat of unchanged tests.
+
+This is **default-off experimental parallel reading, not an admitted speedup**.
+No wall-clock benchmark or scaling campaign was run. Per-task work is too small
+to infer a useful benefit, and fine-grain dispatch adds many synchronous joins.
+The next structural requirement is a compiler/Bake proof that multiple ready
+tasks can share a read phase without invalidating ordered results. Increasing
+candidate counts to occupy workers would defeat the local pruning objective.
+The query matcher, mutable effects, publication ownership and source fences still
+need their own parallel protocols.
+
+Reproduce using the previous nine focused suites plus `--test parallel_guards`
+and `parallel-guards-` log prefixes. Our first full suites contain the first three
+worker tests; the final scratch test has separate `parallel-guards-wide-` logs
+in the same three configurations. The collector also accepts fresh full-suite
+logs containing all four tests without counting the scratch test twice. The
+additional library test `parallel_guard_dispatch_cannot_hide_preparation_from_bake_credit`
+has a `parallel-guards-credit-tests.log` from the compiler's all-features library
+suite; the collector likewise avoids counting it twice in a fresh full run.
+Preserve the `read-guards-final-audit/results.json` control. Build
+standalone audit executables separately from compiler tests:
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/parallel-guards-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/parallel-guards-runtime benchmarks/stable-port-congruence/parallel-guards-audit-manifest.json out/stable-port-congruence/parallel-guards-final-audit
+CARGO_INCREMENTAL=0 cargo build --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics,slot-transfer-audit,spine-shapes,allocation-metrics -j 2
+cp "$CARGO_TARGET_DIR/release/eggfuse-cell-runtime" out/stable-port-congruence/parallel-guards-allocator-runtime
+CELL_CPU_PROGRESS=1 python3 benchmarks/result-port-repair/audit.py out/stable-port-congruence/parallel-guards-allocator-runtime benchmarks/stable-port-congruence/parallel-guards-audit-manifest.json out/stable-port-congruence/parallel-guards-allocator-audit
+python3 benchmarks/stable-port-congruence/collect-parallel-guards.py out/stable-port-congruence benchmarks/stable-port-congruence
 ```
