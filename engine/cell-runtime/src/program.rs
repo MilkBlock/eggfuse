@@ -511,7 +511,7 @@ impl Program {
         {
             p.local_rhs = crate::local_rhs::derive(&p, &p.known_results);
             if let Some(raw) = p.artifact.get("local_rhs_blocks")
-                && *raw != serde_json::json!(p.local_rhs)
+                && *raw != crate::local_rhs::wire(&p, &p.local_rhs)
             {
                 return Err("local RHS blocks differ from typed rules".into());
             }

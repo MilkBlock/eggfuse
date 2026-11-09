@@ -21,3 +21,9 @@
 基线 `fc5e7883`。原有 `Op::Let` 通过 `cell::evaluate_call` 统一分派、计算和写回；删除普通 RHS 与已编译 merge 各自的 Call 解释。Frame 只提供存储及读写能力：RHS 保留稀疏结果和实际 receipt；merge 仍读取 repair 中的完整可见端口并折叠合法 lattice 冲突。短 merge 的结果和参数改用内联槽，动态构造 miss 直接建立 Cell Slots，省去中间 BTreeMap。纯投影及 scalar merge 快路保持。
 
 八项 merge 检查和六项 Entry 检查通过。新增用例在运行时触发有序构造、相同输入加法和嵌套函数读取，比较独立 AST 控制的逐阶段状态、有序 RHS/write/resume 摘要及其余工作计数，并检查 native 源程序。AST 控制仍供显式关闭编译 merge 的差分/存储测试使用；其他效果和局部计划尚待接入。没有单独计时。
+
+## 局部执行计划直接引用 Cell 操作
+
+接续 `1f4226f3`。删除局部计划的 `ResultUse`、表编号、key 和结果操作数副本；计划只保留操作位置、跳过计数和覆盖信息，执行直接读源 Cell 的 `Op`。字段读取沿用共同 frame 接口，首次 miss 的提升及原 RHS 接续不变。旧产物布局由源 Cell 临时投影生成，不另存第二份指令。
+
+既有局部完成/首次 miss 提升/选择用例通过；冻结 borrowed fixture 的全部编译组件重新生成一致，旧产物正常加载。没有独立计时。尚未统一单写的预编译标量前缀、闭合预检及完整效果调度。

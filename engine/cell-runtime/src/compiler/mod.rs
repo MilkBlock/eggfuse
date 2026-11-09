@@ -202,7 +202,7 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
     #[cfg(feature = "structural-depth")]
     let structural = json!(crate::depth_plan::Plan::derive(&p));
     #[cfg(feature = "rhs-locals")]
-    let local_blocks = json!(crate::local_rhs::derive(&p, &known_results));
+    let local_blocks = crate::local_rhs::wire(&p, &crate::local_rhs::derive(&p, &known_results));
     j = p.artifact;
     #[cfg(feature = "rhs-locals")]
     {

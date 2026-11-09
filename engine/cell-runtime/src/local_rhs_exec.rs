@@ -1,5 +1,5 @@
 use super::*;
-use crate::local_rhs::{Block, Counts, ResultUse};
+use crate::local_rhs::{Block, Counts};
 
 pub(crate) enum Start {
     Complete { cell: u32, frame: Cell },
@@ -18,33 +18,35 @@ impl Graph {
         let cell = self.reserve_cell_id()?;
         let mut frame = self.new_cell(template, values, parent);
         let mut local_lets = 0;
+        let ops = self.program.templates[template].ops.clone();
         stats.enter += 1;
         for step in &plan.steps {
             self.known_stats.static_eliminated += step.skip_before;
             self.known_stats.avoided_lookups += step.skip_before;
-            let key = step
-                .key
-                .iter()
-                .map(|a| self.argument_in(cell, &frame, None, a))
-                .collect::<Result<smallvec::SmallVec<[Value; 4]>>>()?;
-            if matches!(step.result, ResultUse::Let(_)) {
+            let instruction = &ops[step.op];
+            let (table, args) = match instruction {
+                Op::Let(_, Call::Table(t), args) | Op::Set(t, args, _) => (*t, args),
+                _ => unreachable!("validated local Cell operation"),
+            };
+            let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, None, args)?;
+            if matches!(instruction, Op::Let(..)) {
                 self.stats.constructor_requests += 1;
             }
-            let assigned = if let ResultUse::Set(v) = &step.result {
+            let assigned = if let Op::Set(_, _, v) = instruction {
                 Some(self.argument_in(cell, &frame, None, v)?)
             } else {
                 None
             };
-            if let Some(row) = self.lookup_canonical(step.table, &key)? {
+            if let Some(row) = self.lookup_canonical(table, &key)? {
                 let value = row.values.last().unwrap();
-                match step.result {
-                    ResultUse::Let(s) => {
-                        frame.values.insert(s, value.clone());
+                match instruction {
+                    Op::Let(s, ..) => {
+                        frame.values.insert(*s, value.clone());
                         self.stats.constructor_reused += 1;
                         local_lets += 1;
                         stats.local_let_results += 1;
                     }
-                    ResultUse::Set(_) => {
+                    Op::Set(..) => {
                         let rhs = assigned.unwrap();
                         if *value == rhs {
                             stats.no_op_unions += 1;
@@ -53,6 +55,7 @@ impl Graph {
                             stats.ordered_unions += 1;
                         }
                     }
+                    _ => unreachable!("validated local Cell operation"),
                 }
                 receipts.record(step.op, row.witness);
             } else {
@@ -61,13 +64,14 @@ impl Graph {
                     cell,
                     op: step.op as u32,
                 };
-                match step.result {
-                    ResultUse::Let(s) => {
-                        self.insert_constructor(cell, step.op, step.table, &key, s)?;
+                match instruction {
+                    Op::Let(s, ..) => {
+                        self.insert_constructor(cell, step.op, table, &key, *s)?;
                     }
-                    ResultUse::Set(_) => {
-                        self.activate(fact, step.table, &key, assigned.unwrap(), false)?;
+                    Op::Set(..) => {
+                        self.activate(fact, table, &key, assigned.unwrap(), false)?;
                     }
+                    _ => unreachable!("validated local Cell operation"),
                 }
                 receipts.record(step.op, Dependency::Fact(fact));
                 stats.promoted += 1;

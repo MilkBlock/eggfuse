@@ -4,20 +4,12 @@
 use crate::{known_results::Plans, program::*};
 use serde::Serialize;
 use std::rc::Rc;
-#[derive(Clone, Debug, Serialize)]
-pub(crate) enum ResultUse {
-    Let(usize),
-    Set(Arg),
-}
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug)]
 pub(crate) struct Step {
     pub op: usize,
-    pub table: usize,
-    pub key: Vec<Arg>,
-    pub result: ResultUse,
     pub skip_before: u64,
 }
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug)]
 pub(crate) struct Block {
     pub steps: Vec<Step>,
     pub trailing_aliases: u64,
@@ -56,22 +48,17 @@ pub(crate) fn derive(p: &Program, known: &Plans) -> Vec<Option<Rc<Block>>> {
                 if terminal {
                     return None;
                 }
-                let (t, key, result) = match ins {
-                    Op::Let(s, Call::Table(t), key) => (*t, key, ResultUse::Let(*s)),
+                let (t, key, set_value) = match ins {
+                    Op::Let(_, Call::Table(t), key) => (*t, key, None),
                     Op::Set(t, key, v) => {
                         terminal = true;
-                        (*t, key, ResultUse::Set(v.clone()))
+                        (*t, key, Some(v))
                     }
                     _ => return None,
                 };
                 if !p.tables[t].constructor || !p.tables[t].virtual_fact {
                     return None;
                 }
-                let set_value = if let ResultUse::Set(v) = &result {
-                    Some(v)
-                } else {
-                    None
-                };
                 for a in key.iter().chain(set_value) {
                     if let Arg::Slot(s) = a
                         && let Some(&prior) = origins.get(s)
@@ -79,14 +66,11 @@ pub(crate) fn derive(p: &Program, known: &Plans) -> Vec<Option<Rc<Block>>> {
                         consumed.insert(prior);
                     }
                 }
-                if let ResultUse::Let(dst) = result {
-                    origins.insert(dst, op);
+                if let Op::Let(dst, ..) = ins {
+                    origins.insert(*dst, op);
                 }
                 steps.push(Step {
                     op,
-                    table: t,
-                    key: key.clone(),
-                    result,
                     skip_before: std::mem::take(&mut skipped),
                 });
             }
@@ -99,6 +83,25 @@ pub(crate) fn derive(p: &Program, known: &Plans) -> Vec<Option<Rc<Block>>> {
             })
         })
         .collect()
+}
+
+/// Compatibility artifact only: operands always come from the source Cell.
+/// The runtime retains selection/skip metadata, not another effect program.
+pub(crate) fn wire(p: &Program, blocks: &[Option<Rc<Block>>]) -> serde_json::Value {
+    use serde_json::{Value as J, json};
+    J::Array(blocks.iter().enumerate().map(|(rid, block)| {
+        let Some(block) = block else { return J::Null };
+        let ops = &p.templates[p.rules[rid].template].ops;
+        let steps = block.steps.iter().map(|step| {
+            let (table, key, result) = match &ops[step.op] {
+                Op::Let(dst, Call::Table(t), args) => (*t, args, json!({"Let":dst})),
+                Op::Set(t, args, value) => (*t, args, json!({"Set":value})),
+                _ => unreachable!("validated local Cell operation"),
+            };
+            json!({"op":step.op,"table":table,"key":key,"result":result,"skip_before":step.skip_before})
+        }).collect::<Vec<_>>();
+        json!({"steps":steps,"trailing_aliases":block.trailing_aliases,"intermediate_ops":block.intermediate_ops})
+    }).collect())
 }
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
@@ -123,13 +126,14 @@ impl Program {
                 .steps
                 .iter()
                 .map(|s| {
+                    let (kind, table) = match &self.templates[self.rules[rule].template].ops[s.op] {
+                        Op::Let(_, Call::Table(t), _) => ("Let", *t),
+                        Op::Set(t, ..) => ("Set", *t),
+                        _ => unreachable!("validated local Cell operation"),
+                    };
                     [
-                        match s.result {
-                            ResultUse::Let(_) => "Let",
-                            ResultUse::Set(_) => "Set",
-                        }
-                        .into(),
-                        self.tables[s.table].name.clone(),
+                        kind.into(),
+                        self.tables[table].name.clone(),
                     ]
                 })
                 .collect(),
