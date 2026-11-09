@@ -186,6 +186,8 @@ pub struct Stats {
     #[serde(default)]
     pub register_seeds: u64,
     #[serde(default)]
+    pub register_prefix: crate::row_kernel::PrefixStats,
+    #[serde(default)]
     pub idle_scheduled_runs: u64,
     #[serde(default)]
     pub shared_point_requests: u64,

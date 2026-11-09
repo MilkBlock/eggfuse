@@ -414,6 +414,14 @@ impl State {
 #[derive(Default, Serialize)]
 pub struct Stats {
     entry_publication_writes: u64,
+    fragment_slot_probes: u64,
+    publication_slot_probes: u64,
+    publication_pending_pushes: u64,
+    publication_pending_reuses: u64,
+    fragment_pending_writes: u64,
+    fragment_pending_reads: u64,
+    fragment_slot_replacements: u64,
+    fragment_older_skips: u64,
     entry_publications_retired: u64,
     entry_retirement_checks: u64,
     pub predicate_checks: u64,
@@ -439,10 +447,23 @@ pub struct Scheduler {
     #[cfg(feature = "sparse-cells")]
     publication_nodes: Vec<Option<usize>>,
     #[cfg(feature = "sparse-cells")]
-    publications: Vec<Option<crate::stage_spine::Published>>,
+    publications: Vec<Option<PublicationSlot>>,
+    #[cfg(feature = "sparse-cells")]
+    staged_publications: Vec<std::num::NonZeroUsize>,
     #[cfg(feature = "sparse-cells")]
     publication_free: Vec<std::num::NonZeroUsize>,
     pub stats: Stats,
+}
+#[cfg(feature = "sparse-cells")]
+enum PublicationSlot {
+    Live(crate::stage_spine::Published),
+    Pending(crate::stage_spine::Publication),
+}
+#[cfg(feature = "sparse-cells")]
+impl PublicationSlot {
+    fn live(&self) -> Option<&crate::stage_spine::Published> {
+        match self { Self::Live(p) => Some(p), Self::Pending(_) => None }
+    }
 }
 /// Immutable node contents after refresh, plus this consumer's delta frontier.
 #[derive(Clone, Copy)]
@@ -452,7 +473,7 @@ pub(crate) struct Batch<'a> {
     watermark: u64,
     pub table: usize,
     #[cfg(feature = "sparse-cells")]
-    publications: &'a [Option<crate::stage_spine::Published>],
+    publications: &'a [Option<PublicationSlot>],
 }
 impl Batch<'_> {
     #[cfg(any(
@@ -543,7 +564,7 @@ impl Batch<'_> {
             Entries::Plain(rows) => (&rows[&w], None),
             Entries::Owned(rows) => {
                 let e = &rows[&w];
-                (e.packet.as_ref().expect("refreshed entry"), e.publication.and_then(|i| self.publications[i.get() - 1].as_ref()))
+                (e.packet.as_ref().expect("refreshed entry"), e.publication.and_then(|i| self.publications[i.get() - 1].as_ref().and_then(PublicationSlot::live)))
             }
         }
     }
@@ -579,6 +600,8 @@ impl Scheduler {
             #[cfg(feature = "sparse-cells")]
             publications: vec![],
             #[cfg(feature = "sparse-cells")]
+            staged_publications: vec![],
+            #[cfg(feature = "sparse-cells")]
             publication_free: vec![],
             enabled,
             plan,
@@ -611,20 +634,69 @@ impl Scheduler {
         self.publication_nodes.iter().map(Option::is_some).collect()
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency, p: crate::stage_spine::Published) {
+    fn publication_slot(&mut self, table: usize, w: Dependency) -> std::num::NonZeroUsize {
+        self.stats.publication_slot_probes += 1;
         let node = self.publication_nodes[table].expect("compiled entry owner");
         let state = &mut self.states[node];
         let Entries::Owned(rows) = &mut state.rows else { unreachable!("entry owner") };
         let e = rows.entry(w).or_default();
-        state.publications += usize::from(e.publication.is_none());
+        let first = e.publication.is_none();
+        state.publications += usize::from(first);
         if e.packet.is_none() && !state.cold {
-            state.pending.push(w);
+            // A packetless published Entry is already queued by its first
+            // publication. Refresh either installs its packet or removes the
+            // Entry; later graph changes also retain the ordinary Wake path.
+            if first {
+                state.pending.push(w);
+                self.stats.publication_pending_pushes += 1;
+            } else {
+                self.stats.publication_pending_reuses += 1;
+            }
         }
         let id = *e.publication.get_or_insert_with(|| self.publication_free.pop().unwrap_or_else(|| {
             self.publications.push(None);
             std::num::NonZeroUsize::new(self.publications.len()).unwrap()
         }));
-        self.publications[id.get() - 1] = Some(p);
+        id
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency, p: crate::stage_spine::Published) {
+        let id = self.publication_slot(table, w);
+        self.publications[id.get() - 1] = Some(PublicationSlot::Live(p));
+        self.stats.entry_publication_writes += 1;
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn stage_publication(&mut self, table: usize, w: Dependency, p: crate::stage_spine::Publication) -> bool {
+        self.stats.fragment_slot_probes += 1;
+        let id = self.publication_slot(table, w);
+        let target = &mut self.publications[id.get() - 1];
+        let first = !matches!(target, Some(PublicationSlot::Pending(_)));
+        if let Some(PublicationSlot::Pending(old)) = target {
+            if old.ordinal > p.ordinal {
+                self.stats.fragment_older_skips += 1;
+                return false;
+            }
+            self.stats.fragment_slot_replacements += 1;
+        } else {
+            self.staged_publications.push(id);
+        }
+        *target = Some(PublicationSlot::Pending(p));
+        self.stats.fragment_pending_writes += 1;
+        first
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn pop_staged_publication(&mut self) -> Option<(std::num::NonZeroUsize, crate::stage_spine::Publication)> {
+        let id = self.staged_publications.pop()?;
+        self.stats.fragment_pending_reads += 1;
+        let Some(PublicationSlot::Pending(p)) = self.publications[id.get() - 1].take() else {
+            unreachable!("staged publication slot");
+        };
+        Some((id, p))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn finish_publication(&mut self, id: std::num::NonZeroUsize, p: crate::stage_spine::Published) {
+        assert!(self.publications[id.get() - 1].is_none());
+        self.publications[id.get() - 1] = Some(PublicationSlot::Live(p));
         self.stats.entry_publication_writes += 1;
     }
     #[cfg(feature = "sparse-cells")]
@@ -633,7 +705,7 @@ impl Scheduler {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publications(&self) -> impl Iterator<Item = &crate::stage_spine::Published> {
-        self.publications.iter().filter_map(Option::as_ref)
+        self.publications.iter().filter_map(|p| p.as_ref().and_then(PublicationSlot::live))
     }
     /// Called before query-change records are consumed. Only committed rows and
     /// exact same-key forwarding retirements enter the shared pending domains.

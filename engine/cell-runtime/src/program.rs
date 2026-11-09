@@ -514,6 +514,7 @@ impl Program {
             }
         }
         p.multi_stage = crate::multistage::MultiStage::parse(&p, &p.artifact["multi_stage"])?;
+        crate::row_kernel::attach_prefixes(&mut p);
         let spine = p
             .multi_stage
             .stage_entries

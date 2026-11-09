@@ -146,6 +146,22 @@ fn same_sort_tasks_reuse_reads_across_result_unions() {
 }
 
 #[test]
+fn oversized_cell_shapes_use_complete_domains_in_parallel_read_batches() {
+    for chain in [false, true] {
+        let mut source = String::from("(datatype E (N i64) (Start E) (F E i64) (G E))\n(ruleset make) (ruleset merge)\n(rule ((Start x)) (\n");
+        for i in 0..20 {
+            let term = format!("(F x {i})");
+            source.push_str(&if chain { format!("(G {term})\n") } else { format!("{term}\n") });
+        }
+        source.push_str(") :ruleset make)\n(Start (N 0)) (Start (N 1))\n(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)\n(run-schedule (seq (run make) (run merge)))\n");
+        let report = compare(&source, 2, 16);
+        assert!(report["stats"]["exact_domain_tasks"].as_u64().unwrap() > 0, "{report}");
+        assert!(report["stats"]["exact_domain_candidates"].as_u64().unwrap() > 0);
+        assert!(report["stats"]["committed_tasks"].as_u64().unwrap() > 0);
+    }
+}
+
+#[test]
 fn direct_worker_reads_skip_preparation_and_unused_candidates() {
     let report = compare(&siblings(false, true, false), 2, 16);
     let stats = &report["stats"];

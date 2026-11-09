@@ -18,9 +18,19 @@ impl Work {
                 "history_capture_reads", "history_slots_written", "history_allocations",
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards",
                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
+                "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
+                "direct_publication_hash_probes", "fragment_packets", "fragment_receipts", "fragment_receipt_spills", "fragment_delivery_checks",
             ]),
             ("entry_schedule/stats", &[
                 "entry_publication_writes", "entry_retirement_checks", "predicate_checks", "row_decodes",
+                "publication_slot_probes", "publication_pending_pushes", "fragment_pending_writes", "fragment_pending_reads",
+            ]),
+            // Count dispatch, direct donor access and additional full-key
+            // validation. Field assignment/result checks and primitive guards
+            // replace the identical original kernel instructions: charging
+            // their prefix-only subset would penalize moving unchanged work.
+            ("stats/register_prefix", &[
+                "context_reads", "plan_comparisons", "donor_reads", "key_fields",
             ]),
             ("publication", &["row_reads", "column_rows", "range_rows", "neighbor_rows"]),
         ] {
@@ -31,6 +41,12 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Positive receipt/prefix hits and *_avoided are outcomes, not negative
+        // work. Actual lookup savings already lower key_lookup_calls (including
+        // PointPorts hits that never queried the graph). Spine donor reads are
+        // already included in decoded_rows; local_witness_reads is that subset.
+        // Entry slot probes cover ordinary and fragment publication equally;
+        // fragment_slot_probes/replacements are subsets, not extra lookups.
         for field in ["attempts", "steps", "effect_steps", "port_writes", "row_copies"] {
             let key = format!("repair_cells/stats/{field}");
             let stats = &report["repair_cells"]["stats"];
@@ -195,6 +211,64 @@ impl Work {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn witness_and_fragment_credit_charges_work_without_counting_outcomes_twice() {
+        use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
+        let source = r#"
+(datatype E (N i64) (A E) (B E) (Edge E i64) (Out E i64))
+(ruleset make) (ruleset consume)
+(rule ((= x (N n))) ((A x) (B x)) :ruleset make)
+(rule ((B x) (= a (A x)) (Edge x n)) ((Out a n)) :ruleset consume)
+(Edge (N 0) 1) (Edge (N 0) 2)
+(run-schedule (seq (run make) (run consume)))
+"#;
+        let core = eggfuse_bake::device_frontend::core("prefix-credit", source).unwrap();
+        let p = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
+        let mut executor = Executor::new(Graph::new(p).unwrap(), false);
+        #[cfg(feature = "sparse-cells")]
+        executor.use_entry_publications().unwrap();
+        executor.execute().unwrap();
+        let report = executor.report();
+        let baseline = Work::read(&report).unwrap();
+        // Start from a real complete report, then isolate ledger behavior. This
+        // is an accounting regression, not a synthetic performance result.
+        let bump = |report: &mut J, key: &str| {
+            let value = report.pointer_mut(key).unwrap();
+            *value = json!(value.as_u64().unwrap() + 1);
+        };
+        let charged = [
+            "/stats/register_prefix/context_reads", "/stats/register_prefix/plan_comparisons",
+            "/stats/register_prefix/donor_reads", "/stats/register_prefix/key_fields",
+            "/stage_spine/stats/local_witness_contexts", "/stage_spine/stats/local_witness_route_probes",
+            "/stage_spine/stats/local_witness_route_steps", "/stage_spine/stats/local_witness_key_fields",
+            "/stage_spine/stats/direct_publication_hash_probes", "/stage_spine/stats/fragment_packets",
+            "/stage_spine/stats/fragment_receipts", "/stage_spine/stats/fragment_receipt_spills",
+            "/stage_spine/stats/fragment_delivery_checks", "/entry_schedule/stats/publication_slot_probes",
+            "/entry_schedule/stats/publication_pending_pushes", "/entry_schedule/stats/fragment_pending_writes",
+            "/entry_schedule/stats/fragment_pending_reads",
+        ];
+        let mut costs = report.clone();
+        for key in charged { bump(&mut costs, key); }
+        assert_eq!(baseline.savings(&Work::read(&costs).unwrap()).0, -(charged.len() as i128));
+        let mut outcomes = report.clone();
+        for key in [
+            "/stats/register_prefix/eligible_seeds", "/stats/register_prefix/plan_hits",
+            "/stats/register_prefix/donor_hits", "/stats/register_prefix/key_reads_avoided",
+            "/stats/register_prefix/field_writes", "/stats/register_prefix/primitive_checks",
+            "/stage_spine/stats/local_witness_hits", "/stage_spine/stats/fragment_direct_inserts_avoided",
+            "/stage_spine/stats/fragment_deliveries", "/entry_schedule/stats/fragment_slot_probes",
+            "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
+        ] { bump(&mut outcomes, key); }
+        assert_eq!(Work::read(&outcomes).unwrap(), baseline);
+        // A Spine donor already increments decoded_rows: charging the donor's
+        // subset counter again would count that same row access twice.
+        bump(&mut outcomes, "/stage_spine/stats/local_witness_reads");
+        bump(&mut outcomes, "/stats/decoded_rows");
+        assert_eq!(baseline.savings(&Work::read(&outcomes).unwrap()).0, -1);
+        let mut missing = report;
+        missing["stats"]["register_prefix"].as_object_mut().unwrap().remove("donor_reads");
+        assert!(Work::read(&missing).unwrap_err().contains("stats/register_prefix/donor_reads"));
+    }
     #[test]
     fn lookup_savings_must_pay_for_unused_capture_and_failed_reads() {
         let old = Work(BTreeMap::from([("lookup".into(), 100), ("capture".into(), 0), ("failed_read".into(), 0)]));

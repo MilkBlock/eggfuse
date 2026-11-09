@@ -79,18 +79,118 @@ impl Registers {
         for &(c, s) in &k.seed {
             self.fields[s] = seed.values[c].clone();
         }
+        let (pc, epoch) = if k.prefixes.is_empty() {
+            (0, seed.epoch)
+        } else {
+            let Some(resume) = self.prefix(exec, r, k, seed)? else { return Ok(()) };
+            resume
+        };
         self.step::<LOCAL>(
             exec,
             rid,
             r,
             k,
-            0,
+            pc,
             (seed.epoch, seed.witness),
-            seed.epoch,
+            epoch,
             domains,
             known,
             out,
         )
+    }
+    /// Consume only a statically checked complete-key prefix. Reading an old
+    /// producer is not a liveness proof: failure resumes this exact instruction
+    /// through the ordinary matcher instead of rejecting its candidate.
+    fn prefix(
+        &mut self,
+        exec: &mut Executor,
+        r: &Rule,
+        k: &Kernel,
+        seed: &Row,
+    ) -> Result<Option<(usize, u64)>> {
+        exec.graph.stats.register_prefix.eligible_seeds += 1;
+        exec.graph.stats.register_prefix.context_reads += 1;
+        let Some(context) = exec.graph.continuation_context(seed.witness) else {
+            exec.graph.stats.register_prefix.context_missing += 1;
+            return Ok(Some((0, seed.epoch)));
+        };
+        exec.graph.stats.register_prefix.plan_lookups += 1;
+        let Ok(plan) = k.prefixes.binary_search_by_key(
+            &(context.template, context.op), |p| {
+                exec.graph.stats.register_prefix.plan_comparisons += 1;
+                (p.template, p.publication)
+            },
+        ) else { return Ok(Some((0, seed.epoch))) };
+        exec.graph.stats.register_prefix.plan_hits += 1;
+        let mut epoch = seed.epoch;
+        let owner = (seed.epoch, seed.witness);
+        let mut pc = 0;
+        for (ins, effect) in k.steps.iter().zip(&k.prefixes[plan].effects) {
+            let a = &r.query[ins.atom];
+            let result = match (&a.call, effect) {
+                (Call::Table(table), Some(op)) => {
+                    exec.graph.stats.register_prefix.donor_reads += 1;
+                    let fact = exec.graph.context_fact(context, *op as usize);
+                    let row = exec.graph.fact(fact)?;
+                    let Some(row) = row.filter(|row| {
+                        !row.hidden && row.table == *table && row.values.len() == a.args.len()
+                    }) else {
+                        exec.graph.stats.register_prefix.stale_fallbacks += 1;
+                        break;
+                    };
+                    let keys_match = a.args[..a.args.len() - 1].iter()
+                        .zip(row.values.iter()).all(|(arg, value)| {
+                            exec.graph.stats.register_prefix.field_checks += 1;
+                            exec.graph.stats.register_prefix.key_fields += 1;
+                            self.agrees(arg, value, &exec.graph)
+                        });
+                    if !keys_match {
+                        exec.graph.stats.register_prefix.key_fallbacks += 1;
+                        break;
+                    }
+                    exec.graph.stats.register_prefix.donor_hits += 1;
+                    exec.graph.stats.register_prefix.key_reads_avoided += 1;
+                    let stamp = (row.epoch, row.witness);
+                    if stamp > owner || (stamp == owner && ins.atom < k.pivot) {
+                        exec.graph.stats.register_prefix.owner_rejections += 1;
+                        return Ok(None);
+                    }
+                    epoch = epoch.max(row.epoch);
+                    self.witnesses[ins.atom] = Some(row.witness);
+                    row.values.last().unwrap().clone()
+                }
+                (Call::Primitive(name, sort), None) => {
+                    exec.graph.stats.register_prefix.primitive_checks += 1;
+                    if name.starts_with("cell-key-") { exec.graph.stats.key_operations += 1; }
+                    let args: SmallVec<[Value; 4]> = a.args[..a.args.len() - 1].iter()
+                        .map(|arg| self.val(arg, &exec.graph)).collect();
+                    let Some(value) = value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
+                    else {
+                        exec.graph.stats.register_prefix.primitive_rejections += 1;
+                        return Ok(None);
+                    };
+                    value
+                }
+                _ => unreachable!("validated register prefix instruction"),
+            };
+            if let Some((_, arg)) = ins.check.first() {
+                exec.graph.stats.register_prefix.field_checks += 1;
+                if !self.agrees(arg, &result, &exec.graph) {
+                    exec.graph.stats.register_prefix.result_rejections += 1;
+                    return Ok(None);
+                }
+            }
+            if let Some(&(_, slot)) = ins.assign.first() {
+                exec.graph.stats.register_prefix.field_writes += 1;
+                self.fields[slot] = result;
+            }
+            pc += 1;
+        }
+        if pc != 0 {
+            exec.graph.stats.register_prefix.resumes += 1;
+            exec.graph.stats.register_prefix.resumed_instructions += pc as u64;
+        }
+        Ok(Some((pc, epoch)))
     }
     fn step<const LOCAL: bool>(
         &mut self,

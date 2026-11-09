@@ -16,6 +16,8 @@ struct Stats {
     queue_successor_reads: u64,
     preflight_checks: u64,
     uncovered_stops: u64,
+    exact_domain_tasks: u64,
+    exact_domain_candidates: u64,
     short_prefixes: u64,
     preparation_errors: u64,
     dispatches: u64,
@@ -214,7 +216,7 @@ impl Graph {
             .composition
             .conditions
             .get(component.shape)
-            .is_some_and(|p| p.complete && p.site(frame.ordinal, f.op).is_some())
+            .is_some()
     }
     pub(in crate::graph) fn complete_port_read_batch(
         &mut self,
@@ -269,8 +271,8 @@ impl Graph {
                     break;
                 }
             };
-            let context = match self.local_port_candidates(fact, &row) {
-                Ok(Some(context)) => context,
+            let context = match self.batch_port_candidates(fact, &row) {
+                Ok(context) => context,
                 _ => {
                     self.batch_stats().preparation_errors += 1;
                     break;
@@ -368,6 +370,41 @@ impl Graph {
         stats.committed_tasks += committed;
         stats.unused_tasks += count as u64 - committed;
         Ok(committed != 0)
+    }
+
+    /// The bounded local condition plan is an optimization, not a prerequisite
+    /// for an exact parallel read. Larger shapes retain complete port coverage;
+    /// their immutable domain supplies all candidates in the same source order.
+    fn batch_port_candidates(&mut self, f: FactRef, row: &Row) -> Result<CandidateSet> {
+        if let Some(context) = self.local_port_candidates(f, row)? {
+            return Ok(context);
+        }
+        let runtime = self.ownership.as_ref().unwrap();
+        let frame = runtime.composition.frames[&f.cell];
+        let component = runtime.composition.components[frame.component as usize]
+            .as_ref().ok_or("expired completion source component")?;
+        let plan = self.program.cell_ownership.composition.conditions[component.shape].clone();
+        let bound = row.values[..row.values.len() - 1].iter().cloned().map(Some)
+            .collect::<smallvec::SmallVec<[_; 4]>>();
+        let mut candidates = Candidates::new();
+        for witness in self.owned_candidates(row.table, &bound) {
+            let Dependency::Fact(target) = witness else {
+                return Err("constructor completion domain contains a function".into());
+            };
+            if target != f {
+                let capacity = candidates.capacity();
+                candidates.push(Candidate { fact: target, condition: None });
+                if candidates.capacity() != capacity {
+                    let stats = self.batch_stats();
+                    stats.scratch_allocations += 1;
+                    stats.scratch_bytes_requested += (candidates.capacity() * std::mem::size_of::<Candidate>()) as u64;
+                }
+            }
+        }
+        let stats = self.batch_stats();
+        stats.exact_domain_tasks += 1;
+        stats.exact_domain_candidates += candidates.len() as u64;
+        Ok(CandidateSet { component: frame.component, plan, candidates })
     }
 
     fn advance_cached_source(
