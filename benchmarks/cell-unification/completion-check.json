@@ -1,0 +1,13 @@
+{
+  "scope": "standalone Cell CPU; brief grouped correctness/work check; no timing campaign",
+  "baseline_commit": "ff23dc09",
+  "metrics": 311,
+  "unchanged_work_metrics": 300,
+  "ordered_runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "semantic_acceptance": "pass",
+  "report_sha256": "8fe9a50f4bf261fca0fe17b02534d869e80360a448dc9ad369bd951e4fd2820d",
+  "runtime_sha256": "080be87199da99ed28a038d66ae48cccd01b23ca478179a67b11007745fb39c4",
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "single_writes": 1422
+}

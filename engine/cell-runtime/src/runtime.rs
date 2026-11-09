@@ -2004,34 +2004,27 @@ impl Executor {
                 #[cfg(feature = "sparse-cells")]
                 self.graph.has_visibility_changes(write.table),
             );
-            let (cell, index, key, changed) = self
+            let (cell, index, mut key, changed) = self
                 .graph
                 .apply_write(template, b.values, b.parent, &write, keep_key)?;
+            let receipts = crate::cell::SingleEffect(write.op, Dependency::Function(index));
             #[cfg(feature = "structural-depth")]
             if self.stage_spine.structural.capture_rule(rid) {
-                let mut rs = self.stage_spine.begin_effects(&self.graph, rid, true, false);
-                rs.record(write.op, Dependency::Function(index));
                 self.stage_spine
                     .structural
-                    .capture(&self.graph, rid, &b.known, &rs);
-                self.stage_spine.finish_effects(rs, false);
+                    .capture(&self.graph, rid, &b.known, &receipts);
             }
             if let Some(step) = stage_cursor {
                 self.stage_spine.effects(0, u64::from(changed), 0);
-                self.stage_spine.capture_write(
-                    step,
+                self.stage_spine.complete(
+                    &self.graph,
                     rid,
                     cell,
-                    write.op,
-                    write.table,
-                    key,
-                    Dependency::Function(index),
-                    self.graph.stats.unions,
-                    #[cfg(feature = "iterative-bake")]
-                    &self.graph.program.iterative,
-                    #[cfg(feature = "iterative-bake")]
-                    &b.known,
-                );
+                    step,
+                    |i| b.known.receipt(i),
+                    receipts,
+                    |_| key.take().ok_or("missing single-write boundary key".into()),
+                )?;
             }
             return Ok(());
         }

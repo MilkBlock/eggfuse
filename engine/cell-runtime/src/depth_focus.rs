@@ -216,7 +216,7 @@ impl Focus {
         g: &Graph,
         r: usize,
         known: &QueryFacts,
-        effects: &crate::cell::Effects,
+        effects: &impl crate::cell::CompletedEffects,
         read: impl Fn(Dependency) -> Option<&'a Packet>,
         mut emit: impl FnMut(Dependency, usize, Packet),
     ) {

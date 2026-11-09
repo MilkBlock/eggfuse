@@ -1186,7 +1186,7 @@ impl Programs {
         let keep = false;
         crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
     }
-    pub(crate) fn finish_effects(&mut self, effects: crate::cell::Effects, publish: bool) {
+    pub(crate) fn finish_effects(&mut self, effects: impl crate::cell::CompletedEffects, publish: bool) {
         if let Some((buffer, slots, probes, targets)) = effects.finish(publish) {
             debug_assert!(self.cell_outputs.is_empty(), "one executing Cell owns the output arena");
             self.cell_outputs = buffer;
@@ -1200,22 +1200,24 @@ impl Programs {
         self.stats.effect_aborted_frames += 1;
         self.finish_effects(effects, false);
     }
-    pub(crate) fn complete(
+    pub(crate) fn complete<E: crate::cell::CompletedEffects>(
         &mut self,
         g: &Graph,
         rid: usize,
         _cell: u32,
         step: Started,
         query_fact: impl Fn(usize) -> Option<Dependency>,
-        mut effects: crate::cell::Effects,
+        effects: E,
         mut key: impl FnMut(&[Arg]) -> Result<Vec<Value>>,
     ) -> Result<()> {
+        #[cfg(feature = "sparse-cells")]
+        let mut effects = effects;
         self.stats.completed_steps += 1;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
             self.finish_effects(effects, false);
             return Ok(());
         }
-        let clock = Instant::now();
+        let clock = E::DEFERRED_KEYS.then(Instant::now);
         let rule = &g.program.rules[rid];
         let template = &g.program.templates[rule.template];
         self.capture_unions.get_or_insert(g.stats.unions);
@@ -1238,10 +1240,7 @@ impl Programs {
         for position in 0..self.outputs[rid].len() {
             let output = self.outputs[rid][position];
             let (i, table, source) = (output.operation, output.table, output.receipt_source);
-            let receipt = effects.get(i).or_else(|| {
-                if !self.receipts {
-                    return None;
-                }
+            let receipt = if self.receipts { effects.get(i).or_else(|| {
                 match source? {
                     Site::Query(atom) => {
                         let w = query_fact(atom)?;
@@ -1254,7 +1253,7 @@ impl Programs {
                         Some(w)
                     }
                 }
-            });
+            }) } else { None };
             let publication = Publication {
                 slot,
                 receipt,
@@ -1274,8 +1273,10 @@ impl Programs {
                 && !self.audit_receipts
                 && let Some(w) = receipt
             {
-                self.capture_receipt(rid, slot, _cell, position, table, publication, w, Some(&mut effects));
-                self.stats.unmaterialized_anchor_keys += 1;
+                self.capture_receipt(rid, slot, _cell, position, table, publication, w, effects.output_frame());
+                // Single writes already evaluated their write key; only deferred
+                // frame keys count as materialization avoided here.
+                self.stats.unmaterialized_anchor_keys += u64::from(E::DEFERRED_KEYS);
                 self.stats.captured_anchors += 1;
                 continue;
             }
@@ -1293,7 +1294,7 @@ impl Programs {
         let publish = false;
         self.finish_effects(effects, publish);
         self.stats.captured_contexts += 1;
-        self.stats.capture_seconds += clock.elapsed().as_secs_f64();
+        if let Some(clock) = clock { self.stats.capture_seconds += clock.elapsed().as_secs_f64(); }
         Ok(())
     }
     pub(crate) fn write_needs_key(
@@ -1306,64 +1307,6 @@ impl Programs {
             && self.receipts && !self.audit_receipts) }
         #[cfg(not(feature = "sparse-cells"))]
         { true }
-    }
-    pub(crate) fn capture_write(
-        &mut self,
-        step: Started,
-        rid: usize,
-        _cell: u32,
-        op: usize,
-        table: usize,
-        key: Option<Vec<Value>>,
-        w: Dependency,
-        unions: u64,
-        #[cfg(feature = "iterative-bake")] catalog: &crate::iterative::Catalog,
-        #[cfg(feature = "iterative-bake")] query: &QueryFacts,
-    ) {
-        self.stats.completed_steps += 1;
-        if self.outputs[rid].is_empty() {
-            return;
-        }
-        debug_assert_eq!(self.outputs[rid].len(), 1);
-        debug_assert_eq!(self.outputs[rid][0].operation, op);
-        self.capture_unions.get_or_insert(unions);
-        let slot = self.pending_steps.len();
-        #[cfg(feature = "iterative-bake")]
-        let step = {
-            let mut s = step;
-            s.seed_root(
-                catalog,
-                rid,
-                self.training.run,
-                self.training.collect_pairs,
-                &mut self.stats,
-            );
-            s.remember(catalog, rid,
-                |i| query.receipt(i), |i| (i == op).then_some(w), &mut self.stats);
-            s
-        };
-        self.pending_steps.push(Completion::new(step));
-        let publication = Publication {
-            slot,
-            receipt: self.receipts.then_some(w),
-            #[cfg(feature = "iterative-bake")]
-            output: op,
-            #[cfg(feature = "spine-shapes")]
-            source: crate::graph::FactRef {
-                cell: _cell,
-                op: op as u32,
-            },
-        };
-        if let Some(key) = key {
-            self.pending_anchors.push((table, key, publication));
-        } else {
-            #[cfg(feature = "sparse-cells")]
-            self.capture_receipt(rid, slot, _cell, 0, table, publication, w, None);
-            #[cfg(not(feature = "sparse-cells"))]
-            unreachable!("ordinary publication needs a key");
-        }
-        self.stats.captured_anchors += 1;
-        self.stats.captured_contexts += 1;
     }
     #[cfg(feature = "sparse-cells")]
     fn capture_receipt(&mut self, rid: usize, slot: usize, _cell: u32, position: usize,

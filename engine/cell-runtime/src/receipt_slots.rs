@@ -86,7 +86,7 @@ impl Slots {
         focus: &focus::Focus,
         r: usize,
         known: &QueryFacts,
-        effects: &crate::cell::Effects,
+        effects: &impl crate::cell::CompletedEffects,
         stats: &mut Stats,
         profile: bool,
     ) {

@@ -135,11 +135,14 @@
         "Track boundary export records/reads, insertion comparisons, Cell visits, candidate checks/skips and Cursor promotions; retain old removed-path counters as zero.",
         "Cell Definition derives one Output projection for capture, Entry ownership, publication and Bake shape statistics; duplicate anchor/table arrays removed.",
         "Single and multiple owned permanent outputs share completion slots and one receipt sink; standalone FragmentPublication packets removed.",
-        "Source completion/effect order replaces duplicated per-output/global ordinal storage; partially published Cell slots stay stable until drained."
+        "Source completion/effect order replaces duplicated per-output/global ordinal storage; partially published Cell slots stay stable until drained.",
+        "Ordinary/local/closed RHS results use common Cell effect slots; full-width temporary receipt arrays removed.",
+        "Closed handoff keeps computed Cell slots and borrows matched inputs through the common frame reader; per-effect key arrays removed.",
+        "One complete implementation captures history and publishes all RHS variants, including inline single-write returns; capture_write and separate capture_step/capture_keys APIs removed."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
-        "Unify temporary effect receipt arrays, required Results/history capture and boundary key normalization with the same Cell definition; retain only downstream-required references.",
+        "Unify required Results/history retention and uncovered boundary normalization; effect receipt arrays and separate single-write completion have been removed.",
         "Handle legacy owners and unknown boundaries before removing their remaining direct-publication hash table and key coalescing.",
         "Reduce uncovered boundary ordering and scans of deferred Cell completions with a proof of coverage.",
         "Confirm inference speed across stable final paths; short capture and publication paired intervals still include parity.",
@@ -186,7 +189,8 @@
         "opportunity": "Per-RHS full-width receipt arrays copied actual references into final Cell output slots.",
         "live_obligations": "Private suffix until source-scheduled completion, raw history before alias fill, actual foreign-Cell results, interrupted RHS and partial-scope lifetime.",
         "verification": "Common Effects removes temporary receipt arrays; 4,454 outputs retain their slots. Existing work, 1,428 Runs and ordered hashes unchanged; semantic pass. Execute allocations -6,198, requested bytes -386,804; setup +4,656 bytes. Paired timing includes parity; no speedup claim."
-      }
+      },
+      "quick_checks": "benchmarks/cell-unification/completion-check.json"
     },
     {
       "id": "ports_congruence",
@@ -289,7 +293,7 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "D2",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Receipt dataflow is shared; ordinary/local/closed execution, single-write and merge control still need unification."
+      "remaining": "Receipt and completion flow are shared, including inline single writes; effect execution and merge interpretation still need unification."
     },
     {
       "id": "E1",

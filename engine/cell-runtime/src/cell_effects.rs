@@ -6,6 +6,27 @@ use super::{Definition, Output, Site};
 use crate::{graph::Dependency, program::Program};
 use std::{num::NonZeroU32, rc::Rc};
 
+/// The completion interface is independent of receipt storage. Single writes
+/// carry their one actual return inline; other Cells can retain an arena span.
+/// Static dispatch keeps the inline case allocation-free.
+pub(crate) trait CompletedEffects {
+    const DEFERRED_KEYS: bool;
+    fn get(&self, operation: usize) -> Option<Dependency>;
+    #[cfg(feature = "sparse-cells")]
+    fn output_frame(&mut self) -> Option<&mut Effects>;
+    fn finish(self, publish: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)>;
+}
+pub(crate) struct SingleEffect(pub usize, pub Dependency);
+impl CompletedEffects for SingleEffect {
+    const DEFERRED_KEYS: bool = false;
+    fn get(&self, operation: usize) -> Option<Dependency> {
+        (operation == self.0).then_some(self.1)
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn output_frame(&mut self) -> Option<&mut Effects> { None }
+    fn finish(self, _: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> { None }
+}
+
 pub(crate) struct EffectPlan {
     slots: Vec<Option<NonZeroU32>>,
     width: usize,
@@ -54,10 +75,6 @@ impl Effects {
         let keep = if keep { plan.outputs } else { 0 };
         Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0 }
     }
-    pub fn get(&self, operation: usize) -> Option<Dependency> {
-        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.get() as usize - 1;
-        self.buffer[self.first + slot]
-    }
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
@@ -68,12 +85,14 @@ impl Effects {
     pub fn record(&mut self, operation: usize, receipt: Dependency) {
         if let Some(slot) = self.slot(operation) { *slot = Some(receipt); }
     }
+    #[cfg(feature = "sparse-cells")]
     pub fn output_first(&self) -> usize {
         assert!(self.keep != 0, "Cell outputs need a reserved completion span");
         self.first
     }
     /// Actual effect returns already occupy their final output slot. A skipped
     /// effect's proven alias is filled only after history captured the raw RHS.
+    #[cfg(feature = "sparse-cells")]
     pub fn retain_output(&mut self, position: usize, receipt: Dependency) -> bool {
         assert!(position < self.keep);
         let slot = &mut self.buffer[self.first + position];
@@ -85,7 +104,16 @@ impl Effects {
             true
         }
     }
-    pub fn finish(mut self, publish: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> {
+}
+impl CompletedEffects for Effects {
+    const DEFERRED_KEYS: bool = true;
+    fn get(&self, operation: usize) -> Option<Dependency> {
+        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.get() as usize - 1;
+        self.buffer[self.first + slot]
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn output_frame(&mut self) -> Option<&mut Effects> { Some(self) }
+    fn finish(mut self, publish: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> {
         let plan = self.plan.take()?;
         self.buffer.truncate(self.first + if publish { self.keep } else { 0 });
         Some((self.buffer, plan.width, self.probes, self.targets))

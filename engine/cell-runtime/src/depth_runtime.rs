@@ -216,7 +216,7 @@ impl Depth {
         r: usize,
         s: Site,
         known: &QueryFacts,
-        effect: &crate::cell::Effects,
+        effect: &impl crate::cell::CompletedEffects,
     ) -> Option<Dependency> {
         match s {
             Site::Query(i) => known.tracked(i),
@@ -241,7 +241,7 @@ impl Depth {
         g: &Graph,
         r: usize,
         known: &QueryFacts,
-        effect: &crate::cell::Effects,
+        effect: &impl crate::cell::CompletedEffects,
     ) {
         if !self.capture_rule(r) {
             return;
