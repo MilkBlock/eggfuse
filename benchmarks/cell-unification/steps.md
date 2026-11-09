@@ -104,3 +104,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 相对直接前版，推理配对中位比为 0.976（95% bootstrap 区间 0.908–1.012），进程为 0.996（0.977–1.041）；相对上次计时版本分别为 1.004（0.968–1.028）与 0.998（0.937–1.049）。两项都不足以判定加速或退步，不用独立中位数差值替代配对比较。相对上次版本，setup 配对中位比 0.906（0.819–0.946），但推理及整体收益尚未成立；RSS 中位数约增加 0.72 MiB，分配未另行采样。没有新增 Raytrace 或历史最快配置扫描。
 
 复现计时：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/port-read-timing-spec.json out/cell-port-reader-unified/timing --repeat 7 --warmups 1`（输出目录须不存在）；核对已有输出：`python3 benchmarks/cell-unification/port-read-check.py out/cell-port-reader-unified benchmarks/cell-unification/port-read-results.json`。语义、目录指标及源运行输出使用上述既有入口生成；冻结 binary 的 SHA 保存在结果中。
+
+## Cell 字段变化共用发布与完成排队
+
+基线 `53bdc930`。删除 `project_owned_ports`、`notify_stable_fields`、`publish_unique_port` 三份提交实现；共享 wiring 激活后由 `propagate_cell_fields` 处理。表示差异仅保留稳定字段无需写回、旧 decoded 字段需要实际替换的分支。发布、query version、change batch 和 key 排队只实现一次；输入发生变化时不再查询无法影响决策的 canonical singleton 桶。
+
+唯一性证明仍检查完整 live domain、pending peer、union batch 和源顺序，不能被上述快路推断替代。其直接发布保留 completion epoch join 与原独立计数；普通结果发布、stable cause 通知及 decoded 未变化早退均保持。实际更新同一个 fact，未添加状态或反向边。
+
+10 项 unique publication、跨阶段 stable/decoded/keyed/local 差分、并行多输入与级联有序检查及最小特性编译通过。已有用例覆盖 hidden peer、旧 union 不得回退新 consumer epoch、删除重建和多个源阶段。上次速度检查后的第 1 个实现提交，本项不单独计时。

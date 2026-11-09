@@ -235,33 +235,29 @@ impl Graph {
             witness: Dependency::Fact(f),
         })
     }
-    /// Existing shared slices identify the changed columns. No stored field
-    /// needs an Eq(from) comparison or an Eq(to) write. Changed inputs enqueue
-    /// either canonical key work or an exact port-equality obligation.
-    pub(in crate::graph) fn notify_stable_fields(
+    /// Shared Cell slices identify the affected columns. Stable fields already
+    /// observe the equality; decoded compatibility rows still need projection.
+    /// Both representations use the same publication and completion boundary.
+    pub(super) fn propagate_cell_fields(
         &mut self,
         f: FactRef,
         columns: &[usize],
-        changed_root: u64,
-    ) -> bool {
-        let Some(stored) = self.stable_node(f) else {
-            return false;
-        };
-        if columns.is_empty() {
-            return true;
+        from: u64,
+        to: u64,
+    ) {
+        // Several signals may contribute disjoint, unsorted column slices.
+        let stable = self.stable_node(f).map(|stored| {
+            (
+                stored.table,
+                columns.iter().any(|&i| i + 1 < stored.fields.len()),
+            )
+        });
+        if stable.is_some() && columns.is_empty() {
+            return;
         }
-        let table = stored.table;
-        let port_key = self.port_keys_enabled(table);
-        // Dispatch coalesces disjoint columns from several signals, so their
-        // concatenation need not be sorted.
-        let key = columns.iter().any(|&i| i + 1 < stored.fields.len());
-        if port_key && key && self.unique_port_input(f, columns) {
-            let stats = self.stable_ports.as_mut().unwrap();
-            stats.notifications += 1;
-            stats.notified_columns += columns.len() as u64;
-            self.publish_unique_port(f, table);
-            return true;
-        }
+        let port_key = stable.is_some_and(|(table, _)| self.port_keys_enabled(table));
+        let unique = port_key && stable.unwrap().1 && self.unique_port_input(f, columns);
+        let m = self.ownership.as_mut().unwrap();
         let state = self
             .cells
             .get_mut(&f.cell)
@@ -269,33 +265,72 @@ impl Graph {
             .facts
             .get_mut(&f.op)
             .unwrap();
-        let singleton = !port_key
-            && self
-                .intern
-                .get(&state.hash)
-                .is_some_and(|bucket| bucket.len() == 1 && bucket.first() == Some(&f));
-        let m = self.ownership.as_mut().unwrap();
-        let stats = self.stable_ports.as_mut().unwrap();
-        stats.notifications += 1;
-        stats.notified_columns += columns.len() as u64;
-        if !key && (port_key || singleton) && !m.pending.contains(table, &f) {
-            state.epoch = self.epoch;
+        let mut stats = stable.map(|_| self.stable_ports.as_mut().unwrap());
+        let (table, key) = if let Some((table, key)) = stable {
+            let stats = stats.as_mut().unwrap();
+            stats.notifications += 1;
+            stats.notified_columns += columns.len() as u64;
+            (table, key)
+        } else {
+            m.stats.body_visits += 1;
+            let (table, fields) = state.decoded.as_mut().expect("owned canonical body");
+            let mut changed = false;
+            let mut key = false;
+            for &i in columns {
+                m.stats.port_checks += 1;
+                if fields[i] == Value::Eq(from) {
+                    m.stats.changed_ports += 1;
+                    m.stats.row_copies += u64::from(Rc::strong_count(fields) > 1);
+                    Rc::make_mut(fields)[i] = Value::Eq(to);
+                    changed = true;
+                    key |= i + 1 < fields.len();
+                } else {
+                    m.stats.unchanged_port_checks += 1;
+                }
+            }
+            if !changed {
+                return;
+            }
+            (*table, key)
+        };
+        // A changed input needs completion unless uniqueness was proved. Its
+        // canonical hash bucket cannot affect this decision, so do not probe it.
+        let publish = unique
+            || (!key
+                && (port_key
+                    || self.intern.get(&state.hash)
+                        .is_some_and(|b| b.len() == 1 && b.first() == Some(&f)))
+                && !m.pending.contains(table, &f));
+        if publish {
+            state.epoch = if unique {
+                // Bypassing the queue must retain its causal epoch join.
+                m.pending.completion_epoch(self.epoch, state.epoch, None)
+            } else {
+                self.epoch
+            };
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(f));
-            m.stats.result_publications += 1;
-            stats.result_publications += 1;
+            if unique {
+                stats.unwrap().unique.as_mut().unwrap().publications += 1;
+            } else {
+                m.stats.result_publications += 1;
+                if let Some(stats) = stats {
+                    stats.result_publications += 1;
+                }
+            }
         } else {
             let added = u64::from(m.pending.insert(table, f, self.epoch));
-            m.pending.cause(table, changed_root);
             m.stats.key_enqueues += added;
-            if port_key {
-                stats.equality_enqueues += added;
-            } else {
-                stats.legacy_key_enqueues += added;
+            if let Some(stats) = stats {
+                m.pending.cause(table, to);
+                if port_key {
+                    stats.equality_enqueues += added;
+                } else {
+                    stats.legacy_key_enqueues += added;
+                }
             }
             self.dirty_facts[table].insert(f);
         }
-        true
     }
     pub fn stable_port_report(&self) -> J {
         let Some(stats) = &self.stable_ports else {

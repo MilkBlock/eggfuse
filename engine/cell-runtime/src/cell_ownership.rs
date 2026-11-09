@@ -647,7 +647,7 @@ impl Graph {
                 }
             }
             self.ownership.as_mut().unwrap().stats.coalesced_slice_steps += pieces - 1;
-            self.project_owned_ports(fact, &columns, from, to);
+            self.propagate_cell_fields(fact, &columns, from, to);
         }
         let m = self.ownership.as_mut().unwrap();
         m.stats.dispatch_scratch_bytes = heap.capacity()
@@ -655,52 +655,6 @@ impl Graph {
             + columns.capacity() * std::mem::size_of::<usize>();
         m.composition.heap = heap;
         m.composition.columns = columns;
-    }
-    fn project_owned_ports(&mut self, f: FactRef, columns: &[usize], from: u64, to: u64) {
-        if self.notify_stable_fields(f, columns, to) {
-            return;
-        }
-        let m = self.ownership.as_mut().unwrap();
-        m.stats.body_visits += 1;
-        let s = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
-            .unwrap();
-        let (table, fields) = s.decoded.as_mut().expect("owned canonical body");
-        let table = *table;
-        let mut changed = false;
-        let mut key = false;
-        for &i in columns {
-            m.stats.port_checks += 1;
-            if fields[i] == Value::Eq(from) {
-                m.stats.changed_ports += 1;
-                m.stats.row_copies += u64::from(Rc::strong_count(fields) > 1);
-                Rc::make_mut(fields)[i] = Value::Eq(to);
-                changed = true;
-                key |= i + 1 < fields.len();
-            } else {
-                m.stats.unchanged_port_checks += 1;
-            }
-        }
-        if !changed {
-            return;
-        }
-        let singleton = self
-            .intern
-            .get(&s.hash)
-            .is_some_and(|b| b.len() == 1 && b.first() == Some(&f));
-        if !key && singleton && !m.pending.contains(table, &f) {
-            s.epoch = self.epoch;
-            self.query_versions[table] += 1;
-            self.changes.touch(table, Dependency::Fact(f));
-            m.stats.result_publications += 1;
-        } else {
-            m.stats.key_enqueues += u64::from(m.pending.insert(table, f, self.epoch));
-            self.dirty_facts[table].insert(f);
-        }
     }
     pub(super) fn pop_owned_before(&mut self, next: Option<Dependency>, allowed: Option<&[bool]>) -> Option<FactRef> {
         let m = self.ownership.as_mut()?;

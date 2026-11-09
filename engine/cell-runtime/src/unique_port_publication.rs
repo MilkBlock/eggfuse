@@ -27,7 +27,7 @@ pub(super) struct Counts {
     incomplete_rejections: u64,
     budget_rejections: u64,
     accepted: u64,
-    publications: u64,
+    pub(super) publications: u64,
     peak_visits: u64,
 }
 fn visits(c: &Counts) -> u64 {
@@ -249,31 +249,6 @@ impl Graph {
         }
         counts.peer_rejections += 1;
         true
-    }
-    pub(super) fn publish_unique_port(&mut self, f: FactRef, table: usize) {
-        let state = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
-            .unwrap();
-        // The ordinary completion path joins the row epoch even without a
-        // collision. Keep that causal rule when bypassing its queue.
-        state.epoch = self.ownership.as_mut().unwrap().pending.completion_epoch(
-            self.epoch,
-            state.epoch,
-            None,
-        );
-        self.query_versions[table] += 1;
-        self.changes.touch(table, Dependency::Fact(f));
-        self.stable_ports
-            .as_mut()
-            .unwrap()
-            .unique
-            .as_mut()
-            .unwrap()
-            .publications += 1;
     }
     pub(super) fn unique_publication_report(&self) -> J {
         match self.stable_ports.as_ref().and_then(|s| s.unique.as_ref()) {
