@@ -28,9 +28,10 @@ mod point_ports;
 use crate::known_results::QueryFacts;
 use crate::schedule::{self, Task};
 use crate::{
+    cell::{QueryFrame, bind_query as bind, query_operand as operand},
     graph::*,
     program::*,
-    value::{self, Value, canon},
+    value::{self, Value},
 };
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -219,27 +220,13 @@ impl QueryEnv {
             .collect()
     }
 }
-fn operand(a: &Arg, env: &QueryEnv, g: &Graph) -> Option<Value> {
-    match a {
-        Arg::Literal(v) => Some(canon(v, &g.parents)),
-        Arg::Slot(i) => env.values.get(*i).cloned(),
-    }
-}
-fn bind(a: &Arg, v: &Value, env: &mut QueryEnv, g: &Graph) -> bool {
-    // The graph is immutable throughout matching, so assigned values stay canonical.
-    // All callers provide a canonical row, local slot, or primitive output.
-    // No writes are visible during this immutable matching snapshot.
-    match a {
-        Arg::Literal(l) => canon(l, &g.parents) == *v,
-        Arg::Slot(i) => {
-            if let Some(old) = env.values.get(*i) {
-                old == v
-            } else {
-                env.values.set(*i, Some(v.clone()));
-                env.trail.push(*i);
-                true
-            }
-        }
+impl QueryFrame for QueryEnv {
+    #[inline]
+    fn slot(&self, slot: usize) -> Option<&Value> { self.values.get(slot) }
+    #[inline]
+    fn bind_slot(&mut self, slot: usize, value: Value) {
+        self.values.set(slot, Some(value));
+        self.trail.push(slot);
     }
 }
 impl Executor {
@@ -491,7 +478,7 @@ impl Executor {
             Call::Primitive(name, output) => {
                 let vals = atom.args[..atom.args.len() - 1]
                     .iter()
-                    .map(|a| operand(a, &env, &self.graph).ok_or("unbound primitive input"))
+                    .map(|a| operand(a, env, &self.graph).ok_or("unbound primitive input"))
                     .collect::<std::result::Result<Vec<_>, _>>()?;
                 if name.starts_with("cell-key-") {
                     self.graph.stats.key_operations += 1;
@@ -509,7 +496,7 @@ impl Executor {
             Call::Table(t) => {
                 let key = atom.args[..atom.args.len() - 1]
                     .iter()
-                    .map(|a| operand(a, &env, &self.graph))
+                    .map(|a| operand(a, env, &self.graph))
                     .collect::<Option<Vec<_>>>();
                 let complete_key = key.is_some();
                 let witnesses = if let Some(child) = env.domain(chosen).filter(|d| d.len() <= 1) {

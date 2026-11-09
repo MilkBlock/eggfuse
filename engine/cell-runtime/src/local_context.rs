@@ -1,6 +1,7 @@
 //! Retain a connected prefix and expand its final table at the scheduled Run.
 //! Only correlated prefixes survive Run boundaries; terminal answers do not.
 use crate::{
+    cell::{bind_query as bind, query_operand as operand},
     entry_schedule::Scheduler,
     graph::{Dependency, Graph, Row},
     program::*,
@@ -434,7 +435,7 @@ impl Contexts {
                     let key = plan
                         .columns
                         .iter()
-                        .map(|&col| operand(&tail.args[col], &p.values, g).unwrap())
+                        .map(|&col| operand(&tail.args[col], p.values.as_slice(), g).unwrap())
                         .collect();
                     let group = c.groups.entry(key).or_default();
                     group.rows.push(p.clone());
@@ -467,7 +468,7 @@ impl Contexts {
             let bound = tail
                 .args
                 .iter()
-                .map(|a| operand(a, &group.rows[0].values, g))
+                .map(|a| operand(a, group.rows[0].values.as_slice(), g))
                 .collect::<Vec<_>>();
             for &w in ix.candidates(g, terminal, &bound)?.iter() {
                 stats.full_terminal_rows += 1;
@@ -513,7 +514,7 @@ impl Contexts {
                     let bound = tail
                         .args
                         .iter()
-                        .map(|a| operand(a, &group.rows[0].values, g))
+                        .map(|a| operand(a, group.rows[0].values.as_slice(), g))
                         .collect::<Vec<_>>();
                     stats.reverse_groups += 1;
                     cost = cost.saturating_add(ix.count(g, terminal, &bound)?);
@@ -613,7 +614,7 @@ fn extend(
     let bound = a
         .args
         .iter()
-        .map(|v| operand(v, &p.values, g))
+        .map(|v| operand(v, p.values.as_slice(), g))
         .collect::<Vec<_>>();
     if ix.count(g, t, &bound)? > PREFIX_LIMIT {
         return Ok(false);
@@ -723,22 +724,4 @@ pub struct Answer {
     pub values: Vec<Value>,
     pub witnesses: Vec<Option<Dependency>>,
     pub epoch: u64,
-}
-pub(crate) fn operand(a: &Arg, input: &[Option<Value>], g: &Graph) -> Option<Value> {
-    match a {
-        Arg::Literal(v) => Some(canon(v, &g.parents)),
-        Arg::Slot(i) => input[*i].clone(),
-    }
-}
-pub(crate) fn bind(a: &Arg, v: &Value, input: &mut [Option<Value>], g: &Graph) -> bool {
-    match a {
-        Arg::Literal(x) => canon(x, &g.parents) == *v,
-        Arg::Slot(i) => match &input[*i] {
-            Some(old) => old == v,
-            None => {
-                input[*i] = Some(v.clone());
-                true
-            }
-        },
-    }
 }

@@ -3,6 +3,7 @@
 //! It does not publish speculative writes or evaluate a custom merge.
 use super::*;
 use crate::cell::BoundValue;
+use crate::value::canon;
 use crate::graph::cell_ownership::completion::{Batch, Birth};
 
 impl Executor {

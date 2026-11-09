@@ -264,3 +264,15 @@ Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Fre
 推理未建立加速，直接前版的整进程对照仍出现回退，不能按速度保持验收。已有分段样本中，当前版与直接前版的 load 中位数为 66.409/64.286 ms，setup 为 3.000/3.058 ms；本次删除的 Sieve clone 位于推理阶段，故不能把整进程差异全部归因于这项修改。各阶段中位数不可相加作因果分解，也没有为此追加采样。当前版及直接前版截至推理结束的峰值 RSS 中位数均为 178,765,824 字节；没有分配审计。下一周期从本次实现提交起重新计数，所有历史结果和回退仍保留。
 
 复现：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/sieve-timing-spec.json out/cell-sieve-unified/timing --repeat 7 --warmups 1`，然后 `python3 benchmarks/cell-unification/collect_sieve.py out/cell-sieve-unified benchmarks/cell-unification/sieve-results.json --commit 7f4e24c2 --timing`。收集器只读取已有样本，不再次启动负载。
+
+## 普通查询、context 与 Entry 共用 Cell 绑定
+
+基线 `7f4e24c2`。上一份 sum-bits 报告的 local context 有 33 次调用、32 次 root reuse；普通查询及 Entry 另有各自的字段匹配实现。四处分别解释 Literal/Slot、检查已有值、写入新值；其中两处还各自实现 operand 读取。它们都消费同一份已验证的 Cell query，并在当前不可变匹配快照上操作，不需要各自定义绑定语义。
+
+在现有 Cell query 模块中统一 QueryFrame 读取与绑定。普通搜索直接借用原 Inputs 并保留 trail；context 使用原 prefix 槽数组；stage Entry 使用原 Inputs；共享 seed 首次验证只在实际新增槽值时计数。删除四个独立 binder 和两个 operand reader。泛型调用静态分派，不新增实例状态、绑定副本、历史记录或 heap 包装；共享 seed 命中后的直接字段投影继续省掉重复判断。
+
+保留已绑定值相等检查、重复变量、Eq/集合字面量的当前 canonicalization，以及失败行之前已写入字段的原回滚规则。不能把跨 Run 的缓存当作永久 canonical：context 的版本/union 失效、ReadStamp 验证和 Entry 快照边界保持。编译查询的借用 Field、context terminal 投影、prefix 分支复制及 scalar-call 执行仍需后续收拢，本步不宣称查询路径已全部统一。
+
+四项短集成检查通过：`keyed_context_tracks_correlated_ports_and_late_terminal_deltas`、`connected_cuts_span_chains_and_transfer_evidence_to_renamed_relations`、`free_join_preserves_cyclic_matches_and_late_rows_under_collisions`、`complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts`；同时通过 no-default-features 编译。普通 sum-bits 语义 pass，1,428 个 Run、最终状态、339 项工作指标的值/缺失状态及完整 context/Spine/过滤计数保持。构建未改变产物，不把同计数或共享接口当成速度证明。
+
+输出保存于 `out/cell-query-frame`。普通 release 构建、sum 和 semantic/catalog 命令沿用前节；`python3 benchmarks/cell-unification/check_links.py out/cell-query-frame OUTPUT --commit COMMIT --phase query-frame` 只校验已有结果。此步是下一周期第 1 个实现提交，不新增时间/分配采样，之前的速度回退仍待解决。

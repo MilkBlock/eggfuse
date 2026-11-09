@@ -1,6 +1,7 @@
 //! A fused Free Join stage over the Cell query indexes. Subatoms project the
 //! shared columns. A probe returns a witness subset for the next stage.
 use super::*;
+use crate::value::canon;
 use smallvec::SmallVec;
 #[cfg(not(feature="sparse-cells"))]
 use std::collections::HashMap;

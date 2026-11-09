@@ -8,6 +8,54 @@ use serde::Serialize;
 use serde_json::json;
 use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
 
+/// The current bindings of a Cell query. Storage and rollback belong to the
+/// caller: an Entry overlay, a retained prefix or a Run-local search trail.
+/// This interface borrows those bindings; it creates no second frame or facts.
+pub(crate) trait QueryFrame {
+    fn slot(&self, slot: usize) -> Option<&Value>;
+    /// Called only after the common binder proves this slot is unbound.
+    fn bind_slot(&mut self, slot: usize, value: Value);
+}
+
+impl QueryFrame for crate::entry_schedule::Inputs {
+    #[inline]
+    fn slot(&self, slot: usize) -> Option<&Value> { self.get(slot) }
+    #[inline]
+    fn bind_slot(&mut self, slot: usize, value: Value) { self.set(slot, Some(value)); }
+}
+impl QueryFrame for [Option<Value>] {
+    #[inline]
+    fn slot(&self, slot: usize) -> Option<&Value> { self[slot].as_ref() }
+    #[inline]
+    fn bind_slot(&mut self, slot: usize, value: Value) { self[slot] = Some(value); }
+}
+
+#[inline]
+pub(crate) fn query_operand<F: QueryFrame + ?Sized>(a: &Arg, frame: &F, g: &Graph) -> Option<Value> {
+    match a {
+        Arg::Literal(v) => Some(canon(v, &g.parents)),
+        Arg::Slot(slot) => frame.slot(*slot).cloned(),
+    }
+}
+
+/// Matching runs over a repaired, immutable snapshot. Rows and primitive
+/// results are already canonical; only source literals need canonicalizing.
+/// A failed comparison leaves bindings untouched. Branch rollback remains
+/// the caller's responsibility, including earlier fields of a rejected row.
+#[inline]
+pub(crate) fn bind_query<F: QueryFrame + ?Sized>(a: &Arg, value: &Value, frame: &mut F, g: &Graph) -> bool {
+    match a {
+        Arg::Literal(v) => canon(v, &g.parents) == *value,
+        Arg::Slot(slot) => match frame.slot(*slot) {
+            Some(old) => old == value,
+            None => {
+                frame.bind_slot(*slot, value.clone());
+                true
+            }
+        },
+    }
+}
+
 #[derive(Clone, Debug, Serialize)]
 pub(crate) enum Field {
     Anchor(usize),

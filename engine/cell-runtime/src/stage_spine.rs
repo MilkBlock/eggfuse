@@ -4,7 +4,7 @@
 use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
-    cell::Site,
+    cell::{QueryFrame, Site, bind_query as bind},
     known_results::QueryFacts,
     program::*,
     value::{self, Value, canon},
@@ -645,18 +645,6 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     answer_scratch: Winners,
     pub stats: Stats,
-}
-fn bind(a: &Arg, v: &Value, input: &mut Inputs, g: &Graph) -> bool {
-    match a {
-        Arg::Literal(x) => canon(x, &g.parents) == *v,
-        Arg::Slot(i) => match input.get(*i) {
-            Some(x) => x == v,
-            None => {
-                input.set(*i, Some(v.clone()));
-                true
-            }
-        },
-    }
 }
 #[cfg(feature = "sparse-cells")]
 type Winners = Vec<(Vec<Value>, (Answer, Cursor))>;
@@ -2225,22 +2213,25 @@ impl Programs {
         } else {
             self.stats.pivot_candidates += 1;
             *self.stats.entry_checks_by_rule.entry(rid).or_default() += 1;
+            struct SeedInputs<'a> {
+                values: &'a mut [Option<Value>],
+                copied: &'a mut u64,
+            }
+            impl QueryFrame for SeedInputs<'_> {
+                #[inline]
+                fn slot(&self, slot: usize) -> Option<&Value> { self.values[slot].as_ref() }
+                #[inline]
+                fn bind_slot(&mut self, slot: usize, value: Value) {
+                    *self.copied += 1;
+                    self.values[slot] = Some(value);
+                }
+            }
+            let mut frame = SeedInputs { values: input, copied: &mut self.stats.entry_parameters_copied };
             let valid = g.program.rules[rid].query[pivot]
                 .args
                 .iter()
                 .zip(row.values.iter())
-                .all(|(a, v)| match a {
-                    Arg::Literal(l) => canon(l, &g.parents) == *v,
-                    Arg::Slot(i) => match &input[*i] {
-                        Some(old) => old == v,
-                        None => {
-                            self.stats.entry_parameters_copied += 1;
-
-                            input[*i] = Some(v.clone());
-                            true
-                        }
-                    },
-                });
+                .all(|(a, v)| bind(a, v, &mut frame, g));
             self.entry_cache.insert(key, (valid, rid));
             self.stats.peak_cached_entries =
                 self.stats.peak_cached_entries.max(self.entry_cache.len());
