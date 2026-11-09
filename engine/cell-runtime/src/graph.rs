@@ -719,7 +719,7 @@ impl Graph {
             };
             let key = args
                 .iter()
-                .map(|a| self.argument_in(id, &frame, a))
+                .map(|a| self.argument_in(id, &frame, None, a))
                 .collect::<Result<Vec<_>>>()?;
             self.stats.constructor_requests += 1;
             if let Some(row) = self.lookup_canonical(table, &key)? {
@@ -767,7 +767,7 @@ impl Graph {
         for (dst, name, sort, args) in &write.prefix {
             let args = args
                 .iter()
-                .map(|a| self.argument_in(id, &frame, a))
+                .map(|a| self.argument_in(id, &frame, None, a))
                 .collect::<Result<smallvec::SmallVec<[Value; 4]>>>()?;
             let v = value::primitive(name, &args, sort, self.program.key_nodes())?
                 .ok_or_else(|| format!("RHS primitive failed: {name}"))?;
@@ -776,9 +776,9 @@ impl Graph {
         let key = write
             .key
             .iter()
-            .map(|a| self.argument_in(id, &frame, a))
+            .map(|a| self.argument_in(id, &frame, None, a))
             .collect::<Result<Vec<_>>>()?;
-        let value = self.argument_in(id, &frame, &write.value)?;
+        let value = self.argument_in(id, &frame, None, &write.value)?;
         let i=self.set_function_canonical(write.table,&key,value)?;
         let changed=self.stats.function_updates!=before;
         if changed {
@@ -809,7 +809,7 @@ impl Graph {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(w) = self.writer(cell) {
-            return self.slot_fields(cell, w.template, w.parent, &w.values, i);
+            return self.slot_fields(cell, w.template, w.parent, &w.values, None, i);
         }
         Err("expired Cell reference".into())
     }
@@ -867,14 +867,14 @@ impl Graph {
             self.promote_active();
         }
     }
-    fn argument_in(&self, cell: u32, c: &Cell, a: &Arg) -> Result<Value> {
+    fn argument_in(&self, cell: u32, c: &Cell, inputs: Option<&crate::slots::Slots>, a: &Arg) -> Result<Value> {
         match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
-            Arg::Slot(i) => self.slot_in(cell, c, *i),
+            Arg::Slot(i) => self.slot_fields(cell, c.template, c.parent, &c.values, inputs, *i),
         }
     }
     fn slot_in(&self, cell: u32, c: &Cell, i: usize) -> Result<Value> {
-        self.slot_fields(cell, c.template, c.parent, &c.values, i)
+        self.slot_fields(cell, c.template, c.parent, &c.values, None, i)
     }
     fn slot_fields(
         &self,
@@ -882,9 +882,10 @@ impl Graph {
         template: usize,
         parent: Option<FactRef>,
         values: &crate::slots::Slots,
+        inputs: Option<&crate::slots::Slots>,
         i: usize,
     ) -> Result<Value> {
-        if let Some(v) = values.get(&i) {
+        if let Some(v) = values.get(&i).or_else(|| inputs.and_then(|v| v.get(&i))) {
             #[cfg(feature = "sparse-cells")]
             if self.sealed_input_cell == Some(cell) {
                 self.sealed_reads.set(self.sealed_reads.get()+1);
@@ -894,7 +895,7 @@ impl Graph {
         }
         let arg = |a: &Arg| match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
-            Arg::Slot(s) => self.slot_fields(cell, template, parent, values, *s),
+            Arg::Slot(s) => self.slot_fields(cell, template, parent, values, inputs, *s),
         };
         if let Some(a) = self
             .program
@@ -955,9 +956,15 @@ impl Graph {
             _ => Err("invalid parent fact".into()),
         }
     }
+    /// One operand reader for stored, local and preflighted Cell frames. A
+    /// closed frame borrows its matched inputs instead of cloning them.
+    pub(crate) fn frame_arguments<C: FromIterator<Value>>(&self, cell: u32, frame: &Cell,
+        inputs: Option<&crate::slots::Slots>, args: &[Arg]) -> Result<C> {
+        args.iter().map(|arg| self.argument_in(cell, frame, inputs, arg)).collect()
+    }
     fn collect_arguments<C: FromIterator<Value>>(&self, cell: u32, args: &[Arg]) -> Result<C> {
         if let Some(frame) = self.rhs_frame(cell) {
-            args.iter().map(|arg| self.argument_in(cell, frame, arg)).collect()
+            self.frame_arguments(cell, frame, None, args)
         } else {
             args.iter().map(|arg| self.argument(cell, arg)).collect()
         }
@@ -1007,9 +1014,9 @@ impl Graph {
         self.fact_decode_ports.set(self.fact_decode_ports.get() + args.len() as u64 + 1);
         let mut values = Vec::with_capacity(args.len() + 1);
         for arg in args {
-            values.push(self.argument_in(f.cell, c, arg)?);
+            values.push(self.argument_in(f.cell, c, None, arg)?);
         }
-        values.push(self.argument_in(f.cell, c, &result)?);
+        values.push(self.argument_in(f.cell, c, None, &result)?);
         Ok(Row {
             table,
             values: row_fields(values),
@@ -1495,21 +1502,14 @@ impl Graph {
         inputs: &crate::slots::Slots,
         transfers: &[crate::result_handoff::Input],
         receipts: &mut crate::cell::Effects,
-    ) -> Result<Option<(u32, Vec<Option<Vec<Value>>>, u64)>> {
+    ) -> Result<Option<(u32, Cell, u64)>> {
         let ops = self.program.templates[template].ops.clone();
-        let mut keys = vec![None; ops.len()];
-        let mut suffix = crate::slots::Slots::default();
+        // This frame owns only computed slots; matched inputs stay borrowed.
+        // Its prospective ID is not consumed until every preflight check passes.
+        let cell = self.next_cell;
+        let mut frame = self.new_cell(template, Default::default(), None);
         let mut unions = vec![];
-        let arg = |a: &Arg, s: &crate::slots::Slots| -> Result<Value> {
-            match a {
-                Arg::Slot(i) => s
-                    .get(i)
-                    .or_else(|| inputs.get(i))
-                    .map(|v| canon(v, &self.parents))
-                    .ok_or_else(|| "unbound completed slot".into()),
-                Arg::Literal(v) => Ok(canon(v, &self.parents)),
-            }
-        };
+        let arg = |a: &Arg, frame: &Cell| self.argument_in(cell, frame, Some(inputs), a);
         let mut transfers_iter = transfers.iter();
         let mut lets = 0;
         let mut sets = 0;
@@ -1518,12 +1518,12 @@ impl Graph {
         for (op, instruction) in ops.iter().enumerate() {
             let (table, aa) = match instruction {
                 Op::Copy(dst, a) => {
-                    let v = arg(a, &suffix)?;
-                    suffix.insert(*dst, v);
+                    let v = arg(a, &frame)?;
+                    frame.values.insert(*dst, v);
                     continue;
                 }
                 Op::Union(a, b) => {
-                    unions.push((arg(a, &suffix)?, arg(b, &suffix)?));
+                    unions.push((arg(a, &frame)?, arg(b, &frame)?));
                     continue;
                 }
                 Op::Let(_, Call::Table(t), aa) | Op::Set(t, aa, _) => (*t, aa),
@@ -1536,26 +1536,23 @@ impl Graph {
             if input.op != op {
                 return Err("invalid completed block order".into());
             }
-            let key = aa
-                .iter()
-                .map(|a| arg(a, &suffix))
-                .collect::<Result<Vec<_>>>()?;
             let Some(row) = self.live_handoff(f, table)? else {
                 return Ok(None);
             };
             let Some((value, fields)) = row.values.split_last() else {
                 return Ok(None);
             };
-            if fields != key {
-                return Ok(None);
+            if fields.len() != aa.len() { return Ok(None); }
+            for (field, a) in fields.iter().zip(aa) {
+                if *field != arg(a, &frame)? { return Ok(None); }
             }
             match instruction {
                 Op::Let(dst, ..) => {
-                    suffix.insert(*dst, value.clone());
+                    frame.values.insert(*dst, value.clone());
                     lets += 1;
                 }
                 Op::Set(_, _, a) => {
-                    let v = arg(a, &suffix)?;
+                    let v = arg(a, &frame)?;
                     if !matches!((value, &v), (Value::Eq(_), Value::Eq(_))) {
                         return Err("non-equality constructor result".into());
                     }
@@ -1569,10 +1566,10 @@ impl Graph {
                 _ => unreachable!(),
             }
             receipts.record(op, row.witness);
-            keys[op] = Some(key);
             deep += u64::from(input.back > 1);
         }
-        let cell = self.reserve_cell_id()?;
+        let reserved = self.reserve_cell_id()?;
+        debug_assert_eq!(cell, reserved);
         let count = unions.len() as u64;
         for (a, b) in unions {
             self.enqueue_union(a, b)?
@@ -1584,7 +1581,7 @@ impl Graph {
         self.stats.handoff_lets += lets;
         self.stats.handoff_sets += sets;
         self.stats.handoff_deep += deep;
-        Ok(Some((cell, keys, count)))
+        Ok(Some((cell, frame, count)))
     }
     #[cfg(feature = "structural-depth")]
     pub(crate) fn checked_constructor(

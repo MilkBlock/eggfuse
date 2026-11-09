@@ -2063,7 +2063,7 @@ impl Executor {
                 .is_some_and(|s| s.closed(&self.graph.program.iterative))
         {
             let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
-            if let Some((cell, mut keys, unions)) =
+            if let Some((cell, frame, unions)) =
                 self.graph.finish_handoff(template, &b.values, &available, &mut receipts)?
             {
                 #[cfg(feature = "structural-depth")]
@@ -2071,18 +2071,14 @@ impl Executor {
                     .structural
                     .capture(&self.graph, rid, &b.known, &receipts);
                 self.stage_spine.effects(0, 0, unions);
-                self.stage_spine.capture_keys(
+                self.stage_spine.complete(
                     &self.graph,
                     rid,
                     cell,
                     stage_cursor.unwrap(),
                     |i| b.known.receipt(i),
                     receipts,
-                    |i, _| {
-                        keys[i]
-                            .take()
-                            .ok_or("missing completed publication key".into())
-                    },
+                    |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args),
                 )?;
                 return Ok(());
             }
@@ -2095,7 +2091,7 @@ impl Executor {
             && let Some(d) = closed
         {
             let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
-            if let Some((cell, mut keys, unions)) =
+            if let Some((cell, frame, unions)) =
                 self.graph.finish_handoff(template, &b.values, &ports, &mut receipts)?
             {
                 #[cfg(feature = "rhs-work-audit")]
@@ -2114,18 +2110,14 @@ impl Executor {
                     .capture(&self.graph, rid, &b.known, &receipts);
                 if let Some(cursor) = stage_cursor {
                     self.stage_spine.effects(0, 0, unions);
-                    self.stage_spine.capture_keys(
+                    self.stage_spine.complete(
                         &self.graph,
                         rid,
                         cell,
                         cursor,
                         |i| b.known.receipt(i),
                         receipts,
-                        |i, _| {
-                            keys[i]
-                                .take()
-                                .ok_or("missing structural publication key".into())
-                        },
+                        |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args),
                     )?;
                 }
                 else { self.stage_spine.finish_effects(receipts, false); }
@@ -2238,14 +2230,14 @@ impl Executor {
                             self.graph.stats.union_requests - u,
                         );
                         let g = &self.graph;
-                        self.stage_spine.capture_keys(
+                        self.stage_spine.complete(
                             g,
                             rid,
                             cell,
                             cursor,
                             |i| b.known.receipt(i),
                             effect_receipts,
-                            |_, args| g.local_key(cell, &frame, args),
+                            |args| g.frame_arguments(cell, &frame, None, args),
                         )?;
                     } else { self.stage_spine.finish_effects(effect_receipts, false); }
                     return Ok(());
@@ -2447,13 +2439,14 @@ impl Executor {
             );
         }
         if completed && let Some(cursor) = stage_cursor {
-            self.stage_spine.capture_step(
+            self.stage_spine.complete(
                 &self.graph,
                 rid,
                 cell,
                 cursor,
                 |i| b.known.receipt(i),
                 effect_receipts,
+                |args| self.graph.arguments(cell, args),
             )?;
         } else if !completed {
             self.stage_spine.abort_effects(effect_receipts);

@@ -1171,7 +1171,7 @@ impl Programs {
         self.owner_queries = true;
     }
     /// Lend the pending arena to one source RHS. Its suffix is private until
-    /// capture_keys seals it; matching and publication never run during this loan.
+    /// complete seals it; matching and publication never run during this loan.
     pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool) -> crate::cell::Effects {
         if !force && !full && !self.capture_receipts(rid) { return Default::default(); }
         let outputs = self.outputs.get(rid).map_or(&[][..], Vec::as_slice);
@@ -1200,20 +1200,7 @@ impl Programs {
         self.stats.effect_aborted_frames += 1;
         self.finish_effects(effects, false);
     }
-    pub(crate) fn capture_step(
-        &mut self,
-        g: &Graph,
-        rid: usize,
-        cell: u32,
-        step: Started,
-        query_fact: impl Fn(usize) -> Option<Dependency>,
-        effects: crate::cell::Effects,
-    ) -> Result<()> {
-        self.capture_keys(g, rid, cell, step, query_fact, effects, |_, args| {
-            g.arguments(cell, args)
-        })
-    }
-    pub(crate) fn capture_keys(
+    pub(crate) fn complete(
         &mut self,
         g: &Graph,
         rid: usize,
@@ -1221,7 +1208,7 @@ impl Programs {
         step: Started,
         query_fact: impl Fn(usize) -> Option<Dependency>,
         mut effects: crate::cell::Effects,
-        mut key: impl FnMut(usize, &[Arg]) -> Result<Vec<Value>>,
+        mut key: impl FnMut(&[Arg]) -> Result<Vec<Value>>,
     ) -> Result<()> {
         self.stats.completed_steps += 1;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
@@ -1297,7 +1284,7 @@ impl Programs {
                 _ => unreachable!("validated Cell output"),
             };
             self.pending_anchors
-                .push((table, key(i, args)?, publication));
+                .push((table, key(args)?, publication));
             self.stats.captured_anchors += 1;
         }
         #[cfg(feature = "sparse-cells")]

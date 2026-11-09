@@ -6,11 +6,6 @@ pub(crate) enum Start {
     Promoted { cell: u32, next_op: usize },
 }
 impl Graph {
-    pub(crate) fn local_key(&self, id: u32, frame: &Cell, args: &[Arg]) -> Result<Vec<Value>> {
-        args.iter()
-            .map(|a| self.argument_in(id, frame, a))
-            .collect()
-    }
     pub(crate) fn local_rhs(
         &mut self,
         template: usize,
@@ -30,13 +25,13 @@ impl Graph {
             let key = step
                 .key
                 .iter()
-                .map(|a| self.argument_in(cell, &frame, a))
+                .map(|a| self.argument_in(cell, &frame, None, a))
                 .collect::<Result<smallvec::SmallVec<[Value; 4]>>>()?;
             if matches!(step.result, ResultUse::Let(_)) {
                 self.stats.constructor_requests += 1;
             }
             let assigned = if let ResultUse::Set(v) = &step.result {
-                Some(self.argument_in(cell, &frame, v)?)
+                Some(self.argument_in(cell, &frame, None, v)?)
             } else {
                 None
             };
