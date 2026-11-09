@@ -1,0 +1,349 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/entry_schedule/stats/publication_pending_reuses": [
+      425,
+      123
+    ],
+    "/stage_spine/stats/receipt_attempts": [
+      11586,
+      8472
+    ],
+    "/stage_spine/stats/receipt_hits": [
+      11528,
+      8414
+    ],
+    "/stage_spine/stats/receipt_hits_by_source/effect": [
+      11528,
+      8414
+    ]
+  },
+  "publication_net_saved_operations": 3114,
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "scope": "standalone Cell CPU; normal release work checks; no timing or allocator campaign",
+  "baseline_commit": "3e8c8680",
+  "candidate_commit": "c07c314e",
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 343,
+  "changed_work_metrics": {
+    "report:/entry_schedule/stats/publication_pending_reuses [value]": [
+      {
+        "status": "observed",
+        "value": 425
+      },
+      {
+        "status": "observed",
+        "value": 123
+      }
+    ],
+    "report:/stage_spine/stats/receipt_attempts [value]": [
+      {
+        "status": "observed",
+        "value": 11586
+      },
+      {
+        "status": "observed",
+        "value": 8472
+      }
+    ],
+    "report:/stage_spine/stats/receipt_hits [value]": [
+      {
+        "status": "observed",
+        "value": 11528
+      },
+      {
+        "status": "observed",
+        "value": 8414
+      }
+    ]
+  },
+  "before_mixed_commit": "3e622300",
+  "before_mixed": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {
+      "/entry_schedule/stats/publication_candidate_checks": [
+        7740,
+        9027
+      ],
+      "/entry_schedule/stats/publication_loser_skips": [
+        1827,
+        3114
+      ],
+      "/entry_schedule/stats/publication_pending_reuses": [
+        366,
+        123
+      ],
+      "/entry_schedule/stats/publication_slot_probes": [
+        7740,
+        9027
+      ],
+      "/stage_spine/stats/cell_output_checks": [
+        6053,
+        8774
+      ],
+      "/stage_spine/stats/cell_output_deliveries": [
+        6053,
+        8774
+      ],
+      "/stage_spine/stats/cell_output_receipts": [
+        6053,
+        8774
+      ],
+      "/stage_spine/stats/cell_output_slot_reads": [
+        6053,
+        8774
+      ],
+      "/stage_spine/stats/cell_output_slots": [
+        6053,
+        8774
+      ],
+      "/stage_spine/stats/cell_output_spans": [
+        4079,
+        6365
+      ],
+      "/stage_spine/stats/completion_boundary_reads": [
+        1687,
+        253
+      ],
+      "/stage_spine/stats/completion_boundary_records": [
+        1687,
+        253
+      ],
+      "/stage_spine/stats/completion_order_checks": [
+        1262,
+        111
+      ],
+      "/stage_spine/stats/direct_publication_hash_probes": [
+        7573,
+        4680
+      ],
+      "/stage_spine/stats/effect_output_copies": [
+        1599,
+        1808
+      ],
+      "/stage_spine/stats/effect_outputs_reused": [
+        4454,
+        6966
+      ],
+      "/stage_spine/stats/fragment_deliveries": [
+        3421,
+        6142
+      ],
+      "/stage_spine/stats/fragment_delivery_checks": [
+        3421,
+        6142
+      ],
+      "/stage_spine/stats/fragment_direct_inserts_avoided": [
+        3421,
+        6142
+      ],
+      "/stage_spine/stats/fragment_receipts": [
+        3421,
+        6142
+      ],
+      "/stage_spine/stats/peak_cell_output_slots": [
+        587,
+        872
+      ],
+      "/stage_spine/stats/receipt_attempts": [
+        10299,
+        8472
+      ],
+      "/stage_spine/stats/receipt_hits": [
+        10241,
+        8414
+      ],
+      "/stage_spine/stats/receipt_hits_by_source/effect": [
+        10241,
+        8414
+      ],
+      "/stage_spine/stats/receipt_redirects": [
+        448,
+        498
+      ]
+    },
+    "publication_net_saved_operations": -920,
+    "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f"
+  },
+  "prior_mixed_step_under_current_credit": -4034,
+  "fixtures": {
+    "mixed-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "mixed-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "aliased-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "aliased-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "mixed-64-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/stage_spine/stats/receipt_attempts": [
+          15,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          15,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          15,
+          11
+        ]
+      },
+      "publication_net_saved_operations": 4,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "mixed-0-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/stage_spine/stats/receipt_attempts": [
+          15,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          15,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          15,
+          11
+        ]
+      },
+      "publication_net_saved_operations": 4,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "aliased-64-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/stage_spine/stats/receipt_attempts": [
+          13,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          13,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          13,
+          11
+        ]
+      },
+      "publication_net_saved_operations": 2,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "aliased-0-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/stage_spine/stats/receipt_attempts": [
+          13,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          13,
+          11
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          13,
+          11
+        ]
+      },
+      "publication_net_saved_operations": 2,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    }
+  },
+  "tests": {
+    "entry": {
+      "passed": 2,
+      "sha256": "aceaf87a325a3ce8e51078c7ad76dcf32a5351b3eb3f0875f55380145991dede"
+    },
+    "publications": {
+      "passed": 7,
+      "sha256": "54c83b1bd0fcda9e7d3b15846eeb7a198f5ade8b9663f2d26a2a4c31188ecc71"
+    },
+    "publications-all": {
+      "passed": 7,
+      "sha256": "e6b7a0b589fe1a835158a17e548f3f2647658f65f546ae3170059a8ee7837d8c"
+    },
+    "scoped": {
+      "passed": 12,
+      "sha256": "119ca9ab74581de866d58f190e9e76b37fe8591b7a9ff710a0dae2753866fced"
+    },
+    "credit": {
+      "passed": 4,
+      "sha256": "741713b812096b1a126a09d332a9f1dfc3a007bf030ae4ca28ec0e264fd4ed24"
+    }
+  },
+  "minimal_sha256": "96fbd08a0a09b2358204a1d9a1087208216d76a395e8f08206903bc0ad739d2b",
+  "scoped_sha256": "e8ab572360a935185b9ca32a1bdc32ad215635eef285e544f5304aba74eb3122",
+  "relower_sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1",
+  "relower_components": 22,
+  "binaries": {
+    "baseline": "5d718db587707133e23038e10c2577aa1e5bd6041a0cb28aedec41420b92fcca",
+    "candidate": "cf6306b7455e95c71d6ba4af1a1ff01149cfdc1fbc35ce1ea937c38a7983d312"
+  },
+  "fixture_manifest_sha256": {
+    "": "850726696ed7b1cd3614d84ad29542908083df81b0ee91376bfaf5b491928974",
+    "-normal": "2203ac5aed8e62f6ddb13b9911b4e120caa2f12e03b2bc6b4013c0069a0a6266"
+  },
+  "removed": "Independent publication-slot preparation before winner selection. Existing Cell Entry batch proof now rejects losers before visibility validation or pending maintenance. Only successful validation creates/replaces a publication; later batches revalidate.",
+  "limits": "Entry lookups, candidate counts, output scans, receipt resolutions and real publication writes are unchanged. Every Cell output delivery still resolves its receipt; Work now charges this separately from visibility attempts, using the same corrected basis for both controls. No extra instance cache or subscription is added. Equal-weight credit is not a time model; marker/Bake unification and final parallel acceptance remain incomplete.",
+  "timing_cadence": {
+    "last_timed_commit": "acab2911",
+    "implementation_commits_since_timing": 3
+  }
+}
