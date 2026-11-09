@@ -41,3 +41,5 @@
 接续 `609f76ae`。单写前缀只保留源操作位置，删除独立保存的 primitive 名称、sort 和参数数组；直接通过共同 Cell 调用执行器计算临时 writer frame。PortWrite 的直接整数投影仍由源指令派生，最终写入的规范化 key/value 投影保留。旧 artifact 的 prefix 由源指令投影生成。
 
 带函数写入的 register 用例及六项 Entry 顺序检查通过；前者的整数 key 不能进入 Eq-key PortWrite，确实经过共同标量执行器。没有独立计时。
+
+两项改动合用一次 sum-bits 检查，见 [prefix-check.json](prefix-check.json)：语义 pass、1,428 个 Run 与最终 state 相同，300 项非时间/RSS指标保持；旧 sum-bits artifact 的 22 个编译组件重新生成一致，最小特性编译通过。没有新增性能采样或分配审计。

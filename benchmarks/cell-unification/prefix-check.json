@@ -1,0 +1,15 @@
+{
+  "scope": "standalone Cell CPU; grouped semantic/work check; no timing or allocation campaign",
+  "baseline_commit": "f887a07f",
+  "candidate_commit": "00d555f4",
+  "metrics": 311,
+  "unchanged_work_metrics": 300,
+  "ordered_runs": 1428,
+  "compiler_components_identical": 22,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "semantic_acceptance": "pass",
+  "report_sha256": "8a0df086f68ef69c3764375c4e2669762572ab8804d43e82545529519b151c3d",
+  "runtime_sha256": "2f12f0351a40458ac9cfaa9b61c691177e5cdd0e82270e96be844bd4621b2d83",
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "coverage_note": "source prefix and single-write behavior exercised by sum-bits; selected local completion/miss and structural receipts additionally covered by targeted tests"
+}
