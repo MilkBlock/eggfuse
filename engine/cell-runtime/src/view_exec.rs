@@ -7,7 +7,7 @@ use super::*;
 use crate::{
     entry_schedule::Scheduler,
     slots::Slots,
-    view_plan::{Comparison, Join, Member, Port, Tuple},
+    view_plan::{Join, Member, Tuple},
 };
 use rustc_hash::FxHashMap;
 
@@ -262,34 +262,33 @@ fn delta(
         .map(|&(_, w)| batch.entry(w).unwrap().row.clone())
         .collect())
 }
-fn field<'a>(port: Port, driver: &'a Tuple, peer: &'a Row) -> &'a Value {
-    match port {
-        Port::Driver(i) => driver.port(i),
-        Port::Peer(i) => &peer.values[i],
-        Port::Unit => &Value::Int(0),
-    }
-}
-fn accepts(m: &Member, d: &Tuple, p: &Row) -> bool {
-    m.tests.iter().all(|t| {
-        let a = field(t.left, d, p);
-        let b = field(t.right, d, p);
-        match t.comparison {
-            Comparison::Equal => a == b,
-            Comparison::Less => a < b,
-            Comparison::Greater => a > b,
-            Comparison::LessEqual => a <= b,
-            Comparison::GreaterEqual => a >= b,
+fn accepts(m: &Member, peer_key: usize, d: &Tuple, p: &Row, g: &Graph) -> Result<bool> {
+    let expanded = Some((0, p));
+    for (column, field) in &m.query.steps[0].expansion.as_ref().unwrap().checks {
+        // The group already checked the shared join column, even on hash collisions.
+        if *column != peer_key && !field.agrees(&p.values[*column], g, |i| d.port(i), &[], expanded) {
+            return Ok(false);
         }
-    })
+    }
+    for step in &m.query.steps[1..] {
+        let Call::Primitive(name, sort) = &step.call else { unreachable!("certified pair guard") };
+        let bound = step.bind::<smallvec::SmallVec<[Value; 2]>>(|f|
+            f.operand(g, |i| d.port(i), &[], expanded));
+        if bound.evaluate(|args| value::primitive(name, &args, sort, g.program.key_nodes()))?.is_none() {
+            return Ok(false);
+        }
+    }
+    Ok(true)
 }
 impl Group {
-    fn emit(&mut self, d: &Tuple, p: &Row, g: &Graph, spine: &crate::stage_spine::Programs) {
+    fn emit(&mut self, d: &Tuple, p: &Row, g: &Graph, spine: &crate::stage_spine::Programs) -> Result<()> {
         if d.port(self.plan.driver_key) != &p.values[self.plan.peer_key] {
-            return;
+            return Ok(());
         }
         self.counts.joined_pairs += 1;
         if let Some(branch) = &self.plan.dispatch {
-            let member = match field(branch.left, d, p).cmp(field(branch.right, d, p)) {
+            let member = match branch.left.operand(g, |i| d.port(i), &[], Some((0, p)))
+                .cmp(&branch.right.operand(g, |i| d.port(i), &[], Some((0, p)))) {
                 std::cmp::Ordering::Less => branch.less,
                 std::cmp::Ordering::Equal => branch.equal,
                 std::cmp::Ordering::Greater => branch.greater,
@@ -298,11 +297,12 @@ impl Group {
             self.emit_member(member, d, p, g, spine);
         } else {
             for i in 0..self.plan.members.len() {
-                if accepts(&self.plan.members[i], d, p) {
+                if accepts(&self.plan.members[i], self.plan.peer_key, d, p, g)? {
                     self.emit_member(i, d, p, g, spine);
                 }
             }
         }
+        Ok(())
     }
     fn emit_member(
         &mut self,
@@ -314,9 +314,9 @@ impl Group {
     ) {
         let m = &self.plan.members[ordinal];
         let values: Slots = m
-            .output
-            .iter()
-            .map(|&(slot, port)| (slot, field(port, d, p).clone()))
+            .inputs
+            .iter().zip(&m.query.inputs)
+            .map(|(&slot, field)| (slot, field.read(g, |i| d.port(i), &[], Some((0, p)))))
             .collect();
         let mut known = spine.alias_query_facts(g, m.rule);
         known.record(m.driver_atom, Some(d.witness));
@@ -386,7 +386,7 @@ impl Group {
                     if let Some(p) = g.row(w)?
                         && !p.hidden
                     {
-                        self.emit(&d, &p, g, spine);
+                        self.emit(&d, &p, g, spine)?;
                     }
                 }
             }
@@ -401,7 +401,7 @@ impl Group {
                     self.counts.candidate_visits += rows.len() as u64;
                     for &i in rows {
                         if dir.rows[&i].epoch < watermark {
-                            self.emit(&dir.rows[&i], &p, g, spine);
+                            self.emit(&dir.rows[&i], &p, g, spine)?;
                         } else {
                             self.counts.epoch_skips += 1;
                         }
@@ -419,7 +419,7 @@ impl Group {
                     for &w in rows.iter() {
                         if g.visible_epoch(w).is_some_and(|e| e < watermark) {
                             if let Some(d) = g.row(w)? {
-                                self.emit(&Tuple::flat(&d), &p, g, spine);
+                                self.emit(&Tuple::flat(&d), &p, g, spine)?;
                             }
                         } else {
                             self.counts.epoch_skips += 1;

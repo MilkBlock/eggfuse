@@ -419,3 +419,14 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 新增 context-switch.egg 让最小根随表规模改变再恢复；guarded-prefix 的实际 orientations 为 {0: 2, 2: 1}。与冻结旧二进制比较，四个短样例的 state/stages/binding-audit 及所有工作组一致。7 项相关测试、最小 feature 编译、22 个组件重新 lowering 通过；sum-bits 1,428 个 Run、最终 state 和 346 项工作指标保持，语义脚本 pass。输出 `out/cell-context-scope`，复核 `check_context.py ROOT OUTPUT --commit COMMIT --phase scope`。现有指标没有计量被删除的临时 Vec 和 Rule clone，不据此给出分配数或速度收益。
 
 上次测速后第 4 个实现提交，未单独测速。该步完成 context 的模板身份与版本范围接管，其他候选索引、neighbor/view、边界及 Bake 的统一仍须继续，尚未完成整体重写或最终多线程验收。
+
+
+## View 的双行匹配和条件执行接入 Cell Query
+
+上次 sum-bits 的 view 生产端有 211 个输出，消费端有 207 次三路比较分派、166 次复用流；这些是匹配输出，不能当作 committed mutations。原路径还独立保存 Port/Test/Comparison 和输出 slot 映射。现在由 Query::guarded_pair 使用共享 lowering 生成 peer expansion、标量 Step 及输出 Field，运行时借用两条原始行；多条件执行共享 Step 绑定和 primitive evaluator，删除 view 自己的标量解释器。成功 Unit guard 的结果在编译期折叠，既有结果仍先检查，再将后续使用替换为常量；不新增运行时结果数组或事实图。
+
+三路比较保留一次分派，由同一 Query 的条件导出。公共 join 列仍先比较真实值，不能用 fingerprint 命中代替等价证明；其它共享列、多条件、绑定结果和输出均来自 Cell 指令。旧 JSON 的 tests/output/Driver/Peer 仅在序列化时从 Query 与共享源输入槽位恢复，不保留另一份可执行计划。专用候选目录、负查询/可见性、删除重插、发布顺序及原始 Run 水位仍有独立生命周期义务，本次不关闭它们。
+
+6 项相关测试及最小 feature 编译通过；四种短 view 形状（完整分派、重叠条件、反向比较、多 guard）各在正常/全碰撞哈希下与 f9cea51c 冻结版本比较，共 16 个短进程。state/stages/binding-audit、所有受影响工作组一致。sum-bits 的 1,428 个 Run、最终 state 和 346 项工作指标保持，语义脚本 pass，22 个编译组件重新 lowering 一致。复核脚本 check_view_query.py，产物 out/cell-view-query；新静态 Query 元数据及通用 guard 绑定成本没有单独的分配/指令计数。
+
+这是 f1c69507 之后第 5 个实现提交。提交后执行一次正常 release 的四路交错短测速（f9cea51c、f1c69507、24c4ae8a、候选），7 次测量和 1 次预热；不在本步骤启动最终多线程验收。整体统一仍未完成。

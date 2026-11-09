@@ -1,9 +1,10 @@
 //! A Unit view can deliver sealed rows directly to a family of binary joins.
 //! Every rule reader is accounted for. Unsupported query shapes keep the normal plan.
-use crate::{program::*, value::Value};
-use serde::{Deserialize, Serialize};
+use crate::{cell::{Field, Query}, program::*, value::Value};
+use serde::Serialize;
+use serde_json::{Value as Json, json};
 use std::{
-    collections::{BTreeMap, BTreeSet},
+    collections::BTreeSet,
     rc::Rc,
 };
 
@@ -36,70 +37,89 @@ impl Tuple {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub(crate) enum Port {
-    Driver(usize),
-    Peer(usize),
-    Unit,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub(crate) enum Comparison {
-    Less,
-    Greater,
-    Equal,
-    LessEqual,
-    GreaterEqual,
-}
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub(crate) struct Test {
-    pub left: Port,
-    pub right: Port,
-    pub comparison: Comparison,
-}
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub(crate) struct Member {
     pub rule: usize,
     pub driver_atom: usize,
     pub peer_atom: usize,
-    pub tests: Vec<Test>,
-    pub output: Vec<(usize, Port)>,
+    pub query: Query,
+    pub inputs: Rc<Vec<usize>>,
+}
+// These adapters are used only while deriving/serializing a plan. Execution
+// reads Cell instructions; no view-specific tests or output ports are retained.
+fn wire_field(field: &Field) -> Json {
+    match field {
+        Field::Anchor(i) => json!({"Driver":i}),
+        Field::Column { step: 0, column } => json!({"Peer":column}),
+        Field::Literal(Value::Int(0)) => json!("Unit"),
+        _ => unreachable!("certified pair operand"),
+    }
+}
+impl Member {
+    fn predicates(&self, peer_key: usize) -> Vec<(Field, Field, &'static str)> {
+        let mut tests = Vec::new();
+        for (column, field) in &self.query.steps[0].expansion.as_ref().unwrap().checks {
+            if *column != peer_key {
+                tests.push((field.clone(), Field::Column { step: 0, column: *column }, "Equal"));
+            }
+        }
+        for step in &self.query.steps[1..] {
+            let Call::Primitive(name, _) = &step.call else { unreachable!() };
+            let comparison = match name.as_str() {
+                "<" => "Less", ">" => "Greater", "<=" => "LessEqual", ">=" => "GreaterEqual",
+                _ => unreachable!("certified i64 predicate"),
+            };
+            tests.push((step.key[0].clone(), step.key[1].clone(), comparison));
+            if let Some(prior) = &step.check_result {
+                tests.push((prior.clone(), Field::Literal(Value::Int(0)), "Equal"));
+            }
+        }
+        tests
+    }
+    fn wire(&self, peer_key: usize) -> Json {
+        json!({"rule":self.rule,"driver_atom":self.driver_atom,"peer_atom":self.peer_atom,
+            "tests":self.predicates(peer_key).iter().map(|(a,b,c)|
+                json!({"left":wire_field(a),"right":wire_field(b),"comparison":c})).collect::<Vec<_>>(),
+            "output":self.inputs.iter().zip(&self.query.inputs).map(|(slot,f)|
+                json!([slot,wire_field(f)])).collect::<Vec<_>>()})
+    }
 }
 /// A disjoint and exhaustive three-way comparison routes a pair to one member.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub(crate) struct Dispatch {
-    pub left: Port,
-    pub right: Port,
+    pub left: Field,
+    pub right: Field,
     pub less: usize,
     pub equal: usize,
     pub greater: usize,
 }
 impl Dispatch {
-    fn derive(members: &[Member]) -> Option<Self> {
+    fn derive(members: &[Member], peer_key: usize) -> Option<Self> {
         if members.len() != 3 {
             return None;
         }
-        let [test] = members[0].tests.as_slice() else {
+        let first = members[0].predicates(peer_key);
+        let [(left, right, _)] = first.as_slice() else {
             return None;
         };
-        let (left, right) = (test.left, test.right);
         let mut slots = [None; 3];
         for (i, m) in members.iter().enumerate() {
-            let [t] = m.tests.as_slice() else { return None };
-            let normal = (t.left, t.right) == (left, right);
-            if !normal && (t.left, t.right) != (right, left) {
+            let tests = m.predicates(peer_key);
+            let [(a, b, comparison)] = tests.as_slice() else { return None };
+            let normal = (a, b) == (left, right);
+            if !normal && (a, b) != (right, left) {
                 return None;
             }
-            let branch = match t.comparison {
-                Comparison::Less => {
+            let branch = match *comparison {
+                "Less" => {
                     if normal {
                         0
                     } else {
                         2
                     }
                 }
-                Comparison::Equal => 1,
-                Comparison::Greater => {
+                "Equal" => 1,
+                "Greater" => {
                     if normal {
                         2
                     } else {
@@ -113,15 +133,15 @@ impl Dispatch {
             }
         }
         Some(Self {
-            left,
-            right,
+            left: left.clone(),
+            right: right.clone(),
             less: slots[0]?,
             equal: slots[1]?,
             greater: slots[2]?,
         })
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub(crate) struct Join {
     pub driver: usize,
     pub peer: usize,
@@ -130,14 +150,22 @@ pub(crate) struct Join {
     pub members: Vec<Member>,
     pub dispatch: Option<Dispatch>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+impl Serialize for Join {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
+        json!({"driver":self.driver,"peer":self.peer,"driver_key":self.driver_key,"peer_key":self.peer_key,
+            "members":self.members.iter().map(|m| m.wire(self.peer_key)).collect::<Vec<_>>(),
+            "dispatch":self.dispatch.as_ref().map(|d| json!({"left":wire_field(&d.left),"right":wire_field(&d.right),
+                "less":d.less,"equal":d.equal,"greater":d.greater}))}).serialize(serializer)
+    }
+}
+#[derive(Debug, Clone, Serialize)]
 pub(crate) struct Write {
     pub rule: usize,
     pub op: usize,
     pub old: Vec<Arg>,
     pub cols: Rc<Vec<usize>>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 pub(crate) struct Block {
     pub view: usize,
     pub producer: Join,
@@ -189,34 +217,11 @@ fn member(
     if peer == driver || !p.tables[peer].constructor {
         return None;
     }
-    let left = slots(&r.query[di])?;
-    let right = slots(&r.query[pi])?;
-    let mut fields: BTreeMap<_, _> = left
-        .iter()
-        .enumerate()
-        .map(|(i, s)| (*s, Port::Driver(i)))
-        .collect();
-    let mut join = None;
-    let mut tests = vec![];
-    for (i, s) in right.iter().enumerate() {
-        if let Some(&prev) = fields.get(s) {
-            let Port::Driver(k) = prev else { return None };
-            if join.is_none() && p.tables[peer].schema[i]["kind"] == "eq" {
-                join = Some((k, i));
-            } else {
-                tests.push(Test {
-                    left: prev,
-                    right: Port::Peer(i),
-                    comparison: Comparison::Equal,
-                });
-            }
-        } else {
-            fields.insert(*s, Port::Peer(i));
-        }
-    }
+    slots(&r.query[di])?;
+    slots(&r.query[pi])?;
     for a in r.query.iter() {
         if let Call::Primitive(name, out) = &a.call {
-            let [Arg::Slot(x), Arg::Slot(y), Arg::Slot(result)] = a.args.as_slice() else {
+            let [Arg::Slot(x), Arg::Slot(y), Arg::Slot(_)] = a.args.as_slice() else {
                 return None;
             };
             if out != "Unit"
@@ -226,46 +231,16 @@ fn member(
             {
                 return None;
             }
-            let comparison = match name.as_str() {
-                "<" => Comparison::Less,
-                ">" => Comparison::Greater,
-                "<=" => Comparison::LessEqual,
-                ">=" => Comparison::GreaterEqual,
-                _ => return None,
-            };
-            tests.push(Test {
-                left: *fields.get(x)?,
-                right: *fields.get(y)?,
-                comparison,
-            });
-            // A previously bound primitive result is an additional equality predicate.
-            if let Some(prior) = fields.insert(*result, Port::Unit) {
-                tests.push(Test {
-                    left: prior,
-                    right: Port::Unit,
-                    comparison: Comparison::Equal,
-                });
-            }
+            if !matches!(name.as_str(), "<" | ">" | "<=" | ">=") { return None; }
         }
     }
-    let output = r
-        .inputs
-        .iter()
-        .map(|s| Some((*s, *fields.get(s)?)))
-        .collect::<Option<_>>()?;
-    let (dk, pk) = join?;
-    Some((
-        peer,
-        dk,
-        pk,
-        Member {
-            rule: rid,
-            driver_atom: di,
-            peer_atom: pi,
-            tests,
-            output,
-        },
-    ))
+    let query = Query::guarded_pair(r, di, pi)?;
+    let (dk, pk) = query.steps[0].expansion.as_ref()?.checks.iter().find_map(|(col, field)| {
+        if let Field::Anchor(driver_col) = field {
+            (p.tables[peer].schema[*col]["kind"] == "eq").then_some((*driver_col, *col))
+        } else { None }
+    })?;
+    Some((peer, dk, pk, Member { rule: rid, driver_atom: di, peer_atom: pi, query, inputs: r.inputs.clone() }))
 }
 
 fn write(p: &Program, rid: usize, op: usize, table: usize, view_atom: usize) -> Option<Write> {
@@ -415,7 +390,7 @@ pub(crate) fn derive(p: &Program, spine: &BTreeSet<usize>) -> Vec<Block> {
                 peer,
                 driver_key: dk,
                 peer_key: pk,
-                dispatch: Dispatch::derive(&members),
+                dispatch: Dispatch::derive(&members, pk),
                 members,
             },
             writes: aliases,

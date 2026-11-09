@@ -56,7 +56,7 @@ pub(crate) fn bind_query<F: QueryFrame + ?Sized>(a: &Arg, value: &Value, frame: 
     }
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub(crate) enum Field {
     Anchor(usize),
     StepResult(usize),
@@ -363,6 +363,40 @@ impl Query {
     pub(crate) fn residual(rule: &Rule, pivot: usize) -> Option<Self> {
         Self::lower(rule, pivot, &query_order(rule, pivot, 1)?)
     }
+    /// Borrow two matched rows and evaluate Unit guards in source order. Unit
+    /// results are constants after their guard succeeds, so their users need
+    /// neither a result frame nor a separate operand language.
+    pub(crate) fn guarded_pair(rule: &Rule, pivot: usize, peer: usize) -> Option<Self> {
+        let mut order = vec![(peer, Access::Expand)];
+        for (atom, a) in rule.query.iter().enumerate() {
+            if atom == pivot || atom == peer { continue; }
+            if !matches!(&a.call, Call::Primitive(_, out) if out == "Unit") { return None; }
+            order.push((atom, Access::Primitive));
+        }
+        let mut query = Self::lower(rule, pivot, &order)?;
+        let fold = |field: &mut Field, units: &[Field]| {
+            if let Field::StepResult(i) = field {
+                debug_assert!(*i > 0, "the peer exports columns, not a scalar result");
+                *field = Field::Literal(Value::Int(0));
+            } else if units.contains(field) {
+                *field = Field::Literal(Value::Int(0));
+            }
+        };
+        let mut units = Vec::new();
+        for step in &mut query.steps {
+            step.key.iter_mut().for_each(|f| fold(f, &units));
+            step.check_result.iter_mut().for_each(|f| fold(f, &units));
+            if let Some(expansion) = &mut step.expansion {
+                for (_, field) in expansion.bound.iter_mut().chain(&mut expansion.checks) { fold(field, &units); }
+            }
+            // Once this guard succeeds, a previously bound result is also Unit.
+            // Keep its check here; only later uses may use the proven constant.
+            if let Some(expected) = &step.check_result { units.push(expected.clone()); }
+        }
+        query.inputs.iter_mut().for_each(|f| fold(f, &units));
+        query.result_slots = 0;
+        Some(query)
+    }
     /// Compile a retained prefix with the same lowering used by ordinary
     /// queries. Each completed instruction makes its new fields available from
     /// the existing frame; candidate rows never outlive their enumeration.
@@ -594,6 +628,31 @@ impl Queries {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn guarded_pair_preserves_bound_results_and_folds_guard_outputs() {
+        use Arg::Slot;
+        let mut rule = Rule {
+            constructor_only: false, template: 0, seminaive: true, direct: None,
+            inputs: Rc::new(vec![0, 3, 4, 2]),
+            query: Rc::new(vec![
+                Atom { call: Call::Table(0), args: vec![Slot(0), Slot(1), Slot(2)] },
+                Atom { call: Call::Table(1), args: vec![Slot(0), Slot(1), Slot(3)] },
+                Atom { call: Call::Primitive("<".into(), "Unit".into()), args: vec![Slot(1), Slot(3), Slot(4)] },
+                Atom { call: Call::Primitive(">".into(), "Unit".into()), args: vec![Slot(3), Slot(1), Slot(4)] },
+                // A result bound by a row remains an equality check, not a constant binding.
+                Atom { call: Call::Primitive("<=".into(), "Unit".into()), args: vec![Slot(1), Slot(3), Slot(2)] },
+            ]),
+        };
+        let query = Query::guarded_pair(&rule, 0, 1).unwrap();
+        assert_eq!(query.result_slots(), 0);
+        assert_eq!(query.steps[0].expansion.as_ref().unwrap().checks.len(), 2);
+        assert_eq!(query.steps[2].check_result, Some(Field::Literal(Value::Int(0))));
+        assert_eq!(query.steps[3].check_result, Some(Field::Anchor(2)));
+        assert_eq!(query.inputs, vec![Field::Anchor(0), Field::Column { step: 0, column: 2 }, Field::Literal(Value::Int(0)), Field::Literal(Value::Int(0))]);
+        assert!(Query::guarded_pair(&rule, 0, 0).is_none());
+        Rc::make_mut(&mut rule.query)[2].call = Call::Primitive("+".into(), "i64".into());
+        assert!(Query::guarded_pair(&rule, 0, 1).is_none());
+    }
     #[test]
     fn staged_ports_preserve_dependencies_guards_and_bound_results() {
         use Arg::{Literal, Slot};
