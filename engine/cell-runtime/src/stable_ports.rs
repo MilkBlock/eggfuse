@@ -112,40 +112,60 @@ impl Graph {
             .collect::<Vec<_>>();
         for f in facts {
             let row = self.fact(f)?.ok_or("missing initial owned fact")?;
-            self.store_stable_fields(f, row.table, &row.values);
+            self.initialize_cell_fields::<false>(f, row.table, &row.values);
         }
         Ok(())
     }
-    pub(in crate::graph) fn store_stable_fields(
+    /// A new owned fact binds its shared symbols and installs its fields in one
+    /// pass. Enabling stable representation projects the same layout without
+    /// binding those symbols or advancing the component lifetime again.
+    pub(super) fn initialize_cell_fields<const BIND: bool>(
         &mut self,
         f: FactRef,
         table: usize,
         values: &[Value],
     ) {
-        if self.stable_ports.is_none() {
-            return;
+        if BIND {
+            self.ensure_composition_frame(f.cell);
         }
-        let template = self.cells[&f.cell].template;
-        let symbols = &self.program.cell_ownership.markers[template].program.fields[f.op as usize];
+        let owner = self.ownership.as_mut().unwrap();
+        let frame = owner.composition.frames[&f.cell];
+        if BIND {
+            owner.composition.live_facts[frame.component as usize] += 1;
+            owner.stats.component_lifetime_updates += 1;
+        }
+        let component = owner.composition.components[frame.component as usize]
+            .as_ref().unwrap();
+        // Clone only shared code handles so binding can mutate the instance.
+        // The frame/shape map is resolved once, not once per equality column.
+        let ports = owner.composition.shapes[component.shape].as_ref().unwrap().ports
+            [frame.ordinal].clone();
+        let program = self.program.cell_ownership.code_programs[frame.code].clone();
+        let symbols = &program.fields[f.op as usize];
+        assert_eq!(symbols.len(), values.len());
+        let mut fields = self.stable_ports.as_ref()
+            .map(|_| Vec::with_capacity(values.len()));
         let mut count = 0;
-        let fields = values
-            .iter()
-            .zip(symbols)
-            .map(|(v, symbol)| {
-                if let Some(symbol) = symbol {
-                    assert!(matches!(v, Value::Eq(_)), "typed equality field");
-                    count += 1;
-                    Field::Port(self.composed_port(f.cell, *symbol))
-                } else {
-                    assert!(
-                        !matches!(v, Value::Eq(_) | Value::Set(_)),
-                        "scalar ownership field"
-                    );
-                    Field::Scalar(v.clone())
+        for (value, symbol) in values.iter().zip(symbols) {
+            if let Some(&local) = symbol.as_ref() {
+                let Value::Eq(id) = value else { panic!("typed equality field") };
+                let port = PortRef { component: frame.component, symbol: ports[local] };
+                if BIND {
+                    self.bind_cell_port(f, local, port, *id);
                 }
-            })
-            .collect::<Vec<_>>();
-        assert_eq!(fields.len(), values.len());
+                if let Some(fields) = &mut fields {
+                    count += 1;
+                    fields.push(Field::Port(port));
+                }
+            } else if let Some(fields) = &mut fields {
+                assert!(
+                    !matches!(value, Value::Eq(_) | Value::Set(_)),
+                    "scalar ownership field"
+                );
+                fields.push(Field::Scalar(value.clone()));
+            }
+        }
+        let Some(fields) = fields else { return; };
         let state = self
             .cells
             .get_mut(&f.cell)

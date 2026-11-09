@@ -474,7 +474,7 @@ pub(super) struct Runtime {
     pub columns: Vec<usize>,
 }
 impl Runtime {
-    fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
+    pub(super) fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
         let class = plan.query_classes.as_ref().map_or(0, |classes| {
             let c = self.components[component as usize].as_ref().unwrap();
             let (frame, local) = self.shapes[c.shape].as_ref().unwrap().origins[symbol];

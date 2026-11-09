@@ -359,7 +359,7 @@ impl Graph {
             m.tables[row.table] += 1;
             m.stats.adopted_existing += 1;
             m.stats.owned_live += 1;
-            self.attach_owned_signals(f, &row.values);
+            self.initialize_cell_fields::<true>(f, row.table, &row.values);
         }
         Ok(())
     }
@@ -392,8 +392,7 @@ impl Graph {
         m.tables[t] += 1;
         m.stats.owned_births += 1;
         m.stats.owned_live += 1;
-        self.attach_owned_signals(f, fields);
-        self.store_stable_fields(f, t, fields);
+        self.initialize_cell_fields::<true>(f, t, fields);
     }
     fn signal_is_native(&self, signal: Signal, id: u64) -> bool {
         let cell = (id >> 32) as u32;
@@ -441,65 +440,49 @@ impl Graph {
             m.stats.boundary_live += 1;
         }
     }
-    fn attach_owned_signals(&mut self, f: FactRef, fields: &[Value]) {
-        self.ensure_composition_frame(f.cell);
+    fn bind_cell_port(&mut self, f: FactRef, local: usize, port: ports::PortRef, id: u64) {
+        let signal = self.ownership.as_ref().unwrap().composition.signal(
+            &self.program.cell_ownership, port.component, port.symbol);
+        let native = self.signal_is_native(signal, id);
         let m = self.ownership.as_mut().unwrap();
-        let component = m.composition.frames[&f.cell].component;
-        m.composition.live_facts[component as usize] += 1;
-        m.stats.component_lifetime_updates += 1;
-        let template = self.cells[&f.cell].template;
-        let program = self.program.cell_ownership.markers[template]
-            .program
-            .clone();
-        for (column, symbol) in program.fields[f.op as usize].iter().enumerate() {
-            let Some(symbol) = *symbol else {
-                continue;
-            };
-            let Value::Eq(id) = fields[column] else {
-                panic!("typed equality port");
-            };
-            let signal = self.composed_signal(f.cell, symbol);
-            let native = self.signal_is_native(signal, id);
-            let m = self.ownership.as_mut().unwrap();
-            m.stats.internal_ports_seen += u64::from(native);
-            m.stats.boundary_ports_seen += u64::from(!native);
-            m.stats.signal_port_attaches += 1;
-            m.stats.signal_binding_reads += 1;
-            let slot = m.composition.components[signal.component as usize]
-                .as_ref()
-                .unwrap()
-                .signals[signal.symbol];
-            if let Some(bound) = slot {
-                assert!(bound == id || m.stats.signal_root(&self.parents, bound) == id,
-                    "symbolic alias disagrees with live port");
-                if m.composition.training.is_some() {
-                    let frame = m.composition.frames[&f.cell];
-                    let c = m.composition.components[signal.component as usize]
-                        .as_ref()
-                        .unwrap();
-                    let shape = m.composition.shapes[c.shape].as_ref().unwrap();
-                    // A retained slot with no live producer is not an observed
-                    // cross-frame reuse. Profiling must still count real uses.
-                    if shape.signals[signal.symbol].iter().any(|step| {
-                        step.frame < frame.ordinal
-                            && self
-                                .cells
-                                .get(&c.frames[step.frame])
-                                .and_then(|cell| cell.facts.get(&step.op))
-                                .is_some_and(|fact| fact.owned)
-                    }) {
-                        m.composition
-                            .observe_shared_binding(f.cell, symbol, signal.symbol);
-                    }
+        m.stats.internal_ports_seen += u64::from(native);
+        m.stats.boundary_ports_seen += u64::from(!native);
+        m.stats.signal_port_attaches += 1;
+        m.stats.signal_binding_reads += 1;
+        let slot = m.composition.components[signal.component as usize]
+            .as_ref()
+            .unwrap()
+            .signals[signal.symbol];
+        if let Some(bound) = slot {
+            assert!(bound == id || m.stats.signal_root(&self.parents, bound) == id,
+                "symbolic alias disagrees with live port");
+            if m.composition.training.is_some() {
+                let frame = m.composition.frames[&f.cell];
+                let c = m.composition.components[signal.component as usize]
+                    .as_ref()
+                    .unwrap();
+                let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                // A retained slot with no live producer is not an observed
+                // cross-frame reuse. Profiling must still count real uses.
+                if shape.signals[signal.symbol].iter().any(|step| {
+                    step.frame < frame.ordinal
+                        && self
+                            .cells
+                            .get(&c.frames[step.frame])
+                            .and_then(|cell| cell.facts.get(&step.op))
+                            .is_some_and(|fact| fact.owned)
+                }) {
+                    m.composition
+                        .observe_shared_binding(f.cell, local, signal.symbol);
                 }
-            } else {
-                m.composition.components.local_mut(signal.component as usize)
-                    .as_mut().unwrap().signals[signal.symbol] = Some(id);
-                m.stats.signal_bindings_created += 1;
-                m.stats.signal_bindings_live += 1;
-                if !native {
-                    self.boundary(id, signal);
-                }
+            }
+        } else {
+            m.composition.components.local_mut(signal.component as usize)
+                .as_mut().unwrap().signals[signal.symbol] = Some(id);
+            m.stats.signal_bindings_created += 1;
+            m.stats.signal_bindings_live += 1;
+            if !native {
+                self.boundary(id, signal);
             }
         }
     }
@@ -676,7 +659,7 @@ impl Graph {
         self.ownership.as_mut().unwrap().stats.key_completions += 1;
         self.complete_canonical_cell(f, r)
     }
-    pub(super) fn retire_owned(&mut self, f: FactRef, t: usize, _fields: &[Value]) -> bool {
+    pub(super) fn retire_owned(&mut self, f: FactRef, t: usize) -> bool {
         if !self.cells[&f.cell].facts[&f.op].owned {
             return false;
         }

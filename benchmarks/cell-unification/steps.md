@@ -136,3 +136,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 本步检查见 [field-uses-check.json](field-uses-check.json)：sum-bits 语义 pass，1,428 个 Run 与最终 state 相同。目录新增两项已有/新成本后，299 项指标值或状态保持，boundary 未编译扫描 1,542 → 0、node lookup 64,493 → 64,347；boundary site 恰减少 146，实际返回候选不变。新增 indexed steps 为 15,777，旧报告缺项，没有把它当零；不能由这些数字推出总成本或速度收益。短 port fixture 的逐阶段 state/bindings 保持。当前普通构建与冻结 `out/cell-propagation-unified/runtime-candidate` 使用同一 sum/port 输入，输出和目录提取保存在 `out/cell-field-uses-unified`；无新增时间或分配采样。
 
 用户追加了后续目标：完成统一重写并逐项确认后，再恢复完整多线程运行，尝试清除非本质阻塞。coverage 中记录了该顺序和独立验收阶段；本步的并行短回归仅用于避免破坏已有语义，不算该后续阶段完成。
+
+## Cell 出生只遍历一次字段布局
+
+基线 `95530d4a`。上一组 sum-bits 安装了 3,739 行、10,122 个稳定端口；此前先 attach signal，再独立遍历同一字段布局构造 PortRef。删除这两套遍历，`initialize_cell_fields` 统一绑定和安装：每行解析一次 frame/shape 的共享端口映射，同一个地址用于绑定及稳定字段。借用两个 Rc 代码句柄以允许修改实例，不新增字段数组或反向索引。
+
+已有 ownership 导入使用同一初始化；之后启用 stable representation 时只投影字段，不重绑 signal、不重复增加 component 的 live-fact 计数。保留别名一致性、训练时真实跨阶段复用检查及原 scalar/port 校验。retire 接口删除未使用的字段参数，存活和 retired port 行为保持。
+
+稳定地址随代表变化/删除重建、跨阶段共享绑定、inactive slot 退休清理、stable/decoded/keyed/local 差分的四项既有短检查及最小特性编译通过。上次测速后的第 4 个实现提交，随下一项集中核对指标与时间。

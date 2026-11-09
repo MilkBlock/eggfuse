@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "24c4ae8a",
-    "implementation_commits_since_timing": 3,
+    "implementation_commits_since_timing": 4,
     "evidence": "benchmarks/cell-unification/port-read-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign."
   },
@@ -218,7 +218,8 @@
         "Coordinator row/column reads and worker guards resolve ports through one immutable Cell read view; row counters accumulate locally without a second binding or equality traversal implementation.",
         "One Cell-field propagation path publishes stable, decoded and proved-unique changes, or queues exact completion; the three independent publication implementations are removed.",
         "Canonical, owned, stable-port and prefetched collisions share epoch joining, constructor output union and terminal publication; ordinary/owned canonical probing also shares one implementation.",
-        "Query, foreign congruence candidates and uniqueness proofs use the same shared field-use positions; condition-only input directories and duplicate bounded/unbounded enumeration are removed."
+        "Query, foreign congruence candidates and uniqueness proofs use the same shared field-use positions; condition-only input directories and duplicate bounded/unbounded enumeration are removed.",
+        "Owned births bind symbols and install stable fields in one pass using one resolved component port map. Stable activation projects that same layout without rebinding or incrementing lifetime counts."
       ],
       "remaining": [
         "Unify remaining table footprints, stable-port lifecycle, incidence routing and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",

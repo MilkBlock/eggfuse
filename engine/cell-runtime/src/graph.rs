@@ -2103,7 +2103,7 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
-            let owned=self.retire_owned(f,r.table,&r.values);
+            let owned=self.retire_owned(f,r.table);
             let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
             self.end_local_ownership(f, r.table, true);
             if let Some(matcher) = self.union_digest.as_mut() {
