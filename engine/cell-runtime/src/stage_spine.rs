@@ -170,6 +170,34 @@ pub(crate) enum Started {
     },
     Live(Cursor),
 }
+/// One completed source Cell owns its continuation until a final Entry needs
+/// it. Promotion moves the started state once; other exports share its base.
+struct Completion {
+    #[cfg(feature = "sparse-cells")]
+    phase: CompletionPhase,
+    #[cfg(not(feature = "sparse-cells"))]
+    started: Started,
+    #[cfg(feature = "sparse-cells")]
+    ready: Option<std::num::NonZeroUsize>,
+}
+#[cfg(feature = "sparse-cells")]
+enum CompletionPhase {
+    Started(Started),
+    Published(PublishedBase),
+    Moving,
+}
+impl Completion {
+    fn new(started: Started) -> Self {
+        Self {
+            #[cfg(feature = "sparse-cells")]
+            phase: CompletionPhase::Started(started),
+            #[cfg(not(feature = "sparse-cells"))]
+            started,
+            #[cfg(feature = "sparse-cells")]
+            ready: None,
+        }
+    }
+}
 impl Started {
     #[cfg(feature = "iterative-bake")]
     pub(crate) fn closed(&self, catalog: &crate::iterative::Catalog) -> bool {
@@ -445,6 +473,11 @@ pub struct Stats {
     local_witness_row_reads: u64,
     local_witness_history_borrows: u64,
     local_witness_slot_reads: u64,
+    completion_boundary_records: u64,
+    completion_boundary_reads: u64,
+    completion_order_checks: u64,
+    completion_cell_visits: u64,
+    completion_cursor_moves: u64,
     fragment_packets: u64,
     fragment_receipts: u64,
     fragment_receipt_spills: u64,
@@ -484,6 +517,7 @@ pub struct Stats {
     covered_by_rule: BTreeMap<usize, u64>,
     fallback_by_rule: BTreeMap<usize, u64>,
 }
+#[derive(Clone, Copy)]
 pub(crate) struct Publication {
     #[cfg(feature = "sparse-cells")]
     pub(crate) ordinal: u64,
@@ -503,6 +537,16 @@ struct FragmentPublication {
     cell: u32,
     // Positions are in the rule's shared anchor_ops, not repeated descriptors.
     receipts: smallvec::SmallVec<[Option<Dependency>; 4]>,
+}
+/// Only boundary-normalized exports use this scratch list. Fragment exports
+/// already have shared template order and stay in their existing receipt array.
+#[cfg(feature = "sparse-cells")]
+#[derive(Clone, Copy)]
+struct ReadyPublication {
+    table: usize,
+    witness: Dependency,
+    publication: Publication,
+    next: Option<std::num::NonZeroUsize>,
 }
 pub struct Programs {
     #[cfg(feature = "sparse-cells")]
@@ -535,14 +579,14 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     entry_owned_ids: Vec<usize>,
     #[cfg(feature = "sparse-cells")]
-    published_bases: Vec<Option<PublishedBase>>,
+    ready_publications: Vec<ReadyPublication>,
     active_tables: Vec<usize>,
     // Anchor-producing operations and their optional proven receipt sources.
     anchor_ops: Vec<Vec<(usize, Option<Site>)>>,
     alias_query_facts: Vec<QueryFacts>,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
-    pending_steps: Vec<Started>,
+    pending_steps: Vec<Completion>,
     #[cfg(feature = "sparse-cells")]
     pub(crate) compiled_commits: bool,
     #[cfg(feature = "sparse-cells")]
@@ -838,7 +882,7 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             entry_owned_ids: vec![],
             #[cfg(feature = "sparse-cells")]
-            published_bases: vec![],
+            ready_publications: vec![],
             active_tables: vec![0; p.tables.len()],
             #[cfg(feature = "spine-shapes")]
             shapes: Default::default(),
@@ -1200,9 +1244,7 @@ impl Programs {
                 &query_fact, |i| effects.and_then(|e| e[i]), &mut self.stats);
             s
         };
-        self.pending_steps.push(step);
-        #[cfg(feature = "sparse-cells")]
-        self.published_bases.push(None);
+        self.pending_steps.push(Completion::new(step));
         #[cfg(feature = "sparse-cells")]
         let mut fragment = self.fragment_rules[rid].then(|| FragmentPublication {
             rule: rid, slot, ordinal: self.stats.captured_anchors,
@@ -1326,9 +1368,7 @@ impl Programs {
                 |i| query.receipt(i), |i| (i == op).then_some(w), &mut self.stats);
             s
         };
-        self.pending_steps.push(step);
-        #[cfg(feature = "sparse-cells")]
-        self.published_bases.push(None);
+        self.pending_steps.push(Completion::new(step));
         let publication = Publication {
             #[cfg(feature = "sparse-cells")]
             ordinal: self.stats.captured_anchors,
@@ -1371,43 +1411,28 @@ impl Programs {
         let slot = publication.slot;
         #[cfg(feature = "sparse-cells")]
         let cursor = {
-            let base =
-                self.published_bases[slot].get_or_insert_with(|| match &self.pending_steps[slot] {
-                    #[cfg(feature = "sparse-cells")]
-                    Started::Root {
-                        id,
-                        producer,
-                        epoch,
-                        set,
-                    } if self.anchor_ops[*producer].len() == 1 => {
+            let phase = &mut self.pending_steps[slot].phase;
+            if !matches!(phase, CompletionPhase::Published(_)) {
+                let CompletionPhase::Started(started) = std::mem::replace(phase, CompletionPhase::Moving) else {
+                    unreachable!("Cell completion promotion");
+                };
+                let base = match started {
+                    Started::Root { id, producer, epoch, set } if self.anchor_ops[producer].len() == 1 => {
                         self.stats.deferred_single_roots += 1;
-                        PublishedBase::Solo {
-                            id: *id,
-                            producer: *producer,
-                            epoch: *epoch,
-                            stage: *set,
-                            root: OnceCell::new(),
-                        }
+                        PublishedBase::Solo { id, producer, epoch, stage: set, root: OnceCell::new() }
                     }
-                    Started::Root {
-                        id,
-                        producer,
-                        epoch,
-                        set,
-                    } => {
+                    Started::Root { id, producer, epoch, set } => {
                         self.stats.root_handles_created += 1;
-                        PublishedBase::Root(
-                            Rc::new(Root {
-                                id: *id,
-                                epoch: *epoch,
-                                set: set.clone(),
-                                context: OnceCell::new(),
-                            }),
-                            *producer,
-                        )
+                        PublishedBase::Root(Rc::new(Root { id, epoch, set, context: OnceCell::new() }), producer)
                     }
-                    Started::Live(c) => PublishedBase::Active(Rc::new(c.clone())),
-                });
+                    Started::Live(c) => {
+                        self.stats.completion_cursor_moves += 1;
+                        PublishedBase::Active(Rc::new(c))
+                    }
+                };
+                *phase = CompletionPhase::Published(base);
+            }
+            let CompletionPhase::Published(base) = phase else { unreachable!() };
             Published {
                 base: base.clone(),
                 output: publication.output,
@@ -1417,7 +1442,7 @@ impl Programs {
         };
         #[cfg(not(feature = "sparse-cells"))]
         let cursor = {
-            let cursor = self.pending_steps[slot].cursor(&mut self.stats).clone();
+            let cursor = self.pending_steps[slot].started.cursor(&mut self.stats).clone();
             #[cfg(feature = "spine-shapes")]
             let cursor = {
                 let mut cursor = cursor;
@@ -1435,35 +1460,53 @@ impl Programs {
         self.stats.anchor_publications += 1;
         cursor
     }
-    fn install_anchor(&mut self, w: Dependency, table: usize, publication: Publication,
-        #[cfg(feature = "sparse-cells")] entries: Option<&mut crate::entry_schedule::Scheduler>,
-    ) {
+    fn install_anchor(&mut self, w: Dependency, table: usize, publication: Publication) {
         #[cfg(feature = "sparse-cells")]
         if self.entry_owned_tables[table] {
-            let entries = entries.expect("entry publication owner");
-            if self.fragment_receipts_pending != 0 {
-                entries.stage_publication(table, w, publication);
-            } else {
-                let cursor = self.materialize_publication(publication);
-                entries.install_publication(table, w, cursor);
+            // Link normalized boundary exports to their source Cell. The short
+            // list orders only this Cell's own outputs, never its consumers.
+            let slot = publication.slot;
+            let mut previous = None;
+            let mut next = self.pending_steps[slot].ready;
+            while let Some(i) = next {
+                self.stats.completion_order_checks += 1;
+                if self.ready_publications[i.get() - 1].publication.ordinal <= publication.ordinal { break; }
+                previous = Some(i);
+                next = self.ready_publications[i.get() - 1].next;
             }
+            let id = std::num::NonZeroUsize::new(self.ready_publications.len() + 1).expect("Cell export index");
+            self.ready_publications.push(ReadyPublication { table, witness: w, publication, next });
+            if let Some(i) = previous { self.ready_publications[i.get() - 1].next = Some(id); }
+            else { self.pending_steps[slot].ready = Some(id); }
+            self.stats.completion_boundary_records += 1;
             return;
         }
         let cursor = self.materialize_publication(publication);
         self.stats.legacy_entry_writes += 1;
         if self.entries.insert(w, cursor).is_none() {
             if self.active_tables[table] == 0 {
-                for &rid in &self.table_readers[table] {
-                    self.live_inputs[rid] += 1;
-                }
+                for &rid in &self.table_readers[table] { self.live_inputs[rid] += 1; }
             }
             self.active_tables[table] += 1;
         }
     }
     #[cfg(feature = "sparse-cells")]
+    fn finish_boundary(&mut self, slot: usize, entries: &mut crate::entry_schedule::Scheduler) {
+        let id = self.pending_steps[slot].ready.expect("ready Cell export");
+        let record = self.ready_publications[id.get() - 1];
+        self.pending_steps[slot].ready = record.next;
+        self.stats.completion_boundary_reads += 1;
+        if !entries.install_publication(record.table, record.witness,
+            || self.materialize_publication(record.publication)) {
+            // Normalized boundary keys were counted before their receipts were
+            // resolved. A later fragment can already own this same final key.
+            self.stats.distinct_anchor_keys -= 1;
+        }
+    }
+    #[cfg(feature = "sparse-cells")]
     pub(crate) fn settled(&self)->bool {
         self.pending_steps.is_empty() && self.pending_anchors.is_empty()
-            && self.published_bases.is_empty() && self.direct_publications.is_empty()
+            && self.ready_publications.is_empty() && self.direct_publications.is_empty()
             && self.fragment_publications.is_empty()
             && self.sealed_cursors.is_empty() && self.origin_rules.is_empty()
             && self.capture_unions.is_none() && self.entry_cache.is_empty() && self.row_cache.is_empty()
@@ -1622,7 +1665,7 @@ impl Programs {
                         self.direct_publications.remove(&w);
                     }
                 }
-                self.install_anchor(w, table, publication, #[cfg(feature = "sparse-cells")] entries.as_deref_mut());
+                self.install_anchor(w, table, publication);
             } else {
                 self.stats.missing_capture_rows += 1;
             }
@@ -1640,44 +1683,60 @@ impl Programs {
                 self.stats.receipt_attempts += 1;
                 self.stats.receipt_hits += 1;
                 self.stats.receipt_redirects += u64::from(p.receipt != Some(w));
-                self.install_anchor(w, table, p, entries.as_deref_mut());
+                self.install_anchor(w, table, p);
             }
             self.direct_publications = resolved;
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(entries) = entries.as_deref_mut() {
-            for fragment in &mut self.fragment_publications {
-                for (position, receipt) in fragment.receipts.iter_mut().enumerate() {
-                    let Some(old) = *receipt else { continue };
-                    let table = self.fragment_tables[fragment.rule][position];
-                    self.stats.fragment_delivery_checks += 1;
-                    if ready.is_some_and(|r| !r[table]) { continue; }
-                    let w = g.resolve_receipt(old);
-                    if !g.receipt_visible(w, table) {
-                        return Err("permanent fragment receipt lost visibility".into());
+            if !self.ready_publications.is_empty() || !self.fragment_publications.is_empty() {
+                entries.begin_publication();
+                // Both source Cells and each fragment's static ports are in
+                // capture order. Reverse traversal sees each final winner first.
+                let mut fragments = std::mem::take(&mut self.fragment_publications);
+                let mut next_fragment = fragments.len();
+                for slot in (0..self.pending_steps.len()).rev() {
+                    self.stats.completion_cell_visits += 1;
+                    let fragment = if next_fragment != 0 && fragments[next_fragment - 1].slot == slot {
+                        next_fragment -= 1;
+                        Some(&mut fragments[next_fragment])
+                    } else { None };
+                    if let Some(fragment) = fragment {
+                        for (position, receipt) in fragment.receipts.iter_mut().enumerate().rev() {
+                            let Some(old) = *receipt else { continue };
+                            let table = self.fragment_tables[fragment.rule][position];
+                            self.stats.fragment_delivery_checks += 1;
+                            if ready.is_some_and(|r| !r[table]) { continue; }
+                            let ordinal = fragment.ordinal + position as u64;
+                            while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.ordinal > ordinal) {
+                                self.finish_boundary(slot, entries);
+                            }
+                            let w = g.resolve_receipt(old);
+                            if !g.receipt_visible(w, table) {
+                                return Err("permanent fragment receipt lost visibility".into());
+                            }
+                            let (op, _) = self.anchor_ops[fragment.rule][position];
+                            let publication = Publication {
+                                slot, ordinal, receipt: Some(old), output: op,
+                                #[cfg(feature = "spine-shapes")]
+                                source: crate::graph::FactRef { cell: fragment.cell, op: op as u32 },
+                            };
+                            let installed = entries.install_publication(table, w, || self.materialize_publication(publication));
+                            self.stats.distinct_anchor_keys += u64::from(installed);
+                            self.stats.fragment_deliveries += 1;
+                            self.stats.receipt_attempts += 1;
+                            self.stats.receipt_hits += 1;
+                            self.stats.receipt_redirects += u64::from(w != old);
+                            *receipt = None;
+                            self.fragment_receipts_pending -= 1;
+                        }
                     }
-                    let (op, _) = self.anchor_ops[fragment.rule][position];
-                    let publication = Publication {
-                        slot: fragment.slot,
-                        ordinal: fragment.ordinal + position as u64,
-                        receipt: Some(old),
-                        output: op,
-                        #[cfg(feature = "spine-shapes")]
-                        source: crate::graph::FactRef { cell: fragment.cell, op: op as u32 },
-                    };
-                    self.stats.distinct_anchor_keys += u64::from(entries.stage_publication(table, w, publication));
-                    self.stats.fragment_deliveries += 1;
-                    self.stats.receipt_attempts += 1;
-                    self.stats.receipt_hits += 1;
-                    self.stats.receipt_redirects += u64::from(w != old);
-                    *receipt = None;
-                    self.fragment_receipts_pending -= 1;
+                    while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries); }
                 }
-            }
-            self.fragment_publications.retain(|f| f.receipts.iter().any(Option::is_some));
-            while let Some((id, publication)) = entries.pop_staged_publication() {
-                let cursor = self.materialize_publication(publication);
-                entries.finish_publication(id, cursor);
+                debug_assert_eq!(next_fragment, 0);
+                fragments.retain(|f| f.receipts.iter().any(Option::is_some));
+                self.fragment_publications = fragments;
+                self.ready_publications.clear();
             }
         }
         let hits = self.stats.receipt_hits - hits_before;
@@ -1693,8 +1752,6 @@ impl Programs {
         if self.pending_publication_counts().0 == 0 {
             self.pending_steps.clear();
             self.capture_unions = None;
-            #[cfg(feature = "sparse-cells")]
-            self.published_bases.clear();
         }
         if !self.retain_matched_origins {
             #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]

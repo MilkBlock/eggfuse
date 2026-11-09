@@ -123,8 +123,37 @@
     },
     {
       "id": "rhs_publication",
-      "status": "pending",
-      "requirement": "Use Cell result slots for RHS reuse and final Entry publication; remove covered per-anchor packets and Pending round trips."
+      "status": "in_progress",
+      "requirement": "Use Cell result slots for RHS reuse and final Entry publication; remove covered per-anchor packets and Pending round trips.",
+      "baseline_commit": "ec6586d4",
+      "evidence": "benchmarks/cell-unification/publication-results.json",
+      "opportunity": "Previous sum-bits had 3,421 fragment deliveries but 5,505 Pending writes and 4,533 Pending reads; Started and published-base storage duplicated each source Cell lifecycle.",
+      "completed_structure": [
+        "One Completion moves Started into its published base once; all winning exports share it, including later scopes.",
+        "Cell source order and shared fragment output positions choose final Entry winners before materializing continuations.",
+        "Remove Entry Pending enum, staged-id vector and stage/pop/finish APIs; Entry writes only final publications.",
+        "Track boundary export records/reads, insertion comparisons, Cell visits, candidate checks/skips and Cursor promotions; retain old removed-path counters as zero."
+      ],
+      "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
+      "remaining": [
+        "Unify capture receipt/result retention and boundary key normalization with Cell definitions; fragment receipt arrays and direct-publication hashing remain.",
+        "Reduce or compile away boundary output ordering and scans of retained Cell completions where a proof permits it.",
+        "Confirm inference speed across stable final paths; the current short paired inference interval includes parity.",
+        "No general workload, parallel or overall unification acceptance until remaining optimization families are rewritten and measured."
+      ],
+      "verification": "217 compiler + 52 runtime all-feature + 33 minimal test executions; one partial-scope test also run without global audit fences. 22 compiler components, 1,428 source Runs and ordered state/RHS/write/resume evidence unchanged; semantic script pass. Pending reads/writes zero, execute requests -16,544 bytes, inference paired median 0.98684 with 95% interval [0.95565, 1.00593].",
+      "reproduction": [
+        "cargo test --locked -p eggfuse-cell-compiler --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+        "cargo test --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --test scoped_completion cell_completion_shares_one_continuation_across_partial_fragment_publication",
+        "cargo run --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-publication-unified/sum/program.json out/cell-publication-unified/relower.json",
+        "cargo run --locked -p eggfuse-cell-compiler --all-features --example emit_cell_entry_fixtures -- out/cell-publication-unified/fixtures",
+        "python3 benchmarks/cell-unification/run_entry_fixtures.py out/cell-publication-unified --cases reused replaced borrowed",
+        "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-publication-unified/semantic out/cell-publication-unified/semantic-acceptance.json",
+        "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/publication-timing-spec.json out/cell-publication-unified/timing --repeat 7 --warmups 1",
+        "python3 benchmarks/cell-unification/collect.py out/cell-publication-unified benchmarks/cell-unification/publication-results.json --part publication"
+      ]
     },
     {
       "id": "ports_congruence",
@@ -199,14 +228,14 @@
       "title": "RHS handoff 与 query receipt",
       "status": "common_result_ports_verified",
       "metrics_from_catalog": "C2",
-      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
+      "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain."
     },
     {
       "id": "C3",
       "title": "已有见证的实际来源直达",
       "status": "common_result_ports_verified",
       "metrics_from_catalog": "C3",
-      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
+      "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain."
     },
     {
       "id": "C4",
@@ -237,15 +266,18 @@
     {
       "id": "E2",
       "title": "Entry 持有 producer publication",
-      "status": "shared_entry_delivery_semantics_verified",
+      "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "E2",
-      "remaining": "Full/partial plan dispatch, legacy publication boundary and speed acceptance remain incomplete."
+      "remaining": "Final Entry publication and Cell completion state unified; capture receipts, boundary normalization/ordering, visibility fallback and inference performance acceptance remain.",
+      "evidence": "benchmarks/cell-unification/publication-results.json"
     },
     {
       "id": "E3",
       "title": "片段内部 publication",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "E3"
+      "status": "partially_rewritten_semantics_verified_performance_pending",
+      "metrics_from_catalog": "E3",
+      "evidence": "benchmarks/cell-unification/publication-results.json",
+      "remaining": "Final Entry publication and Cell completion state unified; capture receipts, boundary normalization/ordering, visibility fallback and inference performance acceptance remain."
     },
     {
       "id": "F1",

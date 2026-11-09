@@ -1,0 +1,1169 @@
+{
+  "scope": "standalone Cell CPU; publication rewrite, not completion of the unification goal",
+  "baseline_commit": "ec6586d4",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "binaries": {
+    "runtime-baseline": "38e1b2834dc8f3f518fced1fc15746d06dbf5cafb25dd1821af51bf906b1cd57",
+    "runtime-candidate": "09e0e71b1020720cc94090df77c5d7b28418d5e0b144d8655a3d287b24c0c515",
+    "runtime-baseline-audit": "442577e483f27888f079737683a74ccc7d8b727ad5d2eb0333e3adf9c2cb93ed",
+    "runtime-candidate-audit": "c9980d2561437f8e32ba4a9b9e460ebbf31cc1aabd1977abaaf72c4c94f5d398"
+  },
+  "normal_features": "sparse-cells,view-ports,storage-metrics",
+  "diagnostic_extra_features": "allocation-metrics,slot-transfer-audit,spine-shapes",
+  "build_provenance": "frozen previous-step binaries; candidate built in this worktree only, separate normal/audit target directories",
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "compiler_components": {
+    "components": [
+      {
+        "component": "context_cuts",
+        "sha256": "bc39ae4f61b68d115a880ea6edeab26da022830af8738e74fe92d9b6455ce176"
+      },
+      {
+        "component": "contract",
+        "sha256": "ec905de43329a4aec6df06f4ef6ecafa8945e445f1de4f6aa608c0ca3402aa5f"
+      },
+      {
+        "component": "entry_schedule",
+        "sha256": "e801a5122ab9e0bcab75d604d0aa5b9786e23e4a528b9db7bec01bfbb8717290"
+      },
+      {
+        "component": "free_join_entry",
+        "sha256": "2960fa3ea3091dc6cec3e48f822ad3bd0027fc371801f73d3e1f61d7bec24d9c"
+      },
+      {
+        "component": "initial",
+        "sha256": "c388c9090bd1ebd929af57c6254d93d50b71071f4f90484298ba5361f2a62634"
+      },
+      {
+        "component": "known_results",
+        "sha256": "ca209764b5c662eb24f0801c0d8af09ead5f6715718c5a517f02929108ffca7c"
+      },
+      {
+        "component": "local_contexts",
+        "sha256": "c53c3727a49732e88a1fa653533ca5d3ce43428884c25ddba74a838cb27a154c"
+      },
+      {
+        "component": "marker_tables",
+        "sha256": "cb3860fe0e2a2849b6a538f2a6a603d71020a58900d912d1691f65892ed5a8c3"
+      },
+      {
+        "component": "merge_contracts",
+        "sha256": "35dcf73bc52842dc222e22e5787b3f82d115393778bc01b645a2d008024e72c7"
+      },
+      {
+        "component": "merge_programs",
+        "sha256": "7138486472f299d5c95a488eb7a107b53b09901e151cacfbd8fbc30cd58acde8"
+      },
+      {
+        "component": "multi_stage",
+        "sha256": "131ca5a83ecf4e44f608d9b89bca71c65e30ed7976f4d389fa9610514cf8066d"
+      },
+      {
+        "component": "neighbor_entries",
+        "sha256": "099530f2de43e97352f413a9fc9e574e91059aeba6dc5804f4aa8de8a987a4af"
+      },
+      {
+        "component": "physical_plan",
+        "sha256": "7aa003ef05d9ef31caf044188bf22e3fc7637e3cd5e94f98ece509b1a2a8093a"
+      },
+      {
+        "component": "recipe",
+        "sha256": "181ac2a149c851a0f7d647a21b5ac8a6f23923d06e603ea37066233aac59a5a9"
+      },
+      {
+        "component": "repair_ports",
+        "sha256": "1de2949e232369bf8de761c83945174ce597fa8f7b0384845e5760695728e884"
+      },
+      {
+        "component": "requirements",
+        "sha256": "fc93e379dc114af3ddcfe267a7437450e4606c1a1f5aaa5afa92cadf8e47f778"
+      },
+      {
+        "component": "row_kernels",
+        "sha256": "f6da6fd92fbca5fac09ae6a62b36494d714a564a4002e4c5bbe463701f6befa2"
+      },
+      {
+        "component": "schema",
+        "sha256": "3a171fa0f0327ead2640fcaf7f7581bfc3a518a9487f69461b7ef8cc65a8d46b"
+      },
+      {
+        "component": "single_writes",
+        "sha256": "a154543227ec4bddec8dd33104f851af46e89009af9e5a19f18282dfb885fc64"
+      },
+      {
+        "component": "source_core",
+        "sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5"
+      },
+      {
+        "component": "templates",
+        "sha256": "bbc874c22d85b5693f444834f56443652b2341a0f0fa50f08959f3a45e6a103d"
+      },
+      {
+        "component": "view_consumer_blocks",
+        "sha256": "a54f34a13512a809556198d6b944687db18e557b577aea559620d1401ed0b34e"
+      }
+    ],
+    "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+    "scope": "compiler plans and attached catalog validation; not a runtime semantic or timing check",
+    "status": "pass"
+  },
+  "native_reference_scope": "source emitter unchanged; native legacy/values labels intentionally share the same marked-source export",
+  "ordered_runs": 1428,
+  "ordered_audit_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "rhs.json": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "writes.json": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "resumes.json": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+  },
+  "tests": {
+    "compiler": {
+      "passed": 217,
+      "log_sha256": "b7b2c83e787b08d62fecc4fbcee20b75d256dca24af9c1bc1906ff1caa1fb422"
+    },
+    "runtime-all": {
+      "passed": 52,
+      "log_sha256": "d40a271ca45b370aeecf03970d1b5a6027a978e5127f1452975f6fb78bed575e"
+    },
+    "runtime-minimal": {
+      "passed": 33,
+      "log_sha256": "0e5bb278327ac86e574fa479fbd167090b8de013fc3eb3c711f16287f4fbb2dc"
+    }
+  },
+  "supplemental_test": {
+    "passed": 1,
+    "log_sha256": "e220e20471dd9020509765a597c79b6d6d99e5a7436b535db3000def7d11ab6c",
+    "scope": "partial-scope fragment publication without global audit fences; same test also included in compiler suite"
+  },
+  "metric_count": 292,
+  "preserved_work_metric_statuses": {
+    "observed": 225,
+    "missing_counter": 7,
+    "disabled": 37
+  },
+  "optimization_groups_tracked": 29,
+  "work_metric_changes": {
+    "report:/entry_schedule/stats/fragment_older_skips [value]": {
+      "before": {
+        "status": "observed",
+        "value": 249
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    },
+    "report:/entry_schedule/stats/fragment_pending_reads [value]": {
+      "before": {
+        "status": "observed",
+        "value": 4533
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    },
+    "report:/entry_schedule/stats/fragment_pending_writes [value]": {
+      "before": {
+        "status": "observed",
+        "value": 5505
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    },
+    "report:/entry_schedule/stats/fragment_slot_probes [value]": {
+      "before": {
+        "status": "observed",
+        "value": 5754
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    },
+    "report:/entry_schedule/stats/fragment_slot_replacements [value]": {
+      "before": {
+        "status": "observed",
+        "value": 972
+      },
+      "after": {
+        "status": "observed",
+        "value": 0
+      }
+    }
+  },
+  "newly_observed_metrics": {
+    "report:/entry_schedule/stats/publication_candidate_checks [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 7134
+      }
+    },
+    "report:/entry_schedule/stats/publication_loser_skips [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 1221
+      }
+    },
+    "report:/stage_spine/stats/completion_boundary_reads [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 3713
+      }
+    },
+    "report:/stage_spine/stats/completion_boundary_records [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 3713
+      }
+    },
+    "report:/stage_spine/stats/completion_cell_visits [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 7153
+      }
+    },
+    "report:/stage_spine/stats/completion_cursor_moves [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 1752
+      }
+    },
+    "report:/stage_spine/stats/completion_order_checks [value]": {
+      "before": {
+        "status": "missing_counter"
+      },
+      "after": {
+        "status": "observed",
+        "value": 1262
+      }
+    }
+  },
+  "allocations": {
+    "setup_allocations": {
+      "baseline": {
+        "alloc_calls": 105264,
+        "free_calls": 53466,
+        "live_bytes_after": 136427610,
+        "live_bytes_before": 131147506,
+        "peak_live_requested_bytes": 136427610,
+        "realloc_calls": 3187,
+        "released_bytes": 5685041,
+        "requested_bytes": 10965145,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "candidate": {
+        "alloc_calls": 105264,
+        "free_calls": 53466,
+        "live_bytes_after": 136427619,
+        "live_bytes_before": 131147515,
+        "peak_live_requested_bytes": 136427619,
+        "realloc_calls": 3187,
+        "released_bytes": 5685041,
+        "requested_bytes": 10965145,
+        "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+      },
+      "saved": {
+        "alloc_calls": 0,
+        "realloc_calls": 0,
+        "free_calls": 0,
+        "requested_bytes": 0,
+        "released_bytes": 0
+      }
+    },
+    "allocations": {
+      "baseline": {
+        "alloc_calls": 195106,
+        "free_calls": 158033,
+        "live_bytes_after": 144297258,
+        "live_bytes_before": 136427610,
+        "peak_live_requested_bytes": 144748573,
+        "realloc_calls": 19880,
+        "released_bytes": 27382290,
+        "requested_bytes": 35251938,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "candidate": {
+        "alloc_calls": 195105,
+        "free_calls": 158033,
+        "live_bytes_after": 144289075,
+        "live_bytes_before": 136427619,
+        "peak_live_requested_bytes": 144752678,
+        "realloc_calls": 19871,
+        "released_bytes": 27373938,
+        "requested_bytes": 35235394,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "saved": {
+        "alloc_calls": 1,
+        "realloc_calls": 9,
+        "free_calls": 0,
+        "requested_bytes": 16544,
+        "released_bytes": 8352
+      }
+    }
+  },
+  "timing": {
+    "baseline": {
+      "inference_seconds": {
+        "median": 0.025963125,
+        "minimum": 0.024506208,
+        "maximum": 0.028341125,
+        "median_absolute_deviation": 0.0009404580000000017
+      },
+      "process_wall_seconds": {
+        "median": 0.1370219589999997,
+        "minimum": 0.131096125,
+        "maximum": 0.13811224999999983,
+        "median_absolute_deviation": 0.001090291000000132
+      },
+      "peak_rss_through_inference_bytes": {
+        "median": 178798592,
+        "minimum": 178782208,
+        "maximum": 178798592,
+        "median_absolute_deviation": 0
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.025022667,
+          "process_wall_seconds": 0.13182029099999992
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.028341125,
+          "process_wall_seconds": 0.1371647920000001
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.024506208,
+          "process_wall_seconds": 0.131096125
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.026467792,
+          "process_wall_seconds": 0.13720050000000006
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.02644,
+          "process_wall_seconds": 0.13811224999999983
+        },
+        {
+          "iteration": 5,
+          "inference_seconds": 0.025963125,
+          "process_wall_seconds": 0.1370219589999997
+        },
+        {
+          "iteration": 6,
+          "inference_seconds": 0.024744959,
+          "process_wall_seconds": 0.13212104200000008
+        }
+      ]
+    },
+    "candidate": {
+      "inference_seconds": {
+        "median": 0.02489175,
+        "minimum": 0.0244385,
+        "maximum": 0.026127041,
+        "median_absolute_deviation": 0.00045325000000000226
+      },
+      "process_wall_seconds": {
+        "median": 0.13156404199999994,
+        "minimum": 0.13017541700000002,
+        "maximum": 0.13693500000000025,
+        "median_absolute_deviation": 0.0013886249999999212
+      },
+      "peak_rss_through_inference_bytes": {
+        "median": 178749440,
+        "minimum": 178733056,
+        "maximum": 178749440,
+        "median_absolute_deviation": 0
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.024543625,
+          "process_wall_seconds": 0.13017541700000002
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.0244385,
+          "process_wall_seconds": 0.13156404199999994
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.025988583,
+          "process_wall_seconds": 0.13623908299999998
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.026119417,
+          "process_wall_seconds": 0.1360572499999999
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.026127041,
+          "process_wall_seconds": 0.13693500000000025
+        },
+        {
+          "iteration": 5,
+          "inference_seconds": 0.024811583,
+          "process_wall_seconds": 0.13044566700000004
+        },
+        {
+          "iteration": 6,
+          "inference_seconds": 0.02489175,
+          "process_wall_seconds": 0.13099095799999994
+        }
+      ]
+    }
+  },
+  "paired_timing_ratios": {
+    "inference_seconds": {
+      "paired_median_ratio": 0.9868377762678503,
+      "ratio_of_medians": 0.9587347439878674,
+      "paired_bootstrap_95_interval": [
+        0.9556470186081222,
+        1.0059321577376628
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    },
+    "process_wall_seconds": {
+      "paired_median_ratio": 0.9914466009131222,
+      "ratio_of_medians": 0.9601675743082919,
+      "paired_bootstrap_95_interval": [
+        0.9591677286981913,
+        0.9916673044194434
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    }
+  },
+  "repeat": 7,
+  "warmups": 1,
+  "earlier_attempt": null,
+  "entry_diagnostics": {
+    "cases": {
+      "reused": {
+        "scope": "short standalone Cell CPU diagnostic; source fixtures shared with differential/native-check tests",
+        "program_file_sha256": "ef02a8970116cf8aa6d23406891db4865cabf30c6aa0b69f72d6ae42eb407f1a",
+        "ordered_runs": 3,
+        "ordered_hashes": {
+          "state.json": "b178c509a11eaffe9bfaa90c49ad1ab5dd837504487c05ae11bf52e53dbc1a34",
+          "stages.json": "f64b801a67d44dd630310643c8098a3137d3d9fd1b4e27577ca217baa25269a8",
+          "binding-audit.json": "b0109e4bd5df3ca29b5e6103a2503fe68dd7fdb1f59266cfd238786650e1d6ad",
+          "rhs.json": "f26dc3364c6f0526fd98e9c1376c0d5bfdbcd3c68b56a1c98842d9fb81482aaa",
+          "writes.json": "157e0e97bc8b79cf7ec101eba3dc14aea0961669cc8bcb7c7cf7857ce087139f",
+          "resumes.json": "f968eabda1b4c099c7944de4c2dbee344a47c443ebf51b8a0faeb75598a4bcb3"
+        },
+        "prefix": {
+          "baseline": {
+            "context_missing": 0,
+            "context_reads": 0,
+            "donor_hits": 2,
+            "donor_reads": 2,
+            "eligible_seeds": 2,
+            "entry_publication_reads": 2,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 0,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 2,
+            "plan_hits": 2,
+            "plan_lookups": 2,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 2,
+            "stale_fallbacks": 0
+          },
+          "candidate": {
+            "context_missing": 0,
+            "context_reads": 0,
+            "donor_hits": 2,
+            "donor_reads": 2,
+            "eligible_seeds": 2,
+            "entry_publication_reads": 2,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 0,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 2,
+            "plan_hits": 2,
+            "plan_lookups": 2,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 2,
+            "stale_fallbacks": 0
+          }
+        },
+        "seed_bytes": 24,
+        "borrowed_field_work": null
+      },
+      "replaced": {
+        "scope": "short standalone Cell CPU diagnostic; source fixtures shared with differential/native-check tests",
+        "program_file_sha256": "13c779ae9f2d8e1723ddbe017c65fdf28198106809cb1860486684c1aa1fc9d8",
+        "ordered_runs": 8,
+        "ordered_hashes": {
+          "state.json": "deb6933b903322f4e5567ce7ebcfbc3df6df8fb44ce2ec4958db01471c054f46",
+          "stages.json": "1d1bc90e359d471410009e41cad750c97a75e32913e52d0766560d1c60846051",
+          "binding-audit.json": "a775d5bd14cc26e07ae063be43a5ad9a04ff24ea4c583b09834c4f1d0d42ab3f",
+          "rhs.json": "7cf6fcf91c9553627db5ea3e422c3a40dc1ac4d34932559e9e281fbfba7abe22",
+          "writes.json": "e0c7e03f9404460e74cbe3a23c3c1d4cd0ece15e03c016ba438994403af6e3f9",
+          "resumes.json": "6a4673d1986c6375d7a2470a2278e23329e234b9dd37d2ffe13db276fffe9f3c"
+        },
+        "prefix": {
+          "baseline": {
+            "context_missing": 0,
+            "context_reads": 2,
+            "donor_hits": 2,
+            "donor_reads": 4,
+            "eligible_seeds": 4,
+            "entry_publication_reads": 4,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 2,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 8,
+            "plan_hits": 4,
+            "plan_lookups": 4,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 4,
+            "stale_fallbacks": 2
+          },
+          "candidate": {
+            "context_missing": 0,
+            "context_reads": 2,
+            "donor_hits": 2,
+            "donor_reads": 4,
+            "eligible_seeds": 4,
+            "entry_publication_reads": 4,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 2,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 8,
+            "plan_hits": 4,
+            "plan_lookups": 4,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 4,
+            "stale_fallbacks": 2
+          }
+        },
+        "seed_bytes": 24,
+        "borrowed_field_work": null
+      },
+      "borrowed": {
+        "scope": "short standalone Cell CPU diagnostic; source fixtures shared with differential/native-check tests",
+        "program_file_sha256": "3c0ca42f146c428f6a65c88c4c677463478cce7ee5de85d170dca407873c1338",
+        "ordered_runs": 5,
+        "ordered_hashes": {
+          "state.json": "0b23d913f5227e3695261f13244cb005f9baebe9400ad97c8fe90d4e8eda2fb5",
+          "stages.json": "8c7cea19c62739d276799314976977c9752c205dcc7ae04cbd3a2d3a0e5f7034",
+          "binding-audit.json": "d2d90b3c09b41b285d8d5c44d78180bc593ea2a30ed97917cf915ba072a38505",
+          "rhs.json": "b6b507ba1da4d192abeafc72c4b7719e196cb0bc261843a7ff512155c82de840",
+          "writes.json": "3e3c7002fe78e3527554944df16e9a27c1dd69d0f4357cd6d8fd61a9d8d73eca",
+          "resumes.json": "e2501b309cc929f124cba1573318a791ced48412ed9887dfc8002c66cf15c79c"
+        },
+        "prefix": {
+          "baseline": {
+            "context_missing": 0,
+            "context_reads": 0,
+            "donor_hits": 2,
+            "donor_reads": 2,
+            "eligible_seeds": 2,
+            "entry_publication_reads": 2,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 0,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 2,
+            "plan_hits": 2,
+            "plan_lookups": 2,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 2,
+            "stale_fallbacks": 0
+          },
+          "candidate": {
+            "context_missing": 0,
+            "context_reads": 0,
+            "donor_hits": 2,
+            "donor_reads": 2,
+            "eligible_seeds": 2,
+            "entry_publication_reads": 2,
+            "field_checks": 2,
+            "field_writes": 2,
+            "history_borrows": 0,
+            "key_fallbacks": 0,
+            "key_fields": 2,
+            "key_reads_avoided": 2,
+            "misses": {
+              "cell_missing": 0,
+              "fact_missing": 0,
+              "hidden": 0,
+              "key": 0,
+              "receipt_missing": 0,
+              "shape": 0
+            },
+            "owner_rejections": 0,
+            "plan_comparisons": 2,
+            "plan_hits": 2,
+            "plan_lookups": 2,
+            "primitive_checks": 0,
+            "primitive_rejections": 0,
+            "publication_probes": 0,
+            "receipt_hits": 2,
+            "receipt_probes": 2,
+            "receipt_slot_reads": 2,
+            "receipt_steps": 0,
+            "result_rejections": 0,
+            "resumed_instructions": 2,
+            "resumes": 2,
+            "row_reads": 2,
+            "stale_fallbacks": 0
+          }
+        },
+        "seed_bytes": 24,
+        "borrowed_field_work": {
+          "register_expansion_rows": 6,
+          "register_result_writes": 12
+        }
+      }
+    },
+    "runs": [
+      {
+        "case": "reused",
+        "lane": "baseline",
+        "argv": [
+          "out/cell-publication-unified/runtime-baseline-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/reused.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/reused-baseline",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "442577e483f27888f079737683a74ccc7d8b727ad5d2eb0333e3adf9c2cb93ed",
+        "diagnostic_process_seconds": 0.0072217500000000025
+      },
+      {
+        "case": "reused",
+        "lane": "candidate",
+        "argv": [
+          "out/cell-publication-unified/runtime-candidate-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/reused.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/reused-candidate",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "c9980d2561437f8e32ba4a9b9e460ebbf31cc1aabd1977abaaf72c4c94f5d398",
+        "diagnostic_process_seconds": 0.005354541999999997
+      },
+      {
+        "case": "replaced",
+        "lane": "baseline",
+        "argv": [
+          "out/cell-publication-unified/runtime-baseline-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/replaced.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/replaced-baseline",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "442577e483f27888f079737683a74ccc7d8b727ad5d2eb0333e3adf9c2cb93ed",
+        "diagnostic_process_seconds": 0.005888958999999999
+      },
+      {
+        "case": "replaced",
+        "lane": "candidate",
+        "argv": [
+          "out/cell-publication-unified/runtime-candidate-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/replaced.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/replaced-candidate",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "c9980d2561437f8e32ba4a9b9e460ebbf31cc1aabd1977abaaf72c4c94f5d398",
+        "diagnostic_process_seconds": 0.005802542000000001
+      },
+      {
+        "case": "borrowed",
+        "lane": "baseline",
+        "argv": [
+          "out/cell-publication-unified/runtime-baseline-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/borrowed.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/borrowed-baseline",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "442577e483f27888f079737683a74ccc7d8b727ad5d2eb0333e3adf9c2cb93ed",
+        "diagnostic_process_seconds": 0.005911125000000003
+      },
+      {
+        "case": "borrowed",
+        "lane": "candidate",
+        "argv": [
+          "out/cell-publication-unified/runtime-candidate-audit",
+          "--program",
+          "out/cell-publication-unified/fixtures/borrowed.json",
+          "--output",
+          "out/cell-publication-unified/fixtures/borrowed-candidate",
+          "--local-congruence",
+          "--audit-stages"
+        ],
+        "runtime_sha256": "c9980d2561437f8e32ba4a9b9e460ebbf31cc1aabd1977abaaf72c4c94f5d398",
+        "diagnostic_process_seconds": 0.005935582999999994
+      }
+    ],
+    "timing_scope": "duration only verifies the short-fixture budget; not a performance measurement"
+  },
+  "entry_accessor_call_sites": null,
+  "performance_acceptance": "inference unresolved: paired interval includes parity; process wall interval is below parity in this short sample only; no general workload or overall-goal performance claim",
+  "limitations": [
+    "short sum-bits preservation check; no new Raytrace or historical-fastest campaign",
+    "allocation regions exclude program loading; process wall time and RSS include that cost",
+    "same work counts do not prove the remaining execution paths have been rewritten",
+    "whole-graph hashes are determinism diagnostics in addition to the semantic acceptance script"
+  ]
+}

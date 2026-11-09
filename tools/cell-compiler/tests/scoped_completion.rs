@@ -466,3 +466,45 @@ fn compiler_rejecting_all_deferral_erases_runtime_scope_queries() {
         reference.graph.export().unwrap()
     );
 }
+
+// One Cell exports to both a deferred A scope and an immediately readable B
+// scope. Its promoted continuation must survive partial publication, duplicate
+// B output from a later Cell, and eventual publication of the A fragment.
+#[cfg(feature = "sparse-cells")]
+#[test]
+fn cell_completion_shares_one_continuation_across_partial_fragment_publication() {
+    use eggfuse_cell_runtime::executor::Executor;
+    let source = EXECUTOR_STAGES.replace(
+        "((Ga (Fa x)) (Ga (Fa y)) (union x y))",
+        "((Ga (Fa x)) (Ga (Fa y)) (Gb (Fb (Nb 0))) (union x y))",
+    );
+    let p = program(&source);
+    let mut reference = Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(), false);
+    let mut scoped = Executor::new(Graph::new_with_scoped_completion(p).unwrap(), false);
+    reference.use_entry_publications().unwrap();
+    scoped.use_entry_publications().unwrap();
+    scoped.use_scoped_execution().unwrap();
+    reference.execute().unwrap();
+    scoped.execute_until(Some(3)).unwrap();
+    let partial = scoped.scoped_execution_report();
+    if partial["global_observer"] == false {
+        assert!(partial["pending_anchors"].as_u64().unwrap() > 0, "{partial}");
+        assert!(partial["retained_contexts"].as_u64().unwrap() > 0, "{partial}");
+        assert!(scoped.report()["stage_spine"]["stats"]["fragment_deliveries"].as_u64().unwrap() > 0);
+    }
+    assert_eq!(scoped.graph.witness_count(table(&scoped.graph.program, "SeenB")), 1);
+    scoped.execute().unwrap();
+    assert_eq!(scoped.graph.export().unwrap(), reference.graph.export().unwrap());
+    for (a, b) in scoped.steps.iter().zip(&reference.steps) {
+        assert_eq!(a.executed_bindings, b.executed_bindings);
+        assert_eq!(a.changed, b.changed);
+    }
+    assert_eq!(scoped.scoped_execution_report()["retained_contexts"], 0);
+    let report = scoped.report();
+    let stats = &report["stage_spine"]["stats"];
+    assert_eq!(stats["completion_boundary_records"], stats["completion_boundary_reads"]);
+    assert_eq!(stats["fragment_receipts"], stats["fragment_deliveries"]);
+    assert_eq!(report["entry_schedule"]["stats"]["fragment_pending_writes"], 0);
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, &source).unwrap();
+}

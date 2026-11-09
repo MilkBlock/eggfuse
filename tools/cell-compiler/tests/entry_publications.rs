@@ -88,7 +88,12 @@ fn fragment_receipts_use_entry_slots_after_union_and_duplicate_publications() {
     assert!(spine["fragment_packets"].as_u64().unwrap() > 0, "{spine}");
     assert_eq!(spine["fragment_receipts"], spine["fragment_direct_inserts_avoided"]);
     assert_eq!(spine["fragment_receipts"], spine["fragment_deliveries"]);
-    assert!(report["entry_schedule"]["stats"]["fragment_slot_replacements"].as_u64().unwrap() > 0);
+    let entries = &report["entry_schedule"]["stats"];
+    assert!(entries["publication_loser_skips"].as_u64().unwrap() > 0, "{entries}");
+    for k in ["fragment_pending_reads", "fragment_pending_writes", "fragment_slot_replacements"] {
+        assert_eq!(entries[k], 0, "{k}");
+    }
+    assert_eq!(spine["completion_boundary_records"], spine["completion_boundary_reads"]);
 }
 
 #[test]
