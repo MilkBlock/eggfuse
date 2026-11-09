@@ -90,6 +90,9 @@ fn reused_constructor_receipt_resumes_all_residual_results() {
         for stable in [false, true] {
             let (old, new) = compare(SOURCE, owned, stable);
             assert!(new.graph.stats.register_prefix.receipt_hits > 0);
+            assert!(new.graph.stats.register_prefix.receipt_slot_reads > 0);
+            assert_eq!(new.graph.stats.register_prefix.receipt_steps, 0);
+            assert_eq!(new.graph.stats.register_prefix.history_borrows, 0);
             assert!(new.graph.stats.register_prefix.resumes > 0);
             assert!(new.graph.key_lookup_calls.get() < old.graph.key_lookup_calls.get());
         }
@@ -114,6 +117,8 @@ fn full_spine_reads_the_published_receipt_before_a_key_lookup() {
     let report = new.report();
     assert!(report["stage_spine"]["stats"]["local_witness_receipt_hits"].as_u64().unwrap() > 0, "{}", report["stage_spine"]["stats"]);
     assert!(report["stage_spine"]["stats"]["local_witness_hits"].as_u64().unwrap() > 0);
+    assert!(report["stage_spine"]["stats"]["local_witness_slot_reads"].as_u64().unwrap() > 0);
+    assert_eq!(report["stage_spine"]["stats"]["local_witness_receipt_steps"], 0);
     assert!(new.graph.key_lookup_calls.get() < old.graph.key_lookup_calls.get());
 }
 

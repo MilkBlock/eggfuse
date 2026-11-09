@@ -57,9 +57,9 @@ pub(crate) struct Published {
 }
 #[cfg(feature = "sparse-cells")]
 impl Published {
-    pub(crate) fn witness_history(&self) -> Option<(usize, usize, &crate::result_handoff::History)> {
+    pub(crate) fn cell_results(&self) -> Option<(usize, usize, Option<&crate::cell::Results>)> {
         let PublishedBase::Active(c) = &self.base else { return None };
-        Some((c.producer, self.output, &c.state.history))
+        Some((c.producer, self.output, c.state.history.current()))
     }
     fn root_info(&self) -> (u64, Option<&Root>) {
         match &self.base {
@@ -106,8 +106,8 @@ pub(crate) type Published = Cursor;
 #[cfg(not(feature = "sparse-cells"))]
 impl Cursor {
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn witness_history(&self) -> Option<(usize, usize, &crate::result_handoff::History)> {
-        Some((self.producer, self.state.output, &self.state.history))
+    pub(crate) fn cell_results(&self) -> Option<(usize, usize, Option<&crate::cell::Results>)> {
+        Some((self.producer, self.state.output, self.state.history.current()))
     }
     pub(crate) fn expand(&self) -> Self {
         self.clone()
@@ -179,17 +179,22 @@ impl Started {
     pub(crate) fn result_inputs(
         &self,
         catalog: &crate::iterative::Catalog,
+        stats: &mut Stats,
     ) -> smallvec::SmallVec<[crate::result_handoff::Input; 4]> {
         let Self::Live(c) = self else {
             return smallvec::SmallVec::new();
         };
+        stats.history_result_reads += catalog.program(&c.state).len() as u64;
         catalog
             .program(&c.state)
             .iter()
             .map(|r| crate::result_handoff::Input {
                 op: r.op,
                 back: r.back,
-                fact: c.state.history.get(r),
+                fact: match c.state.history.get(r.back, r.port.expect("compiled Cell result port")) {
+                    Some(Dependency::Fact(f)) => Some(f),
+                    _ => None,
+                },
                 equal_output: r.equal_output,
             })
             .collect()
@@ -237,6 +242,7 @@ impl Started {
             stats.history_capture_reads += work.reads as u64;
             stats.history_slots_written += work.slots as u64;
             stats.history_allocations += work.allocations as u64;
+            stats.history_empty_slots_written += work.empty_slots as u64;
         }
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
@@ -361,6 +367,8 @@ pub struct Stats {
     history_capture_reads: u64,
     history_slots_written: u64,
     history_allocations: u64,
+    history_empty_slots_written: u64,
+    history_result_reads: u64,
     legacy_entry_writes: u64,
     legacy_retirement_checks: u64,
     pub(crate) legacy_cursor_probes: u64,
@@ -436,6 +444,7 @@ pub struct Stats {
     local_witness_receipt_hits: u64,
     local_witness_row_reads: u64,
     local_witness_history_borrows: u64,
+    local_witness_slot_reads: u64,
     fragment_packets: u64,
     fragment_receipts: u64,
     fragment_receipt_spills: u64,
@@ -645,7 +654,8 @@ fn read_port(
     #[cfg(feature = "iterative-bake")]
     if let Some(proof) = g.program.iterative.query_receipt(&cursor.state, _atom) {
         stats.query_receipt_attempts += 1;
-        if let Some(w) = cursor.state.history.get_query(proof) {
+        stats.history_result_reads += 1;
+        if let Some(w) = cursor.state.history.get(proof.back, proof.port.expect("compiled Cell result port")) {
             g.stats.decoded_rows += 1;
             if let Some(row) = g.row(w)?.filter(good) {
                 stats.query_receipt_hits += 1;
@@ -683,10 +693,11 @@ fn read_port(
             // This is a current positive witness, never a cached value or a
             // negative lookup proof. Missing or retired receipts fall back.
             #[cfg(feature = "iterative-bake")]
-            let receipt = if source.retained {
+            let receipt = if let Some(port) = source.port {
                 stats.local_witness_receipt_probes += 1;
-                local.history.current_source(local.route.producer, source.source,
-                    &mut stats.local_witness_receipt_steps)
+                stats.local_witness_slot_reads += 1;
+                stats.history_result_reads += 1;
+                local.history.get(1, port)
             } else { None };
             #[cfg(not(feature = "iterative-bake"))]
             let receipt = None;
@@ -809,15 +820,15 @@ impl Context {
 }
 impl Programs {
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn witness_history<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
-        table: usize, w: Dependency) -> Option<(usize, usize, &'a crate::result_handoff::History)> {
+    pub(crate) fn cell_results<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
+        table: usize, w: Dependency) -> Option<(usize, usize, Option<&'a crate::cell::Results>)> {
         #[cfg(feature = "sparse-cells")]
         if self.entry_owned_tables[table] {
-            return entries.publication(table, w)?.witness_history();
+            return entries.publication(table, w)?.cell_results();
         }
         #[cfg(not(feature = "sparse-cells"))]
         let _ = (entries, table);
-        self.entries.get(&w)?.witness_history()
+        self.entries.get(&w)?.cell_results()
     }
     pub fn new(p: &Program) -> Self {
         let enabled = true;

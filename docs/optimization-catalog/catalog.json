@@ -675,6 +675,16 @@
             "source": "report",
             "pointer": "/stage_spine/stats/query_receipt_stale",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_result_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_empty_slots_written",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -685,7 +695,7 @@
           }
         ]
       },
-      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。",
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads.",
       "evidence": [
         "benchmarks/query-receipts/README.md",
         "benchmarks/compiler-congruence/README.md"
@@ -764,6 +774,11 @@
           {
             "source": "report",
             "pointer": "/stage_spine/stats/local_witness_row_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_slot_reads",
             "reduce": "value"
           }
         ],
@@ -927,6 +942,11 @@
           {
             "source": "report",
             "pointer": "/stats/register_prefix/publication_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/receipt_slot_reads",
             "reduce": "value"
           }
         ],

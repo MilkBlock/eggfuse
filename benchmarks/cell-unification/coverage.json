@@ -22,8 +22,32 @@
     },
     {
       "id": "entry",
-      "status": "pending",
-      "requirement": "Shared Entry supplies Cell bindings and established query facts; remove covered history/route recovery while preserving late inputs and delta ownership."
+      "status": "in_progress",
+      "requirement": "Shared Entry supplies Cell bindings and established query facts; remove covered history/route recovery while preserving late inputs and delta ownership.",
+      "completed_structure": [
+        "Compile admitted Cell result sources to shared slots; retain only actual returned references.",
+        "RHS reuse, query receipts and prefix receipts read the same Results layout; source-tag searches removed.",
+        "Prefix reads borrow current Cell results without cloning the published History."
+      ],
+      "remaining": [
+        "Pass the already selected Entry to residual execution instead of probing publication again.",
+        "Compile residual execution position together with the Entry projection; remove covered route recovery.",
+        "Unify full and partial continuation delivery without losing delta ownership or late-input enumeration."
+      ],
+      "verification": "shared result ports verified; Entry dispatch takeover remains incomplete",
+      "evidence": "benchmarks/cell-unification/result-ports-results.json",
+      "baseline_commit": "d36e0254",
+      "opportunity": "The previous sum-bits execution retained 1,508 results; 592 result reads now use compiled slots. Prefix dispatch is not exercised by sum-bits and is covered separately by witness_sources/register_prefix fixtures.",
+      "live_obligations": "Actual result reference, current row/key/visibility, delta ownership and source Run ordering. Existing bounded history remains for results spanning multiple stages.",
+      "reproduction": [
+        "cargo test --locked -p eggfuse-cell-compiler --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --all-features",
+        "cargo test --locked -p eggfuse-cell-runtime --no-default-features",
+        "cargo run --release --locked -p eggfuse-cell-runtime --features sparse-cells,view-ports,storage-metrics --example audit_cell_relower -- out/cell-entry-ports/sum/program.json out/cell-entry-ports/relower.json",
+        "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-entry-ports/semantic out/cell-entry-ports/semantic-acceptance.json",
+        "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/result-ports-timing-spec.json out/cell-entry-ports/timing --repeat 7 --warmups 1",
+        "python3 benchmarks/cell-unification/collect.py out/cell-entry-ports benchmarks/cell-unification/result-ports-results.json --part result-ports"
+      ]
     },
     {
       "id": "query",
@@ -102,20 +126,23 @@
     {
       "id": "C2",
       "title": "RHS handoff 与 query receipt",
-      "status": "common_definition_only",
-      "metrics_from_catalog": "C2"
+      "status": "common_result_ports_verified",
+      "metrics_from_catalog": "C2",
+      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
     },
     {
       "id": "C3",
       "title": "已有见证的实际来源直达",
-      "status": "common_definition_only",
-      "metrics_from_catalog": "C3"
+      "status": "common_result_ports_verified",
+      "metrics_from_catalog": "C3",
+      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
     },
     {
       "id": "C4",
       "title": "匹配前缀接续",
-      "status": "common_definition_only",
-      "metrics_from_catalog": "C4"
+      "status": "common_result_ports_verified",
+      "metrics_from_catalog": "C4",
+      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
     },
     {
       "id": "D1",

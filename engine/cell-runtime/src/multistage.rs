@@ -10,7 +10,16 @@ use std::rc::Rc;
 #[derive(Clone, Copy, Debug)]
 pub(crate) struct WitnessSource {
     pub source: crate::cell::Site,
-    pub retained: bool,
+    #[cfg(feature = "iterative-bake")]
+    pub port: Option<crate::cell::ResultPort>,
+}
+impl WitnessSource {
+    fn retained(&self) -> bool {
+        #[cfg(feature = "iterative-bake")]
+        { self.port.is_some() }
+        #[cfg(not(feature = "iterative-bake"))]
+        { false }
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -94,7 +103,7 @@ impl MultiStage {
         for read in self.routes.values().flat_map(|r| &r.reads) {
             match read.witness {
                 Some(w) => {
-                    retained += usize::from(w.retained);
+                    retained += usize::from(w.retained());
                     local += usize::from(matches!(w.source, crate::cell::Site::Effect(_)));
                 }
                 None => skipped += 1,
@@ -270,7 +279,9 @@ impl MultiStage {
                     // Empty keys already use a singleton directory read. A
                     // receipt dispatch cannot remove hashing/field work there.
                     witness: (program.tables[table].virtual_fact
-                        && columns.len() > 1).then(|| WitnessSource { retained: false, source:
+                        && columns.len() > 1).then(|| WitnessSource {
+                        #[cfg(feature = "iterative-bake")]
+                        port: None, source:
                         if kind == "query" { crate::cell::Site::Query(index) }
                         else { program.known_results.static_sources.get(producer)
                             .and_then(|sources| sources[index])
@@ -314,11 +325,11 @@ pub(crate) fn compile_witnesses(p: &mut Program) {
             let Some(witness) = &mut read.witness else { continue };
             #[cfg(feature = "iterative-bake")]
             {
-                witness.retained = p.iterative.exports(producer).contains(&witness.source);
+                witness.port = p.iterative.result_port(producer, witness.source);
             }
             #[cfg(not(feature = "iterative-bake"))]
             let _ = producer;
-            if !witness.retained && matches!(witness.source, crate::cell::Site::Query(_)) {
+            if !witness.retained() && matches!(witness.source, crate::cell::Site::Query(_)) {
                 read.witness = None;
             }
         }

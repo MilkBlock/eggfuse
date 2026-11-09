@@ -6,6 +6,12 @@ use crate::program::{Arg, Call, Op, Program, Result, Rule, Table, Template};
 use serde::{Deserialize, Serialize};
 use std::{borrow::Cow, collections::BTreeMap};
 
+#[cfg(feature = "iterative-bake")]
+#[path = "cell_results.rs"]
+mod results;
+#[cfg(feature = "iterative-bake")]
+pub(crate) use results::{Capture, ResultPort, Results};
+
 /// A position in a Cell definition, never a physical address of its result.
 /// Keep the wire representation shared by existing recipe and Bake artifacts.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]

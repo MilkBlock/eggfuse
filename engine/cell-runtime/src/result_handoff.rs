@@ -4,7 +4,7 @@
 use crate::{
     graph::{Dependency, FactRef},
     iterative::Entry,
-    cell::{Definition, Site},
+    cell::{Capture, Definition, ResultPort, Results, Site},
     program::*,
     value::Value,
 };
@@ -21,6 +21,8 @@ pub(crate) struct Reuse {
     pub back: usize,
     pub rule: usize,
     pub donor: Site,
+    #[serde(skip)]
+    pub port: Option<ResultPort>,
 }
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 pub(crate) struct QueryReuse {
@@ -28,6 +30,8 @@ pub(crate) struct QueryReuse {
     pub back: usize,
     pub rule: usize,
     pub donor: Site,
+    #[serde(skip)]
+    pub port: Option<ResultPort>,
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Input {
@@ -236,6 +240,7 @@ fn derive_stage(
                         back: stage - f.stage,
                         rule: f.rule,
                         donor: f.source,
+                        port: None,
                     });
                 }
                 // A mutable row's location may survive while its result changes.
@@ -317,6 +322,7 @@ fn derive_stage(
                         back: stage - f.stage,
                         rule: f.rule,
                         donor: f.source,
+                        port: None,
                     });
                 }
                 if matches!(ins, Op::Set(..)) {
@@ -351,17 +357,12 @@ fn derive_stage(
         complete,
     }
 }
-#[derive(Clone, Debug)]
-struct Exports {
-    rule: usize,
-    rows: smallvec::SmallVec<[(Site, Dependency); 2]>,
-}
 /// Shared by copied/published cursors. Empty stages maintain real offsets;
 /// trimming at the largest compiled distance bounds the history.
 #[derive(Debug)]
 enum Trail {
-    One(Exports),
-    Many(Vec<Option<Rc<Exports>>>),
+    One(Results),
+    Many(Vec<Option<Rc<Results>>>),
 }
 #[derive(Clone, Debug, Default)]
 pub(crate) struct History(Option<Rc<Trail>>);
@@ -370,39 +371,35 @@ pub(crate) struct CaptureWork {
     pub reads: usize,
     pub slots: usize,
     pub allocations: usize,
+    pub empty_slots: usize,
 }
 impl History {
-    pub(crate) fn current_source(&self, rule: usize, source: Site, steps: &mut u64) -> Option<Dependency> {
-        let e = match self.0.as_deref()? {
-            Trail::One(e) => e,
-            Trail::Many(v) => v.last()?.as_deref()?,
-        };
-        if e.rule != rule { return None; }
-        e.rows.iter().find(|x| { *steps += 1; x.0 == source }).map(|x| x.1)
-    }
+    pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
     pub(crate) fn capture(
         &mut self,
         limit: usize,
         rid: usize,
-        wanted: &[Site],
+        wanted: &[Capture],
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
         if limit == 0 || (wanted.is_empty() && self.0.is_none()) {
             return CaptureWork::default();
         }
-        let mut rows = smallvec::SmallVec::new();
-        for &d in wanted {
-            let w = match d {
+        let mut results = Results::new(rid);
+        let mut empty_slots = 0;
+        for capture in wanted {
+            let w = match capture.site {
                 Site::Query(i) => read(i),
                 Site::Effect(i) => effect(i),
             };
             if let Some(w) = w {
-                rows.push((d, w));
+                empty_slots += results.insert(capture.port, w);
             }
         }
-        let mut work = CaptureWork { reads: wanted.len(), slots: rows.len(), allocations: 0 };
-        let frame = (!rows.is_empty()).then_some(Exports { rule: rid, rows });
+        let mut work = CaptureWork { reads: wanted.len(), slots: results.len(),
+            empty_slots, allocations: 0 };
+        let frame = (results.len() != 0).then_some(results);
         if limit == 1 {
             work.allocations = usize::from(frame.is_some());
             self.0 = frame.map(|f| Rc::new(Trail::One(f)));
@@ -425,24 +422,15 @@ impl History {
         self.0 = Some(Rc::new(Trail::Many(v)));
         work
     }
-    pub(crate) fn get(&self, r: &Reuse) -> Option<FactRef> {
-        match self.get_donor(r.back, r.rule, r.donor)? {
-            Dependency::Fact(f) => Some(f),
-            _ => None,
-        }
+    pub(crate) fn get(&self, back: usize, port: ResultPort) -> Option<Dependency> {
+        self.frame(back)?.get(port)
     }
-    pub(crate) fn get_query(&self, r: &QueryReuse) -> Option<Dependency> {
-        self.get_donor(r.back, r.rule, r.donor)
-    }
-    fn get_donor(&self, back: usize, rule: usize, donor: Site) -> Option<Dependency> {
-        let e = match self.0.as_deref()? {
-            Trail::One(e) if back == 1 => e,
-            Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_deref()?,
+    fn frame(&self, back: usize) -> Option<&Results> {
+        match self.0.as_deref()? {
+            Trail::One(e) if back == 1 => Some(e),
+            Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_deref(),
             _ => return None,
-        };
-        (e.rule == rule)
-            .then(|| e.rows.iter().find(|x| x.0 == donor).map(|x| x.1))
-            .flatten()
+        }
     }
 }
 
@@ -481,7 +469,7 @@ struct Node {
     failure: usize,
     program: Terminal,
     next: Vec<((usize, usize), usize)>,
-    supply: Vec<Site>,
+    supply: Vec<Capture>,
 }
 impl Default for Terminal {
     fn default() -> Self {
@@ -569,7 +557,9 @@ impl Switch {
                 .chain(program.queries.iter().map(|r| (r.back, r.rule, r.donor)))
             {
                 let donor: usize = ids[&path[..path.len() - back]];
-                nodes[donor].supply.push(source);
+                nodes[donor].supply.push(Capture {
+                    site: source, port: ResultPort::new(rule, 0),
+                });
                 exports[rule].push(source);
                 depth = depth.max(back);
             }
@@ -599,6 +589,21 @@ impl Switch {
         for s in &mut exports {
             s.sort_unstable();
             s.dedup();
+        }
+        // Every reader and writer uses this one Cell result layout. Runtime
+        // frames no longer repeat Site tags or search them on each access.
+        let port = |rule: usize, site: Site| ResultPort::new(rule,
+            exports[rule].binary_search(&site).expect("compiled Cell export"));
+        for node in &mut nodes {
+            for capture in &mut node.supply {
+                capture.port = port(capture.port.rule(), capture.site);
+            }
+            for read in &mut node.program.reuse {
+                read.port = Some(port(read.rule, read.donor));
+            }
+            for read in &mut node.program.queries {
+                read.port = Some(port(read.rule, read.donor));
+            }
         }
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
@@ -650,7 +655,7 @@ impl Switch {
             .find(|(k, _)| *k == (op, leaf))
             .map_or(self.initial[leaf], |x| x.1)
     }
-    pub(crate) fn supply(&self, id: usize) -> &[Site] {
+    pub(crate) fn supply(&self, id: usize) -> &[Capture] {
         self.nodes.get(id).map_or(&[], |n| n.supply.as_slice())
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
@@ -685,6 +690,47 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn compiled_result_ports_preserve_holes_and_real_returned_addresses() {
+        let first = ResultPort::new(4, 0);
+        let last = ResultPort::new(4, 2);
+        let captures = [Capture { site: Site::Query(1), port: first },
+            Capture { site: Site::Effect(7), port: last }];
+        // The effect reused another Cell's constructor. Its result address
+        // cannot be derived from either its local op or its result slot.
+        let reused = Dependency::Fact(FactRef { cell: 91, op: 3 });
+        let mut history = History::default();
+        let work = history.capture(1, 4, &captures, |_| None, |_| Some(reused));
+        assert_eq!(work.reads, 2);
+        assert_eq!(work.slots, 3);
+        assert_eq!(work.empty_slots, 2);
+        assert_eq!(history.get(1, last), Some(reused));
+        assert_eq!(history.get(1, first), None);
+        assert_eq!(history.get(1, ResultPort::new(5, 2)), None);
+        assert_eq!(history.get(0, last), None);
+        assert_eq!(history.get(2, last), None);
+        // An absent source on the next execution never inherits the old value.
+        history.capture(1, 4, &captures, |_| None, |_| None);
+        assert_eq!(history.get(1, last), None);
+    }
+    #[test]
+    fn result_ports_keep_empty_stage_offsets_and_trim_old_instances() {
+        let port = ResultPort::new(4, 0);
+        let capture = [Capture { site: Site::Effect(2), port }];
+        let old = Dependency::Function(9);
+        let new = Dependency::Function(12);
+        let mut history = History::default();
+        history.capture(3, 4, &capture, |_| None, |_| Some(old));
+        history.capture(3, 8, &[], |_| None, |_| None);
+        assert_eq!(history.get(1, port), None);
+        assert_eq!(history.get(2, port), Some(old));
+        history.capture(3, 4, &capture, |_| None, |_| Some(new));
+        assert_eq!(history.get(1, port), Some(new));
+        assert_eq!(history.get(3, port), Some(old));
+        history.capture(3, 8, &[], |_| None, |_| None);
+        assert_eq!(history.get(2, port), Some(new));
+        assert_eq!(history.get(4, port), None);
+    }
     #[test]
     fn conditional_closure_matches_full_scan_through_hides_and_pending_unions() {
         let mut symbols = Symbols::default();

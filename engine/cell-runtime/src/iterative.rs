@@ -252,7 +252,10 @@ impl Catalog {
     pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
         self.switch.exports.get(rid).map_or(&[], Vec::as_slice)
     }
-    pub(crate) fn capture_sources(&self, s: &State) -> &[crate::cell::Site] {
+    pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
+        self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
+    }
+    pub(crate) fn capture_sources(&self, s: &State) -> &[crate::cell::Capture] {
         self.switch.supply(s.pc)
     }
     pub(crate) fn history_depth(&self) -> usize {

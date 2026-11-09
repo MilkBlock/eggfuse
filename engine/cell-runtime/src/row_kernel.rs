@@ -32,7 +32,6 @@ pub(crate) struct Kernel {
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Prefix {
-    pub producer: usize,
     pub template: usize,
     pub publication: usize,
     /// One entry for each leading kernel instruction. None is a primitive that
@@ -59,6 +58,7 @@ pub struct PrefixStats {
     pub publication_probes: u64,
     pub receipt_probes: u64,
     pub receipt_steps: u64,
+    pub receipt_slot_reads: u64,
     pub receipt_hits: u64,
     pub row_reads: u64,
     pub history_borrows: u64,
@@ -101,7 +101,7 @@ pub(crate) fn attach_prefixes(p: &mut Program) {
             }
         }
         if reads != 0 {
-            Rc::make_mut(kernel).prefixes.push(Prefix { producer: route.producer, template, publication, effects });
+            Rc::make_mut(kernel).prefixes.push(Prefix { template, publication, effects });
         }
     }
     for kernel in p.kernels.iter_mut().flatten().flatten() {

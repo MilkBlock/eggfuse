@@ -112,16 +112,12 @@ impl Registers {
         exec.graph.stats.register_prefix.context_reads += 1;
         let context = exec.graph.continuation_context(seed.witness);
         #[cfg(feature = "iterative-bake")]
-        let history = {
+        let entry = {
             exec.graph.stats.register_prefix.publication_probes += 1;
-            exec.stage_spine.witness_history(&exec.entry_schedule, seed.table, seed.witness)
-                .map(|(rule, output, history)| {
-                    exec.graph.stats.register_prefix.history_borrows += 1;
-                    (rule, output, history.clone())
-                })
+            exec.stage_spine.cell_results(&exec.entry_schedule, seed.table, seed.witness)
         };
         #[cfg(feature = "iterative-bake")]
-        let published = history.as_ref().map(|(r, op, _)| (exec.graph.program.rules[*r].template, *op));
+        let published = entry.map(|(r, op, _)| (exec.graph.program.rules[r].template, op));
         #[cfg(not(feature = "iterative-bake"))]
         let published: Option<(usize, usize)> = None;
         let Some(address) = published.or_else(|| context.map(|c| (c.template, c.op))) else {
@@ -146,11 +142,11 @@ impl Registers {
                 (Call::Table(table), Some(source)) => {
                     exec.graph.stats.register_prefix.donor_reads += 1;
                     #[cfg(feature = "iterative-bake")]
-                    let receipt = history.as_ref().filter(|_| source.retained).and_then(|(_, _, history)| {
+                    let receipt = source.port.and_then(|port| entry.and_then(|(_, _, results)| {
                         exec.graph.stats.register_prefix.receipt_probes += 1;
-                        history.current_source(k.prefixes[plan].producer, source.source,
-                            &mut exec.graph.stats.register_prefix.receipt_steps)
-                    });
+                        exec.graph.stats.register_prefix.receipt_slot_reads += 1;
+                        results.and_then(|results| results.get(port))
+                    }));
                     #[cfg(not(feature = "iterative-bake"))]
                     let receipt = None;
                     exec.graph.stats.register_prefix.receipt_hits += u64::from(receipt.is_some());

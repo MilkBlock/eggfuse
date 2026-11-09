@@ -2037,7 +2037,7 @@ impl Executor {
         let available = stage_cursor
             .as_ref()
             .filter(|_| true)
-            .map(|s| s.result_inputs(&self.graph.program.iterative))
+            .map(|s| s.result_inputs(&self.graph.program.iterative, &mut self.stage_spine.stats))
             .unwrap_or_default();
         #[cfg(feature = "structural-depth")]
         let (ports, proven, closed) = if let Some(ev) = &evidence {

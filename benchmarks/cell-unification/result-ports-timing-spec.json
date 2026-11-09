@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-entry-ports/runtime-baseline",
+      "program": "out/cell-entry-ports/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-entry-ports/runtime-candidate",
+      "program": "out/cell-entry-ports/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
