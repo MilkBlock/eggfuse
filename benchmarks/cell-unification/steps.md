@@ -198,3 +198,7 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 静态目录向量容量 205,464 字节，源索引容量 70,976 字节；不含 Rc、原 Continuation 和 allocator 开销，不能据此声称总内存下降。本次是上次计时后第 3 个实现提交；用户明确授权这次提交后提前测速，因此提交后运行一次交错计时，比较直接前版、`d81b0cb2` 和历史 `24c4ae8a`。后续五提交周期从本次计时重新开始。
 
 复现：普通 release 构建特性为 `sparse-cells,view-ports,storage-metrics`，冻结二进制后在 `out/cell-routes-checked` 运行同一 sum-bits。通过 `emit_cell_entry_fixtures` 生成 reused/replaced/borrowed/full 输入，用 `run_entry_fixtures.py ROOT --cases reused replaced borrowed full` 运行；此处 audit 文件名指普通二进制的 `--audit-stages`，没有 allocation/RHS 审计特性。用既有 catalog extract 和 choice_diagnosis.py 校验。`benchmarks/witness-prefix/measure.py benchmarks/cell-unification/routes-timing-spec.json ROOT/timing --repeat 7 --warmups 1` 执行交错计时；`benchmarks/cell-unification/collect_routes.py ROOT benchmarks/cell-unification/routes-results.json --commit COMMIT` 验证并汇总保存结果。计时针对 standalone Cell CPU，不是原生 egglog。
+
+实现提交 `ab33d47c` 后，按用户授权完成 1 次预热、7 轮四版本交错计时。当前 sum-bits 推理中位数 24.831 ms，整进程 131.000 ms；直接前版分别 24.699 ms、129.311 ms。当前/前版的配对中位比为推理 1.0058（95% 小样本区间 0.9830–1.0119），整进程 1.0095（1.0013–1.0368）。相对上次计时版 `d81b0cb2`，推理比 1.0125（0.9707–1.0206）；相对历史 `24c4ae8a`，推理比 0.9932（0.9715–1.0334），整进程比 1.0179（1.0145–1.0239）。配对中位比与两个中位数的比不是同一统计量，两者都保存在结果中。
+
+本组没有建立加速结论：推理差异不明确，整进程出现小幅回退。历史速度保持问题仍未解决；不通过反复采样挑选更好结果。sum-bits 没有命中残余前缀，四个前缀短样例仅验证语义及工作量；不能外推 Raytrace 或多线程速度。证据见 `routes-results.json`，后续五个实现提交的计时周期从 `ab33d47c` 开始。

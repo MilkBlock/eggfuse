@@ -3,10 +3,10 @@
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
-    "last_timed_commit": "d81b0cb2",
-    "implementation_commits_since_timing": 2,
-    "evidence": "benchmarks/cell-unification/lifecycle-results.json",
-    "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign.",
+    "last_timed_commit": "ab33d47c",
+    "implementation_commits_since_timing": 0,
+    "evidence": "benchmarks/cell-unification/routes-results.json",
+    "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not count. User authorized this checkpoint after three implementation commits; next interval is five.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
   },
   "baseline_commit": "27f1c503",
@@ -37,10 +37,11 @@
         "RHS reuse, query receipts and prefix receipts read the same Results layout; source-tag searches removed.",
         "Prefix reads borrow current Cell results without cloning the published History.",
         "One borrowed Cell Entry supplies the row, shared Consumer definition and publication location to every batch reader; packet/published_packet/seed(packet) APIs removed.",
-        "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed."
+        "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed.",
+        "Full query, residual prefix and continuation consumers share one static Cell route directory. Independent Prefix plans and copied witness sources are removed; exact sparse fallback and indexed original reads retain source coverage."
       ],
       "remaining": [
-        "Full and residual operands now share Cell Query; still remove divergent producer-route recovery and prefix plan comparisons across the Entry boundary.",
+        "Full and residual consumers share Cell Query and routing; physical producer-context recovery and uncovered boundary fallback remain to unify.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
@@ -72,7 +73,8 @@
           "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/entry-delivery-timing-spec.json out/cell-entry-delivery/timing --repeat 7 --warmups 1",
           "python3 benchmarks/cell-unification/collect.py out/cell-entry-delivery benchmarks/cell-unification/entry-delivery-results.json --part entry-delivery"
         ]
-      }
+      },
+      "route_checks": "benchmarks/cell-unification/routes-results.json"
     },
     {
       "id": "query",

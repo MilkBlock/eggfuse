@@ -40,6 +40,9 @@ def collect(root, commit):
         'features': 'sparse-cells,view-ports,storage-metrics',
         'baseline_commit': '7632423c', 'candidate_commit': commit,
         'semantic_acceptance': 'pass', 'cases': {}, 'tests': {},
+        'performance_status': 'speedup_not_established_preservation_unresolved',
+        'timing_cadence': {'last_timed_commit': commit, 'implementation_commits_since_timing': 0,
+                          'reason': 'User authorized timing immediately after this commit; subsequent interval is five implementation commits.'},
         'allocation_status': 'not collected; vector capacity is not total allocation or memory',
     }
     for case in ('sum_bits', 'reused', 'replaced', 'borrowed', 'full'):
@@ -70,7 +73,10 @@ def collect(root, commit):
                 if key not in NEW:
                     expected = (case in ('reused', 'borrowed') and key == 'plan_comparisons') or (
                         case == 'full' and key == 'local_witness_route_steps')
-                    assert (left[key], right[key]) == (2, 0) if expected else left[key] == right[key]
+                    if expected:
+                        assert (left[key], right[key]) == (2, 0)
+                    else:
+                        assert left[key] == right[key]
         result['cases'][case] = {'runs': len(runs), 'ordered_hashes': hashes,
             'program_file_sha256': sha(program), 'route_work_before_after': work,
             'route_directory': b['multi_stage']['witness_plan']['route_directory']}
@@ -112,6 +118,7 @@ def collect(root, commit):
                'execution_order': data['execution_order'], 'lanes': {}, 'comparisons': {}}
     rows = {}
     fields = ('inference_seconds', 'process_wall_seconds', 'load_seconds', 'setup_seconds',
+              'export_seconds', 'report_seconds', 'process_after_report_residual_seconds',
               'peak_rss_through_inference_bytes')
     for lane, values in data['lanes'].items():
         assert values['runtime_sha256'] == sha(root / f'runtime-{lane}')
