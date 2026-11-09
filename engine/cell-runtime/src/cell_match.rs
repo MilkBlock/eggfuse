@@ -6,6 +6,10 @@ use crate::{
 };
 
 pub(crate) struct Matched {
+    // The existing move-only continuation token follows its winning match.
+    // Its lifetime remains owned by the source Run, not a second fact graph.
+    #[cfg(feature = "iterative-bake")]
+    pub direct: Option<crate::stage_spine::DirectOrigin>,
     pub values: Vec<Value>,
     pub facts: QueryFacts,
     pub epoch: u64,

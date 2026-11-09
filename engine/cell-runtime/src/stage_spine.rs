@@ -4,8 +4,7 @@
 use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
-    cell::{QueryFrame, Site, bind_query as bind},
-    cell::QueryFacts,
+    cell::{Matched, QueryFacts, QueryFrame, Site, bind_query as bind},
     program::*,
     value::{self, Value, canon},
 };
@@ -352,17 +351,9 @@ impl std::fmt::Debug for DirectOrigin {
             .finish()
     }
 }
-pub struct Answer {
-    #[cfg(feature = "iterative-bake")]
-    pub(crate) direct: Option<DirectOrigin>,
-
-    pub values: Vec<Value>,
-    pub witnesses: Vec<Option<Dependency>>,
-    pub epoch: u64,
-}
 /// Exact entry coverage, independently usable from residual query completion.
-pub struct Coverage {
-    pub answers: Vec<Answer>,
+pub(crate) struct Coverage {
+    pub answers: Vec<Matched>,
     pub covered: BTreeSet<(usize, Dependency)>,
     pub complete: bool,
 }
@@ -647,13 +638,13 @@ pub struct Programs {
     pub stats: Stats,
 }
 #[cfg(feature = "sparse-cells")]
-type Winners = Vec<(Vec<Value>, (Answer, Cursor))>;
+type Winners = Vec<(Vec<Value>, (Matched, Cursor))>;
 #[cfg(not(feature = "sparse-cells"))]
-type Winners = BTreeMap<Vec<Value>, (Answer, Cursor)>;
+type Winners = BTreeMap<Vec<Value>, (Matched, Cursor)>;
 fn record_answer(
     results: &mut Winners,
     values: Vec<Value>,
-    witnesses: Vec<Option<Dependency>>,
+    facts: QueryFacts,
     epoch: u64,
 
     cursor: Cursor,
@@ -663,7 +654,7 @@ fn record_answer(
     #[cfg(not(feature = "iterative-bake"))]
     let direct = false;
     let candidate = (
-        Answer {
+        Matched {
             #[cfg(feature = "iterative-bake")]
             direct: None,
 
@@ -672,7 +663,7 @@ fn record_answer(
             } else {
                 values.clone()
             },
-            witnesses,
+            facts,
             epoch,
         },
         cursor,
@@ -1717,18 +1708,19 @@ impl Programs {
         let n = n + self.sealed_cursors.len();
         n
     }
-    pub fn answers(
+    pub(crate) fn answers(
         &mut self,
         g: &mut Graph,
         rid: usize,
         pending: &BTreeSet<Dependency>,
         watermark: u64,
+        facts: &QueryFacts,
     ) -> Result<Option<Coverage>> {
         if !self.active_for_rule(rid) {
             return Ok(None);
         }
         let clock = Instant::now();
-        let result = self.answers_inner(g, rid, pending, watermark);
+        let result = self.answers_inner(g, rid, pending, watermark, facts);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
     }
@@ -1738,6 +1730,7 @@ impl Programs {
         rid: usize,
         pending: &BTreeSet<Dependency>,
         watermark: u64,
+        facts: &QueryFacts,
     ) -> Result<Option<Coverage>> {
         self.stats.query_attempts += 1;
         self.prepare_epoch(g.epoch);
@@ -1827,6 +1820,7 @@ impl Programs {
             covered,
             complete,
             watermark,
+            facts,
         )
     }
     #[cfg(feature = "family-survey")]
@@ -1883,44 +1877,6 @@ impl Programs {
         .then_some(&self.entries)
     }
 
-    pub fn answers_scheduled(
-        &mut self,
-        g: &mut Graph,
-        rid: usize,
-        seeds: &[Seed],
-        watermark: u64,
-    ) -> Result<Option<Coverage>> {
-        if !self.active_for_rule(rid) {
-            return Ok(None);
-        }
-        // This API also certifies an externally supplied empty domain. The
-        // scheduler's routed API only reports takeovers for delivered seeds.
-        if seeds.is_empty() {
-            self.stats.query_attempts += 1;
-            return self.finish_answers(
-                g,
-                rid,
-                std::iter::empty::<(usize, Rc<Row>, Cursor)>(),
-                BTreeSet::new(),
-                true,
-                watermark,
-            );
-        }
-        let mut routes = Vec::new();
-        for (i, seed) in seeds.iter().enumerate() {
-            let row = &seed.packet.row;
-            if let Some(cursor) = self
-                .scheduled_cursors(rid, seed.atom(), row.table)
-                .and_then(|c| c.get(&row.witness))
-            {
-                routes.push((i, cursor.expand()));
-            } else {
-                self.record_fallbacks(rid, seed.atom(), 1);
-            }
-        }
-        self.answers_routed(g, rid, seeds, routes, watermark)
-    }
-
     pub(crate) fn answers_routed(
         &mut self,
         g: &mut Graph,
@@ -1928,6 +1884,7 @@ impl Programs {
         seeds: &[Seed],
         mut routes: Vec<(usize, Cursor)>,
         watermark: u64,
+        facts: &QueryFacts,
     ) -> Result<Option<Coverage>> {
         self.stats.routed_spine_seeds += routes.len() as u64;
         self.stats.routed_matcher_seeds += (seeds.len() - routes.len()) as u64;
@@ -1965,7 +1922,7 @@ impl Programs {
                 cursor,
             )
         });
-        let result = self.finish_answers(g, rid, ready, covered, complete, watermark);
+        let result = self.finish_answers(g, rid, ready, covered, complete, watermark, facts);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
     }
@@ -1977,11 +1934,11 @@ impl Programs {
         covered: BTreeSet<(usize, Dependency)>,
         complete: bool,
         watermark: u64,
+        facts: &QueryFacts,
     ) -> Result<Option<Coverage>> {
         if !complete && covered.is_empty() {
             return Ok(None);
         }
-        let rule = g.program.rules[rid].clone();
         #[cfg(feature = "sparse-cells")]
         let mut results = std::mem::take(&mut self.answer_scratch);
         #[cfg(not(feature = "sparse-cells"))]
@@ -2049,7 +2006,7 @@ impl Programs {
             self.stats.cell_query_entries += 1;
             let mut values = smallvec::SmallVec::<[Value; 4]>::new();
             // Keep rejected queries off the heap in the common short case. Only
-            // successful matches materialize the externally required witness map.
+            // successful matches materialize the requested Cell fact projection.
             let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
             for (position, step) in query.steps.iter().enumerate() {
                 self.stats.cell_query_steps += 1;
@@ -2087,14 +2044,13 @@ impl Programs {
             }
             if epoch >= watermark {
                 let inputs = query.inputs.iter().map(|v| v.read(g, |col| &row.values[col], &values, None)).collect();
-                let mut witnesses = vec![None; rule.query.len()];
-                witnesses[pivot] = Some(row.witness);
-                for (atom, witness) in found_witnesses { witnesses[atom] = Some(witness); }
+                let facts = facts.with_rows(std::iter::once((pivot, row.witness))
+                    .chain(found_witnesses));
                 #[cfg(feature = "iterative-bake")]
                 if cursor.via_block && cursor.state.direct {
                     self.training.seal_moves += query.inputs.len() as u64;
                 }
-                record_answer(&mut results, inputs, witnesses, epoch, cursor);
+                record_answer(&mut results, inputs, facts, epoch, cursor);
             }
         }
         #[cfg(feature = "sparse-cells")]
@@ -2130,7 +2086,7 @@ impl Programs {
                 } {
                     // The executor appends residual matches after these winners.
                     // Stable sealing keeps the Spine binding on an equal RHS key.
-                    // The public standalone Programs route still resolves by key.
+                    // Unsealed continuations still resolve by key.
                     self.stats.sealed_partial_origins += u64::from(!complete);
                     let mut answer = answer;
                     answer.values = key;

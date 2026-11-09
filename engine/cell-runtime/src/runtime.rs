@@ -58,7 +58,7 @@ impl Binding {
             #[cfg(feature = "view-consumers")]
             view_source: None,
             #[cfg(feature = "iterative-bake")]
-            direct: None,
+            direct: matched.direct,
             values: rule.inputs.iter().copied().zip(matched.values).collect(),
             known: matched.facts,
             epoch: matched.epoch,
@@ -1352,11 +1352,12 @@ impl Executor {
                     seeds,
                     spine_routes,
                     watermark,
+                    &query_facts,
                 )?,
                 Some(_) => None,
                 None => {
                     self.stage_spine
-                        .answers(&mut self.graph, rid, &self.pending[rid], watermark)?
+                        .answers(&mut self.graph, rid, &self.pending[rid], watermark, &query_facts)?
                 }
             };
             if self.graph.program.neighbor_plans[rid].is_some()
@@ -1374,27 +1375,8 @@ impl Executor {
                 stats.residual_entries += (seeds.len() - claimed) as u64;
             }
             if let Some(coverage) = coverage {
-                found = coverage
-                    .answers
-                    .into_iter()
-                    .map(|a| {
-                        let known = query_facts.with_rows(a.witnesses.into_iter().enumerate()
-                            .filter_map(|(atom, w)| w.map(|w| (atom, w))));
-
-                        Binding {
-                            #[cfg(feature = "view-consumers")]
-                            view_source: None,
-                            #[cfg(feature = "iterative-bake")]
-                            direct: a.direct,
-                            values: rule.inputs.iter().copied().zip(a.values).collect(),
-                            known,
-                            parent: None,
-                            continuation: None,
-                            epoch: a.epoch,
-                            compiled: true,
-                        }
-                    })
-                    .collect();
+                found = coverage.answers.into_iter()
+                    .map(|answer| Binding::matched(&rule, answer)).collect();
                 if coverage.complete {
                     self.pending[rid].clear();
                     return Ok(found);

@@ -648,7 +648,11 @@ fn emit(
         let facts = facts.with_rows(p.witnesses.iter().enumerate()
             .filter_map(|(atom, &w)| w.map(|w| (atom, w)))
             .chain(std::iter::once((plan.tail(), row.witness))));
-        out.push(Matched { values, facts, epoch });
+        out.push(Matched {
+            #[cfg(feature = "iterative-bake")]
+            direct: None,
+            values, facts, epoch,
+        });
     }
     Ok(prefixes.len() as u64)
 }

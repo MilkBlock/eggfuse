@@ -379,3 +379,12 @@ prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分�
 按同次交错样本配对的 当前/对照 比值（不是两个中位数相除）：推理相对改动前 0.992190 [0.976855, 1.029979]、相对上次测速 0.994960 [0.964456, 1.017490]、相对历史 0.984370 [0.976718, 1.037474]；进程分别为 1.003255 [0.978642, 1.021987]、0.983660 [0.948459, 1.028617]、0.974394 [0.967472, 1.007325]。方括号为 95% bootstrap 区间，全部包含 1；不宣称加速，也未解决严格的速度保持验收。峰值 RSS 中位数 179,683,328 字节，比改动前低 48 KiB、比上次测速和历史高 176 KiB；RSS 不是分配次数。
 
 语义通过，346 项现有工作指标保持。sum-bits 本身只有 4 个 context bindings，不能把此短样例的总体耗时解释为该局部改动的速度收益。完整 Entry 交接、prefix/index 生命周期、其他优化类别和最终多线程仍未完成。
+
+
+## 完整 Entry 交付同一份 Cell Matched
+
+上一轮 sum-bits 实际经过 5,738 个完整查询 Entry，保留 3,034 个匹配，其中 111 次混合覆盖、409 个部分覆盖的 sealed origins。完整 Entry 在成功查询后构造全 query 宽 witness 数组，执行器再生成所需事实。现在直接从现有成功读取记录投影 QueryFacts，输出与 context 相同的 Cell Matched；执行器共用 Binding::matched。删除 stage Answer、全宽交接数组及第二个转换循环。仓库没有调用者的 answers_scheduled 包装 API 一并删除；保留实际使用的 legacy pending 和 routed seed 来源，两者都进入同一个完成函数，所需事实模板由执行器传入。
+
+原有 DirectOrigin 是 source Run 所有的 move-only 续接 token，随赢家放入 Matched，并未重新创建来源历史或绑定表。维持最大深度优先、同深度首个来源、部分覆盖与后续普通枚举的顺序。当前只将所需事实投影提前至去重前，不能从 3,034 个输出推出删除的数组/分配次数。context 记录增加一个空的可选来源槽；完整 Entry 的 witness scratch、当前 key/可见性、retirement 和 delta 归属检查保留。公共 stage Answer/answers_scheduled 不再是兼容接口；内部执行改用 Cell 完成记录，未增加兼容执行路径。
+
+31 项相关测试通过，覆盖稀疏/非稀疏见证消费、可变函数 receipt、退役重建、ordered resume/mutation digests 与匹配后完成前的来源存活；最小 feature 编译和 22 个组件重新 lowering 通过。普通 release 的 sum-bits 1,428 个 Run、state、346 项工作指标不变。四个短 Entry 样例对照冻结旧二进制，state/stages/binding-audit 一致，每进程少于 1 秒。输出 `out/cell-match-entry`，复核 `check_match_completion.py ROOT OUTPUT --commit COMMIT --phase entry`；语义入口仍为 choice_diagnosis.py。上次测速后第 1 个实现提交，不单独测速度。完整 Cell 重写、缓存生命周期、其他类别及最终多线程仍未完成。
