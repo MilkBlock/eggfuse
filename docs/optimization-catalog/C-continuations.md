@@ -15,7 +15,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [spine_blocks.rs](../../engine/cell-runtime/src/spine_blocks.rs)
+代码：[cell_query.rs](../../engine/cell-runtime/src/cell_query.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [spine_blocks.rs](../../engine/cell-runtime/src/spine_blocks.rs) · [cell_match.rs](../../engine/cell-runtime/src/cell_match.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -23,11 +23,11 @@
 | 成本 / 剩余工作 | `report:/stage_spine/stats/guards [value]`<br>`report:/stage_spine/stats/port_refreshes [value]`<br>`report:/stage_spine/stats/origin_map_writes [value]`<br>`report:/stage_spine/stats/context_reads [value]`<br>`report:/stage_spine/stats/cell_query_steps [value]`<br>`report:/stage_spine/stats/cell_query_result_writes [value]` |
 | 覆盖 / 规模 / 回退 | `report:/stage_spine/stats/routed_spine_seeds [value]`<br>`report:/stage_spine/stats/routed_matcher_seeds [value]`<br>`report:/stage_spine/stats/uncovered_queries [value]`<br>`program:/spine_blocks/entries [count]`<br>`report:/stage_spine/stats/cell_query_entries [value]`<br>`report:/stage_spine/shared_query_plans [value]` |
 
-解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。 Complete Entry stores results only through the last new output, omitting trailing bound-result writes. Internal holes keep instruction-position addresses. sum-bits writes fell 2604 to 2455; the five-commit timing checkpoint did not establish a speedup.
+解释与缺口：完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。 Complete Entry stores results only through the last new output, omitting trailing bound-result writes. Internal holes keep instruction-position addresses. sum-bits writes fell 2604 to 2455; the five-commit timing checkpoint did not establish a speedup. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[benchmarks/leaf-completion/README.md](../../benchmarks/leaf-completion/README.md) · [benchmarks/cell-unification/query.md](../../benchmarks/cell-unification/query.md) · [benchmarks/cell-unification/query-storage-results.json](../../benchmarks/cell-unification/query-storage-results.json)
+证据：[benchmarks/leaf-completion/README.md](../../benchmarks/leaf-completion/README.md) · [benchmarks/cell-unification/query.md](../../benchmarks/cell-unification/query.md) · [benchmarks/cell-unification/query-storage-results.json](../../benchmarks/cell-unification/query-storage-results.json) · [benchmarks/cell-unification/match-entry-check.json](../../benchmarks/cell-unification/match-entry-check.json)
 
 ## C2 · RHS handoff 与 query receipt
 

@@ -1,0 +1,165 @@
+{
+  "scope": "standalone Cell CPU; normal release; not native egglog performance",
+  "features": "sparse-cells,view-ports,storage-metrics",
+  "baseline_commit": "f1c69507",
+  "candidate_commit": "3bd9d21e",
+  "semantic_acceptance": "pass",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "ordered_hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+      },
+      "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+      "compared_report_groups": [
+        "stats",
+        "cell_ownership",
+        "stable_ports",
+        "free_join",
+        "sieve",
+        "neighbor_context",
+        "physical",
+        "stage_spine",
+        "local_context"
+      ],
+      "context_bindings": 4
+    },
+    "reused": {
+      "runs": 3,
+      "ordered_hashes": {
+        "state.json": "b178c509a11eaffe9bfaa90c49ad1ab5dd837504487c05ae11bf52e53dbc1a34",
+        "stages.json": "f64b801a67d44dd630310643c8098a3137d3d9fd1b4e27577ca217baa25269a8",
+        "binding-audit.json": "b0109e4bd5df3ca29b5e6103a2503fe68dd7fdb1f59266cfd238786650e1d6ad"
+      },
+      "program_file_sha256": "ef02a8970116cf8aa6d23406891db4865cabf30c6aa0b69f72d6ae42eb407f1a",
+      "compared_report_groups": [
+        "stats",
+        "cell_ownership",
+        "stable_ports",
+        "free_join",
+        "sieve",
+        "neighbor_context",
+        "physical",
+        "stage_spine",
+        "local_context"
+      ],
+      "context_bindings": 0
+    },
+    "replaced": {
+      "runs": 8,
+      "ordered_hashes": {
+        "state.json": "deb6933b903322f4e5567ce7ebcfbc3df6df8fb44ce2ec4958db01471c054f46",
+        "stages.json": "1d1bc90e359d471410009e41cad750c97a75e32913e52d0766560d1c60846051",
+        "binding-audit.json": "a775d5bd14cc26e07ae063be43a5ad9a04ff24ea4c583b09834c4f1d0d42ab3f"
+      },
+      "program_file_sha256": "13c779ae9f2d8e1723ddbe017c65fdf28198106809cb1860486684c1aa1fc9d8",
+      "compared_report_groups": [
+        "stats",
+        "cell_ownership",
+        "stable_ports",
+        "free_join",
+        "sieve",
+        "neighbor_context",
+        "physical",
+        "stage_spine",
+        "local_context"
+      ],
+      "context_bindings": 0
+    },
+    "borrowed": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "0b23d913f5227e3695261f13244cb005f9baebe9400ad97c8fe90d4e8eda2fb5",
+        "stages.json": "8c7cea19c62739d276799314976977c9752c205dcc7ae04cbd3a2d3a0e5f7034",
+        "binding-audit.json": "d2d90b3c09b41b285d8d5c44d78180bc593ea2a30ed97917cf915ba072a38505"
+      },
+      "program_file_sha256": "3c0ca42f146c428f6a65c88c4c677463478cce7ee5de85d170dca407873c1338",
+      "compared_report_groups": [
+        "stats",
+        "cell_ownership",
+        "stable_ports",
+        "free_join",
+        "sieve",
+        "neighbor_context",
+        "physical",
+        "stage_spine",
+        "local_context"
+      ],
+      "context_bindings": 0
+    },
+    "full": {
+      "runs": 3,
+      "ordered_hashes": {
+        "state.json": "2061b84858ee71a61b4ae7718b45da625efc427fcf6d5012ca727f6d229da3a4",
+        "stages.json": "2792e81aee92b59b317227fe1f37c435f7b47097ec888298cf11f6510cb29ee2",
+        "binding-audit.json": "6307c76a5f34c65ce551cd6bbb2aecc58022ea6a58d13916becdfedf529b9a64"
+      },
+      "program_file_sha256": "d044efaca02129678ccaebdbe990c4c405033a091b9806f1215b7e78022a265a",
+      "compared_report_groups": [
+        "stats",
+        "cell_ownership",
+        "stable_ports",
+        "free_join",
+        "sieve",
+        "neighbor_context",
+        "physical",
+        "stage_spine",
+        "local_context"
+      ],
+      "context_bindings": 0
+    }
+  },
+  "unchanged_work_metrics": 346,
+  "changed_work_metrics": {},
+  "tests": {
+    "entry": {
+      "passed": 1,
+      "log_sha256": "8c99d771ee81811fc075658dbb5fd8348308adba448b372326d0e94466f371d2"
+    },
+    "witness": {
+      "passed": 8,
+      "log_sha256": "d1660f4cd987ea44bd68c402f5fbf556c31202ea106c4e907d01f301d2d246ee"
+    },
+    "receipts": {
+      "passed": 7,
+      "log_sha256": "00f795e6ddbe0730f006e37cc131750f18338db38ff02e125b8e00bcc5c5bae7"
+    },
+    "publications": {
+      "passed": 6,
+      "log_sha256": "9383ce6d57983963dfc2bc22152d318deb776d223a008a0d2ff06355b6bb9769"
+    },
+    "origins": {
+      "passed": 1,
+      "log_sha256": "85d23853d3d1fb7616186578e092d18c1c1d9ead5f7c8bdb494f6b1447b7ea40"
+    },
+    "witness-nonsparse": {
+      "passed": 8,
+      "log_sha256": "07a5377025a8b13e7e316ef1de5c370eba1ebc155084e22ad43bcbaecefa515d"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "5453912132a0d7ec1c91bfb75bb0ec09f963b4b7473a1f2f6b8908a847bb9d85"
+    }
+  },
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  },
+  "binaries": {
+    "baseline": "f53bdf52541b200ed20a195198f54f686116cdc3e6e2fd7afc086d79db06edf2",
+    "candidate": "a71c673e8eb8f26e3e16a33901dc8ea9a96f2a20edac8f268023e5f6bd7bef7d"
+  },
+  "takeover": "Full stage Entries and contexts return the same Cell Matched record. The stage Answer type, successful-answer full witness array, duplicate executor conversion, and uncalled scheduled-adapter API are removed.",
+  "limits": "Winner depth and stable tie order, source visibility, late queries, existing move-only origin lifetime and mutable row identities remain authoritative. Facts are projected before deduplication, not after; no allocation savings inferred from output counts. Context records now carry an empty optional origin slot. Full Cell rewrite, remaining witness/cache storage, speed and multithread acceptance remain incomplete.",
+  "timing_cadence": {
+    "last_timed_commit": "f1c69507",
+    "implementation_commits_since_timing": 1,
+    "policy": "No new timing; measure after five implementation commits."
+  },
+  "entry_work": {
+    "cell_query_entries": 5738,
+    "bindings": 3034,
+    "partial_queries": 111,
+    "sealed_partial_origins": 409
+  }
+}
