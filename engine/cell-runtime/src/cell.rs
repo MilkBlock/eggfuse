@@ -23,7 +23,9 @@ mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};
 #[path = "cell_symbols.rs"]
 mod symbols;
-pub(crate) use symbols::{SymbolObserver, Symbols};
+pub(crate) use symbols::Symbols;
+#[cfg(feature = "iterative-bake")]
+pub(crate) use symbols::{SymbolKey, SymbolObserver};
 #[cfg(feature = "iterative-bake")]
 #[path = "cell_handoff.rs"]
 mod handoff;

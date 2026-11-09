@@ -1,8 +1,10 @@
 //! Compile-time equality over Cell operands. Callers supply only facts justified
 //! at their current source boundary. No runtime facts or consumer lists live here.
-use crate::{program::Arg, value::Value};
+use crate::{program::{Arg, Call, Op, Template}, value::Value};
 use smallvec::SmallVec;
 use std::collections::BTreeMap;
+
+pub(crate) type SymbolKey = SmallVec<[usize; 4]>;
 
 /// Optional compiler-index invalidation. Plain local wiring carries no index
 /// footprint; a cross-stage donor index observes key reads and displaced roots.
@@ -22,6 +24,31 @@ impl Symbols {
     pub fn with_slots(slots: usize) -> Self {
         Self { parents: (0..slots).collect(), ..Self::default() }
     }
+    /// Scan the source Cell once for unconditional copies and admitted
+    /// constructors. The caller handles remaining source effects in place:
+    /// wiring records Set incidences; repair collects future union obligations.
+    /// Neither callback is permission to close those unions prematurely.
+    pub fn source_constructors(&mut self, template: &Template,
+        covered: impl Fn(usize) -> bool, mut other: impl FnMut(&mut Self, usize, &Op),
+    ) -> Vec<(usize, usize, SmallVec<[usize; 4]>)> {
+        let mut facts = Vec::new();
+        for (op, instruction) in template.ops.iter().enumerate() {
+            match instruction {
+                Op::Copy(dst, arg) => {
+                    let source = self.arg(arg, |i| i);
+                    self.equal(*dst, source);
+                }
+                Op::Let(dst, Call::Table(table), args) if covered(*table) => {
+                    let mut fields = args.iter().map(|arg| self.arg(arg, |i| i))
+                        .collect::<SmallVec<[usize; 4]>>();
+                    fields.push(*dst);
+                    facts.push((op, *table, fields));
+                }
+                _ => other(self, op, instruction),
+            }
+        }
+        facts
+    }
 }
 impl<W: SymbolObserver> Symbols<W> {
     pub fn len(&self) -> usize { self.parents.len() }
@@ -33,6 +60,9 @@ impl<W: SymbolObserver> Symbols<W> {
     pub fn root(&self, mut id: usize) -> usize {
         while self.parents[id] != id { id = self.parents[id]; }
         id
+    }
+    pub fn key(&self, args: &[usize]) -> SymbolKey {
+        args.iter().map(|&symbol| self.root(symbol)).collect()
     }
     pub fn equal(&mut self, a: usize, b: usize) -> bool {
         let (a, b) = (self.root(a), self.root(b));
@@ -69,7 +99,7 @@ impl<W: SymbolObserver> Symbols<W> {
             let mut keys = BTreeMap::new();
             let mut changed = false;
             for (table, args, result) in facts.clone() {
-                let key = args.iter().map(|&s| self.root(s)).collect::<SmallVec<[usize; 4]>>();
+                let key = self.key(args);
                 self.observer.key(&key);
                 if let Some(other) = keys.insert((table, key), result) {
                     changed |= self.equal(other, result);

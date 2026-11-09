@@ -26,41 +26,18 @@ impl PortProgram {
     pub fn covers(&self, op: usize) -> bool { !self.fields[op].is_empty() }
     pub(super) fn derive(p: &Program, t: &Template, covered: &[bool]) -> Self {
         let mut symbols = crate::cell::Symbols::with_slots(t.sorts.len());
-        let mut facts = Vec::new();
         let mut bodies = vec![Vec::new(); t.ops.len()];
         let mut native = Vec::new();
-        for (op, instruction) in t.ops.iter().enumerate() {
-            match instruction {
-                Op::Copy(dst, a) => {
-                    let a = symbols.arg(a, |i| i);
-                    symbols.equal(*dst, a);
-                }
-                Op::Let(dst, Call::Table(table), args) if covered[*table] => {
-                    let mut ports = args.iter().map(|a| symbols.arg(a, |i| i)).collect::<Vec<_>>();
-                    ports.push(*dst);
-                    facts.push((op, *table, ports.clone()));
-                    bodies[op] = ports
-                        .into_iter()
-                        .enumerate()
-                        .map(|(c, s)| (p.tables[*table].schema[c]["kind"] == "eq").then_some(s))
-                        .collect();
-                    native.push((*dst, *dst));
-                }
-                Op::Set(table, args, result) if covered[*table] => {
-                    // A Set's result equality can still be pending. Do not
-                    // include its result in unconditional symbolic congruence.
-                    bodies[op] = args
-                        .iter()
-                        .chain(std::iter::once(result))
-                        .enumerate()
-                        .map(|(c, a)| {
-                            (p.tables[*table].schema[c]["kind"] == "eq").then(|| symbols.arg(a, |i| i))
-                        })
-                        .collect();
-                }
-                _ => (),
+        let facts = symbols.source_constructors(t, |table| covered[table], |symbols, op, instruction| {
+            if let Op::Set(table, args, result) = instruction && covered[*table] {
+                // A Set's result equality can still be pending. Record its
+                // incidences, but never use it as unconditional congruence.
+                bodies[op] = args.iter().chain(std::iter::once(result)).enumerate()
+                    .map(|(c, arg)| (p.tables[*table].schema[c]["kind"] == "eq")
+                        .then(|| symbols.arg(arg, |i| i)))
+                    .collect();
             }
-        }
+        });
         // Deletion can create a new result for the same constructor key later
         // in this RHS. Reuse the old local-union analysis's lifetime boundary:
         // copies remain identities, but never close constructor witnesses over
@@ -71,6 +48,15 @@ impl PortProgram {
             .any(|op| matches!(op, Op::Hide(..) | Op::Panic))
         {
             symbols.close_constructors(facts.iter().map(|(_, table, ports)| (*table, &ports[..ports.len() - 1], *ports.last().unwrap())));
+        }
+        // Project each constructor once, after closure; the previous compiler
+        // copied its complete port vector into a second body representation.
+        for (op, table, ports) in facts {
+            let dst = *ports.last().unwrap();
+            native.push((dst, dst));
+            bodies[op] = ports.into_iter().enumerate()
+                .map(|(col, symbol)| (p.tables[table].schema[col]["kind"] == "eq").then_some(symbol))
+                .collect();
         }
         let mut names = BTreeMap::new();
         for body in &mut bodies {

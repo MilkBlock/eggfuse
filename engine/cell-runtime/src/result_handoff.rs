@@ -90,7 +90,7 @@ impl Symbols {
 /// This is a compiler lookup index, not another equality solver.
 #[derive(Default)]
 struct FactIndex {
-    keys: BTreeMap<(usize, Vec<usize>), usize>,
+    keys: BTreeMap<(usize, crate::cell::SymbolKey), usize>,
     indexed: usize,
     epoch: usize,
 }
@@ -112,13 +112,13 @@ impl FactIndex {
             self.clear(symbols);
         }
         for (i, f) in facts.iter().enumerate().skip(self.indexed) {
-            let key = f.key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
+            let key = symbols.key(&f.key);
             symbols.observer.indexed_roots.extend(&key);
             self.keys.insert((f.table, key), i);
         }
         self.indexed = facts.len();
         self.epoch = symbols.observer.key_epoch;
-        let key = key.iter().map(|&s| symbols.root(s)).collect::<Vec<_>>();
+        let key = symbols.key(key);
         // Register the pending fact too, before its source-boundary unions.
         symbols.observer.indexed_roots.extend(&key);
         self.keys.get(&(table, key)).copied()

@@ -83,3 +83,9 @@
 基线 `664b4189`。port wiring、局部 union completion 和跨阶段 handoff 共用 `cell_symbols` 的符号分配、literal、等价根和构造子闭包；删除 local-union 与 handoff 两套求解器。闭包借用当前仍有效的构造子 key/result，短 key 使用内联存储，不另存一份事实图。handoff 仅附带原有 key footprint/epoch 观察器，保留条件闭包和 donor 索引失效条件；普通 wiring 不承担这个状态。
 
 port wiring 仍不提前使用源 union，局部 repair 的预测仍生成运行时 equality obligation；handoff 只在原有源屏障关闭 congruence。五项 local-union、四项 handoff 索引/闭包、两个源 union 屏障及删除重建用例通过。库测试编译还发现此前 `slot_fields` 新增借用输入参数后遗留的两处测试调用，补上 `None` 后 sealed-input union 失效检查通过。没有新增计时。
+
+## 从同一源 Cell 扫描符号构造子
+
+接续 `0ac8dde9`。port wiring 和局部 repair 共用 Copy/构造子扫描；各自仅处理不同的剩余源效果（Set incidence 或待验证 union）。短字段保留内联，port wiring 在闭包后投影一次，删除原来的 `ports.clone()`。没有源 union 的 Cell 在建立符号数组前直接跳过局部 repair 分析。局部完成计划删除另一份 union 操作数，原证书只在序列化时借用源操作投影。
+
+handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key 也采用内联存储。五项 local-union、不同 union 共享局部连接、四项 handoff 索引/闭包、多参数 equality 条件及最小特性编译通过；没有新增测试或单项计时。

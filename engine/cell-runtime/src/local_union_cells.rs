@@ -11,7 +11,6 @@ pub struct Plan {
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 struct TemplatePlan {
-    unions: Vec<(Arg, Arg)>,
     classes: Vec<Vec<usize>>,
     ports: BTreeMap<usize, Vec<usize>>,
     obligations: BTreeMap<usize, Vec<(Arg, Arg)>>,
@@ -20,35 +19,23 @@ impl Plan {
     pub(crate) fn derive(p: &Program) -> Result<Self> {
         let mut plans = vec![];
         for t in &p.templates {
-            let mut s = crate::cell::Symbols::with_slots(t.sorts.len());
-            let mut facts = vec![];
-            let mut unions = vec![];
-            // Delete/subsume invalidate symbolic constructor witnesses.
-            if t.ops.iter().any(|o| matches!(o, Op::Hide(..) | Op::Panic)) {
+            // No source union means no deferred equality work. A visibility
+            // mutation invalidates the complete constructor-lifetime proof.
+            if !t.ops.iter().any(|o| matches!(o, Op::Union(..)))
+                || t.ops.iter().any(|o| matches!(o, Op::Hide(..) | Op::Panic))
+            {
                 plans.push(None);
                 continue;
             }
-            for (op, ins) in t.ops.iter().enumerate() {
-                match ins {
-                    Op::Copy(dst, a) => {
-                        let a = s.arg(a, |i| i);
-                        s.equal(*dst, a);
+            let mut s = crate::cell::Symbols::with_slots(t.sorts.len());
+            let mut unions = vec![];
+            let facts = s.source_constructors(t, |table| p.repair_ports.key_eq_columns[table].is_some(),
+                |symbols, _, instruction| {
+                    if let Op::Union(a, b) = instruction {
+                        unions.push((symbols.arg(a, |i| i), symbols.arg(b, |i| i)));
                     }
-                    Op::Union(a, b) => {
-                        let (a, b) = (s.arg(a, |i| i), s.arg(b, |i| i));
-                        unions.push((a, b));
-                    }
-                    Op::Let(dst, Call::Table(table), args)
-                        if p.repair_ports.key_eq_columns[*table].is_some() =>
-                    {
-                        let mut ports = args.iter().map(|a| s.arg(a, |i| i)).collect::<Vec<_>>();
-                        ports.push(*dst);
-                        facts.push((op, *table, ports));
-                    }
-                    _ => (),
-                }
-            }
-            if unions.is_empty() || facts.is_empty() {
+                });
+            if facts.is_empty() {
                 plans.push(None);
                 continue;
             }
@@ -114,19 +101,7 @@ impl Plan {
                 .iter()
                 .map(|&r| (0..t.sorts.len()).filter(|&i| s.root(i) == r).collect())
                 .collect();
-            let unions = t
-                .ops
-                .iter()
-                .filter_map(|o| {
-                    if let Op::Union(a, b) = o {
-                        Some((a.clone(), b.clone()))
-                    } else {
-                        None
-                    }
-                })
-                .collect();
             plans.push(Some(TemplatePlan {
-                unions,
                 classes,
                 ports,
                 obligations,
@@ -157,7 +132,17 @@ impl Plan {
         Ok(plan)
     }
     pub fn artifact(&self, p: &Program) -> J {
-        json!({"schema":"eggfuse-local-union-cells/v1","recipe":p.artifact["recipe"]["sha256"],"templates":self.templates,"selected":self.selected,
+        let templates = self.templates.iter().zip(&p.templates).map(|(plan, source)| {
+            let Some(plan) = plan else { return J::Null; };
+            let mut raw = json!(plan);
+            // Keep the checked wire format without retaining source operands
+            // a second time in every executable completion plan.
+            raw["unions"] = json!(source.ops.iter().filter_map(|op| match op {
+                Op::Union(a, b) => Some((a, b)), _ => None,
+            }).collect::<Vec<_>>());
+            raw
+        }).collect::<Vec<_>>();
+        json!({"schema":"eggfuse-local-union-cells/v1","recipe":p.artifact["recipe"]["sha256"],"templates":templates,"selected":self.selected,
         "contract":"new scalar constructor rows; one source completion boundary; actual committed equality checked; surviving boundaries subscribe"})
     }
     pub fn select(p: &Program, enabled: bool) -> J {
