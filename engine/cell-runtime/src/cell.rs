@@ -21,6 +21,10 @@ pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
 #[path = "cell_bound.rs"]
 mod bound;
 pub(crate) use bound::{BoundRhs, BoundValue};
+#[path = "cell_routes.rs"]
+mod routes;
+pub use routes::Routes;
+pub(crate) use routes::Dispatch as RouteDispatch;
 #[path = "cell_eval.rs"]
 mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsFrame, evaluate_call};

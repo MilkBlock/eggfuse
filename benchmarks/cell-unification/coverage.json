@@ -323,16 +323,18 @@
     {
       "id": "C3",
       "title": "已有见证的实际来源直达",
-      "status": "common_result_ports_verified",
+      "status": "shared_cell_route_semantics_verified_performance_pending",
       "metrics_from_catalog": "C3",
-      "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain."
+      "remaining": "Full and residual consumers share the Cell route selector and normalized witness sources. Producer context recovery, legacy publication boundaries, broader coverage and speed acceptance remain.",
+      "route_checks": "benchmarks/cell-unification/routes-results.json"
     },
     {
       "id": "C4",
       "title": "匹配前缀接续",
-      "status": "shared_entry_delivery_semantics_verified",
+      "status": "shared_cell_route_semantics_verified_performance_pending",
       "metrics_from_catalog": "C4",
-      "remaining": "Full/partial plan dispatch, legacy publication boundary and speed acceptance remain incomplete."
+      "remaining": "Full and residual consumers share the Cell route selector and normalized witness sources. Producer context recovery, legacy publication boundaries, broader coverage and speed acceptance remain.",
+      "route_checks": "benchmarks/cell-unification/routes-results.json"
     },
     {
       "id": "D1",

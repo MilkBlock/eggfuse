@@ -76,9 +76,7 @@ fn elided_rhs_operation_reads_its_query_receipt() {
 
 #[test]
 fn full_spine_reads_the_published_receipt_before_a_key_lookup() {
-    let source = SOURCE.replace("(Edge x y)) ((Out a y))", "(= n y)) ((Out a y))")
-        .replace("(check (Out (A (N 0)) 10) (Out (A (N 0)) 11) (Out (A (N 1)) 12))",
-            "(check (Out (A (N 0)) 0) (Out (A (N 1)) 1))");
+    let source = fixture::full_source();
     let (old, new) = compare(&source, true, true);
     let report = new.report();
     assert!(report["stage_spine"]["stats"]["local_witness_receipt_hits"].as_u64().unwrap() > 0, "{}", report["stage_spine"]["stats"]);

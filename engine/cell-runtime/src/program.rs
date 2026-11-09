@@ -572,7 +572,6 @@ impl Program {
             p.iterative = crate::iterative::Catalog::parse(&p, &p.artifact["iterative_bake"])?;
         }
         crate::multistage::compile_witnesses(&mut p);
-        crate::row_kernel::attach_prefixes(&mut p);
         Ok(p)
     }
     fn validate(&self) -> Result<()> {

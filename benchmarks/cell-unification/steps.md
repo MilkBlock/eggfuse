@@ -186,3 +186,15 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 删除两个历史汇总 map、每个 ruleset 的对应 BTreeSet 构造/归并及名称/数组保存。保守 scope 直接合入同一份 Cell query/RHS 结论。query 与 RHS 的阶段差异仍有必要：未匹配 Cell 的 RHS 不能阻塞其他绑定。测试改为检查运行时真正读取的单 Cell 需求；all/any 与原聚合集合的包含关系等价。
 
 隐式 merge 回调读依赖、未匹配 RHS 不阻塞、跨 sort congruence 传播三项短检查通过。普通和 pure 两模式的 sum-bits 最终状态、1,428 个 Run、全部 scoped/port/runtime 计数保持，既有语义验收通过；未新增测速或分配采样。这一步删除的是 setup/常驻结构，不据此推断运行时已加速。距上次计时累计 2 个实现提交，检查方式沿用上一节，输出保存在 `out/cell-demand-unified`，证据见 `demand-check.json`。
+
+## 完整查询与前缀接续共用 Cell 路线
+
+基线 `7632423c`。sum-bits 编译 6,325 条路线但只有一条可用残余前缀；实际执行没有前缀命中，不能用它单独证明前缀路径保持。原完整查询用四元组哈希表，残余入口另建有序 Prefix 数组并复制见证来源。两者现在共享按消费者 Entry 组织的静态目录；紧密的生产者范围用有界槽位，稀疏范围仍精确二分。模板操作范围先验证，不能把越界操作映射到相邻模板。
+
+删除独立 Prefix 类型、见证数组和 attach_prefixes 遍历。前缀长度从原 Cell Query 的连续完整 key 指令推导，见证从同一条 Continuation 的原 reads 读取；只保存必要的 atom → read 索引。扩展查询、晚到输入、原始 Run 顺序、增量归属、存活和可见性检查保持，没有实例消费者表、新 capture 或第二份绑定。后续仍需统一物理 producer context 的恢复与边界接口。
+
+18 项见证/残余测试、2 项目录边界测试、1 项评分检查及最小特性编译通过。最终普通构建的 sum-bits 语义 pass，1,428 个 Run、最终 state 和原有 313 项工作指标保持；新增 13 项目录/索引度量，旧报告的缺项不当作零。四个短 Entry 样例逐阶段 state 和绑定顺序一致：reused/borrowed 的路线比较各 2→0，改为各 2 次直接索引和 2 次见证源索引；replaced 仍 8 次比较，新增 4 次源索引；full 的逐 read 扫描 2→0，改为 2 次源索引。所有新增成本进入 Bake 评分，完整路线直接索引是已有 route_probes 的子集，不能重复计费。
+
+静态目录向量容量 205,464 字节，源索引容量 70,976 字节；不含 Rc、原 Continuation 和 allocator 开销，不能据此声称总内存下降。本次是上次计时后第 3 个实现提交；用户明确授权这次提交后提前测速，因此提交后运行一次交错计时，比较直接前版、`d81b0cb2` 和历史 `24c4ae8a`。后续五提交周期从本次计时重新开始。
+
+复现：普通 release 构建特性为 `sparse-cells,view-ports,storage-metrics`，冻结二进制后在 `out/cell-routes-checked` 运行同一 sum-bits。通过 `emit_cell_entry_fixtures` 生成 reused/replaced/borrowed/full 输入，用 `run_entry_fixtures.py ROOT --cases reused replaced borrowed full` 运行；此处 audit 文件名指普通二进制的 `--audit-stages`，没有 allocation/RHS 审计特性。用既有 catalog extract 和 choice_diagnosis.py 校验。`benchmarks/witness-prefix/measure.py benchmarks/cell-unification/routes-timing-spec.json ROOT/timing --repeat 7 --warmups 1` 执行交错计时；`benchmarks/cell-unification/collect_routes.py ROOT benchmarks/cell-unification/routes-results.json --commit COMMIT` 验证并汇总保存结果。计时针对 standalone Cell CPU，不是原生 egglog。

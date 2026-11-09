@@ -1,6 +1,6 @@
 //! Residual Cell query entries and their checked producer prefixes. Query owns
 //! the shared dataflow; this module retains admission and capability metadata.
-use crate::{cell::{Access, Query}, program::*};
+use crate::{cell::Query, program::*};
 #[cfg(feature = "sparse-cells")]
 use crate::cell::Field;
 use serde::{Deserialize, Serialize};
@@ -11,17 +11,9 @@ pub(crate) struct Kernel {
     pub query: Rc<Query>,
     /// Derived only after multi_stage's source wiring has been validated. These
     /// are shared plans, never consumer lists attached to live producers.
-    pub prefixes: Vec<Prefix>,
+    pub routes: Option<Rc<crate::cell::RouteDispatch>>,
     #[cfg(feature = "sparse-cells")]
     pub sum_filter: Option<(usize, usize, usize, Field)>,
-}
-#[derive(Clone, Debug)]
-pub(crate) struct Prefix {
-    pub template: usize,
-    pub publication: usize,
-    /// One entry for each leading kernel instruction. None is a primitive that
-    /// must still execute; Some is the normalized query/effect donor.
-    pub effects: Vec<Option<crate::multistage::WitnessSource>>,
 }
 
 /// Actual work of the residual register matcher's optional producer prefix.
@@ -35,6 +27,8 @@ pub struct PrefixStats {
     pub context_missing: u64,
     pub plan_lookups: u64,
     pub plan_comparisons: u64,
+    pub plan_index_probes: u64,
+    pub source_index_probes: u64,
     pub plan_hits: u64,
     pub donor_reads: u64,
     pub donor_hits: u64,
@@ -59,42 +53,6 @@ pub struct PrefixStats {
     pub key_reads_avoided: u64,
     pub resumed_instructions: u64,
     pub resumes: u64,
-}
-
-/// Attach a contiguous, complete-key prefix to residual kernels. A route may
-/// know one row of an expansion, but that never proves its whole candidate
-/// domain. Likewise a later atom cannot justify skipping an earlier key read.
-pub(crate) fn attach_prefixes(p: &mut Program) {
-    for (&(template, publication, rid, pivot), route) in &p.multi_stage.routes {
-        let Some(kernel) = p.kernels[rid][pivot].as_mut() else { continue };
-        if !kernel.query.steps.iter().any(|s| matches!(s.access(), Access::Expand)) {
-            continue;
-        }
-        let mut effects = Vec::new();
-        let mut reads = 0;
-        for step in &kernel.query.steps {
-            match step.access() {
-                Access::Expand => break,
-                Access::Primitive => effects.push(None),
-                Access::Key => {
-                    let Some(read) = route.reads.iter().find(|r| r.atom == step.atom) else {
-                        break;
-                    };
-                    let Some(effect) = read.witness else { break };
-                    effects.push(Some(effect));
-                    reads += 1;
-                }
-            }
-        }
-        if reads != 0 {
-            Rc::make_mut(kernel).prefixes.push(Prefix { template, publication, effects });
-        }
-    }
-    for kernel in p.kernels.iter_mut().flatten().flatten() {
-        if !kernel.prefixes.is_empty() {
-            Rc::make_mut(kernel).prefixes.sort_unstable_by_key(|p| (p.template, p.publication));
-        }
-    }
 }
 
 pub(crate) type Kernels = Vec<Vec<Option<Rc<Kernel>>>>;
@@ -128,7 +86,7 @@ fn plan(r: &Rule, pivot: usize) -> Option<Kernel> {
         Some((expand.atom, table.args.iter().position(|a| a == left)?,
             table.args.iter().position(|a| a == right)?, target.clone()))
     });
-    Some(Kernel { pivot, query, prefixes: vec![],
+    Some(Kernel { pivot, query, routes: None,
         #[cfg(feature = "sparse-cells")]
         sum_filter,
     })

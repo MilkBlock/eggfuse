@@ -39,6 +39,6 @@ def run(root, cases):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('root', type=Path)
-    parser.add_argument('--cases', nargs='+', choices=('reused', 'replaced', 'borrowed'), default=('reused', 'replaced'))
+    parser.add_argument('--cases', nargs='+', choices=('reused', 'replaced', 'borrowed', 'full'), default=('reused', 'replaced'))
     args = parser.parse_args()
     run(args.root, args.cases)

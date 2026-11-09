@@ -476,6 +476,9 @@ pub struct Stats {
     local_witness_routes: u64,
     local_witness_route_probes: u64,
     local_witness_route_steps: u64,
+    local_witness_route_index_probes: u64,
+    local_witness_route_comparisons: u64,
+    local_witness_read_index_probes: u64,
     local_witness_key_fields: u64,
     local_witness_reads: u64,
     local_witness_hits: u64,
@@ -748,10 +751,10 @@ fn read_port(
     };
     if row.is_none() {
         if let Some(local) = local
-            && let Some(source) = local.route.reads.iter().find(|read| {
-                stats.local_witness_route_steps += 1;
-                read.atom == _atom
-            }).and_then(|r| r.witness)
+            && let Some(source) = {
+                stats.local_witness_read_index_probes += 1;
+                local.route.witness(_atom)
+            }
         {
             stats.local_witness_reads += 1;
             // This is a current positive witness, never a cached value or a
@@ -894,8 +897,8 @@ impl Programs {
             queries: if enabled { p.cell_queries.clone() } else { Default::default() },
             local_witness_entries: {
                 let mut entries = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
-                for (&(.., rid, pivot), route) in &p.multi_stage.routes {
-                    entries[rid][pivot] |= route.reads.iter().any(|read| read.witness.is_some());
+                for route in p.multi_stage.routes.values() {
+                    entries[route.consumer][route.anchor] |= route.reads.iter().any(|read| read.witness.is_some());
                 }
                 entries
             },
@@ -2003,8 +2006,11 @@ impl Programs {
                 let published: Option<(usize, usize)> = None;
                 published.or_else(|| context.map(|c| (c.template, c.op))).and_then(|(template, output)| {
                     self.stats.local_witness_route_probes += 1;
-                    let route = g.program.multi_stage.routes
-                        .get(&(template, output, rid, pivot))?.clone();
+                    let (route, indexed, comparisons) = g.program.multi_stage.routes
+                        .lookup(&(template, output, rid, pivot));
+                    self.stats.local_witness_route_index_probes += indexed;
+                    self.stats.local_witness_route_comparisons += comparisons;
+                    let route = route?.clone();
                     self.stats.local_witness_routes += 1;
                     #[cfg(feature = "iterative-bake")]
                     { self.stats.local_witness_history_borrows += 1; }

@@ -749,7 +749,8 @@
         "engine/cell-runtime/src/producer.rs",
         "engine/cell-runtime/src/multistage.rs",
         "engine/cell-runtime/src/result_handoff.rs",
-        "engine/cell-runtime/src/compiler/mod.rs"
+        "engine/cell-runtime/src/compiler/mod.rs",
+        "engine/cell-runtime/src/cell_routes.rs"
       ],
       "metrics": {
         "benefit": [
@@ -813,6 +814,26 @@
           {
             "source": "report",
             "pointer": "/stage_spine/stats/local_witness_slot_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_route_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_read_index_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/vector_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/read_index_capacity_bytes",
             "reduce": "value"
           }
         ],
@@ -881,10 +902,40 @@
             "source": "report",
             "pointer": "/multi_stage/witness_plan/excluded_reads",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_route_index_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/direct_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/direct_slots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/sparse_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/routes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/read_index_slots",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -907,7 +958,8 @@
         "engine/cell-runtime/src/producer.rs",
         "engine/cell-runtime/src/multistage.rs",
         "engine/cell-runtime/src/result_handoff.rs",
-        "engine/cell-runtime/src/compiler/mod.rs"
+        "engine/cell-runtime/src/compiler/mod.rs",
+        "engine/cell-runtime/src/cell_routes.rs"
       ],
       "metrics": {
         "benefit": [
@@ -987,6 +1039,16 @@
             "source": "report",
             "pointer": "/stats/register_prefix/entry_publication_reads",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/plan_index_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/source_index_probes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -1044,10 +1106,15 @@
             "source": "report",
             "pointer": "/multi_stage/witness_plan/new_capture_slots",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/multi_stage/witness_plan/route_directory/prefix_routes",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes.",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes. 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。",
       "evidence": [
         "benchmarks/witness-prefix/register-prefix-design.md",
         "benchmarks/witness-prefix/normal/README.md",

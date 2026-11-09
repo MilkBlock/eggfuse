@@ -1,0 +1,24 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-routes-checked/runtime-baseline",
+      "program": "out/cell-routes-checked/sum/program.json",
+      "args": ["--local-congruence"]
+    },
+    "candidate": {
+      "runtime": "out/cell-routes-checked/runtime-candidate",
+      "program": "out/cell-routes-checked/sum/program.json",
+      "args": ["--local-congruence"]
+    },
+    "last_timed": {
+      "runtime": "out/cell-routes-checked/runtime-last_timed",
+      "program": "out/cell-routes-checked/sum/program.json",
+      "args": ["--local-congruence"]
+    },
+    "historical": {
+      "runtime": "out/cell-routes-checked/runtime-historical",
+      "program": "out/cell-routes-checked/sum/program.json",
+      "args": ["--local-congruence"]
+    }
+  }
+}

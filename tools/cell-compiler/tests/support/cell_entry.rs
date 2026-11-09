@@ -52,6 +52,12 @@ pub fn replaced_source() -> String {
         + "\n(check (Out (A (N 0)) 100) (Out (A (N 1)) 101))\n"
 }
 
+pub fn full_source() -> String {
+    SOURCE.replace("(Edge x y)) ((Out a y))", "(= n y)) ((Out a y))")
+        .replace("(check (Out (A (N 0)) 10) (Out (A (N 0)) 11) (Out (A (N 1)) 12))",
+            "(check (Out (A (N 0)) 0) (Out (A (N 1)) 1))")
+}
+
 
 // Candidate aliases and scalar results must follow each borrowed expansion row,
 // including a later delta whose owner is the expanded relation itself.

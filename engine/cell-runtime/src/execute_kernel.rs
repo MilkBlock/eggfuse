@@ -75,7 +75,7 @@ impl Frame {
         exec.graph.stats.register_seeds += 1;
         let seed = &entry.packet.row;
         self.witnesses[k.pivot] = Some(seed.witness);
-        let (pc, epoch) = if k.prefixes.is_empty() {
+        let (pc, epoch) = if k.routes.is_none() {
             (0, seed.epoch)
         } else {
             let Some(resume) = self.prefix(exec, k, entry)? else { return Ok(()) };
@@ -128,19 +128,22 @@ impl Frame {
             return Ok(Some((0, seed.epoch)));
         };
         exec.graph.stats.register_prefix.plan_lookups += 1;
-        let Ok(plan) = k.prefixes.binary_search_by_key(
-            &address, |p| {
-                exec.graph.stats.register_prefix.plan_comparisons += 1;
-                (p.template, p.publication)
-            },
-        ) else { return Ok(Some((0, seed.epoch))) };
+        let Some(source) = exec.graph.program.multi_stage.routes.source(address.0, address.1)
+            else { return Ok(Some((0, seed.epoch))) };
+        let (route, indexed, comparisons) = k.routes.as_ref().unwrap().lookup(source);
+        exec.graph.stats.register_prefix.plan_index_probes += indexed;
+        exec.graph.stats.register_prefix.plan_comparisons += comparisons;
+        let Some(route) = route.filter(|r| r.prefix_len != 0)
+            else { return Ok(Some((0, seed.epoch))) };
         exec.graph.stats.register_prefix.plan_hits += 1;
         let mut epoch = seed.epoch;
         let owner = (seed.epoch, seed.witness);
         let mut pc = 0;
-        for (ins, effect) in k.query.steps.iter().zip(&k.prefixes[plan].effects) {
-            let result = match (&ins.call, effect) {
-                (Call::Table(table), Some(source)) => {
+        for ins in k.query.steps.iter().take(route.prefix_len) {
+            let result = match &ins.call {
+                Call::Table(table) => {
+                    exec.graph.stats.register_prefix.source_index_probes += 1;
+                    let source = route.witness(ins.atom).expect("validated Cell prefix donor");
                     exec.graph.stats.register_prefix.donor_reads += 1;
                     #[cfg(feature = "iterative-bake")]
                     let receipt = source.port.and_then(|port| entry.and_then(|(_, _, results)| {
@@ -191,7 +194,7 @@ impl Frame {
                     self.witnesses[ins.atom] = Some(row.witness);
                     row.values.last().unwrap().clone()
                 }
-                (Call::Primitive(name, sort), None) => {
+                Call::Primitive(name, sort) => {
                     exec.graph.stats.register_prefix.primitive_checks += 1;
                     if name.starts_with("cell-key-") { exec.graph.stats.key_operations += 1; }
                     let args: SmallVec<[Value; 4]> = ins.key.iter()
@@ -203,7 +206,6 @@ impl Frame {
                     };
                     value
                 }
-                _ => unreachable!("validated register prefix instruction"),
             };
             if let Some(arg) = &ins.check_result {
                 exec.graph.stats.register_prefix.field_checks += 1;

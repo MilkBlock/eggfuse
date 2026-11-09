@@ -40,12 +40,22 @@ pub struct Continuation {
     pub consumer: usize,
     pub anchor: usize,
     pub reads: Vec<LocalRead>,
+    #[serde(skip)]
+    pub(crate) read_positions: Vec<Option<std::num::NonZeroU32>>,
+    #[serde(skip)]
+    pub(crate) prefix_len: usize,
+}
+impl Continuation {
+    pub(crate) fn witness(&self, atom: usize) -> Option<WitnessSource> {
+        let index = self.read_positions.get(atom)?.as_ref()?.get() as usize - 1;
+        self.reads[index].witness
+    }
 }
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct MultiStage {
     #[serde(default)]
     pub stage_entries: Vec<(usize, usize, Rc<Vec<usize>>)>,
-    pub routes: HashMap<(usize, usize, usize, usize), Rc<Continuation>>,
+    pub routes: crate::cell::Routes,
     pub entries: HashMap<(usize, usize), Rc<Vec<usize>>>,
     pub finishes: Vec<Rc<Vec<usize>>>,
 }
@@ -110,7 +120,7 @@ impl MultiStage {
             }
         }
         serde_json::json!({"retained_receipt_reads":retained,"physical_fallback_reads":local,
-            "excluded_reads":skipped,"new_capture_slots":0,
+            "excluded_reads":skipped,"new_capture_slots":0,"route_directory":self.routes.report(),
             "contract":"existing admitted receipts only; nonempty complete keys; full live row validation"})
     }
     pub fn parse(program: &Program, raw: &J) -> Result<Self> {
@@ -221,6 +231,7 @@ impl MultiStage {
         for (rid, finish) in array(&raw["finishes"])?.iter().enumerate() {
             result.finishes.push(verify_points(rid, None, finish)?);
         }
+        let mut routes = HashMap::new();
         for route in array(&raw["routes"])? {
             let number = |name: &str| {
                 route[name]
@@ -296,8 +307,7 @@ impl MultiStage {
             if route["residual"] != J::Array(residual) {
                 return Err("continuation residual domain differs".into());
             }
-            if result
-                .routes
+            if routes
                 .insert(
                     (program.rules[producer].template, effect, consumer, anchor),
                     Rc::new(Continuation {
@@ -305,6 +315,8 @@ impl MultiStage {
                         consumer,
                         anchor,
                         reads,
+                        read_positions: vec![],
+                        prefix_len: 0,
                     }),
                 )
                 .is_some()
@@ -312,6 +324,7 @@ impl MultiStage {
                 return Err("duplicate continuation".into());
             }
         }
+        result.routes = crate::cell::Routes::compile(program, routes);
         Ok(result)
     }
 }
@@ -319,18 +332,52 @@ impl MultiStage {
 /// Use only receipts already admitted by the catalog. Missing query receipts
 /// cannot be recovered by interpreting an equality representative as a row ID.
 pub(crate) fn compile_witnesses(p: &mut Program) {
-    for route in p.multi_stage.routes.values_mut() {
+    #[cfg(feature = "iterative-bake")]
+    let catalog = &p.iterative;
+    let kernels = &mut p.kernels;
+    p.multi_stage.routes.for_each_mut(|route| {
+        let route = Rc::make_mut(route);
         let producer = route.producer;
-        for read in &mut Rc::make_mut(route).reads {
+        route.read_positions.clear();
+        route.prefix_len = 0;
+        for (index, read) in route.reads.iter_mut().enumerate() {
             let Some(witness) = &mut read.witness else { continue };
             #[cfg(feature = "iterative-bake")]
             {
-                witness.port = p.iterative.result_port(producer, witness.source);
+                witness.port = catalog.result_port(producer, witness.source);
             }
             #[cfg(not(feature = "iterative-bake"))]
             let _ = producer;
             if !witness.retained() && matches!(witness.source, crate::cell::Site::Query(_)) {
                 read.witness = None;
+            } else {
+                route.read_positions.resize(route.read_positions.len().max(read.atom + 1), None);
+                route.read_positions[read.atom] = Some(std::num::NonZeroU32::new(
+                    u32::try_from(index + 1).expect("Cell route width exhausted")).unwrap());
+            }
+        }
+        let Some(kernel) = &kernels[route.consumer][route.anchor] else { return; };
+        if !kernel.query.steps.iter().any(|s| matches!(s.access(), crate::cell::Access::Expand)) {
+            return;
+        }
+        let (mut width, mut reads) = (0, 0);
+        for step in &kernel.query.steps {
+            match step.access() {
+                crate::cell::Access::Expand => break,
+                crate::cell::Access::Primitive => (),
+                crate::cell::Access::Key if route.witness(step.atom).is_some() => { reads += 1; }
+                _ => break,
+            }
+            width += 1;
+        }
+        if reads != 0 { route.prefix_len = width; }
+    });
+    for (rid, entries) in kernels.iter_mut().enumerate() {
+        for (pivot, kernel) in entries.iter_mut().enumerate() {
+            let Some(kernel) = kernel else { continue; };
+            let selector = p.multi_stage.routes.entry(rid, pivot);
+            if selector.is_some_and(|s| s.has_prefix()) {
+                Rc::make_mut(kernel).routes = selector.cloned();
             }
         }
     }
