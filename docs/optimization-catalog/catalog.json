@@ -632,7 +632,7 @@
           }
         ]
       },
-      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy.",
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence.",
       "evidence": [
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",
@@ -641,7 +641,8 @@
         "benchmarks/cell-unification/context-branches-check.json",
         "benchmarks/cell-unification/context-terminal-check.json",
         "benchmarks/cell-unification/context-prefix-check.json",
-        "benchmarks/cell-unification/query-storage-results.json"
+        "benchmarks/cell-unification/query-storage-results.json",
+        "benchmarks/cell-unification/context-selection-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -2835,13 +2836,14 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc.",
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
         "benchmarks/cell-unification/context-branches-check.json",
         "benchmarks/cell-unification/context-terminal-check.json",
-        "benchmarks/cell-unification/query-storage-results.json"
+        "benchmarks/cell-unification/query-storage-results.json",
+        "benchmarks/cell-unification/context-selection-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

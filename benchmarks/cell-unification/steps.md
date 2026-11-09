@@ -328,3 +328,11 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 全部区间跨过 1，未证明提速，也不能据此宣称性能保持验收完成。候选推理前峰值 RSS 中位数 179,503,104 bytes，比直接基线高 458,752 bytes、比上轮计时高 737,280 bytes；这是进程峰值差异，不是分配归因。完整保存原始七轮、执行顺序和来源哈希，不重跑以挑选更好结果。此处是 standalone Cell CPU，不是 native egglog 性能；Raytrace 和完整多线程仍等待统一重写审计。
 
 输出 `out/cell-query-scratch`。运行 `python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/query-storage-timing-spec.json ROOT/timing --repeat 7 --warmups 1`，再用 `check_query_storage.py ROOT benchmarks/cell-unification/query-storage-results.json --commit c8ef6edc --timing` 校验保存结果。fixture 使用既有 emit_cell_entry_fixtures 产物与 run_entry_fixtures.py，输出目录须为空。接下来继续检查 Cell 计划的重复存储、context 生命周期和候选索引；不将这次范围很小的写入减少当作整个架构已完成。
+
+## admission 之前不再构造随后丢弃的 Cell 指令
+
+实现 `30394de0`，基线 `c8ef6edc`。sum-bits 的旧加载器先将 1,481 个通用 context cut 编译为 4,423 条指令，再按已有 admission 丢掉其中 1,464 个。现在先由原 typed query 推导完整源操作顺序，完整比较 artifact，再按 admission 只为 17 个入选 cut 编译 56 条共用 Cell 指令。默认 narrow context 路径不变且不计入这些数量。以上是从完整候选、admission 与实际编译调用位置推导的精确构造数，不是分配器或耗时采样。
+
+临时 Cut 只持有已有的 root/ports/tail/post 操作位置，加载结束即释放；没有第二份可执行查询表示或运行时事实图。输入覆盖与 guard readiness 保留；选中的 cut 仍由同一 Query lowerer 完成验证。compiler 发出选择证书无需先编译指令，第二次 Bake install 可以从原 source 重选并扩大范围，也无需先构造被排除的指令。被 admission 排除的错误 cut 仍必须拒绝；针对性回归重新计算 artifact digest 后验证该拒绝确实发生在 cut 校验处。
+
+输出 `out/cell-context-selection`。sum-bits choice_diagnosis pass，1,428 个 Run/state 与 346 项工作指标保持；两个已有短 context fixture 的 state/stages/binding audit 保持。7 项针对性检查及最小配置编译通过，audit_cell_relower 验证 22 个编译产物组件完全一致。收集器 `check_context.py ROOT OUTPUT --phase selection --commit 30394de0` 校验保存的来源、测试及数量推导。本步为新周期 1/5，不进行计时/分配采样，速度验收仍未解决。
