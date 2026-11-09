@@ -136,7 +136,8 @@
           "python3 benchmarks/cell-unification/collect.py out/cell-residual-unified benchmarks/cell-unification/residual-results.json --part residual"
         ]
       },
-      "links_checks": "benchmarks/cell-unification/links-check.json"
+      "links_checks": "benchmarks/cell-unification/links-check.json",
+      "frame_checks": "benchmarks/cell-unification/query-frame-check.json"
     },
     {
       "id": "rhs_publication",
@@ -317,7 +318,8 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B3",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "Static column wiring and binding semantics are shared with Cell query/Entry execution. Context terminal projection, prefix storage and branch copies, candidate index lifecycle and runtime speed acceptance remain."
+      "remaining": "Static column wiring and binding semantics are shared with Cell query/Entry execution. Context terminal projection, prefix storage and branch copies, candidate index lifecycle and runtime speed acceptance remain.",
+      "frame_checks": "benchmarks/cell-unification/query-frame-check.json"
     },
     {
       "id": "C1",

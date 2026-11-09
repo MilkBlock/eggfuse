@@ -63,7 +63,7 @@
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
-代码：[neighbor.rs](../../engine/cell-runtime/src/neighbor.rs) · [local_context.rs](../../engine/cell-runtime/src/local_context.rs) · [view_plan.rs](../../engine/cell-runtime/src/view_plan.rs) · [cell_links.rs](../../engine/cell-runtime/src/cell_links.rs)
+代码：[neighbor.rs](../../engine/cell-runtime/src/neighbor.rs) · [local_context.rs](../../engine/cell-runtime/src/local_context.rs) · [view_plan.rs](../../engine/cell-runtime/src/view_plan.rs) · [cell_links.rs](../../engine/cell-runtime/src/cell_links.rs) · [cell_query.rs](../../engine/cell-runtime/src/cell_query.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
@@ -71,8 +71,8 @@
 | 成本 / 剩余工作 | `report:/neighbor_context/rules/*/stats/build_visits [sum]`<br>`report:/neighbor_context/publication/refreshed [value]`<br>`report:/view_consumers/port_payload_deliveries [value]` |
 | 覆盖 / 规模 / 回退 | `report:/neighbor_context/demanded_keys [value]`<br>`report:/local_context/cut_rules [value]`<br>`report:/view_consumers/groups [count]` |
 
-解释与缺口：每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup.
+解释与缺口：每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; context storage/branch copies and terminal projections remain to integrate.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/VIEW_CONSUMER_BLOCKS.md](../../docs/VIEW_CONSUMER_BLOCKS.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json)
+证据：[docs/VIEW_CONSUMER_BLOCKS.md](../../docs/VIEW_CONSUMER_BLOCKS.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/query-frame-check.json](../../benchmarks/cell-unification/query-frame-check.json)

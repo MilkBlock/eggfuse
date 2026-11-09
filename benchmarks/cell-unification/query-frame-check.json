@@ -1,0 +1,143 @@
+{
+  "scope": "standalone Cell CPU; normal release sum-bits; no new timing/allocation audit",
+  "baseline_commit": "7f4e24c2",
+  "candidate_commit": "7b8ed749",
+  "semantic_acceptance": "pass",
+  "runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "unchanged_work_metric_values_or_missing_status": 339,
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "local_context",
+    "stage_spine"
+  ],
+  "static_source_wiring": {
+    "directed_atom_pairs": 3018,
+    "column_links": 3231,
+    "scope": "computed from typed recipe, not executed matches or mutations"
+  },
+  "free_join": {
+    "bucket_rows_examined": 1359,
+    "bucket_rows_materialized": 130,
+    "cache_capacity_resets": 0,
+    "cover_rows": 1196,
+    "disjoint_key_reads": 3064,
+    "disjoint_rule_skips": 239,
+    "empty_entry_batches": 4474,
+    "entry_bucket_rows_examined": 927,
+    "entry_bucket_rows_materialized": 5056,
+    "entry_cache_hits": 33,
+    "entry_delta_rejections": 1530,
+    "entry_domains": 7266,
+    "entry_point_uses": 304,
+    "entry_probes": 21635,
+    "entry_rejections": 11223,
+    "entry_rows": 19074,
+    "key_groups": 1154,
+    "membership_only": 1652,
+    "probes": 1407,
+    "rejected_cover_rows": 165,
+    "reverse_empty": 186,
+    "reverse_epoch_bins": 3621,
+    "reverse_keys": 762,
+    "reverse_refs": 705,
+    "reverse_stages": 301,
+    "shared_column_reads": 19287,
+    "single_domain_seeds": 5254,
+    "stages": 810,
+    "subtrie_uses": 2089
+  },
+  "sieve_stats": {
+    "added_keys": 7102,
+    "build_rows": 12076,
+    "builds": 526,
+    "dependency_rows": 2494,
+    "empty_join_skips": 474,
+    "probes": 15561,
+    "rejected": 10319,
+    "reused_summaries": 4965,
+    "rule_uses": 4447,
+    "update_rows": 30833
+  },
+  "tests": {
+    "context": {
+      "passed": 1,
+      "log_sha256": "435be00218b69f928a5a829c34b78faa3ddbcf394d74212bd83206cda1d5fe3c"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "d7dda30b836f143fa6acf58861900e45794b8ee52100d4c6db5bb9bd370dad4d"
+    },
+    "free-join": {
+      "passed": 1,
+      "log_sha256": "50699638bc4adc91d5ab7126792bf125c0c3950aeb4c023cbc5dd078f75b80ce"
+    },
+    "entry": {
+      "passed": 1,
+      "log_sha256": "c7f51a8368af5d947736b02c767b7077508246652e822f540321f8e13fa85bdd"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "d3f623b0fbc4e3edc1169f1bd08a1cd22a69de9c847238d413b142643544592b"
+    }
+  },
+  "binaries": {
+    "baseline": "f12b1fe9ebf9d7e47df43e581101b3e60ea2571dff080703a375b52e81efc058",
+    "candidate": "e17cc81b186ec9f8d31762ca5801dd275ff5cbdbded87cca759eeed79f8898ff"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "7f4e24c2",
+    "implementation_commits_since_timing": 1
+  },
+  "limits": "One Cell binder replaces four separate comparison/assignment implementations. Storage lifetime, trails, complete compiled-query fields and context terminal projections remain distinct obligations. Unchanged counters do not prove full unification or speed preservation; previous timing regression remains unresolved.",
+  "local_context": {
+    "cut_orientations": 17,
+    "cut_rules": 4,
+    "enabled": true,
+    "general": true,
+    "plans": [
+      {
+        "ports": [
+          1,
+          2,
+          4
+        ],
+        "root": 0,
+        "rule": 249,
+        "terminal": 3
+      }
+    ],
+    "prefix_limit": 4096,
+    "root_limit": 256,
+    "rules": {
+      "249": {
+        "bindings": 4,
+        "calls": 33,
+        "delta_terminal_rows": 1,
+        "fallbacks": 0,
+        "full_terminal_rows": 4,
+        "orientations": {
+          "0": 33
+        },
+        "peak_prefix_rows": 1,
+        "peak_roots": 1,
+        "port_candidates": 3,
+        "port_probes": 3,
+        "reverse_groups": 0,
+        "reverse_reads": 0,
+        "root_rebuilds": 1,
+        "root_reuses": 32,
+        "root_rows": 1,
+        "spine_deferrals": 0,
+        "terminal_pairs": 4
+      }
+    }
+  }
+}
