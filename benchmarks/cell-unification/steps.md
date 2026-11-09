@@ -344,3 +344,13 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 根节点先验证所有重复字段/常量约束，再向原实例槽写入；没有新 bindings 图或运行时地址映射。新增静态根指令有存储/编译成本，候选域继续使用原 Vec/SmallVec 载体，不把此步称为已测得的分配优化。三个短样例包括重复根字段 Start(x,x)，确认 Start(9,10) 无法产生额外结果；逐 Run state/binding audit 与旧版一致。
 
 输出 `out/cell-context-root`。sum-bits 语义 pass、1,428 个 Run/state 和 346 项工作指标保持，22 个编译产物组件一致。15 项针对性测试、最小配置编译通过。`check_context.py ROOT OUTPUT --phase root --commit 7d773cdc` 校验已有结果。当前 2/5，不新增测速。接下来可据静态字段映射压紧 prefix 存储，不再为整条规则的 RHS/terminal 槽留空位；生命周期和索引审计仍需继续。
+
+## prefix 的槽地址由 Cell 静态压紧
+
+实现 `3d814c3a`，基线 `7d773cdc`。统一字段读取后，context 实例不再需要原规则的全宽 RHS 槽数组。ScopedStep 编译时给每步新字段安排连续区间，Field::Anchor 直接指向紧凑位置；terminal continuation 消费同一份编译期 source map 后将它释放。运行时没有编号转换表或第二份 bindings。每条指令保留原变量名作为已有投影的来源标签，artifact 序列化按同一静态投影恢复旧编号；新增成本是每条 scoped 指令一个 base 字及序列化时的静态查找。
+
+prefix 初始化宽度取最后一条指令的区间终点，成功缓存和分支副本只保留 prefix 字段。清理仍访问相同数量的新槽，只是改为连续范围；witness 槽及其生命周期保持。sum-bits 的一次保留复制从 21 槽降到 14 槽（含未压缩的 witness 槽）；三个短 fixture 的累计复制槽数为 branches 105→77、terminal 81→51、roots 105→77。复制次数、清理数、结果写入和其他 345 项工作指标不变。既有 Work 账本自动计入这一减少，没有另外增加 avoided 收益。
+
+输出 `out/cell-context-compact`。choice_diagnosis 最终 pass；首次校验因历史 sum 符号链接层数超过文件系统上限而 inconclusive，原报告保留为 semantic-input-link-error.json，将本实验 sum 链接改为直接指向原产物后复用已有执行结果重新校验，未改比较规则或重跑负载。1,428 个 Run/state、三个 fixture 的逐阶段 state/binding audit 保持，22 个重新生成的编译组件一致。15 项针对性检查和最小配置编译通过。`check_context.py ROOT OUTPUT --phase compact --commit 3d814c3a` 读取保存证据；后续实验应直接链接规范产物路径，避免继续接长链接链。
+
+此步为当前周期 3/5；没有新增速度/分配测试。槽复制是实际工作计数，不是分配次数或时间。完整 context 生命周期、view/候选索引与其他优化族仍须继续统一，多线程阶段尚未开始。

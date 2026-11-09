@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "c8ef6edc",
-    "implementation_commits_since_timing": 2,
+    "implementation_commits_since_timing": 3,
     "evidence": "benchmarks/cell-unification/query-storage-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
@@ -102,7 +102,8 @@
         "Retained prefixes use shared scoped Cell instructions for expansion, scalar evaluation and rollback. The independent Arg scalar interpreter and stored legacy post order are removed; compatibility views derive atom order from those instructions.",
         "Compiled Cell Query owns the result storage bound. Context and register frames derive scratch width from it; complete Entries omit trailing bound-result writes. Result write credit charges full register/Entry totals once, not the prefix subset twice.",
         "Context selection/admission now precedes common Cell instruction lowering. All source-order certificates remain validated; compiler emission and Bake refitting no longer construct discarded executable plans.",
-        "Context roots and internal rows use ScopedStep row binding. Terminal and register candidate keys share Expansion binding; correlation columns derive from the same fields. Context runtime no longer interprets Arg operands."
+        "Context roots and internal rows use ScopedStep row binding. Terminal and register candidate keys share Expansion binding; correlation columns derive from the same fields. Context runtime no longer interprets Arg operands.",
+        "Retained prefixes store only densely addressed prefix fields. Scoped Cell instructions assign ranges and the continuation consumes their compile-time source map; no runtime source-slot translation or full RHS frame remains. Legacy wire names are recovered from the same static projections."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
@@ -149,7 +150,8 @@
       "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
       "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json",
       "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
-      "context_root_checks": "benchmarks/cell-unification/context-root-check.json"
+      "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
+      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json"
     },
     {
       "id": "rhs_publication",
@@ -332,14 +334,15 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B3",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "All context field matching uses common Cell instructions. Cached successful prefixes, compact storage, context admission/index lifetime and runtime speed acceptance remain.",
+      "remaining": "All context field matching and compact prefix addressing use common Cell instructions. Cached-prefix/witness lifetime, context admission/index lifetime, remaining view integration and runtime speed acceptance remain.",
       "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
       "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
       "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json",
       "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
       "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
-      "context_root_checks": "benchmarks/cell-unification/context-root-check.json"
+      "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
+      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json"
     },
     {
       "id": "C1",
@@ -519,7 +522,8 @@
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
       "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
       "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
-      "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json"
+      "context_selection_checks": "benchmarks/cell-unification/context-selection-check.json",
+      "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",

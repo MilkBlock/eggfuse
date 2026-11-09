@@ -1,0 +1,333 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "context_work": {
+    "249": {
+      "bindings": 4,
+      "branch_slot_clears": 6,
+      "calls": 33,
+      "delta_terminal_rows": 1,
+      "fallbacks": 0,
+      "full_terminal_rows": 4,
+      "orientations": {
+        "0": 33
+      },
+      "peak_prefix_rows": 1,
+      "peak_roots": 1,
+      "port_candidates": 3,
+      "port_probes": 3,
+      "prefix_copies": 1,
+      "prefix_slots_copied": 14,
+      "reverse_groups": 0,
+      "reverse_reads": 0,
+      "root_rebuilds": 1,
+      "root_reuses": 32,
+      "root_rows": 1,
+      "spine_deferrals": 0,
+      "terminal_binding_copies": 0,
+      "terminal_pairs": 4,
+      "terminal_result_writes": 0,
+      "terminal_scratch_slots": 0,
+      "terminal_slots_copied": 0
+    }
+  },
+  "copied_prefix_slots": [
+    21,
+    14
+  ],
+  "scope": "standalone Cell CPU; normal release; no timing or allocation audit",
+  "baseline_commit": "7d773cdc",
+  "candidate_commit": "3d814c3a",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups_excluding": [
+    "prefix_slots_copied"
+  ],
+  "compared_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context"
+  ],
+  "unchanged_work_metrics": 345,
+  "changed_work_metrics": {
+    "report:/local_context/rules/*/prefix_slots_copied [sum]": [
+      {
+        "status": "observed",
+        "value": 21
+      },
+      {
+        "status": "observed",
+        "value": 14
+      }
+    ]
+  },
+  "fixtures": {
+    "branches": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "26a6568ccc8c026ef510dfc03bc8268aa2526df79a314f7b109f72caa81b07f6",
+        "stages.json": "90aa69bffcb960283dd5e58c7f1657f0f962ce0e1a1bc56653d82b85e967adbf",
+        "binding-audit.json": "6d792e241f7555f4a3b662a245265c2eb1898ec0f1e12efd0ab8193ce273fdbf"
+      },
+      "program_file_sha256": "18954bb7a8b22e3b280823f4d9a12395c1a81b361fcc19d4ddc382e3b7f4e216",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 1,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 77,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 0,
+          "root_rows": 3,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 1,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 1,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "copied_prefix_slots": [
+        105,
+        77
+      ],
+      "source_sha256": "2a9ca53cb7febc4c87ed85937368c84dea66022ff39f0f5295520c886aa0bd6a"
+    },
+    "terminal": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8fe1b39063a4d04dfcc0e3f6c848a2a37f4e0c8cf7391eebc8987c2dd4a01834",
+        "stages.json": "b64891564ff28ffefbdeb1183cab7b15f7267bd643a7ec33c2a513703f1dea6b",
+        "binding-audit.json": "2a7937cb2d4c9167b4f4736fe267a28f2829e600a9af0110de77c034dd78e1c8"
+      },
+      "program_file_sha256": "eec0e254deedb3594cc20079b36124435f197be4c12d5568aebac802dedbf2ad",
+      "context_work": {
+        "3": {
+          "bindings": 5,
+          "branch_slot_clears": 6,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 27,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 6,
+          "terminal_result_writes": 11,
+          "terminal_scratch_slots": 12,
+          "terminal_slots_copied": 0
+        },
+        "4": {
+          "bindings": 1,
+          "branch_slot_clears": 6,
+          "calls": 1,
+          "delta_terminal_rows": 0,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 1
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 24,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 1,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 5,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "copied_prefix_slots": [
+        81,
+        51
+      ],
+      "source_sha256": "ab672609af2f721d11b97af5791fd45e044e2845bad649ae04a982403adad1e1"
+    },
+    "roots": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "3f7768e6d9cd0e1a1e3549fb3827dbf9663f0aebce8d7fadef1404c52edca5c6",
+        "stages.json": "0cd6454d2f489f0057353f63d13543ecc4b8718a68de98afd2ecc7f8147b18c3",
+        "binding-audit.json": "69914de28c9bc815202401f7b0bacdbe0987ab7d7197c6758d907a0e6534fe22"
+      },
+      "program_file_sha256": "0848e8ae3027c6731a0a97f543e77ba41e6a9370bfb3828f94e499731ef8a925",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 77,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 2,
+          "root_rows": 4,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 2,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "copied_prefix_slots": [
+        105,
+        77
+      ],
+      "source_sha256": "c36c315665c3c023b7f97b3848c2b57333e5f13b68680f95e5bd72fd96bbd733"
+    }
+  },
+  "tests": {
+    "query": {
+      "passed": 3,
+      "log_sha256": "9426b7c080bd3c2aa2a2746f36ebade7b5c459ce7640676fcabd99ed627f2228"
+    },
+    "context": {
+      "passed": 1,
+      "log_sha256": "ce32964c77d8fcebd732d5bc8d64bc203bc01a9a1a144fcb3a5397c2c9c5e0e7"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "551cb02fb5fea1300187ba4b411825c6af1a1666b1a12226acfaa5c7866c945e"
+    },
+    "budget": {
+      "passed": 1,
+      "log_sha256": "9a2ac7f307754330393c54b27840d357e928944dcabcadc7179e114d7cb43545"
+    },
+    "entry": {
+      "passed": 1,
+      "log_sha256": "588a7bb7e08ead2d9ec9dfb9cfccaa77400c0661f7f1291e5033cc4435c1960c"
+    },
+    "witness": {
+      "passed": 8,
+      "log_sha256": "b8f4080ab5fd8b2a1937ef231c83f315d6e6e465927cf0d3f376a40c64c2af8c"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "2355957d9c2c67948eb7af9d49c25e9f555a1915f7d7e36666229d673c9e59d0"
+    }
+  },
+  "binaries": {
+    "baseline": "da4470129db3f55b8f06d7aa36c245ae7f7defd603daf6f47ea3ae5727fe9279",
+    "candidate": "6a253e5118a8aabb16b3fbb55d774c0443514fc0b53e50548fe1dab5c2e1e3cd"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "c8ef6edc",
+    "implementation_commits_since_timing": 3
+  },
+  "limits": "Prefix fields have dense Cell addresses; original source-slot names remain solely in static projection provenance. No runtime translation map or second frame is introduced. Copied slot counts include witness slots and empty fields; these are not allocator calls or bytes. Each scoped instruction adds one static base word; wire serialization recovers original names from those same projections. Root/cache lifetime, witness storage and full speed acceptance remain pending.",
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  }
+}
