@@ -2234,49 +2234,16 @@ impl Executor {
             #[cfg(feature = "iterative-bake")]
             if let Some((input, tail)) = transfers.split_first().filter(|(r, _)| r.op == i) {
                 transfers = tail;
-                self.graph.stats.handoff_attempts += 1;
-                if let Some(f) = input.fact {
-                    let (t, args) = match op {
-                        Op::Let(_, Call::Table(t), a) | Op::Set(t, a, _) => (*t, a),
-                        _ => unreachable!("validated constructor handoff"),
-                    };
-                    if let Some(row) = self.graph.handoff_row(f, cell, t, args)? {
-                        let value = row.values.last().unwrap().clone();
-                        match op {
-                            Op::Let(dst, ..) => {
-                                self.graph
-                                    .rhs_frame_mut(cell)
-                                    .unwrap()
-                                    .values
-                                    .insert(*dst, value);
-                                self.graph.stats.handoff_lets += 1;
-                            }
-                            Op::Set(_, _, v) => {
-                                let rhs = self.graph.argument(cell, v)?;
-                                if input.equal_output && value == rhs {
-                                    self.graph.stats.handoff_noop_unions += 1;
-                                } else {
-                                    self.graph.enqueue_union(value, rhs)?;
-                                }
-                                self.graph.stats.handoff_sets += 1;
-                            }
-                            _ => unreachable!(),
-                        }
-                        effect_receipts.record(i, row.witness);
-                        #[cfg(feature = "structural-depth")]
-                        if self.stage_spine.structural.execute
-                            && origin.is_none()
-                            && let Some((_, d)) = proven.iter().find(|(op, _)| *op == i)
-                        {
-                            self.stage_spine.structural.accepted(*d as usize);
-                        }
-                        self.graph.stats.handoff_deep += u64::from(input.back > 1);
-                        completed_prefix = i + 1;
-                        continue;
+                if crate::cell::apply_handoff(&mut self.graph, cell, &mut effect_receipts, op, input)? {
+                    #[cfg(feature = "structural-depth")]
+                    if self.stage_spine.structural.execute
+                        && origin.is_none()
+                        && let Some((_, d)) = proven.iter().find(|(op, _)| *op == i)
+                    {
+                        self.stage_spine.structural.accepted(*d as usize);
                     }
-                    self.graph.stats.handoff_stale += 1;
-                } else {
-                    self.graph.stats.handoff_missing += 1;
+                    completed_prefix = i + 1;
+                    continue;
                 }
             }
             match op {

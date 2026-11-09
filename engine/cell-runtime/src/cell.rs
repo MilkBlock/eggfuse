@@ -21,6 +21,13 @@ pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
 #[path = "cell_eval.rs"]
 mod eval;
 pub(crate) use eval::{LocalCall, MergeFrame, RhsCall, evaluate_call};
+#[cfg(feature = "iterative-bake")]
+#[path = "cell_handoff.rs"]
+mod handoff;
+#[cfg(feature = "iterative-bake")]
+pub(crate) use handoff::{HandoffCounts, HandoffFrame, Preflight, apply_handoff, complete_handoff};
+#[cfg(feature = "iterative-bake")]
+pub(crate) use eval::CellFrame;
 #[cfg(feature = "spine-blocks")]
 pub(crate) use query::Field;
 

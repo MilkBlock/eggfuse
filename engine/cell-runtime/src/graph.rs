@@ -815,7 +815,7 @@ impl Graph {
             self.promote_active();
         }
     }
-    fn argument_in(&self, cell: u32, c: &Cell, inputs: Option<&crate::slots::Slots>, a: &Arg) -> Result<Value> {
+    pub(crate) fn argument_in(&self, cell: u32, c: &Cell, inputs: Option<&crate::slots::Slots>, a: &Arg) -> Result<Value> {
         match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
             Arg::Slot(i) => self.slot_fields(cell, c.template, c.parent, &c.values, inputs, *i),
@@ -1451,85 +1451,45 @@ impl Graph {
         transfers: &[crate::result_handoff::Input],
         receipts: &mut crate::cell::Effects,
     ) -> Result<Option<(u32, Cell, u64)>> {
+        use crate::cell::{CellFrame, HandoffFrame, HandoffCounts, Preflight, complete_handoff};
         let ops = self.program.templates[template].ops.clone();
-        // This frame owns only computed slots; matched inputs stay borrowed.
-        // Its prospective ID is not consumed until every preflight check passes.
         let cell = self.next_cell;
-        let mut frame = self.new_cell(template, Default::default(), None);
-        let mut unions = vec![];
-        let arg = |a: &Arg, frame: &Cell| self.argument_in(cell, frame, Some(inputs), a);
-        let mut transfers_iter = transfers.iter();
-        let mut lets = 0;
-        let mut sets = 0;
-        let mut deep = 0;
-        let mut noop = 0;
+        let mut pending = Preflight {
+            cell, frame: self.new_cell(template, Default::default(), None),
+            inputs, unions: Default::default(),
+        };
+        let mut transfers = transfers.iter();
+        let mut counts = HandoffCounts::default();
         for (op, instruction) in ops.iter().enumerate() {
-            let (table, aa) = match instruction {
+            match instruction {
                 Op::Copy(dst, a) => {
-                    let v = arg(a, &frame)?;
-                    frame.values.insert(*dst, v);
-                    continue;
+                    let value = pending.argument(self, a)?;
+                    pending.assign(self, *dst, value)?;
                 }
                 Op::Union(a, b) => {
-                    unions.push((arg(a, &frame)?, arg(b, &frame)?));
-                    continue;
+                    let a = pending.argument(self, a)?;
+                    let b = pending.argument(self, b)?;
+                    pending.union(self, a, b)?;
                 }
-                Op::Let(_, Call::Table(t), aa) | Op::Set(t, aa, _) => (*t, aa),
+                Op::Let(_, Call::Table(_), _) | Op::Set(..) => {
+                    let Some(input) = transfers.next() else { return Ok(None); };
+                    if input.op != op { return Err("invalid completed block order".into()); }
+                    let Some(witness) = complete_handoff(self, &mut pending, instruction, input, &mut counts)?
+                        else { return Ok(None); };
+                    receipts.record(op, witness);
+                }
                 _ => return Err("unexpected instruction in completed block".into()),
-            };
-            let Some(input) = transfers_iter.next() else {
-                return Ok(None);
-            };
-            let Some(f) = input.fact else { return Ok(None) };
-            if input.op != op {
-                return Err("invalid completed block order".into());
             }
-            let Some(row) = self.live_handoff(f, table)? else {
-                return Ok(None);
-            };
-            let Some((value, fields)) = row.values.split_last() else {
-                return Ok(None);
-            };
-            if fields.len() != aa.len() { return Ok(None); }
-            for (field, a) in fields.iter().zip(aa) {
-                if *field != arg(a, &frame)? { return Ok(None); }
-            }
-            match instruction {
-                Op::Let(dst, ..) => {
-                    frame.values.insert(*dst, value.clone());
-                    lets += 1;
-                }
-                Op::Set(_, _, a) => {
-                    let v = arg(a, &frame)?;
-                    if !matches!((value, &v), (Value::Eq(_), Value::Eq(_))) {
-                        return Err("non-equality constructor result".into());
-                    }
-                    if input.equal_output && value == &v {
-                        noop += 1;
-                    } else {
-                        unions.push((value.clone(), v));
-                    }
-                    sets += 1;
-                }
-                _ => unreachable!(),
-            }
-            receipts.record(op, row.witness);
-            deep += u64::from(input.back > 1);
         }
         let reserved = self.reserve_cell_id()?;
         debug_assert_eq!(cell, reserved);
-        let count = unions.len() as u64;
-        for (a, b) in unions {
-            self.enqueue_union(a, b)?
-        }
+        let count = pending.unions.len() as u64;
+        for (a, b) in pending.unions { self.enqueue_union(a, b)?; }
         self.stats.rhs_frames_avoided += 1;
         self.stats.handoff_closed += 1;
-        self.stats.handoff_noop_unions += noop;
-        self.stats.handoff_attempts += lets + sets;
-        self.stats.handoff_lets += lets;
-        self.stats.handoff_sets += sets;
-        self.stats.handoff_deep += deep;
-        Ok(Some((cell, frame, count)))
+        self.stats.handoff_attempts += counts.lets + counts.sets;
+        counts.commit(&mut self.stats);
+        Ok(Some((cell, pending.frame, count)))
     }
     #[cfg(feature = "structural-depth")]
     pub(crate) fn checked_constructor(
@@ -1543,34 +1503,13 @@ impl Graph {
             .filter(|r| r.values.split_last().is_some_and(|(_, k)| k == key)))
     }
     #[cfg(feature = "iterative-bake")]
-    fn live_handoff(&self, f: FactRef, table: usize) -> Result<Option<Row>> {
+    pub(crate) fn live_handoff(&self, f: FactRef, table: usize) -> Result<Option<Row>> {
         if !self.dirty_facts[table].is_empty() {
             return Ok(None);
         }
         Ok(self
             .row(self.resolve_receipt(Dependency::Fact(f)))?
             .filter(|r| r.table == table && !r.hidden))
-    }
-    #[cfg(feature = "iterative-bake")]
-    pub(crate) fn handoff_row(
-        &self,
-        f: FactRef,
-        cell: u32,
-        table: usize,
-        args: &[Arg],
-    ) -> Result<Option<Row>> {
-        let Some(row) = self.live_handoff(f, table)? else {
-            return Ok(None);
-        };
-        if row.values.len() != args.len() + 1 {
-            return Ok(None);
-        }
-        for (a, v) in args.iter().zip(row.values.iter()) {
-            if self.argument(cell, a)? != *v {
-                return Ok(None);
-            }
-        }
-        Ok(Some(row))
     }
     pub fn construct(
         &mut self,

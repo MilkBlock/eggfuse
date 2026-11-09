@@ -43,3 +43,9 @@
 带函数写入的 register 用例及六项 Entry 顺序检查通过；前者的整数 key 不能进入 Eq-key PortWrite，确实经过共同标量执行器。没有独立计时。
 
 两项改动合用一次 sum-bits 检查，见 [prefix-check.json](prefix-check.json)：语义 pass、1,428 个 Run 与最终 state 相同，300 项非时间/RSS指标保持；旧 sum-bits artifact 的 22 个编译组件重新生成一致，最小特性编译通过。没有新增性能采样或分配审计。
+
+## 闭合与普通交接共用见证执行
+
+基线 `f672cabb`。删除两套 handoff 字段校验和结果绑定：共同执行器按源 Cell 操作验证实际 receipt、完整当前字段、构造子结果，再写入结果或处理 Set 的 union。Cell frame 提供共同的参数读取和赋值；闭合预检借用输入，保留小型内联 union 队列，全部通过后才消费 ID、提交 union 和计数。普通路径即时提交当前操作；缺失和 stale 计数保持。没有新增匹配状态或反向订阅。
+
+闭合成功/删除回退、三阶段结构交接、显式 union 与 congruence，以及六项 Entry 顺序检查通过。未单独计时。一般效果分派和源 union 的重复 marker 读取继续处理。

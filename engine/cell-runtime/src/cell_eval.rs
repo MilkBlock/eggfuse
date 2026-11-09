@@ -6,9 +6,13 @@ use smallvec::SmallVec;
 
 type Arguments = SmallVec<[Value; 4]>;
 
-pub(crate) trait CallFrame {
+pub(crate) trait CellFrame {
+    fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value>;
     fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments>;
     fn assign(&mut self, g: &mut Graph, slot: usize, value: Value) -> Result<()>;
+}
+
+pub(crate) trait CallFrame: CellFrame {
     fn construct(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Arg], dst: usize) -> Result<()>;
     fn read(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Value]) -> Result<Value>;
     fn failed_primitive(&self, name: &str) -> String { format!("RHS primitive failed: {name}") }
@@ -37,7 +41,8 @@ pub(crate) struct RhsCall<'a> {
     pub cell: u32,
     pub receipts: &'a mut Effects,
 }
-impl CallFrame for RhsCall<'_> {
+impl CellFrame for RhsCall<'_> {
+    fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value> { g.argument(self.cell, arg) }
     fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments> {
         g.inline_arguments(self.cell, args)
     }
@@ -45,6 +50,8 @@ impl CallFrame for RhsCall<'_> {
         g.rhs_frame_mut(self.cell).expect("executing Cell").values.insert(slot, value);
         Ok(())
     }
+}
+impl CallFrame for RhsCall<'_> {
     fn construct(&mut self, g: &mut Graph, op: usize, table: usize, args: &[Arg], dst: usize) -> Result<()> {
         if let Some(receipt) = self.receipts.slot(op) {
             g.construct_recorded(self.cell, op, table, args, dst, receipt, &mut false)?;
@@ -68,7 +75,10 @@ pub(crate) struct LocalCall<'a> {
     pub cell: u32,
     pub frame: &'a mut Cell,
 }
-impl CallFrame for LocalCall<'_> {
+impl CellFrame for LocalCall<'_> {
+    fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value> {
+        g.argument_in(self.cell, self.frame, None, arg)
+    }
     fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments> {
         g.frame_arguments(self.cell, self.frame, None, args)
     }
@@ -76,6 +86,8 @@ impl CallFrame for LocalCall<'_> {
         self.frame.values.insert(slot, value);
         Ok(())
     }
+}
+impl CallFrame for LocalCall<'_> {
     fn construct(&mut self, _: &mut Graph, _: usize, _: usize, _: &[Arg], _: usize) -> Result<()> {
         Err("constructor in scalar Cell prefix".into())
     }
@@ -97,7 +109,8 @@ impl MergeFrame {
         match arg { Arg::Slot(s) => self.values[*s].clone(), Arg::Literal(v) => v.clone() }
     }
 }
-impl CallFrame for MergeFrame {
+impl CellFrame for MergeFrame {
+    fn argument(&self, _: &Graph, arg: &Arg) -> Result<Value> { Ok(self.operand(arg)) }
     fn arguments(&self, _: &Graph, args: &[Arg]) -> Result<Arguments> {
         Ok(args.iter().map(|a| self.operand(a)).collect())
     }
@@ -106,6 +119,8 @@ impl CallFrame for MergeFrame {
         self.values.push(value);
         Ok(())
     }
+}
+impl CallFrame for MergeFrame {
     fn construct(&mut self, g: &mut Graph, _: usize, table: usize, args: &[Arg], dst: usize) -> Result<()> {
         let args = self.arguments(g, args)?;
         g.stats.merge_program_constructs += 1;
