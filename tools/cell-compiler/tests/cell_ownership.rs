@@ -291,7 +291,7 @@ fn bake_emits_checked_markers_without_executing_the_program() {
             .markers
             .iter()
             .enumerate()
-            .any(|(i, m)| m.active && !p.templates[i].ops.iter().any(|op| matches!(op, eggfuse_cell_runtime::program::Op::Union(..))))
+            .any(|(i, m)| m.program.active() && !p.templates[i].ops.iter().any(|op| matches!(op, eggfuse_cell_runtime::program::Op::Union(..))))
     );
     assert!(p.cell_ownership.routes.iter().any(|r| !r.is_empty()));
     let temp = tempfile::tempdir().unwrap();

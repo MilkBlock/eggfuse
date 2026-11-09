@@ -5,6 +5,9 @@ use super::*;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 pub struct PortProgram {
+    /// Cached once per shared wiring, rather than once per source marker.
+    #[serde(skip)]
+    pub(super) active: bool,
     /// Per live body column, its symbolic signal (non-equality columns are None).
     pub fields: Vec<Vec<Option<usize>>>,
     /// One immutable local instruction list per symbolic equality signal.
@@ -19,6 +22,8 @@ pub struct Step {
     pub columns: Vec<usize>,
 }
 impl PortProgram {
+    pub fn active(&self) -> bool { self.active }
+    pub fn covers(&self, op: usize) -> bool { !self.fields[op].is_empty() }
     pub(super) fn derive(p: &Program, t: &Template, covered: &[bool]) -> Self {
         let mut symbols = super::super::local_union_cells::Symbols::default();
         symbols.parents = (0..t.sorts.len()).collect();
@@ -91,6 +96,7 @@ impl PortProgram {
             }
         }
         Self {
+            active: bodies.iter().any(|fields| !fields.is_empty()),
             fields: bodies,
             signals,
             native: native

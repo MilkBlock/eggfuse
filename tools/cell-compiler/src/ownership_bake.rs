@@ -59,7 +59,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     super::write(
         &out.join("coverage.json"),
         &json!({"scope":"typed compiler coverage, no workload execution or timing",
-        "templates":p.cell_ownership.markers.len(),"covered_bodies":p.cell_ownership.markers.iter().map(|m|m.bodies.iter().filter(|x|**x).count()).sum::<usize>(),
+        "templates":p.cell_ownership.markers.len(),"covered_bodies":p.cell_ownership.markers.iter().map(|m|m.program.fields.iter().filter(|fields|!fields.is_empty()).count()).sum::<usize>(),
         "covered_tables":p.cell_ownership.tables.iter().filter(|x|**x).count(),"entry_ports":p.cell_ownership.entries.iter().map(Vec::len).sum::<usize>(),
         "shared_port_programs":p.cell_ownership.markers.iter().map(|m|std::rc::Rc::as_ptr(&m.program)).collect::<std::collections::BTreeSet<_>>().len(),
         "template_signal_steps":p.cell_ownership.markers.iter().flat_map(|m|&m.program.signals).map(Vec::len).sum::<usize>(),

@@ -44,8 +44,6 @@ pub struct Plan {
 }
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Marker {
-    pub active: bool,
-    pub bodies: Vec<bool>,
     pub program_id: usize,
     #[serde(skip)]
     pub code: usize,
@@ -71,15 +69,8 @@ impl Plan {
                 let id = shared.len();
                 let (program_id, program) = shared.entry((program.clone(), legacy))
                     .or_insert((id, program)).clone();
-                Marker {
-                program, program_id, code: 0,
-                active: t.ops.iter().any(|op|matches!(op,Op::Let(_,Call::Table(table),_)|Op::Set(table,_,_) if tables[*table])),
-                bodies: t
-                    .ops
-                    .iter()
-                    .map(|op| matches!(op, Op::Let(_,Call::Table(table),_) | Op::Set(table,_,_) if tables[*table]))
-                    .collect(),
-            }})
+                Marker { program, program_id, code: 0 }
+            })
             .collect::<Vec<_>>();
         let mut programs = vec![Rc::new(PortProgram::default()); shared.len()];
         for (_, (id, program)) in shared {
@@ -135,7 +126,7 @@ impl Plan {
         let mut shared = BTreeMap::new();
         for (template, marker) in templates.iter().zip(&mut self.markers) {
             let operators = template.ops.iter().enumerate().map(|(op, instruction)| {
-                if !marker.bodies[op] { return usize::MAX; }
+                if !marker.program.covers(op) { return usize::MAX; }
                 match instruction {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
                     _ => unreachable!("covered body must have a typed operator"),
@@ -289,7 +280,7 @@ impl Graph {
     }
     pub(crate) fn needs_ownership_entry(&self, rid: usize) -> bool {
         self.ownership.as_ref().is_some_and(|m| {
-            self.program.cell_ownership.markers[self.program.rules[rid].template].active
+            self.program.cell_ownership.markers[self.program.rules[rid].template].program.active()
                 && (m.composition.training.is_some()
                     || self.program.cell_ownership.composition.active_rules[rid])
         })
@@ -390,7 +381,7 @@ impl Graph {
             return false;
         }
         let template = self.cells[&f.cell].template;
-        if !self.program.cell_ownership.markers[template].bodies[f.op as usize] {
+        if !self.program.cell_ownership.markers[template].program.covers(f.op as usize) {
             self.ownership.as_mut().unwrap().stats.uncovered_births += 1;
             return false;
         }

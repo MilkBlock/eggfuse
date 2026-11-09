@@ -44,9 +44,14 @@ pub(super) fn unions(template: &Template) -> Vec<Option<[&Arg; 2]>> {
 
 pub(super) fn plan(plan: &Plan, p: &Program) -> J {
     let mut raw = json!(plan);
-    if plan.format == Format::Legacy {
-        let mut seen = vec![false; plan.programs.len()];
-        for (i, (marker, template)) in plan.markers.iter().zip(&p.templates).enumerate() {
+    let mut seen = vec![false; plan.programs.len()];
+    for (i, (marker, template)) in plan.markers.iter().zip(&p.templates).enumerate() {
+        // Preserve the checked artifact projection without retaining duplicate
+        // per-template coverage arrays in the executable plan.
+        raw["markers"][i]["active"] = json!(marker.program.active());
+        raw["markers"][i]["bodies"] = json!(marker.program.fields.iter()
+            .map(|fields| !fields.is_empty()).collect::<Vec<_>>());
+        if plan.format == Format::Legacy {
             raw["markers"][i]["unions"] = json!(template.ops.iter().enumerate()
                 .filter_map(|(i, op)| matches!(op, Op::Union(..)).then_some(i)).collect::<Vec<_>>());
             if !seen[marker.program_id] {

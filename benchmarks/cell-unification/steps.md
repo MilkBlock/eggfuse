@@ -65,3 +65,9 @@
 新 marker/fragment/profile 格式分别为 v5/v2/v2，区分改变后的程序地址；旧 v4/v1/v1 加载时只借用源操作恢复旧编号，发出/校验产物时临时投影旧字段，没有第二套运行时 union 指令。完整字段校验、query class 证书和覆盖范围保持；混合地址版本拒绝加载。
 
 新短用例验证不同 union 共享同一个 Rc，并对照旧地址的逐阶段状态、bindings、union 请求和 native 源程序；现有 typed wiring 校验、八项 query-class/receipt 测试及 Bake 输出检查通过。冻结旧格式程序重新加载、旧 profile 再 Bake 也通过。未测时间。marker 的逐操作覆盖数组继续消除。
+
+## 覆盖范围直接来自共享字段布局
+
+接续 `8f60229c`。删除每个 marker 的 `bodies: Vec<bool>` 和 `active` 副本；操作覆盖由共享 PortProgram 的字段布局判断，是否活跃只在共享程序缓存一次。规则准入、事实激活和 operator 代码准备读取同一份布局。产物里的覆盖字段在序列化时投影生成，现有 v4/v5 证书仍逐项检查；执行期不保留第二个覆盖数组。
+
+共享 union 用例、三个 ownership receipt/源顺序检查、Bake 输出及最小特性编译通过。没有新增测试或单项计时。
