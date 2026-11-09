@@ -1,0 +1,50 @@
+{
+  "scope": "standalone Cell CPU reports used by Bake measured-work scoring; no new runtime campaign",
+  "implementation_commit": "6dd18b55",
+  "runtime_source_commit": "563e4ab0",
+  "report_sha256": "a82cd0e8a2418a03a2decb3bc0821ee4ba0b26f7999550385f0447a15efbeea6",
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "newly_charged_observed_counts": {
+    "free_join/entry_rows": 19074,
+    "free_join/entry_probes": 21635,
+    "free_join/entry_cache_hits": 33,
+    "free_join/entry_bucket_rows_examined": 927,
+    "free_join/entry_bucket_rows_materialized": 5056,
+    "free_join/cover_rows": 1196,
+    "free_join/key_groups": 1154,
+    "free_join/probes": 1407,
+    "free_join/bucket_rows_examined": 1359,
+    "free_join/bucket_rows_materialized": 130,
+    "free_join/reverse_keys": 762,
+    "free_join/reverse_refs": 705,
+    "free_join/reverse_epoch_bins": 3621,
+    "free_join/disjoint_key_reads": 3064,
+    "sieve/stats/rule_uses": 4447,
+    "sieve/stats/build_rows": 12076,
+    "sieve/stats/update_rows": 30833,
+    "sieve/stats/dependency_rows": 2494,
+    "sieve/stats/probes": 15561
+  },
+  "equal_weight_total": 125534,
+  "tests": {
+    "unit": {
+      "passed": 4,
+      "log_sha256": "427c24114a66114accaf32aec4483b629764394e0d97a4bb16e0bac6d51e56fa"
+    },
+    "selection": {
+      "passed": 1,
+      "log_sha256": "6249b56f30059d1b6c2ac4b42779bcc05de9652d282864a4c1587fb68ddb349d"
+    }
+  },
+  "runtime_changes": false,
+  "timing_cadence": {
+    "last_timed_commit": "ab33d47c",
+    "implementation_commits_since_timing": 4
+  },
+  "limits": "These operations already occurred; counts are not extra work, committed mutations or elapsed time. No speedup established. Filter subset counters and outcomes are excluded from additional credit.",
+  "reproduction": [
+    "cargo test --locked -p eggfuse-cell-compiler --all-features work_credit::tests --lib",
+    "cargo test --locked -p eggfuse-cell-compiler --all-features --test query_receipts measured_credit_rejects_query_hits_that_do_not_pay_for_source_history",
+    "Read the listed report paths from the saved normal sum-bits report; sum only these 19 values."
+  ]
+}
