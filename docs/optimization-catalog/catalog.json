@@ -1469,12 +1469,13 @@
           }
         ]
       },
-      "gaps": "RHS receipt 数据流统一到 Cell effect 槽，整宽临时 receipt 数组已删除。普通/局部/闭合效果执行器、单写执行和 merge 仍有独立控制逻辑，不能把此数据流接管视为整个 D2 已重写。 Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled.",
+      "gaps": "RHS receipt 数据流已统一到 Cell effect 槽；混合输出使用永久 Entry 前缀及临时边界后缀。Cell 布局根据已有实际来源证明只保留最后一次相同输出，但 donor 和被后续读取的历史仍须捕获。sum-bits 槽初始化 12190→12144、别名补写 1808→1762。普通/局部/闭合效果执行器、单写和 merge 仍有独立控制逻辑，不能把数据流接管视为整个 D2 已重写。配置期排序/临时来源集合没有单独分配计数或时间证据。",
       "evidence": [
         "docs/SPARSE_CELL_CPU.md",
         "benchmarks/cell-unification/effects.md",
         "benchmarks/cell-unification/effects-results.json",
-        "benchmarks/cell-unification/mixed-outputs-check.json"
+        "benchmarks/cell-unification/mixed-outputs-check.json",
+        "benchmarks/cell-unification/output-selection-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1837,7 +1838,7 @@
           }
         ]
       },
-      "gaps": "普通、局部、闭合 handoff 和结构性 capture 共用 Cell effect 槽。已覆盖输出在完成后保留原槽；别名和单写结果仍需填入，history 只保留后续需要的引用。槽位不提前发布，中止仅丢弃私有收据，不回滚已发生的图效果。未知边界和 legacy owner 尚未统一。新缓存、槽寻址、复制及未完成 RHS 成本须一并计费。 Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled. Cell Entry now rejects same-batch losers before visibility checks and slot maintenance; later batches validate again. Sum-bits receipt_attempts 11586→8472 with unchanged 9027 Entry probes and 8774 Cell output resolutions. Work separately charges those resolutions using cell_output_deliveries. On the same corrected basis, this step saves 3114 operations; cumulative work versus 3e622300 remains 920 operations higher. Neither change is a timing result.",
+      "gaps": "Cell effect 槽直接承担已覆盖输出；永久 Entry 由输出布局接管，删除/可见性及未知边界仍保留。Entry 先选择同批次胜者再验证；现在 Cell 布局还消除同一实际来源的较早发布，保留最后原 operation 及实际 donor。sum-bits 候选/Entry 探测 9027→8703，输出登记/读取/解析 8774→8450；实际发布、查询、历史与 Run 不变。仅 Eq 相等不能作为静态合并证明。当前等权账本本步节省 1666 项，相对混合输出前 3e622300 累计节省 746 项；这不是速度证据。未知边界、源 marker 物化、一般 Bake 组合及最终多线程验收仍未完成。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -1848,7 +1849,8 @@
         "benchmarks/cell-unification/effects.md",
         "benchmarks/cell-unification/effects-results.json",
         "benchmarks/cell-unification/mixed-outputs-check.json",
-        "benchmarks/cell-unification/publication-winners-check.json"
+        "benchmarks/cell-unification/publication-winners-check.json",
+        "benchmarks/cell-unification/output-selection-check.json"
       ],
       "status": "Cell 输出及 RHS receipt 数据流已统一；短样例语义和源顺序保持，分配下降；推理及整进程配对区间跨持平，尚未证明加速。",
       "introduced_in": "094fb2ed"
@@ -2875,7 +2877,7 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Prefix copied-slot credit also reflects dense witness storage; it remains an uncalibrated count of copied fields, not allocation or speed evidence. Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed. Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled. Work now charges all Cell output receipt registrations/slot reads/copies, receipt validation attempts, boundary records/reads/order checks and Cell visits. Fragment receipt/delivery-check subsets remain coverage and are not charged again; missing required cost fields fail closed. Cell Entry now rejects same-batch losers before visibility checks and slot maintenance; later batches validate again. Sum-bits receipt_attempts 11586→8472 with unchanged 9027 Entry probes and 8774 Cell output resolutions. Work separately charges those resolutions using cell_output_deliveries. On the same corrected basis, this step saves 3114 operations; cumulative work versus 3e622300 remains 920 operations higher. Neither change is a timing result.",
+      "gaps": "Work credit 是等权操作差值，不是纳秒模型。账本收费实际查询、字段写入、Free Join/Sieve 准备维护、历史、全部 Cell 输出登记/读取/补写/转发解析、实际 receipt 可见性检查、Entry 探测及边界维护；覆盖量、命中、拒绝和子集计数不重复收费，缺失必需字段拒绝评分。静态相同来源输出选择在当前口径节省 1666 项，混合输出改造以来相对 3e622300 累计节省 746 项；不能把初始化槽减少、命中率或少掉的校验另算为全部查找消失。训练/准备耗时、配置期临时集合与分配器全量数据、单优化边际 ablation 尚未统一入评分；新增临时布局成本待五提交测速检查。历史保留等结构容器计数不等于总分配字节。整体速度保持与最终并行验收尚未建立。",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
@@ -2887,7 +2889,8 @@
         "benchmarks/cell-unification/prefix-witness-check.json",
         "benchmarks/cell-unification/retention-check.json",
         "benchmarks/cell-unification/mixed-outputs-check.json",
-        "benchmarks/cell-unification/publication-winners-check.json"
+        "benchmarks/cell-unification/publication-winners-check.json",
+        "benchmarks/cell-unification/output-selection-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

@@ -1,0 +1,732 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/entry_schedule/stats/publication_candidate_checks": [
+      9027,
+      8703
+    ],
+    "/entry_schedule/stats/publication_loser_skips": [
+      3114,
+      2790
+    ],
+    "/entry_schedule/stats/publication_slot_probes": [
+      9027,
+      8703
+    ],
+    "/stage_spine/stats/alias_effect_forwards": [
+      335,
+      294
+    ],
+    "/stage_spine/stats/alias_query_forwards": [
+      1609,
+      1604
+    ],
+    "/stage_spine/stats/captured_anchors": [
+      12898,
+      12574
+    ],
+    "/stage_spine/stats/cell_output_checks": [
+      8774,
+      8450
+    ],
+    "/stage_spine/stats/cell_output_deliveries": [
+      8774,
+      8450
+    ],
+    "/stage_spine/stats/cell_output_receipts": [
+      8774,
+      8450
+    ],
+    "/stage_spine/stats/cell_output_slot_reads": [
+      8774,
+      8450
+    ],
+    "/stage_spine/stats/cell_output_slots": [
+      8774,
+      8450
+    ],
+    "/stage_spine/stats/effect_output_copies": [
+      1808,
+      1762
+    ],
+    "/stage_spine/stats/effect_outputs_reused": [
+      6966,
+      6688
+    ],
+    "/stage_spine/stats/effect_slots_initialized": [
+      12190,
+      12144
+    ],
+    "/stage_spine/stats/fragment_deliveries": [
+      6142,
+      5818
+    ],
+    "/stage_spine/stats/fragment_delivery_checks": [
+      6142,
+      5818
+    ],
+    "/stage_spine/stats/fragment_direct_inserts_avoided": [
+      6142,
+      5818
+    ],
+    "/stage_spine/stats/fragment_receipts": [
+      6142,
+      5818
+    ],
+    "/stage_spine/stats/unmaterialized_anchor_keys": [
+      11277,
+      10953
+    ]
+  },
+  "publication_net_saved_operations": 1666,
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "scope": "standalone Cell CPU; saved normal release work checks, no timing or allocator campaign",
+  "baseline_commit": "c07c314e",
+  "candidate_commit": "23d923e4",
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 331,
+  "changed_work_metrics": {
+    "report:/entry_schedule/stats/publication_candidate_checks [value]": [
+      {
+        "status": "observed",
+        "value": 9027
+      },
+      {
+        "status": "observed",
+        "value": 8703
+      }
+    ],
+    "report:/entry_schedule/stats/publication_loser_skips [value]": [
+      {
+        "status": "observed",
+        "value": 3114
+      },
+      {
+        "status": "observed",
+        "value": 2790
+      }
+    ],
+    "report:/entry_schedule/stats/publication_slot_probes [value]": [
+      {
+        "status": "observed",
+        "value": 9027
+      },
+      {
+        "status": "observed",
+        "value": 8703
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_checks [value]": [
+      {
+        "status": "observed",
+        "value": 8774
+      },
+      {
+        "status": "observed",
+        "value": 8450
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_deliveries [value]": [
+      {
+        "status": "observed",
+        "value": 8774
+      },
+      {
+        "status": "observed",
+        "value": 8450
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_receipts [value]": [
+      {
+        "status": "observed",
+        "value": 8774
+      },
+      {
+        "status": "observed",
+        "value": 8450
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_slot_reads [value]": [
+      {
+        "status": "observed",
+        "value": 8774
+      },
+      {
+        "status": "observed",
+        "value": 8450
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_slots [value]": [
+      {
+        "status": "observed",
+        "value": 8774
+      },
+      {
+        "status": "observed",
+        "value": 8450
+      }
+    ],
+    "report:/stage_spine/stats/effect_output_copies [value]": [
+      {
+        "status": "observed",
+        "value": 1808
+      },
+      {
+        "status": "observed",
+        "value": 1762
+      }
+    ],
+    "report:/stage_spine/stats/effect_outputs_reused [value]": [
+      {
+        "status": "observed",
+        "value": 6966
+      },
+      {
+        "status": "observed",
+        "value": 6688
+      }
+    ],
+    "report:/stage_spine/stats/effect_slots_initialized [value]": [
+      {
+        "status": "observed",
+        "value": 12190
+      },
+      {
+        "status": "observed",
+        "value": 12144
+      }
+    ],
+    "report:/stage_spine/stats/fragment_deliveries [value]": [
+      {
+        "status": "observed",
+        "value": 6142
+      },
+      {
+        "status": "observed",
+        "value": 5818
+      }
+    ],
+    "report:/stage_spine/stats/fragment_delivery_checks [value]": [
+      {
+        "status": "observed",
+        "value": 6142
+      },
+      {
+        "status": "observed",
+        "value": 5818
+      }
+    ],
+    "report:/stage_spine/stats/fragment_direct_inserts_avoided [value]": [
+      {
+        "status": "observed",
+        "value": 6142
+      },
+      {
+        "status": "observed",
+        "value": 5818
+      }
+    ],
+    "report:/stage_spine/stats/fragment_receipts [value]": [
+      {
+        "status": "observed",
+        "value": 6142
+      },
+      {
+        "status": "observed",
+        "value": 5818
+      }
+    ]
+  },
+  "before_mixed_commit": "3e622300",
+  "before_mixed": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {
+      "/entry_schedule/stats/publication_candidate_checks": [
+        7740,
+        8703
+      ],
+      "/entry_schedule/stats/publication_loser_skips": [
+        1827,
+        2790
+      ],
+      "/entry_schedule/stats/publication_pending_reuses": [
+        366,
+        123
+      ],
+      "/entry_schedule/stats/publication_slot_probes": [
+        7740,
+        8703
+      ],
+      "/stage_spine/stats/alias_effect_forwards": [
+        335,
+        294
+      ],
+      "/stage_spine/stats/alias_query_forwards": [
+        1609,
+        1604
+      ],
+      "/stage_spine/stats/captured_anchors": [
+        12898,
+        12574
+      ],
+      "/stage_spine/stats/cell_output_checks": [
+        6053,
+        8450
+      ],
+      "/stage_spine/stats/cell_output_deliveries": [
+        6053,
+        8450
+      ],
+      "/stage_spine/stats/cell_output_receipts": [
+        6053,
+        8450
+      ],
+      "/stage_spine/stats/cell_output_slot_reads": [
+        6053,
+        8450
+      ],
+      "/stage_spine/stats/cell_output_slots": [
+        6053,
+        8450
+      ],
+      "/stage_spine/stats/cell_output_spans": [
+        4079,
+        6365
+      ],
+      "/stage_spine/stats/completion_boundary_reads": [
+        1687,
+        253
+      ],
+      "/stage_spine/stats/completion_boundary_records": [
+        1687,
+        253
+      ],
+      "/stage_spine/stats/completion_order_checks": [
+        1262,
+        111
+      ],
+      "/stage_spine/stats/direct_publication_hash_probes": [
+        7573,
+        4680
+      ],
+      "/stage_spine/stats/effect_output_copies": [
+        1599,
+        1762
+      ],
+      "/stage_spine/stats/effect_outputs_reused": [
+        4454,
+        6688
+      ],
+      "/stage_spine/stats/effect_slots_initialized": [
+        12190,
+        12144
+      ],
+      "/stage_spine/stats/fragment_deliveries": [
+        3421,
+        5818
+      ],
+      "/stage_spine/stats/fragment_delivery_checks": [
+        3421,
+        5818
+      ],
+      "/stage_spine/stats/fragment_direct_inserts_avoided": [
+        3421,
+        5818
+      ],
+      "/stage_spine/stats/fragment_receipts": [
+        3421,
+        5818
+      ],
+      "/stage_spine/stats/peak_cell_output_slots": [
+        587,
+        872
+      ],
+      "/stage_spine/stats/receipt_attempts": [
+        10299,
+        8472
+      ],
+      "/stage_spine/stats/receipt_hits": [
+        10241,
+        8414
+      ],
+      "/stage_spine/stats/receipt_hits_by_source/effect": [
+        10241,
+        8414
+      ],
+      "/stage_spine/stats/receipt_redirects": [
+        448,
+        498
+      ],
+      "/stage_spine/stats/unmaterialized_anchor_keys": [
+        11277,
+        10953
+      ]
+    },
+    "publication_net_saved_operations": 746,
+    "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f"
+  },
+  "fixtures": {
+    "mixed-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "mixed-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "aliased-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "1f3f3b9b21f7d4fdc4c11b70847cef55b15963e872a313df3b15bd7c5d25b9ac",
+        "stages.json": "f5e523e6187379c89ef52493afcabd1014310e703bb30b3ccc5cd77e1a87b7d9",
+        "binding-audit.json": "98970179f0bc5d3245cccaeb799d1b7ce40e49febdf54af24034fcd9ad58a3d1"
+      },
+      "changed_work": {
+        "/stable_ports/stats/node_lookups": [
+          213,
+          209
+        ],
+        "/stable_ports/stats/port_reads": [
+          326,
+          322
+        ],
+        "/stable_ports/stats/root_parent_probes": [
+          374,
+          370
+        ],
+        "/stable_ports/stats/root_resolutions": [
+          326,
+          322
+        ],
+        "/stage_spine/stats/alias_effect_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/alias_query_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/captured_anchors": [
+          21,
+          15
+        ],
+        "/stage_spine/stats/effect_slots_initialized": [
+          25,
+          21
+        ],
+        "/storage/sealed_slot_reads": [
+          14,
+          12
+        ]
+      },
+      "publication_net_saved_operations": 6,
+      "program_sha256": "27be78cb16dded68e84e6a684a9f988bc020756fe9cd42f9e96c73fd612ea32e"
+    },
+    "aliased-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "1f3f3b9b21f7d4fdc4c11b70847cef55b15963e872a313df3b15bd7c5d25b9ac",
+        "stages.json": "f5e523e6187379c89ef52493afcabd1014310e703bb30b3ccc5cd77e1a87b7d9",
+        "binding-audit.json": "98970179f0bc5d3245cccaeb799d1b7ce40e49febdf54af24034fcd9ad58a3d1"
+      },
+      "changed_work": {
+        "/stable_ports/stats/node_lookups": [
+          215,
+          211
+        ],
+        "/stable_ports/stats/port_reads": [
+          332,
+          328
+        ],
+        "/stable_ports/stats/root_parent_probes": [
+          382,
+          378
+        ],
+        "/stable_ports/stats/root_resolutions": [
+          332,
+          328
+        ],
+        "/stage_spine/stats/alias_effect_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/alias_query_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/captured_anchors": [
+          21,
+          15
+        ],
+        "/stage_spine/stats/effect_slots_initialized": [
+          25,
+          21
+        ],
+        "/storage/sealed_slot_reads": [
+          14,
+          12
+        ]
+      },
+      "publication_net_saved_operations": 6,
+      "program_sha256": "27be78cb16dded68e84e6a684a9f988bc020756fe9cd42f9e96c73fd612ea32e"
+    },
+    "mixed-64-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "mixed-0-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {},
+      "publication_net_saved_operations": 0,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "aliased-64-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "1f3f3b9b21f7d4fdc4c11b70847cef55b15963e872a313df3b15bd7c5d25b9ac"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          19,
+          13
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          8,
+          2
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          19,
+          13
+        ],
+        "/stage_spine/stats/alias_effect_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/alias_query_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/captured_anchors": [
+          21,
+          15
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/effect_output_copies": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          7,
+          5
+        ],
+        "/stage_spine/stats/effect_slots_initialized": [
+          25,
+          21
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/unmaterialized_anchor_keys": [
+          15,
+          9
+        ]
+      },
+      "publication_net_saved_operations": 34,
+      "program_sha256": "27be78cb16dded68e84e6a684a9f988bc020756fe9cd42f9e96c73fd612ea32e"
+    },
+    "aliased-0-normal": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "1f3f3b9b21f7d4fdc4c11b70847cef55b15963e872a313df3b15bd7c5d25b9ac"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          19,
+          13
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          8,
+          2
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          19,
+          13
+        ],
+        "/stage_spine/stats/alias_effect_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/alias_query_forwards": [
+          4,
+          2
+        ],
+        "/stage_spine/stats/captured_anchors": [
+          21,
+          15
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          15,
+          9
+        ],
+        "/stage_spine/stats/effect_output_copies": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          7,
+          5
+        ],
+        "/stage_spine/stats/effect_slots_initialized": [
+          25,
+          21
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          12,
+          6
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/unmaterialized_anchor_keys": [
+          15,
+          9
+        ]
+      },
+      "publication_net_saved_operations": 34,
+      "program_sha256": "27be78cb16dded68e84e6a684a9f988bc020756fe9cd42f9e96c73fd612ea32e"
+    }
+  },
+  "tests": {
+    "layout": {
+      "passed": 3,
+      "sha256": "f8194db6983c759f713857d12f7c28dac8a0bf3ba66e094c72558618b077ad95"
+    },
+    "publications": {
+      "passed": 8,
+      "sha256": "cf0a5c0e94a17749a265c13ab2ec2280c7ae208e9bf88671fd5051dad7f0b87e"
+    },
+    "publications-all": {
+      "passed": 8,
+      "sha256": "4b24d3484fb1f09c13cb71532ffc5ef3248429db2ba57b798b95d0c13dc1fb68"
+    },
+    "witness": {
+      "passed": 8,
+      "sha256": "53ec315253b075d84115c856ec224f8c4829303d8b6da5051ba166bc033d3100"
+    },
+    "scoped": {
+      "passed": 12,
+      "sha256": "8e084bd43bb316febf91d30cd338f6152059a4a49ba2886dd1fc34ca556fe4ec"
+    }
+  },
+  "minimal_sha256": "663fe8e9b851a5072881f732a62d036fac89cb843c238c53ac5fcbe1fb08ab3d",
+  "scoped_sha256": "00ef84692aa40ee63253e39f6772b3052005212a93e42121629ec71ab86f9a30",
+  "relower_sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1",
+  "relower_components": 22,
+  "binaries": {
+    "baseline": "cf6306b7455e95c71d6ba4af1a1ff01149cfdc1fbc35ce1ea937c38a7983d312",
+    "candidate": "a429f054f56d8632431158718db73c7ce0b860e7bfd93a4d6ce2f1cd76f28b9a"
+  },
+  "fixture_manifest_sha256": {
+    "": "de81f98724925d19b2677f809c5c0a33383a04d01d7c56222024a0b41d71ee71",
+    "-normal": "48914b3272357d22c99bc5a4aab6053cd969580f5d74a10ce8e95f0edd914f83"
+  },
+  "removed": "Earlier permanent Entry outputs sharing the same proven query/effect receipt source. Last original operation remains the continuation address; donor receipt and demanded history slots remain live.",
+  "limits": "Selection runs while building the static Cell output layout, adding a temporary source set only for multi-output Cells with eligible aliases. Eq-only, mutable, deletable and uncovered boundaries remain; no instance index is added. Equal-weight work is not speed. Source marker materialization, general Bake composition and final parallel acceptance remain incomplete.",
+  "timing_cadence": {
+    "last_timed_commit": "acab2911",
+    "implementation_commits_since_timing": 4
+  }
+}

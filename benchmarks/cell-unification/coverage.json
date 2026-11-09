@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "acab2911",
-    "implementation_commits_since_timing": 3,
+    "implementation_commits_since_timing": 4,
     "evidence": "benchmarks/cell-unification/projection-candidates-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -51,7 +51,8 @@
         "Consumer dispatch transfers displaced original history on reset. Full witness reads borrow the original Cell Results just as residual prefixes do; the extra LocalWitness history handle and clone are removed.",
         "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed.",
         "Mixed Cells retain their permanent Entry-owned outputs as the first segment of the existing effect frame; boundary receipts remain transient. The whole-rule gate, covered receipt hashing and covered ready-boundary records are removed. Original effect positions still select the final publication.",
-        "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication."
+        "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication.",
+        "Cell output layout removes earlier permanent Entry publications with an identical proven actual receipt source, preserving the last original operation and demanded donor/history slots; no runtime alias index is added."
       ],
       "remaining": [
         "Source routing, physical fallback, current result slots and compiled continuation retention are shared. Legacy boundary publication ownership, wider path coverage and final performance acceptance still require integration.",
@@ -92,7 +93,8 @@
       "history_checks": "benchmarks/cell-unification/history-check.json",
       "retention_checks": "benchmarks/cell-unification/retention-check.json",
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
-      "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json"
+      "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     },
     {
       "id": "query",
@@ -218,7 +220,8 @@
         "Ordinary effects execute in the common Cell frame; source unions no longer reload and clone a second marker instruction.",
         "Read-only bound-effect proofs borrow original Cell operations through a dense operand layout; duplicate Expr/Arithmetic/Effect instructions and copied table/literal/operator semantics are removed. Checked integer execution is shared with the ordinary RHS.",
         "Mixed Cells retain their permanent Entry-owned outputs as the first segment of the existing effect frame; boundary receipts remain transient. The whole-rule gate, covered receipt hashing and covered ready-boundary records are removed. Original effect positions still select the final publication.",
-        "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication."
+        "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication.",
+        "Cell output layout removes earlier permanent Entry publications with an identical proven actual receipt source, preserving the last original operation and demanded donor/history slots; no runtime alias index is added."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
@@ -273,7 +276,8 @@
       "quick_checks": "benchmarks/cell-unification/handoff-check.json",
       "bound_effect_checks": "benchmarks/cell-unification/bound-check.json",
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
-      "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json"
+      "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     },
     {
       "id": "ports_congruence",
@@ -325,7 +329,8 @@
         "Source marker publication and typed cross-stage result/repair proofs share Cell Symbols for equality and congruence. The source adapter retains emission expressions and pre-resolved operand symbols; independent marker union-find and closure are removed.",
         "Source publication, typed producer-local projections and runtime query/Entry frames now use the same Cell Operand and Bindings semantics. Independent per-field matching is removed; source fields are lowered before candidate enumeration and variable names are borrowed.",
         "Source marker completion and typed local donor discovery share Cell row projection and first-equivalent uniqueness. Separate candidate binding loops and temporary uniqueness collections are removed. Operator filtering precedes typed frame cloning; source root enumeration retains deterministic deduplication.",
-        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed."
+        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed.",
+        "Cell output layout removes earlier permanent Entry publications with an identical proven actual receipt source, preserving the last original operation and demanded donor/history slots; no runtime alias index is added."
       ],
       "remaining": [
         "Unify source fragment selection and iterative Cell composition, derive consumer Entries and optional marker materialization boundaries from the same definitions, and remove the replaced boundary maintenance. Shared constructor-result propagation alone does not complete this takeover.",
@@ -336,7 +341,8 @@
       "binding_checks": "benchmarks/cell-unification/projection-binding-check.json",
       "candidate_checks": "benchmarks/cell-unification/projection-candidates-results.json",
       "retention_checks": "benchmarks/cell-unification/retention-check.json",
-      "publication_credit_checks": "benchmarks/cell-unification/mixed-outputs-check.json"
+      "publication_credit_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     },
     {
       "id": "multithread_after_rewrite",
@@ -488,7 +494,8 @@
       "evidence": "benchmarks/cell-unification/effects-results.json",
       "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; legacy union operands exist only in checked artifact projections, not executable port plans. The disabled-compiled-merge AST control remains for differential/storage tests.",
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
-      "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim."
+      "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim.",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     },
     {
       "id": "E1",
@@ -515,7 +522,8 @@
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
       "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim.",
       "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
-      "publication_winner_limits": "3114 receipt visibility checks removed in sum-bits; Entry probes and receipt resolution calls unchanged. Credit now separately charges each Cell output resolution. Under that common basis, cumulative publication work remains 920 operations above 3e622300; speed and complete unification remain unproven."
+      "publication_winner_limits": "3114 receipt visibility checks removed in sum-bits; Entry probes and receipt resolution calls unchanged. Credit now separately charges each Cell output resolution. Under that common basis, cumulative publication work remains 920 operations above 3e622300; speed and complete unification remain unproven.",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     },
     {
       "id": "F1",
@@ -630,7 +638,8 @@
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
       "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim.",
       "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
-      "publication_winner_limits": "3114 receipt visibility checks removed in sum-bits; Entry probes and receipt resolution calls unchanged. Credit now separately charges each Cell output resolution. Under that common basis, cumulative publication work remains 920 operations above 3e622300; speed and complete unification remain unproven."
+      "publication_winner_limits": "3114 receipt visibility checks removed in sum-bits; Entry probes and receipt resolution calls unchanged. Credit now separately charges each Cell output resolution. Under that common basis, cumulative publication work remains 920 operations above 3e622300; speed and complete unification remain unproven.",
+      "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",

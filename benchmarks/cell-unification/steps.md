@@ -563,3 +563,17 @@ Work 现在用已有 cell_output_deliveries 单独收费这条路径每次仍需
 sum-bits 1,428 个 Run、最终 state 保持，choice_diagnosis pass，22 个编译组件重新 lowering 一致。对象仍为 standalone Cell CPU，没有性能/分配器采样。产物 out/cell-publication-winners；复核 `python3 benchmarks/cell-unification/check_publication_winners.py ROOT OUTPUT --commit COMMIT`。当前使用同一源程序和冻结普通 release，并保留直接前版和混合输出之前的报告，使用同一成本口径比较。
 
 本次是 acab2911 后第 3 个实现提交。尚未删除 Entry 查找、重复候选的输出扫描或转发解析。下一处结构机会是 Cell 已有 static_sources：它描述真实的查询/效果来源，可用于证明某些输出必被同 Cell 的较晚输出覆盖；目前还没有据此删除发布。源码 marker 物化、一般 Bake 组合和最终多线程验收仍未完成。
+
+## Cell 布局删除必被较晚同源输出覆盖的发布
+
+上一目录有 9,027 个 Entry 候选，其中 3,114 个在当前批次落败；上一轮仅让它们跳过可见性校验。已有 static_sources 从成功匹配的 query 或实际执行的 effect 推导精确构造子别名，不把 `(Cell, operation)` 当成物理结果地址。本次把这个证明用于 Cell 输出布局：永久 Entry 输出若拥有相同 table 和实际来源，只留下原 RHS 顺序最后一次。删除较早输出的捕获、保留和投递，原效果执行及最后续执行位置不变。
+
+布局仍借用现有 Output/EffectPlan，不新增实例索引、历史副本或消费者列表。较早 effect 自己的发布被删除后，若它仍给最后别名提供实际 receipt，EffectPlan 继续捕获它；后续历史需求也继续生效。可删除/可隐藏表和未覆盖边界不参与消除，单纯 union 后 Eq 相等不构成同源证明。只有完整 RHS 完成才发布，中断仍丢弃私有结果。静态布局配置增加一次来源选择；只有多个输出且存在合格别名时才分配临时集合，其准备成本尚未单独测速。
+
+sum-bits 相对 c07c314e：捕获提案 12,898→12,574，Entry 探测 9,027→8,703，Cell 输出登记/读取/解析各 8,774→8,450，别名补写 1,808→1,762，初始化效果槽 12,190→12,144。实际发布写入、可见性校验、查询、图执行及历史工作不变。当前 Work 口径净节省 1,666 项等权操作；相对混合输出之前 3e622300 累计净节省 746 项。初始化槽与命中/覆盖等子集没有另加为 credit；这些数不是时间或全量分配结论。
+
+39 项相关测试和最小 feature 编译通过。新 aliased-cell-outputs.egg 覆盖同源重复输出、查询 donor、较早效果 donor、union、退役重建和 RHS 中断；完整配置同时比较有序效果/写入/续执行来源。正常模式此样例少 6 个候选、4 次补写，保留输出峰值槽 8→4；已有 mixed 样例仅因 union 相等的输出没有被误删，其全部工作计数保持。两样例在正常/全碰撞哈希下分别作审计和普通执行，16 个进程均小于 1 秒；所有 state、Run 顺序与适用的 stage/binding audit 一致。审计路径仍构造 key，少掉重复捕获后相应字段读取也减少，不把它当成普通发布路径的额外收益。
+
+sum-bits 的 1,428 个 Run、最终 state 保持，331 项目录指标不变、15 项相关工作指标改变；choice_diagnosis pass，22 个编译组件重新 lowering 一致。对象为 standalone Cell CPU。产物 out/cell-output-selection，复核 `python3 benchmarks/cell-unification/check_output_selection.py ROOT OUTPUT --commit COMMIT`。短样例用 emit_cell_source 分别编译 mixed-cell-outputs.egg 和 aliased-cell-outputs.egg 到 ROOT/fixture-mixed、ROOT/fixture-aliased，再调用 run_retention_fixtures.run(ROOT, ('mixed','aliased'), audit=True/False)。普通 release 使用 sparse-cells,view-ports,storage-metrics，测试构建另用独立 target。
+
+这是 acab2911 测速后的第 4 个实现提交，不另做速度采样。当前接管限于同一 Cell 的精确来源，跨 Cell 仍需 Entry 判断。后续优先消除 retained alias 对 donor receipt 的搬运；必须先保住 raw effect 历史与最后 operation 身份，不能简单把两个槽混为一份。源码 marker 物化、一般 Bake 组合、全局 Cell 选择以及最终多线程验收仍未完成。
