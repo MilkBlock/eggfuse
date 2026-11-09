@@ -1,0 +1,292 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "publication": {
+    "column_rows": 5585,
+    "header_only": 1690,
+    "headers": 7275,
+    "neighbor_rows": 190,
+    "range_rows": 0,
+    "row_reads": 4750,
+    "view_column_rows": 0
+  },
+  "neighbor_publication": {
+    "checked": 190,
+    "cleared": 0,
+    "nanoseconds": 0,
+    "refreshed": 33,
+    "retired": 5
+  },
+  "range_work": {
+    "broad_fallbacks": 0,
+    "build_rows": 0,
+    "builds": 0,
+    "changed_entries": 0,
+    "empty_domains": 0,
+    "hits": 0,
+    "input_rows": 0,
+    "invalidated_axes": 0,
+    "maintenance_ns": 0,
+    "mixed_prefixes": 0,
+    "output_rows": 0,
+    "partial_domains": 0,
+    "partial_input_rows": 0,
+    "partial_output_rows": 0,
+    "range_refs": 0,
+    "subset_checks": 0,
+    "update_rows": 0,
+    "uses": 0
+  },
+  "scope": "standalone Cell CPU; normal release; no timing or allocation campaign",
+  "baseline_commit": "cc472d0f",
+  "candidate_commit": "f6e44667",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context",
+    "publication",
+    "entry_schedule",
+    "view_consumers",
+    "view_storage"
+  ],
+  "unchanged_work_metric_values_or_missing_status": 346,
+  "fixtures": {
+    "neighbor-64": {
+      "runs": 8,
+      "ordered_hashes": {
+        "state.json": "403e19b91eceaf4212505d0087a932c43892f6535ee6955639b647c8bde21230",
+        "stages.json": "96c319d045f23748a3d968bc83b31fe11bc92db74ab3de9a18e719d5fefe7754",
+        "binding-audit.json": "d21fd11120b36139a38ac6ee74a9b2e11692240993e37a7f1fb58f5e328973f7"
+      },
+      "program_file_sha256": "5dd03453b36c6418e75c1b73bd6e909cd4fb88dabb3559bee84855d5327358f9",
+      "publication": {
+        "column_rows": 19,
+        "header_only": 1,
+        "headers": 20,
+        "neighbor_rows": 17,
+        "range_rows": 0,
+        "row_reads": 15,
+        "view_column_rows": 0
+      },
+      "neighbor_publication": {
+        "checked": 17,
+        "cleared": 0,
+        "nanoseconds": 0,
+        "refreshed": 3,
+        "retired": 2
+      },
+      "range_work": {
+        "broad_fallbacks": 0,
+        "build_rows": 0,
+        "builds": 0,
+        "changed_entries": 0,
+        "empty_domains": 0,
+        "hits": 0,
+        "input_rows": 0,
+        "invalidated_axes": 0,
+        "maintenance_ns": 0,
+        "mixed_prefixes": 0,
+        "output_rows": 0,
+        "partial_domains": 0,
+        "partial_input_rows": 0,
+        "partial_output_rows": 0,
+        "range_refs": 0,
+        "subset_checks": 0,
+        "update_rows": 0,
+        "uses": 0
+      }
+    },
+    "neighbor-0": {
+      "runs": 8,
+      "ordered_hashes": {
+        "state.json": "403e19b91eceaf4212505d0087a932c43892f6535ee6955639b647c8bde21230",
+        "stages.json": "96c319d045f23748a3d968bc83b31fe11bc92db74ab3de9a18e719d5fefe7754",
+        "binding-audit.json": "d21fd11120b36139a38ac6ee74a9b2e11692240993e37a7f1fb58f5e328973f7"
+      },
+      "program_file_sha256": "5dd03453b36c6418e75c1b73bd6e909cd4fb88dabb3559bee84855d5327358f9",
+      "publication": {
+        "column_rows": 19,
+        "header_only": 1,
+        "headers": 20,
+        "neighbor_rows": 17,
+        "range_rows": 0,
+        "row_reads": 15,
+        "view_column_rows": 0
+      },
+      "neighbor_publication": {
+        "checked": 17,
+        "cleared": 0,
+        "nanoseconds": 0,
+        "refreshed": 3,
+        "retired": 2
+      },
+      "range_work": {
+        "broad_fallbacks": 0,
+        "build_rows": 0,
+        "builds": 0,
+        "changed_entries": 0,
+        "empty_domains": 0,
+        "hits": 0,
+        "input_rows": 0,
+        "invalidated_axes": 0,
+        "maintenance_ns": 0,
+        "mixed_prefixes": 0,
+        "output_rows": 0,
+        "partial_domains": 0,
+        "partial_input_rows": 0,
+        "partial_output_rows": 0,
+        "range_refs": 0,
+        "subset_checks": 0,
+        "update_rows": 0,
+        "uses": 0
+      }
+    },
+    "range-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "25961ed7a7a7c88d242961886bd0c35f4114d44886ad4fac4405c9b73b87e165",
+        "stages.json": "087128d9365e0e56f5294cd7281db5b3bc5dc0583e35075c3152ca6605fe22df",
+        "binding-audit.json": "3b0de2355f8262650762ff246e94495aee81a26a7065b49773540be775e0a676"
+      },
+      "program_file_sha256": "00b0e928e93e5ccf1107c3d372e616972640c90afc0e6e283f9c80b13170afe6",
+      "publication": {
+        "column_rows": 6,
+        "header_only": 66,
+        "headers": 72,
+        "neighbor_rows": 0,
+        "range_rows": 4,
+        "row_reads": 5,
+        "view_column_rows": 0
+      },
+      "neighbor_publication": {
+        "checked": 0,
+        "cleared": 0,
+        "nanoseconds": 0,
+        "refreshed": 0,
+        "retired": 0
+      },
+      "range_work": {
+        "broad_fallbacks": 0,
+        "build_rows": 64,
+        "builds": 1,
+        "changed_entries": 4,
+        "empty_domains": 0,
+        "hits": 2,
+        "input_rows": 193,
+        "invalidated_axes": 0,
+        "maintenance_ns": 12041,
+        "mixed_prefixes": 2,
+        "output_rows": 112,
+        "partial_domains": 2,
+        "partial_input_rows": 128,
+        "partial_output_rows": 47,
+        "range_refs": 47,
+        "subset_checks": 128,
+        "update_rows": 4,
+        "uses": 3
+      }
+    },
+    "range-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "25961ed7a7a7c88d242961886bd0c35f4114d44886ad4fac4405c9b73b87e165",
+        "stages.json": "087128d9365e0e56f5294cd7281db5b3bc5dc0583e35075c3152ca6605fe22df",
+        "binding-audit.json": "3b0de2355f8262650762ff246e94495aee81a26a7065b49773540be775e0a676"
+      },
+      "program_file_sha256": "00b0e928e93e5ccf1107c3d372e616972640c90afc0e6e283f9c80b13170afe6",
+      "publication": {
+        "column_rows": 6,
+        "header_only": 66,
+        "headers": 72,
+        "neighbor_rows": 0,
+        "range_rows": 4,
+        "row_reads": 5,
+        "view_column_rows": 0
+      },
+      "neighbor_publication": {
+        "checked": 0,
+        "cleared": 0,
+        "nanoseconds": 0,
+        "refreshed": 0,
+        "retired": 0
+      },
+      "range_work": {
+        "broad_fallbacks": 0,
+        "build_rows": 64,
+        "builds": 1,
+        "changed_entries": 4,
+        "empty_domains": 0,
+        "hits": 2,
+        "input_rows": 193,
+        "invalidated_axes": 0,
+        "maintenance_ns": 13250,
+        "mixed_prefixes": 2,
+        "output_rows": 112,
+        "partial_domains": 2,
+        "partial_input_rows": 128,
+        "partial_output_rows": 47,
+        "range_refs": 47,
+        "subset_checks": 128,
+        "update_rows": 4,
+        "uses": 3
+      }
+    }
+  },
+  "fixture_runs_sha256": "0dfe6c909ca3b44774d188cf6e7137a0206162011f92f59d9135f494cba13bb0",
+  "tests": {
+    "neighbor-unit": {
+      "passed": 2,
+      "log_sha256": "70ba976ed43675a3042f12bc60f3a4d266cbc6ff1b1babf467f48b42a7861c09"
+    },
+    "neighbor-nonsparse": {
+      "passed": 2,
+      "log_sha256": "fd9dcda051eaf27e9acf68e91aea833683eaee1f2f7ab13ee52d3ee8c6edd6c4"
+    },
+    "neighbor": {
+      "passed": 1,
+      "log_sha256": "486e4ecded2d34d1f27337312898e8be37afad35d958af5fbed4bc2ab68031fb"
+    },
+    "view": {
+      "passed": 1,
+      "log_sha256": "a6ffc86ce89003c33afc4f8d23ec4aa305c01275c98cd75507002a2350bcf161"
+    },
+    "scoped": {
+      "passed": 1,
+      "log_sha256": "1dac4367aab2a5374c80dc83e76439c4f98799293d271fb6aca11f7970931dae"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "c5a5441bb1dbec76193d5647f9a7b6d033054c7b44a8077504c13582f4492033"
+    }
+  },
+  "scoped_executor": {
+    "source_sha256": "4d8a4bd15e42f8bf0716dee673cf0d3669ce10d1e270f96b83778c05eebc9c81",
+    "global_observer": false,
+    "published_tables_while_pending": 3,
+    "final_state_and_ordered_step_bindings_match": true
+  },
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  },
+  "binaries": {
+    "baseline": "f59c332fbbe3a89335dc4174d8cc5f2c44ac80316af8b23641b9ee2f88bd6a46",
+    "candidate": "3c95bb6caf4435512b156837f5de3f685c7cfdc87c1dd68cf444c6c07f1bd333"
+  },
+  "removed": "Neighbor subscribed-table vector/global version sweep and per-row Context lookup; range per-row table lookup/version writes. Columns, ranges and neighbor reads borrow table writers from the same repaired ChangeBatch and finish delivered tables only.",
+  "limits": "Current/old witness identity, same-key replacement, negative reads, axes and candidate groups remain necessary. No reverse-key maps or row work were claimed removed. Counters do not measure deleted subscriber scans, table lookups or version stores; unchanged work metrics are not a speed proof. New unit coverage exercises selective batches and shared row delivery in sparse/nonsparse builds; no multithread acceptance.",
+  "timing_cadence": {
+    "last_timed_commit": "cc472d0f",
+    "implementation_commits_since_timing": 1
+  }
+}

@@ -178,6 +178,12 @@
         "evidence": "benchmarks/cell-unification/view-query-results.json",
         "baseline_commit": "f9cea51c",
         "scope": "Borrowed driver/peer fields, expansion predicates, Unit guards, checked results and output projection. Keeps derived three-way dispatch, directories and source Run watermarks."
+      },
+      "read_publication": {
+        "status": "shared_cell_semantics_verified_performance_pending",
+        "evidence": "benchmarks/cell-unification/read-publication-check.json",
+        "baseline_commit": "cc472d0f",
+        "scope": "Columns, ordered ranges and demanded neighbor ports consume one repaired table batch and complete only the delivered table. Old-key identity and exact-row/group storage remain necessary."
       }
     },
     {
@@ -357,7 +363,8 @@
       "evidence": "benchmarks/cell-unification/links-check.json",
       "remaining": "Static shared-column wiring is common and Sieve preparation borrows it without cloning nested specs/rule targets. Range guards, dynamic join choice, local-context lifetime, candidate index lifecycle and runtime speed acceptance remain.",
       "sieve_preparation_checks": "benchmarks/cell-unification/sieve-results.json",
-      "leased_query_checks": "benchmarks/cell-unification/leased-query-check.json"
+      "leased_query_checks": "benchmarks/cell-unification/leased-query-check.json",
+      "read_publication_checks": "benchmarks/cell-unification/read-publication-check.json"
     },
     {
       "id": "B3",
@@ -384,7 +391,8 @@
         "scope": "Root/prefix/suffix instructions, compact values/witnesses, match completion, exact leased candidates and template/read-scope validity. Retains necessary per-root liveness leases and original schedule boundaries.",
         "evidence": "benchmarks/cell-unification/context-scope-check.json"
       },
-      "view_query_checks": "benchmarks/cell-unification/view-query-results.json"
+      "view_query_checks": "benchmarks/cell-unification/view-query-results.json",
+      "read_publication_checks": "benchmarks/cell-unification/read-publication-check.json"
     },
     {
       "id": "C1",

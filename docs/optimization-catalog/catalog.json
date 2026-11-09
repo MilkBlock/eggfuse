@@ -656,7 +656,8 @@
         "benchmarks/cell-unification/prefix-witness-check.json",
         "benchmarks/cell-unification/leased-query-check.json",
         "benchmarks/cell-unification/context-scope-check.json",
-        "benchmarks/cell-unification/view-query-results.json"
+        "benchmarks/cell-unification/view-query-results.json",
+        "benchmarks/cell-unification/read-publication-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
