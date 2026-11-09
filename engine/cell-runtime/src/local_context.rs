@@ -1,7 +1,7 @@
 //! Retain a connected prefix and expand its final table at the scheduled Run.
 //! Only correlated prefixes survive Run boundaries; terminal answers do not.
 use crate::{
-    cell::{Query, ScopedStep, bind_query as bind, query_operand as operand},
+    cell::{Field, Query, ScopedStep},
     entry_schedule::Scheduler,
     graph::{Dependency, Graph, Row},
     program::*,
@@ -17,14 +17,17 @@ use std::{
 
 #[derive(Debug, Clone)]
 pub(crate) struct Plan {
-    root: usize,
+    root: ScopedStep,
     ports: Vec<ScopedStep>,
     branching: bool,
-    tail: usize,
     columns: Vec<usize>,
     versions: Vec<usize>,
     identity_literal: bool,
     query: Query,
+}
+impl Plan {
+    fn root(&self) -> usize { self.root.step.atom }
+    fn tail(&self) -> usize { self.query.steps[0].atom }
 }
 #[path = "context_wire.rs"]
 mod wire;
@@ -124,7 +127,7 @@ fn project(
 ) -> Option<Plan> {
     let q = &r.query;
     let prefix = std::iter::once(root).chain(ports.iter().copied());
-    let (known, steps) = Query::scoped_prefix(r, root, &ports)?;
+    let (known, mut steps) = Query::scoped_prefix(r, root, &ports)?;
     let versions = prefix
         .filter_map(|i| match q[i].call {
             Call::Table(t) => Some(t),
@@ -133,12 +136,6 @@ fn project(
         .collect::<BTreeSet<_>>()
         .into_iter()
         .collect();
-    let columns = q[tail]
-        .args
-        .iter()
-        .enumerate()
-        .filter_map(|(i, a)| matches!(a,Arg::Slot(s) if known.contains(s)).then_some(i))
-        .collect();
     let identity_literal = q.iter().any(|a| {
         a.args
             .iter()
@@ -146,11 +143,12 @@ fn project(
     });
     let query = Query::continuation(r, std::iter::once(root).chain(ports.iter().copied()),
         &known, tail, &post)?;
+    let columns = query.steps[0].expansion.as_ref()?.bound.iter().filter_map(|(col, field)|
+        matches!(field, Field::Anchor(_)).then_some(*col)).collect();
     Some(Plan {
         branching: ports.iter().any(|&i| matches!(q[i].call, Call::Table(_))),
-        root,
+        root: steps.remove(0),
         ports: steps,
-        tail,
         columns,
         versions,
         identity_literal,
@@ -243,7 +241,7 @@ impl Contexts {
     }
     pub fn report(&self, program: &Program) -> serde_json::Value {
         let (cut_rules, cut_orientations) = program.context_cut_counts();
-        let plans = program.local_contexts.iter().enumerate().filter_map(|(rid,p)| p.as_ref().map(|p| serde_json::json!({"rule":rid,"root":p.root,"ports":p.ports.iter().map(|s| s.step.atom).collect::<Vec<_>>(),"terminal":p.tail}))).collect::<Vec<_>>();
+        let plans = program.local_contexts.iter().enumerate().filter_map(|(rid,p)| p.as_ref().map(|p| serde_json::json!({"rule":rid,"root":p.root(),"ports":p.ports.iter().map(|s| s.step.atom).collect::<Vec<_>>(),"terminal":p.tail()}))).collect::<Vec<_>>();
         serde_json::json!({"enabled":self.enabled,"root_limit":ROOT_LIMIT,"prefix_limit":PREFIX_LIMIT,"plans":plans,"general":self.general,"cut_rules":cut_rules,"cut_orientations":cut_orientations,"rules":self.stats})
     }
     pub fn matches(
@@ -269,10 +267,10 @@ impl Contexts {
             let best = g.program.context_cuts[rid]
                 .iter()
                 .filter_map(|p| {
-                    let roots = g.witness_count(table(&rule.query[p.root]));
-                    let tails = g.witness_count(table(&rule.query[p.tail]));
+                    let roots = g.witness_count(table(&rule.query[p.root()]));
+                    let tails = g.witness_count(table(&rule.query[p.tail()]));
                     (roots <= ROOT_LIMIT && roots <= tails)
-                        .then_some(((roots, std::cmp::Reverse(tails), p.root), p))
+                        .then_some(((roots, std::cmp::Reverse(tails), p.root()), p))
                 })
                 .min_by_key(|(score, _)| *score);
             let Some((_, p)) = best else {
@@ -282,9 +280,10 @@ impl Contexts {
             };
             p.clone()
         };
-        let root_table = table(&rule.query[plan.root]);
-        let tail = &rule.query[plan.tail];
-        let terminal = table(tail);
+        let root_table = table(&rule.query[plan.root()]);
+        let tail = &plan.query.steps[0];
+        let Call::Table(terminal) = tail.call else { unreachable!("terminal table") };
+        let expansion = tail.expansion.as_ref().expect("terminal expansion");
         let roots = g.witness_count(root_table);
         if roots > ROOT_LIMIT || roots > g.witness_count(terminal) {
             self.states.remove(&rid);
@@ -292,7 +291,7 @@ impl Contexts {
             return Ok(None);
         }
         let c = self.states.entry(rid).or_default();
-        let orientation = Some((plan.root, plan.tail));
+        let orientation = Some((plan.root(), plan.tail()));
         if c.orientation != orientation {
             *c = Context {
                 orientation,
@@ -356,8 +355,8 @@ impl Contexts {
                         leases: vec![],
                         outputs: vec![],
                     };
-                    if bind_row(g, &rule.query[plan.root], &row, &mut p.values) {
-                        p.witnesses[plan.root] = Some(w);
+                    if plan.root.bind_row(g, &row, p.values.as_mut_slice()) {
+                        p.witnesses[plan.root()] = Some(w);
                         stats.root_rebuilds += 1;
                         let complete = if plan.branching {
                             extend(g, ix, &plan.ports, &mut p,
@@ -397,11 +396,9 @@ impl Contexts {
             } else if changed || !previous.is_empty() {
                 c.groups.clear();
                 for p in c.roots.values().flat_map(|r| &r.outputs) {
-                    let key = plan
-                        .columns
-                        .iter()
-                        .map(|&col| operand(&tail.args[col], p.values.as_slice(), g).unwrap())
-                        .collect();
+                    let key = expansion.bound.iter().filter_map(|(_, field)|
+                        matches!(field, Field::Anchor(_)).then(||
+                            field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], None))).collect();
                     let group = c.groups.entry(key).or_default();
                     group.rows.push(p.clone());
                 }
@@ -419,7 +416,7 @@ impl Contexts {
             return Ok(None);
         }
         stats.calls += 1;
-        *stats.orientations.entry(plan.root).or_default() += 1;
+        *stats.orientations.entry(plan.root()).or_default() += 1;
         let mut answers = Vec::new();
         let pairs_before = stats.terminal_pairs;
         // New prefix facts can match old terminal rows. Stable prefixes only
@@ -430,11 +427,8 @@ impl Contexts {
             .filter(|b| b.rows.last().unwrap().epoch >= watermark)
         {
             let fresh = group.rows.partition_point(|p| p.epoch < watermark);
-            let bound = tail
-                .args
-                .iter()
-                .map(|a| operand(a, group.rows[0].values.as_slice(), g))
-                .collect::<Vec<_>>();
+            let bound = expansion.bind::<Vec<_>>(|field| field.read(g,
+                |slot| group.rows[0].values[slot].as_ref().unwrap(), &[], None));
             for &w in ix.candidates(g, terminal, &bound)?.iter() {
                 stats.full_terminal_rows += 1;
                 g.stats.residual_candidates += 1;
@@ -462,7 +456,7 @@ impl Contexts {
             .any(|b| b.rows.last().unwrap().epoch < watermark)
         {
             let before = stats.delta_terminal_rows;
-            let batch = entries.terminal_batch(g, rid, plan.tail, watermark)?;
+            let batch = entries.terminal_batch(g, rid, plan.tail(), watermark)?;
             let budget = self
                 .general
                 .then(|| batch.delta_len())
@@ -476,11 +470,8 @@ impl Contexts {
                     .values()
                     .filter(|b| b.rows.last().unwrap().epoch < watermark)
                 {
-                    let bound = tail
-                        .args
-                        .iter()
-                        .map(|a| operand(a, group.rows[0].values.as_slice(), g))
-                        .collect::<Vec<_>>();
+                    let bound = expansion.bind::<Vec<_>>(|field| field.read(g,
+                        |slot| group.rows[0].values[slot].as_ref().unwrap(), &[], None));
                     stats.reverse_groups += 1;
                     cost = cost.saturating_add(ix.count(g, terminal, &bound)?);
                     if cost >= budget {
@@ -540,15 +531,6 @@ impl Contexts {
         Ok(Some(answers))
     }
 }
-fn bind_row(g: &Graph, atom: &Atom, row: &Row, values: &mut [Option<Value>]) -> bool {
-    !row.hidden
-        && row.table == table(atom)
-        && atom
-            .args
-            .iter()
-            .zip(row.values.iter())
-            .all(|(arg, v)| bind(arg, v, values, g))
-}
 fn extend(
     g: &mut Graph,
     ix: &mut QueryIndexes,
@@ -581,10 +563,8 @@ fn extend(
     }
     let Call::Table(t) = step.call else { unreachable!() };
     let expansion = step.expansion.as_ref().expect("prefix expansion");
-    let mut bound = vec![None; expansion.width];
-    for (col, field) in &expansion.bound {
-        bound[*col] = Some(field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], None));
-    }
+    let bound = expansion.bind::<Vec<_>>(|field|
+        field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], None));
     if ix.count(g, t, &bound)? > PREFIX_LIMIT {
         return Ok(false);
     }
@@ -599,14 +579,7 @@ fn extend(
         g.stats.residual_candidates += 1;
         if let Some(row) = g.row(w)? {
             let (epoch, witness) = (p.epoch, p.witnesses[atom]);
-            let expanded = Some((0, &row));
-            let matches = !row.hidden && row.table == t && expansion.checks.iter().all(|(col, field)|
-                field.agrees(&row.values[*col], g, |slot| p.values[slot].as_ref().unwrap(), &[], expanded));
-            let result = if matches {
-                for (slot, field) in &scoped.bindings {
-                    let value = field.read(g, |slot| p.values[slot].as_ref().unwrap(), &[], expanded);
-                    p.values[*slot] = Some(value);
-                }
+            let result = if scoped.bind_row(g, &row, p.values.as_mut_slice()) {
                 p.witnesses[atom] = Some(w);
                 p.epoch = p.epoch.max(row.epoch);
                 extend(g, ix, rest, p, root, size, work_left, stats)
@@ -673,7 +646,7 @@ fn emit(
             |slot| p.values[slot].as_ref().unwrap(), &results, expanded)).collect();
         let witnesses = if save_witnesses {
             let mut w = p.witnesses.clone();
-            w[plan.tail] = Some(row.witness);
+            w[plan.tail()] = Some(row.witness);
             w
         } else {
             vec![]

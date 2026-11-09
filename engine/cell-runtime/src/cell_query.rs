@@ -142,6 +142,16 @@ pub(crate) struct Expansion {
     pub bound: Vec<(usize, Field)>,
     pub checks: Vec<(usize, Field)>,
 }
+impl Expansion {
+    /// Query indexes consume a sparse column key. Its source fields come from
+    /// the same Cell expansion used for row checks, regardless of frame storage.
+    pub(crate) fn bind<A: FromIterator<Option<Value>> + AsMut<[Option<Value>]>>(
+        &self, mut read: impl FnMut(&Field) -> Value) -> A {
+        let mut bound: A = std::iter::repeat_with(|| None).take(self.width).collect();
+        for (column, field) in &self.bound { bound.as_mut()[*column] = Some(read(field)); }
+        bound
+    }
+}
 /// A shared query instruction whose newly introduced fields are retained in
 /// the caller's original frame. These static writes are also its rollback scope;
 /// no per-branch trail or separate scalar interpreter is required.
@@ -149,6 +159,26 @@ pub(crate) struct Expansion {
 pub(crate) struct ScopedStep {
     pub step: Step,
     pub bindings: Vec<(usize, Field)>,
+}
+impl ScopedStep {
+    /// Scoped instructions only write newly introduced slots. Check the whole
+    /// candidate first (including repeated fields), then install its projection
+    /// into the existing frame. Root and internal rows have the same semantics.
+    pub(crate) fn bind_row<F: QueryFrame + ?Sized>(&self, g: &Graph, row: &Row, frame: &mut F) -> bool {
+        let Call::Table(table) = self.step.call else { unreachable!("scoped table") };
+        let expansion = self.step.expansion.as_ref().expect("scoped expansion");
+        let expanded = Some((0, row));
+        if row.hidden || row.table != table || !expansion.checks.iter().all(|(col, field)|
+            field.agrees(&row.values[*col], g, |slot| frame.slot(slot).unwrap(), &[], expanded)) {
+            return false;
+        }
+        for (slot, field) in &self.bindings {
+            debug_assert!(frame.slot(*slot).is_none(), "scoped Cell write overwrites a live binding");
+            let value = field.read(g, |slot| frame.slot(slot).unwrap(), &[], expanded);
+            frame.bind_slot(*slot, value);
+        }
+        true
+    }
 }
 /// Shared binding/checking instruction used by source entries and repair cells.
 /// The host supplies typed table/primitive capabilities; a failed predicate
@@ -333,12 +363,10 @@ impl Query {
     /// the existing frame; candidate rows never outlive their enumeration.
     pub(crate) fn scoped_prefix(rule: &Rule, pivot: usize, order: &[usize])
         -> Option<(std::collections::BTreeSet<usize>, Vec<ScopedStep>)> {
-        let mut sources = rule.query.get(pivot)?.args.iter().filter_map(|a| match a {
-            Arg::Slot(s) => Some((*s, Field::Anchor(*s))), _ => None,
-        }).collect::<BTreeMap<_, _>>();
-        let mut seen = std::collections::BTreeSet::from([pivot]);
-        let mut steps = Vec::with_capacity(order.len());
-        for &atom in order {
+        let mut sources = BTreeMap::new();
+        let mut seen = std::collections::BTreeSet::new();
+        let mut steps = Vec::with_capacity(order.len() + 1);
+        for atom in std::iter::once(pivot).chain(order.iter().copied()) {
             if !seen.insert(atom) { return None; }
             let access = match rule.query.get(atom)?.call {
                 Call::Table(_) => Access::Expand, Call::Primitive(..) => Access::Primitive,

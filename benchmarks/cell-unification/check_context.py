@@ -46,13 +46,15 @@ def check_prefix(root, commit, phase="prefix"):
                         if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     assert metrics[0] == metrics[1]
     fixtures = {}
-    for name in ('branches', 'terminal'):
+    for name in (('branches', 'terminal', 'roots') if phase == 'root' else ('branches', 'terminal')):
         path = root / f'fixture-{name}'
         fixtures[name] = pair(path, path / 'program.json', ('baseline', 'candidate'))
         assert any(row['calls'] > 0 for row in fixtures[name]['context_work'].values())
         fixtures[name]['source_sha256'] = sha(Path(__file__).resolve().with_name(f'context-{name}.egg'))
     tests = {}
-    for name, count in (('query', 3), ('context', 1), ('cuts', 1), ('budget', 1), ('entry', 1)):
+    checks = [('query', 3), ('context', 1), ('cuts', 1), ('budget', 1), ('entry', 1)]
+    if phase == 'root': checks.append(('witness', 8))
+    for name, count in checks:
         path = root / f'test-{name}.log'
         passed = re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text())
         assert sum(map(int, passed)) == count, name
@@ -61,13 +63,27 @@ def check_prefix(root, commit, phase="prefix"):
     assert 'Finished `dev` profile' in path.read_text()
     tests['minimal'] = {'status': 'pass', 'log_sha256': sha(path)}
     result = dict(result, scope='standalone Cell CPU; normal release; no timing or allocation audit',
-        baseline_commit='c8ef6edc' if phase == 'selection' else '0b3231c2', candidate_commit=commit, semantic_acceptance='pass',
+        baseline_commit={'prefix': '0b3231c2', 'selection': 'c8ef6edc', 'root': '30394de0'}[phase], candidate_commit=commit, semantic_acceptance='pass',
         unchanged_report_groups=GROUPS, unchanged_work_metrics=len(metrics[0]),
         fixtures=fixtures, tests=tests,
         binaries={lane: sha(root / f'runtime-{lane}') for lane in ('baseline', 'candidate')},
-        timing_cadence={'last_timed_commit': 'c8ef6edc' if phase == 'selection' else '7f4e24c2',
-                       'implementation_commits_since_timing': 1 if phase == 'selection' else 4},
+        timing_cadence={'last_timed_commit': '7f4e24c2' if phase == 'prefix' else 'c8ef6edc',
+                       'implementation_commits_since_timing': {'prefix': 4, 'selection': 1, 'root': 2}[phase]},
         limits='Cell instruction lowering, field reads and scalar binding now cover retained prefixes. Cached prefix storage, admission, indexes, root binding and Run invalidation remain necessary. Existing counters do not count the removed Arg decoding or scalar Vec allocation; no numeric savings or speedup inferred.')
+    if phase == 'root':
+        program = load(root / 'sum/program.json')
+        audit = load(root / 'relower.json')
+        assert audit['status'] == 'pass' and audit['program_sha256'] == program['sha256']
+        result['relower'] = {'components': len(audit['components']), 'sha256': sha(root / 'relower.json')}
+        fp = load(root / 'fixture-roots/program.json')
+        fr = load(root / 'fixture-roots/candidate/report.json')
+        for rid, row in fr['local_context']['rules'].items():
+            if not row['calls']: continue
+            for atom in row['orientations']:
+                args = fp['recipe']['rules'][int(rid)]['query'][int(atom)]['args']
+                slots = [a['slot'] for a in args if 'slot' in a]
+                assert len(slots) > len(set(slots)), 'fixture must exercise a repeated-field root'
+        result['limits'] = ('Root and internal context rows use the same scoped Cell binder; candidate domains use common Expansion fields with register queries. All context Arg interpretation is removed. Static root instructions add metadata; existing counters do not measure this footprint or removed interpretation. Context retention, index lifetime and full speed acceptance remain pending.')
     if phase == 'selection':
         program = load(root / 'sum/program.json')
         all_cuts = program['context_cuts']
@@ -92,7 +108,7 @@ def check_prefix(root, commit, phase="prefix"):
 
 
 def check(root, commit, phase='branches'):
-    if phase in ('prefix', 'selection'):
+    if phase in ('prefix', 'selection', 'root'):
         return check_prefix(root, commit, phase)
     terminal = phase == 'terminal'
     counters = TERMINAL if terminal else COUNTERS
@@ -199,6 +215,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
-    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection'), default='branches')
+    p.add_argument('--phase', choices=('branches', 'terminal', 'prefix', 'selection', 'root'), default='branches')
     args = p.parse_args()
     args.output.write_text(json.dumps(check(args.root, args.commit, args.phase), indent=2) + '\n')

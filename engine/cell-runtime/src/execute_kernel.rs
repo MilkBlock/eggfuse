@@ -239,11 +239,8 @@ impl Frame {
                 let refs = if let Some(domain) = domains.iter().find(|d| d.atom == ins.atom) {
                     domain.rows.clone()
                 } else {
-                    let mut bound = smallvec::smallvec![None; expansion.width];
-                    for (col, arg) in &expansion.bound {
-                        bound[*col] = Some(arg.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
-                    }
-                    let bound: SmallVec<[Option<Value>; 6]> = bound;
+                    let bound = expansion.bind::<SmallVec<[Option<Value>; 6]>>(|field|
+                        field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
                     exec.query_indexes.candidates(&exec.graph, t, &bound)?
                 };
                 #[cfg(feature = "sparse-cells")]
