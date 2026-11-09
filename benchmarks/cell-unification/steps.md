@@ -276,3 +276,17 @@ Cell QueryLinks 在装载原 query 后编译一次，并随 Program 共享。Fre
 四项短集成检查通过：`keyed_context_tracks_correlated_ports_and_late_terminal_deltas`、`connected_cuts_span_chains_and_transfer_evidence_to_renamed_relations`、`free_join_preserves_cyclic_matches_and_late_rows_under_collisions`、`complete_stage_blocks_keep_guards_missing_ports_and_cross_run_receipts`；同时通过 no-default-features 编译。普通 sum-bits 语义 pass，1,428 个 Run、最终状态、339 项工作指标的值/缺失状态及完整 context/Spine/过滤计数保持。构建未改变产物，不把同计数或共享接口当成速度证明。
 
 输出保存于 `out/cell-query-frame`。普通 release 构建、sum 和 semantic/catalog 命令沿用前节；`python3 benchmarks/cell-unification/check_links.py out/cell-query-frame OUTPUT --commit COMMIT --phase query-frame` 只校验已有结果。此步是下一周期第 1 个实现提交，不新增时间/分配采样，之前的速度回退仍待解决。
+
+## Cell 静态作用域代替逐候选 prefix 复制
+
+接续 `7b8ed749`。context 原先在每个候选行的完整判断之前复制所有绑定和见证数组，即使该候选随后被重复变量、字面量或标量 guard 拒绝。现在由原 Cell query 和已确定的 prefix 顺序编译每步首次引入的槽位；这次扫描同时生成原 terminal 投影需要的 known 集合，删除原来的独立集合构造。作用域只保存在共享 Plan 中，不进入产物的第二套字段协议。
+
+枚举期间复用一份临时 prefix，继续调用共同 Cell binder；子分支结束时清理其静态槽位，恢复当前 atom 的 witness 和进入分支前的 epoch。只在成功叶子进入缓存时复制完整快照；没有枚举表的 prefix 仍直接移动进缓存，避免给原来零复制的路径增加复制。普通动态 join 的 trail 不变；固定顺序的 context 不需要新增逐实例 undo 列表或反向依赖。早期失败尚未赋值的槽也会清理并计费，祖先槽绝不在当前 scope 内。
+
+为避免把旧缺失计数当零，先给旧源码打 `context-copy-baseline.patch`，只增加 `prefix_copies/prefix_slots_copied/branch_slot_clears` 三项计数，冻结普通构建的二进制。它的 Run、最终状态和已有统计与未插桩 `7b8ed749` 一致。复制槽数包括值数组和 witness 数组中的空位；它不是 allocator 调用数、字节数或已提交 mutation。新路径的清理成本同时加入 Bake 的聚合账本，缺失必要字段即拒绝评分；账本回归确认复制减少但清理更多时不能得正分。
+
+sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其余 339 项工作指标、1,428 个 Run、最终状态以及完整 context/Spine/过滤统计保持，既有语义验收 pass。新增短样例 `context-branches.egg` 覆盖失败的 prefix guard、兄弟分支、删除后重建及晚到 terminal；前后逐 Run state 和 binding audit 完全一致。其有分支路径复制 10→7、槽位 150→105，新增 40 次清理；无分支标量 prefix 两版均零复制、零清理。样例显式启用编译器已验证的 cuts，仅用于正确性/工作量检查，不是性能训练证据。
+
+三项已有 context/cuts/超预算恢复集成检查、四项 Work 账本检查及最小特性编译通过。新增静态 scope 数组有准备和存储成本，标量 epoch/witness 保存恢复也有成本；等权复制/清理计数不是完整指令成本或速度模型。成功缓存、ReadStamp、终端 post-guard 的槽复制仍必要或待后续统一。本步不测速度/分配，是当前周期第 2 个实现提交。
+
+复现基线：在隔离的 `7b8ed749` 工作树应用 `context-copy-baseline.patch`，使用普通 release 特性 `sparse-cells,view-ports,storage-metrics` 构建并冻结 `runtime-baseline`；`runtime-original` 为未插桩版本，`runtime-candidate` 为本步版本。输出目录 `out/cell-context-branches`；sum 和 semantic/catalog 命令沿用前节。`run_context_fixture.py ROOT --compiler COMPILER` 在新的 fixture 目录编译并运行两版短样例；`check_context.py ROOT OUTPUT --commit COMMIT` 校验已有运行、计数来源、插桩差异、逐阶段输出和测试日志，不重复启动负载。

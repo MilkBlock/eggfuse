@@ -56,6 +56,23 @@ pub(crate) fn bind_query<F: QueryFrame + ?Sized>(a: &Arg, value: &Value, frame: 
     }
 }
 
+/// Slots introduced by each step of an ordered Cell prefix. Matching only
+/// assigns previously unbound slots, so these static scopes also describe
+/// exactly what a failed/completed branch may clear. No instance trail is
+/// needed when the atom order is already fixed by the template.
+pub(crate) fn query_scopes(query: &[Atom], pivot: usize, order: &[usize])
+    -> (std::collections::BTreeSet<usize>, Vec<Vec<usize>>) {
+    let mut known = query[pivot].args.iter().filter_map(|a| match a {
+        Arg::Slot(s) => Some(*s), Arg::Literal(_) => None,
+    }).collect::<std::collections::BTreeSet<_>>();
+    let scopes = order.iter().map(|&atom| {
+        query[atom].args.iter().filter_map(|a| match a {
+            Arg::Slot(s) if known.insert(*s) => Some(*s), _ => None,
+        }).collect()
+    }).collect();
+    (known, scopes)
+}
+
 #[derive(Clone, Debug, Serialize)]
 pub(crate) enum Field {
     Anchor(usize),

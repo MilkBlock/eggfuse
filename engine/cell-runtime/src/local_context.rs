@@ -19,6 +19,11 @@ use std::{
 pub(crate) struct Plan {
     root: usize,
     ports: Vec<usize>,
+    // Derived from the same checked Cell query, not another artifact contract.
+    #[serde(skip)]
+    scopes: Vec<Vec<usize>>,
+    #[serde(skip)]
+    branching: bool,
     tail: usize,
     columns: Vec<usize>,
     versions: Vec<usize>,
@@ -145,7 +150,7 @@ fn project(
 ) -> Option<Plan> {
     let q = &r.query;
     let prefix = std::iter::once(root).chain(ports.iter().copied());
-    let known: BTreeSet<_> = prefix.clone().flat_map(|i| slots(&q[i].args)).collect();
+    let (known, scopes) = crate::cell::query_scopes(q, root, &ports);
     let versions = prefix
         .filter_map(|i| match q[i].call {
             Call::Table(t) => Some(t),
@@ -195,6 +200,8 @@ fn project(
         vec![]
     };
     Some(Plan {
+        scopes,
+        branching: ports.iter().any(|&i| matches!(q[i].call, Call::Table(_))),
         root,
         ports,
         tail,
@@ -249,6 +256,9 @@ pub(crate) struct Stats {
     root_reuses: u64,
     port_probes: u64,
     port_candidates: u64,
+    prefix_copies: u64,
+    prefix_slots_copied: u64,
+    branch_slot_clears: u64,
     full_terminal_rows: u64,
     delta_terminal_rows: u64,
     reverse_reads: u64,
@@ -401,17 +411,20 @@ impl Contexts {
                     if bind_row(g, &rule.query[plan.root], &row, &mut p.values) {
                         p.witnesses[plan.root] = Some(w);
                         stats.root_rebuilds += 1;
-                        if !extend(
-                            g,
-                            ix,
-                            &rule,
-                            &plan.ports,
-                            p,
-                            &mut root,
-                            size,
-                            &mut work_left,
-                            stats,
-                        )? {
+                        let complete = if plan.branching {
+                            extend(g, ix, &rule, &plan.ports, &plan.scopes, &mut p,
+                                &mut root, size, &mut work_left, stats)?
+                        } else if size + root.leases.len() + root.outputs.len() >= PREFIX_LIMIT {
+                            false
+                        } else {
+                            // With no enumerated prefix table there are no
+                            // siblings: keep the original move into the cache.
+                            if finish_guards(g, &rule, &plan.ports, &mut p.values)? {
+                                root.outputs.push(Rc::new(p));
+                            }
+                            true
+                        };
+                        if !complete {
                             c.blocked = true;
                             break;
                         }
@@ -589,7 +602,8 @@ fn extend(
     ix: &mut QueryIndexes,
     r: &Rule,
     ports: &[usize],
-    p: Prefix,
+    scopes: &[Vec<usize>],
+    p: &mut Prefix,
     root: &mut Root,
     size: usize,
     work_left: &mut usize,
@@ -599,16 +613,21 @@ fn extend(
         return Ok(false);
     }
     let Some((&atom, rest)) = ports.split_first() else {
-        root.outputs.push(Rc::new(p));
+        // Only retained successful prefixes need independent storage.
+        stats.prefix_copies += 1;
+        stats.prefix_slots_copied += (p.values.len() + p.witnesses.len()) as u64;
+        root.outputs.push(Rc::new(p.clone()));
         return Ok(true);
     };
+    let (scope, scopes) = scopes.split_first().expect("Cell prefix scope");
     let a = &r.query[atom];
     if matches!(a.call, Call::Primitive(..)) {
-        let mut p = p;
-        if !finish_guards(g, r, &[atom], &mut p.values)? {
-            return Ok(true);
-        }
-        return extend(g, ix, r, rest, p, root, size, work_left, stats);
+        let result = (|| {
+            if !finish_guards(g, r, &[atom], &mut p.values)? { return Ok(true); }
+            extend(g, ix, r, rest, scopes, p, root, size, work_left, stats)
+        })();
+        clear_scope(p, scope, stats);
+        return result;
     }
     let t = table(a);
     let bound = a
@@ -629,17 +648,26 @@ fn extend(
         stats.port_candidates += 1;
         g.stats.residual_candidates += 1;
         if let Some(row) = g.row(w)? {
-            let mut child = p.clone();
-            if bind_row(g, a, &row, &mut child.values) {
-                child.witnesses[atom] = Some(w);
-                child.epoch = child.epoch.max(row.epoch);
-                if !extend(g, ix, r, rest, child, root, size, work_left, stats)? {
-                    return Ok(false);
-                }
-            }
+            let (epoch, witness) = (p.epoch, p.witnesses[atom]);
+            let result = if bind_row(g, a, &row, &mut p.values) {
+                p.witnesses[atom] = Some(w);
+                p.epoch = p.epoch.max(row.epoch);
+                extend(g, ix, r, rest, scopes, p, root, size, work_left, stats)
+            } else { Ok(true) };
+            clear_scope(p, scope, stats);
+            p.witnesses[atom] = witness;
+            p.epoch = epoch;
+            if !result? { return Ok(false); }
         }
     }
     Ok(true)
+}
+#[inline]
+fn clear_scope(p: &mut Prefix, slots: &[usize], stats: &mut Stats) {
+    // Some fields may not have been assigned before a predicate failed. Clear
+    // the compiled scope anyway; it never contains a parent/sibling binding.
+    stats.branch_slot_clears += slots.len() as u64;
+    for &slot in slots { p.values[slot] = None; }
 }
 fn emit(
     g: &mut Graph,

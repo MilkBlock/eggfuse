@@ -55,6 +55,18 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Static Cell scopes replace candidate-prefix copies with slot clears.
+        // Charge both paths, summing rules so changing context admission cannot
+        // hide work by adding/removing a per-rule key from the comparison.
+        let contexts = report["local_context"]["rules"].as_object()
+            .ok_or("missing context work report")?;
+        for field in ["prefix_copies", "prefix_slots_copied", "branch_slot_clears"] {
+            let mut total = 0;
+            for stats in contexts.values() {
+                total += stats[field].as_u64().ok_or_else(|| format!("missing context work {field}"))?;
+            }
+            work.insert(format!("local_context/{field}"), total);
+        }
         // Positive receipt/prefix hits and *_avoided are outcomes, not negative
         // work. Actual lookup savings already lower key_lookup_calls (including
         // PointPorts hits that never queried the graph). Spine donor reads are
@@ -249,6 +261,19 @@ mod tests {
         executor.execute().unwrap();
         let report = executor.report();
         let baseline = Work::read(&report).unwrap();
+        let mut context = report.clone();
+        context["local_context"]["rules"]["scope-ledger"] = json!({
+            "prefix_copies": 1, "prefix_slots_copied": 8, "branch_slot_clears": 0,
+        });
+        let copied = Work::read(&context).unwrap();
+        assert_eq!(baseline.savings(&copied).0, -9);
+        context["local_context"]["rules"]["scope-ledger"] = json!({
+            "prefix_copies": 0, "prefix_slots_copied": 0, "branch_slot_clears": 10,
+        });
+        // Replacing a copy with more charged clears must not earn credit.
+        assert_eq!(copied.savings(&Work::read(&context).unwrap()).0, -1);
+        context["local_context"]["rules"]["scope-ledger"].as_object_mut().unwrap().remove("branch_slot_clears");
+        assert!(Work::read(&context).unwrap_err().contains("missing context work branch_slot_clears"));
         // Start from a real complete report, then isolate ledger behavior. This
         // is an accounting regression, not a synthetic performance result.
         let bump = |report: &mut J, key: &str| {

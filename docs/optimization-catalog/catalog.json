@@ -576,6 +576,21 @@
             "source": "report",
             "pointer": "/view_consumers/port_payload_deliveries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/local_context/rules/*/prefix_copies",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/local_context/rules/*/prefix_slots_copied",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/local_context/rules/*/branch_slot_clears",
+            "reduce": "sum"
           }
         ],
         "coverage": [
@@ -596,7 +611,7 @@
           }
         ]
       },
-      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; context storage/branch copies and terminal projections remain to integrate.",
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage and terminal projections remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds.",
       "evidence": [
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",

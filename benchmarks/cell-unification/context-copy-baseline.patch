@@ -1,0 +1,23 @@
+diff --git a/engine/cell-runtime/src/local_context.rs b/engine/cell-runtime/src/local_context.rs
+index 6e805208..e1755b1b 100644
+--- a/engine/cell-runtime/src/local_context.rs
++++ b/engine/cell-runtime/src/local_context.rs
+@@ -249,6 +249,9 @@ pub(crate) struct Stats {
+     root_reuses: u64,
+     port_probes: u64,
+     port_candidates: u64,
++    prefix_copies: u64,
++    prefix_slots_copied: u64,
++    branch_slot_clears: u64,
+     full_terminal_rows: u64,
+     delta_terminal_rows: u64,
+     reverse_reads: u64,
+@@ -629,6 +632,8 @@ fn extend(
+         stats.port_candidates += 1;
+         g.stats.residual_candidates += 1;
+         if let Some(row) = g.row(w)? {
++            stats.prefix_copies += 1;
++            stats.prefix_slots_copied += (p.values.len() + p.witnesses.len()) as u64;
+             let mut child = p.clone();
+             if bind_row(g, a, &row, &mut child.values) {
+                 child.witnesses[atom] = Some(w);
