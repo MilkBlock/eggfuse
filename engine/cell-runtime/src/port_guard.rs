@@ -103,17 +103,33 @@ impl ReadView<'_> {
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
         self.read_port_counted(port).map(|(value, _)| value)
     }
-    fn read_port_counted(&self, port: PortRef) -> Result<(Value, u64)> {
-        let id = self
+    pub(super) fn read_port_counted(&self, port: PortRef) -> Result<(Value, u64)> {
+        let signals = &self
             .components
             .get(port.component as usize)
             .and_then(Option::as_ref)
-            .and_then(|c| c.signals.get(port.symbol))
+            .ok_or("expired stable port")?
+            .signals;
+        let (id, probes) = self.read_symbol(signals, port.symbol)?;
+        Ok((Value::Eq(id), probes))
+    }
+    fn read_symbol(&self, signals: &[Option<u64>], symbol: usize) -> Result<(u64, u64)> {
+        let id = signals
+            .get(symbol)
             .copied()
             .flatten()
             .ok_or("expired stable port")?;
-        let (id, probes) = self.parents.root_counted(id);
-        Ok((Value::Eq(id), probes))
+        Ok(self.parents.root_counted(id))
+    }
+    pub(super) fn field_value(&self, field: &Field, meter: bool, work: &mut Work) -> Result<Value> {
+        field.value(|port| {
+            let (value, probes) = self.read_port_counted(port)?;
+            if meter {
+                work.port_reads += 1;
+                work.parent_probes += probes;
+            }
+            Ok(value)
+        })
     }
 
     fn field_matches(&self, field: &Field, value: &Value, work: &mut Work) -> Result<bool> {
@@ -176,13 +192,8 @@ impl ReadView<'_> {
             }
             work.equality_guards += 1;
             let mut resolve = |symbol: usize| -> Result<u64> {
-                let id = signals
-                    .get(symbol)
-                    .copied()
-                    .flatten()
-                    .ok_or("expired stable port")?;
+                let (id, probes) = self.read_symbol(signals, symbol)?;
                 work.port_reads += 1;
-                let (id, probes) = self.parents.root_counted(id);
                 work.parent_probes += probes;
                 Ok(id)
             };
@@ -258,20 +269,22 @@ impl Graph {
         }))
     }
 
+    pub(super) fn record_port_reads(&self, reads: u64, probes: u64) {
+        let stats = self.stable_ports.as_ref().unwrap();
+        stats.port_reads.set(stats.port_reads.get() + reads);
+        stats
+            .root_resolutions
+            .set(stats.root_resolutions.get() + reads);
+        stats
+            .root_parent_probes
+            .set(stats.root_parent_probes.get() + probes);
+    }
     pub(super) fn record_guard_reads(&self, work: &Work) {
+        self.record_port_reads(work.port_reads, work.parent_probes);
         let stats = self.stable_ports.as_ref().unwrap();
         stats
             .node_lookups
             .set(stats.node_lookups.get() + work.node_lookups);
-        stats
-            .port_reads
-            .set(stats.port_reads.get() + work.port_reads);
-        stats
-            .root_resolutions
-            .set(stats.root_resolutions.get() + work.port_reads);
-        stats
-            .root_parent_probes
-            .set(stats.root_parent_probes.get() + work.parent_probes);
         stats
             .key_field_comparisons
             .set(stats.key_field_comparisons.get() + work.key_fields);

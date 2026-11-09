@@ -207,7 +207,8 @@
         "Cell coverage derives from shared port fields; per-marker body arrays and active flags removed. Legacy artifact fields are transient source projections only.",
         "Port wiring, deferred local-union repair and cross-stage handoff share one Cell symbol allocator, equality solver and constructor closure; donor-index invalidation remains a compile-time observer.",
         "Port wiring and local repair scan source Copy/constructor operations once through the same builder; the duplicate constructor-port copy and retained local-union operands are removed.",
-        "Canonical symbol keys share inline storage in closure and the handoff donor index; templates without source unions skip inapplicable repair analysis before allocating symbols."
+        "Canonical symbol keys share inline storage in closure and the handoff donor index; templates without source unions skip inapplicable repair analysis before allocating symbols.",
+        "Coordinator row/column reads and worker guards resolve ports through one immutable Cell read view; row counters accumulate locally without a second binding or equality traversal implementation."
       ],
       "remaining": [
         "Unify remaining table footprints, stable-port lifecycle, incidence routing and equality-condition execution around Cell definitions; unknown boundaries still require complete handling.",

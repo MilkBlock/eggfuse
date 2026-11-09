@@ -32,6 +32,14 @@ enum Field {
     Port(PortRef),
     Scalar(Value),
 }
+impl Field {
+    fn value(&self, port: impl FnOnce(PortRef) -> Result<Value>) -> Result<Value> {
+        match self {
+            Self::Scalar(value) => Ok(value.clone()),
+            Self::Port(p) => port(*p),
+        }
+    }
+}
 #[derive(Clone, Debug)]
 pub struct Stored {
     pub(super) table: usize,
@@ -165,29 +173,10 @@ impl Graph {
             runtime.nodes_retired += u64::from(runtime.nodes.remove(&f));
         }
     }
-    fn port_value(&self, port: PortRef, meter: bool) -> Result<Value> {
-        let binding = self
-            .ownership
-            .as_ref()
-            .and_then(|m| m.composition.components.get(port.component as usize))
-            .and_then(Option::as_ref)
-            .and_then(|c| c.signals.get(port.symbol))
-            .copied()
-            .flatten()
-            .ok_or("expired stable port")?;
-        let (id, probes) = self.parents.reader().root_counted(binding);
-        if meter {
-            let stats = self.stable_ports.as_ref().ok_or("stable fields disabled")?;
-            stats.port_reads.set(stats.port_reads.get() + 1);
-            stats.root_resolutions.set(stats.root_resolutions.get() + 1);
-            stats
-                .root_parent_probes
-                .set(stats.root_parent_probes.get() + probes);
-        }
-        Ok(Value::Eq(id))
-    }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
-        self.port_value(port, true)
+        let (value, probes) = self.stable_port_reader()?.read_port_counted(port)?;
+        self.record_port_reads(1, probes);
+        Ok(value)
     }
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
         let fields = &self.stable_node(f)?.fields;
@@ -196,18 +185,16 @@ impl Graph {
             Field::Scalar(_) => None,
         }
     }
-    fn stable_field_value(&self, field: &Field, meter: bool) -> Result<Value> {
-        match field {
-            Field::Port(p) => self.port_value(*p, meter),
-            Field::Scalar(v) => Ok(v.clone()),
-        }
-    }
     pub(in crate::graph) fn read_stable_column(
         &self,
         stored: &Stored,
         col: usize,
     ) -> Result<Value> {
-        self.stable_field_value(stored.fields.get(col).ok_or("stable field column")?, true)
+        stored
+            .fields
+            .get(col)
+            .ok_or("stable field column")?
+            .value(|port| self.read_port(port))
     }
     pub(in crate::graph) fn stable_values(
         &self,
@@ -218,12 +205,21 @@ impl Graph {
             let stats = self.stable_ports.as_ref().ok_or("stable fields disabled")?;
             stats.row_views.set(stats.row_views.get() + 1);
         }
-        stored
+        // One immutable Cell read view serves the entire row, as it does a
+        // worker guard. Accumulate counters locally instead of updating three
+        // interior counters and reborrowing the graph for every equality field.
+        let view = self.stable_port_reader()?;
+        let mut work = guard::Work::default();
+        let result = stored
             .fields
             .iter()
-            .map(|field| self.stable_field_value(field, meter))
-            .collect::<Result<Vec<_>>>()
-            .map(row_fields)
+            .map(|field| view.field_value(field, meter, &mut work))
+            .collect::<Result<Vec<_>>>();
+        // Preserve successful-prefix work even when a later port has expired.
+        if meter && work.port_reads != 0 {
+            self.record_port_reads(work.port_reads, work.parent_probes);
+        }
+        result.map(row_fields)
     }
     pub(in crate::graph) fn read_stable_fact(
         &self,

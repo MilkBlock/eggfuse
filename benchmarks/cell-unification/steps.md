@@ -91,3 +91,10 @@ port wiring 仍不提前使用源 union，局部 repair 的预测仍生成运行
 handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key 也采用内联存储。五项 local-union、不同 union 共享局部连接、四项 handoff 索引/闭包、多参数 equality 条件及最小特性编译通过；没有新增测试或单项计时。
 
 两项合并核对见 [symbols-check.json](symbols-check.json)：一次 sum-bits 语义 pass，300 项非时间/RSS指标、1,428 个 Run、最终 state 与完整 local-union 证书保持。ownership 短 fixture 的 runtime/ownership 计数、三个 Run 的 state/bindings 和 local-union 证书相同。冻结的旧/新地址格式各 24 个编译组件重新生成一致，附带 port/composition 证书通过原校验。未做计时采样或分配审计；静态存储与重复代码的删除不单独视为速度结论。
+## 主线程与 worker 共用稳定端口读取
+
+基线 `61f272de`（冻结 binary 来自相同运行时代码 `05c1fd9a`）。删除 Graph 自己的端口绑定/等价根读取实现，字段读取与 worker guard 共用借用 Cell 组件、稳定节点和 equality 的 ReadView。整行只建立一次读视图，先累计端口读取及 parent probe，最后写回计数；纯标量列不建立视图。condition 仍只查一次组件，不把每个 Eq 条件变成重复的组件查询。
+
+保留 coordinator 的当前 overlay、worker 的冻结快照及端口删除失效；没有复制绑定、建立反向依赖或放松多输入 conjunction。既有共享 guard、有效 union 与快照共存、端口代表变化/删除重建检查和最小特性编译通过。通知后的发布/排队路径仍待合并。
+
+按用户更新的节奏，本项实现提交后运行一次 sum-bits 配对计时；此后每累计约五个实现提交检查实际速度，期间继续相关短检查。证据提交不单独触发一次计时。计时是 standalone Cell CPU，不能表述为 native egglog 性能。
