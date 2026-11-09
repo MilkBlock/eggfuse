@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "24c4ae8a",
-    "implementation_commits_since_timing": 6,
+    "implementation_commits_since_timing": 7,
     "evidence": "benchmarks/cell-unification/port-read-results.json",
     "rule": "Run focused semantic/work checks between timing checkpoints; evidence-only commits do not trigger an additional campaign."
   },
