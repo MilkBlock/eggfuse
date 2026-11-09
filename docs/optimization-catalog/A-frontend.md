@@ -71,8 +71,8 @@
 | 成本 / 剩余工作 | `report:/allocations/alloc_calls [value]`<br>`report:/allocations/realloc_calls [value]`<br>`report:/allocations/requested_bytes [value]`<br>`report:/setup_allocations/alloc_calls [value]`<br>`report:/setup_allocations/requested_bytes [value]`<br>`report:/entry_schedule/stats/fragment_pending_reads [value]`<br>`report:/entry_schedule/stats/publication_slot_probes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/marker_tables [count]`<br>`program:/recipe/rules/*/effects [count]` |
 
-解释与缺口：静态替换详情在 marker-selection.json/result_handoff；不能当运行时 credit。必须重编译源程序；旧目录绑定不同 recipe，不能搬用。sum-bits 的旧 native/standalone 完整等价对照存在差异，新旧 marker 各自行为一致，不代表整条工具链通过 native 验证。
+解释与缺口：静态替换详情在 marker-selection.json/result_handoff；不能当运行时 credit。必须重编译源程序，旧目录不能搬用。sum-bits 的严格 native 全图差异已定位为等成本提取及合法 hoist 选择：98 个提取成本一致，选中项由已有 Add/Mul 交换律对应，核心 Expr 等价与可见性一致。该最终状态诊断不等于完整跨引擎逐 Run 或生成代码证明。
 
 状态：实验模式已实现；短样例减少查询和分配；尚未完成新目录及历史最快配置的性能验收。
 
-证据：[benchmarks/marker-handoff/design.md](../../benchmarks/marker-handoff/design.md) · [benchmarks/marker-handoff/README.md](../../benchmarks/marker-handoff/README.md)
+证据：[benchmarks/marker-handoff/design.md](../../benchmarks/marker-handoff/design.md) · [benchmarks/marker-handoff/README.md](../../benchmarks/marker-handoff/README.md) · [benchmarks/marker-handoff/choice-diagnosis.md](../../benchmarks/marker-handoff/choice-diagnosis.md)

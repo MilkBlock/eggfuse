@@ -64,13 +64,27 @@ a bijection through complete keys, then checks every typed row, scalar,
 visibility bit and initial anchor. It fails on unresolved graphs. Native
 egglog also produces equivalent final states for the two marked sources.
 
-The stricter independent native controls **do not all pass**. On sum-bits,
-unmarked structural-key source versus legacy marked source, and native marked
-source versus standalone execution, disagree on some `TermAndCost` equality
-relationships. The values emitter preserves both legacy outcomes. This is
-recorded as `full_native_validation: false`, not hidden by dropping tables or
-treated as proof that the complete toolchain preserves original semantics.
-The change remains experimental; it has not replaced frozen configurations.
+The stricter independent whole-graph controls **do not all pass**. Follow-up
+diagnosis identifies order-sensitive choices in the saved sum-bits states,
+rather than evidence of a changed program computation. `ExtractedExpr` merges
+with `Smaller(old, new)`, whose equal-cost rule selects its left operand. The
+source's `to-hoist` function similarly uses `:merge new` among maximum-size
+legal candidates. See [choice-diagnosis.md](choice-diagnosis.md).
+
+Across native unmarked/marked and native marked/standalone, all 98 extraction
+costs agree. Each selected term is a current minimum-cost candidate. The 10
+different selected terms in each comparison agree under the existing source
+Add/Mul commutativity rules; their candidate sets agree under those same rules.
+The non-term graph has an exact bijection over 2,374 rows, including Expr
+equalities and visibility. Native versus standalone also chooses a different
+legal size-1 hoisting candidate. The new values emitter changes none of these
+choices relative to its legacy counterpart.
+
+`full_native_validation: false` remains the result of the **strict** historical
+whole-graph check; it is not a program-semantics failure verdict. The diagnostic
+does not erase or relabel that check as passed. It proves the stated final-state
+properties, not complete cross-engine Run histories or generated-code execution.
+The change remains experimental and still needs catalog/performance acceptance.
 
 The five new small regressions check native original/marked projection,
 native/standalone agreement, and per-Run structural equivalence. They cover

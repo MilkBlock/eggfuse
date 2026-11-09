@@ -47,7 +47,7 @@ def states(path):
             buf = buf[end:]
 
 
-def equivalent(left, right, tables=None, anchors=True):
+def equivalent(left, right, tables=None, anchors=True, mapping_out=None):
     rows = lambda s: [r for r in s['rows'] if tables is None or r['table'] in tables]
     aa, bb = rows(left), rows(right)
     assert len(aa) == len(bb), ('row counts', len(aa), len(bb))
@@ -106,6 +106,8 @@ def equivalent(left, right, tables=None, anchors=True):
         assert len(rest) < len(todo), ('unresolved or unequal state', len(rest))
         todo = rest
     assert sorted(key(mapped(r)) for r in aa) == sorted(key(canonical(r)) for r in bb), 'full row/visibility mismatch'
+    if mapping_out is not None:
+        mapping_out.update(forward)
     return {'rows': len(aa), 'eq_values': len(forward), 'exact_bijection': True}
 
 
