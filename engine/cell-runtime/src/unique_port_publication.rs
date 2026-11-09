@@ -156,67 +156,18 @@ impl Graph {
                 return None;
             }
             counts.signal_visits += 1;
-            let Some(component) = owner
-                .composition
-                .components
-                .get(signal.component as usize)
-                .and_then(Option::as_ref)
-            else {
+            let Ok(uses) = self.cell_field_uses(signal, column) else {
                 counts.incomplete_rejections += 1;
                 return Some(false);
             };
-            if let Some(plan) = self
-                .program
-                .cell_ownership
-                .composition
-                .conditions
-                .get(component.shape)
-                .filter(|p| p.complete)
-            {
-                for &(site, input) in &plan.inputs[signal.symbol] {
-                    if visits(counts) - before >= MAX_VISITS {
-                        return None;
-                    }
-                    counts.static_steps += 1;
-                    if input != column {
-                        continue;
-                    }
-                    let body = &plan.sites[site];
-                    let fact = FactRef {
-                        cell: component.frames[body.frame],
-                        op: body.op,
-                    };
-                    if self.unique_input_site(fact, f, table, counts, &mut source_seen) {
-                        return Some(false);
-                    }
+            for position in 0..uses.len() {
+                if visits(counts) - before >= MAX_VISITS {
+                    return None;
                 }
-            } else {
-                // Oversized shapes keep their complete original input slices.
-                // Never treat a missing bounded condition plan as an empty one.
-                let Some(shape) = owner
-                    .composition
-                    .shapes
-                    .get(component.shape)
-                    .and_then(Option::as_ref)
-                else {
-                    counts.incomplete_rejections += 1;
+                counts.static_steps += 1;
+                let Some(fact) = uses.fact(position, true) else { continue; };
+                if self.unique_input_site(fact, f, table, counts, &mut source_seen) {
                     return Some(false);
-                };
-                for step in shape.signals[signal.symbol].iter() {
-                    if visits(counts) - before >= MAX_VISITS {
-                        return None;
-                    }
-                    counts.static_steps += 1;
-                    if !step.columns.contains(&column) {
-                        continue;
-                    }
-                    let fact = FactRef {
-                        cell: component.frames[step.frame],
-                        op: step.op,
-                    };
-                    if self.unique_input_site(fact, f, table, counts, &mut source_seen) {
-                        return Some(false);
-                    }
                 }
             }
         }

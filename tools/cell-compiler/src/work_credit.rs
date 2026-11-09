@@ -106,7 +106,7 @@ impl Work {
         }
         for field in ["attempts", "boundary_signals", "boundary_sites", "condition_visits",
             "inactive_sites", "pending_sites", "operator_guards", "scalar_guards", "equality_guards", "shared_symbol_guards",
-            "anchor_probes", "boundary_uncompiled_steps", "local_candidates", "boundary_candidates",
+            "anchor_probes", "boundary_uncompiled_steps", "boundary_indexed_steps", "local_candidates", "boundary_candidates",
             "candidate_buffer_growths", "candidate_sort_comparisons"] {
             let key = format!("stable_ports/local_conditions/stats/{field}");
             let conditions = &report["stable_ports"]["local_conditions"];
@@ -312,6 +312,11 @@ mod tests {
         let (after_state, mut after) = run(true, false, false);
         assert_eq!(before_state, after_state);
         let serial = Work::read(&before).unwrap();
+        let route_work = "stable_ports/local_conditions/stats/boundary_indexed_steps";
+        assert!(serial.0[route_work] > 0);
+        let mut missing_routes = before.clone();
+        missing_routes["stable_ports"]["local_conditions"]["stats"].as_object_mut().unwrap().remove("boundary_indexed_steps");
+        assert!(Work::read(&missing_routes).unwrap_err().contains("missing local condition work boundary_indexed_steps"));
         let parallel = Work::read(&after).unwrap();
         assert!(parallel.0["stable_ports/parallel_guards/stats/rounds"] > 0);
         assert!(parallel.0["stable_ports/parallel_guards/stats/prepared_candidates"] > 0);

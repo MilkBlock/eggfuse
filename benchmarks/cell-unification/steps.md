@@ -124,3 +124,11 @@ handoff donor 索引与闭包使用同一 canonical symbol key，短索引 key �
 这两项合做一次普通构建 sum-bits 核对，见 [propagation-check.json](propagation-check.json)：语义入口 pass，300 项非时间/RSS指标、1,428 个 Run 与最终 state 保持。1,046 次 equality completion 实际经过共同提交。短 port fixture 的逐阶段状态、binding audit、runtime/ownership/stable-port 工作计数也一致；16 项针对性短测试通过。没有新增计时或 allocation 审计。
 
 复现输出使用冻结 `out/cell-port-reader-unified/runtime-candidate` 作前版，当前源码普通 release 构建作后版，分别运行相同的 `sum/program.json --local-congruence` 与 `port-program.json --local-congruence --audit-stages`，输出保存在 `out/cell-propagation-unified`。沿用 `catalog.py extract` 的工作指标及 `choice_diagnosis.py` 的 semantic 入口，比较上述 Run 字段、完整工作计数和状态摘要；binary/program SHA 与短测试日志 SHA 记录在结果文件。
+
+## 查询、边界条件和唯一性证明共用字段使用索引
+
+基线 `cd20519b`。删除 condition plan 的第二份 `inputs` 目录，以及边界条件/唯一性证明各自的 bounded/unbounded 枚举实现。三者共用借用的 Cell `FieldUses` 视图；普通查询仍能按输出列查询，输入证明只接受输入使用。每个 query position 的一个低位表示输入角色，位置仍占一个 usize，没有扩大每项存储。共享地址只提供潜在使用位置，table、存活、pending 和完整 Eq/标量证明仍在原处执行。
+
+编译字段索引不受最多 16 个条件 site 的界限影响，较大 shape 也按字段直接寻址。未见过的训练 shape 保留完整静态 wiring 扫描；没有为任何实例维护消费者列表。唯一性证明按真实访问数执行既有预算，省掉无关字段后可能证明更多合法实例，不能靠提高预算掩盖成本。
+
+新增 `boundary_indexed_steps`，与剩余 `boundary_uncompiled_steps` 一同进入目录和 Bake 评分。旧报告没有新计数应显示缺失，不能当作零。19 项短检查覆盖条件容量回退、唯一性、未来 class 过滤/训练回退、多输入别名、超大 shape 的并行完成及评分缺项拒绝；最小特性编译通过。相对上次测速是第 3 个实现提交，本步不计时。

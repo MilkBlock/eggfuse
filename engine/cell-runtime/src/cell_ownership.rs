@@ -765,30 +765,24 @@ impl Graph {
         for signal in self.query_signals(table, id) {
             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
             let m = &self.ownership.as_ref().unwrap().composition;
-            let component = m.components[signal.component as usize].as_ref().unwrap();
-            let steps = &m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol];
-            let positions = self.program.cell_ownership.composition.queries
-                .get(component.shape).map(|p| p.positions(signal.symbol, column));
+            let uses = self.cell_field_uses(signal, column).expect("live query signal");
             s.domain_route_probes.set(s.domain_route_probes.get() + 1);
-            for position in 0..positions.map_or(steps.len(), <[usize]>::len) {
-                let step = &steps[positions.map_or(position, |p| p[position])];
+            for position in 0..uses.len() {
                 s.domain_slice_steps.set(s.domain_slice_steps.get() + 1);
-                if positions.is_none() {
+                if !uses.indexed() {
                     s.domain_column_checks.set(s.domain_column_checks.get() + 1);
-                    if !step.columns.contains(&column) { continue; }
                 }
-                let cell = component.frames[step.frame];
+                let Some(fact) = uses.fact(position, false) else { continue; };
                 // The instance selects concrete compiled code even when its
                 // port layout is shared with other operators. Discriminate
                 // with that code before probing any live node directory.
-                let frame = m.frames[&cell];
-                let operator = self.program.cell_ownership.code_operators[frame.code][step.op as usize];
+                let frame = m.frames[&fact.cell];
+                let operator = self.program.cell_ownership.code_operators[frame.code][fact.op as usize];
                 s.domain_type_guards.set(s.domain_type_guards.get() + 1);
                 if operator != table {
                     s.domain_type_rejections.set(s.domain_type_rejections.get() + 1);
                     continue;
                 }
-                let fact = FactRef { cell, op: step.op };
                 let matches = if self.stable_ports.is_some() {
                     // This is the authoritative live owned-fact directory:
                     // installation and retirement enforce the fact's lifetime.
@@ -797,7 +791,7 @@ impl Graph {
                     self.stable_node(fact).is_some_and(|node| node.table == table)
                 } else {
                     s.domain_legacy_fact_probes.set(s.domain_legacy_fact_probes.get() + 1);
-                    self.cells.get(&cell).and_then(|c| c.facts.get(&step.op))
+                    self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op))
                         .is_some_and(|state| state.owned && state.decoded.as_ref().unwrap().0 == table)
                 };
                 if matches {

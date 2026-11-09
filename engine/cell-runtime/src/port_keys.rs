@@ -28,7 +28,8 @@ impl Graph {
                 }
             }
         }
-        self.program.cell_ownership.composition.prepare_queries();
+        let plan = &mut self.program.cell_ownership;
+        plan.composition.prepare_queries(&plan.programs);
         self.stable_ports.as_mut().unwrap().keys = true;
         // Existing hints freeze here. Subsequent unions never relocate them.
         Ok(())

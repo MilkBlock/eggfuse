@@ -267,12 +267,14 @@ fn condition_budget_falls_back_instead_of_truncating_coverage() {
         "{report}"
     );
     assert!(
-        report["stats"]["boundary_uncompiled_steps"]
+        report["stats"]["boundary_indexed_steps"]
             .as_u64()
             .unwrap()
             > 0,
         "{report}"
     );
+    // The condition plan may be bounded, but field-use indexing is complete.
+    assert_eq!(report["stats"]["boundary_uncompiled_steps"], 0);
 }
 
 #[test]

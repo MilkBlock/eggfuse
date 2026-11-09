@@ -44,10 +44,10 @@
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stable_ports/local_conditions/stats/completed_conditions [value]`<br>`report:/stable_ports/local_conditions/stats/cross_stage_conditions [value]` |
-| 成本 / 剩余工作 | `report:/stable_ports/local_conditions/stats/condition_visits [value]`<br>`report:/stable_ports/local_conditions/stats/operator_guards [value]`<br>`report:/stable_ports/local_conditions/stats/equality_guards [value]`<br>`report:/stable_ports/local_conditions/stats/scalar_guards [value]`<br>`report:/stable_ports/local_conditions/stats/boundary_signals [value]`<br>`report:/cell_ownership/stats/domain_route_probes [value]`<br>`report:/cell_ownership/stats/domain_column_checks [value]` |
+| 成本 / 剩余工作 | `report:/stable_ports/local_conditions/stats/condition_visits [value]`<br>`report:/stable_ports/local_conditions/stats/operator_guards [value]`<br>`report:/stable_ports/local_conditions/stats/equality_guards [value]`<br>`report:/stable_ports/local_conditions/stats/scalar_guards [value]`<br>`report:/stable_ports/local_conditions/stats/boundary_signals [value]`<br>`report:/stable_ports/local_conditions/stats/boundary_indexed_steps [value]`<br>`report:/stable_ports/local_conditions/stats/boundary_uncompiled_steps [value]`<br>`report:/cell_ownership/stats/domain_route_probes [value]`<br>`report:/cell_ownership/stats/domain_column_checks [value]` |
 | 覆盖 / 规模 / 回退 | `report:/stable_ports/local_conditions/stats/uncovered_shapes [value]`<br>`report:/stable_ports/local_conditions/stats/open_domains [value]`<br>`report:/stable_ports/local_conditions/stats/closed_domain_probes [value]` |
 
-解释与缺口：条件满足数不是额外独立收益；完整输入证明、存活及边界候选不能删。
+解释与缺口：条件满足数不是额外独立收益；完整输入证明、存活及边界候选不能删。边界与唯一性候选共用 Cell 字段使用索引，不再保存条件专用 inputs 表。boundary_indexed_steps 记录直接字段路由访问，boundary_uncompiled_steps 记录未编译 shape 的完整扫描；两者都进入 Bake 工作评分。旧报告缺少 indexed 计数不能视为零。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

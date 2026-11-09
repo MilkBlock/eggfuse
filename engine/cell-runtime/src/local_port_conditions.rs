@@ -16,6 +16,7 @@ pub(super) struct Stats {
     pub boundary_sites: u64,
     pub anchor_probes: u64,
     pub boundary_uncompiled_steps: u64,
+    pub boundary_indexed_steps: u64,
     pub open_domains: u64,
     pub closed_domain_probes: u64,
     pub local_candidates: u64,
@@ -51,6 +52,7 @@ struct BoundaryWork {
     signals: u64,
     sites: u64,
     uncompiled_steps: u64,
+    indexed_steps: u64,
     growths: u64,
 }
 fn push_candidate(out: &mut Candidates, fact: FactRef, condition: Option<usize>) -> u64 {
@@ -137,6 +139,7 @@ impl Graph {
         stats.boundary_signals += work.signals;
         stats.boundary_sites += work.sites;
         stats.boundary_uncompiled_steps += work.uncompiled_steps;
+        stats.boundary_indexed_steps += work.indexed_steps;
         if candidates.len() == locals {
             stats.closed_domain_probes += 1;
         } else {
@@ -279,57 +282,25 @@ impl Graph {
     ) -> Result<BoundaryWork> {
         // Root-level boundary ownership already belongs to symbolic ports.
         // Probe shared code; no producer gets a runtime consumer list.
-        let m = self.ownership.as_ref().unwrap();
         let mut work = BoundaryWork::default();
         for signal in self.query_signals(table, id) {
             work.signals += 1;
             if signal.component == component {
                 continue;
             }
-            let other = m.composition.components[signal.component as usize]
-                .as_ref()
-                .ok_or("expired boundary component")?;
-            if let Some(plan) = self
-                .program
-                .cell_ownership
-                .composition
-                .conditions
-                .get(other.shape)
-                .filter(|p| p.complete)
-            {
-                for &(site, input) in &plan.inputs[signal.symbol] {
-                    if input != column {
-                        continue;
-                    }
-                    let body = &plan.sites[site];
-                    let fact = FactRef {
-                        cell: other.frames[body.frame],
-                        op: body.op,
-                    };
-                    work.sites += 1;
-                    if self.condition_candidate_table(fact) == Some(table) {
-                        work.growths += push_candidate(out, fact, None);
-                    }
-                }
-            } else {
-                // An oversized foreign shape still has complete shared signal
-                // slices. Only the bound input column can supply a candidate.
-                let shape = m.composition.shapes[other.shape]
-                    .as_ref()
-                    .ok_or("missing foreign shape")?;
-                for step in shape.signals[signal.symbol].iter() {
+            // Field-use indexing is independent of the bounded pair-condition
+            // plan. Oversized shapes keep the same complete input domain.
+            let uses = self.cell_field_uses(signal, column)?;
+            for position in 0..uses.len() {
+                if uses.indexed() {
+                    work.indexed_steps += 1;
+                } else {
                     work.uncompiled_steps += 1;
-                    if !step.columns.contains(&column) {
-                        continue;
-                    }
-                    let fact = FactRef {
-                        cell: other.frames[step.frame],
-                        op: step.op,
-                    };
-                    work.sites += 1;
-                    if self.condition_candidate_table(fact) == Some(table) {
-                        work.growths += push_candidate(out, fact, None);
-                    }
+                }
+                let Some(fact) = uses.fact(position, true) else { continue; };
+                work.sites += 1;
+                if self.condition_candidate_table(fact) == Some(table) {
+                    work.growths += push_candidate(out, fact, None);
                 }
             }
         }

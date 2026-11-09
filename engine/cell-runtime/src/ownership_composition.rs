@@ -327,10 +327,10 @@ impl Plan {
                 .collect();
         }
     }
-    pub fn prepare_queries(&mut self) {
+    pub fn prepare_queries(&mut self, programs: &[Rc<PortProgram>]) {
         if self.queries.is_empty() {
             self.queries = self.shapes.iter()
-                .map(|shape| Rc::new(queries::Plan::derive(shape))).collect();
+                .map(|shape| Rc::new(queries::Plan::derive(shape, programs))).collect();
         }
     }
     pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>], templates: &[Template], markers: &[Marker]) {

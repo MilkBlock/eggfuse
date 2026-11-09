@@ -47,8 +47,6 @@ pub struct Plan {
     /// Site -> conditions, ordered by the other site. Shared code, never a
     /// consumer list attached to an individual producer instance.
     pub routes: Vec<Vec<usize>>,
-    /// Signal -> (site, input column), used to certify boundary exclusion.
-    pub inputs: Vec<Vec<(usize, usize)>>,
     pub operator_pairs_elided: usize,
     pub reflexive_inputs_elided: usize,
     pub duplicate_inputs_elided: usize,
@@ -78,18 +76,10 @@ impl Plan {
         let mut plan = Self {
             complete: true,
             routes: vec![vec![]; sites.len()],
-            inputs: vec![vec![]; shape.signals.len()],
             sites,
             conditions: vec![],
             ..Self::default()
         };
-        for (site, body) in plan.sites.iter().enumerate() {
-            for (column, symbol) in body.fields[..body.fields.len() - 1].iter().enumerate() {
-                if let Some(symbol) = symbol {
-                    plan.inputs[*symbol].push((site, column));
-                }
-            }
-        }
         for a in 0..plan.sites.len() {
             for b in a + 1..plan.sites.len() {
                 let left = &plan.sites[a].fields;
