@@ -1252,14 +1252,11 @@ impl Executor {
                             {
                                 return Ok(());
                             }
-                            #[cfg(feature = "sparse-cells")]
-                            let (packet, published) = batch.published_packet(w);
-                            #[cfg(not(feature = "sparse-cells"))]
-                            let packet = batch.packet(w).expect("current delta entry");
+                            let entry = batch.entry(w).expect("current delta entry");
                             let cursor = if node_owns {
                                 node_cursor_reads += 1;
                                 #[cfg(feature = "sparse-cells")]
-                                { published }
+                                { entry.published() }
                                 #[cfg(not(feature = "sparse-cells"))]
                                 { None }
                             } else {
@@ -1282,7 +1279,7 @@ impl Executor {
                                     &mut self.query_indexes,
                                     rid,
                                     atom,
-                                    &packet.row,
+                                    &entry.row,
                                     #[cfg(feature = "family-overlap")]
                                     (&mut self.overlap, watermark),
                                 )?
@@ -1291,7 +1288,7 @@ impl Executor {
                                 };
                                 entry_domains.push(domains);
                             }
-                            out.push(batch.seed(packet));
+                            out.push(entry.seed());
                             Ok::<(), String>(())
                         };
                         #[cfg(feature = "projection-shared")]
@@ -1632,7 +1629,7 @@ impl Executor {
                         seeds
                             .iter()
                             .enumerate()
-                            .filter(move |(_, s)| s.atom == pivot)
+                            .filter(move |(_, s)| s.atom() == pivot)
                             .map(|(i, s)| (Some((i, s)), s.packet.row.as_ref()))
                     })
                     .chain(
@@ -1656,7 +1653,7 @@ impl Executor {
                         self.graph.stats.residual_candidates += 1;
                         self.graph.stats.decoded_rows += 1;
                     }
-                    if let (Some(kernel), Some((i, _))) = (&kernel, supplied) {
+                    if let (Some(kernel), Some((i, seed))) = (&kernel, supplied) {
                         #[cfg(feature = "structural-depth")]
                         if let Some(sol) =
                             self.stage_spine
@@ -1699,7 +1696,7 @@ impl Executor {
                                 rid,
                                 &rule,
                                 kernel,
-                                row,
+                                seed,
                                 domains,
                                 &query_facts,
                                 &mut found,
@@ -1713,7 +1710,7 @@ impl Executor {
                                 rid,
                                 &rule,
                                 kernel,
-                                row,
+                                seed,
                                 domains,
                                 &query_facts,
                                 &mut found,

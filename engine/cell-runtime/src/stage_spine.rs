@@ -821,14 +821,14 @@ impl Context {
 impl Programs {
     #[cfg(feature = "iterative-bake")]
     pub(crate) fn cell_results<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
-        table: usize, w: Dependency) -> Option<(usize, usize, Option<&'a crate::cell::Results>)> {
+        seed: &Seed) -> Option<(usize, usize, Option<&'a crate::cell::Results>)> {
         #[cfg(feature = "sparse-cells")]
-        if self.entry_owned_tables[table] {
-            return entries.publication(table, w)?.cell_results();
+        if self.entry_owned_tables[seed.packet.row.table] {
+            return entries.publication(seed)?.cell_results();
         }
         #[cfg(not(feature = "sparse-cells"))]
-        let _ = (entries, table);
-        self.entries.get(&w)?.cell_results()
+        let _ = entries;
+        self.entries.get(&seed.packet.row.witness)?.cell_results()
     }
     pub fn new(p: &Program) -> Self {
         let enabled = true;
@@ -1954,12 +1954,12 @@ impl Programs {
         for (i, seed) in seeds.iter().enumerate() {
             let row = &seed.packet.row;
             if let Some(cursor) = self
-                .scheduled_cursors(rid, seed.atom, row.table)
+                .scheduled_cursors(rid, seed.atom(), row.table)
                 .and_then(|c| c.get(&row.witness))
             {
                 routes.push((i, cursor.expand()));
             } else {
-                self.record_fallbacks(rid, seed.atom, 1);
+                self.record_fallbacks(rid, seed.atom(), 1);
             }
         }
         self.answers_routed(g, rid, seeds, routes, watermark)
@@ -1990,7 +1990,7 @@ impl Programs {
             self.stats.uncovered_queries += 1;
         }
         // Equal-depth continuations retain the original witness/atom tie break.
-        routes.sort_unstable_by_key(|(i, _)| (seeds[*i].packet.row.witness, seeds[*i].atom));
+        routes.sort_unstable_by_key(|(i, _)| (seeds[*i].packet.row.witness, seeds[*i].atom()));
         let mut covered = BTreeSet::new();
         // A complete takeover has no residual consumer for the coverage set.
         // Stream the producer packet into its block; only the uncompiled route
@@ -1999,13 +1999,13 @@ impl Programs {
             covered.extend(
                 routes
                     .iter()
-                    .map(|(i, _)| (seeds[*i].atom, seeds[*i].packet.row.witness)),
+                    .map(|(i, _)| (seeds[*i].atom(), seeds[*i].packet.row.witness)),
             );
         }
         let ready = routes.into_iter().map(|(i, cursor)| {
             let seed = &seeds[i];
             (
-                seed.atom,
+                seed.atom(),
                 seed.packet.row.clone(),
                 move || Inputs::shared(seed.clone()),
                 cursor,

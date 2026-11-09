@@ -93,7 +93,7 @@ impl Frontiers {
         let mut rows = Vec::new();
         for &(_, w) in batch.delta() {
             self.stats.examined += 1;
-            let row = &batch.packet(w).expect("sealed frontier").row;
+            let row = &batch.entry(w).expect("sealed frontier").row;
             let hashes = ix.hashes(row.table, w);
             let key: Key = shape
                 .columns

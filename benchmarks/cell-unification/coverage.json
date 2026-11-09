@@ -27,14 +27,16 @@
       "completed_structure": [
         "Compile admitted Cell result sources to shared slots; retain only actual returned references.",
         "RHS reuse, query receipts and prefix receipts read the same Results layout; source-tag searches removed.",
-        "Prefix reads borrow current Cell results without cloning the published History."
+        "Prefix reads borrow current Cell results without cloning the published History.",
+        "One borrowed Cell Entry supplies the row, shared Consumer definition and publication location to every batch reader; packet/published_packet/seed(packet) APIs removed.",
+        "Entry-managed residual seeds carry the existing publication slot without growing the 24-byte sparse Seed; covered witness-map probes and unnecessary physical producer recovery removed."
       ],
       "remaining": [
-        "Pass the already selected Entry to residual execution instead of probing publication again.",
-        "Compile residual execution position together with the Entry projection; remove covered route recovery.",
-        "Unify full and partial continuation delivery without losing delta ownership or late-input enumeration."
+        "Compile full and partial continuation plans under the shared Cell Entry and hand over the execution position; prefix plan comparisons still occur.",
+        "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
+        "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
       ],
-      "verification": "shared result ports verified; Entry dispatch takeover remains incomplete",
+      "verification": "shared result ports and delivered Entry provenance verified; full/partial query plans and performance acceptance remain incomplete",
       "evidence": "benchmarks/cell-unification/result-ports-results.json",
       "baseline_commit": "d36e0254",
       "opportunity": "The previous sum-bits execution retained 1,508 results; 592 result reads now use compiled slots. Prefix dispatch is not exercised by sum-bits and is covered separately by witness_sources/register_prefix fixtures.",
@@ -47,7 +49,22 @@
         "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-entry-ports/semantic out/cell-entry-ports/semantic-acceptance.json",
         "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/result-ports-timing-spec.json out/cell-entry-ports/timing --repeat 7 --warmups 1",
         "python3 benchmarks/cell-unification/collect.py out/cell-entry-ports benchmarks/cell-unification/result-ports-results.json --part result-ports"
-      ]
+      ],
+      "delivery": {
+        "status": "semantics_and_takeover_verified_performance_pending",
+        "baseline_commit": "e275f3db",
+        "evidence": "benchmarks/cell-unification/entry-delivery-results.json",
+        "opportunity": "Previous normal execution delivered 12,066 shared seeds. The reused/replaced short fixtures exercise prefix handoff that sum-bits does not enter.",
+        "lifetime_proof": "Only the matching invocation consumes the private publication handle. Delivery completes before RHS publication, arena reuse and the next query snapshot; mutable Entry ownership is not shared with workers. Later overlap across this boundary must add an appropriate lifetime proof.",
+        "limits": "No route-comparison savings yet. Ordinary graph key lookups and logical/committed work are unchanged. Runtime allocation requests are unchanged; setup requests shrink, but RSS and time must still be assessed.",
+        "reproduction": [
+          "cargo run --locked -p eggfuse-cell-compiler --all-features --example emit_cell_entry_fixtures -- out/cell-entry-delivery/fixtures",
+          "python3 benchmarks/cell-unification/run_entry_fixtures.py out/cell-entry-delivery",
+          "python3 benchmarks/marker-handoff/choice_diagnosis.py out/cell-entry-delivery/semantic out/cell-entry-delivery/semantic-acceptance.json",
+          "python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/entry-delivery-timing-spec.json out/cell-entry-delivery/timing --repeat 7 --warmups 1",
+          "python3 benchmarks/cell-unification/collect.py out/cell-entry-delivery benchmarks/cell-unification/entry-delivery-results.json --part entry-delivery"
+        ]
+      }
     },
     {
       "id": "query",
@@ -140,9 +157,9 @@
     {
       "id": "C4",
       "title": "匹配前缀接续",
-      "status": "common_result_ports_verified",
+      "status": "shared_entry_delivery_semantics_verified",
       "metrics_from_catalog": "C4",
-      "remaining": "Entry dispatch, residual query compilation and publication maintenance remain separate."
+      "remaining": "Full/partial plan dispatch, legacy publication boundary and speed acceptance remain incomplete."
     },
     {
       "id": "D1",
@@ -159,14 +176,16 @@
     {
       "id": "E1",
       "title": "Run 变更批次与共享 Entry 参数",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "E1"
+      "status": "shared_entry_delivery_semantics_verified",
+      "metrics_from_catalog": "E1",
+      "remaining": "Full/partial plan dispatch, legacy publication boundary and speed acceptance remain incomplete."
     },
     {
       "id": "E2",
       "title": "Entry 持有 producer publication",
-      "status": "not_rewritten",
-      "metrics_from_catalog": "E2"
+      "status": "shared_entry_delivery_semantics_verified",
+      "metrics_from_catalog": "E2",
+      "remaining": "Full/partial plan dispatch, legacy publication boundary and speed acceptance remain incomplete."
     },
     {
       "id": "E3",

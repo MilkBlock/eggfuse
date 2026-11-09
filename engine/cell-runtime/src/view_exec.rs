@@ -259,7 +259,7 @@ fn delta(
     let batch = entries.terminal_batch(g, rid, atom, watermark)?;
     Ok(batch
         .delta()
-        .map(|&(_, w)| batch.packet(w).unwrap().row.clone())
+        .map(|&(_, w)| batch.entry(w).unwrap().row.clone())
         .collect())
 }
 fn field<'a>(port: Port, driver: &'a Tuple, peer: &'a Row) -> &'a Value {

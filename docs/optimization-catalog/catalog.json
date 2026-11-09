@@ -948,6 +948,11 @@
             "source": "report",
             "pointer": "/stats/register_prefix/receipt_slot_reads",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/entry_publication_reads",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -1008,7 +1013,7 @@
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes.",
       "evidence": [
         "benchmarks/witness-prefix/register-prefix-design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -1218,6 +1223,11 @@
           {
             "source": "report",
             "pointer": "/publication/row_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/seed_bytes",
             "reduce": "value"
           }
         ],

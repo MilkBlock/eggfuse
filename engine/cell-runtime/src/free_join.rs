@@ -343,7 +343,7 @@ impl FreeJoin {
         self.stats.reverse_refs += rows.len() as u64;
         let mut candidates = rows
             .into_iter()
-            .filter_map(|w| batch.packet(w).map(|p| (p.row.epoch, w)))
+            .filter_map(|w| batch.entry(w).map(|p| (p.row.epoch, w)))
             .collect::<Vec<_>>();
         candidates.sort_unstable();
         if candidates.is_empty() {

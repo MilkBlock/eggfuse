@@ -528,7 +528,7 @@ impl Contexts {
                 for (group, bound) in domains {
                     for &w in ix.candidates(g, terminal, &bound)?.iter() {
                         stats.delta_terminal_rows += 1;
-                        if let Some(packet) = batch.packet(w) {
+                        if let Some(packet) = batch.entry(w) {
                             stats.terminal_pairs += emit(
                                 g,
                                 &plan,
@@ -543,7 +543,7 @@ impl Contexts {
                 }
             } else {
                 for &(_, w) in batch.delta() {
-                    let row = &batch.packet(w).unwrap().row;
+                    let row = &batch.entry(w).unwrap().row;
                     stats.delta_terminal_rows += 1;
                     let key = plan
                         .columns

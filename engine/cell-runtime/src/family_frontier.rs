@@ -121,11 +121,11 @@ impl Trace {
             let mut packets = Vec::with_capacity(saved.rows.len());
             let mut subtries = Vec::with_capacity(if join { saved.rows.len() } else { 0 });
             for (w, ds) in &saved.rows {
-                let Some(packet) = batch.packet(*w) else {
+                let Some(packet) = batch.entry(*w) else {
                     s.cost.invalid += 1;
                     return;
                 };
-                packets.push(batch.seed(packet));
+                packets.push(packet.seed());
                 if join {
                     if ds.len() != self.projections[rid][atom].len() {
                         s.cost.invalid += 1;
@@ -148,7 +148,7 @@ impl Trace {
                 && packets
                     .iter()
                     .zip(actual)
-                    .all(|(a, b)| a.packet.row.witness == b.packet.row.witness && a.atom == b.atom)
+                    .all(|(a, b)| a.packet.row.witness == b.packet.row.witness && a.atom() == b.atom())
                 && subtries.len() == domains.len()
                 && subtries.iter().zip(domains).all(|(a, b)| {
                     a.len() == b.len()

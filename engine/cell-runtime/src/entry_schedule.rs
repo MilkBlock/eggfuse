@@ -15,7 +15,7 @@ use {crate::graph::FactRef, std::collections::BTreeSet};
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Plan {
     nodes: Vec<Node>,
-    rules: Vec<Vec<Consumer>>,
+    rules: Vec<Vec<Rc<Consumer>>>,
     tables: Vec<Vec<usize>>,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -32,7 +32,7 @@ struct Node {
 struct Consumer {
     node: usize,
     atom: usize,
-    projection: Rc<Vec<Option<usize>>>,
+    projection: Vec<Option<usize>>,
 }
 fn identity(v: &Value) -> bool {
     match v {
@@ -138,11 +138,11 @@ impl Plan {
                         .as_array_mut()
                         .unwrap()
                         .push(json!({"rule":rid,"atom":atom,"slots":pairs}));
-                    s.rules[rid].push(Consumer {
+                    s.rules[rid].push(Rc::new(Consumer {
                         node: id,
                         atom,
-                        projection: Rc::new(projection),
-                    });
+                        projection,
+                    }));
                 }
             }
         }
@@ -167,9 +167,15 @@ pub struct Packet {
 }
 #[derive(Clone)]
 pub struct Seed {
-    pub atom: usize,
     pub packet: SharedPacket,
-    projection: Rc<Vec<Option<usize>>>,
+    consumer: Rc<Consumer>,
+    // This handle is used only while matching this delivered Run snapshot.
+    // Publications are committed/retired after matching, before another batch.
+    #[cfg(feature = "sparse-cells")]
+    publication: Option<std::num::NonZeroUsize>,
+}
+impl Seed {
+    pub fn atom(&self) -> usize { self.consumer.atom }
 }
 /// Sparse private suffix writes over immutable compiled parameter projections.
 /// No initial full-width parameter array is cloned for a scheduled consumer.
@@ -200,7 +206,7 @@ impl Inputs {
     pub fn len(&self) -> usize {
         self.own
             .len()
-            .max(self.base.as_ref().map_or(0, |s| s.projection.len()))
+            .max(self.base.as_ref().map_or(0, |s| s.consumer.projection.len()))
     }
     pub fn iter(&self) -> impl Iterator<Item = &Option<Value>> {
         (0..self.len()).map(move |i| &self[i])
@@ -225,7 +231,7 @@ impl Inputs {
             return Some(v);
         }
         let s = self.base.as_ref()?;
-        let port = s.projection.get(slot).copied().flatten()?;
+        let port = s.consumer.projection.get(slot).copied().flatten()?;
         #[cfg(feature = "sparse-cells")]
         {
             s.packet.row.values.get(port)
@@ -250,11 +256,11 @@ impl std::ops::Index<usize> for Inputs {
             return v;
         }
         let Some(s) = &self.base else { return &None };
-        if s.projection.get(i).is_none_or(Option::is_none) {
+        if s.consumer.projection.get(i).is_none_or(Option::is_none) {
             return &None;
         }
         &self.legacy_base.get_or_init(|| {
-            s.projection
+            s.consumer.projection
                 .iter()
                 .map(|port| port.map(|c| s.packet.row.values[c].clone()))
                 .collect()
@@ -269,7 +275,7 @@ impl std::ops::Index<usize> for Inputs {
             return v;
         }
         if let Some(s) = &self.base {
-            if let Some(Some(port)) = s.projection.get(i) {
+            if let Some(Some(port)) = s.consumer.projection.get(i) {
                 return &s.packet.values[*port];
             }
         }
@@ -289,7 +295,7 @@ impl std::ops::IndexMut<usize> for Inputs {
 #[path = "epoch_runs.rs"]
 mod epoch_runs;
 #[derive(Default)]
-struct Entry {
+struct Stored {
     // A producer may publish before this node's first scheduled consumer.
     // Keep its expression here without decoding an otherwise unused row.
     packet: Option<SharedPacket>,
@@ -301,7 +307,7 @@ struct Entry {
 enum Entries {
     Plain(HashMap<Dependency, SharedPacket>),
     #[cfg(feature = "sparse-cells")]
-    Owned(HashMap<Dependency, Entry>),
+    Owned(HashMap<Dependency, Stored>),
 }
 impl Default for Entries {
     fn default() -> Self { Self::Plain(HashMap::default()) }
@@ -315,16 +321,9 @@ impl Entries {
         }
     }
     fn is_empty(&self) -> bool { self.len() == 0 }
-    fn packet(&self, w: Dependency) -> Option<&SharedPacket> {
+    fn remove(&mut self, w: &Dependency) -> Option<Stored> {
         match self {
-            Self::Plain(rows) => rows.get(&w),
-            #[cfg(feature = "sparse-cells")]
-            Self::Owned(rows) => rows.get(&w).and_then(|e| e.packet.as_ref()),
-        }
-    }
-    fn remove(&mut self, w: &Dependency) -> Option<Entry> {
-        match self {
-            Self::Plain(rows) => rows.remove(w).map(|packet| Entry {
+            Self::Plain(rows) => rows.remove(w).map(|packet| Stored {
                 packet: Some(packet),
                 #[cfg(feature = "sparse-cells")]
                 publication: None,
@@ -333,7 +332,7 @@ impl Entries {
             Self::Owned(rows) => rows.remove(w),
         }
     }
-    fn insert(&mut self, w: Dependency, entry: Entry) {
+    fn insert(&mut self, w: Dependency, entry: Stored) {
         match self {
             Self::Plain(rows) => {
                 #[cfg(feature = "sparse-cells")]
@@ -469,13 +468,42 @@ impl PublicationSlot {
 #[derive(Clone, Copy)]
 pub(crate) struct Batch<'a> {
     state: &'a State,
-    consumer: &'a Consumer,
+    consumer: &'a Rc<Consumer>,
     watermark: u64,
     pub table: usize,
     #[cfg(feature = "sparse-cells")]
     publications: &'a [Option<PublicationSlot>],
 }
-impl Batch<'_> {
+/// One borrowed Cell Entry: its existing row, shared consumer projection and
+/// publication location travel together. No per-consumer binding array or
+/// producer subscription is created for this view.
+pub(crate) struct Entry<'a> {
+    packet: &'a SharedPacket,
+    consumer: &'a Rc<Consumer>,
+    #[cfg(feature = "sparse-cells")]
+    publication: Option<std::num::NonZeroUsize>,
+    #[cfg(feature = "sparse-cells")]
+    publications: &'a [Option<PublicationSlot>],
+}
+impl std::ops::Deref for Entry<'_> {
+    type Target = Packet;
+    fn deref(&self) -> &Packet { self.packet }
+}
+impl Entry<'_> {
+    pub fn seed(&self) -> Seed {
+        Seed {
+            packet: self.packet.clone(),
+            consumer: self.consumer.clone(),
+            #[cfg(feature = "sparse-cells")]
+            publication: self.publication,
+        }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn published(&self) -> Option<&crate::stage_spine::Published> {
+        self.publications[self.publication?.get() - 1].as_ref()?.live()
+    }
+}
+impl<'a> Batch<'a> {
     #[cfg(any(
         feature = "projection-shared",
         feature = "family-overlap",
@@ -552,28 +580,27 @@ impl Batch<'_> {
         }
         false
     }
-    pub fn packet(&self, w: Dependency) -> Option<&SharedPacket> {
-        self.state
-            .rows
-            .packet(w)
-            .filter(|p| p.row.epoch >= self.watermark)
-    }
-    #[cfg(feature = "sparse-cells")]
-    pub fn published_packet(&self, w: Dependency) -> (&SharedPacket, Option<&crate::stage_spine::Published>) {
-        match &self.state.rows {
-            Entries::Plain(rows) => (&rows[&w], None),
+    // Query consumers live in several codegen units. Inline this borrowed
+    // view so it does not introduce a large return-value copy per delivered row.
+    #[inline]
+    pub fn entry(&self, w: Dependency) -> Option<Entry<'a>> {
+        let packet = match &self.state.rows {
+            Entries::Plain(rows) => rows.get(&w)?,
+            #[cfg(feature = "sparse-cells")]
             Entries::Owned(rows) => {
-                let e = &rows[&w];
-                (e.packet.as_ref().expect("refreshed entry"), e.publication.and_then(|i| self.publications[i.get() - 1].as_ref().and_then(PublicationSlot::live)))
+                let e = rows.get(&w)?;
+                return e.packet.as_ref().filter(|p| p.row.epoch >= self.watermark)
+                    .map(|packet| Entry { packet, consumer: self.consumer,
+                        publication: e.publication, publications: self.publications });
             }
-        }
-    }
-    pub fn seed(&self, packet: &SharedPacket) -> Seed {
-        Seed {
-            atom: self.consumer.atom,
-            packet: packet.clone(),
-            projection: self.consumer.projection.clone(),
-        }
+        };
+        (packet.row.epoch >= self.watermark).then_some(Entry {
+            packet, consumer: self.consumer,
+            #[cfg(feature = "sparse-cells")]
+            publication: None,
+            #[cfg(feature = "sparse-cells")]
+            publications: self.publications,
+        })
     }
 }
 impl Scheduler {
@@ -625,7 +652,7 @@ impl Scheduler {
                 self.publication_nodes[table] = Some(nodes[0]);
                 if let Entries::Plain(rows) = &mut self.states[nodes[0]].rows {
                     let owned = std::mem::take(rows).into_iter().map(|(w, packet)| {
-                        (w, Entry { packet: Some(packet), publication: None })
+                        (w, Stored { packet: Some(packet), publication: None })
                     }).collect();
                     self.states[nodes[0]].rows = Entries::Owned(owned);
                 }
@@ -704,11 +731,13 @@ impl Scheduler {
         self.publication_nodes[table].map_or(0, |id| self.states[id].publications)
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn publication(&self, table: usize, w: Dependency) -> Option<&crate::stage_spine::Published> {
-        let state = &self.states[self.publication_nodes[table]?];
-        let Entries::Owned(rows) = &state.rows else { return None };
-        let id = rows.get(&w)?.publication?;
+    pub(crate) fn publication(&self, seed: &Seed) -> Option<&crate::stage_spine::Published> {
+        let id = seed.publication?;
         self.publications[id.get() - 1].as_ref()?.live()
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn owns_publications(&self, table: usize) -> bool {
+        self.publication_nodes[table].is_some()
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publications(&self) -> impl Iterator<Item = &crate::stage_spine::Published> {
@@ -810,7 +839,7 @@ impl Scheduler {
         self.batches(g, rid, watermark, |batch, out| {
             for &(_, w) in batch.delta() {
                 if allow(batch.atom(), batch.table, w) {
-                    out.push(batch.seed(batch.state.rows.packet(w).unwrap()));
+                    out.push(batch.entry(w).expect("current delta entry").seed());
                 }
             }
             Ok(())
@@ -947,11 +976,11 @@ impl Scheduler {
                 self.stats.parameter_packets_reused += 1;
                 s.insert_epoch(row.epoch, w);
                 #[cfg(feature = "sparse-cells")]
-                s.rows.insert(w, Entry { packet: Some(Packet { row }), publication });
+                s.rows.insert(w, Stored { packet: Some(Packet { row }), publication });
                 #[cfg(not(feature = "sparse-cells"))]
                 s.rows.insert(
                     w,
-                    Entry { packet: Some(Rc::new(Packet {
+                    Stored { packet: Some(Rc::new(Packet {
                         row,
                         values: _previous.values.clone(),
                     })) },
@@ -966,7 +995,7 @@ impl Scheduler {
                 });
                 if valid {
                     s.insert_epoch(row.epoch, w);
-                    s.rows.insert(w, Entry { packet: Some(Packet { row }), publication });
+                    s.rows.insert(w, Stored { packet: Some(Packet { row }), publication });
                 } else {
                     self.stats.retired_packets += u64::from(previous.is_some());
                 }
@@ -995,7 +1024,7 @@ impl Scheduler {
                         Rc::new(values)
                     };
                     s.insert_epoch(row.epoch, w);
-                    s.rows.insert(w, Entry { packet: Some(Rc::new(Packet { row, values })) });
+                    s.rows.insert(w, Stored { packet: Some(Rc::new(Packet { row, values })) });
                 } else {
                     self.stats.retired_packets += u64::from(previous.is_some());
                 }
@@ -1016,7 +1045,10 @@ impl Scheduler {
         #[cfg(feature = "sparse-cells")]
         { stats["node_notifications"] = (self.stats.node_notifications
             + self.states.iter().map(|s|s.pending_count() as u64).sum::<u64>()).into(); }
-        json!({"enabled":self.enabled,"nodes":self.plan.nodes.len(),"stats":stats,"live_packets":self.states.iter().map(|s|s.rows.len()).sum::<usize>(),"scope":"compiled shared entry predicates; consumer watermarks and complete residual/RHS remain source scheduled"})
+        json!({"enabled":self.enabled,"nodes":self.plan.nodes.len(),"stats":stats,
+            "seed_bytes":std::mem::size_of::<Seed>(),
+            "live_packets":self.states.iter().map(|s|s.rows.len()).sum::<usize>(),
+            "scope":"compiled Cell Entry projection, current row and publication location; consumer watermarks and residual/RHS remain source scheduled"})
     }
 }
 

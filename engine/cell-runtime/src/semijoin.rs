@@ -305,7 +305,7 @@ impl Gates {
                 self.stats.over_budget += 1;
                 return Ok(None);
             }
-            if batch.packet(w).is_some() {
+            if batch.entry(w).is_some() {
                 rows.push(w);
             }
         }

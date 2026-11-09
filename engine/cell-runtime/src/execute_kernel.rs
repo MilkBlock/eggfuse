@@ -45,6 +45,16 @@ pub(super) struct Registers {
     witnesses: Vec<Option<Dependency>>,
 }
 impl Registers {
+    fn producer_context(
+        graph: &mut Graph,
+        witness: Dependency,
+        cache: &mut Option<Option<crate::graph::producer::Context>>,
+    ) -> Option<crate::graph::producer::Context> {
+        *cache.get_or_insert_with(|| {
+            graph.stats.register_prefix.context_reads += 1;
+            graph.continuation_context(witness)
+        })
+    }
     pub(super) fn new(r: &Rule) -> Self {
         Self {
             fields: vec![Value::Int(0); r.inputs.iter().copied().max().map_or(0, |s| s + 1)],
@@ -69,12 +79,13 @@ impl Registers {
         rid: usize,
         r: &Rule,
         k: &Kernel,
-        seed: &Row,
+        entry: &crate::entry_schedule::Seed,
         domains: &[Subtrie],
         known: &QueryFacts,
         out: &mut Vec<Binding>,
     ) -> Result<()> {
         exec.graph.stats.register_seeds += 1;
+        let seed = &entry.packet.row;
         self.witnesses[k.pivot] = Some(seed.witness);
         for &(c, s) in &k.seed {
             self.fields[s] = seed.values[c].clone();
@@ -82,7 +93,7 @@ impl Registers {
         let (pc, epoch) = if k.prefixes.is_empty() {
             (0, seed.epoch)
         } else {
-            let Some(resume) = self.prefix(exec, r, k, seed)? else { return Ok(()) };
+            let Some(resume) = self.prefix(exec, r, k, entry)? else { return Ok(()) };
             resume
         };
         self.step::<LOCAL>(
@@ -106,21 +117,27 @@ impl Registers {
         exec: &mut Executor,
         r: &Rule,
         k: &Kernel,
-        seed: &Row,
+        supplied: &crate::entry_schedule::Seed,
     ) -> Result<Option<(usize, u64)>> {
         exec.graph.stats.register_prefix.eligible_seeds += 1;
-        exec.graph.stats.register_prefix.context_reads += 1;
-        let context = exec.graph.continuation_context(seed.witness);
+        let seed = &supplied.packet.row;
+        let mut context = None;
         #[cfg(feature = "iterative-bake")]
         let entry = {
-            exec.graph.stats.register_prefix.publication_probes += 1;
-            exec.stage_spine.cell_results(&exec.entry_schedule, seed.table, seed.witness)
+            #[cfg(feature = "sparse-cells")]
+            let direct = exec.entry_schedule.owns_publications(seed.table);
+            #[cfg(not(feature = "sparse-cells"))]
+            let direct = false;
+            exec.graph.stats.register_prefix.entry_publication_reads += u64::from(direct);
+            exec.graph.stats.register_prefix.publication_probes += u64::from(!direct);
+            exec.stage_spine.cell_results(&exec.entry_schedule, supplied)
         };
         #[cfg(feature = "iterative-bake")]
         let published = entry.map(|(r, op, _)| (exec.graph.program.rules[r].template, op));
         #[cfg(not(feature = "iterative-bake"))]
         let published: Option<(usize, usize)> = None;
-        let Some(address) = published.or_else(|| context.map(|c| (c.template, c.op))) else {
+        let Some(address) = published.or_else(|| Self::producer_context(&mut exec.graph, seed.witness, &mut context)
+            .map(|c| (c.template, c.op))) else {
             exec.graph.stats.register_prefix.context_missing += 1;
             return Ok(Some((0, seed.epoch)));
         };
@@ -132,7 +149,6 @@ impl Registers {
             },
         ) else { return Ok(Some((0, seed.epoch))) };
         exec.graph.stats.register_prefix.plan_hits += 1;
-        let context = context.filter(|c| (c.template, c.op) == address);
         let mut epoch = seed.epoch;
         let owner = (seed.epoch, seed.witness);
         let mut pc = 0;
@@ -150,9 +166,17 @@ impl Registers {
                     #[cfg(not(feature = "iterative-bake"))]
                     let receipt = None;
                     exec.graph.stats.register_prefix.receipt_hits += u64::from(receipt.is_some());
+                    // An Entry's actual result needs no recovery of the Cell
+                    // physically owning its anchor. Only the uncovered local
+                    // effect fallback needs that context, and at most once.
+                    let physical = if receipt.is_none()
+                        && matches!(source.source, crate::cell::Site::Effect(_)) {
+                        Self::producer_context(&mut exec.graph, seed.witness, &mut context)
+                            .filter(|c| (c.template, c.op) == address)
+                    } else { None };
                     let mut misses = std::mem::take(&mut exec.graph.stats.register_prefix.misses);
                     let mut reads = 0;
-                    let row = exec.graph.context_witness_row(context, source.source, receipt,
+                    let row = exec.graph.context_witness_row(physical, source.source, receipt,
                         *table, a.args.len(), &mut misses, &mut reads)?;
                     exec.graph.stats.register_prefix.row_reads += reads;
                     exec.graph.stats.register_prefix.misses = misses;

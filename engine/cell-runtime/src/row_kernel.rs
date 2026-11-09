@@ -56,6 +56,7 @@ pub struct PrefixStats {
     pub stale_fallbacks: u64,
     pub misses: crate::graph::producer::WitnessMisses,
     pub publication_probes: u64,
+    pub entry_publication_reads: u64,
     pub receipt_probes: u64,
     pub receipt_steps: u64,
     pub receipt_slot_reads: u64,
