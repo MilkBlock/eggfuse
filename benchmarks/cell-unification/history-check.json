@@ -1,0 +1,70 @@
+{
+  "scope": "standalone Cell CPU; short semantic/work checks, no new timing or allocation audit",
+  "baseline_commit": "50e12acf",
+  "candidate_commit": "78836033",
+  "features": "sparse-cells,view-ports,storage-metrics",
+  "semantic_acceptance": "pass",
+  "cases": {
+    "sum_bits": {
+      "runs": 1428,
+      "ordered_hashes": {
+        "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+      },
+      "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+      "physical_context_reads_before_after": [
+        0,
+        0
+      ],
+      "history_handle_copies_before_after": [
+        0,
+        0
+      ],
+      "remaining_runtime_port_ownership_and_spine_work_identical": true
+    },
+    "full": {
+      "runs": 3,
+      "ordered_hashes": {
+        "state.json": "2061b84858ee71a61b4ae7718b45da625efc427fcf6d5012ca727f6d229da3a4",
+        "stages.json": "2792e81aee92b59b317227fe1f37c435f7b47097ec888298cf11f6510cb29ee2",
+        "binding-audit.json": "6307c76a5f34c65ce551cd6bbb2aecc58022ea6a58d13916becdfedf529b9a64"
+      },
+      "program_file_sha256": "d044efaca02129678ccaebdbe990c4c405033a091b9806f1215b7e78022a265a",
+      "physical_context_reads_before_after": [
+        0,
+        0
+      ],
+      "history_handle_copies_before_after": [
+        2,
+        0
+      ],
+      "remaining_runtime_port_ownership_and_spine_work_identical": true
+    }
+  },
+  "tests": {
+    "final-tests": {
+      "passed": 15,
+      "log_sha256": "7fc6e4c56037c3edd5c267ea8651d3f181373b3dd29220e7658781dc872e7d8d"
+    },
+    "dispatch": {
+      "passed": 2,
+      "log_sha256": "0c63fdf95506f7e5c2ee7717aed5561a52cf1901bb1f460faffeebae330d3747"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "f5b58ded01e4958a3a7a7b2c07f208a15076f8213d42b0594dc12da924331171"
+    }
+  },
+  "timing_cadence": {
+    "last_timed_commit": "ab33d47c",
+    "implementation_commits_since_timing": 2
+  },
+  "performance_status": "prior_regression_unresolved_no_new_speed_claim",
+  "work_metrics": {
+    "unchanged_values_or_missing_status": 326,
+    "changed": {}
+  },
+  "binaries": {
+    "baseline": "b3c1c472ae3cdd409ddcb28464e76abc0427a54a36d8f1ff86e47c8f1980f420",
+    "candidate": "d3783719c81a6f90ea8d2473fe63d9561a953dc2338f7345cd6532814b0dda40"
+  }
+}
