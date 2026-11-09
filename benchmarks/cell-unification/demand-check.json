@@ -1,0 +1,61 @@
+{
+  "scope": "standalone Cell CPU; remove unused ruleset effect aggregates; no timing or allocation sampling",
+  "baseline_commit": "390077a7 (runtime b6bda1d3)",
+  "candidate_commit": "7632423c",
+  "semantic_acceptance": "pass",
+  "cases": {
+    "run": {
+      "runs": 1428,
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "unchanged_work_metrics": 313,
+      "observed_work_metrics": 258,
+      "runtime_ownership_stable_scoped_and_port_counters_identical": true
+    },
+    "pure": {
+      "runs": 1428,
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "unchanged_work_metrics": 313,
+      "observed_work_metrics": 284,
+      "runtime_ownership_stable_scoped_and_port_counters_identical": true,
+      "live_demands": {
+        "rhs_selected_rules": 8,
+        "rhs_demand_probes": 2224,
+        "readiness_dependency_checks": 7268,
+        "rhs_access_completions": 4,
+        "rhs_union_completions": 0,
+        "rhs_completions": 4
+      }
+    }
+  },
+  "tests": {
+    "callback": {
+      "passed": 1,
+      "log_sha256": "f663dc9dc89fbd2354a5fe4a987e6b0e01138dc4e16b8389cb8763bde87d2ec1"
+    },
+    "unmatched": {
+      "passed": 1,
+      "log_sha256": "ef1dcf6aa6bf26afe5de34fc7d50484f05404da83632f5ffee037d615c9968e5"
+    },
+    "sorts": {
+      "passed": 1,
+      "log_sha256": "9a9635c8bdd56be91bd08a9b5bef83b9890ea48ba9ccce5c92b0bbed56009c0a"
+    }
+  },
+  "removed_structure": [
+    "port_demands ruleset map",
+    "port_accesses ruleset map",
+    "temporary direct/accesses BTreeSets and aggregate copy passes"
+  ],
+  "retained_obligations": "Query readiness precedes matching; only matched Cells contribute RHS dependencies. Conservative sort scopes, merge callback reads, publication and source order remain.",
+  "timing_cadence": {
+    "last_timed_commit": "d81b0cb2",
+    "implementation_commits_since_timing": 2,
+    "prior_performance_issue": "The lifecycle checkpoint regression remains unresolved."
+  },
+  "binaries": {
+    "baseline": "d1975787128edbfeac354ad21bfac90cd77b546c7fe431442174c7be9972e142",
+    "candidate": "9161803d26064ad435671a71313c23ca7c5f7adf5a3a8fd865ab89aaddef44a7"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "reproduction": "Same normal build and sum-bits invocations as bound-check.json, with frozen binaries for these commits. Focused checks: merge_completion::source_union_includes_hidden_read_only_callbacks_in_its_write_fence, staged_completion::an_unmatched_rhs_does_not_block_other_bindings_and_their_consumers, scoped_completion::typed_reachability_includes_multi_sort_congruence_cascades. Existing catalog extract and choice_diagnosis.py entrypoints are unchanged."
+}
