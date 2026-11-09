@@ -369,10 +369,11 @@
           }
         ]
       },
-      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count.",
+      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented.",
       "evidence": [
         "README.md",
-        "benchmarks/cell-unification/residual.md"
+        "benchmarks/cell-unification/residual.md",
+        "benchmarks/cell-unification/query-storage-results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -631,7 +632,7 @@
           }
         ]
       },
-      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings.",
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy.",
       "evidence": [
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",
@@ -639,7 +640,8 @@
         "benchmarks/cell-unification/query-frame-check.json",
         "benchmarks/cell-unification/context-branches-check.json",
         "benchmarks/cell-unification/context-terminal-check.json",
-        "benchmarks/cell-unification/context-prefix-check.json"
+        "benchmarks/cell-unification/context-prefix-check.json",
+        "benchmarks/cell-unification/query-storage-results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -739,10 +741,11 @@
           }
         ]
       },
-      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。",
+      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。 Complete Entry stores results only through the last new output, omitting trailing bound-result writes. Internal holes keep instruction-position addresses. sum-bits writes fell 2604 to 2455; the five-commit timing checkpoint did not establish a speedup.",
       "evidence": [
         "benchmarks/leaf-completion/README.md",
-        "benchmarks/cell-unification/query.md"
+        "benchmarks/cell-unification/query.md",
+        "benchmarks/cell-unification/query-storage-results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -2832,12 +2835,13 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings.",
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
         "benchmarks/cell-unification/context-branches-check.json",
-        "benchmarks/cell-unification/context-terminal-check.json"
+        "benchmarks/cell-unification/context-terminal-check.json",
+        "benchmarks/cell-unification/query-storage-results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

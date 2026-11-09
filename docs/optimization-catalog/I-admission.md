@@ -23,8 +23,8 @@
 | 成本 / 剩余工作 | `report:/setup_seconds [value]`<br>`report:/setup_allocations/requested_bytes [value]`<br>`program:/iterative_bake/joins [count]` |
 | 覆盖 / 规模 / 回退 | `program:/ownership_fragments/fragments [count]`<br>`program:/iterative_bake/rhs_handoffs/states [count]` |
 
-解释与缺口：work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings.
+解释与缺口：work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[benchmarks/entry-publications/README.md](../../benchmarks/entry-publications/README.md) · [benchmarks/condition-bake/README.md](../../benchmarks/condition-bake/README.md) · [benchmarks/cell-unification/context-branches-check.json](../../benchmarks/cell-unification/context-branches-check.json) · [benchmarks/cell-unification/context-terminal-check.json](../../benchmarks/cell-unification/context-terminal-check.json)
+证据：[benchmarks/entry-publications/README.md](../../benchmarks/entry-publications/README.md) · [benchmarks/condition-bake/README.md](../../benchmarks/condition-bake/README.md) · [benchmarks/cell-unification/context-branches-check.json](../../benchmarks/cell-unification/context-branches-check.json) · [benchmarks/cell-unification/context-terminal-check.json](../../benchmarks/cell-unification/context-terminal-check.json) · [benchmarks/cell-unification/query-storage-results.json](../../benchmarks/cell-unification/query-storage-results.json)

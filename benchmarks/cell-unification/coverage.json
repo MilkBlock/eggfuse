@@ -3,9 +3,9 @@
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
-    "last_timed_commit": "7f4e24c2",
-    "implementation_commits_since_timing": 4,
-    "evidence": "benchmarks/cell-unification/sieve-results.json",
+    "last_timed_commit": "c8ef6edc",
+    "implementation_commits_since_timing": 0,
+    "evidence": "benchmarks/cell-unification/query-storage-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established"
   },
@@ -99,7 +99,8 @@
         "Ordinary search, retained context, stage Entry and first shared-seed checks share Cell QueryFrame binding and operand semantics. Removed four independent binders and two operand readers; original storage/trail/copy accounting stays at each caller.",
         "Ordered context prefixes use Cell-compiled slot scopes to reuse one transient prefix across candidates, clear only newly introduced slots and restore witness/epoch state. Intermediate prefix copies and a runtime undo trail are unnecessary; only successful retained leaves are copied, while branch-free prefixes still move directly.",
         "Context terminal expansion, output projection and scalar post-guards compile through the common Cell Query lowerer. Register, stage Entry and context borrow anchor fields through the same Field reader; the context-only executable Field and per-pair binding array copy are removed. Bound output constraints and computed result slots follow the common Step binder.",
-        "Retained prefixes use shared scoped Cell instructions for expansion, scalar evaluation and rollback. The independent Arg scalar interpreter and stored legacy post order are removed; compatibility views derive atom order from those instructions."
+        "Retained prefixes use shared scoped Cell instructions for expansion, scalar evaluation and rollback. The independent Arg scalar interpreter and stored legacy post order are removed; compatibility views derive atom order from those instructions.",
+        "Compiled Cell Query owns the result storage bound. Context and register frames derive scratch width from it; complete Entries omit trailing bound-result writes. Result write credit charges full register/Entry totals once, not the prefix subset twice."
       ],
       "remaining": [
         "Unify remaining entry-strategy routing and full/prefix donor recovery; one Query IR alone does not remove boundary dispatch.",
@@ -142,7 +143,9 @@
       "links_checks": "benchmarks/cell-unification/links-check.json",
       "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
-      "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json"
+      "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
+      "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json",
+      "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json"
     },
     {
       "id": "rhs_publication",
@@ -306,7 +309,8 @@
       "status": "semantics_and_takeover_verified_performance_pending",
       "metrics_from_catalog": "B1",
       "evidence": "benchmarks/cell-unification/residual-results.json",
-      "remaining": "Point-cache behavior preserved under shared Cell instructions; residual speed acceptance and higher peak RSS remain unresolved."
+      "remaining": "Point-cache behavior preserved under shared Cell instructions; residual speed acceptance and higher peak RSS remain unresolved.",
+      "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json"
     },
     {
       "id": "B2",
@@ -314,7 +318,7 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "B2",
       "evidence": "benchmarks/cell-unification/links-check.json",
-      "remaining": "Static shared-column wiring is common and Sieve preparation borrows it without cloning nested specs/rule targets. Range guards, dynamic join choice, local-context prefixes, candidate index lifecycle and runtime speed acceptance remain.",
+      "remaining": "Static shared-column wiring is common and Sieve preparation borrows it without cloning nested specs/rule targets. Range guards, dynamic join choice, local-context lifetime, candidate index lifecycle and runtime speed acceptance remain.",
       "sieve_preparation_checks": "benchmarks/cell-unification/sieve-results.json"
     },
     {
@@ -327,7 +331,8 @@
       "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
       "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
-      "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json"
+      "context_prefix_checks": "benchmarks/cell-unification/context-prefix-check.json",
+      "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json"
     },
     {
       "id": "C1",
@@ -335,7 +340,8 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "C1",
       "evidence": "benchmarks/cell-unification/query-results.json",
-      "remaining": "Complete and residual instruction definitions now shared; boundary donor recovery, publication and coverage policies remain."
+      "remaining": "Complete and residual instructions and storage bounds are shared. Complete Entries omit unused trailing results; boundary publication, coverage policies, metadata footprint and speed acceptance remain.",
+      "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json"
     },
     {
       "id": "C2",
@@ -504,7 +510,8 @@
       "filter_credit_checks": "benchmarks/cell-unification/filter-credit-check.json",
       "remaining": "Measured Cell trials charge pre-decode filtering as well as result/repair maintenance. Common iterative composition/materialization authority, remaining filter families and calibrated speed acceptance still need work; equal-weight credit is not time.",
       "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json",
-      "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json"
+      "context_terminal_checks": "benchmarks/cell-unification/context-terminal-check.json",
+      "query_storage_checks": "benchmarks/cell-unification/query-storage-results.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",

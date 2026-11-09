@@ -66,6 +66,7 @@ def check(root, commit, timed):
         'implementation_commits_since_timing': 0 if timed else 5,
         'implementation_commits_in_batch': ['7b8ed749', 'a02f2148', '0b3231c2', '6b4c670d', commit]}
     if timed:
+        result['performance_status'] = 'speedup_not_established_preservation_unresolved'
         result['timing'] = timing(root, commit, commits={'baseline': '6b4c670d', 'candidate': commit,
             'last_timed': '7f4e24c2', 'historical': '24c4ae8a'})
     return result

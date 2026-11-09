@@ -310,3 +310,21 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 候选先完成静态 checks，再写入新槽；多次使用同一列的检查仍引用当前候选。标量用共用 Step.bind/evaluate，小参数保留在栈上，新结果移动到原槽，已绑定结果只检查。删除 finish_guards 的 Arg 解释循环；ports/post 的旧 artifact 序列只在序列化时从指令推导。缓存、read lease、root 绑定和失效边界仍然存在，未宣称整个 context 生命周期已经统一。
 
 验证输出 `out/cell-context-prefix`：3 项 Query 单测、4 项 context/cut/budget/Entry 回归和最小特性编译；两个已有短 fixture 比较 state/stages/binding audit。sum-bits 使用已有 program 和 choice_diagnosis 入口。执行 `check_context.py ROOT OUTPUT --phase prefix --commit COMMIT` 核对保存结果。本步为 4/5，实现结构删减不换算为未测得的分配或速度收益；下一实现提交后统一测速。
+
+## 同一 Query 决定结果存储范围；第五次提交计时
+
+实现 `c8ef6edc`，直接基线 `6b4c670d`。结果范围现在在共同 Cell Query 构造/组合时计算一次，context 删除自己的副本，register frame 取同一规则各 pivot 的最大范围，完整 Entry 不再写入末尾只约束已有结果的指令。指令位置地址仍保留，内部空洞尚未压紧；所有约束照常执行。每个 register frame 的最大范围扫描及额外 Query header 有成本，尚未单独插桩，不能将结构性缩小直接称为实测分配收益。
+
+普通 release sum-bits：choice_diagnosis pass，1,428 个 Run/state 保持；完整 Entry 的结果写入 2,604→2,455，其余 345 项现有工作指标保持。Work 账本现在计入完整 register/Entry 写入总数，不重复计入 register_prefix.field_writes。23 项针对性 Query、receipt、residual prefix、Entry/context、credit 检查与最小配置编译通过。4 个短 Entry fixture 的逐阶段 state/binding audit 相同；单进程均小于 1 秒。逻辑 matches 仍不等同于提交 mutation。
+
+这是本周期第 5 个实现提交，执行一次七轮交错 sum-bits 测速，每 lane 一轮 warmup，使用普通 release 特性 sparse-cells,view-ports,storage-metrics。候选推理中位数 24.860042 ms，整进程中位数 127.523875 ms。同轮配对中位比（候选/对照，越低越好）：
+
+| 对照 | 推理比及 95% 区间 | 整进程比及 95% 区间 |
+| --- | --- | --- |
+| 直接基线 `6b4c670d` | 0.99957 [0.98125, 1.00159] | 1.00131 [0.99202, 1.01814] |
+| 上轮计时 `7f4e24c2` | 0.98866 [0.96624, 1.01989] | 1.00200 [0.94462, 1.01357] |
+| 历史 `24c4ae8a` | 1.00255 [0.98301, 1.03381] | 1.01356 [0.99102, 1.01739] |
+
+全部区间跨过 1，未证明提速，也不能据此宣称性能保持验收完成。候选推理前峰值 RSS 中位数 179,503,104 bytes，比直接基线高 458,752 bytes、比上轮计时高 737,280 bytes；这是进程峰值差异，不是分配归因。完整保存原始七轮、执行顺序和来源哈希，不重跑以挑选更好结果。此处是 standalone Cell CPU，不是 native egglog 性能；Raytrace 和完整多线程仍等待统一重写审计。
+
+输出 `out/cell-query-scratch`。运行 `python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/query-storage-timing-spec.json ROOT/timing --repeat 7 --warmups 1`，再用 `check_query_storage.py ROOT benchmarks/cell-unification/query-storage-results.json --commit c8ef6edc --timing` 校验保存结果。fixture 使用既有 emit_cell_entry_fixtures 产物与 run_entry_fixtures.py，输出目录须为空。接下来继续检查 Cell 计划的重复存储、context 生命周期和候选索引；不将这次范围很小的写入减少当作整个架构已完成。
