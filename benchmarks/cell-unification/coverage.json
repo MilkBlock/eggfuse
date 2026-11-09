@@ -138,7 +138,8 @@
         ]
       },
       "links_checks": "benchmarks/cell-unification/links-check.json",
-      "frame_checks": "benchmarks/cell-unification/query-frame-check.json"
+      "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
+      "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json"
     },
     {
       "id": "rhs_publication",
@@ -320,7 +321,8 @@
       "metrics_from_catalog": "B3",
       "evidence": "benchmarks/cell-unification/links-check.json",
       "remaining": "Shared Cell scopes eliminate intermediate context prefix copies. Cached successful prefixes, terminal post-guard binding copies/projections, candidate index lifecycle and runtime speed acceptance remain.",
-      "frame_checks": "benchmarks/cell-unification/query-frame-check.json"
+      "frame_checks": "benchmarks/cell-unification/query-frame-check.json",
+      "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json"
     },
     {
       "id": "C1",
@@ -495,7 +497,8 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "I1",
       "filter_credit_checks": "benchmarks/cell-unification/filter-credit-check.json",
-      "remaining": "Measured Cell trials charge pre-decode filtering as well as result/repair maintenance. Common iterative composition/materialization authority, remaining filter families and calibrated speed acceptance still need work; equal-weight credit is not time."
+      "remaining": "Measured Cell trials charge pre-decode filtering as well as result/repair maintenance. Common iterative composition/materialization authority, remaining filter families and calibrated speed acceptance still need work; equal-weight credit is not time.",
+      "context_scope_checks": "benchmarks/cell-unification/context-branches-check.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",

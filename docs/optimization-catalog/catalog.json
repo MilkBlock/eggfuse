@@ -616,7 +616,8 @@
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",
         "benchmarks/cell-unification/links-check.json",
-        "benchmarks/cell-unification/query-frame-check.json"
+        "benchmarks/cell-unification/query-frame-check.json",
+        "benchmarks/cell-unification/context-branches-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -2812,7 +2813,8 @@
       "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
-        "benchmarks/condition-bake/README.md"
+        "benchmarks/condition-bake/README.md",
+        "benchmarks/cell-unification/context-branches-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

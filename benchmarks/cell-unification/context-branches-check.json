@@ -1,0 +1,149 @@
+{
+  "scope": "standalone Cell CPU; normal release; no timing or allocation audit",
+  "baseline_source_commit": "7b8ed749",
+  "candidate_commit": "a02f2148",
+  "baseline_instrumentation": {
+    "patch": "benchmarks/cell-unification/context-copy-baseline.patch",
+    "sha256": "9845a8de00f614bb17ace6bad5ff88c5633c2d9d56eb9f892c3529f9f8cee9d1",
+    "purpose": "Counters only, same old prefix-copy algorithm. Missing counters in the original report are not treated as zero."
+  },
+  "semantic_acceptance": "pass",
+  "runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "unchanged_report_groups_excluding_new_counters": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context"
+  ],
+  "unchanged_work_metrics": 339,
+  "changed_work_metrics": {
+    "report:/local_context/rules/*/branch_slot_clears [sum]": [
+      {
+        "status": "observed",
+        "value": 0
+      },
+      {
+        "status": "observed",
+        "value": 6
+      }
+    ],
+    "report:/local_context/rules/*/prefix_copies [sum]": [
+      {
+        "status": "observed",
+        "value": 3
+      },
+      {
+        "status": "observed",
+        "value": 1
+      }
+    ],
+    "report:/local_context/rules/*/prefix_slots_copied [sum]": [
+      {
+        "status": "observed",
+        "value": 63
+      },
+      {
+        "status": "observed",
+        "value": 21
+      }
+    ]
+  },
+  "prefix_work": {
+    "baseline": {
+      "prefix_copies": 3,
+      "prefix_slots_copied": 63,
+      "branch_slot_clears": 0
+    },
+    "candidate": {
+      "prefix_copies": 1,
+      "prefix_slots_copied": 21,
+      "branch_slot_clears": 6
+    }
+  },
+  "prefix_work_net_equal_weight_units_saved": 38,
+  "tests": {
+    "context": {
+      "passed": 1,
+      "log_sha256": "8e66a3a92ff86fd5a7cd3fb81d3a278b149153b0ad780484f987da2519bb669f"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "d7dda30b836f143fa6acf58861900e45794b8ee52100d4c6db5bb9bd370dad4d"
+    },
+    "budget": {
+      "passed": 1,
+      "log_sha256": "a3555eb7a8214f21fa6672fe52f192a15508ce5983a8a216b0589f26b85fa44a"
+    },
+    "credit": {
+      "passed": 4,
+      "log_sha256": "e5cea817ce6ba3000e699c0c00775f1574060241dbbd6548b65a71a73aeccb79"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "70939672689fde24385e503d8b10169111e4280f158c77f42980da8d88ce2725"
+    }
+  },
+  "guarded_fixture": {
+    "runs": 7,
+    "program_file_sha256": "18954bb7a8b22e3b280823f4d9a12395c1a81b361fcc19d4ddc382e3b7f4e216",
+    "source_sha256": "2a9ca53cb7febc4c87ed85937368c84dea66022ff39f0f5295520c886aa0bd6a",
+    "ordered_hashes": {
+      "state.json": "26a6568ccc8c026ef510dfc03bc8268aa2526df79a314f7b109f72caa81b07f6",
+      "stages.json": "90aa69bffcb960283dd5e58c7f1657f0f962ce0e1a1bc56653d82b85e967adbf",
+      "binding-audit.json": "6d792e241f7555f4a3b662a245265c2eb1898ec0f1e12efd0ab8193ce273fdbf"
+    },
+    "cases": {
+      "guarded-prefix": {
+        "prefix_copies": [
+          10,
+          7
+        ],
+        "prefix_slots_copied": [
+          150,
+          105
+        ],
+        "branch_slot_clears": [
+          0,
+          40
+        ]
+      },
+      "linear-prefix": {
+        "prefix_copies": [
+          0,
+          0
+        ],
+        "prefix_slots_copied": [
+          0,
+          0
+        ],
+        "branch_slot_clears": [
+          0,
+          0
+        ]
+      }
+    },
+    "admission": "explicitly enabled compiler-certified contexts; no performance training claimed"
+  },
+  "binaries": {
+    "original": "e17cc81b186ec9f8d31762ca5801dd275ff5cbdbded87cca759eeed79f8898ff",
+    "baseline": "25d83c53886a8034330f59e92b649fa3f2535021c518e5655dc765d548b9bf84",
+    "candidate": "ffb79a3548a9016e43535df3e19535c74d0cd5df7cecb333ad5abb778ea2d7f1"
+  },
+  "reports": {
+    "original": "9ae628f5be992745320117b4a835c154d287eb51f1114cca42945019eba1e058",
+    "baseline": "43b65bbbcc8e28f1821472fdfc355d6c2d8e48942e256955e446f544508f44b9",
+    "candidate": "0e9862992d4cf91f8359e56fe284140c5968805fd4a2775d0b2f8fe6f471398c"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "7f4e24c2",
+    "implementation_commits_since_timing": 2
+  },
+  "limits": "Copies count source clone operations and allocated array slots, including empty slots, not allocator calls or bytes. Clears include unassigned fields after early failures. Equal weights are not a time model or an exhaustive instruction count. Cached successful prefixes, leases and terminal post-guard copies remain; no full context takeover, speedup or multithread acceptance claimed."
+}
