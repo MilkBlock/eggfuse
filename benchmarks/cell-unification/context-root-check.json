@@ -1,0 +1,302 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "context_work": {
+    "249": {
+      "bindings": 4,
+      "branch_slot_clears": 6,
+      "calls": 33,
+      "delta_terminal_rows": 1,
+      "fallbacks": 0,
+      "full_terminal_rows": 4,
+      "orientations": {
+        "0": 33
+      },
+      "peak_prefix_rows": 1,
+      "peak_roots": 1,
+      "port_candidates": 3,
+      "port_probes": 3,
+      "prefix_copies": 1,
+      "prefix_slots_copied": 21,
+      "reverse_groups": 0,
+      "reverse_reads": 0,
+      "root_rebuilds": 1,
+      "root_reuses": 32,
+      "root_rows": 1,
+      "spine_deferrals": 0,
+      "terminal_binding_copies": 0,
+      "terminal_pairs": 4,
+      "terminal_result_writes": 0,
+      "terminal_scratch_slots": 0,
+      "terminal_slots_copied": 0
+    }
+  },
+  "scope": "standalone Cell CPU; normal release; no timing or allocation audit",
+  "baseline_commit": "30394de0",
+  "candidate_commit": "7d773cdc",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context"
+  ],
+  "unchanged_work_metrics": 346,
+  "fixtures": {
+    "branches": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "26a6568ccc8c026ef510dfc03bc8268aa2526df79a314f7b109f72caa81b07f6",
+        "stages.json": "90aa69bffcb960283dd5e58c7f1657f0f962ce0e1a1bc56653d82b85e967adbf",
+        "binding-audit.json": "6d792e241f7555f4a3b662a245265c2eb1898ec0f1e12efd0ab8193ce273fdbf"
+      },
+      "program_file_sha256": "18954bb7a8b22e3b280823f4d9a12395c1a81b361fcc19d4ddc382e3b7f4e216",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 1,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 105,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 0,
+          "root_rows": 3,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 1,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 1,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "2a9ca53cb7febc4c87ed85937368c84dea66022ff39f0f5295520c886aa0bd6a"
+    },
+    "terminal": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8fe1b39063a4d04dfcc0e3f6c848a2a37f4e0c8cf7391eebc8987c2dd4a01834",
+        "stages.json": "b64891564ff28ffefbdeb1183cab7b15f7267bd643a7ec33c2a513703f1dea6b",
+        "binding-audit.json": "2a7937cb2d4c9167b4f4736fe267a28f2829e600a9af0110de77c034dd78e1c8"
+      },
+      "program_file_sha256": "eec0e254deedb3594cc20079b36124435f197be4c12d5568aebac802dedbf2ad",
+      "context_work": {
+        "3": {
+          "bindings": 5,
+          "branch_slot_clears": 6,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 45,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 6,
+          "terminal_result_writes": 11,
+          "terminal_scratch_slots": 12,
+          "terminal_slots_copied": 0
+        },
+        "4": {
+          "bindings": 1,
+          "branch_slot_clears": 6,
+          "calls": 1,
+          "delta_terminal_rows": 0,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 1
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 3,
+          "port_probes": 2,
+          "prefix_copies": 3,
+          "prefix_slots_copied": 36,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 2,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 1,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 5,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "ab672609af2f721d11b97af5791fd45e044e2845bad649ae04a982403adad1e1"
+    },
+    "roots": {
+      "runs": 7,
+      "ordered_hashes": {
+        "state.json": "3f7768e6d9cd0e1a1e3549fb3827dbf9663f0aebce8d7fadef1404c52edca5c6",
+        "stages.json": "0cd6454d2f489f0057353f63d13543ecc4b8718a68de98afd2ecc7f8147b18c3",
+        "binding-audit.json": "69914de28c9bc815202401f7b0bacdbe0987ab7d7197c6758d907a0e6534fe22"
+      },
+      "program_file_sha256": "0848e8ae3027c6731a0a97f543e77ba41e6a9370bfb3828f94e499731ef8a925",
+      "context_work": {
+        "4": {
+          "bindings": 4,
+          "branch_slot_clears": 40,
+          "calls": 3,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 3,
+          "orientations": {
+            "0": 3
+          },
+          "peak_prefix_rows": 3,
+          "peak_roots": 2,
+          "port_candidates": 10,
+          "port_probes": 3,
+          "prefix_copies": 7,
+          "prefix_slots_copied": 105,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 3,
+          "root_reuses": 2,
+          "root_rows": 4,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 4,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        },
+        "5": {
+          "bindings": 2,
+          "branch_slot_clears": 0,
+          "calls": 2,
+          "delta_terminal_rows": 1,
+          "fallbacks": 0,
+          "full_terminal_rows": 1,
+          "orientations": {
+            "0": 2
+          },
+          "peak_prefix_rows": 1,
+          "peak_roots": 2,
+          "port_candidates": 0,
+          "port_probes": 0,
+          "prefix_copies": 0,
+          "prefix_slots_copied": 0,
+          "reverse_groups": 0,
+          "reverse_reads": 0,
+          "root_rebuilds": 1,
+          "root_reuses": 0,
+          "root_rows": 2,
+          "spine_deferrals": 0,
+          "terminal_binding_copies": 0,
+          "terminal_pairs": 2,
+          "terminal_result_writes": 0,
+          "terminal_scratch_slots": 0,
+          "terminal_slots_copied": 0
+        }
+      },
+      "source_sha256": "c36c315665c3c023b7f97b3848c2b57333e5f13b68680f95e5bd72fd96bbd733"
+    }
+  },
+  "tests": {
+    "query": {
+      "passed": 3,
+      "log_sha256": "9214df8bf3db0fd2d7db55f4f6564c45751f279741f8955e08be6a4d057fb35f"
+    },
+    "context": {
+      "passed": 1,
+      "log_sha256": "9aa923dc51aab64aa04782537995383519d33e5773384cf61ecba567bb74ee04"
+    },
+    "cuts": {
+      "passed": 1,
+      "log_sha256": "f844638b0fe1856dc1c35e7cfdae068b2b8ef197ecf3d67872c2ea2ee698b3b6"
+    },
+    "budget": {
+      "passed": 1,
+      "log_sha256": "159d1e8c95993cedcf9df4b5b86c4fa4f9a58f37dfcb9e51f3ff97e66bf0c8d0"
+    },
+    "entry": {
+      "passed": 1,
+      "log_sha256": "80e3feaff4c26d69d7bfe8b6a99e61ce802c8794450e904e1c0bd9e9f6e678ac"
+    },
+    "witness": {
+      "passed": 8,
+      "log_sha256": "f18ff78a10053c9adaaf0bc888db95718475c8ec603a0e440d1b52bcfc93d783"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "5c5318206e625d1c72b3c5098339fc2e772dbfcd298a7e43af165e8dd0b745ef"
+    }
+  },
+  "binaries": {
+    "baseline": "6934292638c3512f9bd5f8edec341c24eb4546acb5451aeac6b4b94f4fee55c0",
+    "candidate": "da4470129db3f55b8f06d7aa36c245ae7f7defd603daf6f47ea3ae5727fe9279"
+  },
+  "timing_cadence": {
+    "last_timed_commit": "c8ef6edc",
+    "implementation_commits_since_timing": 2
+  },
+  "limits": "Root and internal context rows use the same scoped Cell binder; candidate domains use common Expansion fields with register queries. All context Arg interpretation is removed. Static root instructions add metadata; existing counters do not measure this footprint or removed interpretation. Context retention, index lifetime and full speed acceptance remain pending.",
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  }
+}

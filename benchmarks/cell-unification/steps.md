@@ -336,3 +336,11 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 临时 Cut 只持有已有的 root/ports/tail/post 操作位置，加载结束即释放；没有第二份可执行查询表示或运行时事实图。输入覆盖与 guard readiness 保留；选中的 cut 仍由同一 Query lowerer 完成验证。compiler 发出选择证书无需先编译指令，第二次 Bake install 可以从原 source 重选并扩大范围，也无需先构造被排除的指令。被 admission 排除的错误 cut 仍必须拒绝；针对性回归重新计算 artifact digest 后验证该拒绝确实发生在 cut 校验处。
 
 输出 `out/cell-context-selection`。sum-bits choice_diagnosis pass，1,428 个 Run/state 与 346 项工作指标保持；两个已有短 context fixture 的 state/stages/binding audit 保持。7 项针对性检查及最小配置编译通过，audit_cell_relower 验证 22 个编译产物组件完全一致。收集器 `check_context.py ROOT OUTPUT --phase selection --commit 30394de0` 校验保存的来源、测试及数量推导。本步为新周期 1/5，不进行计时/分配采样，速度验收仍未解决。
+
+## 根节点和候选域也使用同一 Cell 字段映射
+
+实现 `7d773cdc`，基线 `30394de0`。把 context root 编译为 ScopedStep，与内部表候选共用完整行检查及新槽写入；删除根部的逐 Arg binder。终端候选、反向候选和 register expansion 共用 Expansion.bind，context 相关分组列由这份字段映射推导。重复 root/tail 位置不再另存。context 执行部分已不再解释 Arg；source 查询仍用于规划和表位置识别。
+
+根节点先验证所有重复字段/常量约束，再向原实例槽写入；没有新 bindings 图或运行时地址映射。新增静态根指令有存储/编译成本，候选域继续使用原 Vec/SmallVec 载体，不把此步称为已测得的分配优化。三个短样例包括重复根字段 Start(x,x)，确认 Start(9,10) 无法产生额外结果；逐 Run state/binding audit 与旧版一致。
+
+输出 `out/cell-context-root`。sum-bits 语义 pass、1,428 个 Run/state 和 346 项工作指标保持，22 个编译产物组件一致。15 项针对性测试、最小配置编译通过。`check_context.py ROOT OUTPUT --phase root --commit 7d773cdc` 校验已有结果。当前 2/5，不新增测速。接下来可据静态字段映射压紧 prefix 存储，不再为整条规则的 RHS/terminal 槽留空位；生命周期和索引审计仍需继续。
