@@ -1,0 +1,2008 @@
+{
+  "schema": "eggfuse-optimization-catalog/v1",
+  "scope": "当前 Cell CPU 分支；native Bake 是编译工具，以下 runtime 指 standalone Cell CPU，不是 native egglog",
+  "categories": [
+    {
+      "id": "A",
+      "title": "前端表示与 marker",
+      "file": "A-frontend.md"
+    },
+    {
+      "id": "B",
+      "title": "匹配与候选访问",
+      "file": "B-matching.md"
+    },
+    {
+      "id": "C",
+      "title": "跨阶段见证与接续",
+      "file": "C-continuations.md"
+    },
+    {
+      "id": "D",
+      "title": "RHS 执行",
+      "file": "D-rhs.md"
+    },
+    {
+      "id": "E",
+      "title": "发布与共享 Entry",
+      "file": "E-publication.md"
+    },
+    {
+      "id": "F",
+      "title": "端口、共享 wiring 与生命周期",
+      "file": "F-ports.md"
+    },
+    {
+      "id": "G",
+      "title": "构造子判重与等价条件",
+      "file": "G-congruence.md"
+    },
+    {
+      "id": "H",
+      "title": "完成调度与并行",
+      "file": "H-completion.md"
+    },
+    {
+      "id": "I",
+      "title": "Bake 选择与评分",
+      "file": "I-admission.md"
+    }
+  ],
+  "common_metrics": [
+    {
+      "source": "report",
+      "pointer": "/inference_seconds",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/load_seconds",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/setup_seconds",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/report_seconds",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/export_seconds",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/peak_rss_through_inference_bytes",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/allocations/alloc_calls",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/allocations/requested_bytes",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/setup_allocations/requested_bytes",
+      "reduce": "value"
+    },
+    {
+      "source": "report",
+      "pointer": "/steps/*/phases/search",
+      "reduce": "sum"
+    },
+    {
+      "source": "report",
+      "pointer": "/steps/*/phases/rhs",
+      "reduce": "sum"
+    },
+    {
+      "source": "report",
+      "pointer": "/steps/*/phases/repair",
+      "reduce": "sum"
+    },
+    {
+      "source": "report",
+      "pointer": "/steps/*/phases/query_update",
+      "reduce": "sum"
+    },
+    {
+      "source": "report",
+      "pointer": "/steps/*/phases/delivery_gc",
+      "reduce": "sum"
+    }
+  ],
+  "optimizations": [
+    {
+      "id": "A1",
+      "category": "A",
+      "title": "结构 key 与有界 native Bake",
+      "activation": "编译命令默认前端",
+      "compile_fact": "结构 key ABI、源程序及训练环境检查",
+      "replaces": "重复表达的前端重写与分析",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "tools/cell-compiler/src/keys.rs",
+        "src/native_analyze.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/key_operations",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/load_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/setup_seconds",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/source_core/structural_key/nodes",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "缺少统一导出的分阶段离线编译时间、Bake 峰值内存和前后 IR 节点数；运行时 key_operations 不是离线收益。",
+      "evidence": [
+        "README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "A2",
+      "category": "A",
+      "title": "marker 选择与 Recipe lowering",
+      "activation": "编译时选择；产物绑定 recipe digest",
+      "compile_fact": "原查询变量、运算符和控制流一致，marker 不改变原程序效果",
+      "replaces": "重复入口谓词与参数表达",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "tools/cell-compiler/src/markers.rs",
+        "tools/cell-compiler/src/marker_ir.rs",
+        "engine/cell-runtime/src/compiler/mod.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/marker_roots",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/setup_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/setup_allocations/requested_bytes",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/marker_tables",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/entry_schedule/nodes",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。",
+      "evidence": [
+        "tools/cell-compiler/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "B1",
+      "category": "B",
+      "title": "寄存器 join 与共享 point 读取",
+      "activation": "可编译的 seminaive 查询",
+      "compile_fact": "至多一次 Expand，其余为完整 key 或已绑定 primitive",
+      "replaces": "通用环境、逐 atom 解释与重复 point 查找",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/row_kernel.rs",
+        "engine/cell-runtime/src/execute_kernel.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/register_answers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/shared_point_hits",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stats/register_seeds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/shared_point_requests",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/residual_candidates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/key_lookup_calls",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/row_kernels",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。",
+      "evidence": [
+        "README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "B2",
+      "category": "B",
+      "title": "Free Join、Sieve 与范围过滤",
+      "activation": "产物具备计划；范围索引按需求构建",
+      "compile_fact": "共享列投影、类型正确的范围约束、版本化候选域",
+      "replaces": "读取后才拒绝的无关候选",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/entry_join.rs",
+        "engine/cell-runtime/src/free_join.rs",
+        "engine/cell-runtime/src/sieve.rs",
+        "engine/cell-runtime/src/physical_plan.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_rejections",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/disjoint_rule_skips",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/rejected",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/free_join/probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_bucket_rows_examined",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/entry_bucket_rows_materialized",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/build_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/update_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/publication/range_rows",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/free_join_entry",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/physical_plan/ranges",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。",
+      "evidence": [
+        "docs/SEMIJOIN.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "B3",
+      "category": "B",
+      "title": "邻居、局部 context 与 view 消费",
+      "activation": "窄 context 默认；通用 cut 需 admission；view-ports 为 feature",
+      "compile_fact": "受需求约束的 sibling/parent 投影与完整 residual",
+      "replaces": "重复解码父节点及重复局部连接",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/neighbor.rs",
+        "engine/cell-runtime/src/local_context.rs",
+        "engine/cell-runtime/src/view_plan.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/rules/*/stats/group_hits",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/local_context/rules/*/root_reuses",
+            "reduce": "sum"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/rules/*/stats/build_visits",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/publication/refreshed",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/view_consumers/port_payload_deliveries",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/demanded_keys",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/local_context/cut_rules",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/view_consumers/groups",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。",
+      "evidence": [
+        "docs/VIEW_CONSUMER_BLOCKS.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "C1",
+      "category": "C",
+      "title": "完整 stage Entry 与 Spine block",
+      "activation": "编译计划及已验证 block catalog",
+      "compile_fact": "函数 key 流可完成全部 atom，primitive 顺序明确",
+      "replaces": "完整匹配环境和重复入口处理",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/stage_spine.rs",
+        "engine/cell-runtime/src/spine_blocks.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_takeovers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/block_resumptions",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/pivots_skipped",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/guards",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/port_refreshes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/origin_map_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/context_reads",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/routed_spine_seeds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/routed_matcher_seeds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/uncovered_queries",
+            "reduce": "value"
+          },
+          {
+            "source": "program",
+            "pointer": "/spine_blocks/entries",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。",
+      "evidence": [
+        "benchmarks/leaf-completion/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "C2",
+      "category": "C",
+      "title": "RHS handoff 与 query receipt",
+      "activation": "iterative Bake 的 typed handoff 证书",
+      "compile_fact": "前序事实、完整 key 与源边界 congruence；禁止未来查询倒证先前读取",
+      "replaces": "后继 RHS 构造子查找、部分完整 Cell frame",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/result_handoff.rs",
+        "engine/cell-runtime/src/iterative.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_lets",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_sets",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_closed",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/rhs_frames_avoided",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_receipt_hits",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_stale",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/handoff_missing",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_capture_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_slots_written",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_allocations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_receipt_stale",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/iterative_bake/rhs_handoffs/states",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。",
+      "evidence": [
+        "benchmarks/query-receipts/README.md",
+        "benchmarks/compiler-congruence/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "C3-new",
+      "category": "C",
+      "title": "已有 effect 见证直达",
+      "activation": "有静态 effect route 的完整 Spine Entry",
+      "compile_fact": "真实 Entry 的当前 producer + 当前完整 key 校验",
+      "replaces": "history/cache 未命中后的完整查询",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/stage_spine.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_hits",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_contexts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_route_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_route_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_key_fields",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_stale",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/key_lookup_calls",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_routes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/local_witness_reads",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "命中才省一次 fallback lookup；不能把所有 context probes 都视作成功复用。",
+      "evidence": [
+        "benchmarks/witness-prefix/design.md"
+      ],
+      "status": "本轮实现；正确性与性能见本轮验证记录"
+    },
+    {
+      "id": "C4-new",
+      "category": "C",
+      "title": "匹配前缀接续",
+      "activation": "含 Expand 且存在 producer-local effect 前缀的 register kernel",
+      "compile_fact": "连续完整 key 前缀；保留 delta owner、guards 与全部 residual Expand",
+      "replaces": "从 PC=0 重做已有事实前缀",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/row_kernel.rs",
+        "engine/cell-runtime/src/execute_kernel.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/key_reads_avoided",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/resumes",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/context_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/plan_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/donor_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/key_fields",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/stale_fallbacks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/key_fallbacks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/eligible_seeds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/plan_hits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/register_prefix/owner_rejections",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "key_reads_avoided 包括原本可命中 PointPorts 的读取，不能当作等量哈希查找节省。",
+      "evidence": [
+        "benchmarks/witness-prefix/register-prefix-design.md"
+      ],
+      "status": "本轮实现；正确性与性能见本轮验证记录"
+    },
+    {
+      "id": "D1",
+      "category": "D",
+      "title": "静态构造子别名与 known results",
+      "activation": "typed RHS alias 计划",
+      "compile_fact": "已匹配 query/effect 的同 key 结果；删除 guard 保留",
+      "replaces": "重复构造调用和部分 RHS frame",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/known_results.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/known_results/static_eliminated",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/known_results/lazy_prefix_eliminated",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/known_results/avoided_lookups",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/rhs_frames_avoided",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/known_results/requests",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/known_results/dirty",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/known_results/mismatched",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/known_results/expired",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/known_results/static_aliases",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/known_results/plans",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "本轮补导出已有 known_stats；旧 report 中缺失，不得补零。static plan 数不是运行时消除次数。",
+      "evidence": [
+        "docs/RHS_BLOCK_WORK.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "D2",
+      "category": "D",
+      "title": "单写 RHS、稀疏 frame 与 merge program",
+      "activation": "typed single-write / scalar merge / constructor-only 路径",
+      "compile_fact": "纯前缀、定义使用关系、merge 语义",
+      "replaces": "通用 Cell 分配、slot 初始化和 merge 解释",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/row_kernel.rs",
+        "engine/cell-runtime/src/graph.rs",
+        "engine/cell-runtime/src/merge_programs.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/single_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/transient_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/rhs_frames_avoided",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/scalar_unchanged",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stats/cells_created",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/merge_program_operations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/merge_port_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/merge_program_constructs",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/allocations/alloc_calls",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/single_writes",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/merge_programs/programs",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "单写/稀疏 frame/merge 各自的独立耗时未统一分离；需针对计划的消融。",
+      "evidence": [
+        "docs/SPARSE_CELL_CPU.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "E1",
+      "category": "E",
+      "title": "Run 变更批次与共享 Entry 参数",
+      "activation": "普通执行路径；编译共享入口谓词",
+      "compile_fact": "只发布当前 committed row，按消费者水位交付",
+      "replaces": "重复逐规则登记、字段复制与重解码",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/change_batch.rs",
+        "engine/cell-runtime/src/entry_schedule.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/parameter_packets_reused",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/borrowed_slots",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/predicate_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/row_decodes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/node_notifications",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/publication/row_reads",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/nodes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/live_packets",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "参数共享是表示优化；不能省略可观察的 RHS 发布与源 Run 边界。",
+      "evidence": [
+        "docs/CHANGE_BATCH.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "E2",
+      "category": "E",
+      "title": "Entry 持有 producer publication",
+      "activation": "--entry-publications；ownership 自动启用",
+      "compile_fact": "唯一穷尽入口、当前可见性、同 key forwarding、最后写入者",
+      "replaces": "独立 Spine source 索引与重复退休维护",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/entry_schedule.rs",
+        "engine/cell-runtime/src/stage_spine.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/node_cursor_reads",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/legacy_entry_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/legacy_retirement_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/legacy_cursor_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/entry_publication_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/entry_retirement_checks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/node_entry_references",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/legacy_entry_references",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "比较旧/新索引双方维护成本；不要只报告 legacy writes 降低。",
+      "evidence": [
+        "benchmarks/entry-publications/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "E3-new",
+      "category": "E",
+      "title": "片段内部 publication",
+      "activation": "至少两个 anchor；全为 permanent、Entry-owned，非 audit_receipts",
+      "compile_fact": "共享 anchor wiring + compact receipts + Entry 槽位 ordinal",
+      "replaces": "中间 direct-publication 哈希登记/重映射与二次 Entry 寻址",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/stage_spine.rs",
+        "engine/cell-runtime/src/entry_schedule.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_direct_inserts_avoided",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_deliveries",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_packets",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_receipt_spills",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_delivery_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/direct_publication_hash_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/publication_slot_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/fragment_pending_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/fragment_pending_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/publication_pending_pushes",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/fragment_receipts",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "这是有覆盖证明的 RHS 片段交付；未知边界仍走旧路径。audit_receipts 会主动禁用该快路，验证不能只用 audit 模式。",
+      "evidence": [
+        "benchmarks/witness-prefix/design.md"
+      ],
+      "status": "本轮实现；正确性与性能见本轮验证记录"
+    },
+    {
+      "id": "F1",
+      "category": "F",
+      "title": "result-only repair ports",
+      "activation": "--repair-ports",
+      "compile_fact": "typed key footprint 区分输入和结果变化",
+      "replaces": "只有输出改变时的 key 重建与订阅重做",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/repair_ports.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stats/repair_key_hash_changes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/repaired_dependencies",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/repair_ports/stats/attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/repair_ports/stats/port_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/repair_ports/stats/field_copies",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/repair_ports/enabled",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "收益必须与旧路径差值比较；key 改变仍有 repair。",
+      "evidence": [
+        "benchmarks/result-port-repair/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "F2",
+      "category": "F",
+      "title": "Cell ownership 与共享 repair slices",
+      "activation": "--cell-ownership / --local-unions 的相关后端",
+      "compile_fact": "全部标量 body、静态 signal→字段 wiring；未知外部关系保留",
+      "replaces": "逐字段反向订阅及逐 owner/body 扫描",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/cell_ownership.rs",
+        "engine/cell-runtime/src/ownership_slices.rs",
+        "engine/cell-runtime/src/local_union_cells.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/reverse_insert_attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/reverse_remove_attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/owned_births",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/slice_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/dispatch_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/dispatch_scratch_growths",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/boundary_probes",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/eligible_live_facts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/unsupported_live_rows",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "早期 owner 扫描版本曾明显变慢；订阅减少不能单独证明更快。",
+      "evidence": [
+        "benchmarks/ownership-slices/README.md",
+        "benchmarks/local-unions/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "F3",
+      "category": "F",
+      "title": "跨模板共享符号与 frozen fragments",
+      "activation": "ownership_fragments 证书；运行时只接受已烘焙 hop",
+      "compile_fact": "checked Entry substitutions；静态 frame/local wiring",
+      "replaces": "跨模板字段绑定记录和运行时 shape 构建",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/ownership_composition.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_substituted_ports",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_baked_hits",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_transition_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_shape_builds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_shape_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/composition_unbaked_fallbacks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/internal_eq_ports",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/boundary_eq_ports",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/cross_stage_live_facts",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "baked_hits 是事件，不能作为独立 Cell 数量；同时报告容量截断与 fallback。",
+      "evidence": [
+        "benchmarks/ownership-fragments/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "F4",
+      "category": "F",
+      "title": "直接 signal 槽与 component 生命周期",
+      "activation": "ownership 后端",
+      "compile_fact": "稳定 component/symbol 地址；事实存活与最终 component 退休",
+      "replaces": "signal 绑定哈希和逐字段 detach 引用计数",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/ownership_composition.rs",
+        "engine/cell-runtime/src/ownership_slices.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/signal_port_detaches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/signal_bindings_retired",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/signal_binding_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/component_lifetime_updates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/component_signal_retire_visits",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/retained_inactive_signal_bindings",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/inventory/allocated_signal_slots",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "将删除工作推迟到 component 退休会保留 inactive slots；必须报告峰值内存。",
+      "evidence": [
+        "benchmarks/signal-lifetime/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "F5",
+      "category": "F",
+      "title": "稳定字段 PortRef",
+      "activation": "--stable-ports（port-keys/local-congruence 隐含）",
+      "compile_fact": "字段保存稳定端口，值通过当前 Eq 根读取",
+      "replaces": "复制 canonical 代表编号与逐字段重写",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/stable_ports.rs",
+        "engine/cell-runtime/src/port_guard.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/notified_columns",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/legacy_key_enqueues",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/port_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/root_resolutions",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/root_parent_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/node_lookups",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/live_stable_nodes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/live_port_fields",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "字段重写降低不等于 key repair 消失；表示层成本转成读取时解析。",
+      "evidence": [
+        "benchmarks/stable-port-congruence/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "G1",
+      "category": "G",
+      "title": "端口等价构造子判重与 birth hint",
+      "activation": "--port-keys",
+      "compile_fact": "完整端口域给候选；完整 key Eq/标量校验；hint 只作正提示",
+      "replaces": "canonical-key 哈希维护",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/port_keys.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/birth_hint_hits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/repair_key_hash_changes",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/birth_hint_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/port_domain_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/key_candidates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/key_field_comparisons",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/port_key_matching",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/pending_canonical_keys",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "birth hint 失效只能 fallback，不能证明无匹配；候选顺序决定 survivor。",
+      "evidence": [
+        "benchmarks/stable-port-congruence/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "G2",
+      "category": "G",
+      "title": "局部 congruence 条件与 typed dispatch",
+      "activation": "--local-congruence",
+      "compile_fact": "共享静态 site/输入 Eq 条件，运算符 identity 与 scalar guard；有容量界",
+      "replaces": "重复局部候选枚举、反身 Eq 检查与泛化字段扫描",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/ownership_conditions.rs",
+        "engine/cell-runtime/src/local_port_conditions.rs",
+        "engine/cell-runtime/src/ownership_queries.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/completed_conditions",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/cross_stage_conditions",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/condition_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/operator_guards",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/equality_guards",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/scalar_guards",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/boundary_signals",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_route_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_column_checks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/uncovered_shapes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/open_domains",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/local_conditions/stats/closed_domain_probes",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "条件满足数不是额外独立收益；完整输入证明、存活及边界候选不能删。",
+      "evidence": [
+        "benchmarks/condition-bake/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "G3",
+      "category": "G",
+      "title": "跨阶段候选域分组跳过",
+      "activation": "bake-cell-ownership --query-classes true",
+      "compile_fact": "所有允许未来 hop 的可能运算符闭包，certificate 验证",
+      "replaces": "先访问实例再拒绝的 signal/slice 遍历",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/ownership_query_classes.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_signal_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_slice_steps",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/query_class_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/query_class_range_jumps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/key_candidates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/stats/key_field_comparisons",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/ownership_fragments/query_classes/masks",
+            "reduce": "count"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_queries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/cell_ownership/stats/domain_results",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "当前已知改进相对前一共享代码版本；没有双工作负载整进程胜出，仍慢于历史 fast。候选减少不能推出 RHS 同比例加速。",
+      "evidence": [
+        "benchmarks/query-classes/final/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "H1",
+      "category": "H",
+      "title": "编译 scope 与按需完成",
+      "activation": "--scoped-queues / --scoped-execution",
+      "compile_fact": "完整 table/type influence、opaque effects 回退与原观察边界",
+      "replaces": "不相关 table 的强制等待",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/completion_plan.rs",
+        "engine/cell-runtime/src/scoped_completion.rs",
+        "engine/cell-runtime/src/runtime_completion.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/scoped_completion/stats/bypassed_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/runs_with_unrelated_pending",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/scoped_completion/stats/head_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/readiness_dependency_checks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/compiler_full_completion_runs",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_completion/stats/opaque_full_completions",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "静态粗 scope 常退化成全局；目前没有专门的 wall-clock stall 分项，不把 bypassed_tasks 叫已消除 stall。",
+      "evidence": [
+        "benchmarks/stable-port-congruence/scoped-executor-contract.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "H2",
+      "category": "H",
+      "title": "concrete-port influence 与 pure epoch",
+      "activation": "--port-scopes / --pure-epochs / --unique-port-publication",
+      "compile_fact": "端口影响 frontier、纯构造效果、birth/order 检查",
+      "replaces": "有界区域内的多余完成屏障和发布查找",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/port_completion.rs",
+        "engine/cell-runtime/src/pure_effects.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/bypassed_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/scoped_executor/stats/rhs_fact_births_while_pending",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/root_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/static_steps",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/pure_epoch_frontier_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/pure_epoch_order_checks",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/pure_epoch_accepts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/typed_fallbacks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/port_completion/stats/pure_epoch_order_rejections",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "while_pending 的 binding/逻辑 match 不是 mutation；只有实际 birth/update/union 计数能说明执行。",
+      "evidence": [
+        "benchmarks/stable-port-congruence/scoped-executor-contract.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "H3",
+      "category": "H",
+      "title": "并行 guard、跨 task 读取与 overlap",
+      "activation": "--guard-workers；--completion-batch-tasks；--overlap-completion",
+      "compile_fact": "不可变 snapshot、完整输入 read set、两侧 union 失效和有序提交",
+      "replaces": "将可独立的 Eq/条件读取并行执行",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/parallel_port_guards.rs",
+        "engine/cell-runtime/src/completion_read_batches.rs",
+        "engine/cell-runtime/src/completion_overlap.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/committed_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/reused_after_union",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/dispatches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/read_set_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/unused_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/scratch_allocations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/overlap/stats/task_spawns",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/worker_tasks",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "需要同二进制1/2/4线程整进程与推理时间；worker参与和并行读取不代表并行提交或无 stall。历史测试未建立加速。",
+      "evidence": [
+        "benchmarks/raytrace-parallel/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    },
+    {
+      "id": "H4-new",
+      "category": "H",
+      "title": "大 Cell 的完整域并行完成",
+      "activation": "已有 completion batch 模式自动扩大可读范围",
+      "compile_fact": "局部条件超16 sites时，完整端口域 + exact key guard 仍可证明候选完整",
+      "replaces": "因局部条件容量限制而截断整个读取批次",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "engine/cell-runtime/src/completion_read_batches.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/exact_domain_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/committed_tasks",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/exact_domain_candidates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/candidate_positions",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/unused_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/scratch_allocations",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/uncovered_stops",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stable_ports/completion_batches/stats/short_prefixes",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "覆盖扩大不是速度改善；原条件代码容量界不变，提交仍按序且必须允许失效回退。",
+      "evidence": [
+        "benchmarks/witness-prefix/design.md"
+      ],
+      "status": "本轮实现；正确性与性能见本轮验证记录"
+    },
+    {
+      "id": "I1",
+      "category": "I",
+      "title": "模板选择、迭代 catalog 与实际工作 credit",
+      "activation": "bake-cell-ownership / cell-iterate；明确 backend",
+      "compile_fact": "profile 选代码、typed facts 证明；同工作负载完整执行比较",
+      "replaces": "仅以模板数、静态收益或命中率选方案",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "sources": [
+        "tools/cell-compiler/src/ownership_bake.rs",
+        "tools/cell-compiler/src/iterate.rs",
+        "tools/cell-compiler/src/work_credit.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/key_lookup_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/allocations/alloc_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/inference_seconds",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/setup_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/setup_allocations/requested_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "program",
+            "pointer": "/iterative_bake/joins",
+            "reduce": "count"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "program",
+            "pointer": "/ownership_fragments/fragments",
+            "reduce": "count"
+          },
+          {
+            "source": "program",
+            "pointer": "/iterative_bake/rhs_handoffs/states",
+            "reduce": "count"
+          }
+        ]
+      },
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。",
+      "evidence": [
+        "benchmarks/entry-publications/README.md",
+        "benchmarks/condition-bake/README.md"
+      ],
+      "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
+    }
+  ]
+}

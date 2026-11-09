@@ -2,6 +2,8 @@
 
 This branch builds the Rust Cell compiler, offline Bake and standalone CPU executor in one Cargo workspace. The compiler uses the vendored egglog frontend for native analysis. The executor runs checked recipe IR, publishes at the original Run boundaries and exports a logical graph.
 
+[优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、27 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
+
 ```sh
 cargo cell-compile --case sum-bits --output out/sum-bits
 cargo cell-run --program out/sum-bits/program.json --output out/run

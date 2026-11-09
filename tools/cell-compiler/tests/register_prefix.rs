@@ -26,10 +26,7 @@ fn execute(p: Program, owned_entries: bool, stable_ports: bool) -> Executor {
         else { Graph::new(p) }.unwrap();
     let mut e = Executor::new(graph, true);
     #[cfg(feature = "sparse-cells")]
-    #[cfg(feature = "sparse-cells")]
     if owned_entries { e.use_entry_publications().unwrap(); }
-    #[cfg(not(feature = "sparse-cells"))]
-    let _ = owned_entries;
     #[cfg(not(feature = "sparse-cells"))]
     let _ = owned_entries;
     e.execute().unwrap();

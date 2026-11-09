@@ -1,0 +1,78 @@
+# B · 匹配与候选访问
+
+[返回总目录](README.md)。本页从 [catalog.json](catalog.json) 生成。
+
+指标路径以 `report:` 或 `program:` 开头；`*` 表示逐规则/逐 Run 展开。
+同一指标可能被多个优化使用，不能跨条目累加成总收益。
+
+## B1 · 寄存器 join 与共享 point 读取
+
+启用条件：可编译的 seminaive 查询。
+
+编译期依据：至多一次 Expand，其余为完整 key 或已绑定 primitive。
+
+替代的旧工作：通用环境、逐 atom 解释与重复 point 查找。
+
+运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
+
+代码：[row_kernel.rs](../../engine/cell-runtime/src/row_kernel.rs) · [execute_kernel.rs](../../engine/cell-runtime/src/execute_kernel.rs)
+
+| 指标用途 | 精确数据路径 |
+|---|---|
+| 收益观察（需基线差值） | `report:/stats/register_answers [value]`<br>`report:/stats/shared_point_hits [value]` |
+| 成本 / 剩余工作 | `report:/stats/register_seeds [value]`<br>`report:/stats/shared_point_requests [value]`<br>`report:/stats/residual_candidates [value]`<br>`report:/key_lookup_calls [value]` |
+| 覆盖 / 规模 / 回退 | `program:/row_kernels [count]` |
+
+解释与缺口：register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。
+
+状态：已实现；性能结论仅适用于链接中的具体版本和配置。
+
+证据：[README.md](../../README.md)
+
+## B2 · Free Join、Sieve 与范围过滤
+
+启用条件：产物具备计划；范围索引按需求构建。
+
+编译期依据：共享列投影、类型正确的范围约束、版本化候选域。
+
+替代的旧工作：读取后才拒绝的无关候选。
+
+运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
+
+代码：[entry_join.rs](../../engine/cell-runtime/src/entry_join.rs) · [free_join.rs](../../engine/cell-runtime/src/free_join.rs) · [sieve.rs](../../engine/cell-runtime/src/sieve.rs) · [physical_plan.rs](../../engine/cell-runtime/src/physical_plan.rs)
+
+| 指标用途 | 精确数据路径 |
+|---|---|
+| 收益观察（需基线差值） | `report:/free_join/entry_rejections [value]`<br>`report:/free_join/disjoint_rule_skips [value]`<br>`report:/sieve/stats/rejected [value]` |
+| 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]` |
+| 覆盖 / 规模 / 回退 | `program:/free_join_entry [count]`<br>`program:/physical_plan/ranges [count]` |
+
+解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。
+
+状态：已实现；性能结论仅适用于链接中的具体版本和配置。
+
+证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md)
+
+## B3 · 邻居、局部 context 与 view 消费
+
+启用条件：窄 context 默认；通用 cut 需 admission；view-ports 为 feature。
+
+编译期依据：受需求约束的 sibling/parent 投影与完整 residual。
+
+替代的旧工作：重复解码父节点及重复局部连接。
+
+运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
+
+代码：[neighbor.rs](../../engine/cell-runtime/src/neighbor.rs) · [local_context.rs](../../engine/cell-runtime/src/local_context.rs) · [view_plan.rs](../../engine/cell-runtime/src/view_plan.rs)
+
+| 指标用途 | 精确数据路径 |
+|---|---|
+| 收益观察（需基线差值） | `report:/neighbor_context/rules/*/stats/group_hits [sum]`<br>`report:/local_context/rules/*/root_reuses [sum]` |
+| 成本 / 剩余工作 | `report:/neighbor_context/rules/*/stats/build_visits [sum]`<br>`report:/neighbor_context/publication/refreshed [value]`<br>`report:/view_consumers/port_payload_deliveries [value]` |
+| 覆盖 / 规模 / 回退 | `report:/neighbor_context/demanded_keys [value]`<br>`report:/local_context/cut_rules [value]`<br>`report:/view_consumers/groups [count]` |
+
+解释与缺口：每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。
+
+状态：已实现；性能结论仅适用于链接中的具体版本和配置。
+
+证据：[docs/VIEW_CONSUMER_BLOCKS.md](../../docs/VIEW_CONSUMER_BLOCKS.md)
