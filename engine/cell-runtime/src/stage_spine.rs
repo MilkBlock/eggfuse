@@ -1427,17 +1427,18 @@ impl Programs {
         }
     }
     #[cfg(feature = "sparse-cells")]
-    fn finish_boundary(&mut self, slot: usize, entries: &mut crate::entry_schedule::Scheduler) {
+    fn finish_boundary(&mut self, slot: usize, entries: &mut crate::entry_schedule::Scheduler) -> Result<()> {
         let id = self.pending_steps[slot].ready.expect("ready Cell export");
         let record = self.ready_publications[id.get() - 1];
         self.pending_steps[slot].ready = record.next;
         self.stats.completion_boundary_reads += 1;
         if !entries.install_publication(record.table, record.witness,
-            || self.materialize_publication(record.publication)) {
+            || Ok(self.materialize_publication(record.publication)))? {
             // Normalized boundary keys were counted before their receipts were
             // resolved. A later fragment can already own this same final key.
             self.stats.distinct_anchor_keys -= 1;
         }
+        Ok(())
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn settled(&self)->bool {
@@ -1648,30 +1649,34 @@ impl Programs {
                             if fragment { self.stats.fragment_delivery_checks += 1; }
                             if ready.is_some_and(|r| !r[table]) { pending = true; continue; }
                             while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.output > output.operation) {
-                                self.finish_boundary(slot, entries);
+                                self.finish_boundary(slot, entries)?;
                             }
                             let w = g.resolve_receipt(old);
-                            if !g.receipt_visible(w, table) {
-                                return Err("permanent Cell output lost visibility".into());
-                            }
                             let publication = Publication {
                                 slot, receipt: Some(old), output: output.operation,
                                 #[cfg(feature = "spine-shapes")]
                                 source: crate::graph::FactRef { cell: delivery.cell, op: output.operation as u32 },
                             };
-                            let installed = entries.install_publication(table, w, || self.materialize_publication(publication));
+                            let installed = entries.install_publication(table, w, || {
+                                self.stats.receipt_attempts += 1;
+                                if !g.receipt_visible(w, table) {
+                                    return Err("permanent Cell output lost visibility".into());
+                                }
+                                self.stats.receipt_hits += 1;
+                                Ok(self.materialize_publication(publication))
+                            })?;
                             self.stats.distinct_anchor_keys += u64::from(installed);
                             self.stats.cell_output_deliveries += 1;
                             if fragment { self.stats.fragment_deliveries += 1; }
-                            self.stats.receipt_attempts += 1;
-                            self.stats.receipt_hits += 1;
+                            // Resolution still runs for every delivered output,
+                            // even when its final Entry already has a winner.
                             self.stats.receipt_redirects += u64::from(w != old);
                             self.cell_outputs[index] = None;
                             self.cell_outputs_pending -= 1;
                         }
                         self.pending_steps[slot].delivery = pending.then_some(delivery);
                     }
-                    while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries); }
+                    while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries)?; }
                 }
                 self.ready_publications.clear();
             }

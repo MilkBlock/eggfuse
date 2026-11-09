@@ -116,7 +116,7 @@ fn fragment_receipts_use_entry_slots_after_union_and_duplicate_publications() {
 }
 
 #[test]
-fn repeated_fragment_publications_queue_a_new_packet_once() {
+fn repeated_publications_skip_batch_losers_but_revalidate_later_batches() {
     let source = r#"
 (datatype E (N i64) (Start E) (F E) (H E) (Gateway E) (Out E))
 (ruleset make) (ruleset consume)
@@ -132,7 +132,20 @@ fn repeated_fragment_publications_queue_a_new_packet_once() {
     let report = nodes.report();
     let stats = &report["entry_schedule"]["stats"];
     assert!(stats["publication_pending_pushes"].as_u64().unwrap() > 0, "{stats}");
-    assert!(stats["publication_pending_reuses"].as_u64().unwrap() > 0, "{stats}");
+    assert!(stats["publication_loser_skips"].as_u64().unwrap() > 0, "{stats}");
+    assert_eq!(stats["publication_pending_reuses"], 0, "a same-batch loser cannot maintain the queue");
+
+    // The next source Run can publish to that still-packetless Entry before
+    // consumption. The previous batch is no proof for this new application.
+    let later = source.replace("(ruleset make)", "(ruleset later) (ruleset make)")
+        .replace("(F (N 0))", "(rule ((Start x)) ((Gateway x)) :ruleset later)\n(F (N 0))")
+        .replace("(run make) (run consume)", "(run make) (run later) (run consume)");
+    compare(&later);
+    let (_, nodes) = compare_mode(&later, false);
+    let after = nodes.report();
+    assert!(after["entry_schedule"]["stats"]["publication_pending_reuses"].as_u64().unwrap() > 0);
+    assert!(after["stage_spine"]["stats"]["receipt_attempts"].as_u64().unwrap()
+        > report["stage_spine"]["stats"]["receipt_attempts"].as_u64().unwrap());
 }
 
 #[test]
@@ -156,6 +169,10 @@ fn single_output_cells_keep_last_source_without_receipt_hash_coalescing() {
     assert_eq!(s["fragment_receipts"], 0);
     assert_eq!(s["direct_publication_hash_probes"], 0);
     assert!(report["entry_schedule"]["stats"]["publication_loser_skips"].as_u64().unwrap() > 0);
+    // Repeated candidates still resolve their receipts, but only the winner
+    // needs a visibility proof. Later Runs must publish and validate again.
+    assert!(s["receipt_attempts"].as_u64().unwrap() < s["cell_output_deliveries"].as_u64().unwrap());
+    assert_eq!(s["receipt_hits"], report["entry_schedule"]["stats"]["entry_publication_writes"]);
 }
 
 #[test]

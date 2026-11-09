@@ -549,3 +549,17 @@ Bake Work::read 以前只收费 fragment_receipts/fragment_delivery_checks 子�
 新短样例 mixed-cell-outputs.egg 含交错永久/可删除输出、union、重复发布、删除重建；派生样例再含查询别名及 RHS 中断。源 marker 编译与直接 typed Cell 编译各作普通/全碰撞哈希的逐阶段对照。audit-stages 会关闭编译后的 receipt 直达，所以另对直接编译的样例运行正常模式，明确验证实际接管：哈希探测分别 18→0、16→0，边界记录均 8→4，已有输出槽直接复用 3→11、3→9；等权净节省分别为 6、12。24 个短进程均小于 1 秒，仅作预算检查；所有 state/Run 顺序及适用的 stage/binding audit 相同。sum-bits 的 1,428 个 Run、最终 state 保持，322 项目录工作指标不变、24 项发布指标按上述接管变化；choice_diagnosis pass，22 个编译组件重新 lowering 一致。
 
 产物 out/cell-mixed-outputs；复核 `python3 benchmarks/cell-unification/check_mixed_outputs.py ROOT OUTPUT --commit COMMIT`。直接源样例由 `cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports --example emit_cell_source -- SOURCE.egg OUTPUT_DIRECTORY` 生成；run_mixed_outputs.py 支持 --direct-emitter，正常模式用 run_retention_fixtures.run(ROOT, ('mixed','aliased'), audit=False)。这是 standalone Cell CPU 的工作量检查，没有时间/分配器采样；源码 marker 物化、一般 Bake 组合、剩余边界及整体速度验收仍未完成。本次是 acab2911 后第 2 个实现提交。
+
+## Cell Entry 复用同一批次的胜者证明
+
+上一轮 sum-bits 有 9,027 个 Entry 发布候选、3,114 个落败候选。原路径先验证 receipt，再由 publication_slot 维护槽位/队列，最后才检查同批次胜者。Cell 已按相反源顺序发布，且整个发布批次内图不变：同一最终 receipt 的胜者已证明可见，后来的候选不必重做该校验。本次删除独立 publication_slot 接口，把 Entry 选择、校验和提交合为一次操作；落败候选在维护前退出，只有校验成功才能创建/替换 publication。新批次必须重新验证，失败不能留下空 Entry、占槽或排队。原 receipt 转发解析仍在选胜者之前执行，实际复用/重定向、源效果覆盖顺序和原 Run 边界保持。
+
+sum-bits receipt_attempts 11,586→8,472，receipt_hits 11,528→8,414，publication_pending_reuses 425→123；343 项目录工作指标保持，3 项改变。Entry 探测仍为 9,027，Cell 输出读取/解析次数仍为 8,774，最终发布写入和图/查询/历史工作均不变。少掉的是实际 receipt_visible 调用以及落败候选的槽位维护，没有用新缓存或反向依赖替代它们。
+
+Work 现在用已有 cell_output_deliveries 单独收费这条路径每次仍需执行的 resolve_receipt；receipt_attempts 收实际可见性校验。按同一更新口径重算前后报告，本轮净节省 3,114 项等权工作；上一轮混合输出单独计算为 -4,034（旧账本未计转发解析时是 -1,313），两轮累计相对 3e622300 仍为 -920。不能将删除校验误记成连解析也消失，不能以等权工作量代替速度结论。
+
+32 项针对性测试及最小 feature 编译通过：2 项 Entry 状态检查、普通/完整配置各 7 项发布、12 项局部完成、4 项工作评分。新增失败校验不污染 Entry 的检查；重复发布回归明确区分同批次落败不维护队列、下一 Run 在尚未消费前仍需验证。部分 scope 样例 global_observer=false，确实在其他完成任务未结束时发布 3 张表，最终状态和顺序绑定保持。两个既有混合输出/别名中断短样例以正常及全碰撞哈希，分别运行审计和普通模式；16 个进程均小于 1 秒。普通模式分别少 4、2 次校验，查询、实际发布及所有其他工作保持；state/Run 与适用的 stage/binding audit 完全一致。
+
+sum-bits 1,428 个 Run、最终 state 保持，choice_diagnosis pass，22 个编译组件重新 lowering 一致。对象仍为 standalone Cell CPU，没有性能/分配器采样。产物 out/cell-publication-winners；复核 `python3 benchmarks/cell-unification/check_publication_winners.py ROOT OUTPUT --commit COMMIT`。当前使用同一源程序和冻结普通 release，并保留直接前版和混合输出之前的报告，使用同一成本口径比较。
+
+本次是 acab2911 后第 3 个实现提交。尚未删除 Entry 查找、重复候选的输出扫描或转发解析。下一处结构机会是 Cell 已有 static_sources：它描述真实的查询/效果来源，可用于证明某些输出必被同 Cell 的较晚输出覆盖；目前还没有据此删除发布。源码 marker 物化、一般 Bake 组合和最终多线程验收仍未完成。

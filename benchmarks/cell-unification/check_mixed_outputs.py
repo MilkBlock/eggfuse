@@ -30,7 +30,7 @@ def differences(a, b, path=''):
     return {} if a == b else {path: [a, b]}
 
 
-def pair(directory, lanes, program, audit=False):
+def pair(directory, lanes, program, audit=False, allowed=ALLOWED, charged=CHARGED):
     reports = [load(directory / lane / 'report.json') for lane in lanes]
     clean = [stable(work(r)) for r in reports]
     for r in clean:
@@ -39,12 +39,12 @@ def pair(directory, lanes, program, audit=False):
         for k in ('peak_rss_through_setup_bytes', 'peak_rss_through_inference_bytes'):
             r.pop(k)
     changes = differences(*clean)
-    assert changes.keys() <= ALLOWED, changes.keys() - ALLOWED
+    assert changes.keys() <= allowed, changes.keys() - allowed
     files = ('state.json', 'stages.json', 'binding-audit.json') if audit else ('state.json',)
     hashes = {f: sha(directory / lanes[0] / f) for f in files}
     assert all(sha(directory / lanes[1] / f) == h for f, h in hashes.items())
     return dict(runs=len(reports[0]['steps']), ordered_hashes=hashes, changed_work=changes,
-        publication_net_saved_operations=sum(before - after for k, (before, after) in changes.items() if k in CHARGED),
+        publication_net_saved_operations=sum(before - after for k, (before, after) in changes.items() if k in charged),
         program_sha256=sha(program))
 
 

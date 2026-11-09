@@ -26,6 +26,9 @@ impl Work {
                 // the boundary work that a compiled output can replace.
                 // Fragment coverage/check counters are subsets, not extra work.
                 "cell_output_receipts", "cell_output_slot_reads", "effect_output_copies", "receipt_attempts",
+                // Each delivered output still resolves its receipt before
+                // Entry selection; skipping visibility checks does not erase it.
+                "cell_output_deliveries",
                 "completion_boundary_records", "completion_boundary_reads", "completion_order_checks", "completion_cell_visits",
             ]),
             ("entry_schedule/stats", &[
@@ -306,6 +309,7 @@ mod tests {
             "/stage_spine/stats/fragment_receipt_spills", "/entry_schedule/stats/publication_slot_probes",
             "/stage_spine/stats/cell_output_receipts", "/stage_spine/stats/cell_output_slot_reads",
             "/stage_spine/stats/effect_output_copies", "/stage_spine/stats/receipt_attempts",
+            "/stage_spine/stats/cell_output_deliveries",
             "/stage_spine/stats/completion_boundary_records", "/stage_spine/stats/completion_boundary_reads",
             "/stage_spine/stats/completion_order_checks", "/stage_spine/stats/completion_cell_visits",
             "/entry_schedule/stats/publication_pending_pushes", "/entry_schedule/stats/fragment_pending_writes",

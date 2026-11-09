@@ -658,18 +658,39 @@ impl Scheduler {
         self.publication_nodes.iter().map(Option::is_some).collect()
     }
     #[cfg(feature = "sparse-cells")]
-    fn publication_slot(&mut self, table: usize, w: Dependency) -> std::num::NonZeroUsize {
+    pub(crate) fn begin_publication(&mut self) {
+        self.publication_batch = self.publication_batch.checked_add(1).expect("publication generation exhausted");
+    }
+    /// Cell completion supplies candidates in descending source order against
+    /// one unchanged graph. The first validated candidate owns the Entry for
+    /// this batch; older candidates reuse that proof without preparing a slot.
+    /// A new batch must validate again, including when its Entry already exists.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency,
+        make: impl FnOnce() -> Result<crate::stage_spine::Published>,
+    ) -> Result<bool> {
+        self.stats.publication_candidate_checks += 1;
         self.stats.publication_slot_probes += 1;
         let node = self.publication_nodes[table].expect("compiled entry owner");
         let state = &mut self.states[node];
         let Entries::Owned(rows) = &mut state.rows else { unreachable!("entry owner") };
-        let e = rows.entry(w).or_default();
+        let entry = rows.entry(w);
+        let prior = match &entry {
+            std::collections::hash_map::Entry::Occupied(e) => e.get().publication,
+            std::collections::hash_map::Entry::Vacant(_) => None,
+        };
+        if prior.is_some_and(|id| self.publications[id.get() - 1].as_ref()
+            .is_some_and(|p| p.batch == self.publication_batch)) {
+            self.stats.publication_loser_skips += 1;
+            return Ok(false);
+        }
+        // Failed validation may not create a packetless Entry, reserve a slot,
+        // queue a wakeup or destroy a previously valid publication.
+        let published = make()?;
+        let e = entry.or_default();
         let first = e.publication.is_none();
         state.publications += usize::from(first);
         if e.packet.is_none() && !state.cold {
-            // A packetless published Entry is already queued by its first
-            // publication. Refresh either installs its packet or removes the
-            // Entry; later graph changes also retain the ordinary Wake path.
             if first {
                 state.pending.push(w);
                 self.stats.publication_pending_pushes += 1;
@@ -681,29 +702,9 @@ impl Scheduler {
             self.publications.push(None);
             std::num::NonZeroUsize::new(self.publications.len()).unwrap()
         }));
-        id
-    }
-    #[cfg(feature = "sparse-cells")]
-    pub(crate) fn begin_publication(&mut self) {
-        self.publication_batch = self.publication_batch.checked_add(1).expect("publication generation exhausted");
-    }
-    /// Cell completion supplies candidates in descending source order. The
-    /// first candidate in this boundary owns the slot; losing candidates never
-    /// construct a continuation or write a Pending publication.
-    #[cfg(feature = "sparse-cells")]
-    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency,
-        make: impl FnOnce() -> crate::stage_spine::Published,
-    ) -> bool {
-        self.stats.publication_candidate_checks += 1;
-        let id = self.publication_slot(table, w);
-        let target = &mut self.publications[id.get() - 1];
-        if target.as_ref().is_some_and(|p| p.batch == self.publication_batch) {
-            self.stats.publication_loser_skips += 1;
-            return false;
-        }
-        *target = Some(PublicationSlot { published: make(), batch: self.publication_batch });
+        self.publications[id.get() - 1] = Some(PublicationSlot { published, batch: self.publication_batch });
         self.stats.entry_publication_writes += 1;
-        true
+        Ok(true)
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publication_count(&self, table: usize) -> usize {
@@ -1034,6 +1035,27 @@ impl Scheduler {
 #[cfg(all(test,feature="sparse-cells"))]
 mod pending_tests {
     use super::*;
+    #[test]
+    fn failed_validation_cannot_leave_a_packetless_entry_or_reserve_a_slot() {
+        let mut s = Scheduler {
+            enabled: true, plan: Plan::default(),
+            states: vec![State { rows: Entries::Owned(HashMap::default()), ..Default::default() }],
+            rows: HashMap::default(), unions: 0, publication_nodes: vec![Some(0)],
+            publications: vec![], publication_batch: 0, publication_free: vec![],
+            stats: Stats::default(),
+        };
+        let w = Dependency::Function(7);
+        s.begin_publication();
+        for _ in 0..2 {
+            assert_eq!(s.install_publication(0, w, || Err("stale".into())).unwrap_err(), "stale");
+            assert!(s.states[0].rows.is_empty());
+            assert!(s.states[0].pending.is_empty());
+            assert!(s.publications.is_empty());
+            assert_eq!(s.states[0].publications, 0);
+            assert_eq!(s.stats.entry_publication_writes, 0);
+            assert_eq!(s.stats.publication_loser_skips, 0);
+        }
+    }
     #[test]
     fn pending_counts_include_later_duplicates_only_once() {
         let mut s=State::default();
