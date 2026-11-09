@@ -302,3 +302,11 @@ sum-bits 的复制次数 3→1，复制槽位 63→21，新增 6 次清理；其
 普通 sum-bits 的语义脚本 pass，1,428 个 Run 和最终状态保持；旧 342 项工作指标保持，新增四项均为零，当前目录共 346 项。sum-bits 不命中 post-guard，不能用它证明终端接管收益；该路径的动态证据来自短样例。三项 Cell Query 单元检查、context/cuts/stage Entry 三项集成检查、四项 Work 账本检查以及最小特性编译通过。账本计入复制、scratch 初始化和结果写入，并保留缺失计数拒绝规则。
 
 输出在 `out/cell-context-terminal`。基线构建和 sum/semantic/catalog 方式沿用前节；在 `a02f2148` 上应用本节计数 patch。`run_context_fixture.py ROOT --source benchmarks/cell-unification/context-terminal.egg --compiler COMPILER` 执行短样例；`check_context.py ROOT OUTPUT --commit COMMIT --phase terminal` 校验保存的结果。每次运行使用新输出目录，收集器不执行负载。本步是当前周期第 3 个实现提交，不新增计时或分配采样；prefix 标量解释、缓存/index 生命周期和速度验收仍未完成。
+
+## 保留 prefix 也执行同一份 Cell 指令
+
+接续 `0b3231c2`。上轮 terminal/post-guard 已接入 Query，但 prefix 仍逐次解释原始 Arg、构造标量 Vec 并运行独立 binder；静态 scopes 与 executable ports 还各持有一份顺序。本轮把单条指令的 lowering 提取为共用实现，prefix 的表扩展和标量均用同一 Step/Field。每步新绑定的静态投影同时定义写入和回退范围；实例继续使用原 prefix 的值槽，不增加第二份运行时 bindings 或依赖表。
+
+候选先完成静态 checks，再写入新槽；多次使用同一列的检查仍引用当前候选。标量用共用 Step.bind/evaluate，小参数保留在栈上，新结果移动到原槽，已绑定结果只检查。删除 finish_guards 的 Arg 解释循环；ports/post 的旧 artifact 序列只在序列化时从指令推导。缓存、read lease、root 绑定和失效边界仍然存在，未宣称整个 context 生命周期已经统一。
+
+验证输出 `out/cell-context-prefix`：3 项 Query 单测、4 项 context/cut/budget/Entry 回归和最小特性编译；两个已有短 fixture 比较 state/stages/binding audit。sum-bits 使用已有 program 和 choice_diagnosis 入口。执行 `check_context.py ROOT OUTPUT --phase prefix --commit COMMIT` 核对保存结果。本步为 4/5，实现结构删减不换算为未测得的分配或速度收益；下一实现提交后统一测速。
