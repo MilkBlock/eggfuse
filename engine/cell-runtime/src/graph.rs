@@ -327,9 +327,8 @@ pub struct Graph {
     parent_users: rustc_hash::FxHashMap<u32, usize>,
     garbage: BTreeSet<u32>,
 }
-#[cfg(feature = "rhs-locals")]
-#[path = "local_rhs_exec.rs"]
-pub(crate) mod local_rhs_exec;
+#[path = "cell_prefix.rs"]
+pub(crate) mod cell_prefix;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {
@@ -689,54 +688,6 @@ impl Graph {
         let frame = self.new_cell(template, values, parent);
         self.store_cell(id, frame);
         Ok(id)
-    }
-    /// Run the read-only prefix against live canonical constructor rows. Keep
-    /// the ID sequence even on a full hit since later eclass IDs encode it.
-    pub(crate) fn start_constructor_rhs(
-        &mut self,
-        template: usize,
-        values: crate::slots::Slots,
-        parent: Option<FactRef>,
-        aliases: Option<&[bool]>,
-        #[cfg(feature = "structural-depth")] receipts: &mut crate::cell::Effects,
-    ) -> Result<Option<(u32, usize)>> {
-        let id = self.reserve_cell_id()?;
-        #[cfg(feature = "sparse-cells")]
-        self.trust_sealed_frame(id);
-        let mut frame = self.new_cell(template, values, parent);
-        let ops = self.program.templates[template].ops.clone();
-        for (op, instruction) in ops.iter().enumerate() {
-            // slot_in resolves the validated alias in either the temporary
-            // frame or the same frame after its first constructor miss.
-            if self.known_stats.elide_static(aliases, op) {
-                self.known_stats.lazy_prefix_eliminated += 1;
-                continue;
-            }
-            let (dst, table, args) = match instruction {
-                Op::Copy(..) => continue, // slot_in resolves copy definitions on demand
-                Op::Let(dst, Call::Table(t), args) => (*dst, *t, args),
-                _ => return Err("unexpected operation in constructor-only RHS".into()),
-            };
-            let key = args
-                .iter()
-                .map(|a| self.argument_in(id, &frame, None, a))
-                .collect::<Result<Vec<_>>>()?;
-            self.stats.constructor_requests += 1;
-            if let Some(row) = self.lookup_canonical(table, &key)? {
-                self.stats.constructor_reused += 1;
-                #[cfg(feature = "structural-depth")]
-                receipts.record(op, row.witness);
-                frame.values.insert(dst, row.values.last().unwrap().clone());
-            } else {
-                self.store_cell(id, frame);
-                self.insert_constructor(id, op, table, &key, dst)?;
-                #[cfg(feature = "structural-depth")]
-                receipts.record(op, Dependency::Fact(FactRef { cell: id, op: op as u32 }));
-                return Ok(Some((id, op + 1)));
-            }
-        }
-        self.stats.rhs_frames_avoided += 1;
-        Ok(None)
     }
     pub(crate) fn apply_write(
         &mut self,

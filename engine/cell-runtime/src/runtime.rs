@@ -2163,94 +2163,51 @@ impl Executor {
         };
         #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
         let inspect_births = (local.clone(), stage_cursor.is_some());
-        // Move the binding exactly once. All hits leave only a temporary
-        // frame; on the first miss the original suffix resumes after it.
-        let ordinary = |me: &mut Self,
-                        values: crate::slots::Slots,
-                        _receipts: &mut crate::cell::Effects|
-         -> Result<Option<(u32, usize)>> {
+        // Selection supplies only Cell positions and accounting. Both admitted
+        // prefixes share first-miss promotion and the same completion handling.
+        use crate::graph::cell_prefix::{Start, SourcePrefix};
+        let ordinary = |me: &mut Self, values: crate::slots::Slots,
+                        receipts: &mut crate::cell::Effects| -> Result<Start> {
             if me.graph.program.rules[rid].constructor_only
-                && stage_cursor.is_none()
-                && origin.is_none()
+                && stage_cursor.is_none() && origin.is_none()
             {
-                me.graph.start_constructor_rhs(
-                    template,
-                    values,
-                    b.parent,
-                    aliases,
-                    #[cfg(feature = "structural-depth")]
-                    _receipts,
-                )
+                let width = me.graph.program.templates[template].ops.len();
+                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases))
             } else {
-                Ok(Some((
-                    {
-                        #[cfg(feature = "sparse-cells")]
-                        let id = me.graph.begin_transient(template, values, b.parent)?;
-                        #[cfg(not(feature = "sparse-cells"))]
-                        let id = me.graph.linked_slots(template, values, b.parent)?;
-                        id
-                    },
-                    0,
-                )))
+                #[cfg(feature = "sparse-cells")]
+                let cell = me.graph.begin_transient(template, values, b.parent)?;
+                #[cfg(not(feature = "sparse-cells"))]
+                let cell = me.graph.linked_slots(template, values, b.parent)?;
+                Ok(Start::Resume { cell, next_op: 0 })
             }
         };
         #[cfg(feature = "rhs-locals")]
         let start = if let Some(block) = local {
-            match self.graph.local_rhs(
-                template,
-                b.values,
-                b.parent,
-                &block,
-                &mut effect_receipts,
-                &mut self.local_counts,
-            )? {
-                crate::graph::local_rhs_exec::Start::Promoted { cell, next_op } => {
-                    Some((cell, next_op))
-                }
-                crate::graph::local_rhs_exec::Start::Complete { cell, frame } => {
-                    #[cfg(feature = "structural-depth")]
-                    self.stage_spine.structural.capture(
-                        &self.graph,
-                        rid,
-                        &b.known,
-                        &effect_receipts,
-                    );
-                    if let Some(cursor) = stage_cursor {
-                        let (c, f, u) = stage_counts.unwrap();
-                        self.stage_spine.effects(
-                            self.graph.stats.constructor_requests - c,
-                            self.graph.stats.function_updates - f,
-                            self.graph.stats.union_requests - u,
-                        );
-                        let g = &self.graph;
-                        self.stage_spine.complete(
-                            g,
-                            rid,
-                            cell,
-                            cursor,
-                            |i| b.known.receipt(i),
-                            effect_receipts,
-                            |args| g.frame_arguments(cell, &frame, None, args),
-                        )?;
-                    } else { self.stage_spine.finish_effects(effect_receipts, false); }
-                    return Ok(());
-                }
-            }
+            self.graph.start_cell(template, b.values, b.parent, &mut effect_receipts,
+                crate::graph::cell_prefix::LocalPrefix::new(&block, &mut self.local_counts))?
         } else {
             ordinary(self, b.values, &mut effect_receipts)?
         };
         #[cfg(not(feature = "rhs-locals"))]
         let start = ordinary(self, b.values, &mut effect_receipts)?;
-        let Some((cell, first_op)) = start else {
-            #[cfg(feature = "structural-depth")]
-            self.stage_spine.structural.capture(
-                &self.graph,
-                rid,
-                &b.known,
-                &effect_receipts,
-            );
-            self.stage_spine.finish_effects(effect_receipts, false);
-            return Ok(());
+        let (cell, first_op) = match start {
+            Start::Resume { cell, next_op } => (cell, next_op),
+            Start::Complete { cell, frame } => {
+                #[cfg(feature = "structural-depth")]
+                self.stage_spine.structural.capture(&self.graph, rid, &b.known, &effect_receipts);
+                if let Some(cursor) = stage_cursor {
+                    let (c, f, u) = stage_counts.unwrap();
+                    self.stage_spine.effects(
+                        self.graph.stats.constructor_requests - c,
+                        self.graph.stats.function_updates - f,
+                        self.graph.stats.union_requests - u,
+                    );
+                    let g = &self.graph;
+                    self.stage_spine.complete(g, rid, cell, cursor, |i| b.known.receipt(i),
+                        effect_receipts, |args| g.frame_arguments(cell, &frame, None, args))?;
+                } else { self.stage_spine.finish_effects(effect_receipts, false); }
+                return Ok(());
+            }
         };
 
         if let Some((producer, depth, residual)) = origin {
