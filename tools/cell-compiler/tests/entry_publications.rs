@@ -221,3 +221,22 @@ fn mixed_cell_outputs_keep_direct_slots_beside_retirable_boundaries() {
     assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
     assert!(report["entry_schedule"]["stats"]["entry_publications_retired"].as_u64().unwrap() > 0);
 }
+
+#[test]
+fn completed_cell_publishes_only_last_exact_alias_without_dropping_donors() {
+    let source = include_str!("fixtures/aliased-cell-outputs.egg");
+    compare(source);
+    let (old, nodes) = compare_mode(source, false);
+    let before = old.report();
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    assert!(s["captured_anchors"].as_u64().unwrap()
+        < before["stage_spine"]["stats"]["captured_anchors"].as_u64().unwrap());
+    assert!(s["effect_aborted_frames"].as_u64().unwrap() > 0);
+    assert!(s["completion_boundary_records"].as_u64().unwrap() > 0);
+    // Query and earlier-effect donors must survive even when their own output
+    // is removed; completed aliases keep the actual receipt, not an op address.
+    assert!(s["alias_query_forwards"].as_u64().unwrap() > 0, "{s}");
+    assert!(s["alias_effect_forwards"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+}

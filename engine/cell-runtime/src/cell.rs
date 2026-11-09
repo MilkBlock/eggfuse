@@ -104,6 +104,24 @@ pub(crate) struct Output {
     pub table: usize,
     pub receipt_source: Option<Site>,
 }
+impl Output {
+    /// Lay out the completed Cell's retained prefix and transient boundaries.
+    /// Exact constructor aliases share an actual query/effect receipt source;
+    /// only their last publication can win. Eq values alone are not this proof.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn prepare(outputs: &mut Vec<Self>, retained: impl Fn(usize) -> bool) -> usize {
+        if outputs.len() > 1 && outputs.iter().any(|o| retained(o.table) && o.receipt_source.is_some()) {
+            outputs.sort_by_key(|o| std::cmp::Reverse(o.operation));
+            let mut seen = BTreeSet::new();
+            outputs.retain(|o| !retained(o.table)
+                || seen.insert((o.table, o.receipt_source.unwrap_or(Site::Effect(o.operation)))));
+        }
+        // Original operation positions still determine the winning continuation
+        // and the merge with boundary publications. No RHS effects are removed.
+        outputs.sort_by_key(|o| (!retained(o.table), o.operation));
+        outputs.iter().take_while(|o| retained(o.table)).count()
+    }
+}
 impl Relation<'_> {
     pub fn columns(&self) -> impl Iterator<Item = &Arg> {
         self.keys
@@ -232,6 +250,24 @@ mod tests {
     use super::*;
     use crate::{program::Atom, value::Value};
     use std::{collections::BTreeMap, rc::Rc};
+
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn output_layout_keeps_last_exact_source_and_every_boundary() {
+        let mut outputs = vec![
+            Output { operation: 0, table: 0, receipt_source: None },
+            Output { operation: 1, table: 1, receipt_source: Some(Site::Query(0)) },
+            Output { operation: 2, table: 0, receipt_source: Some(Site::Effect(0)) },
+            Output { operation: 3, table: 1, receipt_source: Some(Site::Query(0)) },
+            Output { operation: 4, table: 0, receipt_source: Some(Site::Query(0)) },
+            Output { operation: 5, table: 0, receipt_source: Some(Site::Effect(0)) },
+            Output { operation: 6, table: 0, receipt_source: None },
+        ];
+        for _ in 0..2 {
+            assert_eq!(Output::prepare(&mut outputs, |t| t == 0), 3);
+            assert_eq!(outputs.iter().map(|o| o.operation).collect::<Vec<_>>(), [4, 5, 6, 1, 3]);
+        }
+    }
 
     #[test]
     fn copies_do_not_make_queued_union_visible() {

@@ -1847,12 +1847,8 @@ impl Programs {
         self.entry_owned_tables = scheduler.own_publications(|t| self.enabled && !self.table_readers[t].is_empty() && !excluded(t));
         self.entry_owned_ids = self.entry_owned_tables.iter().enumerate().filter_map(|(t, &owned)| owned.then_some(t)).collect();
         for (rid, outputs) in self.outputs.iter_mut().enumerate() {
-            let retained = |o: &crate::cell::Output| self.permanent[o.table] && self.entry_owned_tables[o.table];
-            // One Cell layout: its retained outputs precede transient boundary
-            // receipts. Stable partition preserves effect order within each
-            // part; publication merges them by the original operation position.
-            outputs.sort_by_key(|o| !retained(o));
-            self.cell_output_widths[rid] = outputs.iter().take_while(|o| retained(o)).count();
+            self.cell_output_widths[rid] = crate::cell::Output::prepare(outputs,
+                |table| self.permanent[table] && self.entry_owned_tables[table]);
             self.effect_plans[rid].take();
             #[cfg(feature = "structural-depth")]
             self.full_effect_plans[rid].take();
