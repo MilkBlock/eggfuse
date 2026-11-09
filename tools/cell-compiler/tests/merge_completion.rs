@@ -36,6 +36,62 @@ fn compare(old: &Executor, new: &Executor) {
         }
     }
 }
+
+#[test]
+fn cell_calls_preserve_ordered_merge_reads_primitives_and_constructor_results() {
+    let source = r#"
+(datatype E (N i64) (Pair E E) (Seen E))
+(function port (E) i64 :merge (max old new))
+(function ordered (E) E :merge (Pair old new))
+(function total (E) i64 :merge (+ old new))
+(function callback (E) i64 :merge (+ (port (N 0)) (+ old new)))
+(ruleset first) (ruleset second) (ruleset third) (ruleset observe)
+(rule ((= x (ordered (N 0)))) ((Seen x)) :ruleset observe)
+(rule ((= key (N 0)) (= a (N 1)))
+      ((set (port key) 7) (set (ordered key) a)
+       (set (total key) 3) (set (callback key) 2)) :ruleset first)
+(rule ((= key (N 0)) (= a (N 1)))
+      ((set (ordered key) a) (set (total key) 3)) :ruleset second)
+(rule ((= key (N 0)) (= b (N 2)))
+      ((set (ordered key) b) (set (callback key) 5)) :ruleset third)
+(N 0) (N 1) (N 2)
+(run-schedule (seq (run first) (run second) (run third) (run observe)))
+(check (= (total (N 0)) 6) (= (callback (N 0)) 14)
+       (Seen (Pair (N 1) (N 2))))
+"#;
+    let p = program(source);
+    let mut old = Executor::new(Graph::new(p.clone()).unwrap(), true);
+    old.graph.merge_programs_enabled = false;
+    let mut new = Executor::new(Graph::new(p).unwrap(), true);
+    #[cfg(feature = "iterative-bake")]
+    {
+        use eggfuse_cell_runtime::transfer_audit as audit;
+        let execute = |e: &mut Executor| {
+            audit::set_active(true);
+            audit::enable_write_audit();
+            e.execute().unwrap();
+            audit::set_active(false);
+            (audit::take_digests(), audit::take_write_digests(), audit::take_resume_digests())
+        };
+        assert_eq!(execute(&mut old), execute(&mut new));
+    }
+    #[cfg(not(feature = "iterative-bake"))]
+    { old.execute().unwrap(); new.execute().unwrap(); }
+    compare(&old, &new);
+    assert_eq!(old.snapshots, new.snapshots);
+    assert!(new.graph.stats.merge_program_constructs > 0);
+    assert!(new.graph.stats.merge_port_reads > 0);
+    let work = |e: &Executor| {
+        let mut stats = serde_json::to_value(&e.graph.stats).unwrap();
+        for key in ["merge_program_calls", "merge_program_operations", "merge_program_constructs"] {
+            stats.as_object_mut().unwrap().remove(key);
+        }
+        stats
+    };
+    assert_eq!(work(&old), work(&new));
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+}
+
 const INDEPENDENT: &str = r#"
 (datatype A (Na i64) (Fa A) (Ga A) (SeenA A))
 (datatype B (Nb i64))

@@ -1721,18 +1721,19 @@ impl Graph {
         Ok(value)
     }
 
-    pub fn dynamic_construct(&mut self, t: usize, args: Vec<Value>) -> Result<Value> {
-        let key = args
+    pub fn dynamic_construct(&mut self, t: usize, args: impl AsRef<[Value]> + IntoIterator<Item = Value>) -> Result<Value> {
+        let key = args.as_ref()
             .iter()
             .map(|v| canon(v, &self.parents))
             .collect::<smallvec::SmallVec<[Value; 4]>>();
         if let Some(row) = self.lookup_canonical(t, &key)? {
             return Ok(row.values.last().unwrap().clone());
         }
-        let dst = args.len();
-        let cell = self.frame(
+        let dst = args.as_ref().len();
+        let cell = self.linked_slots(
             self.program.table_templates[t],
             args.into_iter().enumerate().collect(),
+            None,
         )?;
         // Creating this empty frame changes neither Parents nor the constructor
         // index. The lookup miss above still proves that this canonical key is
@@ -2055,47 +2056,21 @@ impl Graph {
                     _ => return Err("merge result slot".into()),
                 });
             }
-            let mut values = Vec::with_capacity(2 + m.operations.len());
-            values.extend([old, new]);
-            let operand = |a: &Arg, values: &Vec<Value>| match a {
-                Arg::Slot(s) => values[*s].clone(),
-                Arg::Literal(v) => v.clone(),
-            };
-            for op in &m.operations {
+            let mut frame = crate::cell::MergeFrame::new(old, new, m.operations.len());
+            for (i, op) in m.operations.iter().enumerate() {
                 let Op::Let(dst, call, args) = op else {
                     return Err("invalid merge instruction".into());
                 };
-                let args = args.iter().map(|a| operand(a, &values)).collect::<Vec<_>>();
-                let value = match call {
-                    Call::Table(t) if self.program.tables[*t].virtual_fact => {
-                        self.stats.merge_program_constructs += 1;
-                        self.dynamic_construct(*t, args)?
-                    }
-                    Call::Table(t) => {
-                        self.stats.merge_port_reads += 1;
-                        self.read_merge_port(*t, &args)?
-                    }
-                    Call::Primitive(name, sort) => {
-                        if name.starts_with("cell-key-") {
-                            self.stats.key_operations += 1;
-                        }
-                        value::primitive(name, &args, sort, self.program.key_nodes())?
-                            .ok_or("merge arithmetic failed")?
-                    }
-                };
-                if *dst != values.len() {
-                    return Err("merge SSA order".into());
-                }
-                values.push(value);
+                crate::cell::evaluate_call(self, &mut frame, i, *dst, call, args)?;
                 self.stats.merge_program_operations += 1;
             }
-            Ok(operand(&m.result, &values))
+            Ok(frame.operand(&m.result))
         } else {
             let expr = expr.clone();
             self.merge_expression(&expr, &old, &new)
         }
     }
-    fn read_merge_port(&mut self, t: usize, args: &[Value]) -> Result<Value> {
+    pub(crate) fn read_merge_port(&mut self, t: usize, args: &[Value]) -> Result<Value> {
         let key = args
             .iter()
             .map(|v| canon(v, &self.parents))

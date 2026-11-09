@@ -2324,52 +2324,11 @@ impl Executor {
             }
             match op {
                 Op::Copy(..) => {}
-                Op::Let(dst, Call::Table(t), aa) => {
-                    if self.graph.program.tables[*t].virtual_fact {
-                        if let Some(receipt) = effect_receipts.slot(i) {
-                            let mut visible = false;
-                            self.graph.construct_recorded(
-                                cell,
-                                i,
-                                *t,
-                                aa,
-                                *dst,
-                                receipt,
-                                &mut visible,
-                            )?;
-                        } else {
-                            self.graph.construct(cell, i, *t, aa, *dst)?;
-                        };
-                    } else {
-                        let key = self.graph.inline_arguments(cell, aa)?;
-                        let row = self.graph.lookup_canonical(*t, &key)?.ok_or_else(|| {
-                            format!(
-                                "missing function read {}",
-                                self.graph.program.tables[*t].name
-                            )
-                        })?;
-                        effect_receipts.record(i, row.witness);
-                        self.graph
-                            .rhs_frame_mut(cell)
-                            .unwrap()
-                            .values
-                            .insert(*dst, row.values.last().unwrap().clone());
-                    }
-                }
-                Op::Let(dst, Call::Primitive(name, output), aa) => {
-                    let args = self.graph.inline_arguments(cell, aa)?;
-                    if name.starts_with("cell-key-") {
-                        self.graph.stats.key_operations += 1;
-                    }
-                    let v =
-                        value::primitive(&name, &args, &output, self.graph.program.key_nodes())?
-                            .ok_or_else(|| format!("RHS primitive failed: {name}"))?;
-                    self.graph
-                        .rhs_frame_mut(cell)
-                        .unwrap()
-                        .values
-                        .insert(*dst, v);
-                }
+                Op::Let(dst, call, args) => crate::cell::evaluate_call(
+                    &mut self.graph,
+                    &mut crate::cell::RhsCall { cell, receipts: &mut effect_receipts },
+                    i, *dst, call, args,
+                )?,
                 Op::Set(t, aa, v) => {
                     #[cfg(feature = "view-consumers")]
                     let source = b.view_source;
