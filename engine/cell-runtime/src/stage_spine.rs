@@ -2051,7 +2051,7 @@ impl Programs {
             // Keep rejected queries off the heap in the common short case. Only
             // successful matches materialize the externally required witness map.
             let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
-            for step in &query.steps {
+            for (position, step) in query.steps.iter().enumerate() {
                 self.stats.cell_query_steps += 1;
                 let bound = step.bind::<PortKey>(|v| v.operand(g, |col| &row.values[col], &values, None));
                 let result = bound.evaluate(|args| match &step.call {
@@ -2077,8 +2077,13 @@ impl Programs {
                     if matches!(step.call, Call::Primitive(..)) { self.stats.guard_rejections += 1; }
                     continue 'answer;
                 };
-                self.stats.cell_query_result_writes += 1;
-                values.push(result);
+                // Keep instruction-position addresses for any later output.
+                // Trailing checks cannot introduce a StepResult and need no
+                // storage; they still execute and reject exactly as before.
+                if position < query.result_slots() {
+                    self.stats.cell_query_result_writes += 1;
+                    values.push(result);
+                }
             }
             if epoch >= watermark {
                 let inputs = query.inputs.iter().map(|v| v.read(g, |col| &row.values[col], &values, None)).collect();

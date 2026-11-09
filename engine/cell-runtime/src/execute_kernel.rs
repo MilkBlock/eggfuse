@@ -45,9 +45,13 @@ pub(super) struct Frame {
     witnesses: Vec<Option<Dependency>>,
 }
 impl Frame {
-    pub(super) fn new(r: &Rule) -> Self {
+    pub(super) fn new(r: &Rule, kernels: &[Option<Rc<Kernel>>]) -> Self {
         Self {
-            results: vec![Value::Int(0); r.query.len().saturating_sub(1)],
+            // A frame is shared across this rule's pivots. Use the largest
+            // checked query width, not the number of source atoms; expansion
+            // rows and trailing bound-result checks need no value slots.
+            results: vec![Value::Int(0); kernels.iter().flatten()
+                .map(|k| k.query.result_slots()).max().unwrap_or(0)],
             witnesses: vec![None; r.query.len()],
         }
     }

@@ -10,13 +10,13 @@ impl Work {
         let mut work = BTreeMap::new();
         for (group, fields) in [
             ("", &["key_lookup_calls", "fact_decode_calls", "fact_decode_ports"][..]),
-            ("stats", &["decoded_rows", "repaired_dependencies", "residual_candidates", "key_operations", "handoff_attempts", "constructor_requests", "union_requests", "cells_created"]),
+            ("stats", &["decoded_rows", "repaired_dependencies", "residual_candidates", "key_operations", "handoff_attempts", "constructor_requests", "union_requests", "cells_created", "register_result_writes"]),
             ("stage_spine/stats", &[
                 "legacy_entry_writes", "legacy_retirement_checks", "legacy_cursor_probes", "node_cursor_reads",
                 "root_handles_created", "contexts_created", "captured_anchors", "capture_reads",
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
-                "query_receipt_attempts", "context_reads", "port_cache_fills", "guards",
+                "query_receipt_attempts", "context_reads", "port_cache_fills", "guards", "cell_query_result_writes",
                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
                 "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
                 "local_witness_route_comparisons", "local_witness_read_index_probes",
@@ -28,9 +28,9 @@ impl Work {
                 "publication_slot_probes", "publication_pending_pushes", "fragment_pending_writes", "fragment_pending_reads",
             ]),
             // Count dispatch, direct donor access and additional full-key
-            // validation. Field assignment/result checks and primitive guards
-            // replace the identical original kernel instructions: charging
-            // their prefix-only subset would penalize moving unchanged work.
+            // validation. register_result_writes already includes prefix
+            // field writes; do not charge its subset again. Primitive guard
+            // checks likewise replace the original kernel instructions.
             ("stats/register_prefix", &[
                 "context_reads", "plan_comparisons", "row_reads", "key_fields",
                 "plan_index_probes", "source_index_probes",
@@ -287,6 +287,7 @@ mod tests {
             *value = json!(value.as_u64().unwrap() + 1);
         };
         let charged = [
+            "/stats/register_result_writes", "/stage_spine/stats/cell_query_result_writes",
             "/stats/register_prefix/context_reads", "/stats/register_prefix/plan_comparisons",
             "/stats/register_prefix/plan_index_probes", "/stats/register_prefix/source_index_probes",
             "/stats/register_prefix/row_reads", "/stats/register_prefix/key_fields",

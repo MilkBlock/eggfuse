@@ -70,12 +70,12 @@ def collect(root, commit, timed):
     return result
 
 
-def timing(root, commit):
+def timing(root, commit, commits=None):
     path = root / 'timing/samples.json'
     data = load(path)
     assert data.get('finished_at_utc') and 'failure' not in data
     assert data['repeat'] == 7 and data['warmups'] == 1
-    commits = {'baseline': '563e4ab0', 'candidate': commit,
+    commits = commits or {'baseline': '563e4ab0', 'candidate': commit,
                'last_timed': 'ab33d47c', 'historical': '24c4ae8a'}
     fields = ('inference_seconds', 'process_wall_seconds', 'load_seconds', 'setup_seconds',
               'export_seconds', 'report_seconds', 'process_after_report_residual_seconds',

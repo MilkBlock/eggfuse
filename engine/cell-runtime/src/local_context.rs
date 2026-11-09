@@ -25,7 +25,6 @@ pub(crate) struct Plan {
     versions: Vec<usize>,
     identity_literal: bool,
     query: Query,
-    result_slots: usize,
 }
 #[path = "context_wire.rs"]
 mod wire;
@@ -155,7 +154,6 @@ fn project(
         columns,
         versions,
         identity_literal,
-        result_slots: query.result_slots(),
         query,
     })
 }
@@ -651,8 +649,8 @@ fn emit(
     // The terminal row and prefix slots stay borrowed. Only scalar results
     // need storage; reuse this scratch for the whole correlated group.
     let mut results = smallvec::SmallVec::<[Value; 4]>::new();
-    if plan.result_slots != 0 {
-        results.resize(plan.result_slots, Value::Int(0));
+    if query.result_slots() != 0 {
+        results.resize(query.result_slots(), Value::Int(0));
         stats.terminal_scratch_slots += results.len() as u64;
     }
     'prefix: for p in prefixes {

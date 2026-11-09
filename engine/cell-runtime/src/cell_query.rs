@@ -123,6 +123,7 @@ impl Field {
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Query {
+    result_slots: usize,
     pub steps: Vec<Step>,
     pub inputs: Vec<Field>,
 }
@@ -247,9 +248,11 @@ impl<A> BoundStep<'_, A> {
 impl Query {
     /// Computed outputs retain instruction-position addresses. Expansion rows
     /// stay borrowed, and a checked existing result needs no new value slot.
-    pub(crate) fn result_slots(&self) -> usize {
-        self.steps.iter().rposition(|s| s.expansion.is_none() && s.check_result.is_none())
-            .map_or(0, |i| i + 1)
+    pub(crate) fn result_slots(&self) -> usize { self.result_slots }
+    fn new(steps: Vec<Step>, inputs: Vec<Field>) -> Self {
+        let result_slots = steps.iter().rposition(|s| s.expansion.is_none() && s.check_result.is_none())
+            .map_or(0, |i| i + 1);
+        Self { steps, inputs, result_slots }
     }
     /// Substitute a complete block's outputs into the next block's anchor.
     /// This is dataflow composition: no intermediate row or slot map is needed.
@@ -305,10 +308,7 @@ impl Query {
                 },
             });
         }
-        Some(Self {
-            steps,
-            inputs: next.inputs.iter().map(field).collect::<Option<_>>()?,
-        })
+        Some(Self::new(steps, next.inputs.iter().map(field).collect::<Option<_>>()?))
     }
     pub(crate) fn compile(rule: &Rule, pivot: usize, order: &[usize]) -> Option<Self> {
         let order = order
@@ -389,14 +389,7 @@ impl Query {
         if seen.len() != rule.query.len() {
             return None;
         }
-        Some(Self {
-            steps,
-            inputs: rule
-                .inputs
-                .iter()
-                .map(|s| sources.get(s).cloned())
-                .collect::<Option<_>>()?,
-        })
+        Some(Self::new(steps, rule.inputs.iter().map(|s| sources.get(s).cloned()).collect::<Option<_>>()?))
     }
 }
 

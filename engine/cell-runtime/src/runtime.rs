@@ -1670,7 +1670,7 @@ impl Executor {
                             continue;
                         }
                         let regs =
-                            regs.get_or_insert_with(|| execute_kernel::Frame::new(&rule));
+                            regs.get_or_insert_with(|| execute_kernel::Frame::new(&rule, &self.graph.program.kernels[rid]));
                         let domains = if early_join {
                             entry_domains[i].as_slice()
                         } else {

@@ -1,0 +1,32 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-query-scratch/runtime-baseline",
+      "program": "out/cell-query-scratch/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-query-scratch/runtime-candidate",
+      "program": "out/cell-query-scratch/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "last_timed": {
+      "runtime": "out/cell-query-scratch/runtime-last_timed",
+      "program": "out/cell-query-scratch/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "historical": {
+      "runtime": "out/cell-query-scratch/runtime-historical",
+      "program": "out/cell-query-scratch/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
