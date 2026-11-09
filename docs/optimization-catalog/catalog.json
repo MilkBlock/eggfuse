@@ -218,7 +218,8 @@
       "gaps": "marker 数量仅表示静态规模；没有统一的逐 marker 净节省计数，需要禁用/启用同源消融。 Source marker publication now uses the same Cell equality/congruence implementation as typed cross-stage proofs. Source operands are resolved once; the independent union-find and repeated term/key closure loop are removed. The source frontend still owns publication admission and original effect boundaries. Selection, publication matching and iterative materialization boundaries remain separate. Cached compiler operands add storage; no allocation, speed or runtime-repair savings are inferred. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
       "evidence": [
         "tools/cell-compiler/README.md",
-        "benchmarks/cell-unification/marker-symbols-check.json"
+        "benchmarks/cell-unification/marker-symbols-check.json",
+        "benchmarks/cell-unification/projection-binding-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -380,7 +381,8 @@
         "README.md",
         "benchmarks/cell-unification/residual.md",
         "benchmarks/cell-unification/query-storage-results.json",
-        "benchmarks/cell-unification/context-root-check.json"
+        "benchmarks/cell-unification/context-root-check.json",
+        "benchmarks/cell-unification/projection-binding-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -872,7 +874,8 @@
       "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
       "evidence": [
         "benchmarks/query-receipts/README.md",
-        "benchmarks/compiler-congruence/README.md"
+        "benchmarks/compiler-congruence/README.md",
+        "benchmarks/cell-unification/projection-binding-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

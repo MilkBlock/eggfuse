@@ -1,0 +1,315 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "known_results": {
+    "available": 0,
+    "avoided_lookups": 5853,
+    "deletion_guard_misses": 0,
+    "dirty": 0,
+    "effect_sources": 0,
+    "expired": 0,
+    "lazy_prefix_eliminated": 0,
+    "mismatched": 0,
+    "observed_other_value": 0,
+    "observed_other_witness": 0,
+    "observed_same_value": 0,
+    "observed_same_witness": 0,
+    "opportunities_by_table": {},
+    "planned": 0,
+    "query_sources": 0,
+    "requests": 0,
+    "retained_result_writes": 0,
+    "static_eliminated": 5853,
+    "static_observed_equal": 0,
+    "static_observed_other": 0,
+    "unavailable": 0,
+    "validated": 0,
+    "value_eligible": 0,
+    "value_reuses": 0
+  },
+  "scope": "standalone Cell CPU; normal release; no timing or allocation campaign",
+  "baseline_commit": "08c6b90b",
+  "candidate_commit": "c54780d8",
+  "semantic_acceptance": "pass",
+  "unchanged_report_groups": [
+    "stats",
+    "cell_ownership",
+    "stable_ports",
+    "free_join",
+    "sieve",
+    "neighbor_context",
+    "physical",
+    "stage_spine",
+    "local_context",
+    "publication",
+    "entry_schedule",
+    "view_consumers",
+    "view_storage",
+    "known_results"
+  ],
+  "unchanged_work_metric_values_or_missing_status": 346,
+  "fixtures": {
+    "handoff-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "23760de104eadef223fd4eb658a3b4757880a5fce26686740c222e9e9aeebe0e",
+        "stages.json": "a03f43b53b16aadfdf2cf1078332b9e73d9d329441a040f86d8c8473fd25edc9",
+        "binding-audit.json": "0c7d4fc4c0441ab5c021f37a7383f2ae5f18a2a59a11a651c3ecc02cc8c2d43b"
+      },
+      "program_file_sha256": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "handoff-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "23760de104eadef223fd4eb658a3b4757880a5fce26686740c222e9e9aeebe0e",
+        "stages.json": "a03f43b53b16aadfdf2cf1078332b9e73d9d329441a040f86d8c8473fd25edc9",
+        "binding-audit.json": "0c7d4fc4c0441ab5c021f37a7383f2ae5f18a2a59a11a651c3ecc02cc8c2d43b"
+      },
+      "program_file_sha256": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "bindings-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "865f6f1e43a3576733b7aab6b49f07b350c6d8ed2645e1e3750e694978c7f9d4",
+        "stages.json": "29eed915ca17c908dc8b6cc7bb6b28988aa549b31a000af2c6b95302a0fdb8bb",
+        "binding-audit.json": "92d4ecfb98ec8d6a8d5a8422f6b9f80b74b337af392f5b83019737da4bef411b"
+      },
+      "program_file_sha256": "24f5ed9363cafb920c7a610008bee8b0daa224a50fcafebc4a1c9e7c78a42542",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    },
+    "bindings-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "865f6f1e43a3576733b7aab6b49f07b350c6d8ed2645e1e3750e694978c7f9d4",
+        "stages.json": "29eed915ca17c908dc8b6cc7bb6b28988aa549b31a000af2c6b95302a0fdb8bb",
+        "binding-audit.json": "92d4ecfb98ec8d6a8d5a8422f6b9f80b74b337af392f5b83019737da4bef411b"
+      },
+      "program_file_sha256": "24f5ed9363cafb920c7a610008bee8b0daa224a50fcafebc4a1c9e7c78a42542",
+      "known_results": {
+        "available": 0,
+        "avoided_lookups": 0,
+        "deletion_guard_misses": 0,
+        "dirty": 0,
+        "effect_sources": 0,
+        "expired": 0,
+        "lazy_prefix_eliminated": 0,
+        "mismatched": 0,
+        "observed_other_value": 0,
+        "observed_other_witness": 0,
+        "observed_same_value": 0,
+        "observed_same_witness": 0,
+        "opportunities_by_table": {},
+        "planned": 0,
+        "query_sources": 0,
+        "requests": 0,
+        "retained_result_writes": 0,
+        "static_eliminated": 0,
+        "static_observed_equal": 0,
+        "static_observed_other": 0,
+        "unavailable": 0,
+        "validated": 0,
+        "value_eligible": 0,
+        "value_reuses": 0
+      }
+    }
+  },
+  "fixture_runs_sha256": "3de54cea39d650eb89e0c2f486d10f715d4f26428df1e0d81903d08aaeeb5ff2",
+  "tests": {
+    "cell": {
+      "passed": 14,
+      "log_sha256": "7f5e62001ee679bde3937c7572799a137ba6d07bf1f7cc3965613c60db06aa50"
+    },
+    "binding-nonsparse": {
+      "passed": 1,
+      "log_sha256": "1242fb7f54aeb3431f7db5f185949ff231815fae48de11d325c44b4b7f2271df"
+    },
+    "marker": {
+      "passed": 7,
+      "log_sha256": "12dbb7220f66ef5001e7d084de93dc5909504ace0362463b261dc11917bd3b6c"
+    },
+    "witness": {
+      "passed": 8,
+      "log_sha256": "c2dce5453fd21ba31ab361a8e42b0c8b75f0b029b50516d29e96ff70a090cbd7"
+    },
+    "minimal": {
+      "status": "pass",
+      "log_sha256": "95b1bdf3424a0ba9bb6f1c9e17b8e9d2524a6b2d79c4378009ee30d6d5bd62d3"
+    }
+  },
+  "marker_emission": [
+    {
+      "case": "handoff",
+      "source_sha256": "30696953044ef572589c8dd22fc48bcc6f585742039e119646657a866984f293",
+      "unchanged_files": {
+        "source_sk_mk.egg": "b8eef7c785de619933c7eaf6a5b86b8d5acd207012476f789598621af10006af",
+        "marker-selection.json": "27462f738273894888b4340c7151c25ab9799324559d8cf55d78713153377973",
+        "marker-program.json": "4035c22ef2c8c4e261f6498029d5c56977677a8cac2d8e74426d991b39c4636b",
+        "program.json": "f0ad9b2eafb0576f4312cb406c892886a7d98d466b66c05ceab2501dccadef41"
+      },
+      "result_handoff": {
+        "mode": "values",
+        "rules": [
+          {
+            "rule": 0,
+            "consumer_result_uses": 0,
+            "publication_result_uses": 3,
+            "captured_results": 2
+          },
+          {
+            "rule": 1,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          },
+          {
+            "rule": 2,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          }
+        ],
+        "new_marker_fields": 0,
+        "proof": "original permanent constructor atoms carried by complete correlated markers",
+        "resume": "marker table and consumer rule select the residual LHS; original Run remains authoritative"
+      },
+      "compiler_sha256": {
+        "baseline": "036ef60c0fd186c89425ea1a63483d00178a8c4256980f50e87406d4c0614e33",
+        "candidate": "03bd4c261af8bb0af1965feacb69e324a2e331eb1a44180465ad619454346240"
+      }
+    },
+    {
+      "case": "bindings",
+      "source_sha256": "dd3d7c886faa5a064a2a4e34779a8b64c7c4cddf47ac6a2d8d5e66c10168a46f",
+      "unchanged_files": {
+        "source_sk_mk.egg": "96a00785d0e4830f6fe89377db431c2760d3b90cbb8d57d479546dcd2474bfe8",
+        "marker-selection.json": "6a1338b6a181128e988cf396948d29b8fa02cf15519590af194f6b9e11306271",
+        "marker-program.json": "9226115fec5eadbfff2aa4b51ee707993ef8b5279641f606d6efece52bd160d9",
+        "program.json": "24f5ed9363cafb920c7a610008bee8b0daa224a50fcafebc4a1c9e7c78a42542"
+      },
+      "result_handoff": {
+        "mode": "values",
+        "rules": [
+          {
+            "rule": 0,
+            "consumer_result_uses": 0,
+            "publication_result_uses": 3,
+            "captured_results": 7
+          },
+          {
+            "rule": 1,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          },
+          {
+            "rule": 2,
+            "consumer_result_uses": 2,
+            "publication_result_uses": 0,
+            "captured_results": 1
+          }
+        ],
+        "new_marker_fields": 0,
+        "proof": "original permanent constructor atoms carried by complete correlated markers",
+        "resume": "marker table and consumer rule select the residual LHS; original Run remains authoritative"
+      },
+      "compiler_sha256": {
+        "baseline": "036ef60c0fd186c89425ea1a63483d00178a8c4256980f50e87406d4c0614e33",
+        "candidate": "03bd4c261af8bb0af1965feacb69e324a2e331eb1a44180465ad619454346240"
+      }
+    }
+  ],
+  "relower": {
+    "components": 22,
+    "sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1"
+  },
+  "binaries": {
+    "baseline": "d8ad440fb695ff8bcd39239d2fb1733c90dbc9a8d913269e04d455faf651b506",
+    "candidate": "04b16864f42fbdb18c40cb2e8e03c8548b6f8d07881721158f89b29a6b9ae4f8"
+  },
+  "removed": "Independent field-binding logic in runtime queries, typed producer-local projections, and source marker publication. Arg is the typed Cell Operand alias; all three use Cell Bindings and bind_operand. Marker fields are lowered once per proof, eliminating candidate-loop JSON dispatch, literal term lookup and owned variable-name copies.",
+  "limits": "Runtime bindings remain in the existing query/Entry frame. Static projections require exact typed operands; source symbols require equality at their publication boundary; runtime literals use the repaired graph. These distinct evidence obligations are preserved. Candidate enumeration, materialization selection and iterative boundary composition are not yet unified. The temporary source pattern and generic binder have not been allocation/timing-profiled; unchanged counters do not establish speed preservation.",
+  "timing_cadence": {
+    "last_timed_commit": "cc472d0f",
+    "implementation_commits_since_timing": 4
+  }
+}

@@ -27,7 +27,7 @@
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[README.md](../../README.md) · [benchmarks/cell-unification/residual.md](../../benchmarks/cell-unification/residual.md) · [benchmarks/cell-unification/query-storage-results.json](../../benchmarks/cell-unification/query-storage-results.json) · [benchmarks/cell-unification/context-root-check.json](../../benchmarks/cell-unification/context-root-check.json)
+证据：[README.md](../../README.md) · [benchmarks/cell-unification/residual.md](../../benchmarks/cell-unification/residual.md) · [benchmarks/cell-unification/query-storage-results.json](../../benchmarks/cell-unification/query-storage-results.json) · [benchmarks/cell-unification/context-root-check.json](../../benchmarks/cell-unification/context-root-check.json) · [benchmarks/cell-unification/projection-binding-check.json](../../benchmarks/cell-unification/projection-binding-check.json)
 
 ## B2 · Free Join、Sieve 与范围过滤
 

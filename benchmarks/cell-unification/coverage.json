@@ -320,7 +320,8 @@
         "Preserve source lexical bindings/purity admission, typed SSA and deletion invalidation, actual returned values and original Run/effect ordering. Compile/setup layout costs and runtime speed acceptance remain unmeasured for this step."
       ],
       "construction_checks": "benchmarks/cell-unification/construction-check.json",
-      "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json"
+      "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json",
+      "binding_checks": "benchmarks/cell-unification/projection-binding-check.json"
     },
     {
       "id": "multithread_after_rewrite",
@@ -347,7 +348,8 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "A2",
       "remaining": "Marker publication equality, operands and per-field binding now use Cell implementations. Fragment discovery, selection, publication candidate enumeration/deduplication and iterative materialization boundaries still need a common Cell authority; no runtime repair or boundary removal is claimed.",
-      "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json"
+      "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json",
+      "binding_checks": "benchmarks/cell-unification/projection-binding-check.json"
     },
     {
       "id": "A3",
@@ -368,7 +370,8 @@
       "context_root_checks": "benchmarks/cell-unification/context-root-check.json",
       "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json",
       "leased_query_checks": "benchmarks/cell-unification/leased-query-check.json",
-      "view_query_checks": "benchmarks/cell-unification/view-query-results.json"
+      "view_query_checks": "benchmarks/cell-unification/view-query-results.json",
+      "binding_checks": "benchmarks/cell-unification/projection-binding-check.json"
     },
     {
       "id": "B2",
@@ -426,7 +429,8 @@
       "metrics_from_catalog": "C2",
       "remaining": "Result ports and query operands are common; Entry donor recovery, receipt capture and boundary normalization remain.",
       "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json",
-      "match_entry_checks": "benchmarks/cell-unification/match-entry-check.json"
+      "match_entry_checks": "benchmarks/cell-unification/match-entry-check.json",
+      "binding_checks": "benchmarks/cell-unification/projection-binding-check.json"
     },
     {
       "id": "C3",
