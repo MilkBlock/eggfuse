@@ -68,7 +68,7 @@ impl Graph {
     pub fn use_local_port_conditions(&mut self) -> Result<()> {
         self.use_port_constructor_matching()?;
         let plan = &mut self.program.cell_ownership;
-        plan.composition.prepare_conditions(&plan.programs);
+        plan.composition.prepare_conditions(&plan.programs, &self.program.templates, &plan.markers);
         self.stable_ports
             .as_mut()
             .unwrap()
@@ -359,6 +359,15 @@ impl Graph {
             "covered_shapes":plans.iter().filter(|p|p.complete).count(),
             "uncovered_shapes":plans.iter().filter(|p|!p.complete).count(),
             "shared_conditions":plans.iter().map(|p|p.conditions.len()).sum::<usize>(),
+            "operator_pairs_elided":plans.iter().map(|p|p.operator_pairs_elided).sum::<usize>(),
+            "reflexive_inputs_elided":plans.iter().map(|p|p.reflexive_inputs_elided).sum::<usize>(),
+            "duplicate_inputs_elided":plans.iter().map(|p|p.duplicate_inputs_elided).sum::<usize>(),
+            "shared_typed_codes":self.program.cell_ownership.code_programs.len(),
+            "shared_operator_slots":self.program.cell_ownership.code_operators.iter().map(Vec::len).sum::<usize>(),
+            "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
+                .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),
+            "shared_query_positions":self.program.cell_ownership.composition.queries.iter()
+                .flat_map(|p|&p.columns).flatten().map(Vec::len).sum::<usize>(),
             "scope":"shared local all-input guards plus one complete foreign input domain; global Run barrier remains"})
     }
 }

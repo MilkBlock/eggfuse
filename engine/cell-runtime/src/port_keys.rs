@@ -28,6 +28,7 @@ impl Graph {
                 }
             }
         }
+        self.program.cell_ownership.composition.prepare_queries();
         self.stable_ports.as_mut().unwrap().keys = true;
         // Existing hints freeze here. Subsequent unions never relocate them.
         Ok(())

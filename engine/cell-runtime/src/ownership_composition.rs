@@ -5,6 +5,8 @@ use super::*;
 pub mod conditions;
 #[path = "ownership_effects.rs"]
 pub mod effects;
+#[path = "ownership_queries.rs"]
+pub mod queries;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -119,6 +121,8 @@ pub struct Plan {
     pub conditions: Vec<Rc<conditions::Plan>>,
     #[serde(skip)]
     pub effects: Vec<Rc<effects::Plan>>,
+    #[serde(skip)]
+    pub queries: Vec<Rc<queries::Plan>>,
     pub fragments: Vec<Fragment>,
     pub transitions: Vec<(Key, usize)>,
     pub max_frames: usize,
@@ -231,6 +235,7 @@ impl Plan {
             sources,
             conditions: vec![],
             effects: vec![],
+            queries: vec![],
             active_rules: vec![false; p.rules.len()],
             shapes: programs
                 .iter()
@@ -319,12 +324,19 @@ impl Plan {
                 .collect();
         }
     }
-    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
+    pub fn prepare_queries(&mut self) {
+        if self.queries.is_empty() {
+            self.queries = self.shapes.iter()
+                .map(|shape| Rc::new(queries::Plan::derive(shape))).collect();
+        }
+    }
+    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>], templates: &[Template], markers: &[Marker]) {
         if self.conditions.is_empty() {
+            let operators = conditions::operators(templates, markers, programs);
             self.conditions = self
                 .shapes
                 .iter()
-                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs)))
+                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs, &operators)))
                 .collect();
         }
     }
@@ -383,7 +395,9 @@ pub(super) struct Component {
 pub(super) struct Frame {
     pub component: u32,
     pub ordinal: usize,
-    pub program: usize,
+    /// Checked marker selecting shared native-port and operator code arrays.
+    /// This occupies the former port-program ID slot, without growing a frame.
+    pub code: usize,
 }
 /// Stable frame addresses are normally dense. Retain outlier support for
 /// imported IDs without paying a hash lookup on every local port access.
@@ -740,7 +754,7 @@ impl Graph {
             Frame {
                 component,
                 ordinal,
-                program,
+                code: self.program.cell_ownership.markers[template].code,
             },
         );
     }
@@ -800,19 +814,19 @@ mod tests {
         let frame = Frame {
             component: 1,
             ordinal: 2,
-            program: 3,
+            code: 3,
         };
         frames.insert(u32::MAX, frame);
         frames.insert(4, frame);
         frames.insert(
             4,
             Frame {
-                program: 5,
+                code: 5,
                 ..frame
             },
         );
         assert_eq!(frames.len(), 2);
-        assert_eq!(frames[&4].program, 5);
+        assert_eq!(frames[&4].code, 5);
         frames.remove(&4);
         frames.remove(&4);
         assert_eq!(frames.len(), 1);

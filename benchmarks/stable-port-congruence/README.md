@@ -48,6 +48,16 @@ Sum-bits still requires all ten waits: its four RHS batches encounter overlappin
 frontiers. Refinement adds 77 counted proof events, three allocations and 132
 requested bytes per execution; this is a proof extension, not a workload speedup.
 
+The subsequent single-thread work compiles typed operator exclusions, removes
+redundant local Eq guards, and shares column routes and operator dispatch code.
+Bake replay now selects the actual stable-port/condition backend. Complete
+ordered audits match on sum-bits and Raytrace. However, paired timing does not
+pass the two-workload performance gate: Raytrace improves while sum-bits process
+time does not. An additional birth-absence proof was rejected and removed from
+the runtime. See [the recorded experiments](../condition-bake/README.md) and
+[the next static coverage experiment](query-class-design.md); no general
+speedup or additional rebuild-stall removal is claimed here.
+
 Structural starting revision: `5ffdec1d`; the independently verified signal-slot
 improvement `7c7ab5d3` is integrated before validating these field changes. The
 previous frozen sum-bits execution still needed

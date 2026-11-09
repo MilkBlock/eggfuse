@@ -1,0 +1,280 @@
+diff --git a/engine/cell-runtime/src/cell_ownership.rs b/engine/cell-runtime/src/cell_ownership.rs
+index 95d490cf..46ef66b5 100644
+--- a/engine/cell-runtime/src/cell_ownership.rs
++++ b/engine/cell-runtime/src/cell_ownership.rs
+@@ -201,6 +201,8 @@ struct Stats {
+     domain_planning_slice_steps: Counter<u64>,
+     domain_signal_visits: Counter<u64>,
+     domain_slice_steps: Counter<u64>,
++    domain_route_probes: Counter<u64>,
++    domain_column_checks: Counter<u64>,
+ }
+ impl Stats {
+     fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
+@@ -731,76 +733,42 @@ impl Graph {
+             });
+         }
+     }
+-    fn signal_domain(&self, id: u64) -> BTreeSet<Signal> {
+-        let m = self.ownership.as_ref().unwrap();
+-        let mut signals = m
+-            .boundaries
+-            .get(&id)
+-            .map(|set| set.iter().copied().collect::<BTreeSet<_>>())
+-            .unwrap_or_default();
+-        if let Some(signal) = self.native_signal(id) {
+-            signals.insert(signal);
+-        }
+-        signals
+-    }
+-    fn smallest_signal_domain(
+-        &self,
+-        bound: &[Option<Value>],
+-    ) -> Option<(u64, BTreeSet<Signal>, usize)> {
++    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<(usize, u64)> {
+         let m = self.ownership.as_ref()?;
+         m.stats
+             .domain_planning_calls
+             .set(m.stats.domain_planning_calls.get() + 1);
+         bound
+             .iter()
+-            .filter_map(|v| {
++            .enumerate()
++            .filter_map(|(column, v)| {
+                 let Some(Value::Eq(id)) = v else {
+                     return None;
+                 };
+                 let id = root(&self.parents, *id);
+-                let signals = self.signal_domain(id);
+-                m.stats
+-                    .domain_planning_signals
+-                    .set(m.stats.domain_planning_signals.get() + signals.len() as u64);
+-                let count = signals
+-                    .iter()
+-                    .map(|s| {
+-                        let c = m.composition.components[s.component as usize]
+-                            .as_ref()
+-                            .unwrap();
+-                        let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+-                        shape.signals[s.symbol]
+-                            .iter()
+-                            .filter_map(|step| {
+-                                m.stats
+-                                    .domain_planning_slice_steps
+-                                    .set(m.stats.domain_planning_slice_steps.get() + 1);
+-                                self.cells
+-                                    .get(&c.frames[step.frame])
+-                                    .and_then(|cell| cell.facts.get(&step.op))
+-                                    .filter(|fact| fact.owned)
+-                                    .map(|_| step.columns.len())
+-                            })
+-                            .sum::<usize>()
+-                    })
+-                    .sum::<usize>()
++                // Choosing a domain is only a heuristic. Reading bucket sizes
++                // avoids allocating and walking every losing domain just to
++                // choose one. A signal may cover many fields, so this estimate
++                // must never be used as a candidate-count upper bound.
++                let count = m.boundaries.get(&id).map_or(0, |s| s.len())
++                    + usize::from(self.native_signal(id).is_some())
+                     + self.uses.get(&id).map_or(0, UseSet::len);
+-                Some((id, signals, count))
++                Some((column, id, count))
+             })
+             .min_by_key(|x| x.2)
++            .map(|x| (x.0, x.1))
+     }
+-    pub(super) fn owned_candidate_count(&self, table: usize, bound: &[Option<Value>]) -> usize {
+-        self.smallest_signal_domain(bound)
+-            .map_or(self.witness_count(table), |(_, _, n)| {
+-                n.min(self.witness_count(table))
+-            })
++    pub(super) fn owned_candidate_count(&self, table: usize, _bound: &[Option<Value>]) -> usize {
++        // Keep the public upper-bound contract without enumerating signal
++        // slices. The cheap domain-selection score is not a row count.
++        self.witness_count(table)
+     }
+     pub(super) fn owned_candidates(
+         &self,
+         table: usize,
+         bound: &[Option<Value>],
+     ) -> Vec<Dependency> {
+-        let Some((id, signals, _)) = self.smallest_signal_domain(bound) else {
++        let Some((column, id)) = self.smallest_signal_domain(bound) else {
+             let rows = self.witnesses(table);
+             let s = &self.ownership.as_ref().unwrap().stats;
+             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
+@@ -808,15 +776,32 @@ impl Graph {
+                 .set(s.unbound_query_rows.get() + rows.len() as u64);
+             return rows;
+         };
+-        let s = &self.ownership.as_ref().unwrap().stats;
++        let owner = self.ownership.as_ref().unwrap();
++        let s = &owner.stats;
+         s.domain_queries.set(s.domain_queries.get() + 1);
+         let mut result = BTreeSet::new();
++        let native = self.native_signal(id);
++        // Borrow only the selected bucket. A native signal can also be a
++        // boundary; visit it once. The result set preserves witness order.
++        let signals = owner.boundaries.get(&id).into_iter()
++            .flat_map(|set| set.iter()).copied()
++            .filter(|signal| Some(*signal) != native)
++            .chain(native);
+         for signal in signals {
+             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
+             let m = &self.ownership.as_ref().unwrap().composition;
+             let component = m.components[signal.component as usize].as_ref().unwrap();
+-            for step in m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol].iter() {
++            let steps = &m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol];
++            let positions = self.program.cell_ownership.composition.queries
++                .get(component.shape).map(|p| p.positions(signal.symbol, column));
++            s.domain_route_probes.set(s.domain_route_probes.get() + 1);
++            for position in 0..positions.map_or(steps.len(), <[usize]>::len) {
++                let step = &steps[positions.map_or(position, |p| p[position])];
+                 s.domain_slice_steps.set(s.domain_slice_steps.get() + 1);
++                if positions.is_none() {
++                    s.domain_column_checks.set(s.domain_column_checks.get() + 1);
++                    if !step.columns.contains(&column) { continue; }
++                }
+                 let cell = component.frames[step.frame];
+                 if self
+                     .cells
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index 5026c22a..6be37e09 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -1724,7 +1724,11 @@ impl Graph {
+     }
+ 
+     pub fn dynamic_construct(&mut self, t: usize, args: Vec<Value>) -> Result<Value> {
+-        if let Some(row) = self.lookup(t, &args)? {
++        let key = args
++            .iter()
++            .map(|v| canon(v, &self.parents))
++            .collect::<smallvec::SmallVec<[Value; 4]>>();
++        if let Some(row) = self.lookup_canonical(t, &key)? {
+             return Ok(row.values.last().unwrap().clone());
+         }
+         let dst = args.len();
+@@ -1732,13 +1736,12 @@ impl Graph {
+             self.program.table_templates[t],
+             args.into_iter().enumerate().collect(),
+         )?;
+-        self.construct(
+-            cell,
+-            0,
+-            t,
+-            &(0..dst).map(Arg::Slot).collect::<Vec<_>>(),
+-            dst,
+-        )
++        // Creating this empty frame changes neither Parents nor the constructor
++        // index. The lookup miss above still proves that this canonical key is
++        // absent; do not repeat the (potentially expensive) port-domain lookup.
++        // As before, dynamic hits do not enter the RHS constructor path.
++        self.stats.constructor_requests += 1;
++        self.insert_constructor(cell, 0, t, &key, dst)
+     }
+     pub fn enqueue_union(&mut self, a: Value, b: Value) -> Result<()> {
+         self.stats.union_requests += 1;
+diff --git a/engine/cell-runtime/src/local_port_conditions.rs b/engine/cell-runtime/src/local_port_conditions.rs
+index b1fb9ae3..11bfa0c3 100644
+--- a/engine/cell-runtime/src/local_port_conditions.rs
++++ b/engine/cell-runtime/src/local_port_conditions.rs
+@@ -359,6 +359,10 @@ impl Graph {
+             "covered_shapes":plans.iter().filter(|p|p.complete).count(),
+             "uncovered_shapes":plans.iter().filter(|p|!p.complete).count(),
+             "shared_conditions":plans.iter().map(|p|p.conditions.len()).sum::<usize>(),
++            "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
++                .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),
++            "shared_query_positions":self.program.cell_ownership.composition.queries.iter()
++                .flat_map(|p|&p.columns).flatten().map(Vec::len).sum::<usize>(),
+             "scope":"shared local all-input guards plus one complete foreign input domain; global Run barrier remains"})
+     }
+ }
+diff --git a/engine/cell-runtime/src/ownership_composition.rs b/engine/cell-runtime/src/ownership_composition.rs
+index 40fbce17..46ed1af8 100644
+--- a/engine/cell-runtime/src/ownership_composition.rs
++++ b/engine/cell-runtime/src/ownership_composition.rs
+@@ -5,6 +5,8 @@ use super::*;
+ pub mod conditions;
+ #[path = "ownership_effects.rs"]
+ pub mod effects;
++#[path = "ownership_queries.rs"]
++pub mod queries;
+ 
+ #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+ pub struct Source {
+@@ -119,6 +121,8 @@ pub struct Plan {
+     pub conditions: Vec<Rc<conditions::Plan>>,
+     #[serde(skip)]
+     pub effects: Vec<Rc<effects::Plan>>,
++    #[serde(skip)]
++    pub queries: Vec<Rc<queries::Plan>>,
+     pub fragments: Vec<Fragment>,
+     pub transitions: Vec<(Key, usize)>,
+     pub max_frames: usize,
+@@ -231,6 +235,7 @@ impl Plan {
+             sources,
+             conditions: vec![],
+             effects: vec![],
++            queries: vec![],
+             active_rules: vec![false; p.rules.len()],
+             shapes: programs
+                 .iter()
+@@ -319,6 +324,12 @@ impl Plan {
+                 .collect();
+         }
+     }
++    pub fn prepare_queries(&mut self) {
++        if self.queries.is_empty() {
++            self.queries = self.shapes.iter()
++                .map(|shape| Rc::new(queries::Plan::derive(shape))).collect();
++        }
++    }
+     pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
+         if self.conditions.is_empty() {
+             self.conditions = self
+diff --git a/engine/cell-runtime/src/port_keys.rs b/engine/cell-runtime/src/port_keys.rs
+index d2eb4575..ec6d4806 100644
+--- a/engine/cell-runtime/src/port_keys.rs
++++ b/engine/cell-runtime/src/port_keys.rs
+@@ -28,6 +28,7 @@ impl Graph {
+                 }
+             }
+         }
++        self.program.cell_ownership.composition.prepare_queries();
+         self.stable_ports.as_mut().unwrap().keys = true;
+         // Existing hints freeze here. Subsequent unions never relocate them.
+         Ok(())
+diff --git a/engine/cell-runtime/src/ownership_queries.rs b/engine/cell-runtime/src/ownership_queries.rs
+new file mode 100644
+--- /dev/null
++++ b/engine/cell-runtime/src/ownership_queries.rs
+@@ -0,0 +1,27 @@
++//! A bound field addresses shared template code directly. These routes contain
++//! positions in immutable signal slices, never instance IDs or live consumers.
++use super::*;
++
++#[derive(Clone, Debug, Default, PartialEq, Eq)]
++pub struct Plan {
++    /// Symbol -> column -> positions in Shape::signals[symbol].
++    pub columns: Vec<Vec<Vec<usize>>>,
++}
++impl Plan {
++    pub fn derive(shape: &Shape) -> Self {
++        let columns = shape.signals.iter().map(|steps| {
++            let mut columns = Vec::<Vec<usize>>::new();
++            for (position, step) in steps.iter().enumerate() {
++                for &column in step.columns.iter() {
++                    columns.resize_with(columns.len().max(column + 1), Vec::new);
++                    columns[column].push(position);
++                }
++            }
++            columns
++        }).collect();
++        Self { columns }
++    }
++    pub fn positions(&self, symbol: usize, column: usize) -> &[usize] {
++        self.columns[symbol].get(column).map_or(&[], Vec::as_slice)
++    }
++}

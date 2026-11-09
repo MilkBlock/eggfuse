@@ -1,0 +1,26 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/raytrace-parallel/runtime-fixed",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "marker": {
+      "runtime": "out/condition-bake/runtime-marker",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "fast_archived": {
+      "runtime": "out/raytrace-parallel/fast-runtime",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ]
+    }
+  }
+}

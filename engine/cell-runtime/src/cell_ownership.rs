@@ -21,6 +21,12 @@ pub struct Plan {
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
     pub programs: Vec<Rc<PortProgram>>,
+    /// Structure-of-arrays dispatch: native ports retain a compact pointer
+    /// array; operator tags are compiled separately from source instructions.
+    #[serde(skip)]
+    pub code_programs: Vec<Rc<PortProgram>>,
+    #[serde(skip)]
+    pub code_operators: Vec<Vec<usize>>,
     pub composition: composition::Plan,
     pub entries: Vec<Vec<usize>>,
     /// Shared publication table -> scheduled typed entry ports. Producer body
@@ -34,6 +40,8 @@ pub struct Marker {
     pub bodies: Vec<bool>,
     pub unions: Vec<usize>,
     pub program_id: usize,
+    #[serde(skip)]
+    pub code: usize,
     #[serde(skip)]
     pub program: Rc<PortProgram>,
 }
@@ -54,7 +62,7 @@ impl Plan {
                 let id=shared.len();
                 let (program_id,program)=shared.entry(program.clone()).or_insert_with(|| (id,Rc::new(program))).clone();
                 Marker {
-                program, program_id,
+                program, program_id, code: 0,
                 active: t.ops.iter().any(|op|matches!(op,Op::Let(_,Call::Table(table),_)|Op::Set(table,_,_) if tables[*table])),
                 bodies: t
                     .ops
@@ -97,6 +105,8 @@ impl Plan {
         let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
         let plan = Self {
             programs,
+            code_programs: vec![],
+            code_operators: vec![],
             composition,
             tables,
             markers,
@@ -109,6 +119,27 @@ impl Plan {
             }
         }
         Ok(plan)
+    }
+    fn prepare_codes(&mut self, templates: &[Template]) {
+        if !self.code_programs.is_empty() { return; }
+        let mut shared = BTreeMap::new();
+        for (template, marker) in templates.iter().zip(&mut self.markers) {
+            let operators = template.ops.iter().enumerate().map(|(op, instruction)| {
+                if !marker.bodies[op] { return usize::MAX; }
+                match instruction {
+                    Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
+                    _ => unreachable!("covered body must have a typed operator"),
+                }
+            }).collect::<Vec<_>>();
+            let key = (marker.program_id, operators);
+            marker.code = if let Some(&id) = shared.get(&key) { id } else {
+                let id = self.code_programs.len();
+                self.code_programs.push(marker.program.clone());
+                self.code_operators.push(key.1.clone());
+                shared.insert(key, id);
+                id
+            };
+        }
     }
     pub fn artifact(&self, p: &Program) -> J {
         json!({"schema":"eggfuse-ownership-markers/v4", "recipe":p.artifact["recipe"]["sha256"],
@@ -201,6 +232,11 @@ struct Stats {
     domain_planning_slice_steps: Counter<u64>,
     domain_signal_visits: Counter<u64>,
     domain_slice_steps: Counter<u64>,
+    domain_route_probes: Counter<u64>,
+    domain_column_checks: Counter<u64>,
+    domain_legacy_fact_probes: Counter<u64>,
+    domain_type_guards: Counter<u64>,
+    domain_type_rejections: Counter<u64>,
 }
 impl Stats {
     fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
@@ -272,6 +308,7 @@ impl Graph {
             );
         }
         self.program.prepare_cell_ownership()?;
+        self.program.cell_ownership.prepare_codes(&self.program.templates);
         self.ownership = Some(Runtime {
             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
             boundaries: HashMap::default(),
@@ -366,7 +403,7 @@ impl Graph {
         if frame.component != signal.component {
             return false;
         }
-        let Some(&local) = self.program.cell_ownership.programs[frame.program]
+        let Some(&local) = self.program.cell_ownership.code_programs[frame.code]
             .native
             .get(&(slot as usize))
         else {
@@ -380,7 +417,7 @@ impl Graph {
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
         let frame = m.composition.frames.get(&cell)?;
-        let local = *self.program.cell_ownership.programs[frame.program]
+        let local = *self.program.cell_ownership.code_programs[frame.code]
             .native
             .get(&slot)?;
         let signal = self.composed_signal(cell, local);
@@ -731,14 +768,15 @@ impl Graph {
             });
         }
     }
-    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<u64> {
+    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<(usize, u64)> {
         let m = self.ownership.as_ref()?;
         m.stats
             .domain_planning_calls
             .set(m.stats.domain_planning_calls.get() + 1);
         bound
             .iter()
-            .filter_map(|v| {
+            .enumerate()
+            .filter_map(|(column, v)| {
                 let Some(Value::Eq(id)) = v else {
                     return None;
                 };
@@ -750,10 +788,10 @@ impl Graph {
                 let count = m.boundaries.get(&id).map_or(0, |s| s.len())
                     + usize::from(self.native_signal(id).is_some())
                     + self.uses.get(&id).map_or(0, UseSet::len);
-                Some((id, count))
+                Some((column, id, count))
             })
-            .min_by_key(|x| x.1)
-            .map(|x| x.0)
+            .min_by_key(|x| x.2)
+            .map(|x| (x.0, x.1))
     }
     pub(super) fn owned_candidate_count(&self, table: usize, _bound: &[Option<Value>]) -> usize {
         // Keep the public upper-bound contract without enumerating signal
@@ -765,7 +803,7 @@ impl Graph {
         table: usize,
         bound: &[Option<Value>],
     ) -> Vec<Dependency> {
-        let Some(id) = self.smallest_signal_domain(bound) else {
+        let Some((column, id)) = self.smallest_signal_domain(bound) else {
             let rows = self.witnesses(table);
             let s = &self.ownership.as_ref().unwrap().stats;
             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
@@ -788,17 +826,42 @@ impl Graph {
             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
             let m = &self.ownership.as_ref().unwrap().composition;
             let component = m.components[signal.component as usize].as_ref().unwrap();
-            for step in m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol].iter() {
+            let steps = &m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol];
+            let positions = self.program.cell_ownership.composition.queries
+                .get(component.shape).map(|p| p.positions(signal.symbol, column));
+            s.domain_route_probes.set(s.domain_route_probes.get() + 1);
+            for position in 0..positions.map_or(steps.len(), <[usize]>::len) {
+                let step = &steps[positions.map_or(position, |p| p[position])];
                 s.domain_slice_steps.set(s.domain_slice_steps.get() + 1);
+                if positions.is_none() {
+                    s.domain_column_checks.set(s.domain_column_checks.get() + 1);
+                    if !step.columns.contains(&column) { continue; }
+                }
                 let cell = component.frames[step.frame];
-                if self
-                    .cells
-                    .get(&cell)
-                    .and_then(|c| c.facts.get(&step.op))
-                    .is_some_and(|s| s.owned && self.stable_node(FactRef { cell, op: step.op }).map_or_else(
-                        || s.decoded.as_ref().unwrap().0, |p| p.table) == table)
-                {
-                    result.insert(Dependency::Fact(FactRef { cell, op: step.op }));
+                // The instance selects concrete compiled code even when its
+                // port layout is shared with other operators. Discriminate
+                // with that code before probing any live node directory.
+                let frame = m.frames[&cell];
+                let operator = self.program.cell_ownership.code_operators[frame.code][step.op as usize];
+                s.domain_type_guards.set(s.domain_type_guards.get() + 1);
+                if operator != table {
+                    s.domain_type_rejections.set(s.domain_type_rejections.get() + 1);
+                    continue;
+                }
+                let fact = FactRef { cell, op: step.op };
+                let matches = if self.stable_ports.is_some() {
+                    // This is the authoritative live owned-fact directory:
+                    // installation and retirement enforce the fact's lifetime.
+                    // Do not re-read both legacy directories
+                    // before asking the same node for its operator.
+                    self.stable_node(fact).is_some_and(|node| node.table == table)
+                } else {
+                    s.domain_legacy_fact_probes.set(s.domain_legacy_fact_probes.get() + 1);
+                    self.cells.get(&cell).and_then(|c| c.facts.get(&step.op))
+                        .is_some_and(|state| state.owned && state.decoded.as_ref().unwrap().0 == table)
+                };
+                if matches {
+                    result.insert(Dependency::Fact(fact));
                 }
             }
         }

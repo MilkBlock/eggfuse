@@ -1,0 +1,728 @@
+{
+  "scope": "standalone Cell CPU; real process wall and inference timing; not native egglog",
+  "repeat": 2,
+  "warmups": 0,
+  "started_at_utc": "2026-11-09T04:37:13.256934+00:00",
+  "finished_at_utc": "2026-11-09T04:39:13.043306+00:00",
+  "semantic_reference": {
+    "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+    "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+  },
+  "process_wait": "blocking waitpid with a separate timeout watchdog; no polling sleeps",
+  "execution_order": [
+    {
+      "iteration": 0,
+      "lanes": [
+        "baseline",
+        "marker",
+        "fast_archived"
+      ]
+    },
+    {
+      "iteration": 1,
+      "lanes": [
+        "baseline",
+        "fast_archived",
+        "marker"
+      ]
+    }
+  ],
+  "reference": "baseline",
+  "lanes": {
+    "baseline": {
+      "args": [
+        "--local-congruence"
+      ],
+      "runtime_sha256": "5445d16049f46d4d85ca64f0d5f9fd37d22d368dc37a7d6ece195c3ea4b43967",
+      "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+      "timing": {
+        "inference_seconds": {
+          "median": 16.3612071875,
+          "minimum": 16.342010708,
+          "maximum": 16.380403667,
+          "median_absolute_deviation": 0.019196479499999697
+        },
+        "process_wall_seconds": {
+          "median": 26.1676157705,
+          "minimum": 26.151670457999998,
+          "maximum": 26.183561083,
+          "median_absolute_deviation": 0.015945312500001307
+        },
+        "load_seconds": {
+          "median": 0.5419433955,
+          "minimum": 0.529296583,
+          "maximum": 0.554590208,
+          "median_absolute_deviation": 0.012646812499999993
+        },
+        "setup_seconds": {
+          "median": 0.002929479,
+          "minimum": 0.002870125,
+          "maximum": 0.002988833,
+          "median_absolute_deviation": 5.935400000000018e-05
+        },
+        "export_seconds": {
+          "median": 1.7291157085,
+          "minimum": 1.717163625,
+          "maximum": 1.741067792,
+          "median_absolute_deviation": 0.011952083499999988
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 2127749120.0,
+          "minimum": 2118762496,
+          "maximum": 2136735744,
+          "median_absolute_deviation": 8986624.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4330682,
+        "cell_ownership_stats": {
+          "adopted_existing": 128,
+          "body_visits": 0,
+          "boundary_body_reads": 0,
+          "boundary_edges_created": 1662134,
+          "boundary_edges_removed": 442112,
+          "boundary_insert_attempts": 1662134,
+          "boundary_live": 1220022,
+          "boundary_owner_routes": 0,
+          "boundary_ports_seen": 1383071,
+          "boundary_probes": 226523,
+          "boundary_rebuilds": 0,
+          "boundary_signal_routes": 247952,
+          "carried_components": 1995198565,
+          "carried_facts": 3493147562,
+          "changed_ports": 0,
+          "coalesced_slice_steps": 21865,
+          "component_lifetime_growths": 18,
+          "component_lifetime_updates": 982208,
+          "component_signal_retire_visits": 292166,
+          "components_created": 433073,
+          "components_live": 372967,
+          "components_retired": 60106,
+          "composition_baked_hits": 153985,
+          "composition_cache_hits": 153985,
+          "composition_capacity_cuts": 212824,
+          "composition_cross_stage_joins": 153985,
+          "composition_entry_reads": 1216985,
+          "composition_frames": 587058,
+          "composition_materializations": 0,
+          "composition_missing_sources": 0,
+          "composition_requests": 153985,
+          "composition_shape_builds": 0,
+          "composition_shape_steps": 0,
+          "composition_substituted_ports": 209096,
+          "composition_transition_probes": 1004161,
+          "composition_unbaked_fallbacks": 850176,
+          "dispatch_comparisons": 844988,
+          "dispatch_heap_pops": 452736,
+          "dispatch_heap_pushes": 452736,
+          "dispatch_scratch_bytes": 8224,
+          "dispatch_scratch_growths": 8,
+          "domain_body_visits": 0,
+          "domain_legacy_visits": 5457044,
+          "domain_owner_visits": 0,
+          "domain_planning_calls": 1962583,
+          "domain_planning_signals": 0,
+          "domain_planning_slice_steps": 0,
+          "domain_queries": 1962583,
+          "domain_results": 10000938,
+          "domain_signal_visits": 55413157,
+          "domain_slice_steps": 105558365,
+          "inactive_slice_steps": 196519,
+          "internal_ports_seen": 1029184,
+          "key_completions": 0,
+          "key_enqueues": 224478,
+          "marker_anchor_reads": 0,
+          "marker_entries": 903027,
+          "marker_union_requests": 115423,
+          "native_owner_routes": 0,
+          "native_signal_routes": 188946,
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "owned_retirements": 161769,
+          "owner_visits": 0,
+          "port_checks": 0,
+          "result_publications": 182870,
+          "retired_result_boundaries": 0,
+          "row_copies": 0,
+          "signal_activations": 436898,
+          "signal_binding_reads": 2412255,
+          "signal_bindings_created": 1976286,
+          "signal_bindings_live": 1742844,
+          "signal_bindings_retired": 233442,
+          "signal_parent_probes": 402401,
+          "signal_port_attaches": 2412255,
+          "signal_port_detaches": 0,
+          "signal_root_queries": 235572,
+          "slice_steps": 649255,
+          "stage_barriers": 9332,
+          "unbound_query_calls": 0,
+          "unbound_query_rows": 0,
+          "unchanged_port_checks": 0,
+          "uncovered_births": 0
+        },
+        "stable_ports_stats": {
+          "birth_hint_hits": 2063540,
+          "birth_hint_probes": 4021212,
+          "equality_completions": 224478,
+          "equality_enqueues": 224478,
+          "key_candidates": 12161275,
+          "key_field_comparisons": 17482743,
+          "key_lookups": 4026123,
+          "keys": true,
+          "legacy_key_enqueues": 0,
+          "node_lookups": 95542301,
+          "node_retirement_probes": 161769,
+          "nodes_retired": 161769,
+          "notifications": 430871,
+          "notified_columns": 457480,
+          "pending_candidate_skips": 37799,
+          "port_domain_probes": 1962583,
+          "port_reads": 37495361,
+          "ports_installed": 2412255,
+          "result_publications": 182870,
+          "root_parent_probes": 40880293,
+          "root_resolutions": 37495361,
+          "row_views": 7982965,
+          "rows_installed": 820439
+        },
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 0,
+          "repaired_dependencies": 255111,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.020890830499999558,
+        "query_update": 1.8785563080000016,
+        "repair": 1.053500673499979,
+        "rhs": 4.711731060499976,
+        "search": 8.691031015999442
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 16.380403667,
+          "process_wall_seconds": 26.183561083,
+          "process_user_seconds": 25.526264,
+          "process_system_seconds": 0.6148399999999999
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 16.342010708,
+          "process_wall_seconds": 26.151670457999998,
+          "process_user_seconds": 25.58197,
+          "process_system_seconds": 0.5443359999999999
+        }
+      ]
+    },
+    "marker": {
+      "args": [
+        "--local-congruence"
+      ],
+      "runtime_sha256": "63c9be3e2f78cb1cdfeaa494f0b47c0e8fc043a5f7b3991c13aa8da5aa926955",
+      "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+      "timing": {
+        "inference_seconds": {
+          "median": 13.05940925,
+          "minimum": 12.887991375,
+          "maximum": 13.230827125,
+          "median_absolute_deviation": 0.1714178749999995
+        },
+        "process_wall_seconds": {
+          "median": 22.816454770500002,
+          "minimum": 22.57709325,
+          "maximum": 23.055816291,
+          "median_absolute_deviation": 0.23936152049999926
+        },
+        "load_seconds": {
+          "median": 0.5612333125,
+          "minimum": 0.559423,
+          "maximum": 0.563043625,
+          "median_absolute_deviation": 0.001810312500000022
+        },
+        "setup_seconds": {
+          "median": 0.0049422914999999994,
+          "minimum": 0.004632666,
+          "maximum": 0.005251917,
+          "median_absolute_deviation": 0.0003096255000000002
+        },
+        "export_seconds": {
+          "median": 1.7237963125,
+          "minimum": 1.693196666,
+          "maximum": 1.754395959,
+          "median_absolute_deviation": 0.03059964650000002
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 2155159552.0,
+          "minimum": 2154708992,
+          "maximum": 2155610112,
+          "median_absolute_deviation": 450560.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4330682,
+        "cell_ownership_stats": {
+          "adopted_existing": 128,
+          "body_visits": 0,
+          "boundary_body_reads": 0,
+          "boundary_edges_created": 1662134,
+          "boundary_edges_removed": 442112,
+          "boundary_insert_attempts": 1662134,
+          "boundary_live": 1220022,
+          "boundary_owner_routes": 0,
+          "boundary_ports_seen": 1383071,
+          "boundary_probes": 226523,
+          "boundary_rebuilds": 0,
+          "boundary_signal_routes": 247952,
+          "carried_components": 1995198565,
+          "carried_facts": 3493147562,
+          "changed_ports": 0,
+          "coalesced_slice_steps": 21865,
+          "component_lifetime_growths": 18,
+          "component_lifetime_updates": 982208,
+          "component_signal_retire_visits": 292166,
+          "components_created": 433073,
+          "components_live": 372967,
+          "components_retired": 60106,
+          "composition_baked_hits": 153985,
+          "composition_cache_hits": 153985,
+          "composition_capacity_cuts": 212824,
+          "composition_cross_stage_joins": 153985,
+          "composition_entry_reads": 1216985,
+          "composition_frames": 587058,
+          "composition_materializations": 0,
+          "composition_missing_sources": 0,
+          "composition_requests": 153985,
+          "composition_shape_builds": 0,
+          "composition_shape_steps": 0,
+          "composition_substituted_ports": 209096,
+          "composition_transition_probes": 1004161,
+          "composition_unbaked_fallbacks": 850176,
+          "dispatch_comparisons": 844988,
+          "dispatch_heap_pops": 452736,
+          "dispatch_heap_pushes": 452736,
+          "dispatch_scratch_bytes": 8224,
+          "dispatch_scratch_growths": 8,
+          "domain_body_visits": 0,
+          "domain_column_checks": 0,
+          "domain_legacy_fact_probes": 0,
+          "domain_legacy_visits": 5457044,
+          "domain_owner_visits": 0,
+          "domain_planning_calls": 1962583,
+          "domain_planning_signals": 0,
+          "domain_planning_slice_steps": 0,
+          "domain_queries": 1962583,
+          "domain_results": 6235405,
+          "domain_route_probes": 55413157,
+          "domain_signal_visits": 55413157,
+          "domain_slice_steps": 63490061,
+          "domain_type_guards": 63490061,
+          "domain_type_rejections": 53395879,
+          "inactive_slice_steps": 196519,
+          "internal_ports_seen": 1029184,
+          "key_completions": 0,
+          "key_enqueues": 224478,
+          "marker_anchor_reads": 0,
+          "marker_entries": 903027,
+          "marker_union_requests": 115423,
+          "native_owner_routes": 0,
+          "native_signal_routes": 188946,
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "owned_retirements": 161769,
+          "owner_visits": 0,
+          "port_checks": 0,
+          "result_publications": 182870,
+          "retired_result_boundaries": 0,
+          "row_copies": 0,
+          "signal_activations": 436898,
+          "signal_binding_reads": 2412255,
+          "signal_bindings_created": 1976286,
+          "signal_bindings_live": 1742844,
+          "signal_bindings_retired": 233442,
+          "signal_parent_probes": 402401,
+          "signal_port_attaches": 2412255,
+          "signal_port_detaches": 0,
+          "signal_root_queries": 235572,
+          "slice_steps": 649255,
+          "stage_barriers": 9332,
+          "unbound_query_calls": 0,
+          "unbound_query_rows": 0,
+          "unchanged_port_checks": 0,
+          "uncovered_births": 0
+        },
+        "stable_ports_stats": {
+          "birth_hint_hits": 2063540,
+          "birth_hint_probes": 4021212,
+          "equality_completions": 224478,
+          "equality_enqueues": 224478,
+          "key_candidates": 8475767,
+          "key_field_comparisons": 13742679,
+          "key_lookups": 4026123,
+          "keys": true,
+          "legacy_key_enqueues": 0,
+          "node_lookups": 30037468,
+          "node_retirement_probes": 161769,
+          "nodes_retired": 161769,
+          "notifications": 430871,
+          "notified_columns": 457480,
+          "pending_candidate_skips": 37788,
+          "port_domain_probes": 1962583,
+          "port_reads": 33755311,
+          "ports_installed": 2412255,
+          "result_publications": 182870,
+          "root_parent_probes": 37083372,
+          "root_resolutions": 33755311,
+          "row_views": 7982965,
+          "rows_installed": 820439
+        },
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 0,
+          "repaired_dependencies": 255111,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.020326276499999525,
+        "query_update": 1.7876748689999973,
+        "repair": 0.9871672560000164,
+        "rhs": 3.7722771864999762,
+        "search": 6.48773420949956
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 12.887991375,
+          "process_wall_seconds": 22.57709325,
+          "process_user_seconds": 22.092094,
+          "process_system_seconds": 0.45620000000000005
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 13.230827125,
+          "process_wall_seconds": 23.055816291,
+          "process_user_seconds": 22.494134000000003,
+          "process_system_seconds": 0.5385410000000004
+        }
+      ]
+    },
+    "fast_archived": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications"
+      ],
+      "runtime_sha256": "9d5aa6db095301ed2285ce8b365c0f7124853b17138b0420a1cf97a10d93d3aa",
+      "program_file_sha256": "9f7b97614ada9a66cb32e764173a54e2beca0e2ed7ae0e85d059bb417daa0fed",
+      "timing": {
+        "inference_seconds": {
+          "median": 7.732157,
+          "minimum": 7.647965375,
+          "maximum": 7.816348625,
+          "median_absolute_deviation": 0.08419162499999988
+        },
+        "process_wall_seconds": {
+          "median": 10.026887395999996,
+          "minimum": 9.958530333999995,
+          "maximum": 10.095244457999996,
+          "median_absolute_deviation": 0.06835706200000047
+        },
+        "setup_seconds": {
+          "median": 0.003084125,
+          "minimum": 0.002749041,
+          "maximum": 0.003419209,
+          "median_absolute_deviation": 0.00033508400000000003
+        },
+        "export_seconds": {
+          "median": 1.5537542295,
+          "minimum": 1.5424567919999999,
+          "maximum": 1.565051667,
+          "median_absolute_deviation": 0.011297437500000118
+        },
+        "peak_rss_through_inference_bytes": {
+          "median": 1996505088.0,
+          "minimum": 1996390400,
+          "maximum": 1996619776,
+          "median_absolute_deviation": 114688.0
+        }
+      },
+      "counters": {
+        "key_lookup_calls": 4420726,
+        "cell_ownership_stats": null,
+        "stable_ports_stats": null,
+        "birth_absence_directory": null,
+        "stats": {
+          "bindings": 3785196,
+          "cells_created": 704559,
+          "constructor_requests": 2062640,
+          "constructor_reused": 1311590,
+          "decoded_rows": 867701,
+          "delivery_events": 3164969,
+          "direct_bindings": 0,
+          "direct_candidates": 0,
+          "distinct_delivery_events": 2805065,
+          "empty_frames_released": 102635,
+          "function_updates": 1676336,
+          "handoff_attempts": 64796,
+          "handoff_closed": 18016,
+          "handoff_closed_fallback": 5740,
+          "handoff_deep": 0,
+          "handoff_lets": 34063,
+          "handoff_missing": 0,
+          "handoff_noop_unions": 17363,
+          "handoff_sets": 17363,
+          "handoff_stale": 13370,
+          "idle_scheduled_runs": 7551,
+          "key_operations": 0,
+          "logical_facts_created": 820439,
+          "merge_calls": 2961959,
+          "merge_contract_calls": {
+            "lattice": 1922368,
+            "ordered": 1033842,
+            "unique": 5749
+          },
+          "merge_port_reads": 0,
+          "merge_program_calls": 107161,
+          "merge_program_constructs": 106103,
+          "merge_program_operations": 106151,
+          "native_free_join_calls": 0,
+          "native_table_reads": 0,
+          "native_table_writes": 0,
+          "register_answers": 2452435,
+          "register_seeds": 1937670,
+          "repair_collisions": 161769,
+          "repair_key_hash_changes": 224478,
+          "repaired_dependencies": 479589,
+          "residual_candidates": 4490637,
+          "rhs_frames_avoided": 1822751,
+          "scalar_merge_calls": 2847545,
+          "scalar_old_projection": 925177,
+          "scalar_unchanged": 1742162,
+          "shared_negative_hits": 379,
+          "shared_point_hits": 24221,
+          "shared_point_requests": 122926,
+          "single_writes": 2301668,
+          "sum_index_reads": 20416,
+          "sum_index_skips": 80843,
+          "transient_writes": 1017798,
+          "union_requests": 573277,
+          "unions": 226523
+        }
+      },
+      "deterministic_counter_check": {
+        "groups": [
+          "key_lookup_calls",
+          "cell_ownership_stats",
+          "stable_ports_stats",
+          "birth_absence_directory",
+          "stats"
+        ],
+        "measured_samples": 2,
+        "warmup_samples": 0,
+        "all_equal": true
+      },
+      "phases": {
+        "delivery_gc": 0.0189177884999997,
+        "query_update": 1.5180411194999943,
+        "repair": 0.5534720399999985,
+        "rhs": 2.068178416999986,
+        "search": 3.5683658609999815
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 7.647965375,
+          "process_wall_seconds": 9.958530333999995,
+          "process_user_seconds": 9.452996999999996,
+          "process_system_seconds": 0.4829889999999999
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 7.816348625,
+          "process_wall_seconds": 10.095244457999996,
+          "process_user_seconds": 9.618803,
+          "process_system_seconds": 0.46477199999999996
+        }
+      ]
+    }
+  },
+  "comparisons": {
+    "marker": {
+      "inference_seconds": {
+        "paired_median_ratio": 0.7982068927861139,
+        "ratio_of_medians": 0.7981935012703353,
+        "paired_bootstrap_95_interval": [
+          0.7867932706056676,
+          0.8096205149665601
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      },
+      "process_wall_seconds": {
+        "paired_median_ratio": 0.8719406956408806,
+        "ratio_of_medians": 0.8719347979811779,
+        "paired_bootstrap_95_interval": [
+          0.8622621338034289,
+          0.8816192574783324
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      }
+    },
+    "fast_archived": {
+      "inference_seconds": {
+        "paired_median_ratio": 0.47259754962654443,
+        "ratio_of_medians": 0.4725908615048519,
+        "paired_bootstrap_95_interval": [
+          0.4668972468857779,
+          0.47829785236731104
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      },
+      "process_wall_seconds": {
+        "paired_median_ratio": 0.3831809844895242,
+        "ratio_of_medians": 0.38317925041163986,
+        "paired_bootstrap_95_interval": [
+          0.3803352150012052,
+          0.38602675397784325
+        ],
+        "bootstrap_resamples": 10000,
+        "pairing": "same interleaved repetition index"
+      }
+    }
+  },
+  "concurrent_fast_reference_lanes": [
+    "fast_archived"
+  ],
+  "limits": "A bounded single-thread pilot; small-sample intervals are descriptive. An archived-fast reference was included in this same campaign: fast_archived. Counter reductions alone do not establish a speedup; use measured inference and whole-process time."
+}

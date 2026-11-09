@@ -136,6 +136,7 @@ def measure(spec, output, repeat, warmups, timeout):
             for key in ('scoped_executor', 'port_completion'):
                 row[key] = report.get(key)
             stable = report.get('stable_ports', {})
+            row['birth_absence_directory'] = stable.get('birth_absence_directory')
             row['parallel_guards'] = stable.get('parallel_guards')
             row['completion_batches'] = stable.get('completion_batches')
             for key in ('cell_ownership', 'stable_ports', 'maintenance'):

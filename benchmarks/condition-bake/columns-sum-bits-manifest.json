@@ -1,0 +1,18 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/raytrace-parallel/runtime-fixed",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "columns": {
+      "runtime": "out/condition-bake/runtime-columns",
+      "program": "out/stable-port-congruence/sum-program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

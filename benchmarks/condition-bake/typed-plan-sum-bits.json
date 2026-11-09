@@ -1,0 +1,123 @@
+{
+  "scope": "standalone Cell CPU; separate sum-bits plan diagnostic, not timing",
+  "lanes": {
+    "baseline": {
+      "local_conditions": {
+        "covered_shapes": 606,
+        "enabled": true,
+        "max_sites": 16,
+        "scope": "shared local all-input guards plus one complete foreign input domain; global Run barrier remains",
+        "shared_conditions": 2176,
+        "stats": {
+          "anchor_probes": 1922,
+          "attempts": 1046,
+          "boundary_candidates": 2806,
+          "boundary_collisions": 733,
+          "boundary_signals": 20710,
+          "boundary_sites": 17234,
+          "boundary_uncompiled_steps": 3218,
+          "candidate_buffer_growths": 43,
+          "candidate_buffer_spills": 26,
+          "candidate_sort_comparisons": 8895,
+          "closed_domain_probes": 189,
+          "completed_conditions": 108,
+          "condition_visits": 611,
+          "cross_stage_conditions": 96,
+          "equality_guards": 312,
+          "inactive_sites": 191,
+          "local_candidates": 2179,
+          "open_domains": 847,
+          "operator_guards": 420,
+          "pending_sites": 300,
+          "scalar_guards": 118,
+          "shared_symbol_guards": 87,
+          "uncovered_shapes": 10
+        },
+        "uncovered_shapes": 24
+      },
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 19222
+    },
+    "columns": {
+      "local_conditions": {
+        "covered_shapes": 606,
+        "enabled": true,
+        "max_sites": 16,
+        "scope": "shared local all-input guards plus one complete foreign input domain; global Run barrier remains",
+        "shared_conditions": 2176,
+        "shared_query_positions": 7610,
+        "shared_query_routes": 11312,
+        "stats": {
+          "anchor_probes": 1922,
+          "attempts": 1046,
+          "boundary_candidates": 2806,
+          "boundary_collisions": 733,
+          "boundary_signals": 20710,
+          "boundary_sites": 17234,
+          "boundary_uncompiled_steps": 3218,
+          "candidate_buffer_growths": 43,
+          "candidate_buffer_spills": 26,
+          "candidate_sort_comparisons": 8895,
+          "closed_domain_probes": 189,
+          "completed_conditions": 108,
+          "condition_visits": 611,
+          "cross_stage_conditions": 96,
+          "equality_guards": 312,
+          "inactive_sites": 191,
+          "local_candidates": 2179,
+          "open_domains": 847,
+          "operator_guards": 420,
+          "pending_sites": 300,
+          "scalar_guards": 118,
+          "shared_symbol_guards": 87,
+          "uncovered_shapes": 10
+        },
+        "uncovered_shapes": 24
+      },
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 19222
+    },
+    "typed": {
+      "local_conditions": {
+        "covered_shapes": 606,
+        "duplicate_inputs_elided": 2,
+        "enabled": true,
+        "max_sites": 16,
+        "operator_pairs_elided": 600,
+        "reflexive_inputs_elided": 1477,
+        "scope": "shared local all-input guards plus one complete foreign input domain; global Run barrier remains",
+        "shared_conditions": 1576,
+        "shared_query_positions": 7610,
+        "shared_query_routes": 11312,
+        "stats": {
+          "anchor_probes": 1922,
+          "attempts": 1046,
+          "boundary_candidates": 2806,
+          "boundary_collisions": 733,
+          "boundary_signals": 20710,
+          "boundary_sites": 17234,
+          "boundary_uncompiled_steps": 3218,
+          "candidate_buffer_growths": 43,
+          "candidate_buffer_spills": 26,
+          "candidate_sort_comparisons": 7424,
+          "closed_domain_probes": 189,
+          "completed_conditions": 108,
+          "condition_visits": 407,
+          "cross_stage_conditions": 96,
+          "equality_guards": 312,
+          "inactive_sites": 119,
+          "local_candidates": 1404,
+          "open_domains": 847,
+          "operator_guards": 288,
+          "pending_sites": 294,
+          "scalar_guards": 118,
+          "shared_symbol_guards": 0,
+          "uncovered_shapes": 10
+        },
+        "uncovered_shapes": 24
+      },
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 19222
+    }
+  }
+}

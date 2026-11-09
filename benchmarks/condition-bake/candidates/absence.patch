@@ -1,0 +1,830 @@
+diff --git a/engine/cell-runtime/src/cell_ownership.rs b/engine/cell-runtime/src/cell_ownership.rs
+index f7ab4654..41ad75a0 100644
+--- a/engine/cell-runtime/src/cell_ownership.rs
++++ b/engine/cell-runtime/src/cell_ownership.rs
+@@ -21,6 +21,12 @@ pub struct Plan {
+     pub tables: Vec<bool>,
+     pub markers: Vec<Marker>,
+     pub programs: Vec<Rc<PortProgram>>,
++    /// Structure-of-arrays dispatch: native ports retain a compact pointer
++    /// array; operator tags are compiled separately from source instructions.
++    #[serde(skip)]
++    pub code_programs: Vec<Rc<PortProgram>>,
++    #[serde(skip)]
++    pub code_operators: Vec<Vec<usize>>,
+     pub composition: composition::Plan,
+     pub entries: Vec<Vec<usize>>,
+     /// Shared publication table -> scheduled typed entry ports. Producer body
+@@ -35,6 +41,8 @@ pub struct Marker {
+     pub unions: Vec<usize>,
+     pub program_id: usize,
+     #[serde(skip)]
++    pub code: usize,
++    #[serde(skip)]
+     pub program: Rc<PortProgram>,
+ }
+ impl Plan {
+@@ -54,7 +62,7 @@ impl Plan {
+                 let id=shared.len();
+                 let (program_id,program)=shared.entry(program.clone()).or_insert_with(|| (id,Rc::new(program))).clone();
+                 Marker {
+-                program, program_id,
++                program, program_id, code: 0,
+                 active: t.ops.iter().any(|op|matches!(op,Op::Let(_,Call::Table(table),_)|Op::Set(table,_,_) if tables[*table])),
+                 bodies: t
+                     .ops
+@@ -97,6 +105,8 @@ impl Plan {
+         let composition = composition::Plan::derive(p, &markers, &programs, &entries)?;
+         let plan = Self {
+             programs,
++            code_programs: vec![],
++            code_operators: vec![],
+             composition,
+             tables,
+             markers,
+@@ -110,6 +120,27 @@ impl Plan {
+         }
+         Ok(plan)
+     }
++    fn prepare_codes(&mut self, templates: &[Template]) {
++        if !self.code_programs.is_empty() { return; }
++        let mut shared = BTreeMap::new();
++        for (template, marker) in templates.iter().zip(&mut self.markers) {
++            let operators = template.ops.iter().enumerate().map(|(op, instruction)| {
++                if !marker.bodies[op] { return usize::MAX; }
++                match instruction {
++                    Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
++                    _ => unreachable!("covered body must have a typed operator"),
++                }
++            }).collect::<Vec<_>>();
++            let key = (marker.program_id, operators);
++            marker.code = if let Some(&id) = shared.get(&key) { id } else {
++                let id = self.code_programs.len();
++                self.code_programs.push(marker.program.clone());
++                self.code_operators.push(key.1.clone());
++                shared.insert(key, id);
++                id
++            };
++        }
++    }
+     pub fn artifact(&self, p: &Program) -> J {
+         json!({"schema":"eggfuse-ownership-markers/v4", "recipe":p.artifact["recipe"]["sha256"],
+             "entry_schedule":crate::checksum::artifact_digest(&p.artifact["entry_schedule"]),"plan":self,
+@@ -201,6 +232,11 @@ struct Stats {
+     domain_planning_slice_steps: Counter<u64>,
+     domain_signal_visits: Counter<u64>,
+     domain_slice_steps: Counter<u64>,
++    domain_route_probes: Counter<u64>,
++    domain_column_checks: Counter<u64>,
++    domain_legacy_fact_probes: Counter<u64>,
++    domain_type_guards: Counter<u64>,
++    domain_type_rejections: Counter<u64>,
+ }
+ impl Stats {
+     fn signal_root(&self, parents: &Parents, id: u64) -> u64 {
+@@ -272,6 +308,7 @@ impl Graph {
+             );
+         }
+         self.program.prepare_cell_ownership()?;
++        self.program.cell_ownership.prepare_codes(&self.program.templates);
+         self.ownership = Some(Runtime {
+             composition: composition::Runtime::new(&self.program.cell_ownership.composition),
+             boundaries: HashMap::default(),
+@@ -366,7 +403,7 @@ impl Graph {
+         if frame.component != signal.component {
+             return false;
+         }
+-        let Some(&local) = self.program.cell_ownership.programs[frame.program]
++        let Some(&local) = self.program.cell_ownership.code_programs[frame.code]
+             .native
+             .get(&(slot as usize))
+         else {
+@@ -380,7 +417,7 @@ impl Graph {
+         let slot = (id as u32).checked_sub(1)? as usize;
+         let m = self.ownership.as_ref()?;
+         let frame = m.composition.frames.get(&cell)?;
+-        let local = *self.program.cell_ownership.programs[frame.program]
++        let local = *self.program.cell_ownership.code_programs[frame.code]
+             .native
+             .get(&slot)?;
+         let signal = self.composed_signal(cell, local);
+@@ -731,14 +768,15 @@ impl Graph {
+             });
+         }
+     }
+-    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<u64> {
++    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<(usize, u64)> {
+         let m = self.ownership.as_ref()?;
+         m.stats
+             .domain_planning_calls
+             .set(m.stats.domain_planning_calls.get() + 1);
+         bound
+             .iter()
+-            .filter_map(|v| {
++            .enumerate()
++            .filter_map(|(column, v)| {
+                 let Some(Value::Eq(id)) = v else {
+                     return None;
+                 };
+@@ -750,10 +788,10 @@ impl Graph {
+                 let count = m.boundaries.get(&id).map_or(0, |s| s.len())
+                     + usize::from(self.native_signal(id).is_some())
+                     + self.uses.get(&id).map_or(0, UseSet::len);
+-                Some((id, count))
++                Some((column, id, count))
+             })
+-            .min_by_key(|x| x.1)
+-            .map(|x| x.0)
++            .min_by_key(|x| x.2)
++            .map(|x| (x.0, x.1))
+     }
+     pub(super) fn owned_candidate_count(&self, table: usize, _bound: &[Option<Value>]) -> usize {
+         // Keep the public upper-bound contract without enumerating signal
+@@ -765,7 +803,7 @@ impl Graph {
+         table: usize,
+         bound: &[Option<Value>],
+     ) -> Vec<Dependency> {
+-        let Some(id) = self.smallest_signal_domain(bound) else {
++        let Some((column, id)) = self.smallest_signal_domain(bound) else {
+             let rows = self.witnesses(table);
+             let s = &self.ownership.as_ref().unwrap().stats;
+             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
+@@ -788,17 +826,42 @@ impl Graph {
+             s.domain_signal_visits.set(s.domain_signal_visits.get() + 1);
+             let m = &self.ownership.as_ref().unwrap().composition;
+             let component = m.components[signal.component as usize].as_ref().unwrap();
+-            for step in m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol].iter() {
++            let steps = &m.shapes[component.shape].as_ref().unwrap().signals[signal.symbol];
++            let positions = self.program.cell_ownership.composition.queries
++                .get(component.shape).map(|p| p.positions(signal.symbol, column));
++            s.domain_route_probes.set(s.domain_route_probes.get() + 1);
++            for position in 0..positions.map_or(steps.len(), <[usize]>::len) {
++                let step = &steps[positions.map_or(position, |p| p[position])];
+                 s.domain_slice_steps.set(s.domain_slice_steps.get() + 1);
++                if positions.is_none() {
++                    s.domain_column_checks.set(s.domain_column_checks.get() + 1);
++                    if !step.columns.contains(&column) { continue; }
++                }
+                 let cell = component.frames[step.frame];
+-                if self
+-                    .cells
+-                    .get(&cell)
+-                    .and_then(|c| c.facts.get(&step.op))
+-                    .is_some_and(|s| s.owned && self.stable_node(FactRef { cell, op: step.op }).map_or_else(
+-                        || s.decoded.as_ref().unwrap().0, |p| p.table) == table)
+-                {
+-                    result.insert(Dependency::Fact(FactRef { cell, op: step.op }));
++                // The instance selects concrete compiled code even when its
++                // port layout is shared with other operators. Discriminate
++                // with that code before probing any live node directory.
++                let frame = m.frames[&cell];
++                let operator = self.program.cell_ownership.code_operators[frame.code][step.op as usize];
++                s.domain_type_guards.set(s.domain_type_guards.get() + 1);
++                if operator != table {
++                    s.domain_type_rejections.set(s.domain_type_rejections.get() + 1);
++                    continue;
++                }
++                let fact = FactRef { cell, op: step.op };
++                let matches = if self.stable_ports.is_some() {
++                    // This is the authoritative live owned-fact directory:
++                    // installation and retirement enforce the fact's lifetime.
++                    // Do not re-read both legacy directories
++                    // before asking the same node for its operator.
++                    self.stable_node(fact).is_some_and(|node| node.table == table)
++                } else {
++                    s.domain_legacy_fact_probes.set(s.domain_legacy_fact_probes.get() + 1);
++                    self.cells.get(&cell).and_then(|c| c.facts.get(&step.op))
++                        .is_some_and(|state| state.owned && state.decoded.as_ref().unwrap().0 == table)
++                };
++                if matches {
++                    result.insert(Dependency::Fact(fact));
+                 }
+             }
+         }
+diff --git a/engine/cell-runtime/src/local_port_conditions.rs b/engine/cell-runtime/src/local_port_conditions.rs
+index b1fb9ae3..90e5861e 100644
+--- a/engine/cell-runtime/src/local_port_conditions.rs
++++ b/engine/cell-runtime/src/local_port_conditions.rs
+@@ -68,7 +68,7 @@ impl Graph {
+     pub fn use_local_port_conditions(&mut self) -> Result<()> {
+         self.use_port_constructor_matching()?;
+         let plan = &mut self.program.cell_ownership;
+-        plan.composition.prepare_conditions(&plan.programs);
++        plan.composition.prepare_conditions(&plan.programs, &self.program.templates, &plan.markers);
+         self.stable_ports
+             .as_mut()
+             .unwrap()
+@@ -359,6 +359,15 @@ impl Graph {
+             "covered_shapes":plans.iter().filter(|p|p.complete).count(),
+             "uncovered_shapes":plans.iter().filter(|p|!p.complete).count(),
+             "shared_conditions":plans.iter().map(|p|p.conditions.len()).sum::<usize>(),
++            "operator_pairs_elided":plans.iter().map(|p|p.operator_pairs_elided).sum::<usize>(),
++            "reflexive_inputs_elided":plans.iter().map(|p|p.reflexive_inputs_elided).sum::<usize>(),
++            "duplicate_inputs_elided":plans.iter().map(|p|p.duplicate_inputs_elided).sum::<usize>(),
++            "shared_typed_codes":self.program.cell_ownership.code_programs.len(),
++            "shared_operator_slots":self.program.cell_ownership.code_operators.iter().map(Vec::len).sum::<usize>(),
++            "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
++                .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),
++            "shared_query_positions":self.program.cell_ownership.composition.queries.iter()
++                .flat_map(|p|&p.columns).flatten().map(Vec::len).sum::<usize>(),
+             "scope":"shared local all-input guards plus one complete foreign input domain; global Run barrier remains"})
+     }
+ }
+diff --git a/engine/cell-runtime/src/ownership_composition.rs b/engine/cell-runtime/src/ownership_composition.rs
+index 40fbce17..f371469a 100644
+--- a/engine/cell-runtime/src/ownership_composition.rs
++++ b/engine/cell-runtime/src/ownership_composition.rs
+@@ -5,6 +5,8 @@ use super::*;
+ pub mod conditions;
+ #[path = "ownership_effects.rs"]
+ pub mod effects;
++#[path = "ownership_queries.rs"]
++pub mod queries;
+ 
+ #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+ pub struct Source {
+@@ -119,6 +121,8 @@ pub struct Plan {
+     pub conditions: Vec<Rc<conditions::Plan>>,
+     #[serde(skip)]
+     pub effects: Vec<Rc<effects::Plan>>,
++    #[serde(skip)]
++    pub queries: Vec<Rc<queries::Plan>>,
+     pub fragments: Vec<Fragment>,
+     pub transitions: Vec<(Key, usize)>,
+     pub max_frames: usize,
+@@ -231,6 +235,7 @@ impl Plan {
+             sources,
+             conditions: vec![],
+             effects: vec![],
++            queries: vec![],
+             active_rules: vec![false; p.rules.len()],
+             shapes: programs
+                 .iter()
+@@ -319,12 +324,19 @@ impl Plan {
+                 .collect();
+         }
+     }
+-    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>]) {
++    pub fn prepare_queries(&mut self) {
++        if self.queries.is_empty() {
++            self.queries = self.shapes.iter()
++                .map(|shape| Rc::new(queries::Plan::derive(shape))).collect();
++        }
++    }
++    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>], templates: &[Template], markers: &[Marker]) {
+         if self.conditions.is_empty() {
++            let operators = conditions::operators(templates, markers, programs);
+             self.conditions = self
+                 .shapes
+                 .iter()
+-                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs)))
++                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs, &operators)))
+                 .collect();
+         }
+     }
+@@ -383,7 +395,9 @@ pub(super) struct Component {
+ pub(super) struct Frame {
+     pub component: u32,
+     pub ordinal: usize,
+-    pub program: usize,
++    /// Checked marker selecting shared native-port and operator code arrays.
++    /// This occupies the former port-program ID slot, without growing a frame.
++    pub code: usize,
+ }
+ /// Stable frame addresses are normally dense. Retain outlier support for
+ /// imported IDs without paying a hash lookup on every local port access.
+@@ -740,7 +754,7 @@ impl Graph {
+             Frame {
+                 component,
+                 ordinal,
+-                program,
++                code: self.program.cell_ownership.markers[template].code,
+             },
+         );
+     }
+@@ -800,19 +814,19 @@ mod tests {
+         let frame = Frame {
+             component: 1,
+             ordinal: 2,
+-            program: 3,
++            code: 3,
+         };
+         frames.insert(u32::MAX, frame);
+         frames.insert(4, frame);
+         frames.insert(
+             4,
+             Frame {
+-                program: 5,
++                code: 5,
+                 ..frame
+             },
+         );
+         assert_eq!(frames.len(), 2);
+-        assert_eq!(frames[&4].program, 5);
++        assert_eq!(frames[&4].code, 5);
+         frames.remove(&4);
+         frames.remove(&4);
+         assert_eq!(frames.len(), 1);
+diff --git a/engine/cell-runtime/src/ownership_conditions.rs b/engine/cell-runtime/src/ownership_conditions.rs
+index 81c4a6da..1bb41e66 100644
+--- a/engine/cell-runtime/src/ownership_conditions.rs
++++ b/engine/cell-runtime/src/ownership_conditions.rs
+@@ -3,6 +3,29 @@
+ //! and scalar literals are explicit guards, never inferred from program IDs.
+ use super::*;
+ 
++/// A shared port program can represent several operators. Take the union of
++/// their typed tables; exclusions are valid only outside this complete set.
++pub fn operators(templates: &[Template], markers: &[Marker], programs: &[Rc<PortProgram>]) -> Vec<Vec<Vec<usize>>> {
++    let mut result = programs.iter().map(|p| vec![vec![]; p.fields.len()]).collect::<Vec<_>>();
++    for (template, marker) in templates.iter().zip(markers) {
++        for (op, instruction) in template.ops.iter().enumerate() {
++            if marker.program.fields[op].is_empty() { continue; }
++            let table = match instruction {
++                Op::Let(_, Call::Table(table), _) | Op::Set(table, _, _) => *table,
++                _ => unreachable!("a typed body must publish a table"),
++            };
++            result[marker.program_id][op].push(table);
++        }
++    }
++    for program in &mut result {
++        for tables in program {
++            tables.sort_unstable();
++            tables.dedup();
++        }
++    }
++    result
++}
++
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub struct Site {
+     pub frame: usize,
+@@ -26,10 +49,13 @@ pub struct Plan {
+     pub routes: Vec<Vec<usize>>,
+     /// Signal -> (site, input column), used to certify boundary exclusion.
+     pub inputs: Vec<Vec<(usize, usize)>>,
++    pub operator_pairs_elided: usize,
++    pub reflexive_inputs_elided: usize,
++    pub duplicate_inputs_elided: usize,
+ }
+ impl Plan {
+     pub const MAX_SITES: usize = 16;
+-    pub fn derive(shape: &Shape, programs: &[Rc<PortProgram>]) -> Self {
++    pub fn derive(shape: &Shape, programs: &[Rc<PortProgram>], operators: &[Vec<Vec<usize>>]) -> Self {
+         let mut sites = Vec::new();
+         for (frame, &program) in shape.programs.iter().enumerate() {
+             for (op, fields) in programs[program].fields.iter().enumerate() {
+@@ -55,6 +81,7 @@ impl Plan {
+             inputs: vec![vec![]; shape.signals.len()],
+             sites,
+             conditions: vec![],
++            ..Self::default()
+         };
+         for (site, body) in plan.sites.iter().enumerate() {
+             for (column, symbol) in body.fields[..body.fields.len() - 1].iter().enumerate() {
+@@ -78,14 +105,31 @@ impl Plan {
+                 let (Some(&Some(u)), Some(&Some(v))) = (left.last(), right.last()) else {
+                     continue;
+                 };
++                let tables = |site: &Site| &operators[shape.programs[site.frame]][site.op as usize];
++                if !tables(&plan.sites[a]).iter().any(|t| tables(&plan.sites[b]).binary_search(t).is_ok()) {
++                    plan.operator_pairs_elided += 1;
++                    continue;
++                }
++                let mut equality_inputs = Vec::new();
++                for (a, b) in left[..left.len() - 1].iter().zip(right) {
++                    let (Some(a), Some(b)) = (a, b) else { continue; };
++                    if a == b {
++                        plan.reflexive_inputs_elided += 1;
++                        continue;
++                    }
++                    let pair = [*a.min(b), *a.max(b)];
++                    if equality_inputs.contains(&pair) {
++                        plan.duplicate_inputs_elided += 1;
++                    } else {
++                        // Keep the first field's order: it can be the cheapest
++                        // failing guard. Symmetry only normalizes code identity.
++                        equality_inputs.push(pair);
++                    }
++                }
+                 let id = plan.conditions.len();
+                 plan.conditions.push(Condition {
+                     sites: [a, b],
+-                    equality_inputs: left[..left.len() - 1]
+-                        .iter()
+-                        .zip(right)
+-                        .filter_map(|(a, b)| Some([(*a)?, (*b)?]))
+-                        .collect(),
++                    equality_inputs,
+                     scalar_columns: left[..left.len() - 1]
+                         .iter()
+                         .enumerate()
+diff --git a/engine/cell-runtime/src/parent_epoch.rs b/engine/cell-runtime/src/parent_epoch.rs
+index bbeab76e..2b61b6ea 100644
+--- a/engine/cell-runtime/src/parent_epoch.rs
++++ b/engine/cell-runtime/src/parent_epoch.rs
+@@ -1,6 +1,8 @@
+ use crate::read_epoch::Work;
+ use rustc_hash::FxHashMap;
+ use std::sync::Arc;
++#[path = "parent_absence.rs"]
++mod absence;
+ #[cfg(feature = "sparse-cells")]
+ pub(crate) type Base = super::root_directory::Parents;
+ #[cfg(not(feature = "sparse-cells"))]
+@@ -12,6 +14,9 @@ pub struct Parents {
+     base: Option<Arc<Base>>,
+     delta: FxHashMap<u64, u64>,
+     work: Work,
++    // Coordinator-only and monotone across read epochs. Snapshot guard readers
++    // never use negative-index proofs, so this needs neither a copy nor overlay.
++    absence: Option<absence::Directory>,
+ }
+ impl Parents {
+     #[inline]
+@@ -25,6 +30,7 @@ impl Parents {
+         self.get(id).is_some()
+     }
+     pub fn insert(&mut self, id: u64, to: u64) -> Option<u64> {
++        if let Some(absence) = &mut self.absence { absence.mark(to); }
+         if self.base.is_none() {
+             return self.local.insert(id, to);
+         }
+@@ -38,6 +44,9 @@ impl Parents {
+     pub fn clear(&mut self) {
+         assert!(self.base.is_none(), "clear during a parent read epoch");
+         self.local.clear();
++        // Clearing equality is not a certificate that any retained birth
++        // hashes are complete. Only a new Parents/index lifetime can rearm it.
++        if let Some(absence) = &mut self.absence { absence.invalidate(); }
+     }
+     pub fn len(&self) -> usize {
+         self.base.as_ref().map_or(self.local.len(), |base| {
+@@ -52,6 +61,22 @@ impl Parents {
+     pub fn is_empty(&self) -> bool {
+         self.len() == 0
+     }
++    pub(crate) fn enable_absence_proofs(&mut self) {
++        if self.absence.is_some() { return; }
++        let mut absence = absence::Directory::default();
++        for &to in self.base.as_deref().unwrap_or(&self.local).values().chain(self.delta.values()) {
++            absence.mark(to);
++        }
++        self.absence = Some(absence);
++    }
++    pub(crate) fn proves_unaliased_root(&self, id: u64) -> bool {
++        // Callers must supply a current root. A nonroot may have no incoming
++        // edge itself while belonging to a larger class through its parent.
++        self.absence.as_ref().is_some_and(|a| a.proves_unaliased_root(id))
++    }
++    pub(crate) fn absence_stats(&self) -> (u64, u64, usize) {
++        self.absence.as_ref().map_or((0, 0, 0), |a| (a.writes, a.growths, a.capacity_bytes()))
++    }
+     pub(crate) fn reader(&self) -> Read<'_> {
+         Read {
+             base: self.base.as_deref().unwrap_or(&self.local),
+@@ -111,6 +136,34 @@ impl Read<'_> {
+ mod tests {
+     use super::*;
+     #[test]
++    fn absence_proof_includes_old_edges_and_live_epoch_targets() {
++        let [a, b, c, d] = [1, 2, 3, 4].map(|cell| (cell << 32) | 1u64);
++        let mut parents = Parents::default();
++        parents.insert(b, a);
++        let snapshot = parents.freeze();
++        parents.insert(a, c);
++        parents.enable_absence_proofs();
++        assert!(!parents.proves_unaliased_root(c));
++        assert!(!parents.proves_unaliased_root(c + 1), "same Cell conservatively shares a bit");
++        assert!(parents.proves_unaliased_root(d));
++        parents.insert(c, d);
++        assert!(!parents.proves_unaliased_root(d));
++        assert_eq!(Read { base: &snapshot, delta: None }.root(b), a);
++        assert_eq!(parents.reader().root(b), d);
++        drop(snapshot);
++        parents.thaw();
++        assert!(!parents.proves_unaliased_root(d));
++        let outlier = (1u64 << 58) | 1;
++        let bytes = parents.absence_stats().2;
++        parents.insert(outlier + 1, outlier);
++        assert!(!parents.proves_unaliased_root(outlier));
++        assert_eq!(parents.absence_stats().2, bytes, "outlier IDs must not grow the bitmap");
++        parents.clear();
++        assert!(!parents.proves_unaliased_root(d));
++        parents.enable_absence_proofs();
++        assert!(!parents.proves_unaliased_root(d), "clear cannot rearm an old index proof");
++    }
++    #[test]
+     fn snapshot_roots_stay_fixed_while_live_roots_follow_new_unions() {
+         let mut parents = Parents::default();
+         parents.insert(30, 20);
+diff --git a/engine/cell-runtime/src/port_keys.rs b/engine/cell-runtime/src/port_keys.rs
+index d2eb4575..652587af 100644
+--- a/engine/cell-runtime/src/port_keys.rs
++++ b/engine/cell-runtime/src/port_keys.rs
+@@ -28,6 +28,8 @@ impl Graph {
+                 }
+             }
+         }
++        self.program.cell_ownership.composition.prepare_queries();
++        self.parents.enable_absence_proofs();
+         self.stable_ports.as_mut().unwrap().keys = true;
+         // Existing hints freeze here. Subsequent unions never relocate them.
+         Ok(())
+@@ -71,6 +73,26 @@ impl Graph {
+                     return Ok(Some(row));
+                 }
+             }
++            // Birth hashes are complete for this key when none of its current
++            // Eq roots can have an incoming alias. No other birth ID could
++            // have migrated to an input; scalar inputs are immutable. A coarse
++            // Cell bit may decline the proof, never authorize a false miss.
++            let unaliased = columns.iter().all(|&column| {
++                stats.birth_absence_checks.set(stats.birth_absence_checks.get() + 1);
++                let Value::Eq(id) = key[column] else { unreachable!("checked input port") };
++                let proven = self.parents.proves_unaliased_root(id);
++                if !proven {
++                    stats.birth_absence_declines.set(stats.birth_absence_declines.get() + 1);
++                    if id >> 32 == 0 {
++                        stats.birth_absence_imported_declines.set(stats.birth_absence_imported_declines.get() + 1);
++                    }
++                }
++                proven
++            });
++            if unaliased {
++                stats.birth_absence_proofs.set(stats.birth_absence_proofs.get() + 1);
++                return Ok(None);
++            }
+         }
+         stats
+             .port_domain_probes
+diff --git a/engine/cell-runtime/src/root_directory.rs b/engine/cell-runtime/src/root_directory.rs
+index 458ddb1b..4769b57e 100644
+--- a/engine/cell-runtime/src/root_directory.rs
++++ b/engine/cell-runtime/src/root_directory.rs
+@@ -47,6 +47,9 @@ impl Parents {
+     pub fn len(&self) -> usize {
+         self.map.len()
+     }
++    pub fn values(&self) -> impl Iterator<Item = &u64> {
++        self.map.values()
++    }
+     pub fn is_empty(&self) -> bool {
+         self.map.is_empty()
+     }
+diff --git a/engine/cell-runtime/src/stable_ports.rs b/engine/cell-runtime/src/stable_ports.rs
+index a8609d5b..2bf4c123 100644
+--- a/engine/cell-runtime/src/stable_ports.rs
++++ b/engine/cell-runtime/src/stable_ports.rs
+@@ -69,6 +69,10 @@ pub(in crate::graph) struct Runtime {
+     pending_candidate_skips: Counter<u64>,
+     birth_hint_probes: Counter<u64>,
+     birth_hint_hits: Counter<u64>,
++    birth_absence_checks: Counter<u64>,
++    birth_absence_proofs: Counter<u64>,
++    birth_absence_declines: Counter<u64>,
++    birth_absence_imported_declines: Counter<u64>,
+     port_domain_probes: Counter<u64>,
+     equality_enqueues: u64,
+     equality_completions: u64,
+@@ -368,9 +372,11 @@ impl Graph {
+                     .is_some_and(|t| !self.port_keys_enabled(t))
+             })
+             .count();
++        let (absence_writes, absence_growths, absence_bytes) = self.parents.absence_stats();
+         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
+             "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
+             "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
++            "birth_absence_directory":{"writes":absence_writes,"growths":absence_growths,"capacity_bytes":absence_bytes},
+             "pending_canonical_keys":pending_canonical_keys,
+             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})
+     }
+diff --git a/engine/cell-runtime/src/ownership_queries.rs b/engine/cell-runtime/src/ownership_queries.rs
+new file mode 100644
+--- /dev/null
++++ b/engine/cell-runtime/src/ownership_queries.rs
+@@ -0,0 +1,27 @@
++//! A bound field addresses shared template code directly. These routes contain
++//! positions in immutable signal slices, never instance IDs or live consumers.
++use super::*;
++
++#[derive(Clone, Debug, Default, PartialEq, Eq)]
++pub struct Plan {
++    /// Symbol -> column -> positions in Shape::signals[symbol].
++    pub columns: Vec<Vec<Vec<usize>>>,
++}
++impl Plan {
++    pub fn derive(shape: &Shape) -> Self {
++        let columns = shape.signals.iter().map(|steps| {
++            let mut columns = Vec::<Vec<usize>>::new();
++            for (position, step) in steps.iter().enumerate() {
++                for &column in step.columns.iter() {
++                    columns.resize_with(columns.len().max(column + 1), Vec::new);
++                    columns[column].push(position);
++                }
++            }
++            columns
++        }).collect();
++        Self { columns }
++    }
++    pub fn positions(&self, symbol: usize, column: usize) -> &[usize] {
++        self.columns[symbol].get(column).map_or(&[], Vec::as_slice)
++    }
++}
+diff --git a/engine/cell-runtime/src/parent_absence.rs b/engine/cell-runtime/src/parent_absence.rs
+new file mode 100644
+--- /dev/null
++++ b/engine/cell-runtime/src/parent_absence.rs
+@@ -0,0 +1,33 @@
++//! Conservative incoming-union summary. A zero bit certifies that no equality
++//! ID in this Cell has received a parent edge. False positives only retain the
++//! complete lookup path. This is not a consumer index or a canonical-key cache.
++#[derive(Clone, Debug, Default)]
++pub(super) struct Directory {
++    words: Vec<u64>,
++    pub writes: u64,
++    pub growths: u64,
++    invalidated: bool,
++}
++const WORD_LIMIT: usize = 1 << 20;
++impl Directory {
++    fn address(id: u64) -> (usize, u64) {
++        let cell = (id >> 32) as usize;
++        (cell / 64, 1u64 << (cell % 64))
++    }
++    pub fn mark(&mut self, id: u64) {
++        if self.invalidated { return; }
++        self.writes += 1;
++        let (word, bit) = Self::address(id);
++        if word >= WORD_LIMIT { return; }
++        let before = self.words.capacity();
++        if word >= self.words.len() { self.words.resize(word + 1, 0); }
++        self.growths += u64::from(self.words.capacity() != before);
++        self.words[word] |= bit;
++    }
++    pub fn proves_unaliased_root(&self, id: u64) -> bool {
++        let (word, bit) = Self::address(id);
++        !self.invalidated && word < WORD_LIMIT && self.words.get(word).is_none_or(|bits| bits & bit == 0)
++    }
++    pub fn invalidate(&mut self) { self.invalidated = true; }
++    pub fn capacity_bytes(&self) -> usize { self.words.capacity() * std::mem::size_of::<u64>() }
++}
+diff --git a/tools/cell-compiler/tests/condition_compilation.rs b/tools/cell-compiler/tests/condition_compilation.rs
+new file mode 100644
+--- /dev/null
++++ b/tools/cell-compiler/tests/condition_compilation.rs
+@@ -0,0 +1,154 @@
++use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program, value::Value};
++
++fn source(src: &str) -> Program {
++    let core = eggfuse_bake::device_frontend::core("condition-compilation", src).unwrap();
++    Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap()
++}
++
++#[test]
++fn bound_column_routes_exclude_wrong_columns_and_preserve_aliased_matches() {
++    let p = source(r#"
++(datatype E (N i64) (Pair E E) (Wrap E))
++(ruleset build) (ruleset merge)
++(rule ((= a (N 0)) (= b (N 1)))
++      ((Wrap (Pair a b)) (Wrap (Pair b a))) :ruleset build)
++(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
++(N 0) (N 1)
++(run-schedule (seq (run build) (run merge)))
++"#);
++    let pair = p.tables.iter().position(|t| t.name == "Pair").unwrap();
++    let n = p.tables.iter().position(|t| t.name == "N").unwrap();
++    for ports in [false, true] {
++        let graph = if ports { Graph::new_with_local_congruence(p.clone()) }
++            else { Graph::new_with_cell_ownership(p.clone()) }.unwrap();
++        let mut e = Executor::new(graph, true);
++        e.execute_until(Some(1)).unwrap();
++        let a = e.graph.lookup(n, &[Value::Int(0)]).unwrap().unwrap().values[1].clone();
++        for column in 0..2 {
++            let mut bound = vec![None; 3];
++            bound[column] = Some(a.clone());
++            let candidates = e.graph.candidates(pair, &bound);
++            assert_eq!(candidates.len(), 1, "other input column is not a candidate");
++            assert_eq!(e.graph.row(candidates[0]).unwrap().unwrap().values[column], a);
++        }
++        e.execute().unwrap();
++        let candidates = e.graph.candidates(pair, &[Some(a.clone()), None, None]);
++        assert_eq!(candidates.len(), 1);
++        assert_eq!(e.graph.row(candidates[0]).unwrap().unwrap().values[0], a);
++        let stats = e.graph.ownership_report();
++        if ports {
++            assert!(stats["stats"]["domain_route_probes"].as_u64().unwrap() > 0);
++            assert_eq!(stats["stats"]["domain_column_checks"], 0);
++        }
++    }
++}
++
++#[test]
++fn typed_conditions_elide_impossible_operators_and_repeated_equalities() {
++    let p = source(r#"
++(datatype E (N i64) (F E E E) (G E E E))
++(ruleset build) (ruleset merge)
++(rule ((= a (N 0)) (= b (N 1)) (= c (N 2)))
++      ((F a a c) (F b b c) (G a a c) (G b b c)) :ruleset build)
++(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset merge)
++(N 0) (N 1) (N 2)
++(run-schedule (seq (run build) (run merge)))
++"#);
++    let f = p.tables.iter().position(|t| t.name == "F").unwrap();
++    let g = p.tables.iter().position(|t| t.name == "G").unwrap();
++    let mut reference = Executor::new(Graph::new_with_port_keys(p.clone()).unwrap(), true);
++    let mut actual = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
++    reference.execute().unwrap();
++    actual.execute().unwrap();
++    assert_eq!(reference.snapshots, actual.snapshots);
++    assert_eq!(reference.binding_audit, actual.binding_audit);
++    assert_eq!(reference.graph.export().unwrap(), actual.graph.export().unwrap());
++    assert_eq!(actual.graph.witness_count(f), 1);
++    assert_eq!(actual.graph.witness_count(g), 1);
++    let report = actual.graph.stable_port_report()["local_conditions"].clone();
++    for field in ["operator_pairs_elided", "reflexive_inputs_elided", "duplicate_inputs_elided"] {
++        assert!(report[field].as_u64().unwrap() > 0, "{field}: {report}");
++    }
++    assert_eq!(report["stats"]["shared_symbol_guards"], 0);
++
++    // Generic constructor templates intentionally share a layout. Neither
++    // operator may be inferred from that layout's program ID.
++    let p = &actual.graph.program;
++    let markers = &p.cell_ownership.markers;
++    let fm = &markers[p.table_templates[f]];
++    let gm = &markers[p.table_templates[g]];
++    assert_eq!(fm.program_id, gm.program_id);
++    let operators = eggfuse_cell_runtime::graph::cell_ownership::composition::conditions::operators(
++        &p.templates, markers, &p.cell_ownership.programs);
++    assert!(operators[fm.program_id][0].contains(&f));
++    assert!(operators[fm.program_id][0].contains(&g));
++}
++
++#[test]
++fn concrete_marker_filters_operators_even_when_port_layouts_are_shared() {
++    let p = source(r#"
++(datatype E (N i64) (F E) (G E))
++(F (N 0)) (G (N 0)) (F (N 1)) (G (N 1))
++(run-schedule (run))
++"#);
++    let n = p.tables.iter().position(|t| t.name == "N").unwrap();
++    let f = p.tables.iter().position(|t| t.name == "F").unwrap();
++    let g = p.tables.iter().position(|t| t.name == "G").unwrap();
++    let mut graph = Graph::new_with_local_congruence(p).unwrap();
++    assert_eq!(graph.program.cell_ownership.markers[graph.program.table_templates[f]].program_id,
++        graph.program.cell_ownership.markers[graph.program.table_templates[g]].program_id);
++    let a = graph.lookup(n, &[Value::Int(0)]).unwrap().unwrap().values[1].clone();
++    for table in [f, g] {
++        let rows = graph.candidates(table, &[Some(a.clone()), None]);
++        assert_eq!(rows.len(), 1);
++        assert_eq!(graph.row(rows[0]).unwrap().unwrap().table, table);
++    }
++    graph.hide(f, &[a.clone()], true).unwrap();
++    assert!(graph.candidates(f, &[Some(a.clone()), None]).is_empty());
++    assert_eq!(graph.candidates(g, &[Some(a.clone()), None]).len(), 1);
++    graph.dynamic_construct(f, vec![a.clone()]).unwrap();
++    assert_eq!(graph.candidates(f, &[Some(a), None]).len(), 1);
++    let report = graph.ownership_report();
++    assert!(report["stats"]["domain_type_rejections"].as_u64().unwrap() > 0);
++    assert_eq!(report["stats"]["domain_legacy_fact_probes"], 0);
++}
++
++#[test]
++fn birth_miss_proof_requires_every_input_root_to_be_unaliased() {
++    let p = source(r#"
++(datatype E (N i64) (F E i64) (Pair E E))
++(N 0) (N 1)
++(run-schedule (run))
++"#);
++    let table = |name: &str| p.tables.iter().position(|t| t.name == name).unwrap();
++    let (n, f, pair) = (table("N"), table("F"), table("Pair"));
++    let mut graph = Graph::new_with_port_keys(p).unwrap();
++    let [a, b] = [0, 1].map(|i| graph.lookup(n, &[Value::Int(i)]).unwrap().unwrap().values[1].clone());
++    // Imported roots share Cell 0. Make c in a fresh Cell so its bit stays
++    // clear after the imported a/b class merges; the second-input check matters.
++    let c = graph.dynamic_construct(n, vec![Value::Int(2)]).unwrap();
++    let before = graph.stable_port_report();
++    assert!(graph.lookup(f, &[a.clone(), Value::Int(0)]).unwrap().is_none());
++    let missing = graph.stable_port_report();
++    assert_eq!(missing["stats"]["port_domain_probes"], before["stats"]["port_domain_probes"]);
++    assert_eq!(missing["stats"]["birth_absence_proofs"].as_u64().unwrap(),
++        before["stats"]["birth_absence_proofs"].as_u64().unwrap() + 1);
++    let value = graph.dynamic_construct(f, vec![b.clone(), Value::Int(0)]).unwrap();
++    graph.dynamic_construct(pair, vec![b.clone(), c.clone()]).unwrap();
++    graph.dynamic_construct(pair, vec![c.clone(), b.clone()]).unwrap();
++    graph.enqueue_union(a.clone(), b.clone()).unwrap();
++    graph.repair().unwrap();
++    let before = graph.stable_port_report();
++    // The birth hash still contains b. These current keys must reach it through
++    // equality, including when only the second input has received an alias.
++    assert_eq!(graph.lookup(f, &[a.clone(), Value::Int(0)]).unwrap().unwrap().values[2], value);
++    assert!(graph.lookup(pair, &[a.clone(), c.clone()]).unwrap().is_some());
++    assert!(graph.lookup(pair, &[c.clone(), a.clone()]).unwrap().is_some());
++    assert!(graph.lookup(f, &[a.clone(), Value::Int(1)]).unwrap().is_none());
++    let after = graph.stable_port_report();
++    assert!(after["stats"]["port_domain_probes"].as_u64().unwrap() > before["stats"]["port_domain_probes"].as_u64().unwrap());
++    graph.hide(f, &[a.clone(), Value::Int(0)], true).unwrap();
++    assert!(graph.lookup(f, &[a.clone(), Value::Int(0)]).unwrap().is_none());
++    graph.dynamic_construct(f, vec![a.clone(), Value::Int(0)]).unwrap();
++    assert!(graph.lookup(f, &[b, Value::Int(0)]).unwrap().is_some());
++}
