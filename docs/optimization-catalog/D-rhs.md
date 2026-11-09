@@ -47,8 +47,8 @@
 | 成本 / 剩余工作 | `report:/stats/cells_created [value]`<br>`report:/stats/merge_program_operations [value]`<br>`report:/stats/merge_port_reads [value]`<br>`report:/stats/merge_program_constructs [value]`<br>`report:/allocations/alloc_calls [value]`<br>`report:/stage_spine/stats/effect_frames [value]`<br>`report:/stage_spine/stats/effect_slots_initialized [value]`<br>`report:/stage_spine/stats/effect_slot_probes [value]`<br>`report:/stage_spine/stats/effect_slot_targets [value]`<br>`report:/stage_spine/stats/effect_outputs_reused [value]`<br>`report:/stage_spine/stats/effect_output_copies [value]`<br>`report:/stage_spine/stats/effect_aborted_frames [value]`<br>`report:/stage_spine/effect_plan_cache_bytes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/single_writes [count]`<br>`program:/merge_programs/programs [count]` |
 
-解释与缺口：RHS receipt 数据流统一到 Cell effect 槽，整宽临时 receipt 数组已删除。普通/局部/闭合效果执行器、单写执行和 merge 仍有独立控制逻辑，不能把此数据流接管视为整个 D2 已重写。
+解释与缺口：RHS receipt 数据流统一到 Cell effect 槽，整宽临时 receipt 数组已删除。普通/局部/闭合效果执行器、单写执行和 merge 仍有独立控制逻辑，不能把此数据流接管视为整个 D2 已重写。 Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/SPARSE_CELL_CPU.md](../../docs/SPARSE_CELL_CPU.md) · [benchmarks/cell-unification/effects.md](../../benchmarks/cell-unification/effects.md) · [benchmarks/cell-unification/effects-results.json](../../benchmarks/cell-unification/effects-results.json)
+证据：[docs/SPARSE_CELL_CPU.md](../../docs/SPARSE_CELL_CPU.md) · [benchmarks/cell-unification/effects.md](../../benchmarks/cell-unification/effects.md) · [benchmarks/cell-unification/effects-results.json](../../benchmarks/cell-unification/effects-results.json) · [benchmarks/cell-unification/mixed-outputs-check.json](../../benchmarks/cell-unification/mixed-outputs-check.json)

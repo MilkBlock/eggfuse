@@ -1469,11 +1469,12 @@
           }
         ]
       },
-      "gaps": "RHS receipt 数据流统一到 Cell effect 槽，整宽临时 receipt 数组已删除。普通/局部/闭合效果执行器、单写执行和 merge 仍有独立控制逻辑，不能把此数据流接管视为整个 D2 已重写。",
+      "gaps": "RHS receipt 数据流统一到 Cell effect 槽，整宽临时 receipt 数组已删除。普通/局部/闭合效果执行器、单写执行和 merge 仍有独立控制逻辑，不能把此数据流接管视为整个 D2 已重写。 Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled.",
       "evidence": [
         "docs/SPARSE_CELL_CPU.md",
         "benchmarks/cell-unification/effects.md",
-        "benchmarks/cell-unification/effects-results.json"
+        "benchmarks/cell-unification/effects-results.json",
+        "benchmarks/cell-unification/mixed-outputs-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1836,7 +1837,7 @@
           }
         ]
       },
-      "gaps": "普通、局部、闭合 handoff 和结构性 capture 共用 Cell effect 槽。已覆盖输出在完成后保留原槽；别名和单写结果仍需填入，history 只保留后续需要的引用。槽位不提前发布，中止仅丢弃私有收据，不回滚已发生的图效果。未知边界和 legacy owner 尚未统一。新缓存、槽寻址、复制及未完成 RHS 成本须一并计费。",
+      "gaps": "普通、局部、闭合 handoff 和结构性 capture 共用 Cell effect 槽。已覆盖输出在完成后保留原槽；别名和单写结果仍需填入，history 只保留后续需要的引用。槽位不提前发布，中止仅丢弃私有收据，不回滚已发生的图效果。未知边界和 legacy owner 尚未统一。新缓存、槽寻址、复制及未完成 RHS 成本须一并计费。 Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled.",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -1845,7 +1846,8 @@
         "benchmarks/cell-unification/capture.md",
         "benchmarks/cell-unification/capture-results.json",
         "benchmarks/cell-unification/effects.md",
-        "benchmarks/cell-unification/effects-results.json"
+        "benchmarks/cell-unification/effects-results.json",
+        "benchmarks/cell-unification/mixed-outputs-check.json"
       ],
       "status": "Cell 输出及 RHS receipt 数据流已统一；短样例语义和源顺序保持，分配下降；推理及整进程配对区间跨持平，尚未证明加速。",
       "introduced_in": "094fb2ed"
@@ -2872,7 +2874,7 @@
           }
         ]
       },
-      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Prefix copied-slot credit also reflects dense witness storage; it remains an uncalibrated count of copied fields, not allocation or speed evidence. Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
+      "gaps": "work credit 是等权操作差值，不是纳秒模型；训练耗时/峰值内存和单优化边际 ablation 尚未统一进 runtime report，必须看训练产物与实测。 Measured credit includes Free Join probing/grouping/reverse enumeration and Sieve preparation/maintenance. Older incomplete reports fail closed; rejection totals are not savings. Work now charges register_result_writes and cell_query_result_writes once, excluding the prefix field_writes subset. Equal-weight savings remain an uncalibrated proxy; timing intervals crossed equality against all three controls at c8ef6edc. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Prefix copied-slot credit also reflects dense witness storage; it remains an uncalibrated count of copied fields, not allocation or speed evidence. Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed. Mixed Cell output retention is now a dense prefix of the existing effect frame, with transient boundary receipts following it. Sum-bits receipt hashing 7573→4680 and boundary records 1687→253 trade against Entry slot probes 7740→9027 and output reads 6053→8774. Corrected equal-weight publication credit is -1313 saved operations, not a speed result. Added per-rule width storage and stable configuration partition are unprofiled. Work now charges all Cell output receipt registrations/slot reads/copies, receipt validation attempts, boundary records/reads/order checks and Cell visits. Fragment receipt/delivery-check subsets remain coverage and are not charged again; missing required cost fields fail closed.",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
@@ -2882,7 +2884,8 @@
         "benchmarks/cell-unification/context-selection-check.json",
         "benchmarks/cell-unification/context-compact-check.json",
         "benchmarks/cell-unification/prefix-witness-check.json",
-        "benchmarks/cell-unification/retention-check.json"
+        "benchmarks/cell-unification/retention-check.json",
+        "benchmarks/cell-unification/mixed-outputs-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

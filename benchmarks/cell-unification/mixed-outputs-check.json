@@ -1,0 +1,928 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/entry_schedule/stats/publication_candidate_checks": [
+      7740,
+      9027
+    ],
+    "/entry_schedule/stats/publication_loser_skips": [
+      1827,
+      3114
+    ],
+    "/entry_schedule/stats/publication_pending_reuses": [
+      366,
+      425
+    ],
+    "/entry_schedule/stats/publication_slot_probes": [
+      7740,
+      9027
+    ],
+    "/stage_spine/stats/cell_output_checks": [
+      6053,
+      8774
+    ],
+    "/stage_spine/stats/cell_output_deliveries": [
+      6053,
+      8774
+    ],
+    "/stage_spine/stats/cell_output_receipts": [
+      6053,
+      8774
+    ],
+    "/stage_spine/stats/cell_output_slot_reads": [
+      6053,
+      8774
+    ],
+    "/stage_spine/stats/cell_output_slots": [
+      6053,
+      8774
+    ],
+    "/stage_spine/stats/cell_output_spans": [
+      4079,
+      6365
+    ],
+    "/stage_spine/stats/completion_boundary_reads": [
+      1687,
+      253
+    ],
+    "/stage_spine/stats/completion_boundary_records": [
+      1687,
+      253
+    ],
+    "/stage_spine/stats/completion_order_checks": [
+      1262,
+      111
+    ],
+    "/stage_spine/stats/direct_publication_hash_probes": [
+      7573,
+      4680
+    ],
+    "/stage_spine/stats/effect_output_copies": [
+      1599,
+      1808
+    ],
+    "/stage_spine/stats/effect_outputs_reused": [
+      4454,
+      6966
+    ],
+    "/stage_spine/stats/fragment_deliveries": [
+      3421,
+      6142
+    ],
+    "/stage_spine/stats/fragment_delivery_checks": [
+      3421,
+      6142
+    ],
+    "/stage_spine/stats/fragment_direct_inserts_avoided": [
+      3421,
+      6142
+    ],
+    "/stage_spine/stats/fragment_receipts": [
+      3421,
+      6142
+    ],
+    "/stage_spine/stats/peak_cell_output_slots": [
+      587,
+      872
+    ],
+    "/stage_spine/stats/receipt_attempts": [
+      10299,
+      11586
+    ],
+    "/stage_spine/stats/receipt_hits": [
+      10241,
+      11528
+    ],
+    "/stage_spine/stats/receipt_hits_by_source/effect": [
+      10241,
+      11528
+    ],
+    "/stage_spine/stats/receipt_redirects": [
+      448,
+      498
+    ]
+  },
+  "publication_net_saved_operations": -1313,
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "scope": "standalone Cell CPU; frozen normal release; work checks, not timing or allocator measurements",
+  "baseline_commit": "3e622300",
+  "candidate_commit": "3e8c8680",
+  "semantic_acceptance": "pass",
+  "unchanged_work_metrics": 322,
+  "changed_work_metrics": {
+    "report:/entry_schedule/stats/publication_candidate_checks [value]": [
+      {
+        "status": "observed",
+        "value": 7740
+      },
+      {
+        "status": "observed",
+        "value": 9027
+      }
+    ],
+    "report:/entry_schedule/stats/publication_loser_skips [value]": [
+      {
+        "status": "observed",
+        "value": 1827
+      },
+      {
+        "status": "observed",
+        "value": 3114
+      }
+    ],
+    "report:/entry_schedule/stats/publication_pending_reuses [value]": [
+      {
+        "status": "observed",
+        "value": 366
+      },
+      {
+        "status": "observed",
+        "value": 425
+      }
+    ],
+    "report:/entry_schedule/stats/publication_slot_probes [value]": [
+      {
+        "status": "observed",
+        "value": 7740
+      },
+      {
+        "status": "observed",
+        "value": 9027
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_checks [value]": [
+      {
+        "status": "observed",
+        "value": 6053
+      },
+      {
+        "status": "observed",
+        "value": 8774
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_deliveries [value]": [
+      {
+        "status": "observed",
+        "value": 6053
+      },
+      {
+        "status": "observed",
+        "value": 8774
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_receipts [value]": [
+      {
+        "status": "observed",
+        "value": 6053
+      },
+      {
+        "status": "observed",
+        "value": 8774
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_slot_reads [value]": [
+      {
+        "status": "observed",
+        "value": 6053
+      },
+      {
+        "status": "observed",
+        "value": 8774
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_slots [value]": [
+      {
+        "status": "observed",
+        "value": 6053
+      },
+      {
+        "status": "observed",
+        "value": 8774
+      }
+    ],
+    "report:/stage_spine/stats/cell_output_spans [value]": [
+      {
+        "status": "observed",
+        "value": 4079
+      },
+      {
+        "status": "observed",
+        "value": 6365
+      }
+    ],
+    "report:/stage_spine/stats/completion_boundary_reads [value]": [
+      {
+        "status": "observed",
+        "value": 1687
+      },
+      {
+        "status": "observed",
+        "value": 253
+      }
+    ],
+    "report:/stage_spine/stats/completion_boundary_records [value]": [
+      {
+        "status": "observed",
+        "value": 1687
+      },
+      {
+        "status": "observed",
+        "value": 253
+      }
+    ],
+    "report:/stage_spine/stats/completion_order_checks [value]": [
+      {
+        "status": "observed",
+        "value": 1262
+      },
+      {
+        "status": "observed",
+        "value": 111
+      }
+    ],
+    "report:/stage_spine/stats/direct_publication_hash_probes [value]": [
+      {
+        "status": "observed",
+        "value": 7573
+      },
+      {
+        "status": "observed",
+        "value": 4680
+      }
+    ],
+    "report:/stage_spine/stats/effect_output_copies [value]": [
+      {
+        "status": "observed",
+        "value": 1599
+      },
+      {
+        "status": "observed",
+        "value": 1808
+      }
+    ],
+    "report:/stage_spine/stats/effect_outputs_reused [value]": [
+      {
+        "status": "observed",
+        "value": 4454
+      },
+      {
+        "status": "observed",
+        "value": 6966
+      }
+    ],
+    "report:/stage_spine/stats/fragment_deliveries [value]": [
+      {
+        "status": "observed",
+        "value": 3421
+      },
+      {
+        "status": "observed",
+        "value": 6142
+      }
+    ],
+    "report:/stage_spine/stats/fragment_delivery_checks [value]": [
+      {
+        "status": "observed",
+        "value": 3421
+      },
+      {
+        "status": "observed",
+        "value": 6142
+      }
+    ],
+    "report:/stage_spine/stats/fragment_direct_inserts_avoided [value]": [
+      {
+        "status": "observed",
+        "value": 3421
+      },
+      {
+        "status": "observed",
+        "value": 6142
+      }
+    ],
+    "report:/stage_spine/stats/fragment_receipts [value]": [
+      {
+        "status": "observed",
+        "value": 3421
+      },
+      {
+        "status": "observed",
+        "value": 6142
+      }
+    ],
+    "report:/stage_spine/stats/peak_cell_output_slots [value]": [
+      {
+        "status": "observed",
+        "value": 587
+      },
+      {
+        "status": "observed",
+        "value": 872
+      }
+    ],
+    "report:/stage_spine/stats/receipt_attempts [value]": [
+      {
+        "status": "observed",
+        "value": 10299
+      },
+      {
+        "status": "observed",
+        "value": 11586
+      }
+    ],
+    "report:/stage_spine/stats/receipt_hits [value]": [
+      {
+        "status": "observed",
+        "value": 10241
+      },
+      {
+        "status": "observed",
+        "value": 11528
+      }
+    ],
+    "report:/stage_spine/stats/receipt_redirects [value]": [
+      {
+        "status": "observed",
+        "value": 448
+      },
+      {
+        "status": "observed",
+        "value": 498
+      }
+    ]
+  },
+  "fixtures": {
+    "marked-audit-mixed-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "d681df5cfdf53f99797db024b2ac9d9d83751b68060fc529679bd13bd562bd75"
+    },
+    "marked-audit-mixed-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "d681df5cfdf53f99797db024b2ac9d9d83751b68060fc529679bd13bd562bd75"
+    },
+    "marked-audit-aliased-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "4519e2d743663c7250b59e394d54f633a531ac0d0ff35d9a69c304d86bb1ed06"
+    },
+    "marked-audit-aliased-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "4519e2d743663c7250b59e394d54f633a531ac0d0ff35d9a69c304d86bb1ed06"
+    },
+    "direct-audit-mixed-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "direct-audit-mixed-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "a0ed74dc9d620cf491ac8d8479a412fc4c571c86d208b7be7257146de2f1e3cd"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "direct-audit-aliased-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "direct-audit-aliased-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570",
+        "stages.json": "5b3899196e420ada3cbfb729b9a46cf7e71edd2ff6a4d0313765df668c470e59",
+        "binding-audit.json": "14800eafd2d6d8af2c9f1c14968e1488d91703f4ee3ca2a2f1828f4e34e0d7d2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          11,
+          0
+        ]
+      },
+      "publication_net_saved_operations": 11,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "direct-normal-mixed-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          11,
+          15
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          0,
+          4
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_spans": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/completion_boundary_reads": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_boundary_records": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_order_checks": [
+          4,
+          0
+        ],
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          18,
+          0
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          2,
+          6
+        ],
+        "/stage_spine/stats/receipt_attempts": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_redirects": [
+          0,
+          2
+        ]
+      },
+      "publication_net_saved_operations": 6,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "direct-normal-mixed-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          11,
+          15
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          0,
+          4
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/cell_output_spans": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/completion_boundary_reads": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_boundary_records": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_order_checks": [
+          4,
+          0
+        ],
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          18,
+          0
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          3,
+          11
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          0,
+          8
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          2,
+          6
+        ],
+        "/stage_spine/stats/receipt_attempts": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          11,
+          15
+        ],
+        "/stage_spine/stats/receipt_redirects": [
+          0,
+          2
+        ]
+      },
+      "publication_net_saved_operations": 6,
+      "program_sha256": "a2b956347baf03377b8c04000ad2d45f90cbcbce9864d85ec5c92a3ff33f9e0e"
+    },
+    "direct-normal-aliased-64": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          11,
+          13
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          0,
+          2
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_spans": [
+          3,
+          7
+        ],
+        "/stage_spine/stats/completion_boundary_reads": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_boundary_records": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_order_checks": [
+          4,
+          0
+        ],
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          16,
+          0
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          2,
+          4
+        ],
+        "/stage_spine/stats/receipt_attempts": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          11,
+          13
+        ]
+      },
+      "publication_net_saved_operations": 12,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    },
+    "direct-normal-aliased-0": {
+      "runs": 6,
+      "ordered_hashes": {
+        "state.json": "e82c7ed93dfa0412396d40d2c6fdbc004a8c37467abb8bc72861b83b6c48e570"
+      },
+      "changed_work": {
+        "/entry_schedule/stats/publication_candidate_checks": [
+          11,
+          13
+        ],
+        "/entry_schedule/stats/publication_loser_skips": [
+          0,
+          2
+        ],
+        "/entry_schedule/stats/publication_slot_probes": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/cell_output_checks": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_deliveries": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_receipts": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slot_reads": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_slots": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/cell_output_spans": [
+          3,
+          7
+        ],
+        "/stage_spine/stats/completion_boundary_reads": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_boundary_records": [
+          8,
+          4
+        ],
+        "/stage_spine/stats/completion_order_checks": [
+          4,
+          0
+        ],
+        "/stage_spine/stats/direct_publication_hash_probes": [
+          16,
+          0
+        ],
+        "/stage_spine/stats/effect_outputs_reused": [
+          3,
+          9
+        ],
+        "/stage_spine/stats/fragment_deliveries": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_delivery_checks": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_direct_inserts_avoided": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/fragment_receipts": [
+          0,
+          6
+        ],
+        "/stage_spine/stats/peak_cell_output_slots": [
+          2,
+          4
+        ],
+        "/stage_spine/stats/receipt_attempts": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/receipt_hits": [
+          11,
+          13
+        ],
+        "/stage_spine/stats/receipt_hits_by_source/effect": [
+          11,
+          13
+        ]
+      },
+      "publication_net_saved_operations": 12,
+      "program_sha256": "6fdeae80a7791709bd413bed3fea01587c973d3d9787c795fc008cc7518920db"
+    }
+  },
+  "fixture_manifests": {
+    "marked-audit": "fe9cbf1989fef3bacfec8769103f0704ab760b894e201054428aca4790389321",
+    "direct-audit": "f98dd3fa6a49fd0c74fb45f056bda3a492aefb6e5b453ed0f896be26a9cf5150",
+    "direct-normal": "ae408bd36bd51ced8d428df7eb2a69ac36dc1435dfa0ab246f893933f7226488"
+  },
+  "tests": {
+    "publications": {
+      "passed": 7,
+      "sha256": "65e4c8f12bed0222916bf5e1490ea0224127363b5b28725de0a551831f76ad6b"
+    },
+    "normal": {
+      "passed": 7,
+      "sha256": "9c85f642f60820cae52e9dbe98335d5d23251fc8b3f3ce63452cb9ccc480a25c"
+    },
+    "witness": {
+      "passed": 8,
+      "sha256": "fb22aba85912e95dec219b5ba8e9ddbfa1cc4fd2179a639c2145f2d3683f7575"
+    },
+    "credit": {
+      "passed": 4,
+      "sha256": "2a42892729b4e43dd0b5012baf0b061277fefee2708edfc9698e18005a2ca14e"
+    },
+    "scoped": {
+      "passed": 1,
+      "sha256": "94ffcb1ef119a5a8019476ce9273f0ab5f649e21c2d214f575c680ee4428058a"
+    }
+  },
+  "minimal_sha256": "d6188b50c823a9c1d1eeea35205480c1f3c56d856b7b52cbe0b02a84f1c526ba",
+  "scoped_sha256": "60044eff2433fe835c1c97026875dc8afd75149f72d822899e85958eda6460c1",
+  "relower_components": 22,
+  "relower_sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1",
+  "binaries": {
+    "baseline": "d88bcba5169546bf931e1c3fac768fefe201e96e68cdf49d44381cc5b813521c",
+    "candidate": "5d718db587707133e23038e10c2577aa1e5bd6041a0cb28aedec41420b92fcca"
+  },
+  "removed": "Whole-Cell eligibility gate. The Cell effect layout retains a dense prefix of permanent Entry-owned outputs; boundary receipts follow transiently. Covered mixed outputs bypass the independent receipt hash and ready-boundary records. Source operation positions still merge publication order.",
+  "limits": "Uncovered boundary paths remain. More uncoalesced candidates reach Entry and more output slots remain live. Equal-weight Bake credit charges those costs and is not a time model. Static width replaces a bool per rule and configuration partitions outputs once. Audit-stages disables compiled receipt delivery: direct-normal cases and normal unit tests verify takeover, audited cases verify stages. Marker prefix materialization, general Bake composition and full parallel acceptance remain unfinished.",
+  "timing_cadence": {
+    "last_timed_commit": "acab2911",
+    "implementation_commits_since_timing": 2
+  }
+}

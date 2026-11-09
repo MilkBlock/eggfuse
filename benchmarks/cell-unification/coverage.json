@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "acab2911",
-    "implementation_commits_since_timing": 1,
+    "implementation_commits_since_timing": 2,
     "evidence": "benchmarks/cell-unification/projection-candidates-results.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "preservation_unresolved_no_speedup_established",
@@ -49,7 +49,8 @@
         "Full query, residual prefix and continuation consumers share one static Cell route directory. Independent Prefix plans and copied witness sources are removed; exact sparse fallback and indexed original reads retain source coverage.",
         "Full and residual witness reads share a transient Cell Producer. Published addresses avoid physical recovery; uncovered effects recover once and must match the selected template/output. Root/Solo publications expose existing addresses without expanding roots.",
         "Consumer dispatch transfers displaced original history on reset. Full witness reads borrow the original Cell Results just as residual prefixes do; the extra LocalWitness history handle and clone are removed.",
-        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed."
+        "Each compiled Cell state now retains only history reachable from its actual query/RHS reads and transitions, including inherited jumps and restarts. Bake rebuilds this bound with its composition; runtime global-depth capture is removed.",
+        "Mixed Cells retain their permanent Entry-owned outputs as the first segment of the existing effect frame; boundary receipts remain transient. The whole-rule gate, covered receipt hashing and covered ready-boundary records are removed. Original effect positions still select the final publication."
       ],
       "remaining": [
         "Source routing, physical fallback, current result slots and compiled continuation retention are shared. Legacy boundary publication ownership, wider path coverage and final performance acceptance still require integration.",
@@ -88,7 +89,8 @@
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
       "history_checks": "benchmarks/cell-unification/history-check.json",
-      "retention_checks": "benchmarks/cell-unification/retention-check.json"
+      "retention_checks": "benchmarks/cell-unification/retention-check.json",
+      "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json"
     },
     {
       "id": "query",
@@ -212,7 +214,8 @@
         "Single-write scalar prefixes store source operation positions and use the common Cell call evaluator; duplicated primitive programs removed while direct integer projections remain.",
         "Closed preflight and live RHS reuse the same actual-witness field validation, result binding and constructor Set equality handling; preflight still defers graph effects until complete.",
         "Ordinary effects execute in the common Cell frame; source unions no longer reload and clone a second marker instruction.",
-        "Read-only bound-effect proofs borrow original Cell operations through a dense operand layout; duplicate Expr/Arithmetic/Effect instructions and copied table/literal/operator semantics are removed. Checked integer execution is shared with the ordinary RHS."
+        "Read-only bound-effect proofs borrow original Cell operations through a dense operand layout; duplicate Expr/Arithmetic/Effect instructions and copied table/literal/operator semantics are removed. Checked integer execution is shared with the ordinary RHS.",
+        "Mixed Cells retain their permanent Entry-owned outputs as the first segment of the existing effect frame; boundary receipts remain transient. The whole-rule gate, covered receipt hashing and covered ready-boundary records are removed. Original effect positions still select the final publication."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
@@ -265,7 +268,8 @@
         "verification": "Common Effects removes temporary receipt arrays; 4,454 outputs retain their slots. Existing work, 1,428 Runs and ordered hashes unchanged; semantic pass. Execute allocations -6,198, requested bytes -386,804; setup +4,656 bytes. Paired timing includes parity; no speedup claim."
       },
       "quick_checks": "benchmarks/cell-unification/handoff-check.json",
-      "bound_effect_checks": "benchmarks/cell-unification/bound-check.json"
+      "bound_effect_checks": "benchmarks/cell-unification/bound-check.json",
+      "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json"
     },
     {
       "id": "ports_congruence",
@@ -327,7 +331,8 @@
       "symbol_checks": "benchmarks/cell-unification/marker-symbols-check.json",
       "binding_checks": "benchmarks/cell-unification/projection-binding-check.json",
       "candidate_checks": "benchmarks/cell-unification/projection-candidates-results.json",
-      "retention_checks": "benchmarks/cell-unification/retention-check.json"
+      "retention_checks": "benchmarks/cell-unification/retention-check.json",
+      "publication_credit_checks": "benchmarks/cell-unification/mixed-outputs-check.json"
     },
     {
       "id": "multithread_after_rewrite",
@@ -477,7 +482,9 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "D2",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; legacy union operands exist only in checked artifact projections, not executable port plans. The disabled-compiled-merge AST control remains for differential/storage tests."
+      "remaining": "Calls, prefixes, witness application, source effects, receipts and completion use Cell frames. Strategy admission, closed transaction traversal and final single-write key/value projections remain; legacy union operands exist only in checked artifact projections, not executable port plans. The disabled-compiled-merge AST control remains for differential/storage tests.",
+      "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
+      "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim."
     },
     {
       "id": "E1",
@@ -500,7 +507,9 @@
       "status": "partially_rewritten_semantics_verified_performance_pending",
       "metrics_from_catalog": "E3",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Owned outputs and RHS receipts share Cell slots. Necessary Results/history, unknown boundaries/legacy owners and final performance acceptance remain."
+      "remaining": "Owned outputs and RHS receipts share Cell slots. Necessary Results/history, unknown boundaries/legacy owners and final performance acceptance remain.",
+      "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
+      "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim."
     },
     {
       "id": "F1",
@@ -611,7 +620,9 @@
       "context_compact_checks": "benchmarks/cell-unification/context-compact-check.json",
       "prefix_witness_checks": "benchmarks/cell-unification/prefix-witness-check.json",
       "view_query_checks": "benchmarks/cell-unification/view-query-results.json",
-      "retention_checks": "benchmarks/cell-unification/retention-check.json"
+      "retention_checks": "benchmarks/cell-unification/retention-check.json",
+      "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
+      "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim."
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",
