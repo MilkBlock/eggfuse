@@ -34,3 +34,20 @@ slots later consumers actually read. Shared Entry, delayed publication,
 liveness and source Run ordering remain obligations. No additional runtime
 tracking was added for this diagnosis, and no saved operation is claimed from
 these maintenance costs yet.
+
+## Rejected exclusive-owner reuse experiment
+
+A temporary change to `History::retain_results` reused an existing uniquely
+owned `Rc<Trail>` when the compiled history depth was one. The same one-trial
+sum-bits admission replay still reported 534 history allocations and +2,603
+net operations. The completion/query receipt regressions passed, but this
+workload showed no benefit, so the runtime branch was removed rather than
+adding an extra ownership probe to every such capture.
+
+The 534 counter is not a total allocation census. `Effects::begin_joint` also
+allocates its slot vector; the 369 joint-frame creations are already charged
+separately by `Work::read` as `joint_history_frames`. Adding that count again
+as a new scoring term would double-charge the same creation. Future allocation
+measurements should distinguish owner and slot-buffer storage without changing
+credits merely to improve a score. The next target is captured-slot demand and
+lifetime, not an unmeasured allocator substitution.
