@@ -930,14 +930,12 @@ impl Training {
             ..Default::default()
         });
         e.visits += 1;
-        if saves_key {
-            if e.avoidable_origin_slots == 0 {
-                e.producer_run = sample.0;
-                e.consumer_run = sample.1;
-                e.witness = sample.2;
-            }
-            e.avoidable_origin_slots += inputs as u64;
-        }
+        // Keep one recent real application per retained shape, rather than
+        // permanently pinning its first occurrence before raw trace cutoff.
+        e.producer_run = sample.0;
+        e.consumer_run = sample.1;
+        e.witness = sample.2;
+        if saves_key { e.avoidable_origin_slots += inputs as u64; }
     }
     pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State) {
         if let Some(id) = s.active { self.trace_completed(c, s, id, 0); }
@@ -968,11 +966,26 @@ impl Training {
             let Some(&right) = catalog.leaves.get(&event.entry) else { continue };
             joins.insert(Join {left:parent.unit, output:event.output, right});
         }
-        ObservedCompletions { units:self.trace.iter().map(|e|e.unit).collect(), joins }
+        let mut units = self.trace.iter().map(|e|e.unit).collect::<BTreeSet<_>>();
+        // Existing bounded pair samples survive raw-event truncation. They are
+        // successful applications, not synthetic event ancestry.
+        for (join, evidence) in &self.pairs {
+            if evidence.visits == 0 { continue; }
+            units.extend([join.left,join.right]);
+            joins.insert(*join);
+        }
+        ObservedCompletions { units, joins }
     }
     /// Materialize compile-time history from completed cursor executions only.
     /// Paths are bounded suffixes; the event links retain their actual ancestry.
     pub fn completion_history(&self, p: &Program) -> J {
+        fn intern(path: &[(Option<usize>, Entry)], catalog: &mut Catalog,
+            units: &mut BTreeMap<Vec<(Option<usize>, Entry)>,usize>) -> usize {
+            let next = catalog.units.len();
+            *units.entry(path.to_vec()).or_insert_with(|| {
+                catalog.units.push(Unit {path:path.into()}); next
+            })
+        }
         let mut catalog = Catalog::default();
         let mut units = BTreeMap::new();
         let mut event_units: Vec<usize> = Vec::new();
@@ -983,25 +996,33 @@ impl Training {
             }).unwrap_or_default();
             path.push(((!path.is_empty()).then_some(event.output), event.entry));
             if path.len() > limit { path.remove(0); path[0].0 = None; }
-            let next = catalog.units.len();
-            let unit = *units.entry(path.clone()).or_insert_with(|| {
-                catalog.units.push(Unit { path:path.clone().into_boxed_slice() }); next
-            });
+            let unit = intern(&path, &mut catalog, &mut units);
             event_units.push(unit);
             // A native transition references only the exact observed prefix.
             if let Some(parent) = event.parent {
                 let left = event_units[parent];
                 if catalog.units[left].path.len()+1 == path.len() {
                     let leaf = vec![(None,event.entry)];
-                    let next = catalog.units.len();
-                    let right = *units.entry(leaf.clone()).or_insert_with(|| {
-                        catalog.units.push(Unit {path:leaf.into_boxed_slice()}); next
-                    });
+                    let right = intern(&leaf, &mut catalog, &mut units);
                     catalog.jumps.insert(Join {left,output:event.output,right}, unit);
                 }
             }
         }
+        let mut applications = Vec::new();
+        for (join, evidence) in &self.pairs {
+            if evidence.visits == 0 { continue; }
+            let Some(combined) = p.iterative.combine(p,*join) else { continue };
+            let left = intern(&p.iterative.units[join.left].path, &mut catalog, &mut units);
+            let right = intern(&p.iterative.units[join.right].path, &mut catalog, &mut units);
+            let target = intern(&combined.path, &mut catalog, &mut units);
+            catalog.jumps.insert(Join {left,output:join.output,right},target);
+            applications.push(json!({"join":join,"from":left,"consumer":right,"to":target,
+                "retained_support":evidence.visits,"producer_run":evidence.producer_run,
+                "consumer_run":evidence.consumer_run,"witness":evidence.witness,
+                "origin":"bounded-completed-pair-sample","sample_policy":"latest-retained-application"}));
+        }
         json!({"schema":"eggfuse-cell-runtime-history/v1",
+            "sampled_applications":applications,"pair_counter_prunes":self.evictions,
             "program_sha256":p.artifact["sha256"],"events":self.trace,
             "event_units":event_units,"dropped_events":self.trace_dropped,
             "contracts":catalog.completion_contracts(p),
@@ -1079,10 +1100,15 @@ mod tests {
         assert_eq!(training.completion_observations(&c).joins, [
             Join {left:0,output:0,right:1}, Join {left:0,output:0,right:2}
         ].into_iter().collect());
-        c.limits.candidates=1; c.limits.depth=1;
+        c.limits.candidates=1; c.limits.depth=2;
+        let late = Join {left:2,output:0,right:1};
+        source.active=Some(1); source.pending=Some(late);
         training.run=4; training.applied(&c,&mut source,1);
         assert_eq!(training.trace.len(),3);
         assert_eq!(training.trace_dropped,1);
+        assert!(training.completion_observations(&c).joins.contains(&late),
+            "successful pair evidence must survive a full raw-event archive");
+        assert_eq!(training.pairs[&late].consumer_run,4);
         assert_eq!(source.samples.as_ref().unwrap().last().unwrap().3,None);
         let mut ordinary = State {active:Some(0),..Default::default()};
         training.applied(&c,&mut ordinary,1);

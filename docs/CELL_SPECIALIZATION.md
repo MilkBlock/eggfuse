@@ -123,13 +123,33 @@ mapping each execution back to it. To recover one execution's cross-stage trace,
 follow `events[id].parent`; to collect a Cell's histories, select its event-unit
 indices first. These are offline operations on the export.
 
+The existing bounded `Training.pairs` table continues collecting after raw
+trace capacity is exhausted. Recognition also consumes these successful
+applications, exported separately as `sampled_applications`; it does not invent
+missing parent links. Each retained shape stores its latest actual boundary
+sample in the existing evidence fields. `retained_support` is a bounded counter
+subject to pruning, not an exact execution frequency; `pair_counter_prunes`
+reports pruning. The compiler checks composition against the authoritative
+source operations before registering a sampled path. No extra runtime bindings
+or consumer lists are introduced.
+
+A short actual Cell runtime sum-bits replay (rounds=0, local congruence enabled)
+retained 2,048 raw events and reported 380 drops across 1,428 Runs. Raw events
+ended at Run 1,220; 39 retained pair samples included two later samples, up to
+Run 1,223. Registering these samples increased observed path implementations
+from 111 to 121 and native eclasses from 109 to 119. This does not recover the
+full dropped history. Final state, schedule, ordered RHS, writes and resumes
+hashes matched the preceding implementation. This is a coverage check, not a
+speed measurement or native egglog semantic acceptance.
+
 The native ripsat registry receives normalized structures of those executed
 paths and their observed prefix transitions. Measured inferred-route candidates
-start from the actual cross-Run parent/consumer applications in that trace,
+start from actual cross-Run parent/consumer applications in that trace or the
+existing bounded successful-pair samples,
 including applications not already present as joins in the executable catalog.
 Observing two source implementations alone does not authorize an expansion;
 there must be an observed application to recognize and specialize. Source
-implementations outside the trace are not normalized for this search. With no
+implementations outside those observations are not normalized for this search. With no
 observed applications, Bake builds no recognition index.
 
 Equivalence may generalize an observed route to another observed implementation;

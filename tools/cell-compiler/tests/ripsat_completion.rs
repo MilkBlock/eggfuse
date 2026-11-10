@@ -269,6 +269,14 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
             assert!(!events.is_empty());
             assert!(events.iter().any(|e| e["parent"].is_u64() && e["run"] != e["producer_run"]));
             assert_eq!(graph["registered_compositions"], trace["contracts"]["implementations"].as_array().unwrap().len());
+            let samples = trace["sampled_applications"].as_array().unwrap();
+            assert!(!samples.is_empty());
+            for sample in samples {
+                assert_eq!(sample["sample_policy"], "latest-retained-application");
+                assert!(sample["consumer_run"].as_u64().unwrap() > sample["producer_run"].as_u64().unwrap());
+                assert!(sample["retained_support"].as_u64().unwrap() > 0);
+                assert!(sample.get("parent").is_none(), "aggregate evidence is not an event chain");
+            }
             for (id, event) in events.iter().enumerate() {
                 if let Some(parent) = event["parent"].as_u64() {
                     assert!((parent as usize) < id);
