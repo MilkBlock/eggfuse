@@ -2280,7 +2280,7 @@ impl Programs {
             self.deferred_queries[rid] = Some((complete, covered_count, ordinals.into_iter().zip(results).collect()));
             return Ok(Some(Coverage { complete, covered, claimed: covered_count, answers: Vec::new() }));
         }
-        let answers = self.seal_answers(rid, complete, covered_count, results);
+        let answers = self.seal_answers(rid, &g.program.rules[rid].inputs, complete, covered_count, results);
         Ok(Some(Coverage {
             complete,
             covered,
@@ -2288,18 +2288,18 @@ impl Programs {
             answers,
         }))
     }
-    fn seal_answers(&mut self, rid: usize, complete: bool, covered_count: usize,
+    fn seal_answers(&mut self, rid: usize, inputs: &[usize], complete: bool, covered_count: usize,
         mut results: Winners) -> Vec<Matched> {
         #[cfg(feature = "sparse-cells")]
         {
             // Stable ordering retains the first producer when duplicate
             // bindings have the same depth, as in the ordered-map route.
-            // Validated source inputs are ordered SSA slots. Every candidate
-            // here belongs to rid, so comparing Slots preserves the old key order.
+            // The matched inputs define identity even when a worker has
+            // continued the instance and filled some of its RHS result slots.
             results.sort_by(|a, b| {
-                a.answer.values.cmp(&b.answer.values).then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
+                a.answer.compare_inputs(&b.answer, inputs).then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
             });
-            results.dedup_by(|a, b| a.answer.values == b.answer.values);
+            results.dedup_by(|a, b| a.answer.compare_inputs(&b.answer, inputs).is_eq());
         }
         if complete {
             self.stats.query_takeovers += 1;
@@ -2347,7 +2347,7 @@ impl Programs {
                 self.stats.origin_map_writes += 1;
                 // Unsealed legacy origins still need an independently owned
                 // lookup key. It does not replace the fragment's slot storage.
-                self.origins[rid].insert(answer.values.values().cloned().collect(), cursor);
+                self.origins[rid].insert(answer.input_values(inputs).cloned().collect(), cursor);
                 answer
             })
             .collect();
@@ -2372,11 +2372,11 @@ impl Programs {
         results.push((ordinal, Winner { answer, cursor }));
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn finish_worker_rule(&mut self, rid: usize, order_comparisons: &mut u64, winner_moves: &mut u64) -> Option<(bool, Vec<Matched>)> {
+    pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64, winner_moves: &mut u64) -> Option<(bool, Vec<Matched>)> {
         let (complete, covered, mut results) = self.deferred_queries[rid].take()?;
         *winner_moves += results.len() as u64;
         results.sort_unstable_by(|(a,_),(b,_)| { *order_comparisons += 1; a.cmp(b) });
-        Some((complete, self.seal_answers(rid, complete, covered,
+        Some((complete, self.seal_answers(rid, inputs, complete, covered,
             results.into_iter().map(|(_, winner)| winner).collect())))
     }
     pub fn shared(&self) -> bool {

@@ -25,6 +25,22 @@ pub(crate) struct Instance {
     pub compiled: bool,
 }
 impl Instance {
+    /// Match identity is the source Cell's input projection. Computed RHS
+    /// slots remain owned by the same instance but cannot select a different
+    /// winner or change the continuation lookup key.
+    pub(crate) fn input_values<'a>(&'a self, inputs: &'a [usize]) -> impl Iterator<Item = &'a crate::value::Value> {
+        inputs.iter().map(|slot| &self.values[slot])
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn compare_inputs(&self, other: &Self, inputs: &[usize]) -> std::cmp::Ordering {
+        // Query completion supplies every input in source slot order. Keep
+        // its contiguous comparison when neither instance has added outputs.
+        if self.values.len() == inputs.len() && other.values.len() == inputs.len() {
+            self.values.cmp(&other.values)
+        } else {
+            self.input_values(inputs).cmp(other.input_values(inputs))
+        }
+    }
     pub fn matched(values: Slots, known: QueryFacts, epoch: u64) -> Self {
         Self {
             #[cfg(feature = "view-consumers")]
@@ -127,6 +143,34 @@ impl QueryFacts {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn prepared_results_do_not_change_match_identity_or_legacy_origin_key() {
+        use crate::value::Value;
+        use std::cmp::Ordering;
+        let inputs = [1, 1000];
+        let make = |x| Instance::matched([(1, Value::Int(x)), (1000, Value::Eq(9))].into_iter().collect(),
+            QueryFacts::None, 11);
+        let query = make(7);
+        let mut completed = make(7);
+        // An output can lie between sparse input addresses. No contiguous
+        // prefix assumption is sufficient for general checked Cell layouts.
+        completed.values.insert(15, Value::Int(123));
+        completed.values.insert(2000, Value::Eq(91));
+        assert_ne!(query.values, completed.values);
+        assert_eq!(query.compare_inputs(&completed, &inputs), Ordering::Equal);
+        assert_eq!(completed.compare_inputs(&make(8), &inputs), Ordering::Less);
+        assert_eq!(query.input_values(&inputs).collect::<Vec<_>>(), completed.input_values(&inputs).collect::<Vec<_>>());
+        let address = std::ptr::from_ref(completed.values.get(&15).unwrap());
+        let mut candidates = vec![(query, 2), (completed, 5), (make(7), 5)];
+        candidates.sort_by(|(a, depth_a), (b, depth_b)| a.compare_inputs(b, &inputs).then_with(|| depth_b.cmp(depth_a)));
+        candidates.dedup_by(|(a, _), (b, _)| a.compare_inputs(b, &inputs).is_eq());
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].1, 5);
+        assert_eq!(std::ptr::from_ref(candidates[0].0.values.get(&15).unwrap()), address,
+            "stable winner selection keeps the original prepared instance");
+    }
 
     #[test]
     fn demanded_facts_do_not_retain_other_matches_or_mutable_values() {

@@ -3323,7 +3323,7 @@
           }
         ]
       },
-      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。 owned-instance/v1 仅完成查询到 RHS 的实例交接；候选格式更宽，编译输入引用增加 2,048 字节。旧 Binding 重装未在历史 Work 中收费，不能用跨表示的历史等权分数证明这步收益；新增片段覆盖数不奖励，完整 allocator 成本单独对照。 E3 的 cell-span/v1 进一步删除 RHS 到 Entry 的逐输出重复登记，效果执行和最终发布仍按序；历史保留尚未统一。 cell-results/v1 接通合格 RHS 结果到 Entry/history 的同一存储，并保留原 Run 发布；这减少协调线程交接，不是把图写入移入 worker。",
+      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。 owned-instance/v1 仅完成查询到 RHS 的实例交接；候选格式更宽，编译输入引用增加 2,048 字节。旧 Binding 重装未在历史 Work 中收费，不能用跨表示的历史等权分数证明这步收益；新增片段覆盖数不奖励，完整 allocator 成本单独对照。 E3 的 cell-span/v1 进一步删除 RHS 到 Entry 的逐输出重复登记，效果执行和最终发布仍按序；历史保留尚未统一。 cell-results/v1 接通合格 RHS 结果到 Entry/history 的同一存储，并保留原 Run 发布；这减少协调线程交接，不是把图写入移入 worker。 Cell 输入投影现在独立决定赢家与 legacy origin key，实例的 RHS 结果不再参与身份。纯查询实例沿用连续 Slots 比较，无新 key 存储；这是提前执行 RHS 的正确性准备，尚非新增计算接管或加速。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
         "benchmarks/cell-query-workers/results.json",
@@ -3351,7 +3351,10 @@
         "benchmarks/cell-owned-fragments/README.md",
         "benchmarks/cell-owned-fragments/results.json",
         "benchmarks/cell-joint-results/README.md",
-        "benchmarks/cell-joint-results/results.json"
+        "benchmarks/cell-joint-results/results.json",
+        "benchmarks/cell-input-identity/README.md",
+        "benchmarks/cell-input-identity/opportunity.json",
+        "benchmarks/cell-input-identity/checks.json"
       ],
       "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立"
     },

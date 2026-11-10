@@ -1,0 +1,1055 @@
+{
+  "scope": "Saved standalone Cell CPU executions; source-shape opportunity weighted by observed Spine bindings, not worker coverage, committed mutations or measured speed.",
+  "limits": "Scalar expressions can fail. Constructor prefixes still need immutable input, visibility, ownership and current equality proofs. Source order, winner selection and actual result addresses remain authoritative. Current Run state and first misses can reduce useful coverage; speculative duplicate work is not estimated here.",
+  "sum": {
+    "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+    "program_file_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+    "report_file_sha256": "f4336140ba3da9861fac68ce5b6ddeb9517fc23e3cc2378354b152ee38ee9047",
+    "runs": 1428,
+    "observed": {
+      "constructor_requests": 11502,
+      "constructor_reused": 8398,
+      "function_updates": 1450
+    },
+    "weighted_opportunity": {
+      "source_scalar_prefix_ops": 193,
+      "input_only_scalar_ops": 483,
+      "unaliased_constructor_prefix_ops": 2741
+    },
+    "rules": [
+      {
+        "rule": 50,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 51,
+        "observed_spine_bindings": 9,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 54,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 56,
+        "observed_spine_bindings": 20,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 57,
+        "observed_spine_bindings": 81,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 58,
+        "observed_spine_bindings": 311,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 61,
+        "observed_spine_bindings": 16,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 62,
+        "observed_spine_bindings": 68,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 2,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 63,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 64,
+        "observed_spine_bindings": 16,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 65,
+        "observed_spine_bindings": 48,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 67,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 69,
+        "observed_spine_bindings": 9,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 70,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 84,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 85,
+        "observed_spine_bindings": 9,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 86,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 100,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 101,
+        "observed_spine_bindings": 8,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 102,
+        "observed_spine_bindings": 25,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 103,
+        "observed_spine_bindings": 74,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 104,
+        "observed_spine_bindings": 28,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 105,
+        "observed_spine_bindings": 73,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 107,
+        "observed_spine_bindings": 3,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 110,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 113,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 114,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 115,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 125,
+        "observed_spine_bindings": 91,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 137,
+        "observed_spine_bindings": 228,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 138,
+        "observed_spine_bindings": 96,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 2,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 143,
+        "observed_spine_bindings": 311,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 146,
+        "observed_spine_bindings": 10,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 3,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 150,
+        "observed_spine_bindings": 8,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 151,
+        "observed_spine_bindings": 25,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 157,
+        "observed_spine_bindings": 3,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 403,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 420,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 421,
+        "observed_spine_bindings": 8,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 422,
+        "observed_spine_bindings": 24,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 424,
+        "observed_spine_bindings": 93,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 425,
+        "observed_spine_bindings": 37,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 426,
+        "observed_spine_bindings": 72,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 428,
+        "observed_spine_bindings": 3,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 430,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 432,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 502,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 503,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 506,
+        "observed_spine_bindings": 193,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 521,
+        "observed_spine_bindings": 62,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 527,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 541,
+        "observed_spine_bindings": 9,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 544,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 546,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 548,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 551,
+        "observed_spine_bindings": 4,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 552,
+        "observed_spine_bindings": 7,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 553,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 554,
+        "observed_spine_bindings": 4,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 557,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 560,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 565,
+        "observed_spine_bindings": 16,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 575,
+        "observed_spine_bindings": 8,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      }
+    ]
+  },
+  "ray": {
+    "program_sha256": "2f692b3f85c6b3988d3586482ac02c6d2af5db2f3943655584313034263b8cc4",
+    "program_file_sha256": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601",
+    "report_file_sha256": "848e28840ed614b4aceab713fd53c453f837446eb3895d8bb9f4a8d6364df7ee",
+    "runs": 16883,
+    "observed": {
+      "constructor_requests": 2065807,
+      "constructor_reused": 1314757,
+      "function_updates": 1676336
+    },
+    "weighted_opportunity": {
+      "source_scalar_prefix_ops": 19819,
+      "input_only_scalar_ops": 42394,
+      "unaliased_constructor_prefix_ops": 371286
+    },
+    "rules": [
+      {
+        "rule": 50,
+        "observed_spine_bindings": 104,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 51,
+        "observed_spine_bindings": 315,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 54,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 56,
+        "observed_spine_bindings": 602,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 57,
+        "observed_spine_bindings": 7427,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 58,
+        "observed_spine_bindings": 32879,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 61,
+        "observed_spine_bindings": 2146,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 62,
+        "observed_spine_bindings": 6167,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 2,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 63,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 64,
+        "observed_spine_bindings": 1920,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 65,
+        "observed_spine_bindings": 8186,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 66,
+        "observed_spine_bindings": 172,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 67,
+        "observed_spine_bindings": 4,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 69,
+        "observed_spine_bindings": 315,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 70,
+        "observed_spine_bindings": 104,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 84,
+        "observed_spine_bindings": 29,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 85,
+        "observed_spine_bindings": 315,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 86,
+        "observed_spine_bindings": 104,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 100,
+        "observed_spine_bindings": 1552,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 101,
+        "observed_spine_bindings": 165,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 102,
+        "observed_spine_bindings": 631,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 103,
+        "observed_spine_bindings": 1551,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 104,
+        "observed_spine_bindings": 822,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 105,
+        "observed_spine_bindings": 2372,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 107,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 110,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 113,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 114,
+        "observed_spine_bindings": 1552,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 115,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 125,
+        "observed_spine_bindings": 9812,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 137,
+        "observed_spine_bindings": 23177,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 138,
+        "observed_spine_bindings": 8174,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 2,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 143,
+        "observed_spine_bindings": 32879,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 146,
+        "observed_spine_bindings": 20,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 3,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 150,
+        "observed_spine_bindings": 845,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 151,
+        "observed_spine_bindings": 3555,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 152,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 157,
+        "observed_spine_bindings": 116,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 158,
+        "observed_spine_bindings": 50,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 160,
+        "observed_spine_bindings": 51,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 164,
+        "observed_spine_bindings": 194,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      },
+      {
+        "rule": 230,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 232,
+        "observed_spine_bindings": 349,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 233,
+        "observed_spine_bindings": 1088,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 275,
+        "observed_spine_bindings": 8,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 403,
+        "observed_spine_bindings": 833,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 404,
+        "observed_spine_bindings": 97,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 420,
+        "observed_spine_bindings": 1552,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 421,
+        "observed_spine_bindings": 885,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 422,
+        "observed_spine_bindings": 3338,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 423,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 424,
+        "observed_spine_bindings": 10526,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 425,
+        "observed_spine_bindings": 4054,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 426,
+        "observed_spine_bindings": 9814,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 428,
+        "observed_spine_bindings": 120,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 429,
+        "observed_spine_bindings": 50,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 430,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 431,
+        "observed_spine_bindings": 51,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 432,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 435,
+        "observed_spine_bindings": 167,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 446,
+        "observed_spine_bindings": 1738,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 502,
+        "observed_spine_bindings": 1552,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 503,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 506,
+        "observed_spine_bindings": 71204,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 521,
+        "observed_spine_bindings": 6508,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 527,
+        "observed_spine_bindings": 5,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 536,
+        "observed_spine_bindings": 329,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 537,
+        "observed_spine_bindings": 193,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 6
+      },
+      {
+        "rule": 541,
+        "observed_spine_bindings": 315,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 544,
+        "observed_spine_bindings": 78,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 546,
+        "observed_spine_bindings": 104,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 548,
+        "observed_spine_bindings": 29,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 2
+      },
+      {
+        "rule": 551,
+        "observed_spine_bindings": 27,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 552,
+        "observed_spine_bindings": 7,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 553,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 554,
+        "observed_spine_bindings": 4,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 1
+      },
+      {
+        "rule": 557,
+        "observed_spine_bindings": 833,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 558,
+        "observed_spine_bindings": 97,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 4
+      },
+      {
+        "rule": 560,
+        "observed_spine_bindings": 1,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 562,
+        "observed_spine_bindings": 2,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 565,
+        "observed_spine_bindings": 848,
+        "source_scalar_prefix_ops": 0,
+        "input_only_scalar_ops": 0,
+        "unaliased_constructor_prefix_ops": 3
+      },
+      {
+        "rule": 575,
+        "observed_spine_bindings": 1413,
+        "source_scalar_prefix_ops": 1,
+        "input_only_scalar_ops": 1,
+        "unaliased_constructor_prefix_ops": 0
+      }
+    ]
+  }
+}

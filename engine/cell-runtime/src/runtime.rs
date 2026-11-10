@@ -2471,7 +2471,7 @@ impl Executor {
             workers.finish_run(&mut self.graph, &mut self.stage_spine)?;
             let (mut order_comparisons, mut winner_moves, mut binding_moves) = (0, 0, 0);
             for (rid, residual) in &mut work {
-                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &mut order_comparisons, &mut winner_moves) {
+                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &self.graph.program.rules[*rid].inputs, &mut order_comparisons, &mut winner_moves) {
                     binding_moves += residual.len() as u64;
                     let previous_answers = residual.len();
                     let mut merged = answers;
