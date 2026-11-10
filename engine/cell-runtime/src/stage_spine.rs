@@ -2624,17 +2624,24 @@ impl Programs {
         let report = {
             let mut r = report;
             let mut storage = crate::result_handoff::HistoryStorage::default();
+            let mut discovery = crate::iterative::DiscoveryStorage::default();
             for publication in self.entries.values().chain(extra.iter().copied()) {
                 #[cfg(feature = "sparse-cells")]
                 if let PublishedBase::Active(cursor) = &publication.base {
                     cursor.state.history.count_storage(&mut storage);
+                    cursor.state.count_discovery(&mut discovery);
                 }
                 #[cfg(not(feature = "sparse-cells"))]
-                publication.state.history.count_storage(&mut storage);
+                {
+                    publication.state.history.count_storage(&mut storage);
+                    publication.state.count_discovery(&mut discovery);
+                }
             }
             r["published_history_storage"] = serde_json::to_value(storage).unwrap();
             r["history_result_frame_bytes"] = std::mem::size_of::<crate::cell::Results>().into();
             r["history_handle_bytes"] = std::mem::size_of::<crate::result_handoff::History>().into();
+            r["execution_state_bytes"] = std::mem::size_of::<crate::iterative::State>().into();
+            r["published_discovery_storage"] = serde_json::to_value(discovery).unwrap();
             r["iterative_bake"] = self.training.report();
             r
         };

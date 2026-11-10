@@ -136,3 +136,9 @@ including uncombined Cells. Do not expand the catalog on the strength of this
 allocation counter alone. The remaining 369 producer result frames and their
 311 query captures still provide live evidence; removing them requires reusing
 an existing instance owner, not dropping the evidence.
+
+Follow-up: [compiled execution state](../cell-execution-state/README.md) removes
+unused discovery fields and the redundant active Cell ID. The history handle
+remains 24 bytes, but Cell Entry/completion records shrink from 192 to 104
+bytes while preserving the 165 eliminated owner allocations. Learning-mode
+allocation costs are measured separately.

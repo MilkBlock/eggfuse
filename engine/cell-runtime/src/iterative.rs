@@ -81,27 +81,68 @@ struct Segment {
     incoming: usize,
 }
 #[derive(Clone, Debug, Default)]
-pub(crate) struct State {
+struct Discovery {
     stack: Vec<Segment>,
-    pub output: usize,
     pending: Option<Join>,
-    pub complete: bool,
-    pub direct: bool,
     capped: bool,
-    last_run: usize,
     witness: Option<crate::graph::Dependency>,
-    pub(crate) history: crate::result_handoff::History,
-    pc: usize,
-    active: Option<Id>,
-    pub(crate) collect_pairs: bool,
     samples: Option<Rc<Vec<(usize, usize, Option<crate::graph::Dependency>, Option<usize>)>>>,
 }
+/// A compiled execution retains only its position and actual result history.
+/// Discovering new compositions (and the uncompiled legacy reducer) needs a
+/// stack and provenance window. Forks share that optional state until changed;
+/// ordinary compiled cursors never allocate it or clone its empty containers.
+#[derive(Clone, Debug, Default)]
+pub(crate) struct State {
+    pub output: usize,
+    pub complete: bool,
+    pub direct: bool,
+    last_run: usize,
+    pub(crate) history: crate::result_handoff::History,
+    pc: usize,
+    discovery: Option<Rc<Discovery>>,
+    pub(crate) collect_pairs: bool,
+}
 impl State {
+    fn compiled_unit(&self, catalog: &Catalog) -> Option<Id> {
+        (self.pc != 0).then(|| catalog.switch.active(self.pc))
+    }
+    fn active(&self, catalog: &Catalog) -> Option<Id> {
+        self.compiled_unit(catalog)
+            .or_else(|| self.discovery.as_ref()?.stack.last().map(|s| s.unit))
+    }
+    fn discover(&mut self) -> &mut Discovery {
+        Rc::make_mut(self.discovery.get_or_insert_with(Default::default))
+    }
+    pub(crate) fn count_discovery(&self, storage: &mut DiscoveryStorage) {
+        let Some(d) = &self.discovery else { return; };
+        if !storage.seen.insert(Rc::as_ptr(d) as usize) { return; }
+        storage.owners += 1;
+        storage.owner_bytes += std::mem::size_of::<Discovery>() + 2 * std::mem::size_of::<usize>();
+        storage.stack_bytes += d.stack.capacity() * std::mem::size_of::<Segment>();
+        if let Some(window) = &d.samples
+            && storage.windows.insert(Rc::as_ptr(window) as usize) {
+                storage.window_bytes += std::mem::size_of_val(window.as_ref()) + 2 * std::mem::size_of::<usize>()
+                    + window.capacity() * std::mem::size_of::<(usize, usize, Option<crate::graph::Dependency>, Option<usize>)>();
+            }
+    }
     pub fn fused(&self, catalog: &Catalog) -> bool {
-        self.active
-            .or_else(|| self.stack.last().map(|s| s.unit))
+        self.active(catalog)
             .is_some_and(|id| id >= catalog.leaves.len())
     }
+}
+/// Reporting-only census of discovery state reachable from published Entries.
+/// Counts shared owners once; it is neither a peak nor a cumulative allocator census.
+#[derive(Default, Serialize)]
+pub(crate) struct DiscoveryStorage {
+    owners: usize,
+    owner_bytes: usize,
+    stack_bytes: usize,
+    window_bytes: usize,
+    #[serde(skip)]
+    seen: BTreeSet<usize>,
+    #[serde(skip)]
+    windows: BTreeSet<usize>,
 }
 impl Catalog {
     /// State array and completion programs; excludes allocator overhead.
@@ -533,15 +574,11 @@ impl Catalog {
             return None;
         }
         let pc = self.switch.unique_root(rule, !collect_pairs)?;
-        let unit = self.switch.active(pc);
         Some(State {
             pc,
-            active: Some(unit),
-            stack: if collect_pairs {
-                vec![Segment { unit, incoming: 0 }]
-            } else {
-                vec![]
-            },
+            discovery: collect_pairs.then(|| Rc::new(Discovery {
+                stack: vec![Segment { unit: self.switch.active(pc), incoming: 0 }], ..Default::default()
+            })),
             last_run: run,
             collect_pairs,
             ..Default::default()
@@ -613,29 +650,34 @@ impl Catalog {
             };
             state.pc = self.switch.advance(state.pc, state.output, leaf);
             let unit = self.switch.active(state.pc);
-            state.active = Some(unit);
             state.direct = complete;
             state.complete = complete;
-            state.pending = None;
-            state.capped = false;
-            state.witness = Some(witness);
-            if state.collect_pairs {
+            let collect_pairs = state.collect_pairs;
+            let output = state.output;
+            if collect_pairs || state.discovery.is_some() {
+                let discovery = state.discover();
+                discovery.pending = None;
+                discovery.capped = false;
+                discovery.witness = Some(witness);
+            }
+            if collect_pairs {
+                let discovery = state.discover();
                 let size = self.units[unit].path.len();
                 let mut overlap = size - 1;
-                let mut incoming = state.output;
+                let mut incoming = output;
                 while overlap != 0 {
-                    let Some(segment) = state.stack.pop() else {
+                    let Some(segment) = discovery.stack.pop() else {
                         break;
                     };
                     let span = self.units[segment.unit].path.len();
                     incoming = segment.incoming;
                     if span > overlap {
-                        state.stack.clear();
+                        discovery.stack.clear();
                         break;
                     }
                     overlap -= span;
                 }
-                if let Some(left) = state.stack.last() {
+                if let Some(left) = discovery.stack.last() {
                     let j = Join {
                         left: left.unit,
                         output: incoming,
@@ -644,14 +686,14 @@ impl Catalog {
                     if self.units[left.unit].path.len() + size
                         <= self.limits.depth.min(self.limits.nodes)
                     {
-                        state.pending = Some(j);
+                        discovery.pending = Some(j);
                     } else {
-                        state.capped = true;
+                        discovery.capped = true;
                     }
                 }
-                state.stack.push(Segment { unit, incoming });
+                discovery.stack.push(Segment { unit, incoming });
                 let mut expanded = 0;
-                let keep = state
+                let keep = discovery
                     .stack
                     .iter()
                     .rev()
@@ -660,7 +702,7 @@ impl Catalog {
                         expanded <= self.limits.depth.min(self.limits.nodes)
                     })
                     .count();
-                state.stack.drain(..state.stack.len() - keep);
+                discovery.stack.drain(..discovery.stack.len() - keep);
             }
             return (self.units[unit].terminal(), Default::default());
         }
@@ -671,11 +713,12 @@ impl Catalog {
             unit: id,
             incoming: state.output,
         };
-        state.pending = None;
-        state.capped = false;
-        state.witness = Some(witness);
         state.complete = complete;
-        while let Some(left) = state.stack.last() {
+        let discovery = state.discover();
+        discovery.pending = None;
+        discovery.capped = false;
+        discovery.witness = Some(witness);
+        while let Some(left) = discovery.stack.last() {
             let join = Join {
                 left: left.unit,
                 output: right.incoming,
@@ -686,23 +729,22 @@ impl Catalog {
                     unit,
                     incoming: left.incoming,
                 };
-                state.stack.pop();
+                discovery.stack.pop();
             } else {
                 if self.units[left.unit].path.len() + self.units[right.unit].path.len()
                     <= self.limits.depth.min(self.limits.nodes)
                 {
-                    state.pending = Some(join);
+                    discovery.pending = Some(join);
                 } else {
-                    state.capped = true;
+                    discovery.capped = true;
                 }
                 break;
             }
         }
-        state.direct = complete && right.unit >= self.leaves.len();
-        state.stack.push(right);
+        discovery.stack.push(right);
         // A future reduction cannot reach past D primitive applications.
         let mut size = 0;
-        let keep = state
+        let keep = discovery
             .stack
             .iter()
             .rev()
@@ -711,7 +753,8 @@ impl Catalog {
                 size <= self.limits.depth.min(self.limits.nodes)
             })
             .count();
-        state.stack.drain(..state.stack.len() - keep);
+        discovery.stack.drain(..discovery.stack.len() - keep);
+        state.direct = complete && right.unit >= self.leaves.len();
         (self.units[right.unit].terminal(), Default::default())
     }
     pub fn entries(&self) -> Vec<J> {
@@ -910,8 +953,8 @@ impl Training {
     }
     pub(crate) fn applied(&mut self, c: &Catalog, s: &mut State, inputs: usize) {
         let parent_run = std::mem::replace(&mut s.last_run, self.run);
-        self.capped_events += u64::from(s.capped);
-        let Some(id) = s.active.or_else(|| s.stack.last().map(|x| x.unit)) else {
+        self.capped_events += u64::from(s.discovery.as_ref().is_some_and(|d| d.capped));
+        let Some(id) = s.active(c) else {
             return;
         };
         *self.hits.entry(id).or_default() += 1;
@@ -922,22 +965,23 @@ impl Training {
         // In training only, retain a bounded witness window. With a multi-step
         // right operand its *first* Run identifies the sampled join boundary.
         self.trace_completed(c, s, id, parent_run);
-        let Some(j) = s.pending else { return };
+        let Some(discovery) = &s.discovery else { return };
+        let Some(j) = discovery.pending else { return };
         // Once a right operand already takes the direct origin, extending its
         // left boundary earns no second credit for the same operation.
         if parent_run == 0 || parent_run >= self.run {
             return;
         }
-        let sample = if s.collect_pairs && s.active.is_some() {
-            let window = s.samples.as_deref().unwrap();
+        let sample = if s.collect_pairs && s.compiled_unit(c).is_some() {
+            let window = discovery.samples.as_deref().unwrap();
             let Some(i) = window.len().checked_sub(c.units[j.right].path.len()) else {
                 return;
             };
             window[i]
         } else {
-            (parent_run, self.run, s.witness, None)
+            (parent_run, self.run, discovery.witness, None)
         };
-        let saves_key = s.complete && !s.fused(c) && !c.switch.enabled();
+        let saves_key = s.complete && !c.switch.enabled() && !s.fused(c);
         if self.pairs.len() == c.limits.candidates && !self.pairs.contains_key(&j) {
             self.pairs.retain(|_, e| {
                 e.visits -= 1;
@@ -963,24 +1007,26 @@ impl Training {
         if saves_key { e.avoidable_origin_slots += inputs as u64; }
     }
     pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State) {
-        if let Some(id) = s.active { self.trace_completed(c, s, id, 0); }
+        if let Some(id) = s.compiled_unit(c) { self.trace_completed(c, s, id, 0); }
     }
     fn trace_completed(&mut self, c: &Catalog, s: &mut State, id: Id, parent_run: usize) {
         if s.collect_pairs {
-            let parent = s.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
+            let output = s.output;
+            let discovery = s.discover();
+            let parent = discovery.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
             let trace = if self.trace.len() < c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes)) {
                 let index = self.trace.len();
                 self.trace.push(TraceEvent { parent, unit:id, entry:c.units[id].last(),
-                    output:s.output, run:self.run, producer_run:parent_run, witness:s.witness,
+                    output, run:self.run, producer_run:parent_run, witness:discovery.witness,
                     truncated_parent:parent.is_none() && parent_run!=0 });
                 Some(index)
             } else { self.trace_dropped += 1; None };
-            let window = Rc::make_mut(s.samples.get_or_insert_with(Default::default));
+            let window = Rc::make_mut(discovery.samples.get_or_insert_with(Default::default));
             let limit = c.limits.depth.min(c.limits.nodes);
             if window.len() == limit {
                 window.remove(0);
             }
-            window.push((parent_run, self.run, s.witness, trace));
+            window.push((parent_run, self.run, discovery.witness, trace));
         }
     }
     pub fn completion_observations(&self, catalog: &Catalog) -> ObservedCompletions {
@@ -1093,8 +1139,8 @@ mod tests {
         for i in 0..4 {
             assert!(c.dispatch(&mut state, i, 0, true, Dependency::Function(0)).0);
         }
-        assert_eq!(state.stack.len(), 1);
-        assert_eq!(state.stack[0].unit, 6);
+        assert_eq!(state.discovery.as_ref().unwrap().stack.len(), 1);
+        assert_eq!(state.discovery.as_ref().unwrap().stack[0].unit, 6);
         assert!(state.direct);
         let port = crate::cell::ResultPort::new(0, 0);
         state.history.capture(1, 0, &[crate::cell::Capture { site: crate::cell::Site::Effect(0), port }],
@@ -1103,7 +1149,7 @@ mod tests {
         assert!(!selected);
         assert_eq!(previous.get(1, port), Some(Dependency::Function(7)));
         assert!(state.history.current().is_none());
-        assert!(state.stack.is_empty() && !state.direct);
+        assert!(state.discovery.is_none() && !state.direct);
     }
     #[test]
     fn bridge_support_requires_one_completed_cross_stage_ancestry() {
@@ -1135,11 +1181,16 @@ mod tests {
             c.units.push(Unit {path:vec![(None,(rule,Some(0)))].into_boxed_slice()});
         }
         let mut training = Training {run:1,..Default::default()};
-        let mut source = State {active:Some(0),collect_pairs:true,..Default::default()};
+        let mut source = State {collect_pairs:true,..Default::default()};
+        source.discover().stack.push(Segment { unit:0, incoming:0 });
         training.applied(&c,&mut source,1);
         let mut left = source.clone();
-        left.active=Some(1); training.run=2; training.applied(&c,&mut left,1);
-        source.active=Some(2); training.run=3; training.applied(&c,&mut source,1);
+        assert!(Rc::ptr_eq(source.discovery.as_ref().unwrap(), left.discovery.as_ref().unwrap()));
+        left.discover().stack[0].unit=1; training.run=2; training.applied(&c,&mut left,1);
+        assert_eq!(source.discovery.as_ref().unwrap().stack[0].unit,0,
+            "a fork must not change the published producer's discovery state");
+        assert!(!Rc::ptr_eq(source.discovery.as_ref().unwrap(), left.discovery.as_ref().unwrap()));
+        source.discover().stack[0].unit=2; training.run=3; training.applied(&c,&mut source,1);
         assert_eq!(training.trace.len(),3);
         assert_eq!(training.trace[1].parent,Some(0));
         assert_eq!(training.trace[2].parent,Some(0));
@@ -1149,17 +1200,18 @@ mod tests {
         ].into_iter().collect());
         c.limits.candidates=1; c.limits.depth=2;
         let late = Join {left:2,output:0,right:1};
-        source.active=Some(1); source.pending=Some(late);
+        source.discover().stack[0].unit=1; source.discover().pending=Some(late);
         training.run=4; training.applied(&c,&mut source,1);
         assert_eq!(training.trace.len(),3);
         assert_eq!(training.trace_dropped,1);
         assert!(training.completion_observations(&c).joins.contains(&late),
             "successful pair evidence must survive a full raw-event archive");
         assert_eq!(training.pairs[&late].consumer_run,4);
-        assert_eq!(source.samples.as_ref().unwrap().last().unwrap().3,None);
-        let mut ordinary = State {active:Some(0),..Default::default()};
+        assert_eq!(source.discovery.as_ref().unwrap().samples.as_ref().unwrap().last().unwrap().3,None);
+        let mut ordinary = State::default();
+        ordinary.discover().stack.push(Segment { unit:0, incoming:0 });
         training.applied(&c,&mut ordinary,1);
-        assert!(ordinary.samples.is_none());
+        assert!(ordinary.discovery.as_ref().unwrap().samples.is_none());
         assert_eq!(training.trace_dropped,1);
     }
     #[test]
@@ -1168,10 +1220,9 @@ mod tests {
         c.limits.candidates = 1;
         c.leaves.insert((0, Some(0)), 0);
         let mut s = State {
-            stack: vec![Segment {
-                unit: 0,
-                incoming: 0,
-            }],
+            discovery: Some(Rc::new(Discovery {
+                stack: vec![Segment { unit: 0, incoming: 0 }], ..Default::default()
+            })),
             last_run: 1,
             ..Default::default()
         };
@@ -1179,20 +1230,20 @@ mod tests {
             run: 2,
             ..Default::default()
         };
-        s.pending = Some(Join {
+        s.discover().pending = Some(Join {
             left: 0,
             output: 1,
             right: 0,
         });
         training.applied(&c, &mut s, 3);
         assert_eq!(
-            training.pairs[&s.pending.unwrap()].avoidable_origin_slots,
+            training.pairs[&s.discovery.as_ref().unwrap().pending.unwrap()].avoidable_origin_slots,
             0
         );
         training.run = 3;
         s.complete = true;
         training.applied(&c, &mut s, 3);
-        let e = &training.pairs[&s.pending.unwrap()];
+        let e = &training.pairs[&s.discovery.as_ref().unwrap().pending.unwrap()];
         assert_eq!(
             (
                 e.visits,
@@ -1202,7 +1253,7 @@ mod tests {
             ),
             (2, 3, 2, 3)
         );
-        s.pending = Some(Join {
+        s.discover().pending = Some(Join {
             left: 0,
             output: 2,
             right: 0,

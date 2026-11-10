@@ -120,6 +120,8 @@ fn direct_completion_projects_real_results_and_preserves_every_run() {
             for key in ["ordinal","ruleset","path","iterations","epoch","logical_matches","executed_bindings","changed"] {assert_eq!(a[key],b[key],"{key}");}
         }
         let a=before.report(); let b=after.report();
+        assert_eq!(b["stage_spine"]["published_discovery_storage"]["owners"],0,
+            "compiled execution without training must not retain discovery owners");
         let stats=&b["stage_spine"]["stats"];
         assert!(stats["ripsat_completed"].as_u64().unwrap()>0,"case {case}; completion programs: {}; {stats}",compiled["iterative_bake"]["rhs_handoffs"]["completion_states"]);
         if case==3 {
