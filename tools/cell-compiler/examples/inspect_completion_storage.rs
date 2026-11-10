@@ -5,7 +5,10 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
     let [input,output]=args.as_slice() else {return Err("expected PROGRAM OUTPUT".into())};
     let p=Program::parse(serde_json::from_slice(&std::fs::read(input)?)?)?;
     let plan=Plan::derive(&p)?;
-    let report=serde_json::json!({"program":p.artifact["sha256"],"storage":plan.demand_storage(),"plan":plan});
+    let influence:Vec<_>=(0..p.tables.len()).map(|a|(0..p.tables.len()).map(|b|plan.affects(a,b)).collect::<Vec<_>>()).collect();
+    let waits:Vec<_>=(0..p.tables.len()).map(|t|serde_json::to_value(plan.scope(&[t]).unwrap()).unwrap()).collect();
+    let signature=eggfuse_cell_runtime::checksum::artifact_digest(&serde_json::json!({"affects":influence,"singleton_scopes":waits}));
+    let report=serde_json::json!({"program":p.artifact["sha256"],"closure_sha256":signature,"storage":plan.demand_storage(),"matrices":plan.matrix_storage(),"plan":plan});
     std::fs::write(output,serde_json::to_vec_pretty(&report)?)?;
     Ok(())
 }

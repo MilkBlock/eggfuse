@@ -283,3 +283,39 @@ Reproduce using the script's --baseline, --candidate, --program, --root (fresh
 directory) and --output arguments. Both binaries must be frozen ordinary
 release builds; artifacts under out/ are not tracked. This experiment measures
 the standalone Cell CPU, not native egglog speed.
+
+## Shared immutable influence/wait matrices
+
+After the existing mutable transitive closure and merge-birth/read dependency
+construction finishes, exact equal u64 rows are interned across both matrices.
+Runtime row lookup still indexes the same bit positions; scope selection and
+repair ordering are unchanged. The interning registry is compile-local and is
+not retained. Boxed row directories avoid retaining the larger Vec<Vec<u64>>
+allocation capacity when converting to smaller shared handles. This is not a
+new relationship graph or an approximation of repair influence.
+
+For the frozen sum-bits catalog, 802 rows have 249 distinct contents. Logical
+retained storage (payload, row directory, estimated Rc headers) decreases from
+64,160 to 30,760 bytes (-52.1%). The old directory model is 24 bytes per Vec on
+this 64-bit host, and rows were allocated at the exact dense width. The new
+directory occupies 12,832 bytes and shared payload/Rc headers 17,928 bytes.
+Outer container headers, allocator rounding, temporary closure construction and
+interning storage are excluded. No latency/peak RSS saving is claimed.
+
+`shared-matrices-check.json` records the census and exact closure signature.
+The diagnostic helper now hashes every affects(a,b) result and every singleton
+scope, in addition to the full serialized Plan. All are equal before/after.
+To reproduce the baseline signature on 83e1b566, use the new
+inspect_completion_storage helper with only its `matrices` report field removed
+(the old Plan lacks that census method). Use separate checkouts/target dirs.
+The new helper reports the shared storage directly. Existing scoped correctness
+checks pass: 31 staged/merge/scoped tests plus a row-sharing test covering high
+bits, cross-matrix sharing, unequal rows and owner lifetime. Runtime algorithms
+and forecast results are unchanged; the already accepted semantic exports
+remain the development reference, not a newly claimed execution measurement.
+
+The previous catalog's actual executions still select which work is useful;
+this change compresses the exact type-derived closure they consume. It does not
+claim that a scheduled cross-Run switch can discharge more work merely because
+its masks share memory. All previously live matching, Eq, deletion, visibility
+and publication obligations remain live.

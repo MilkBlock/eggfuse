@@ -26,9 +26,9 @@ impl Scope {
 pub struct Plan {
     source: String,
     #[serde(skip)]
-    affects: Vec<Vec<u64>>,
+    affects: Box<[std::rc::Rc<[u64]>]>,
     #[serde(skip)]
-    waits: Vec<Vec<u64>>,
+    waits: Box<[std::rc::Rc<[u64]>]>,
     /// Tables that completion may read, including merges reached by its effects.
     pub completion_reads: Vec<Vec<usize>>,
     pub merges: Vec<effects::Merge>,
@@ -169,17 +169,16 @@ impl Plan {
                 }
             }
         }
+        let global_effects=affects.iter().map(|row|
+            row.iter().map(|word|word.count_ones() as usize).sum::<usize>()==n).collect();
+        // Closure construction remains mutable. Only the final exact rows are
+        // interned, sharing equal influence and wait masks across both matrices.
+        let mut rows=BTreeSet::new();
+        let affects=share_rows(affects,&mut rows);
+        let waits=share_rows(waits,&mut rows);
         let mut plan = Self {
             source,
-            global_effects: affects
-                .iter()
-                .map(|row| {
-                    row.iter()
-                        .map(|word| word.count_ones() as usize)
-                        .sum::<usize>()
-                        == n
-                })
-                .collect(),
+            global_effects,
             affects,
             waits,
             completion_reads,
@@ -240,6 +239,18 @@ impl Plan {
         Ok(plan)
     }
     /// Logical capacity census, excluding allocator rounding and temporary interning.
+    pub fn matrix_storage(&self)->serde_json::Value {
+        let mut seen=BTreeSet::new();
+        let mut payload=0;
+        for row in self.affects.iter().chain(self.waits.iter()) {
+            if seen.insert(row.as_ptr() as usize) {payload+=std::mem::size_of_val(row.as_ref())+2*std::mem::size_of::<usize>();}
+        }
+        let count=self.affects.len()+self.waits.len();
+        serde_json::json!({"rows":count,"unique_rows":seen.len(),
+            "dense_payload_bytes":count*self.affects.len().div_ceil(64)*std::mem::size_of::<u64>(),
+            "shared_payload_and_rc_bytes":payload,
+            "directory_bytes":(self.affects.len()+self.waits.len())*std::mem::size_of::<std::rc::Rc<[u64]>>()})
+    }
     pub fn demand_storage(&self) -> serde_json::Value {
         let mut seen=BTreeSet::new();
         let mut shared=0usize;
@@ -309,8 +320,8 @@ impl Plan {
             "pure_rhs_expressions":pure.iter().map(|p|p.values.len()).sum::<usize>(),
             "pure_rhs_effects":pure.iter().map(|p|p.effects.len()).sum::<usize>(),
             "pure_rhs_copies_elided":pure.iter().map(|p|p.copies_elided).sum::<usize>(),
-            "dependency_edges":self.affects.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
-            "wait_edges":self.waits.iter().flatten().map(|word|word.count_ones() as usize).sum::<usize>(),
+            "dependency_edges":self.affects.iter().flat_map(|row|row.iter()).map(|word|word.count_ones() as usize).sum::<usize>(),
+            "wait_edges":self.waits.iter().flat_map(|row|row.iter()).map(|word|word.count_ones() as usize).sum::<usize>(),
             "merge_read_edges":self.merges.iter().map(|m|m.reads.len()).sum::<usize>(),
             "merge_birth_edges":self.merges.iter().map(|m|m.births.len()).sum::<usize>(),
             "merges":self.merges.iter().enumerate().filter(|(_,m)|m.opaque||!m.reads.is_empty()).map(|(table,m)|serde_json::json!({"table":table,"reads":m.reads,"births":m.births,"opaque":m.opaque})).collect::<Vec<_>>(),
@@ -332,5 +343,29 @@ fn transitive(rows: &mut [Vec<u64>]) {
                 }
             }
         }
+    }
+}
+
+fn share_rows(rows:Vec<Vec<u64>>, pool:&mut BTreeSet<std::rc::Rc<[u64]>>)->Box<[std::rc::Rc<[u64]>]> {
+    rows.into_iter().map(|row| {
+        if let Some(existing)=pool.get(row.as_slice()) {return existing.clone()}
+        let shared:std::rc::Rc<[u64]>=row.into();
+        pool.insert(shared.clone());shared
+    }).collect::<Vec<_>>().into_boxed_slice()
+}
+
+#[cfg(test)]
+mod shared_rows_tests {
+    use super::*;
+    #[test]
+    fn exact_rows_share_across_matrices_without_losing_high_bits() {
+        let mut pool=BTreeSet::new();
+        let influence=share_rows(vec![vec![1,1<<63],vec![0,0],vec![1,1<<63]],&mut pool);
+        let waits=share_rows(vec![vec![1,1<<63],vec![1,0]],&mut pool);
+        assert!(std::rc::Rc::ptr_eq(&influence[0],&influence[2]));
+        assert!(std::rc::Rc::ptr_eq(&influence[0],&waits[0]));
+        assert!(!std::rc::Rc::ptr_eq(&influence[0],&waits[1]));
+        drop(pool);drop(influence);
+        assert_eq!(waits[0].as_ref(),&[1,1<<63]);
     }
 }
