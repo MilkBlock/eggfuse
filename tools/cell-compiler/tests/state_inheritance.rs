@@ -61,3 +61,28 @@ fn empty_catalog_is_supported() {
     let plan = eggfuse_cell_compiler::state_plan::compile(&p).unwrap();
     assert_eq!(plan["implementations"], json!([]));
 }
+
+#[test]
+fn mixed_exports_share_old_slots_and_keep_new_constructor_results() {
+    let source = include_str!("fixtures/history-retention.egg")
+        .replace("(Mid E)", "(Mid E) (Extra E)")
+        .replace("((Mid x))", "((Left x) (Right x) (Extra x) (Mid x))")
+        .replace("((Left x) (Right x)) :ruleset c", "((Left x) (Right x) (Extra x)) :ruleset c");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let mut raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw.clone()).unwrap();
+    let plan=eggfuse_cell_compiler::state_plan::compile(&p).unwrap();
+    assert!(plan["contracts"].as_array().unwrap().iter().any(|c| c["exports"].as_array().is_some_and(|e| !e.is_empty()) && c["can_inherit"]==true));
+    raw["iterative_bake"]["state_plan"]=plan;
+    let inherited=run(seal(raw.clone()));
+    for choice in raw["iterative_bake"]["state_plan"]["implementations"].as_array_mut().unwrap() { *choice=json!("materialize"); }
+    let materialized=run(seal(raw));
+    assert_eq!(inherited.graph.export().unwrap(),materialized.graph.export().unwrap());
+    assert_eq!(inherited.snapshots,materialized.snapshots);
+    assert_eq!(inherited.binding_audit,materialized.binding_audit);
+    let a=materialized.report();let b=inherited.report();
+    assert!(b["stage_spine"]["stats"]["history_inherited_slots"].as_u64().unwrap()>0);
+    assert!(a["stage_spine"]["stats"]["history_slots_written"].as_u64().unwrap()>b["stage_spine"]["stats"]["history_slots_written"].as_u64().unwrap());
+    assert_eq!(a["key_lookup_calls"],b["key_lookup_calls"]);
+}

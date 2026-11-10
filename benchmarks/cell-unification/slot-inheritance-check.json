@@ -1,0 +1,464 @@
+{
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "scope": "standalone Cell CPU; work and semantic diagnostics, no timing or total allocator measurement",
+  "materialized_control": "same kernel, all state choices materialize; provenance recording disabled",
+  "changed_work": {
+    "/stage_spine/published_history_storage/layout_bytes": [
+      0,
+      328
+    ],
+    "/stage_spine/published_history_storage/layouts": [
+      0,
+      3
+    ],
+    "/stage_spine/published_history_storage/owner_payload_bytes": [
+      8896,
+      9920
+    ],
+    "/stage_spine/published_history_storage/owners": [
+      139,
+      155
+    ],
+    "/stage_spine/published_history_storage/rc_header_bytes": [
+      2224,
+      2528
+    ],
+    "/stage_spine/stats/history_capture_reads": [
+      1508,
+      1313
+    ],
+    "/stage_spine/stats/history_heap_frames": [
+      534,
+      392
+    ],
+    "/stage_spine/stats/history_inheritance_marks": [
+      0,
+      232
+    ],
+    "/stage_spine/stats/history_inherited_reads": [
+      0,
+      71
+    ],
+    "/stage_spine/stats/history_inherited_slots": [
+      0,
+      195
+    ],
+    "/stage_spine/stats/history_slots_written": [
+      1508,
+      1313
+    ]
+  },
+  "work_credit": {
+    "net_saved_operations": 229,
+    "counters": {
+      "stage_spine/stats/history_capture_reads": {
+        "before": 1508,
+        "after": 1313,
+        "saved": 195
+      },
+      "stage_spine/stats/history_heap_frames": {
+        "before": 534,
+        "after": 392,
+        "saved": 142
+      },
+      "stage_spine/stats/history_inheritance_marks": {
+        "before": 0,
+        "after": 232,
+        "saved": -232
+      },
+      "stage_spine/stats/history_inherited_reads": {
+        "before": 0,
+        "after": 71,
+        "saved": -71
+      },
+      "stage_spine/stats/history_slots_written": {
+        "before": 1508,
+        "after": 1313,
+        "saved": 195
+      }
+    },
+    "unit": "one observed operation per counter; equal weights, not elapsed time",
+    "performance_admission": "unvalidated proxy; a positive sum alone does not establish acceleration",
+    "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost",
+    "omitted_counters": "zero differences only"
+  },
+  "layouts": [
+    {
+      "state": 1,
+      "rule": 55,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 12,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 34,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 55,
+            "slot": 0
+          }
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 39,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 1
+          }
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 2
+          }
+        }
+      ]
+    },
+    {
+      "state": 40,
+      "rule": 55,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 44,
+      "rule": 137,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 1
+          }
+        }
+      ]
+    },
+    {
+      "state": 48,
+      "rule": 137,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 1
+          }
+        }
+      ]
+    },
+    {
+      "state": 51,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 55,
+            "slot": 0
+          }
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 53,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 137,
+            "slot": 1
+          }
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 137,
+            "slot": 0
+          }
+        }
+      ]
+    },
+    {
+      "state": 54,
+      "rule": 55,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 59,
+      "rule": 143,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 1
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 1
+          }
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 2
+          }
+        }
+      ]
+    },
+    {
+      "state": 60,
+      "rule": 55,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        }
+      ]
+    },
+    {
+      "state": 63,
+      "rule": 137,
+      "slots": [
+        {
+          "source": {
+            "Query": 0
+          },
+          "inherit": null
+        },
+        {
+          "source": {
+            "Effect": 2
+          },
+          "inherit": {
+            "back": 1,
+            "rule": 143,
+            "slot": 1
+          }
+        }
+      ]
+    }
+  ],
+  "runs_manifest": [
+    {
+      "argv": [
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/runtime-baseline",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/program-old.json",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/run-baseline",
+        "--local-congruence"
+      ],
+      "binary_sha256": "d5cee006a1b450f63e6485a27dd8b32fbd2ec82fa9a19b454d57287e26f1e4d2",
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c"
+    },
+    {
+      "argv": [
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/runtime-candidate",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/program-materialized.json",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/run-materialized",
+        "--local-congruence"
+      ],
+      "binary_sha256": "9664ea28b62aa444cff36c454fc89cd4fc4adfba99a02169e0eee218e40454ff",
+      "program_sha256": "64d3f0229f90bb5748fdef572392d31b2415dc896d7ae76df14824299e5100bd"
+    },
+    {
+      "argv": [
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/runtime-candidate",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/program.json",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-slot-inheritance/compact-final/run-candidate",
+        "--local-congruence"
+      ],
+      "binary_sha256": "9664ea28b62aa444cff36c454fc89cd4fc4adfba99a02169e0eee218e40454ff",
+      "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+    }
+  ],
+  "report_hashes": {
+    "baseline": "0c929b79e75eca8e7a6fc28b029fba2a96344410680cc39ee8d5a66694111380",
+    "materialized": "e11e8c2f0e9f63b441149aa90016d9b96f4e80451180fef7e6d273b03610866b",
+    "candidate": "4e8902666075d063e3bf1a70b2cbac83c298e6df75081821efcd8be3549306a0"
+  },
+  "sources": {
+    "baseline_binary": "d5cee006a1b450f63e6485a27dd8b32fbd2ec82fa9a19b454d57287e26f1e4d2",
+    "candidate_binary": "9664ea28b62aa444cff36c454fc89cd4fc4adfba99a02169e0eee218e40454ff",
+    "input_program": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c"
+  },
+  "resource_costs": {
+    "result_frame_bytes": 56,
+    "effect_plan_slot_bytes": 6376,
+    "published_history_storage": {
+      "materialized": {
+        "history_array_bytes": 0,
+        "layout_bytes": 0,
+        "layouts": 0,
+        "owner_payload_bytes": 8896,
+        "owners": 139,
+        "rc_header_bytes": 2224,
+        "result_array_bytes": 6560
+      },
+      "candidate": {
+        "history_array_bytes": 0,
+        "layout_bytes": 328,
+        "layouts": 3,
+        "owner_payload_bytes": 9920,
+        "owners": 155,
+        "rc_header_bytes": 2528,
+        "result_array_bytes": 6560
+      }
+    },
+    "compiled_layouts": 4,
+    "compiled_layout_bytes": 520
+  },
+  "limits": "Source witnesses retain all ordinary validation. Old-owner projection changes and widths above 64 materialize affected fields. Parents are leaf owners; no transitive runtime chain or runtime layout allocation. Published storage counts unique reachable owners, retained parents and referenced shared layouts, including array capacities and estimated Rc headers; excludes allocator rounding, pending work, unreferenced compiled layouts and unrelated graph storage. Bitmap arithmetic and byte costs are not calibrated by equal-weight Work. No speed or whole-process memory gain claimed.",
+  "checks": {
+    "history_tests": 11,
+    "compiler_state_witness_query_tests": 21,
+    "forced_hash_collision_state_tests": 3,
+    "minimal_runtime_check": "pass",
+    "all_features_compiler_check": "pass",
+    "semantic_acceptance": "pass",
+    "v1_compatibility": "1428 Runs and final state equal"
+  }
+}

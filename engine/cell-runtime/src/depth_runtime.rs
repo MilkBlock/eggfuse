@@ -863,6 +863,7 @@ impl Depth {
                 deepest = deepest.max(path.len);
             }
             result.inputs.push(Input {
+                from_history:false,
                 op,
                 back: path.map_or(1, |p| p.len as usize),
                 fact: Some(f),

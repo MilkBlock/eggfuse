@@ -12,6 +12,7 @@ use std::{num::NonZeroU32, rc::Rc};
 /// Static dispatch keeps the inline case allocation-free.
 pub(crate) trait CompletedEffects {
     const DEFERRED_KEYS: bool;
+    fn forwarded(&self) -> u64 { 0 }
     fn get(&self, operation: usize) -> Option<Dependency>;
     #[cfg(feature = "sparse-cells")]
     fn output_frame(&mut self) -> Option<&mut Effects>;
@@ -28,8 +29,10 @@ impl CompletedEffects for SingleEffect {
     fn finish(self, _: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> { None }
 }
 
+#[derive(Clone, Copy)]
+struct EffectSlot { index:NonZeroU32, history:Option<u8> }
 pub(crate) struct EffectPlan {
-    slots: Vec<Option<NonZeroU32>>,
+    slots: Vec<Option<EffectSlot>>,
     width: usize,
     pub outputs: usize,
 }
@@ -55,8 +58,8 @@ impl EffectPlan {
             if let Some(Site::Effect(op)) = output.receipt_source { plan.require(op); }
         }
         #[cfg(feature = "iterative-bake")]
-        for site in p.iterative.exports(rule) {
-            if let Site::Effect(op) = *site { plan.require(op); }
+        for (slot,site) in p.iterative.exports(rule).iter().enumerate() {
+            if let Site::Effect(op) = *site { plan.require(op); if slot < 64 { plan.slots[op].as_mut().unwrap().history=Some(slot as u8); } }
         }
         if full {
             for op in 0..cell.template.ops.len() {
@@ -65,10 +68,11 @@ impl EffectPlan {
         }
         plan
     }
+    pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<Option<EffectSlot>>() }
     fn require(&mut self, op: usize) {
         if self.slots[op].is_none() {
             self.width += 1;
-            self.slots[op] = Some(NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap());
+            self.slots[op] = Some(EffectSlot { index:NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap(), history:None });
         }
     }
 }
@@ -81,20 +85,33 @@ pub(crate) struct Effects {
     keep: usize,
     probes: u64,
     targets: u64,
+    forwarded: u64,
 }
 impl Effects {
     pub fn begin(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
         let first = buffer.len();
         buffer.resize(first + plan.width, None);
         let keep = if keep { plan.outputs } else { 0 };
-        Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0 }
+        Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded:0 }
     }
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
-        let slot = plan.slots.get(operation)?.as_ref()?.get() as usize - 1;
+        let slot = plan.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
         self.targets += 1;
         Some(&mut self.buffer[self.first + slot])
+    }
+    #[cfg(feature = "iterative-bake")]
+    pub fn record_handoff(&mut self, operation:usize, receipt:Dependency, input:&crate::result_handoff::Input, original:bool, track:bool) {
+        let Some(plan)=&self.plan else { return };
+        self.probes+=1;
+        let Some(Some(slot))=plan.slots.get(operation) else { return };
+        self.targets+=1;
+        self.buffer[self.first+slot.index.get() as usize-1]=Some(receipt);
+        // Provenance rides in the existing operation-to-slot descriptor: no
+        // second index or per-instance source map is queried or maintained.
+        if track && input.from_history && input.back==1 && original
+            && let Some(history)=slot.history { self.forwarded |= 1<<history; }
     }
     pub fn record(&mut self, operation: usize, receipt: Dependency) {
         if let Some(slot) = self.slot(operation) { *slot = Some(receipt); }
@@ -122,9 +139,10 @@ impl Effects {
     }
 }
 impl CompletedEffects for Effects {
+    fn forwarded(&self) -> u64 { self.forwarded }
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
-        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.get() as usize - 1;
+        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
         self.buffer[self.first + slot]
     }
     #[cfg(feature = "sparse-cells")]

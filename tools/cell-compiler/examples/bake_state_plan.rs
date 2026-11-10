@@ -3,12 +3,15 @@ use eggfuse_cell_runtime::{program::Program, checksum::artifact_digest};
 use std::{fs, time::Instant};
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    let [input, output, audit] = args.as_slice() else { return Err("expected INPUT OUTPUT AUDIT".into()) };
+    let [input, output, audit, rest @ ..] = args.as_slice() else { return Err("expected INPUT OUTPUT AUDIT".into()) };
     let start = Instant::now();
     let mut p = Program::parse(serde_json::from_slice(&fs::read(input)?)?)?;
     let parsed = start.elapsed().as_secs_f64();
     let clock = Instant::now();
-    let plan = eggfuse_cell_compiler::state_plan::compile(&p)?;
+    let mut plan = eggfuse_cell_compiler::state_plan::compile(&p)?;
+    if rest.first().is_some_and(|s| s == "materialize") {
+        for value in plan["implementations"].as_array_mut().unwrap() { *value = "materialize".into(); }
+    }
     let compile = clock.elapsed().as_secs_f64();
     p.artifact["iterative_bake"]["state_plan"] = plan;
     p.artifact.as_object_mut().unwrap().remove("sha256");

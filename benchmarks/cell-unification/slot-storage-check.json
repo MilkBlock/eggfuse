@@ -1,0 +1,67 @@
+{
+  "scope": "standalone Cell CPU, final published history owners and all compiled slot layouts; no timing",
+  "execution": {
+    "runs": 1428,
+    "hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    }
+  },
+  "samples": {
+    "frame88_reference": {
+      "frame_bytes": 88,
+      "published": {
+        "history_array_bytes": 0,
+        "layout_bytes": 552,
+        "layouts": 5,
+        "owner_payload_bytes": 13640,
+        "owners": 155,
+        "rc_header_bytes": 2560,
+        "result_array_bytes": 8192
+      },
+      "published_bytes": 24944,
+      "compiled_layouts": 8,
+      "compiled_layout_bytes": 1016,
+      "combined_bytes": 25328,
+      "report_sha256": "3526f48d24312d45125c91a24323fc8c6905a7cd0da134b27dab5c6cccfd0d9b"
+    },
+    "materialized": {
+      "frame_bytes": 56,
+      "published": {
+        "history_array_bytes": 0,
+        "layout_bytes": 0,
+        "layouts": 0,
+        "owner_payload_bytes": 8896,
+        "owners": 139,
+        "rc_header_bytes": 2224,
+        "result_array_bytes": 6560
+      },
+      "published_bytes": 17680,
+      "compiled_layouts": 4,
+      "compiled_layout_bytes": 520,
+      "combined_bytes": 18200,
+      "report_sha256": "e11e8c2f0e9f63b441149aa90016d9b96f4e80451180fef7e6d273b03610866b"
+    },
+    "candidate": {
+      "frame_bytes": 56,
+      "published": {
+        "history_array_bytes": 0,
+        "layout_bytes": 328,
+        "layouts": 3,
+        "owner_payload_bytes": 9920,
+        "owners": 155,
+        "rc_header_bytes": 2528,
+        "result_array_bytes": 6560
+      },
+      "published_bytes": 19336,
+      "compiled_layouts": 4,
+      "compiled_layout_bytes": 520,
+      "combined_bytes": 19480,
+      "report_sha256": "4e8902666075d063e3bf1a70b2cbac83c298e6df75081821efcd8be3549306a0"
+    }
+  },
+  "bytes_saved": 5848,
+  "fractional_reduction": 0.23089071383449145,
+  "inheritance_over_materialized_bytes": 1280,
+  "inheritance_over_materialized_fraction": 0.0703296703296703,
+  "limitations": "Excludes allocator rounding, peak/transient or unpublished cursor storage, program JSON and unrelated graph data. Rc headers are estimated. Whole-process compression is not established."
+}

@@ -1,5 +1,5 @@
 //! Finite state implementations extracted by the compile-time Cell egraph.
-//! Equivalence is restricted to an empty export transfer at an original Run boundary.
+//! Plans classify inherited and fresh results at original Run boundaries.
 use eggfuse_cell_runtime::{program::Program, checksum::artifact_digest};
 use serde_json::{Value, json};
 
@@ -26,7 +26,7 @@ pub fn compile(p: &Program) -> Result<Value, Box<dyn std::error::Error>> {
         implementations.push(if term.starts_with("(Inherit ") { "inherit" } else { "materialize" });
         extracted.push(term);
     }
-    Ok(json!({"schema":"eggfuse-cell-state-plan/v1", "contracts":contracts,
+    Ok(json!({"schema":"eggfuse-cell-state-plan/v2", "contracts":contracts,
         "implementations":implementations,"extracted":extracted,
         "cost_scope":"history transfer containers only; not latency or whole-cell cost"}))
 }

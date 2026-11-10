@@ -2879,6 +2879,16 @@ impl Executor {
         let spine = self.stage_spine.report_with(self.entry_schedule.publications());
         #[cfg(not(feature = "sparse-cells"))]
         let spine = self.stage_spine.report();
+        #[cfg(feature = "iterative-bake")]
+        let spine = {
+            let mut spine = spine;
+            let (layouts,bytes) = self.graph.program.iterative.layout_storage();
+            // Includes every compiled layout, also those not currently retained
+            // by publications. Published-history layout bytes are a subset.
+            spine["compiled_history_layouts"] = layouts.into();
+            spine["compiled_history_layout_bytes"] = bytes.into();
+            spine
+        };
         let view_rule_profile=self.profile_queries.then(||{
             self.graph.program.view_blocks.iter().flat_map(|b|b.producer.members.iter().chain(&b.consumers.members))
                 .map(|m|{let (calls,seconds,visits,answers)=self.query_profile[m.rule];

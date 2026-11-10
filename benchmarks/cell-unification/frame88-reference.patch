@@ -1,0 +1,82 @@
+--- a/engine/cell-runtime/Cargo.toml
++++ b/engine/cell-runtime/Cargo.toml
+@@ -38,7 +38,7 @@
+ serde = { version = "1", features = ["derive", "rc"] }
+ serde_json = { version = "1", features = ["float_roundtrip"] }
+ sha2 = "0.10"
+-smallvec = { version = "1", features = ["union"] }
++smallvec = "1"
+ rustc-hash = "2.1"
+ rayon = "1"
+ mimalloc = { version = "0.1", default-features = false }
+--- a/engine/cell-runtime/src/cell_results.rs
++++ b/engine/cell-runtime/src/cell_results.rs
+@@ -73,20 +73,21 @@
+ #[derive(Clone, Debug)]
+ pub(crate) struct Results {
+     rule: usize,
+-    slots: SmallVec<[Option<Dependency>; 1]>,
++    slots: SmallVec<[Option<Dependency>; 2]>,
+     projection: Option<Rc<SlotLayout>>,
+     parent: Option<Rc<Trail>>,
++    fresh: u64,
+     forwarded: u64,
+ }
+ impl Results {
+     pub fn new(rule: usize) -> Self {
+-        Self { rule, slots: SmallVec::new(), projection:None, parent:None, forwarded:0 }
++        Self { rule, slots: SmallVec::new(), projection:None, parent:None, fresh:0, forwarded:0 }
+     }
+     /// The compiled capture width avoids geometric growth of tiny arrays.
+     /// Called only after the first present local result, so empty captures
+     /// never allocate a backing array.
+     pub fn reserve_local(&mut self, width: usize) {
+-        self.slots.reserve_exact(width.saturating_sub(self.slots.len()));
++        let _ = width;
+     }
+     /// Return only the padding written for missing earlier results. Captures
+     /// are sorted by the shared layout; a present result is written once.
+@@ -94,7 +95,12 @@
+         debug_assert_eq!(self.rule, port.rule(), "Cell result belongs to another definition");
+         // Inherited slots consume no local storage. Missing local results
+         // retain None padding, so no second per-instance presence bitmap is needed.
+-        let slot = self.local_slot(port.slot());
++        let slot = port.slot();
++        if self.projection.is_some() {
++            self.fresh |= 1u64 << slot;
++            self.slots.push(Some(result));
++            return 0;
++        }
+         debug_assert!(slot >= self.slots.len(), "ordered, distinct Cell captures");
+         let padding = slot - self.slots.len();
+         self.slots.resize(slot, None);
+@@ -113,7 +119,8 @@
+                 let Trail::One(parent) = self.parent.as_deref()? else { unreachable!() };
+                 return parent.get(self.projection.as_ref()?.sources[port.slot()]?);
+             }
+-            return self.slots.get(self.local_slot(port.slot())).copied().flatten();
++            if self.fresh & bit == 0 { return None; }
++            return self.slots.get((self.fresh & (bit-1)).count_ones() as usize).copied().flatten();
+         }
+         self.slots.get(port.slot()).copied().flatten()
+     }
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -735,7 +735,6 @@
+                 read.port = Some(port(read.rule, read.donor));
+             }
+         }
+-        let mut layouts = BTreeMap::new();
+         for node in &mut nodes {
+             if node.supply.is_empty() { continue; }
+             let width = node.supply.iter().map(|c| c.port.slot()+1).max().unwrap();
+@@ -750,8 +749,7 @@
+             }
+             if layout.iter().any(Option::is_some) {
+                 let rule = node.supply[0].port.rule();
+-                node.layout = layouts.entry((rule,layout.clone()))
+-                    .or_insert_with(|| SlotLayout::compile(rule,layout)).clone();
++                node.layout = SlotLayout::compile(rule,layout);
+             }
+         }
+         let mut by_rule = vec![vec![]; p.rules.len()];
