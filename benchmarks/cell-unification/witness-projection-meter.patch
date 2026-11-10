@@ -1,0 +1,22 @@
+diff --git a/engine/cell-runtime/src/stage_spine.rs b/engine/cell-runtime/src/stage_spine.rs
+index 5f89cf7e..002f4b0b 100644
+--- a/engine/cell-runtime/src/stage_spine.rs
++++ b/engine/cell-runtime/src/stage_spine.rs
+@@ -528,6 +528,9 @@ pub struct Stats {
+     cell_query_entries: u64,
+     cell_query_steps: u64,
+     cell_query_result_writes: u64,
++    cell_query_witness_writes: u64,
++    cell_query_witness_checks: u64,
++    cell_query_witness_dispatches: u64,
+     guard_rejections: u64,
+     bindings: u64,
+     steps_executed: u64,
+@@ -2044,6 +2047,7 @@ impl Programs {
+                             (&mut self.structural, row.witness),
+                         )? else { return Ok(None); };
+                         epoch = epoch.max(found.epoch);
++                        self.stats.cell_query_witness_writes += 1;
+                         found_witnesses.push((step.atom, found.witness));
+                         Ok(Some(found.values.last().unwrap().clone()))
+                     }

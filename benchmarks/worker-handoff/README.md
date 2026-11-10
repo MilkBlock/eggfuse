@@ -470,3 +470,41 @@ retain deletion, union, aborted RHS, cross-stage inheritance and winner-order
 coverage. Saved evidence is `../cell-unification/direct-receipt-donors-check.json`.
 Use `check_elided_receipts.py --mode donors` with the fresh baseline/candidate
 exports and the required semantic acceptance JSON to reproduce the work check.
+
+## Rejected query-witness projection experiment
+
+The existing QueryFacts demand selected three specialized query collectors:
+no intermediate witness list for None, one inline witness for One, and the old
+list for All/Ports/Tracked. Source queries, guards, epochs, required final facts
+and publication stayed unchanged. The candidate patch and metering-only control
+patch are saved in `../cell-unification/`; neither is installed in the kernel.
+Both patches apply to 07c62ee5 individually (do not apply them on top of each
+other). The control adds three counters to the original collector. The timing
+baseline is unmodified 07c62ee5, built with the same release feature set.
+
+Sum-bits intermediate witness writes fell 2,178 -> 131, but the new path added
+487 single-atom comparisons and 870 demand dispatches. Charging all three yields
+690 fewer equal-weight operations. `check_witness_projection.py` verifies the
+metered control against the saved unmodified execution and checks that all other
+normalized work is unchanged. Exact final state, all 1,428 Run signatures and
+native choice diagnosis agree. Eleven Entry publication tests, seven query
+receipt tests, eleven witness-source tests, three closed-alias tests and four
+credit tests passed, including empty/single demand and added-cost charging.
+
+The user requested a speed gate before further work. One warmup and seven
+alternating pairs per mode, using `time_alias_scopes.py`, produced:
+
+| Mode | Inference median ms (old -> trial) | Wall median ms (old -> trial) |
+| --- | ---: | ---: |
+| normal | 25.521 -> 26.017 | 139.586 -> 142.702 |
+| scoped | 31.598 -> 31.230 | 173.496 -> 174.240 |
+
+Paired inference ratios were 1.0153 [0.9847, 1.0343] and 1.0027
+[0.9020, 1.0277], respectively (95% bootstrap intervals). Neither establishes a
+speed benefit; wall-time intervals also cross 1. The small work-count saving
+is insufficient evidence of acceleration. Runtime and credit changes were
+withdrawn, retaining only reproducible patches and text evidence. No Raytrace
+campaign was run. The user then directed further work toward storage compression
+and deferred hotspot investigation until the parallel branch returns instances
+directly. `query-witness-projection-timing.json` contains individual samples and
+binary hashes; `query-witness-projection-check.json` contains work/semantic checks.
