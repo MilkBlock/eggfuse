@@ -297,3 +297,20 @@ fn constructor_alias_union_keeps_constructor_access_but_not_sort_wide_fence() {
     let mut old=executor(&source,false);let mut new=executor(&source,true);
     old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
 }
+
+#[test]
+fn matched_constructor_alias_removes_only_its_rhs_access() {
+    for deletes in [false,true] {
+        let mut source=String::from("(datatype E (N i64) (F E)) (ruleset r) (ruleset retire)\n(rule ((= u (F x))) ((F x)) :ruleset r)\n(F (N 0)) (run-schedule (run r))");
+        if deletes {source=source.replace("(F (N 0))", "(rule ((= u (F x))) ((delete (F x))) :ruleset retire)\n(F (N 0))").replace("(run-schedule (run r))", "(run-schedule (seq (run r) (run retire)))");}
+        let p=program(&source);
+        let f=p.tables.iter().position(|t|t.name=="F").unwrap();
+        let rid=p.sets["r"][0];
+        let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+        assert!(plan.rule_demands[rid].query.contains(&f));
+        assert_eq!(plan.rule_demands[rid].rhs.contains(&f),deletes);
+        assert_eq!(plan.rule_demands[rid].accesses.contains(&f),deletes);
+        let mut old=executor(&source,false);let mut new=executor(&source,true);
+        old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
+    }
+}

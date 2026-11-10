@@ -242,3 +242,44 @@ The frozen sum-bits full forecast is exactly unchanged versus the saved prior
 plan: it offers no extra scope-reduction opportunity here. No speedup, additional
 sum-bits repair saving or broad runtime compression is claimed. This extends
 what typed Cell facts can prove, without treating occurrence counts as proof.
+
+## Reuse executable constructor-elision proofs in forecasts
+
+RHS scope derivation now consults the same validated static_skip mask as the
+ordinary Cell executor. Only constructor Let operations already skipped by that
+executor stop contributing new RHS demands. Mandatory query reads remain; an
+actual earlier constructor operation still contributes its access. Set, mutable
+reads, Hide and non-elided operations retain their previous requirements. The
+existing global deletion restrictions on alias proofs remain authoritative.
+
+Against d9ae41af, the frozen sum-bits catalog changes 63 rules, removing 72 RHS
+and 73 direct-access table memberships (overlapping categories, not additive
+saved work). The shared demand payload plus estimated Rc headers decreases
+82,112 -> 64,160 bytes; handles remain 27,936 bytes. These are stored prediction
+structures, not whole-process memory. `alias-demand-check.json` records exact
+subset checks, unchanged query demands and the before/after source hashes.
+
+The scoped release comparison uses an isolated control built from current
+sources with completion_access.rs restored to d9ae41af, and the candidate built
+with the new proof use. Both use sparse-cells,view-ports,storage-metrics. Their
+1,428 Run signatures/final state match and choice_diagnosis passes. Scoped work
+counters are identical: this workload's pending windows do not exercise the
+newly removed demands. Thirty staged/merge/witness tests pass, including a new
+matched-constructor test with/without an active deletion rule. No runtime repair
+reduction is claimed for sum-bits.
+
+At the user's explicit timing request, `time_alias_scopes.py` ran one warmup and
+seven interleaved pairs per mode, without compilation during measurement.
+`alias-scope-timing.json` saves every sample and binary/program hashes. Normal
+inference medians are 26.117/26.074 ms; scoped inference 31.739/31.433 ms.
+Normal process medians are 145.816/143.055 ms; scoped 173.849/182.791 ms. Paired
+candidate/control inference ratios are 1.0048 [0.9956,1.0116] and 0.9982
+[0.9142,1.0154]; paired process ratios 1.0038 [0.9798,1.0115] and 1.0118
+[0.9947,1.0464]. No stable speedup is established. The unpaired scoped process
+median increases 5.1%, while the paired estimate increases 1.2% with uncertainty
+crossing parity. One short workload cannot establish a general regression bound.
+
+Reproduce using the script's --baseline, --candidate, --program, --root (fresh
+directory) and --output arguments. Both binaries must be frozen ordinary
+release builds; artifacts under out/ are not tracked. This experiment measures
+the standalone Cell CPU, not native egglog speed.

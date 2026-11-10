@@ -41,7 +41,16 @@ impl Rule {
         let mut rhs = BTreeSet::new();
         let mut opaque_rhs = eq_sorts(&template.sorts).1;
         let mut unions = BTreeSet::new();
-        for op in template.ops.iter() {
+        for (operation,op) in template.ops.iter().enumerate() {
+            // The same validated alias mask used by ordinary RHS execution
+            // proves this constructor is supplied by a matched/earlier result.
+            // Keep query demands above and the original source's access below;
+            // only the already-elided operation contributes no new RHS demand.
+            if matches!(op,Op::Let(_,Call::Table(t),_) if p.tables[*t].constructor)
+                && p.known_results.static_skip.get(rid)
+                    .and_then(|mask|mask.get(operation))==Some(&true) {
+                continue;
+            }
             match op {
                 // Existing ordered Cell aliases prove identical values, not
                 // merely a possible future union. Such a union adds no repair
