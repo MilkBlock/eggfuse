@@ -1,0 +1,29 @@
+{
+  "scope": "Standalone Cell CPU; complete Raytrace; not native egglog",
+  "candidate_commit": "13cfd2358cc0b43f0eebdd16bd53d2ad3c28c009",
+  "baseline_commit": "efc06d49 (runtime implementation 14e112c7; binary recorded at f4fd21cb)",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "cpu": "Apple M3 Max",
+  "logical_cpus": 16,
+  "features": "sparse-cells,view-ports,storage-metrics; ordinary release; no allocation/profiling instrumentation",
+  "files": {
+    "baseline": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/runtime-candidate",
+      "sha256": "f07e3a21e945c9cd29c9cc5d2f787802d788dcbcbeeeb6e48f4f92a6ae4657a3",
+      "bytes": 5210832
+    },
+    "candidate": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-query-workers/runtime-candidate",
+      "sha256": "b3669a91c6347885aae15d7db3a8b50fb825c6cb92d288edffec8032b6bd9917",
+      "bytes": 5272864
+    },
+    "program": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "sha256": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601",
+      "bytes": 20034122
+    }
+  },
+  "input": "Same regenerated named Raytrace + frozen 64-block catalog + ownership query classes as raytrace-thread-bottlenecks; no source/catalog retraining.",
+  "scope_limit": "Only query workers enabled; no guard-workers/overlap/scoped-execution. 1 is inline; 2/4 are pool sizes plus coordinator.",
+  "semantics": "Exact final graph and all ordered Run signatures against old_serial; no independent native Raytrace proof."
+}
