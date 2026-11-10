@@ -51,3 +51,22 @@ as a new scoring term would double-charge the same creation. Future allocation
 measurements should distinguish owner and slot-buffer storage without changing
 credits merely to improve a score. The next target is captured-slot demand and
 lifetime, not an unmeasured allocator substitution.
+
+## Capture demand audit
+
+The measured artifact has only two states with nonempty supply. State 12
+(rule 143) retains `Query(0)` (Get witness) and `Effect(1)` (Single result).
+State 33's completed consumer (rule 137) uses both at back=1: output operation 1
+reads the query witness, and output operation 2 reads the constructor result.
+Its checked completion sources are exactly `(143,0)` and `(143,1)`. The relevant
+artifact entries are preserved in `sum-bits-work.json`; neither producer slot
+is dead, and the query read/write cannot simply be removed.
+
+The remaining structural opportunity is the consumer's result-owner wrapper:
+its entire output frame is already a static projection of that donor. Explore
+publishing through the original owner plus that projection, rather than
+allocating a fresh owner only to contain a projected Results value. This needs
+a view-aware lifetime/slot lookup design; it is not the rejected unique-owner
+mutation experiment. Rule-specific ResultPort identity, deferred publication,
+actual foreign constructor addresses and retirement checks remain mandatory.
+No wrapper allocations have been eliminated by this audit.

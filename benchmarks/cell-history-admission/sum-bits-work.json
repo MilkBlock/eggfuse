@@ -156,5 +156,75 @@
     "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
     "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
   },
-  "next_round_uses_measured_candidate": true
+  "next_round_uses_measured_candidate": true,
+  "capture_demand_audit": {
+    "producer_rule": 143,
+    "producer_state": 12,
+    "producer_supply": [
+      {
+        "Query": 0
+      },
+      {
+        "Effect": 1
+      }
+    ],
+    "consumer_state": 33,
+    "consumer_program": {
+      "reuse": [
+        {
+          "equal_output": false,
+          "op": 1,
+          "back": 1,
+          "rule": 143,
+          "donor": {
+            "Query": 0
+          }
+        },
+        {
+          "equal_output": true,
+          "op": 2,
+          "back": 1,
+          "rule": 143,
+          "donor": {
+            "Effect": 1
+          }
+        }
+      ],
+      "complete": true
+    },
+    "consumer_completion": {
+      "rule": 137,
+      "back": 1,
+      "outputs": [
+        [
+          {
+            "Effect": 1
+          },
+          223,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          323,
+          1
+        ]
+      ],
+      "sources": [
+        [
+          143,
+          0
+        ],
+        [
+          143,
+          1
+        ]
+      ],
+      "composed_projections": [],
+      "remaining_effects": 0,
+      "publication": "original-run-after-completion"
+    },
+    "conclusion": "Both retained producer slots are read by the completed consumer; deleting either slot is not justified."
+  }
 }
