@@ -549,18 +549,23 @@ pub(crate) struct Switch {
     by_rule: DispatchRows,
     roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
-    pub exports: Vec<Vec<Site>>,
+    exports: Rows<Site>,
     pub depth: usize,
 }
-/// CSR rows preserve pivot holes and direct rule indexing without one allocation
+type DispatchRows = Rows<Option<NonZeroUsize>>;
+
+/// CSR rows preserve slots and direct rule indexing without one allocation
 /// and a fat pointer per rule. Empty adjacent rows share the same offset.
-#[derive(Clone, Debug, Default)]
-struct DispatchRows {
+#[derive(Clone, Debug)]
+struct Rows<T> {
     offsets: Box<[usize]>,
-    slots: Box<[Option<NonZeroUsize>]>,
+    slots: Box<[T]>,
 }
-impl DispatchRows {
-    fn compile(rows: Vec<Vec<Option<NonZeroUsize>>>) -> Self {
+impl<T> Default for Rows<T> {
+    fn default() -> Self { Self { offsets: Box::new([]), slots: Box::new([]) } }
+}
+impl<T> Rows<T> {
+    fn compile(rows: Vec<Vec<T>>) -> Self {
         if rows.is_empty() { return Self::default(); }
         let mut offsets = Vec::with_capacity(rows.len()+1);
         let mut slots = Vec::new();
@@ -571,7 +576,7 @@ impl DispatchRows {
         }
         Self { offsets: offsets.into_boxed_slice(), slots: slots.into_boxed_slice() }
     }
-    fn get(&self, rule: usize) -> Option<&[Option<NonZeroUsize>]> {
+    fn get(&self, rule: usize) -> Option<&[T]> {
         let end = *self.offsets.get(rule.checked_add(1)?)?;
         Some(&self.slots[self.offsets[rule]..end])
     }
@@ -618,6 +623,15 @@ impl Default for Terminal {
     }
 }
 impl Switch {
+    pub(crate) fn exports(&self, rule: usize) -> &[Site] {
+        self.exports.get(rule).unwrap_or(&[])
+    }
+    pub(crate) fn export_storage(&self) -> serde_json::Value {
+        serde_json::json!({
+            "interfaces":(0..self.exports.len()).map(|r|(r,self.exports.get(r).unwrap())).filter(|(_,s)|!s.is_empty()).collect::<Vec<_>>(),
+            "directory_bytes":std::mem::size_of_val(self.exports.offsets.as_ref()),
+            "slot_bytes":std::mem::size_of_val(self.exports.slots.as_ref())})
+    }
     pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
         serde_json::json!({"rule_rows":self.by_rule.len(),
             "rule_slots":self.by_rule.slots.len(),
@@ -805,6 +819,8 @@ impl Switch {
         while roots.last() == Some(&None) { roots.pop(); }
         let by_rule = DispatchRows::compile(by_rule);
         let roots = roots.into_boxed_slice();
+        while exports.last().is_some_and(Vec::is_empty) { exports.pop(); }
+        let exports = Rows::compile(exports);
         Self {
             reuse_results,
             congruence,
@@ -917,6 +933,21 @@ mod tests {
         assert_eq!(rows.get(4), None);
         assert_eq!(rows.get(usize::MAX), None);
         assert_eq!(DispatchRows::compile(vec![]).get(0), None);
+    }
+    #[test]
+    fn compact_exports_preserve_slot_order_and_missing_rules() {
+        let mut switch = Switch::default();
+        assert!(switch.exports(0).is_empty());
+        switch.exports = Rows::compile(vec![vec![], vec![Site::Query(0), Site::Effect(2)], vec![]]);
+        assert!(switch.exports(0).is_empty());
+        assert_eq!(switch.exports(1), &[Site::Query(0), Site::Effect(2)]);
+        assert_eq!(switch.exports(1).binary_search(&Site::Effect(2)), Ok(1));
+        assert!(switch.exports(2).is_empty());
+        assert!(switch.exports(3).is_empty());
+        assert!(switch.exports(usize::MAX).is_empty());
+        let clone = switch.clone();
+        drop(switch);
+        assert_eq!(clone.exports(1), &[Site::Query(0), Site::Effect(2)]);
     }
     #[test]
     fn packed_dispatch_preserves_holes_roots_and_replay() {

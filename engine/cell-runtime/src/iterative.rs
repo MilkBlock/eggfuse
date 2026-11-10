@@ -104,6 +104,8 @@ impl State {
     }
 }
 impl Catalog {
+    /// Retained export directory and slots; excludes allocator overhead.
+    pub fn export_storage(&self) -> J { self.switch.export_storage() }
     /// Retained switch dispatch arrays; excludes allocator overhead.
     pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
     /// Retained path storage only; excludes tree-node overhead and other catalog data.
@@ -300,7 +302,7 @@ impl Catalog {
     }
     pub(crate) fn tracks_slots(&self) -> bool { self.track_slots }
     pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
-        self.switch.exports.get(rid).map_or(&[], Vec::as_slice)
+        self.switch.exports(rid)
     }
     pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
         self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
