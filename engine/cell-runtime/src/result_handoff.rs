@@ -977,8 +977,8 @@ impl Switch {
             let (donor,mapping)=direct_sources[id].as_ref().unwrap();
             let sources=exports[rule].iter().map(|site|mapping.get(site).map(|&site|port(*donor,site))).collect::<Vec<_>>();
             if sources.len()>64 || sources.iter().any(Option::is_none) {continue;}
-            let layout=layouts.entry((rule,sources.clone())).or_insert_with(||SlotLayout::compile(rule,sources)).clone()
-                .expect("single checked donor rule");
+            let Some(layout)=layouts.entry((rule,sources.clone()))
+                .or_insert_with(||SlotLayout::compile(rule,sources)).clone() else {continue};
             let cell=Definition::new(p,rule).unwrap();
             let outputs=exports[rule].iter().enumerate().map(|(slot,&site)|(site,cell.relation(site).unwrap().table,slot)).collect();
             let required_sources=layout.sources.iter().flatten().fold(0,|mask,p|mask | (1u64<<p.slot()));
