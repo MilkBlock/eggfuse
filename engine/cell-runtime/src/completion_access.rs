@@ -4,9 +4,9 @@ use super::*;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct Rule {
-    pub query: Vec<usize>,
-    pub rhs: Vec<usize>,
-    pub accesses: Vec<usize>,
+    pub query: std::rc::Rc<[usize]>,
+    pub rhs: std::rc::Rc<[usize]>,
+    pub accesses: std::rc::Rc<[usize]>,
     /// Shared Cell operand wiring and ordered source positions. The concrete
     /// closure must still be proved; None retains the ordinary scoped path.
     pub(crate) pure: Option<std::rc::Rc<crate::cell::BoundRhs>>,
@@ -76,7 +76,7 @@ impl Rule {
                 }
             }
         }
-        let accesses = if opaque_rhs {
+        let accesses: Vec<usize> = if opaque_rhs {
             (0..n).collect()
         } else {
             rhs.iter().copied().collect()
@@ -93,7 +93,7 @@ impl Rule {
         Self {
             query: query.into_iter().collect(),
             rhs: rhs.into_iter().collect(),
-            accesses,
+            accesses: accesses.into(),
             pure: None,
         }
     }

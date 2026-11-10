@@ -104,3 +104,30 @@ Reproduce with the emitter above and compact JSON serialization on both commits;
 use separate checkout/target directories. The executor and source artifacts
 are unchanged, so saved semantic exports remain applicable. Tests verify
 contract preservation, route tables, vector roundtrip and forged-data rejection.
+
+## Runtime obligation sharing
+
+`completion_plan::Plan::derive` now interns identical immutable query/RHS/access
+lists across rules using exact ordered contents. Runtime rule demands reference
+`Rc<[usize]>` owners instead of allocating independent Vec payloads. The
+compile-local interning registry is dropped before execution; no runtime
+reverse-consumer list or parallel fact graph is added. All demand lookups and
+conservative repair checks remain authoritative and unchanged.
+
+On the same frozen sum-bits artifact, 1,746 lists share 744 owners. Logical
+payload changes from 496,824 bytes to 82,112 bytes including estimated Rc
+headers; shared handles occupy another 27,936 bytes. This excludes allocator
+rounding, transient interning, other Plan members and whole-process RSS. The
+full serialized forecast remains exactly equal to the previous plan. This is
+runtime representation compression, not fewer repair operations or measured
+speedup. See `shared-demands-check.json`.
+
+Reproduce the census using `cargo run -p eggfuse-cell-compiler --example
+inspect_completion_storage -- PROGRAM OUTPUT`. The output includes both the
+full derived Plan (for exact comparison with the expanded v2 forecast) and its
+storage census. Existing staged/merge tests check source Run behavior; a
+focused test checks shared pointer identity and ownership after cloning/dropping
+the plan. The normal runtime's 1,428 sum-bits Runs and final state agree with the
+frozen prior execution, and choice_diagnosis reports pass. No performance
+campaign was run. The next opportunity is to make the same typed scopes support
+actual work elimination, rather than treating shared storage as a repair win.

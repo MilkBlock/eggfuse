@@ -307,7 +307,7 @@ impl Executor {
         let state = self.completion.as_mut().unwrap();
         for (rid, _) in &patch.groups {
             state.stats.rhs_selected_rules += 1;
-            for &table in &plan.rule_demands[*rid].rhs {
+            for &table in plan.rule_demands[*rid].rhs.iter() {
                 state.stats.rhs_demand_probes += 1;
                 if !state.rhs_seen[table] {
                     state.rhs_seen[table] = true;

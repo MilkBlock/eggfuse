@@ -206,13 +206,22 @@ impl Plan {
         plan.rule_demands = (0..p.rules.len())
             .map(|rid| access::Rule::derive(p, &plan, rid, &sorts))
             .collect();
+        // Identical conservative obligations share immutable storage across
+        // rules and stages. Equality is exact, never inferred from a digest.
+        let mut sets = BTreeSet::<std::rc::Rc<[usize]>>::new();
+        for demand in &mut plan.rule_demands {
+            for list in [&mut demand.query, &mut demand.rhs, &mut demand.accesses] {
+                if let Some(shared) = sets.get(list.as_ref()) { *list = shared.clone(); }
+                else { sets.insert(list.clone()); }
+            }
+        }
         for (name, rules) in &p.sets {
             let mut tables = BTreeSet::new();
             let mut queries = BTreeSet::new();
             for &rid in rules {
                 let demand = &plan.rule_demands[rid];
                 queries.extend(demand.query.iter().copied());
-                tables.extend(demand.query.iter().chain(&demand.rhs).copied());
+                tables.extend(demand.query.iter().chain(demand.rhs.iter()).copied());
                 let template = &p.templates[p.rules[rid].template];
                 let (reads, unknown) = eq_sorts(&template.sorts);
                 for (t, (names, opaque)) in sorts.iter().enumerate() {
@@ -229,6 +238,23 @@ impl Plan {
                 .insert(name.clone(), queries.into_iter().collect());
         }
         Ok(plan)
+    }
+    /// Logical capacity census, excluding allocator rounding and temporary interning.
+    pub fn demand_storage(&self) -> serde_json::Value {
+        let mut seen=BTreeSet::new();
+        let mut shared=0usize;
+        let mut unshared=0usize;
+        for demand in &self.rule_demands {
+            for list in [&demand.query,&demand.rhs,&demand.accesses] {
+                unshared += std::mem::size_of_val(list.as_ref());
+                if seen.insert(list.as_ptr() as usize) {
+                    shared += std::mem::size_of_val(list.as_ref())+2*std::mem::size_of::<usize>();
+                }
+            }
+        }
+        serde_json::json!({"lists":self.rule_demands.len()*3,"unique_lists":seen.len(),
+            "unshared_payload_bytes":unshared,"shared_payload_and_rc_bytes":shared,
+            "shared_handles_bytes":self.rule_demands.len()*3*std::mem::size_of::<std::rc::Rc<[usize]>>()})
     }
     /// Compile once per template when the optional bound-effect path is enabled.
     /// Ordinary scoped execution does not allocate or retain this code.

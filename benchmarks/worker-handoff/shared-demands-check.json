@@ -1,0 +1,21 @@
+{
+  "scope": "standalone Cell CPU completion-plan storage, not whole-process RSS",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "storage": {
+    "lists": 1746,
+    "unique_lists": 744,
+    "unshared_payload_bytes": 496824,
+    "shared_payload_and_rc_bytes": 82112,
+    "shared_handles_bytes": 27936
+  },
+  "exact_plan_equal_to_previous_forecast": true,
+  "execution": {
+    "runs": 1428,
+    "hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    }
+  },
+  "semantic_status": "pass",
+  "baseline_commit": "3d1fbe51",
+  "limits": "Payload lengths and estimated Rc headers; excludes allocator rounding, transient interning and other plan fields. No timing."
+}

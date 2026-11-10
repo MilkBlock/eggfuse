@@ -215,3 +215,22 @@ fn matched_entry_origins_survive_completion_and_publication_before_rhs() {
     );
     assert_eq!(new.scoped_execution_report()["retained_forwards"], 0);
 }
+
+#[test]
+fn identical_completion_obligations_share_owners_across_rules() {
+    let p=program("(relation A (i64)) (relation B (i64)) (ruleset r)\n(rule ((A x)) ((B x)) :ruleset r)\n(rule ((A x) (= x 1)) ((B x)) :ruleset r)\n(A 1) (run-schedule (run r))");
+    let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+    let mut owners=std::collections::BTreeMap::new();
+    let mut duplicates=0;
+    for demand in &plan.rule_demands {
+        for list in [&demand.query,&demand.rhs,&demand.accesses] {
+            if let Some(previous)=owners.get(list.as_ref()) {
+                assert!(std::rc::Rc::ptr_eq(previous,list));duplicates+=1;
+            } else {owners.insert(list.to_vec(),list.clone());}
+        }
+    }
+    assert!(duplicates>0);
+    let snapshot=serde_json::to_value(&plan).unwrap();
+    let cloned=plan.clone();drop(plan);
+    assert_eq!(snapshot,serde_json::to_value(&cloned).unwrap());
+}
