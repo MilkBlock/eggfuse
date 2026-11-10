@@ -437,3 +437,36 @@ python3 benchmarks/cell-unification/check_elided_receipts.py \
   --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
   --output benchmarks/cell-unification/elided-receipt-slots-check.json
 ```
+
+## Read the compiled receipt donor directly
+
+The previous normal catalog execution had 1,604 successful query-alias forwards
+and 294 effect-alias forwards, versus 1,313 history capture reads and 195 already
+inherited slots. Before publication, every alias first probed its skipped raw
+operation and only then read the compiler-known source. The raw result is absent
+by the same execution proof used for receipt-frame compression.
+
+Cell Output now selects the existing query/effect source before reading it.
+Ordinary outputs still read their own actual receipt. A missing donor returns
+None and keeps the existing publication fallback; source identity is neither a
+visibility certificate nor permission to replace a returned receipt with a
+producer/op address. No cache, runtime index, consumer list or extra instance
+state is introduced. Source Run publication order and history capture remain
+unchanged. This does not discharge another cross-Run publication boundary.
+
+On the same sum-bits program, before/after 4d8caa0d, all normalized work counters,
+1,428 ordered Run signatures and the final graph are identical. The required
+choice diagnosis passes. At least 1,898 redundant raw-slot probes disappear:
+this lower bound follows from the successful forwarding counters and the old
+and new code paths, not a new probe counter. Missing donors can save further
+probes but are excluded from the bound. No latency or publication-work reduction
+is claimed. This is implementation two since the last timing checkpoint.
+
+The 16 entry-publication, closed-alias and state-inheritance tests pass with
+iterative-bake, sparse-cells, view-ports and structural-depth. A runtime unit
+check verifies donor-only access including missing donors (no raw-alias read),
+query donors (no effect read), and ordinary output receipts. Existing tests
+retain deletion, union, aborted RHS, cross-stage inheritance and winner-order
+coverage. Saved evidence is `../cell-unification/direct-receipt-donors-check.json`.
+Use `check_elided_receipts.py --mode donors` with the fresh baseline/candidate
+exports and the required semantic acceptance JSON to reproduce the work check.
