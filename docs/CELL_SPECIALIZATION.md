@@ -343,3 +343,21 @@ they differ from the newly derived structures. No proof checks were relaxed.
 This is four additional recognizable paths, not a measured speedup or a completed
 cross-Union takeover. Tests retain distinct entry ports, preserve Union order,
 and reject construction after a genuine Union.
+
+### Final-stage queued Union semantics
+
+The previous constructor-after-Union restriction was stricter than execution:
+`Graph::enqueue_union` queues equality updates, and the existing typed result
+handoff analysis applies them after the RHS instruction loop. Normalization now
+allows constructors interleaved with Unions in the final stage, using pre-Union
+constructor congruence throughout. Union order remains in the boundary
+obligations. No equality is fed back into the stage's query assumptions.
+Crossing into a later stage after a genuine Union remains unsupported.
+
+The regression compares a constructor placed before and after a queued Union:
+the two implementations share a structural class, while a Cell without the
+additional constructor stays distinct. Actual execution before and after Bake
+matches exported graph, Run snapshots and result audit. All 14 completion/query
+receipt tests pass. The same short sum-bits history still has 94 opaque paths;
+all five audit hashes match the previous version. This removes a representational
+restriction, but adds no coverage or demonstrated speed gain on that sample.

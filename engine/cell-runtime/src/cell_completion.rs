@@ -194,7 +194,9 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
         for (op,ins) in cell.template.ops.iter().enumerate() {
             if let Op::Copy(dst,arg)=ins { slots[*dst]=b.arg(arg,&slots); continue; }
             if let Op::Union(a,c)=ins {
-                // Keep genuine terminal equalities as ordered obligations,
+                // RHS unions are queued until the source boundary, so later
+                // constructors still use pre-Union congruence. Keep these
+                // final-stage equalities as ordered obligations,
                 // never as entry assumptions or constructor congruence.
                 let a=b.arg(a,&slots); let c=b.arg(c,&slots);
                 b.close();
@@ -204,7 +206,6 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
                 }
                 continue;
             }
-            if !b.terminal_unions.is_empty() { return None; }
             let relation=cell.relation(Site::Effect(op))?;
             if !p.tables[relation.table].constructor || !p.tables[relation.table].virtual_fact { return None; }
             let columns=relation.columns().map(|a|b.arg(a,&slots)).collect::<Vec<_>>();

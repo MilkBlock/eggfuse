@@ -379,16 +379,17 @@ fn already_proven_union_does_not_hide_constructor_structure() {
 (rule ((Start x)) ((let lhs (F x)) (let rhs (F x)) (union lhs rhs)) :ruleset a :name "inert")
 (rule ((Start x)) ((let lhs (F x)) (let rhs (G x)) (union lhs rhs)) :ruleset a :name "real")
 (rule ((Start x)) ((let lhs (F x)) (let rhs (G x)) (union lhs rhs) (F lhs)) :ruleset a :name "after")
+(rule ((Start x)) ((let lhs (F x)) (let rhs (G x)) (F lhs) (union lhs rhs)) :ruleset a :name "before")
 (Start (N 1))
 (run-schedule (run a))
 "#;
     let core=eggfuse_bake::device_frontend::core("inert-union",source).unwrap();
     let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
     let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
-    let ids=["plain","inert","real","after"].map(|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap());
+    let ids=["plain","inert","real","after","before"].map(|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap());
     let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
         "prefixes":ids.map(|r|json!({"edge":[0,0,r,0],"visits":1}))});
-    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,4).unwrap();
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,5).unwrap();
     let mut raw=p.artifact; raw["spine_blocks"]=blocks;
     let p=Program::parse(seal(raw)).unwrap();
     let plan=Catalog::seed(&p,Limits::default()).unwrap();
@@ -404,5 +405,14 @@ fn already_proven_union_does_not_hide_constructor_structure() {
     assert_ne!(entry(ids[0])["class"],entry(ids[2])["class"]);
     let shape=&contracts["structures"][entry(ids[2])["class"].as_u64().unwrap() as usize];
     assert_eq!(shape["terminal_unions"].as_array().unwrap().len(),1);
-    assert_eq!(entry(ids[3])["normalization"],"opaque-source-contract");
+    assert!(entry(ids[3]).get("normalization").is_none());
+    assert_ne!(entry(ids[2])["class"],entry(ids[3])["class"]);
+    assert_eq!(entry(ids[3])["class"],entry(ids[4])["class"],
+        "queued Union must not change same-RHS constructor congruence");
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(p.clone()).unwrap();
+    let (before,expected)=execute(p.artifact);
+    let (after,actual)=execute(compiled);
+    assert_eq!(expected,actual);
+    assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
+    assert_eq!(before.snapshots,after.snapshots);
 }
