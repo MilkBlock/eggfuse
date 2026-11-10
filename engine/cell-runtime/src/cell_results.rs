@@ -13,6 +13,25 @@ pub(crate) struct ResultPort {
     rule: u32,
     slot: NonZeroU32,
 }
+
+#[cfg(all(test, feature = "sparse-cells"))]
+mod joint_tests {
+    use super::*;
+    use crate::graph::FactRef;
+
+    #[test]
+    fn completed_outputs_keep_the_original_allocation_and_actual_foreign_witness() {
+        let foreign = Dependency::Fact(FactRef { cell: 91, op: 4 });
+        let outputs = vec![None, Some(foreign), Some(Dependency::Function(17))];
+        let allocation = outputs.as_ptr();
+        let results = Results::from_outputs(3, outputs);
+        assert_eq!(results.slots.as_ptr(), allocation);
+        assert_eq!(results.output(1), Some(foreign));
+        assert_eq!(results.get(ResultPort::new(3, 1)), Some(foreign));
+        assert_eq!(results.get(ResultPort::new(3, 0)), None);
+        assert_eq!(results.get(ResultPort::new(91, 1)), None);
+    }
+}
 impl ResultPort {
     pub fn new(rule: usize, slot: usize) -> Self {
         Self {
@@ -81,6 +100,14 @@ pub(crate) struct Results {
 impl Results {
     pub fn new(rule: usize) -> Self {
         Self { rule, slots: SmallVec::new(), projection:None, parent:None, forwarded:0 }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn from_outputs(rule: usize, slots: Vec<Option<Dependency>>) -> Self {
+        Self { slots: SmallVec::from_vec(slots), ..Self::new(rule) }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn output(&self, slot: usize) -> Option<Dependency> {
+        self.slots.get(slot).copied().flatten()
     }
     /// The compiled capture width avoids geometric growth of tiny arrays.
     /// Called only after the first present local result, so empty captures

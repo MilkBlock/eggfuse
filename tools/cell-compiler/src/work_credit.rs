@@ -16,7 +16,7 @@ impl Work {
                 "root_handles_created", "contexts_created", "capture_reads",
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
-                "history_inherited_reads", "history_inheritance_marks", "history_heap_frames",
+                "history_inherited_reads", "history_inheritance_marks", "history_heap_frames", "effect_slots_initialized",
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards", "cell_query_result_writes",
                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
                 "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
@@ -86,6 +86,21 @@ impl Work {
         for field in ["cell_output_span_seals", "output_span_checks", "output_residual_dispatches"] {
             let value = if sealed { report["stage_spine"]["stats"][field].as_u64()
                 .ok_or_else(|| format!("missing Cell registration work {field}"))? } else { 0 };
+            work.insert(format!("stage_spine/stats/{field}"), value);
+        }
+        let joint = match report["stage_spine"].get("joint_result_storage") {
+            None => false,
+            Some(J::String(version)) if version == "cell-results/v1" => true,
+            _ => return Err("unknown joint Cell result storage".into()),
+        };
+        // Shared owners replace the old history heap arrays. Query captures
+        // move earlier; they still cost reads and writes. Output availability
+        // and retirement are already in cell_output_slot_reads/deliveries;
+        // charge the additional lookup through the shared owner separately.
+        for field in ["joint_history_checks", "joint_history_frames", "joint_history_query_reads",
+            "joint_history_query_writes", "joint_output_reads"] {
+            let value = if joint { report["stage_spine"]["stats"][field].as_u64()
+                .ok_or_else(|| format!("missing joint Cell result work {field}"))? } else { 0 };
             work.insert(format!("stage_spine/stats/{field}"), value);
         }
         // Static Cell scopes replace candidate-prefix copies with slot clears.
@@ -415,6 +430,9 @@ mod tests {
             "/stage_spine/stats/output_registrations", "/stage_spine/stats/cell_output_registrations",
             "/stage_spine/stats/cell_output_span_seals", "/stage_spine/stats/cell_output_slot_reads",
             "/stage_spine/stats/output_span_checks", "/stage_spine/stats/output_residual_dispatches",
+            "/stage_spine/stats/joint_history_checks", "/stage_spine/stats/joint_history_frames",
+            "/stage_spine/stats/joint_history_query_reads", "/stage_spine/stats/joint_history_query_writes",
+            "/stage_spine/stats/joint_output_reads", "/stage_spine/stats/effect_slots_initialized",
             "/stage_spine/stats/effect_output_copies", "/stage_spine/stats/receipt_attempts",
             "/stage_spine/stats/cell_output_deliveries",
             "/stage_spine/stats/completion_boundary_records", "/stage_spine/stats/completion_boundary_reads",
@@ -445,6 +463,8 @@ mod tests {
             "/stage_spine/stats/cell_output_checks", "/stage_spine/stats/effect_outputs_reused",
             "/stage_spine/stats/captured_anchors", "/stage_spine/stats/cell_output_receipts",
             "/stage_spine/stats/cell_output_sealed_receipts",
+            "/stage_spine/stats/history_shared_slots", "/stage_spine/stats/joint_output_mask_checks",
+            "/stage_spine/stats/joint_output_mask_writes",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
@@ -458,6 +478,14 @@ mod tests {
         let legacy_work = Work::read(&legacy).unwrap();
         assert_eq!(legacy_work.0["stage_spine/stats/output_registrations"], report["stage_spine"]["stats"]["captured_anchors"].as_u64().unwrap());
         assert_eq!(legacy_work.0["stage_spine/stats/cell_output_span_seals"], 0);
+        legacy["stage_spine"].as_object_mut().unwrap().remove("joint_result_storage");
+        assert_eq!(Work::read(&legacy).unwrap().0["stage_spine/stats/joint_history_frames"], 0);
+        for field in ["joint_history_checks", "joint_history_frames", "joint_history_query_reads",
+            "joint_history_query_writes", "joint_output_reads"] {
+            let mut missing = report.clone();
+            missing["stage_spine"]["stats"].as_object_mut().unwrap().remove(field);
+            assert!(Work::read(&missing).unwrap_err().contains(field));
+        }
         for field in ["output_registrations", "cell_output_registrations", "cell_output_span_seals", "output_span_checks", "output_residual_dispatches"] {
             let mut missing = report.clone();
             missing["stage_spine"]["stats"].as_object_mut().unwrap().remove(field);

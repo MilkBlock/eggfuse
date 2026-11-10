@@ -37,6 +37,18 @@ pub(crate) struct EffectPlan {
     pub outputs: usize,
     #[cfg(feature = "sparse-cells")]
     registration: Option<Registration>,
+    #[cfg(feature = "sparse-cells")]
+    joint: Option<Box<JointResults>>,
+}
+/// Full history exports and permanent publication slots can share a bounded
+/// Cell frame. Remaining boundary publication still uses its original path.
+#[cfg(feature = "sparse-cells")]
+struct JointResults {
+    width: usize,
+    queries: Vec<(usize, usize)>,
+    outputs: Vec<usize>,
+    transient: Vec<Option<usize>>,
+    transient_width: usize,
 }
 /// A completed RHS has already written these retained effect results. Only
 /// query aliases and uncovered boundaries still need individual registration.
@@ -85,6 +97,8 @@ impl EffectPlan {
         let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published,
             #[cfg(feature = "sparse-cells")]
             registration: Registration::compile(p, rule, outputs, published),
+            #[cfg(feature = "sparse-cells")]
+            joint: None,
         };
         // The retained prefix belongs to the actual producer, even when its
         // publication is attached to a later alias operation. Output::prepare
@@ -112,7 +126,48 @@ impl EffectPlan {
                 if cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
             }
         }
+        #[cfg(feature = "sparse-cells")]
+        if published != 0 && published <= 32
+            && plan.registration.as_ref().is_some_and(|r| r.direct == published)
+        {
+            let mut queries = Vec::new();
+            let exports = p.iterative.exports(rule);
+            for (slot, site) in exports.iter().enumerate() {
+                if let Site::Query(atom) = *site { queries.push((atom, slot)); }
+            }
+            let output_ports = outputs[..published].iter().map(|output| {
+                let source = output.receipt_source.unwrap_or(Site::Effect(output.operation));
+                exports.binary_search(&source).ok()
+            }).collect::<Option<Vec<_>>>();
+            if exports.len() <= 64 && output_ports.is_some()
+                && matches!(exports.last(), Some(Site::Effect(op)) if !p.known_results.static_skip[rule][*op])
+            {
+                let mut transient = vec![None; plan.width];
+                let mut transient_width = 0;
+                for (op, slot) in plan.slots.iter().enumerate() {
+                    if let Some(slot) = slot && slot.history.is_none() && !p.known_results.static_skip[rule][op] {
+                        transient[slot.index.get() as usize - 1] = Some(transient_width);
+                        transient_width += 1;
+                    }
+                }
+                plan.joint = Some(Box::new(JointResults { width: exports.len(), queries,
+                    outputs: output_ports.unwrap(), transient, transient_width }));
+            }
+        }
         plan
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn joint_width(&self) -> Option<usize> { self.joint.as_ref().map(|p| p.width) }
+    #[cfg(feature = "sparse-cells")]
+    pub fn history_output(&self, position: usize) -> usize { self.joint.as_ref().unwrap().outputs[position] }
+    pub(crate) fn joint_bytes(&self) -> usize {
+        #[cfg(feature = "sparse-cells")]
+        { std::mem::size_of::<Option<Box<JointResults>>>() + self.joint.as_ref().map_or(0, |j|
+            std::mem::size_of::<JointResults>() + j.outputs.capacity() * std::mem::size_of::<usize>()
+            + j.transient.capacity() * std::mem::size_of::<Option<usize>>()
+            + j.queries.capacity() * std::mem::size_of::<(usize, usize)>()) }
+        #[cfg(not(feature = "sparse-cells"))]
+        { 0 }
     }
     pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<Option<EffectSlot>>() }
     pub(crate) fn registration_bytes(&self) -> usize {
@@ -139,18 +194,50 @@ pub(crate) struct Effects {
     probes: u64,
     targets: u64,
     forwarded: u64,
+    #[cfg(feature = "sparse-cells")]
+    joint: bool,
+    #[cfg(feature = "sparse-cells")]
+    history: Vec<Option<Dependency>>,
 }
 impl Effects {
     pub fn begin(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
         let first = buffer.len();
         buffer.resize(first + plan.width, None);
         let keep = if keep { plan.outputs } else { 0 };
-        Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded:0 }
+        Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded:0,
+            #[cfg(feature = "sparse-cells")] joint:false,
+            #[cfg(feature = "sparse-cells")] history:vec![] }
     }
+    #[cfg(feature = "sparse-cells")]
+    pub fn begin_joint(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, facts: &super::QueryFacts) -> (Self, usize) {
+        let joint = plan.joint.as_ref().unwrap();
+        let first = buffer.len();
+        buffer.resize(first + joint.transient_width, None);
+        let mut history = vec![None; joint.width];
+        for &(atom, slot) in &joint.queries { history[slot] = facts.receipt(atom); }
+        let reads = joint.queries.len();
+        let keep = plan.outputs;
+        (Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded: 0, joint: true, history }, reads)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn take_results(&mut self, rule: usize) -> Option<super::Results> {
+        self.joint.then(|| super::Results::from_outputs(rule, std::mem::take(&mut self.history)))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn has_joint_results(&self) -> bool { self.joint }
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
-        let slot = plan.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
+        let descriptor = plan.slots.get(operation)?.as_ref()?;
+        let slot = descriptor.index.get() as usize - 1;
+        #[cfg(feature = "sparse-cells")]
+        let slot = if self.joint {
+            if let Some(port) = descriptor.history {
+                self.targets += 1;
+                return self.history.get_mut(port as usize);
+            }
+            plan.joint.as_ref()?.transient[slot]?
+        } else { slot };
         self.targets += 1;
         Some(&mut self.buffer[self.first + slot])
     }
@@ -160,6 +247,14 @@ impl Effects {
         self.probes+=1;
         let Some(Some(slot))=plan.slots.get(operation) else { return };
         self.targets+=1;
+        #[cfg(feature = "sparse-cells")]
+        if self.joint {
+            if let Some(port) = slot.history { self.history[port as usize] = Some(receipt); }
+            else if let Some(index) = plan.joint.as_ref().unwrap().transient[slot.index.get() as usize - 1] {
+                self.buffer[self.first + index] = Some(receipt);
+            }
+            return;
+        }
         self.buffer[self.first+slot.index.get() as usize-1]=Some(receipt);
         // Provenance rides in the existing operation-to-slot descriptor: no
         // second index or per-instance source map is queried or maintained.
@@ -184,7 +279,8 @@ impl Effects {
         if self.keep == 0 { return None; }
         let plan = self.plan.as_ref()?.registration.as_ref()?;
         debug_assert!((0..self.keep).all(|position| plan.query_aliases.contains(&position)
-            || self.buffer[self.first + position].is_some()), "completed Cell must supply every proven effect result");
+            || if self.joint { self.history[self.plan.as_ref().unwrap().history_output(position)].is_some() }
+               else { self.buffer[self.first + position].is_some() }), "completed Cell must supply every proven effect result");
         Some((self.first, plan.direct, plan.aliases, plan.query_aliases.len()))
     }
     #[cfg(feature = "sparse-cells")]
@@ -210,13 +306,26 @@ impl CompletedEffects for Effects {
     fn forwarded(&self) -> u64 { self.forwarded }
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
-        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
+        let plan = self.plan.as_ref()?;
+        let descriptor = plan.slots.get(operation)?.as_ref()?;
+        let slot = descriptor.index.get() as usize - 1;
+        #[cfg(feature = "sparse-cells")]
+        let slot = if self.joint {
+            if let Some(port) = descriptor.history { return self.history.get(port as usize).copied().flatten(); }
+            plan.joint.as_ref()?.transient[slot]?
+        } else { slot };
         self.buffer[self.first + slot]
     }
     #[cfg(feature = "sparse-cells")]
     fn output_frame(&mut self) -> Option<&mut Effects> { Some(self) }
     fn finish(mut self, publish: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> {
         let plan = self.plan.take()?;
+        #[cfg(feature = "sparse-cells")]
+        if self.joint {
+            self.buffer.truncate(self.first);
+            let joint = plan.joint.as_ref().unwrap();
+            return Some((self.buffer, joint.width + joint.transient_width, self.probes, self.targets));
+        }
         self.buffer.truncate(self.first + if publish { self.keep } else { 0 });
         Some((self.buffer, plan.width, self.probes, self.targets))
     }

@@ -380,6 +380,7 @@ pub(crate) struct CaptureWork {
     pub carried: bool,
     pub inherited: usize,
     pub heap_frames: usize,
+    pub shared_slots: usize,
 }
 impl History {
     pub(crate) fn count_storage(&self, census: &mut HistoryStorage) {
@@ -480,8 +481,17 @@ impl History {
                 empty_slots += results.insert(capture.port, w);
             }
         }
-        let mut work = CaptureWork { reads: wanted.len() - results.inherited_count(), slots: results.stored_len(),
-            empty_slots, allocations: 0, carried: false, inherited:results.inherited_count(), heap_frames:usize::from(results.spilled()) };
+        let work = CaptureWork { reads: wanted.len() - results.inherited_count(), slots: results.stored_len(),
+            empty_slots, allocations: 0, carried: false, inherited:results.inherited_count(), heap_frames:usize::from(results.spilled()), shared_slots:0 };
+        self.retain_results(limit, results, work)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn capture_outputs(&mut self, limit: usize, results: Results) -> CaptureWork {
+        assert!(limit > 0);
+        let shared_slots = results.len();
+        self.retain_results(limit, results, CaptureWork { shared_slots, ..Default::default() })
+    }
+    fn retain_results(&mut self, limit: usize, results: Results, mut work: CaptureWork) -> CaptureWork {
         let frame = (results.len() != 0).then_some(results);
         if frame.is_none() {
             self.carry(limit, &mut work);

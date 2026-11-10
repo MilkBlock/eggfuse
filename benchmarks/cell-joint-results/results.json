@@ -1,0 +1,890 @@
+{
+  "scope": "Standalone Cell CPU; RHS, existing history and Entry share actual result slots. Short correctness/work/allocator checks, not timing or native Raytrace proof.",
+  "baseline": {
+    "commit": "8f4e914f34518181e990b43ea05e567abd69eb74",
+    "binaries": {
+      "runtime-before": "e15d9a3d836a532987b2128fdd5aca85e53747d17426c8d6b5057d06649c8fb3",
+      "runtime-alloc-before": "043bc750703547ae702778bf1c11d5485d3a4171c1d18ebe7ce2e4b559be23b6",
+      "query-prefix-before": "2cbfc1eab4fc652527cfe7efe9de707166bd2df7f6143714a7aa34c9991bdb48"
+    }
+  },
+  "binaries_after": {
+    "runtime-after": "9c6615ef4bbe8a69b2e2e2bd4d62087359109223e3511dcf70db383d21226b04",
+    "query-prefix-after": "565b5da3b5614773e1fdee8fda8c7d94e2fbfd0020e63f0f59ab05c53361ba12",
+    "runtime-alloc-after": "99ca2f1849fedc3976f8b07da11ab4c30b1322e738d9cda5e1b7e8584b3ea07c"
+  },
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "cases": {
+    "sum": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "lanes": {
+        "baseline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "2b70d26080dba6fff3892fe05d01b207397055d29e45fce387f762c1a3a7da67"
+        },
+        "off": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "ffd7a1a94b3bc7a3533b4fe2e87325040f60db0020c84a5a3c28e5ba48b55846"
+        },
+        "inline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "8663d6bd17067b8366b993b01e6fe37e2ba4e8b884573fcca062769ad3b26ee8"
+        },
+        "two": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "c155545c1b972e85477f570e5c273cfd4ae46ad0478750ec3bb244d9789b535b"
+        },
+        "four": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "dfdebe9d10a8ecd3e22e008c5a6f3bd8858d7897ebfb530d5eccb249b2dd40bc"
+        }
+      }
+    },
+    "fixture": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "f6584d38087309edf508496dfb27ad1e1b77da92ec9159ddfaa692d0711f7464"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "ac67b82d2c1222080852566bae97d0ffa10dc6ccb5321ef74aeca5e6089a8318"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "e8007b73665d761f88a7cf7ef8eb0ce5865a3730b6c144fbb2a6674277e6a681"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "14735c0b1bb835ed775b7f17fec2778a50c6df981b44a53d832a4c238cfdde06"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "ad3af866c5d1228f1986333745791d0226f4be3230c6792489b12cb833088670"
+        }
+      }
+    },
+    "fixture-collisions": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "5ceb70737b0d3204394e549d94c9201b820d8434177e58db4632f4dfa08c7a2a"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "fc231be5212fd06c0c0b2e89ed33e29b4f9956928a020ee433e49210c8ccc6cd"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "c536ad2ed0cf3b501dc907f9eb6ad6a37596561dac58c7a1ffe65d85bf0335ae"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "327c1cf31ec16db8d3c1e4766d5333d3963bb1de6778ca2f3943151e901fb45a"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "41602097f7585b5baafb63a8fed129a5526f81cb853b8a6f3d0e957ad5f9412e"
+        }
+      }
+    },
+    "fixture-extra": {
+      "program_sha256": "54cfb10a2362cfb5aa4d97183a49522bba4008f81f255b32d20bb01e0b45f760",
+      "lanes": {
+        "baseline": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "a839e9a80888a5dd367d7b5e93046d7e5a86d5652402858b5a49ba6835dca37c"
+        },
+        "off": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "437e1bad94da30c08f0d5905c62494d42b93064840d9d594dca092338d4e6f6a"
+        },
+        "inline": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "40aeb4db31b0fed82d5ecdd2f4ef8230b78079a3447aae5c05b6f0d1a4e9a580"
+        },
+        "two": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "76b70a2dcf07eabe501b98edf4f4ed6c75386e7845a67c1c370103bcbec86cba"
+        },
+        "four": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "0ed422b44bef1d58f6ab8a6c43be80cebe6bd1fbf6ef7b1bedcc8cdd70acd08e"
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "ray-prefix": {
+      "program_sha256": "2f692b3f85c6b3988d3586482ac02c6d2af5db2f3943655584313034263b8cc4",
+      "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+      "runs": 128,
+      "run_signature_sha256": "d1b01bd3f2c2dd6726b4da7c95decb53fde8300ac20bf5ab7d99cb1f8518d59a",
+      "report_sha256": {
+        "before": "b1865df5cb46acba53c35acc6df96ceb60c1e4f0b4535efc11e1a1d20ef7d427",
+        "after": "3584db15953ac1475227c5c3c979e7c8417b9df85e3870a0c6c233cb6ae82233"
+      },
+      "result_storage_costs_before_after": {
+        "history_capture_reads": [
+          0,
+          0
+        ],
+        "history_slots_written": [
+          0,
+          0
+        ],
+        "history_heap_frames": [
+          0,
+          0
+        ],
+        "effect_slots_initialized": [
+          53288,
+          53288
+        ],
+        "joint_history_checks": [
+          0,
+          0
+        ],
+        "joint_history_frames": [
+          0,
+          0
+        ],
+        "joint_history_query_reads": [
+          0,
+          0
+        ],
+        "joint_history_query_writes": [
+          0,
+          0
+        ],
+        "joint_output_reads": [
+          0,
+          0
+        ]
+      },
+      "result_storage_work_saved": 0,
+      "shared_history_slots": 0,
+      "new_shared_plan_bytes": 352,
+      "completion_record_bytes_after": 184,
+      "published_history_storage_unchanged": {
+        "history_array_bytes": 0,
+        "layout_bytes": 0,
+        "layouts": 0,
+        "owner_payload_bytes": 0,
+        "owners": 0,
+        "rc_header_bytes": 0,
+        "result_array_bytes": 0
+      },
+      "pending_output_slots_peak_before_after": [
+        6675,
+        6675
+      ],
+      "unchanged": {
+        "history_allocations": 0,
+        "history_result_reads": 0,
+        "effect_slot_probes": 59818,
+        "effect_slot_targets": 52031,
+        "cell_output_slot_reads": 35455,
+        "cell_output_deliveries": 35455,
+        "output_registrations": 20192,
+        "cell_output_registrations": 1808,
+        "output_span_checks": 31884,
+        "cell_output_span_seals": 22495,
+        "direct_publication_hash_probes": 19180
+      }
+    },
+    "sum-alloc-1": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "runs": 1428,
+      "run_signature_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+      "report_sha256": {
+        "before": "131faa5338e0448cba1fd8963e1cebe84b4b82d3e3bce6f7a7bd9735ab9601f2",
+        "after": "8b3bc28d8d436a8e6dba547cc06662528481cce4e5d4b6c5a2ff91b0e4b6e3b0"
+      },
+      "result_storage_costs_before_after": {
+        "history_capture_reads": [
+          1508,
+          129
+        ],
+        "history_slots_written": [
+          1508,
+          129
+        ],
+        "history_heap_frames": [
+          534,
+          0
+        ],
+        "effect_slots_initialized": [
+          12028,
+          12251
+        ],
+        "joint_history_checks": [
+          0,
+          539
+        ],
+        "joint_history_frames": [
+          0,
+          534
+        ],
+        "joint_history_query_reads": [
+          0,
+          534
+        ],
+        "joint_history_query_writes": [
+          0,
+          534
+        ],
+        "joint_output_reads": [
+          0,
+          534
+        ]
+      },
+      "result_storage_work_saved": 394,
+      "shared_history_slots": 1379,
+      "new_shared_plan_bytes": 1576,
+      "completion_record_bytes_after": 184,
+      "published_history_storage_unchanged": {
+        "history_array_bytes": 0,
+        "layout_bytes": 0,
+        "layouts": 0,
+        "owner_payload_bytes": 8896,
+        "owners": 139,
+        "rc_header_bytes": 2224,
+        "result_array_bytes": 6560
+      },
+      "pending_output_slots_peak_before_after": [
+        872,
+        788
+      ],
+      "unchanged": {
+        "history_allocations": 663,
+        "history_result_reads": 592,
+        "effect_slot_probes": 12569,
+        "effect_slot_targets": 10130,
+        "cell_output_slot_reads": 8450,
+        "cell_output_deliveries": 8450,
+        "output_registrations": 5608,
+        "cell_output_registrations": 1484,
+        "output_span_checks": 6422,
+        "cell_output_span_seals": 5394,
+        "direct_publication_hash_probes": 4680
+      },
+      "allocations": {
+        "before": {
+          "alloc_calls": 168370,
+          "free_calls": 135274,
+          "live_bytes_after": 156698387,
+          "live_bytes_before": 149726403,
+          "peak_live_requested_bytes": 157293166,
+          "realloc_calls": 19390,
+          "released_bytes": 26469954,
+          "requested_bytes": 33441938,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "after": {
+          "alloc_calls": 168378,
+          "free_calls": 135274,
+          "live_bytes_after": 156699965,
+          "live_bytes_before": 149726405,
+          "peak_live_requested_bytes": 157294712,
+          "realloc_calls": 19390,
+          "released_bytes": 26469954,
+          "requested_bytes": 33443514,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations": {
+        "before": {
+          "alloc_calls": 78885,
+          "free_calls": 35389,
+          "live_bytes_after": 149726403,
+          "live_bytes_before": 145229726,
+          "peak_live_requested_bytes": 149726404,
+          "realloc_calls": 1937,
+          "released_bytes": 4567741,
+          "requested_bytes": 9064418,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "after": {
+          "alloc_calls": 78885,
+          "free_calls": 35389,
+          "live_bytes_after": 149726405,
+          "live_bytes_before": 145229728,
+          "peak_live_requested_bytes": 149726406,
+          "realloc_calls": 1937,
+          "released_bytes": 4567741,
+          "requested_bytes": 9064418,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "allocation_delta": {
+        "alloc_calls": 8,
+        "realloc_calls": 0,
+        "requested_bytes": 1576,
+        "peak_live_requested_bytes": 1546
+      }
+    },
+    "sum-alloc-4": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "runs": 1428,
+      "run_signature_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+      "report_sha256": {
+        "before": "2c7c8081befb8f79fc9a150faa8912216105908e74fc38c6b50b938a0705b51e",
+        "after": "f4336140ba3da9861fac68ce5b6ddeb9517fc23e3cc2378354b152ee38ee9047"
+      },
+      "result_storage_costs_before_after": {
+        "history_capture_reads": [
+          1508,
+          129
+        ],
+        "history_slots_written": [
+          1508,
+          129
+        ],
+        "history_heap_frames": [
+          534,
+          0
+        ],
+        "effect_slots_initialized": [
+          12028,
+          12251
+        ],
+        "joint_history_checks": [
+          0,
+          539
+        ],
+        "joint_history_frames": [
+          0,
+          534
+        ],
+        "joint_history_query_reads": [
+          0,
+          534
+        ],
+        "joint_history_query_writes": [
+          0,
+          534
+        ],
+        "joint_output_reads": [
+          0,
+          534
+        ]
+      },
+      "result_storage_work_saved": 394,
+      "shared_history_slots": 1379,
+      "new_shared_plan_bytes": 1576,
+      "completion_record_bytes_after": 184,
+      "published_history_storage_unchanged": {
+        "history_array_bytes": 0,
+        "layout_bytes": 0,
+        "layouts": 0,
+        "owner_payload_bytes": 8896,
+        "owners": 139,
+        "rc_header_bytes": 2224,
+        "result_array_bytes": 6560
+      },
+      "pending_output_slots_peak_before_after": [
+        872,
+        788
+      ],
+      "unchanged": {
+        "history_allocations": 663,
+        "history_result_reads": 592,
+        "effect_slot_probes": 12569,
+        "effect_slot_targets": 10130,
+        "cell_output_slot_reads": 8450,
+        "cell_output_deliveries": 8450,
+        "output_registrations": 5608,
+        "cell_output_registrations": 1484,
+        "output_span_checks": 6422,
+        "cell_output_span_seals": 5394,
+        "direct_publication_hash_probes": 4680
+      },
+      "allocations": {
+        "before": {
+          "alloc_calls": 168383,
+          "free_calls": 135274,
+          "live_bytes_after": 156733975,
+          "live_bytes_before": 149760791,
+          "peak_live_requested_bytes": 157328754,
+          "realloc_calls": 19394,
+          "released_bytes": 26470306,
+          "requested_bytes": 33443490,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "after": {
+          "alloc_calls": 168391,
+          "free_calls": 135274,
+          "live_bytes_after": 156735441,
+          "live_bytes_before": 149760793,
+          "peak_live_requested_bytes": 157330188,
+          "realloc_calls": 19391,
+          "released_bytes": 26470050,
+          "requested_bytes": 33444698,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations": {
+        "before": {
+          "alloc_calls": 78967,
+          "free_calls": 35400,
+          "live_bytes_after": 149760791,
+          "live_bytes_before": 145229726,
+          "peak_live_requested_bytes": 149760792,
+          "realloc_calls": 1941,
+          "released_bytes": 4568229,
+          "requested_bytes": 9099294,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "after": {
+          "alloc_calls": 78967,
+          "free_calls": 35400,
+          "live_bytes_after": 149760793,
+          "live_bytes_before": 145229728,
+          "peak_live_requested_bytes": 149760794,
+          "realloc_calls": 1941,
+          "released_bytes": 4568229,
+          "requested_bytes": 9099294,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "allocation_delta": {
+        "alloc_calls": 8,
+        "realloc_calls": -3,
+        "requested_bytes": 1208,
+        "peak_live_requested_bytes": 1434
+      }
+    }
+  },
+  "limits": "The equal-weight storage ledger is not time. Query reads/writes, new frame allocations, initialization and publication owner lookups are charged. Coverage earns no credit. Availability/retirement remain charged by existing output slot reads/deliveries; mask diagnostics are subsets. Shared plan storage appears in allocator costs; the publication mask reuses the unused arena offset. Raytrace prefix has no captures and cannot establish full coverage."
+}

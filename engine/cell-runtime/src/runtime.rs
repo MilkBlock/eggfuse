@@ -2054,7 +2054,7 @@ impl Executor {
             #[cfg(feature = "structural-depth")]
             let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
             if let Some(selected) = selected {
-                let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched);
+                let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched, stage_cursor.as_ref(), &b.known);
                 let (start, unions) = self.graph.start_completion(rid, &mut b.values, b.parent, selected, &mut receipts)?;
                 match start {
                     Start::Complete { cell, frame } => {
@@ -2129,11 +2129,11 @@ impl Executor {
         #[cfg(feature = "iterative-bake")]
         let (mut effect_receipts, resume_start) = match resumed {
             Some((start, receipts)) => (receipts, Some(start)),
-            None => (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false), None),
+            None => (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None),
         };
         #[cfg(not(feature = "iterative-bake"))]
         let (mut effect_receipts, resume_start) =
-            (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false), None::<Start>);
+            (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None::<Start>);
         #[cfg(feature = "rhs-locals")]
         let local = if resume_start.is_none() && self.local_width > 0
             && self.local_selection.as_ref().is_none_or(|s| s[rid])

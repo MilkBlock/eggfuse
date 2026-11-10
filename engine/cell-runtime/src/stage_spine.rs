@@ -197,10 +197,31 @@ struct Completion {
 #[cfg(feature = "sparse-cells")]
 #[derive(Clone, Copy)]
 struct Delivery {
+    // The high rule bit selects shared history. In that case `first` is the
+    // pending output mask, reusing the arena offset that this path never needs.
+    // Wider Cells retain the ordinary arena rather than widen every completion.
     rule: std::num::NonZeroU32,
     first: u32,
     #[cfg(feature = "spine-shapes")]
     cell: u32,
+}
+#[cfg(feature = "sparse-cells")]
+impl Delivery {
+    const HISTORY: u32 = 1 << 31;
+    fn new(rule: usize, first: usize, width: usize, joint: bool, _cell: u32) -> Self {
+        let rule = u32::try_from(rule).ok().and_then(|r| r.checked_add(1))
+            .filter(|&r| r < Self::HISTORY).expect("Cell rule index exhausted");
+        Self {
+            rule: std::num::NonZeroU32::new(rule | if joint { Self::HISTORY } else { 0 }).unwrap(),
+            first: if joint {
+                assert!((1..=32).contains(&width));
+                u32::MAX >> (32 - width)
+            } else { u32::try_from(first).expect("Cell output arena exhausted") },
+            #[cfg(feature = "spine-shapes")] cell: _cell,
+        }
+    }
+    fn rule(self) -> usize { (self.rule.get() & !Self::HISTORY) as usize - 1 }
+    fn joint(self) -> bool { self.rule.get() & Self::HISTORY != 0 }
 }
 #[cfg(feature = "sparse-cells")]
 enum CompletionPhase {
@@ -209,6 +230,15 @@ enum CompletionPhase {
     Moving,
 }
 impl Completion {
+    #[cfg(feature = "sparse-cells")]
+    fn results(&self) -> &crate::cell::Results {
+        let history = match &self.phase {
+            CompletionPhase::Started(Started::Live(c)) => &c.state.history,
+            CompletionPhase::Published(PublishedBase::Active(c)) => &c.state.history,
+            _ => unreachable!("joint results retain their original live Cell continuation"),
+        };
+        history.current().expect("completed Cell results")
+    }
     fn new(started: Started) -> Self {
         Self {
             #[cfg(feature = "sparse-cells")]
@@ -280,11 +310,16 @@ impl Started {
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
         forwarded: u64,
+        #[cfg(feature = "sparse-cells")] prepared: Option<crate::cell::Results>,
         stats: &mut Stats,
     ) {
         if let Self::Live(c) = self {
             let (sources, depth, inherit, layout) = cat.capture(&c.state);
-            let work = c.state.history.capture_layout(
+            #[cfg(feature = "sparse-cells")]
+            let shared = prepared.map(|results| c.state.history.capture_outputs(depth, results));
+            #[cfg(not(feature = "sparse-cells"))]
+            let shared = None;
+            let work = shared.unwrap_or_else(|| c.state.history.capture_layout(
                 depth,
                 rid,
                 sources,
@@ -293,7 +328,7 @@ impl Started {
                 forwarded,
                 read,
                 effect,
-            );
+            ));
             stats.history_capture_reads += work.reads as u64;
             stats.history_slots_written += work.slots as u64;
             stats.history_allocations += work.allocations as u64;
@@ -301,6 +336,7 @@ impl Started {
             stats.history_carried_steps += u64::from(work.carried);
             stats.history_inherited_slots += work.inherited as u64;
             stats.history_heap_frames += work.heap_frames as u64;
+            stats.history_shared_slots += work.shared_slots as u64;
         }
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
@@ -403,6 +439,25 @@ impl Serialize for SetCounts {
 #[cfg(test)]
 mod set_counts_test {
     use super::*;
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn joint_delivery_retirement_cannot_turn_a_mask_into_an_arena_offset() {
+        for width in [1, 32] {
+            let mut delivery = Delivery::new(7, 123, width, true, 9);
+            for position in (0..width).rev() {
+                assert_eq!(delivery.rule(), 7);
+                assert!(delivery.joint());
+                assert_ne!(delivery.first & (1 << position), 0);
+                delivery.first &= !(1 << position);
+            }
+            assert_eq!(delivery.first, 0);
+            assert!(delivery.joint());
+        }
+        let arena = Delivery::new(7, u32::MAX as usize, 64, false, 9);
+        assert!(!arena.joint());
+        assert_eq!(arena.rule(), 7);
+        assert_eq!(arena.first, u32::MAX);
+    }
     #[test]
     fn serialization_includes_current_set_and_prior_occurrences() {
         let mut counts=SetCounts::default();
@@ -421,6 +476,14 @@ pub struct Stats {
     origin_map_writes: u64,
     origin_map_probes: u64,
     history_capture_reads: u64,
+    history_shared_slots: u64,
+    joint_history_checks: u64,
+    joint_history_frames: u64,
+    joint_history_query_reads: u64,
+    joint_history_query_writes: u64,
+    joint_output_reads: u64,
+    joint_output_mask_checks: u64,
+    joint_output_mask_writes: u64,
     history_slots_written: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
@@ -1183,7 +1246,8 @@ impl Programs {
     }
     /// Lend the pending arena to one source RHS. Its suffix is private until
     /// complete seals it; matching and publication never run during this loan.
-    pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool) -> crate::cell::Effects {
+    pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool,
+        _step: Option<&Started>, _facts: &QueryFacts) -> crate::cell::Effects {
         if !force && !full && !self.capture_receipts(rid) { return Default::default(); }
         let outputs = self.outputs.get(rid).map_or(&[][..], Vec::as_slice);
         #[cfg(feature = "sparse-cells")]
@@ -1199,6 +1263,22 @@ impl Programs {
             && published != 0 && outputs[..published].iter().all(|o| !g.has_visibility_changes(o.table));
         #[cfg(not(feature = "sparse-cells"))]
         let keep = false;
+        #[cfg(feature = "sparse-cells")]
+        if keep && !full && !g.program.iterative.tracks_slots() && let Some(width) = plan.joint_width() {
+            self.stats.joint_history_checks += 1;
+            if let Some(Started::Live(cursor)) = _step {
+                let (sources, depth, _, _) = g.program.iterative.capture(&cursor.state);
+                // Supply is a checked subset of this rule's exports. Equal
+                // width proves complete coverage without per-instance maps.
+                if depth != 0 && sources.len() == width {
+                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, std::mem::take(&mut self.cell_outputs), _facts);
+                    self.stats.joint_history_frames += 1;
+                    self.stats.joint_history_query_reads += queries as u64;
+                    self.stats.joint_history_query_writes += queries as u64;
+                    return frame;
+                }
+            }
+        }
         crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
     }
     pub(crate) fn finish_effects(&mut self, effects: impl crate::cell::CompletedEffects, publish: bool) {
@@ -1238,6 +1318,15 @@ impl Programs {
         let template = &g.program.templates[rule.template];
         self.capture_unions.get_or_insert(g.stats.unions);
         let slot = self.pending_steps.len();
+        #[cfg(feature = "sparse-cells")]
+        let sealed = effects.output_frame().and_then(|frame| {
+            self.stats.output_span_checks += 1;
+            frame.sealed_outputs()
+        });
+        #[cfg(feature = "sparse-cells")]
+        let joint = effects.output_frame().is_some_and(|frame| frame.has_joint_results());
+        #[cfg(not(feature = "sparse-cells"))]
+        let joint = false;
         #[cfg(feature = "iterative-bake")]
         let step = {
             let mut s = step;
@@ -1248,22 +1337,20 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
-            s.remember(&g.program.iterative, rid,
-                &query_fact, |i| effects.get(i), effects.forwarded(), &mut self.stats);
+            if !joint {
+                s.remember(&g.program.iterative, rid,
+                    &query_fact, |i| effects.get(i), effects.forwarded(),
+                    #[cfg(feature = "sparse-cells")] None, &mut self.stats);
+            }
             s
         };
         self.pending_steps.push(Completion::new(step));
-        #[cfg(feature = "sparse-cells")]
-        let sealed = effects.output_frame().and_then(|frame| {
-            self.stats.output_span_checks += 1;
-            frame.sealed_outputs()
-        });
         #[cfg(feature = "sparse-cells")]
         if let Some((first, count, aliases, _)) = sealed {
             // begin_effects admitted only permanent Entry-owned tables without
             // visibility loss. No source Hide can target such a table; union
             // forwarding and final Entry selection still run at publication.
-            self.install_delivery(rid, slot, _cell, first);
+            self.install_delivery(rid, slot, _cell, first, joint);
             self.stats.cell_output_span_seals += 1;
             self.stats.cell_output_sealed_receipts += count as u64;
             self.stats.effect_outputs_reused += count as u64;
@@ -1340,6 +1427,16 @@ impl Programs {
             self.stats.captured_anchors += 1;
         }
         #[cfg(feature = "sparse-cells")]
+        if joint {
+            // Individual boundaries only read this frame. The permanent
+            // prefix has no query aliases to fill, so raw RHS evidence remains
+            // unchanged. Move it once after boundary registration is done.
+            let prepared = effects.output_frame().unwrap().take_results(rid).unwrap();
+            let CompletionPhase::Started(step) = &mut self.pending_steps[slot].phase else { unreachable!() };
+            step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
+                effects.forwarded(), Some(prepared), &mut self.stats);
+        }
+        #[cfg(feature = "sparse-cells")]
         let publish = self.pending_steps[slot].delivery.is_some();
         #[cfg(not(feature = "sparse-cells"))]
         let publish = false;
@@ -1380,31 +1477,29 @@ impl Programs {
                 self.cell_outputs.resize(first + width, None);
                 first
             };
-            self.install_delivery(rid, slot, _cell, first)
+            self.install_delivery(rid, slot, _cell, first, false)
         };
         if let Some(effects) = effects.as_mut() {
             if effects.retain_output(position, receipt) { self.stats.effect_output_copies += 1; }
             else { self.stats.effect_outputs_reused += 1; }
         } else {
+            debug_assert!(!delivery.joint());
             self.cell_outputs[delivery.first as usize + position] = Some(receipt);
             self.stats.effect_output_copies += 1;
         }
         self.count_output_receipts(rid, 1);
     }
     #[cfg(feature = "sparse-cells")]
-    fn install_delivery(&mut self, rid: usize, slot: usize, _cell: u32, first: usize) -> Delivery {
+    fn install_delivery(&mut self, rid: usize, slot: usize, _cell: u32, first: usize, joint: bool) -> Delivery {
         debug_assert!(self.pending_steps[slot].delivery.is_none());
         let width = self.cell_output_widths[rid];
         self.stats.cell_output_spans += 1;
         self.stats.cell_output_slots += width as u64;
-        self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
-        let delivery = Delivery {
-            rule: u32::try_from(rid).ok().and_then(|r| r.checked_add(1))
-                .and_then(std::num::NonZeroU32::new).expect("Cell rule index exhausted"),
-            first: u32::try_from(first).expect("Cell output arena exhausted"),
-            #[cfg(feature = "spine-shapes")]
-            cell: _cell,
-        };
+        if !joint {
+            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
+        }
+        self.stats.joint_output_mask_writes += u64::from(joint);
+        let delivery = Delivery::new(rid, first, width, joint, _cell);
         self.pending_steps[slot].delivery = Some(delivery);
         delivery
     }
@@ -1710,15 +1805,24 @@ impl Programs {
                 // order. Reverse traversal sees the final Entry winner first.
                 for slot in (0..self.pending_steps.len()).rev() {
                     self.stats.completion_cell_visits += 1;
-                    if let Some(delivery) = self.pending_steps[slot].delivery {
+                    if let Some(mut delivery) = self.pending_steps[slot].delivery {
                         let mut pending = false;
-                        let rule = delivery.rule.get() as usize - 1;
+                        let joint = delivery.joint();
+                        let mut mask = delivery.first;
+                        let rule = delivery.rule();
                         let width = self.cell_output_widths[rule];
                         let fragment = self.outputs[rule].len() >= 2;
                         for position in (0..width).rev() {
                             self.stats.cell_output_slot_reads += 1;
                             let index = delivery.first as usize + position;
-                            let Some(old) = self.cell_outputs[index] else { continue };
+                            let old = if joint {
+                                self.stats.joint_output_mask_checks += 1;
+                                if mask & (1 << position) == 0 { continue; }
+                                self.stats.joint_output_reads += 1;
+                                let port = self.effect_plans[rule].get().unwrap().history_output(position);
+                                self.pending_steps[slot].results().output(port)
+                            } else { self.cell_outputs[index] };
+                            let Some(old) = old else { continue };
                             let output = self.outputs[rule][position];
                             let table = output.table;
                             self.stats.cell_output_checks += 1;
@@ -1747,9 +1851,13 @@ impl Programs {
                             // Resolution still runs for every delivered output,
                             // even when its final Entry already has a winner.
                             self.stats.receipt_redirects += u64::from(w != old);
-                            self.cell_outputs[index] = None;
+                            if joint {
+                                mask &= !(1 << position);
+                                self.stats.joint_output_mask_writes += 1;
+                            } else { self.cell_outputs[index] = None; }
                             self.cell_outputs_pending -= 1;
                         }
+                        if joint { delivery.first = mask; }
                         self.pending_steps[slot].delivery = pending.then_some(delivery);
                     }
                     while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries)?; }
@@ -2389,6 +2497,9 @@ impl Programs {
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
         let report = json!({"output_registration":"cell-span/v1",
+            "joint_result_storage":"cell-results/v1",
+            "completion_record_bytes":std::mem::size_of::<Completion>(),
+            "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),
             "query_fragment_layout":"owned-instance/v1","query_winner_bytes":std::mem::size_of::<Winner>(),
             "query_fragment_header_bytes":std::mem::size_of::<Matched>(),
