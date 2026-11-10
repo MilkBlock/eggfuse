@@ -383,24 +383,33 @@ impl Catalog {
         Self::emit_policy(p, plan, true, true, true, true, false, None)
     }
     /// Inferred routes must connect implementations seen in completed runtime history.
-    pub fn emit_observed_ripsat_handoffs(p: &Program, plan: &mut J, observed: &BTreeSet<Id>) -> Result<()> {
+    pub fn emit_observed_ripsat_handoffs(p: &Program, plan: &mut J, observed: &ObservedCompletions) -> Result<()> {
         Self::emit_policy(p, plan, true, true, true, true, true, Some(observed))
     }
     /// Transfer a known local application to another implementation of the
     /// exact same completed Cell. Positions are matched by constructor
     /// incidence, not rule IDs or physical addresses. This is one bounded
     /// graph expansion per Bake call, not enumeration of complete histories.
-    fn extend_completion_entries(p:&Program,plan:&mut J,observed:Option<&BTreeSet<Id>>) -> Result<()> {
+    fn extend_completion_entries(p:&Program,plan:&mut J,observed:Option<&ObservedCompletions>) -> Result<()> {
         use crate::cell::{Definition,Site};
         let catalog=Self::parse(p,plan)?;
+        if observed.is_some_and(|seen| seen.units.iter().any(|&id|id>=catalog.units.len())
+            || seen.joins.iter().any(|j|j.left>=catalog.units.len() || j.right>=catalog.units.len())) {
+            return Err("completed history references a different Cell catalog".into());
+        }
         let room=catalog.limits.total.saturating_sub(catalog.units.len())
             .min(catalog.limits.per_round);
-        if room==0 {
+        let seeds = observed.map(|seen| seen.joins.iter().copied().collect::<Vec<_>>())
+            .unwrap_or_else(||catalog.jumps.keys().copied().collect());
+        if room==0 || seeds.is_empty() {
             plan["completion_search"] = json!({"scope":"compile-only; not runtime savings",
                 "indexed_outputs":0,"route_probes":0,"candidate_visits":0,"proof_checks":0,"admitted":0});
             return Ok(());
         }
-        let normalized=catalog.units.iter().map(|u|crate::cell_completion::normalize(p,&u.path)).collect::<Vec<_>>();
+        let normalized=catalog.units.iter().enumerate().map(|(id,u)| {
+            if observed.is_some_and(|seen| !seen.units.contains(&id)) { return None; }
+            crate::cell_completion::normalize(p,&u.path)
+        }).collect::<Vec<_>>();
         // Build the final-stage output incidence index once. Borrow canonical
         // structures/ports; no graph clones or runtime producer subscriptions.
         // Reverse operation order preserves the old last-output preference.
@@ -408,7 +417,7 @@ impl Catalog {
         let mut indexed_outputs = 0;
         for (left, alternative) in normalized.iter().enumerate() {
             let Some(alternative) = alternative else { continue };
-            if observed.is_some_and(|seen| !seen.contains(&left)) { continue; }
+            if observed.is_some_and(|seen| !seen.units.contains(&left)) { continue; }
             let unit = &catalog.units[left];
             let cell = Definition::new(p, unit.last().0)?;
             let mut seen = BTreeSet::new();
@@ -426,8 +435,8 @@ impl Catalog {
         let mut paths=catalog.units.iter().map(|u|u.path.to_vec()).collect::<BTreeSet<_>>();
         let mut extensions=vec![];
         let mut additions=vec![];
-        'joins: for (&join,_) in &catalog.jumps {
-            if observed.is_some_and(|seen| !seen.contains(&join.left)) { continue; }
+        'joins: for join in seeds {
+            if observed.is_some_and(|seen| !seen.units.contains(&join.left)) { continue; }
             let Some(source)=&normalized[join.left] else{continue};
             let original=&catalog.units[join.left];
             let stage=original.path.len()-1;
@@ -437,7 +446,6 @@ impl Catalog {
             let Some(candidates) = outputs.get(&(&source.structure, table, columns)) else { continue };
             for &(left, output) in candidates {
                 candidate_visits += 1;
-                if left == join.left { continue; }
                 let candidate=Join{left,output,right:join.right};
                 if catalog.jumps.contains_key(&candidate) {continue;}
                 let Some(combined)=catalog.combine(p,candidate) else{continue};
@@ -450,6 +458,8 @@ impl Catalog {
                 extensions.push(json!({"from":join,"to":candidate,
                     "structure":crate::checksum::artifact_digest(&serde_json::to_value(&source.structure).unwrap()),
                     "output_ports":columns,"proof":"exact normalized structure and output incidence",
+                    "origin":if observed.is_some() {"completed-runtime-history"} else {"checked-catalog"},
+                    "observed_application":observed.is_some_and(|seen|seen.joins.contains(&candidate)),
                     "new_observation":false}));
                 if additions.len()==room {break 'joins;}
             }
@@ -473,7 +483,7 @@ impl Catalog {
         query_ports: bool,
         completion: bool,
         expand: bool,
-        observed: Option<&BTreeSet<Id>>,
+        observed: Option<&ObservedCompletions>,
     ) -> Result<()> {
         plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
         plan.as_object_mut().unwrap().remove("completion");
@@ -839,6 +849,12 @@ pub struct Evidence {
     pub witness: Option<crate::graph::Dependency>,
     width: u64,
 }
+/// Compile-time recognition seeds derived from completed trace links.
+#[derive(Default)]
+pub struct ObservedCompletions {
+    pub units: BTreeSet<Id>,
+    pub joins: BTreeSet<Join>,
+}
 /// A successful logical Cell execution, not a physical constructor owner.
 /// Parent is an earlier execution on this cursor, including across Runs.
 #[derive(Clone, Serialize)]
@@ -944,8 +960,15 @@ impl Training {
             window.push((parent_run, self.run, s.witness, trace));
         }
     }
-    pub fn completed_trace_units(&self) -> BTreeSet<Id> {
-        self.trace.iter().map(|e|e.unit).collect()
+    pub fn completion_observations(&self, catalog: &Catalog) -> ObservedCompletions {
+        let mut joins = BTreeSet::new();
+        for event in &self.trace {
+            let Some(parent) = event.parent.map(|i| &self.trace[i]) else { continue };
+            if parent.run >= event.run { continue; }
+            let Some(&right) = catalog.leaves.get(&event.entry) else { continue };
+            joins.insert(Join {left:parent.unit, output:event.output, right});
+        }
+        ObservedCompletions { units:self.trace.iter().map(|e|e.unit).collect(), joins }
     }
     /// Materialize compile-time history from completed cursor executions only.
     /// Paths are bounded suffixes; the event links retain their actual ancestry.
@@ -1040,6 +1063,7 @@ mod tests {
     fn completed_trace_keeps_fork_ancestry_and_reports_capacity_loss() {
         let mut c = Catalog::default();
         for rule in 0..3 {
+            c.leaves.insert((rule,Some(0)),rule);
             c.units.push(Unit {path:vec![(None,(rule,Some(0)))].into_boxed_slice()});
         }
         let mut training = Training {run:1,..Default::default()};
@@ -1052,6 +1076,9 @@ mod tests {
         assert_eq!(training.trace[1].parent,Some(0));
         assert_eq!(training.trace[2].parent,Some(0));
         assert_eq!(training.trace[2].producer_run,1);
+        assert_eq!(training.completion_observations(&c).joins, [
+            Join {left:0,output:0,right:1}, Join {left:0,output:0,right:2}
+        ].into_iter().collect());
         c.limits.candidates=1; c.limits.depth=1;
         training.run=4; training.applied(&c,&mut source,1);
         assert_eq!(training.trace.len(),3);

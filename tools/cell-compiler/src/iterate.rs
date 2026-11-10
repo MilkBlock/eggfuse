@@ -260,7 +260,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     fs::create_dir(out)?;
     let mut reference = None;
     let mut history = Vec::new();
-    let compile_plan = |plan: &mut J, expand: bool, observed: Option<&std::collections::BTreeSet<usize>>| -> Result<Program> {
+    let compile_plan = |plan: &mut J, expand: bool, observed: Option<&eggfuse_cell_runtime::iterative::ObservedCompletions>| -> Result<Program> {
         plan.as_object_mut().unwrap().remove("state_plan");
         if completion {
             if expand {
@@ -328,7 +328,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         } else {
             vec![]
         };
-        let observed_units = train.completed_trace_units();
+        let observed_units = train.completion_observations(cat);
         let runtime_history = completion.then(|| train.completion_history(&p));
         let registry = if let Some(trace) = &runtime_history {
             let mut registry = eggfuse_bake::native_analyze::register_cpu_completion_structures(&trace["contracts"])?;

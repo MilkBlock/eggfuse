@@ -237,6 +237,12 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
         let mut unseen = raw["iterative_bake"].clone();
         Catalog::emit_observed_ripsat_handoffs(&checked, &mut unseen, &Default::default()).unwrap();
         assert_eq!(unseen["joins"], raw["iterative_bake"]["joins"], "unobserved catalog implementations must not seed inferred routes");
+        let observed = eggfuse_cell_runtime::iterative::ObservedCompletions {
+            units: [first,second,consumer].into_iter().collect(), joins:Default::default(),
+        };
+        Catalog::emit_observed_ripsat_handoffs(&checked, &mut unseen, &observed).unwrap();
+        assert_eq!(unseen["joins"], raw["iterative_bake"]["joins"], "seeing both endpoints is not observing their transition");
+        assert_eq!(unseen["completion_search"]["indexed_outputs"],0,"no trace edge means no recognition index to build");
         // Measured Bake must not insert the inferred route while constructing its
         // baseline. Even without observed proposals it must score that route.
         let tmp = tempfile::tempdir().unwrap();
@@ -281,6 +287,11 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
                     assert_eq!(history[1]["source_program"], *hash, "next round must use exact scored artifact");
                     let final_program: Value = serde_json::from_slice(&std::fs::read(out.join("program.json")).unwrap()).unwrap();
                     assert_eq!(final_program["sha256"], *hash);
+                    let inferred = final_program["iterative_bake"]["completion_extensions"].as_array().unwrap();
+                    assert!(inferred.iter().any(|route| route["from"]["left"]==second
+                        && route["to"]["left"]==second && route["observed_application"]==true
+                        && route["origin"]=="completed-runtime-history"),
+                        "recognition must start at the executed route, not the unused catalog join");
                 } else {
                     assert_eq!(history[0]["stop"], "no_measured_gain");
                     assert_eq!(history.as_array().unwrap().len(), 1);

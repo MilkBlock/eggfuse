@@ -125,9 +125,19 @@ indices first. These are offline operations on the export.
 
 The native ripsat registry receives normalized structures of those executed
 paths and their observed prefix transitions. Measured inferred-route candidates
-are additionally restricted to source implementations recorded in the trace;
+start from the actual cross-Run parent/consumer applications in that trace,
+including applications not already present as joins in the executable catalog.
+Observing two source implementations alone does not authorize an expansion;
+there must be an observed application to recognize and specialize. Source
+implementations outside the trace are not normalized for this search. With no
+observed applications, Bake builds no recognition index.
+
+Equivalence may generalize an observed route to another observed implementation;
 typed completion proof, exact output incidence and measured admission still
 apply. Candidate routes remain predictions, never fabricated trace events.
+Extension provenance records `origin: completed-runtime-history` and whether
+the proposed application itself occurred (`observed_application`). That is
+distinct from a predicted equivalent route and from a committed mutation.
 Explicit static/offline expansion remains available as a separate policy.
 
 The short retained-chain check records 6 executions, 4 cross-Run parent edges,
