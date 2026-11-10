@@ -3,7 +3,7 @@ index 882ec434..813a18f8 100644
 --- a/engine/cell-runtime/src/completion_access.rs
 +++ b/engine/cell-runtime/src/completion_access.rs
 @@ -4,6 +4,8 @@ use super::*;
- 
+
  #[derive(Clone, Debug, Default, Serialize)]
  pub struct Rule {
 +    #[serde(skip)]
