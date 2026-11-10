@@ -1,0 +1,160 @@
+{
+  "scope": "actual Cell runtime; equal-weight work counters, not elapsed-time measurement",
+  "implementation_commit": "a4b14c4b",
+  "rounds": 1,
+  "trial_limit": 1,
+  "ranked_proposals": 5,
+  "untried_ranked_proposals": 4,
+  "source_program": "c02cdd06cf6346c38a16043c675299946d8042d30388f43676a2dfb24110e470",
+  "candidate_program": "f2f9ce9b91b81d9b0c8d83c2ceb8c8d5e619b73d3eb256573e8b1ae93bbd559b",
+  "join": {
+    "left": 3,
+    "output": 2,
+    "right": 5
+  },
+  "proposal": {
+    "visits": 223,
+    "predicted_key_reads": 446,
+    "bridge_support": 0,
+    "avoidable_origin_slots": 0,
+    "producer_run": 1220,
+    "consumer_run": 1223,
+    "witness": {
+      "Fact": {
+        "cell": 10021,
+        "op": 2
+      }
+    },
+    "width": 3
+  },
+  "semantic_audit": true,
+  "net_saved_operations": 2603,
+  "changed_counters": {
+    "key_lookup_calls": {
+      "before": 19129,
+      "after": 18759,
+      "saved": 370
+    },
+    "stable_ports/stats/birth_hint_probes": {
+      "before": 17247,
+      "after": 16877,
+      "saved": 370
+    },
+    "stable_ports/stats/key_candidates": {
+      "before": 16879,
+      "after": 16509,
+      "saved": 370
+    },
+    "stable_ports/stats/key_field_comparisons": {
+      "before": 33328,
+      "after": 32753,
+      "saved": 575
+    },
+    "stable_ports/stats/node_lookups": {
+      "before": 67383,
+      "after": 67053,
+      "saved": 330
+    },
+    "stable_ports/stats/port_reads": {
+      "before": 126338,
+      "after": 125308,
+      "saved": 1030
+    },
+    "stable_ports/stats/root_parent_probes": {
+      "before": 143093,
+      "after": 141919,
+      "saved": 1174
+    },
+    "stable_ports/stats/root_resolutions": {
+      "before": 126338,
+      "after": 125308,
+      "saved": 1030
+    },
+    "stable_ports/stats/row_views": {
+      "before": 38670,
+      "after": 38340,
+      "saved": 330
+    },
+    "stage_spine/stats/effect_slots_initialized": {
+      "before": 10790,
+      "after": 10771,
+      "saved": 19
+    },
+    "stage_spine/stats/history_allocations": {
+      "before": 0,
+      "after": 534,
+      "saved": -534
+    },
+    "stage_spine/stats/joint_history_checks": {
+      "before": 0,
+      "after": 374,
+      "saved": -374
+    },
+    "stage_spine/stats/joint_history_frames": {
+      "before": 0,
+      "after": 369,
+      "saved": -369
+    },
+    "stage_spine/stats/joint_history_query_reads": {
+      "before": 0,
+      "after": 311,
+      "saved": -311
+    },
+    "stage_spine/stats/joint_history_query_writes": {
+      "before": 0,
+      "after": 311,
+      "saved": -311
+    },
+    "stage_spine/stats/joint_output_reads": {
+      "before": 0,
+      "after": 534,
+      "saved": -534
+    },
+    "stage_spine/stats/ripsat_boundary_reads": {
+      "before": 0,
+      "after": 165,
+      "saved": -165
+    },
+    "stage_spine/stats/ripsat_layout_checks": {
+      "before": 0,
+      "after": 223,
+      "saved": -223
+    },
+    "stage_spine/stats/ripsat_witness_checks": {
+      "before": 0,
+      "after": 428,
+      "saved": -428
+    },
+    "stats/constructor_requests": {
+      "before": 11774,
+      "after": 11569,
+      "saved": 205
+    },
+    "stats/handoff_attempts": {
+      "before": 0,
+      "after": 116,
+      "saved": -116
+    },
+    "stats/union_requests": {
+      "before": 3211,
+      "after": 3046,
+      "saved": 165
+    }
+  },
+  "completion_search": {
+    "scope": "compile-only; not runtime savings",
+    "indexed_outputs": 22,
+    "route_probes": 25,
+    "candidate_visits": 25,
+    "proof_checks": 24,
+    "admitted": 0
+  },
+  "audit_hashes": {
+    "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+    "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+    "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+  },
+  "next_round_uses_measured_candidate": true
+}
