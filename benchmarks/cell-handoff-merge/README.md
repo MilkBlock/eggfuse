@@ -85,3 +85,12 @@ python3 benchmarks/cell-handoff-merge/verify_state.py OUT SUM
 
 验证脚本只读取这些已保存执行，不重跑工作负载。构建、完整图、日志、编译
 sidecar 留在忽略的 `out/cell-handoff-merge`；仓库保留可复现脚本和文本结果。
+
+## 后续分支同步
+
+完整计时结束后又合入分支截至 `39512f71` 的两个提交，其中 `b840448c`
+直接构造 closure 位图并复用临时行；另一个提交记录对方的测量结果。
+本地重跑 49 项 compiler/query-worker/state/scoped/staged 测试和普通 release
+构建通过。用户随后要求回到 worker 直接接续 Cell 的实现，因此没有启动
+这两个追加提交的补充计时。上文计时与二进制哈希仍严格属于 `c8b099fd`
+合并快照，不能用于声称追加提交的最终版本已经完成性能验收。

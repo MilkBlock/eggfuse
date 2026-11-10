@@ -87,11 +87,11 @@ impl Plan {
             .enumerate()
             .filter_map(|(i, _)| (sorts[i].1 || merges[i].opaque).then_some(i))
             .collect::<Vec<_>>();
-        let mut affects = vec![vec![false; n]; n];
+        let mut affects = vec![vec![0u64; n.div_ceil(64)]; n];
         for (i, t) in p.tables.iter().enumerate() {
-            affects[i][i] = true;
+            affects[i][i / 64] |= 1 << (i % 64);
             if opaque_tables.contains(&i) {
-                affects[i].fill(true);
+                fill_all_tables(&mut affects[i], n);
                 continue;
             }
             if t.constructor
@@ -100,31 +100,18 @@ impl Plan {
             {
                 let name = sort["name"].as_str().ok_or("constructor result sort")?;
                 for (j, (names, unknown)) in sorts.iter().enumerate() {
-                    affects[i][j] |= *unknown || names.contains(name);
+                    if *unknown || names.contains(name) { affects[i][j / 64] |= 1 << (j % 64); }
                 }
             }
             // An opaque merge's reads are a barrier only when that merge is
             // actually pending. Its mere presence must not connect unrelated
             // sorts; the runtime switches to ordered full completion then.
         }
-        let mut affects = affects
-            .into_iter()
-            .map(|row| {
-                let mut bits = vec![0u64; n.div_ceil(64)];
-                for (j, yes) in row.into_iter().enumerate() {
-                    if yes {
-                        bits[j / 64] |= 1 << (j % 64);
-                    }
-                }
-                bits
-            })
-            .collect::<Vec<_>>();
         transitive(&mut affects);
         // Closing an existing constructor key can publish an equality. A merge
         // constructing a previously absent key only publishes that table's new
         // fact; its fresh result is not a union of existing classes. Add birth
         // writes after equality-task closure so they do not invent that union.
-        let task_effects = affects.clone();
         let completion_reads = affects
             .iter()
             .map(|row| {
@@ -137,11 +124,17 @@ impl Plan {
                 reads.into_iter().collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        for (i, row) in task_effects.iter().enumerate() {
-            for (t, merge) in merges.iter().enumerate() {
-                if row[t / 64] & (1 << (t % 64)) != 0 {
-                    for &birth in &merge.births {
-                        affects[i][birth / 64] |= 1 << (birth % 64);
+        {
+            // A birth must not activate another merge in this same pass.
+            // Snapshot only the current closed row and reuse that buffer.
+            let mut task_effects=vec![0u64;n.div_ceil(64)];
+            for row in &mut affects {
+                task_effects.copy_from_slice(row);
+                for (t, merge) in merges.iter().enumerate() {
+                    if task_effects[t / 64] & (1 << (t % 64)) != 0 {
+                        for &birth in &merge.births {
+                            row[birth / 64] |= 1 << (birth % 64);
+                        }
                     }
                 }
             }
@@ -333,9 +326,17 @@ impl Plan {
 fn opaque_literal(a: &Arg) -> bool {
     matches!(a, Arg::Literal(Value::Eq(_) | Value::Set(_)))
 }
+fn fill_all_tables(row:&mut [u64], tables:usize) {
+    row.fill(u64::MAX);
+    // Keep padding zero: global-effect classification counts set bits.
+    if tables % 64 != 0 {
+        if let Some(last)=row.last_mut() { *last=(1u64<<(tables%64))-1; }
+    }
+}
 fn transitive(rows: &mut [Vec<u64>]) {
+    let mut via=vec![0;rows.first().map_or(0,Vec::len)];
     for k in 0..rows.len() {
-        let via = rows[k].clone();
+        via.copy_from_slice(&rows[k]);
         for row in &mut *rows {
             if row[k / 64] & (1 << (k % 64)) != 0 {
                 for (word, &other) in row.iter_mut().zip(&via) {
@@ -357,6 +358,15 @@ fn share_rows(rows:Vec<Vec<u64>>, pool:&mut BTreeSet<std::rc::Rc<[u64]>>)->Box<[
 #[cfg(test)]
 mod shared_rows_tests {
     use super::*;
+    #[test]
+    fn opaque_masks_include_all_tables_but_never_padding() {
+        for n in [0usize,1,63,64,65,127,128,129,401] {
+            let mut row=vec![0;n.div_ceil(64)];
+            fill_all_tables(&mut row,n);
+            assert_eq!(row.iter().map(|word|word.count_ones() as usize).sum::<usize>(),n);
+            assert!((0..n).all(|i|row[i/64] & (1<<(i%64)) != 0));
+        }
+    }
     #[test]
     fn exact_rows_share_across_matrices_without_losing_high_bits() {
         let mut pool=BTreeSet::new();

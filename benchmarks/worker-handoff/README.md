@@ -319,3 +319,70 @@ this change compresses the exact type-derived closure they consume. It does not
 claim that a scheduled cross-Run switch can discharge more work merely because
 its masks share memory. All previously live matching, Eq, deletion, visibility
 and publication obligations remain live.
+
+## Build prediction masks directly and reuse closure scratch
+
+Prediction construction no longer builds an n-by-n Vec<bool> matrix and scans
+it again to produce u64 rows. It sets the same bits directly. Opaque/full rows
+explicitly clear padding bits because global-effect classification counts bits;
+boundary tests cover 0/1/63/64/65/127/128/129/401 tables.
+
+Merge-birth influence still reads the pre-birth closed row. A single reusable
+snapshot replaces cloning the entire task-effect matrix, so births cannot
+spuriously activate another merge in the same pass. Both transitive-closure
+passes likewise reuse one pivot buffer each instead of cloning every pivot.
+The ordering and scope of all proof computations remain unchanged.
+
+On the 401-table frozen catalog, the removed intermediate boolean payload is
+160,801 bytes. The birth-snapshot payload changes 22,456 -> 56 bytes. Two closure
+passes plus the birth pass use three explicit row buffers rather than 1,203.
+These are source-level temporary representations, not instrumented allocator
+calls or measured peak RSS; the boolean matrix and birth snapshot occur in
+different phases and their sizes must not be added as a peak-memory claim.
+Retained prediction storage is unchanged.
+
+`direct-mask-check.json` compares against c8b099fd. Running the same
+inspect_completion_storage example on both versions yields identical complete
+diagnostic JSON, including all serialized facts, every influence pair and every
+singleton waiting scope. Thirty-one staged/merge/scoped tests and two boundary/
+sharing tests pass. No new inference timing was run. Existing accepted semantic
+exports remain the reference because the executor and every generated
+prediction are unchanged. This change removes redundant work needed to build
+predictions; it does not claim broader repair coverage or new Run takeover.
+
+## Closure compression timing (83e1b566 -> b840448c)
+
+`closure-compression-timing.json` measures the standalone Cell CPU runtime,
+not native egglog, on the frozen sum-bits program. Both release binaries use
+sparse-cells, view-ports and storage-metrics, with CELL_CPU_HASH_BITS=64.
+`time_alias_scopes.py` ran one warmup and seven alternating paired repetitions
+per mode. Every sample agrees on the exact final-state hash and 1,428 ordered
+Run signatures. This is a before/after regression check, not a fresh native
+semantic proof. Binary hashes and individual samples are saved in the JSON.
+
+Median milliseconds (baseline -> candidate):
+
+| Mode | Setup | Inference | Process wall |
+| --- | ---: | ---: | ---: |
+| normal | 3.413 -> 3.352 | 27.285 -> 27.942 | 149.316 -> 151.282 |
+| scoped | 28.118 -> 29.359 | 31.637 -> 33.599 | 174.110 -> 182.859 |
+
+Paired median candidate/baseline ratios for scoped setup, inference and wall
+are 1.0315, 1.0337 and 1.0285. Their paired bootstrap 95% intervals are
+[1.0155, 1.0498], [1.0033, 1.0992] and [1.0066, 1.0474], respectively.
+Normal-mode intervals include 1. These samples show no speed benefit and a
+small scoped-mode regression; they do not isolate which of the two commits
+causes it. Ratios of medians differ from medians of paired ratios.
+
+Call-site inspection: scoped_completion::use_scoped_completion derives the
+Plan once when enabling this optional mode, inside main's setup timer. Normal
+local-congruence mode does not build it. Offline worker-handoff compilation
+also derives the Plan. Direct mask construction and scratch reuse optimize
+this preparation, not a per-RHS or per-repair loop. Runtime scope selection
+and influence checks read the retained matrices; sharing changes their storage
+but removes no logical check. No profile establishes those reads as a hotspot.
+
+The retained-matrix reduction (64,160 -> 30,760 logical bytes) remains valid,
+but must be reported with this time cost, not as RHS publication acceleration.
+Further speed work should target measured repeated Entry/publication work;
+this measurement does not justify more prediction-builder micro-optimization.
