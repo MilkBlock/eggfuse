@@ -1162,6 +1162,8 @@ impl Programs {
         cursor.root.materialize(&mut self.stats);
         Some(cursor)
     }
+    pub(crate) fn completed_step_count(&self) -> u64 { self.stats.completed_steps }
+
     pub(crate) fn begin_step(
         &mut self,
         p: &Program,

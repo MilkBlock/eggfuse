@@ -28,6 +28,8 @@ mod pure_epochs;
 #[cfg(feature="sparse-cells")]
 #[path = "point_ports.rs"]
 mod point_ports;
+#[path = "rule_profile.rs"]
+mod rule_profile;
 use crate::cell::QueryFacts;
 use crate::schedule::{self, Task};
 use crate::{
@@ -167,6 +169,7 @@ pub struct Executor {
     sieve: crate::sieve::Sieve,
     profile_queries: bool,
     query_profile: Vec<(u64, f64, u64, u64)>,
+    rhs_profile: Vec<rule_profile::Rhs>,
     progress: bool,
 
     continuation_stats: ContinuationStats,
@@ -370,6 +373,9 @@ impl Executor {
             sieve,
             profile_queries: std::env::var_os("CELL_CPU_PROFILE").is_some(),
             query_profile: vec![(0, 0.0, 0, 0); n],
+            rhs_profile: if std::env::var_os("CELL_CPU_PROFILE").is_some() {
+                vec![rule_profile::Rhs::default(); n]
+            } else { Vec::new() },
             progress: std::env::var_os("CELL_CPU_PROGRESS").is_some(),
 
             continuation_stats: ContinuationStats::default(),
@@ -2553,50 +2559,59 @@ impl Executor {
         let groups = buffer.drain(..);
         #[cfg(not(feature = "sparse-cells"))]
         let groups = patch.groups.into_iter();
-        for (rid, binding) in groups.flat_map(|(rid, rows)| rows.into_iter().map(move |b| (rid, b))) {
-            #[cfg(feature = "family-survey")]
-            let before = {
-                if rhs_clock.as_ref().is_none_or(|(r, _)| *r != rid) {
-                    if let Some((prev, clock)) = rhs_clock.replace((rid, Instant::now())) {
-                        self.survey.rhs(prev, clock.elapsed().as_nanos() as u64);
+        for (rid, rows) in groups {
+            let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
+                rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
+            for binding in rows {
+                #[cfg(feature = "family-survey")]
+                let before = {
+                    if rhs_clock.as_ref().is_none_or(|(r, _)| *r != rid) {
+                        if let Some((prev, clock)) = rhs_clock.replace((rid, Instant::now())) {
+                            self.survey.rhs(prev, clock.elapsed().as_nanos() as u64);
+                        }
                     }
+                    self.stage_spine.survey_resumed()
+                };
+                #[cfg(feature = "rhs-work-audit")]
+                let sample = self.ledger.begin(&self.graph, rid, &binding.values)?;
+                #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
+                let local_sample = (
+                    self.local_counts.block_local_intermediates,
+                    self.local_counts.local_complete,
+                );
+                #[cfg(feature = "sparse-cells")]
+                { self.graph.sealed_generation = Some(binding_generation); }
+                let applied = self.apply(
+                    rid,
+                    binding,
+                    #[cfg(feature = "structural-depth")]
+                    evidence.as_mut().and_then(Iterator::next),
+                );
+                #[cfg(feature = "sparse-cells")]
+                {
+                    self.graph.sealed_input_cell = None;
+                    self.graph.sealed_generation = None;
                 }
-                self.stage_spine.survey_resumed()
-            };
-            #[cfg(feature = "rhs-work-audit")]
-            let sample = self.ledger.begin(&self.graph, rid, &binding.values)?;
-            #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
-            let local_sample = (
-                self.local_counts.block_local_intermediates,
-                self.local_counts.local_complete,
-            );
-            #[cfg(feature = "sparse-cells")]
-            { self.graph.sealed_generation = Some(binding_generation); }
-            let applied = self.apply(
-                rid,
-                binding,
-                #[cfg(feature = "structural-depth")]
-                evidence.as_mut().and_then(Iterator::next),
-            );
-            #[cfg(feature = "sparse-cells")]
-            {
-                self.graph.sealed_input_cell = None;
-                self.graph.sealed_generation = None;
+                #[cfg(feature = "sparse-cells")]
+                if applied.is_err() {
+                    self.graph.promote_active();
+                }
+                applied?;
+                #[cfg(feature = "rhs-work-audit")]
+                {
+                    #[cfg(feature = "rhs-locals")]
+                    self.ledger.locals(local_sample, &self.local_counts);
+                    self.ledger.end(&self.graph, sample)?;
+                }
+                #[cfg(feature = "family-survey")]
+                self.survey
+                    .resumed(rid, self.stage_spine.survey_resumed() - before);
             }
-            #[cfg(feature = "sparse-cells")]
-            if applied.is_err() {
-                self.graph.promote_active();
+            if let Some((clock, bindings, before)) = profile {
+                self.rhs_profile[rid].record(before,
+                    rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count()),
+                    bindings, clock.elapsed().as_secs_f64());
             }
-            applied?;
-            #[cfg(feature = "rhs-work-audit")]
-            {
-                #[cfg(feature = "rhs-locals")]
-                self.ledger.locals(local_sample, &self.local_counts);
-                self.ledger.end(&self.graph, sample)?;
-            }
-            #[cfg(feature = "family-survey")]
-            self.survey
-                .resumed(rid, self.stage_spine.survey_resumed() - before);
         }
         #[cfg(feature = "sparse-cells")]
         {
@@ -2951,7 +2966,8 @@ impl Executor {
             .filter(|(_, (calls, _, _, _))| *calls != 0)
             .map(|(rule, &(calls, search_s, residual_visits, bindings))|
                 json!({"rule":rule,"template":self.graph.program.rules[rule].template,
-                    "calls":calls,"search_s":search_s,"residual_visits":residual_visits,"bindings":bindings}))
+                    "calls":calls,"search_s":search_s,"residual_visits":residual_visits,"bindings":bindings,
+                    "rhs":self.rhs_profile[rule]}))
             .collect::<Vec<_>>());
         let view_rule_profile=self.profile_queries.then(||{
             self.graph.program.view_blocks.iter().flat_map(|b|b.producer.members.iter().chain(&b.consumers.members))

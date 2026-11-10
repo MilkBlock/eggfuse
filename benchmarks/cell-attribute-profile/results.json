@@ -1,0 +1,2212 @@
+{
+  "baseline_commit": "f2a008da",
+  "scope": "standalone Cell CPU, one instrumented attribution; not throughput or general sparsity proof",
+  "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+  "runtime_sha256": "ef7af210298793bb77591bbe1ed107a8bb1121ca1115f76a8b6a8e25f1826a34",
+  "prefix_sha256": "883ca1980ec5e9ed90a5b41be6bcf6b3995b7cf993f3cffb7d255e1c53fda6fd",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "cases": {
+    "sum-profile": {
+      "report_sha256": "3d9546a0303a0e07b9e3e20b09d17894ace0a6d21df57c2db8c9b6c05faa0ef8",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "baseline_report_sha256": "bc6a17a1c2b167a80192f392cddf430f05c8f6b0664f4242024f3e3c91aeca8a",
+      "runs": 1428,
+      "expr_size": [
+        {
+          "bindings": 2,
+          "calls": 82,
+          "residual_visits": 2,
+          "rhs": {
+            "batches": 2,
+            "bindings": 2,
+            "completed_steps": 2,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2,
+            "seconds": 8.750000000000001e-07,
+            "single_writes": 2,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 148,
+          "search_s": 3.8956000000000004e-05,
+          "template": 148
+        },
+        {
+          "bindings": 5,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 2,
+            "bindings": 5,
+            "completed_steps": 5,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 5,
+            "seconds": 2.375e-06,
+            "single_writes": 5,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 149,
+          "search_s": 2.788000000000001e-06,
+          "template": 149
+        },
+        {
+          "bindings": 8,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 1,
+            "bindings": 8,
+            "completed_steps": 8,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 4,
+            "seconds": 1.875e-06,
+            "single_writes": 8,
+            "unchanged_single_writes": 4,
+            "union_requests": 0
+          },
+          "rule": 150,
+          "search_s": 1.1588000000000002e-05,
+          "template": 150
+        },
+        {
+          "bindings": 56,
+          "calls": 82,
+          "residual_visits": 62,
+          "rhs": {
+            "batches": 18,
+            "bindings": 56,
+            "completed_steps": 56,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 16,
+            "seconds": 1.5834e-05,
+            "single_writes": 56,
+            "unchanged_single_writes": 40,
+            "union_requests": 0
+          },
+          "rule": 151,
+          "search_s": 6.770899999999996e-05,
+          "template": 151
+        },
+        {
+          "bindings": 2,
+          "calls": 82,
+          "residual_visits": 2,
+          "rhs": {
+            "batches": 2,
+            "bindings": 2,
+            "completed_steps": 2,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2,
+            "seconds": 6.249999999999999e-07,
+            "single_writes": 2,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 152,
+          "search_s": 1.7451999999999988e-05,
+          "template": 152
+        },
+        {
+          "bindings": 214,
+          "calls": 82,
+          "residual_visits": 117,
+          "rhs": {
+            "batches": 34,
+            "bindings": 214,
+            "completed_steps": 214,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 37,
+            "seconds": 3.317099999999999e-05,
+            "single_writes": 214,
+            "unchanged_single_writes": 177,
+            "union_requests": 0
+          },
+          "rule": 153,
+          "search_s": 0.00010850399999999995,
+          "template": 153
+        },
+        {
+          "bindings": 104,
+          "calls": 82,
+          "residual_visits": 138,
+          "rhs": {
+            "batches": 36,
+            "bindings": 104,
+            "completed_steps": 104,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 33,
+            "seconds": 1.7788e-05,
+            "single_writes": 104,
+            "unchanged_single_writes": 71,
+            "union_requests": 0
+          },
+          "rule": 154,
+          "search_s": 8.808399999999997e-05,
+          "template": 154
+        },
+        {
+          "bindings": 98,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 27,
+            "bindings": 98,
+            "completed_steps": 98,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 48,
+            "seconds": 2.0997000000000002e-05,
+            "single_writes": 98,
+            "unchanged_single_writes": 50,
+            "union_requests": 0
+          },
+          "rule": 155,
+          "search_s": 7.500399999999999e-05,
+          "template": 155
+        },
+        {
+          "bindings": 0,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 156,
+          "search_s": 1.748999999999999e-06,
+          "template": 156
+        },
+        {
+          "bindings": 6,
+          "calls": 82,
+          "residual_visits": 7,
+          "rhs": {
+            "batches": 4,
+            "bindings": 6,
+            "completed_steps": 6,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 3,
+            "seconds": 2.4589999999999997e-06,
+            "single_writes": 6,
+            "unchanged_single_writes": 3,
+            "union_requests": 0
+          },
+          "rule": 157,
+          "search_s": 3.6998000000000014e-05,
+          "template": 157
+        },
+        {
+          "bindings": 1,
+          "calls": 82,
+          "residual_visits": 2,
+          "rhs": {
+            "batches": 1,
+            "bindings": 1,
+            "completed_steps": 1,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 1,
+            "seconds": 2.92e-07,
+            "single_writes": 1,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 158,
+          "search_s": 1.567400000000001e-05,
+          "template": 158
+        },
+        {
+          "bindings": 5,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 3,
+            "bindings": 5,
+            "completed_steps": 5,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 4,
+            "seconds": 1.124e-06,
+            "single_writes": 5,
+            "unchanged_single_writes": 1,
+            "union_requests": 0
+          },
+          "rule": 159,
+          "search_s": 2.6640000000000002e-06,
+          "template": 159
+        },
+        {
+          "bindings": 0,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 160,
+          "search_s": 1.4989999999999991e-06,
+          "template": 160
+        },
+        {
+          "bindings": 2,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 2,
+            "bindings": 2,
+            "completed_steps": 2,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2,
+            "seconds": 1.7500000000000002e-06,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 161,
+          "search_s": 2.5440000000000027e-06,
+          "template": 161
+        },
+        {
+          "bindings": 0,
+          "calls": 82,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 164,
+          "search_s": 1.8739999999999987e-06,
+          "template": 164
+        }
+      ],
+      "expr_size_totals": {
+        "batches": 132,
+        "bindings": 503,
+        "completed_steps": 503,
+        "constructor_requests": 0,
+        "constructor_reused": 0,
+        "facts_created": 0,
+        "function_updates": 157,
+        "seconds": 9.916499999999999e-05,
+        "single_writes": 501,
+        "unchanged_single_writes": 346,
+        "union_requests": 0
+      },
+      "neighbor_rules": {
+        "148": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 2,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 2,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 2,
+            "seeds": 2,
+            "spine_entries": 0
+          }
+        },
+        "149": null,
+        "150": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 8
+          }
+        },
+        "151": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 32,
+            "build_visits": 10,
+            "cached_parent_visits": 0,
+            "expansion_visits": 43,
+            "group_builds": 4,
+            "group_hits": 0,
+            "maintenance_ns": 2790,
+            "owner_skips": 0,
+            "point_hits": 24,
+            "point_probes": 19,
+            "resets": 3,
+            "residual_entries": 37,
+            "seeds": 37,
+            "spine_entries": 38
+          }
+        },
+        "152": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 2,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 2,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 2,
+            "seeds": 2,
+            "spine_entries": 1
+          }
+        },
+        "153": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 117,
+            "build_visits": 61,
+            "cached_parent_visits": 0,
+            "expansion_visits": 117,
+            "group_builds": 15,
+            "group_hits": 0,
+            "maintenance_ns": 4748,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 7,
+            "residual_entries": 71,
+            "seeds": 71,
+            "spine_entries": 293
+          }
+        },
+        "154": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 70,
+            "build_visits": 38,
+            "cached_parent_visits": 0,
+            "expansion_visits": 91,
+            "group_builds": 17,
+            "group_hits": 0,
+            "maintenance_ns": 6209,
+            "owner_skips": 0,
+            "point_hits": 44,
+            "point_probes": 47,
+            "resets": 8,
+            "residual_entries": 70,
+            "seeds": 70,
+            "spine_entries": 95
+          }
+        },
+        "155": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 292
+          }
+        },
+        "156": null,
+        "157": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                3,
+                2
+              ],
+              [
+                4,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 3,
+            "build_visits": 2,
+            "cached_parent_visits": 0,
+            "expansion_visits": 3,
+            "group_builds": 1,
+            "group_hits": 0,
+            "maintenance_ns": 585,
+            "owner_skips": 0,
+            "point_hits": 5,
+            "point_probes": 4,
+            "resets": 1,
+            "residual_entries": 2,
+            "seeds": 2,
+            "spine_entries": 8
+          }
+        },
+        "158": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 1,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 1,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 625,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 1,
+            "resets": 0,
+            "residual_entries": 1,
+            "seeds": 1,
+            "spine_entries": 0
+          }
+        },
+        "159": null,
+        "160": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 0
+          }
+        },
+        "161": null,
+        "164": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 0
+          }
+        }
+      }
+    },
+    "ray1280-profile": {
+      "report_sha256": "651e08c35df9c5d8e6fa341ccd71ede3d116ec5a2685ab2675b3b866cef79c22",
+      "state_sha256": "ae313aa10b89a821340306b09678c2a616ddd18e7bba9d9c0ab5e3228dc36dc6",
+      "baseline_report_sha256": "7b379c437a945278d9b4f8dccf16468b5ae6fef47a59c8af41f4ff2c4cbfd0ef",
+      "runs": 1280,
+      "expr_size": [
+        {
+          "bindings": 21,
+          "calls": 51,
+          "residual_visits": 21,
+          "rhs": {
+            "batches": 13,
+            "bindings": 21,
+            "completed_steps": 21,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 21,
+            "seconds": 3.3543e-05,
+            "single_writes": 21,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 148,
+          "search_s": 0.0008713339999999999,
+          "template": 148
+        },
+        {
+          "bindings": 985,
+          "calls": 51,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 3,
+            "bindings": 985,
+            "completed_steps": 985,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 985,
+            "seconds": 0.00040825000000000003,
+            "single_writes": 985,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 149,
+          "search_s": 0.00018808000000000008,
+          "template": 149
+        },
+        {
+          "bindings": 240,
+          "calls": 51,
+          "residual_visits": 738,
+          "rhs": {
+            "batches": 47,
+            "bindings": 240,
+            "completed_steps": 240,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 229,
+            "seconds": 0.00021196199999999997,
+            "single_writes": 240,
+            "unchanged_single_writes": 11,
+            "union_requests": 0
+          },
+          "rule": 150,
+          "search_s": 0.001257046,
+          "template": 150
+        },
+        {
+          "bindings": 1586,
+          "calls": 51,
+          "residual_visits": 2669,
+          "rhs": {
+            "batches": 50,
+            "bindings": 1586,
+            "completed_steps": 1586,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 1480,
+            "seconds": 0.00101404,
+            "single_writes": 1586,
+            "unchanged_single_writes": 106,
+            "union_requests": 0
+          },
+          "rule": 151,
+          "search_s": 0.0022126629999999997,
+          "template": 151
+        },
+        {
+          "bindings": 3,
+          "calls": 51,
+          "residual_visits": 3,
+          "rhs": {
+            "batches": 2,
+            "bindings": 3,
+            "completed_steps": 3,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 3,
+            "seconds": 1.7500000000000002e-06,
+            "single_writes": 3,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 152,
+          "search_s": 3.800000000000003e-05,
+          "template": 152
+        },
+        {
+          "bindings": 8025,
+          "calls": 51,
+          "residual_visits": 7122,
+          "rhs": {
+            "batches": 50,
+            "bindings": 8025,
+            "completed_steps": 8025,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2769,
+            "seconds": 0.002122004,
+            "single_writes": 8025,
+            "unchanged_single_writes": 5256,
+            "union_requests": 0
+          },
+          "rule": 153,
+          "search_s": 0.005974752000000001,
+          "template": 153
+        },
+        {
+          "bindings": 4197,
+          "calls": 51,
+          "residual_visits": 8938,
+          "rhs": {
+            "batches": 49,
+            "bindings": 4197,
+            "completed_steps": 4197,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2985,
+            "seconds": 0.0016572109999999996,
+            "single_writes": 4197,
+            "unchanged_single_writes": 1212,
+            "union_requests": 0
+          },
+          "rule": 154,
+          "search_s": 0.004800253000000002,
+          "template": 154
+        },
+        {
+          "bindings": 3811,
+          "calls": 51,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 50,
+            "bindings": 3811,
+            "completed_steps": 3811,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 2956,
+            "seconds": 0.0015683740000000004,
+            "single_writes": 3811,
+            "unchanged_single_writes": 855,
+            "union_requests": 0
+          },
+          "rule": 155,
+          "search_s": 0.004666959,
+          "template": 155
+        },
+        {
+          "bindings": 0,
+          "calls": 51,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 156,
+          "search_s": 2.9530000000000033e-06,
+          "template": 156
+        },
+        {
+          "bindings": 72,
+          "calls": 51,
+          "residual_visits": 193,
+          "rhs": {
+            "batches": 30,
+            "bindings": 72,
+            "completed_steps": 72,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 72,
+            "seconds": 5.5583e-05,
+            "single_writes": 72,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 157,
+          "search_s": 0.000606167,
+          "template": 157
+        },
+        {
+          "bindings": 24,
+          "calls": 51,
+          "residual_visits": 46,
+          "rhs": {
+            "batches": 9,
+            "bindings": 24,
+            "completed_steps": 24,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 24,
+            "seconds": 1.3627999999999999e-05,
+            "single_writes": 24,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 158,
+          "search_s": 0.00016278799999999997,
+          "template": 158
+        },
+        {
+          "bindings": 71,
+          "calls": 51,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 1,
+            "bindings": 71,
+            "completed_steps": 71,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 71,
+            "seconds": 2.1208e-05,
+            "single_writes": 71,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 159,
+          "search_s": 9.71000000000001e-06,
+          "template": 159
+        },
+        {
+          "bindings": 43,
+          "calls": 51,
+          "residual_visits": 43,
+          "rhs": {
+            "batches": 28,
+            "bindings": 43,
+            "completed_steps": 43,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 43,
+            "seconds": 3.2206e-05,
+            "single_writes": 43,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 160,
+          "search_s": 0.000258288,
+          "template": 160
+        },
+        {
+          "bindings": 0,
+          "calls": 51,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 161,
+          "search_s": 9.159999999999999e-07,
+          "template": 161
+        },
+        {
+          "bindings": 195,
+          "calls": 51,
+          "residual_visits": 178,
+          "rhs": {
+            "batches": 11,
+            "bindings": 195,
+            "completed_steps": 195,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 136,
+            "seconds": 7.008200000000001e-05,
+            "single_writes": 195,
+            "unchanged_single_writes": 59,
+            "union_requests": 0
+          },
+          "rule": 164,
+          "search_s": 0.00023357800000000002,
+          "template": 164
+        }
+      ],
+      "expr_size_totals": {
+        "batches": 343,
+        "bindings": 19273,
+        "completed_steps": 19273,
+        "constructor_requests": 0,
+        "constructor_reused": 0,
+        "facts_created": 0,
+        "function_updates": 11774,
+        "seconds": 0.007209841,
+        "single_writes": 19273,
+        "unchanged_single_writes": 7499,
+        "union_requests": 0
+      },
+      "neighbor_rules": {
+        "148": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 21,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 21,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 21,
+            "seeds": 21,
+            "spine_entries": 0
+          }
+        },
+        "149": null,
+        "150": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 240,
+            "build_visits": 10,
+            "cached_parent_visits": 0,
+            "expansion_visits": 292,
+            "group_builds": 2,
+            "group_hits": 0,
+            "maintenance_ns": 139202,
+            "owner_skips": 0,
+            "point_hits": 110,
+            "point_probes": 446,
+            "resets": 1,
+            "residual_entries": 284,
+            "seeds": 284,
+            "spine_entries": 56
+          }
+        },
+        "151": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 1473,
+            "build_visits": 776,
+            "cached_parent_visits": 0,
+            "expansion_visits": 1734,
+            "group_builds": 261,
+            "group_hits": 0,
+            "maintenance_ns": 258789,
+            "owner_skips": 0,
+            "point_hits": 799,
+            "point_probes": 935,
+            "resets": 9,
+            "residual_entries": 1219,
+            "seeds": 1219,
+            "spine_entries": 1145
+          }
+        },
+        "152": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 3,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 3,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 3,
+            "seeds": 3,
+            "spine_entries": 0
+          }
+        },
+        "153": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 7122,
+            "build_visits": 4161,
+            "cached_parent_visits": 0,
+            "expansion_visits": 7122,
+            "group_builds": 995,
+            "group_hits": 0,
+            "maintenance_ns": 262231,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 25,
+            "residual_entries": 3956,
+            "seeds": 3956,
+            "spine_entries": 12927
+          }
+        },
+        "154": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 4132,
+            "build_visits": 3110,
+            "cached_parent_visits": 0,
+            "expansion_visits": 5985,
+            "group_builds": 896,
+            "group_hits": 0,
+            "maintenance_ns": 611171,
+            "owner_skips": 0,
+            "point_hits": 3032,
+            "point_probes": 2953,
+            "resets": 21,
+            "residual_entries": 3771,
+            "seeds": 3771,
+            "spine_entries": 5070
+          }
+        },
+        "155": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 16899
+          }
+        },
+        "156": null,
+        "157": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                3,
+                2
+              ],
+              [
+                4,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 72,
+            "build_visits": 30,
+            "cached_parent_visits": 0,
+            "expansion_visits": 79,
+            "group_builds": 13,
+            "group_hits": 0,
+            "maintenance_ns": 23709,
+            "owner_skips": 0,
+            "point_hits": 109,
+            "point_probes": 114,
+            "resets": 1,
+            "residual_entries": 62,
+            "seeds": 62,
+            "spine_entries": 6
+          }
+        },
+        "158": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 24,
+            "build_visits": 4,
+            "cached_parent_visits": 0,
+            "expansion_visits": 25,
+            "group_builds": 2,
+            "group_hits": 0,
+            "maintenance_ns": 3536,
+            "owner_skips": 0,
+            "point_hits": 4,
+            "point_probes": 21,
+            "resets": 1,
+            "residual_entries": 23,
+            "seeds": 23,
+            "spine_entries": 0
+          }
+        },
+        "159": null,
+        "160": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 43,
+            "build_visits": 2,
+            "cached_parent_visits": 0,
+            "expansion_visits": 43,
+            "group_builds": 1,
+            "group_hits": 0,
+            "maintenance_ns": 125,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 1,
+            "residual_entries": 42,
+            "seeds": 42,
+            "spine_entries": 0
+          }
+        },
+        "161": null,
+        "164": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 178,
+            "build_visits": 159,
+            "cached_parent_visits": 0,
+            "expansion_visits": 178,
+            "group_builds": 26,
+            "group_hits": 0,
+            "maintenance_ns": 10614,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 2,
+            "residual_entries": 45,
+            "seeds": 45,
+            "spine_entries": 21
+          }
+        }
+      }
+    },
+    "ray-profile": {
+      "report_sha256": "2ec7528e36f18bbc9274be81da7280ed770161abeacb64de25abcb9ae242d8c1",
+      "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+      "baseline_report_sha256": "e855ff53a23771d39e9c4caa07fe10170ae3794e57e8e3df3b432e30c625a109",
+      "runs": 16883,
+      "expr_size": [
+        {
+          "bindings": 1458,
+          "calls": 1798,
+          "residual_visits": 1458,
+          "rhs": {
+            "batches": 704,
+            "bindings": 1458,
+            "completed_steps": 1458,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 1458,
+            "seconds": 0.000885658000000001,
+            "single_writes": 1458,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 148,
+          "search_s": 0.13459312100000032,
+          "template": 148
+        },
+        {
+          "bindings": 1552,
+          "calls": 1798,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 18,
+            "bindings": 1552,
+            "completed_steps": 1552,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 1543,
+            "seconds": 0.0006600829999999999,
+            "single_writes": 1552,
+            "unchanged_single_writes": 9,
+            "union_requests": 0
+          },
+          "rule": 149,
+          "search_s": 0.0003084690000000046,
+          "template": 149
+        },
+        {
+          "bindings": 79986,
+          "calls": 1798,
+          "residual_visits": 140839,
+          "rhs": {
+            "batches": 1291,
+            "bindings": 79986,
+            "completed_steps": 79986,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 49232,
+            "seconds": 0.018963697000000033,
+            "single_writes": 79986,
+            "unchanged_single_writes": 30754,
+            "union_requests": 0
+          },
+          "rule": 150,
+          "search_s": 0.1060799190000001,
+          "template": 150
+        },
+        {
+          "bindings": 221686,
+          "calls": 1798,
+          "residual_visits": 311233,
+          "rhs": {
+            "batches": 1560,
+            "bindings": 221686,
+            "completed_steps": 221686,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 208698,
+            "seconds": 0.056198914999999995,
+            "single_writes": 221686,
+            "unchanged_single_writes": 12988,
+            "union_requests": 0
+          },
+          "rule": 151,
+          "search_s": 0.16750731900000013,
+          "template": 151
+        },
+        {
+          "bindings": 9,
+          "calls": 1798,
+          "residual_visits": 8,
+          "rhs": {
+            "batches": 6,
+            "bindings": 9,
+            "completed_steps": 9,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 4,
+            "seconds": 3.5830000000000003e-06,
+            "single_writes": 9,
+            "unchanged_single_writes": 5,
+            "union_requests": 0
+          },
+          "rule": 152,
+          "search_s": 0.000877734999999993,
+          "template": 152
+        },
+        {
+          "bindings": 966545,
+          "calls": 1798,
+          "residual_visits": 956267,
+          "rhs": {
+            "batches": 1643,
+            "bindings": 966545,
+            "completed_steps": 966545,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 250442,
+            "seconds": 0.113614751,
+            "single_writes": 966545,
+            "unchanged_single_writes": 716103,
+            "union_requests": 0
+          },
+          "rule": 153,
+          "search_s": 0.2672612620000004,
+          "template": 153
+        },
+        {
+          "bindings": 334264,
+          "calls": 1798,
+          "residual_visits": 533241,
+          "rhs": {
+            "batches": 1603,
+            "bindings": 334264,
+            "completed_steps": 334264,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 290251,
+            "seconds": 0.06125498100000005,
+            "single_writes": 334264,
+            "unchanged_single_writes": 44013,
+            "union_requests": 0
+          },
+          "rule": 154,
+          "search_s": 0.246120487,
+          "template": 154
+        },
+        {
+          "bindings": 306775,
+          "calls": 1798,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 1596,
+            "bindings": 306775,
+            "completed_steps": 306775,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 302321,
+            "seconds": 0.06693237699999986,
+            "single_writes": 306775,
+            "unchanged_single_writes": 4454,
+            "union_requests": 0
+          },
+          "rule": 155,
+          "search_s": 0.2547388639999996,
+          "template": 155
+        },
+        {
+          "bindings": 0,
+          "calls": 1798,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 0,
+            "bindings": 0,
+            "completed_steps": 0,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 0,
+            "seconds": 0.0,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 156,
+          "search_s": 8.476099999999842e-05,
+          "template": 156
+        },
+        {
+          "bindings": 13088,
+          "calls": 1798,
+          "residual_visits": 19605,
+          "rhs": {
+            "batches": 968,
+            "bindings": 13088,
+            "completed_steps": 13088,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 10282,
+            "seconds": 0.0029262200000000115,
+            "single_writes": 13088,
+            "unchanged_single_writes": 2806,
+            "union_requests": 0
+          },
+          "rule": 157,
+          "search_s": 0.027191376999999916,
+          "template": 157
+        },
+        {
+          "bindings": 7199,
+          "calls": 1798,
+          "residual_visits": 7745,
+          "rhs": {
+            "batches": 973,
+            "bindings": 7199,
+            "completed_steps": 7199,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 7178,
+            "seconds": 0.0016177739999999974,
+            "single_writes": 7199,
+            "unchanged_single_writes": 21,
+            "union_requests": 0
+          },
+          "rule": 158,
+          "search_s": 0.008183682000000008,
+          "template": 158
+        },
+        {
+          "bindings": 78,
+          "calls": 1798,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 6,
+            "bindings": 78,
+            "completed_steps": 78,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 77,
+            "seconds": 2.2335000000000002e-05,
+            "single_writes": 78,
+            "unchanged_single_writes": 1,
+            "union_requests": 0
+          },
+          "rule": 159,
+          "search_s": 6.355199999999904e-05,
+          "template": 159
+        },
+        {
+          "bindings": 6960,
+          "calls": 1798,
+          "residual_visits": 6909,
+          "rhs": {
+            "batches": 973,
+            "bindings": 6960,
+            "completed_steps": 6960,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 6909,
+            "seconds": 0.001737818999999995,
+            "single_writes": 6960,
+            "unchanged_single_writes": 51,
+            "union_requests": 0
+          },
+          "rule": 160,
+          "search_s": 0.010970602999999992,
+          "template": 160
+        },
+        {
+          "bindings": 5,
+          "calls": 1798,
+          "residual_visits": 0,
+          "rhs": {
+            "batches": 2,
+            "bindings": 5,
+            "completed_steps": 5,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 5,
+            "seconds": 7.75e-06,
+            "single_writes": 0,
+            "unchanged_single_writes": 0,
+            "union_requests": 0
+          },
+          "rule": 161,
+          "search_s": 3.634999999999989e-05,
+          "template": 161
+        },
+        {
+          "bindings": 460,
+          "calls": 1798,
+          "residual_visits": 270,
+          "rhs": {
+            "batches": 17,
+            "bindings": 460,
+            "completed_steps": 460,
+            "constructor_requests": 0,
+            "constructor_reused": 0,
+            "facts_created": 0,
+            "function_updates": 142,
+            "seconds": 0.000104543,
+            "single_writes": 460,
+            "unchanged_single_writes": 318,
+            "union_requests": 0
+          },
+          "rule": 164,
+          "search_s": 0.0028069709999999867,
+          "template": 164
+        }
+      ],
+      "expr_size_totals": {
+        "batches": 11360,
+        "bindings": 1940065,
+        "completed_steps": 1940065,
+        "constructor_requests": 0,
+        "constructor_reused": 0,
+        "facts_created": 0,
+        "function_updates": 1128542,
+        "seconds": 0.32493048599999996,
+        "single_writes": 1940060,
+        "unchanged_single_writes": 811523,
+        "union_requests": 0
+      },
+      "neighbor_rules": {
+        "148": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 1458,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 1458,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 1458,
+            "seeds": 1458,
+            "spine_entries": 0
+          }
+        },
+        "149": null,
+        "150": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ],
+              [
+                3,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 79298,
+            "build_visits": 987,
+            "cached_parent_visits": 49709,
+            "expansion_visits": 139371,
+            "group_builds": 279,
+            "group_hits": 10854,
+            "maintenance_ns": 346482,
+            "owner_skips": 0,
+            "point_hits": 242691,
+            "point_probes": 1468,
+            "resets": 9,
+            "residual_entries": 99808,
+            "seeds": 99808,
+            "spine_entries": 1480
+          }
+        },
+        "151": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 219581,
+            "build_visits": 6458,
+            "cached_parent_visits": 126867,
+            "expansion_visits": 308314,
+            "group_builds": 1966,
+            "group_hits": 44675,
+            "maintenance_ns": 953729,
+            "owner_skips": 0,
+            "point_hits": 305281,
+            "point_probes": 2919,
+            "resets": 21,
+            "residual_entries": 221630,
+            "seeds": 221630,
+            "spine_entries": 5286
+          }
+        },
+        "152": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 8,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 8,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 8,
+            "seeds": 8,
+            "spine_entries": 1
+          }
+        },
+        "153": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 956267,
+            "build_visits": 60044,
+            "cached_parent_visits": 592912,
+            "expansion_visits": 956267,
+            "group_builds": 16799,
+            "group_hits": 142120,
+            "maintenance_ns": 3503297,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 89,
+            "residual_entries": 462230,
+            "seeds": 462230,
+            "spine_entries": 26391
+          }
+        },
+        "154": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 330964,
+            "build_visits": 19837,
+            "cached_parent_visits": 139780,
+            "expansion_visits": 525994,
+            "group_builds": 6150,
+            "group_hits": 50080,
+            "maintenance_ns": 2296104,
+            "owner_skips": 0,
+            "point_hits": 518747,
+            "point_probes": 7247,
+            "resets": 69,
+            "residual_entries": 422607,
+            "seeds": 422607,
+            "spine_entries": 11414
+          }
+        },
+        "155": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 0,
+            "build_visits": 0,
+            "cached_parent_visits": 0,
+            "expansion_visits": 0,
+            "group_builds": 0,
+            "group_hits": 0,
+            "maintenance_ns": 0,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 0,
+            "residual_entries": 0,
+            "seeds": 0,
+            "spine_entries": 1132388
+          }
+        },
+        "156": null,
+        "157": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                3,
+                2
+              ],
+              [
+                4,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 12976,
+            "build_visits": 199,
+            "cached_parent_visits": 2902,
+            "expansion_visits": 19292,
+            "group_builds": 88,
+            "group_hits": 1428,
+            "maintenance_ns": 94075,
+            "owner_skips": 0,
+            "point_hits": 48358,
+            "point_probes": 313,
+            "resets": 7,
+            "residual_entries": 17707,
+            "seeds": 17707,
+            "spine_entries": 170
+          }
+        },
+        "158": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "pivots": [
+              0,
+              1,
+              2
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 7149,
+            "build_visits": 39,
+            "cached_parent_visits": 1734,
+            "expansion_visits": 7672,
+            "group_builds": 18,
+            "group_hits": 749,
+            "maintenance_ns": 23048,
+            "owner_skips": 0,
+            "point_hits": 7599,
+            "point_probes": 73,
+            "resets": 4,
+            "residual_entries": 6666,
+            "seeds": 6666,
+            "spine_entries": 51
+          }
+        },
+        "159": null,
+        "160": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 6909,
+            "build_visits": 4,
+            "cached_parent_visits": 6,
+            "expansion_visits": 6909,
+            "group_builds": 2,
+            "group_hits": 3,
+            "maintenance_ns": 751,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 2,
+            "residual_entries": 6904,
+            "seeds": 6904,
+            "spine_entries": 87
+          }
+        },
+        "161": null,
+        "164": {
+          "plan": {
+            "attribute": 197,
+            "children": [
+              [
+                1,
+                1
+              ]
+            ],
+            "pivots": [
+              0,
+              1
+            ],
+            "structure": 0
+          },
+          "stats": {
+            "bindings": 270,
+            "build_visits": 199,
+            "cached_parent_visits": 46,
+            "expansion_visits": 270,
+            "group_builds": 31,
+            "group_hits": 5,
+            "maintenance_ns": 12040,
+            "owner_skips": 0,
+            "point_hits": 0,
+            "point_probes": 0,
+            "resets": 3,
+            "residual_entries": 61,
+            "seeds": 61,
+            "spine_entries": 194
+          }
+        }
+      }
+    }
+  }
+}
