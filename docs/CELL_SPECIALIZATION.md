@@ -98,6 +98,31 @@ programs and entry-dispatch proofs.
 
 ## Iterative Bake
 
+Measured admission now separates lowering from structural expansion. The
+baseline is lowered with `emit_existing_ripsat_handoffs`, which cannot add
+joins. Observed join proposals may carry inferred equivalent routes and are
+scored as one complete catalog; a standalone equivalent-route proposal also
+competes when no new observed join exists. Rejected proposals never modify
+the baseline. Empty expansions do not trigger a baseline replay.
+
+The winning Program is retained, not reconstructed from just its initiating
+join. The next round reuses its exact artifact, and the round credit records
+`selected_program_sha256`. This prevents another implicit expansion between
+measurement and admission, and avoids recompiling the winning artifact. The
+source Run, ordered RHS/write/resume checks still run before scoring and on the
+following training round. `--score static` retains the prior bounded expansion
+policy and does not imply measured profitability.
+
+The opposite-order producer regression now exercises both measured outcomes
+with the same source and no new observed proposal (support threshold 1,000,000).
+With local congruence disabled, the inferred route scores −6 and is rejected;
+with it enabled, it scores +23 and is accepted. The accepted trial hash equals
+both the next round's source artifact hash and final output hash. Zero rounds
+leave the four-unit baseline unchanged in both configurations. These are
+equal-weight operation scores on a small standalone CPU fixture, not timing
+measurements or native egglog performance. Scalar/visibility proof rules are
+unchanged. The query-receipt and completion integration suites pass (12 tests).
+
 Entry dispatch is generated inside `state_plan::completion`, so both offline
 `bake-cell-completion` and every `iterate --objective ripsat-completion` trial
 regenerate it from the current checked catalog. `rounds.json` reports eligible

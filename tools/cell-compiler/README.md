@@ -33,7 +33,12 @@ cargo run --release --locked -p eggfuse-cell-compiler --features sparse-cells,vi
 ```
 
 Use `--objective ripsat-completion` with `cell-iterate` to recompile this proof
-and charge completion dispatch/validation in each measured-work trial. Current
+and charge completion dispatch/validation in each measured-work trial. Measured
+Bake lowers its baseline without adding equivalent routes. Structural expansion
+is a scored candidate even when no new observed join is available; the winning
+complete artifact, including inferred joins, is reused unchanged next round.
+Static scoring and standalone `bake-cell-completion` retain bounded expansion
+without claiming measured benefit. Current
 direct coverage requires an already established, constructor-only RHS whose
 actual result ports come from one retained frame. Eligible Entry publication
 projects those existing slots; original Run visibility and residual execution

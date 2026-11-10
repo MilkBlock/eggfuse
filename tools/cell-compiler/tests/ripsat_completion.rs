@@ -207,43 +207,81 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
 (Start (N 1))
 (run-schedule (seq (run second) (run consume) (run observe) (run first)))
 "#;
-    let core=eggfuse_bake::device_frontend::core("alternative",source).unwrap();
-    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
-    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
-    let rule=|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
-    let (a,b,c)=(rule("first"),rule("second"),rule("consumer"));
-    let gateway=|rid:usize|rules[rid]["effects"].as_array().unwrap().iter()
-        .position(|e|e["call"]["table"]=="Gateway").unwrap();
-    let (source_output,other_output)=(gateway(a),gateway(b));
-    assert_ne!(source_output,other_output);
-    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
-        "prefixes":([a,b,c].map(|r|json!({"edge":[0,0,r,0],"visits":2})))});
-    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,3).unwrap();
-    let entries=blocks["entries"].as_array().unwrap();
-    let entry=|r|entries.iter().position(|e|e["consumer"]==r).unwrap();
-    let (first,second,consumer)=(entry(a),entry(b),entry(c));
-    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
-    let p=Program::parse(seal(raw.clone())).unwrap();
-    let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
-    plan["joins"]=json!([{"left":first,"output":source_output,"right":consumer}]);
-    Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
-    raw["iterative_bake"]=plan;
-    let raw=seal(raw);
-    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
-    check_entry_dispatch(&compiled);
-    let search = &compiled["iterative_bake"]["completion_search"];
-    assert_eq!(search["route_probes"], 1);
-    assert_eq!(search["candidate_visits"], 2, "only the two equivalent output sources are visited");
-    assert_eq!(search["proof_checks"], 1);
-    assert_eq!(search["admitted"], 1);
-    let additions=compiled["iterative_bake"]["completion_extensions"].as_array().unwrap();
-    assert!(additions.iter().any(|e|e["to"]==json!({"left":second,"output":other_output,"right":consumer})),"{additions:?}");
-    let edges=&compiled["iterative_bake"]["completion"]["cell_egraph"]["completion_transitions"];
-    assert_eq!(edges["source_edges"],2);
-    assert_eq!(edges["shared_edges"],1,"equal completion transitions share the actual native relation: {edges}");
-    let (_,expected)=execute(raw);
-    let (after,actual)=execute(compiled);
-    assert_eq!(expected,actual);
-    assert!(after.report()["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,
-        "the second producer's untrained route must execute the derived completion");
+    for local in [false, true] {
+        let core=eggfuse_bake::device_frontend::core("alternative",source).unwrap();
+        let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+        let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+        let rule=|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+        let (a,b,c)=(rule("first"),rule("second"),rule("consumer"));
+        let gateway=|rid:usize|rules[rid]["effects"].as_array().unwrap().iter()
+            .position(|e|e["call"]["table"]=="Gateway").unwrap();
+        let (source_output,other_output)=(gateway(a),gateway(b));
+        assert_ne!(source_output,other_output);
+        let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+            "prefixes":([a,b,c].map(|r|json!({"edge":[0,0,r,0],"visits":2})))});
+        let blocks=compiler::bake_spine_blocks(&p,&profile,&p,3).unwrap();
+        let entries=blocks["entries"].as_array().unwrap();
+        let entry=|r|entries.iter().position(|e|e["consumer"]==r).unwrap();
+        let (first,second,consumer)=(entry(a),entry(b),entry(c));
+        let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+        let p=Program::parse(seal(raw.clone())).unwrap();
+        let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
+        plan["joins"]=json!([{"left":first,"output":source_output,"right":consumer}]);
+        Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
+        raw["iterative_bake"]=plan;
+        let raw=seal(raw);
+        // Measured Bake must not insert the inferred route while constructing its
+        // baseline. Even without observed proposals it must score that route.
+        let tmp = tempfile::tempdir().unwrap();
+        let seed = tmp.path().join("seed.json");
+        let catalog = tmp.path().join("catalog.json");
+        std::fs::write(&seed, serde_json::to_vec(&raw).unwrap()).unwrap();
+        std::fs::write(&catalog, serde_json::to_vec(&raw["iterative_bake"]).unwrap()).unwrap();
+        for rounds in [0, 1] {
+            let out = tmp.path().join(format!("rounds-{rounds}"));
+            let result = std::process::Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+                .args(["iterate", "--program"]).arg(&seed)
+                .arg("--resume-catalog").arg(&catalog).arg("--output").arg(&out)
+                .args(["--objective", "ripsat-completion", "--score", "measured-work",
+                    "--local-congruence", if local { "true" } else { "false" }, "--min-support", "1000000", "--rounds", &rounds.to_string()])
+                .output().unwrap();
+            assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
+            let history: Value = serde_json::from_slice(&std::fs::read(out.join("rounds.json")).unwrap()).unwrap();
+            assert_eq!(history[0]["units"], 4, "unscored inferred route entered baseline");
+            if rounds == 1 {
+                let trials = history[0]["credit"]["trials"].as_array().unwrap();
+                assert_eq!(trials.len(), 1);
+                assert_eq!(trials[0]["proposal"]["kind"], "equivalent-routes");
+                let score = trials[0]["work"]["net_saved_operations"].as_i64().unwrap();
+                eprintln!("equivalent-route local={local}, credit={score}");
+                assert_eq!(score > 0, local, "fixture must cover both admission and rejection");
+                if let Some(hash) = history[0]["credit"].get("selected_program_sha256") {
+                    assert_eq!(*hash, trials[0]["program_sha256"]);
+                    assert_eq!(history[1]["source_program"], *hash, "next round must use exact scored artifact");
+                    let final_program: Value = serde_json::from_slice(&std::fs::read(out.join("program.json")).unwrap()).unwrap();
+                    assert_eq!(final_program["sha256"], *hash);
+                } else {
+                    assert_eq!(history[0]["stop"], "no_measured_gain");
+                    assert_eq!(history.as_array().unwrap().len(), 1);
+                }
+            }
+        }
+        let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+        check_entry_dispatch(&compiled);
+        let search = &compiled["iterative_bake"]["completion_search"];
+        assert_eq!(search["route_probes"], 1);
+        assert_eq!(search["candidate_visits"], 2, "only the two equivalent output sources are visited");
+        assert_eq!(search["proof_checks"], 1);
+        assert_eq!(search["admitted"], 1);
+        let additions=compiled["iterative_bake"]["completion_extensions"].as_array().unwrap();
+        assert!(additions.iter().any(|e|e["to"]==json!({"left":second,"output":other_output,"right":consumer})),"{additions:?}");
+        let edges=&compiled["iterative_bake"]["completion"]["cell_egraph"]["completion_transitions"];
+        assert_eq!(edges["source_edges"],2);
+        assert_eq!(edges["shared_edges"],1,"equal completion transitions share the actual native relation: {edges}");
+        let (_,expected)=execute(raw);
+        let (after,actual)=execute(compiled);
+        assert_eq!(expected,actual);
+        assert!(after.report()["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,
+            "the second producer's untrained route must execute the derived completion");
+    }
 }

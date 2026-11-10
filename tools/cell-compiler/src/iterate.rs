@@ -260,10 +260,11 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     fs::create_dir(out)?;
     let mut reference = None;
     let mut history = Vec::new();
-    let compile_plan = |plan: &mut J| -> Result<Program> {
+    let compile_plan = |plan: &mut J, expand: bool| -> Result<Program> {
         plan.as_object_mut().unwrap().remove("state_plan");
         if completion {
-            Catalog::emit_ripsat_handoffs(&seed,plan)?;
+            if expand { Catalog::emit_ripsat_handoffs(&seed,plan)?; }
+            else { Catalog::emit_existing_ripsat_handoffs(&seed,plan)?; }
         } else if query_ports {
             Catalog::emit_query_handoffs(&seed, plan)?;
         } else if congruence {
@@ -287,8 +288,13 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         p.artifact["sha256"] = artifact_digest(&p.artifact).into();
         Ok(Program::parse(p.artifact)?)
     };
+    let mut prepared = None;
     for round in 0..=rounds {
-        let p = compile_plan(&mut plan)?;
+        // Reuse the exact scored artifact, including inferred joins and IDs.
+        let p = match prepared.take() {
+            Some(p) => p,
+            None => compile_plan(&mut plan, !measured)?,
+        };
         let units = p.iterative.entries();
         let registry = eggfuse_bake::native_analyze::register_cpu_blocks(
             &plan,
@@ -326,31 +332,44 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         let mut credit = json!({"policy":if measured {"measured-work"} else {"static"},
             "entry_publications":config.entry_publications,"repair_ports":config.repair_ports,"repair_cells":config.repair_cells,"local_unions":config.local_unions,"cell_ownership":config.cell_ownership,
             "stable_ports":config.stable_ports,"port_keys":config.port_keys,"local_congruence":config.local_congruence});
-        if measured && !admitted.is_empty() {
-            // Pair discovery can force producer roots into existence. Score
-            // with collection disabled in BOTH executions, as in inference.
-            let (baseline, baseline_stamp) = replay(p.clone(), false, config)?;
-            if baseline_stamp != stamp { return Err("pair collection changed execution".into()); }
-            let work = Work::read(&baseline.report())?;
-            drop(baseline);
+        let mut selected_program = None;
+        let infer = completion && units.len() < limits.total;
+        if measured && round < rounds && (!admitted.is_empty() || infer) {
+            // Don't replay a baseline for an empty structural expansion.
+            let mut work = None;
             let mut trials = Vec::new();
             let mut best = None;
             let mut best_score = 0;
-            let proposals = std::mem::take(&mut admitted);
+            let mut proposals = std::mem::take(&mut admitted).into_iter().map(Some).collect::<Vec<_>>();
+            // Structural inference can be useful even without a newly observed
+            // join. It competes as a real, separately replayed candidate.
+            if infer { proposals.push(None); }
             credit["ranked_proposals"] = json!(proposals.len());
             credit["untried_ranked_proposals"] = json!(proposals.len().saturating_sub(trial_limit));
-            for (join, evidence) in proposals.into_iter().take(trial_limit) {
+            for proposal in proposals.into_iter().take(trial_limit) {
                 let start = std::time::Instant::now();
                 let mut candidate = plan.clone();
-                candidate["joins"].as_array_mut().unwrap().push(json!(join));
-                let candidate = compile_plan(&mut candidate)?;
+                if let Some((join, _)) = &proposal {
+                    candidate["joins"].as_array_mut().unwrap().push(json!(join));
+                }
+                let candidate = compile_plan(&mut candidate, true)?;
+                if candidate.artifact["iterative_bake"]["joins"] == plan["joins"] { continue; }
                 let compile_seconds = start.elapsed().as_secs_f64();
                 let candidate_hash = candidate.artifact["sha256"].clone();
+                if work.is_none() {
+                    // Training can force producer roots into existence. Both
+                    // scored executions disable it, exactly as in inference.
+                    let (baseline, baseline_stamp) = replay(p.clone(), false, config)?;
+                    if baseline_stamp != stamp { return Err("pair collection changed execution".into()); }
+                    work = Some(Work::read(&baseline.report())?);
+                }
                 let start = std::time::Instant::now();
                 let (trial, actual) = replay(candidate, false, config)?;
                 if actual != stamp { return Err("candidate changed graph, schedule, RHS, writes or resumes".into()); }
-                let (score, delta) = work.savings(&Work::read(&trial.report())?);
-                let row = json!({"join":join,"proposal":evidence,"program_sha256":candidate_hash,
+                let (score, delta) = work.as_ref().unwrap().savings(&Work::read(&trial.report())?);
+                let row = json!({"join":proposal.as_ref().map(|(j,_)|j),
+                    "proposal":proposal.as_ref().map(|(_,e)|json!(e)).unwrap_or(json!({"kind":"equivalent-routes","new_observation":false})),
+                    "program_sha256":candidate_hash,
                     "semantic_audit":true,"compile_seconds":compile_seconds,
                     "replay_and_export_hash_seconds":start.elapsed().as_secs_f64(),"work":delta});
                 eprintln!("round {round} trial {}: {score} net saved operations", trials.len());
@@ -358,12 +377,16 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
                 save(&out.join(format!("round-{round}-trials.json")), &json!(trials))?;
                 if score > best_score {
                     best_score = score;
-                    best = Some((join, evidence));
+                    best = Some((proposal, trial.graph.program.clone()));
                 }
             }
-            if let Some(winner) = best { admitted.push(winner); }
-            // One measured addition per round: never sum independent credits
-            // and then assume the corresponding cells do not overlap.
+            if let Some((proposal, program)) = best {
+                if let Some(winner) = proposal { admitted.push(winner); }
+                credit["selected_program_sha256"] = program.artifact["sha256"].clone();
+                selected_program = Some(program);
+            }
+            // One measured catalog per round; score inferred routes jointly
+            // with their initiating proposal, never sum overlapping credits.
             credit["trials"] = json!(trials);
             credit["selected_net_saved_operations"] = json!(best_score);
         }
@@ -371,7 +394,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "round_limit"
         } else if units.len() == limits.total {
             "catalog_full"
-        } else if admitted.is_empty() {
+        } else if admitted.is_empty() && selected_program.is_none() {
             if measured && credit.get("trials").is_some() {
                 if credit["untried_ranked_proposals"].as_u64().unwrap_or(0) > 0 { "trial_limit" }
                 else { "no_measured_gain" }
@@ -412,8 +435,13 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             save(&out.join("expanded.json"), &json!(units))?;
             break;
         }
-        for (join, _) in admitted {
-            plan["joins"].as_array_mut().unwrap().push(json!(join));
+        if let Some(next) = selected_program {
+            plan = next.artifact["iterative_bake"].clone();
+            prepared = Some(next);
+        } else {
+            for (join, _) in admitted {
+                plan["joins"].as_array_mut().unwrap().push(json!(join));
+            }
         }
     }
     Ok(())

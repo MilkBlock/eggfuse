@@ -367,16 +367,20 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
-        Self::emit_policy(p, plan, reuse, false, false, false)
+        Self::emit_policy(p, plan, reuse, false, false, false, false)
     }
     pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, false, false)
+        Self::emit_policy(p, plan, true, true, false, false, false)
     }
     pub fn emit_query_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, false)
+        Self::emit_policy(p, plan, true, true, true, false, false)
     }
     pub fn emit_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true)
+        Self::emit_policy(p, plan, true, true, true, true, true)
+    }
+    /// Lower exactly this catalog without silently admitting equivalent routes.
+    pub fn emit_existing_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
+        Self::emit_policy(p, plan, true, true, true, true, false)
     }
     /// Transfer a known local application to another implementation of the
     /// exact same completed Cell. Positions are matched by constructor
@@ -462,14 +466,15 @@ impl Catalog {
         congruence: bool,
         query_ports: bool,
         completion: bool,
+        expand: bool,
     ) -> Result<()> {
         plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
         plan.as_object_mut().unwrap().remove("completion");
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
-        if completion {Self::extend_completion_entries(p,plan)?;}
-        else {
+        if expand {Self::extend_completion_entries(p,plan)?;}
+        else if !completion {
             plan.as_object_mut().unwrap().remove("completion_extensions");
             plan.as_object_mut().unwrap().remove("completion_search");
         }
