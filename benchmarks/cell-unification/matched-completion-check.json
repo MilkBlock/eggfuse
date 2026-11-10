@@ -1,0 +1,423 @@
+{
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/storage/sealed_slot_reads": [
+      47308,
+      48048
+    ]
+  },
+  "matched_cells_completed": 419,
+  "current_work_credit_delta": 0,
+  "program_file_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "scope": "standalone Cell CPU; short work/semantic checks, no timing or allocator campaign",
+  "baseline_commit": "808aadb3",
+  "candidate_commit": "135dfb1b",
+  "semantic_acceptance": "pass",
+  "previous_evidence_sha256": "9e982b922e90c7443a1edcd12eef9cd4b80e6a5f88072b4ddc0dbae6a47f2e81",
+  "fixtures": {
+    "matched-64": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced",
+        "stages.json": "307f95a5f3ab3ed63c62b2a76f2fc75a69cd1e8c38b6db91a5531bbdfc220410",
+        "binding-audit.json": "3dd41338ce7cd78f5f95746387b4e668fb69b159d1c5d22a97637909f1686455"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "fec331a365d73f7bb0ec408b4758a201c0a9d129dd4bcf7318d3153e25e2036f"
+    },
+    "matched-0": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced",
+        "stages.json": "307f95a5f3ab3ed63c62b2a76f2fc75a69cd1e8c38b6db91a5531bbdfc220410",
+        "binding-audit.json": "3dd41338ce7cd78f5f95746387b4e668fb69b159d1c5d22a97637909f1686455"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "fec331a365d73f7bb0ec408b4758a201c0a9d129dd4bcf7318d3153e25e2036f"
+    },
+    "boundaries-64": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "28ffc6ce80cd4b4b922d122d663355132dc613c23ab7ed8635745c78f06812aa",
+        "stages.json": "41ba4bc40e9965467d0d0a01151ac28e1ba4cb5f936dd4ff693721492b492839",
+        "binding-audit.json": "2a32c0a568ac5705de04e9ab7fd5dd588c4873668c0ca04d37dec28df902166e"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 0,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "d89f9bb7dc2d37cdcae3053d6d39a445c7c9f60d959d621fbe68d610450da15e"
+    },
+    "boundaries-0": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "28ffc6ce80cd4b4b922d122d663355132dc613c23ab7ed8635745c78f06812aa",
+        "stages.json": "41ba4bc40e9965467d0d0a01151ac28e1ba4cb5f936dd4ff693721492b492839",
+        "binding-audit.json": "2a32c0a568ac5705de04e9ab7fd5dd588c4873668c0ca04d37dec28df902166e"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 0,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "d89f9bb7dc2d37cdcae3053d6d39a445c7c9f60d959d621fbe68d610450da15e"
+    },
+    "legacy-64": {
+      "runs": 9,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced",
+        "stages.json": "527373e641d5e11ab769c8c29b629fabbb2f2f1cec70982471ccfcbbf5e3fe2c",
+        "binding-audit.json": "c4e059e25136835746e92b94e6b61aecb022bda42a271422892f0f0ecce83dcd"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "2700f06a4cd23a77b18ab3794c0d169f18c91ff079a224071463419cd5a1feaf"
+    },
+    "legacy-0": {
+      "runs": 9,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced",
+        "stages.json": "527373e641d5e11ab769c8c29b629fabbb2f2f1cec70982471ccfcbbf5e3fe2c",
+        "binding-audit.json": "c4e059e25136835746e92b94e6b61aecb022bda42a271422892f0f0ecce83dcd"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "2700f06a4cd23a77b18ab3794c0d169f18c91ff079a224071463419cd5a1feaf"
+    },
+    "matched-64-normal": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "fec331a365d73f7bb0ec408b4758a201c0a9d129dd4bcf7318d3153e25e2036f"
+    },
+    "matched-0-normal": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "fec331a365d73f7bb0ec408b4758a201c0a9d129dd4bcf7318d3153e25e2036f"
+    },
+    "boundaries-64-normal": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "28ffc6ce80cd4b4b922d122d663355132dc613c23ab7ed8635745c78f06812aa"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 0,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "d89f9bb7dc2d37cdcae3053d6d39a445c7c9f60d959d621fbe68d610450da15e"
+    },
+    "boundaries-0-normal": {
+      "runs": 7,
+      "hashes": {
+        "state.json": "28ffc6ce80cd4b4b922d122d663355132dc613c23ab7ed8635745c78f06812aa"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 0,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "d89f9bb7dc2d37cdcae3053d6d39a445c7c9f60d959d621fbe68d610450da15e"
+    },
+    "legacy-64-normal": {
+      "runs": 9,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "2700f06a4cd23a77b18ab3794c0d169f18c91ff079a224071463419cd5a1feaf"
+    },
+    "legacy-0-normal": {
+      "runs": 9,
+      "hashes": {
+        "state.json": "3a1e63f73bb50e64c512a064e9a6e0eca4a5eb40dfff18395d75a1bc13696ced"
+      },
+      "changed_work": {},
+      "matched_cells_completed": 6,
+      "current_work_credit_delta": 0,
+      "program_file_sha256": "2700f06a4cd23a77b18ab3794c0d169f18c91ff079a224071463419cd5a1feaf"
+    }
+  },
+  "tests": {
+    "matched": {
+      "passed": 3,
+      "sha256": "374c7039a913f9879482dd52839429091ff24d72e4f2c74eb0a45e2d8d9bdeed"
+    },
+    "matched-all": {
+      "passed": 3,
+      "sha256": "398bcef6ece7d0bc4b45a241d923fa80a8d16e130b0a0da34f8b7eca477833fb"
+    },
+    "aliases": {
+      "passed": 3,
+      "sha256": "84371434e7ec2db84a1f5111b1dd16bc4f6b551cd4480d62a8b1cf9cf5a2f8ed"
+    },
+    "aliases-all": {
+      "passed": 3,
+      "sha256": "c5a44c163c9ed4a8912efd20da5d8a43868cf6f6086458fbb37755b9f139766c"
+    },
+    "publications": {
+      "passed": 9,
+      "sha256": "9963596eed1b003b79de2339b50a0ecf9534a0a1b52c3c6b2dab67d66a42264f"
+    },
+    "witness": {
+      "passed": 8,
+      "sha256": "ef2ed291d58e9c783c7f94418716590ea491b6e3c54664ba5b1cf9a4bbbf057a"
+    },
+    "scoped": {
+      "passed": 12,
+      "sha256": "f7d34b75f6a877bf012e1b6eafa88ea1505287dc8e5e84441e72f8a13dcb0446"
+    },
+    "credit": {
+      "passed": 4,
+      "sha256": "129b04f762cd71221d3557698bac39c5da14276567b26def8393f477d004d6ef"
+    },
+    "barrier": {
+      "passed": 1,
+      "sha256": "40f36098212dc2480c67cbb79b79def3929108a98125c3ba0b7bd1d1da8d6a4f"
+    },
+    "history": {
+      "passed": 1,
+      "sha256": "3e62a238d6f080028bcfe7b47d3e4625f9f5112dbb27867ba657c61aeea1bb4c"
+    }
+  },
+  "fixture_manifests": {
+    "": "691f3ea5c217059b96c4af78c4b72435946a1cc4df3052ca93e48317de9345c0",
+    "-normal": "0f77c4559197fef692b94249313372dc11e04a807dbd20406792df5cb441dc89"
+  },
+  "binaries": {
+    "baseline": "aff4cb0570944b377b3eea875ce0f6d1e0ae69fae15945193808f79f6c4d96ee",
+    "candidate": "88530b18cc6cf187adfe621038b405df6347c7719fe24351f474efdac66f0913"
+  },
+  "scoped_sha256": "dc292b40ee9b689d16b9943d136116128547453d9fdfd513ea0c00dbcdae27f8",
+  "relower_sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1",
+  "relower_components": 22,
+  "opportunity": {
+    "matched_rules": [
+      {
+        "rule": 23,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "peepholes",
+          "name": "(rewrite (Top (Select ) pred x x) x :ruleset peepholes)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 134,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (Concat (Empty ty ctx) x) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 135,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (Concat x (Empty ty ctx)) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 145,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)"
+        },
+        "operations": 3
+      },
+      {
+        "rule": 167,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (MaxIntOrInfinity (NegInfinity ) x) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 168,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (MaxIntOrInfinity x (NegInfinity )) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 172,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (MinIntOrInfinity (Infinity ) x) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 173,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (MinIntOrInfinity x (Infinity )) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 184,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (RevConcat-List<i64+IntInterval> (Nil-List<i64+IntInterval> ) l) l :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 191,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (UnionHelper-List<i64+IntInterval> (Nil-List<i64+IntInterval> ) (Nil-List<i64+IntInterval> ) res) res :ruleset always-run)"
+        },
+        "operations": 3
+      },
+      {
+        "rule": 198,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (IntersectHelper-List<i64+IntInterval> (Nil-List<i64+IntInterval> ) m2 res) res :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 199,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (IntersectHelper-List<i64+IntInterval> m1 (Nil-List<i64+IntInterval> ) res) res :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 210,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (Intersect-PtrPointees (PointsAnywhere ) x) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 211,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (Intersect-PtrPointees x (PointsAnywhere )) x :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 218,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "always-run",
+          "name": "(rewrite (RevConcat-List<PtrPointees> (Nil-List<PtrPointees> ) l) l :ruleset always-run)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 266,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "apply-drop-unions",
+          "name": "(rule ((DelayedDropUnion lhs rhs))\n      ((union lhs rhs))\n        :ruleset apply-drop-unions )"
+        },
+        "operations": 1
+      },
+      {
+        "rule": 267,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "apply-subst-unions",
+          "name": "(rule ((DelayedSubstUnion lhs rhs))\n      ((union lhs rhs))\n        :ruleset apply-subst-unions )"
+        },
+        "operations": 1
+      },
+      {
+        "rule": 317,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "context",
+          "name": "(rule ((= lhs (AddContext ctx inner))\n       (= inner (AddContext ctx expr)))\n      ((union lhs inner))\n        :ruleset context )"
+        },
+        "operations": 3
+      },
+      {
+        "rule": 572,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "type-helpers",
+          "name": "(rewrite (TLConcat (TNil ) r) r :ruleset type-helpers)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 576,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "type-helpers",
+          "name": "(rewrite (TypeList-ith (TCons hd tl) 0) hd :ruleset type-helpers)"
+        },
+        "operations": 2
+      },
+      {
+        "rule": 580,
+        "metadata": {
+          "seminaive": true,
+          "source_set": "type-helpers",
+          "name": "(rewrite (TypeListRemoveAt (TCons x xs) 0) xs :ruleset type-helpers)"
+        },
+        "operations": 2
+      }
+    ],
+    "previous_continuation_bindings": 528,
+    "scope": "Static proof from existing typed Cell operations and aliases; not a mutation count"
+  },
+  "unchanged_work_metrics": 346,
+  "changed_work_metrics": {
+    "report:/stats/matched_cells_completed [value]": [
+      {
+        "status": "missing_counter"
+      },
+      {
+        "status": "observed",
+        "value": 419
+      }
+    ]
+  },
+  "removed_unused_registrations": {
+    "attempts": 528,
+    "basis": "One old BTreeSet insertion per admitted continuation, inferred from preserved binding counts; not allocator or Work credit"
+  },
+  "limits": "Matched completion replaces transient RHS preparation, not logical effects. The old avoided-frame counter already includes empty transient release. Source union queues, IDs, facts, Run order, real receipts and visibility remain authoritative. Compiled enum replaces one bool per rule; setup classification adds an alias-coverage scan. No measured time or allocation gain; minimal no-default build retains ordinary execution. General RHS selection, source marker materialization, Bake composition and final parallel acceptance remain incomplete.",
+  "timing_cadence": {
+    "last_timed_commit": "808aadb3",
+    "implementation_commits_since_timing": 1
+  }
+}

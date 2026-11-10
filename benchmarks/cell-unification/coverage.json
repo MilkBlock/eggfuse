@@ -4,7 +4,7 @@
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
     "last_timed_commit": "808aadb3",
-    "implementation_commits_since_timing": 0,
+    "implementation_commits_since_timing": 1,
     "evidence": "benchmarks/cell-unification/closed-cells-check.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
     "checkpoint_status": "inference_gain_not_established_preservation_unresolved",
@@ -223,7 +223,8 @@
         "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication.",
         "Cell output layout removes earlier permanent Entry publications with an identical proven actual receipt source, preserving the last original operation and demanded donor/history slots; no runtime alias index is added.",
         "The same Cell effect layout maps actual effect donors directly to retained publication slots; raw operation receipts stay distinct for history and closed/full capture. Query aliases and boundaries retain required copies.",
-        "Validated Cell aliases complete closed admission without a second runtime proof representation. Iterative/structural handoff and ordinary/local prefixes share Start; a miss promotes the completed frame/receipts and resumes at the source operation instead of replaying the prefix."
+        "Validated Cell aliases complete closed admission without a second runtime proof representation. Iterative/structural handoff and ordinary/local prefixes share Start; a miss promotes the completed frame/receipts and resumes at the source operation instead of replaying the prefix.",
+        "Static Cell Completion replaces the independent constructor-only flag and admits matched-input/alias/copy/union Cells to the shared completion executor. Removed the separate HandoffFrame/union queue, eager copy projection, unused handoffs registry and its binding producer ID. Continuation accounting survives full completion; source effects keep their original queue and Run boundary."
       ],
       "live_obligations": "Last source RHS producer per Entry, legal Run/scope publication boundaries, receipt forwarding and visibility, arena lifecycle and generation; deferred fragment outputs retain the same Completion.",
       "remaining": [
@@ -281,7 +282,8 @@
       "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
       "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json",
       "output_donor_checks": "benchmarks/cell-unification/output-donors-results.json",
-      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json"
+      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json",
+      "matched_completion_checks": "benchmarks/cell-unification/matched-completion-check.json"
     },
     {
       "id": "ports_congruence",
@@ -499,12 +501,13 @@
       "status": "partially_rewritten",
       "metrics_from_catalog": "D2",
       "evidence": "benchmarks/cell-unification/effects-results.json",
-      "remaining": "Calls, result proofs, effect receipts and first-miss continuation now share Cell definitions and Start. Strategy selection, full query-only closure, single-write projections and remaining source/boundary execution still need integration; the disabled-compiled-merge AST control remains for differential/storage tests. Final performance acceptance remains pending.",
+      "remaining": "Matched-input completion and witnessed prefixes share CellFrame and Start. General RHS strategy selection, single-write projections and remaining source/boundary execution still need integration; disabled-compiled-merge AST control remains for differential/storage tests. Final performance acceptance pending.",
       "mixed_output_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
       "mixed_output_limits": "Sum-bits preserves query/state/Run work but changes 24 publication metrics. Hash probes and boundary records fall, while Entry candidate probes and retained output slots rise. Corrected equal-weight credit reports -1313 saved operations; no speed or overall completion claim.",
       "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json",
       "output_donor_checks": "benchmarks/cell-unification/output-donors-results.json",
-      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json"
+      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json",
+      "matched_completion_checks": "benchmarks/cell-unification/matched-completion-check.json"
     },
     {
       "id": "E1",

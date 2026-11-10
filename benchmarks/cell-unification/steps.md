@@ -635,3 +635,17 @@ sum-bits effect_aborted_frames 58→0，effect_frames 6480→6422，槽初始化
 复现测速：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/closed-cells-timing-spec.json out/cell-closed-aliases/timing --repeat 7 --warmups 1`（需新的输出目录；已有样本不覆盖）。复核现有产物：`python3 benchmarks/cell-unification/check_closed_cells.py out/cell-closed-aliases OUTPUT.json --commit 808aadb3 --timing`。原版及计数控制分别对应 last_timed 和 baseline lane；二进制 SHA 与前次证据相互核对。复核脚本不会重跑负载。
 
 下一项仍是仅凭匹配事实就能完成的 Cell：先核对实际覆盖和 continuation 的发布、深度、去重义务，再用现有完成接口接管。不能为了扩大闭合数量而新增另一套绑定或绕开原 Run/effect 顺序。
+
+## 匹配事实直接完成 Cell（135dfb1b）
+
+前次 sum-bits 源程序有 21 条规则的全部 RHS 都是已有别名、Copy 或显式 union；已有目录中的相关 unit 确实被执行。现在由 Cell Definition 和既有别名证明生成 Completion 选择，替换独立 constructor_only 标志。这些 Cell 直接借用匹配参数，经原完成接口执行与发布；不安装普通 RHS frame，也不另建事实或绑定图。需要新构造子、标量效果、可变读取/写入或删除的 Cell 继续执行原指令。最小 no-default 配置仍保留原执行方式。
+
+完成路径与首次 miss 接续共用 CellFrame，Copy 通过已有 operand reader 延迟投影；删除 HandoffFrame 及额外 union 暂存队列。由于 miss 会保留前缀，显式 union 和见证中的 union 可以按原操作顺序直接进入现有队列，仍在原边界完成等价传播。实际源 union 继续经过 enqueue_source_union，不能丢掉 ownership 计数；已有 sealed 输入许可沿用原世代检查。旧 handoffs 集合只有插入、没有任何读取，因此删除集合和绑定中仅供该集合使用的 producer 编号；续执行的完整/残余计数和深度仍在一次公共入口更新，只有留下物理 frame 时才写 recipe_depth。
+
+sum-bits 实际 **419 次**执行进入匹配事实完成路径。最终 state、1,428 个 Run，以及查询、构造、union、图维护、发布、历史、continuation 等工作保持。346 项已有目录工作指标保持，新加 1 项 matched_cells_completed 覆盖指标；原报告 sealed_slot_reads 47,308→48,048 表示更多已许可的字段读取免去再次 canonicalize，并非增加了同等数量的图读取。rhs_frames_avoided 仍为 6,811，因为它原来就把执行后释放的空 transient frame 算进去；不能再把 419 当作额外 frame 节省或 Bake credit。现有等权 Work 计分增量为 0。被删除的登记按旧代码及保留的 continuation 计数对应 528 次插入尝试，不是 528 次分配；额外 union 暂存、绑定字段和准备工作的时间/分配收益尚未独立量化。静态选择多一次别名覆盖扫描，未新增实例状态。
+
+47 项相关测试与最小 feature 编译通过，覆盖原闭合首次 miss、真实见证、发布、历史、源 union 屏障及部分 scope 完成。新增短例验证：两条独立 Choice 保留残余枚举；晚到输入及 union 启用的旧匹配产生原来的 2+4 次完成；删除重建、可变 query 读取和标量效果留在动态 RHS；实际物理 producer 的 legacy continuation 在没有新 RHS frame 时仍正确计数。三个样例以正常/全碰撞哈希分别运行审计及普通模式，24 个进程均小于 1 秒，最终 state、Run 及适用的逐阶段/binding audit 与冻结的 808aadb3 相同。sum-bits choice_diagnosis pass，22 个编译组件重新 lowering 相同。上述运行仅验证工作量和正确性，不作速度采样或分配器结论；这是 standalone Cell CPU，非 native egglog。
+
+产物 out/cell-matched-completion。用普通 release features sparse-cells,view-ports,storage-metrics 构建候选；baseline 链接 out/cell-closed-aliases/runtime-candidate。编译已有 emit_cell_source example 后，执行 `python3 benchmarks/cell-unification/run_matched_completion.py ROOT --emitter EMITTER` 生成三个短例并运行冻结对照；legacy 变体由脚本从同一源例派生。复核：`python3 benchmarks/cell-unification/check_matched_completion.py ROOT OUTPUT.json --commit 135dfb1b`。本次是 808aadb3 测速后的第 **1/5** 个实现提交。
+
+整体统一和最终多线程验收仍未完成。短例还暴露一个下一轮值得检查的缺口：producer 把重复的 N(i) 写成一个共享 let 后，已有 legacy route 才能连接它的 F/G/Gateway；展开写法虽已有静态构造子别名，当前 multistage 的局部关系比较仍只 resolve_copy。下一轮先核对现有目录中的影响范围，再让这类编译接线使用同一份 Cell 来源证明；不据此直接宣称能带来提速。
