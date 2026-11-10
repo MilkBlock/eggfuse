@@ -40,6 +40,12 @@ pub fn program(source: &str) -> Program {
     Program::parse(raw).unwrap()
 }
 
+pub fn aliased_source(source: &str) -> String {
+    source.replace("(N i64)", "(N i64) (Seed i64)")
+        .replace("((= x (N n))) ((A x) (B x n))", "((Seed n)) ((A (N n)) (B (N n) n))")
+        .replace("(run-schedule", "(Seed 0) (Seed 1)\n(run-schedule")
+}
+
 pub fn replaced_source() -> String {
     SOURCE.replace("(ruleset make)", r#"
 (ruleset reset) (ruleset again) (ruleset late)

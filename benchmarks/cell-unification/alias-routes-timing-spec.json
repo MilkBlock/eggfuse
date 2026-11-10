@@ -1,0 +1,39 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-route-aliases/runtime-baseline",
+      "program": "out/cell-route-aliases/sum-old/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "compatible": {
+      "runtime": "out/cell-route-aliases/runtime-candidate",
+      "program": "out/cell-route-aliases/sum-old/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-route-aliases/runtime-candidate",
+      "program": "out/cell-route-aliases/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "last_timed": {
+      "runtime": "out/cell-route-aliases/runtime-last_timed",
+      "program": "out/cell-route-aliases/sum-old/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "historical": {
+      "runtime": "out/cell-route-aliases/runtime-historical",
+      "program": "out/cell-route-aliases/sum-old/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}

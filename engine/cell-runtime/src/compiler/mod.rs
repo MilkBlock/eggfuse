@@ -67,10 +67,11 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
             loaders.push(producer);
             continue;
         }
-        let cell = Definition::new(p, producer).expect("typed Cell");
+        let cell = Definition::new(p, producer).expect("typed Cell")
+            .with_aliases(&known.static_slots[producer]);
         let local = cell.local_relations().map(|relation| {
             (relation.site, relation.table,
-                relation.columns().map(|a| cell.template.resolve_copy(a)).collect::<Vec<_>>())
+                relation.columns().map(|a| cell.value(a)).collect::<Vec<_>>())
         }).collect::<Vec<_>>();
         for (site, t, cols) in &local {
             let Site::Effect(effect) = *site else { continue };
@@ -110,14 +111,17 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                         });
                         let projections = project_rows(&a.args, &mapping, candidates, PartialEq::eq,
                             |literal, value| matches!(value, Arg::Literal(v) if v == literal));
-                        if let Some(((site, columns), m)) = unique_projection(projections,
+                        if let Some(((site, _), m)) = unique_projection(projections,
                             |a, b| a.0.1 == b.0.1) {
                             let (kind, idx) = site.coordinates();
                             mapping = m;
                             let mut step = json!({"atom":i,"source_kind":kind,"source_index":idx});
                             if kind == "effect" {
+                                // Wire coordinates remain the original source
+                                // projection, even when value proofs use aliases.
+                                let (_, columns) = cell.local_columns(*site).expect("local Cell source");
                                 step["assignments"] =
-                                    json!(crate::multistage::assignments(&q[anchor], a, columns));
+                                    json!(crate::multistage::assignments(&q[anchor], a, &columns));
                             }
                             steps.push(step);
                             remaining.remove(&i);

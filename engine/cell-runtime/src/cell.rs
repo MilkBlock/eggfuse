@@ -100,6 +100,7 @@ pub struct Definition<'a> {
     pub rule: &'a Rule,
     pub template: &'a Template,
     tables: &'a [Table],
+    aliases: &'a [Option<Arg>],
 }
 pub struct Relation<'a> {
     pub site: Site,
@@ -166,12 +167,25 @@ impl<'a> Definition<'a> {
     }
 
     pub fn new(program: &'a Program, rule: usize) -> Result<Self> {
+        let aliases = program.known_results.static_slots.get(rule).map_or(&[][..], Vec::as_slice);
         let rule = program.rules.get(rule).ok_or("Cell rule index")?;
         Ok(Self {
             rule,
             template: &program.templates[rule.template],
             tables: &program.tables,
+            aliases,
         })
+    }
+    /// Bootstrap compilation derives these same proofs before installing Plans.
+    /// Borrow that result; do not build a second alias environment for routing.
+    pub(crate) fn with_aliases(mut self, aliases: &'a [Option<Arg>]) -> Self {
+        self.aliases = aliases;
+        self
+    }
+    /// Exact source values, using Copy and the existing ordered constructor
+    /// proof. This never treats a pending union as an established equality.
+    pub(crate) fn value(&self, arg: &Arg) -> Arg {
+        self.template.resolve_with(arg, self.aliases)
     }
     pub fn relation(&self, site: Site) -> Option<Relation<'a>> {
         let (table, keys, result) = match site {
@@ -257,11 +271,14 @@ impl Template {
     /// Only SSA Copy definitions are aliases here. Union is visible according
     /// to the original schedule and must not rewrite an earlier query or read.
     pub fn resolve_copy(&self, arg: &Arg) -> Arg {
+        self.resolve_with(arg, &[])
+    }
+    fn resolve_with(&self, arg: &Arg, aliases: &[Option<Arg>]) -> Arg {
         resolve(arg, |slot| {
-            match self.defs.get(&slot).and_then(|&op| self.ops.get(op)) {
+            aliases.get(slot).and_then(Option::as_ref).or_else(|| match self.defs.get(&slot).and_then(|&op| self.ops.get(op)) {
                 Some(Op::Copy(_, from)) => Some(from),
                 _ => None,
-            }
+            })
         })
     }
 }
@@ -357,6 +374,7 @@ mod tests {
             rule: &rule,
             template: &template,
             tables: &tables,
+            aliases: &[],
         };
         assert!(cell.local_relation(Site::Query(0)).is_some());
         assert!(cell.relation(Site::Effect(0)).is_some());

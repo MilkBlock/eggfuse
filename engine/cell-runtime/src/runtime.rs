@@ -885,8 +885,16 @@ impl Executor {
                     };
                     key
                 };
-                self.continuation_stats.keyed_reads += 1;
-                let row = self.graph.lookup(read.table, &key)?;
+                let row = if let Some(witness) = expected {
+                    // The query domain already identified the only candidate.
+                    // Read that actual witness once and validate the Cell's
+                    // projected key; do not rediscover it through another lookup.
+                    self.graph.row(witness)?.filter(|row| row.table == read.table
+                        && row.values.split_last().is_some_and(|(_, fields)| fields == key.as_slice()))
+                } else {
+                    self.continuation_stats.keyed_reads += 1;
+                    self.graph.lookup(read.table, &key)?
+                };
                 let Some(row) = row else {
                     if expected.is_none() {
                         return Ok((false, epoch, None));

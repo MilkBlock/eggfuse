@@ -66,6 +66,46 @@ fn reused_constructor_receipt_resumes_all_residual_results() {
 }
 
 #[test]
+fn constructor_alias_inputs_connect_the_existing_receipt_to_a_residual_query() {
+    let source = fixture::aliased_source(SOURCE);
+    let (old, new) = compare(&source, true, true);
+    assert!(new.graph.stats.register_prefix.receipt_hits > 0);
+    assert!(new.graph.stats.register_prefix.resumes > 0);
+    assert!(new.graph.key_lookup_calls.get() < old.graph.key_lookup_calls.get());
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, &source).unwrap();
+}
+
+#[test]
+fn aliased_route_still_rejects_forged_exported_source_slots() {
+    let p = program(&fixture::aliased_source(SOURCE));
+    let mut raw = p.artifact;
+    let step = raw["multi_stage"]["routes"].as_array_mut().unwrap().iter_mut()
+        .flat_map(|route| route["steps"].as_array_mut().unwrap())
+        .find(|step| step["assignments"].as_array().is_some_and(|a| !a.is_empty())).unwrap();
+    step["assignments"][0][1] = serde_json::json!({"Slot":999999});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    assert!(matches!(Program::parse(raw), Err(e) if e.contains("invalid producer slot wiring")));
+}
+
+#[test]
+fn route_value_proofs_do_not_anticipate_unions_or_cross_deletion() {
+    for effects in [
+        "(let a (N n)) (let b (M n)) (A a) (B b n) (union a b)",
+        "(A (N n)) (delete (N n)) (B (N n) n)",
+    ] {
+        let source = fixture::aliased_source(SOURCE).replace("(Seed i64)", "(Seed i64) (M i64)")
+            .replace("(A (N n)) (B (N n) n)", effects);
+        let p = program(&source);
+        let rules = p.artifact["recipe"]["rules"].as_array().unwrap();
+        let id = |name| rules.iter().position(|r| r["metadata"]["name"] == name).unwrap();
+        assert!(p.artifact["multi_stage"]["routes"].as_array().unwrap().iter().all(|route|
+            route["producer"] != id("producer") || route["consumer"] != id("consumer")), "{effects}");
+    }
+}
+
+#[test]
 fn elided_rhs_operation_reads_its_query_receipt() {
     let source = SOURCE.replace("((= x (N n)))", "((= x (N n)) (= a (A x)))");
     let (old, new) = compare(&source, true, true);

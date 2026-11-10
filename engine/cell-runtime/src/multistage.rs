@@ -219,7 +219,8 @@ impl MultiStage {
             let anchor = number("anchor")?;
             let target = program.rules.get(consumer).ok_or("continuation consumer")?;
             let cell = Definition::new(program, producer)?;
-            let (table, cols) = cell.local_columns(Site::Effect(effect))?;
+            let (table, mut cols) = cell.local_columns(Site::Effect(effect))?;
+            for value in &mut cols { *value = cell.value(value); }
             let mut mapping = BTreeMap::new();
             bind_relation(
                 target.query.get(anchor).ok_or("continuation anchor")?,
@@ -239,13 +240,8 @@ impl MultiStage {
                     return Err("duplicate continuation atom".into());
                 }
                 let site = Site::parse(kind, index)?;
-                let (table, columns) = cell.local_columns(site)?;
-                bind_relation(
-                    target.query.get(atom).ok_or("continuation atom index")?,
-                    table,
-                    &columns,
-                    &mut mapping,
-                )?;
+                let (table, mut columns) = cell.local_columns(site)?;
+                target.query.get(atom).ok_or("continuation atom index")?;
                 let assignments = if kind == "effect" {
                     assignments(&target.query[anchor], &target.query[atom], &columns)
                 } else {
@@ -256,6 +252,10 @@ impl MultiStage {
                         return Err("invalid producer slot wiring".into());
                     }
                 }
+                // Validate original exported slots exactly before resolving
+                // the existing Cell aliases for proof and runtime operand use.
+                for value in &mut columns { *value = cell.value(value); }
+                bind_relation(&target.query[atom], table, &columns, &mut mapping)?;
                 reads.push(LocalRead {
                     assignments,
                     atom,
