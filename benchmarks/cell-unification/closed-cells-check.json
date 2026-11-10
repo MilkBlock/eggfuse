@@ -1,0 +1,575 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/stable_ports/stats/node_lookups": [
+      64347,
+      64307
+    ],
+    "/stable_ports/stats/port_reads": [
+      118304,
+      118224
+    ],
+    "/stable_ports/stats/root_parent_probes": [
+      134325,
+      134202
+    ],
+    "/stable_ports/stats/root_resolutions": [
+      118304,
+      118224
+    ],
+    "/stable_ports/stats/row_views": [
+      35602,
+      35562
+    ],
+    "/stage_spine/stats/effect_aborted_frames": [
+      58,
+      0
+    ],
+    "/stage_spine/stats/effect_frames": [
+      6480,
+      6422
+    ],
+    "/stage_spine/stats/effect_slot_probes": [
+      12609,
+      12569
+    ],
+    "/stage_spine/stats/effect_slot_targets": [
+      10170,
+      10130
+    ],
+    "/stage_spine/stats/effect_slots_initialized": [
+      12144,
+      12028
+    ],
+    "/stats/handoff_attempts": [
+      690,
+      592
+    ],
+    "/stats/handoff_closed_fallback": [
+      58,
+      75
+    ],
+    "/storage/sealed_slot_reads": [
+      47388,
+      47308
+    ]
+  },
+  "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+  "net_saved_measured_operations": 98,
+  "scope": "standalone Cell CPU; normal release work checks, no timing or allocator campaign",
+  "baseline_commit": "311a3ef8 plus the recorded attempt-accounting-only patch",
+  "candidate_commit": "808aadb3",
+  "semantic_acceptance": "pass",
+  "metering_control": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {
+      "/stats/handoff_attempts": [
+        592,
+        690
+      ]
+    },
+    "program_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+    "net_saved_measured_operations": -98
+  },
+  "control_patch_sha256": "8f8952cfd37c18b53ebff2b6d6bc37e40a8822a337a15de4e927a04683cfb9dd",
+  "opportunity": {
+    "newly_closed": [
+      {
+        "state": 60,
+        "unit": 54,
+        "rule": 55,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 17
+      }
+    ],
+    "remaining": [
+      {
+        "state": 34,
+        "unit": 35,
+        "rule": 143,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0,
+          2,
+          3
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 17
+      },
+      {
+        "state": 39,
+        "unit": 38,
+        "rule": 143,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0,
+          3
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 9
+      },
+      {
+        "state": 51,
+        "unit": 41,
+        "rule": 143,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0,
+          2,
+          3
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 34
+      },
+      {
+        "state": 53,
+        "unit": 46,
+        "rule": 143,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0,
+          3
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 11
+      },
+      {
+        "state": 59,
+        "unit": 50,
+        "rule": 143,
+        "source_set": "always-run",
+        "uncovered_operations": [
+          0,
+          3
+        ],
+        "alias_operations": [
+          0
+        ],
+        "prior_applied_unit_visits": 19
+      }
+    ],
+    "scope": "Static retained switch certificates and prior applied-unit counts; not a mutation count or guaranteed successful closure"
+  },
+  "unchanged_work_metrics": 336,
+  "changed_work_metrics": {
+    "report:/stable_ports/stats/node_lookups [value]": [
+      {
+        "status": "observed",
+        "value": 64347
+      },
+      {
+        "status": "observed",
+        "value": 64307
+      }
+    ],
+    "report:/stable_ports/stats/port_reads [value]": [
+      {
+        "status": "observed",
+        "value": 118304
+      },
+      {
+        "status": "observed",
+        "value": 118224
+      }
+    ],
+    "report:/stable_ports/stats/root_parent_probes [value]": [
+      {
+        "status": "observed",
+        "value": 134325
+      },
+      {
+        "status": "observed",
+        "value": 134202
+      }
+    ],
+    "report:/stable_ports/stats/root_resolutions [value]": [
+      {
+        "status": "observed",
+        "value": 118304
+      },
+      {
+        "status": "observed",
+        "value": 118224
+      }
+    ],
+    "report:/stage_spine/stats/effect_aborted_frames [value]": [
+      {
+        "status": "observed",
+        "value": 58
+      },
+      {
+        "status": "observed",
+        "value": 0
+      }
+    ],
+    "report:/stage_spine/stats/effect_frames [value]": [
+      {
+        "status": "observed",
+        "value": 6480
+      },
+      {
+        "status": "observed",
+        "value": 6422
+      }
+    ],
+    "report:/stage_spine/stats/effect_slot_probes [value]": [
+      {
+        "status": "observed",
+        "value": 12609
+      },
+      {
+        "status": "observed",
+        "value": 12569
+      }
+    ],
+    "report:/stage_spine/stats/effect_slot_targets [value]": [
+      {
+        "status": "observed",
+        "value": 10170
+      },
+      {
+        "status": "observed",
+        "value": 10130
+      }
+    ],
+    "report:/stage_spine/stats/effect_slots_initialized [value]": [
+      {
+        "status": "observed",
+        "value": 12144
+      },
+      {
+        "status": "observed",
+        "value": 12028
+      }
+    ],
+    "report:/stats/handoff_attempts [value]": [
+      {
+        "status": "observed",
+        "value": 690
+      },
+      {
+        "status": "observed",
+        "value": 592
+      }
+    ]
+  },
+  "fixtures": {
+    "closed-64": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15",
+        "stages.json": "72241302fb070dc42dbe022c550bf7de7f15e8b2e6e5d411c00db0fbdfade69b",
+        "binding-audit.json": "a4292f7b6bcbb7db95814629d4ada66bdfc1a9691e440f457f4da925efc446fe"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          2
+        ],
+        "/storage/sealed_slot_reads": [
+          34,
+          20
+        ]
+      },
+      "program_sha256": "e8b195573317ed602e524b37d631dd804e7e5b408cf359025843831af31e0476",
+      "net_saved_measured_operations": 0
+    },
+    "closed-0": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15",
+        "stages.json": "72241302fb070dc42dbe022c550bf7de7f15e8b2e6e5d411c00db0fbdfade69b",
+        "binding-audit.json": "a4292f7b6bcbb7db95814629d4ada66bdfc1a9691e440f457f4da925efc446fe"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          2
+        ],
+        "/storage/sealed_slot_reads": [
+          34,
+          20
+        ]
+      },
+      "program_sha256": "e8b195573317ed602e524b37d631dd804e7e5b408cf359025843831af31e0476",
+      "net_saved_measured_operations": 0
+    },
+    "retired-64": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8c846f64e1c7e15700400dcb9a6b737220e64896edd39f4803f396bc1c7bd0d3",
+        "stages.json": "bb1ee02d59babb197462e70d475a5a647849abd6fe7228a1b0d642f605080dc7",
+        "binding-audit.json": "1a9cb4e241f9ce9d6881f3be52a30ee3ba8638d930d425c07dd9e774e7b233c8"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          1
+        ],
+        "/stats/handoff_closed_fallback": [
+          0,
+          1
+        ],
+        "/storage/sealed_slot_reads": [
+          36,
+          25
+        ]
+      },
+      "program_sha256": "bb2de1c6066ab7d2af1a0228c8dbec5ee0ebd4bcfc57e44b6e35bdaf60abdc9b",
+      "net_saved_measured_operations": 0
+    },
+    "retired-0": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8c846f64e1c7e15700400dcb9a6b737220e64896edd39f4803f396bc1c7bd0d3",
+        "stages.json": "bb1ee02d59babb197462e70d475a5a647849abd6fe7228a1b0d642f605080dc7",
+        "binding-audit.json": "1a9cb4e241f9ce9d6881f3be52a30ee3ba8638d930d425c07dd9e774e7b233c8"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          1
+        ],
+        "/stats/handoff_closed_fallback": [
+          0,
+          1
+        ],
+        "/storage/sealed_slot_reads": [
+          36,
+          25
+        ]
+      },
+      "program_sha256": "bb2de1c6066ab7d2af1a0228c8dbec5ee0ebd4bcfc57e44b6e35bdaf60abdc9b",
+      "net_saved_measured_operations": 0
+    },
+    "barrier-64": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15",
+        "stages.json": "72241302fb070dc42dbe022c550bf7de7f15e8b2e6e5d411c00db0fbdfade69b",
+        "binding-audit.json": "a4292f7b6bcbb7db95814629d4ada66bdfc1a9691e440f457f4da925efc446fe"
+      },
+      "changed_work": {},
+      "program_sha256": "4a1fe229f73aa51cf452895bc6eeeabae364f0d91fce4594f5cd9094a4ef1c65",
+      "net_saved_measured_operations": 0
+    },
+    "barrier-0": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15",
+        "stages.json": "72241302fb070dc42dbe022c550bf7de7f15e8b2e6e5d411c00db0fbdfade69b",
+        "binding-audit.json": "a4292f7b6bcbb7db95814629d4ada66bdfc1a9691e440f457f4da925efc446fe"
+      },
+      "changed_work": {},
+      "program_sha256": "4a1fe229f73aa51cf452895bc6eeeabae364f0d91fce4594f5cd9094a4ef1c65",
+      "net_saved_measured_operations": 0
+    },
+    "closed-64-normal": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          2
+        ],
+        "/storage/sealed_slot_reads": [
+          18,
+          10
+        ]
+      },
+      "program_sha256": "e8b195573317ed602e524b37d631dd804e7e5b408cf359025843831af31e0476",
+      "net_saved_measured_operations": 0
+    },
+    "closed-0-normal": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          2
+        ],
+        "/storage/sealed_slot_reads": [
+          18,
+          10
+        ]
+      },
+      "program_sha256": "e8b195573317ed602e524b37d631dd804e7e5b408cf359025843831af31e0476",
+      "net_saved_measured_operations": 0
+    },
+    "retired-64-normal": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8c846f64e1c7e15700400dcb9a6b737220e64896edd39f4803f396bc1c7bd0d3"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          1
+        ],
+        "/stats/handoff_closed_fallback": [
+          0,
+          1
+        ],
+        "/storage/sealed_slot_reads": [
+          24,
+          15
+        ]
+      },
+      "program_sha256": "bb2de1c6066ab7d2af1a0228c8dbec5ee0ebd4bcfc57e44b6e35bdaf60abdc9b",
+      "net_saved_measured_operations": 0
+    },
+    "retired-0-normal": {
+      "runs": 5,
+      "ordered_hashes": {
+        "state.json": "8c846f64e1c7e15700400dcb9a6b737220e64896edd39f4803f396bc1c7bd0d3"
+      },
+      "changed_work": {
+        "/cell_ownership/stats/marker_union_requests": [
+          2,
+          0
+        ],
+        "/stats/handoff_closed": [
+          0,
+          1
+        ],
+        "/stats/handoff_closed_fallback": [
+          0,
+          1
+        ],
+        "/storage/sealed_slot_reads": [
+          24,
+          15
+        ]
+      },
+      "program_sha256": "bb2de1c6066ab7d2af1a0228c8dbec5ee0ebd4bcfc57e44b6e35bdaf60abdc9b",
+      "net_saved_measured_operations": 0
+    },
+    "barrier-64-normal": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15"
+      },
+      "changed_work": {},
+      "program_sha256": "4a1fe229f73aa51cf452895bc6eeeabae364f0d91fce4594f5cd9094a4ef1c65",
+      "net_saved_measured_operations": 0
+    },
+    "barrier-0-normal": {
+      "runs": 4,
+      "ordered_hashes": {
+        "state.json": "5208ad1672e9c0dc53e324c298ea08ed5b3cbcef3d73a00e590af926fe8bdd15"
+      },
+      "changed_work": {},
+      "program_sha256": "4a1fe229f73aa51cf452895bc6eeeabae364f0d91fce4594f5cd9094a4ef1c65",
+      "net_saved_measured_operations": 0
+    }
+  },
+  "tests": {
+    "aliases": {
+      "passed": 3,
+      "sha256": "acb10e19f443ab7bd8e3554804e6b339cd89590f2f2b6251ec89a0549ff901d7"
+    },
+    "aliases-all": {
+      "passed": 3,
+      "sha256": "8fdd3f52a0eb28106319cfc5f370909d754147a4553acd25db95ba068f459618"
+    },
+    "publications": {
+      "passed": 9,
+      "sha256": "25196c3d05ba0257b762c22631ccbb26a4979a36593884a6cfd9d065cb4c9800"
+    },
+    "witness": {
+      "passed": 8,
+      "sha256": "f18ff78a10053c9adaaf0bc888db95718475c8ec603a0e440d1b52bcfc93d783"
+    },
+    "congruence": {
+      "passed": 1,
+      "sha256": "4fddf77a9a69503b9537c285e1fb9639f641254a9e3ed4804c1ca7fc251c2fcb"
+    },
+    "barrier": {
+      "passed": 1,
+      "sha256": "f46de88be42be0579bab1ab7dfad0d46dedd077313dd863cc92de585c9e5046d"
+    },
+    "history": {
+      "passed": 1,
+      "sha256": "3d42e820cc85f31406ed8d28d01fd55b6324978d0b36a231417a56d762741171"
+    },
+    "scoped": {
+      "passed": 12,
+      "sha256": "5eb1b84a659bd0e4f37ba5d483e586052d6058fed3eb4f5b91d30723747d1e87"
+    },
+    "credit": {
+      "passed": 4,
+      "sha256": "6cfbc7624da512bc1bbb782b67411415ba823faa30af6fcb83342c7756f3a144"
+    }
+  },
+  "minimal_sha256": "877f045d6733ac94417ec3ffb53f27964a1f365f59fa06417495a0bcdfcc76a1",
+  "scoped_sha256": "f8a7a9baddee85bffb557aec499aa765d32edf93ff54375db58bea70ccc6cd75",
+  "relower_sha256": "3d96d134816aa7979ca7fa56a16814a0dcaa02b6189f10166783bcce95f61df1",
+  "relower_components": 22,
+  "binaries": {
+    "unmetered": "1b17fd225c20301a671b8d3b32533d992b135864aec946493611bcbb095f0cf4",
+    "baseline": "68ae953b30ede09de0b66819c37e0e703940e955ed30655119dd6b48a4891740",
+    "candidate": "aff4cb0570944b377b3eea875ce0f6d1e0ae69fae15945193808f79f6c4d96ee"
+  },
+  "fixture_manifest_sha256": {
+    "": "ee0a459fefc74f796e103b210dae4125240dbea81e401b6e30624f3c39abe125",
+    "-normal": "b2300051404dc1d6e809ba0636c5992663c4141477c651b33837cfb227da5b27"
+  },
+  "removed": "Whole-prefix discard, receipt-frame recreation and repeated witness checks after a closed Cell miss. Iterative and structural completion share the Cell Start result; source aliases extend closure after exact portable-proof validation.",
+  "limits": "No full-closure increase on sum-bits: newly eligible visits still miss, but now resume without duplicate work. Raw operation receipts, original effect/Run order, exact key/liveness checks and unsupported-union boundaries remain. Setup lowering and partial-frame moves are not separately timed or allocator-counted. Equal-weight credit charges actual witness attempts once; older raw counts omitted failed preflight work. Overall Cell unification and final parallel acceptance remain incomplete.",
+  "timing_cadence": {
+    "last_timed_commit": "311a3ef8",
+    "implementation_commits_since_timing": 1
+  }
+}

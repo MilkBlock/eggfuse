@@ -600,3 +600,19 @@ sum-bits 相对 23d923e4：effect_output_copies 1,762→1,484，effect_outputs_r
 产物 out/cell-output-donors；复核 `python3 benchmarks/cell-unification/check_output_selection.py ROOT OUTPUT --commit 311a3ef8 --phase donors --timing`。原选择阶段的校验输出也重新检查为逐字节一致。测速命令使用 output-donors-timing-spec.json 和既有 witness-prefix/measure.py，repeat=7、warmups=1；节奏从 311a3ef8 归零。
 
 下一处更直接的跨阶段障碍已定位：result_handoff::is_complete 对每个 table operation 要求单独 reuse，而复用计划主动排除 static_skip；finish_handoff 同样逐操作索取 transfer。因此普通路径已经能省掉的静态别名，仍可能阻止整个 Cell 闭合。下一轮先核对实际目录的受阻范围，再让闭合准入和执行共同消费 Cell 的既有证明。源码 marker 物化、一般 Bake 组合、其余优化族重写和最终多线程验收仍未完成。
+
+## Cell 别名闭合与首次 miss 后接续原前缀
+
+当前冻结 sum-bits 目录中，state 60 / unit 54 / rule 55 只差一个已证明的查询别名即可闭合，上一轮该 unit 执行 17 次。其他尚未闭合的状态仍缺结果见证或有 v1 不允许的 union，不扩大准入。现在由 Cell::Definition 的统一覆盖判断接受已有别名证明；旧 portable handoff certificate 仍逐项验证，通过后才补全唯一的执行标志，不另维护一份运行时事实或绑定。
+
+最初仅放开准入的短检查显示这 17 次全部遇到失效见证，造成 17 次额外检查和临时帧。没有把这个版本作为最终结果：闭合执行改为与普通/局部前缀相同的 Cell Start 协议。成功的前缀保留计算槽、实际收据和原效果顺序；首次 miss 将这些结果移入普通 RHS，从失败 operation 继续。已失败的同一输入不重复检查，后续若有不同的结构性见证仍需验证。已经完成的 union 只按原源顺序排队一次，不提前做跨 Run 的等价推断。完整完成和部分完成共用该路径，删除原 iterative/structural 两套“丢弃效果帧后从头再来”的处理。
+
+发现并修正一个计分问题：原 handoff_attempts 只在整个预检成功后一次性增加，漏掉失败预检里已经发生的检查。使用隔离 worktree 的 311a3ef8 加 closed-attempt-accounting.patch 构建对照，仅把计数移到每次实际检查之前。sum-bits 旧 592 修正为 690，除这一字段外全部工作、state 和 Run 保持。最终候选相对这个同口径控制为 **690→592**，净少 98 项现有 Work 计分操作，不把旧漏记当成保持或收益。
+
+sum-bits effect_aborted_frames 58→0，effect_frames 6480→6422，槽初始化 12144→12028，效果槽探测/命中各少 40，端口读取少 80，row_views 少 40。handoff_closed_fallback 58→75 表示需要继续 RHS 的闭合 miss，已不代表丢弃/重放；完整闭合仍为 165，查询、图执行、实际发布、历史、最终 state 和 1,428 个 Run 保持。336 项目录工作指标不变，10 项按接管变化。新增静态 lowering、临时帧合并及前缀选择成本没有独立时间/分配器归因；本次不宣称加速。
+
+42 项相关测试及最小 feature 编译通过，涵盖普通/完整配置的查询和效果别名、后部 miss 前已有 union、raw receipt 身份、删除/缺失见证、跨 Run 历史、严格 wire 校验和 scoped publication。三种显式构造的短目录由 emit_closed_cells 生成，不是训练学得的最优目录。正常案例完整闭合 2 次；删除案例完整闭合 1 次、接续 1 次，均只做 4 次见证检查且不丢弃效果帧。v1 边界对照确实执行 4 次转移检查但不闭合，全部工作与对照一致。三个样例在普通/全碰撞哈希下分别审计和正常执行，24 个进程均小于 1 秒，state、Run 与适用的 stages/binding-audit 一致。sum-bits choice_diagnosis pass，22 个编译组件重新 lowering 一致。
+
+产物 out/cell-closed-aliases；复核 `python3 benchmarks/cell-unification/check_closed_cells.py ROOT OUTPUT --commit COMMIT`。控制源码为 `git worktree add --detach ROOT/control 311a3ef8` 后应用 closed-attempt-accounting.patch，普通 release features 为 sparse-cells,view-ports,storage-metrics；脚本同时核对控制源码差异、旧二进制 SHA、输入及运行清单。短目录用 `cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports,iterative-bake --example emit_closed_cells -- ROOT` 生成，随后 run_retention_fixtures.run(ROOT, ('closed','retired','barrier'), audit=True/False)。
+
+这是 311a3ef8 测速后的第 1 个实现提交，度量对象为 standalone Cell CPU。接续消除了已覆盖闭合 miss 的重复工作；只有匹配事实就足以完成的 Cell、RHS 策略选择、未知发布边界及其余优化族仍待接管，整体统一与最终多线程验收未完成。

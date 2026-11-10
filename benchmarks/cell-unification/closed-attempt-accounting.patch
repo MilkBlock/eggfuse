@@ -1,0 +1,20 @@
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index a39d1e03..5733bf9a 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -1474,6 +1474,7 @@ impl Graph {
+                 Op::Let(_, Call::Table(_), _) | Op::Set(..) => {
+                     let Some(input) = transfers.next() else { return Ok(None); };
+                     if input.op != op { return Err("invalid completed block order".into()); }
++                    self.stats.handoff_attempts += 1;
+                     let Some(witness) = complete_handoff(self, &mut pending, instruction, input, &mut counts)?
+                         else { return Ok(None); };
+                     receipts.record(op, witness);
+@@ -1487,7 +1488,6 @@ impl Graph {
+         for (a, b) in pending.unions { self.enqueue_union(a, b)?; }
+         self.stats.rhs_frames_avoided += 1;
+         self.stats.handoff_closed += 1;
+-        self.stats.handoff_attempts += counts.lets + counts.sets;
+         counts.commit(&mut self.stats);
+         Ok(Some((cell, pending.frame, count)))
+     }

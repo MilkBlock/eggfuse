@@ -872,12 +872,13 @@
           }
         ]
       },
-      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations.",
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations. 闭合 miss 现继续同一 Cell 前缀，已验证收据和计算结果不再重做；失败检查也计入 handoff_attempts。实际不同的结构性替代见证仍须验证，live/key/Run 约束保留。",
       "evidence": [
         "benchmarks/query-receipts/README.md",
         "benchmarks/compiler-congruence/README.md",
         "benchmarks/cell-unification/projection-binding-check.json",
-        "benchmarks/cell-unification/projection-candidates-results.json"
+        "benchmarks/cell-unification/projection-candidates-results.json",
+        "benchmarks/cell-unification/closed-cells-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1469,14 +1470,15 @@
           }
         ]
       },
-      "gaps": "RHS receipt 数据流已统一到 Cell effect 槽；混合输出使用永久 Entry 前缀及临时边界后缀。Cell 布局根据已有实际来源证明只保留最后一次相同输出，但 donor 和被后续读取的历史仍须捕获。sum-bits 槽初始化 12190→12144、别名补写 1808→1762。普通/局部/闭合效果执行器、单写和 merge 仍有独立控制逻辑，不能把数据流接管视为整个 D2 已重写。配置期排序/临时来源集合没有单独分配计数或时间证据。 实际 effect donor 现直接占据最终发布槽，sum-bits 补写进一步 1762→1484；原始操作收据仍分离，槽位数不变。闭合完成尚未把静态别名作为可执行的已知事实，仍是后续接管点。",
+      "gaps": "闭合准入复用 Cell 现有别名证明；旧 portable certificate 仍严格校验，再 lowering 唯一执行标志。闭合、结构性完成与普通/局部前缀共用 Start，首次 miss 保留计算结果、收据与原操作位置，不再丢弃并重放整段。source effect donor 仍直接占据发布槽，raw operation 收据保持独立。sum-bits 实际见证检查在修正的同一口径下 690→592，丢弃帧 58→0；完整闭合仍为 165。RHS 策略选择、只有查询事实即可完成的 Cell、单写投影和剩余边界控制尚待统一；本步未测速。",
       "evidence": [
         "docs/SPARSE_CELL_CPU.md",
         "benchmarks/cell-unification/effects.md",
         "benchmarks/cell-unification/effects-results.json",
         "benchmarks/cell-unification/mixed-outputs-check.json",
         "benchmarks/cell-unification/output-selection-check.json",
-        "benchmarks/cell-unification/output-donors-results.json"
+        "benchmarks/cell-unification/output-donors-results.json",
+        "benchmarks/cell-unification/closed-cells-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1839,7 +1841,7 @@
           }
         ]
       },
-      "gaps": "Cell effect 槽直接承担已覆盖输出；永久 Entry 由输出布局接管，删除/可见性及未知边界仍保留。Entry 先选择同批次胜者再验证；现在 Cell 布局还消除同一实际来源的较早发布，保留最后原 operation 及实际 donor。sum-bits 候选/Entry 探测 9027→8703，输出登记/读取/解析 8774→8450；实际发布、查询、历史与 Run 不变。仅 Eq 相等不能作为静态合并证明。当前等权账本本步节省 1666 项，相对混合输出前 3e622300 累计节省 746 项；这不是速度证据。未知边界、源 marker 物化、一般 Bake 组合及最终多线程验收仍未完成。 donor 槽直达再少 278 次补写，当前相对 3e622300 累计净少 1024 项。311a3ef8 五提交检查点推理相对直接前版配对快约 1.65%，但相对上次测速和历史配置的推理区间均跨持平，整体验收仍未建立。",
+      "gaps": "Cell effect 槽直接承担已覆盖输出；永久 Entry 由输出布局接管，删除/可见性及未知边界仍保留。Entry 先选择同批次胜者再验证；现在 Cell 布局还消除同一实际来源的较早发布，保留最后原 operation 及实际 donor。sum-bits 候选/Entry 探测 9027→8703，输出登记/读取/解析 8774→8450；实际发布、查询、历史与 Run 不变。仅 Eq 相等不能作为静态合并证明。当前等权账本本步节省 1666 项，相对混合输出前 3e622300 累计节省 746 项；这不是速度证据。未知边界、源 marker 物化、一般 Bake 组合及最终多线程验收仍未完成。 donor 槽直达再少 278 次补写，当前相对 3e622300 累计净少 1024 项。311a3ef8 五提交检查点推理相对直接前版配对快约 1.65%，但相对上次测速和历史配置的推理区间均跨持平，整体验收仍未建立。 闭合 miss 保留原效果帧，sum-bits effect_aborted_frames 58→0、槽初始化 12144→12028；RHS 真正中止仍会丢弃私有收据。没有新增实例历史或依赖列表。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -1852,7 +1854,8 @@
         "benchmarks/cell-unification/mixed-outputs-check.json",
         "benchmarks/cell-unification/publication-winners-check.json",
         "benchmarks/cell-unification/output-selection-check.json",
-        "benchmarks/cell-unification/output-donors-results.json"
+        "benchmarks/cell-unification/output-donors-results.json",
+        "benchmarks/cell-unification/closed-cells-check.json"
       ],
       "status": "Cell 输出及 RHS receipt 数据流已统一；短样例语义和源顺序保持，分配下降；推理及整进程配对区间跨持平，尚未证明加速。",
       "introduced_in": "094fb2ed"
@@ -2879,7 +2882,7 @@
           }
         ]
       },
-      "gaps": "Work credit 是等权操作差值，不是纳秒模型。账本收费实际查询、字段写入、Free Join/Sieve 准备维护、历史、全部 Cell 输出登记/读取/补写/转发解析、实际 receipt 可见性检查、Entry 探测及边界维护；覆盖量、命中、拒绝和子集计数不重复收费，缺失必需字段拒绝评分。静态相同来源输出选择在当前口径节省 1666 项，混合输出改造以来相对 3e622300 累计节省 746 项；不能把初始化槽减少、命中率或少掉的校验另算为全部查找消失。训练/准备耗时、配置期临时集合与分配器全量数据、单优化边际 ablation 尚未统一入评分；新增布局成本已进入 311a3ef8 五提交测速的 setup，但没有单独分配/指令归因。历史保留等结构容器计数不等于总分配字节。整体速度保持与最终并行验收尚未建立。 本步现有补写计数再少 278；不把对应复用命中增加重复计分。单轮配对推理相对直接前版为 0.983497 [0.977410,0.990010]，相对 acab2911/24c4ae8a 的区间跨 1；工作量改善不是该时间差的因果证明。",
+      "gaps": "Work credit 是等权操作差值，不是纳秒模型。账本收费实际查询、字段写入、Free Join/Sieve 准备维护、历史、全部 Cell 输出登记/读取/补写/转发解析、实际 receipt 可见性检查、Entry 探测及边界维护；覆盖量、命中、拒绝和子集计数不重复收费，缺失必需字段拒绝评分。静态相同来源输出选择在当前口径节省 1666 项，混合输出改造以来相对 3e622300 累计节省 746 项；不能把初始化槽减少、命中率或少掉的校验另算为全部查找消失。训练/准备耗时、配置期临时集合与分配器全量数据、单优化边际 ablation 尚未统一入评分；新增布局成本已进入 311a3ef8 五提交测速的 setup，但没有单独分配/指令归因。历史保留等结构容器计数不等于总分配字节。整体速度保持与最终并行验收尚未建立。 本步现有补写计数再少 278；不把对应复用命中增加重复计分。单轮配对推理相对直接前版为 0.983497 [0.977410,0.990010]，相对 acab2911/24c4ae8a 的区间跨 1；工作量改善不是该时间差的因果证明。 handoff_attempts 现计入失败预检的实际检查；311a3ef8 只修计数的控制将旧 592 修正为 690，其他工作完全不变。本次前缀接续在这个公平控制下为 592，净少 98 项现有计分操作。闭合失败次数 58→75 不再意味着丢弃/重放，不能把它单独当维护成本；槽/端口读取减少与命中不额外重复计分。",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
@@ -2893,7 +2896,8 @@
         "benchmarks/cell-unification/mixed-outputs-check.json",
         "benchmarks/cell-unification/publication-winners-check.json",
         "benchmarks/cell-unification/output-selection-check.json",
-        "benchmarks/cell-unification/output-donors-results.json"
+        "benchmarks/cell-unification/output-donors-results.json",
+        "benchmarks/cell-unification/closed-cells-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }
