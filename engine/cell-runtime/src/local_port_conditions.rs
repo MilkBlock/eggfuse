@@ -44,7 +44,7 @@ struct Candidate {
 type Candidates = smallvec::SmallVec<[Candidate; 16]>;
 struct CandidateSet {
     component: u32,
-    plan: Rc<Plan>,
+    plan: Arc<Plan>,
     candidates: Candidates,
 }
 #[derive(Default)]

@@ -3,7 +3,7 @@
 //! composed Cell frames. Foreign inputs and escaped aliases bind boundary ports.
 use super::*;
 use std::cell::Cell as Counter;
-use std::rc::Rc;
+use std::sync::Arc;
 #[path = "ownership_slices.rs"]
 pub mod slices;
 use slices::{PortProgram, Signal};
@@ -17,6 +17,9 @@ pub mod query_classes;
 mod wire;
 #[path = "ownership_pending.rs"]
 mod ready;
+#[cfg(feature = "sparse-cells")]
+#[path = "constructor_reads.rs"]
+pub(in crate::graph) mod query_read;
 #[path = "port_completion.rs"]
 pub(crate) mod completion;
 
@@ -26,15 +29,15 @@ pub struct Plan {
     format: wire::Format,
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
-    pub programs: Vec<Rc<PortProgram>>,
+    pub programs: Vec<Arc<PortProgram>>,
     /// Structure-of-arrays dispatch: native ports retain a compact pointer
     /// array; operator tags are compiled separately from source instructions.
     #[serde(skip)]
-    pub code_programs: Vec<Rc<PortProgram>>,
+    pub code_programs: Vec<Arc<PortProgram>>,
     #[serde(skip)]
     pub code_operators: Vec<Vec<usize>>,
     #[serde(skip)]
-    pub query_classes: Option<Rc<query_classes::Plan>>,
+    pub query_classes: Option<Arc<query_classes::Plan>>,
     pub composition: composition::Plan,
     pub entries: Vec<Vec<usize>>,
     /// Shared publication table -> scheduled typed entry ports. Producer body
@@ -48,7 +51,7 @@ pub struct Marker {
     #[serde(skip)]
     pub code: usize,
     #[serde(skip)]
-    pub program: Rc<PortProgram>,
+    pub program: Arc<PortProgram>,
 }
 impl Plan {
     pub(crate) fn derive(p: &Program) -> Result<Self> {
@@ -64,7 +67,7 @@ impl Plan {
             .templates
             .iter()
             .map(|t| {
-                let program = Rc::new(PortProgram::derive(p, t, &tables));
+                let program = Arc::new(PortProgram::derive(p, t, &tables));
                 let legacy = (format == wire::Format::Legacy).then(|| wire::unions(t));
                 let id = shared.len();
                 let (program_id, program) = shared.entry((program.clone(), legacy))
@@ -72,7 +75,7 @@ impl Plan {
                 Marker { program, program_id, code: 0 }
             })
             .collect::<Vec<_>>();
-        let mut programs = vec![Rc::new(PortProgram::default()); shared.len()];
+        let mut programs = vec![Arc::new(PortProgram::default()); shared.len()];
         for (_, (id, program)) in shared {
             programs[id] = program;
         }
@@ -117,7 +120,7 @@ impl Plan {
         }
         if let Some(raw) = p.artifact["ownership_fragments"].get("query_classes") {
             plan.prepare_codes(&p.templates);
-            plan.query_classes = Some(Rc::new(query_classes::Plan::validate(raw, p, &plan)?));
+            plan.query_classes = Some(Arc::new(query_classes::Plan::validate(raw, p, &plan)?));
         }
         Ok(plan)
     }
@@ -894,7 +897,7 @@ impl Graph {
             .cell_ownership
             .markers
             .iter()
-            .map(|m| Rc::as_ptr(&m.program))
+            .map(|m| Arc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},

@@ -96,7 +96,7 @@ impl KeyGuard<'_> {
 }
 
 impl ReadView<'_> {
-    pub(super) fn node(&self, fact: FactRef, work: &mut Work) -> Option<&Stored> {
+    pub(in crate::graph::cell_ownership) fn node(&self, fact: FactRef, work: &mut Work) -> Option<&Stored> {
         work.node_lookups += 1;
         self.nodes.get(&fact)
     }
@@ -144,7 +144,7 @@ impl ReadView<'_> {
         }
     }
 
-    pub(super) fn key_matches(
+    pub(in crate::graph::cell_ownership) fn key_matches(
         &self,
         target: &Stored,
         table: usize,
@@ -161,6 +161,11 @@ impl ReadView<'_> {
             }
         }
         Ok(true)
+    }
+
+    #[cfg(feature = "sparse-cells")]
+    pub(in crate::graph::cell_ownership) fn result(&self, node: &Stored, work: &mut Work) -> Result<Value> {
+        self.field_value(node.fields.last().ok_or("constructor without result")?, true, work)
     }
 
     pub(super) fn condition_matches(

@@ -77,7 +77,7 @@ impl Work {
         }
         let cell_tasks = match report["query_workers"].get("organization") {
             None => false, // recorded 13cfd235 Entry-batch host
-            Some(J::String(version)) if version == "cell-run/v1" => true,
+            Some(J::String(version)) if version == "cell-run/v1" || version == "cell-run/v2" => true,
             _ => return Err("unknown query worker organization".into()),
         };
         for field in ["rule_admissions", "entry_mask_checks", "cell_source_reads",
@@ -89,6 +89,24 @@ impl Work {
                     .ok_or_else(|| format!("missing Cell task work {field}"))?
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
+        }
+        for field in ["task_order_headers", "completion_slot_initializations", "completion_slot_writes"] {
+            let value = if report["query_workers"]["organization"] == "cell-run/v2" {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing Cell completion work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
+        // Domain traversal and exact guards are folded into their existing
+        // ownership/stable-port counters below. Only new scratch/metadata work
+        // is charged here, once; constructor coverage itself earns no credit.
+        for field in ["domain_key_fields", "metadata_reads", "candidate_pushes",
+            "candidate_growths", "candidate_sort_comparisons"] {
+            let value = if report["query_workers"]["organization"] == "cell-run/v2" {
+                report["query_workers"]["stats"]["constructors"][field].as_u64()
+                    .ok_or_else(|| format!("missing constructor query work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/constructors/{field}"), value);
         }
         // Charge both paths, summing rules so changing context admission cannot
         // hide work by adding/removing a per-rule key from the comparison.

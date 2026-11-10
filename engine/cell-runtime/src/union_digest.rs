@@ -2,7 +2,6 @@
 //! incidences and interning buckets. ChangeBatch is the only wake-up queue
 //! consumed by shared Entry; source Run barriers still control observation.
 use super::*;
-use std::rc::Rc;
 #[path = "congruence_cells.rs"]
 mod cells;
 
@@ -139,6 +138,11 @@ impl Graph {
             .expressions
             .as_ref()
             .map(|e| e.audit())
+    }
+
+    #[cfg(feature = "sparse-cells")]
+    pub(super) fn constructor_hash_mask(&self) -> u64 {
+        self.union_digest.as_ref().map_or(u64::MAX, |m| m.hash_mask)
     }
 
     #[inline]
@@ -278,10 +282,10 @@ impl Graph {
                 .as_mut()
                 .ok_or("missing shared digest fields")?;
             let result_column = fields.len() - 1;
-            matcher.stats.shared_row_copies += u64::from(Rc::strong_count(fields) > 1);
+            matcher.stats.shared_row_copies += u64::from(RowFields::strong_count(fields) > 1);
             // Entry packets may still own the preceding Run's fields. COW keeps
             // those snapshots immutable while new packets use the updated row.
-            let values = Rc::make_mut(fields);
+            let values = RowFields::make_mut(fields);
             let mut changed_key = false;
             let mut changed = false;
             for &column in &matcher.eq_columns[*table] {
@@ -431,8 +435,8 @@ impl Graph {
                 .ok_or("missing expression publication witness")?;
             let (table, fields) = state.decoded.as_mut().ok_or("missing expression row")?;
             let m = self.union_digest.as_mut().unwrap();
-            m.stats.shared_row_copies += u64::from(Rc::strong_count(fields) > 1);
-            let values = Rc::make_mut(fields);
+            m.stats.shared_row_copies += u64::from(RowFields::strong_count(fields) > 1);
+            let values = RowFields::make_mut(fields);
             for &col in &m.eq_columns[*table] {
                 values[col] = canon(&values[col], &self.parents);
             }

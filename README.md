@@ -8,6 +8,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [按 Cell 实例组织查询](benchmarks/cell-run-queries/README.md)：同一源 Run 内跨规则归组、借用实例字段并复用临时帧，保留原发布顺序；完整 Raytrace 的工作量、性能与正确性对照。
 
+[Cell 任务内的构造子查询](benchmarks/cell-constructor-queries/README.md)：借用现有 signal 域完成精确查询，完整 Raytrace key 读取覆盖增至 26.2%；四线程仍未超过同路径单线程。
+
 ```sh
 cargo cell-compile --case sum-bits --output out/sum-bits
 cargo cell-run --program out/sum-bits/program.json --output out/run

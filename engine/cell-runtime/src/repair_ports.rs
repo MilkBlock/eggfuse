@@ -103,8 +103,8 @@ impl Graph {
             stats.ambiguous_bucket += 1;
             return false;
         }
-        stats.field_copies += u64::from(std::rc::Rc::strong_count(fields) > 1);
-        *std::rc::Rc::make_mut(fields).last_mut().unwrap() = Value::Eq(to);
+        stats.field_copies += u64::from(RowFields::strong_count(fields) > 1);
+        *RowFields::make_mut(fields).last_mut().unwrap() = Value::Eq(to);
         state.epoch = self.epoch;
         self.query_versions[*table] += 1;
         self.changes.touch(*table, Dependency::Fact(f));

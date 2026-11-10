@@ -1,5 +1,7 @@
 # 在源 Run 内按 Cell 实例完成查询
 
+本页记录 `5f87ba03`。后续构造子接管与真实线程对照见 [Cell 任务内的构造子查询](../cell-constructor-queries/README.md)。
+
 这是 **standalone Cell CPU** 的实验实现，不是 native egglog 的多线程实现。对照为 `13cfd235`；该版本的完整 Raytrace 测量已单独保存在 [上一轮结果](../cell-query-workers/raytrace-full.md)。入口仍为 `--query-workers N --query-grain N`，默认关闭。
 
 本轮已经把符合条件的跨阶段查询从逐规则 Entry 批次改成了源 Run 内的 Cell 实例任务，**尚未建立端到端加速**。worker 仍只承担普通函数的全键查询和标量指令，没有覆盖构造子查询、枚举、RHS 或 repair，也没有测到硬件 cache miss 的下降。

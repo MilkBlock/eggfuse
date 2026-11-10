@@ -2847,14 +2847,15 @@
       "category": "H",
       "title": "按 Cell 实例归组的源 Run 查询执行",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）",
-      "compile_fact": "从原 Cell Query 编译 Entry 能力表；在源 Run 的只读边界内跨规则合并同一实际 Cell 实例，保留原 Query 与现有槽位",
-      "replaces": "不合格 Cell 查询的批量缓冲和逐 Entry 类型准入；重复遍历全体 seed；已覆盖查询的串行 host 和逐规则 worker 等待",
+      "compile_fact": "从原 Cell Query 编译无枚举 Entry 能力；稳定构造子表完整覆盖证明候选来自共享 wiring。在源 Run 只读边界内跨规则合并实际 Cell 实例，借用原槽位、静态模板和生命周期。",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动。",
       "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
-        "engine/cell-runtime/src/function_reads.rs",
+        "engine/cell-runtime/src/query_reads.rs",
         "engine/cell-runtime/src/stage_spine.rs",
-        "engine/cell-runtime/src/cell_query.rs"
+        "engine/cell-runtime/src/cell_query.rs",
+        "engine/cell-runtime/src/constructor_reads.rs"
       ],
       "metrics": {
         "benefit": [
@@ -2984,6 +2985,46 @@
             "source": "report",
             "pointer": "/query_workers/stats/peak_cell_queue_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/task_order_headers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/completion_slot_initializations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/completion_slot_writes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/domain_key_fields",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/metadata_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/candidate_pushes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/candidate_growths",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/candidate_sort_comparisons",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3031,10 +3072,30 @@
             "source": "report",
             "pointer": "/query_workers/stats/worker_steps",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/lookups",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/domains",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/constructors/results",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/max_entries_per_cell",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "Entry 掩码检查与恢复源顺序仍有成本，不能只报告准入下降。worker_entries 仅含池线程，coordinator_entries 单列 inline 工作；两者之和是 entries。未把静态指令数当作耗时权重。构造子/枚举、已有 history/context、特殊端口索引仍保留原路径，尚未消除 repair 等待。",
+      "gaps": "entry mask、任务归组、返回槽和 winner 顺序仍有成本；worker/coordinator 分别计数。构造子 query 复用已有完整域和精确判定，未重复计入 marker 节省。Arc 字段页与模板原子引用计数、硬件缓存事件未单独计量。枚举和已有 history/context/local-witness 保持旧 host；RHS/repair 未并行化。逐规则 search_s 不包括延迟完成，不能用作调度权重。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
         "benchmarks/cell-query-workers/results.json",
@@ -3042,9 +3103,13 @@
         "benchmarks/cell-run-queries/README.md",
         "benchmarks/cell-run-queries/checks.json",
         "benchmarks/cell-run-queries/timing-summary.json",
-        "benchmarks/cell-run-queries/work-sum.json"
+        "benchmarks/cell-run-queries/work-sum.json",
+        "benchmarks/cell-constructor-queries/README.md",
+        "benchmarks/cell-constructor-queries/summary.json",
+        "benchmarks/cell-constructor-queries/checks.json",
+        "benchmarks/cell-constructor-queries/work-sum.json"
       ],
-      "status": "Cell 实例跨规则归组已接入；跨规则读后写/别名/有序绑定测试、sum-bits 专用验收和完整 Raytrace Run 签名通过。16 次完整进程测量未建立加速：新 4 worker 中位数 11.561 s，旧 4 worker 10.779 s；成对区间仍跨 1。"
+      "status": "cell-run/v2 已接管完整覆盖构造子查询；84 项集成与 61 项 runtime 测试、sum-bits 指定验收通过。20 个完整 Raytrace 进程的图和 Run 签名相同。key 读取覆盖 26.2%；4 worker 9.706 s，inline 9.411 s，尚未建立线程加速。"
     },
     {
       "id": "I1",

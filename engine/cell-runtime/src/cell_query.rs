@@ -274,9 +274,8 @@ impl<A> BoundStep<'_, A> {
 }
 impl Query {
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn function_points(&self, tables: &[crate::program::Table]) -> Option<Box<[usize]>> {
-        self.steps.iter().all(|s| s.expansion.is_none()
-            && !matches!(s.call, Call::Table(t) if tables[t].virtual_fact))
+    pub(crate) fn point_tables(&self) -> Option<Box<[usize]>> {
+        self.steps.iter().all(|s| s.expansion.is_none())
             .then(|| self.steps.iter().filter_map(|s| match s.call {
                 Call::Table(t) => Some(t), _ => None,
             }).collect::<std::collections::BTreeSet<_>>().into_iter().collect::<Vec<_>>().into_boxed_slice())
@@ -578,7 +577,7 @@ pub(crate) struct Queries {
     count: usize,
     shared: usize,
     #[cfg(feature = "sparse-cells")]
-    function_points: Vec<Vec<Option<Box<[usize]>>>>,
+    point_tables: Vec<Vec<Option<Box<[usize]>>>>,
 }
 impl Queries {
     pub(crate) fn compile(p: &Program) -> Result<Self> {
@@ -612,11 +611,11 @@ impl Queries {
             });
         }
         #[cfg(feature = "sparse-cells")]
-        let function_points = entries.iter().map(|row| row.iter().map(|q|
-            q.as_ref().and_then(|q| q.function_points(&p.tables))).collect()).collect();
+        let point_tables = entries.iter().map(|row| row.iter().map(|q|
+            q.as_ref().and_then(|q| q.point_tables())).collect()).collect();
         Ok(Self {
             #[cfg(feature = "sparse-cells")]
-            function_points,
+            point_tables,
             entries,
             count: p.multi_stage.stage_entries.len(),
             shared: shared_count,
@@ -627,8 +626,8 @@ impl Queries {
         self.entries.get(rid)?.get(pivot)?.as_ref()
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn function_points(&self, rid: usize, pivot: usize) -> Option<&[usize]> {
-        self.function_points.get(rid)?.get(pivot)?.as_deref()
+    pub(crate) fn point_tables(&self, rid: usize, pivot: usize) -> Option<&[usize]> {
+        self.point_tables.get(rid)?.get(pivot)?.as_deref()
     }
     pub(crate) fn shared(&self) -> usize {
         self.shared

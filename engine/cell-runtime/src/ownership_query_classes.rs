@@ -210,18 +210,20 @@ enum Members<'a> {
         accepted: Option<u32>,
     },
 }
-struct Signals<'a> {
+pub(super) struct Signals<'a> {
     members: Members<'a>,
     plan: Option<&'a Plan>,
     table: usize,
-    stats: &'a Stats,
+    stats: Option<&'a Stats>,
+    pub(super) probes: u64,
+    pub(super) jumps: u64,
 }
 impl<'a> Signals<'a> {
-    fn new(
+    pub(super) fn new(
         set: Option<&'a crate::tiny_set::TinySet<Signal>>,
         plan: Option<&'a Plan>,
         table: usize,
-        stats: &'a Stats,
+        stats: Option<&'a Stats>,
     ) -> Self {
         use crate::tiny_set::TinySet;
         let members = match (set, plan) {
@@ -238,7 +240,7 @@ impl<'a> Signals<'a> {
             members,
             plan,
             table,
-            stats,
+            stats, probes: 0, jumps: 0,
         }
     }
 }
@@ -249,9 +251,8 @@ impl Iterator for Signals<'_> {
             Members::Plain(iter) => iter.next().copied(),
             Members::One(signal) => {
                 let signal = signal.take()?;
-                self.stats
-                    .query_class_probes
-                    .set(self.stats.query_class_probes.get() + 1);
+                self.probes += 1;
+                if let Some(stats) = self.stats { stats.query_class_probes.set(stats.query_class_probes.get() + 1); }
                 self.plan
                     .unwrap()
                     .contains(signal.class, self.table)
@@ -266,9 +267,8 @@ impl Iterator for Signals<'_> {
                 if *accepted == Some(signal.class) {
                     return Some(signal);
                 }
-                self.stats
-                    .query_class_probes
-                    .set(self.stats.query_class_probes.get() + 1);
+                self.probes += 1;
+                if let Some(stats) = self.stats { stats.query_class_probes.set(stats.query_class_probes.get() + 1); }
                 if self.plan.unwrap().contains(signal.class, self.table) {
                     *accepted = Some(signal.class);
                     return Some(signal);
@@ -281,9 +281,8 @@ impl Iterator for Signals<'_> {
                     symbol: usize::MAX,
                 };
                 *range = set.range((std::ops::Bound::Excluded(end), std::ops::Bound::Unbounded));
-                self.stats
-                    .query_class_range_jumps
-                    .set(self.stats.query_class_range_jumps.get() + 1);
+                self.jumps += 1;
+                if let Some(stats) = self.stats { stats.query_class_range_jumps.set(stats.query_class_range_jumps.get() + 1); }
             },
         }
     }
@@ -308,7 +307,7 @@ impl Graph {
                 plan.contains(s.class, table)
             })
         });
-        Signals::new(owner.boundaries.get(&id), plan, table, &owner.stats)
+        Signals::new(owner.boundaries.get(&id), plan, table, Some(&owner.stats))
             .filter(move |signal| Some(*signal) != native)
             .chain(native)
     }
@@ -354,7 +353,7 @@ mod tests {
         };
         set.insert(kept);
         assert_eq!(
-            Signals::new(Some(&set), Some(&plan), 1, &stats).collect::<Vec<_>>(),
+            Signals::new(Some(&set), Some(&plan), 1, Some(&stats)).collect::<Vec<_>>(),
             [kept]
         );
         assert_eq!(stats.query_class_probes.get(), 2);

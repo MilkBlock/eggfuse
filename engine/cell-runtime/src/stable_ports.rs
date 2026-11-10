@@ -300,8 +300,8 @@ impl Graph {
                 m.stats.port_checks += 1;
                 if fields[i] == Value::Eq(from) {
                     m.stats.changed_ports += 1;
-                    m.stats.row_copies += u64::from(Rc::strong_count(fields) > 1);
-                    Rc::make_mut(fields)[i] = Value::Eq(to);
+                    m.stats.row_copies += u64::from(RowFields::strong_count(fields) > 1);
+                    RowFields::make_mut(fields)[i] = Value::Eq(to);
                     changed = true;
                     key |= i + 1 < fields.len();
                 } else {

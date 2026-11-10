@@ -2,9 +2,13 @@
 use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
 
 fn run(source: &str, workers: Option<(usize, usize)>) -> Executor {
+    run_mode(source, workers, true)
+}
+fn run_mode(source: &str, workers: Option<(usize, usize)>, stable: bool) -> Executor {
     let core = eggfuse_bake::device_frontend::core("cell-query-workers", source).unwrap();
     let program = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
-    let mut e = Executor::new(Graph::new_with_local_congruence(program).unwrap(), true);
+    let graph = if stable { Graph::new_with_local_congruence(program) } else { Graph::new(program) };
+    let mut e = Executor::new(graph.unwrap(), true);
     if let Some((workers, grain)) = workers { e.use_query_workers(workers, grain).unwrap(); }
     e.execute().unwrap();
     e
@@ -53,7 +57,7 @@ fn small_cell_runs_execute_inline_without_spawning_more_work() {
     assert!(q["worker_entries"].as_array().unwrap().iter().all(|v| v == 0));
 }
 #[test]
-fn uncovered_constructor_and_enumeration_queries_keep_all_answers() {
+fn constructor_points_and_residual_enumeration_keep_all_answers() {
     let source = r#"
 (datatype E (Leaf i64) (Wrap E))
 (function Cost (E) i64 :merge new)
@@ -69,9 +73,52 @@ fn uncovered_constructor_and_enumeration_queries_keep_all_answers() {
     same(&run(source,None), &after);
     let report = after.report();
     let stats = &report["query_workers"]["stats"];
-    assert_eq!(stats["entry_headers"], 0);
-    assert_eq!(stats["entry_mask_checks"], 0);
-    assert_eq!(stats["cell_source_reads"], 0);
+    assert!(stats["entries"].as_u64().unwrap() > 0);
+    // Without complete stable ownership the same constructor queries still
+    // use the exhaustive serial host, including its residual enumeration.
+    let ordinary = run_mode(source, Some((2,1)), false);
+    same(&run_mode(source, None, false), &ordinary);
+    assert_eq!(ordinary.report()["query_workers"]["stats"]["constructors"]["lookups"], 0);
+}
+
+#[test]
+fn constructor_domains_follow_both_aliases_visibility_and_recreation() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E) (Gate E) (Pair E E i64))
+(function Cost (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(ruleset make) (ruleset see) (ruleset first) (ruleset second)
+(ruleset hide) (ruleset remove) (ruleset restore)
+(rule ((Start x)) ((Gate x)) :ruleset make)
+(rule ((Gate x) (= y (N 7)) (= p (Pair x y 5)) (= c (Cost p))) ((set (Out x) c)) :ruleset see)
+(rule ((= x (N i)) (>= i 0) (< i 32) (= j (+ i 1000))) ((union x (N j))) :ruleset first)
+(rule ((= x (N 7)) (= y (N 80))) ((union x y)) :ruleset second)
+(rule ((= x (N 0)) (= y (N 7))) ((subsume (Pair x y 5)) (set (Cost (Pair x y 6)) 999)) :ruleset hide)
+(rule ((= x (N 1)) (= y (N 7))) ((delete (Pair x y 5))) :ruleset remove)
+(rule ((= x (N 1)) (= y (N 7))) ((set (Cost (Pair x y 5)) 77)) :ruleset restore)
+"#);
+    for i in 0..32 {
+        source += &format!("(Start (N {i})) (set (Cost (Pair (N {}) (N 80) 5)) {})\n",i+1000,i+1);
+    }
+    source += "(N 7)\n";
+    // The first equality is insufficient: every corresponding input and the
+    // scalar guard must hold. Birth hashes are deliberately no longer current.
+    source += "(run-schedule (seq (run make) (run see) (run first) (run see) (run second) (run see)))\n";
+    for i in 0..32 { source += &format!("(check (= (Out (N {i})) {}))\n",i+1); }
+    source += r#"
+(run-schedule (seq (run hide) (run see) (run remove) (run see) (run restore) (run see)))
+"#;
+    let before = run(&source, None);
+    for workers in [1,2,4] {
+        let after = run(&source, Some((workers,16)));
+        same(&before, &after);
+        let r = after.report();
+        let work = &r["query_workers"]["stats"]["constructors"];
+        assert!(work["lookups"].as_u64().unwrap() > 0);
+        assert!(work["domains"].as_u64().unwrap() > 0);
+        assert!(work["signal_visits"].as_u64().unwrap() > 0);
+        assert!(work["candidate_pushes"].as_u64().unwrap() > 0);
+    }
 }
 
 #[test]

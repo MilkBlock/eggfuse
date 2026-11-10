@@ -17,8 +17,8 @@ pub struct Source {
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq, Hash)]
 pub struct Shape {
     pub programs: Vec<usize>,
-    pub ports: Vec<Rc<Vec<usize>>>,
-    pub signals: Vec<Rc<Vec<Instruction>>>,
+    pub ports: Vec<Arc<Vec<usize>>>,
+    pub signals: Vec<Arc<Vec<Instruction>>>,
     /// First introduction of each shared symbol. Appending preserves origins.
     #[serde(skip)]
     pub origins: Vec<(usize, usize)>,
@@ -28,7 +28,7 @@ pub struct Shape {
 pub struct Instruction {
     pub frame: usize,
     pub op: u32,
-    pub columns: Rc<Vec<usize>>,
+    pub columns: Arc<Vec<usize>>,
 }
 impl Shape {
     fn initial(id: usize, p: &PortProgram) -> Self {
@@ -54,7 +54,7 @@ impl Shape {
                     shared
                 } else {
                     let new = shape.signals.len();
-                    shape.signals.push(Rc::new(Vec::new()));
+                    shape.signals.push(Arc::new(Vec::new()));
                     shape.origins.push((frame, local));
                     new
                 };
@@ -64,10 +64,10 @@ impl Shape {
                 copied_steps += shape.signals[symbol].len();
             }
             copied_steps += steps.len();
-            Rc::make_mut(&mut shape.signals[symbol]).extend(steps.iter().map(|s| Instruction {
+            Arc::make_mut(&mut shape.signals[symbol]).extend(steps.iter().map(|s| Instruction {
                 frame,
                 op: s.op,
-                columns: Rc::new(s.columns.clone()),
+                columns: Arc::new(s.columns.clone()),
             }));
         }
         // Several checked query inputs may substitute to the same symbol.
@@ -76,21 +76,21 @@ impl Shape {
         // Only modified slices copy instruction handles; untouched slices and
         // all previous frame port maps retain their existing allocations.
         for symbol in touched {
-            let steps = Rc::make_mut(&mut shape.signals[symbol]);
+            let steps = Arc::make_mut(&mut shape.signals[symbol]);
             let prefix = steps.partition_point(|s| s.frame < frame);
             steps[prefix..].sort_unstable_by_key(|s| s.op);
             steps.dedup_by(|next, prev| {
                 if (next.frame, next.op) != (prev.frame, prev.op) {
                     return false;
                 }
-                let columns = Rc::make_mut(&mut prev.columns);
+                let columns = Arc::make_mut(&mut prev.columns);
                 columns.extend_from_slice(&next.columns);
                 columns.sort_unstable();
                 columns.dedup();
                 true
             });
         }
-        shape.ports.push(Rc::new(ports));
+        shape.ports.push(Arc::new(ports));
         (shape, copied_steps)
     }
 }
@@ -119,14 +119,14 @@ pub struct Plan {
     pub sources: Vec<Vec<Source>>,
     pub active_rules: Vec<bool>,
     #[serde(skip)]
-    pub shapes: Vec<Rc<Shape>>,
+    pub shapes: Vec<Arc<Shape>>,
     /// Re-derived from checked wiring, never trusted from a profile.
     #[serde(skip)]
-    pub conditions: Vec<Rc<conditions::Plan>>,
+    pub conditions: Vec<Arc<conditions::Plan>>,
     #[serde(skip)]
-    pub effects: Vec<Rc<effects::Plan>>,
+    pub effects: Vec<Arc<effects::Plan>>,
     #[serde(skip)]
-    pub queries: Vec<Rc<queries::Plan>>,
+    pub queries: Vec<Arc<queries::Plan>>,
     pub fragments: Vec<Fragment>,
     pub transitions: Vec<(Key, usize)>,
     pub max_frames: usize,
@@ -206,7 +206,7 @@ impl Plan {
     pub(super) fn derive(
         p: &Program,
         markers: &[Marker],
-        programs: &[Rc<PortProgram>],
+        programs: &[Arc<PortProgram>],
         entries: &[Vec<usize>],
         format: wire::Format,
     ) -> Result<Self> {
@@ -243,7 +243,7 @@ impl Plan {
             shapes: programs
                 .iter()
                 .enumerate()
-                .map(|(id, p)| Rc::new(Shape::initial(id, p)))
+                .map(|(id, p)| Arc::new(Shape::initial(id, p)))
                 .collect(),
             fragments: (0..programs.len())
                 .map(|root| Fragment { root, hops: vec![] })
@@ -302,7 +302,7 @@ impl Plan {
                         } else {
                             let id = plan.shapes.len();
                             intern.insert(code.clone(), id);
-                            plan.shapes.push(Rc::new(code));
+                            plan.shapes.push(Arc::new(code));
                             plan.fragments.push(prefix);
                             id
                         };
@@ -318,34 +318,34 @@ impl Plan {
         }
         Ok(plan)
     }
-    pub fn prepare_effects(&mut self, programs: &[Rc<PortProgram>]) {
+    pub fn prepare_effects(&mut self, programs: &[Arc<PortProgram>]) {
         if self.effects.is_empty() {
             self.effects = self
                 .shapes
                 .iter()
-                .map(|shape| Rc::new(effects::Plan::derive(shape, programs)))
+                .map(|shape| Arc::new(effects::Plan::derive(shape, programs)))
                 .collect();
         }
     }
-    pub fn prepare_queries(&mut self, programs: &[Rc<PortProgram>]) {
+    pub fn prepare_queries(&mut self, programs: &[Arc<PortProgram>]) {
         if self.queries.is_empty() {
             self.queries = self.shapes.iter()
-                .map(|shape| Rc::new(queries::Plan::derive(shape, programs))).collect();
+                .map(|shape| Arc::new(queries::Plan::derive(shape, programs))).collect();
         }
     }
-    pub fn prepare_conditions(&mut self, programs: &[Rc<PortProgram>], templates: &[Template], markers: &[Marker]) {
+    pub fn prepare_conditions(&mut self, programs: &[Arc<PortProgram>], templates: &[Template], markers: &[Marker]) {
         if self.conditions.is_empty() {
             let operators = conditions::operators(templates, markers, programs);
             self.conditions = self
                 .shapes
                 .iter()
-                .map(|shape| Rc::new(conditions::Plan::derive(shape, programs, &operators)))
+                .map(|shape| Arc::new(conditions::Plan::derive(shape, programs, &operators)))
                 .collect();
         }
     }
     fn substitutions(
         &self,
-        programs: &[Rc<PortProgram>],
+        programs: &[Arc<PortProgram>],
         shape: usize,
         hop: &Hop,
     ) -> Option<Vec<(usize, usize)>> {
@@ -354,7 +354,7 @@ impl Plan {
 }
 fn substitutions(
     sources: &[Vec<Source>],
-    programs: &[Rc<PortProgram>],
+    programs: &[Arc<PortProgram>],
     shape: &Shape,
     hop: &Hop,
 ) -> Option<Vec<(usize, usize)>> {
@@ -464,7 +464,7 @@ pub(super) struct Runtime {
     // Coordinator-only lifetime metadata. Guards never consult these counts.
     pub live_facts: Vec<usize>,
     pub frames: Frames,
-    pub shapes: Vec<Option<Rc<Shape>>>,
+    pub shapes: Vec<Option<Arc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
     pub entry_rule: Option<usize>,
@@ -698,7 +698,7 @@ impl Graph {
                     fragment.hops.push(key.hop.clone());
                     t.fragments.push(fragment);
                     let id = m.composition.shapes.len();
-                    m.composition.shapes.push(Some(Rc::new(code)));
+                    m.composition.shapes.push(Some(Arc::new(code)));
                     m.composition.transitions.insert(key, id);
                     m.stats.composition_shape_builds += 1;
                     m.stats.composition_materializations += 1;
@@ -874,9 +874,9 @@ mod tests {
         assert_eq!(copied, 2);
         assert_eq!(parent.signals[0].len(), 1);
         assert_eq!(child.signals[0].len(), 2);
-        assert!(Rc::ptr_eq(&parent.ports[0], &child.ports[0]));
+        assert!(Arc::ptr_eq(&parent.ports[0], &child.ports[0]));
         for symbol in 1..200 {
-            assert!(Rc::ptr_eq(&parent.signals[symbol], &child.signals[symbol]));
+            assert!(Arc::ptr_eq(&parent.signals[symbol], &child.signals[symbol]));
         }
     }
 }

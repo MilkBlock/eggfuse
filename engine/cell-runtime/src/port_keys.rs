@@ -8,6 +8,21 @@
 use super::*;
 
 impl Graph {
+    #[cfg(feature = "sparse-cells")]
+    pub(in crate::graph) fn port_constructor_keys_active(&self) -> bool {
+        self.stable_ports.as_ref().is_some_and(|p| p.keys)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(in crate::graph) fn record_query_key_work(&self, w: &query_read::Work) {
+        let s = self.stable_ports.as_ref().unwrap();
+        macro_rules! add { ($f:ident, $v:expr) => { s.$f.set(s.$f.get() + $v); }; }
+        // Ordinary canonical constructor reads are also measured here, but
+        // key_lookups remains the original port-key subset.
+        add!(key_lookups, w.hint_probes); add!(key_candidates, w.candidates);
+        add!(birth_hint_probes, w.hint_probes); add!(birth_hint_hits, w.hint_hits);
+        add!(port_domain_probes, w.domains);
+        self.record_guard_reads(&w.reads);
+    }
     pub fn new_with_port_keys(p: Program) -> Result<Self> {
         let mut g = Self::new_with_stable_ports(p)?;
         g.use_port_constructor_matching()?;

@@ -21,7 +21,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::hash::{Hash, Hasher};
 
 #[cfg(feature = "sparse-cells")]
-pub type RowFields = std::rc::Rc<[Value]>;
+pub type RowFields = std::sync::Arc<[Value]>;
 #[cfg(feature = "sparse-cells")]
 use crate::ordered_run::OrderedRun as TableRows;
 #[cfg(not(feature = "sparse-cells"))]
@@ -336,8 +336,8 @@ pub struct Graph {
 #[path = "cell_prefix.rs"]
 pub(crate) mod cell_prefix;
 #[cfg(feature = "sparse-cells")]
-#[path = "function_reads.rs"]
-pub(crate) mod function_reads;
+#[path = "query_reads.rs"]
+pub(crate) mod query_reads;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {

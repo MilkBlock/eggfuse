@@ -1,0 +1,51 @@
+{
+  "lanes": {
+    "historical_serial": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/runtime-candidate",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "before_query4": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-run-queries/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64"
+      ]
+    },
+    "current_serial": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-constructor-queries/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "inline1": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-constructor-queries/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "1",
+        "--query-grain",
+        "64"
+      ]
+    },
+    "query4": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-constructor-queries/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64"
+      ]
+    }
+  }
+}

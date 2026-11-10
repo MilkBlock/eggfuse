@@ -5,7 +5,7 @@ use super::*;
 
 /// A shared port program can represent several operators. Take the union of
 /// their typed tables; exclusions are valid only outside this complete set.
-pub fn operators(templates: &[Template], markers: &[Marker], programs: &[Rc<PortProgram>]) -> Vec<Vec<Vec<usize>>> {
+pub fn operators(templates: &[Template], markers: &[Marker], programs: &[Arc<PortProgram>]) -> Vec<Vec<Vec<usize>>> {
     let mut result = programs.iter().map(|p| vec![vec![]; p.fields.len()]).collect::<Vec<_>>();
     for (template, marker) in templates.iter().zip(markers) {
         for (op, instruction) in template.ops.iter().enumerate() {
@@ -53,7 +53,7 @@ pub struct Plan {
 }
 impl Plan {
     pub const MAX_SITES: usize = 16;
-    pub fn derive(shape: &Shape, programs: &[Rc<PortProgram>], operators: &[Vec<Vec<usize>>]) -> Self {
+    pub fn derive(shape: &Shape, programs: &[Arc<PortProgram>], operators: &[Vec<Vec<usize>>]) -> Self {
         let mut sites = Vec::new();
         for (frame, &program) in shape.programs.iter().enumerate() {
             for (op, fields) in programs[program].fields.iter().enumerate() {

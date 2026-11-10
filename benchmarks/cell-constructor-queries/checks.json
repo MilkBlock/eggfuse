@@ -1,0 +1,1340 @@
+{
+  "scope": "standalone Cell CPU; one process per semantic/work configuration; not a speed measurement",
+  "baseline_commit": "5f87ba03",
+  "binaries": {
+    "baseline": "a976f21683c54ab5b26b7ab2e21c2e02e104cb7a0580a7abdcbbf50621889025",
+    "candidate": "6134cf15b7ce0c270c9388d70fac3ae624af0248832fd5178d4c38f59b731648"
+  },
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "cases": {
+    "sum": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "lanes": {
+        "baseline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "deec273870614c496baa2268ea89c7991fc5912adb63f8ebebb63531dec5f5be"
+        },
+        "off": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "bcceba9dc8875efb2c888c79750e8a2633c8e325cf6ca9f1b811bb8cd195b2b0"
+        },
+        "inline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 1450,
+              "answers": 787,
+              "batch_buffers": 2008,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 7792,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "chunks": 1453,
+              "completion_binding_moves": 416,
+              "completion_slot_initializations": 1907,
+              "completion_slot_writes": 1907,
+              "constructors": {
+                "candidate_growths": 39,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 1912,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 137624,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 2816,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 1915,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 59392,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "winner_order_comparisons": 1814,
+              "worker_entries": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "f35fb202bf64669a4e5f71a2dda64bc98016ab23b7d339c38a93287190e9a98a"
+        },
+        "two": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 1450,
+              "answers": 787,
+              "batch_buffers": 2008,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 7792,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "chunks": 1453,
+              "completion_binding_moves": 416,
+              "completion_slot_initializations": 1907,
+              "completion_slot_writes": 1907,
+              "constructors": {
+                "candidate_growths": 39,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 0,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 137624,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 2816,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 1915,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 59392,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "winner_order_comparisons": 1814,
+              "worker_entries": [
+                1401,
+                511
+              ],
+              "worker_steps": [
+                1704,
+                603
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "d7c77a1acdefd270c6468472dd0eca02517feef84cbc6ebb632ba7aa3ef4dc2e"
+        },
+        "four": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 1450,
+              "answers": 787,
+              "batch_buffers": 2008,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 7792,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "chunks": 1453,
+              "completion_binding_moves": 416,
+              "completion_slot_initializations": 1907,
+              "completion_slot_writes": 1907,
+              "constructors": {
+                "candidate_growths": 39,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 0,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 137624,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 2816,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 1915,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 59392,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "winner_order_comparisons": 1814,
+              "worker_entries": [
+                976,
+                433,
+                253,
+                250
+              ],
+              "worker_steps": [
+                1177,
+                544,
+                284,
+                302
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "4c0da6e9bb93a7b293cbd02b22ecd7b29c5ef0afc5c5ee45f80b6d68f44a59be"
+        }
+      }
+    },
+    "fixture": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "acc8eac466314c0ad348d9f7cc3f77e12dc6f575dddaeb1f9a1825fcdc56d44e"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "07a90d85b93048347fffc2de3ec62c40f177fcec79e7eb293213cf6e3946d020"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 79,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 1244,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 134,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "b711b5f05d7376405ae4a70f9be89eaa1f9de88359d24f584ccf21349effdd94"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 79,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 134,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                762,
+                479
+              ],
+              "worker_steps": [
+                1065,
+                847
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "dafc059bf7280faef300792f5145fd6374f1c09b70b93f35e2ecca131eab32e2"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 79,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 134,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                474,
+                384,
+                224,
+                159
+              ],
+              "worker_steps": [
+                697,
+                544,
+                368,
+                303
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "c73ba5c309d2a38b8bdfaf9bad5c311bbaddffcb0a650f8d44d369d063958e8c"
+        }
+      }
+    },
+    "fixture-collisions": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "f8c3d4019ebbbeb6060fb24076d86886446089bad16cb793b6ccfa1f6f2ee6ce"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "d1ae6a7fd90f2f931959527fe5a18bfcf7a89f035bea0c5661058598e3a92325"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 80,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 1263,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 136,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "4ffd12dcf100431c84f2f4a70074a1410490efadee6fc2a8062e550cd912cb82"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 80,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 136,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                863,
+                397
+              ],
+              "worker_steps": [
+                1230,
+                739
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "0c72395c14f2a9815dde4ea0cb26869d77889a267d832c24c690666a0a205d70"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v2",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 37,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_instances": 129,
+              "cell_order_comparisons": 129,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 131,
+              "chunks": 80,
+              "completion_binding_moves": 0,
+              "completion_slot_initializations": 131,
+              "completion_slot_writes": 131,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "cross_rule_cells": 1,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 55512,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 136,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 3,
+              "multi_entry_cells": 1,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 29696,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                591,
+                352,
+                160,
+                157
+              ],
+              "worker_steps": [
+                766,
+                544,
+                272,
+                387
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "ab48132cbd359e0de041c74b8e8fe84d26d62defe89843b62f1b9a195714e0cb"
+        }
+      }
+    }
+  }
+}

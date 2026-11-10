@@ -317,8 +317,8 @@ impl Graph {
             if let Field::StepResult(i) = source {
                 if fields[col] != results[*i] {
                     changed_key |= col + 1 < fields.len();
-                    stats.row_copies += u64::from(Rc::strong_count(fields) > 1);
-                    Rc::make_mut(fields)[col] = results[*i].clone();
+                    stats.row_copies += u64::from(RowFields::strong_count(fields) > 1);
+                    RowFields::make_mut(fields)[col] = results[*i].clone();
                     stats.port_writes += 1;
                 }
             }

@@ -2,7 +2,6 @@
 //! reverse subscriptions can wait for its first completion boundary. The
 //! completion list is consumed once; it is never indexed by equality class.
 use super::*;
-use std::rc::Rc;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -297,8 +296,8 @@ impl Graph {
                     m.counts.port_checks += 1;
                     let next = root(&self.parents, id);
                     if next != id {
-                        m.counts.row_copies += u64::from(Rc::strong_count(fields) > 1);
-                        Rc::make_mut(fields)[col] = Value::Eq(next);
+                        m.counts.row_copies += u64::from(RowFields::strong_count(fields) > 1);
+                        RowFields::make_mut(fields)[col] = Value::Eq(next);
                         key_changed |= col + 1 < fields.len();
                         changed = true;
                     }

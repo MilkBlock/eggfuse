@@ -117,7 +117,7 @@ fn source_unions_do_not_split_cell_wiring_or_change_effect_order() {
     let b = p.rules[p.sets["b"][0]].template;
     let markers = &p.cell_ownership.markers;
     assert_eq!(markers[a].program_id, markers[b].program_id);
-    assert!(std::rc::Rc::ptr_eq(&markers[a].program, &markers[b].program));
+    assert!(std::sync::Arc::ptr_eq(&markers[a].program, &markers[b].program));
     let wire = p.cell_ownership.artifact(&p);
     assert_eq!(wire["schema"], "eggfuse-ownership-markers/v5");
     assert!(wire["plan"]["programs"].as_array().unwrap().iter().all(|x| x.get("unions").is_none()));
@@ -428,7 +428,7 @@ fn symbolic_program_is_shared_and_untrusted_artifacts_are_rechecked() {
     for (i, a) in p.cell_ownership.markers.iter().enumerate() {
         for b in &p.cell_ownership.markers[i + 1..] {
             if !a.program.signals.is_empty() && a.program == b.program {
-                assert!(std::rc::Rc::ptr_eq(&a.program, &b.program));
+                assert!(std::sync::Arc::ptr_eq(&a.program, &b.program));
                 shared = true;
             }
         }

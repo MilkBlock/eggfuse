@@ -156,7 +156,7 @@ impl Forecast {
 impl Graph {
     pub(crate) fn enable_pure_epochs(&mut self) {
         let mut plan = self.program.completion_plan.take().unwrap();
-        Rc::make_mut(&mut plan).prepare_pure_rhs(&self.program);
+        std::rc::Rc::make_mut(&mut plan).prepare_pure_rhs(&self.program);
         self.program.completion_plan = Some(plan);
         self.ownership
             .as_mut()

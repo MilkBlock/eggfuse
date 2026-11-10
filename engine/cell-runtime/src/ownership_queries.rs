@@ -18,7 +18,7 @@ pub struct Plan {
     pub columns: Vec<Vec<Vec<Position>>>,
 }
 impl Plan {
-    pub fn derive(shape: &Shape, programs: &[Rc<PortProgram>]) -> Self {
+    pub fn derive(shape: &Shape, programs: &[Arc<PortProgram>]) -> Self {
         let columns = shape
             .signals
             .iter()
@@ -49,7 +49,7 @@ pub(in crate::graph::cell_ownership) struct FieldUses<'a> {
     shape: &'a Shape,
     steps: &'a [Instruction],
     positions: Option<&'a [Position]>,
-    programs: &'a [Rc<PortProgram>],
+    programs: &'a [Arc<PortProgram>],
     column: usize,
 }
 impl FieldUses<'_> {
@@ -89,6 +89,14 @@ impl FieldUses<'_> {
         })
     }
 }
+impl<'a> FieldUses<'a> {
+    pub(in crate::graph::cell_ownership) fn new(component: &'a Component, shape: &'a Shape, plan: &'a super::super::Plan,
+        symbol: usize, column: usize) -> Self {
+        Self { component, shape, steps: &shape.signals[symbol],
+            positions: plan.composition.queries.get(component.shape).map(|p| p.positions(symbol, column)),
+            programs: &plan.programs, column }
+    }
+}
 impl Graph {
     #[inline]
     pub(in crate::graph::cell_ownership) fn cell_field_uses(
@@ -108,17 +116,6 @@ impl Graph {
             .and_then(Option::as_ref)
             .ok_or("missing field-use shape")?;
         let plan = &self.program.cell_ownership;
-        Ok(FieldUses {
-            component,
-            shape,
-            steps: &shape.signals[signal.symbol],
-            positions: plan
-                .composition
-                .queries
-                .get(component.shape)
-                .map(|p| p.positions(signal.symbol, column)),
-            programs: &plan.programs,
-            column,
-        })
+        Ok(FieldUses::new(component, shape, plan, signal.symbol, column))
     }
 }

@@ -14,7 +14,7 @@ pub struct Plan {
     pub signals: Vec<Vec<Step>>,
 }
 impl Plan {
-    pub fn derive(shape: &Shape, programs: &[Rc<PortProgram>]) -> Self {
+    pub fn derive(shape: &Shape, programs: &[Arc<PortProgram>]) -> Self {
         Self {
             signals: shape
                 .signals

@@ -15,7 +15,7 @@ pub(crate) struct Kernel {
     /// Typed capability derived from this same Cell query, not a second plan.
     /// Unit/view storage admission and Run readiness remain runtime checks.
     #[cfg(feature = "sparse-cells")]
-    pub function_points: Option<Box<[usize]>>,
+    pub point_tables: Option<Box<[usize]>>,
     #[cfg(feature = "sparse-cells")]
     pub sum_filter: Option<(usize, usize, usize, Field)>,
 }
@@ -76,7 +76,7 @@ fn plan(r: &Rule, pivot: usize, _tables: &[Table]) -> Option<Kernel> {
     }
     let query = Rc::new(Query::residual(r, pivot)?);
     #[cfg(feature = "sparse-cells")]
-    let function_points = query.function_points(_tables);
+    let point_tables = query.point_tables();
     #[cfg(feature = "sparse-cells")]
     let sum_filter = query.steps.windows(2).enumerate().find_map(|(pc, pair)| {
         let (expand, guard) = (&pair[0], &pair[1]);
@@ -94,7 +94,7 @@ fn plan(r: &Rule, pivot: usize, _tables: &[Table]) -> Option<Kernel> {
     });
     Some(Kernel { pivot, query, routes: None,
         #[cfg(feature = "sparse-cells")]
-        function_points,
+        point_tables,
         #[cfg(feature = "sparse-cells")]
         sum_filter,
     })

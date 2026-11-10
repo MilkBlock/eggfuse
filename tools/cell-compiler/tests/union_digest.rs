@@ -481,7 +481,7 @@ fn bake_markers_and_compact_unit_ports_survive_union_digests() {
 #[test]
 fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
     use eggfuse_cell_runtime::entry_schedule::Scheduler;
-    use std::rc::Rc;
+    use eggfuse_cell_runtime::graph::RowFields;
     let p = program(
         r#"
         (datatype E (N i64) (Pair E E) (Seen E) (Same E))
@@ -506,7 +506,7 @@ fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
             .row
             .clone();
         let values = old.values.to_vec();
-        assert!(Rc::ptr_eq(
+        assert!(RowFields::ptr_eq(
             &old.values,
             &graph.row(old.witness).unwrap().unwrap().values
         ));
@@ -544,11 +544,11 @@ fn shared_entry_keeps_old_packets_and_observes_digest_at_publication() {
             scheduler.seeds(&graph, equal, graph.epoch).unwrap().len(),
             1
         );
-        assert!(Rc::ptr_eq(
+        assert!(RowFields::ptr_eq(
             &new.values,
             &graph.row(new.witness).unwrap().unwrap().values
         ));
-        assert!(!Rc::ptr_eq(&new.values, &old.values));
+        assert!(!RowFields::ptr_eq(&new.values, &old.values));
         let report = graph.union_digest_report();
         assert!(report["stats"]["shared_row_copies"].as_u64().unwrap() > 0);
         assert_eq!(report["owned_key_packets"], 0);
