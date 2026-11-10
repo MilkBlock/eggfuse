@@ -5,6 +5,11 @@ use std::{collections::BTreeMap, ops::Index};
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FrameMap<K, V>(Vec<(K, V)>);
 pub type Slots = FrameMap<usize, crate::value::Value>;
+impl<K, V> IntoIterator for FrameMap<K, V> {
+    type Item = (K, V);
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+    fn into_iter(self) -> Self::IntoIter { self.0.into_iter() }
+}
 impl<K, V> Default for FrameMap<K, V> {
     fn default() -> Self {
         Self(Vec::new())

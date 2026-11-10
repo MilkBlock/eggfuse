@@ -12,8 +12,8 @@ impl HandoffFrame for RhsFrame<'_> {
     fn union(&mut self, g: &mut Graph, a: Value, b: Value) -> Result<()> { g.enqueue_union(a, b) }
 }
 
-/// Own only computed slots and deferred effects. Borrow the original matched
-/// inputs; a failed preflight must not reserve an ID or enqueue any union.
+/// Own only computed slots and deferred effects while borrowing matched inputs.
+/// Completion or promotion commits this source prefix exactly once.
 pub(crate) struct Preflight<'a> {
     pub cell: u32,
     pub frame: Cell,
@@ -86,7 +86,7 @@ pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl HandoffFrame,
 }
 
 /// A live RHS can immediately commit a successful operation's receipt and
-/// counters. A closed frame instead commits them only after its entire preflight.
+/// counters. A witnessed prefix commits them at completion or first-miss promotion.
 pub(crate) fn apply_handoff(g: &mut Graph, cell: u32, receipts: &mut Effects,
     instruction: &Op, input: &Input) -> Result<bool> {
     let mut counts = HandoffCounts::default();

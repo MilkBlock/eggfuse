@@ -1904,6 +1904,8 @@ impl Executor {
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
+        #[cfg(feature = "iterative-bake")]
+        let mut b = b;
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
         let stage_cursor = self.stage_spine.begin_step(
@@ -2005,74 +2007,62 @@ impl Executor {
         } else {
             Default::default()
         };
+        use crate::graph::cell_prefix::{Start, SourcePrefix};
         #[cfg(feature = "iterative-bake")]
-        if !available.is_empty()
-            && stage_cursor
-                .as_ref()
-                .is_some_and(|s| s.closed(&self.graph.program.iterative))
+        let mut resumed = None;
+        #[cfg(feature = "iterative-bake")]
+        let mut failed_input = None;
+        #[cfg(feature = "iterative-bake")]
         {
-            let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
-            if let Some((cell, frame, unions)) =
-                self.graph.finish_handoff(template, &b.values, &available, &mut receipts)?
-            {
-                #[cfg(feature = "structural-depth")]
-                self.stage_spine
-                    .structural
-                    .capture(&self.graph, rid, &b.known, &receipts);
-                self.stage_spine.effects(0, 0, unions);
-                self.stage_spine.complete(
-                    &self.graph,
-                    rid,
-                    cell,
-                    stage_cursor.unwrap(),
-                    |i| b.known.receipt(i),
-                    receipts,
-                    |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args),
-                )?;
-                return Ok(());
+            let iterative_closed = !available.is_empty() && stage_cursor.as_ref()
+                .is_some_and(|s| s.closed(&self.graph.program.iterative));
+            #[cfg(feature = "structural-depth")]
+            let structural_closed = if !iterative_closed && self.stage_spine.structural.execute
+                && origin.is_none() { closed } else { None };
+            let selected = if iterative_closed { Some(available.as_slice()) } else { None };
+            #[cfg(feature = "structural-depth")]
+            let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
+            if let Some(selected) = selected {
+                let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
+                let (start, unions) = self.graph.start_handoff(rid, &mut b.values, b.parent, selected, &mut receipts)?;
+                match start {
+                    Start::Complete { cell, frame } => {
+                        #[cfg(feature = "structural-depth")]
+                        {
+                            if let Some(d) = structural_closed {
+                                #[cfg(feature = "rhs-work-audit")]
+                                if !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))) {
+                                    self.ledger.closed(&self.graph, rid, &b.values);
+                                }
+                                self.stage_spine.structural.closed(d,
+                                    matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))));
+                                for &(_, d) in &proven { self.stage_spine.structural.accepted(d as usize); }
+                            }
+                            self.stage_spine.structural.capture(&self.graph, rid, &b.known, &receipts);
+                        }
+                        if let Some(cursor) = stage_cursor {
+                            self.stage_spine.effects(0, 0, unions);
+                            self.stage_spine.complete(&self.graph, rid, cell, cursor,
+                                |i| b.known.receipt(i), receipts,
+                                |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args))?;
+                        } else { self.stage_spine.finish_effects(receipts, false); }
+                        return Ok(());
+                    }
+                    Start::Resume { cell, next_op } => {
+                        failed_input = selected.iter().find(|input| input.op == next_op).copied();
+                        if iterative_closed { self.graph.stats.handoff_closed_fallback += 1; }
+                        #[cfg(feature = "structural-depth")]
+                        if self.stage_spine.structural.execute && origin.is_none() {
+                            for &(op, d) in &proven {
+                                if op < next_op && !self.graph.program.known_results.static_skip[rid][op] {
+                                    self.stage_spine.structural.accepted(d as usize);
+                                }
+                            }
+                        }
+                        resumed = Some((Start::Resume { cell, next_op }, receipts));
+                    }
+                }
             }
-            self.stage_spine.abort_effects(receipts);
-            self.graph.stats.handoff_closed_fallback += 1;
-        }
-        #[cfg(feature = "structural-depth")]
-        if self.stage_spine.structural.execute
-            && origin.is_none()
-            && let Some(d) = closed
-        {
-            let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
-            if let Some((cell, frame, unions)) =
-                self.graph.finish_handoff(template, &b.values, &ports, &mut receipts)?
-            {
-                #[cfg(feature = "rhs-work-audit")]
-                if !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))) {
-                    self.ledger.closed(&self.graph, rid, &b.values);
-                }
-                self.stage_spine.structural.closed(
-                    d,
-                    matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))),
-                );
-                for &(_, d) in &proven {
-                    self.stage_spine.structural.accepted(d as usize);
-                }
-                self.stage_spine
-                    .structural
-                    .capture(&self.graph, rid, &b.known, &receipts);
-                if let Some(cursor) = stage_cursor {
-                    self.stage_spine.effects(0, 0, unions);
-                    self.stage_spine.complete(
-                        &self.graph,
-                        rid,
-                        cell,
-                        cursor,
-                        |i| b.known.receipt(i),
-                        receipts,
-                        |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args),
-                    )?;
-                }
-                else { self.stage_spine.finish_effects(receipts, false); }
-                return Ok(());
-            }
-            self.stage_spine.abort_effects(receipts);
         }
         #[cfg(feature = "structural-depth")]
         let available = {
@@ -2103,9 +2093,16 @@ impl Executor {
                 .cloned()
         };
         let aliases = static_skip.as_deref().map(Vec::as_slice).filter(|_| true);
-        let mut effect_receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, false);
+        #[cfg(feature = "iterative-bake")]
+        let (mut effect_receipts, resume_start) = match resumed {
+            Some((start, receipts)) => (receipts, Some(start)),
+            None => (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false), None),
+        };
+        #[cfg(not(feature = "iterative-bake"))]
+        let (mut effect_receipts, resume_start) =
+            (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false), None::<Start>);
         #[cfg(feature = "rhs-locals")]
-        let local = if self.local_width > 0
+        let local = if resume_start.is_none() && self.local_width > 0
             && self.local_selection.as_ref().is_none_or(|s| s[rid])
             && origin.is_none()
             && !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_)))
@@ -2119,9 +2116,8 @@ impl Executor {
         };
         #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
         let inspect_births = (local.clone(), stage_cursor.is_some());
-        // Selection supplies only Cell positions and accounting. Both admitted
+        // Selection supplies only Cell positions and accounting. Admitted
         // prefixes share first-miss promotion and the same completion handling.
-        use crate::graph::cell_prefix::{Start, SourcePrefix};
         let ordinary = |me: &mut Self, values: crate::slots::Slots,
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
             if me.graph.program.rules[rid].constructor_only
@@ -2138,14 +2134,16 @@ impl Executor {
             }
         };
         #[cfg(feature = "rhs-locals")]
-        let start = if let Some(block) = local {
+        let start = if let Some(start) = resume_start { start } else if let Some(block) = local {
             self.graph.start_cell(template, b.values, b.parent, &mut effect_receipts,
                 crate::graph::cell_prefix::LocalPrefix::new(&block, &mut self.local_counts))?
         } else {
             ordinary(self, b.values, &mut effect_receipts)?
         };
         #[cfg(not(feature = "rhs-locals"))]
-        let start = ordinary(self, b.values, &mut effect_receipts)?;
+        let start = if let Some(start) = resume_start { start } else {
+            ordinary(self, b.values, &mut effect_receipts)?
+        };
         let (cell, first_op) = match start {
             Start::Resume { cell, next_op } => (cell, next_op),
             Start::Complete { cell, frame } => {
@@ -2180,7 +2178,15 @@ impl Executor {
         let mut completed = true;
         let mut completed_prefix = first_op;
         #[cfg(feature = "iterative-bake")]
-        let mut transfers = available.as_slice();
+        let mut transfers = &available[available.partition_point(|input| input.op < first_op)..];
+        #[cfg(feature = "iterative-bake")]
+        if let Some((input, tail)) = transfers.split_first()
+            && failed_input.as_ref() == Some(input)
+        {
+            // The same failed receipt was already checked before promotion.
+            // A different structural proposal at this op still gets its check.
+            transfers = tail;
+        }
         for (i, op) in ops.iter().enumerate().skip(first_op) {
             if self.graph.known_stats.elide_static(aliases, i) {
                 completed_prefix = i + 1;

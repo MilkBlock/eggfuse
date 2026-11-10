@@ -1441,26 +1441,39 @@ impl Graph {
         self.changed = true;
         Ok(())
     }
-    /// Preflight the complete switched RHS on the sealed tuple. Reserve an ID
-    /// and enqueue unions only after every row and its full canonical key pass.
+    /// Complete the witnessed Cell prefix. On the first miss, retain its frame,
+    /// receipts and ordered effects and resume the original RHS at that op.
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn finish_handoff(
+    pub(crate) fn start_handoff(
         &mut self,
-        template: usize,
-        inputs: &crate::slots::Slots,
+        rule: usize,
+        inputs: &mut crate::slots::Slots,
+        parent: Option<FactRef>,
         transfers: &[crate::result_handoff::Input],
         receipts: &mut crate::cell::Effects,
-    ) -> Result<Option<(u32, Cell, u64)>> {
+    ) -> Result<(cell_prefix::Start, u64)> {
         use crate::cell::{CellFrame, HandoffFrame, HandoffCounts, Preflight, complete_handoff};
+        let template = self.program.rules[rule].template;
         let ops = self.program.templates[template].ops.clone();
+        let aliases = self.program.known_results.static_skip[rule].clone();
         let cell = self.next_cell;
         let mut pending = Preflight {
             cell, frame: self.new_cell(template, Default::default(), None),
             inputs, unions: Default::default(),
         };
-        let mut transfers = transfers.iter();
+        let mut transfers = transfers.iter().peekable();
         let mut counts = HandoffCounts::default();
+        let mut skipped = 0;
+        let mut first_miss = None;
         for (op, instruction) in ops.iter().enumerate() {
+            if aliases[op] {
+                // The common Cell operand reader already projects this alias.
+                // Structural proposals may include a redundant alias transfer;
+                // it cannot become an extra read or a fabricated raw receipt.
+                if transfers.peek().is_some_and(|input| input.op == op) { transfers.next(); }
+                skipped += 1;
+                continue;
+            }
             match instruction {
                 Op::Copy(dst, a) => {
                     let value = pending.argument(self, a)?;
@@ -1472,10 +1485,16 @@ impl Graph {
                     pending.union(self, a, b)?;
                 }
                 Op::Let(_, Call::Table(_), _) | Op::Set(..) => {
-                    let Some(input) = transfers.next() else { return Ok(None); };
+                    let Some(input) = transfers.next() else { first_miss = Some(op); break; };
                     if input.op != op { return Err("invalid completed block order".into()); }
+                    self.stats.handoff_attempts += 1;
                     let Some(witness) = complete_handoff(self, &mut pending, instruction, input, &mut counts)?
-                        else { return Ok(None); };
+                        else {
+                            if input.fact.is_none() { self.stats.handoff_missing += 1; }
+                            else { self.stats.handoff_stale += 1; }
+                            first_miss = Some(op);
+                            break;
+                        };
                     receipts.record(op, witness);
                 }
                 _ => return Err("unexpected instruction in completed block".into()),
@@ -1483,13 +1502,32 @@ impl Graph {
         }
         let reserved = self.reserve_cell_id()?;
         debug_assert_eq!(cell, reserved);
-        let count = pending.unions.len() as u64;
-        for (a, b) in pending.unions { self.enqueue_union(a, b)?; }
-        self.stats.rhs_frames_avoided += 1;
-        self.stats.handoff_closed += 1;
-        self.stats.handoff_attempts += counts.lets + counts.sets;
+        let Preflight { frame, unions, .. } = pending;
+        let count = unions.len() as u64;
+        for (a, b) in unions { self.enqueue_union(a, b)?; }
         counts.commit(&mut self.stats);
-        Ok(Some((cell, pending.frame, count)))
+        // The completed prefix will not run again, even after a later miss.
+        self.known_stats.static_eliminated += skipped;
+        self.known_stats.avoided_lookups += skipped;
+        let start = if let Some(next_op) = first_miss {
+            let mut resumed = self.new_cell(template, std::mem::take(inputs), parent);
+            resumed.values.extend(frame.values);
+            #[cfg(feature = "sparse-cells")]
+            {
+                debug_assert!(self.active_rhs.is_none());
+                self.active_origin = None;
+                self.trust_sealed_frame(cell);
+                self.active_rhs = Some((cell, resumed));
+            }
+            #[cfg(not(feature = "sparse-cells"))]
+            self.store_cell(cell, resumed);
+            cell_prefix::Start::Resume { cell, next_op }
+        } else {
+            self.stats.rhs_frames_avoided += 1;
+            self.stats.handoff_closed += 1;
+            cell_prefix::Start::Complete { cell, frame }
+        };
+        Ok((start, count))
     }
     #[cfg(feature = "structural-depth")]
     pub(crate) fn checked_constructor(

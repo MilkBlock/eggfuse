@@ -130,6 +130,18 @@ impl Relation<'_> {
     }
 }
 impl<'a> Definition<'a> {
+    /// Every source operation needs either an existing Cell alias proof, an
+    /// allowed deferred effect, or a supplied result. The caller still validates
+    /// supplied receipts and commits effects only at the original Run boundary.
+    #[cfg(feature = "iterative-bake")]
+    pub(crate) fn closes_with(&self, aliases: &[bool], unions: bool,
+        supplied: impl Fn(usize) -> bool) -> bool {
+        self.template.ops.iter().enumerate().all(|(op, instruction)| {
+            aliases.get(op) == Some(&true) || matches!(instruction, Op::Copy(..))
+                || (unions && matches!(instruction, Op::Union(..))) || supplied(op)
+        })
+    }
+
     pub fn new(program: &'a Program, rule: usize) -> Result<Self> {
         let rule = program.rules.get(rule).ok_or("Cell rule index")?;
         Ok(Self {

@@ -32,7 +32,7 @@ pub(crate) struct QueryReuse {
     #[serde(skip)]
     pub port: Option<ResultPort>,
 }
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Input {
     pub op: usize,
     pub back: usize,
@@ -465,6 +465,19 @@ impl Default for Terminal {
     }
 }
 impl Switch {
+    /// Lower the validated portable transfer certificate with the Cell's own
+    /// alias proofs. Keep one executable completion flag, without changing the
+    /// historical wire certificate or relaxing its exact validation.
+    pub(crate) fn complete_cells(&mut self, p: &Program, rule: impl Fn(usize) -> usize) {
+        for node in self.nodes.iter_mut().skip(1) {
+            let rid = rule(node.unit);
+            node.program.complete = !node.program.reuse.is_empty()
+                && Definition::new(p, rid).expect("validated Cell")
+                    .closes_with(&p.known_results.static_skip[rid], self.congruence,
+                        |op| node.program.reuse.iter().any(|r| r.op == op));
+        }
+    }
+
     /// Retain only prefixes which can supply a terminal operation. Compile
     /// inherited suffix jumps once, so a cold entry is a direct leaf reset.
     pub(crate) fn build<'a>(
@@ -665,15 +678,8 @@ impl Switch {
 
 fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool {
     !reuse.is_empty()
-        && p.templates[p.rules[r].template]
-            .ops
-            .iter()
-            .enumerate()
-            .all(|(i, o)| {
-                matches!(o, Op::Copy(..))
-                    || (congruence && matches!(o, Op::Union(..)))
-                    || reuse.iter().any(|x| x.op == i)
-            })
+        && Definition::new(p, r).expect("validated Cell")
+            .closes_with(&[], congruence, |op| reuse.iter().any(|r| r.op == op))
 }
 
 #[cfg(test)]

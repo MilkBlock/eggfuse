@@ -211,6 +211,7 @@ impl Catalog {
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
             }
+            s.switch.complete_cells(p, |unit| s.units[unit].last.0);
         }
         Ok(s)
     }
