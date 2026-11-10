@@ -767,7 +767,9 @@ pub(super) fn cpu_completion_egraph(contracts:&Json) -> Result<Json> {
             "recipe":contracts["recipe"],"structure":structure});
         registry.register_descriptor(id,&[],&descriptor,&Json::Null)?;
     }
+    let edges=registry.completion_edges(contracts["transitions"].as_array().ok_or("missing completion transitions")?)?;
     let mut report=registry.report();
+    report["completion_transitions"]=edges;
     report["scope"]=json!("exact finite constructor completion structures; source Runs remain authoritative");
     report["implementations"]=contracts["implementations"].clone();
     Ok(report)

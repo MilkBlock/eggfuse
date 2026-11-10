@@ -221,6 +221,25 @@ impl Registry {
                 "parent_scope":"observed history; not a necessary execution dependency"}));
         Ok(())
     }
+    pub(super) fn completion_edges(&mut self, edges:&[Json]) -> Result<Json> {
+        let mut signatures=BTreeMap::new();
+        let mut source=String::from("(relation CellCompletion (Cell i64 Cell))\n");
+        for edge in edges {
+            let from=edge["from"].as_u64().and_then(|n|usize::try_from(n).ok()).ok_or("invalid completion source")?;
+            let to=edge["to"].as_u64().and_then(|n|usize::try_from(n).ok()).ok_or("invalid completion target")?;
+            if !self.values.contains_key(&from) || !self.values.contains_key(&to) {return Err("unregistered completion endpoint".into());}
+            let key=serde_json::to_string(&edge["application"])?;
+            let next=signatures.len();
+            let signature=*signatures.entry(key).or_insert(next);
+            source.push_str(&format!("(CellCompletion cell_{from} {signature} cell_{to})\n"));
+        }
+        source.push_str("(print-size CellCompletion)");
+        let outputs=self.eg.parse_and_run_program(None,&source)?;
+        let rows=outputs.iter().find_map(|o|match o {egglog::CommandOutput::PrintFunctionSize(n)=>Some(*n),_=>None})
+            .ok_or("missing completion relation size")?;
+        Ok(json!({"source_edges":edges.len(),"shared_edges":rows,"application_signatures":signatures.len(),
+            "key":"normalized output incidence and checked entry; local operation numbers remain in entry maps"}))
+    }
     fn consider_graft(&mut self, target: usize, mut parents: Vec<usize>) {
         parents.sort_unstable();
         parents.dedup();

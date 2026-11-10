@@ -63,5 +63,10 @@ pub(crate) fn compile_projections(plans:&mut [Option<Rc<CompletedPlan>>],
             }
         }
     }
+    // Entries share identical executable specializations, not a second graph.
+    let mut shared = BTreeMap::new();
+    for plan in plans.iter_mut().flatten() {
+        let key = serde_json::to_string(&plan.artifact()).unwrap();
+        *plan = shared.entry(key).or_insert_with(|| plan.clone()).clone();
+    }
 }
-

@@ -188,3 +188,52 @@ fn deletable_results_keep_the_original_rhs_responsibility() {
     assert_eq!(before.binding_audit,after.binding_audit);
     assert_eq!(after.report()["stage_spine"]["stats"]["ripsat_completed"],0);
 }
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_position() {
+    let source=r#"
+(datatype E (N i64) (Start E) (Left E) (Right E) (Gateway E) (Seen E))
+(ruleset first) (ruleset second) (ruleset consume) (ruleset observe)
+(rule ((Start x)) ((Left x) (Right x) (Gateway x)) :ruleset first :name "first")
+(rule ((Start renamed)) ((Gateway renamed) (Right renamed) (Left renamed)) :ruleset second :name "second")
+(rule ((Gateway x)) ((Left x) (Right x)) :ruleset consume :name "consumer")
+(rule ((Left x)) ((Seen x)) :ruleset observe)
+(rule ((Right x)) ((Seen x)) :ruleset observe)
+(Start (N 1))
+(run-schedule (seq (run second) (run consume) (run observe) (run first)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("alternative",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let rule=|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+    let (a,b,c)=(rule("first"),rule("second"),rule("consumer"));
+    let gateway=|rid:usize|rules[rid]["effects"].as_array().unwrap().iter()
+        .position(|e|e["call"]["table"]=="Gateway").unwrap();
+    let (source_output,other_output)=(gateway(a),gateway(b));
+    assert_ne!(source_output,other_output);
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":([a,b,c].map(|r|json!({"edge":[0,0,r,0],"visits":2})))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,3).unwrap();
+    let entries=blocks["entries"].as_array().unwrap();
+    let entry=|r|entries.iter().position(|e|e["consumer"]==r).unwrap();
+    let (first,second,consumer)=(entry(a),entry(b),entry(c));
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw.clone())).unwrap();
+    let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
+    plan["joins"]=json!([{"left":first,"output":source_output,"right":consumer}]);
+    Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
+    raw["iterative_bake"]=plan;
+    let raw=seal(raw);
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    let additions=compiled["iterative_bake"]["completion_extensions"].as_array().unwrap();
+    assert!(additions.iter().any(|e|e["to"]==json!({"left":second,"output":other_output,"right":consumer})),"{additions:?}");
+    let edges=&compiled["iterative_bake"]["completion"]["cell_egraph"]["completion_transitions"];
+    assert_eq!(edges["source_edges"],2);
+    assert_eq!(edges["shared_edges"],1,"equal completion transitions share the actual native relation: {edges}");
+    let (_,expected)=execute(raw);
+    let (after,actual)=execute(compiled);
+    assert_eq!(expected,actual);
+    assert!(after.report()["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,
+        "the second producer's untrained route must execute the derived completion");
+}

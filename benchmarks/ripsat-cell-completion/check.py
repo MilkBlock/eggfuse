@@ -67,7 +67,9 @@ def main():
         contracts = compiled['iterative_bake']['completion']['contracts']
         results['cases'][case] = {'source_program_sha256': sha(program), 'candidate_program_sha256': sha(baked / 'program.json'),
                                   'direct_states': sum(s is not None for s in switch['completion_states']),
-                                  'structures': len(contracts['structures']), 'implementations': len(contracts['implementations']), 'lanes': lanes}
+                                  'structures': len(contracts['structures']), 'implementations': len(contracts['implementations']),
+                                  'inferred_entries': len(compiled['iterative_bake'].get('completion_extensions', [])),
+                                  'native_transitions': compiled['iterative_bake']['completion']['cell_egraph']['completion_transitions'], 'lanes': lanes}
         if case == 'sum':
             assert lanes['four']['spine']['ripsat_completed'] > 0, 'semantic parity alone does not establish takeover coverage'
     semantic = args.output / 'semantic'

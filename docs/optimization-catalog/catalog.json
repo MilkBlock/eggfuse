@@ -780,14 +780,16 @@
       "id": "C2",
       "category": "C",
       "title": "RHS handoff 与 query receipt",
-      "activation": "iterative Bake 的 typed handoff 证书",
+      "activation": "iterative Bake 的 typed handoff 证书；result-switch v4 可执行 ripsat 直接补全",
       "compile_fact": "前序事实、完整 key 与源边界 congruence；禁止未来查询倒证先前读取",
       "replaces": "后继 RHS 构造子查找、部分完整 Cell frame",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
         "engine/cell-runtime/src/result_handoff.rs",
         "engine/cell-runtime/src/iterative.rs",
-        "engine/cell-runtime/src/cell_binding.rs"
+        "engine/cell-runtime/src/cell_binding.rs",
+        "engine/cell-runtime/src/cell_completion.rs",
+        "tools/cell-compiler/src/completion_bake.rs"
       ],
       "metrics": {
         "benefit": [
@@ -887,6 +889,36 @@
             "source": "report",
             "pointer": "/stage_spine/stats/joint_history_query_writes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_plan_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_layout_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_witness_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_projection_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_boundary_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/effect_slots_initialized",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -904,10 +936,35 @@
             "source": "report",
             "pointer": "/stage_spine/stats/history_shared_slots",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_completed",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_projected_slots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_layout_fallbacks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_witness_fallbacks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_boundary_fallbacks",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations. 闭合 miss 现继续同一 Cell 前缀，已验证收据和计算结果不再重做；失败检查也计入 handoff_attempts。实际不同的结构性替代见证仍须验证，live/key/Run 约束保留。 组合中间阶段不导出新结果时，沿用已有 history 容器，只推进阶段位置；保留编译期生命周期边界与逐次存活性验证。短链和删除样例的 history 容器分配 6→2、槽写 8→4，读取与查询不变；sum-bits 不覆盖这类深链，工作量不变。句柄新增一个阶段偏移，从 8 增至 16 字节，深层数组元素仍为指针大小；未测速。非空结果转存和通用 Entry 发布仍未消除。 cell-results/v1 在完整导出覆盖的 Cell 中让 RHS、Entry 与已有 History owner 共用实际结果数组；sum-bits 捕获读/写各 1508→129。查询捕获提前、共享数组分配和发布 owner 读取仍收费；slot inheritance、审计与不完整状态继续原路径。历史最终存储规模不变；未完整测速。",
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations. 闭合 miss 现继续同一 Cell 前缀，已验证收据和计算结果不再重做；失败检查也计入 handoff_attempts。实际不同的结构性替代见证仍须验证，live/key/Run 约束保留。 组合中间阶段不导出新结果时，沿用已有 history 容器，只推进阶段位置；保留编译期生命周期边界与逐次存活性验证。短链和删除样例的 history 容器分配 6→2、槽写 8→4，读取与查询不变；sum-bits 不覆盖这类深链，工作量不变。句柄新增一个阶段偏移，从 8 增至 16 字节，深层数组元素仍为指针大小；未测速。非空结果转存和通用 Entry 发布仍未消除。 cell-results/v1 在完整导出覆盖的 Cell 中让 RHS、Entry 与已有 History owner 共用实际结果数组；sum-bits 捕获读/写各 1508→129。查询捕获提前、共享数组分配和发布 owner 读取仍收费；slot inheritance、审计与不完整状态继续原路径。历史最终存储规模不变；未完整测速。 ripsat 补全按精确静态转换继承实际结果槽，跳过结果输入重装、RHS 遍历与 receipt 转存；投影包装与边界维护仍收费。completed/projected_slots 是覆盖，不能重复计收益。静态布局组合最多 256 种，未知组合与非空效果回退。结构等价只覆盖有限正构造子闭包，非全程序 saturation；实测与覆盖见 ripsat-cell-completion。",
       "evidence": [
         "benchmarks/query-receipts/README.md",
         "benchmarks/compiler-congruence/README.md",
@@ -916,7 +973,9 @@
         "benchmarks/cell-unification/closed-cells-check.json",
         "benchmarks/cell-unification/history-carry-check.json",
         "benchmarks/cell-joint-results/README.md",
-        "benchmarks/cell-joint-results/results.json"
+        "benchmarks/cell-joint-results/results.json",
+        "benchmarks/ripsat-cell-completion/README.md",
+        "docs/RIPSAT_CELL_COMPLETION.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -3441,7 +3500,7 @@
           }
         ]
       },
-      "gaps": "Work credit 是等权操作差值，不是纳秒模型。账本收费实际查询、字段写入、Free Join/Sieve 准备维护、历史、全部 Cell 输出登记/读取/补写/转发解析、实际 receipt 可见性检查、Entry 探测及边界维护；覆盖量、命中、拒绝和子集计数不重复收费，缺失必需字段拒绝评分。静态相同来源输出选择在当前口径节省 1666 项，混合输出改造以来相对 3e622300 累计节省 746 项；不能把初始化槽减少、命中率或少掉的校验另算为全部查找消失。训练/准备耗时、配置期临时集合与分配器全量数据、单优化边际 ablation 尚未统一入评分；新增布局成本已进入 311a3ef8 五提交测速的 setup，但没有单独分配/指令归因。历史保留等结构容器计数不等于总分配字节。整体速度保持与最终并行验收尚未建立。 本步现有补写计数再少 278；不把对应复用命中增加重复计分。单轮配对推理相对直接前版为 0.983497 [0.977410,0.990010]，相对 acab2911/24c4ae8a 的区间跨 1；工作量改善不是该时间差的因果证明。 handoff_attempts 现计入失败预检的实际检查；311a3ef8 只修计数的控制将旧 592 修正为 690，其他工作完全不变。本次前缀接续在这个公平控制下为 592，净少 98 项现有计分操作。闭合失败次数 58→75 不再意味着丢弃/重放，不能把它单独当维护成本；槽/端口读取减少与命中不额外重复计分。 808aadb3 按用户要求补测：sum-bits 推理中位数 24.646 ms，直接前版 311a3ef8 为 24.740 ms；配对比 0.991190 [0.979910,1.038960]，相对计数控制/历史配置的推理区间也跨 1。98 项等权工作节省没有建立速度收益或严格速度保持；这是 standalone Cell CPU，非 native egglog。 匹配事实直接完成已接入同一 Cell Completion；sum-bits 有 21 条合格规则、419 次实际接管。旧 rhs_frames_avoided 已含空临时帧释放，新 matched_cells_completed 仅计覆盖，当前等权 Work 增量为 0。删除单独 HandoffFrame、私有 union 队列、Copy 重写及无人读取的 handoffs 登记；绑定也不再携带仅供该登记使用的 producer 编号。保留原有 union 队列、真实结果、Run 顺序和 continuation 深度/残余计数。sealed_slot_reads 47308→48048 表示沿用已有输入权限，并非新增相同数量的图读取。静态选择替换原 constructor_only 标志，多一次别名覆盖扫描；未单独量化分配或时间收益。单写、一般 RHS 选择、源 marker 物化、一般 Bake 组合和最终并行验收仍待完成。本步不测速，808aadb3 仍为最后检查点。 cell-span/v1 按实际 output_registrations/cell_output_registrations 计费，新增整段检查、封存和查询别名分派另计；旧报告从逐输出 captured_anchors/cell_output_receipts 还原同口径。输出覆盖数不再作为登记成本或奖励。 cell-results/v1 对 joint_history_checks/frames/query_reads/query_writes、joint_output_reads 和 effect_slots_initialized 收费；覆盖不奖励。掩码 availability/retirement 是已有输出读取/交付的子集。新版缺字段拒绝评分，旧版新增工作按零处理；等权工作不是速度预测。 winner_ordering=input-depth-ordinal/v1 计完整赢家比较器；旧 worker 报告仅计 ordinal 排序，漏计后续 key/depth 排序，因此跨版本原始 Work 不能声称这部分比较收益。实际移除的 deferred_winner_moves 仅按差额收费/计分一次。",
+      "gaps": "Work credit 是等权操作差值，不是纳秒模型。账本收费实际查询、字段写入、Free Join/Sieve 准备维护、历史、全部 Cell 输出登记/读取/补写/转发解析、实际 receipt 可见性检查、Entry 探测及边界维护；覆盖量、命中、拒绝和子集计数不重复收费，缺失必需字段拒绝评分。静态相同来源输出选择在当前口径节省 1666 项，混合输出改造以来相对 3e622300 累计节省 746 项；不能把初始化槽减少、命中率或少掉的校验另算为全部查找消失。训练/准备耗时、配置期临时集合与分配器全量数据、单优化边际 ablation 尚未统一入评分；新增布局成本已进入 311a3ef8 五提交测速的 setup，但没有单独分配/指令归因。历史保留等结构容器计数不等于总分配字节。整体速度保持与最终并行验收尚未建立。 本步现有补写计数再少 278；不把对应复用命中增加重复计分。单轮配对推理相对直接前版为 0.983497 [0.977410,0.990010]，相对 acab2911/24c4ae8a 的区间跨 1；工作量改善不是该时间差的因果证明。 handoff_attempts 现计入失败预检的实际检查；311a3ef8 只修计数的控制将旧 592 修正为 690，其他工作完全不变。本次前缀接续在这个公平控制下为 592，净少 98 项现有计分操作。闭合失败次数 58→75 不再意味着丢弃/重放，不能把它单独当维护成本；槽/端口读取减少与命中不额外重复计分。 808aadb3 按用户要求补测：sum-bits 推理中位数 24.646 ms，直接前版 311a3ef8 为 24.740 ms；配对比 0.991190 [0.979910,1.038960]，相对计数控制/历史配置的推理区间也跨 1。98 项等权工作节省没有建立速度收益或严格速度保持；这是 standalone Cell CPU，非 native egglog。 匹配事实直接完成已接入同一 Cell Completion；sum-bits 有 21 条合格规则、419 次实际接管。旧 rhs_frames_avoided 已含空临时帧释放，新 matched_cells_completed 仅计覆盖，当前等权 Work 增量为 0。删除单独 HandoffFrame、私有 union 队列、Copy 重写及无人读取的 handoffs 登记；绑定也不再携带仅供该登记使用的 producer 编号。保留原有 union 队列、真实结果、Run 顺序和 continuation 深度/残余计数。sealed_slot_reads 47308→48048 表示沿用已有输入权限，并非新增相同数量的图读取。静态选择替换原 constructor_only 标志，多一次别名覆盖扫描；未单独量化分配或时间收益。单写、一般 RHS 选择、源 marker 物化、一般 Bake 组合和最终并行验收仍待完成。本步不测速，808aadb3 仍为最后检查点。 cell-span/v1 按实际 output_registrations/cell_output_registrations 计费，新增整段检查、封存和查询别名分派另计；旧报告从逐输出 captured_anchors/cell_output_receipts 还原同口径。输出覆盖数不再作为登记成本或奖励。 cell-results/v1 对 joint_history_checks/frames/query_reads/query_writes、joint_output_reads 和 effect_slots_initialized 收费；覆盖不奖励。掩码 availability/retirement 是已有输出读取/交付的子集。新版缺字段拒绝评分，旧版新增工作按零处理；等权工作不是速度预测。 winner_ordering=input-depth-ordinal/v1 计完整赢家比较器；旧 worker 报告仅计 ordinal 排序，漏计后续 key/depth 排序，因此跨版本原始 Work 不能声称这部分比较收益。实际移除的 deferred_winner_moves 仅按差额收费/计分一次。 ripsat-completion objective 从成功 RHS 学习，按规范化结构与输出端口映射扩展已有路线；推断接续不伪装成新观测。精确证明经 loader 重建。新增分派/布局/见证/投影/边界读进入 Work，native CellCompletion 关系共享等价转换，命中率不直接计分。",
       "evidence": [
         "benchmarks/entry-publications/README.md",
         "benchmarks/condition-bake/README.md",
@@ -3463,7 +3522,9 @@
         "benchmarks/cell-winner-fold/README.md",
         "benchmarks/cell-winner-fold/results.json",
         "benchmarks/cell-winner-fold/timing.md",
-        "benchmarks/cell-winner-fold/timing.json"
+        "benchmarks/cell-winner-fold/timing.json",
+        "benchmarks/ripsat-cell-completion/README.md",
+        "docs/RIPSAT_CELL_COMPLETION.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     }

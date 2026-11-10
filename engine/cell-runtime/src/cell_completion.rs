@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value as Json, json};
 use std::collections::{BTreeMap, BTreeSet};
 
+
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 struct Fact { table: usize, columns: Vec<usize> }
 

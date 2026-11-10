@@ -668,6 +668,12 @@ impl Switch {
                     +node.program.queries.capacity()*std::mem::size_of::<QueryReuse>();
             }
         }
+        let mut direct_seen = BTreeSet::new();
+        let direct_bytes = self.direct.iter().flatten()
+            .filter(|p| direct_seen.insert(Rc::as_ptr(p) as usize))
+            .map(|p| std::mem::size_of::<crate::cell::CompletedPlan>()+2*std::mem::size_of::<usize>()
+                +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
+                +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>();
         serde_json::json!({
             "states":self.nodes.len(),
             "lowered_reads":self.nodes.iter().map(|n| (
@@ -678,10 +684,8 @@ impl Switch {
             "program_owner_bytes":seen.len()*(std::mem::size_of::<Terminal>()+2*std::mem::size_of::<usize>()),
             "direct_states":self.direct.iter().flatten().count(),
             "direct_array_bytes":std::mem::size_of_val(self.direct.as_ref()),
-            "direct_program_bytes":self.direct.iter().flatten().map(|p|
-                std::mem::size_of::<crate::cell::CompletedPlan>()+2*std::mem::size_of::<usize>()
-                +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
-                +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>(),
+            "direct_programs":direct_seen.len(),
+            "direct_program_bytes":direct_bytes,
             "read_payload_bytes":payload})
     }
     pub(crate) fn transition_storage(&self) -> serde_json::Value {
@@ -973,8 +977,8 @@ impl Switch {
             let (donor,mapping)=direct_sources[id].as_ref().unwrap();
             let sources=exports[rule].iter().map(|site|mapping.get(site).map(|&site|port(*donor,site))).collect::<Vec<_>>();
             if sources.len()>64 || sources.iter().any(Option::is_none) {continue;}
-            let layout=layouts.entry((rule,sources.clone())).or_insert_with(||SlotLayout::compile(rule,sources)).clone()
-                .expect("single checked donor rule");
+            let Some(layout)=layouts.entry((rule,sources.clone()))
+                .or_insert_with(||SlotLayout::compile(rule,sources)).clone() else {continue};
             let cell=Definition::new(p,rule).unwrap();
             let outputs=exports[rule].iter().enumerate().map(|(slot,&site)|(site,cell.relation(site).unwrap().table,slot)).collect();
             let required_sources=layout.sources.iter().flatten().fold(0,|mask,p|mask | (1u64<<p.slot()));

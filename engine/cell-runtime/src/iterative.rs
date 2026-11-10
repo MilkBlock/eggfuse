@@ -317,8 +317,9 @@ impl Catalog {
         let mut shapes = BTreeMap::new();
         let mut structures = vec![];
         let mut implementations = vec![];
+        let normalized=self.units.iter().map(|u|normalize(p,&u.path)).collect::<Vec<_>>();
         for (unit,u) in self.units.iter().enumerate() {
-            let Some(n) = normalize(p,&u.path) else {
+            let Some(n) = &normalized[unit] else {
                 // Retain exact ordered source contracts for unsupported
                 // normalization. They may use independently checked result
                 // inclusion, but do not acquire structural equivalence merely
@@ -335,13 +336,25 @@ impl Catalog {
                 structures.push(serde_json::to_value(&n.structure).unwrap()); next
             });
             let prefix = if u.path.len()>1 { normalize(p,&u.path[..u.path.len()-1]) } else { None };
-            let transition = prefix.as_ref().and_then(|before| extension(before,&n));
+            let transition = prefix.as_ref().and_then(|before| extension(before,n));
             implementations.push(json!({"unit":unit,"class":class,"ports":n.ports,
                 "source_path":u.path,"extension":transition,
                 "established":"successful-rhs","visible":"original-run-after-completion"}));
         }
+        let transitions=self.jumps.iter().map(|(join,&target)| {
+            let unit=&self.units[join.left];
+            let incidence=normalized[join.left].as_ref().and_then(|n|
+                n.ports.iter().find(|(stage,site,_)|*stage==unit.path.len()-1 && *site==crate::cell::Site::Effect(join.output)));
+            let signature=if let Some((_,_,ports))=incidence {
+                let table=crate::cell::Definition::new(p,unit.last().0).unwrap()
+                    .relation(crate::cell::Site::Effect(join.output)).unwrap().table;
+                json!({"table":table,"ports":ports,"entry":self.units[join.right].path})
+            } else {json!({"ordered_source":unit.path,"output":join.output,"entry":self.units[join.right].path})};
+            json!({"from":join.left,"to":target,"application":signature})
+        }).collect::<Vec<_>>();
         json!({"schema":"eggfuse-constructor-completion-contracts/v1",
             "recipe":p.artifact["recipe"]["sha256"],"structures":structures,"implementations":implementations,
+            "transitions":transitions,
             "scope":"finite positive constructor closure; not whole-program saturation"})
     }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
@@ -359,6 +372,60 @@ impl Catalog {
     pub fn emit_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_policy(p, plan, true, true, true, true)
     }
+    /// Transfer a known local application to another implementation of the
+    /// exact same completed Cell. Positions are matched by constructor
+    /// incidence, not rule IDs or physical addresses. This is one bounded
+    /// graph expansion per Bake call, not enumeration of complete histories.
+    fn extend_completion_entries(p:&Program,plan:&mut J) -> Result<()> {
+        use crate::cell::{Definition,Site};
+        let catalog=Self::parse(p,plan)?;
+        let room=catalog.limits.total.saturating_sub(catalog.units.len())
+            .min(catalog.limits.per_round);
+        if room==0 {return Ok(());}
+        let normalized=catalog.units.iter().map(|u|crate::cell_completion::normalize(p,&u.path)).collect::<Vec<_>>();
+        let mut paths=catalog.units.iter().map(|u|u.path.to_vec()).collect::<BTreeSet<_>>();
+        let mut extensions=vec![];
+        let mut additions=vec![];
+        'joins: for (&join,_) in &catalog.jumps {
+            let Some(source)=&normalized[join.left] else{continue};
+            let original=&catalog.units[join.left];
+            let stage=original.path.len()-1;
+            let Some((_,_,columns))=source.ports.iter().find(|(s,site,_)|*s==stage && *site==Site::Effect(join.output)) else{continue};
+            let table=Definition::new(p,original.last().0)?.relation(Site::Effect(join.output)).ok_or("missing completion output")?.table;
+            for (left,alternative) in normalized.iter().enumerate() {
+                let Some(alternative)=alternative else{continue};
+                if left==join.left || alternative.structure!=source.structure {continue;}
+                let unit=&catalog.units[left];
+                let cell=Definition::new(p,unit.last().0)?;
+                let output=alternative.ports.iter().rev().find_map(|(stage,site,cols)| {
+                    let Site::Effect(op)=*site else{return None};
+                    (*stage==unit.path.len()-1 && cols==columns
+                        && cell.relation(*site).is_some_and(|r|r.table==table)).then_some(op)
+                });
+                let Some(output)=output else{continue};
+                let candidate=Join{left,output,right:join.right};
+                if catalog.jumps.contains_key(&candidate) {continue;}
+                let Some(combined)=catalog.combine(p,candidate) else{continue};
+                if paths.contains(combined.path.as_ref()) {continue;}
+                let proof=crate::result_handoff::terminal(p,&combined.path,true,true);
+                if !proof.complete || proof.reuse.is_empty() {continue;}
+                paths.insert(combined.path.to_vec());
+                additions.push(json!(candidate));
+                extensions.push(json!({"from":join,"to":candidate,
+                    "structure":crate::checksum::artifact_digest(&serde_json::to_value(&source.structure).unwrap()),
+                    "output_ports":columns,"proof":"exact normalized structure and output incidence",
+                    "new_observation":false}));
+                if additions.len()==room {break 'joins;}
+            }
+        }
+        if !additions.is_empty() {
+            plan["joins"].as_array_mut().ok_or("missing completion joins")?.extend(additions);
+            let object=plan.as_object_mut().unwrap();
+            object.entry("completion_extensions").or_insert_with(||json!([]))
+                .as_array_mut().ok_or("invalid completion provenance")?.extend(extensions);
+        }
+        Ok(())
+    }
     fn emit_policy(
         p: &Program,
         plan: &mut J,
@@ -372,6 +439,8 @@ impl Catalog {
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
+        if completion {Self::extend_completion_entries(p,plan)?;}
+        else {plan.as_object_mut().unwrap().remove("completion_extensions");}
         let cat = Self::parse(p, plan)?;
         plan["rhs_handoffs"] = crate::result_handoff::Switch::build(
             p,

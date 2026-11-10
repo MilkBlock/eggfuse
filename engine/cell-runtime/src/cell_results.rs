@@ -33,6 +33,15 @@ mod joint_tests {
     }
 
     #[test]
+    fn oversized_projection_declines_without_shifting_outside_its_mask() {
+        let slots=(0..64).map(|slot|Some(ResultPort::new(1,slot))).collect::<Vec<_>>();
+        assert!(SlotLayout::compile(2,slots.clone()).is_some());
+        let mut too_many=slots;too_many.push(None);
+        assert!(SlotLayout::compile(2,too_many).is_none());
+        assert!(SlotLayout::compile(2,vec![Some(ResultPort::new(1,64))]).is_none());
+    }
+
+    #[test]
     fn baked_permutations_reuse_one_owner_through_repeated_completions() {
         use crate::cell::{CompletedPlan,compile_projections};
         let make=|rule,source| {
@@ -96,6 +105,7 @@ pub(crate) struct SlotLayout {
 }
 impl SlotLayout {
     pub fn compile(rule:usize, sources:Vec<Option<ResultPort>>) -> Option<Rc<Self>> {
+        if sources.len()>64 {return None;}
         let source_rule=sources.iter().flatten().next()?.rule();
         if sources.iter().flatten().any(|p|p.rule()!=source_rule || p.slot()>=64) { return None; }
         let mut valid=0; let mut identity=0;
