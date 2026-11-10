@@ -64,6 +64,7 @@ fn compare(p: &Program, plan: &J) -> Executor {
     {
         let mut owned = Executor::new(Graph::new(fast.graph.program.clone()).unwrap(), true);
         owned.use_entry_publications().unwrap();
+        owned.use_query_workers(2, 1).unwrap();
         owned.execute().unwrap();
         assert_eq!(fast.snapshots, owned.snapshots);
         assert_eq!(fast.binding_audit, owned.binding_audit);

@@ -34,6 +34,12 @@ pub struct Cursor {
     pub producer: usize,
 }
 #[cfg(feature = "sparse-cells")]
+impl Cursor {
+    pub(crate) fn uncached_query(&self) -> bool {
+        self.root.context.get().is_none() && self.state.history.is_empty()
+    }
+}
+#[cfg(feature = "sparse-cells")]
 #[derive(Clone)]
 enum PublishedBase {
     Root(Rc<Root>, usize),
@@ -1729,12 +1735,14 @@ impl Programs {
         pending: &BTreeSet<Dependency>,
         watermark: u64,
         facts: &QueryFacts,
+        #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         if !self.active_for_rule(rid) {
             return Ok(None);
         }
         let clock = Instant::now();
-        let result = self.answers_inner(g, rid, pending, watermark, facts);
+        let result = self.answers_inner(g, rid, pending, watermark, facts,
+            #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
     }
@@ -1745,6 +1753,7 @@ impl Programs {
         pending: &BTreeSet<Dependency>,
         watermark: u64,
         facts: &QueryFacts,
+        #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         self.stats.query_attempts += 1;
         self.prepare_epoch(g.epoch);
@@ -1835,6 +1844,7 @@ impl Programs {
             complete,
             watermark,
             facts,
+            #[cfg(feature = "sparse-cells")] workers,
         )
     }
     #[cfg(feature = "family-survey")]
@@ -1902,6 +1912,7 @@ impl Programs {
         mut routes: Vec<(usize, Cursor)>,
         watermark: u64,
         facts: &QueryFacts,
+        #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         self.stats.routed_spine_seeds += routes.len() as u64;
         self.stats.routed_matcher_seeds += (seeds.len() - routes.len()) as u64;
@@ -1939,7 +1950,8 @@ impl Programs {
                 cursor,
             )
         });
-        let result = self.finish_answers(g, rid, ready, covered, complete, watermark, facts);
+        let result = self.finish_answers(g, rid, ready, covered, complete, watermark, facts,
+            #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
     }
@@ -1952,6 +1964,7 @@ impl Programs {
         complete: bool,
         watermark: u64,
         facts: &QueryFacts,
+        #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         if !complete && covered.is_empty() {
             return Ok(None);
@@ -1961,7 +1974,19 @@ impl Programs {
         #[cfg(not(feature = "sparse-cells"))]
         let mut results = Winners::new();
         let covered_count = if complete { ready.len() } else { covered.len() };
-        'answer: for (pivot, row, cursor) in ready {
+        #[cfg(feature = "sparse-cells")]
+        let mut ready = ready;
+        #[cfg(feature = "sparse-cells")]
+        let mut buffered = Vec::new();
+        #[cfg(feature = "sparse-cells")]
+        let mut completed = if let Some(workers) = workers.filter(|w| w.should_buffer(ready.len())) {
+            buffered.extend(&mut ready);
+            workers.spine_batch(g, &self.queries, rid, &buffered, buffered.capacity(),
+                &self.local_witness_entries[rid], watermark, facts, &mut self.stats)?
+        } else { Vec::new() }.into_iter().peekable();
+        #[cfg(feature = "sparse-cells")]
+        let ready = ready.chain(buffered);
+        'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
                 #[cfg(feature = "iterative-bake")]
@@ -2020,6 +2045,17 @@ impl Programs {
                 displaced_history.current().or_else(|| cursor.state.history.current())
             } else { None };
             let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
+            #[cfg(feature = "sparse-cells")]
+            if completed.peek().is_some_and(|(i, _)| *i == _ordinal) {
+                let (_, answer) = completed.next().unwrap();
+                if let Some(answer) = answer? {
+                    if cursor.via_block && cursor.state.direct {
+                        self.training.seal_moves += query.inputs.len() as u64;
+                    }
+                    record_answer(&mut results, answer.values, answer.facts, answer.epoch, cursor);
+                }
+                continue;
+            }
             self.stats.cell_query_entries += 1;
             let mut values = smallvec::SmallVec::<[Value; 4]>::new();
             // Keep rejected queries off the heap in the common short case. Only
@@ -2269,5 +2305,16 @@ impl Programs {
             r
         };
         report
+    }
+}
+
+#[cfg(feature = "sparse-cells")]
+impl Stats {
+    pub(crate) fn record_query_worker(&mut self, counts: &crate::executor::query_workers::Counts) {
+        self.cell_query_entries += counts.entries;
+        self.cell_query_steps += counts.steps;
+        self.cell_query_result_writes += counts.result_writes;
+        self.guards += counts.guards;
+        self.guard_rejections += counts.guard_rejections;
     }
 }

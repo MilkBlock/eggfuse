@@ -64,6 +64,17 @@ impl Work {
             }
         }
         // Static Cell scopes replace candidate-prefix copies with slot clears.
+        // Query-host point reads, result writes and key operations are already
+        // in the ordinary counters. Charge only the new preparation/dispatch
+        // and buffer work here, never count a worker answer as saved work.
+        for field in ["admission_entry_checks", "admission_table_checks", "seed_selection_visits", "entry_headers",
+            "chunks", "frame_allocations", "batch_buffers", "answer_buffer_allocations"] {
+            let value = if report["query_workers"]["enabled"] == true {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing query worker work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
         // Charge both paths, summing rules so changing context admission cannot
         // hide work by adding/removing a per-rule key from the comparison.
         let contexts = report["local_context"]["rules"].as_object()
@@ -246,6 +257,26 @@ impl Work {
             "performance_admission":"unvalidated proxy; a positive sum alone does not establish acceleration",
             "scope":"complete inference including failed candidates and unused source captures; excludes compilation and replay cost"}))
     }
+}
+
+#[cfg(all(test, feature = "sparse-cells"))]
+#[test]
+fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
+    use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
+    let source = include_str!("../tests/fixtures/cell-point-queries.egg");
+    let core = eggfuse_bake::device_frontend::core("query-credit", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
+    let mut e = Executor::new(Graph::new_with_local_congruence(p).unwrap(), false);
+    e.use_query_workers(1, 16).unwrap();
+    e.execute().unwrap();
+    let mut report = e.report();
+    let work = Work::read(&report).unwrap();
+    assert!(work.0["query_workers/stats/frame_allocations"] > 0);
+    assert!(work.0["query_workers/stats/chunks"] > 0);
+    report["query_workers"]["stats"]["answers"] = u64::MAX.into();
+    assert_eq!(Work::read(&report).unwrap().0, work.0);
+    report["query_workers"]["stats"].as_object_mut().unwrap().remove("frame_allocations");
+    assert!(Work::read(&report).is_err());
 }
 
 #[cfg(test)]

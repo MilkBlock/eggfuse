@@ -1,0 +1,29 @@
+{
+  "scope": "validation only; no comparative speed claim",
+  "integration_passed": 43,
+  "work_credit_passed": 5,
+  "integration_tests": [
+    "query_workers",
+    "query_receipts",
+    "parallel_guards",
+    "read_guards",
+    "stable_ports",
+    "union_digest",
+    "repair_ports"
+  ],
+  "notes": [
+    "test-complete.log filtered integration cases; only its 5 work_credit unit passes count. The separate test-integration-final.log contains all 43 integration passes.",
+    "Release compiler/run/bench smoke followed README entrypoints; one short fixture bench iteration, no speed comparison.",
+    "All-feature runtime check compiles diagnostic fallbacks; active worker behavior tested in sparse-cells,view-ports normal configuration."
+  ],
+  "logs": {
+    "test-integration-final.log": "4dc7e33c434e5955cdd076ebb18d73b0ebe3fe687a0451153a5b1bc90c5ca63b",
+    "test-complete.log": "0e2de71cc86ebc011c6c36dcffabbb188727596a4278e16105ed6d7e6d7ddf75",
+    "check-default-final.log": "336b932fb87c94f598e162975c702f0397d260665e5da12825f667d2e64cbdc3",
+    "check-all-final.log": "87765b80cc6e973ba27c5c092153a72ca61952e59184c49970a2f0d38ae7dcc9",
+    "build-final-spine.log": "ec5964bcdcc64182f9ef618c8ce4fbac00b5f7be8926d2ce0b2e1dc986f72455",
+    "compile-smoke.log": "b8645455eecdceec8af5113c470e355bb2b30329d98ccbd3a1165637a3f73df9",
+    "run-smoke.log": "086c18708a10cd5b551f242341429de49083e8403f55df0356405f74bde44625",
+    "bench-smoke.log": "ff4b30167cf7da264ae3046186645dad58f0bb334558ff078f3b477b73338a9a"
+  }
+}

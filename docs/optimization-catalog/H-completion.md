@@ -100,3 +100,27 @@
 状态：完整回归及真实双线程按序诊断通过；sum/Raytrace 额外接管 6/4426 个 exact-domain task；未重测普通构建线程扩展性。
 
 证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/README.md](../../benchmarks/witness-prefix/README.md)
+
+## H5 · 借用现有 Entry 的完整函数查询并行执行
+
+启用条件：sparse-cells 构建；--query-workers N；--query-grain N（默认 64）。
+
+编译期依据：原 Cell Query 的全键函数读取和标量指令；静态排除构造子枚举、特殊端口索引和其他查询 host 的已有前缀。
+
+替代的旧工作：覆盖范围内的串行 Cell 查询；跨阶段函数读取不再生成临时 Row 或经过 read_port 缓存分派。
+
+运行时仍须满足：Run 必须已 settled；普通函数索引有效；跨阶段 Entry 没有上下文缓存、历史结果或局部见证路线。保留 delta 归属、watermark、原位置去重、实际结果引用、存活状态以及原 RHS/Run 顺序。
+
+代码：[query_workers.rs](../../engine/cell-runtime/src/query_workers.rs) · [function_reads.rs](../../engine/cell-runtime/src/function_reads.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [cell_query.rs](../../engine/cell-runtime/src/cell_query.rs)
+
+| 指标用途 | 精确数据路径 |
+|---|---|
+| 收益观察（需基线差值） | `report:/stage_spine/stats/pre_resume_port_lookups [value]`<br>`report:/key_lookup_calls [value]`<br>`report:/inference_seconds [value]` |
+| 成本 / 剩余工作 | `report:/query_workers/stats/admission_entry_checks [value]`<br>`report:/query_workers/stats/admission_table_checks [value]`<br>`report:/query_workers/stats/seed_selection_visits [value]`<br>`report:/query_workers/stats/entry_headers [value]`<br>`report:/query_workers/stats/chunks [value]`<br>`report:/query_workers/stats/frame_allocations [value]`<br>`report:/query_workers/stats/batch_buffers [value]`<br>`report:/query_workers/stats/answer_buffer_allocations [value]`<br>`report:/query_workers/stats/entry_buffer_bytes [value]`<br>`report:/query_workers/stats/output_buffer_capacity [value]` |
+| 覆盖 / 规模 / 回退 | `report:/query_workers/stats/entries [value]`<br>`report:/query_workers/stats/spine_entries [value]`<br>`report:/query_workers/stats/spine_point_reads [value]`<br>`report:/query_workers/stats/worker_entries [value]` |
+
+解释与缺口：pre_resume_port_lookups 降低只表示读取离开了串行 host；总 key 查询仍计入 key_lookup_calls。worker Entries/answers 是查询完成量，不是 committed mutations。Bake 对新增准备和缓冲工作收费，不奖励并行覆盖量。未测本版完整 Raytrace 线程扩展性，未证明 repair stall 消失或整体加速。
+
+状态：已实现 opt-in 查询接管；短样例逐 Run/有序绑定检查、sum-bits 专用语义验收及 Raytrace 128 Run 前缀检查通过；待速度验收。
+
+证据：[benchmarks/cell-query-workers/README.md](../../benchmarks/cell-query-workers/README.md) · [benchmarks/cell-query-workers/results.json](../../benchmarks/cell-query-workers/results.json)

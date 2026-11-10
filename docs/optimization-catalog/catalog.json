@@ -2843,6 +2843,120 @@
       "introduced_in": "094fb2ed"
     },
     {
+      "id": "H5",
+      "category": "H",
+      "title": "借用现有 Entry 的完整函数查询并行执行",
+      "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）",
+      "compile_fact": "原 Cell Query 的全键函数读取和标量指令；静态排除构造子枚举、特殊端口索引和其他查询 host 的已有前缀",
+      "replaces": "覆盖范围内的串行 Cell 查询；跨阶段函数读取不再生成临时 Row 或经过 read_port 缓存分派",
+      "live_obligations": "Run 必须已 settled；普通函数索引有效；跨阶段 Entry 没有上下文缓存、历史结果或局部见证路线。保留 delta 归属、watermark、原位置去重、实际结果引用、存活状态以及原 RHS/Run 顺序。",
+      "sources": [
+        "engine/cell-runtime/src/query_workers.rs",
+        "engine/cell-runtime/src/function_reads.rs",
+        "engine/cell-runtime/src/stage_spine.rs",
+        "engine/cell-runtime/src/cell_query.rs"
+      ],
+      "metrics": {
+        "benefit": [
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/pre_resume_port_lookups",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/key_lookup_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/inference_seconds",
+            "reduce": "value"
+          }
+        ],
+        "cost": [
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/admission_entry_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/admission_table_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/seed_selection_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/entry_headers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/chunks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/frame_allocations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/batch_buffers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/answer_buffer_allocations",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/entry_buffer_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/output_buffer_capacity",
+            "reduce": "value"
+          }
+        ],
+        "coverage": [
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/spine_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/spine_point_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/worker_entries",
+            "reduce": "value"
+          }
+        ]
+      },
+      "gaps": "pre_resume_port_lookups 降低只表示读取离开了串行 host；总 key 查询仍计入 key_lookup_calls。worker Entries/answers 是查询完成量，不是 committed mutations。Bake 对新增准备和缓冲工作收费，不奖励并行覆盖量。未测本版完整 Raytrace 线程扩展性，未证明 repair stall 消失或整体加速。",
+      "evidence": [
+        "benchmarks/cell-query-workers/README.md",
+        "benchmarks/cell-query-workers/results.json"
+      ],
+      "status": "已实现 opt-in 查询接管；短样例逐 Run/有序绑定检查、sum-bits 专用语义验收及 Raytrace 128 Run 前缀检查通过；待速度验收"
+    },
+    {
       "id": "I1",
       "category": "I",
       "title": "模板选择、迭代 catalog 与实际工作 credit",

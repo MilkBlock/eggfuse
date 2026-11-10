@@ -16,6 +16,9 @@ mod view_exec;
 use free_join::{Domains, FreeJoin, Subtrie};
 #[path = "execute_kernel.rs"]
 mod execute_kernel;
+#[cfg(feature = "sparse-cells")]
+#[path = "query_workers.rs"]
+pub(crate) mod query_workers;
 #[path = "ready_sets.rs"]
 mod ready_sets;
 #[path = "runtime_completion.rs"]
@@ -106,6 +109,8 @@ impl StagePatch {
     }
 }
 pub struct Executor {
+    #[cfg(feature = "sparse-cells")]
+    query_workers: Option<query_workers::Workers>,
     completion: Option<completion::State>,
     #[cfg(feature = "sparse-cells")]
     work_scratch: Vec<(usize, Vec<Binding>)>,
@@ -303,6 +308,8 @@ impl Executor {
         graph.receipt_tracking =
             (stage_spine.enabled && stage_spine.receipts) || entry_schedule.enabled;
         let mut e = Self {
+            #[cfg(feature = "sparse-cells")]
+            query_workers: None,
             completion: None,
             #[cfg(feature = "sparse-cells")]
             work_scratch: vec![],
@@ -1359,11 +1366,13 @@ impl Executor {
                     spine_routes,
                     watermark,
                     &query_facts,
+                    #[cfg(feature = "sparse-cells")] self.query_workers.as_mut(),
                 )?,
                 Some(_) => None,
                 None => {
                     self.stage_spine
-                        .answers(&mut self.graph, rid, &self.pending[rid], watermark, &query_facts)?
+                        .answers(&mut self.graph, rid, &self.pending[rid], watermark, &query_facts,
+                            #[cfg(feature = "sparse-cells")] self.query_workers.as_mut())?
                 }
             };
             if self.graph.program.neighbor_plans[rid].is_some()
@@ -1583,6 +1592,12 @@ impl Executor {
                     && self.graph.program.neighbor_plans[rid]
                         .as_ref()
                         .is_some_and(|plan| plan.pivots.contains(&pivot));
+                #[cfg(feature = "sparse-cells")]
+                if let (Some(kernel), Some(seeds)) = (&kernel, &scheduled)
+                    && self.query_worker_batch(rid, &rule, kernel, seeds, &stage_covered,
+                        early_sieve, &query_facts, &mut found)? {
+                    continue;
+                }
                 let candidates = scheduled
                     .as_ref()
                     .into_iter()
@@ -2875,6 +2890,10 @@ impl Executor {
         self.graph.proof.write(&self.graph, path)
     }
     pub fn report(&self) -> J {
+        #[cfg(feature="sparse-cells")]
+        let query_workers = self.query_worker_report();
+        #[cfg(not(feature="sparse-cells"))]
+        let query_workers = json!({"enabled":false});
         #[cfg(feature = "sparse-cells")]
         let spine = self.stage_spine.report_with(self.entry_schedule.publications());
         #[cfg(not(feature = "sparse-cells"))]
@@ -2901,6 +2920,7 @@ impl Executor {
             "union_digest":self.graph.union_digest_report(),
             "scoped_completion":self.graph.scoped_completion_report(),
             "scoped_executor":self.scoped_execution_report(),
+            "query_workers":query_workers,
             "port_completion":self.graph.port_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,

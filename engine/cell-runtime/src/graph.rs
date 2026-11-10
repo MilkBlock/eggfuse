@@ -103,8 +103,6 @@ pub struct Function {
     #[cfg(feature = "receipt-slots")]
     #[serde(skip)]
     port_slot: u32,
-    #[serde(skip)]
-    decoded: Option<RowFields>,
     pub table: usize,
     pub key: Vec<Value>,
     pub value: Value,
@@ -285,6 +283,10 @@ pub struct Graph {
     #[cfg(feature = "sparse-cells")]
     pub cells: arena::Cells,
     pub functions: Vec<Function>,
+    // Derived row views belong to the coordinator. Keeping them out of the
+    // authoritative function slots lets a Cell query borrow those slots across
+    // workers without copying values or changing every Rc into an atomic Arc.
+    function_decoded: Vec<Option<RowFields>>,
     pub parents: Parents,
     pub epoch: u64,
     pub changed: bool,
@@ -333,6 +335,9 @@ pub struct Graph {
 }
 #[path = "cell_prefix.rs"]
 pub(crate) mod cell_prefix;
+#[cfg(feature = "sparse-cells")]
+#[path = "function_reads.rs"]
+pub(crate) mod function_reads;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {
@@ -513,6 +518,7 @@ impl Graph {
             program,
             cells: Default::default(),
             functions: vec![],
+            function_decoded: vec![],
             parents: Default::default(),
             epoch: 0,
             changed: false,
@@ -1002,7 +1008,7 @@ impl Graph {
     #[cfg(feature = "view-consumers")]
     pub(crate) fn published_view(&self, i: usize) -> Option<crate::view_plan::Tuple> {
         let f = self.functions.get(i).filter(|f| f.live)?;
-        if let Some(fields) = &f.decoded {
+        if let Some(fields) = &self.function_decoded[i] {
             return Some(crate::view_plan::Tuple {
                 witness: Dependency::Function(i),
                 epoch: f.epoch,
@@ -1027,7 +1033,7 @@ impl Graph {
         if !f.live {
             return None;
         }
-        let values = f.decoded.clone().unwrap_or_else(|| self.decode_function(i, f));
+        let values = self.function_decoded[i].clone().unwrap_or_else(|| self.decode_function(i, f));
         Some(Row {
             table: f.table,
             values,
@@ -1761,7 +1767,7 @@ impl Graph {
             }
             let table = self.dependency_table(*d);
             if let Dependency::Function(i) = d {
-                self.functions[*i].decoded = None;
+                self.function_decoded[*i] = None;
             }
             if !retained && let Dependency::Fact(f) = d
                 && let Some(state) = self
@@ -2073,7 +2079,7 @@ impl Graph {
             let old = canon(&self.functions[i].value, &self.parents);
             let next = self.merge_value(t, old.clone(), value)?;
             if next != old {
-                self.functions[i].decoded = Some(Self::shared_fields(key, &next));
+                self.function_decoded[i] = Some(Self::shared_fields(key, &next));
                 #[cfg(feature = "slot-transfer-audit")]
                 crate::transfer_audit::effective(self.epoch, t, i, key, Some(&old), &next)?;
                 self.functions[i].value = next;
@@ -2114,12 +2120,12 @@ impl Graph {
                 self.function_keys[t].insert(key.to_vec(), i);
                 (key.to_vec(), Some(Self::shared_fields(key, &value)))
             };
+            self.function_decoded.push(decoded);
             self.functions.push(Function {
                 #[cfg(feature = "sparse-cells")]
                 writer: None,
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
-                decoded,
                 table: t,
                 key: stored_key,
                 value,
@@ -2449,7 +2455,7 @@ impl Graph {
                                 && (self.functions[j].key == key
                                     || self.units.change_block(j, &row.values));
                             if shared_unit {
-                                self.functions[j].decoded = Some(row.values.clone());
+                                self.function_decoded[j] = Some(row.values.clone());
                                 self.units.stats.fast_merges += 1;
                             } else {
                                 let old = canon(&self.functions[j].value, &self.parents);
@@ -2471,7 +2477,7 @@ impl Graph {
                                         &next,
                                     )?;
                                 }
-                                self.functions[j].decoded = None;
+                                self.function_decoded[j] = None;
                                 self.functions[j].value = next;
                             }
                             self.functions[j].epoch = self.epoch;
@@ -2504,7 +2510,7 @@ impl Graph {
                     if compressed {
                         self.units.stats.promoted += 1;
                     }
-                    self.functions[i].decoded = Some(row.values.clone());
+                    self.function_decoded[i] = Some(row.values.clone());
                     self.functions[i].key = key.clone();
                     self.functions[i].value = row.values.last().unwrap().clone();
                     self.functions[i].epoch = self.epoch;

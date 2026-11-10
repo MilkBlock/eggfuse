@@ -348,7 +348,7 @@ impl Program {
             }
             sets.insert(string(&s["name"])?.into(), ids);
         }
-        let kernels = crate::row_kernel::derive(&rules);
+        let kernels = crate::row_kernel::derive(&rules, &tables);
         if let Some(raw) = j.get("row_kernels")
             && *raw != crate::row_kernel::wire(&rules, &kernels)
         {

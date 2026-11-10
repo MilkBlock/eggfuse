@@ -73,8 +73,17 @@ impl Field {
         results: &'a [Value],
         expanded: Option<(usize, &'a Row)>,
     ) -> Cow<'a, Value> {
+        self.operand_in(&g.parents, anchor, results, expanded)
+    }
+    pub(crate) fn operand_in<'a>(
+        &'a self,
+        parents: &crate::value::Parents,
+        anchor: impl FnOnce(usize) -> &'a Value,
+        results: &'a [Value],
+        expanded: Option<(usize, &'a Row)>,
+    ) -> Cow<'a, Value> {
         match self {
-            Self::Literal(v) => Cow::Owned(canon(v, &g.parents)),
+            Self::Literal(v) => Cow::Owned(canon(v, parents)),
             _ => Cow::Borrowed(self.value(anchor, results, expanded)),
         }
     }
@@ -264,6 +273,15 @@ impl<A> BoundStep<'_, A> {
     }
 }
 impl Query {
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn function_points(&self, tables: &[crate::program::Table]) -> Option<Box<[usize]>> {
+        self.steps.iter().all(|s| s.expansion.is_none()
+            && !matches!(s.call, Call::Table(t) if tables[t].virtual_fact))
+            .then(|| self.steps.iter().filter_map(|s| match s.call {
+                Call::Table(t) => Some(t), _ => None,
+            }).collect::<std::collections::BTreeSet<_>>().into_iter().collect::<Vec<_>>().into_boxed_slice())
+    }
+
     /// Computed outputs retain instruction-position addresses. Expansion rows
     /// stay borrowed, and a checked existing result needs no new value slot.
     pub(crate) fn result_slots(&self) -> usize { self.result_slots }
@@ -559,6 +577,8 @@ pub(crate) struct Queries {
     entries: Vec<Vec<Option<Rc<Query>>>>,
     count: usize,
     shared: usize,
+    #[cfg(feature = "sparse-cells")]
+    function_points: Vec<Vec<Option<Box<[usize]>>>>,
 }
 impl Queries {
     pub(crate) fn compile(p: &Program) -> Result<Self> {
@@ -591,7 +611,12 @@ impl Queries {
                 ),
             });
         }
+        #[cfg(feature = "sparse-cells")]
+        let function_points = entries.iter().map(|row| row.iter().map(|q|
+            q.as_ref().and_then(|q| q.function_points(&p.tables))).collect()).collect();
         Ok(Self {
+            #[cfg(feature = "sparse-cells")]
+            function_points,
             entries,
             count: p.multi_stage.stage_entries.len(),
             shared: shared_count,
@@ -600,6 +625,10 @@ impl Queries {
     #[inline]
     pub(crate) fn get(&self, rid: usize, pivot: usize) -> Option<&Rc<Query>> {
         self.entries.get(rid)?.get(pivot)?.as_ref()
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn function_points(&self, rid: usize, pivot: usize) -> Option<&[usize]> {
+        self.function_points.get(rid)?.get(pivot)?.as_deref()
     }
     pub(crate) fn shared(&self) -> usize {
         self.shared

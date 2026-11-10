@@ -40,6 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
+        println!("  --query-workers N [--query-grain N] (Cell function-point query batches; 1 = inline; default grain 64)");
         println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
         println!("  --overlap-completion (experimental snapshot reads overlapping ordered commits; requires completion batches)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
@@ -65,7 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" => {
+            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -195,6 +196,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    if let Some(workers) = opt("--query-workers") {
+        #[cfg(feature="sparse-cells")]
+        runtime.use_query_workers(workers.parse()?, opt("--query-grain").map(|s| s.parse())
+            .transpose()?.unwrap_or(64))?;
+        #[cfg(not(feature="sparse-cells"))]
+        { let _ = workers; return Err("query workers require sparse-cells".into()); }
+    } else if opt("--query-grain").is_some() {
+        return Err("query grain requires query workers".into());
+    }
     if scoped_execution { runtime.use_scoped_execution()?; }
     if port_scopes { runtime.use_port_scopes()?; }
     if pure_epochs { runtime.use_pure_epochs()?; }

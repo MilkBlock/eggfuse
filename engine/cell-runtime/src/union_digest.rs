@@ -244,7 +244,7 @@ impl Graph {
                         matcher.publication.insert(f);
                     }
                     Dependency::Function(i) => {
-                        self.functions[i].decoded = None;
+                        self.function_decoded[i] = None;
                         matcher.unit_pending.insert(i);
                         matcher.stats.unit_notifications += 1;
                     }
@@ -260,7 +260,7 @@ impl Graph {
                 Dependency::Function(i) => {
                     // Unit cannot cause another equality. Coalesce notifications
                     // across the constructor closure before joining these keys.
-                    self.functions[i].decoded = None;
+                    self.function_decoded[i] = None;
                     matcher.unit_pending.insert(i);
                     matcher.stats.unit_notifications += 1;
                     continue;
@@ -519,7 +519,7 @@ impl Graph {
             }
             let f = &mut self.functions[i];
             f.epoch = self.epoch;
-            f.decoded = Some(row.values.clone());
+            self.function_decoded[i] = Some(row.values.clone());
             if let Some(alias) = alias {
                 self.units.restore_key(i, alias, row.values);
                 self.union_digest

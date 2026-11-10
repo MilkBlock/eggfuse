@@ -370,6 +370,8 @@ impl History {
             _ => None,
         }
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
     pub(crate) fn capture(
         &mut self,

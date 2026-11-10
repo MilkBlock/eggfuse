@@ -644,7 +644,7 @@ fn incremental_operations_match_a_full_scan_congruence_oracle() {
                     (t, key)
                 };
                 for (graph, hs) in graphs.iter_mut().zip(&mut handles) {
-                    let args = key
+                    let args: Vec<_> = key
                         .iter()
                         .map(|v| match v {
                             Value::Eq(i) => canon(&hs[*i as usize], &graph.parents),

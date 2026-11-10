@@ -12,6 +12,10 @@ pub(crate) struct Kernel {
     /// Derived only after multi_stage's source wiring has been validated. These
     /// are shared plans, never consumer lists attached to live producers.
     pub routes: Option<Rc<crate::cell::RouteDispatch>>,
+    /// Typed capability derived from this same Cell query, not a second plan.
+    /// Unit/view storage admission and Run readiness remain runtime checks.
+    #[cfg(feature = "sparse-cells")]
+    pub function_points: Option<Box<[usize]>>,
     #[cfg(feature = "sparse-cells")]
     pub sum_filter: Option<(usize, usize, usize, Field)>,
 }
@@ -56,21 +60,23 @@ pub struct PrefixStats {
 }
 
 pub(crate) type Kernels = Vec<Vec<Option<Rc<Kernel>>>>;
-pub(crate) fn derive(rules: &[Rule]) -> Kernels {
+pub(crate) fn derive(rules: &[Rule], tables: &[Table]) -> Kernels {
     rules
         .iter()
         .map(|r| {
             (0..r.query.len())
-                .map(|pivot| plan(r, pivot).map(Rc::new))
+                .map(|pivot| plan(r, pivot, tables).map(Rc::new))
                 .collect()
         })
         .collect()
 }
-fn plan(r: &Rule, pivot: usize) -> Option<Kernel> {
+fn plan(r: &Rule, pivot: usize, _tables: &[Table]) -> Option<Kernel> {
     if !r.seminaive || r.direct.is_some() || !matches!(r.query[pivot].call, Call::Table(_)) {
         return None;
     }
     let query = Rc::new(Query::residual(r, pivot)?);
+    #[cfg(feature = "sparse-cells")]
+    let function_points = query.function_points(_tables);
     #[cfg(feature = "sparse-cells")]
     let sum_filter = query.steps.windows(2).enumerate().find_map(|(pc, pair)| {
         let (expand, guard) = (&pair[0], &pair[1]);
@@ -87,6 +93,8 @@ fn plan(r: &Rule, pivot: usize) -> Option<Kernel> {
             table.args.iter().position(|a| a == right)?, target.clone()))
     });
     Some(Kernel { pivot, query, routes: None,
+        #[cfg(feature = "sparse-cells")]
+        function_points,
         #[cfg(feature = "sparse-cells")]
         sum_filter,
     })
