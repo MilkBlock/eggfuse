@@ -157,3 +157,24 @@ matched_rules_reuse_the_same_compiled_rhs_scope. The current evidence records
 16 passing staged/merge tests. This optimization acts on the actual selected
 instances, using exact immutable typed scopes from Bake; training frequency
 is not treated as a validity certificate.
+
+## Rejected unconditional nonconsecutive grouping
+
+An isolated follow-up assigned exact RHS scope IDs and maintained a per-call
+seen bitset. It preserves first-occurrence demand order and passed all 16
+staged/merge tests. However, on the existing short duplicate-scope fixture it
+still makes two table probes while increasing group checks from one to two,
+adding two word writes and 32 bytes of scratch capacity. Rule group IDs also
+add storage. This is not evidence for replacing the cheap consecutive check.
+The production implementation remains e3630ee8's algorithm.
+
+`nonconsecutive-scopes.patch` reproduces the rejected implementation on
+e3630ee8; apply only in an isolated checkout. Run the staged_completion test
+matched_rules_reuse_the_same_compiled_rhs_scope with SHARED_SCOPE_EVIDENCE set
+to a fresh JSON path, and compare the checkpoint counters with
+shared-scope-check.json. `nonconsecutive-scopes-check.json` records the rejection.
+No latency was measured. The fixture does not contain nonconsecutive duplicates,
+so it establishes an added cost on already-covered input, not the absence of
+benefit on other workloads. Further selection should use actual matched-rule
+sequences and scope lengths rather than interpreting increased coverage as
+saved work. No new runtime cache remains from this experiment.
