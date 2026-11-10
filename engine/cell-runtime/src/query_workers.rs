@@ -6,10 +6,16 @@ use serde::Serialize;
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub frame_cache_borrows: u64,
+    pub frame_capacity_bytes: u64,
+    pub worker_frame_capacity_bytes: Vec<u64>,
+    pub coordinator_frame_capacity_bytes: u64,
     pub constructors: crate::graph::query_reads::Work,
     pub task_order_headers: u64,
     pub completion_slot_initializations: u64,
     pub completion_slot_writes: u64,
+    pub completion_headers: u64,
+    pub completion_error_checks: u64,
     pub winner_order_comparisons: u64,
     pub deferred_winner_moves: u64,
     pub completion_binding_moves: u64,
@@ -60,6 +66,74 @@ pub(crate) struct Workers {
     cell_plans: Vec<Option<CellPlan>>,
     cell_queries: Vec<CellQuery>,
     rule_facts: Vec<Option<QueryFacts>>,
+    inline_frame: Frame,
+}
+
+// Capacities belong to the executor's worker threads (or its inline host).
+// Values, witnesses and candidates never survive a chunk, including an error.
+// This is scratch reuse, not a query-result cache across source Runs.
+#[derive(Default)]
+struct Frame {
+    values: Vec<Value>,
+    witnesses: Vec<(usize, Dependency)>,
+    constructors: crate::graph::query_reads::Scratch,
+}
+struct FrameUse<'a>(&'a mut Frame);
+impl Drop for FrameUse<'_> {
+    fn drop(&mut self) {
+        self.0.values.clear();
+        self.0.witnesses.clear();
+        self.0.constructors.clear();
+    }
+}
+impl Frame {
+    fn with<R>(&mut self, run: impl FnOnce(&mut Self) -> R) -> R {
+        let guard = FrameUse(self);
+        run(&mut *guard.0)
+    }
+    fn prepare(&mut self, slots: usize, reads: usize, counts: &mut Counts) {
+        debug_assert!(self.values.is_empty() && self.witnesses.is_empty());
+        counts.frame_cache_borrows += 1;
+        counts.frame_allocations += u64::from(slots > self.values.capacity())
+            + u64::from(reads > self.witnesses.capacity());
+        self.values.resize(slots, Value::Int(0));
+        self.witnesses.reserve(reads);
+    }
+    fn bytes(&self) -> u64 {
+        (self.values.capacity() * std::mem::size_of::<Value>()
+            + self.witnesses.capacity() * std::mem::size_of::<(usize, Dependency)>()
+            + self.constructors.capacity_bytes()) as u64
+    }
+}
+thread_local! {
+    static QUERY_FRAME: std::cell::RefCell<Frame> = std::cell::RefCell::new(Frame::default());
+}
+fn with_worker_frame<R>(run: impl FnOnce(&mut Frame) -> R) -> R {
+    QUERY_FRAME.with_borrow_mut(|frame| frame.with(run))
+}
+
+#[cfg(test)]
+#[test]
+fn scratch_keeps_capacity_but_releases_values_on_error_and_unwind() {
+    use std::sync::Arc;
+    let mut frame = Frame::default();
+    for unwind in [false, true] {
+        let value = Arc::new("value from a completed Run".to_owned());
+        let weak = Arc::downgrade(&value);
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            frame.with(|frame| -> Result<()> {
+                frame.prepare(3, 2, &mut Counts::default());
+                frame.values[0] = Value::Text(value);
+                frame.witnesses.push((0, Dependency::Fact(FactRef { cell: 7, op: 1 })));
+                if unwind { panic!("query failure") }
+                Err("query failure".into())
+            })
+        }));
+        assert!(if unwind { outcome.is_err() } else { outcome.unwrap().is_err() });
+        assert!(weak.upgrade().is_none(), "scratch must not retain a query value");
+        assert!(frame.values.is_empty() && frame.witnesses.is_empty());
+        assert!(frame.values.capacity() >= 3 && frame.witnesses.capacity() >= 2);
+    }
 }
 // Borrow through the Entry's Rc on the coordinator, sharing only its immutable
 // values and lifecycle stamp. No Rc operations happen on worker threads.
@@ -79,13 +153,15 @@ impl Executor {
         self.query_workers = Some(Workers { pool, grain,
             cell_plans: CellPlan::compile(&self.graph.program), cell_queries: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
-            stats: Counts { worker_entries: vec![0; workers], worker_steps: vec![0; workers], ..Default::default() } });
+            inline_frame: Frame::default(),
+            stats: Counts { worker_entries: vec![0; workers], worker_steps: vec![0; workers],
+                worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
         Ok(())
     }
     pub(super) fn query_worker_report(&self) -> J {
         self.query_workers.as_ref().map_or(json!({"enabled":false}), |w|
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
-                "organization":"cell-run/v2","scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
+                "organization":"cell-run/v3","scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
     }
     pub(super) fn query_worker_batch(
         &mut self, rid: usize, rule: &Rule, kernel: &crate::row_kernel::Kernel,
@@ -122,37 +198,35 @@ impl Executor {
         let query_width = rule.query.len();
         let key_nodes = self.graph.program.key_nodes();
         let pooled = workers.pool.is_some();
-        let run = |chunk: &[Entry<'_>]| -> Result<(Vec<Binding>, Counts, Option<usize>)> {
-            let mut results = vec![Value::Int(0); query.result_slots()];
-            let mut witnesses = Vec::with_capacity(query_width);
-            let mut scratch = crate::graph::query_reads::Scratch::default();
+        let run = |chunk: &[Entry<'_>], frame: &mut Frame| -> Result<(Vec<Binding>, Counts, Option<usize>)> {
             let mut counts = Counts { entries: chunk.len() as u64, chunks: 1,
-                frame_allocations: u64::from(!results.is_empty()) + u64::from(query_width != 0),
                 ..Default::default() };
+            frame.prepare(query.result_slots(), query_width, &mut counts);
             let mut answers = Vec::new();
             for entry in chunk {
                 let Some(epoch) = evaluate(query, entry, pivot, &reads, key_nodes, false,
-                    &mut results, &mut witnesses, &mut scratch, &mut counts)? else { continue };
+                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts)? else { continue };
                 if answers.len() == answers.capacity() { counts.answer_buffer_allocations += 1; }
                 answers.push(Binding {
                     #[cfg(feature="view-consumers")]
                     view_source: None,
                     direct: None,
-                    known: known.with_rows(witnesses.iter().copied()),
+                    known: known.with_rows(frame.witnesses.iter().copied()),
                     values: input_slots.iter().zip(&query.inputs).map(|(&slot, field)|
-                        (slot, field.operand_in(reads.parents, |col| &entry.values[col], &results, None).into_owned())).collect(),
+                        (slot, field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())).collect(),
                     epoch, parent: None, continuation: None, compiled: true,
                 });
             }
             counts.answers = answers.len() as u64;
             counts.output_buffer_capacity = answers.capacity() as u64;
+            counts.frame_capacity_bytes = frame.bytes();
             Ok((answers, counts, if pooled { rayon::current_thread_index() } else { None }))
         };
         // Indexed collection preserves pivot/Entry order, including first-error
         // selection. The borrow ends before any source effect can mutate slots.
         let completed: Vec<_> = if let Some(pool) = &workers.pool {
-            pool.install(|| entries.par_chunks(workers.grain).map(run).collect())
-        } else { entries.chunks(workers.grain).map(run).collect() };
+            pool.install(|| entries.par_chunks(workers.grain).map(|chunk| with_worker_frame(|frame| run(chunk, frame))).collect())
+        } else { entries.chunks(workers.grain).map(|chunk| workers.inline_frame.with(|frame| run(chunk, frame))).collect() };
         workers.stats.batches += 1;
         workers.stats.batch_buffers += 2;
         workers.stats.entry_headers += entries.len() as u64;
@@ -225,7 +299,13 @@ impl Workers {
         if let Some(worker) = worker {
             self.stats.worker_entries[worker] += c.entries;
             self.stats.worker_steps[worker] += c.steps;
-        } else { self.stats.coordinator_entries += c.entries; }
+            self.stats.worker_frame_capacity_bytes[worker] = self.stats.worker_frame_capacity_bytes[worker].max(c.frame_capacity_bytes);
+        } else {
+            self.stats.coordinator_entries += c.entries;
+            self.stats.coordinator_frame_capacity_bytes = self.stats.coordinator_frame_capacity_bytes.max(c.frame_capacity_bytes);
+        }
+        self.stats.frame_cache_borrows += c.frame_cache_borrows;
+        self.stats.frame_capacity_bytes = self.stats.frame_capacity_bytes.max(c.frame_capacity_bytes);
         self.stats.entries += c.entries;
         self.stats.answers += c.answers;
         self.stats.steps += c.steps;
@@ -273,7 +353,7 @@ struct CellQuery {
     ordinal: usize,
     watermark: u64,
     row: Rc<Row>,
-    cursor: crate::stage_spine::Cursor,
+    cursor: Option<crate::stage_spine::Cursor>,
 }
 struct QueryRead<'a> {
     query: &'a crate::cell::Query,
@@ -313,7 +393,7 @@ impl Workers {
         let cell = actual.map_or((g.program.table_templates[row.table], row.witness),
             |(template, cell)| (template, Dependency::Fact(FactRef { cell, op: 0 })));
         if self.cell_queries.len() == self.cell_queries.capacity() { self.stats.cell_queue_growths += 1; }
-        self.cell_queries.push(CellQuery { cell, rule: rid, pivot, ordinal, watermark, row, cursor });
+        self.cell_queries.push(CellQuery { cell, rule: rid, pivot, ordinal, watermark, row, cursor: Some(cursor) });
         self.stats.entry_headers += 1;
         self.stats.peak_cell_queue_bytes = self.stats.peak_cell_queue_bytes.max(
             (self.cell_queries.capacity() * std::mem::size_of::<CellQuery>()) as u64);
@@ -372,41 +452,60 @@ impl Workers {
         self.stats.entry_buffer_bytes += (headers.capacity() * std::mem::size_of::<QueryRead<'_>>()) as u64;
         let key_nodes = g.program.key_nodes();
         let pooled = self.pool.is_some() && headers.len() >= self.grain;
-        let run = |range: &std::ops::Range<usize>| {
+        let run = |range: &std::ops::Range<usize>, frame: &mut Frame| {
             let chunk = &headers[range.clone()];
             let max_slots = chunk.iter().map(|q| q.query.result_slots()).max().unwrap_or(0);
             let max_reads = chunk.iter().map(|q| q.query.steps.len() + 1).max().unwrap_or(0);
-            let mut values = vec![Value::Int(0); max_slots];
-            let mut witnesses = Vec::with_capacity(max_reads);
-            let mut scratch = crate::graph::query_reads::Scratch::default();
-            let mut counts = Counts { entries: chunk.len() as u64, chunks: 1,
-                frame_allocations: u64::from(max_slots != 0) + u64::from(max_reads != 0),
-                answer_buffer_allocations: 1, ..Default::default() };
-            let mut answers = Vec::with_capacity(chunk.len());
-            for q in chunk {
+            let mut counts = Counts { entries: chunk.len() as u64, chunks: 1, ..Default::default() };
+            frame.prepare(max_slots, max_reads, &mut counts);
+            let mut answers = Vec::new();
+            let mut first_error = None;
+            for (&source, q) in order[range.clone()].iter().zip(chunk) {
                 let answer = evaluate(q.query, &q.entry, q.pivot, &reads, key_nodes, true,
-                    &mut values, &mut witnesses, &mut scratch, &mut counts).map(|epoch| epoch.filter(|&e| e >= q.watermark).map(|epoch| {
+                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts).map(|epoch| epoch.filter(|&e| e >= q.watermark).map(|epoch| {
                         counts.answers += 1;
                         crate::cell::Matched { direct: None, epoch,
                             values: q.query.inputs.iter().map(|f| f.operand_in(reads.parents,
-                                |col| &q.entry.values[col], &values, None).into_owned()).collect(),
-                            facts: q.known.with_rows(witnesses.iter().copied()),
+                                |col| &q.entry.values[col], &frame.values, None).into_owned()).collect(),
+                            facts: q.known.with_rows(frame.witnesses.iter().copied()),
                         }
                     }));
-                answers.push(answer);
+                match answer {
+                    Ok(Some(answer)) => {
+                        // At most one answer per point-query Entry. Allocate
+                        // once on the first hit; all-negative tasks allocate
+                        // nothing and dense tasks never grow repeatedly.
+                        if answers.capacity() == 0 {
+                            answers.reserve_exact(chunk.len());
+                            counts.answer_buffer_allocations += 1;
+                        }
+                        answers.push((source, answer));
+                    }
+                    Ok(None) => {}
+                    Err(error) => if first_error.as_ref().is_none_or(|(index, _)| source < *index) {
+                        first_error = Some((source, error));
+                    },
+                }
             }
+            counts.completion_headers = answers.len() as u64;
             counts.output_buffer_capacity = answers.capacity() as u64;
-            (answers, counts, if pooled { rayon::current_thread_index() } else { None })
+            counts.frame_capacity_bytes = frame.bytes();
+            (answers, first_error, counts, if pooled { rayon::current_thread_index() } else { None })
         };
-        let chunks: Vec<_> = if pooled {
-            self.pool.as_ref().unwrap().install(|| ranges.par_iter().map(run).collect())
-        } else { ranges.iter().map(run).collect() };
+        let mut chunks: Vec<_> = if pooled {
+            self.pool.as_ref().unwrap().install(|| ranges.par_iter().map(|range| with_worker_frame(|frame| run(range, frame))).collect())
+        } else { ranges.iter().map(|range| self.inline_frame.with(|frame| run(range, frame))).collect() };
         self.stats.batches += 1;
-        self.stats.batch_buffers += 5; // order, ranges, borrowed headers, chunks, result slots
-        let mut completed: Vec<_> = std::iter::repeat_with(|| None).take(order.len()).collect();
-        self.stats.completion_slot_initializations += completed.len() as u64;
-        let mut destinations = order.into_iter();
-        for (answers, counts, worker) in chunks {
+        self.stats.batch_buffers += 4; // order, ranges, borrowed headers, chunks
+        self.stats.completion_error_checks += chunks.len() as u64;
+        // Cell grouping reorders queries. Preserve the first source-order
+        // error without materializing a completion slot for every failed match.
+        let error = chunks.iter_mut().filter_map(|(_, error, _, _)| error.take()).min_by_key(|(index, _)| *index);
+        if let Some((_, error)) = error {
+            for q in self.cell_queries.drain(..) { self.rule_facts[q.rule] = None; }
+            return Err(error);
+        }
+        for (answers, _, counts, worker) in chunks {
             g.record_constructor_query_work(&counts.constructors);
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
@@ -414,20 +513,17 @@ impl Workers {
             g.key_lookup_calls.set(g.key_lookup_calls.get() + counts.point_reads);
             g.stats.key_operations += counts.key_operations;
             self.absorb(&counts, worker);
-            for answer in answers {
-                completed[destinations.next().unwrap()] = Some(answer);
-                self.stats.completion_slot_writes += 1;
+            self.stats.completion_headers += counts.completion_headers;
+            for (source, answer) in answers {
+                let q = &mut self.cell_queries[source];
+                spine.record_worker_answer(q.rule, q.ordinal, answer,
+                    q.cursor.take().expect("one positive completion per Cell query"));
             }
         }
-        // The original queue never moved. Scatter each result into its source
-        // slot, then drain in order; no cursor sort or second order sort.
-        for (q, answer) in self.cell_queries.drain(..).zip(completed) {
-            let answer = answer.expect("one completion per Cell query");
-            self.rule_facts[q.rule] = None;
-            if let Some(answer) = answer? {
-                spine.record_worker_answer(q.rule, q.ordinal, answer, q.cursor);
-            }
-        }
+        // finish_worker_rule already restores each rule's source ordinals
+        // before winner selection. No second, dense reorder is necessary.
+        // Drop negative cursors and clear even rules with no positive answers.
+        for q in self.cell_queries.drain(..) { self.rule_facts[q.rule] = None; }
         Ok(())
     }
 }

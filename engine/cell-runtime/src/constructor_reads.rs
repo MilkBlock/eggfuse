@@ -43,6 +43,10 @@ impl Work {
 }
 #[derive(Default)]
 pub(crate) struct Scratch { candidates: Vec<FactRef> }
+impl Scratch {
+    pub fn clear(&mut self) { self.candidates.clear(); }
+    pub fn capacity_bytes(&self) -> usize { self.candidates.capacity() * std::mem::size_of::<FactRef>() }
+}
 
 pub(in crate::graph) struct Read<'a> {
     cells: &'a arena::Cells,

@@ -56,6 +56,37 @@ fn small_cell_runs_execute_inline_without_spawning_more_work() {
     assert!(q["entries"].as_u64().unwrap() > 0);
     assert!(q["worker_entries"].as_array().unwrap().iter().all(|v| v == 0));
 }
+
+#[test]
+fn empty_cell_completions_do_not_hide_later_inputs_or_keep_old_values() {
+    let source = r#"
+(datatype E (N i64) (Start E) (Gate E))
+(function Cost (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(ruleset make) (ruleset see) (ruleset fill) (ruleset change)
+(rule ((Start x)) ((Gate x)) :ruleset make)
+(rule ((Gate x) (= c (Cost x)) (> c 0)) ((set (Out x) c)) :ruleset see)
+(rule ((Start x)) ((set (Cost x) 7)) :ruleset fill)
+(rule ((Start x)) ((set (Cost x) 9)) :ruleset change)
+(Start (N 0)) (Start (N 1))
+(set (Cost (N 0)) -1) (set (Cost (N 1)) -1)
+(run-schedule (seq (run make) (run see) (run fill) (run see)))
+(check (= (Out (N 0)) 7) (= (Out (N 1)) 7))
+(run-schedule (seq (run change) (run see)))
+(check (= (Out (N 0)) 9) (= (Out (N 1)) 9))
+"#;
+    let before = run(source, None);
+    for workers in [1, 2, 4] {
+        let after = run(source, Some((workers, 1)));
+        same(&before, &after);
+        let report = after.report();
+        let stats = &report["query_workers"]["stats"];
+        assert!(stats["spine_entries"].as_u64().unwrap() > stats["completion_headers"].as_u64().unwrap());
+        assert!(stats["completion_headers"].as_u64().unwrap() > 0);
+        assert_eq!(stats["completion_slot_initializations"], 0);
+        assert_eq!(stats["completion_slot_writes"], 0);
+    }
+}
 #[test]
 fn constructor_points_and_residual_enumeration_keep_all_answers() {
     let source = r#"

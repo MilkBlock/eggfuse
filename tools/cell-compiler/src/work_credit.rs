@@ -77,9 +77,17 @@ impl Work {
         }
         let cell_tasks = match report["query_workers"].get("organization") {
             None => false, // recorded 13cfd235 Entry-batch host
-            Some(J::String(version)) if version == "cell-run/v1" || version == "cell-run/v2" => true,
+            Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3") => true,
             _ => return Err("unknown query worker organization".into()),
         };
+        let indexed_tasks = matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v2" | "cell-run/v3"));
+        for field in ["frame_cache_borrows", "completion_headers", "completion_error_checks"] {
+            let value = if report["query_workers"]["organization"] == "cell-run/v3" {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing sparse completion work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
         for field in ["rule_admissions", "entry_mask_checks", "cell_source_reads",
             "cell_order_comparisons", "cell_queue_growths", "borrowed_job_headers",
             "serial_order_headers", "seed_range_comparisons", "winner_order_comparisons",
@@ -91,7 +99,7 @@ impl Work {
             work.insert(format!("query_workers/stats/{field}"), value);
         }
         for field in ["task_order_headers", "completion_slot_initializations", "completion_slot_writes"] {
-            let value = if report["query_workers"]["organization"] == "cell-run/v2" {
+            let value = if indexed_tasks {
                 report["query_workers"]["stats"][field].as_u64()
                     .ok_or_else(|| format!("missing Cell completion work {field}"))?
             } else { 0 };
@@ -102,7 +110,7 @@ impl Work {
         // is charged here, once; constructor coverage itself earns no credit.
         for field in ["domain_key_fields", "metadata_reads", "candidate_pushes",
             "candidate_growths", "candidate_sort_comparisons"] {
-            let value = if report["query_workers"]["organization"] == "cell-run/v2" {
+            let value = if indexed_tasks {
                 report["query_workers"]["stats"]["constructors"][field].as_u64()
                     .ok_or_else(|| format!("missing constructor query work {field}"))?
             } else { 0 };
