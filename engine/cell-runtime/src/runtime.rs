@@ -2943,6 +2943,16 @@ impl Executor {
             spine["compiled_history_layout_bytes"] = bytes.into();
             spine
         };
+        // The existing per-rule measurements include ordinary and residual
+        // Cell queries too. Restricting export to view members hid most cost.
+        // With workers, search_s covers coordinator preparation, not worker
+        // execution or the later winner merge; profile serial for attribution.
+        let query_rule_profile = self.profile_queries.then(|| self.query_profile.iter().enumerate()
+            .filter(|(_, (calls, _, _, _))| *calls != 0)
+            .map(|(rule, &(calls, search_s, residual_visits, bindings))|
+                json!({"rule":rule,"template":self.graph.program.rules[rule].template,
+                    "calls":calls,"search_s":search_s,"residual_visits":residual_visits,"bindings":bindings}))
+            .collect::<Vec<_>>());
         let view_rule_profile=self.profile_queries.then(||{
             self.graph.program.view_blocks.iter().flat_map(|b|b.producer.members.iter().chain(&b.consumers.members))
                 .map(|m|{let (calls,seconds,visits,answers)=self.query_profile[m.rule];
@@ -2968,7 +2978,7 @@ impl Executor {
             "query_workers":query_workers,
             "port_completion":self.graph.port_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
-            "view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
+            "query_rule_profile":query_rule_profile,"view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})

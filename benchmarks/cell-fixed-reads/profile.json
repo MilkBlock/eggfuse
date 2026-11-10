@@ -1,0 +1,7244 @@
+{
+  "scope": "explicit CELL_CPU_PROFILE=1; standalone serial Cell CPU; one instrumented diagnostic, not timing admission",
+  "limits": "Per-rule timers cover matches, not RHS/repair or Run preparation; worker completion is outside these timers. Profiling also visits normally skipped clean rules. Bindings are not committed mutations.",
+  "behavior_commit": "c00c8233",
+  "diagnostic": "export existing per-rule aggregates for all rules, retaining the view-only projection",
+  "runtime_sha256": "03bea486119a3c1339faa5cf65bb3ab415d85851e35a4e83273bdee24eb1cf24",
+  "report_sha256": "e855ff53a23771d39e9c4caa07fe10170ae3794e57e8e3df3b432e30c625a109",
+  "source_runtime_sha256": "32797255e6fd06e30389e0f6a95742778d8e1fc6919dbe08c77f733eba6cab9c",
+  "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+  "semantic_reference": {
+    "state_sha256": "170ec32923615ded3e643ed852a5a2adbaae92f0cdc4ada0ce1cc469646433d2",
+    "schedule_sha256": "c2045cbc569f58936c7d0eb4501f913b378a9657b4953279b35d5d9d94a3ee40"
+  },
+  "rules_in_recipe": 582,
+  "profiled_rules": 582,
+  "old_view_rules": 4,
+  "timed_query_seconds": 2.8357682819999948,
+  "search_phase_seconds": 2.857723619,
+  "bindings": 3785196,
+  "residual_visits": 4490637,
+  "expr_size": {
+    "rules": [
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      164
+    ],
+    "query_seconds": 1.2490996869999995,
+    "query_fraction": 0.4404801672014758,
+    "bindings": 1940065,
+    "residual_visits": 1977575
+  },
+  "top_rules": [
+    {
+      "bindings": 966545,
+      "calls": 1798,
+      "residual_visits": 956267,
+      "rule": 153,
+      "search_s": 0.27231787599999974,
+      "template": 153,
+      "name": "(rule ((= expr (Get tup i))\n       (= sum (Expr-size tup)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Get"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 3
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 4,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 3
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 5
+            }
+          ],
+          "value": {
+            "slot": 4
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 306775,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 155,
+      "search_s": 0.2536564999999999,
+      "template": 155,
+      "name": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Single"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 2
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 3,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 4,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 1
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "slot": 3
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 334264,
+      "calls": 1798,
+      "residual_visits": 533241,
+      "rule": 154,
+      "search_s": 0.2525952529999997,
+      "template": 154,
+      "name": "(rule ((= expr (Concat x y))\n       (= sum (+ (Expr-size y) (Expr-size x))))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Concat"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 6,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 5
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 7,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 7
+            }
+          ],
+          "value": {
+            "slot": 6
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 42713,
+      "calls": 1187,
+      "residual_visits": 233047,
+      "rule": 507,
+      "search_s": 0.20003146499999996,
+      "template": 507,
+      "name": "(rule ((PotentialExtractedExpr expr (TCPair term cost))\n       (= (ExtractedExpr expr) (TCPair oldterm oldcost))\n       (< cost oldcost))\n      ((set (ExtractedExpr expr) (TCPair term cost)))\n        :ruleset terms-helpers )",
+      "query": [
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "<",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "Unit"
+          },
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "CellSpineView8"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 9
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 10,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 11,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 12,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 8
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 3
+            }
+          ],
+          "value": {
+            "slot": 12
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView8"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 11
+            },
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 11
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineApplied119"
+          },
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 8
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 221686,
+      "calls": 1798,
+      "residual_visits": 311233,
+      "rule": 151,
+      "search_s": 0.1709402080000001,
+      "template": 151,
+      "name": "(rule ((= expr (Bop op x y))\n       (= sum (+ (Expr-size y) (Expr-size x))))\n      ((set (Expr-size expr) (+ sum 1)))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Bop"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 7,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 6
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 8,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 3
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 8
+            }
+          ],
+          "value": {
+            "slot": 9
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 1458,
+      "calls": 1798,
+      "residual_visits": 1458,
+      "rule": 148,
+      "search_s": 0.14265288100000006,
+      "template": 148,
+      "name": "(rule ((= expr (Function name tyin tyout out))\n       (= sum (Expr-size out)))\n      ((set (Expr-size expr) (+ sum 1)))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Function"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 5
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 6,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 5
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 7,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 4
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 8,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 7
+            }
+          ],
+          "value": {
+            "slot": 8
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 79986,
+      "calls": 1798,
+      "residual_visits": 140839,
+      "rule": 150,
+      "search_s": 0.10584782300000008,
+      "template": 150,
+      "name": "(rule ((= expr (Top op x y z))\n       (= sum (+ (Expr-size z) (+ (Expr-size y) (Expr-size x)))))\n      ((set (Expr-size expr) (+ sum 1)))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "Top"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 9
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 10,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 9
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 11,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 4
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 12,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 10
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Expr-size"
+          },
+          "args": [
+            {
+              "slot": 11
+            }
+          ],
+          "value": {
+            "slot": 12
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 197674,
+      "calls": 6779,
+      "residual_visits": 197674,
+      "rule": 287,
+      "search_s": 0.06871850600000311,
+      "template": 287,
+      "name": "complete-CellSpineView9",
+      "query": [
+        {
+          "call": {
+            "table": "Smaller"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 1
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 1
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 6,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView9"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 0
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 143282,
+      "calls": 1798,
+      "residual_visits": 152208,
+      "rule": 249,
+      "search_s": 0.05021358099999916,
+      "template": 249,
+      "name": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-output-ctx))\n       (HasArgType inputs in-type))\n      ((lsr-inv loop (Const c in-type loop-input-ctx) constant))\n        :ruleset always-run )",
+      "query": [
+        {
+          "call": {
+            "table": "DoWhile"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ContextOf"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ContextOf"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Const"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 9
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "HasArgType"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 10
+            },
+            {
+              "slot": 11
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 12,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 9
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 13,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 14,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "Const"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 10
+            },
+            {
+              "slot": 3
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 15,
+          "sort": {
+            "name": "___lsrinvSort",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "lsr-inv"
+          },
+          "args": [
+            {
+              "slot": 13
+            },
+            {
+              "slot": 14
+            },
+            {
+              "slot": 12
+            }
+          ],
+          "kind": "construct"
+        }
+      ]
+    },
+    {
+      "bindings": 17187,
+      "calls": 454,
+      "residual_visits": 57659,
+      "rule": 498,
+      "search_s": 0.04786058900000002,
+      "template": 498,
+      "name": "(rule ((= lhs (Bop o e1 e2))\n       (= (TCPair t1 c1) (ExtractedExpr e1))\n       (= (TCPair t2 c2) (ExtractedExpr e2)))\n      ((PotentialExtractedExpr lhs (TCPair (TermBop o t1 t2) (+ 1 (+ c1 c2)))))\n        :ruleset terms )",
+      "query": [
+        {
+          "call": {
+            "table": "Bop"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 9
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 9
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 10,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 9
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 11,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 6
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 12,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 3
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 13,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermBop"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 7
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 14,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 8
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 15,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            },
+            {
+              "slot": 14
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 16,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 13
+            },
+            {
+              "slot": 15
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 17,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "PotentialExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 12
+            },
+            {
+              "slot": 16
+            }
+          ],
+          "kind": "construct"
+        }
+      ]
+    },
+    {
+      "bindings": 16608,
+      "calls": 1798,
+      "residual_visits": 278557,
+      "rule": 144,
+      "search_s": 0.04581247899999913,
+      "template": 144,
+      "name": "(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)",
+      "query": [
+        {
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Concat"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 8,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 7
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 5
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 9
+            }
+          ],
+          "value": {
+            "slot": 8
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 45334,
+      "calls": 172,
+      "residual_visits": 45334,
+      "rule": 317,
+      "search_s": 0.04355591799999996,
+      "template": 317,
+      "name": "(rule ((= lhs (AddContext ctx inner))\n       (= inner (AddContext ctx expr)))\n      ((union lhs inner))\n        :ruleset context )",
+      "query": [
+        {
+          "call": {
+            "table": "AddContext"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "AddContext"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 4,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 1
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "union",
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "union"
+        }
+      ]
+    },
+    {
+      "bindings": 71204,
+      "calls": 6779,
+      "residual_visits": 78280,
+      "rule": 286,
+      "search_s": 0.04014449799999892,
+      "template": 286,
+      "name": "complete-CellSpineView8",
+      "query": [
+        {
+          "call": {
+            "table": "PotentialExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 1
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 1
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 6,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView8"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 0
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 71902,
+      "calls": 2022,
+      "residual_visits": 148010,
+      "rule": 509,
+      "search_s": 0.040119172999999925,
+      "template": 509,
+      "name": "(rule ((= lhs (Smaller (TCPair t1 cost1) (TCPair t2 cost2)))\n       (< cost1 cost2))\n      ((union lhs (TCPair t1 cost1)))\n        :ruleset terms-helpers-helpers )",
+      "query": [
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "<",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "Unit"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "CellSpineView9"
+          },
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 8
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 9,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "value": {
+            "slot": 5
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView9"
+          },
+          "args": [
+            {
+              "slot": 9
+            },
+            {
+              "slot": 9
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 3
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 9
+            },
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 9
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 3
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineApplied121"
+          },
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 0
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "bindings": 35595,
+      "calls": 454,
+      "residual_visits": 38944,
+      "rule": 504,
+      "search_s": 0.03820041299999998,
+      "template": 504,
+      "name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+      "query": [
+        {
+          "call": {
+            "table": "Get"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 5
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 6,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 5
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 7,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 8,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 8
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 10,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "PotentialExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 9
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 11,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 12,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 11
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 13,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "PotentialExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 12
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 14,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 15,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 14
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 16,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView8"
+          },
+          "args": [
+            {
+              "slot": 13
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 15
+            },
+            {
+              "slot": 16
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "let",
+          "dst": 17,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 18,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 17
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 18
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        },
+        {
+          "op": "let",
+          "dst": 19,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 20,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 19
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 21,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 22,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermGet"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 23,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 22
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "CellSpineView28"
+          },
+          "args": [
+            {
+              "slot": 20
+            },
+            {
+              "slot": 21
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 23
+            },
+            {
+              "slot": 4
+            }
+          ],
+          "value": {
+            "literal": 0,
+            "sort": {
+              "name": "Unit",
+              "kind": "Unit"
+            }
+          },
+          "kind": "set"
+        }
+      ]
+    }
+  ],
+  "all_rules": [
+    {
+      "bindings": 839,
+      "calls": 2,
+      "residual_visits": 11681,
+      "rule": 0,
+      "search_s": 0.010662458,
+      "template": 0
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 1,
+      "search_s": 0.00080475,
+      "template": 1
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 2,
+      "search_s": 5e-07,
+      "template": 2
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 3,
+      "search_s": 0.0,
+      "template": 3
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 4,
+      "search_s": 8.3e-08,
+      "template": 4
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 5,
+      "search_s": 1.67e-07,
+      "template": 5
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 6,
+      "search_s": 8.3e-08,
+      "template": 6
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 7,
+      "search_s": 8.2e-08,
+      "template": 7
+    },
+    {
+      "bindings": 16,
+      "calls": 2,
+      "residual_visits": 144,
+      "rule": 8,
+      "search_s": 0.000489459,
+      "template": 8
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 48,
+      "rule": 9,
+      "search_s": 0.000311084,
+      "template": 9
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 10,
+      "search_s": 0.005519083,
+      "template": 10
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 11,
+      "search_s": 2.5e-07,
+      "template": 11
+    },
+    {
+      "bindings": 0,
+      "calls": 2,
+      "residual_visits": 0,
+      "rule": 12,
+      "search_s": 3.34e-07,
+      "template": 12
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 13,
+      "search_s": 8.8127e-05,
+      "template": 13
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 14,
+      "search_s": 4.15e-07,
+      "template": 14
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 15,
+      "search_s": 4.1500000000000005e-07,
+      "template": 15
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 16,
+      "search_s": 3.34e-07,
+      "template": 16
+    },
+    {
+      "bindings": 53,
+      "calls": 6,
+      "residual_visits": 142,
+      "rule": 17,
+      "search_s": 0.000183543,
+      "template": 17
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 26,
+      "rule": 18,
+      "search_s": 6.650099999999999e-05,
+      "template": 18
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 19,
+      "search_s": 2.9000000000000003e-07,
+      "template": 19
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 20,
+      "search_s": 2.9199999999999997e-07,
+      "template": 20
+    },
+    {
+      "bindings": 121,
+      "calls": 6,
+      "residual_visits": 778,
+      "rule": 21,
+      "search_s": 0.00042350000000000005,
+      "template": 21
+    },
+    {
+      "bindings": 146,
+      "calls": 6,
+      "residual_visits": 1194,
+      "rule": 22,
+      "search_s": 0.00044025,
+      "template": 22
+    },
+    {
+      "bindings": 282,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 23,
+      "search_s": 0.00030195799999999996,
+      "template": 23
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 24,
+      "search_s": 0.0011832070000000001,
+      "template": 24
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 25,
+      "search_s": 6.866500000000001e-05,
+      "template": 25
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 26,
+      "search_s": 4.7668000000000005e-05,
+      "template": 26
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 27,
+      "search_s": 1.5123e-05,
+      "template": 27
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 28,
+      "search_s": 1.9334e-05,
+      "template": 28
+    },
+    {
+      "bindings": 32,
+      "calls": 6,
+      "residual_visits": 64,
+      "rule": 29,
+      "search_s": 0.000262123,
+      "template": 29
+    },
+    {
+      "bindings": 32,
+      "calls": 6,
+      "residual_visits": 64,
+      "rule": 30,
+      "search_s": 0.000229501,
+      "template": 30
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 31,
+      "search_s": 6.5083e-05,
+      "template": 31
+    },
+    {
+      "bindings": 155,
+      "calls": 6,
+      "residual_visits": 333,
+      "rule": 32,
+      "search_s": 0.000727917,
+      "template": 32
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 33,
+      "search_s": 3.395899999999999e-05,
+      "template": 33
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 34,
+      "search_s": 2.8417e-05,
+      "template": 34
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 35,
+      "search_s": 1.5376e-05,
+      "template": 35
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 36,
+      "search_s": 1.4791000000000001e-05,
+      "template": 36
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 37,
+      "search_s": 1.3582000000000001e-05,
+      "template": 37
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 38,
+      "search_s": 1.2791000000000002e-05,
+      "template": 38
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 39,
+      "search_s": 3.3399999999999995e-07,
+      "template": 39
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 40,
+      "search_s": 6.249999999999999e-07,
+      "template": 40
+    },
+    {
+      "bindings": 3,
+      "calls": 6,
+      "residual_visits": 22,
+      "rule": 41,
+      "search_s": 0.0024007499999999997,
+      "template": 41
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 42,
+      "search_s": 0.00011675000000000002,
+      "template": 42
+    },
+    {
+      "bindings": 675,
+      "calls": 6,
+      "residual_visits": 2068,
+      "rule": 43,
+      "search_s": 0.001571334,
+      "template": 43
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 44,
+      "search_s": 5.097599999999951e-05,
+      "template": 44
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 45,
+      "search_s": 3.582299999999987e-05,
+      "template": 45
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 46,
+      "search_s": 3.233800000000001e-05,
+      "template": 46
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 47,
+      "search_s": 3.0290000000000034e-05,
+      "template": 47
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 48,
+      "search_s": 3.1162e-05,
+      "template": 48
+    },
+    {
+      "bindings": 16036,
+      "calls": 1798,
+      "residual_visits": 36812,
+      "rule": 49,
+      "search_s": 0.008169459999999979,
+      "template": 49
+    },
+    {
+      "bindings": 104,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 50,
+      "search_s": 7.77589999999988e-05,
+      "template": 50
+    },
+    {
+      "bindings": 315,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 51,
+      "search_s": 0.0001389650000000007,
+      "template": 51
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 52,
+      "search_s": 3.2331000000000006e-05,
+      "template": 52
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 53,
+      "search_s": 3.407899999999991e-05,
+      "template": 53
+    },
+    {
+      "bindings": 78,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 54,
+      "search_s": 5.6136999999999256e-05,
+      "template": 54
+    },
+    {
+      "bindings": 14802,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 55,
+      "search_s": 0.0046595919999998766,
+      "template": 55
+    },
+    {
+      "bindings": 602,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 56,
+      "search_s": 0.0030574470000000356,
+      "template": 56
+    },
+    {
+      "bindings": 8694,
+      "calls": 1798,
+      "residual_visits": 1801,
+      "rule": 57,
+      "search_s": 0.01483517600000003,
+      "template": 57
+    },
+    {
+      "bindings": 32879,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 58,
+      "search_s": 0.008030285999999937,
+      "template": 58
+    },
+    {
+      "bindings": 16209,
+      "calls": 1798,
+      "residual_visits": 33811,
+      "rule": 59,
+      "search_s": 0.018328415999999435,
+      "template": 59
+    },
+    {
+      "bindings": 28246,
+      "calls": 1798,
+      "residual_visits": 31608,
+      "rule": 60,
+      "search_s": 0.012949795000000004,
+      "template": 60
+    },
+    {
+      "bindings": 2182,
+      "calls": 1798,
+      "residual_visits": 1741,
+      "rule": 61,
+      "search_s": 0.00833125899999995,
+      "template": 61
+    },
+    {
+      "bindings": 6259,
+      "calls": 1798,
+      "residual_visits": 640,
+      "rule": 62,
+      "search_s": 0.004546649999999919,
+      "template": 62
+    },
+    {
+      "bindings": 78,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 63,
+      "search_s": 4.292199999999968e-05,
+      "template": 63
+    },
+    {
+      "bindings": 1920,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 64,
+      "search_s": 0.0005390320000000027,
+      "template": 64
+    },
+    {
+      "bindings": 8186,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 65,
+      "search_s": 0.0026449100000000337,
+      "template": 65
+    },
+    {
+      "bindings": 172,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 66,
+      "search_s": 8.166299999999812e-05,
+      "template": 66
+    },
+    {
+      "bindings": 4,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 67,
+      "search_s": 3.602499999999984e-05,
+      "template": 67
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 68,
+      "search_s": 3.4343999999999954e-05,
+      "template": 68
+    },
+    {
+      "bindings": 315,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 69,
+      "search_s": 0.00010290799999999787,
+      "template": 69
+    },
+    {
+      "bindings": 104,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 70,
+      "search_s": 5.5043999999999346e-05,
+      "template": 70
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 71,
+      "search_s": 3.455299999999998e-05,
+      "template": 71
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 72,
+      "search_s": 3.424999999999991e-05,
+      "template": 72
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 73,
+      "search_s": 3.367199999999992e-05,
+      "template": 73
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 74,
+      "search_s": 3.2001e-05,
+      "template": 74
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 75,
+      "search_s": 3.412499999999993e-05,
+      "template": 75
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 76,
+      "search_s": 3.221199999999997e-05,
+      "template": 76
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 77,
+      "search_s": 3.295699999999996e-05,
+      "template": 77
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 78,
+      "search_s": 3.267099999999993e-05,
+      "template": 78
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 79,
+      "search_s": 3.321999999999998e-05,
+      "template": 79
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 80,
+      "search_s": 3.563799999999991e-05,
+      "template": 80
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 81,
+      "search_s": 3.423499999999989e-05,
+      "template": 81
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 82,
+      "search_s": 3.4840999999999946e-05,
+      "template": 82
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 83,
+      "search_s": 3.414799999999995e-05,
+      "template": 83
+    },
+    {
+      "bindings": 29,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 84,
+      "search_s": 4.12529999999997e-05,
+      "template": 84
+    },
+    {
+      "bindings": 315,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 85,
+      "search_s": 7.699799999999852e-05,
+      "template": 85
+    },
+    {
+      "bindings": 104,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 86,
+      "search_s": 4.865499999999955e-05,
+      "template": 86
+    },
+    {
+      "bindings": 5974,
+      "calls": 1798,
+      "residual_visits": 6809,
+      "rule": 87,
+      "search_s": 0.013560611999999962,
+      "template": 87
+    },
+    {
+      "bindings": 19520,
+      "calls": 1798,
+      "residual_visits": 20596,
+      "rule": 88,
+      "search_s": 0.011452746999999982,
+      "template": 88
+    },
+    {
+      "bindings": 13,
+      "calls": 1798,
+      "residual_visits": 13,
+      "rule": 89,
+      "search_s": 0.00028263300000000213,
+      "template": 89
+    },
+    {
+      "bindings": 80808,
+      "calls": 1798,
+      "residual_visits": 95042,
+      "rule": 90,
+      "search_s": 0.0282631689999995,
+      "template": 90
+    },
+    {
+      "bindings": 37586,
+      "calls": 1798,
+      "residual_visits": 38101,
+      "rule": 91,
+      "search_s": 0.016461916999999594,
+      "template": 91
+    },
+    {
+      "bindings": 29521,
+      "calls": 1798,
+      "residual_visits": 31371,
+      "rule": 92,
+      "search_s": 0.015166199000000026,
+      "template": 92
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 93,
+      "search_s": 5.4719999999999415e-05,
+      "template": 93
+    },
+    {
+      "bindings": 933,
+      "calls": 1798,
+      "residual_visits": 933,
+      "rule": 94,
+      "search_s": 0.0015367890000000178,
+      "template": 94
+    },
+    {
+      "bindings": 238,
+      "calls": 1798,
+      "residual_visits": 238,
+      "rule": 95,
+      "search_s": 0.0008356940000000025,
+      "template": 95
+    },
+    {
+      "bindings": 600,
+      "calls": 1798,
+      "residual_visits": 600,
+      "rule": 96,
+      "search_s": 0.0018673430000000217,
+      "template": 96
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 97,
+      "search_s": 3.2156000000000015e-05,
+      "template": 97
+    },
+    {
+      "bindings": 835,
+      "calls": 1798,
+      "residual_visits": 842,
+      "rule": 98,
+      "search_s": 0.0015293020000000167,
+      "template": 98
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 99,
+      "search_s": 0.0008774170000000038,
+      "template": 99
+    },
+    {
+      "bindings": 1552,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 100,
+      "search_s": 0.00037903600000000447,
+      "template": 100
+    },
+    {
+      "bindings": 213,
+      "calls": 1798,
+      "residual_visits": 287,
+      "rule": 101,
+      "search_s": 0.000987548000000005,
+      "template": 101
+    },
+    {
+      "bindings": 1079,
+      "calls": 1798,
+      "residual_visits": 4958,
+      "rule": 102,
+      "search_s": 0.0032410000000000286,
+      "template": 102
+    },
+    {
+      "bindings": 2465,
+      "calls": 1798,
+      "residual_visits": 1088,
+      "rule": 103,
+      "search_s": 0.0078631269999999,
+      "template": 103
+    },
+    {
+      "bindings": 3671,
+      "calls": 1798,
+      "residual_visits": 8701,
+      "rule": 104,
+      "search_s": 0.006373561999999863,
+      "template": 104
+    },
+    {
+      "bindings": 2372,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 105,
+      "search_s": 0.006939825999999885,
+      "template": 105
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 106,
+      "search_s": 3.847099999999982e-05,
+      "template": 106
+    },
+    {
+      "bindings": 10,
+      "calls": 1798,
+      "residual_visits": 43,
+      "rule": 107,
+      "search_s": 0.00042925300000000395,
+      "template": 107
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 108,
+      "search_s": 4.281499999999973e-05,
+      "template": 108
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 109,
+      "search_s": 4.228999999999974e-05,
+      "template": 109
+    },
+    {
+      "bindings": 5,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 110,
+      "search_s": 3.418199999999999e-05,
+      "template": 110
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 111,
+      "search_s": 3.6069999999999877e-05,
+      "template": 111
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 112,
+      "search_s": 3.405499999999987e-05,
+      "template": 112
+    },
+    {
+      "bindings": 78,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 113,
+      "search_s": 4.8570999999999566e-05,
+      "template": 113
+    },
+    {
+      "bindings": 1552,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 114,
+      "search_s": 0.0003328250000000042,
+      "template": 114
+    },
+    {
+      "bindings": 5,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 115,
+      "search_s": 3.578399999999988e-05,
+      "template": 115
+    },
+    {
+      "bindings": 2200,
+      "calls": 1798,
+      "residual_visits": 2200,
+      "rule": 116,
+      "search_s": 0.005712039999999882,
+      "template": 116
+    },
+    {
+      "bindings": 1663,
+      "calls": 1798,
+      "residual_visits": 1671,
+      "rule": 117,
+      "search_s": 0.001458890000000022,
+      "template": 117
+    },
+    {
+      "bindings": 1526,
+      "calls": 1798,
+      "residual_visits": 1532,
+      "rule": 118,
+      "search_s": 0.0014845790000000234,
+      "template": 118
+    },
+    {
+      "bindings": 7921,
+      "calls": 1798,
+      "residual_visits": 8043,
+      "rule": 119,
+      "search_s": 0.004576302999999914,
+      "template": 119
+    },
+    {
+      "bindings": 9174,
+      "calls": 1798,
+      "residual_visits": 9332,
+      "rule": 120,
+      "search_s": 0.004336379999999904,
+      "template": 120
+    },
+    {
+      "bindings": 19,
+      "calls": 1798,
+      "residual_visits": 19,
+      "rule": 121,
+      "search_s": 0.0001428409999999996,
+      "template": 121
+    },
+    {
+      "bindings": 29755,
+      "calls": 1798,
+      "residual_visits": 29781,
+      "rule": 122,
+      "search_s": 0.012167032999999945,
+      "template": 122
+    },
+    {
+      "bindings": 16335,
+      "calls": 1798,
+      "residual_visits": 17114,
+      "rule": 123,
+      "search_s": 0.007045608999999834,
+      "template": 123
+    },
+    {
+      "bindings": 13014,
+      "calls": 1798,
+      "residual_visits": 13484,
+      "rule": 124,
+      "search_s": 0.005889830999999888,
+      "template": 124
+    },
+    {
+      "bindings": 12917,
+      "calls": 1798,
+      "residual_visits": 5669,
+      "rule": 125,
+      "search_s": 0.010414434999999967,
+      "template": 125
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 126,
+      "search_s": 3.76199999999998e-05,
+      "template": 126
+    },
+    {
+      "bindings": 338,
+      "calls": 1798,
+      "residual_visits": 339,
+      "rule": 127,
+      "search_s": 0.00047011800000000347,
+      "template": 127
+    },
+    {
+      "bindings": 302,
+      "calls": 1798,
+      "residual_visits": 302,
+      "rule": 128,
+      "search_s": 0.0004343850000000041,
+      "template": 128
+    },
+    {
+      "bindings": 104,
+      "calls": 1798,
+      "residual_visits": 104,
+      "rule": 129,
+      "search_s": 0.0002498730000000022,
+      "template": 129
+    },
+    {
+      "bindings": 172,
+      "calls": 1798,
+      "residual_visits": 172,
+      "rule": 130,
+      "search_s": 0.000349967000000004,
+      "template": 130
+    },
+    {
+      "bindings": 557,
+      "calls": 1798,
+      "residual_visits": 557,
+      "rule": 131,
+      "search_s": 0.0003896030000000042,
+      "template": 131
+    },
+    {
+      "bindings": 308,
+      "calls": 1798,
+      "residual_visits": 308,
+      "rule": 132,
+      "search_s": 0.0004944430000000037,
+      "template": 132
+    },
+    {
+      "bindings": 6913,
+      "calls": 1798,
+      "residual_visits": 9550,
+      "rule": 133,
+      "search_s": 0.003610057000000032,
+      "template": 133
+    },
+    {
+      "bindings": 98,
+      "calls": 1798,
+      "residual_visits": 98,
+      "rule": 134,
+      "search_s": 7.953499999999922e-05,
+      "template": 134
+    },
+    {
+      "bindings": 36,
+      "calls": 1798,
+      "residual_visits": 36,
+      "rule": 135,
+      "search_s": 4.4589999999999924e-05,
+      "template": 135
+    },
+    {
+      "bindings": 16,
+      "calls": 1798,
+      "residual_visits": 32,
+      "rule": 136,
+      "search_s": 0.007569641999999828,
+      "template": 136
+    },
+    {
+      "bindings": 23177,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 137,
+      "search_s": 0.007683041999999839,
+      "template": 137
+    },
+    {
+      "bindings": 8174,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 138,
+      "search_s": 0.006417201999999842,
+      "template": 138
+    },
+    {
+      "bindings": 104,
+      "calls": 1798,
+      "residual_visits": 58,
+      "rule": 139,
+      "search_s": 0.00020518100000000198,
+      "template": 139
+    },
+    {
+      "bindings": 325,
+      "calls": 1798,
+      "residual_visits": 179,
+      "rule": 140,
+      "search_s": 0.00030464300000000374,
+      "template": 140
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 141,
+      "search_s": 3.432999999999989e-05,
+      "template": 141
+    },
+    {
+      "bindings": 79,
+      "calls": 1798,
+      "residual_visits": 79,
+      "rule": 142,
+      "search_s": 0.00013833899999999918,
+      "template": 142
+    },
+    {
+      "bindings": 32879,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 143,
+      "search_s": 0.007248908999999888,
+      "template": 143
+    },
+    {
+      "bindings": 16608,
+      "calls": 1798,
+      "residual_visits": 278557,
+      "rule": 144,
+      "search_s": 0.04581247899999913,
+      "template": 144
+    },
+    {
+      "bindings": 9778,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 145,
+      "search_s": 0.010069413999999962,
+      "template": 145
+    },
+    {
+      "bindings": 20,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 146,
+      "search_s": 5.0808999999999825e-05,
+      "template": 146
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 147,
+      "search_s": 4.550999999999991e-05,
+      "template": 147
+    },
+    {
+      "bindings": 1458,
+      "calls": 1798,
+      "residual_visits": 1458,
+      "rule": 148,
+      "search_s": 0.14265288100000006,
+      "template": 148
+    },
+    {
+      "bindings": 1552,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 149,
+      "search_s": 0.00035180800000000483,
+      "template": 149
+    },
+    {
+      "bindings": 79986,
+      "calls": 1798,
+      "residual_visits": 140839,
+      "rule": 150,
+      "search_s": 0.10584782300000008,
+      "template": 150
+    },
+    {
+      "bindings": 221686,
+      "calls": 1798,
+      "residual_visits": 311233,
+      "rule": 151,
+      "search_s": 0.1709402080000001,
+      "template": 151
+    },
+    {
+      "bindings": 9,
+      "calls": 1798,
+      "residual_visits": 8,
+      "rule": 152,
+      "search_s": 0.0008806169999999908,
+      "template": 152
+    },
+    {
+      "bindings": 966545,
+      "calls": 1798,
+      "residual_visits": 956267,
+      "rule": 153,
+      "search_s": 0.27231787599999974,
+      "template": 153
+    },
+    {
+      "bindings": 334264,
+      "calls": 1798,
+      "residual_visits": 533241,
+      "rule": 154,
+      "search_s": 0.2525952529999997,
+      "template": 154
+    },
+    {
+      "bindings": 306775,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 155,
+      "search_s": 0.2536564999999999,
+      "template": 155
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 156,
+      "search_s": 7.901799999999854e-05,
+      "template": 156
+    },
+    {
+      "bindings": 13088,
+      "calls": 1798,
+      "residual_visits": 19605,
+      "rule": 157,
+      "search_s": 0.027559466999999973,
+      "template": 157
+    },
+    {
+      "bindings": 7199,
+      "calls": 1798,
+      "residual_visits": 7745,
+      "rule": 158,
+      "search_s": 0.008252844000000002,
+      "template": 158
+    },
+    {
+      "bindings": 78,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 159,
+      "search_s": 4.812999999999958e-05,
+      "template": 159
+    },
+    {
+      "bindings": 6960,
+      "calls": 1798,
+      "residual_visits": 6909,
+      "rule": 160,
+      "search_s": 0.011046691000000003,
+      "template": 160
+    },
+    {
+      "bindings": 5,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 161,
+      "search_s": 3.657199999999987e-05,
+      "template": 161
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 162,
+      "search_s": 6.683099999999908e-05,
+      "template": 162
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 163,
+      "search_s": 3.434999999999993e-05,
+      "template": 163
+    },
+    {
+      "bindings": 460,
+      "calls": 1798,
+      "residual_visits": 270,
+      "rule": 164,
+      "search_s": 0.002833998999999983,
+      "template": 164
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 165,
+      "search_s": 3.9926999999999755e-05,
+      "template": 165
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 166,
+      "search_s": 3.787899999999983e-05,
+      "template": 166
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 167,
+      "search_s": 3.4505999999999944e-05,
+      "template": 167
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 168,
+      "search_s": 3.452999999999988e-05,
+      "template": 168
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 169,
+      "search_s": 3.303399999999997e-05,
+      "template": 169
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 170,
+      "search_s": 3.3391999999999954e-05,
+      "template": 170
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 171,
+      "search_s": 3.220999999999999e-05,
+      "template": 171
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 172,
+      "search_s": 3.184899999999998e-05,
+      "template": 172
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 173,
+      "search_s": 3.192800000000001e-05,
+      "template": 173
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 174,
+      "search_s": 3.224899999999998e-05,
+      "template": 174
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 175,
+      "search_s": 3.216699999999998e-05,
+      "template": 175
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 176,
+      "search_s": 3.374799999999995e-05,
+      "template": 176
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 177,
+      "search_s": 3.343299999999998e-05,
+      "template": 177
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 178,
+      "search_s": 3.308199999999996e-05,
+      "template": 178
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 179,
+      "search_s": 3.264399999999993e-05,
+      "template": 179
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 180,
+      "search_s": 3.1590000000000035e-05,
+      "template": 180
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 181,
+      "search_s": 3.154699999999998e-05,
+      "template": 181
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 182,
+      "search_s": 3.140700000000002e-05,
+      "template": 182
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 183,
+      "search_s": 3.190099999999998e-05,
+      "template": 183
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 184,
+      "search_s": 3.2392999999999986e-05,
+      "template": 184
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 185,
+      "search_s": 3.313099999999998e-05,
+      "template": 185
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 186,
+      "search_s": 3.3984999999999947e-05,
+      "template": 186
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 187,
+      "search_s": 3.2964999999999966e-05,
+      "template": 187
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 188,
+      "search_s": 3.380199999999991e-05,
+      "template": 188
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 189,
+      "search_s": 3.344799999999997e-05,
+      "template": 189
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 190,
+      "search_s": 3.336899999999992e-05,
+      "template": 190
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 191,
+      "search_s": 3.198700000000001e-05,
+      "template": 191
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 192,
+      "search_s": 3.207399999999995e-05,
+      "template": 192
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 193,
+      "search_s": 3.1236e-05,
+      "template": 193
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 194,
+      "search_s": 3.142200000000002e-05,
+      "template": 194
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 195,
+      "search_s": 3.199999999999996e-05,
+      "template": 195
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 196,
+      "search_s": 3.266199999999999e-05,
+      "template": 196
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 197,
+      "search_s": 3.3211999999999966e-05,
+      "template": 197
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 198,
+      "search_s": 3.266499999999994e-05,
+      "template": 198
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 199,
+      "search_s": 3.193200000000001e-05,
+      "template": 199
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 200,
+      "search_s": 3.3465999999999974e-05,
+      "template": 200
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 201,
+      "search_s": 3.3178999999999955e-05,
+      "template": 201
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 202,
+      "search_s": 3.414099999999992e-05,
+      "template": 202
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 203,
+      "search_s": 3.3729999999999957e-05,
+      "template": 203
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 204,
+      "search_s": 3.249599999999997e-05,
+      "template": 204
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 205,
+      "search_s": 3.2656999999999975e-05,
+      "template": 205
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 206,
+      "search_s": 3.104300000000002e-05,
+      "template": 206
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 207,
+      "search_s": 3.171999999999997e-05,
+      "template": 207
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 208,
+      "search_s": 3.1884000000000015e-05,
+      "template": 208
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 209,
+      "search_s": 3.1462999999999987e-05,
+      "template": 209
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 210,
+      "search_s": 3.2587999999999994e-05,
+      "template": 210
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 211,
+      "search_s": 3.2948999999999986e-05,
+      "template": 211
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 212,
+      "search_s": 3.3089999999999915e-05,
+      "template": 212
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 213,
+      "search_s": 3.381299999999992e-05,
+      "template": 213
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 214,
+      "search_s": 3.260199999999996e-05,
+      "template": 214
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 215,
+      "search_s": 3.291499999999997e-05,
+      "template": 215
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 216,
+      "search_s": 3.297199999999996e-05,
+      "template": 216
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 217,
+      "search_s": 3.3104999999999935e-05,
+      "template": 217
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 218,
+      "search_s": 3.344199999999994e-05,
+      "template": 218
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 219,
+      "search_s": 3.173000000000002e-05,
+      "template": 219
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 220,
+      "search_s": 3.208699999999996e-05,
+      "template": 220
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 221,
+      "search_s": 3.1755000000000024e-05,
+      "template": 221
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 222,
+      "search_s": 3.191099999999997e-05,
+      "template": 222
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 223,
+      "search_s": 3.238399999999998e-05,
+      "template": 223
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 224,
+      "search_s": 3.3292999999999954e-05,
+      "template": 224
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 225,
+      "search_s": 3.3205999999999993e-05,
+      "template": 225
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 226,
+      "search_s": 3.3640999999999944e-05,
+      "template": 226
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 227,
+      "search_s": 3.308599999999996e-05,
+      "template": 227
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 228,
+      "search_s": 3.289199999999994e-05,
+      "template": 228
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 229,
+      "search_s": 3.325299999999994e-05,
+      "template": 229
+    },
+    {
+      "bindings": 14,
+      "calls": 1798,
+      "residual_visits": 14,
+      "rule": 230,
+      "search_s": 5.213999999999934e-05,
+      "template": 230
+    },
+    {
+      "bindings": 703,
+      "calls": 1798,
+      "residual_visits": 1205,
+      "rule": 231,
+      "search_s": 0.0003440670000000041,
+      "template": 231
+    },
+    {
+      "bindings": 1189,
+      "calls": 1798,
+      "residual_visits": 840,
+      "rule": 232,
+      "search_s": 0.0007522780000000039,
+      "template": 232
+    },
+    {
+      "bindings": 1088,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 233,
+      "search_s": 0.0006371830000000046,
+      "template": 233
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 234,
+      "search_s": 3.250899999999998e-05,
+      "template": 234
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 235,
+      "search_s": 4.2733999999999866e-05,
+      "template": 235
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 236,
+      "search_s": 3.2674e-05,
+      "template": 236
+    },
+    {
+      "bindings": 371,
+      "calls": 1798,
+      "residual_visits": 495,
+      "rule": 237,
+      "search_s": 0.007352093999999871,
+      "template": 237
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 238,
+      "search_s": 6.251099999999937e-05,
+      "template": 238
+    },
+    {
+      "bindings": 66,
+      "calls": 1798,
+      "residual_visits": 578,
+      "rule": 239,
+      "search_s": 0.007216156999999872,
+      "template": 239
+    },
+    {
+      "bindings": 456,
+      "calls": 1798,
+      "residual_visits": 2499,
+      "rule": 240,
+      "search_s": 0.008847210999999933,
+      "template": 240
+    },
+    {
+      "bindings": 1138,
+      "calls": 1798,
+      "residual_visits": 7967,
+      "rule": 241,
+      "search_s": 0.012189542999999995,
+      "template": 241
+    },
+    {
+      "bindings": 1600,
+      "calls": 1798,
+      "residual_visits": 6847,
+      "rule": 242,
+      "search_s": 0.013418351999999968,
+      "template": 242
+    },
+    {
+      "bindings": 1129,
+      "calls": 1798,
+      "residual_visits": 3664,
+      "rule": 243,
+      "search_s": 0.009007420999999988,
+      "template": 243
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 244,
+      "search_s": 4.143199999999973e-05,
+      "template": 244
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 9,
+      "rule": 245,
+      "search_s": 0.0044008279999999,
+      "template": 245
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 246,
+      "search_s": 0.00021499300000000476,
+      "template": 246
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 247,
+      "search_s": 0.00013712800000000022,
+      "template": 247
+    },
+    {
+      "bindings": 8,
+      "calls": 1798,
+      "residual_visits": 8,
+      "rule": 248,
+      "search_s": 0.00030405700000000005,
+      "template": 248
+    },
+    {
+      "bindings": 143282,
+      "calls": 1798,
+      "residual_visits": 152208,
+      "rule": 249,
+      "search_s": 0.05021358099999916,
+      "template": 249
+    },
+    {
+      "bindings": 4,
+      "calls": 1798,
+      "residual_visits": 4,
+      "rule": 250,
+      "search_s": 0.00019557600000000148,
+      "template": 250
+    },
+    {
+      "bindings": 737,
+      "calls": 1798,
+      "residual_visits": 3222,
+      "rule": 251,
+      "search_s": 0.001626046000000032,
+      "template": 251
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 252,
+      "search_s": 3.313799999999998e-05,
+      "template": 252
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 253,
+      "search_s": 3.361699999999995e-05,
+      "template": 253
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 254,
+      "search_s": 3.302599999999993e-05,
+      "template": 254
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 255,
+      "search_s": 3.3100999999999994e-05,
+      "template": 255
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 256,
+      "search_s": 3.303199999999996e-05,
+      "template": 256
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 257,
+      "search_s": 3.252799999999991e-05,
+      "template": 257
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 258,
+      "search_s": 3.263699999999999e-05,
+      "template": 258
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 259,
+      "search_s": 3.2749e-05,
+      "template": 259
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 260,
+      "search_s": 3.238399999999997e-05,
+      "template": 260
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 261,
+      "search_s": 3.168399999999997e-05,
+      "template": 261
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 262,
+      "search_s": 3.259499999999996e-05,
+      "template": 262
+    },
+    {
+      "bindings": 0,
+      "calls": 1798,
+      "residual_visits": 0,
+      "rule": 263,
+      "search_s": 3.209500000000001e-05,
+      "template": 263
+    },
+    {
+      "bindings": 818,
+      "calls": 1798,
+      "residual_visits": 2320,
+      "rule": 264,
+      "search_s": 0.011422817999999984,
+      "template": 264
+    },
+    {
+      "bindings": 6,
+      "calls": 1798,
+      "residual_visits": 14,
+      "rule": 265,
+      "search_s": 0.0003896180000000036,
+      "template": 265
+    },
+    {
+      "bindings": 53,
+      "calls": 24,
+      "residual_visits": 0,
+      "rule": 266,
+      "search_s": 1.4044e-05,
+      "template": 266
+    },
+    {
+      "bindings": 14972,
+      "calls": 24,
+      "residual_visits": 0,
+      "rule": 267,
+      "search_s": 0.004995040999999998,
+      "template": 267
+    },
+    {
+      "bindings": 1118,
+      "calls": 12,
+      "residual_visits": 6055,
+      "rule": 268,
+      "search_s": 0.006508499999999998,
+      "template": 268
+    },
+    {
+      "bindings": 1548,
+      "calls": 12,
+      "residual_visits": 6919,
+      "rule": 269,
+      "search_s": 0.007026206000000001,
+      "template": 269
+    },
+    {
+      "bindings": 605,
+      "calls": 19,
+      "residual_visits": 57,
+      "rule": 270,
+      "search_s": 0.001654125,
+      "template": 270
+    },
+    {
+      "bindings": 0,
+      "calls": 19,
+      "residual_visits": 0,
+      "rule": 271,
+      "search_s": 5.835000000000001e-06,
+      "template": 271
+    },
+    {
+      "bindings": 18,
+      "calls": 19,
+      "residual_visits": 5,
+      "rule": 272,
+      "search_s": 0.000561126,
+      "template": 272
+    },
+    {
+      "bindings": 36,
+      "calls": 19,
+      "residual_visits": 8,
+      "rule": 273,
+      "search_s": 0.0007444999999999999,
+      "template": 273
+    },
+    {
+      "bindings": 8,
+      "calls": 19,
+      "residual_visits": 4,
+      "rule": 274,
+      "search_s": 0.0004602509999999999,
+      "template": 274
+    },
+    {
+      "bindings": 8,
+      "calls": 19,
+      "residual_visits": 4,
+      "rule": 275,
+      "search_s": 2.1544e-05,
+      "template": 275
+    },
+    {
+      "bindings": 0,
+      "calls": 19,
+      "residual_visits": 0,
+      "rule": 276,
+      "search_s": 9.950100000000001e-05,
+      "template": 276
+    },
+    {
+      "bindings": 0,
+      "calls": 19,
+      "residual_visits": 0,
+      "rule": 277,
+      "search_s": 6.004099999999999e-05,
+      "template": 277
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 278,
+      "search_s": 0.00015743899999999986,
+      "template": 278
+    },
+    {
+      "bindings": 805,
+      "calls": 6779,
+      "residual_visits": 977,
+      "rule": 279,
+      "search_s": 0.0006187180000000177,
+      "template": 279
+    },
+    {
+      "bindings": 84,
+      "calls": 6779,
+      "residual_visits": 101,
+      "rule": 280,
+      "search_s": 0.00022743900000000367,
+      "template": 280
+    },
+    {
+      "bindings": 1,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 281,
+      "search_s": 0.0001359689999999962,
+      "template": 281
+    },
+    {
+      "bindings": 3,
+      "calls": 6779,
+      "residual_visits": 2,
+      "rule": 282,
+      "search_s": 0.00013073399999999528,
+      "template": 282
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 283,
+      "search_s": 0.00012385499999999425,
+      "template": 283
+    },
+    {
+      "bindings": 855,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 284,
+      "search_s": 0.0008146260000000165,
+      "template": 284
+    },
+    {
+      "bindings": 1114,
+      "calls": 6779,
+      "residual_visits": 440,
+      "rule": 285,
+      "search_s": 0.0010345960000000436,
+      "template": 285
+    },
+    {
+      "bindings": 71204,
+      "calls": 6779,
+      "residual_visits": 78280,
+      "rule": 286,
+      "search_s": 0.04014449799999892,
+      "template": 286
+    },
+    {
+      "bindings": 197674,
+      "calls": 6779,
+      "residual_visits": 197674,
+      "rule": 287,
+      "search_s": 0.06871850600000311,
+      "template": 287
+    },
+    {
+      "bindings": 4,
+      "calls": 6779,
+      "residual_visits": 2,
+      "rule": 288,
+      "search_s": 0.00013596899999999615,
+      "template": 288
+    },
+    {
+      "bindings": 982,
+      "calls": 6779,
+      "residual_visits": 1748,
+      "rule": 289,
+      "search_s": 0.006927896999999299,
+      "template": 289
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 290,
+      "search_s": 0.00014796499999999757,
+      "template": 290
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 291,
+      "search_s": 0.00012772199999999502,
+      "template": 291
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 292,
+      "search_s": 0.0001265639999999948,
+      "template": 292
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 293,
+      "search_s": 0.0001296919999999952,
+      "template": 293
+    },
+    {
+      "bindings": 5425,
+      "calls": 6779,
+      "residual_visits": 5425,
+      "rule": 294,
+      "search_s": 0.003230310000000113,
+      "template": 294
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 295,
+      "search_s": 0.00012409599999999425,
+      "template": 295
+    },
+    {
+      "bindings": 898,
+      "calls": 6779,
+      "residual_visits": 898,
+      "rule": 296,
+      "search_s": 0.0011162400000000556,
+      "template": 296
+    },
+    {
+      "bindings": 59,
+      "calls": 6779,
+      "residual_visits": 38,
+      "rule": 297,
+      "search_s": 0.00045351900000001506,
+      "template": 297
+    },
+    {
+      "bindings": 69,
+      "calls": 6779,
+      "residual_visits": 43,
+      "rule": 298,
+      "search_s": 0.0003933570000000152,
+      "template": 298
+    },
+    {
+      "bindings": 41,
+      "calls": 6779,
+      "residual_visits": 12,
+      "rule": 299,
+      "search_s": 0.00037971900000001636,
+      "template": 299
+    },
+    {
+      "bindings": 43,
+      "calls": 6779,
+      "residual_visits": 5,
+      "rule": 300,
+      "search_s": 0.0003784180000000156,
+      "template": 300
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 301,
+      "search_s": 0.00012477399999999433,
+      "template": 301
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 302,
+      "search_s": 0.0001259359999999946,
+      "template": 302
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 303,
+      "search_s": 0.00012616199999999458,
+      "template": 303
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 304,
+      "search_s": 0.0001305189999999953,
+      "template": 304
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 305,
+      "search_s": 0.00013101399999999565,
+      "template": 305
+    },
+    {
+      "bindings": 63050,
+      "calls": 6779,
+      "residual_visits": 63050,
+      "rule": 306,
+      "search_s": 0.020761949999999224,
+      "template": 306
+    },
+    {
+      "bindings": 57,
+      "calls": 6779,
+      "residual_visits": 29,
+      "rule": 307,
+      "search_s": 0.0003734510000000155,
+      "template": 307
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 308,
+      "search_s": 0.0001241539999999943,
+      "template": 308
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 309,
+      "search_s": 0.0001239179999999944,
+      "template": 309
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 310,
+      "search_s": 0.00013121299999999586,
+      "template": 310
+    },
+    {
+      "bindings": 0,
+      "calls": 6779,
+      "residual_visits": 0,
+      "rule": 311,
+      "search_s": 0.00012721699999999469,
+      "template": 311
+    },
+    {
+      "bindings": 10563,
+      "calls": 23,
+      "residual_visits": 16291,
+      "rule": 312,
+      "search_s": 0.01864891899999999,
+      "template": 312
+    },
+    {
+      "bindings": 0,
+      "calls": 23,
+      "residual_visits": 0,
+      "rule": 313,
+      "search_s": 1.8729999999999997e-06,
+      "template": 313
+    },
+    {
+      "bindings": 0,
+      "calls": 24,
+      "residual_visits": 0,
+      "rule": 314,
+      "search_s": 2.4599999999999997e-06,
+      "template": 314
+    },
+    {
+      "bindings": 13,
+      "calls": 24,
+      "residual_visits": 13,
+      "rule": 315,
+      "search_s": 2.7418000000000004e-05,
+      "template": 315
+    },
+    {
+      "bindings": 29,
+      "calls": 24,
+      "residual_visits": 0,
+      "rule": 316,
+      "search_s": 8.958e-06,
+      "template": 316
+    },
+    {
+      "bindings": 45334,
+      "calls": 172,
+      "residual_visits": 45334,
+      "rule": 317,
+      "search_s": 0.04355591799999996,
+      "template": 317
+    },
+    {
+      "bindings": 81,
+      "calls": 172,
+      "residual_visits": 81,
+      "rule": 318,
+      "search_s": 0.0003841229999999999,
+      "template": 318
+    },
+    {
+      "bindings": 466,
+      "calls": 172,
+      "residual_visits": 466,
+      "rule": 319,
+      "search_s": 0.002348795999999998,
+      "template": 319
+    },
+    {
+      "bindings": 6,
+      "calls": 172,
+      "residual_visits": 6,
+      "rule": 320,
+      "search_s": 2.5962000000000034e-05,
+      "template": 320
+    },
+    {
+      "bindings": 3809,
+      "calls": 172,
+      "residual_visits": 4410,
+      "rule": 321,
+      "search_s": 0.004898667999999999,
+      "template": 321
+    },
+    {
+      "bindings": 13185,
+      "calls": 172,
+      "residual_visits": 14772,
+      "rule": 322,
+      "search_s": 0.011485129999999998,
+      "template": 322
+    },
+    {
+      "bindings": 5,
+      "calls": 172,
+      "residual_visits": 5,
+      "rule": 323,
+      "search_s": 9.732699999999997e-05,
+      "template": 323
+    },
+    {
+      "bindings": 45824,
+      "calls": 172,
+      "residual_visits": 53203,
+      "rule": 324,
+      "search_s": 0.027910631999999994,
+      "template": 324
+    },
+    {
+      "bindings": 582,
+      "calls": 172,
+      "residual_visits": 662,
+      "rule": 325,
+      "search_s": 0.0010069999999999988,
+      "template": 325
+    },
+    {
+      "bindings": 482,
+      "calls": 172,
+      "residual_visits": 555,
+      "rule": 326,
+      "search_s": 0.000703786000000001,
+      "template": 326
+    },
+    {
+      "bindings": 14288,
+      "calls": 172,
+      "residual_visits": 14925,
+      "rule": 327,
+      "search_s": 0.012037131999999996,
+      "template": 327
+    },
+    {
+      "bindings": 28857,
+      "calls": 172,
+      "residual_visits": 33766,
+      "rule": 328,
+      "search_s": 0.020051708999999994,
+      "template": 328
+    },
+    {
+      "bindings": 0,
+      "calls": 172,
+      "residual_visits": 0,
+      "rule": 329,
+      "search_s": 3.4300000000000057e-06,
+      "template": 329
+    },
+    {
+      "bindings": 0,
+      "calls": 172,
+      "residual_visits": 0,
+      "rule": 330,
+      "search_s": 4.4120000000000045e-06,
+      "template": 330
+    },
+    {
+      "bindings": 0,
+      "calls": 172,
+      "residual_visits": 0,
+      "rule": 331,
+      "search_s": 1.4128000000000037e-05,
+      "template": 331
+    },
+    {
+      "bindings": 584,
+      "calls": 172,
+      "residual_visits": 654,
+      "rule": 332,
+      "search_s": 0.0008636990000000008,
+      "template": 332
+    },
+    {
+      "bindings": 175,
+      "calls": 172,
+      "residual_visits": 178,
+      "rule": 333,
+      "search_s": 0.00044141800000000006,
+      "template": 333
+    },
+    {
+      "bindings": 2,
+      "calls": 36,
+      "residual_visits": 8,
+      "rule": 334,
+      "search_s": 0.001885167,
+      "template": 334
+    },
+    {
+      "bindings": 4,
+      "calls": 36,
+      "residual_visits": 4,
+      "rule": 335,
+      "search_s": 2.2709999999999998e-05,
+      "template": 335
+    },
+    {
+      "bindings": 2,
+      "calls": 36,
+      "residual_visits": 2,
+      "rule": 336,
+      "search_s": 6.500999999999999e-06,
+      "template": 336
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 337,
+      "search_s": 1.683199999999999e-05,
+      "template": 337
+    },
+    {
+      "bindings": 18,
+      "calls": 36,
+      "residual_visits": 32,
+      "rule": 338,
+      "search_s": 3.987400000000001e-05,
+      "template": 338
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 339,
+      "search_s": 1.6669999999999997e-06,
+      "template": 339
+    },
+    {
+      "bindings": 40,
+      "calls": 36,
+      "residual_visits": 56,
+      "rule": 340,
+      "search_s": 8.120799999999999e-05,
+      "template": 340
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 341,
+      "search_s": 4.209000000000001e-06,
+      "template": 341
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 342,
+      "search_s": 2.2520000000000006e-06,
+      "template": 342
+    },
+    {
+      "bindings": 16,
+      "calls": 36,
+      "residual_visits": 32,
+      "rule": 343,
+      "search_s": 4.9832999999999995e-05,
+      "template": 343
+    },
+    {
+      "bindings": 20,
+      "calls": 36,
+      "residual_visits": 38,
+      "rule": 344,
+      "search_s": 5.704e-05,
+      "template": 344
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 345,
+      "search_s": 7.919999999999999e-07,
+      "template": 345
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 346,
+      "search_s": 1.4251e-05,
+      "template": 346
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 347,
+      "search_s": 1.6669999999999999e-06,
+      "template": 347
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 0,
+      "rule": 348,
+      "search_s": 1.4979999999999995e-06,
+      "template": 348
+    },
+    {
+      "bindings": 0,
+      "calls": 36,
+      "residual_visits": 8,
+      "rule": 349,
+      "search_s": 1.3378e-05,
+      "template": 349
+    },
+    {
+      "bindings": 6,
+      "calls": 36,
+      "residual_visits": 8,
+      "rule": 350,
+      "search_s": 9.082e-06,
+      "template": 350
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 3189,
+      "rule": 351,
+      "search_s": 0.0030395850000000005,
+      "template": 351
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 985,
+      "rule": 352,
+      "search_s": 0.0017710840000000005,
+      "template": 352
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 96,
+      "rule": 353,
+      "search_s": 0.000341494,
+      "template": 353
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 354,
+      "search_s": 0.00014346,
+      "template": 354
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 870,
+      "rule": 355,
+      "search_s": 0.000804916,
+      "template": 355
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 885,
+      "rule": 356,
+      "search_s": 0.00047320700000000007,
+      "template": 356
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 357,
+      "search_s": 6.649699999999997e-05,
+      "template": 357
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 358,
+      "search_s": 0.00153754,
+      "template": 358
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 359,
+      "search_s": 2.5020000000000004e-06,
+      "template": 359
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 360,
+      "search_s": 0.0006782520000000004,
+      "template": 360
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 361,
+      "search_s": 2.0440000000000003e-06,
+      "template": 361
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 362,
+      "search_s": 0.00043916900000000016,
+      "template": 362
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 363,
+      "search_s": 4.874000000000001e-06,
+      "template": 363
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 364,
+      "search_s": 0.002955832000000001,
+      "template": 364
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 2691,
+      "rule": 365,
+      "search_s": 0.0017507089999999998,
+      "template": 365
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 366,
+      "search_s": 0.0010454160000000004,
+      "template": 366
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 367,
+      "search_s": 4.125000000000001e-06,
+      "template": 367
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 368,
+      "search_s": 0.0010715870000000004,
+      "template": 368
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 369,
+      "search_s": 2.7090000000000028e-06,
+      "template": 369
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 685,
+      "rule": 370,
+      "search_s": 0.0010839579999999999,
+      "template": 370
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 25357,
+      "rule": 371,
+      "search_s": 0.007558749999999996,
+      "template": 371
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 372,
+      "search_s": 2.917000000000001e-06,
+      "template": 372
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 1004,
+      "rule": 373,
+      "search_s": 0.0005996279999999998,
+      "template": 373
+    },
+    {
+      "bindings": 0,
+      "calls": 49,
+      "residual_visits": 0,
+      "rule": 374,
+      "search_s": 1.999e-06,
+      "template": 374
+    },
+    {
+      "bindings": 1,
+      "calls": 1,
+      "residual_visits": 0,
+      "rule": 375,
+      "search_s": 9.8125e-05,
+      "template": 375
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 394,
+      "rule": 376,
+      "search_s": 0.0012281310000000004,
+      "template": 376
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 42,
+      "rule": 377,
+      "search_s": 0.00014104099999999995,
+      "template": 377
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 378,
+      "search_s": 8.729999999999999e-07,
+      "template": 378
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 379,
+      "search_s": 5.829999999999999e-07,
+      "template": 379
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 380,
+      "search_s": 7.499999999999999e-07,
+      "template": 380
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 381,
+      "search_s": 6.679999999999999e-07,
+      "template": 381
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 382,
+      "search_s": 7.899999999999998e-07,
+      "template": 382
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 383,
+      "search_s": 9.199999999999998e-07,
+      "template": 383
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 384,
+      "search_s": 7.489999999999998e-07,
+      "template": 384
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 385,
+      "search_s": 6.24e-07,
+      "template": 385
+    },
+    {
+      "bindings": 386,
+      "calls": 38,
+      "residual_visits": 1494,
+      "rule": 386,
+      "search_s": 0.0012524160000000001,
+      "template": 386
+    },
+    {
+      "bindings": 386,
+      "calls": 38,
+      "residual_visits": 1494,
+      "rule": 387,
+      "search_s": 0.000970792,
+      "template": 387
+    },
+    {
+      "bindings": 66,
+      "calls": 38,
+      "residual_visits": 113,
+      "rule": 388,
+      "search_s": 0.00031042,
+      "template": 388
+    },
+    {
+      "bindings": 66,
+      "calls": 38,
+      "residual_visits": 117,
+      "rule": 389,
+      "search_s": 0.00025833,
+      "template": 389
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 390,
+      "search_s": 6.741999999999995e-05,
+      "template": 390
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 391,
+      "search_s": 2.3665999999999997e-05,
+      "template": 391
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 392,
+      "search_s": 1.4246000000000009e-05,
+      "template": 392
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 393,
+      "search_s": 1.3332000000000007e-05,
+      "template": 393
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 394,
+      "search_s": 2.5400000000000007e-06,
+      "template": 394
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 395,
+      "search_s": 1.8339999999999997e-06,
+      "template": 395
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 396,
+      "search_s": 2.165e-06,
+      "template": 396
+    },
+    {
+      "bindings": 52,
+      "calls": 38,
+      "residual_visits": 120,
+      "rule": 397,
+      "search_s": 0.00024624900000000003,
+      "template": 397
+    },
+    {
+      "bindings": 52,
+      "calls": 38,
+      "residual_visits": 120,
+      "rule": 398,
+      "search_s": 0.00020967099999999998,
+      "template": 398
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 399,
+      "search_s": 1.8711e-05,
+      "template": 399
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 400,
+      "search_s": 1.528900000000001e-05,
+      "template": 400
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 401,
+      "search_s": 0.0001502110000000001,
+      "template": 401
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 402,
+      "search_s": 0.00014078600000000006,
+      "template": 402
+    },
+    {
+      "bindings": 833,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 403,
+      "search_s": 0.00020154099999999996,
+      "template": 403
+    },
+    {
+      "bindings": 97,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 404,
+      "search_s": 2.6289e-05,
+      "template": 404
+    },
+    {
+      "bindings": 947,
+      "calls": 38,
+      "residual_visits": 2482,
+      "rule": 405,
+      "search_s": 0.0023901670000000003,
+      "template": 405
+    },
+    {
+      "bindings": 116,
+      "calls": 38,
+      "residual_visits": 305,
+      "rule": 406,
+      "search_s": 0.00044662599999999993,
+      "template": 406
+    },
+    {
+      "bindings": 71,
+      "calls": 38,
+      "residual_visits": 187,
+      "rule": 407,
+      "search_s": 0.000277046,
+      "template": 407
+    },
+    {
+      "bindings": 45,
+      "calls": 38,
+      "residual_visits": 130,
+      "rule": 408,
+      "search_s": 0.00022737399999999997,
+      "template": 408
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 409,
+      "search_s": 1.7089999999999992e-06,
+      "template": 409
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 410,
+      "search_s": 1.4159999999999997e-06,
+      "template": 410
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 411,
+      "search_s": 8.329999999999998e-07,
+      "template": 411
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 412,
+      "search_s": 7.929999999999999e-07,
+      "template": 412
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 413,
+      "search_s": 1.208e-06,
+      "template": 413
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 414,
+      "search_s": 8.779999999999998e-07,
+      "template": 414
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 415,
+      "search_s": 6.269999999999999e-07,
+      "template": 415
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 416,
+      "search_s": 1.2909999999999998e-06,
+      "template": 416
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 417,
+      "search_s": 8.31e-07,
+      "template": 417
+    },
+    {
+      "bindings": 0,
+      "calls": 38,
+      "residual_visits": 0,
+      "rule": 418,
+      "search_s": 8.329999999999999e-07,
+      "template": 418
+    },
+    {
+      "bindings": 29,
+      "calls": 782,
+      "residual_visits": 29,
+      "rule": 419,
+      "search_s": 0.002856736000000005,
+      "template": 419
+    },
+    {
+      "bindings": 1552,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 420,
+      "search_s": 0.00048251400000000214,
+      "template": 420
+    },
+    {
+      "bindings": 1602,
+      "calls": 782,
+      "residual_visits": 2870,
+      "rule": 421,
+      "search_s": 0.004141486999999999,
+      "template": 421
+    },
+    {
+      "bindings": 7819,
+      "calls": 782,
+      "residual_visits": 13047,
+      "rule": 422,
+      "search_s": 0.007875352000000004,
+      "template": 422
+    },
+    {
+      "bindings": 8,
+      "calls": 782,
+      "residual_visits": 7,
+      "rule": 423,
+      "search_s": 0.00030093099999999956,
+      "template": 423
+    },
+    {
+      "bindings": 25882,
+      "calls": 782,
+      "residual_visits": 16487,
+      "rule": 424,
+      "search_s": 0.014559041000000009,
+      "template": 424
+    },
+    {
+      "bindings": 13512,
+      "calls": 782,
+      "residual_visits": 26765,
+      "rule": 425,
+      "search_s": 0.011008330999999993,
+      "template": 425
+    },
+    {
+      "bindings": 9814,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 426,
+      "search_s": 0.009159163999999994,
+      "template": 426
+    },
+    {
+      "bindings": 0,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 427,
+      "search_s": 1.902300000000006e-05,
+      "template": 427
+    },
+    {
+      "bindings": 318,
+      "calls": 782,
+      "residual_visits": 843,
+      "rule": 428,
+      "search_s": 0.0021313960000000046,
+      "template": 428
+    },
+    {
+      "bindings": 104,
+      "calls": 782,
+      "residual_visits": 110,
+      "rule": 429,
+      "search_s": 0.0007929160000000015,
+      "template": 429
+    },
+    {
+      "bindings": 78,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 430,
+      "search_s": 3.674699999999985e-05,
+      "template": 430
+    },
+    {
+      "bindings": 172,
+      "calls": 782,
+      "residual_visits": 121,
+      "rule": 431,
+      "search_s": 0.0008813270000000051,
+      "template": 431
+    },
+    {
+      "bindings": 5,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 432,
+      "search_s": 1.7547000000000064e-05,
+      "template": 432
+    },
+    {
+      "bindings": 0,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 433,
+      "search_s": 2.1404000000000055e-05,
+      "template": 433
+    },
+    {
+      "bindings": 0,
+      "calls": 782,
+      "residual_visits": 0,
+      "rule": 434,
+      "search_s": 1.4419000000000068e-05,
+      "template": 434
+    },
+    {
+      "bindings": 398,
+      "calls": 782,
+      "residual_visits": 606,
+      "rule": 435,
+      "search_s": 0.0011505480000000002,
+      "template": 435
+    },
+    {
+      "bindings": 104,
+      "calls": 12,
+      "residual_visits": 0,
+      "rule": 436,
+      "search_s": 4.450099999999999e-05,
+      "template": 436
+    },
+    {
+      "bindings": 0,
+      "calls": 12,
+      "residual_visits": 0,
+      "rule": 437,
+      "search_s": 0.004648041000000001,
+      "template": 437
+    },
+    {
+      "bindings": 3,
+      "calls": 12,
+      "residual_visits": 21,
+      "rule": 438,
+      "search_s": 0.001229127,
+      "template": 438
+    },
+    {
+      "bindings": 0,
+      "calls": 12,
+      "residual_visits": 265,
+      "rule": 439,
+      "search_s": 0.003625418,
+      "template": 439
+    },
+    {
+      "bindings": 1070,
+      "calls": 25,
+      "residual_visits": 5730,
+      "rule": 440,
+      "search_s": 0.0015079140000000002,
+      "template": 440
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 4,
+      "rule": 441,
+      "search_s": 0.0005694589999999999,
+      "template": 441
+    },
+    {
+      "bindings": 164,
+      "calls": 25,
+      "residual_visits": 1140,
+      "rule": 442,
+      "search_s": 0.0019253320000000003,
+      "template": 442
+    },
+    {
+      "bindings": 194,
+      "calls": 25,
+      "residual_visits": 1197,
+      "rule": 443,
+      "search_s": 0.0014709970000000006,
+      "template": 443
+    },
+    {
+      "bindings": 104,
+      "calls": 25,
+      "residual_visits": 265,
+      "rule": 444,
+      "search_s": 0.000518417,
+      "template": 444
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 66,
+      "rule": 445,
+      "search_s": 0.0004028750000000001,
+      "template": 445
+    },
+    {
+      "bindings": 1738,
+      "calls": 25,
+      "residual_visits": 0,
+      "rule": 446,
+      "search_s": 0.00039712299999999993,
+      "template": 446
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 952,
+      "rule": 447,
+      "search_s": 0.00170525,
+      "template": 447
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 0,
+      "rule": 448,
+      "search_s": 2.2910000000000006e-06,
+      "template": 448
+    },
+    {
+      "bindings": 141,
+      "calls": 25,
+      "residual_visits": 555,
+      "rule": 449,
+      "search_s": 0.0008260399999999999,
+      "template": 449
+    },
+    {
+      "bindings": 149,
+      "calls": 25,
+      "residual_visits": 148,
+      "rule": 450,
+      "search_s": 0.0003544200000000001,
+      "template": 450
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 0,
+      "rule": 451,
+      "search_s": 0.0004886679999999999,
+      "template": 451
+    },
+    {
+      "bindings": 0,
+      "calls": 25,
+      "residual_visits": 0,
+      "rule": 452,
+      "search_s": 0.00022316699999999997,
+      "template": 452
+    },
+    {
+      "bindings": 1269,
+      "calls": 1,
+      "residual_visits": 1269,
+      "rule": 453,
+      "search_s": 0.001072292,
+      "template": 453
+    },
+    {
+      "bindings": 1,
+      "calls": 1,
+      "residual_visits": 3,
+      "rule": 454,
+      "search_s": 7.9375e-05,
+      "template": 454
+    },
+    {
+      "bindings": 25,
+      "calls": 1,
+      "residual_visits": 25,
+      "rule": 455,
+      "search_s": 2.4417e-05,
+      "template": 455
+    },
+    {
+      "bindings": 0,
+      "calls": 1,
+      "residual_visits": 0,
+      "rule": 456,
+      "search_s": 1.7166e-05,
+      "template": 456
+    },
+    {
+      "bindings": 318,
+      "calls": 1,
+      "residual_visits": 919,
+      "rule": 457,
+      "search_s": 0.002266,
+      "template": 457
+    },
+    {
+      "bindings": 0,
+      "calls": 1,
+      "residual_visits": 0,
+      "rule": 458,
+      "search_s": 0.00064675,
+      "template": 458
+    },
+    {
+      "bindings": 0,
+      "calls": 1,
+      "residual_visits": 0,
+      "rule": 459,
+      "search_s": 0.000999375,
+      "template": 459
+    },
+    {
+      "bindings": 307,
+      "calls": 6,
+      "residual_visits": 3319,
+      "rule": 460,
+      "search_s": 0.00581825,
+      "template": 460
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 461,
+      "search_s": 7.51e-07,
+      "template": 461
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 462,
+      "search_s": 2.51e-07,
+      "template": 462
+    },
+    {
+      "bindings": 773,
+      "calls": 6,
+      "residual_visits": 2775,
+      "rule": 463,
+      "search_s": 0.005291290999999999,
+      "template": 463
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 464,
+      "search_s": 1.1792e-05,
+      "template": 464
+    },
+    {
+      "bindings": 0,
+      "calls": 6,
+      "residual_visits": 0,
+      "rule": 465,
+      "search_s": 0.000167375,
+      "template": 465
+    },
+    {
+      "bindings": 4,
+      "calls": 6,
+      "residual_visits": 28,
+      "rule": 466,
+      "search_s": 0.001423251,
+      "template": 466
+    },
+    {
+      "bindings": 5717,
+      "calls": 158,
+      "residual_visits": 5717,
+      "rule": 467,
+      "search_s": 0.0027886669999999986,
+      "template": 467
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 468,
+      "search_s": 6.782e-06,
+      "template": 468
+    },
+    {
+      "bindings": 29,
+      "calls": 158,
+      "residual_visits": 29,
+      "rule": 469,
+      "search_s": 0.0001767440000000002,
+      "template": 469
+    },
+    {
+      "bindings": 34,
+      "calls": 158,
+      "residual_visits": 34,
+      "rule": 470,
+      "search_s": 0.000275085,
+      "template": 470
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 471,
+      "search_s": 5.124000000000005e-06,
+      "template": 471
+    },
+    {
+      "bindings": 123,
+      "calls": 158,
+      "residual_visits": 369,
+      "rule": 472,
+      "search_s": 0.00036083699999999987,
+      "template": 472
+    },
+    {
+      "bindings": 811,
+      "calls": 158,
+      "residual_visits": 2351,
+      "rule": 473,
+      "search_s": 0.001055998999999998,
+      "template": 473
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 474,
+      "search_s": 9.377000000000007e-06,
+      "template": 474
+    },
+    {
+      "bindings": 3761,
+      "calls": 158,
+      "residual_visits": 6891,
+      "rule": 475,
+      "search_s": 0.002976961,
+      "template": 475
+    },
+    {
+      "bindings": 6,
+      "calls": 158,
+      "residual_visits": 18,
+      "rule": 476,
+      "search_s": 0.000100583,
+      "template": 476
+    },
+    {
+      "bindings": 36,
+      "calls": 158,
+      "residual_visits": 108,
+      "rule": 477,
+      "search_s": 0.000126464,
+      "template": 477
+    },
+    {
+      "bindings": 1565,
+      "calls": 158,
+      "residual_visits": 4695,
+      "rule": 478,
+      "search_s": 0.001798912999999998,
+      "template": 478
+    },
+    {
+      "bindings": 2888,
+      "calls": 158,
+      "residual_visits": 6400,
+      "rule": 479,
+      "search_s": 0.002663876999999998,
+      "template": 479
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 480,
+      "search_s": 6.6249999999999976e-06,
+      "template": 480
+    },
+    {
+      "bindings": 20,
+      "calls": 158,
+      "residual_visits": 40,
+      "rule": 481,
+      "search_s": 0.00015833000000000015,
+      "template": 481
+    },
+    {
+      "bindings": 30,
+      "calls": 158,
+      "residual_visits": 90,
+      "rule": 482,
+      "search_s": 0.00015166800000000015,
+      "template": 482
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 483,
+      "search_s": 1.0126000000000006e-05,
+      "template": 483
+    },
+    {
+      "bindings": 0,
+      "calls": 158,
+      "residual_visits": 0,
+      "rule": 484,
+      "search_s": 4.6260000000000045e-06,
+      "template": 484
+    },
+    {
+      "bindings": 4,
+      "calls": 12,
+      "residual_visits": 0,
+      "rule": 485,
+      "search_s": 2.1457999999999997e-05,
+      "template": 485
+    },
+    {
+      "bindings": 1336,
+      "calls": 30,
+      "residual_visits": 1742,
+      "rule": 486,
+      "search_s": 0.000924082,
+      "template": 486
+    },
+    {
+      "bindings": 231,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 487,
+      "search_s": 0.000324707,
+      "template": 487
+    },
+    {
+      "bindings": 77,
+      "calls": 30,
+      "residual_visits": 105,
+      "rule": 488,
+      "search_s": 0.000229747,
+      "template": 488
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 489,
+      "search_s": 1.6289999999999998e-06,
+      "template": 489
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 490,
+      "search_s": 0.000921082,
+      "template": 490
+    },
+    {
+      "bindings": 83,
+      "calls": 30,
+      "residual_visits": 83,
+      "rule": 491,
+      "search_s": 0.0027133340000000004,
+      "template": 491
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 492,
+      "search_s": 4.583999999999999e-06,
+      "template": 492
+    },
+    {
+      "bindings": 931,
+      "calls": 30,
+      "residual_visits": 931,
+      "rule": 493,
+      "search_s": 0.005492539999999998,
+      "template": 493
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 494,
+      "search_s": 1.9169999999999996e-06,
+      "template": 494
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 495,
+      "search_s": 1.0019999999999999e-06,
+      "template": 495
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 496,
+      "search_s": 0.0017975820000000003,
+      "template": 496
+    },
+    {
+      "bindings": 0,
+      "calls": 30,
+      "residual_visits": 0,
+      "rule": 497,
+      "search_s": 0.000796501,
+      "template": 497
+    },
+    {
+      "bindings": 17187,
+      "calls": 454,
+      "residual_visits": 57659,
+      "rule": 498,
+      "search_s": 0.04786058900000002,
+      "template": 498
+    },
+    {
+      "bindings": 4088,
+      "calls": 454,
+      "residual_visits": 26301,
+      "rule": 499,
+      "search_s": 0.023699037,
+      "template": 499
+    },
+    {
+      "bindings": 10,
+      "calls": 454,
+      "residual_visits": 15,
+      "rule": 500,
+      "search_s": 0.0014745729999999996,
+      "template": 500
+    },
+    {
+      "bindings": 6925,
+      "calls": 454,
+      "residual_visits": 21781,
+      "rule": 501,
+      "search_s": 0.01950120000000001,
+      "template": 501
+    },
+    {
+      "bindings": 1552,
+      "calls": 454,
+      "residual_visits": 0,
+      "rule": 502,
+      "search_s": 0.00045336200000000104,
+      "template": 502
+    },
+    {
+      "bindings": 78,
+      "calls": 454,
+      "residual_visits": 0,
+      "rule": 503,
+      "search_s": 2.8910999999999964e-05,
+      "template": 503
+    },
+    {
+      "bindings": 35595,
+      "calls": 454,
+      "residual_visits": 38944,
+      "rule": 504,
+      "search_s": 0.03820041299999998,
+      "template": 504
+    },
+    {
+      "bindings": 15669,
+      "calls": 454,
+      "residual_visits": 32851,
+      "rule": 505,
+      "search_s": 0.016463340999999996,
+      "template": 505
+    },
+    {
+      "bindings": 71204,
+      "calls": 1187,
+      "residual_visits": 0,
+      "rule": 506,
+      "search_s": 0.013554841000000014,
+      "template": 506
+    },
+    {
+      "bindings": 42713,
+      "calls": 1187,
+      "residual_visits": 233047,
+      "rule": 507,
+      "search_s": 0.20003146499999996,
+      "template": 507
+    },
+    {
+      "bindings": 0,
+      "calls": 1187,
+      "residual_visits": 0,
+      "rule": 508,
+      "search_s": 0.006117506999999996,
+      "template": 508
+    },
+    {
+      "bindings": 71902,
+      "calls": 2022,
+      "residual_visits": 148010,
+      "rule": 509,
+      "search_s": 0.040119172999999925,
+      "template": 509
+    },
+    {
+      "bindings": 75550,
+      "calls": 2022,
+      "residual_visits": 0,
+      "rule": 510,
+      "search_s": 5.903099999999938e-05,
+      "template": 510
+    },
+    {
+      "bindings": 558,
+      "calls": 2022,
+      "residual_visits": 0,
+      "rule": 511,
+      "search_s": 5.991499999999923e-05,
+      "template": 511
+    },
+    {
+      "bindings": 9,
+      "calls": 476,
+      "residual_visits": 9,
+      "rule": 512,
+      "search_s": 0.0023697470000000036,
+      "template": 512
+    },
+    {
+      "bindings": 8444,
+      "calls": 476,
+      "residual_visits": 8936,
+      "rule": 513,
+      "search_s": 0.005842709999999988,
+      "template": 513
+    },
+    {
+      "bindings": 9166,
+      "calls": 476,
+      "residual_visits": 10135,
+      "rule": 514,
+      "search_s": 0.004688752999999998,
+      "template": 514
+    },
+    {
+      "bindings": 2176,
+      "calls": 476,
+      "residual_visits": 2191,
+      "rule": 515,
+      "search_s": 0.0015347470000000028,
+      "template": 515
+    },
+    {
+      "bindings": 1611,
+      "calls": 476,
+      "residual_visits": 1947,
+      "rule": 516,
+      "search_s": 0.0012638680000000018,
+      "template": 516
+    },
+    {
+      "bindings": 1535,
+      "calls": 476,
+      "residual_visits": 1754,
+      "rule": 517,
+      "search_s": 0.0012562580000000031,
+      "template": 517
+    },
+    {
+      "bindings": 26802,
+      "calls": 476,
+      "residual_visits": 29084,
+      "rule": 518,
+      "search_s": 0.011346332000000008,
+      "template": 518
+    },
+    {
+      "bindings": 431,
+      "calls": 476,
+      "residual_visits": 491,
+      "rule": 519,
+      "search_s": 0.00039149000000000003,
+      "template": 519
+    },
+    {
+      "bindings": 173,
+      "calls": 476,
+      "residual_visits": 175,
+      "rule": 520,
+      "search_s": 0.00026617199999999996,
+      "template": 520
+    },
+    {
+      "bindings": 11709,
+      "calls": 476,
+      "residual_visits": 6960,
+      "rule": 521,
+      "search_s": 0.009936414,
+      "template": 521
+    },
+    {
+      "bindings": 13833,
+      "calls": 476,
+      "residual_visits": 16808,
+      "rule": 522,
+      "search_s": 0.007990713999999993,
+      "template": 522
+    },
+    {
+      "bindings": 13002,
+      "calls": 476,
+      "residual_visits": 14951,
+      "rule": 523,
+      "search_s": 0.00624337999999999,
+      "template": 523
+    },
+    {
+      "bindings": 367,
+      "calls": 476,
+      "residual_visits": 368,
+      "rule": 524,
+      "search_s": 0.00038721100000000097,
+      "template": 524
+    },
+    {
+      "bindings": 105,
+      "calls": 476,
+      "residual_visits": 111,
+      "rule": 525,
+      "search_s": 0.0001919960000000001,
+      "template": 525
+    },
+    {
+      "bindings": 665,
+      "calls": 476,
+      "residual_visits": 725,
+      "rule": 526,
+      "search_s": 0.0003549900000000003,
+      "template": 526
+    },
+    {
+      "bindings": 5,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 527,
+      "search_s": 1.195400000000001e-05,
+      "template": 527
+    },
+    {
+      "bindings": 1,
+      "calls": 476,
+      "residual_visits": 2,
+      "rule": 528,
+      "search_s": 0.0035292190000000036,
+      "template": 528
+    },
+    {
+      "bindings": 634,
+      "calls": 476,
+      "residual_visits": 1171,
+      "rule": 529,
+      "search_s": 0.0024766649999999973,
+      "template": 529
+    },
+    {
+      "bindings": 4511,
+      "calls": 476,
+      "residual_visits": 8501,
+      "rule": 530,
+      "search_s": 0.005734835000000003,
+      "template": 530
+    },
+    {
+      "bindings": 1932,
+      "calls": 476,
+      "residual_visits": 8737,
+      "rule": 531,
+      "search_s": 0.0035928860000000026,
+      "template": 531
+    },
+    {
+      "bindings": 1675,
+      "calls": 476,
+      "residual_visits": 3833,
+      "rule": 532,
+      "search_s": 0.002116705000000008,
+      "template": 532
+    },
+    {
+      "bindings": 509,
+      "calls": 476,
+      "residual_visits": 2333,
+      "rule": 533,
+      "search_s": 0.0018988399999999993,
+      "template": 533
+    },
+    {
+      "bindings": 406,
+      "calls": 476,
+      "residual_visits": 969,
+      "rule": 534,
+      "search_s": 0.000596873000000001,
+      "template": 534
+    },
+    {
+      "bindings": 5619,
+      "calls": 476,
+      "residual_visits": 14002,
+      "rule": 535,
+      "search_s": 0.008518403999999992,
+      "template": 535
+    },
+    {
+      "bindings": 329,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 536,
+      "search_s": 0.00011107899999999962,
+      "template": 536
+    },
+    {
+      "bindings": 965,
+      "calls": 476,
+      "residual_visits": 1423,
+      "rule": 537,
+      "search_s": 0.0011903650000000005,
+      "template": 537
+    },
+    {
+      "bindings": 28334,
+      "calls": 476,
+      "residual_visits": 45198,
+      "rule": 538,
+      "search_s": 0.026935208999999974,
+      "template": 538
+    },
+    {
+      "bindings": 23384,
+      "calls": 476,
+      "residual_visits": 74117,
+      "rule": 539,
+      "search_s": 0.018659707999999976,
+      "template": 539
+    },
+    {
+      "bindings": 17159,
+      "calls": 476,
+      "residual_visits": 60972,
+      "rule": 540,
+      "search_s": 0.03330679699999995,
+      "template": 540
+    },
+    {
+      "bindings": 315,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 541,
+      "search_s": 0.00010932399999999958,
+      "template": 541
+    },
+    {
+      "bindings": 2264,
+      "calls": 476,
+      "residual_visits": 9349,
+      "rule": 542,
+      "search_s": 0.004125159999999994,
+      "template": 542
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 543,
+      "search_s": 9.670000000000018e-06,
+      "template": 543
+    },
+    {
+      "bindings": 78,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 544,
+      "search_s": 2.3410000000000045e-05,
+      "template": 544
+    },
+    {
+      "bindings": 129,
+      "calls": 476,
+      "residual_visits": 207,
+      "rule": 545,
+      "search_s": 0.000760447000000002,
+      "template": 545
+    },
+    {
+      "bindings": 104,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 546,
+      "search_s": 3.995499999999993e-05,
+      "template": 546
+    },
+    {
+      "bindings": 104,
+      "calls": 476,
+      "residual_visits": 386,
+      "rule": 547,
+      "search_s": 0.0009343679999999991,
+      "template": 547
+    },
+    {
+      "bindings": 29,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 548,
+      "search_s": 1.8542000000000054e-05,
+      "template": 548
+    },
+    {
+      "bindings": 172,
+      "calls": 476,
+      "residual_visits": 172,
+      "rule": 549,
+      "search_s": 0.0001052949999999995,
+      "template": 549
+    },
+    {
+      "bindings": 173,
+      "calls": 476,
+      "residual_visits": 346,
+      "rule": 550,
+      "search_s": 0.0007409520000000021,
+      "template": 550
+    },
+    {
+      "bindings": 29,
+      "calls": 476,
+      "residual_visits": 5,
+      "rule": 551,
+      "search_s": 4.216499999999988e-05,
+      "template": 551
+    },
+    {
+      "bindings": 7,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 552,
+      "search_s": 0.00018961300000000072,
+      "template": 552
+    },
+    {
+      "bindings": 1,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 553,
+      "search_s": 9.551000000000014e-06,
+      "template": 553
+    },
+    {
+      "bindings": 6,
+      "calls": 476,
+      "residual_visits": 26,
+      "rule": 554,
+      "search_s": 0.000326749000000001,
+      "template": 554
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 555,
+      "search_s": 1.2869000000000034e-05,
+      "template": 555
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 556,
+      "search_s": 9.425000000000014e-06,
+      "template": 556
+    },
+    {
+      "bindings": 833,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 557,
+      "search_s": 0.00028045800000000014,
+      "template": 557
+    },
+    {
+      "bindings": 97,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 558,
+      "search_s": 4.190499999999994e-05,
+      "template": 558
+    },
+    {
+      "bindings": 23,
+      "calls": 476,
+      "residual_visits": 47,
+      "rule": 559,
+      "search_s": 0.00022988800000000011,
+      "template": 559
+    },
+    {
+      "bindings": 1,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 560,
+      "search_s": 9.456000000000014e-06,
+      "template": 560
+    },
+    {
+      "bindings": 14,
+      "calls": 476,
+      "residual_visits": 34,
+      "rule": 561,
+      "search_s": 0.00019362199999999985,
+      "template": 561
+    },
+    {
+      "bindings": 2,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 562,
+      "search_s": 1.0289000000000028e-05,
+      "template": 562
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 563,
+      "search_s": 1.0160000000000018e-05,
+      "template": 563
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 564,
+      "search_s": 9.709000000000018e-06,
+      "template": 564
+    },
+    {
+      "bindings": 848,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 565,
+      "search_s": 0.0003830430000000005,
+      "template": 565
+    },
+    {
+      "bindings": 451,
+      "calls": 476,
+      "residual_visits": 996,
+      "rule": 566,
+      "search_s": 0.0036158350000000047,
+      "template": 566
+    },
+    {
+      "bindings": 2444,
+      "calls": 476,
+      "residual_visits": 7082,
+      "rule": 567,
+      "search_s": 0.005872910000000002,
+      "template": 567
+    },
+    {
+      "bindings": 1545,
+      "calls": 476,
+      "residual_visits": 2632,
+      "rule": 568,
+      "search_s": 0.0021265859999999993,
+      "template": 568
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 569,
+      "search_s": 1.8335000000000047e-05,
+      "template": 569
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 570,
+      "search_s": 8.96400000000001e-06,
+      "template": 570
+    },
+    {
+      "bindings": 0,
+      "calls": 476,
+      "residual_visits": 0,
+      "rule": 571,
+      "search_s": 1.3825000000000043e-05,
+      "template": 571
+    },
+    {
+      "bindings": 1534,
+      "calls": 2694,
+      "residual_visits": 0,
+      "rule": 572,
+      "search_s": 0.0016466270000000355,
+      "template": 572
+    },
+    {
+      "bindings": 4136,
+      "calls": 2694,
+      "residual_visits": 4208,
+      "rule": 573,
+      "search_s": 0.0020158550000000434,
+      "template": 573
+    },
+    {
+      "bindings": 1,
+      "calls": 2694,
+      "residual_visits": 0,
+      "rule": 574,
+      "search_s": 5.58309999999993e-05,
+      "template": 574
+    },
+    {
+      "bindings": 2128,
+      "calls": 2694,
+      "residual_visits": 717,
+      "rule": 575,
+      "search_s": 0.0034981090000000452,
+      "template": 575
+    },
+    {
+      "bindings": 1915,
+      "calls": 2694,
+      "residual_visits": 1098,
+      "rule": 576,
+      "search_s": 0.0015936510000000396,
+      "template": 576
+    },
+    {
+      "bindings": 17504,
+      "calls": 2694,
+      "residual_visits": 18321,
+      "rule": 577,
+      "search_s": 0.006326487999999759,
+      "template": 577
+    },
+    {
+      "bindings": 0,
+      "calls": 2694,
+      "residual_visits": 0,
+      "rule": 578,
+      "search_s": 0.0015202760000000471,
+      "template": 578
+    },
+    {
+      "bindings": 0,
+      "calls": 2694,
+      "residual_visits": 0,
+      "rule": 579,
+      "search_s": 6.612099999999898e-05,
+      "template": 579
+    },
+    {
+      "bindings": 2,
+      "calls": 2694,
+      "residual_visits": 2,
+      "rule": 580,
+      "search_s": 5.511999999999941e-05,
+      "template": 580
+    },
+    {
+      "bindings": 0,
+      "calls": 2694,
+      "residual_visits": 0,
+      "rule": 581,
+      "search_s": 5.160099999999953e-05,
+      "template": 581
+    }
+  ]
+}
