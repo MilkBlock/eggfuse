@@ -3,9 +3,14 @@
 use super::*;
 use rayon::prelude::*;
 use serde::Serialize;
+#[cfg(feature = "cell-query-sharing-audit")]
+#[path = "query_sharing_audit.rs"]
+mod sharing_audit;
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    #[cfg(feature = "cell-query-sharing-audit")]
+    pub sharing_audit: sharing_audit::Counts,
     pub cell_task_probes: u64,
     pub cell_task_records: u64,
     pub cell_task_links: u64,
@@ -166,6 +171,12 @@ impl Executor {
                 .thread_name(|i| format!("cell-query-{i}")).build().map_err(|e| e.to_string())?)
         };
         let (cell_plans, cell_codes) = CellPlan::compile(&self.graph.program);
+        #[cfg(feature = "cell-query-sharing-audit")]
+        let sharing_audit = sharing_audit::Counts {
+            compiled_prefixes: cell_codes.iter().flat_map(|c| c.audit_prefixes.iter()).copied().max().unwrap_or(0) as u64,
+            compiled_prefix_bytes: cell_codes.iter().map(|c| c.audit_prefixes.capacity() * std::mem::size_of::<usize>()).sum::<usize>() as u64,
+            ..Default::default()
+        };
         let compiled_cell_code_bytes = (cell_codes.capacity() * std::mem::size_of::<CellCode>()
             + cell_plans.capacity() * std::mem::size_of::<Option<CellPlan>>()
             + cell_plans.iter().flatten().map(|p| p.entries.capacity() * std::mem::size_of::<Option<usize>>()
@@ -175,6 +186,8 @@ impl Executor {
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
             stats: Counts { compiled_cell_code_bytes, worker_entries: vec![0; workers], worker_steps: vec![0; workers],
+                #[cfg(feature = "cell-query-sharing-audit")]
+                sharing_audit,
                 worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
         Ok(())
     }
@@ -226,7 +239,9 @@ impl Executor {
             let mut answers = Vec::new();
             for entry in chunk {
                 let Some(epoch) = evaluate(query, entry, pivot, &reads, key_nodes, false,
-                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts)? else { continue };
+                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts,
+                    #[cfg(feature = "cell-query-sharing-audit")] None,
+                )? else { continue };
                 if answers.len() == answers.capacity() { counts.answer_buffer_allocations += 1; }
                 answers.push(Binding {
                     #[cfg(feature="view-consumers")]
@@ -275,6 +290,7 @@ fn evaluate(
     reads: &crate::graph::query_reads::QueryReads<'_>, key_nodes: &J,
     spine: bool, values: &mut [Value], witnesses: &mut Vec<(usize, Dependency)>,
     scratch: &mut crate::graph::query_reads::Scratch, counts: &mut Counts,
+    #[cfg(feature = "cell-query-sharing-audit")] mut audit: Option<(&mut sharing_audit::Probe, &[usize])>,
 ) -> Result<Option<u64>> {
     witnesses.clear();
     witnesses.push((pivot, entry.witness));
@@ -282,11 +298,17 @@ fn evaluate(
     let mut epoch = entry.epoch;
     for (pc, step) in query.steps.iter().enumerate() {
         counts.steps += 1;
+        #[cfg(feature = "cell-query-sharing-audit")]
+        if let Some((probe, prefixes)) = &mut audit {
+            probe.prefix(prefixes[pc], entry.values, entry.witness, matches!(step.call, Call::Table(_)));
+        }
         let bound = step.bind::<smallvec::SmallVec<[Value; 4]>>(|field|
             field.operand_in(reads.parents, |col| &entry.values[col], values, None));
         let value = bound.evaluate(|args| match &step.call {
             Call::Table(t) => {
                 counts.point_reads += 1;
+                #[cfg(feature = "cell-query-sharing-audit")]
+                if let Some((probe, _)) = &mut audit { probe.read(*t, &args); }
                 let Some((v, stamp, witness)) = reads.point(*t, &args, scratch, &mut counts.constructors)? else { return Ok(None) };
                 if !spine && ((stamp, witness) > owner || ((stamp, witness) == owner && step.atom < pivot)) {
                     counts.owner_rejections += 1;
@@ -316,6 +338,8 @@ fn evaluate(
 
 impl Workers {
     fn absorb(&mut self, c: &Counts, worker: Option<usize>) {
+        #[cfg(feature = "cell-query-sharing-audit")]
+        self.stats.sharing_audit.add(&c.sharing_audit);
         self.stats.constructors.add(&c.constructors);
         if let Some(worker) = worker {
             self.stats.worker_entries[worker] += c.entries;
@@ -356,6 +380,8 @@ struct CellCode {
     pivot: usize,
     slots: usize,
     reads: usize,
+    #[cfg(feature = "cell-query-sharing-audit")]
+    audit_prefixes: Vec<usize>,
 }
 struct RuleRun { facts: QueryFacts, watermark: u64 }
 impl CellPlan {
@@ -365,6 +391,8 @@ impl CellPlan {
             local[route.consumer][route.anchor] |= route.reads.iter().any(|r| r.witness.is_some());
         }
         let mut codes = Vec::new();
+        #[cfg(feature = "cell-query-sharing-audit")]
+        let mut prefixes = sharing_audit::Prefixes::default();
         let plans = p.rules.iter().enumerate().map(|(rid, r)| {
             let mut tables = BTreeSet::new();
             let entries = (0..r.query.len()).map(|pivot| {
@@ -374,6 +402,8 @@ impl CellPlan {
                 let query = p.cell_queries.get(rid, pivot).unwrap().clone();
                 let code = codes.len();
                 codes.push(CellCode { rule: rid, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
+                    #[cfg(feature = "cell-query-sharing-audit")]
+                    audit_prefixes: prefixes.compile(&query),
                     inputs: r.inputs.clone(), query });
                 Some(code)
             }).collect::<Vec<_>>();
@@ -393,6 +423,8 @@ struct QueryRead<'a> {
     source: usize,
     code: &'a CellCode,
     entry: Entry<'a>,
+    #[cfg(feature = "cell-query-sharing-audit")]
+    audit_cell: (usize, Dependency),
 }
 struct Chunk {
     entries: std::ops::Range<usize>,
@@ -400,14 +432,28 @@ struct Chunk {
     reads: usize,
 }
 fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCode],
-    headers: &mut Vec<QueryRead<'a>>, chunk: &mut Chunk, counts: &mut Counts) {
+    headers: &mut Vec<QueryRead<'a>>, chunk: &mut Chunk, counts: &mut Counts,
+    #[cfg(feature = "cell-query-sharing-audit")] g: &Graph) {
     let q = &queries[source];
     let code = &codes[q.code];
     counts.cell_code_reads += 1;
     chunk.slots = chunk.slots.max(code.slots);
     chunk.reads = chunk.reads.max(code.reads);
     headers.push(QueryRead { source, code,
+        #[cfg(feature = "cell-query-sharing-audit")]
+        audit_cell: physical_cell(g, &q.row),
         entry: Entry { values: &q.row.values, epoch: q.row.epoch, witness: q.row.witness } });
+}
+#[inline]
+fn physical_cell(g: &Graph, row: &Row) -> (usize, Dependency) {
+    // Use the actual result's Cell, including foreign constructor reuse.
+    let actual = g.origin(row.witness).and_then(|f| {
+        g.cells.get(&f.cell).map(|c| (c.template, f.cell))
+            .or_else(|| g.continuation_context(row.witness)
+                .filter(|c| c.cell == f.cell).map(|c| (c.template, c.cell)))
+    });
+    actual.map_or((g.program.table_templates[row.table], row.witness),
+        |(template, cell)| (template, Dependency::Fact(FactRef { cell, op: 0 })))
 }
 // Transient work, not subscriptions: each Run links only its already activated
 // Entries. The shared template buckets contain no facts or later consumers.
@@ -519,13 +565,7 @@ impl Workers {
         // assumed to be (logical producer, effect position). Unknown boundary
         // functions retain their own identity rather than claiming a Cell.
         self.stats.cell_source_reads += 1;
-        let actual = g.origin(row.witness).and_then(|f| {
-            g.cells.get(&f.cell).map(|c| (c.template, f.cell))
-                .or_else(|| g.continuation_context(row.witness)
-                    .filter(|c| c.cell == f.cell).map(|c| (c.template, c.cell)))
-        });
-        let cell = actual.map_or((g.program.table_templates[row.table], row.witness),
-            |(template, cell)| (template, Dependency::Fact(FactRef { cell, op: 0 })));
+        let cell = physical_cell(g, row);
         self.tasks.push(cell, source, rid, &mut self.cell_queries, &mut self.stats);
     }
     pub(crate) fn record_deferred_storage(&mut self, serial: usize) {
@@ -551,7 +591,8 @@ impl Workers {
             self.stats.ungrouped_inline_entries += self.cell_queries.len() as u64;
             let mut chunk = Chunk { entries: 0..self.cell_queries.len(), slots: 0, reads: 0 };
             for source in 0..self.cell_queries.len() {
-                append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats);
+                append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats,
+                    #[cfg(feature = "cell-query-sharing-audit")] g);
             }
             ranges.push(chunk);
         }
@@ -568,7 +609,8 @@ impl Workers {
                 self.stats.max_entries_per_cell = self.stats.max_entries_per_cell.max(cell.count as u64);
                 let mut source = cell.first;
                 while source != usize::MAX {
-                    append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats);
+                    append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats,
+                        #[cfg(feature = "cell-query-sharing-audit")] g);
                     source = self.cell_queries[source].next;
                 }
                 task = cell.next;
@@ -594,11 +636,17 @@ impl Workers {
             frame.prepare(range.slots, range.reads, &mut counts);
             let mut answers = Vec::new();
             let mut first_error = None;
+            #[cfg(feature = "cell-query-sharing-audit")]
+            let mut probe = sharing_audit::Probe::default();
             for q in chunk {
                 let code = q.code;
                 let known = rule_facts[code.rule].as_ref().unwrap();
+                #[cfg(feature = "cell-query-sharing-audit")]
+                probe.start(q.audit_cell, q.source, code.rule, code.pivot);
                 let answer = evaluate(&code.query, &q.entry, code.pivot, &reads, key_nodes, true,
-                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts).map(|epoch| epoch.filter(|&e| e >= known.watermark).map(|epoch| {
+                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts,
+                    #[cfg(feature = "cell-query-sharing-audit")] Some((&mut probe, &code.audit_prefixes)),
+                ).map(|epoch| epoch.filter(|&e| e >= known.watermark).map(|epoch| {
                         counts.answers += 1;
                         crate::cell::Matched::matched(
                             code.inputs.iter().zip(&code.query.inputs).map(|(&slot, f)|
@@ -606,6 +654,8 @@ impl Workers {
                                     |col| &q.entry.values[col], &frame.values, None).into_owned())).collect(),
                             known.facts.with_rows(frame.witnesses.iter().copied()), epoch)
                     }));
+                #[cfg(feature = "cell-query-sharing-audit")]
+                probe.end(matches!(answer, Ok(Some(_))), answer.is_err());
                 match answer {
                     Ok(Some(answer)) => {
                         // At most one answer per point-query Entry. Allocate
@@ -626,6 +676,8 @@ impl Workers {
             counts.completion_headers = answers.len() as u64;
             counts.output_buffer_capacity = answers.capacity() as u64;
             counts.frame_capacity_bytes = frame.bytes();
+            #[cfg(feature = "cell-query-sharing-audit")]
+            { counts.sharing_audit = probe.finish(); }
             (answers, first_error, counts, if pooled { rayon::current_thread_index() } else { None })
         };
         let mut chunks: Vec<_> = if pooled {

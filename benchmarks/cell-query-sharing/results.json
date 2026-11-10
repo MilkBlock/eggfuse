@@ -1,0 +1,419 @@
+{
+  "scope": "Standalone Cell CPU; opt-in cell-query-sharing-audit; short executions, not speed or takeover.",
+  "provenance": {
+    "baseline_commit": "114543ae",
+    "baseline_runtime_sha256": "4d72e91b9cc23de3c47f84d6dcb2415c87d1fbbc5a3a57aaf2e89351ed06433a",
+    "binaries": {
+      "runtime-audit": "a31cc795e60aaeb224da2ee54c250963b5280a6baea9ad91a63a75183720882c",
+      "query-prefix-audit": "9ded33ac4867fe89017433ed4fcfea17036064d944da3f6d1a5cf2a11a27964a"
+    }
+  },
+  "semantic_acceptance": "pass",
+  "checks_sha256": "c9211a440d4e2c3cec3530ead404dd2b7e70a7e560e05ffef59b5c190750c6b2",
+  "cases": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "program_file_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "runs": 1428,
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "run_signature_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+      "reports": {
+        "before": "3c9b81ab1b1c6a6a87767226e86cfe4223e6918b06776c18999d9d62e7c7a96e",
+        "audit": "545b983a41dc77782b9523eca46e6d7ee6d2a43a99601c946514a82c4b78c7ef"
+      },
+      "counts": {
+        "cell_scopes": 1448,
+        "compiled_prefix_bytes": 2016,
+        "compiled_prefixes": 170,
+        "cross_entry_repeated_reads": 24,
+        "cross_rule_repeated_reads": 4,
+        "diagnostic_value_clones": 9444,
+        "distinct_prefix_keys": 2302,
+        "distinct_read_keys": 2056,
+        "entries": 1907,
+        "error_entries": 0,
+        "multi_entry_scopes": 356,
+        "peak_chunk_records": 141,
+        "point_reads": 2082,
+        "prefix_steps": 2302,
+        "rejected_entries": 1122,
+        "repeated_read_pairs": {
+          "375:102:0:102:0:198": 1,
+          "375:103:0:103:0:198": 2,
+          "375:151:0:151:0:197": 1,
+          "375:153:0:153:0:197": 2,
+          "375:271:1:271:1:276": 1,
+          "375:307:1:307:1:244": 3,
+          "375:422:0:422:0:199": 1,
+          "375:422:0:426:0:199": 4,
+          "375:424:0:424:0:199": 4,
+          "375:425:0:425:0:199": 3,
+          "375:554:0:554:0:306": 2
+        },
+        "repeated_reads_in_rejected_entries": 5,
+        "repeated_reads_in_successful_entries": 19,
+        "same_anchor_prefix_guards": 0,
+        "same_anchor_prefix_reads": 0,
+        "same_anchor_prefix_steps": 0,
+        "same_entry_repeated_reads": 2,
+        "successful_entries": 785
+      },
+      "read_pairs": [
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            422,
+            0
+          ],
+          "repeat_rule_pivot": [
+            426,
+            0
+          ],
+          "table": "ExprIsResolved",
+          "count": 4,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            424,
+            0
+          ],
+          "repeat_rule_pivot": [
+            424,
+            0
+          ],
+          "table": "ExprIsResolved",
+          "count": 4,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            307,
+            1
+          ],
+          "repeat_rule_pivot": [
+            307,
+            1
+          ],
+          "table": "Int",
+          "count": 3,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            425,
+            0
+          ],
+          "repeat_rule_pivot": [
+            425,
+            0
+          ],
+          "table": "ExprIsResolved",
+          "count": 3,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            103,
+            0
+          ],
+          "repeat_rule_pivot": [
+            103,
+            0
+          ],
+          "table": "ExprIsPure",
+          "count": 2,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            153,
+            0
+          ],
+          "repeat_rule_pivot": [
+            153,
+            0
+          ],
+          "table": "Expr-size",
+          "count": 2,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            554,
+            0
+          ],
+          "repeat_rule_pivot": [
+            554,
+            0
+          ],
+          "table": "PureBaseType",
+          "count": 2,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            102,
+            0
+          ],
+          "repeat_rule_pivot": [
+            102,
+            0
+          ],
+          "table": "ExprIsPure",
+          "count": 1,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            151,
+            0
+          ],
+          "repeat_rule_pivot": [
+            151,
+            0
+          ],
+          "table": "Expr-size",
+          "count": 1,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            271,
+            1
+          ],
+          "repeat_rule_pivot": [
+            271,
+            1
+          ],
+          "table": "Mul",
+          "count": 1,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            422,
+            0
+          ],
+          "repeat_rule_pivot": [
+            422,
+            0
+          ],
+          "table": "ExprIsResolved",
+          "count": 1,
+          "unambiguous_literal_key": false
+        }
+      ],
+      "literal_key_repeated_reads": 4,
+      "same_core_work": true
+    },
+    "ray128": {
+      "program_sha256": "2f692b3f85c6b3988d3586482ac02c6d2af5db2f3943655584313034263b8cc4",
+      "program_file_sha256": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601",
+      "runs": 128,
+      "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+      "run_signature_sha256": "d1b01bd3f2c2dd6726b4da7c95decb53fde8300ac20bf5ab7d99cb1f8518d59a",
+      "reports": {
+        "before": "c36c31dd749c54fe0f009e96b86d2c2a6c583d5abe9eb75cd083ab95f1d86607",
+        "audit": "6710a775d820cd7fc8063050f6886638363e4abef000d7fa22a8c42c53de812d"
+      },
+      "counts": {
+        "cell_scopes": 19543,
+        "compiled_prefix_bytes": 2016,
+        "compiled_prefixes": 170,
+        "cross_entry_repeated_reads": 734,
+        "cross_rule_repeated_reads": 0,
+        "diagnostic_value_clones": 113203,
+        "distinct_prefix_keys": 30520,
+        "distinct_read_keys": 20495,
+        "entries": 21186,
+        "error_entries": 0,
+        "multi_entry_scopes": 489,
+        "peak_chunk_records": 694,
+        "point_reads": 21229,
+        "prefix_steps": 30520,
+        "rejected_entries": 18626,
+        "repeated_read_pairs": {
+          "375:281:1:281:1:287": 2,
+          "375:282:1:282:1:280": 2,
+          "375:283:1:283:1:0": 2,
+          "375:285:1:285:1:373": 439,
+          "375:288:0:288:0:364": 1,
+          "375:307:1:307:1:244": 234,
+          "375:554:0:554:0:306": 50,
+          "375:554:0:554:0:308": 1,
+          "375:575:0:575:0:360": 3
+        },
+        "repeated_reads_in_rejected_entries": 260,
+        "repeated_reads_in_successful_entries": 474,
+        "same_anchor_prefix_guards": 0,
+        "same_anchor_prefix_reads": 0,
+        "same_anchor_prefix_steps": 0,
+        "same_entry_repeated_reads": 0,
+        "successful_entries": 2560
+      },
+      "read_pairs": [
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            285,
+            1
+          ],
+          "repeat_rule_pivot": [
+            285,
+            1
+          ],
+          "table": "Write",
+          "count": 439,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            307,
+            1
+          ],
+          "repeat_rule_pivot": [
+            307,
+            1
+          ],
+          "table": "Int",
+          "count": 234,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            554,
+            0
+          ],
+          "repeat_rule_pivot": [
+            554,
+            0
+          ],
+          "table": "PureBaseType",
+          "count": 50,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            575,
+            0
+          ],
+          "repeat_rule_pivot": [
+            575,
+            0
+          ],
+          "table": "TypeList-length",
+          "count": 3,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            281,
+            1
+          ],
+          "repeat_rule_pivot": [
+            281,
+            1
+          ],
+          "table": "Not",
+          "count": 2,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            282,
+            1
+          ],
+          "repeat_rule_pivot": [
+            282,
+            1
+          ],
+          "table": "Neg",
+          "count": 2,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            283,
+            1
+          ],
+          "repeat_rule_pivot": [
+            283,
+            1
+          ],
+          "table": "Abs",
+          "count": 2,
+          "unambiguous_literal_key": true
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            288,
+            0
+          ],
+          "repeat_rule_pivot": [
+            288,
+            0
+          ],
+          "table": "UnaryOpIsPure",
+          "count": 1,
+          "unambiguous_literal_key": false
+        },
+        {
+          "producer_template": 375,
+          "producer_source_set": "initialization",
+          "first_rule_pivot": [
+            554,
+            0
+          ],
+          "repeat_rule_pivot": [
+            554,
+            0
+          ],
+          "table": "PureTypeList",
+          "count": 1,
+          "unambiguous_literal_key": false
+        }
+      ],
+      "literal_key_repeated_reads": 679,
+      "same_core_work": true
+    }
+  },
+  "sum_inline_and_pool_counts_equal": true,
+  "limits": "The diagnostic clones keys and anchors into per-chunk maps. It never serves a query result. Normal builds contain none of those maps or diagnostic headers. Same-anchor prefix repeats are a conservative subset of possible shared expressions; zero does not exclude sharing across distinct anchors. Dynamic duplicate reads are opportunities, not saved operations. Missing/default, visibility, Eq, per-entry tests, watermark, delta ownership and source order remain authoritative. No full Raytrace inference."
+}
