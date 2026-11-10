@@ -622,6 +622,15 @@ impl QueryIndexes {
     pub(crate) fn fingerprint(&self, value: &Value) -> u64 {
         fingerprint(value, self.bits)
     }
+    /// Borrow only an already-built, current column. Absence is a necessary
+    /// query failure; fingerprint hits still require the ordinary exact query.
+    /// This gate must not create another index or maintain a negative cache.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn current_key_support(&self, graph: &Graph, table: usize, column: usize, value: &Value) -> Option<bool> {
+        let index = self.tables.get(&table)?;
+        if index.version != graph.query_versions[table] { return None; }
+        Some(index.values.get(column)?.get()?.contains_key(&fingerprint(value, self.bits)))
+    }
     /// A one-column Free Join projection has exactly the same domain as the
     /// maintained column bucket, including in the presence of hash collisions.
     pub(crate) fn single_support(&mut self, graph: &Graph, table: usize, column:usize, key:u64) -> Result<Domain> {
@@ -812,7 +821,8 @@ impl QueryIndexes {
     any(
         feature = "projection-semijoin",
         feature = "projection-stamps",
-        feature = "projection-shared"
+        feature = "projection-shared",
+        feature = "sparse-cells"
     )
 ))]
 pub(crate) fn test_projection_indexes(bits: u32) -> QueryIndexes {
@@ -827,7 +837,8 @@ pub(crate) fn test_projection_indexes(bits: u32) -> QueryIndexes {
     any(
         feature = "projection-semijoin",
         feature = "projection-stamps",
-        feature = "projection-shared"
+        feature = "projection-shared",
+        feature = "sparse-cells"
     )
 ))]
 pub(crate) fn test_projection_graph() -> Graph {
@@ -848,6 +859,33 @@ pub(crate) fn test_projection_graph() -> Graph {
     let mut graph = Graph::new(p).unwrap();
     graph.merge_programs_enabled = false; // This fixture exercises storage updates without a compiled RHS.
     graph
+}
+
+#[cfg(all(test, feature = "sparse-cells"))]
+mod support_tests {
+    use super::*;
+    #[test]
+    fn negative_support_needs_a_current_built_column_and_hits_are_only_candidates() {
+        for bits in [64, 0] {
+            let mut graph = test_projection_graph();
+            let mut index = test_projection_indexes(bits);
+            graph.set_function(0, vec![Value::Int(1), Value::Int(0)], Value::Int(7)).unwrap();
+            assert_eq!(index.current_key_support(&graph, 0, 0, &Value::Int(2)), None);
+            assert_eq!(index.builds, 0, "an optional gate never builds an index");
+            index.ensure_selected(&graph, 0, [0]).unwrap();
+            graph.changes.clear();
+            assert_eq!(index.current_key_support(&graph, 0, 1, &Value::Int(2)), None,
+                "an undemanded column is not a negative proof");
+            assert_eq!(index.current_key_support(&graph, 0, 0, &Value::Int(1)), Some(true));
+            assert_eq!(index.current_key_support(&graph, 0, 0, &Value::Int(2)), Some(bits == 0),
+                "collisions may admit extra candidates but cannot reject a true key");
+            graph.set_function(0, vec![Value::Int(2), Value::Int(0)], Value::Int(8)).unwrap();
+            assert_eq!(index.current_key_support(&graph, 0, 0, &Value::Int(2)), None,
+                "a stale absence cannot hide a late input");
+            index.update(&mut graph).unwrap();
+            assert_eq!(index.current_key_support(&graph, 0, 0, &Value::Int(2)), Some(true));
+        }
+    }
 }
 
 #[cfg(all(test, feature = "projection-stamps"))]

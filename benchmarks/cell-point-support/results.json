@@ -1,0 +1,217 @@
+{
+  "baseline_commit": "497d5300",
+  "scope": "standalone Cell CPU; bounded work and allocator diagnostics, no throughput or general sparsity claim",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "baseline_report_sha256": "2682ed927daa738f50bd49ba8eb477466dbdb824688ebeee598688c02d3e9f21",
+      "report_sha256": "90a07fa4f23060fe5442134a8abd0955e211d781092706fdf3d18f82206f819e",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "lookups": [
+        18633,
+        17661
+      ],
+      "support": {
+        "point_support_checks": 1860,
+        "point_support_plans": 645,
+        "point_support_rejected": 972,
+        "point_support_unavailable": 295
+      },
+      "indexed_columns": [
+        [
+          260,
+          141,
+          6295
+        ],
+        [
+          260,
+          141,
+          6295
+        ]
+      ],
+      "spine_entries": [
+        1907,
+        1502
+      ],
+      "routed_spine_seeds": [
+        5738,
+        4766
+      ]
+    },
+    "ray1280": {
+      "runs": 1280,
+      "baseline_report_sha256": "a304fdb40b97e0fed05cc73756b04292aab6628a39222e5810272c45aa82b7ea",
+      "report_sha256": "5ba12b4fd310b7e2d26b87193ea16637dfb152ea5528d2d6583b2298dd056a4f",
+      "state_sha256": "ae313aa10b89a821340306b09678c2a616ddd18e7bba9d9c0ab5e3228dc36dc6",
+      "lookups": [
+        751255,
+        690981
+      ],
+      "support": {
+        "point_support_checks": 91621,
+        "point_support_plans": 1712,
+        "point_support_rejected": 60274,
+        "point_support_unavailable": 15387
+      },
+      "indexed_columns": [
+        [
+          162,
+          103,
+          372947
+        ],
+        [
+          162,
+          103,
+          372947
+        ]
+      ],
+      "spine_entries": [
+        81285,
+        56014
+      ],
+      "routed_spine_seeds": [
+        273115,
+        212841
+      ]
+    },
+    "sum-stable": {
+      "runs": 1428,
+      "baseline_report_sha256": "28a12d635deb34ea964e0164d1c2a8bae6ec8125b064d6698962820f320ededd",
+      "report_sha256": "08fb4314a883bddfdd83903d867f604610b185124ccec3b2a5b9435a89d75e87",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "lookups": [
+        18633,
+        17661
+      ],
+      "support": {
+        "point_support_checks": 1860,
+        "point_support_plans": 645,
+        "point_support_rejected": 972,
+        "point_support_unavailable": 295
+      },
+      "indexed_columns": [
+        [
+          260,
+          141,
+          6295
+        ],
+        [
+          260,
+          141,
+          6295
+        ]
+      ],
+      "spine_entries": [
+        1907,
+        1502
+      ],
+      "routed_spine_seeds": [
+        5738,
+        4766
+      ]
+    },
+    "sum-completed": {
+      "runs": 1428,
+      "baseline_report_sha256": "9a403f520b8d629e71f9f8969fe526da0a6825aa53ba5c68c9e244ddfb5031df",
+      "report_sha256": "4cfc3849e78d25897651abaaf3efa150d9f9610ad60fd74bf17a8615cc132041",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "lookups": [
+        18633,
+        17661
+      ],
+      "support": {
+        "point_support_checks": 1860,
+        "point_support_plans": 645,
+        "point_support_rejected": 972,
+        "point_support_unavailable": 295
+      },
+      "indexed_columns": [
+        [
+          260,
+          141,
+          6295
+        ],
+        [
+          260,
+          141,
+          6295
+        ]
+      ],
+      "spine_entries": [
+        1907,
+        1502
+      ],
+      "routed_spine_seeds": [
+        5738,
+        4766
+      ]
+    }
+  },
+  "allocations": {
+    "sum": {
+      "before": {
+        "alloc_calls": 94101,
+        "free_calls": 66395,
+        "live_bytes_after": 141611247,
+        "live_bytes_before": 135855078,
+        "peak_live_requested_bytes": 142247401,
+        "realloc_calls": 18241,
+        "released_bytes": 18840394,
+        "requested_bytes": 24596563,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "after": {
+        "alloc_calls": 93665,
+        "free_calls": 65988,
+        "live_bytes_after": 141588909,
+        "live_bytes_before": 135855076,
+        "peak_live_requested_bytes": 142238671,
+        "realloc_calls": 18104,
+        "released_bytes": 18404274,
+        "requested_bytes": 24138107,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "reports": [
+        "aecb4b8323b31cecf0716146e9f75efdda22e612c8de70fdb0271aeb8e63e9e6",
+        "162750e5639413ad07e4af40b3df21f83bb7723beb032b27ab441eb5aae1b30b"
+      ]
+    },
+    "ray1280": {
+      "before": {
+        "alloc_calls": 2591621,
+        "free_calls": 1211227,
+        "live_bytes_after": 714553312,
+        "live_bytes_before": 386892730,
+        "peak_live_requested_bytes": 714571950,
+        "realloc_calls": 388933,
+        "released_bytes": 773680251,
+        "requested_bytes": 1101340833,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "after": {
+        "alloc_calls": 2576984,
+        "free_calls": 1204081,
+        "live_bytes_after": 714194831,
+        "live_bytes_before": 386892729,
+        "peak_live_requested_bytes": 714208637,
+        "realloc_calls": 388424,
+        "released_bytes": 751121123,
+        "requested_bytes": 1078423225,
+        "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+      },
+      "reports": [
+        "0e4ae2cd0f6f046adeb4764815f08faea2502a42e6356825fe933c1cf00c8edf",
+        "ae13990b01f003a836b4584ebd578040abb19d604852173fc7e57993cb7af46d"
+      ]
+    }
+  },
+  "binaries": {
+    "runtime": "b1aa75145bd9b9b3a2c7e5c4dab64c82bf80633172b7364b781ff4a8758463d3",
+    "prefix": "54fabaf4880cb5b99d0a62b65334690d1a25fb81b267daca7315cf3d7a3b095f",
+    "runtime-before-alloc": "d677bbaa468976d7a50bd071c41defb40eeffb45d70378ffa938bbd0e9eeba8d",
+    "prefix-before-alloc": "484fb5197d031dbdaa5b17475e4d3a08a6c868d22116094dfb1e45ae6e07c34b",
+    "runtime-after-alloc": "94f9650924f56afa283a0b95d326b9c85db7434d79a253486558719ab5d6da1f",
+    "prefix-after-alloc": "ef1ce0d15933d1b14cfa463b55e8593fa06f2972c3e60926f1adf740e9021f2f"
+  },
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292"
+}

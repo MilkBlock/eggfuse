@@ -44,6 +44,10 @@ impossible Entries before Cursor expansion. It must retain exact checks for
 positive fingerprint hits, late insertions, unions and visibility changes.
 No new reverse index or maintained candidate graph is needed.
 
+The [implemented Entry support gate](../cell-point-support/README.md) now
+performs this rejection using only already-built current columns. Its short
+checks show fewer actual queries and allocations; full speedup is unproven.
+
 ## Coverage and validation
 
 The first 128 Raytrace Runs never execute this family. The 1,280-Run prefix

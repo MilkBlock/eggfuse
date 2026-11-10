@@ -28,6 +28,42 @@ fn same(a: &Executor, b: &Executor) {
     }
 }
 #[test]
+fn constructor_support_keeps_late_keys_unions_and_recreated_rows() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E) (Wrap E))
+(function Cost (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(relation Warm (E))
+(ruleset warm) (ruleset fill) (ruleset change) (ruleset see) (ruleset late) (ruleset join) (ruleset remove) (ruleset again)
+(rule ((Wrap x) (Start x) (= c (Cost x))) ((Warm x)) :ruleset warm)
+(rule ((Start x)) ((set (Cost x) 1)) :ruleset fill)
+(rule ((Start x)) ((set (Cost x) 2)) :ruleset change)
+(rule ((= c (Cost x)) (= w (Wrap x))) ((set (Out x) c)) :ruleset see)
+(rule ((= x (N 60))) ((Wrap x)) :ruleset late)
+(rule ((= x (N 1)) (= y (N 61))) ((union x y)) :ruleset join)
+(rule ((= x (N 2))) ((delete (Wrap x))) :ruleset remove)
+(rule ((= x (N 2))) ((Wrap x)) :ruleset again)
+"#);
+    for i in 0..64 {
+        source.push_str(&format!("(Start (N {i}))\n"));
+        if i < 32 { source.push_str(&format!("(Wrap (N {i}))\n")); }
+    }
+    source.push_str(r#"
+(run-schedule (seq (run fill) (run warm) (run see) (run change) (run see) (run late) (run see) (run join) (run see) (run remove) (run see) (run again) (run see)))
+(check (= (Out (N 60)) 2) (= (Out (N 61)) 2) (= (Out (N 2)) 2))
+"#);
+    let mut native = egglog::EGraph::default();
+    native.parse_and_run_program(None, &source).unwrap();
+    for stable in [false, true] {
+        let before = run_mode(&source, None, stable);
+        for workers in [1, 4] {
+            let after = run_mode(&source, Some((workers, 1)), stable);
+            same(&before, &after);
+            assert!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0);
+        }
+    }
+}
+#[test]
 fn point_queries_keep_mutation_boundaries_delta_ownership_and_result_aliases() {
     let source = include_str!("fixtures/cell-point-queries.egg");
     let before = run(source, None);

@@ -69,6 +69,18 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Charge both attempted plan preparation and every support probe,
+        // including unavailable columns. Rejections are outcomes; their saved
+        // queries/dispatch are already absent from the original counters.
+        for field in ["point_support_plans", "point_support_checks"] {
+            let value = match report.get("point_support_accounting") {
+                None => 0,
+                Some(J::String(v)) if v == "current-column/v1" => report["free_join"][field].as_u64()
+                    .ok_or_else(|| format!("missing point support work {field}"))?,
+                _ => return Err("unknown point support accounting".into()),
+            };
+            work.insert(format!("free_join/{field}"), value);
+        }
         // Before span sealing each captured anchor and retained receipt had an
         // individual registration. New reports count the remaining operations
         // explicitly: output coverage is no longer proportional to this work.
@@ -468,6 +480,7 @@ mod tests {
             "/stage_spine/stats/completion_order_checks", "/stage_spine/stats/completion_cell_visits",
             "/entry_schedule/stats/publication_pending_pushes", "/entry_schedule/stats/fragment_pending_writes",
             "/entry_schedule/stats/fragment_pending_reads",
+            "/free_join/point_support_plans", "/free_join/point_support_checks",
             "/free_join/entry_rows", "/free_join/entry_probes", "/free_join/entry_cache_hits",
             "/free_join/entry_bucket_rows_examined", "/free_join/entry_bucket_rows_materialized",
             "/free_join/cover_rows", "/free_join/key_groups", "/free_join/probes",
@@ -495,6 +508,7 @@ mod tests {
             "/stage_spine/stats/history_shared_slots", "/stage_spine/stats/joint_output_mask_checks",
             "/stage_spine/stats/joint_output_mask_writes",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
+            "/free_join/point_support_rejected", "/free_join/point_support_unavailable",
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
             "/sieve/stats/empty_join_skips",

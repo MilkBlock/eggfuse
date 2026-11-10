@@ -69,6 +69,10 @@ pub(super) struct Stats {
     entry_bucket_rows_examined: u64,
     entry_bucket_rows_materialized: u64,
     pub entry_point_uses: u64,
+    pub point_support_checks: u64,
+    pub point_support_plans: u64,
+    pub point_support_unavailable: u64,
+    pub point_support_rejected: u64,
 }
 
 #[cfg(feature = "projection-stamps")]
@@ -250,6 +254,24 @@ impl FreeJoin {
         self.entry
             .as_ref()
             .is_some_and(|p| p.entries[rid].iter().any(|steps| !steps.is_empty()))
+    }
+    /// An exhaustive one-read Cell can reject a missing unary constructor
+    /// before expanding its Cursor. Reuse the existing typed Entry projection;
+    /// neither a new query plan nor a runtime consumer list is needed.
+    #[cfg(feature = "sparse-cells")]
+    pub(super) fn point_support(&mut self, program: &Program, rid: usize, pivot: usize) -> Option<(usize, usize)> {
+        self.stats.point_support_plans += 1;
+        let kernel = program.kernels[rid][pivot].as_ref()?;
+        let [first] = kernel.query.steps.as_slice() else { return None; };
+        if !matches!(first.access(), crate::cell::Access::Key) { return None; }
+        let Call::Table(table) = first.call else { return None; };
+        let table_def = &program.tables[table];
+        if !table_def.constructor || table_def.schema.len() != 2 || table_def.schema[0]["kind"] != "eq" { return None; }
+        let plan = self.entry.as_ref()?;
+        let step = plan.entries[rid][pivot].iter().find(|s| s.atom == first.atom)?;
+        let projection = &plan.projections[step.projection];
+        let [(0, crate::entry_join::Source::Cover(source))] = projection.columns.as_slice() else { return None; };
+        Some((table, *source))
     }
     pub fn reverse(
         &mut self,

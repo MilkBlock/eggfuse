@@ -1183,6 +1183,10 @@ impl Executor {
                                 });
                         #[cfg(not(feature = "sparse-cells"))]
                         let point_only = false;
+                        #[cfg(feature = "sparse-cells")]
+                        let point_support = if point_only && early_join {
+                            self.free_join.point_support(&self.graph.program, rid, atom)
+                        } else { None };
                         let start = out.len();
                         let claimed = spine_routes.len();
                         #[cfg(feature = "sparse-cells")]
@@ -1244,6 +1248,18 @@ impl Executor {
                                 return Ok(());
                             }
                             let entry = batch.entry(w).expect("current delta entry");
+                            #[cfg(feature = "sparse-cells")]
+                            if let Some((table, source)) = point_support {
+                                self.free_join.stats.point_support_checks += 1;
+                                match self.query_indexes.current_key_support(&self.graph, table, 0, &entry.row.values[source]) {
+                                    Some(false) => {
+                                        self.free_join.stats.point_support_rejected += 1;
+                                        return Ok(());
+                                    }
+                                    None => self.free_join.stats.point_support_unavailable += 1,
+                                    Some(true) => (),
+                                }
+                            }
                             let cursor = if node_owns {
                                 node_cursor_reads += 1;
                                 #[cfg(feature = "sparse-cells")]
@@ -2994,7 +3010,7 @@ impl Executor {
             "query_workers":query_workers,
             "port_completion":self.graph.port_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
-            "query_rule_profile":query_rule_profile,"view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
+            "point_support_accounting":"current-column/v1","query_rule_profile":query_rule_profile,"view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
