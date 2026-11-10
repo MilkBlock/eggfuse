@@ -35,11 +35,57 @@ pub(crate) struct EffectPlan {
     slots: Vec<Option<EffectSlot>>,
     width: usize,
     pub outputs: usize,
+    #[cfg(feature = "sparse-cells")]
+    registration: Option<Registration>,
+}
+/// A completed RHS has already written these retained effect results. Only
+/// query aliases and uncovered boundaries still need individual registration.
+/// This is shared template wiring, not a list maintained by each instance.
+#[cfg(feature = "sparse-cells")]
+struct Registration {
+    query_aliases: Vec<usize>,
+    direct: usize,
+    aliases: usize,
+}
+#[cfg(feature = "sparse-cells")]
+impl Registration {
+    fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize) -> Option<Self> {
+        if published == 0 { return None; }
+        let cell = Definition::new(p, rule).ok()?;
+        let skip = p.known_results.static_skip.get(rule)?;
+        let sources = p.known_results.static_sources.get(rule)?;
+        let mut plan = Self { query_aliases: vec![], direct: 0, aliases: 0 };
+        for (position, output) in outputs[..published].iter().enumerate() {
+            if matches!(output.receipt_source, Some(Site::Query(_))) {
+                plan.query_aliases.push(position);
+                continue;
+            }
+            let donor = match output.receipt_source {
+                Some(Site::Effect(donor)) => {
+                    if !skip[output.operation] || sources[output.operation] != output.receipt_source { return None; }
+                    plan.aliases += 1;
+                    donor
+                }
+                None => output.operation,
+                _ => unreachable!(),
+            };
+            // Successful ordinary, local-prefix and handoff execution all
+            // record non-skipped relation results. An interrupted RHS never
+            // seals a span. SourcePrefix without receipts is used only when
+            // there is no publishing continuation.
+            if *skip.get(donor)? || cell.relation(Site::Effect(donor))?.table != output.table { return None; }
+            plan.direct += 1;
+        }
+        (plan.direct != 0).then_some(plan)
+    }
 }
 impl EffectPlan {
     pub fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize, full: bool) -> Self {
         let cell = Definition::new(p, rule).expect("typed Cell");
-        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published };
+        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published,
+            #[cfg(feature = "sparse-cells")]
+            registration: Registration::compile(p, rule, outputs, published),
+        };
         // The retained prefix belongs to the actual producer, even when its
         // publication is attached to a later alias operation. Output::prepare
         // has already selected one last output per exact source.
@@ -69,6 +115,13 @@ impl EffectPlan {
         plan
     }
     pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<Option<EffectSlot>>() }
+    pub(crate) fn registration_bytes(&self) -> usize {
+        #[cfg(feature = "sparse-cells")]
+        { std::mem::size_of::<Option<Registration>>() + self.registration.as_ref().map_or(0, |r|
+            r.query_aliases.capacity() * std::mem::size_of::<usize>()) }
+        #[cfg(not(feature = "sparse-cells"))]
+        { 0 }
+    }
     fn require(&mut self, op: usize) {
         if self.slots[op].is_none() {
             self.width += 1;
@@ -122,6 +175,21 @@ impl Effects {
     pub fn output_first(&self) -> usize {
         assert!(self.keep != 0, "Cell outputs need a reserved completion span");
         self.first
+    }
+    /// Called only after successful execution and capture of raw RHS history.
+    /// The retained arena is already the Entry delivery storage: seal once,
+    /// without rereading each effect or registering each output separately.
+    #[cfg(feature = "sparse-cells")]
+    pub fn sealed_outputs(&self) -> Option<(usize, usize, usize, usize)> {
+        if self.keep == 0 { return None; }
+        let plan = self.plan.as_ref()?.registration.as_ref()?;
+        debug_assert!((0..self.keep).all(|position| plan.query_aliases.contains(&position)
+            || self.buffer[self.first + position].is_some()), "completed Cell must supply every proven effect result");
+        Some((self.first, plan.direct, plan.aliases, plan.query_aliases.len()))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn query_output(&self, index: usize) -> usize {
+        self.plan.as_ref().unwrap().registration.as_ref().unwrap().query_aliases[index]
     }
     /// Actual effect donors already occupy their final output slot. Query
     /// aliases are filled only after history captured the raw RHS.

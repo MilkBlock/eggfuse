@@ -262,3 +262,30 @@ fn effect_donor_occupies_publication_slot_without_fabricating_alias_execution() 
     // actual donor, whose result already occupies the final publication slot.
     assert!(s["alias_effect_forwards"].as_u64().unwrap() > 0);
 }
+
+#[test]
+fn sealed_outputs_keep_query_aliases_and_retirable_boundaries_in_source_order() {
+    let source = r#"
+(datatype E (N i64) (Start E) (F E) (G E) (Gateway E) (Boundary E) (Out E))
+(ruleset make) (ruleset consume) (ruleset retire)
+(rule ((Start x) (F x)) ((F x) (Gateway x) (Boundary x) (G x) (Gateway x)) :ruleset make)
+(rule ((Gateway x) (F x) (= g (G x)) (Boundary x)) ((Out g)) :ruleset consume)
+(rule ((Start x)) ((delete (Boundary x))) :ruleset retire)
+(Start (N 1)) (F (N 1)) (G (N 1)) (Gateway (N 1))
+(run-schedule (seq (run make) (run consume) (run retire) (run make) (run consume)))
+(check (Out (G (N 1))))
+"#;
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    let n = |key: &str| s[key].as_u64().unwrap();
+    assert!(n("cell_output_span_seals") > 0, "{s}");
+    assert!(n("cell_output_sealed_receipts") > n("cell_output_span_seals"), "{s}");
+    assert!(n("alias_query_forwards") > 0, "{s}");
+    assert!(n("alias_effect_forwards") > 0, "{s}");
+    assert!(n("completion_boundary_records") > 0, "{s}");
+    assert_eq!(n("captured_anchors"), n("output_registrations") + n("cell_output_sealed_receipts"));
+    assert_eq!(n("cell_output_receipts"), n("cell_output_registrations") + n("cell_output_sealed_receipts"));
+    assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+}

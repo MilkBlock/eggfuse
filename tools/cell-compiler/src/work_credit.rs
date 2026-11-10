@@ -13,7 +13,7 @@ impl Work {
             ("stats", &["decoded_rows", "repaired_dependencies", "residual_candidates", "key_operations", "handoff_attempts", "constructor_requests", "union_requests", "cells_created", "register_result_writes"]),
             ("stage_spine/stats", &[
                 "legacy_entry_writes", "legacy_retirement_checks", "legacy_cursor_probes", "node_cursor_reads",
-                "root_handles_created", "contexts_created", "captured_anchors", "capture_reads",
+                "root_handles_created", "contexts_created", "capture_reads",
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
                 "history_inherited_reads", "history_inheritance_marks", "history_heap_frames",
@@ -26,7 +26,7 @@ impl Work {
                 // Charge every Cell output, including single/mixed Cells, and
                 // the boundary work that a compiled output can replace.
                 // Fragment coverage/check counters are subsets, not extra work.
-                "cell_output_receipts", "cell_output_slot_reads", "effect_output_copies", "receipt_attempts",
+                "cell_output_slot_reads", "effect_output_copies", "receipt_attempts",
                 // Each delivered output still resolves its receipt before
                 // Entry selection; skipping visibility checks does not erase it.
                 "cell_output_deliveries",
@@ -67,6 +67,26 @@ impl Work {
                     .ok_or_else(|| format!("missing measured-work counter {key}"))?;
                 work.insert(key, value);
             }
+        }
+        // Before span sealing each captured anchor and retained receipt had an
+        // individual registration. New reports count the remaining operations
+        // explicitly: output coverage is no longer proportional to this work.
+        let sealed = match report["stage_spine"].get("output_registration") {
+            None => false,
+            Some(J::String(version)) if version == "cell-span/v1" => true,
+            _ => return Err("unknown Cell output registration".into()),
+        };
+        for (field, old) in [("output_registrations", "captured_anchors"),
+            ("cell_output_registrations", "cell_output_receipts")] {
+            let source = if sealed { field } else { old };
+            let value = report["stage_spine"]["stats"][source].as_u64()
+                .ok_or_else(|| format!("missing Cell registration work {source}"))?;
+            work.insert(format!("stage_spine/stats/{field}"), value);
+        }
+        for field in ["cell_output_span_seals", "output_span_checks", "output_residual_dispatches"] {
+            let value = if sealed { report["stage_spine"]["stats"][field].as_u64()
+                .ok_or_else(|| format!("missing Cell registration work {field}"))? } else { 0 };
+            work.insert(format!("stage_spine/stats/{field}"), value);
         }
         // Static Cell scopes replace candidate-prefix copies with slot clears.
         // Query-host point reads, result writes and key operations are already
@@ -392,7 +412,9 @@ mod tests {
             "/stage_spine/stats/local_witness_receipt_probes", "/stage_spine/stats/local_witness_receipt_steps",
             "/stage_spine/stats/direct_publication_hash_probes", "/stage_spine/stats/fragment_packets",
             "/stage_spine/stats/fragment_receipt_spills", "/entry_schedule/stats/publication_slot_probes",
-            "/stage_spine/stats/cell_output_receipts", "/stage_spine/stats/cell_output_slot_reads",
+            "/stage_spine/stats/output_registrations", "/stage_spine/stats/cell_output_registrations",
+            "/stage_spine/stats/cell_output_span_seals", "/stage_spine/stats/cell_output_slot_reads",
+            "/stage_spine/stats/output_span_checks", "/stage_spine/stats/output_residual_dispatches",
             "/stage_spine/stats/effect_output_copies", "/stage_spine/stats/receipt_attempts",
             "/stage_spine/stats/cell_output_deliveries",
             "/stage_spine/stats/completion_boundary_records", "/stage_spine/stats/completion_boundary_reads",
@@ -421,12 +443,26 @@ mod tests {
             "/stage_spine/stats/fragment_deliveries", "/entry_schedule/stats/fragment_slot_probes",
             "/stage_spine/stats/fragment_receipts", "/stage_spine/stats/fragment_delivery_checks",
             "/stage_spine/stats/cell_output_checks", "/stage_spine/stats/effect_outputs_reused",
+            "/stage_spine/stats/captured_anchors", "/stage_spine/stats/cell_output_receipts",
+            "/stage_spine/stats/cell_output_sealed_receipts",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
             "/sieve/stats/empty_join_skips",
         ] { bump(&mut outcomes, key); }
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
+        // Historical reports used one registration per captured output. Keep
+        // those costs, while rejecting new reports missing their actual work.
+        let mut legacy = report.clone();
+        legacy["stage_spine"].as_object_mut().unwrap().remove("output_registration");
+        let legacy_work = Work::read(&legacy).unwrap();
+        assert_eq!(legacy_work.0["stage_spine/stats/output_registrations"], report["stage_spine"]["stats"]["captured_anchors"].as_u64().unwrap());
+        assert_eq!(legacy_work.0["stage_spine/stats/cell_output_span_seals"], 0);
+        for field in ["output_registrations", "cell_output_registrations", "cell_output_span_seals", "output_span_checks", "output_residual_dispatches"] {
+            let mut missing = report.clone();
+            missing["stage_spine"]["stats"].as_object_mut().unwrap().remove(field);
+            assert!(Work::read(&missing).unwrap_err().contains(field));
+        }
         // A Spine donor already increments decoded_rows: charging the donor's
         // subset counter again would count that same row access twice.
         bump(&mut outcomes, "/stage_spine/stats/local_witness_row_reads");

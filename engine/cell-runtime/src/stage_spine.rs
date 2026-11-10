@@ -520,6 +520,12 @@ pub struct Stats {
     effect_slot_targets: u64,
     effect_outputs_reused: u64,
     effect_output_copies: u64,
+    output_registrations: u64,
+    cell_output_registrations: u64,
+    cell_output_span_seals: u64,
+    cell_output_sealed_receipts: u64,
+    output_span_checks: u64,
+    output_residual_dispatches: u64,
     effect_aborted_frames: u64,
     cell_output_spans: u64,
     cell_output_slots: u64,
@@ -1247,7 +1253,42 @@ impl Programs {
             s
         };
         self.pending_steps.push(Completion::new(step));
-        for position in 0..self.outputs[rid].len() {
+        #[cfg(feature = "sparse-cells")]
+        let sealed = effects.output_frame().and_then(|frame| {
+            self.stats.output_span_checks += 1;
+            frame.sealed_outputs()
+        });
+        #[cfg(feature = "sparse-cells")]
+        if let Some((first, count, aliases, _)) = sealed {
+            // begin_effects admitted only permanent Entry-owned tables without
+            // visibility loss. No source Hide can target such a table; union
+            // forwarding and final Entry selection still run at publication.
+            self.install_delivery(rid, slot, _cell, first);
+            self.stats.cell_output_span_seals += 1;
+            self.stats.cell_output_sealed_receipts += count as u64;
+            self.stats.effect_outputs_reused += count as u64;
+            self.stats.alias_effect_forwards += aliases as u64;
+            self.stats.unmaterialized_anchor_keys += count as u64;
+            self.stats.captured_anchors += count as u64;
+            self.count_output_receipts(rid, count);
+        }
+        #[cfg(feature = "sparse-cells")]
+        let remaining = self.outputs[rid].len() - sealed.map_or(0, |(_, count, _, _)| count);
+        #[cfg(not(feature = "sparse-cells"))]
+        let remaining = self.outputs[rid].len();
+        for position in 0..remaining {
+            #[cfg(feature = "sparse-cells")]
+            let position = if let Some((_, _, _, aliases)) = sealed {
+                if position < aliases {
+                    self.stats.output_residual_dispatches += 1;
+                    effects.output_frame().unwrap().query_output(position)
+                } else {
+                    // Boundaries already occupy a contiguous suffix. They
+                    // need no per-output dispatch index or template lookup.
+                    self.cell_output_widths[rid] + position - aliases
+                }
+            } else { position };
+            self.stats.output_registrations += 1;
             let output = self.outputs[rid][position];
             let (i, table, source) = (output.operation, output.table, output.receipt_source);
             let receipt = if self.receipts { effects.get(i).or_else(|| {
@@ -1332,23 +1373,15 @@ impl Programs {
             self.direct_publications.insert(receipt, (table, publication));
             return;
         }
-        let delivery = self.pending_steps[slot].delivery.get_or_insert_with(|| {
+        self.stats.cell_output_registrations += 1;
+        let delivery = if let Some(delivery) = self.pending_steps[slot].delivery { delivery } else {
             let first = if let Some(effects) = &effects { effects.output_first() } else {
                 let first = self.cell_outputs.len();
                 self.cell_outputs.resize(first + width, None);
                 first
             };
-            self.stats.cell_output_spans += 1;
-            self.stats.cell_output_slots += width as u64;
-            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
-            Delivery {
-                rule: u32::try_from(rid).ok().and_then(|r| r.checked_add(1))
-                    .and_then(std::num::NonZeroU32::new).expect("Cell rule index exhausted"),
-                first: u32::try_from(first).expect("Cell output arena exhausted"),
-                #[cfg(feature = "spine-shapes")]
-                cell: _cell,
-            }
-        });
+            self.install_delivery(rid, slot, _cell, first)
+        };
         if let Some(effects) = effects.as_mut() {
             if effects.retain_output(position, receipt) { self.stats.effect_output_copies += 1; }
             else { self.stats.effect_outputs_reused += 1; }
@@ -1356,13 +1389,34 @@ impl Programs {
             self.cell_outputs[delivery.first as usize + position] = Some(receipt);
             self.stats.effect_output_copies += 1;
         }
-        self.cell_outputs_pending += 1;
-        self.stats.cell_output_receipts += 1;
+        self.count_output_receipts(rid, 1);
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn install_delivery(&mut self, rid: usize, slot: usize, _cell: u32, first: usize) -> Delivery {
+        debug_assert!(self.pending_steps[slot].delivery.is_none());
+        let width = self.cell_output_widths[rid];
+        self.stats.cell_output_spans += 1;
+        self.stats.cell_output_slots += width as u64;
+        self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
+        let delivery = Delivery {
+            rule: u32::try_from(rid).ok().and_then(|r| r.checked_add(1))
+                .and_then(std::num::NonZeroU32::new).expect("Cell rule index exhausted"),
+            first: u32::try_from(first).expect("Cell output arena exhausted"),
+            #[cfg(feature = "spine-shapes")]
+            cell: _cell,
+        };
+        self.pending_steps[slot].delivery = Some(delivery);
+        delivery
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn count_output_receipts(&mut self, rid: usize, count: usize) {
+        self.cell_outputs_pending += count;
+        self.stats.cell_output_receipts += count as u64;
         // Preserve the historical multi-output coverage metric as a subset of
         // common Cell output delivery, without maintaining a fragment packet.
         if self.outputs[rid].len() >= 2 {
-            self.stats.fragment_receipts += 1;
-            self.stats.fragment_direct_inserts_avoided += 1;
+            self.stats.fragment_receipts += count as u64;
+            self.stats.fragment_direct_inserts_avoided += count as u64;
         }
     }
     fn materialize_publication(&mut self, publication: Publication) -> Published {
@@ -2334,7 +2388,9 @@ impl Programs {
         #[cfg(feature = "structural-depth")]
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
-        let report = json!({"query_fragment_layout":"owned-instance/v1","query_winner_bytes":std::mem::size_of::<Winner>(),
+        let report = json!({"output_registration":"cell-span/v1",
+            "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),
+            "query_fragment_layout":"owned-instance/v1","query_winner_bytes":std::mem::size_of::<Winner>(),
             "query_fragment_header_bytes":std::mem::size_of::<Matched>(),
             "query_fragment_slot_bytes":std::mem::size_of::<(usize, Value)>(),
             "query_value_bytes":std::mem::size_of::<Value>(),
