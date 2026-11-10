@@ -13,6 +13,17 @@ use sha2::{Digest, Sha256};
 use std::{fs, path::Path};
 use crate::work_credit::Work;
 type Result<T> = eggfuse_bake::pipeline::Result<T>;
+// Search provenance is not executed. Keep every other artifact field in the
+// identity, including slot layouts, source order and all completion proofs.
+fn replay_identity(artifact: &J) -> J {
+    let mut executable = artifact.clone();
+    executable.as_object_mut().unwrap().remove("sha256");
+    if let Some(plan) = executable.get_mut("iterative_bake").and_then(J::as_object_mut) {
+        plan.remove("completion_search");
+        plan.remove("completion_extensions");
+    }
+    executable
+}
 pub(crate) type Stamp = (String, String, Vec<String>, Vec<(u64, String)>, Vec<(u64, String)>);
 #[derive(Clone, Copy, Default)]
 pub(crate) struct Execution {
@@ -82,6 +93,23 @@ fn save(path: &Path, value: &J) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn replay_identity_ignores_only_search_provenance() {
+        let original = json!({"sha256":"first","recipe":{"effects":[1,2]},
+            "iterative_bake":{"joins":[[0,1,2]],"completion":{"slots":[0,1]},
+                "completion_search":{"admitted":1},"completion_extensions":["observed"]}});
+        let mut alternative = original.clone();
+        alternative["sha256"] = json!("second");
+        alternative["iterative_bake"]["completion_search"] = json!({"admitted":0});
+        alternative["iterative_bake"].as_object_mut().unwrap().remove("completion_extensions");
+        assert_eq!(replay_identity(&original), replay_identity(&alternative));
+        alternative["iterative_bake"]["completion"]["slots"] = json!([1,0]);
+        assert_ne!(replay_identity(&original), replay_identity(&alternative));
+        alternative = original.clone();
+        alternative["recipe"]["effects"] = json!([2,1]);
+        assert_ne!(replay_identity(&original), replay_identity(&alternative));
+    }
 
     #[test]
     fn condition_replay_runs_and_scores_the_requested_backend() {
@@ -351,13 +379,18 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             let mut trials = Vec::new();
             let mut best = None;
             let mut best_score = 0;
+            let mut replayed = Vec::new();
+            let mut duplicate_proposals = 0;
+            let mut considered = 0;
             let mut proposals = std::mem::take(&mut admitted).into_iter().map(Some).collect::<Vec<_>>();
             // Structural inference can be useful even without a newly observed
             // join. It competes as a real, separately replayed candidate.
             if infer { proposals.push(None); }
             credit["ranked_proposals"] = json!(proposals.len());
-            credit["untried_ranked_proposals"] = json!(proposals.len().saturating_sub(trial_limit));
-            for proposal in proposals.into_iter().take(trial_limit) {
+            let proposal_count = proposals.len();
+            for proposal in proposals {
+                if trials.len() == trial_limit { break; }
+                considered += 1;
                 let start = std::time::Instant::now();
                 let mut candidate = plan.clone();
                 if let Some((join, _)) = &proposal {
@@ -365,6 +398,12 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
                 }
                 let candidate = compile_plan(&mut candidate, true, Some(&observed_units))?;
                 if candidate.artifact["iterative_bake"]["joins"] == plan["joins"] { continue; }
+                let identity = replay_identity(&candidate.artifact);
+                if replayed.contains(&identity) {
+                    duplicate_proposals += 1;
+                    continue;
+                }
+                replayed.push(identity);
                 let compile_seconds = start.elapsed().as_secs_f64();
                 let candidate_hash = candidate.artifact["sha256"].clone();
                 if work.is_none() {
@@ -391,6 +430,8 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
                     best = Some((proposal, trial.graph.program.clone()));
                 }
             }
+            credit["untried_ranked_proposals"] = json!(proposal_count - considered);
+            credit["duplicate_executable_proposals"] = json!(duplicate_proposals);
             if let Some((proposal, program)) = best {
                 if let Some(winner) = proposal { admitted.push(winner); }
                 credit["selected_program_sha256"] = program.artifact["sha256"].clone();

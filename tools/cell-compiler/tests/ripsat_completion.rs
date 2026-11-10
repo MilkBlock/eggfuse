@@ -250,13 +250,13 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
         let catalog = tmp.path().join("catalog.json");
         std::fs::write(&seed, serde_json::to_vec(&raw).unwrap()).unwrap();
         std::fs::write(&catalog, serde_json::to_vec(&raw["iterative_bake"]).unwrap()).unwrap();
-        for rounds in [0, 1] {
-            let out = tmp.path().join(format!("rounds-{rounds}"));
+        for (rounds, support) in [(0, "1000000"), (1, "1000000"), (1, "1")] {
+            let out = tmp.path().join(format!("rounds-{rounds}-{support}"));
             let result = std::process::Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
                 .args(["iterate", "--program"]).arg(&seed)
                 .arg("--resume-catalog").arg(&catalog).arg("--output").arg(&out)
                 .args(["--objective", "ripsat-completion", "--score", "measured-work",
-                    "--local-congruence", if local { "true" } else { "false" }, "--min-support", "1000000", "--rounds", &rounds.to_string()])
+                    "--local-congruence", if local { "true" } else { "false" }, "--min-support", support, "--rounds", &rounds.to_string()])
                 .output().unwrap();
             assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
             let history: Value = serde_json::from_slice(&std::fs::read(out.join("rounds.json")).unwrap()).unwrap();
@@ -285,8 +285,9 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
             }
             if rounds == 1 {
                 let trials = history[0]["credit"]["trials"].as_array().unwrap();
+                assert_eq!(history[0]["credit"]["duplicate_executable_proposals"], if support == "1" { 1 } else { 0 });
                 assert_eq!(trials.len(), 1);
-                assert_eq!(trials[0]["proposal"]["kind"], "equivalent-routes");
+                if support != "1" { assert_eq!(trials[0]["proposal"]["kind"], "equivalent-routes"); }
                 let score = trials[0]["work"]["net_saved_operations"].as_i64().unwrap();
                 eprintln!("equivalent-route local={local}, credit={score}");
                 assert_eq!(score > 0, local, "fixture must cover both admission and rejection");
@@ -295,11 +296,13 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
                     assert_eq!(history[1]["source_program"], *hash, "next round must use exact scored artifact");
                     let final_program: Value = serde_json::from_slice(&std::fs::read(out.join("program.json")).unwrap()).unwrap();
                     assert_eq!(final_program["sha256"], *hash);
-                    let inferred = final_program["iterative_bake"]["completion_extensions"].as_array().unwrap();
-                    assert!(inferred.iter().any(|route| route["from"]["left"]==second
-                        && route["to"]["left"]==second && route["observed_application"]==true
-                        && route["origin"]=="completed-runtime-history"),
-                        "recognition must start at the executed route, not the unused catalog join");
+                    if support != "1" {
+                        let inferred = final_program["iterative_bake"]["completion_extensions"].as_array().unwrap();
+                        assert!(inferred.iter().any(|route| route["from"]["left"]==second
+                            && route["to"]["left"]==second && route["observed_application"]==true
+                            && route["origin"]=="completed-runtime-history"),
+                            "recognition must start at the executed route, not the unused catalog join");
+                    }
                 } else {
                     assert_eq!(history[0]["stop"], "no_measured_gain");
                     assert_eq!(history.as_array().unwrap().len(), 1);

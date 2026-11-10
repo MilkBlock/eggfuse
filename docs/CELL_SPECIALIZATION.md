@@ -244,3 +244,26 @@ cargo test --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-ce
 cargo run --locked -p eggfuse-cell-compiler --features iterative-bake --example emit_cell_retention -- out/completion-entry-dispatch
 cargo run --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells -- iterate --program out/completion-entry-dispatch/fixture-chain/program.json --output out/completion-entry-dispatch/iteration-deep --objective ripsat-completion --rounds 3 --max-depth 4 --max-nodes 8 --min-support 1 --score static
 ```
+
+### Reusing measured candidate executions
+
+An observed join proposal and an inferred equivalent-route proposal can lower
+to the same executable catalog. Measured Bake now compares complete compiled
+artifacts after removing only the root artifact checksum and the compile-only
+`completion_search` / `completion_extensions` annotations. Comparison is exact
+JSON equality, not normalized Cell equivalence or a Bloom-filter decision.
+Every operation, slot layout, proof, execution entry and ordering stays in the
+comparison. The first audited artifact is retained unchanged as the winner.
+
+`duplicate_executable_proposals` reports avoided candidate replays; the trial
+limit counts actual distinct replays, and `untried_ranked_proposals` counts
+remaining proposals. This uses temporary compiler-side copies bounded by the
+trial limit; it adds no inference state. Compilation of duplicate proposals
+still happens before equality can be established.
+
+The alternative-producer regression with support=1 previously replayed two
+candidates with identical work, despite their different artifact checksums.
+It now replays one and skips one. Both local-congruence configurations retain
+the previous admission decision (−6 rejected, +23 accepted, equal-weight work
+counts). Exact winning-artifact inheritance and Run-boundary audits remain
+checked. This saves offline replay work; it is not an inference speedup claim.
