@@ -733,6 +733,7 @@ impl Catalog {
         // of their contents nor a persistent runtime index are necessary.
         let existing:BTreeSet<_>=self.units.iter().map(|u|u.path.as_ref()).collect();
         let mut choices = vec![];
+        let mut bridge_paths = BTreeMap::new();
         for (&join, e) in &profile.pairs {
             if e.visits < self.limits.support {
                 continue;
@@ -765,8 +766,10 @@ impl Catalog {
                 e.predicted_key_reads = e.visits.saturating_mul(additional as u64);
             }
             // A + B can be useful even when B itself has nothing to reuse.
-            // Propose a bounded bridge only if observed B + C and the typed
-            // three-unit path expose a donor in A. This is a ranking estimate;
+            // Separate A+B and B+C observations do not establish A+B+C.
+            // Require that complete path on one actual cursor ancestry before
+            // asking whether its typed operations expose a donor in A.
+            // This is a ranking estimate;
             // the next round must witness the joined AB actually followed by C.
             if self.switch.enabled() && e.predicted_key_reads == 0 {
                 for (next, w) in profile.pairs.range(
@@ -793,6 +796,9 @@ impl Catalog {
                     let mut suffix = tail.path.to_vec();
                     suffix[0].0 = Some(next.output);
                     path.extend(suffix);
+                    let support = *bridge_paths.entry(path.clone())
+                        .or_insert_with(|| profile.completed_path_support(&path));
+                    if support < self.limits.support.max(1) { continue; }
                     let old = self.switch.program(self.switch.replay(&path)).unwrap();
                     let start_of_b = self.units[join.left].path.len();
                     let proof = crate::result_handoff::terminal(
@@ -808,7 +814,7 @@ impl Catalog {
                         path.len() - 1 - r.back < start_of_b
                             && !old.queries.iter().any(|x| x.atom == r.atom)
                     }) {
-                        e.bridge_support = e.bridge_support.max(w.visits.min(e.visits));
+                        e.bridge_support = e.bridge_support.max(support);
                     }
                 }
             }
@@ -883,6 +889,25 @@ pub struct Training {
     pub(crate) seal_moves: u64,
 }
 impl Training {
+    /// Count completed paths on actual cursor ancestry, never by joining
+    /// marginal pair frequencies. Compile-time ranking only; missing history
+    /// cannot establish support and does not invalidate direct pair evidence.
+    fn completed_path_support(&self, path: &[(Option<usize>, Entry)]) -> u64 {
+        if path.is_empty() { return 0; }
+        self.trace.iter().enumerate().filter(|(id, _)| {
+            let mut cursor = *id;
+            for (offset, &(output, entry)) in path.iter().enumerate().rev() {
+                let event = &self.trace[cursor];
+                if event.entry != entry { return false; }
+                if offset == 0 { return true; }
+                if output != Some(event.output) { return false; }
+                let Some(parent) = event.parent else { return false; };
+                if self.trace[parent].run >= event.run { return false; }
+                cursor = parent;
+            }
+            false
+        }).count() as u64
+    }
     pub(crate) fn applied(&mut self, c: &Catalog, s: &mut State, inputs: usize) {
         let parent_run = std::mem::replace(&mut s.last_run, self.run);
         self.capped_events += u64::from(s.capped);
@@ -1080,6 +1105,28 @@ mod tests {
         assert!(state.history.current().is_none());
         assert!(state.stack.is_empty() && !state.direct);
     }
+    #[test]
+    fn bridge_support_requires_one_completed_cross_stage_ancestry() {
+        let event = |rule, parent, run| TraceEvent {
+            parent, unit:rule, entry:(rule,Some(0)), output:0, run,
+            producer_run:0, witness:None, truncated_parent:false,
+        };
+        let mut training = Training::default();
+        // A->B and a separate B->C cannot establish A->B->C.
+        training.trace = vec![event(0,None,1),event(1,Some(0),2),
+            event(1,None,3),event(2,Some(2),4)];
+        let path = [(None,(0,Some(0))),(Some(0),(1,Some(0))),(Some(0),(2,Some(0)))];
+        assert_eq!(training.completed_path_support(&path),0);
+        training.trace.push(event(2,Some(1),5));
+        assert_eq!(training.completed_path_support(&path),1);
+        training.trace.push(event(2,Some(1),6));
+        assert_eq!(training.completed_path_support(&path),2);
+        // Wrong output, missing parent and same-Run execution add no support.
+        let mut wrong = event(2,Some(1),7); wrong.output=1;
+        training.trace.extend([wrong,event(2,None,8),event(2,Some(1),2)]);
+        assert_eq!(training.completed_path_support(&path),2);
+    }
+
     #[test]
     fn completed_trace_keeps_fork_ancestry_and_reports_capacity_loss() {
         let mut c = Catalog::default();

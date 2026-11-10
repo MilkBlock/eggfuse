@@ -328,3 +328,44 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
             "the second producer's untrained route must execute the derived completion");
     }
 }
+
+#[test]
+fn separate_pair_instances_do_not_train_a_three_cell_bridge() {
+    for connected in [false, true] {
+        let source = format!(r#"
+(datatype E (N i64) (Start E) (Left E) (Right E) (Gateway E) (Mid E))
+(ruleset init) (ruleset a) (ruleset b) (ruleset c)
+(rule ((= x (N 1))) ((Start x)) :ruleset init)
+(rule ((= x (N 2))) ((Gateway x)) :ruleset init)
+(rule ((Start x)) ((Left x) (Right x) (Gateway x)) :ruleset a :name "a")
+(rule ((Gateway x)) ((Mid x)) :ruleset b :name "b")
+(rule ((Mid x) (= x (N {}))) ((Left x) (Right x)) :ruleset c :name "c")
+(N 1) (N 2)
+(run-schedule (seq (run init) (run a) (run b) (run c)))
+"#, if connected {1} else {2});
+        let core = eggfuse_bake::device_frontend::core("bridge-ancestry", &source).unwrap();
+        let p = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
+        let rules = p.artifact["recipe"]["rules"].as_array().unwrap();
+        let ids = ["a","b","c"].map(|name| rules.iter().position(|r| r["metadata"]["name"] == name).unwrap());
+        let profile = json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+            "prefixes":ids.map(|r|json!({"edge":[0,0,r,0],"visits":2}))});
+        let blocks = compiler::bake_spine_blocks(&p,&profile,&p,3).unwrap();
+        assert_eq!(blocks["entries"].as_array().unwrap().len(),3);
+        let mut raw = p.artifact; raw["spine_blocks"] = blocks;
+        let tmp = tempfile::tempdir().unwrap();
+        let seed = tmp.path().join("seed.json");
+        let out = tmp.path().join("learned");
+        std::fs::write(&seed,serde_json::to_vec(&seal(raw)).unwrap()).unwrap();
+        let result = std::process::Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+            .args(["iterate","--program"]).arg(&seed).arg("--output").arg(&out)
+            .args(["--rounds","1","--objective","rhs-lookups","--score","static","--min-support","1"])
+            .output().unwrap();
+        assert!(result.status.success(),"{}",String::from_utf8_lossy(&result.stderr));
+        let rounds: Value = serde_json::from_slice(&std::fs::read(out.join("rounds.json")).unwrap()).unwrap();
+        assert!(rounds[0]["work"]["candidate_shapes"].as_u64().unwrap() >= 2,
+            "both pair shapes must actually execute: {rounds}");
+        let bridges = rounds[0]["admitted"].as_array().unwrap().iter()
+            .filter(|e|e[1]["bridge_support"].as_u64().unwrap()>0).count();
+        assert_eq!(bridges,usize::from(connected),"{rounds}");
+    }
+}

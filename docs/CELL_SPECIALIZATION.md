@@ -267,3 +267,31 @@ It now replays one and skips one. Both local-congruence configurations retain
 the previous admission decision (−6 rejected, +23 accepted, equal-weight work
 counts). Exact winning-artifact inheritance and Run-boundary audits remain
 checked. This saves offline replay work; it is not an inference speedup claim.
+
+### Cross-stage bridge support follows cursor ancestry
+
+Bridge ranking previously used `min(visits(A+B), visits(B+C))` as support for
+A+B+C. Those pairs can belong to different instances. The last catalog's
+completed trace now establishes support by matching the entire source-operation
+path on one parent chain, including output positions and increasing Run order.
+Only then does the compiler check whether A supplies a reusable result to C.
+This can discharge a later constructor query across Runs; intermediate B must
+still execute, and typed completion, live results and measured admission remain
+required. It does not assert that A+B alone already saves that future query.
+
+Support is counted from retained successful events, including distinct forks.
+Missing/truncated ancestry contributes no support. The existing bounded pair
+samples still train direct combinations; they cannot manufacture evidence for a
+longer path. Path support is memoized only during candidate selection, adding no
+runtime subscriptions or binding copies. Missing late trace can therefore hide
+useful bridges; this is an explicit coverage limitation, not evidence against
+those bridges.
+
+The `separate_pair_instances_do_not_train_a_three_cell_bridge` regression runs
+the actual Cell runtime with A+B on one value and B+C on another. Both pair
+shapes execute. Restoring the previous pair-frequency ranking admits one false
+bridge and grows the catalog from 3 to 4 units; ancestry ranking admits none and
+retains 3. Changing the consumer to the connected value still admits the real
+bridge. The existing two-Run-old result/deleted-sibling regression also retains
+its three deep handoffs. These checks measure recognition and retained catalog
+size, not elapsed inference performance or native egglog semantic acceptance.
