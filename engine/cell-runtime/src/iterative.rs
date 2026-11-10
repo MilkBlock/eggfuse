@@ -104,6 +104,8 @@ impl State {
     }
 }
 impl Catalog {
+    /// State array and transition storage; excludes allocator overhead.
+    pub fn transition_storage(&self) -> J { self.switch.transition_storage() }
     /// State array and shared capture storage; excludes allocator overhead.
     pub fn capture_storage(&self) -> J { self.switch.capture_storage() }
     /// Retained export directory and slots; excludes allocator overhead.

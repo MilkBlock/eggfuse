@@ -1,0 +1,30 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 2b08d977..4a4ec87d 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -105,6 +105,7 @@ impl State {
+ }
+ impl Catalog {
+     /// State array and shared capture storage; excludes allocator overhead.
++    pub fn transition_storage(&self) -> J { self.switch.transition_storage() }
+     pub fn capture_storage(&self) -> J { self.switch.capture_storage() }
+     /// Retained export directory and slots; excludes allocator overhead.
+     pub fn export_storage(&self) -> J { self.switch.export_storage() }
+diff --git a/engine/cell-runtime/src/result_handoff.rs b/engine/cell-runtime/src/result_handoff.rs
+index ddf43ec0..08589b32 100644
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -633,6 +633,13 @@ impl Switch {
+     pub(crate) fn exports(&self, rule: usize) -> &[Site] {
+         self.exports.get(rule).unwrap_or(&[])
+     }
++    pub(crate) fn transition_storage(&self) -> serde_json::Value {
++        serde_json::json!({
++            "states":self.nodes.len(),
++            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
++            "transition_payload_bytes":self.nodes.iter().map(|n|n.next.capacity()*std::mem::size_of::<((usize,usize),usize)>()).sum::<usize>(),
++            "transition_owner_bytes":0})
++    }
+     pub(crate) fn capture_storage(&self) -> serde_json::Value {
+         let mut seen = BTreeSet::new();
+         let mut payload = 0;
