@@ -27,12 +27,12 @@ def check(args):
     assert acceptance['status']=='pass'
     assert acceptance['input_sha256']['cpu_values']==runtime['ordered_hashes']['state.json']
     return dict(scope='standalone Cell CPU ordinary loaded catalog; retained '+args.mode+' structures',
-        baseline_commit='9e0bac8a' if args.mode=='dispatch' else '0126e0cd',program=before['program'],exact_entries_and_state_contracts_equal=True,
+        baseline_commit=args.baseline_commit or ('9e0bac8a' if args.mode=='dispatch' else '0126e0cd'),program=before['program'],exact_entries_and_state_contracts_equal=True,
         baseline=a,candidate=b,baseline_bytes=old,candidate_bytes=new,bytes_saved=old-new,
         fractional_reduction=1-new/old,runtime=runtime,semantic_acceptance='pass',
         binaries={k:sha(getattr(args,k)) for k in ('baseline','candidate')},
         inspections={k:sha(getattr(args,k)) for k in ('before','after')},
-        baseline_probe_patch_sha256=sha(Path(__file__).with_name(('dispatch' if args.mode=='dispatch' else 'catalog')+'-storage-probe.patch')),
+        baseline_probe_patch_sha256=None if args.baseline_commit else sha(Path(__file__).with_name(('dispatch' if args.mode=='dispatch' else 'catalog')+'-storage-probe.patch')),
         limits=('Counts rule-row directory, nullable leaf arrays and former duplicate lookup entry payloads. '
                'Excludes BTree node spare slots/links, allocator rounding, switch header and other switch data. '
                'No speed or new cross-stage takeover claim.' if args.mode=='dispatch' else 'Counts unit-array capacity, path-array capacities and former duplicate lookup keys/payloads. '
@@ -45,5 +45,6 @@ if __name__=='__main__':
     for key in ('before','after','root','program','baseline','candidate','output'):
         parser.add_argument('--'+key,type=Path,required=True)
     parser.add_argument('--mode',choices=('paths','dispatch'),default='paths')
+    parser.add_argument('--baseline-commit',help='Baseline with built-in census; no probe patch applied')
     args=parser.parse_args()
     args.output.write_text(json.dumps(check(args),indent=2)+'\n')

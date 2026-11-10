@@ -546,11 +546,36 @@ pub(crate) struct Switch {
     pub(crate) congruence: bool,
     pub(crate) query_ports: bool,
     nodes: Vec<Node>,
-    by_rule: Box<[Box<[Option<NonZeroUsize>]>]>,
+    by_rule: DispatchRows,
     roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
     pub exports: Vec<Vec<Site>>,
     pub depth: usize,
+}
+/// CSR rows preserve pivot holes and direct rule indexing without one allocation
+/// and a fat pointer per rule. Empty adjacent rows share the same offset.
+#[derive(Clone, Debug, Default)]
+struct DispatchRows {
+    offsets: Box<[usize]>,
+    slots: Box<[Option<NonZeroUsize>]>,
+}
+impl DispatchRows {
+    fn compile(rows: Vec<Vec<Option<NonZeroUsize>>>) -> Self {
+        if rows.is_empty() { return Self::default(); }
+        let mut offsets = Vec::with_capacity(rows.len()+1);
+        let mut slots = Vec::new();
+        offsets.push(0);
+        for row in rows {
+            slots.extend(row);
+            offsets.push(slots.len());
+        }
+        Self { offsets: offsets.into_boxed_slice(), slots: slots.into_boxed_slice() }
+    }
+    fn get(&self, rule: usize) -> Option<&[Option<NonZeroUsize>]> {
+        let end = *self.offsets.get(rule.checked_add(1)?)?;
+        Some(&self.slots[self.offsets[rule]..end])
+    }
+    fn len(&self) -> usize { self.offsets.len().saturating_sub(1) }
 }
 #[derive(Clone, Debug, Serialize)]
 struct Node {
@@ -595,10 +620,10 @@ impl Default for Terminal {
 impl Switch {
     pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
         serde_json::json!({"rule_rows":self.by_rule.len(),
-            "rule_slots":self.by_rule.iter().map(|r|r.len()).sum::<usize>(),
+            "rule_slots":self.by_rule.slots.len(),
             "root_slots":self.roots.len(),
-            "row_directory_bytes":std::mem::size_of_val(self.by_rule.as_ref()),
-            "rule_slot_bytes":self.by_rule.iter().map(|r|std::mem::size_of_val(r.as_ref())).sum::<usize>(),
+            "row_directory_bytes":std::mem::size_of_val(self.by_rule.offsets.as_ref()),
+            "rule_slot_bytes":std::mem::size_of_val(self.by_rule.slots.as_ref()),
             "root_slot_bytes":std::mem::size_of_val(self.roots.as_ref()),
             "duplicate_lookup_entry_bytes":0})
     }
@@ -778,7 +803,7 @@ impl Switch {
         // Missing trailing rows and roots are already handled by checked lookup.
         while by_rule.last().is_some_and(Vec::is_empty) { by_rule.pop(); }
         while roots.last() == Some(&None) { roots.pop(); }
-        let by_rule = by_rule.into_iter().map(Vec::into_boxed_slice).collect();
+        let by_rule = DispatchRows::compile(by_rule);
         let roots = roots.into_boxed_slice();
         Self {
             reuse_results,
@@ -881,6 +906,19 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 mod tests {
     use super::*;
     #[test]
+    fn dispatch_rows_preserve_empty_rows_and_extreme_missing_indices() {
+        let rows = DispatchRows::compile(vec![vec![], vec![NonZeroUsize::new(1), None], vec![], vec![]]);
+        assert_eq!(rows.len(), 4);
+        assert_eq!(rows.offsets.as_ref(), &[0, 0, 2, 2, 2]);
+        assert_eq!(rows.get(0), Some([].as_slice()));
+        assert_eq!(rows.get(1).unwrap(), &[NonZeroUsize::new(1), None]);
+        assert_eq!(rows.get(2), Some([].as_slice()));
+        assert_eq!(rows.get(3), Some([].as_slice()));
+        assert_eq!(rows.get(4), None);
+        assert_eq!(rows.get(usize::MAX), None);
+        assert_eq!(DispatchRows::compile(vec![]).get(0), None);
+    }
+    #[test]
     fn packed_dispatch_preserves_holes_roots_and_replay() {
         let address = |id: usize| NonZeroUsize::new(id.checked_add(1).unwrap());
         assert_eq!(address(usize::MAX-1).unwrap().get()-1, usize::MAX-1);
@@ -888,8 +926,8 @@ mod tests {
         let mut switch = Switch::default();
         assert_eq!(switch.leaf(0, 0), None);
         assert_eq!(switch.unique_root(0, false), None);
-        switch.by_rule = vec![vec![address(0), None].into_boxed_slice(),
-            vec![address(1), address(2)].into_boxed_slice()].into_boxed_slice();
+        switch.by_rule = DispatchRows::compile(vec![vec![address(0), None],
+            vec![address(1), address(2)]]);
         switch.initial = vec![1, 2, 3];
         switch.nodes = (0..4).map(|unit| Node { unit, failure: 0,
             program: Terminal::default(), next: vec![], supply: vec![],

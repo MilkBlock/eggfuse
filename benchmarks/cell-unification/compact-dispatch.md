@@ -55,3 +55,31 @@ python3 benchmarks/cell-unification/check_catalog_paths.py --mode dispatch \
 OUTPUT_ROOT contains baseline/candidate runtime directories and
 semantic-acceptance.json. The committed `compact-dispatch-check.json` records
 source baseline, program and binary hashes and the comparison results.
+
+## Contiguous dispatch rows
+
+The next iteration inspects the executed catalog's remaining 576-row directory:
+only 38 pivot slots exist, yet each row retains a two-word slice descriptor.
+`DispatchRows` now stores a single contiguous slot array and row offsets.
+Empty rows repeat an offset; pivot holes remain explicit. Lookup reads adjacent
+offsets and takes the existing row slice, preserving constant-time indexed
+access and unique-root enumeration. There is no expansion cache or extra
+per-instance state, and no new cross-Run takeover. The extra offset read remains
+part of dispatch; compression alone does not prove a speedup.
+
+Against `c8914225`, row directory bytes fall from 9,216 to 4,616; slot bytes
+remain 304. The counted dispatch structures total **4,920 versus 9,520 bytes**,
+a 48.3% reduction (4,600 bytes). Relative to the earlier 26,160-byte layout,
+the same counted scope is down 81.2%. Scope exclusions above still apply;
+the Switch header itself gains two machine words (16 bytes on this target) and is excluded in both
+censuses. Accounting for that header increase, the net reduction is 4,584 bytes.
+Individual row allocations are replaced by one slots allocation, but no
+allocator-event count or latency benefit is claimed.
+
+Three runtime tests and the same 15 compiler tests pass. Tests cover consecutive
+empty rows, interior holes, out-of-range rules including usize::MAX, leaf zero,
+root priority and replay. The expanded catalog and contracts, all normalized
+work and 1,428 ordered Run signatures, final-state hash and semantic acceptance
+remain unchanged. `compact-dispatch-rows-check.json` records this comparison.
+Use the reproduction command above with `--baseline-commit c8914225`; this
+baseline has its own census, so no reporting patch is needed.
