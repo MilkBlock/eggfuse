@@ -471,7 +471,7 @@ impl Graph {
         }
         counts.scope_completions += 1;
         let epoch = self.epoch;
-        let result = self.repair_selected(Some(allowed));
+        let result = self.repair_selected(Some(crate::table_mask::Selection::Flags(allowed)));
         self.epoch = epoch;
         result?;
         let remaining = self.pending_completion_tasks();

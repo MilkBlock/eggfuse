@@ -593,3 +593,45 @@ python3 benchmarks/worker-handoff/check_table_lists.py \
   --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
   --output benchmarks/worker-handoff/shared-table-lists-check.json
 ```
+
+## Pack retained scope membership and read it without decompression
+
+The current catalog's 31 scheduled scopes retain 401 predecessor flags each.
+These are now boxed u64 masks with an exact logical length. Construction and
+serialization preserve boolean order, including empty scopes and final-word
+padding. Serialization still emits the original bool array, so the worker
+preparation contract and complete prediction proof remain byte-for-byte
+identical at the JSON-value level.
+
+Queue selection, dirty-node selection, opaque-merge fallback, repair batches
+and parallel read-batch preparation borrow a Selection over either a packed
+scope or the existing mutable boolean flags. No scope is expanded into a
+temporary boolean array. This is a representation change, not a new scheduler
+or an equality proof. Every selected task and original Run boundary remains
+live; no additional cross-stage discharge is credited. The existing actual
+scoped execution is the control for ordered work and semantic validation.
+
+For the frozen catalog, retained flag payload drops 12,431 -> 1,736 bytes.
+Including the unchanged 744 bytes of descriptors, the measured/modelled scope
+mask total drops 13,175 -> 2,480 bytes (-81.2%). Allocator rounding, other Scope
+fields, temporary masks and process RSS are excluded. Reading a bit now needs
+bit extraction and the shared selector supports two representations; unchanged
+logical counters do not imply unchanged latency. No timing campaign was run,
+following the user's instruction to keep working on compression and defer
+hotspot investigation until the parallel instance-return path is ready.
+
+All other inspection JSON is identical to d3c12092: the full serialized Plan,
+every influence pair, every singleton wait scope, and previous storage reports.
+Fifty merge/scoped/staged/read-batch/port-completion tests pass. Two mask tests
+cover 0/1/63/64/65/127/128/129/401 widths, clone lifetime, serialization, all-zero,
+all-one and mixed bits; padding cannot be addressed as a table. A queue test
+compares packed and boolean selection through 2,000 changes, reinsertion and
+read epochs, then compares batch prefixes at the legal settled boundary.
+Scoped sum-bits preserves all normalized work, final graph and 1,428 ordered Run
+signatures. Required native choice diagnosis passes.
+
+`packed-scope-masks-check.json` records storage and scoped-runtime checks.
+Reproduce via `inspect_completion_storage` before/after, the ordinary saved
+scoped runs, and `check_table_lists.py --mode masks` with those inspection files,
+program, binaries and artifact root. The checker removes only the new
+`scope_masks` diagnostic before requiring exact inspection equality.

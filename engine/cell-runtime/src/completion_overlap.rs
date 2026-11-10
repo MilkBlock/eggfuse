@@ -248,7 +248,7 @@ impl Graph {
         prepared: Vec<Prepared>,
         reads: &[(u64, usize)],
         next: Option<Dependency>,
-        allowed: Option<&[bool]>,
+        allowed: Option<crate::table_mask::Selection<'_>>,
     ) -> Result<bool> {
         let count = prepared.len();
         let pool = self

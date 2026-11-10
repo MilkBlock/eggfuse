@@ -221,7 +221,7 @@ impl Graph {
     pub(in crate::graph) fn complete_port_read_batch(
         &mut self,
         next: Option<Dependency>,
-        allowed: Option<&[bool]>,
+        allowed: Option<crate::table_mask::Selection<'_>>,
     ) -> Result<bool> {
         let Some(runtime) = self.stable_ports.as_ref().and_then(|s| s.batches.as_ref()) else {
             return Ok(false);
@@ -415,7 +415,7 @@ impl Graph {
         reads: &[(u64, usize)],
         end: &mut usize,
         mut next: Option<Dependency>,
-        allowed: Option<&[bool]>,
+        allowed: Option<crate::table_mask::Selection<'_>>,
     ) -> Result<Option<Option<Dependency>>> {
         loop {
             if index >= *end {
@@ -456,7 +456,7 @@ impl Graph {
         answers: &[Answer],
         initial_unions: u64,
         next: Option<Dependency>,
-        allowed: Option<&[bool]>,
+        allowed: Option<crate::table_mask::Selection<'_>>,
     ) -> Result<()> {
         // Input values are certified unchanged. Result, visibility and
         // epoch are current commit-time data, not prefetched metadata.

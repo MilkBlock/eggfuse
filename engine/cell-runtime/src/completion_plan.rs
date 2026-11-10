@@ -15,7 +15,7 @@ mod effects;
 pub struct Scope {
     source: String,
     tables: std::rc::Rc<[usize]>,
-    pub(crate) predecessors: Vec<bool>,
+    pub(crate) predecessors: crate::table_mask::Mask,
 }
 impl Scope {
     pub fn tables(&self) -> &[usize] {
@@ -283,6 +283,12 @@ impl Plan {
         serde_json::json!({"lists":lists,"logical_values":values,"unique_lists":seen.len(),
             "shared_payload_and_rc_bytes":shared,
             "handles_bytes":lists*std::mem::size_of::<std::rc::Rc<[usize]>>()})
+    }
+    pub fn scope_mask_storage(&self) -> serde_json::Value {
+        serde_json::json!({"scopes":self.rulesets.len(),
+            "old_boolean_payload_bytes":self.rulesets.values().map(|s|s.predecessors.len()).sum::<usize>(),
+            "packed_payload_bytes":self.rulesets.values().map(|s|s.predecessors.payload_bytes()).sum::<usize>(),
+            "descriptor_bytes":self.rulesets.len()*std::mem::size_of::<crate::table_mask::Mask>()})
     }
     /// Compile once per template when the optional bound-effect path is enabled.
     /// Ordinary scoped execution does not allocate or retain this code.
