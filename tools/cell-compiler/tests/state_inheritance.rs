@@ -96,8 +96,27 @@ fn worker_handoff_is_bound_to_operations_and_catalog() {
     let plan=eggfuse_cell_compiler::worker_handoff::compile(&p);
     assert!(!plan["entry_schedule"].is_null());
     assert_eq!(plan["rules"].as_array().unwrap().len(),p.rules.len());
+    let expanded=p.iterative.state_contracts(&p);
+    for (compact,original) in plan["stage_contracts"].as_array().unwrap().iter().zip(expanded.as_array().unwrap()) {
+        if original["initial"]==true {assert_eq!(compact,original);continue;}
+        let mut restored=compact.clone();
+        restored.as_object_mut().unwrap().remove("pivot");
+        for field in ["interface","effects","environment"] {restored[field]=original[field].clone();}
+        assert_eq!(&restored,original);
+        assert_eq!(compact["pivot"],original["interface"]["pivot"]);
+    }
+    assert_eq!(plan["completion_forecast"]["status"],"derived");
+    for rule in plan["rules"].as_array().unwrap() {
+        for effect in rule["effects"].as_array().unwrap() {
+            if let Some(table)=effect["entry_route"].as_u64() {
+                for node in plan["entry_routes"][table as usize].as_array().unwrap() {
+                    assert_eq!(plan["entry_schedule"]["nodes"][node.as_u64().unwrap() as usize]["table"],p.tables[table as usize].name);
+                }
+            }
+        }
+    }
     eggfuse_cell_compiler::worker_handoff::validate(&p,&plan).unwrap();
-    for field in ["program","stage_contracts","entry_schedule","rules","obligations"] {
+    for field in ["program","stage_contracts","entry_schedule","rules","obligations","entry_routes","completion_forecast"] {
         let mut corrupt=plan.clone();corrupt[field]=Value::Null;
         assert!(eggfuse_cell_compiler::worker_handoff::validate(&p,&corrupt).is_err());
     }

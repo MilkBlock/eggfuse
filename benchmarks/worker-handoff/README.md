@@ -64,3 +64,43 @@ no runtime loader, dispatch or publication path consumes this sidecar. The
 sample records static counts/encoded size, not saved operations or speedup.
 The existing semantic exports remain applicable because no executor or input
 artifact changed. Tests reconstruct the fixture and reject forged metadata.
+
+## v2: compact contracts and conservative RHS/repair forecast
+
+The next iteration keeps the original successful-instance catalog as its
+bounded cross-Run evidence. It does not infer new proven transitions from hit
+counts. Scheduled switches can discharge inherited result transfers only where
+the existing stage proof says so; speculative wider repair stays a live duty.
+
+V2 replaces repeated stage query/sorts/effects with references through
+activation.rule and the exact Program digest, preserving pivot, completion
+proofs, transitions and retention. Effects reference entry_routes by table
+index; that shared array supplies candidate Entry IDs once per table. This
+supersedes v1's per-effect entry_candidates arrays. Consumers must reject an
+unknown schema and reconstruct-validate before using these references.
+
+completion_forecast reuses completion_plan::Plan::derive, not another solver.
+It exposes query demands separately from conditional RHS accesses/repair
+obligations, transitive completion reads, merge descriptors, opaque tables,
+Run scopes and the existing conservative deferrable classification. An actual
+binding activates RHS demands. Union propagation, mutable merge order, current
+representatives, pending writes and liveness remain runtime responsibilities.
+This forecasts a possible affected scope, never an actual collision, result
+identity, repair count, or permission to move a whole RHS into a worker.
+Unsupported derivation is explicit and authorizes no bypass.
+
+The forecast stores identical ordered scalar arrays once in plan.vectors;
+plan.body references them as {"vector": index}. Resolve these references to
+recover the exact existing Plan serialization. This preserves order, masks,
+empty arrays and conservative scope. The forecast remains preparation only;
+it has no runtime consumer yet and earns zero saved-operation credit.
+
+`forecast-check.json` compares compact UTF-8 JSON against d97e42b3 on the same
+program. Stage contracts shrink 78,410 -> 27,695 bytes. Sharing forecast vectors
+shrinks that representation 381,567 -> 203,366 bytes. Including the new forecast,
+the complete sidecar grows 905,056 -> 1,044,950 bytes: no overall size win or
+runtime speedup is claimed. These are encoded artifact bytes, not heap/RSS.
+Reproduce with the emitter above and compact JSON serialization on both commits;
+use separate checkout/target directories. The executor and source artifacts
+are unchanged, so saved semantic exports remain applicable. Tests verify
+contract preservation, route tables, vector roundtrip and forged-data rejection.

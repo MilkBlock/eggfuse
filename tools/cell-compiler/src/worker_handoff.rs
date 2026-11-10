@@ -10,6 +10,28 @@ fn slots(args: impl IntoIterator<Item=Arg>) -> Vec<usize> {
         .collect::<BTreeSet<_>>().into_iter().collect()
 }
 
+// Share identical ordered scalar vectors (including table sets and masks).
+// Preserve ordering; these are not approximate digests or equality proofs.
+fn pack_forecast(mut value:Value)->Value {
+    fn visit(v:&mut Value, ids:&mut std::collections::BTreeMap<String,usize>, arrays:&mut Vec<Value>) {
+        match v {
+            Value::Array(a) if a.iter().all(|x|x.is_number() || x.is_boolean()) => {
+                let key=serde_json::to_string(v).unwrap();
+                let id=if let Some(id)=ids.get(&key) {*id} else {
+                    let id=arrays.len();ids.insert(key,id);arrays.push(v.clone());id
+                };
+                *v=json!({"vector":id});
+            },
+            Value::Array(a)=>for x in a {visit(x,ids,arrays)},
+            Value::Object(o)=>for x in o.values_mut() {visit(x,ids,arrays)},
+            _=>(),
+        }
+    }
+    let mut vectors=vec![];
+    visit(&mut value,&mut Default::default(),&mut vectors);
+    json!({"vectors":vectors,"body":value})
+}
+
 pub fn compile(p: &Program) -> Value {
     let rules: Vec<_> = p.rules.iter().enumerate().map(|(rid,r)| {
         let t=&p.templates[r.template];
@@ -24,11 +46,7 @@ pub fn compile(p: &Program) -> Value {
                 Op::Hide(table,args,_)=>(args.clone(),None,Some(*table),"hide"),
                 Op::Panic=>(vec![],None,None,"panic"),
             };
-            let entries:Vec<_>=table.into_iter().flat_map(|table|
-                p.artifact["entry_schedule"]["nodes"].as_array().into_iter().flatten()
-                    .filter(move |node|node["table"]==p.tables[table].name)
-                    .map(|node|node["id"].clone())).collect();
-            json!({"entry_candidates":entries,"operation":op,"reads":slots(reads),"writes":write,"table":table,"kind":kind,
+            json!({"entry_route":table,"operation":op,"reads":slots(reads),"writes":write,"table":table,"kind":kind,
                 "result_address":match ins { Op::Let(_,Call::Table(_),_) | Op::Set(..) => Some("actual-returned-receipt"), Op::Copy(..) | Op::Let(_,Call::Primitive(..),_) => Some("local-slot"), _=>None },
                 "worker_execution_proved":false})
         }).collect();
@@ -41,9 +59,29 @@ pub fn compile(p: &Program) -> Value {
             "required_order":"original-rule-and-match-ordinal",
             "established_after":"successful-match-and-winner-selection"})
     }).collect();
-    let mut result=json!({"schema":"eggfuse-worker-handoff/v1",
+    // Tables own candidate routes once; effects refer to the shared route.
+    let routes:Vec<_>=p.tables.iter().map(|table|
+        p.artifact["entry_schedule"]["nodes"].as_array().into_iter().flatten()
+            .filter(|node|node["table"]==table.name)
+            .map(|node|node["id"].clone()).collect::<Vec<_>>()).collect();
+    let mut contracts=p.iterative.state_contracts(p);
+    for contract in contracts.as_array_mut().unwrap() {
+        if contract["initial"]==true { continue; }
+        // The exact program digest binds the rule's query, sorts and effects.
+        // Preserve stage-specific pivot, proofs, transitions and retention.
+        let pivot=contract["interface"]["pivot"].clone();
+        let object=contract.as_object_mut().unwrap();
+        object.remove("interface");object.remove("effects");object.remove("environment");
+        object.insert("pivot".into(),pivot);
+    }
+    let completion=match eggfuse_cell_runtime::completion_plan::Plan::derive(p) {
+        Ok(plan)=>json!({"status":"derived","plan":pack_forecast(serde_json::to_value(plan).unwrap())}),
+        Err(error)=>json!({"status":"unsupported","reason":error}),
+    };
+    let mut result=json!({"schema":"eggfuse-worker-handoff/v2",
         "program":p.artifact["sha256"],"rules":rules,
-        "stage_contracts":p.iterative.state_contracts(p),
+        "stage_contracts":contracts,"entry_routes":routes,
+        "completion_forecast":completion,
         "obligations":["residual-enumeration","winner-and-delta-ownership","original-run-and-effect-order",
             "current-equality","mutable-read-validity","visibility","retirement-and-generation",
             "actual-constructor-receipt","cross-thread-ownership"],
@@ -55,4 +93,24 @@ pub fn compile(p: &Program) -> Value {
 
 pub fn validate(p:&Program, raw:&Value) -> Result<(),String> {
     if *raw==compile(p) {Ok(())} else {Err("worker handoff differs from checked Cell instructions/catalog".into())}
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn forecast_vectors_roundtrip_without_losing_order_or_masks() {
+        fn expand(v:&Value, arrays:&Value)->Value {
+            if let Some(i)=v.get("vector").and_then(Value::as_u64) {return arrays[i as usize].clone()}
+            match v {
+                Value::Array(a)=>Value::Array(a.iter().map(|x|expand(x,arrays)).collect()),
+                Value::Object(o)=>Value::Object(o.iter().map(|(k,x)|(k.clone(),expand(x,arrays))).collect()),
+                _=>v.clone(),
+            }
+        }
+        let original=json!({"a":[1,2],"b":[1,2],"c":[2,1],"d":[true,false],"empty":[]});
+        let packed=pack_forecast(original.clone());
+        assert_eq!(packed["vectors"].as_array().unwrap().len(),4);
+        assert_eq!(expand(&packed["body"],&packed["vectors"]),original);
+    }
 }
