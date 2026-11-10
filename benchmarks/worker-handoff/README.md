@@ -386,3 +386,54 @@ The retained-matrix reduction (64,160 -> 30,760 logical bytes) remains valid,
 but must be reported with this time cost, not as RHS publication acceleration.
 Further speed work should target measured repeated Entry/publication work;
 this measurement does not justify more prediction-builder micro-optimization.
+
+## Use executed-operation proofs to compress RHS receipt frames
+
+The next repeated-work target is the actual Cell effect frame, rather than
+one-time forecast construction. The last catalog's normal sum-bits execution
+initializes 12,028 receipt slots. EffectPlan still allocated raw slots for
+constructor aliases that every execution path already skips, including closed
+completion, prefix execution and first-miss resume. Such raw results are always
+absent. The older comment that closed completion could record them was stale.
+
+EffectPlan now uses the executor's validated static_skip proof to omit these
+transient slots, including full structural capture and history-only demands.
+There is no runtime filter or new instance metadata. Original effect donors
+remain allocated; a retained query-alias output still reserves its final prefix
+slot and fills it only after history observes the raw absence. An omitted raw
+slot returns None as before. The operation-to-slot descriptor array stays the
+same size. This does not change RHS instructions, published output positions,
+Run order, receipt resolution, visibility checks or cross-stage history facts.
+
+Normal sum-bits before/after b840448c/39512f71 kernel:
+
+- Receipt slot initializations: 12,028 -> 10,790, removing 1,238 (10.3%).
+- All other normalized work fields are unchanged, including publication work.
+- Exact final state and all 1,428 ordered Run signatures agree.
+- Required native choice diagnosis: pass, bound to the candidate state hash.
+- Entry publication, closed-alias and state-inheritance suites: 16 tests pass
+  both in the ordinary feature set and with structural-depth enabled. The
+  existing effect-donor regression additionally requires one initialized slot
+  per one-source frame; the skipped duplicate must not allocate an empty slot.
+
+This is an actual execution-frame reduction, not broader takeover of internal
+cross-stage publication. Source aliases provide the typed proof; the scheduled
+switch must still preserve actual witness, inherited absence and boundary
+publication. No allocation-count, peak-RSS or speed benefit is inferred from
+these initialization counts. This is the first implementation since the last
+requested timing checkpoint; no timing campaign was run.
+
+Saved result: `../cell-unification/elided-receipt-slots-check.json`.
+Reproduce normal runs with the same release features as the timing section,
+using baseline and candidate binaries and fresh `baseline`/`candidate`
+subdirectories under a pre-created root. Run the required choice diagnosis on
+saved native references and the candidate export, then check them with:
+
+```sh
+python3 benchmarks/cell-unification/check_elided_receipts.py \
+  --root out/elided-receipt-slots \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/closure-current-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/cell-unification/elided-receipt-slots-check.json
+```

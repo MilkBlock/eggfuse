@@ -1,0 +1,30 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/stage_spine/stats/effect_slots_initialized": [
+      12028,
+      10790
+    ]
+  },
+  "publication_net_saved_operations": 0,
+  "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159",
+  "scope": "standalone Cell CPU, normal sum-bits; work counts, not a speed benchmark",
+  "baseline_commit": "39512f71 (same kernel as b840448c)",
+  "binaries": {
+    "baseline": "530fb2b311558ea21c111df474112258256cc0d2a96366375efb357fd9e89133",
+    "candidate": "e6e124c3db7c248c1c24491bff86f557e66bc0690e7267c548881b23fd574916"
+  },
+  "reports": {
+    "baseline": "f775f5b1f6aac51497660b8203b0bbf38c03967832c0af0a7a59f14c9d6fac2a",
+    "candidate": "bef07456569d17a19a9c1a5a7cae3dd7d8771113655c9a0fca6d87c4d6ffb168"
+  },
+  "semantic_acceptance": "pass",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "removed_slot_initializations": 1238,
+  "fraction_removed": 0.10292650482208181,
+  "live_obligations": "Retained query-alias output slots, actual donors, non-elided raw results, history absence, original publication ordering and visibility remain.",
+  "limits": "This removes transient empty slots, not the shared operation descriptor array. No saved allocation, peak-memory reduction, eliminated publication or speedup is inferred. The publication work score is unchanged; do not count empty-slot savings as publication savings."
+}

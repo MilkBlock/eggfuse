@@ -261,4 +261,7 @@ fn effect_donor_occupies_publication_slot_without_fabricating_alias_execution() 
     // The skipped alias must still have no raw result. Completion reads its
     // actual donor, whose result already occupies the final publication slot.
     assert!(s["alias_effect_forwards"].as_u64().unwrap() > 0);
+    // Each captured Cell needs only its one actual source. The skipped second
+    // Gateway must not reserve and initialize a permanently empty raw slot.
+    assert_eq!(s["effect_slots_initialized"], s["effect_frames"], "{s}");
 }

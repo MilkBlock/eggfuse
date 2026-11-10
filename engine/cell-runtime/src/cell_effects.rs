@@ -50,20 +50,29 @@ impl EffectPlan {
             });
         }
         debug_assert_eq!(plan.width, published, "distinct retained Cell sources");
-        // Raw operation receipts remain distinct: closed completion may record
-        // an alias, whereas ordinary execution skips it. History must observe
-        // that distinction before publication fills any remaining output slots.
-        for output in outputs { plan.require(output.operation); }
+        // Every executor, including closed completion and first-miss resume,
+        // skips these instructions. Their raw receipts are always absent, so
+        // they need no transient slot. A retained query-alias publication may
+        // still own a prefix slot above, filled only after history capture.
+        let executes = |op: usize| !p.known_results.static_skip[rule][op];
+        for output in outputs {
+            if executes(output.operation) { plan.require(output.operation); }
+        }
         for output in outputs {
             if let Some(Site::Effect(op)) = output.receipt_source { plan.require(op); }
         }
         #[cfg(feature = "iterative-bake")]
         for (slot,site) in p.iterative.exports(rule).iter().enumerate() {
-            if let Site::Effect(op) = *site { plan.require(op); if slot < 64 { plan.slots[op].as_mut().unwrap().history=Some(slot as u8); } }
+            if let Site::Effect(op) = *site {
+                if executes(op) {
+                    plan.require(op);
+                    if slot < 64 { plan.slots[op].as_mut().unwrap().history=Some(slot as u8); }
+                }
+            }
         }
         if full {
             for op in 0..cell.template.ops.len() {
-                if cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
+                if executes(op) && cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
             }
         }
         plan
