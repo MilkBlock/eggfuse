@@ -319,3 +319,33 @@ this change compresses the exact type-derived closure they consume. It does not
 claim that a scheduled cross-Run switch can discharge more work merely because
 its masks share memory. All previously live matching, Eq, deletion, visibility
 and publication obligations remain live.
+
+## Build prediction masks directly and reuse closure scratch
+
+Prediction construction no longer builds an n-by-n Vec<bool> matrix and scans
+it again to produce u64 rows. It sets the same bits directly. Opaque/full rows
+explicitly clear padding bits because global-effect classification counts bits;
+boundary tests cover 0/1/63/64/65/127/128/129/401 tables.
+
+Merge-birth influence still reads the pre-birth closed row. A single reusable
+snapshot replaces cloning the entire task-effect matrix, so births cannot
+spuriously activate another merge in the same pass. Both transitive-closure
+passes likewise reuse one pivot buffer each instead of cloning every pivot.
+The ordering and scope of all proof computations remain unchanged.
+
+On the 401-table frozen catalog, the removed intermediate boolean payload is
+160,801 bytes. The birth-snapshot payload changes 22,456 -> 56 bytes. Two closure
+passes plus the birth pass use three explicit row buffers rather than 1,203.
+These are source-level temporary representations, not instrumented allocator
+calls or measured peak RSS; the boolean matrix and birth snapshot occur in
+different phases and their sizes must not be added as a peak-memory claim.
+Retained prediction storage is unchanged.
+
+`direct-mask-check.json` compares against c8b099fd. Running the same
+inspect_completion_storage example on both versions yields identical complete
+diagnostic JSON, including all serialized facts, every influence pair and every
+singleton waiting scope. Thirty-one staged/merge/scoped tests and two boundary/
+sharing tests pass. No new inference timing was run. Existing accepted semantic
+exports remain the reference because the executor and every generated
+prediction are unchanged. This change removes redundant work needed to build
+predictions; it does not claim broader repair coverage or new Run takeover.

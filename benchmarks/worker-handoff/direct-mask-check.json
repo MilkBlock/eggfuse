@@ -1,0 +1,15 @@
+{
+  "scope": "standalone Cell CPU prediction construction; source-level temporary storage, no allocator/timing claim",
+  "baseline_commit": "c8b099fd",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "full_diagnostic_equal": true,
+  "closure_sha256": "3c1ed8bb91320b1cb264e318b44e9bb865fd078480f365c69d10f04f954570c7",
+  "tables": 401,
+  "removed_dense_boolean_payload_bytes": 160801,
+  "birth_snapshot_payload_before_bytes": 22456,
+  "birth_snapshot_payload_after_bytes": 56,
+  "closure_and_birth_row_buffers_before": 1203,
+  "closure_and_birth_row_buffers_after": 3,
+  "retained_prediction_storage_unchanged": true,
+  "limits": "The boolean matrix and birth snapshot belong to different phases: do not add these figures as measured peak savings. Counts describe explicit temporary buffers in source, not instrumented allocator calls or RSS."
+}
