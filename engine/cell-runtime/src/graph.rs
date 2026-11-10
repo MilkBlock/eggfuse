@@ -645,6 +645,14 @@ impl Graph {
         self.next_cell = id.checked_add(1).ok_or("Cell identity exhausted")?;
         Ok(id)
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn reserve_completed_cell(&mut self) -> Result<u32> {
+        // Source identity order remains identical to ordinary closed RHS
+        // execution, but no physical frame or computed value slots are made.
+        let id=self.reserve_cell_id()?;
+        self.stats.rhs_frames_avoided+=1;
+        Ok(id)
+    }
     fn new_cell(
         &self,
         template: usize,

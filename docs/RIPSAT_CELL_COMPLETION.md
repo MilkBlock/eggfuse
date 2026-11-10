@@ -123,3 +123,26 @@ or a state label without a runtime consumer does not complete this task.
 These checkpoints are implementation stages, not permission gates. Until the
 runtime takeover, Bake integration and semantic acceptance are complete, the
 overall feature remains unfinished.
+
+## Implementation checkpoints
+
+`e276c6ca` adds exact bounded structural normalization, native ripsat registry
+integration, typed prefix inclusion maps and actual-success apply sampling.
+Renaming/order, stronger-entry and failed-RHS tests pass. This checkpoint alone
+is a compiler foundation, not a runtime takeover.
+
+The next implementation introduces result-switch v4. Artifact loading
+reconstructs the exact direct program and slot maps. A qualifying completion
+borrows an existing retained owner, validates actual receipt visibility, reserves
+only its source identity and seals a shared Entry delivery. It bypasses
+`result_inputs`, `begin_effects`, `start_completion`, result assignments and raw
+receipt capture. There is no intermediate dependency array. A shared projection
+wrapper may still allocate; that cost remains in `history_allocations`.
+
+The direct regression runs the optimized configuration, stops after each source
+Run, and compares graph snapshots plus ordered input/write/resume digests. The
+ordinary `audit=true` mode suppresses compiled publication and cannot alone prove
+this takeover. Foreign-owner reuse, a union between stages, a deletable-result
+fallback and forged artifacts are included. Repeated projection composition,
+structural alternative transition discovery and workload coverage remain work
+for the next checkpoints.

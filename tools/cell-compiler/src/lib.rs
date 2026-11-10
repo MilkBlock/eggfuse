@@ -2,6 +2,8 @@
 pub mod worker_handoff;
 #[cfg(feature = "iterative-bake")]
 pub mod state_plan;
+#[cfg(feature = "iterative-bake")]
+pub mod completion_bake;
 mod bench;
 #[cfg(feature = "iterative-bake")]
 mod iterate;
@@ -321,6 +323,8 @@ pub fn cli(default_bench: bool) -> Result<()> {
     }
     egglog::EGraph::set_num_threads(1);
     match cmd.as_str() {
+        #[cfg(feature = "iterative-bake")]
+        "bake-cell-completion" => completion_bake::run(args),
         "bake-cell-ownership" => ownership_bake::run(args),
         "profile-cell-ownership" => ownership_bake::profile(args),
         #[cfg(feature = "iterative-bake")]

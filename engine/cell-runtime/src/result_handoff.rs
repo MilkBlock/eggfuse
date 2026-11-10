@@ -425,6 +425,9 @@ impl History {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
+    pub(crate) fn project_complete(&self,plan:&crate::cell_completion::Direct) -> Option<Results> {
+        Results::project_complete(plan.rule,&plan.layout,self.snapshot(plan.back)?)
+    }
     pub(crate) fn capture(
         &mut self,
         limit: usize,
@@ -562,6 +565,8 @@ pub(crate) struct Switch {
     roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
     exports: Rows<Site>,
+    completion: bool,
+    direct: Box<[Option<Rc<crate::cell_completion::Direct>>]>,
     pub depth: usize,
 }
 type DispatchRows = Rows<Option<NonZeroUsize>>;
@@ -752,6 +757,7 @@ impl Switch {
         reuse_results: bool,
         congruence: bool,
         query_ports: bool,
+        completion: bool,
     ) -> Self {
         let mut prefixes = BTreeMap::new();
         let mut units = BTreeMap::new();
@@ -853,9 +859,42 @@ impl Switch {
             s.sort_unstable();
             s.dedup();
         }
+        // Ripsat completion exports the existing donor slots directly. Extend
+        // the one authoritative result layout before any ports are lowered.
+        let mut direct_back = vec![None; nodes.len()];
+        if completion {
+            for (path,&id) in &ids {
+                if path.len()<2 || !nodes[id].program.complete { continue; }
+                let Some(structure)=crate::cell_completion::normalize(p,path) else { continue; };
+                let Some(prefix)=crate::cell_completion::normalize(p,&path[..path.len()-1]) else { continue; };
+                if crate::cell_completion::extension(&prefix,&structure).is_none() { continue; }
+                let rid=path.last().unwrap().1.0;
+                let cell=Definition::new(p,rid).unwrap();
+                let ops=cell.template.ops.iter().enumerate().filter_map(|(op,i)|
+                    matches!(i,Op::Let(..)).then_some(op)).collect::<Vec<_>>();
+                if ops.is_empty() || ops.len()>32 || exports[rid].iter().any(|s|matches!(s,Site::Query(_))) { continue; }
+                let reads=ops.iter().map(|op|nodes[id].program.reuse.iter().find(|r|r.op==*op)).collect::<Option<Vec<_>>>();
+                let Some(reads)=reads else { continue; };
+                let first=reads[0];
+                if reads.iter().any(|r|(r.back,r.rule)!=(first.back,first.rule)) { continue; }
+                // Deletion is a boundary operation. Decline whole-table
+                // visibility changes, even when they occur outside this path.
+                if ops.iter().any(|&op| {
+                    let table=cell.relation(Site::Effect(op)).unwrap().table;
+                    p.templates.iter().any(|t|t.ops.iter().any(|i|matches!(i,Op::Hide(t,..) if *t==table)))
+                }) { continue; }
+                direct_back[id]=Some(first.back);
+                for op in ops {
+                    exports[rid].push(Site::Effect(op));
+                    nodes[id].supply.push(Capture {site:Site::Effect(op),port:ResultPort::new(rid,0)});
+                }
+                exports[rid].sort_unstable(); exports[rid].dedup();
+                nodes[id].supply.sort_unstable(); nodes[id].supply.dedup();
+            }
+        }
         let keep = retained_depths(&nodes, &initial);
-        for (node, keep) in nodes.iter_mut().zip(keep) {
-            node.keep_history = keep;
+        for (id,(node, keep)) in nodes.iter_mut().zip(keep).enumerate() {
+            node.keep_history = keep.max(usize::from(direct_back[id].is_some()));
         }
         // Every reader and writer uses this one Cell result layout. Runtime
         // frames no longer repeat Site tags or search them on each access.
@@ -890,6 +929,25 @@ impl Switch {
                 node.layout = layouts.entry((rule,layout.clone()))
                     .or_insert_with(|| SlotLayout::compile(rule,layout)).clone();
             }
+        }
+        let mut direct=vec![None;nodes.len()];
+        for (id,back) in direct_back.into_iter().enumerate() {
+            let Some(back)=back else {continue};
+            let node=&nodes[id];
+            let rule=node.supply[0].port.rule();
+            let sources=exports[rule].iter().map(|site|match site {
+                Site::Effect(op)=>node.program.reuse.iter().find(|r|r.op==*op).and_then(|r|r.port),
+                _=>None,
+            }).collect::<Vec<_>>();
+            if sources.len()>64 || sources.iter().any(Option::is_none) {continue;}
+            let layout=SlotLayout::compile(rule,sources).expect("single checked donor rule");
+            let cell=Definition::new(p,rule).unwrap();
+            let outputs=cell.template.ops.iter().enumerate().filter_map(|(op,i)| {
+                if let Op::Let(_,Call::Table(table),_)=i {
+                    Some((op,*table,exports[rule].binary_search(&Site::Effect(op)).unwrap()))
+                }else{None}
+            }).collect();
+            direct[id]=Some(Rc::new(crate::cell_completion::Direct{rule,back,layout,outputs}));
         }
         // Freeze only after every ResultPort has its final rule/slot identity.
         // The pool is compile-local: states share immutable capture programs,
@@ -936,6 +994,8 @@ impl Switch {
             roots,
             initial,
             exports,
+            completion,
+            direct:direct.into_boxed_slice(),
             depth,
         }
     }
@@ -1001,8 +1061,14 @@ impl Switch {
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| n.program.as_ref())
     }
+    pub(crate) fn direct(&self,id:usize) -> Option<&Rc<crate::cell_completion::Direct>> {
+        self.direct.get(id)?.as_ref()
+    }
+    pub(crate) fn completion_enabled(&self) -> bool { self.completion }
     pub(crate) fn artifact(&self) -> serde_json::Value {
-        serde_json::json!({"schema":if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
+        let mut artifact=serde_json::json!({"schema":if self.completion {"eggfuse-result-switch/v4"} else if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth});
+        if self.completion { artifact["completion_states"]=serde_json::json!(self.direct.iter().map(|p|p.as_ref().map(|p|p.artifact())).collect::<Vec<_>>()); }
+        artifact
     }
     pub(crate) fn enabled(&self) -> bool {
         !self.nodes.is_empty()

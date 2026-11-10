@@ -25,6 +25,22 @@ cargo run --release --locked -p eggfuse-cell-runtime \
 
 To learn blocks for another workload, run a training artifact with `spine-shapes` to collect observed prefixes. Create a seed using `cargo run --release --locked -p eggfuse-cell-runtime --example bake_spine_blocks -- TRAIN_PROGRAM TRAIN_SHAPES TARGET_PROGRAM NEW_PROGRAM 32`. Use `cargo cell-iterate --program NEW_PROGRAM --output out/learned --rounds 4 --objective rhs-lookups` to grow bounded adjacent units. The iterative command checks ordered RHS inputs across rounds. The separate `bake_contexts` example can transfer admission evidence from paired discovery profiles collected with the research executor.
 
+`bake-cell-completion` compiles an existing catalog into checked ripsat completion
+states without executing its workload:
+
+```sh
+cargo run --release --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports,iterative-bake -- bake-cell-completion --program out/seed/program.json --output out/completed
+```
+
+Use `--objective ripsat-completion` with `cell-iterate` to recompile this proof
+and charge completion dispatch/validation in each measured-work trial. Current
+direct coverage requires an already established, constructor-only RHS whose
+actual result ports come from one retained frame. Eligible Entry publication
+projects those existing slots; original Run visibility and residual execution
+remain authoritative. Unsupported effects and deletable results keep their
+ordinary execution. This is standalone Cell CPU work, not an application
+speedup claim. [Plan and acceptance](../../docs/RIPSAT_CELL_COMPLETION.md).
+
 For conditional-template experiments, pass `--local-congruence true` to
 `cell-iterate`. Both discovery and scored replays then use stable port fields,
 port constructor matching and shared local conditions. `--port-keys true` and

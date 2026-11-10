@@ -196,9 +196,10 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         "copies" => (false, false, false),
         "rhs-lookups" => (true, false, false),
         "rhs-congruence" => (true, true, false),
-        "stage-congruence" => (true, true, true),
+        "stage-congruence" | "ripsat-completion" => (true, true, true),
         _ => return Err("unknown iterative Bake objective".into()),
     };
+    let completion=opts.get("--objective").is_some_and(|s|s=="ripsat-completion");
     let mut plan = if let Some(mut plan) = resume_plan {
         if opts.contains_key("--producer-profile") {
             return Err("resume a catalog or select producer roots, not both".into());
@@ -261,7 +262,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let mut history = Vec::new();
     let compile_plan = |plan: &mut J| -> Result<Program> {
         plan.as_object_mut().unwrap().remove("state_plan");
-        if query_ports {
+        if completion {
+            Catalog::emit_ripsat_handoffs(&seed,plan)?;
+        } else if query_ports {
             Catalog::emit_query_handoffs(&seed, plan)?;
         } else if congruence {
             Catalog::emit_congruence_handoffs(&seed, plan)?;
@@ -274,6 +277,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         artifact["sha256"] = artifact_digest(&artifact).into();
         let mut p = Program::parse(artifact)?;
         plan["state_plan"] = crate::state_plan::compile(&p)?;
+        if completion { plan["completion"]=crate::state_plan::completion(&p)?; }
         p.artifact.as_object_mut().unwrap().remove("sha256");
         p.artifact["iterative_bake"] = plan.clone();
         p.artifact["sha256"] = artifact_digest(&p.artifact).into();

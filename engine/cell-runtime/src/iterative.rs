@@ -213,10 +213,11 @@ impl Catalog {
         }
         drop(paths);
         if let Some(raw) = raw.get("rhs_handoffs") {
-            let (congruence, query_ports) = match raw["schema"].as_str() {
-                Some("eggfuse-result-switch/v1") => (false, false),
-                Some("eggfuse-result-switch/v2") => (true, false),
-                Some("eggfuse-result-switch/v3") => (true, true),
+            let (congruence, query_ports, completion) = match raw["schema"].as_str() {
+                Some("eggfuse-result-switch/v1") => (false, false, false),
+                Some("eggfuse-result-switch/v2") => (true, false, false),
+                Some("eggfuse-result-switch/v3") => (true, true, false),
+                Some("eggfuse-result-switch/v4") => (true, true, true),
                 _ => return Err("unsupported cross-Run RHS proof policy".into()),
             };
             let reuse = raw["reuse_results"]
@@ -229,6 +230,7 @@ impl Catalog {
                 reuse,
                 congruence,
                 query_ports,
+                completion,
             );
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
@@ -264,6 +266,12 @@ impl Catalog {
             s.track_slots=inherited.iter().enumerate().any(|(i,&enabled)|enabled && s.switch.layout(i).is_some());
             s.inherited = Some(inherited);
         }
+        if let Some(completion)=raw.get("completion") {
+            if completion["schema"]!="eggfuse-ripsat-completion/v1"
+                || completion["contracts"]!=s.completion_contracts(p) {
+                return Err("invalid ripsat completion structures".into());
+            }
+        }
         Ok(s)
     }
     /// Reconstruct executable state contracts from the validated Cell program.
@@ -298,13 +306,16 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
-        Self::emit_policy(p, plan, reuse, false, false)
+        Self::emit_policy(p, plan, reuse, false, false, false)
     }
     pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, false)
+        Self::emit_policy(p, plan, true, true, false, false)
     }
     pub fn emit_query_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true)
+        Self::emit_policy(p, plan, true, true, true, false)
+    }
+    pub fn emit_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
+        Self::emit_policy(p, plan, true, true, true, true)
     }
     fn emit_policy(
         p: &Program,
@@ -312,8 +323,10 @@ impl Catalog {
         reuse: bool,
         congruence: bool,
         query_ports: bool,
+        completion: bool,
     ) -> Result<()> {
         plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
+        plan.as_object_mut().unwrap().remove("completion");
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
@@ -325,11 +338,16 @@ impl Catalog {
             reuse,
             congruence,
             query_ports,
+            completion,
         )
         .artifact();
         Ok(())
     }
     pub(crate) fn tracks_slots(&self) -> bool { self.track_slots }
+    pub(crate) fn direct_completion(&self,s:&State) -> Option<&Rc<crate::cell_completion::Direct>> {
+        self.switch.direct(s.pc)
+    }
+    pub(crate) fn completion_enabled(&self) -> bool { self.switch.completion_enabled() }
     pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
         self.switch.exports(rid)
     }

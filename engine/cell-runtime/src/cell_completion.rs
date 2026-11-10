@@ -5,6 +5,24 @@ use crate::{cell::{Definition, Site, Symbols}, iterative::Entry,
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as Json, json};
 use std::collections::{BTreeMap, BTreeSet};
+use std::rc::Rc;
+
+/// Lowered proof for an already completed constructor-only RHS. Its sources
+/// are positions in one actual retained frame; no producer address is invented.
+#[derive(Clone,Debug)]
+pub(crate) struct Direct {
+    pub rule: usize,
+    pub back: usize,
+    pub layout: Rc<crate::cell::SlotLayout>,
+    pub outputs: Vec<(usize,usize,usize)>,
+}
+impl Direct {
+    pub(crate) fn artifact(&self) -> Json {
+        json!({"rule":self.rule,"back":self.back,"outputs":self.outputs,
+            "sources":self.layout.sources.iter().map(|p|p.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>(),
+            "remaining_effects":0,"publication":"original-run-after-completion"})
+    }
+}
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 struct Fact { table: usize, columns: Vec<usize> }

@@ -107,7 +107,7 @@ impl Results {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn output(&self, slot: usize) -> Option<Dependency> {
-        self.slots.get(slot).copied().flatten()
+        self.get(ResultPort::new(self.rule,slot))
     }
     /// The compiled capture width avoids geometric growth of tiny arrays.
     /// Called only after the first present local result, so empty captures
@@ -158,6 +158,14 @@ impl Results {
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
+    pub(crate) fn project_complete(rule:usize,layout:&Rc<SlotLayout>,owner:Rc<Trail>) -> Option<Self> {
+        let width=layout.sources.len();
+        if width==0 || width>64 || layout.sources.iter().any(Option::is_none) {return None;}
+        let mask=u64::MAX >> (64-width);
+        let mut projected=Self::new(rule);
+        projected.prepare(layout,owner,mask);
+        (projected.inherited_count()==width).then_some(projected)
+    }
     pub fn inherits(&self, port: ResultPort) -> bool { port.slot() < 64 && self.forwarded & (1 << port.slot()) != 0 }
     pub fn prepare(&mut self, layout:&Rc<SlotLayout>, previous:Rc<Trail>, flags:u64) {
         let Trail::One(old)=previous.as_ref() else { return };

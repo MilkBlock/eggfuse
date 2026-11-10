@@ -2015,6 +2015,13 @@ impl Executor {
             }
             return Ok(());
         }
+        #[cfg(feature = "sparse-cells")]
+        if !full_effects && let Some(step)=stage_cursor.as_ref()
+            && let Some(results)=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
+            let cell=self.graph.reserve_completed_cell()?;
+            self.stage_spine.complete_direct(&self.graph,rid,cell,stage_cursor.unwrap(),results);
+            return Ok(());
+        }
         #[cfg(feature = "iterative-bake")]
         let available = stage_cursor
             .as_ref()

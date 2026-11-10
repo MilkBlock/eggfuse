@@ -520,6 +520,14 @@ pub struct Stats {
     joint_output_reads: u64,
     joint_output_mask_checks: u64,
     joint_output_mask_writes: u64,
+    ripsat_plan_probes: u64,
+    ripsat_layout_checks: u64,
+    ripsat_witness_checks: u64,
+    ripsat_completed: u64,
+    ripsat_projected_slots: u64,
+    ripsat_layout_fallbacks: u64,
+    ripsat_boundary_fallbacks: u64,
+    ripsat_witness_fallbacks: u64,
     history_slots_written: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
@@ -1339,6 +1347,68 @@ impl Programs {
     pub(crate) fn abort_effects(&mut self, effects: crate::cell::Effects) {
         self.stats.effect_aborted_frames += 1;
         self.finish_effects(effects, false);
+    }
+    /// Exact dispatch selects a prechecked constructor completion. Inputs and
+    /// the published anchor were already matched; the pure monotone template
+    /// proves the full keys. Only actual receipt lifetime remains to validate.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn prepare_direct_completion(&mut self,g:&Graph,rid:usize,step:&Started)
+        -> Option<crate::cell::Results> {
+        if !g.program.iterative.completion_enabled() {return None;}
+        let Started::Live(cursor)=step else {return None};
+        self.stats.ripsat_plan_probes+=1;
+        let plan=g.program.iterative.direct_completion(&cursor.state)?;
+        debug_assert_eq!(plan.rule,rid);
+        let outputs=&self.outputs[rid];
+        let width=self.cell_output_widths[rid];
+        self.stats.ripsat_layout_checks+=1;
+        if !outputs.is_empty() && (!self.compiled_commits || !self.receipts || self.audit_receipts
+            || width==0 || width>32 || width!=outputs.len()
+            || outputs.iter().any(|o|!self.permanent[o.table] || g.has_visibility_changes(o.table))) {
+            self.stats.ripsat_boundary_fallbacks+=1; return None;
+        }
+        if !outputs.is_empty() {
+            let effect=self.effect_plans[rid].get_or_init(||Rc::new(crate::cell::EffectPlan::compile(
+                &g.program,rid,outputs,width,false)));
+            if effect.joint_width()!=Some(plan.layout.sources.len()) {
+                self.stats.ripsat_layout_fallbacks+=1; return None;
+            }
+        }
+        let Some(results)=cursor.state.history.project_complete(plan) else {
+            self.stats.ripsat_layout_fallbacks+=1; return None;
+        };
+        for &(_,table,slot) in &plan.outputs {
+            self.stats.ripsat_witness_checks+=1;
+            let port=crate::cell::ResultPort::new(rid,slot);
+            let Some(w)=results.get(port) else {self.stats.ripsat_witness_fallbacks+=1;return None};
+            if !g.receipt_visible(g.resolve_receipt(w),table) {
+                self.stats.ripsat_witness_fallbacks+=1; return None;
+            }
+        }
+        Some(results)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn complete_direct(&mut self,g:&Graph,rid:usize,cell:u32,mut step:Started,
+        results:crate::cell::Results) {
+        let Started::Live(cursor)=&mut step else {unreachable!("validated completion cursor")};
+        self.training.applied(&g.program.iterative,&mut cursor.state,g.program.rules[rid].inputs.len());
+        self.stats.completed_steps+=1;
+        self.stats.ripsat_completed+=1;
+        self.stats.ripsat_projected_slots+=results.len() as u64;
+        if self.outputs[rid].is_empty() {return;}
+        self.capture_unions.get_or_insert(g.stats.unions);
+        // Move only the completion view. All dependency slots remain in the
+        // original owner; history and Entry publication share this projection.
+        step.remember(&g.program.iterative,rid,|_|unreachable!(),|_|unreachable!(),0,
+            Some(results),&mut self.stats);
+        let slot=self.pending_steps.len();
+        self.pending_steps.push(Completion::new(step));
+        self.install_delivery(rid,slot,cell,0,true);
+        let width=self.cell_output_widths[rid];
+        self.count_output_receipts(rid,width);
+        self.stats.captured_anchors+=width as u64;
+        self.stats.unmaterialized_anchor_keys+=width as u64;
+        self.stats.captured_contexts+=1;
     }
     pub(crate) fn complete<E: crate::cell::CompletedEffects>(
         &mut self,

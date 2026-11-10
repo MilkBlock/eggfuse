@@ -66,3 +66,73 @@ fn failed_rhs_does_not_train_a_completed_transition() {
             "the bridge RHS failed and must not establish its completion: {hits:?}");
     }
 }
+
+fn execute(raw:Value) -> (Executor,Value) {
+    let p=Program::parse(raw).unwrap();
+    let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
+    use eggfuse_cell_runtime::transfer_audit as audit;
+    audit::take_digests(); audit::take_write_digests(); audit::take_resume_digests();
+    audit::set_active(true); audit::enable_write_audit();
+    let mut snapshots=vec![e.graph.export().unwrap()];
+    loop {
+        let previous=e.steps.len();
+        e.execute_until(Some(previous+1)).unwrap();
+        if e.steps.len()==previous {break;}
+        snapshots.push(e.graph.export().unwrap());
+    }
+    audit::set_active(false);
+    let evidence=json!({"states":snapshots,"inputs":audit::take_digests(),
+        "writes":audit::take_write_digests(),"resumes":audit::take_resume_digests()});
+    (e,evidence)
+}
+
+#[test]
+fn direct_completion_projects_real_results_and_preserves_every_run() {
+    let base=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(Mid E)","(Mid E) (Seen E)")
+        .replace("(N 1) (N 2)","(N 1) (N 2)\n(ruleset observe)\n(rule ((Left x)) ((Seen x)) :ruleset observe)\n(rule ((Right x)) ((Seen x)) :ruleset observe)")
+        .replace("(run c)","(run c) (run observe)");
+    for source in [base.clone(),base.replace("(N 1) (N 2)","(Left (N 1)) (Right (N 2))"),
+        base.replace("(N 1) (N 2)","(N 1) (N 2)\n(rule ((= first (N 1)) (= second (N 2))) ((union first second)) :ruleset retire)")] {
+        let dir=tempfile::tempdir().unwrap();
+        fixture::emit(&source,&dir.path().join("case")).unwrap();
+        let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+        let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+        let (before,expected)=execute(raw); let (after,actual)=execute(compiled.clone());
+        assert_eq!(expected,actual,"exact boundaries and ordered inputs/effects on the actual optimized path");
+        assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
+        assert_eq!(before.snapshots,after.snapshots);
+        assert_eq!(before.binding_audit,after.binding_audit);
+        for (a,b) in before.steps.iter().zip(&after.steps) {
+            for key in ["ordinal","ruleset","path","iterations","epoch","logical_matches","executed_bindings","changed"] {assert_eq!(a[key],b[key],"{key}");}
+        }
+        let a=before.report(); let b=after.report();
+        let stats=&b["stage_spine"]["stats"];
+        assert!(stats["ripsat_completed"].as_u64().unwrap()>0,"{stats}");
+        assert!(a["stats"]["handoff_attempts"].as_u64().unwrap()>b["stats"]["handoff_attempts"].as_u64().unwrap());
+        assert!(a["stage_spine"]["stats"]["effect_slots_initialized"].as_u64().unwrap()>stats["effect_slots_initialized"].as_u64().unwrap());
+        let mut corrupt=compiled.clone();
+        let state=corrupt["iterative_bake"]["rhs_handoffs"]["completion_states"].as_array_mut().unwrap()
+            .iter_mut().find(|s|!s.is_null()).unwrap();
+        state["sources"][0][1]=json!(99999);
+        assert!(Program::parse(seal(corrupt)).is_err());
+        let mut corrupt=compiled;
+        corrupt["iterative_bake"]["completion"]["contracts"]["structures"]=json!([]);
+        assert!(Program::parse(seal(corrupt)).is_err());
+    }
+}
+
+#[test]
+fn deletable_results_keep_the_original_rhs_responsibility() {
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
+    let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    let (before,expected)=execute(raw); let (after,actual)=execute(compiled);
+    assert_eq!(expected,actual);
+    assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
+    assert_eq!(before.snapshots,after.snapshots);
+    assert_eq!(before.binding_audit,after.binding_audit);
+    assert_eq!(after.report()["stage_spine"]["stats"]["ripsat_completed"],0);
+}

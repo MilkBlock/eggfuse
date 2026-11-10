@@ -16,6 +16,7 @@ impl Work {
                 "root_handles_created", "contexts_created", "capture_reads",
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
+                "ripsat_plan_probes", "ripsat_layout_checks", "ripsat_witness_checks",
                 "history_inherited_reads", "history_inheritance_marks", "history_heap_frames", "effect_slots_initialized",
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards", "cell_query_result_writes",
                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
