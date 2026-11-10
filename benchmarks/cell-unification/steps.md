@@ -616,3 +616,22 @@ sum-bits effect_aborted_frames 58→0，effect_frames 6480→6422，槽初始化
 产物 out/cell-closed-aliases；复核 `python3 benchmarks/cell-unification/check_closed_cells.py ROOT OUTPUT --commit COMMIT`。控制源码为 `git worktree add --detach ROOT/control 311a3ef8` 后应用 closed-attempt-accounting.patch，普通 release features 为 sparse-cells,view-ports,storage-metrics；脚本同时核对控制源码差异、旧二进制 SHA、输入及运行清单。短目录用 `cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,view-ports,iterative-bake --example emit_closed_cells -- ROOT` 生成，随后 run_retention_fixtures.run(ROOT, ('closed','retired','barrier'), audit=True/False)。
 
 这是 311a3ef8 测速后的第 1 个实现提交，度量对象为 standalone Cell CPU。接续消除了已覆盖闭合 miss 的重复工作；只有匹配事实就足以完成的 Cell、RHS 策略选择、未知发布边界及其余优化族仍待接管，整体统一与最终多线程验收未完成。
+
+## 按用户要求补测 808aadb3
+
+当前实现已经提交，按“这个 commit 完就可以试试”的授权补测一次；从 808aadb3 重新按每 5 个实现提交测速，证据提交不计入。使用冻结的普通 release、相同 sum-bits 程序，4 个版本交错运行，每版预热 1 次、正式 7 次。期间没有构建或另起测试。度量对象为 standalone Cell CPU，不是 native egglog，也未恢复完整多线程验收。
+
+| 版本 | 推理中位数 ms | 进程中位数 ms | setup 中位数 ms | RSS 中位数 bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 808aadb3 候选 | 24.645958 | 127.974417 | 3.062542 | 179748864 |
+| 311a3ef8 + 仅计数修正 | 24.599000 | 127.703792 | 3.172542 | 179732480 |
+| 311a3ef8 原版，亦为上次测速 | 24.739542 | 129.089875 | 3.025875 | 179732480 |
+| 24c4ae8a 历史配置 | 24.526833 | 134.240375 | 3.566708 | 179503104 |
+
+候选相对原版的配对推理比为 **0.991190 [0.979910, 1.038960]**，进程比为 1.003900 [0.989034, 1.022652]；相对计数控制的推理比为 1.007952 [0.982817, 1.027509]，进程比为 1.010007 [0.980020, 1.033514]。这些区间均跨 1，不能确认本次提速、变慢或严格速度保持。相对历史配置的推理比为 1.010882 [0.990262, 1.019342]，同样跨 1；进程比为 0.980628 [0.950779, 0.997379]，这个进程差异不能替代推理收益。区间为同轮配对 bootstrap 95%，保留全部样本；不把各中位数之比当成配对结果。
+
+所有预热及正式样本的最终 state 和 1,428 个 Run 顺序完全一致，每个版本内部的工作计数也一致；已有 choice_diagnosis pass 和短样例证据仍适用。修正计数控制的 690 次检查变为候选的 592 次，已覆盖闭合 miss 不再丢弃效果帧，确实省掉了工作；但这 98 项等权节省没有建立实际推理收益。RSS 相对直接前版多 16 KiB，并非分配器计数；各次时间波动及更大范围的准备、调度成本尚不能据此归因。
+
+复现测速：`python3 benchmarks/witness-prefix/measure.py benchmarks/cell-unification/closed-cells-timing-spec.json out/cell-closed-aliases/timing --repeat 7 --warmups 1`（需新的输出目录；已有样本不覆盖）。复核现有产物：`python3 benchmarks/cell-unification/check_closed_cells.py out/cell-closed-aliases OUTPUT.json --commit 808aadb3 --timing`。原版及计数控制分别对应 last_timed 和 baseline lane；二进制 SHA 与前次证据相互核对。复核脚本不会重跑负载。
+
+下一项仍是仅凭匹配事实就能完成的 Cell：先核对实际覆盖和 continuation 的发布、深度、去重义务，再用现有完成接口接管。不能为了扩大闭合数量而新增另一套绑定或绕开原 Run/effect 顺序。

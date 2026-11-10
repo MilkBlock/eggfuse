@@ -47,7 +47,7 @@
 | 成本 / 剩余工作 | `report:/stats/cells_created [value]`<br>`report:/stats/merge_program_operations [value]`<br>`report:/stats/merge_port_reads [value]`<br>`report:/stats/merge_program_constructs [value]`<br>`report:/allocations/alloc_calls [value]`<br>`report:/stage_spine/stats/effect_frames [value]`<br>`report:/stage_spine/stats/effect_slots_initialized [value]`<br>`report:/stage_spine/stats/effect_slot_probes [value]`<br>`report:/stage_spine/stats/effect_slot_targets [value]`<br>`report:/stage_spine/stats/effect_outputs_reused [value]`<br>`report:/stage_spine/stats/effect_output_copies [value]`<br>`report:/stage_spine/stats/effect_aborted_frames [value]`<br>`report:/stage_spine/effect_plan_cache_bytes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/single_writes [count]`<br>`program:/merge_programs/programs [count]` |
 
-解释与缺口：闭合准入复用 Cell 现有别名证明；旧 portable certificate 仍严格校验，再 lowering 唯一执行标志。闭合、结构性完成与普通/局部前缀共用 Start，首次 miss 保留计算结果、收据与原操作位置，不再丢弃并重放整段。source effect donor 仍直接占据发布槽，raw operation 收据保持独立。sum-bits 实际见证检查在修正的同一口径下 690→592，丢弃帧 58→0；完整闭合仍为 165。RHS 策略选择、只有查询事实即可完成的 Cell、单写投影和剩余边界控制尚待统一；本步未测速。
+解释与缺口：闭合准入复用 Cell 现有别名证明；旧 portable certificate 仍严格校验，再 lowering 唯一执行标志。闭合、结构性完成与普通/局部前缀共用 Start，首次 miss 保留计算结果、收据与原操作位置，不再丢弃并重放整段。source effect donor 仍直接占据发布槽，raw operation 收据保持独立。sum-bits 实际见证检查在修正的同一口径下 690→592，丢弃帧 58→0；完整闭合仍为 165。RHS 策略选择、只有查询事实即可完成的 Cell、单写投影和剩余边界控制尚待统一；本步未测速。 808aadb3 按用户要求补测：sum-bits 推理中位数 24.646 ms，直接前版 311a3ef8 为 24.740 ms；配对比 0.991190 [0.979910,1.038960]，相对计数控制/历史配置的推理区间也跨 1。98 项等权工作节省没有建立速度收益或严格速度保持；这是 standalone Cell CPU，非 native egglog。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 

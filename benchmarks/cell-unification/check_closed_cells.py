@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Check saved Cell prefix completion, metered control and short semantic runs."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
 import subprocess
-from check_links import load, sha
+from check_links import load, sha, work
 from check_mixed_outputs import pair
+from collect_sieve import timing, RUN_KEYS
 
 ALLOWED = {'/stats/' + k for k in ('handoff_attempts', 'handoff_closed', 'handoff_closed_fallback')}
 ALLOWED |= {'/stage_spine/stats/' + k for k in ('effect_aborted_frames', 'effect_frames',
@@ -49,7 +51,7 @@ def opportunity(program, report):
         scope='Static retained switch certificates and prior applied-unit counts; not a mutation count or guaranteed successful closure')
 
 
-def collect(root, commit):
+def collect(root, commit, timed=False):
     program = root / 'sum/program.json'
     result = compare(root, ('run-baseline', 'run-candidate'), program)
     assert result['net_saved_measured_operations'] > 0
@@ -129,6 +131,49 @@ def collect(root, commit):
         removed='Whole-prefix discard, receipt-frame recreation and repeated witness checks after a closed Cell miss. Iterative and structural completion share the Cell Start result; source aliases extend closure after exact portable-proof validation.',
         limits='No full-closure increase on sum-bits: newly eligible visits still miss, but now resume without duplicate work. Raw operation receipts, original effect/Run order, exact key/liveness checks and unsupported-union boundaries remain. Setup lowering and partial-frame moves are not separately timed or allocator-counted. Equal-weight credit charges actual witness attempts once; older raw counts omitted failed preflight work. Overall Cell unification and final parallel acceptance remain incomplete.',
         timing_cadence=dict(last_timed_commit='311a3ef8', implementation_commits_since_timing=1))
+    if timed:
+        result['timing'] = timing(root, commit, commits=dict(
+            baseline='311a3ef8 plus attempt-accounting-only patch', candidate=commit,
+            last_timed='311a3ef8', historical='24c4ae8a'))
+        lanes = result['timing']['lanes']
+        assert lanes['last_timed']['runtime_sha256'] == result['binaries']['unmetered']
+        assert lanes['historical']['runtime_sha256'] == prior['timing']['lanes']['historical']['runtime_sha256']
+        samples = load(root / 'timing/samples.json')
+        report = load(root / 'run-candidate/report.json')
+        schedule = [[step[k] for k in RUN_KEYS] for step in report['steps']]
+        stamp = dict(state_sha256=result['ordered_hashes']['state.json'],
+            schedule_sha256=hashlib.sha256(json.dumps(schedule, separators=(',', ':')).encode()).hexdigest())
+        assert samples['semantic_reference'] == stamp
+        groups = ('stats', 'key_lookup_calls', 'scoped_executor', 'port_completion',
+            'birth_absence_directory', 'parallel_guards', 'completion_batches',
+            'cell_ownership_stats', 'stable_ports_stats', 'maintenance_stats',
+            'stage_spine_stats', 'entry_schedule_stats', 'register_prefix_stats',
+            'multi_stage_stats', 'free_join_stats', 'known_results_stats', 'storage')
+        for lane, values in samples['lanes'].items():
+            assert values['args'] == ['--local-congruence'] and values['environment'] == {}
+            assert [r['iteration'] for r in values['warmup_samples']] == [-1]
+            rows = values['warmup_samples'] + values['samples']
+            expected = work({k: rows[0][k] for k in groups})
+            for row in rows:
+                assert all(row[k] == v for k, v in stamp.items()) and row['runs'] == len(schedule)
+                assert work({k: row[k] for k in groups}) == expected, lane
+                assert row['allocations'] is None and row['setup_allocations'] is None
+        for lane, source in [('baseline', 'baseline'), ('candidate', 'candidate'), ('last_timed', 'unmetered')]:
+            report = load(root / f'run-{source}/report.json')
+            row = samples['lanes'][lane]['samples'][0]
+            assert work(row['stats']) == work(report['stats'])
+            assert work(row['stage_spine_stats']) == work(report['stage_spine']['stats'])
+        result['timing'].update(semantic_reference=stamp, work_consistent_in_every_lane=True,
+            normal_release_no_allocator_instrumentation=True,
+            lane_roles=dict(baseline='Metered work control; same source with only attempt accounting fixed',
+                last_timed='Unmodified direct predecessor and prior timing checkpoint',
+                historical='Historical configuration; same frozen program'))
+        result['scope'] = 'standalone Cell CPU; normal release work checks and user-requested timing; not native egglog'
+        result['performance_status'] = 'inference_gain_not_established_preservation_unresolved'
+        result['control_evidence_sha256'] = sha(Path(__file__).with_name('output-donors-results.json'))
+        result['timing_cadence'] = dict(last_timed_commit=commit, implementation_commits_since_timing=0,
+            implementation_commits_in_batch=[commit],
+            reason='User requested timing after the current commit; resume every five implementation commits')
     return result
 
 
@@ -137,5 +182,6 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
+    p.add_argument('--timing', action='store_true', help='Validate saved timing; does not run workloads')
     args = p.parse_args()
-    args.output.write_text(json.dumps(collect(args.root.resolve(), args.commit), indent=2) + '\n')
+    args.output.write_text(json.dumps(collect(args.root.resolve(), args.commit, args.timing), indent=2) + '\n')
