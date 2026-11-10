@@ -287,8 +287,19 @@ impl Catalog {
         let mut structures = vec![];
         let mut implementations = vec![];
         for (unit,u) in self.units.iter().enumerate() {
-            let Some(n) = normalize(p,&u.path) else { continue; };
-            let next=shapes.len();
+            let Some(n) = normalize(p,&u.path) else {
+                // Retain exact ordered source contracts for unsupported
+                // normalization. They may use independently checked result
+                // inclusion, but do not acquire structural equivalence merely
+                // because their final constructor values happen to agree.
+                let class=structures.len();
+                structures.push(json!({"ordered_source":u.path,"normalization":"opaque-source-contract"}));
+                implementations.push(json!({"unit":unit,"class":class,"source_path":u.path,
+                    "normalization":"opaque-source-contract","established":"successful-rhs",
+                    "visible":"original-run-after-completion"}));
+                continue;
+            };
+            let next=structures.len();
             let class=*shapes.entry(n.structure.clone()).or_insert_with(|| {
                 structures.push(serde_json::to_value(&n.structure).unwrap()); next
             });

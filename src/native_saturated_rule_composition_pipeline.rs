@@ -763,7 +763,7 @@ pub(super) fn cpu_completion_egraph(contracts:&Json) -> Result<Json> {
         let class=implementation["class"].as_u64().and_then(|n|usize::try_from(n).ok())
             .ok_or("invalid completion class")?;
         let structure=structures.get(class).ok_or("missing completion class")?;
-        let descriptor=json!({"kind":"completed-positive-constructor-cell",
+        let descriptor=json!({"kind":if structure.get("ordered_source").is_some() {"completed-ordered-source-cell"}else{"completed-positive-constructor-cell"},
             "recipe":contracts["recipe"],"structure":structure});
         registry.register_descriptor(id,&[],&descriptor,&Json::Null)?;
     }

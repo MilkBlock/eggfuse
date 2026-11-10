@@ -31,6 +31,34 @@ mod joint_tests {
         assert_eq!(results.get(ResultPort::new(3, 0)), None);
         assert_eq!(results.get(ResultPort::new(91, 1)), None);
     }
+
+    #[test]
+    fn baked_permutations_reuse_one_owner_through_repeated_completions() {
+        use crate::cell_completion::{Direct,compile_projections};
+        let make=|rule,source| {
+            let layout=SlotLayout::compile(rule,vec![Some(ResultPort::new(source,1)),Some(ResultPort::new(source,0))]).unwrap();
+            Some(Rc::new(Direct {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![]}))
+        };
+        let mut plans=[make(1,0),make(2,1),make(1,2)];
+        compile_projections(&mut plans,std::iter::empty());
+        let a=Dependency::Fact(FactRef{cell:19,op:4});
+        let b=Dependency::Fact(FactRef{cell:71,op:8});
+        let slots=vec![Some(a),Some(b)]; let address=slots.as_ptr();
+        let original=Rc::new(Trail::One(Results::from_outputs(0,slots)));
+        let mut owner=original.clone(); let mut probes=0;
+        for i in 0..101 {
+            let plan=plans[if i==0 {0}else if i%2==1 {1}else{2}].as_ref().unwrap();
+            let next=Results::project_complete(plan,owner,&mut probes).unwrap();
+            assert_eq!(next.stored_len(),0);
+            assert!(Rc::ptr_eq(next.parent_owner().unwrap(),&original));
+            assert_eq!(next.output(0),Some(if i%2==0 {b}else{a}));
+            owner=Rc::new(Trail::One(next));
+        }
+        let Trail::One(base)=original.as_ref() else{unreachable!()};
+        assert_eq!(base.slots.as_ptr(),address);
+        assert_eq!(base.output(0),Some(a));
+        assert!(probes>0);
+    }
 }
 impl ResultPort {
     pub fn new(rule: usize, slot: usize) -> Self {
@@ -59,8 +87,9 @@ impl Serialize for Capture {
 
 #[derive(Debug)]
 pub(crate) struct SlotLayout {
+    pub(crate) rule: usize,
     pub sources: Vec<Option<ResultPort>>,
-    source_rule: usize,
+    pub(crate) source_rule: usize,
     valid: u64,
     identity: u64,
     shifts: Vec<(isize,u64)>,
@@ -78,7 +107,7 @@ impl SlotLayout {
                 *shifts.entry(slot as isize-source.slot() as isize).or_insert(0u64) |= 1<<source.slot();
             }
         }
-        Some(Rc::new(Self { sources,source_rule,valid,identity,shifts:shifts.into_iter().collect() }))
+        Some(Rc::new(Self { rule,sources,source_rule,valid,identity,shifts:shifts.into_iter().collect() }))
     }
     pub(crate) fn storage_bytes(&self) -> usize {
         std::mem::size_of::<Self>()
@@ -158,13 +187,22 @@ impl Results {
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
-    pub(crate) fn project_complete(rule:usize,layout:&Rc<SlotLayout>,owner:Rc<Trail>) -> Option<Self> {
+    pub(crate) fn project_complete(plan:&crate::cell_completion::Direct,owner:Rc<Trail>,probes:&mut u64) -> Option<Self> {
+        let (rule,layout)=(plan.rule,&plan.layout);
         let width=layout.sources.len();
         if width==0 || width>64 || layout.sources.iter().any(Option::is_none) {return None;}
         let mask=u64::MAX >> (64-width);
-        let mut projected=Self::new(rule);
-        projected.prepare(layout,owner,mask);
-        (projected.inherited_count()==width).then_some(projected)
+        let Trail::One(old)=owner.as_ref() else {return None};
+        if old.rule!=layout.source_rule {return None;}
+        let (projection,parent)=if let Some(previous)=&old.projection {
+            if old.forwarded & plan.required_sources != plan.required_sources {return None;}
+            let composed=plan.projections.iter().find_map(|(source,target)| {
+                *probes+=1;
+                Rc::ptr_eq(source,previous).then_some(target.clone())
+            })?;
+            (composed,old.parent.clone()?)
+        } else {(layout.clone(),owner)};
+        Some(Self{rule,slots:SmallVec::new(),projection:Some(projection),parent:Some(parent),forwarded:mask})
     }
     pub fn inherits(&self, port: ResultPort) -> bool { port.slot() < 64 && self.forwarded & (1 << port.slot()) != 0 }
     pub fn prepare(&mut self, layout:&Rc<SlotLayout>, previous:Rc<Trail>, flags:u64) {

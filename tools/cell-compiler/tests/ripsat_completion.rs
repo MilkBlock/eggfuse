@@ -67,6 +67,7 @@ fn failed_rhs_does_not_train_a_completed_transition() {
     }
 }
 
+#[cfg(feature = "sparse-cells")]
 fn execute(raw:Value) -> (Executor,Value) {
     let p=Program::parse(raw).unwrap();
     let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
@@ -87,14 +88,21 @@ fn execute(raw:Value) -> (Executor,Value) {
 }
 
 #[test]
+#[cfg(feature = "sparse-cells")]
 fn direct_completion_projects_real_results_and_preserves_every_run() {
     let base=include_str!("fixtures/history-retention.egg")
         .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
         .replace("(Mid E)","(Mid E) (Seen E)")
         .replace("(N 1) (N 2)","(N 1) (N 2)\n(ruleset observe)\n(rule ((Left x)) ((Seen x)) :ruleset observe)\n(rule ((Right x)) ((Seen x)) :ruleset observe)")
         .replace("(run c)","(run c) (run observe)");
-    for source in [base.clone(),base.replace("(N 1) (N 2)","(Left (N 1)) (Right (N 2))"),
-        base.replace("(N 1) (N 2)","(N 1) (N 2)\n(rule ((= first (N 1)) (= second (N 2))) ((union first second)) :ruleset retire)")] {
+    for (case,source) in [base.clone(),base.replace("(N 1) (N 2)","(Left (N 1)) (Right (N 2))"),
+        base.replace("(N 1) (N 2)","(N 1) (N 2)\n(rule ((= first (N 1)) (= second (N 2))) ((union first second)) :ruleset retire)"),
+        base.replace("((Left x) (Right x) (Gateway x))","((Left x) (Right x) (Mid x) (Gateway x))")
+            .replace("((Mid x))","((Right x) (Left x) (Mid x))"),
+        base.replace("((Left x) (Right x) (Gateway x))","((Left x) (Right x) (Gateway x) (union (Left x) (Mid x)))")
+            .replace("(rule ((= m (Mid x))) ((Left x) (Right x)) :ruleset c :name \"consume\")",
+                "(rewrite (Mid x) (Left x) :ruleset c :name \"consume\")"),
+    ].into_iter().enumerate() {
         let dir=tempfile::tempdir().unwrap();
         fixture::emit(&source,&dir.path().join("case")).unwrap();
         let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
@@ -109,7 +117,11 @@ fn direct_completion_projects_real_results_and_preserves_every_run() {
         }
         let a=before.report(); let b=after.report();
         let stats=&b["stage_spine"]["stats"];
-        assert!(stats["ripsat_completed"].as_u64().unwrap()>0,"{stats}");
+        assert!(stats["ripsat_completed"].as_u64().unwrap()>0,"case {case}; completion programs: {}; {stats}",compiled["iterative_bake"]["rhs_handoffs"]["completion_states"]);
+        if case==3 {
+            assert_eq!(stats["ripsat_completed"],4);
+            assert!(stats["ripsat_projection_checks"].as_u64().unwrap()>0);
+        }
         assert!(a["stats"]["handoff_attempts"].as_u64().unwrap()>b["stats"]["handoff_attempts"].as_u64().unwrap());
         assert!(a["stage_spine"]["stats"]["effect_slots_initialized"].as_u64().unwrap()>stats["effect_slots_initialized"].as_u64().unwrap());
         let mut corrupt=compiled.clone();
@@ -124,6 +136,7 @@ fn direct_completion_projects_real_results_and_preserves_every_run() {
 }
 
 #[test]
+#[cfg(feature = "sparse-cells")]
 fn deletable_results_keep_the_original_rhs_responsibility() {
     let dir=tempfile::tempdir().unwrap();
     fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();

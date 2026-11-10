@@ -523,6 +523,8 @@ pub struct Stats {
     ripsat_plan_probes: u64,
     ripsat_layout_checks: u64,
     ripsat_witness_checks: u64,
+    ripsat_projection_checks: u64,
+    ripsat_boundary_reads: u64,
     ripsat_completed: u64,
     ripsat_projected_slots: u64,
     ripsat_layout_fallbacks: u64,
@@ -1363,18 +1365,18 @@ impl Programs {
         let width=self.cell_output_widths[rid];
         self.stats.ripsat_layout_checks+=1;
         if !outputs.is_empty() && (!self.compiled_commits || !self.receipts || self.audit_receipts
-            || width==0 || width>32 || width!=outputs.len()
+            || width>32
             || outputs.iter().any(|o|!self.permanent[o.table] || g.has_visibility_changes(o.table))) {
             self.stats.ripsat_boundary_fallbacks+=1; return None;
         }
         if !outputs.is_empty() {
             let effect=self.effect_plans[rid].get_or_init(||Rc::new(crate::cell::EffectPlan::compile(
                 &g.program,rid,outputs,width,false)));
-            if effect.joint_width()!=Some(plan.layout.sources.len()) {
+            if width!=0 && effect.joint_width()!=Some(plan.layout.sources.len()) {
                 self.stats.ripsat_layout_fallbacks+=1; return None;
             }
         }
-        let Some(results)=cursor.state.history.project_complete(plan) else {
+        let Some(results)=cursor.state.history.project_complete(plan,&mut self.stats.ripsat_projection_checks) else {
             self.stats.ripsat_layout_fallbacks+=1; return None;
         };
         for &(_,table,slot) in &plan.outputs {
@@ -1403,11 +1405,26 @@ impl Programs {
             Some(results),&mut self.stats);
         let slot=self.pending_steps.len();
         self.pending_steps.push(Completion::new(step));
-        self.install_delivery(rid,slot,cell,0,true);
         let width=self.cell_output_widths[rid];
-        self.count_output_receipts(rid,width);
-        self.stats.captured_anchors+=width as u64;
-        self.stats.unmaterialized_anchor_keys+=width as u64;
+        if width!=0 {
+            self.install_delivery(rid,slot,cell,0,true);
+            self.count_output_receipts(rid,width);
+        }
+        // Uncovered Entry ownership remains an ordinary boundary publication,
+        // reading the same projected frame rather than creating an RHS packet.
+        for position in width..self.outputs[rid].len() {
+            let output=self.outputs[rid][position];
+            self.stats.ripsat_boundary_reads+=1;
+            self.stats.output_registrations+=1;
+            let port=self.effect_plans[rid].get().unwrap().history_effect(output.operation)
+                .expect("direct completion retains every actual effect");
+            let receipt=self.pending_steps[slot].results().output(port).expect("validated completion witness");
+            let publication=Publication{slot,receipt:Some(receipt),output:output.operation,
+                #[cfg(feature="spine-shapes")] source:crate::graph::FactRef{cell,op:output.operation as u32}};
+            self.capture_receipt(rid,slot,cell,position,output.table,publication,receipt,None);
+        }
+        self.stats.captured_anchors+=self.outputs[rid].len() as u64;
+        self.stats.unmaterialized_anchor_keys+=self.outputs[rid].len() as u64;
         self.stats.captured_contexts+=1;
     }
     pub(crate) fn complete<E: crate::cell::CompletedEffects>(

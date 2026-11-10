@@ -425,8 +425,8 @@ impl History {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
-    pub(crate) fn project_complete(&self,plan:&crate::cell_completion::Direct) -> Option<Results> {
-        Results::project_complete(plan.rule,&plan.layout,self.snapshot(plan.back)?)
+    pub(crate) fn project_complete(&self,plan:&crate::cell_completion::Direct,probes:&mut u64) -> Option<Results> {
+        Results::project_complete(plan,self.snapshot(plan.back)?,probes)
     }
     pub(crate) fn capture(
         &mut self,
@@ -676,6 +676,12 @@ impl Switch {
             )).collect::<Vec<_>>(),
             "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
             "program_owner_bytes":seen.len()*(std::mem::size_of::<Terminal>()+2*std::mem::size_of::<usize>()),
+            "direct_states":self.direct.iter().flatten().count(),
+            "direct_array_bytes":std::mem::size_of_val(self.direct.as_ref()),
+            "direct_program_bytes":self.direct.iter().flatten().map(|p|
+                std::mem::size_of::<crate::cell_completion::Direct>()+2*std::mem::size_of::<usize>()
+                +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
+                +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>(),
             "read_payload_bytes":payload})
     }
     pub(crate) fn transition_storage(&self) -> serde_json::Value {
@@ -862,34 +868,63 @@ impl Switch {
         // Ripsat completion exports the existing donor slots directly. Extend
         // the one authoritative result layout before any ports are lowered.
         let mut direct_back = vec![None; nodes.len()];
+        let mut direct_sources = vec![None;nodes.len()];
         if completion {
             for (path,&id) in &ids {
                 if path.len()<2 || !nodes[id].program.complete { continue; }
-                let Some(structure)=crate::cell_completion::normalize(p,path) else { continue; };
-                let Some(prefix)=crate::cell_completion::normalize(p,&path[..path.len()-1]) else { continue; };
-                if crate::cell_completion::extension(&prefix,&structure).is_none() { continue; }
                 let rid=path.last().unwrap().1.0;
                 let cell=Definition::new(p,rid).unwrap();
+                // Prior stages may have ordered unions or other effects.
+                // Their completed typed receipts prove this inclusion; only
+                // positive paths additionally share a normalized structure.
+                if cell.template.ops.iter().any(|i|!matches!(i,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Set(..))) {continue;}
                 let ops=cell.template.ops.iter().enumerate().filter_map(|(op,i)|
-                    matches!(i,Op::Let(..)).then_some(op)).collect::<Vec<_>>();
-                if ops.is_empty() || ops.len()>32 || exports[rid].iter().any(|s|matches!(s,Site::Query(_))) { continue; }
+                    matches!(i,Op::Let(..)|Op::Set(..)).then_some(op)).collect::<Vec<_>>();
+                if ops.is_empty() || ops.len()>32 { continue; }
                 let reads=ops.iter().map(|op|nodes[id].program.reuse.iter().find(|r|r.op==*op)).collect::<Option<Vec<_>>>();
                 let Some(reads)=reads else { continue; };
+                if reads.iter().any(|r|matches!(cell.template.ops[r.op],Op::Set(..)) && !r.equal_output) {continue;}
                 let first=reads[0];
                 if reads.iter().any(|r|(r.back,r.rule)!=(first.back,first.rule)) { continue; }
+                let (back,donor_rule)=(first.back,first.rule);
+                let wanted=exports[rid].iter().copied().chain(ops.iter().map(|&op|Site::Effect(op))).collect::<BTreeSet<_>>();
+                let sources=wanted.iter().map(|&site| {
+                    let source=match site {
+                        Site::Effect(op)=>nodes[id].program.reuse.iter().find(|r|r.op==op).map(|r|(r.back,r.rule,r.donor)),
+                        Site::Query(atom) if path.last().unwrap().1.1==Some(atom) && back==1 => {
+                            let previous=path[path.len()-2].1.0;
+                            let op=path.last().unwrap().0?;
+                            let source=p.known_results.static_sources.get(previous).and_then(|s|s[op]).unwrap_or(Site::Effect(op));
+                            Some((1,previous,source))
+                        },
+                        Site::Query(atom)=>nodes[id].program.queries.iter().find(|r|r.atom==atom).map(|r|(r.back,r.rule,r.donor)),
+                    }?;
+                    ((source.0,source.1)==(back,donor_rule)).then_some((site,source.2))
+                }).collect::<Option<BTreeMap<_,_>>>();
+                let Some(sources)=sources else{continue};
                 // Deletion is a boundary operation. Decline whole-table
                 // visibility changes, even when they occur outside this path.
-                if ops.iter().any(|&op| {
-                    let table=cell.relation(Site::Effect(op)).unwrap().table;
-                    p.templates.iter().any(|t|t.ops.iter().any(|i|matches!(i,Op::Hide(t,..) if *t==table)))
+                if wanted.iter().any(|&site| {
+                    let table=cell.relation(site).unwrap().table;
+                    !p.tables[table].constructor || !p.tables[table].virtual_fact ||
+                        p.templates.iter().any(|t|t.ops.iter().any(|i|matches!(i,Op::Hide(t,..) if *t==table)))
                 }) { continue; }
-                direct_back[id]=Some(first.back);
-                for op in ops {
-                    exports[rid].push(Site::Effect(op));
-                    nodes[id].supply.push(Capture {site:Site::Effect(op),port:ResultPort::new(rid,0)});
+                direct_back[id]=Some(back);
+                direct_sources[id]=Some((donor_rule,sources.clone()));
+                let donor=ids[&path[..path.len()-back]];
+                for (&site,&source) in &sources {
+                    exports[rid].push(site);
+                    nodes[id].supply.push(Capture {site,port:ResultPort::new(rid,0)});
+                    exports[donor_rule].push(source);
+                    nodes[donor].supply.push(Capture{site:source,port:ResultPort::new(donor_rule,0)});
                 }
-                exports[rid].sort_unstable(); exports[rid].dedup();
-                nodes[id].supply.sort_unstable(); nodes[id].supply.dedup();
+            }
+            for exports in &mut exports {exports.sort_unstable();exports.dedup();}
+            for id in 1..nodes.len() {
+                let (before,after)=nodes.split_at_mut(id);
+                let node=&mut after[0];
+                node.supply.extend_from_slice(&before[node.failure].supply);
+                node.supply.sort_unstable();node.supply.dedup();
             }
         }
         let keep = retained_depths(&nodes, &initial);
@@ -935,20 +970,17 @@ impl Switch {
             let Some(back)=back else {continue};
             let node=&nodes[id];
             let rule=node.supply[0].port.rule();
-            let sources=exports[rule].iter().map(|site|match site {
-                Site::Effect(op)=>node.program.reuse.iter().find(|r|r.op==*op).and_then(|r|r.port),
-                _=>None,
-            }).collect::<Vec<_>>();
+            let (donor,mapping)=direct_sources[id].as_ref().unwrap();
+            let sources=exports[rule].iter().map(|site|mapping.get(site).map(|&site|port(*donor,site))).collect::<Vec<_>>();
             if sources.len()>64 || sources.iter().any(Option::is_none) {continue;}
-            let layout=SlotLayout::compile(rule,sources).expect("single checked donor rule");
+            let layout=layouts.entry((rule,sources.clone())).or_insert_with(||SlotLayout::compile(rule,sources)).clone()
+                .expect("single checked donor rule");
             let cell=Definition::new(p,rule).unwrap();
-            let outputs=cell.template.ops.iter().enumerate().filter_map(|(op,i)| {
-                if let Op::Let(_,Call::Table(table),_)=i {
-                    Some((op,*table,exports[rule].binary_search(&Site::Effect(op)).unwrap()))
-                }else{None}
-            }).collect();
-            direct[id]=Some(Rc::new(crate::cell_completion::Direct{rule,back,layout,outputs}));
+            let outputs=exports[rule].iter().enumerate().map(|(slot,&site)|(site,cell.relation(site).unwrap().table,slot)).collect();
+            let required_sources=layout.sources.iter().flatten().fold(0,|mask,p|mask | (1u64<<p.slot()));
+            direct[id]=Some(Rc::new(crate::cell_completion::Direct{rule,back,layout,outputs,required_sources,projections:vec![]}));
         }
+        if completion {crate::cell_completion::compile_projections(&mut direct,layouts.values().flatten().cloned());}
         // Freeze only after every ResultPort has its final rule/slot identity.
         // The pool is compile-local: states share immutable capture programs,
         // while each completed instance retains its own Results and lifetime.
@@ -995,7 +1027,7 @@ impl Switch {
             initial,
             exports,
             completion,
-            direct:direct.into_boxed_slice(),
+            direct:if completion {direct.into_boxed_slice()}else{Box::new([])},
             depth,
         }
     }
@@ -1048,6 +1080,8 @@ impl Switch {
     pub(crate) fn layout_storage(&self) -> (usize,usize) {
         let mut seen=BTreeSet::new();
         let bytes=self.nodes.iter().filter_map(|n|n.layout.as_ref())
+            .chain(self.direct.iter().flatten().flat_map(|p|std::iter::once(&p.layout)
+                .chain(p.projections.iter().flat_map(|(a,b)|[a,b]))))
             .filter(|l|seen.insert(Rc::as_ptr(l) as usize))
             .map(|l|l.storage_bytes()+2*std::mem::size_of::<usize>()).sum();
         (seen.len(),bytes)

@@ -172,6 +172,10 @@ impl EffectPlan {
     pub fn joint_width(&self) -> Option<usize> { self.joint.as_ref().map(|p| p.width) }
     #[cfg(feature = "sparse-cells")]
     pub fn history_output(&self, position: usize) -> usize { self.joint.as_ref().unwrap().outputs[position] }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn history_effect(&self, operation:usize) -> Option<usize> {
+        self.slots.get(operation)?.history.checked_sub(1).map(usize::from)
+    }
     pub(crate) fn joint_bytes(&self) -> usize {
         #[cfg(feature = "sparse-cells")]
         { std::mem::size_of::<Option<Box<JointResults>>>() + self.joint.as_ref().map_or(0, |j|

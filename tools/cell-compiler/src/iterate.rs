@@ -271,13 +271,17 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         } else if handoffs {
             Catalog::emit_handoffs(&seed, plan)?;
         }
+        if completion {
+            let artifact=crate::completion_bake::apply_plan(&seed,plan.clone())?;
+            *plan=artifact["iterative_bake"].clone();
+            return Ok(Program::parse(artifact)?);
+        }
         let mut artifact = seed.artifact.clone();
         artifact.as_object_mut().unwrap().remove("sha256");
         artifact["iterative_bake"] = plan.clone();
         artifact["sha256"] = artifact_digest(&artifact).into();
         let mut p = Program::parse(artifact)?;
         plan["state_plan"] = crate::state_plan::compile(&p)?;
-        if completion { plan["completion"]=crate::state_plan::completion(&p)?; }
         p.artifact.as_object_mut().unwrap().remove("sha256");
         p.artifact["iterative_bake"] = plan.clone();
         p.artifact["sha256"] = artifact_digest(&p.artifact).into();

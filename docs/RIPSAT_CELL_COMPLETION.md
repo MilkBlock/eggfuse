@@ -146,3 +146,24 @@ this takeover. Foreign-owner reuse, a union between stages, a deletable-result
 fallback and forged artifacts are included. Repeated projection composition,
 structural alternative transition discovery and workload coverage remain work
 for the next checkpoints.
+
+The following extension compiles projection composition itself: a later Cell
+can permute inherited slots while referring directly to the original owner.
+The compiler closes at most 256 optional layout variants. A 101-transition test
+checks the original allocation, foreign witnesses, zero local slots and a flat
+owner reference. Unknown variants retain the normal fallback.
+
+An entry query witness can be inherited from its actual constructor publication,
+not just RHS effect witnesses. The single result layout therefore includes both
+the incoming proven query and completed effects. Source captures and their
+publication layout are compiled together, before ResultPort numbering. Current
+direct execution also covers constructor Set with an already-proved equal
+output; a Set needing a new union remains an effect. Prior nonpositive stages
+retain opaque ordered-source contracts rather than being falsely normalized as
+pure constructor graphs.
+
+Recompiling an artifact with ownership predictions rederives its body/Entry
+certificates and query-class masks. The compiler requires all authoritative
+source fields to be unchanged. Old fragment observations select the same code;
+their provenance is retained, and no new observation or performance support is
+claimed. A stale checksum alone is never accepted as the new certificate.
