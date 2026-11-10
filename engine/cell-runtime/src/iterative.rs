@@ -104,6 +104,8 @@ impl State {
     }
 }
 impl Catalog {
+    /// Retained switch dispatch arrays; excludes allocator overhead.
+    pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
     /// Retained path storage only; excludes tree-node overhead and other catalog data.
     pub fn path_storage(&self) -> J {
         let item=std::mem::size_of::<(Option<usize>,Entry)>();

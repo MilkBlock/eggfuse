@@ -11,6 +11,7 @@ use serde::Serialize;
 use std::{
     collections::{BTreeMap, BTreeSet},
     rc::Rc,
+    num::NonZeroUsize,
 };
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
@@ -545,10 +546,9 @@ pub(crate) struct Switch {
     pub(crate) congruence: bool,
     pub(crate) query_ports: bool,
     nodes: Vec<Node>,
-    by_rule: Vec<Vec<Option<usize>>>,
-    roots: Vec<Option<usize>>,
+    by_rule: Box<[Box<[Option<NonZeroUsize>]>]>,
+    roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
-    leaves: BTreeMap<Entry, usize>,
     pub exports: Vec<Vec<Site>>,
     pub depth: usize,
 }
@@ -593,6 +593,15 @@ impl Default for Terminal {
     }
 }
 impl Switch {
+    pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
+        serde_json::json!({"rule_rows":self.by_rule.len(),
+            "rule_slots":self.by_rule.iter().map(|r|r.len()).sum::<usize>(),
+            "root_slots":self.roots.len(),
+            "row_directory_bytes":std::mem::size_of_val(self.by_rule.as_ref()),
+            "rule_slot_bytes":self.by_rule.iter().map(|r|std::mem::size_of_val(r.as_ref())).sum::<usize>(),
+            "root_slot_bytes":std::mem::size_of_val(self.roots.as_ref()),
+            "duplicate_lookup_entry_bytes":0})
+    }
     /// Lower the validated portable transfer certificate with the Cell's own
     /// alias proofs. Keep one executable completion flag, without changing the
     /// historical wire certificate or relaxing its exact validation.
@@ -757,6 +766,7 @@ impl Switch {
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
         for (&(rid, pivot), &leaf) in leaves {
+            let leaf = NonZeroUsize::new(leaf.checked_add(1).expect("Cell leaf address overflow")).unwrap();
             let Some(pivot) = pivot else {
                 roots[rid] = Some(leaf);
                 continue;
@@ -765,6 +775,11 @@ impl Switch {
             entries.resize(entries.len().max(pivot + 1), None);
             entries[pivot] = Some(leaf);
         }
+        // Missing trailing rows and roots are already handled by checked lookup.
+        while by_rule.last().is_some_and(Vec::is_empty) { by_rule.pop(); }
+        while roots.last() == Some(&None) { roots.pop(); }
+        let by_rule = by_rule.into_iter().map(Vec::into_boxed_slice).collect();
+        let roots = roots.into_boxed_slice();
         Self {
             reuse_results,
             congruence,
@@ -773,17 +788,16 @@ impl Switch {
             by_rule,
             roots,
             initial,
-            leaves: leaves.clone(),
             exports,
             depth,
         }
     }
     pub(crate) fn leaf(&self, r: usize, p: usize) -> Option<usize> {
-        self.by_rule.get(r)?.get(p).copied().flatten()
+        self.by_rule.get(r)?.get(p).copied().flatten().map(|id| id.get()-1)
     }
     pub(crate) fn unique_root(&self, rule: usize, require_supply: bool) -> Option<usize> {
         if let Some(leaf) = self.roots.get(rule).copied().flatten() {
-            let pc = self.initial[leaf];
+            let pc = self.initial[leaf.get()-1];
             return (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc);
         }
         let mut leaves = self.by_rule.get(rule)?.iter().flatten();
@@ -791,7 +805,7 @@ impl Switch {
         if leaves.next().is_some() {
             return None;
         }
-        let pc = self.initial[leaf];
+        let pc = self.initial[leaf.get()-1];
         (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc)
     }
     pub(crate) fn active(&self, pc: usize) -> usize {
@@ -848,7 +862,11 @@ impl Switch {
     }
     pub(crate) fn replay(&self, path: &[(Option<usize>, Entry)]) -> usize {
         path.iter().fold(0, |s, (op, e)| {
-            self.advance(s, op.unwrap_or(0), self.leaves[e])
+            let leaf = match *e {
+                (r, Some(p)) => self.leaf(r, p),
+                (r, None) => self.roots.get(r).copied().flatten().map(|id|id.get()-1),
+            }.expect("validated Cell path entry");
+            self.advance(s, op.unwrap_or(0), leaf)
         })
     }
 }
@@ -862,6 +880,33 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn packed_dispatch_preserves_holes_roots_and_replay() {
+        let address = |id: usize| NonZeroUsize::new(id.checked_add(1).unwrap());
+        assert_eq!(address(usize::MAX-1).unwrap().get()-1, usize::MAX-1);
+        assert_eq!(std::mem::size_of::<Option<NonZeroUsize>>(), std::mem::size_of::<usize>());
+        let mut switch = Switch::default();
+        assert_eq!(switch.leaf(0, 0), None);
+        assert_eq!(switch.unique_root(0, false), None);
+        switch.by_rule = vec![vec![address(0), None].into_boxed_slice(),
+            vec![address(1), address(2)].into_boxed_slice()].into_boxed_slice();
+        switch.initial = vec![1, 2, 3];
+        switch.nodes = (0..4).map(|unit| Node { unit, failure: 0,
+            program: Terminal::default(), next: vec![], supply: vec![],
+            keep_history: 0, layout: None }).collect();
+        assert_eq!(switch.leaf(0, 0), Some(0));
+        assert_eq!(switch.leaf(0, 1), None);
+        assert_eq!(switch.leaf(0, 2), None);
+        assert_eq!(switch.leaf(2, 0), None);
+        assert_eq!(switch.unique_root(0, false), Some(1));
+        assert_eq!(switch.unique_root(0, true), None);
+        assert_eq!(switch.unique_root(1, false), None);
+        switch.roots = vec![None, address(0)].into_boxed_slice();
+        assert_eq!(switch.unique_root(1, false), Some(1));
+        switch.nodes[1].next.push(((7, 2), 2));
+        assert_eq!(switch.replay(&[(None, (1, None)), (Some(7), (1, Some(1)))]), 2);
+        assert_eq!(switch.replay(&[(None, (0, Some(0)))]), 1);
+    }
     #[test]
     fn compiled_result_ports_preserve_holes_and_real_returned_addresses() {
         let first = ResultPort::new(4, 0);
