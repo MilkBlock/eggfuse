@@ -1,0 +1,38 @@
+{
+  "scope": "Standalone Cell CPU; not native egglog",
+  "git_head": "f4fd21cbbc7b28da619c63ad5068523471593aa3",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "cpu": "Apple M3 Max",
+  "logical_cpus": 16,
+  "files": {
+    "runtime": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/runtime-candidate",
+      "sha256": "f07e3a21e945c9cd29c9cc5d2f787802d788dcbcbeeeb6e48f4f92a6ae4657a3",
+      "bytes": 5210832
+    },
+    "program": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/raytrace-thread-bottlenecks/query-classes/program.json",
+      "sha256": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601",
+      "bytes": 20034122
+    },
+    "compiler": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/target/cell-unification-tests/debug/eggfuse-cell-compiler",
+      "sha256": "807d0db77d262da54308aea31dc7fdf9819b7a43cfee434dd8d9072b56a1a846",
+      "bytes": 61316960
+    },
+    "source": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/workloads/pass3/inputs/raytrace.eggpart",
+      "sha256": "12d06b0b129afe976d10c251cbc4d9a64aec02b2b22f01425e69d761a5aa7757",
+      "bytes": 1319378
+    },
+    "catalog": {
+      "path": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/workloads/pass3/catalogs/raytrace.json",
+      "sha256": "cce68f16b5048257001881d189a21f5f82135a9863e25bc550506b51520436e7",
+      "bytes": 17071
+    }
+  },
+  "input_provenance": "Regenerated named Raytrace with checked frozen catalog, then bake-cell-ownership --query-classes true. Previous temporary input was unavailable; no historical timing is used as a paired baseline.",
+  "runtime_features": "sparse-cells,view-ports,storage-metrics; release; no allocation metrics or overlap probes",
+  "lane_scope": "guard-workers counts the worker pool; the main coordinator is additional. Batch mode enables scoped queues. scoped_serial isolates that queue change. No scoped-execution, port-scopes or pure-epochs flags.",
+  "semantics": "Exact final state and complete ordered Run signature against local_serial; not an independent native egglog semantic proof."
+}
