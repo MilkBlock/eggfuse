@@ -2855,7 +2855,9 @@
         "engine/cell-runtime/src/query_reads.rs",
         "engine/cell-runtime/src/stage_spine.rs",
         "engine/cell-runtime/src/cell_query.rs",
-        "engine/cell-runtime/src/constructor_reads.rs"
+        "engine/cell-runtime/src/constructor_reads.rs",
+        "engine/cell-runtime/src/cell_match.rs",
+        "engine/cell-runtime/src/slots.rs"
       ],
       "metrics": {
         "benefit": [
@@ -3125,6 +3127,26 @@
             "source": "report",
             "pointer": "/entry_schedule/seed_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_fragment_slots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_fragment_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/query_fragment_header_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/query_winner_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3202,10 +3224,20 @@
             "source": "report",
             "pointer": "/entry_schedule/stats/cell_entry_deliveries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_fragment_frames",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/query_fragment_sealed_slots",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。",
+      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。 owned-instance/v1 仅完成查询到 RHS 的实例交接；候选格式更宽，编译输入引用增加 2,048 字节。旧 Binding 重装未在历史 Work 中收费，不能用跨表示的历史等权分数证明这步收益；新增片段覆盖数不奖励，完整 allocator 成本单独对照。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
         "benchmarks/cell-query-workers/results.json",
@@ -3229,9 +3261,11 @@
         "benchmarks/cell-entry-partition/README.md",
         "benchmarks/cell-entry-partition/results.json",
         "benchmarks/cell-entry-partition/work-sum-g64.json",
-        "benchmarks/cell-entry-partition/work-ray-prefix.json"
+        "benchmarks/cell-entry-partition/work-ray-prefix.json",
+        "benchmarks/cell-owned-fragments/README.md",
+        "benchmarks/cell-owned-fragments/results.json"
       ],
-      "status": "cell-run/v4 + partitioned-cell-entries/v1：Cell Entry 直接交接，残余队列只含未接管输入；sum-bits/128-Run Raytrace 省 5,738/25,285 个 Seed，g64 净少 6,293/27,099 项等权操作。83 项相关测试和 sum-bits 指定验收通过；完整线程加速仍未证实"
+      "status": "owned-instance/v1：查询与 RHS 共用 Cell Instance，删除输入和外层结果重装；sum-bits 四线程 allocator 请求合计少 3,643 次、申请字节少 210,264，峰值在用申请量多 14,390。89 项相关测试与指定语义验收通过；本轮无完整计时，RHS 导出发布仍待接通。"
     },
     {
       "id": "I1",

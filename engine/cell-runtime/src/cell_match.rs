@@ -2,17 +2,38 @@
 //! existing witness projection, never a second graph of maintained facts.
 use crate::{
     graph::{Dependency, FactRef},
-    value::Value,
+    slots::Slots,
 };
 
-pub(crate) struct Matched {
+/// Owned execution state shared by query completion, winner selection and RHS.
+/// No graph identity is allocated until the ordinary ordered commit path.
+#[derive(Debug)]
+pub(crate) struct Instance {
+    #[cfg(feature = "view-consumers")]
+    pub view_source: Option<usize>,
     // The existing move-only continuation token follows its winning match.
     // Its lifetime remains owned by the source Run, not a second fact graph.
     #[cfg(feature = "iterative-bake")]
     pub direct: Option<crate::stage_spine::DirectOrigin>,
-    pub values: Vec<Value>,
-    pub facts: QueryFacts,
+    // Query completion writes the RHS's owned slot storage directly. Winner
+    // selection borrows its values; it must not assemble a second binding.
+    pub values: Slots,
+    pub known: QueryFacts,
     pub epoch: u64,
+    pub parent: Option<FactRef>,
+    pub continuation: Option<(u32, bool)>,
+    pub compiled: bool,
+}
+impl Instance {
+    pub fn matched(values: Slots, known: QueryFacts, epoch: u64) -> Self {
+        Self {
+            #[cfg(feature = "view-consumers")]
+            view_source: None,
+            #[cfg(feature = "iterative-bake")]
+            direct: None,
+            values, known, epoch, parent: None, continuation: None, compiled: true,
+        }
+    }
 }
 
 /// Keep a single requested query witness inline.

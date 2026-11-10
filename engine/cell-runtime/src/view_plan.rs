@@ -43,7 +43,7 @@ pub(crate) struct Member {
     pub driver_atom: usize,
     pub peer_atom: usize,
     pub query: Query,
-    pub inputs: Rc<Vec<usize>>,
+    pub inputs: crate::program::InputSlots,
 }
 // These adapters are used only while deriving/serializing a plan. Execution
 // reads Cell instructions; no view-specific tests or output ports are retained.

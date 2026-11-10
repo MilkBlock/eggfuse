@@ -24,6 +24,7 @@ pub(crate) struct Plan {
     read_tables: Vec<usize>,
     identity_literal: bool,
     query: Query,
+    inputs: InputSlots,
 }
 impl Plan {
     fn root(&self) -> usize { self.root.step.atom }
@@ -166,6 +167,7 @@ fn project(
         read_tables,
         identity_literal,
         query,
+        inputs: r.inputs.clone(),
     })
 }
 
@@ -220,6 +222,8 @@ pub(crate) struct Stats {
     terminal_slots_copied: u64,
     terminal_scratch_slots: u64,
     terminal_result_writes: u64,
+    terminal_input_slots: u64,
+    terminal_input_capacity_bytes: u64,
     full_terminal_rows: u64,
     delta_terminal_rows: u64,
     reverse_reads: u64,
@@ -654,16 +658,14 @@ fn emit(
                 stats.terminal_result_writes += 1;
             }
         }
-        let values = query.inputs.iter().map(|f| f.read(g,
-            |slot| p.values[slot].as_ref().unwrap(), &results, expanded)).collect();
+        let values: crate::slots::Slots = plan.inputs.iter().zip(&query.inputs).map(|(&slot, f)| (slot, f.read(g,
+            |slot| p.values[slot].as_ref().unwrap(), &results, expanded))).collect();
         debug_assert_eq!(p.witnesses.len(), plan.witness_slots);
         let facts = facts.with_rows(plan.witness_atoms().zip(p.witnesses.iter().copied())
             .chain(std::iter::once((plan.tail(), row.witness))));
-        out.push(Matched {
-            #[cfg(feature = "iterative-bake")]
-            direct: None,
-            values, facts, epoch,
-        });
+        stats.terminal_input_slots += values.len() as u64;
+        stats.terminal_input_capacity_bytes += values.capacity_bytes() as u64;
+        out.push(Matched::matched(values, facts, epoch));
     }
     Ok(prefixes.len() as u64)
 }

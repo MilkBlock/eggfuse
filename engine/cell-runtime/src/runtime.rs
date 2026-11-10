@@ -41,34 +41,29 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
 use std::time::Instant;
 
-#[derive(Debug)]
-struct Binding {
-    #[cfg(feature = "view-consumers")]
-    view_source: Option<usize>,
-    #[cfg(feature = "iterative-bake")]
-    direct: Option<crate::stage_spine::DirectOrigin>,
-    known: QueryFacts,
+use crate::cell::Instance as Binding;
 
-    values: crate::slots::Slots,
-    epoch: u64,
-    parent: Option<FactRef>,
-    continuation: Option<(u32, bool)>,
-    compiled: bool,
-}
-impl Binding {
-    fn matched(rule: &Rule, matched: crate::cell::Matched) -> Self {
-        Self {
-            #[cfg(feature = "view-consumers")]
-            view_source: None,
-            #[cfg(feature = "iterative-bake")]
-            direct: matched.direct,
-            values: rule.inputs.iter().copied().zip(matched.values).collect(),
-            known: matched.facts,
-            epoch: matched.epoch,
-            parent: None,
-            continuation: None,
-            compiled: true,
-        }
+#[cfg(all(test, feature = "sparse-cells"))]
+mod fragment_tests {
+    use super::*;
+
+    #[test]
+    fn worker_handoff_preserves_sparse_slot_storage_and_actual_receipts() {
+        let values: crate::slots::Slots = [(15, Value::Text("retained".to_owned().into())),
+            (1, Value::Int(7)), (1000, Value::Eq(9))].into_iter().collect();
+        let address = std::ptr::from_ref(values.get(&15).unwrap()) as usize;
+        let mut facts = QueryFacts::Ports(vec![None; 2]);
+        facts.record(1, Some(Dependency::Function(23)));
+        let fragment = crate::cell::Matched::matched(values, facts, 11);
+        // Exercise the actual cross-thread ownership requirement. Query/Cell
+        // cursors stay on the coordinator; only owned values and receipts move.
+        let fragment = std::thread::spawn(move || fragment).join().unwrap();
+        let binding: Binding = fragment;
+        assert_eq!(std::ptr::from_ref(binding.values.get(&15).unwrap()) as usize, address,
+            "sealing must preserve the query's allocation, not just equal values");
+        assert_eq!(binding.values.keys().copied().collect::<Vec<_>>(), [1, 15, 1000]);
+        assert_eq!(binding.known.receipt(1), Some(Dependency::Function(23)));
+        assert_eq!(binding.epoch, 11);
     }
 }
 #[derive(Default, serde::Serialize, serde::Deserialize)]
@@ -1145,7 +1140,7 @@ impl Executor {
             )?
         {
             self.pending[rid].clear();
-            return Ok(answers.into_iter().map(|answer| Binding::matched(&rule, answer)).collect());
+            return Ok(answers);
         }
         if early_sieve && !sieve_first && self.empty_by_sieve(rid)? {
             return Ok(vec![]);
@@ -1392,8 +1387,7 @@ impl Executor {
                 stats.residual_entries += (seeds.len() + detached_count - claimed) as u64;
             }
             if let Some(coverage) = coverage {
-                found = coverage.answers.into_iter()
-                    .map(|answer| Binding::matched(&rule, answer)).collect();
+                found = coverage.answers;
                 if coverage.complete {
                     self.pending[rid].clear();
                     return Ok(found);
@@ -2480,8 +2474,7 @@ impl Executor {
                 if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &mut order_comparisons, &mut winner_moves) {
                     binding_moves += residual.len() as u64;
                     let previous_answers = residual.len();
-                    let rule = &self.graph.program.rules[*rid];
-                    let mut merged: Vec<_> = answers.into_iter().map(|a| Binding::matched(rule, a)).collect();
+                    let mut merged = answers;
                     merged.append(residual);
                     *residual = if complete { merged } else { self.dedup_bindings(*rid, merged)? };
                     if self.profile_queries {

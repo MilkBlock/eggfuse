@@ -25,7 +25,7 @@ pub(crate) use results::{Capture, ResultPort, Results, SlotLayout};
 mod query;
 #[path = "cell_match.rs"]
 mod matched;
-pub(crate) use matched::{Matched, QueryFacts};
+pub(crate) use matched::{Instance, Instance as Matched, QueryFacts};
 pub(crate) use query::{Access, Queries, Query, SharedQuery, query_order};
 pub(crate) use query::{bind_query, query_operand, ScopedStep};
 #[path = "cell_links.rs"]
@@ -347,7 +347,7 @@ mod tests {
                 call: Call::Table(0),
                 args: vec![Arg::Slot(0), Arg::Slot(1)],
             }]),
-            inputs: Rc::new(vec![0, 1]),
+            inputs: vec![0, 1].into(),
             seminaive: true,
             direct: Some(0),
         };

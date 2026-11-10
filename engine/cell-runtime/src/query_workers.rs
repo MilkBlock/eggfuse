@@ -348,6 +348,7 @@ struct CellPlan {
 }
 struct CellCode {
     query: crate::cell::SharedQuery,
+    inputs: InputSlots,
     rule: usize,
     pivot: usize,
     slots: usize,
@@ -369,7 +370,8 @@ impl CellPlan {
                 tables.extend(points.iter().copied());
                 let query = p.cell_queries.get(rid, pivot).unwrap().clone();
                 let code = codes.len();
-                codes.push(CellCode { rule: rid, pivot, slots: query.result_slots(), reads: query.steps.len() + 1, query });
+                codes.push(CellCode { rule: rid, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
+                    inputs: r.inputs.clone(), query });
                 Some(code)
             }).collect::<Vec<_>>();
             entries.iter().any(Option::is_some).then(|| Self { entries, tables: tables.into_iter().collect() })
@@ -596,11 +598,11 @@ impl Workers {
                 let answer = evaluate(&code.query, &q.entry, code.pivot, &reads, key_nodes, true,
                     &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts).map(|epoch| epoch.filter(|&e| e >= known.watermark).map(|epoch| {
                         counts.answers += 1;
-                        crate::cell::Matched { direct: None, epoch,
-                            values: code.query.inputs.iter().map(|f| f.operand_in(reads.parents,
-                                |col| &q.entry.values[col], &frame.values, None).into_owned()).collect(),
-                            facts: known.facts.with_rows(frame.witnesses.iter().copied()),
-                        }
+                        crate::cell::Matched::matched(
+                            code.inputs.iter().zip(&code.query.inputs).map(|(&slot, f)|
+                                (slot, f.operand_in(reads.parents,
+                                    |col| &q.entry.values[col], &frame.values, None).into_owned())).collect(),
+                            known.facts.with_rows(frame.witnesses.iter().copied()), epoch)
                     }));
                 match answer {
                     Ok(Some(answer)) => {

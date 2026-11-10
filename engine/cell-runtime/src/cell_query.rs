@@ -651,7 +651,7 @@ mod tests {
         use crate::cell::Operand::Slot;
         let mut rule = Rule {
             completion: Default::default(), template: 0, seminaive: true, direct: None,
-            inputs: Rc::new(vec![0, 3, 4, 2]),
+            inputs: vec![0, 3, 4, 2].into(),
             query: Rc::new(vec![
                 Atom { call: Call::Table(0), args: vec![Slot(0), Slot(1), Slot(2)] },
                 Atom { call: Call::Table(1), args: vec![Slot(0), Slot(1), Slot(3)] },
@@ -679,7 +679,7 @@ mod tests {
             template: 0,
             seminaive: true,
             direct: None,
-            inputs: Rc::new(vec![3, 0, 1]),
+            inputs: vec![3, 0, 1].into(),
             query: Rc::new(vec![
                 Atom {
                     call: Call::Table(0),
@@ -721,7 +721,7 @@ mod tests {
             template: 0,
             seminaive: true,
             direct: None,
-            inputs: Rc::new(vec![3]),
+            inputs: vec![3].into(),
             query: Rc::new(vec![
                 Atom {
                     call: Call::Table(0),
@@ -755,7 +755,7 @@ mod tests {
             template: 3,
             seminaive: true,
             direct: None,
-            inputs: Rc::new(vec![1, 0]),
+            inputs: vec![1, 0].into(),
             query: Rc::new(vec![
                 Atom {
                     call: Call::Table(1),

@@ -36,6 +36,9 @@ impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
     pub fn len(&self) -> usize {
         self.0.len()
     }
+    pub(crate) fn capacity_bytes(&self) -> usize {
+        self.0.capacity() * std::mem::size_of::<(K, V)>()
+    }
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }

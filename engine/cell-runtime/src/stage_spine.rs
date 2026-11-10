@@ -412,6 +412,11 @@ mod set_counts_test {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    query_fragment_frames: u64,
+    query_fragment_slots: u64,
+    query_fragment_capacity_bytes: u64,
+    query_fragment_sealed_slots: u64,
+    query_fragment_sealed_capacity_bytes: u64,
     origin_key_slots: u64,
     origin_map_writes: u64,
     origin_map_probes: u64,
@@ -657,49 +662,39 @@ pub struct Programs {
     deferred_queries: Vec<Option<(bool, usize, Vec<(usize, Winner)>)>>,
     pub stats: Stats,
 }
-#[cfg(feature = "sparse-cells")]
-type Winner = (Vec<Value>, (Matched, Cursor));
+// One owned execution fragment. Its inputs are also the winner key; there is
+// no empty answer shell plus a separately moved binding vector.
+struct Winner { answer: Matched, cursor: Cursor }
 #[cfg(feature = "sparse-cells")]
 type Winners = Vec<Winner>;
 #[cfg(not(feature = "sparse-cells"))]
-type Winners = BTreeMap<Vec<Value>, (Matched, Cursor)>;
+type Winners = BTreeMap<crate::slots::Slots, Winner>;
 fn record_answer(
     results: &mut Winners,
-    values: Vec<Value>,
+    values: crate::slots::Slots,
     facts: QueryFacts,
     epoch: u64,
 
     cursor: Cursor,
 ) {
-    #[cfg(feature = "iterative-bake")]
-    let direct = cursor.state.direct;
-    #[cfg(not(feature = "iterative-bake"))]
-    let direct = false;
-    let candidate = (
-        Matched {
-            #[cfg(feature = "iterative-bake")]
-            direct: None,
-
-            values: if direct || cfg!(feature = "sparse-cells") {
-                Vec::new()
-            } else {
-                values.clone()
-            },
-            facts,
-            epoch,
-        },
+    let candidate = Winner {
+        answer: Matched::matched(values, facts, epoch),
         cursor,
-    );
+    };
     #[cfg(feature = "sparse-cells")]
-    results.push((values, candidate));
+    results.push(candidate);
     #[cfg(not(feature = "sparse-cells"))]
-    match results.entry(values) {
-        std::collections::btree_map::Entry::Vacant(e) => {
-            e.insert(candidate);
-        }
-        std::collections::btree_map::Entry::Occupied(mut e) => {
-            if candidate.1.depth > e.get().1.depth {
+    {
+        let mut candidate = candidate;
+        let values = std::mem::take(&mut candidate.answer.values);
+        match results.entry(values) {
+            std::collections::btree_map::Entry::Vacant(e) => {
                 e.insert(candidate);
+            }
+            std::collections::btree_map::Entry::Occupied(mut e) => {
+                if candidate.cursor.depth > e.get().cursor.depth {
+                    e.insert(candidate);
+                }
             }
         }
     }
@@ -2096,13 +2091,17 @@ impl Programs {
                 }
             }
             if epoch >= watermark {
-                let inputs = query.inputs.iter().map(|v| v.read(g, |col| &row.values[col], &values, None)).collect();
+                let inputs: crate::slots::Slots = g.program.rules[rid].inputs.iter().zip(&query.inputs)
+                    .map(|(&slot, v)| (slot, v.read(g, |col| &row.values[col], &values, None))).collect();
                 let facts = facts.with_rows(std::iter::once((pivot, row.witness))
                     .chain(found_witnesses));
                 #[cfg(feature = "iterative-bake")]
                 if cursor.via_block && cursor.state.direct {
                     self.training.seal_moves += query.inputs.len() as u64;
                 }
+                self.stats.query_fragment_frames += 1;
+                self.stats.query_fragment_slots += inputs.len() as u64;
+                self.stats.query_fragment_capacity_bytes += inputs.capacity_bytes() as u64;
                 record_answer(&mut results, inputs, facts, epoch, cursor);
                 #[cfg(feature = "sparse-cells")]
                 if let Some(workers) = workers.as_deref_mut() {
@@ -2133,10 +2132,12 @@ impl Programs {
         {
             // Stable ordering retains the first producer when duplicate
             // bindings have the same depth, as in the ordered-map route.
-            results.sort_by(|(ka, (_, ca)), (kb, (_, cb))| {
-                ka.cmp(kb).then_with(|| cb.depth.cmp(&ca.depth))
+            // Validated source inputs are ordered SSA slots. Every candidate
+            // here belongs to rid, so comparing Slots preserves the old key order.
+            results.sort_by(|a, b| {
+                a.answer.values.cmp(&b.answer.values).then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
             });
-            results.dedup_by(|a, b| a.0 == b.0);
+            results.dedup_by(|a, b| a.answer.values == b.answer.values);
         }
         if complete {
             self.stats.query_takeovers += 1;
@@ -2150,9 +2151,14 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let rows = results.drain(..);
         #[cfg(not(feature = "sparse-cells"))]
-        let rows = results.into_iter();
+        let rows = results.into_iter().map(|(values, mut winner)| {
+            winner.answer.values = values;
+            winner
+        });
         let answers = rows
-            .map(|(key, (answer, cursor))| {
+            .map(|Winner { mut answer, cursor }| {
+                self.stats.query_fragment_sealed_slots += answer.values.len() as u64;
+                self.stats.query_fragment_sealed_capacity_bytes += answer.values.capacity_bytes() as u64;
                 #[cfg(feature = "iterative-bake")]
                 if cursor.state.direct || {
                     #[cfg(feature = "sparse-cells")]
@@ -2164,8 +2170,6 @@ impl Programs {
                     // Stable sealing keeps the Spine binding on an equal RHS key.
                     // Unsealed continuations still resolve by key.
                     self.stats.sealed_partial_origins += u64::from(!complete);
-                    let mut answer = answer;
-                    answer.values = key;
                     #[cfg(feature = "sparse-cells")]
                     {
                         answer.direct = Some(DirectOrigin(self.sealed_cursors.len()));
@@ -2178,14 +2182,10 @@ impl Programs {
                 if self.origins[rid].is_empty() {
                     self.origin_rules.push(rid);
                 }
-                #[cfg(feature = "sparse-cells")]
-                let answer = {
-                    let mut a = answer;
-                    a.values = key.clone();
-                    a
-                };
                 self.stats.origin_map_writes += 1;
-                self.origins[rid].insert(key, cursor);
+                // Unsealed legacy origins still need an independently owned
+                // lookup key. It does not replace the fragment's slot storage.
+                self.origins[rid].insert(answer.values.values().cloned().collect(), cursor);
                 answer
             })
             .collect();
@@ -2204,9 +2204,10 @@ impl Programs {
             self.training.seal_moves += answer.values.len() as u64;
         }
         let (_, _, results) = self.deferred_queries[rid].as_mut().expect("deferred Cell query");
-        let values = answer.values;
-        let answer = Matched { values: Vec::new(), ..answer };
-        results.push((ordinal, (values, (answer, cursor))));
+        self.stats.query_fragment_frames += 1;
+        self.stats.query_fragment_slots += answer.values.len() as u64;
+        self.stats.query_fragment_capacity_bytes += answer.values.capacity_bytes() as u64;
+        results.push((ordinal, Winner { answer, cursor }));
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn finish_worker_rule(&mut self, rid: usize, order_comparisons: &mut u64, winner_moves: &mut u64) -> Option<(bool, Vec<Matched>)> {
@@ -2333,7 +2334,11 @@ impl Programs {
         #[cfg(feature = "structural-depth")]
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
-        let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
+        let report = json!({"query_fragment_layout":"owned-instance/v1","query_winner_bytes":std::mem::size_of::<Winner>(),
+            "query_fragment_header_bytes":std::mem::size_of::<Matched>(),
+            "query_fragment_slot_bytes":std::mem::size_of::<(usize, Value)>(),
+            "query_value_bytes":std::mem::size_of::<Value>(),
+            "enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
             "effect_plan_slot_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.slot_bytes()).sum::<usize>(),"effect_plan_cache_bytes":effect_plan_cache_bytes,"keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});

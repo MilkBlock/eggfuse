@@ -41,7 +41,7 @@ fn block(width: usize, calls: Vec<(&str, Vec<Arg>, usize)>, inputs: Vec<usize>) 
             completion: Default::default(),
             template: 0,
             query: Rc::new(query),
-            inputs: Rc::new(inputs),
+            inputs: inputs.into(),
             seminaive: false,
             direct: None,
         },

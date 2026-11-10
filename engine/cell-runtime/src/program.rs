@@ -4,6 +4,12 @@ use serde_json::Value as J;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 pub type Result<T> = std::result::Result<T, String>;
+// Workers borrow the same source input layout as the coordinator. Only the
+// immutable layout is shared across threads; Program and Cell cursors are not.
+#[cfg(feature = "sparse-cells")]
+pub type InputSlots = std::sync::Arc<Vec<usize>>;
+#[cfg(not(feature = "sparse-cells"))]
+pub type InputSlots = Rc<Vec<usize>>;
 pub type Arg = crate::cell::Operand<Value, usize>;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum Call {
@@ -47,7 +53,7 @@ pub struct Rule {
     pub(crate) completion: crate::cell::Completion,
     pub template: usize,
     pub query: Rc<Vec<Atom>>,
-    pub inputs: Rc<Vec<usize>>,
+    pub inputs: InputSlots,
     pub seminaive: bool,
     pub direct: Option<usize>,
 }
@@ -308,7 +314,7 @@ impl Program {
                 completion: Default::default(),
                 template: templates.len(),
                 query: Rc::new(query),
-                inputs: Rc::new(inputs),
+                inputs: inputs.into(),
                 seminaive: r["metadata"]["seminaive"].as_bool().unwrap_or(true),
                 direct,
             });

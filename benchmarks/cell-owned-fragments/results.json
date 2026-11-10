@@ -1,0 +1,743 @@
+{
+  "scope": "Standalone Cell CPU; same owned instance from query through winner selection to RHS. Short work/allocator checks and Raytrace prefix, not a timing campaign.",
+  "baseline": {
+    "commit": "8758d461d79dc3bedaed0e9a65eaaae7243853a6",
+    "binaries": {
+      "runtime-before": "dc35f2bb8a12f471bc78f1a7b5f74bf0fe16c760050b47c1c82b9bfa7dd9154c",
+      "query-prefix-before": "29bdc82fde5107223a758020ab58a493d1a2ba0d06096966913e70ac140b3cb0",
+      "runtime-alloc-before": "ad04a0c154f87e8591159a4fc76395c5bfd5a42fd62004fb8c231ae38ba4e62b"
+    }
+  },
+  "binaries_after": {
+    "runtime-after": "194aa7e6e61a2fc0c0e7f641c8abb349d848580900915d3e0ace4fef863127a2",
+    "runtime-alloc-after": "e668f933309d958e4ee4fcc9695f2872cb82ac0bc5d54d0651eb890547327d52",
+    "query-prefix-after": "f79cce2841509a272a7b562a424edd47af5400a3dd3ac7a7e489fa029106c960"
+  },
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "cases": {
+    "sum": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "lanes": {
+        "baseline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "dfb6d84685f464d0a849ba64d65b51c68079402443cee82775cc600eed53eb11"
+        },
+        "off": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "d797fb07d52a9bc6f39701d9aea8cab490d689b8d168c22212dc7f2a6230aea2"
+        },
+        "inline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "4cbe1d14e87799747272ab4428f0d088ba7f718f1928b8f4e71056c1e96b323d"
+        },
+        "two": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "14e59b7b6ddbdecc18ba75fc5fa4be0352b898526be1a69d21f2d4410b78f540"
+        },
+        "four": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "report_sha256": "58be0d5338647f698fd370a589deafbbce034ef66abd135a22700724fb98bf0e"
+        }
+      }
+    },
+    "fixture": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "ff3b45a97bb4bd6574c17446ca0131b1868ecb1466242a0d9579918081a7f38b"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "cba22aa1962a363b2ef72497a07a8361bdd9808109158aa46c3a09796667568e"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "fc4ce963c030d6b053574c5baa46f360ecad1d48952f70ecf6373f2cd451a921"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "62d243f2a21c36b2910ce78322b97947b05d4b45e885c8e78ef6fb8178e8bb6e"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "071c23ad5716949b947e7e9db7dcd64222f051bb943518a3ad3bddd831120c3c"
+        }
+      }
+    },
+    "fixture-collisions": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "4fbef25d0cb8261a1da3777c23309860640c7e88e234160646a88512916314ac"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "45a38cb7d621197de8858ca343229b3e765b70c9a7ea14d4dce3924b090ebf86"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "de046164f69e35fa7323ecb09460bc0c23f40944448932f829799138ed724602"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "aa1d7881c0831d5f3c17f0b08bcb60066713b80dad5f521bc811edc46deb8a4e"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "report_sha256": "757070ed6a71b913f7391301561629d40aa0a404ab1ecab3c8cb24eef704808d"
+        }
+      }
+    },
+    "fixture-extra": {
+      "program_sha256": "54cfb10a2362cfb5aa4d97183a49522bba4008f81f255b32d20bb01e0b45f760",
+      "lanes": {
+        "baseline": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "47d7cf741383c8a90235634ebfd71ca42ed20bee49ff21d844ddc7e67ddad3fd"
+        },
+        "off": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "f2bde481bb1078e15ad9b7f75e8ee38f864ccc2edb637dd47f4f51e6cfe9cfd7"
+        },
+        "inline": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "dbe908df1a020388ff3fd891cd9b6ef6e11effd3fce085185b5357002e5eabf9"
+        },
+        "two": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "5939beae72f123905996d23bfbde876c1b10e873e9b5a647e9b9320eb3a30ef2"
+        },
+        "four": {
+          "runs": 11,
+          "hashes": {
+            "state.json": "84487c2f57d307edda2d0660cd80be07672254e35c1ef93bc297f16b0a1c1255",
+            "stages.json": "feb107f232bb649b96eeef7d4ff01a33f21df65b51a157d0c1c0c1701f670f2b",
+            "binding-audit.json": "65e0b960228f61dd2778381b8268937593b03d2b49b9af323ea742b2ef73f5e1",
+            "runs": "8cd1c08c43b820007878ad23521f637dffb733a2c4c16fb4e0e70740ddecb4a2"
+          },
+          "report_sha256": "c87252ecdde40b08c196da2c8bb5ab2dcd705ed83ec25d19b6283e7e65011ec9"
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "sum-alloc-1": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "runs": 1428,
+      "run_signature_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+      "report_sha256": {
+        "before": "0362ddf396cdab5e9daa993ae946b46f826aa1cf246e98c04c8a0a61cabdf271",
+        "after": "7166357dd59d5ef2c8692d0411a2fa0cc20cf9d8902725d3db76c17d64ed1fc9"
+      },
+      "key_lookup_calls": 18692,
+      "derived_old_input_repack_allocations": 3038,
+      "derived_old_input_value_moves": 11622,
+      "additional_early_slot_id_stores": 255,
+      "spine_candidates": 3114,
+      "spine_winners": 3034,
+      "spine_candidate_slot_capacity_bytes": 283896,
+      "spine_selected_slot_capacity_bytes": 277776,
+      "layout": {
+        "query_fragment_layout": "owned-instance/v1",
+        "query_winner_bytes": 288,
+        "query_fragment_header_bytes": 120,
+        "query_fragment_slot_bytes": 24,
+        "query_value_bytes": 16
+      },
+      "compiled_cell_code_bytes": [
+        41304,
+        43352
+      ],
+      "allocations": {
+        "before": {
+          "alloc_calls": 171994,
+          "free_calls": 138915,
+          "live_bytes_after": 156689779,
+          "live_bytes_before": 149724219,
+          "peak_live_requested_bytes": 157272662,
+          "realloc_calls": 19388,
+          "released_bytes": 26680218,
+          "requested_bytes": 33645778,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "after": {
+          "alloc_calls": 168348,
+          "free_calls": 135269,
+          "live_bytes_after": 156692209,
+          "live_bytes_before": 149726409,
+          "peak_live_requested_bytes": 157287148,
+          "realloc_calls": 19390,
+          "released_bytes": 26469794,
+          "requested_bytes": 33435594,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations": {
+        "before": {
+          "alloc_calls": 78885,
+          "free_calls": 35389,
+          "live_bytes_after": 149724219,
+          "live_bytes_before": 145229590,
+          "peak_live_requested_bytes": 149724220,
+          "realloc_calls": 1937,
+          "released_bytes": 4565725,
+          "requested_bytes": 9060354,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "after": {
+          "alloc_calls": 78885,
+          "free_calls": 35389,
+          "live_bytes_after": 149726409,
+          "live_bytes_before": 145229732,
+          "peak_live_requested_bytes": 149726410,
+          "realloc_calls": 1937,
+          "released_bytes": 4567741,
+          "requested_bytes": 9064418,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "allocation_delta": {
+        "alloc_calls": -3646,
+        "realloc_calls": 2,
+        "requested_bytes": -210184,
+        "peak_live_requested_bytes": 14486
+      }
+    },
+    "sum-alloc-4": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "runs": 1428,
+      "run_signature_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+      "report_sha256": {
+        "before": "056c0efa6dabfa9119b19a29b68967d23424fddb238646908df7b171a971c001",
+        "after": "c7718ddf84e1776fa23d4ad599841da65c79db77f7d80552a1d13564678155c0"
+      },
+      "key_lookup_calls": 18692,
+      "derived_old_input_repack_allocations": 3038,
+      "derived_old_input_value_moves": 11622,
+      "additional_early_slot_id_stores": 255,
+      "spine_candidates": 3114,
+      "spine_winners": 3034,
+      "spine_candidate_slot_capacity_bytes": 283896,
+      "spine_selected_slot_capacity_bytes": 277776,
+      "layout": {
+        "query_fragment_layout": "owned-instance/v1",
+        "query_winner_bytes": 288,
+        "query_fragment_header_bytes": 120,
+        "query_fragment_slot_bytes": 24,
+        "query_value_bytes": 16
+      },
+      "compiled_cell_code_bytes": [
+        41304,
+        43352
+      ],
+      "allocations": {
+        "before": {
+          "alloc_calls": 172006,
+          "free_calls": 138915,
+          "live_bytes_after": 156725335,
+          "live_bytes_before": 149758607,
+          "peak_live_requested_bytes": 157308218,
+          "realloc_calls": 19392,
+          "released_bytes": 26680570,
+          "requested_bytes": 33647298,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        },
+        "after": {
+          "alloc_calls": 168362,
+          "free_calls": 135269,
+          "live_bytes_after": 156727669,
+          "live_bytes_before": 149760685,
+          "peak_live_requested_bytes": 157322608,
+          "realloc_calls": 19393,
+          "released_bytes": 26470050,
+          "requested_bytes": 33437034,
+          "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+        }
+      },
+      "setup_allocations": {
+        "before": {
+          "alloc_calls": 78967,
+          "free_calls": 35400,
+          "live_bytes_after": 149758607,
+          "live_bytes_before": 145229590,
+          "peak_live_requested_bytes": 149758608,
+          "realloc_calls": 1941,
+          "released_bytes": 4566213,
+          "requested_bytes": 9095230,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        },
+        "after": {
+          "alloc_calls": 78965,
+          "free_calls": 35400,
+          "live_bytes_after": 149760685,
+          "live_bytes_before": 145229732,
+          "peak_live_requested_bytes": 149760686,
+          "realloc_calls": 1941,
+          "released_bytes": 4568229,
+          "requested_bytes": 9099182,
+          "scope": "allocator requests during Graph/runtime setup, including configured guard pool; excludes program parsing and export; thread stacks are not allocator requests"
+        }
+      },
+      "allocation_delta": {
+        "alloc_calls": -3644,
+        "realloc_calls": 1,
+        "requested_bytes": -210264,
+        "peak_live_requested_bytes": 14390
+      }
+    },
+    "ray-prefix": {
+      "program_sha256": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601",
+      "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+      "runs": 128,
+      "run_signature_sha256": "d1b01bd3f2c2dd6726b4da7c95decb53fde8300ac20bf5ab7d99cb1f8518d59a",
+      "report_sha256": {
+        "before": "06702735db913b58710bc4bf71ebba50e60733bb6b95a095efd89f60dee114cf",
+        "after": "9a34a9c2ed981cda73801cfad8367c391d4383a9c632ec1eb0698243d209ddd2"
+      },
+      "key_lookup_calls": 88737,
+      "derived_old_input_repack_allocations": 3683,
+      "derived_old_input_value_moves": 15448,
+      "additional_early_slot_id_stores": 6,
+      "spine_candidates": 3685,
+      "spine_winners": 3683,
+      "spine_candidate_slot_capacity_bytes": 370896,
+      "spine_selected_slot_capacity_bytes": 370752,
+      "layout": {
+        "query_fragment_layout": "owned-instance/v1",
+        "query_winner_bytes": 288,
+        "query_fragment_header_bytes": 120,
+        "query_fragment_slot_bytes": 24,
+        "query_value_bytes": 16
+      },
+      "compiled_cell_code_bytes": [
+        41304,
+        43352
+      ]
+    }
+  },
+  "limits": "Input repack counts are derived from actual per-rule returned matches and checked input widths. They are not all allocator savings: candidate width grows and winner containers change. Allocator totals are measured separately; bytes are requested sizes, not RSS. No speed credit for fragment coverage; RHS effects and result publication remain ordered."
+}
