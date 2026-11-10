@@ -1,0 +1,1031 @@
+{
+  "scope": "saved short sum-bits executions of standalone Cell CPU at 15de6b94; not native egglog or latency admission",
+  "audit_scope": "compiler-recorded exact graph, schedule and ordered RHS/write/resume audits; not a new native semantic acceptance",
+  "common_execution_audits": {
+    "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+    "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+    "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+  },
+  "experiments": {
+    "full-round": {
+      "rounds_file_sha256": "2585e096d5630b25008eac7b71c081116194db37ee0e113c8a500fa8b6357299",
+      "final_program_sha256": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+      "limits": {
+        "depth": 4,
+        "nodes": 8,
+        "total": 64,
+        "per_round": 8,
+        "candidates": 512,
+        "support": 2
+      },
+      "execution": {
+        "entry_publications": false,
+        "repair_ports": true,
+        "stable_ports": true,
+        "local_congruence": true
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "units": 32,
+          "source_program": "c02cdd06cf6346c38a16043c675299946d8042d30388f43676a2dfb24110e470",
+          "stop": "continue",
+          "ranked_proposals": 5,
+          "untried_ranked_proposals": 0,
+          "duplicate_executable_proposals": 1,
+          "selected_net_saved_operations": 2852,
+          "trials": [
+            {
+              "join": {
+                "left": 3,
+                "output": 2,
+                "right": 5
+              },
+              "program_sha256": "f2f9ce9b91b81d9b0c8d83c2ceb8c8d5e619b73d3eb256573e8b1ae93bbd559b",
+              "net_saved_operations": 2768,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18759,
+                  "saved": 370
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11569,
+                  "saved": 205
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 126338,
+                  "after": 125308,
+                  "saved": 1030
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 143093,
+                  "after": 141919,
+                  "saved": 1174
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 3,
+                "output": 0,
+                "right": 3
+              },
+              "program_sha256": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+              "net_saved_operations": 2852,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18744,
+                  "saved": 385
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11554,
+                  "saved": 220
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 126338,
+                  "after": 125293,
+                  "saved": 1045
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 143093,
+                  "after": 141904,
+                  "saved": 1189
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 7,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "5d8d258558ad882b7207e636685687c2c581b20c6bfd8188ffbefb184dd2f6be",
+              "net_saved_operations": 2674,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18716,
+                  "saved": 413
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11526,
+                  "saved": 248
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 498,
+                  "saved": -498
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 126338,
+                  "after": 125265,
+                  "saved": 1073
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 143093,
+                  "after": 141876,
+                  "saved": 1217
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 5,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "8e0319f82cb2236ef617be15663b7eba47a4dd69c6e8de69a6627fe6e27deeb5",
+              "net_saved_operations": 2400,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18750,
+                  "saved": 379
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11560,
+                  "saved": 214
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 374,
+                  "saved": -374
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 10,
+                  "saved": -10
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 15,
+                  "saved": -15
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 633,
+                  "saved": -633
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 126338,
+                  "after": 125299,
+                  "saved": 1039
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 143093,
+                  "after": 141910,
+                  "saved": 1183
+                }
+              }
+            }
+          ],
+          "completion_entries": {
+            "eligible_entries": 0,
+            "eligible_states": 0,
+            "scope": "static coverage, not saved work"
+          },
+          "history": {
+            "file_sha256": "562f2ba8ac0ff5b64029e722fa4ab8e6b8b186393699fa015790a03548008f35",
+            "structures": 119,
+            "opaque_structures": 94,
+            "sampled_events": 2048,
+            "opaque_sampled_events": 1107,
+            "dropped_events": 380,
+            "scope": "bounded completed cursor lineage; not all matches or committed mutations"
+          }
+        },
+        {
+          "round": 1,
+          "units": 34,
+          "source_program": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+          "stop": "round_limit",
+          "ranked_proposals": null,
+          "untried_ranked_proposals": null,
+          "duplicate_executable_proposals": null,
+          "selected_net_saved_operations": null,
+          "trials": [],
+          "completion_entries": {
+            "eligible_entries": 1,
+            "eligible_states": 1,
+            "scope": "static coverage, not saved work"
+          },
+          "history": {
+            "file_sha256": "03065a885a7327bc33ea46636acf0b66b7db2eebca60725004b9413f900d2da6",
+            "structures": 118,
+            "opaque_structures": 93,
+            "sampled_events": 2048,
+            "opaque_sampled_events": 1107,
+            "dropped_events": 380,
+            "scope": "bounded completed cursor lineage; not all matches or committed mutations"
+          }
+        }
+      ]
+    },
+    "continued": {
+      "rounds_file_sha256": "6390a3ca2a9513e6b427214263f5471a3eab8017e8ea82b3b1d7861cacbaf8ec",
+      "final_program_sha256": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+      "limits": {
+        "depth": 4,
+        "nodes": 8,
+        "total": 64,
+        "per_round": 8,
+        "candidates": 512,
+        "support": 2
+      },
+      "execution": {
+        "entry_publications": false,
+        "repair_ports": true,
+        "stable_ports": true,
+        "local_congruence": true
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "units": 34,
+          "source_program": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+          "stop": "no_measured_gain",
+          "ranked_proposals": 3,
+          "untried_ranked_proposals": 0,
+          "duplicate_executable_proposals": 0,
+          "selected_net_saved_operations": 0,
+          "trials": [
+            {
+              "join": {
+                "left": 7,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "e506d21e61d3399a790b2577dd1a4b18ba57477998d4f4d9b2907e3910f4952c",
+              "net_saved_operations": -94,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 18744,
+                  "after": 18701,
+                  "saved": 43
+                },
+                "stats/constructor_requests": {
+                  "before": 11554,
+                  "after": 11511,
+                  "saved": 43
+                },
+                "stats/union_requests": {
+                  "before": 3046,
+                  "after": 3046,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 369,
+                  "after": 498,
+                  "saved": -129
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 369,
+                  "after": 369,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 311,
+                  "after": 311,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 311,
+                  "after": 311,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 534,
+                  "after": 534,
+                  "saved": 0
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 428,
+                  "after": 428,
+                  "saved": 0
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 223,
+                  "after": 223,
+                  "saved": 0
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 125293,
+                  "after": 125250,
+                  "saved": 43
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 141904,
+                  "after": 141861,
+                  "saved": 43
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 33,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "4adee6b413727d01e5e54150bda0fd477e9b1c54fc643a09927728325186462f",
+              "net_saved_operations": -333,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 18744,
+                  "after": 18735,
+                  "saved": 9
+                },
+                "stats/constructor_requests": {
+                  "before": 11554,
+                  "after": 11545,
+                  "saved": 9
+                },
+                "stats/union_requests": {
+                  "before": 3046,
+                  "after": 3046,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 369,
+                  "after": 369,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 369,
+                  "after": 369,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 311,
+                  "after": 369,
+                  "saved": -58
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 311,
+                  "after": 369,
+                  "saved": -58
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 534,
+                  "after": 534,
+                  "saved": 0
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 428,
+                  "after": 633,
+                  "saved": -205
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 223,
+                  "after": 223,
+                  "saved": 0
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 125293,
+                  "after": 125284,
+                  "saved": 9
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 141904,
+                  "after": 141895,
+                  "saved": 9
+                }
+              }
+            }
+          ],
+          "completion_entries": {
+            "eligible_entries": 1,
+            "eligible_states": 1,
+            "scope": "static coverage, not saved work"
+          },
+          "history": {
+            "file_sha256": "03065a885a7327bc33ea46636acf0b66b7db2eebca60725004b9413f900d2da6",
+            "structures": 118,
+            "opaque_structures": 93,
+            "sampled_events": 2048,
+            "opaque_sampled_events": 1107,
+            "dropped_events": 380,
+            "scope": "bounded completed cursor lineage; not all matches or committed mutations"
+          }
+        }
+      ]
+    },
+    "canonical": {
+      "rounds_file_sha256": "1f489a654500edce40180833106ee8791903896e823fee7d1b6130e3c50dc543",
+      "final_program_sha256": "c02cdd06cf6346c38a16043c675299946d8042d30388f43676a2dfb24110e470",
+      "limits": {
+        "depth": 4,
+        "nodes": 8,
+        "total": 64,
+        "per_round": 8,
+        "candidates": 512,
+        "support": 2
+      },
+      "execution": {
+        "entry_publications": true,
+        "repair_ports": true,
+        "stable_ports": false,
+        "local_congruence": false
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "units": 32,
+          "source_program": "c02cdd06cf6346c38a16043c675299946d8042d30388f43676a2dfb24110e470",
+          "stop": "no_measured_gain",
+          "ranked_proposals": 5,
+          "untried_ranked_proposals": 0,
+          "duplicate_executable_proposals": 1,
+          "selected_net_saved_operations": 0,
+          "trials": [
+            {
+              "join": {
+                "left": 3,
+                "output": 2,
+                "right": 5
+              },
+              "program_sha256": "f2f9ce9b91b81d9b0c8d83c2ceb8c8d5e619b73d3eb256573e8b1ae93bbd559b",
+              "net_saved_operations": -2441,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18759,
+                  "saved": 370
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11569,
+                  "saved": 205
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 3,
+                "output": 0,
+                "right": 3
+              },
+              "program_sha256": "cd51d4946a86c8123763145f305f83aab36461858b3f3fd2b2c9707c4f53d67b",
+              "net_saved_operations": -2467,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18744,
+                  "saved": 385
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11554,
+                  "saved": 220
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 7,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "5d8d258558ad882b7207e636685687c2c581b20c6bfd8188ffbefb184dd2f6be",
+              "net_saved_operations": -2793,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18716,
+                  "saved": 413
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11526,
+                  "saved": 248
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 498,
+                  "saved": -498
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 129,
+                  "saved": -129
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 311,
+                  "saved": -311
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 428,
+                  "saved": -428
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                }
+              }
+            },
+            {
+              "join": {
+                "left": 5,
+                "output": 1,
+                "right": 3
+              },
+              "program_sha256": "8e0319f82cb2236ef617be15663b7eba47a4dd69c6e8de69a6627fe6e27deeb5",
+              "net_saved_operations": -2881,
+              "selected_counter_deltas": {
+                "key_lookup_calls": {
+                  "before": 19129,
+                  "after": 18750,
+                  "saved": 379
+                },
+                "stats/constructor_requests": {
+                  "before": 11774,
+                  "after": 11560,
+                  "saved": 214
+                },
+                "stats/union_requests": {
+                  "before": 3211,
+                  "after": 3046,
+                  "saved": 165
+                },
+                "stage_spine/stats/history_allocations": {
+                  "before": 0,
+                  "after": 374,
+                  "saved": -374
+                },
+                "stage_spine/stats/history_capture_reads": {
+                  "before": 0,
+                  "after": 10,
+                  "saved": -10
+                },
+                "stage_spine/stats/history_slots_written": {
+                  "before": 0,
+                  "after": 15,
+                  "saved": -15
+                },
+                "stage_spine/stats/joint_history_frames": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_reads": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_history_query_writes": {
+                  "before": 0,
+                  "after": 369,
+                  "saved": -369
+                },
+                "stage_spine/stats/joint_output_reads": {
+                  "before": 0,
+                  "after": 534,
+                  "saved": -534
+                },
+                "stage_spine/stats/ripsat_witness_checks": {
+                  "before": 0,
+                  "after": 633,
+                  "saved": -633
+                },
+                "stage_spine/stats/ripsat_layout_checks": {
+                  "before": 0,
+                  "after": 223,
+                  "saved": -223
+                },
+                "stable_ports/stats/port_reads": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                },
+                "stable_ports/stats/root_parent_probes": {
+                  "before": 0,
+                  "after": 0,
+                  "saved": 0
+                }
+              }
+            }
+          ],
+          "completion_entries": {
+            "eligible_entries": 0,
+            "eligible_states": 0,
+            "scope": "static coverage, not saved work"
+          },
+          "history": {
+            "file_sha256": "562f2ba8ac0ff5b64029e722fa4ab8e6b8b186393699fa015790a03548008f35",
+            "structures": 119,
+            "opaque_structures": 94,
+            "sampled_events": 2048,
+            "opaque_sampled_events": 1107,
+            "dropped_events": 380,
+            "scope": "bounded completed cursor lineage; not all matches or committed mutations"
+          }
+        }
+      ]
+    },
+    "shipped-resume": {
+      "rounds_file_sha256": "e9fc0aade48273e16d51ba5d3843a0a0996ede4260335c933047d20634c9fd4f",
+      "final_program_sha256": "4e64baf8bcab3841614deddf50682c71ebc08130108b13c1eaded0aecf88e64b",
+      "limits": {
+        "depth": 4,
+        "nodes": 8,
+        "total": 96,
+        "per_round": 8,
+        "candidates": 512,
+        "support": 2
+      },
+      "execution": {
+        "entry_publications": true,
+        "repair_ports": true,
+        "stable_ports": false,
+        "local_congruence": false
+      },
+      "rounds": [
+        {
+          "round": 0,
+          "units": 64,
+          "source_program": "4e64baf8bcab3841614deddf50682c71ebc08130108b13c1eaded0aecf88e64b",
+          "stop": "no_measured_gain",
+          "ranked_proposals": 1,
+          "untried_ranked_proposals": 0,
+          "duplicate_executable_proposals": 0,
+          "selected_net_saved_operations": 0,
+          "trials": [],
+          "completion_entries": {
+            "eligible_entries": 1,
+            "eligible_states": 3,
+            "scope": "static coverage, not saved work"
+          },
+          "history": {
+            "file_sha256": "4747e1a2674cf372adc5e6cdfdab15cc3a5c5328b12d24874c4707aef0af53f3",
+            "structures": 110,
+            "opaque_structures": 85,
+            "sampled_events": 2048,
+            "opaque_sampled_events": 1107,
+            "dropped_events": 380,
+            "scope": "bounded completed cursor lineage; not all matches or committed mutations"
+          }
+        }
+      ]
+    }
+  }
+}
