@@ -30,6 +30,8 @@ pub(super) struct Counts {
     pub query_bindings_while_pending: u64,
     pub rhs_empty_skips: u64,
     pub rhs_demand_probes: u64,
+    pub rhs_group_checks: u64,
+    pub rhs_group_reuses: u64,
     pub rhs_demand_growths: u64,
     pub rhs_selected_rules: u64,
     pub peak_matched_origin_slots: usize,
@@ -305,9 +307,22 @@ impl Executor {
             }
         }
         let state = self.completion.as_mut().unwrap();
+        let mut previous = None;
         for (rid, _) in &patch.groups {
             state.stats.rhs_selected_rules += 1;
-            for &table in &plan.rule_demands[*rid].rhs {
+            let rhs = &plan.rule_demands[*rid].rhs;
+            // The compiler interns exact immutable obligations. Consecutive
+            // selected rules with the same owner add no new tables. Preserve
+            // first-occurrence ordering and never cache across source Runs.
+            if let Some(old) = previous {
+                state.stats.rhs_group_checks += 1;
+                if std::rc::Rc::ptr_eq(old, rhs) {
+                    state.stats.rhs_group_reuses += 1;
+                    continue;
+                }
+            }
+            previous = Some(rhs);
+            for &table in rhs.iter() {
                 state.stats.rhs_demand_probes += 1;
                 if !state.rhs_seen[table] {
                     state.rhs_seen[table] = true;

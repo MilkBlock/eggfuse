@@ -1,0 +1,20 @@
+{
+  "scope": "standalone Cell CPU retained prediction matrices, not whole-process RSS",
+  "baseline_commit": "83e1b566",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_plan_equal": true,
+  "all_influence_pairs_and_singleton_wait_scopes_equal": true,
+  "closure_sha256": "3c1ed8bb91320b1cb264e318b44e9bb865fd078480f365c69d10f04f954570c7",
+  "storage": {
+    "rows": 802,
+    "unique_rows": 249,
+    "dense_payload_bytes": 44912,
+    "shared_payload_and_rc_bytes": 17928,
+    "directory_bytes": 12832
+  },
+  "old_payload_and_directory_bytes": 64160,
+  "new_payload_rc_and_directory_bytes": 30760,
+  "fractional_reduction": 0.5205735660847881,
+  "limits": "64-bit host. Old row directory modeled as Vec headers (24 bytes); old rows allocated at exact dense width. New Rc header estimate is two words. Excludes allocator rounding, outer container headers and transient closure/interner allocations. No timing.",
+  "tests": "31 staged/merge/scoped tests and one sharing test passed"
+}

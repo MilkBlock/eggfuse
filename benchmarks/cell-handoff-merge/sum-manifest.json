@@ -1,0 +1,62 @@
+{
+  "lanes": {
+    "before_serial": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-entry-partition/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "before_inline1": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-entry-partition/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "1",
+        "--query-grain",
+        "64"
+      ]
+    },
+    "before_query4": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-entry-partition/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64"
+      ]
+    },
+    "after_serial": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-handoff-merge/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "after_inline1": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-handoff-merge/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "1",
+        "--query-grain",
+        "64"
+      ]
+    },
+    "after_query4": {
+      "runtime": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-handoff-merge/runtime-final",
+      "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/cell-history-forwarding/sum/program.json",
+      "args": [
+        "--local-congruence",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64"
+      ]
+    }
+  }
+}

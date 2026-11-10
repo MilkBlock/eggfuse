@@ -4,9 +4,9 @@ use super::*;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct Rule {
-    pub query: Vec<usize>,
-    pub rhs: Vec<usize>,
-    pub accesses: Vec<usize>,
+    pub query: std::rc::Rc<[usize]>,
+    pub rhs: std::rc::Rc<[usize]>,
+    pub accesses: std::rc::Rc<[usize]>,
     /// Shared Cell operand wiring and ordered source positions. The concrete
     /// closure must still be proved; None retains the ordinary scoped path.
     pub(crate) pure: Option<std::rc::Rc<crate::cell::BoundRhs>>,
@@ -18,6 +18,7 @@ impl Rule {
         rid: usize,
         sorts: &[(BTreeSet<String>, bool)],
     ) -> Self {
+        let cell = crate::cell::Definition::new(p,rid).expect("validated completion rule");
         let rule = &p.rules[rid];
         let template = &p.templates[rule.template];
         let n = p.tables.len();
@@ -40,9 +41,21 @@ impl Rule {
         let mut rhs = BTreeSet::new();
         let mut opaque_rhs = eq_sorts(&template.sorts).1;
         let mut unions = BTreeSet::new();
-        for op in template.ops.iter() {
+        for (operation,op) in template.ops.iter().enumerate() {
+            // The same validated alias mask used by ordinary RHS execution
+            // proves this constructor is supplied by a matched/earlier result.
+            // Keep query demands above and the original source's access below;
+            // only the already-elided operation contributes no new RHS demand.
+            if matches!(op,Op::Let(_,Call::Table(t),_) if p.tables[*t].constructor)
+                && p.known_results.static_skip.get(rid)
+                    .and_then(|mask|mask.get(operation))==Some(&true) {
+                continue;
+            }
             match op {
-                Op::Union(a, b) => {
+                // Existing ordered Cell aliases prove identical values, not
+                // merely a possible future union. Such a union adds no repair
+                // influence; the instruction itself still executes normally.
+                Op::Union(a, b) if cell.value(a) != cell.value(b) => {
                     for arg in [a, b] {
                         if let Arg::Slot(slot) = arg {
                             let (names, unknown) =
@@ -76,7 +89,7 @@ impl Rule {
                 }
             }
         }
-        let accesses = if opaque_rhs {
+        let accesses: Vec<usize> = if opaque_rhs {
             (0..n).collect()
         } else {
             rhs.iter().copied().collect()
@@ -93,7 +106,7 @@ impl Rule {
         Self {
             query: query.into_iter().collect(),
             rhs: rhs.into_iter().collect(),
-            accesses,
+            accesses: accesses.into(),
             pure: None,
         }
     }

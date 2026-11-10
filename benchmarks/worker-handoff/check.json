@@ -1,0 +1,15 @@
+{
+  "scope": "compiler preparation only; standalone Cell CPU; no runtime takeover",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "sidecar_sha256": "c6899aa0c6f13ec42d1124fae29088b2a5dfffd3edaa1f4d0078b158390f15f4",
+  "encoded_bytes": 2249649,
+  "rules": 582,
+  "effects": 2799,
+  "entry_nodes": 241,
+  "effects_with_table_route_candidates": 1416,
+  "stage_states": 65,
+  "runtime_work_change": "none: sidecar not consumed",
+  "source_commit": "7d4144b1",
+  "validation": "exact reconstruction passed",
+  "tests": "4 state inheritance and handoff tests passed"
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "compile-time preparation; runtime unchanged",
+  "baseline_commit": "d97e42b3",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "encoding": "compact JSON UTF-8",
+  "old_bytes": 905056,
+  "new_bytes": 1044950,
+  "old_stage_contract_bytes": 78410,
+  "new_stage_contract_bytes": 27695,
+  "forecast_unshared_bytes": 381567,
+  "forecast_shared_bytes": 203366,
+  "forecast_vectors": 825,
+  "rule_demands": 582,
+  "opaque_tables": [],
+  "runtime_saved_operations": 0
+}

@@ -435,12 +435,16 @@ impl Graph {
                 .is_some_and(|f| f.live && f.table == table),
         }
     }
-    pub fn resolve_receipt(&self, mut w: Dependency) -> Dependency {
+    pub fn resolve_receipt(&self, w: Dependency) -> Dependency { self.resolve_receipt_origin(w).0 }
+    #[inline(always)]
+    fn resolve_receipt_origin(&self, mut w: Dependency) -> (Dependency,bool) {
+        let mut original=true;
         loop {
             if let Some(next) = self.receipt_forwards.get(&w) {
+                original=false;
                 w = *next;
             } else {
-                return w;
+                return (w,original);
             }
         }
     }
@@ -1498,14 +1502,14 @@ impl Graph {
                     let Some(input) = transfers.next() else { first_miss = Some(op); break; };
                     if input.op != op { return Err("invalid completed block order".into()); }
                     self.stats.handoff_attempts += 1;
-                    let Some(witness) = complete_handoff(self, &mut pending, instruction, input, &mut counts)?
+                    let Some((witness, original)) = complete_handoff(self, &mut pending, instruction, input, &mut counts)?
                         else {
                             if input.fact.is_none() { self.stats.handoff_missing += 1; }
                             else { self.stats.handoff_stale += 1; }
                             first_miss = Some(op);
                             break;
                         };
-                    receipts.record(op, witness);
+                    receipts.record_handoff(op, witness, input, original, self.program.iterative.tracks_slots());
                 }
                 _ => return Err("unexpected instruction in completed block".into()),
             }
@@ -1550,12 +1554,15 @@ impl Graph {
     }
     #[cfg(feature = "iterative-bake")]
     pub(crate) fn live_handoff(&self, f: FactRef, table: usize) -> Result<Option<Row>> {
-        if !self.dirty_facts[table].is_empty() {
-            return Ok(None);
-        }
-        Ok(self
-            .row(self.resolve_receipt(Dependency::Fact(f)))?
-            .filter(|r| r.table == table && !r.hidden))
+        Ok(self.live_handoff_origin(f,table)?.map(|(row,_)|row))
+    }
+    #[cfg(feature = "iterative-bake")]
+    pub(crate) fn live_handoff_origin(&self, f: FactRef, table: usize) -> Result<Option<(Row,bool)>> {
+        if !self.dirty_facts[table].is_empty() { return Ok(None); }
+        // The existing forwarding walk already proves whether the returned
+        // receipt is the original source. Carry that proof with the handoff.
+        let (witness,original)=self.resolve_receipt_origin(Dependency::Fact(f));
+        Ok(self.row(witness)?.filter(|r|r.table==table && !r.hidden).map(|row|(row,original)))
     }
     pub fn construct(
         &mut self,

@@ -19,7 +19,7 @@ pub(crate) use binding::bind_relation;
 #[path = "cell_results.rs"]
 mod results;
 #[cfg(feature = "iterative-bake")]
-pub(crate) use results::{Capture, ResultPort, Results};
+pub(crate) use results::{Capture, ResultPort, Results, SlotLayout};
 
 #[path = "cell_query.rs"]
 mod query;

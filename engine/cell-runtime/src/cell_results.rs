@@ -5,7 +5,8 @@ use super::Site;
 use crate::graph::Dependency;
 use serde::{Serialize, Serializer};
 use smallvec::SmallVec;
-use std::num::NonZeroU32;
+use std::{num::NonZeroU32, rc::Rc};
+use crate::result_handoff::Trail;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub(crate) struct ResultPort {
@@ -21,7 +22,7 @@ impl ResultPort {
         }
     }
     pub fn rule(self) -> usize { self.rule as usize }
-    fn slot(self) -> usize { self.slot.get() as usize - 1 }
+    pub(crate) fn slot(self) -> usize { self.slot.get() as usize - 1 }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
@@ -37,29 +38,111 @@ impl Serialize for Capture {
     }
 }
 
+#[derive(Debug)]
+pub(crate) struct SlotLayout {
+    pub sources: Vec<Option<ResultPort>>,
+    source_rule: usize,
+    valid: u64,
+    identity: u64,
+    shifts: Vec<(isize,u64)>,
+}
+impl SlotLayout {
+    pub fn compile(rule:usize, sources:Vec<Option<ResultPort>>) -> Option<Rc<Self>> {
+        let source_rule=sources.iter().flatten().next()?.rule();
+        if sources.iter().flatten().any(|p|p.rule()!=source_rule || p.slot()>=64) { return None; }
+        let mut valid=0; let mut identity=0;
+        let mut shifts=std::collections::BTreeMap::new();
+        for (slot,source) in sources.iter().enumerate() {
+            if let Some(source)=source {
+                valid |= 1<<slot;
+                if source.rule()==rule && source.slot()==slot { identity |= 1<<slot; }
+                *shifts.entry(slot as isize-source.slot() as isize).or_insert(0u64) |= 1<<source.slot();
+            }
+        }
+        Some(Rc::new(Self { sources,source_rule,valid,identity,shifts:shifts.into_iter().collect() }))
+    }
+    pub(crate) fn storage_bytes(&self) -> usize {
+        std::mem::size_of::<Self>()
+            + self.sources.capacity() * std::mem::size_of::<Option<ResultPort>>()
+            + self.shifts.capacity() * std::mem::size_of::<(isize,u64)>()
+    }
+    fn project(&self, mask:u64) -> u64 {
+        self.shifts.iter().fold(0,|v,&(shift,bits)|v|if shift>=0 {(mask&bits)<<(shift as usize)} else {(mask&bits)>>((-shift) as usize)})
+    }
+}
 #[derive(Clone, Debug)]
 pub(crate) struct Results {
     rule: usize,
-    slots: SmallVec<[Option<Dependency>; 2]>,
+    slots: SmallVec<[Option<Dependency>; 1]>,
+    projection: Option<Rc<SlotLayout>>,
+    parent: Option<Rc<Trail>>,
+    forwarded: u64,
 }
 impl Results {
     pub fn new(rule: usize) -> Self {
-        Self { rule, slots: SmallVec::new() }
+        Self { rule, slots: SmallVec::new(), projection:None, parent:None, forwarded:0 }
+    }
+    /// The compiled capture width avoids geometric growth of tiny arrays.
+    /// Called only after the first present local result, so empty captures
+    /// never allocate a backing array.
+    pub fn reserve_local(&mut self, width: usize) {
+        self.slots.reserve_exact(width.saturating_sub(self.slots.len()));
     }
     /// Return only the padding written for missing earlier results. Captures
     /// are sorted by the shared layout; a present result is written once.
     pub fn insert(&mut self, port: ResultPort, result: Dependency) -> usize {
         debug_assert_eq!(self.rule, port.rule(), "Cell result belongs to another definition");
-        let slot = port.slot();
+        // Inherited slots consume no local storage. Missing local results
+        // retain None padding, so no second per-instance presence bitmap is needed.
+        let slot = self.local_slot(port.slot());
         debug_assert!(slot >= self.slots.len(), "ordered, distinct Cell captures");
         let padding = slot - self.slots.len();
         self.slots.resize(slot, None);
         self.slots.push(Some(result));
         padding
     }
+    pub fn get_counted(&self, port:ResultPort, extra:&mut u64) -> Option<Dependency> {
+        if self.rule == port.rule() && self.inherits(port) { *extra += 1; }
+        self.get(port)
+    }
     pub fn get(&self, port: ResultPort) -> Option<Dependency> {
         if self.rule != port.rule() { return None; }
+        if self.projection.is_some() {
+            let bit = 1u64.checked_shl(port.slot() as u32)?;
+            if self.forwarded & bit != 0 {
+                let Trail::One(parent) = self.parent.as_deref()? else { unreachable!() };
+                return parent.get(self.projection.as_ref()?.sources[port.slot()]?);
+            }
+            return self.slots.get(self.local_slot(port.slot())).copied().flatten();
+        }
         self.slots.get(port.slot()).copied().flatten()
     }
-    pub fn len(&self) -> usize { self.slots.len() }
+    fn local_slot(&self, slot: usize) -> usize {
+        let preceding = if slot >= 64 { u64::MAX } else { (1u64 << slot) - 1 };
+        slot - (self.forwarded & preceding).count_ones() as usize
+    }
+    pub(crate) fn storage_parts(&self) -> (usize, Option<&Rc<Trail>>, Option<&Rc<SlotLayout>>) {
+        (if self.slots.spilled() { self.slots.capacity() * std::mem::size_of::<Option<Dependency>>() } else { 0 },
+         self.parent.as_ref(), self.projection.as_ref())
+    }
+    pub fn len(&self) -> usize { self.slots.len() + self.inherited_count() }
+    #[cfg(test)]
+    pub fn parent_owner(&self) -> Option<&Rc<Trail>> { self.parent.as_ref() }
+    pub fn spilled(&self) -> bool { self.slots.spilled() }
+    pub fn stored_len(&self) -> usize { self.slots.len() }
+    pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
+    pub fn inherits(&self, port: ResultPort) -> bool { port.slot() < 64 && self.forwarded & (1 << port.slot()) != 0 }
+    pub fn prepare(&mut self, layout:&Rc<SlotLayout>, previous:Rc<Trail>, flags:u64) {
+        let Trail::One(old)=previous.as_ref() else { return };
+        if old.rule!=layout.source_rule { return; }
+        let allowed=if old.parent.is_some() {
+            layout.project(old.forwarded & old.projection.as_ref().unwrap().identity)
+        } else { layout.valid };
+        let forwarded=flags & allowed;
+        if forwarded!=0 {
+            self.parent=Some(if let Some(parent)=&old.parent { parent.clone() } else { previous });
+            self.projection=Some(layout.clone());
+            self.forwarded=forwarded;
+        }
+    }
 }

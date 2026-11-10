@@ -242,8 +242,9 @@ impl Started {
             .iter()
             .map(|r| crate::result_handoff::Input {
                 op: r.op,
+                from_history: true,
                 back: r.back,
-                fact: match c.state.history.get(r.back, r.port.expect("compiled Cell result port")) {
+                fact: match c.state.history.get_counted(r.back, r.port.expect("compiled Cell result port"), &mut stats.history_inherited_reads) {
                     Some(Dependency::Fact(f)) => Some(f),
                     _ => None,
                 },
@@ -278,14 +279,18 @@ impl Started {
         rid: usize,
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
+        forwarded: u64,
         stats: &mut Stats,
     ) {
         if let Self::Live(c) = self {
-            let (sources, depth) = cat.capture(&c.state);
-            let work = c.state.history.capture(
+            let (sources, depth, inherit, layout) = cat.capture(&c.state);
+            let work = c.state.history.capture_layout(
                 depth,
                 rid,
                 sources,
+                inherit,
+                layout,
+                forwarded,
                 read,
                 effect,
             );
@@ -294,6 +299,8 @@ impl Started {
             stats.history_allocations += work.allocations as u64;
             stats.history_empty_slots_written += work.empty_slots as u64;
             stats.history_carried_steps += u64::from(work.carried);
+            stats.history_inherited_slots += work.inherited as u64;
+            stats.history_heap_frames += work.heap_frames as u64;
         }
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
@@ -413,6 +420,10 @@ pub struct Stats {
     history_allocations: u64,
     history_empty_slots_written: u64,
     history_carried_steps: u64,
+    history_inherited_slots: u64,
+    history_inherited_reads: u64,
+    history_inheritance_marks: u64,
+    history_heap_frames:u64,
     history_result_reads: u64,
     legacy_entry_writes: u64,
     legacy_retirement_checks: u64,
@@ -716,7 +727,7 @@ fn read_port(
     if let Some(proof) = g.program.iterative.query_receipt(&cursor.state, _atom) {
         stats.query_receipt_attempts += 1;
         stats.history_result_reads += 1;
-        if let Some(w) = cursor.state.history.get(proof.back, proof.port.expect("compiled Cell result port")) {
+        if let Some(w) = cursor.state.history.get_counted(proof.back, proof.port.expect("compiled Cell result port"), &mut stats.history_inherited_reads) {
             g.stats.decoded_rows += 1;
             if let Some(row) = g.row(w)?.filter(good) {
                 stats.query_receipt_hits += 1;
@@ -758,7 +769,7 @@ fn read_port(
                 stats.local_witness_receipt_probes += 1;
                 stats.local_witness_slot_reads += 1;
                 stats.history_result_reads += 1;
-                local_results.and_then(|results| results.get(port))
+                local_results.and_then(|results| results.get_counted(port, &mut stats.history_inherited_reads))
             } else { None };
             #[cfg(not(feature = "iterative-bake"))]
             let receipt = None;
@@ -1216,6 +1227,7 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let mut effects = effects;
         self.stats.completed_steps += 1;
+        self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
             self.finish_effects(effects, false);
             return Ok(());
@@ -1236,7 +1248,7 @@ impl Programs {
                 &mut self.stats,
             );
             s.remember(&g.program.iterative, rid,
-                &query_fact, |i| effects.get(i), &mut self.stats);
+                &query_fact, |i| effects.get(i), effects.forwarded(), &mut self.stats);
             s
         };
         self.pending_steps.push(Completion::new(step));
@@ -2322,12 +2334,23 @@ impl Programs {
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
         let report = json!({"enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
-            "effect_plan_cache_bytes":effect_plan_cache_bytes,"keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
+            "effect_plan_slot_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.slot_bytes()).sum::<usize>(),"effect_plan_cache_bytes":effect_plan_cache_bytes,"keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]
         let report = {
             let mut r = report;
+            let mut storage = crate::result_handoff::HistoryStorage::default();
+            for publication in self.entries.values().chain(extra.iter().copied()) {
+                #[cfg(feature = "sparse-cells")]
+                if let PublishedBase::Active(cursor) = &publication.base {
+                    cursor.state.history.count_storage(&mut storage);
+                }
+                #[cfg(not(feature = "sparse-cells"))]
+                publication.state.history.count_storage(&mut storage);
+            }
+            r["published_history_storage"] = serde_json::to_value(storage).unwrap();
+            r["history_result_frame_bytes"] = std::mem::size_of::<crate::cell::Results>().into();
             r["history_handle_bytes"] = std::mem::size_of::<crate::result_handoff::History>().into();
             r["iterative_bake"] = self.training.report();
             r

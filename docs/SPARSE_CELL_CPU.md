@@ -316,3 +316,86 @@ The quiescence proof covered 769 / 1,428 and 7,551 / 16,883 source Runs. Each st
 A binding is sealed while the LHS snapshot is repaired. During its RHS, a trusted frame can supply already-canonical stored slots while the union generation still agrees. Historical frames and parent columns keep ordinary resolution, and a real union invalidates the certificate. The retained implementation confines permission to the individual apply call even on failure. Three paired medians were 19.512 / 19.234 ms and 7.079 / 6.958 s inference, 113.548 / 112.671 ms and 10.437 / 10.332 s CLI, and 152.55 / 152.56 MiB and 1,986.00 / 1,986.75 MiB RSS. Visits, RHS, effective writes, Spine, schedule and final graph matched. The narrower permission lifetime is also covered by a focused union-invalidation test.
 
 An entry node keeps the maximum epoch it has inserted since its last full refresh. If that upper bound is below a consumer's watermark, its ordered delta is empty. The source rule still runs at the same place, but this pivot need not prepare inversion, Spine routing or Free Join admission. Removing the previous maximum only makes the bound conservative. Three standard-release pairs on the experimental stack gave 20.286 / 19.493 ms and 6.960 / 6.995 s inference, 116.459 / 114.232 ms and 10.278 / 10.302 s CLI, and 154.00 / 153.78 MiB and 2,031.59 / 2,014.53 MiB RSS. Both full audits and logical visit counts matched.
+
+### Finite Cell state inheritance
+
+`iterative_bake.state_plan` uses `eggfuse-cell-state-plan/v2` (v1 remains accepted). Its `contracts`
+are reconstructed from validated typed Cell programs: query interface and sorts,
+ordered effects, completion proofs, exported sources, retained stage distance,
+original source-Run activation and transitions. These are conservative contracts
+for fixed interfaces, not certificates of saturation under new external inputs.
+Expanded execution history remains available as implementation provenance.
+
+Compile-time `state_plan::compile` registers `Materialize(contract)` and, only
+for an empty retained transfer or a proved mixed export layout, the equivalent
+`Inherit(contract)` in an egglog egraph. Extraction uses container-transfer
+weights 3 and 1. The extracted `implementations` array is installed in the
+runtime catalog; it directly selects history materialization or carrying the
+existing result owner. The loader reconstructs every contract and rejects
+unproved inheritance or changed stage contracts. Recompilation discards stale
+state plans before deriving and extracting replacements.
+
+Original RHS effects, queued unions and source-Run publication continue through
+the ordinary executor. Inherited slots retain their actual returned references
+and existing liveness, generation, key and delta checks. Version 2 compiles
+per-export source slots, allowing new and inherited results in the same frame.
+General publication elimination, multi-producer joins and broader state
+normalization remain future work.
+
+`tests/state_inheritance.rs` exercises normal, deletion and intervening-union
+chains, compares inherited and materialized final graphs, ordered Run fields,
+stage snapshots and binding audits, and rejects forged contracts/selections.
+The diagnostic result is in
+[the saved evidence](../benchmarks/cell-unification/state-plan-check.json).
+Reproduce with `cargo test --locked -p eggfuse-cell-compiler --features
+sparse-cells,view-ports,iterative-bake --test state_inheritance`.
+The 6-to-2 history allocation comparison demonstrates selectable takeover of
+existing carrying; it is not an additional gain over `f4fd21cb`. The cost model
+excludes added compilation, JSON storage and runtime plan reads. No speed
+measurement or native egglog runtime speedup is claimed.
+
+
+### Mixed result-slot inheritance and compression
+
+The 13 exporting sum-bits states now have checked per-slot layouts: eight are
+mixed and five only create new slots. A validated back-one RHS handoff carries
+its original-receipt proof through the existing receipt walk and effect-slot
+descriptor. The capture skips a repeated read and write only when that proof
+and the compiled source slot agree. Forwarded/replaced receipts materialize.
+An inherited parent must be a leaf; repeated identity inheritance reuses that
+leaf rather than creating a growing chain. Wider-than-64 or deeper transfers
+retain the materialized path. Missing results, deleted facts and the original
+Run order remain observable through ordinary validation.
+
+Frames store only non-inherited slots, including None padding for missing local
+results. Their location is derived from the inheritance bitmap, eliminating the
+second presence bitmap. One inline slot, smallvec's union representation and
+exact reservation of the compiled local width reduce the frame from 88 to 56
+bytes. Identical (target rule, source slots) layouts are interned at compile
+loading; sum-bits uses four shared layouts instead of eight. No per-instance
+layout allocation or reverse consumer index is introduced.
+
+The [work check](../benchmarks/cell-unification/slot-inheritance-check.json)
+compares the same kernel's selected and all-materialized plans: 1,508 capture
+reads and writes become 1,313 each, with 232 provenance marks and 71 additional
+inherited reads. Result-array spills are 534 versus 392; the earlier 88-byte
+selected frame had 258 spills, so smaller inline storage trades more allocations
+for fewer bytes. Equal-weight Work saves 229 operations; that is not a latency
+prediction. All 1,428 Runs and final state agree, and the native semantic
+acceptance script passes. These are standalone Cell CPU results, not an
+optimization measured inside native egglog.
+
+The [storage check](../benchmarks/cell-unification/slot-storage-check.json)
+counts unique owners reachable from published Entries, their retained parents,
+array capacities and all compiled slot layouts, with estimated two-word Rc
+headers. It avoids charging the referenced subset of shared layouts twice.
+This scope falls from 25,328 to 19,480 bytes (-23.1%) against the uncompressed
+mixed-frame implementation. All-materialized storage on the same compact kernel
+is 18,200 bytes: inheritance still costs 1,280 bytes (+7.0%), including 16 extra
+retained leaf owners. It is not yet a memory win over materialization. This is
+not RSS, peak allocator usage or complete program storage; effect descriptors
+remain separately reported (6,376 bytes in this case). No new timing was run;
+the user's 5% slowdown allowance is a tolerance, not a measured regression.
+
+Reproduction and the isolated 88-byte reference patch are described in
+[slot-inheritance.md](../benchmarks/cell-unification/slot-inheritance.md).

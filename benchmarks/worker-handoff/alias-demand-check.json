@@ -1,0 +1,619 @@
+{
+  "scope": "standalone Cell CPU; compile-time dependency refinement, scoped runtime diagnostic, no timing",
+  "baseline_commit": "d9ae41af",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "changed_rules": [
+    {
+      "rule": 10,
+      "rhs_removed": [
+        2,
+        276
+      ],
+      "accesses_removed": [
+        2,
+        276
+      ]
+    },
+    {
+      "rule": 21,
+      "rhs_removed": [
+        2,
+        328
+      ],
+      "accesses_removed": [
+        2,
+        328
+      ]
+    },
+    {
+      "rule": 22,
+      "rhs_removed": [
+        2,
+        328
+      ],
+      "accesses_removed": [
+        2,
+        328
+      ]
+    },
+    {
+      "rule": 24,
+      "rhs_removed": [
+        304
+      ],
+      "accesses_removed": [
+        304
+      ]
+    },
+    {
+      "rule": 42,
+      "rhs_removed": [
+        2,
+        276
+      ],
+      "accesses_removed": [
+        2,
+        276
+      ]
+    },
+    {
+      "rule": 43,
+      "rhs_removed": [
+        2
+      ],
+      "accesses_removed": [
+        2
+      ]
+    },
+    {
+      "rule": 99,
+      "rhs_removed": [
+        221
+      ],
+      "accesses_removed": [
+        221
+      ]
+    },
+    {
+      "rule": 100,
+      "rhs_removed": [
+        177
+      ],
+      "accesses_removed": [
+        177
+      ]
+    },
+    {
+      "rule": 101,
+      "rhs_removed": [
+        355
+      ],
+      "accesses_removed": [
+        355
+      ]
+    },
+    {
+      "rule": 102,
+      "rhs_removed": [
+        27
+      ],
+      "accesses_removed": [
+        27
+      ]
+    },
+    {
+      "rule": 103,
+      "rhs_removed": [
+        223
+      ],
+      "accesses_removed": [
+        223
+      ]
+    },
+    {
+      "rule": 104,
+      "rhs_removed": [
+        170
+      ],
+      "accesses_removed": [
+        170
+      ]
+    },
+    {
+      "rule": 105,
+      "rhs_removed": [
+        323
+      ],
+      "accesses_removed": [
+        323
+      ]
+    },
+    {
+      "rule": 106,
+      "rhs_removed": [
+        333
+      ],
+      "accesses_removed": [
+        333
+      ]
+    },
+    {
+      "rule": 107,
+      "rhs_removed": [
+        235
+      ],
+      "accesses_removed": [
+        235
+      ]
+    },
+    {
+      "rule": 108,
+      "rhs_removed": [
+        189
+      ],
+      "accesses_removed": [
+        189
+      ]
+    },
+    {
+      "rule": 109,
+      "rhs_removed": [
+        28
+      ],
+      "accesses_removed": [
+        28
+      ]
+    },
+    {
+      "rule": 110,
+      "rhs_removed": [
+        194
+      ],
+      "accesses_removed": [
+        194
+      ]
+    },
+    {
+      "rule": 111,
+      "rhs_removed": [
+        173
+      ],
+      "accesses_removed": [
+        173
+      ]
+    },
+    {
+      "rule": 112,
+      "rhs_removed": [
+        282
+      ],
+      "accesses_removed": [
+        282
+      ]
+    },
+    {
+      "rule": 113,
+      "rhs_removed": [
+        15
+      ],
+      "accesses_removed": [
+        15
+      ]
+    },
+    {
+      "rule": 114,
+      "rhs_removed": [
+        177
+      ],
+      "accesses_removed": [
+        177
+      ]
+    },
+    {
+      "rule": 115,
+      "rhs_removed": [
+        194
+      ],
+      "accesses_removed": [
+        194
+      ]
+    },
+    {
+      "rule": 116,
+      "rhs_removed": [
+        355
+      ],
+      "accesses_removed": [
+        355
+      ]
+    },
+    {
+      "rule": 117,
+      "rhs_removed": [
+        355
+      ],
+      "accesses_removed": [
+        355
+      ]
+    },
+    {
+      "rule": 118,
+      "rhs_removed": [
+        355
+      ],
+      "accesses_removed": [
+        355
+      ]
+    },
+    {
+      "rule": 119,
+      "rhs_removed": [
+        27
+      ],
+      "accesses_removed": [
+        27
+      ]
+    },
+    {
+      "rule": 120,
+      "rhs_removed": [
+        27
+      ],
+      "accesses_removed": [
+        27
+      ]
+    },
+    {
+      "rule": 121,
+      "rhs_removed": [
+        372
+      ],
+      "accesses_removed": [
+        372
+      ]
+    },
+    {
+      "rule": 122,
+      "rhs_removed": [
+        223
+      ],
+      "accesses_removed": [
+        223
+      ]
+    },
+    {
+      "rule": 123,
+      "rhs_removed": [
+        170
+      ],
+      "accesses_removed": [
+        170
+      ]
+    },
+    {
+      "rule": 124,
+      "rhs_removed": [
+        170
+      ],
+      "accesses_removed": [
+        170
+      ]
+    },
+    {
+      "rule": 125,
+      "rhs_removed": [
+        323
+      ],
+      "accesses_removed": [
+        323
+      ]
+    },
+    {
+      "rule": 126,
+      "rhs_removed": [
+        333
+      ],
+      "accesses_removed": [
+        333
+      ]
+    },
+    {
+      "rule": 127,
+      "rhs_removed": [
+        235
+      ],
+      "accesses_removed": [
+        235
+      ]
+    },
+    {
+      "rule": 128,
+      "rhs_removed": [
+        235
+      ],
+      "accesses_removed": [
+        235
+      ]
+    },
+    {
+      "rule": 129,
+      "rhs_removed": [
+        189
+      ],
+      "accesses_removed": [
+        189
+      ]
+    },
+    {
+      "rule": 130,
+      "rhs_removed": [
+        28
+      ],
+      "accesses_removed": [
+        28
+      ]
+    },
+    {
+      "rule": 131,
+      "rhs_removed": [
+        12
+      ],
+      "accesses_removed": [
+        12
+      ]
+    },
+    {
+      "rule": 132,
+      "rhs_removed": [
+        12
+      ],
+      "accesses_removed": [
+        12
+      ]
+    },
+    {
+      "rule": 143,
+      "rhs_removed": [],
+      "accesses_removed": [
+        223
+      ]
+    },
+    {
+      "rule": 161,
+      "rhs_removed": [
+        194
+      ],
+      "accesses_removed": [
+        194
+      ]
+    },
+    {
+      "rule": 163,
+      "rhs_removed": [
+        282
+      ],
+      "accesses_removed": [
+        282
+      ]
+    },
+    {
+      "rule": 261,
+      "rhs_removed": [
+        176
+      ],
+      "accesses_removed": [
+        176
+      ]
+    },
+    {
+      "rule": 270,
+      "rhs_removed": [
+        2
+      ],
+      "accesses_removed": [
+        2
+      ]
+    },
+    {
+      "rule": 271,
+      "rhs_removed": [
+        276
+      ],
+      "accesses_removed": [
+        276
+      ]
+    },
+    {
+      "rule": 272,
+      "rhs_removed": [
+        195
+      ],
+      "accesses_removed": [
+        195
+      ]
+    },
+    {
+      "rule": 273,
+      "rhs_removed": [
+        13
+      ],
+      "accesses_removed": [
+        13
+      ]
+    },
+    {
+      "rule": 274,
+      "rhs_removed": [
+        289
+      ],
+      "accesses_removed": [
+        289
+      ]
+    },
+    {
+      "rule": 440,
+      "rhs_removed": [
+        27,
+        304
+      ],
+      "accesses_removed": [
+        27,
+        304
+      ]
+    },
+    {
+      "rule": 441,
+      "rhs_removed": [
+        27,
+        304
+      ],
+      "accesses_removed": [
+        27,
+        304
+      ]
+    },
+    {
+      "rule": 449,
+      "rhs_removed": [
+        270
+      ],
+      "accesses_removed": [
+        270
+      ]
+    },
+    {
+      "rule": 535,
+      "rhs_removed": [
+        18,
+        291
+      ],
+      "accesses_removed": [
+        18,
+        291
+      ]
+    },
+    {
+      "rule": 544,
+      "rhs_removed": [
+        15
+      ],
+      "accesses_removed": [
+        15
+      ]
+    },
+    {
+      "rule": 545,
+      "rhs_removed": [
+        358
+      ],
+      "accesses_removed": [
+        358
+      ]
+    },
+    {
+      "rule": 547,
+      "rhs_removed": [
+        358
+      ],
+      "accesses_removed": [
+        358
+      ]
+    },
+    {
+      "rule": 551,
+      "rhs_removed": [
+        18
+      ],
+      "accesses_removed": [
+        18
+      ]
+    },
+    {
+      "rule": 552,
+      "rhs_removed": [
+        358
+      ],
+      "accesses_removed": [
+        358
+      ]
+    },
+    {
+      "rule": 553,
+      "rhs_removed": [
+        337
+      ],
+      "accesses_removed": [
+        337
+      ]
+    },
+    {
+      "rule": 554,
+      "rhs_removed": [
+        335
+      ],
+      "accesses_removed": [
+        335
+      ]
+    },
+    {
+      "rule": 559,
+      "rhs_removed": [
+        18,
+        26
+      ],
+      "accesses_removed": [
+        18,
+        26
+      ]
+    },
+    {
+      "rule": 561,
+      "rhs_removed": [
+        18,
+        247
+      ],
+      "accesses_removed": [
+        18,
+        247
+      ]
+    },
+    {
+      "rule": 563,
+      "rhs_removed": [
+        18,
+        247
+      ],
+      "accesses_removed": [
+        18,
+        247
+      ]
+    }
+  ],
+  "before_storage": {
+    "lists": 1746,
+    "unique_lists": 744,
+    "unshared_payload_bytes": 496824,
+    "shared_payload_and_rc_bytes": 82112,
+    "shared_handles_bytes": 27936
+  },
+  "after_storage": {
+    "lists": 1746,
+    "unique_lists": 718,
+    "unshared_payload_bytes": 495664,
+    "shared_payload_and_rc_bytes": 64160,
+    "shared_handles_bytes": 27936
+  },
+  "execution": {
+    "runs": 1428,
+    "hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    }
+  },
+  "scoped_counters_equal": true,
+  "semantic_status": "pass",
+  "tests": "11 staged, 8 merge and 11 witness tests passed",
+  "binaries": {
+    "control": "89082cf7e448f643445937ea3fc3a4f58d82421fe612d8dfda460b669de2b10d",
+    "candidate": "f697a3196be87e77bb5cdaf853bd791552d53688c9e00ba6d686e6449d528b39"
+  }
+}

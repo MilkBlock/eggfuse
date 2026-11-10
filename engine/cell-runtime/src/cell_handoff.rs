@@ -39,13 +39,13 @@ impl HandoffCounts {
 /// Return None before applying this instruction when its receipt is absent or
 /// no longer proves the complete current key. No lookup or second key buffer.
 pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl CellFrame,
-    instruction: &Op, input: &Input, counts: &mut HandoffCounts) -> Result<Option<crate::graph::Dependency>> {
+    instruction: &Op, input: &Input, counts: &mut HandoffCounts) -> Result<Option<(crate::graph::Dependency,bool)>> {
     let Some(fact) = input.fact else { return Ok(None); };
     let (table, args) = match instruction {
         Op::Let(_, Call::Table(t), args) | Op::Set(t, args, _) => (*t, args),
         _ => return Err("unexpected instruction in completed block".into()),
     };
-    let Some(row) = g.live_handoff(fact, table)? else { return Ok(None); };
+    let Some((row, original)) = g.live_handoff_origin(fact, table)? else { return Ok(None); };
     let Some((value, fields)) = row.values.split_last() else { return Ok(None); };
     if fields.len() != args.len() { return Ok(None); }
     for (field, arg) in fields.iter().zip(args) {
@@ -68,7 +68,7 @@ pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl CellFrame,
         _ => unreachable!(),
     }
     counts.deep += u64::from(input.back > 1);
-    Ok(Some(row.witness))
+    Ok(Some((row.witness,original)))
 }
 
 /// A live RHS can immediately commit a successful operation's receipt and
@@ -77,8 +77,8 @@ pub(crate) fn apply_handoff(g: &mut Graph, cell: u32, receipts: &mut Effects,
     instruction: &Op, input: &Input) -> Result<bool> {
     let mut counts = HandoffCounts::default();
     g.stats.handoff_attempts += 1;
-    if let Some(witness) = complete_handoff(g, &mut RhsFrame { cell, receipts }, instruction, input, &mut counts)? {
-        receipts.record(input.op, witness);
+    if let Some((witness, original)) = complete_handoff(g, &mut RhsFrame { cell, receipts }, instruction, input, &mut counts)? {
+        receipts.record_handoff(input.op, witness, input, original, g.program.iterative.tracks_slots());
         counts.commit(&mut g.stats);
         Ok(true)
     } else {

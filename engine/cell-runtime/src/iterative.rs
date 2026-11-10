@@ -70,6 +70,8 @@ pub struct Catalog {
     jumps: BTreeMap<Join, Id>,
     paths: BTreeSet<Vec<(Option<usize>, Entry)>>,
     switch: crate::result_handoff::Switch,
+    inherited: Option<Vec<bool>>,
+    track_slots: bool,
 }
 #[derive(Clone, Copy, Debug)]
 struct Segment {
@@ -100,6 +102,7 @@ impl State {
     }
 }
 impl Catalog {
+    pub(crate) fn layout_storage(&self) -> (usize,usize) { self.switch.layout_storage() }
     pub fn seed(p: &Program, limits: Limits) -> Result<J> {
         Self::seed_with_roots(p, limits, &[])
     }
@@ -213,7 +216,41 @@ impl Catalog {
             }
             s.switch.complete_cells(p, |unit| s.units[unit].last.0);
         }
+        if let Some(raw) = raw.get("state_plan") {
+            let mut expected = s.state_contracts(p);
+            match raw["schema"].as_str() {
+                Some("eggfuse-cell-state-plan/v1") => for c in expected.as_array_mut().unwrap() {
+                    c.as_object_mut().unwrap().remove("slot_layout");
+                    c["can_inherit"] = serde_json::json!(c.get("exports").and_then(J::as_array).is_some_and(Vec::is_empty)
+                        && c["retained_stages"].as_u64().unwrap_or(0) > 0);
+                },
+                Some("eggfuse-cell-state-plan/v2") => (),
+                _ => return Err("unsupported Cell state plan".into()),
+            }
+            if raw["contracts"] != expected {
+                return Err("Cell state contract mismatch".into());
+            }
+            let choices = raw["implementations"].as_array().ok_or("missing Cell implementations")?;
+            let contracts = expected.as_array().unwrap();
+            if choices.len() != contracts.len() { return Err("Cell implementation count".into()); }
+            let mut inherited = Vec::new();
+            for (choice, contract) in choices.iter().zip(contracts) {
+                let carry = match choice.as_str() {
+                    Some("materialize") => false,
+                    Some("inherit") if contract["can_inherit"] == true => true,
+                    _ => return Err("unproved Cell inheritance".into()),
+                };
+                inherited.push(carry);
+            }
+            s.track_slots=inherited.iter().enumerate().any(|(i,&enabled)|enabled && s.switch.layout(i).is_some());
+            s.inherited = Some(inherited);
+        }
         Ok(s)
+    }
+    /// Reconstruct executable state contracts from the validated Cell program.
+    /// This intentionally promises no saturation under new external inputs.
+    pub fn state_contracts(&self, p: &Program) -> J {
+        self.switch.state_contracts(p, |u| self.units[u].last)
     }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
@@ -234,6 +271,7 @@ impl Catalog {
         congruence: bool,
         query_ports: bool,
     ) -> Result<()> {
+        plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
@@ -249,14 +287,17 @@ impl Catalog {
         .artifact();
         Ok(())
     }
+    pub(crate) fn tracks_slots(&self) -> bool { self.track_slots }
     pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
         self.switch.exports.get(rid).map_or(&[], Vec::as_slice)
     }
     pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
         self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
     }
-    pub(crate) fn capture(&self, s: &State) -> (&[crate::cell::Capture], usize) {
-        self.switch.capture(s.pc)
+    pub(crate) fn capture(&self, s: &State) -> (&[crate::cell::Capture], usize, bool, Option<&Rc<crate::cell::SlotLayout>>) {
+        let (sources, depth, layout) = self.switch.capture(s.pc);
+        (sources, depth, self.inherited.as_ref().is_none_or(|v| v.get(s.pc).copied().unwrap_or(false)),
+            if self.track_slots { layout } else { None })
     }
     /// A fully executed rule seeds its producer node, or a unique legacy leaf.
     /// Keep this restricted to v2 receipts a compiled continuation demands.

@@ -1,0 +1,132 @@
+diff --git a/engine/cell-runtime/src/completion_access.rs b/engine/cell-runtime/src/completion_access.rs
+index 882ec434..813a18f8 100644
+--- a/engine/cell-runtime/src/completion_access.rs
++++ b/engine/cell-runtime/src/completion_access.rs
+@@ -4,6 +4,8 @@ use super::*;
+
+ #[derive(Clone, Debug, Default, Serialize)]
+ pub struct Rule {
++    #[serde(skip)]
++    pub(crate) rhs_group: usize,
+     pub query: std::rc::Rc<[usize]>,
+     pub rhs: std::rc::Rc<[usize]>,
+     pub accesses: std::rc::Rc<[usize]>,
+@@ -95,6 +97,7 @@ impl Rule {
+             rhs: rhs.into_iter().collect(),
+             accesses: accesses.into(),
+             pure: None,
++            rhs_group: 0,
+         }
+     }
+ }
+diff --git a/engine/cell-runtime/src/completion_plan.rs b/engine/cell-runtime/src/completion_plan.rs
+index 6788bfd3..05a6ffa3 100644
+--- a/engine/cell-runtime/src/completion_plan.rs
++++ b/engine/cell-runtime/src/completion_plan.rs
+@@ -215,6 +215,11 @@ impl Plan {
+                 else { sets.insert(list.clone()); }
+             }
+         }
++        let mut rhs_groups=BTreeMap::new();
++        for demand in &mut plan.rule_demands {
++            let next=rhs_groups.len();
++            demand.rhs_group=*rhs_groups.entry(demand.rhs.clone()).or_insert(next);
++        }
+         for (name, rules) in &p.sets {
+             let mut tables = BTreeSet::new();
+             let mut queries = BTreeSet::new();
+@@ -240,6 +245,9 @@ impl Plan {
+         Ok(plan)
+     }
+     /// Logical capacity census, excluding allocator rounding and temporary interning.
++    pub(crate) fn rhs_groups(&self)->usize {
++        self.rule_demands.iter().map(|d|d.rhs_group+1).max().unwrap_or(0)
++    }
+     pub fn demand_storage(&self) -> serde_json::Value {
+         let mut seen=BTreeSet::new();
+         let mut shared=0usize;
+diff --git a/engine/cell-runtime/src/runtime_completion.rs b/engine/cell-runtime/src/runtime_completion.rs
+index e178dc74..3cb4c0ef 100644
+--- a/engine/cell-runtime/src/runtime_completion.rs
++++ b/engine/cell-runtime/src/runtime_completion.rs
+@@ -32,6 +32,8 @@ pub(super) struct Counts {
+     pub rhs_demand_probes: u64,
+     pub rhs_group_checks: u64,
+     pub rhs_group_reuses: u64,
++    pub rhs_group_word_writes: u64,
++    pub rhs_group_capacity_bytes: usize,
+     pub rhs_demand_growths: u64,
+     pub rhs_selected_rules: u64,
+     pub peak_matched_origin_slots: usize,
+@@ -67,6 +69,7 @@ pub(super) struct State {
+     matched: bool,
+     rhs_demand: Vec<usize>,
+     rhs_seen: Vec<bool>,
++    rhs_groups_seen: Vec<u64>,
+     eager: Scope,
+     deferred: ChangeBatch,
+     pub stats: Counts,
+@@ -107,6 +110,7 @@ impl Executor {
+             matched: false,
+             rhs_demand: Vec::new(),
+             rhs_seen: Vec::new(),
++            rhs_groups_seen: Vec::new(),
+             eager,
+             deferred,
+             stats: Counts::default(),
+@@ -127,6 +131,8 @@ impl Executor {
+         }
+         state.can_defer = true;
+         state.port_scopes = true;
++        state.rhs_groups_seen.resize(self.graph.program.completion_plan.as_ref().unwrap().rhs_groups().div_ceil(64),0);
++        state.stats.rhs_group_capacity_bytes=state.rhs_groups_seen.capacity()*std::mem::size_of::<u64>();
+         state
+             .rhs_seen
+             .resize(self.graph.program.tables.len(), false);
+@@ -307,21 +313,21 @@ impl Executor {
+             }
+         }
+         let state = self.completion.as_mut().unwrap();
+-        let mut previous = None;
++        state.rhs_groups_seen.fill(0);
++        state.stats.rhs_group_word_writes += state.rhs_groups_seen.len() as u64;
+         for (rid, _) in &patch.groups {
+             state.stats.rhs_selected_rules += 1;
+-            let rhs = &plan.rule_demands[*rid].rhs;
+-            // The compiler interns exact immutable obligations. Consecutive
+-            // selected rules with the same owner add no new tables. Preserve
+-            // first-occurrence ordering and never cache across source Runs.
+-            if let Some(old) = previous {
+-                state.stats.rhs_group_checks += 1;
+-                if std::rc::Rc::ptr_eq(old, rhs) {
+-                    state.stats.rhs_group_reuses += 1;
+-                    continue;
+-                }
++            let rule=&plan.rule_demands[*rid];
++            let rhs=&rule.rhs;
++            let word=&mut state.rhs_groups_seen[rule.rhs_group/64];
++            let bit=1u64<<(rule.rhs_group%64);
++            state.stats.rhs_group_checks += 1;
++            if *word & bit != 0 {
++                state.stats.rhs_group_reuses += 1;
++                continue;
+             }
+-            previous = Some(rhs);
++            *word |= bit;
++            state.stats.rhs_group_word_writes += 1;
+             for &table in rhs.iter() {
+                 state.stats.rhs_demand_probes += 1;
+                 if !state.rhs_seen[table] {
+diff --git a/tools/cell-compiler/src/work_credit.rs b/tools/cell-compiler/src/work_credit.rs
+index 445b8ebd..ca80360c 100644
+--- a/tools/cell-compiler/src/work_credit.rs
++++ b/tools/cell-compiler/src/work_credit.rs
+@@ -217,7 +217,7 @@ impl Work {
+             } else { 0 };
+             work.insert(format!("stable_ports/unique_publication/stats/{field}"), value);
+         }
+-        for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks", "rhs_demand_probes", "rhs_group_checks", "rhs_demand_growths", "rhs_selected_rules", "bound_rhs_attempts", "bound_rhs_rule_checks", "bound_rhs_ops", "bound_rhs_expression_steps", "bound_rhs_input_reads", "bound_rhs_key_reads", "bound_rhs_value_slots", "bound_rhs_scratch_growths", "bound_rhs_overlay_checks"] {
++        for field in ["ruleset_waits", "eager_waits", "readiness_dependency_checks", "publication_table_checks", "rhs_demand_probes", "rhs_group_checks", "rhs_group_word_writes", "rhs_demand_growths", "rhs_selected_rules", "bound_rhs_attempts", "bound_rhs_rule_checks", "bound_rhs_ops", "bound_rhs_expression_steps", "bound_rhs_input_reads", "bound_rhs_key_reads", "bound_rhs_value_slots", "bound_rhs_scratch_growths", "bound_rhs_overlay_checks"] {
+             let key = format!("scoped_executor/stats/{field}");
+             let value = if report["scoped_executor"]["enabled"] == true {
+                 report["scoped_executor"]["stats"][field].as_u64().ok_or_else(||format!("missing scoped execution work {field}"))?

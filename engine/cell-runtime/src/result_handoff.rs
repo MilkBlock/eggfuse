@@ -4,7 +4,7 @@
 use crate::{
     graph::{Dependency, FactRef},
     iterative::Entry,
-    cell::{Capture, Definition, ResultPort, Results, Site},
+    cell::{Capture, Definition, ResultPort, Results, Site, SlotLayout},
     program::*,
 };
 use serde::Serialize;
@@ -38,6 +38,7 @@ pub(crate) struct Input {
     pub back: usize,
     pub fact: Option<FactRef>,
     pub equal_output: bool,
+    pub from_history: bool,
 }
 #[derive(Clone)]
 struct Fact {
@@ -313,11 +314,55 @@ fn derive_stage(
 /// Shared by copied/published cursors. Empty stages maintain real offsets;
 /// trimming at the largest compiled distance bounds the history.
 #[derive(Debug)]
-enum Trail {
+pub(crate) enum Trail {
     One(Results),
     // Each entry is empty or One. Reuse an existing One when a later Cell
     // needs a deeper history; do not copy its results into another owner.
     Many(Vec<Option<Rc<Trail>>>),
+}
+/// Reporting-only census of result storage reachable from published Entries.
+/// Shared owners (including inherited leaves) and layouts are counted once.
+/// Bytes include backing capacities and an explicit two-word Rc header estimate,
+/// but exclude allocator rounding, cursors, pending work and unrelated graph data.
+#[derive(Default, Serialize)]
+pub(crate) struct HistoryStorage {
+    owners: usize,
+    owner_payload_bytes: usize,
+    result_array_bytes: usize,
+    history_array_bytes: usize,
+    layouts: usize,
+    layout_bytes: usize,
+    rc_header_bytes: usize,
+    #[serde(skip)]
+    seen: BTreeSet<usize>,
+    #[serde(skip)]
+    seen_layouts: BTreeSet<usize>,
+}
+impl HistoryStorage {
+    fn visit(&mut self, owner: &Rc<Trail>) {
+        if !self.seen.insert(Rc::as_ptr(owner) as usize) { return; }
+        self.owners += 1;
+        self.owner_payload_bytes += std::mem::size_of::<Trail>();
+        self.rc_header_bytes += 2 * std::mem::size_of::<usize>();
+        match owner.as_ref() {
+            Trail::One(results) => {
+                let (bytes, parent, layout) = results.storage_parts();
+                self.result_array_bytes += bytes;
+                if let Some(parent) = parent { self.visit(parent); }
+                if let Some(layout) = layout {
+                    if self.seen_layouts.insert(Rc::as_ptr(layout) as usize) {
+                        self.layouts += 1;
+                        self.layout_bytes += layout.storage_bytes();
+                        self.rc_header_bytes += 2 * std::mem::size_of::<usize>();
+                    }
+                }
+            }
+            Trail::Many(frames) => {
+                self.history_array_bytes += frames.capacity() * std::mem::size_of::<Option<Rc<Trail>>>();
+                for frame in frames.iter().flatten() { self.visit(frame); }
+            }
+        }
+    }
 }
 #[derive(Clone, Debug, Default)]
 pub(crate) struct History {
@@ -333,8 +378,13 @@ pub(crate) struct CaptureWork {
     pub allocations: usize,
     pub empty_slots: usize,
     pub carried: bool,
+    pub inherited: usize,
+    pub heap_frames: usize,
 }
 impl History {
+    pub(crate) fn count_storage(&self, census: &mut HistoryStorage) {
+        if let Some(owner) = &self.frames { census.visit(owner); }
+    }
     fn one(results: Option<Results>) -> Self {
         Self { frames: results.map(|r| Rc::new(Trail::One(r))), empty: 0 }
     }
@@ -381,6 +431,26 @@ impl History {
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
+        self.capture_selected(limit, rid, wanted, true, read, effect)
+    }
+    pub(crate) fn capture_selected(
+        &mut self, limit: usize, rid: usize, wanted: &[Capture], inherit: bool,
+        read: impl Fn(usize) -> Option<Dependency>, effect: impl Fn(usize) -> Option<Dependency>,
+    ) -> CaptureWork {
+        self.capture_layout(limit, rid, wanted, inherit, None, 0, read, effect)
+    }
+    pub(crate) fn capture_layout(&mut self, limit: usize, rid: usize, wanted: &[Capture], inherit: bool,
+        layout: Option<&Rc<SlotLayout>>, forwarded: u64,
+        read: impl Fn(usize)->Option<Dependency>, effect: impl Fn(usize)->Option<Dependency>) -> CaptureWork {
+        if !inherit && limit > 1 && wanted.is_empty() && self.frames.is_some() {
+            let stored = match self.frames.as_deref().unwrap() { Trail::One(_) => 1, Trail::Many(v) => v.len() };
+            let count = (stored + self.empty).min(limit - 1);
+            let mut frames = Vec::with_capacity(count + 1);
+            frames.extend((1..=count).rev().map(|back| self.snapshot(back)));
+            frames.push(None);
+            *self = Self { frames:Some(Rc::new(Trail::Many(frames))), empty:0 };
+            return CaptureWork { slots:count+1, allocations:2, ..Default::default() };
+        }
         if limit == 0 {
             *self = Self::default();
             return CaptureWork::default();
@@ -391,18 +461,27 @@ impl History {
             return work;
         }
         let mut results = Results::new(rid);
+        // A one-stage replacement can move its existing owner directly. It
+        // needs neither a back-address lookup nor an extra owner handle.
+        let owner = if inherit && forwarded != 0 && layout.is_some() && limit == 1 && self.empty == 0 {
+            self.frames.take()
+        } else { None };
+        if let Some(owner)=owner { results.prepare(layout.unwrap(),owner,forwarded); }
+        let local_width = wanted.last().map_or(0, |c| c.port.slot() + 1) - results.inherited_count();
         let mut empty_slots = 0;
         for capture in wanted {
+            if results.inherits(capture.port) { continue; }
             let w = match capture.site {
                 Site::Query(i) => read(i),
                 Site::Effect(i) => effect(i),
             };
             if let Some(w) = w {
+                if results.stored_len() == 0 { results.reserve_local(local_width); }
                 empty_slots += results.insert(capture.port, w);
             }
         }
-        let mut work = CaptureWork { reads: wanted.len(), slots: results.len(),
-            empty_slots, allocations: 0, carried: false };
+        let mut work = CaptureWork { reads: wanted.len() - results.inherited_count(), slots: results.stored_len(),
+            empty_slots, allocations: 0, carried: false, inherited:results.inherited_count(), heap_frames:usize::from(results.spilled()) };
         let frame = (results.len() != 0).then_some(results);
         if frame.is_none() {
             self.carry(limit, &mut work);
@@ -426,6 +505,9 @@ impl History {
         v.push(Self::one(frame).frames);
         *self = Self { frames: Some(Rc::new(Trail::Many(v))), empty: 0 };
         work
+    }
+    pub(crate) fn get_counted(&self, back: usize, port: ResultPort, extra:&mut u64) -> Option<Dependency> {
+        self.frame(back)?.get_counted(port, extra)
     }
     pub(crate) fn get(&self, back: usize, port: ResultPort) -> Option<Dependency> {
         self.frame(back)?.get(port)
@@ -481,6 +563,8 @@ struct Node {
     supply: Vec<Capture>,
     #[serde(skip)]
     keep_history: usize,
+    #[serde(skip)]
+    layout: Option<Rc<SlotLayout>>,
 }
 
 /// Liveness after this Cell completes. A successor's direct read needs `back`
@@ -556,7 +640,7 @@ impl Switch {
             program: Default::default(),
             next: vec![],
             supply: vec![],
-            keep_history: 0,
+            keep_history: 0, layout: None,
         };
         let mut nodes = vec![blank()];
         let mut ids = BTreeMap::new();
@@ -653,6 +737,25 @@ impl Switch {
                 read.port = Some(port(read.rule, read.donor));
             }
         }
+        let mut layouts = BTreeMap::new();
+        for node in &mut nodes {
+            if node.supply.is_empty() { continue; }
+            let width = node.supply.iter().map(|c| c.port.slot()+1).max().unwrap();
+            if width > 64 { continue; }
+            let mut layout = vec![None; width];
+            for capture in &node.supply {
+                if let Site::Effect(op) = capture.site {
+                    if let Some(reuse) = node.program.reuse.iter().find(|r| r.op == op && r.back == 1) {
+                        layout[capture.port.slot()] = reuse.port;
+                    }
+                }
+            }
+            if layout.iter().any(Option::is_some) {
+                let rule = node.supply[0].port.rule();
+                node.layout = layouts.entry((rule,layout.clone()))
+                    .or_insert_with(|| SlotLayout::compile(rule,layout)).clone();
+            }
+        }
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
         for (&(rid, pivot), &leaf) in leaves {
@@ -703,8 +806,38 @@ impl Switch {
             .find(|(k, _)| *k == (op, leaf))
             .map_or(self.initial[leaf], |x| x.1)
     }
-    pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize) {
-        self.nodes.get(id).map_or((&[], 0), |n| (n.supply.as_slice(), n.keep_history))
+    pub(crate) fn state_contracts(&self, p: &Program, entry: impl Fn(usize) -> Entry) -> serde_json::Value {
+        serde_json::Value::Array(self.nodes.iter().enumerate().map(|(id, n)| {
+            if id == 0 { return serde_json::json!({"initial":true,"can_inherit":false}); }
+            let (rid, pivot) = entry(n.unit);
+            let rule = &p.artifact["recipe"]["rules"][rid];
+            serde_json::json!({
+                "environment":p.artifact["recipe"]["sha256"],
+                "interface":{"query":rule["query"],"pivot":pivot,"sorts":p.templates[p.rules[rid].template].sorts},
+                "effects":rule["effects"],
+                "activation":{"rule":rid,"boundary":"original-source-run","position":"after-rhs-before-publication","union_commit":"source-run-boundary"},
+                "completion_program":n.program,"exports":n.supply,"retained_stages":n.keep_history,
+                "transitions":n.next,"restart":n.failure,
+                "inheritance":{"storage":"existing-results","distance_delta":1,"retain":n.keep_history},
+                "slot_layout":n.supply.iter().map(|c| serde_json::json!({"source":c.site,
+                    "inherit":n.layout.as_ref().and_then(|l| l.sources.get(c.port.slot())).copied().flatten().map(|port|
+                        serde_json::json!({"back":1,"rule":port.rule(),"slot":port.slot()}))})).collect::<Vec<_>>(),
+                "can_inherit":(n.supply.is_empty() && n.keep_history > 0) || n.layout.is_some()
+            })
+        }).collect())
+    }
+    pub(crate) fn layout_storage(&self) -> (usize,usize) {
+        let mut seen=BTreeSet::new();
+        let bytes=self.nodes.iter().filter_map(|n|n.layout.as_ref())
+            .filter(|l|seen.insert(Rc::as_ptr(l) as usize))
+            .map(|l|l.storage_bytes()+2*std::mem::size_of::<usize>()).sum();
+        (seen.len(),bytes)
+    }
+    pub(crate) fn layout(&self, id: usize) -> Option<&Rc<SlotLayout>> {
+        self.nodes.get(id)?.layout.as_ref()
+    }
+    pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize, Option<&Rc<SlotLayout>>) {
+        self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_slice(), n.keep_history,n.layout.as_ref()))
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| &n.program)
@@ -846,6 +979,73 @@ mod tests {
         }
     }
     #[test]
+    fn mixed_layout_inherits_validated_slots_and_replaces_missing_or_fresh_results() {
+        let old_ports = [ResultPort::new(4,0), ResultPort::new(4,1)];
+        let captures = [Capture { site:Site::Effect(1), port:old_ports[0] }, Capture { site:Site::Effect(2), port:old_ports[1] }];
+        let mut h = History::default();
+        h.capture(1,4,&captures, |_|None, |i|Some(Dependency::Function(i)));
+        let published = h.clone();
+        let wanted = [Capture { site:Site::Query(0), port:ResultPort::new(5,0) },
+            Capture { site:Site::Effect(1), port:ResultPort::new(5,1) },
+            Capture { site:Site::Effect(2), port:ResultPort::new(5,2) }];
+        let layout=SlotLayout::compile(5,vec![None,Some(old_ports[0]),Some(old_ports[1])]).unwrap();
+        let work = h.capture_layout(1,5,&wanted,true,Some(&layout),1<<1,
+            |_|Some(Dependency::Function(9)), |i| if i==1 { panic!("inherited receipt must not be read again") } else { Some(Dependency::Function(20)) });
+        assert_eq!((work.inherited,work.reads,work.slots),(1,2,2));
+        assert_eq!(h.get(1,ResultPort::new(5,0)),Some(Dependency::Function(9)));
+        assert_eq!(h.get(1,ResultPort::new(5,1)),Some(Dependency::Function(1)));
+        assert_eq!(h.get(1,ResultPort::new(5,2)),Some(Dependency::Function(20)));
+        assert_eq!(published.get(1,old_ports[1]),Some(Dependency::Function(2)));
+        h.capture_layout(1,5,&wanted,true,Some(&layout),0, |_|None, |_|None);
+        assert_eq!(h.get(1,ResultPort::new(5,1)),None);
+    }
+    #[test]
+    fn projected_results_preserve_missing_local_slots_and_bit_63() {
+        let captures: Vec<_> = (0..64).map(|slot| Capture {
+            site:Site::Effect(slot), port:ResultPort::new(4,slot),
+        }).collect();
+        let mut h=History::default();
+        h.capture(1,4,&captures, |_|None, |i|Some(Dependency::Function(i)));
+        let mut sources=vec![None;64];
+        sources[1]=Some(captures[1].port);
+        sources[63]=Some(captures[63].port);
+        let layout=SlotLayout::compile(4,sources).unwrap();
+        h.capture_layout(1,4,&captures,true,Some(&layout),(1<<63)|2, |_|None,
+            |i| match i { 1|63=>panic!("inherited slot reread"), 3=>Some(Dependency::Function(99)), _=>None });
+        for slot in 0..64 {
+            let expected=match slot {1|63=>Some(Dependency::Function(slot)),3=>Some(Dependency::Function(99)),_=>None};
+            assert_eq!(h.get(1,captures[slot].port),expected,"slot {slot}");
+        }
+    }
+    #[test]
+    fn repeated_slot_inheritance_keeps_one_leaf_owner_and_no_chain() {
+        let wanted = [Capture { site:Site::Query(0), port:ResultPort::new(4,0) },
+            Capture { site:Site::Effect(1), port:ResultPort::new(4,1) },
+            Capture { site:Site::Effect(2), port:ResultPort::new(4,2) }];
+        let layout=SlotLayout::compile(4,vec![None,Some(wanted[1].port),Some(wanted[2].port)]).unwrap();
+        let mut h=History::default();
+        h.capture(1,4,&wanted, |_|Some(Dependency::Function(0)), |i|Some(Dependency::Function(i)));
+        let owner=h.snapshot(1).unwrap();
+        for epoch in 1..=300 {
+            let work=h.capture_layout(1,4,&wanted,true,Some(&layout),6,
+                |_|Some(Dependency::Function(epoch+10)), |_|panic!("do not reread inherited effects"));
+            assert_eq!((work.inherited,work.slots,work.reads,work.heap_frames),(2,1,1,0));
+            let Trail::One(current)=h.frames.as_deref().unwrap() else { panic!() };
+            assert!(Rc::ptr_eq(current.parent_owner().unwrap(),&owner));
+            assert_eq!(h.get(1,wanted[0].port),Some(Dependency::Function(epoch+10)));
+            assert_eq!(h.get(1,wanted[1].port),Some(Dependency::Function(1)));
+        }
+        let mut storage=HistoryStorage::default();
+        h.count_storage(&mut storage);
+        h.clone().count_storage(&mut storage);
+        storage.visit(&owner);
+        assert_eq!((storage.owners,storage.layouts),(2,1));
+        assert_eq!(storage.owner_payload_bytes,2*std::mem::size_of::<Trail>());
+        assert_eq!(storage.result_array_bytes,h.current().unwrap().parent_owner().map(|_| {
+            let Trail::One(r)=owner.as_ref() else { unreachable!() }; r.storage_parts().0
+        }).unwrap());
+    }
+    #[test]
     fn completed_cells_retain_only_reachable_future_reads() {
         let node = |supply: bool, back, next| Node {
             unit: 0, failure: 0,
@@ -857,7 +1057,7 @@ mod tests {
             },
             next, supply: if supply { vec![Capture {
                 site: Site::Effect(2), port: ResultPort::new(4, 0),
-            }] } else { vec![] }, keep_history: 0,
+            }] } else { vec![] }, keep_history: 0, layout: None,
         };
         let nodes = [node(false, 0, vec![]),
             node(true, 0, vec![((0, 0), 2)]),

@@ -1,0 +1,1893 @@
+{
+  "scope": "standalone Cell CPU; diagnostic work, no speed measurement",
+  "cases": [
+    {
+      "state_plan": {
+        "schema": "eggfuse-cell-state-plan/v1",
+        "contracts": [
+          {
+            "initial": true,
+            "can_inherit": false
+          },
+          {
+            "environment": "9a3c884aec49e6cbb3ea4958872ac8fefac8272534b7aba04c1ce4f2d1e05542",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Start"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 5,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Gateway"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 0,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [
+              {
+                "Effect": 1
+              },
+              {
+                "Effect": 2
+              }
+            ],
+            "retained_stages": 1,
+            "transitions": [
+              [
+                [
+                  3,
+                  1
+                ],
+                4
+              ]
+            ],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 1
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "9a3c884aec49e6cbb3ea4958872ac8fefac8272534b7aba04c1ce4f2d1e05542",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "9a3c884aec49e6cbb3ea4958872ac8fefac8272534b7aba04c1ce4f2d1e05542",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "9a3c884aec49e6cbb3ea4958872ac8fefac8272534b7aba04c1ce4f2d1e05542",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 2,
+            "transitions": [
+              [
+                [
+                  1,
+                  2
+                ],
+                5
+              ]
+            ],
+            "restart": 2,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 2
+            },
+            "can_inherit": true
+          },
+          {
+            "environment": "9a3c884aec49e6cbb3ea4958872ac8fefac8272534b7aba04c1ce4f2d1e05542",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [
+                {
+                  "equal_output": false,
+                  "op": 1,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 1
+                  }
+                },
+                {
+                  "equal_output": false,
+                  "op": 2,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 2
+                  }
+                }
+              ],
+              "complete": true
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 3,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          }
+        ],
+        "implementations": [
+          "materialize",
+          "materialize",
+          "materialize",
+          "materialize",
+          "inherit",
+          "materialize"
+        ],
+        "extracted": [
+          "(Materialize 0)",
+          "(Materialize 1)",
+          "(Materialize 2)",
+          "(Materialize 3)",
+          "(Inherit 4)",
+          "(Materialize 5)"
+        ],
+        "cost_scope": "history transfer containers only; not latency or whole-cell cost"
+      },
+      "source": "(datatype E (N i64) (Start E) (Left E) (Right E) (Gateway E) (Mid E))\n(ruleset init) (ruleset a) (ruleset b) (ruleset c) (ruleset retire)\n(rule ((= x (N i))) ((Start x)) :ruleset init :name \"start\")\n(rule ((= s (Start x))) ((Left x) (Right x) (Gateway x)) :ruleset a :name \"producer\")\n(rule ((= g (Gateway x))) ((Mid x)) :ruleset b :name \"bridge\")\n(rule ((= m (Mid x))) ((Left x) (Right x)) :ruleset c :name \"consume\")\n(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)\n(N 1) (N 2)\n(run-schedule (seq (run init) (run a) (run b) (run retire) (run c)))\n",
+      "exact_state_and_run_bindings": true,
+      "history_allocations": [
+        6,
+        2
+      ],
+      "history_slots_written": [
+        8,
+        4
+      ],
+      "key_lookup_calls": [
+        12,
+        12
+      ]
+    },
+    {
+      "state_plan": {
+        "schema": "eggfuse-cell-state-plan/v1",
+        "contracts": [
+          {
+            "initial": true,
+            "can_inherit": false
+          },
+          {
+            "environment": "22cc742bca1d268792e10ab251c801cac60f415dd6f97b22c280850308321c89",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Start"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 5,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Gateway"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 0,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [
+              {
+                "Effect": 1
+              },
+              {
+                "Effect": 2
+              }
+            ],
+            "retained_stages": 1,
+            "transitions": [
+              [
+                [
+                  3,
+                  1
+                ],
+                4
+              ]
+            ],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 1
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "22cc742bca1d268792e10ab251c801cac60f415dd6f97b22c280850308321c89",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "22cc742bca1d268792e10ab251c801cac60f415dd6f97b22c280850308321c89",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "22cc742bca1d268792e10ab251c801cac60f415dd6f97b22c280850308321c89",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 2,
+            "transitions": [
+              [
+                [
+                  1,
+                  2
+                ],
+                5
+              ]
+            ],
+            "restart": 2,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 2
+            },
+            "can_inherit": true
+          },
+          {
+            "environment": "22cc742bca1d268792e10ab251c801cac60f415dd6f97b22c280850308321c89",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [
+                {
+                  "equal_output": false,
+                  "op": 1,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 1
+                  }
+                },
+                {
+                  "equal_output": false,
+                  "op": 2,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 2
+                  }
+                }
+              ],
+              "complete": true
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 3,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          }
+        ],
+        "implementations": [
+          "materialize",
+          "materialize",
+          "materialize",
+          "materialize",
+          "inherit",
+          "materialize"
+        ],
+        "extracted": [
+          "(Materialize 0)",
+          "(Materialize 1)",
+          "(Materialize 2)",
+          "(Materialize 3)",
+          "(Inherit 4)",
+          "(Materialize 5)"
+        ],
+        "cost_scope": "history transfer containers only; not latency or whole-cell cost"
+      },
+      "source": "(datatype E (N i64) (Start E) (Left E) (Right E) (Gateway E) (Mid E))\n(ruleset init) (ruleset a) (ruleset b) (ruleset c) (ruleset retire)\n(rule ((= x (N i))) ((Start x)) :ruleset init :name \"start\")\n(rule ((= s (Start x))) ((Left x) (Right x) (Gateway x)) :ruleset a :name \"producer\")\n(rule ((= g (Gateway x))) ((Mid x)) :ruleset b :name \"bridge\")\n(rule ((= m (Mid x))) ((Left x) (Right x)) :ruleset c :name \"consume\")\n(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)\n(N 1) (N 2)\n(run-schedule (seq (run init) (run a) (run b)  (run c)))\n",
+      "exact_state_and_run_bindings": true,
+      "history_allocations": [
+        6,
+        2
+      ],
+      "history_slots_written": [
+        8,
+        4
+      ],
+      "key_lookup_calls": [
+        10,
+        10
+      ]
+    },
+    {
+      "state_plan": {
+        "schema": "eggfuse-cell-state-plan/v1",
+        "contracts": [
+          {
+            "initial": true,
+            "can_inherit": false
+          },
+          {
+            "environment": "323df4a68c97f513ef7a33bb37c5ab592f38b1552673c6b30e4d37dda1aa5a55",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Start"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 5,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Gateway"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 0,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [
+              {
+                "Effect": 1
+              },
+              {
+                "Effect": 2
+              }
+            ],
+            "retained_stages": 1,
+            "transitions": [
+              [
+                [
+                  3,
+                  1
+                ],
+                4
+              ]
+            ],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 1
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "323df4a68c97f513ef7a33bb37c5ab592f38b1552673c6b30e4d37dda1aa5a55",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "323df4a68c97f513ef7a33bb37c5ab592f38b1552673c6b30e4d37dda1aa5a55",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 0,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          },
+          {
+            "environment": "323df4a68c97f513ef7a33bb37c5ab592f38b1552673c6b30e4d37dda1aa5a55",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Gateway"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Mid"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 1,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [],
+              "complete": false
+            },
+            "exports": [],
+            "retained_stages": 2,
+            "transitions": [
+              [
+                [
+                  1,
+                  2
+                ],
+                5
+              ]
+            ],
+            "restart": 2,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 2
+            },
+            "can_inherit": true
+          },
+          {
+            "environment": "323df4a68c97f513ef7a33bb37c5ab592f38b1552673c6b30e4d37dda1aa5a55",
+            "interface": {
+              "query": [
+                {
+                  "call": {
+                    "table": "Mid"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    },
+                    {
+                      "slot": 1
+                    }
+                  ]
+                }
+              ],
+              "pivot": 0,
+              "sorts": [
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                {
+                  "name": "E",
+                  "kind": "eq"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "copy",
+                "dst": 2,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "arg": {
+                  "slot": 1
+                },
+                "kind": "copy"
+              },
+              {
+                "op": "let",
+                "dst": 3,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Left"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              },
+              {
+                "op": "let",
+                "dst": 4,
+                "sort": {
+                  "name": "E",
+                  "kind": "eq"
+                },
+                "call": {
+                  "table": "Right"
+                },
+                "args": [
+                  {
+                    "slot": 0
+                  }
+                ],
+                "kind": "construct"
+              }
+            ],
+            "activation": {
+              "rule": 2,
+              "boundary": "original-source-run",
+              "position": "after-rhs-before-publication",
+              "union_commit": "source-run-boundary"
+            },
+            "completion_program": {
+              "reuse": [
+                {
+                  "equal_output": false,
+                  "op": 1,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 1
+                  }
+                },
+                {
+                  "equal_output": false,
+                  "op": 2,
+                  "back": 2,
+                  "rule": 0,
+                  "donor": {
+                    "Effect": 2
+                  }
+                }
+              ],
+              "complete": true
+            },
+            "exports": [],
+            "retained_stages": 0,
+            "transitions": [],
+            "restart": 3,
+            "inheritance": {
+              "storage": "existing-results",
+              "distance_delta": 1,
+              "retain": 0
+            },
+            "can_inherit": false
+          }
+        ],
+        "implementations": [
+          "materialize",
+          "materialize",
+          "materialize",
+          "materialize",
+          "inherit",
+          "materialize"
+        ],
+        "extracted": [
+          "(Materialize 0)",
+          "(Materialize 1)",
+          "(Materialize 2)",
+          "(Materialize 3)",
+          "(Inherit 4)",
+          "(Materialize 5)"
+        ],
+        "cost_scope": "history transfer containers only; not latency or whole-cell cost"
+      },
+      "source": "(datatype E (N i64) (Start E) (Left E) (Right E) (Gateway E) (Mid E))\n(ruleset init) (ruleset a) (ruleset b) (ruleset c) (ruleset retire)\n(rule ((= x (N i))) ((Start x)) :ruleset init :name \"start\")\n(rule ((= s (Start x))) ((Left x) (Right x) (Gateway x)) :ruleset a :name \"producer\")\n(rule ((= g (Gateway x))) ((Mid x)) :ruleset b :name \"bridge\")\n(rule ((= m (Mid x))) ((Left x) (Right x)) :ruleset c :name \"consume\")\n(rule ((= x (N 2))) ((union x (N 1))) :ruleset retire)\n(N 1) (N 2)\n(run-schedule (seq (run init) (run a) (run b) (run retire) (run c)))\n",
+      "exact_state_and_run_bindings": true,
+      "history_allocations": [
+        6,
+        2
+      ],
+      "history_slots_written": [
+        8,
+        4
+      ],
+      "key_lookup_calls": [
+        11,
+        11
+      ]
+    }
+  ],
+  "baseline": "f4fd21cb",
+  "limits": [
+    "Fixed recipe and typed interfaces; conservative exact state contracts, no arbitrary closure equivalence.",
+    "Inheritance selection covers intermediate stages without new result exports.",
+    "Original graph effects and Run publication still execute; no general Entry-publication elimination.",
+    "Extraction weights model container transfer only. Compile time, larger JSON and runtime selection reads are extra costs; no new acceleration claim.",
+    "The 6-to-2 allocation reduction is the existing carry mechanism made selectable, not additional savings over f4fd21cb."
+  ],
+  "checks": {
+    "final": {
+      "sha256": "7898d9a349c4dc6d2b2edd06a41470d6da6f551cc4969796484fdc0856dd81a5",
+      "passed": [
+        7,
+        2,
+        11
+      ]
+    },
+    "history": {
+      "sha256": "4d49425491d2b7ccb82819593e31870f9d42cbbdd0c0ed9c11c83b8a481b7630",
+      "passed": [
+        8
+      ]
+    },
+    "minimal": {
+      "sha256": "07e68ead79c2cb27dbcdd171177c695303ab16fe93074e6c3277764e3f94db8d",
+      "passed": []
+    },
+    "iterate": {
+      "sha256": "71a9ca4c052a054db160b220ea0a224a28f54061fb245f0e029980dbb57ad183",
+      "passed": [
+        1
+      ]
+    }
+  }
+}

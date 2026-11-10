@@ -215,3 +215,102 @@ fn matched_entry_origins_survive_completion_and_publication_before_rhs() {
     );
     assert_eq!(new.scoped_execution_report()["retained_forwards"], 0);
 }
+
+#[test]
+fn identical_completion_obligations_share_owners_across_rules() {
+    let p=program("(relation A (i64)) (relation B (i64)) (ruleset r)\n(rule ((A x)) ((B x)) :ruleset r)\n(rule ((A x) (= x 1)) ((B x)) :ruleset r)\n(A 1) (run-schedule (run r))");
+    let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+    let mut owners=std::collections::BTreeMap::new();
+    let mut duplicates=0;
+    for demand in &plan.rule_demands {
+        for list in [&demand.query,&demand.rhs,&demand.accesses] {
+            if let Some(previous)=owners.get(list.as_ref()) {
+                assert!(std::rc::Rc::ptr_eq(previous,list));duplicates+=1;
+            } else {owners.insert(list.to_vec(),list.clone());}
+        }
+    }
+    assert!(duplicates>0);
+    let snapshot=serde_json::to_value(&plan).unwrap();
+    let cloned=plan.clone();drop(plan);
+    assert_eq!(snapshot,serde_json::to_value(&cloned).unwrap());
+}
+
+#[test]
+fn matched_rules_reuse_the_same_compiled_rhs_scope() {
+    let source=SOURCE.replace("(Na 0) (Na 1) (Nb 0) (set", "(Na 0) (Na 1) (Nb 0) (Nb 1) (set")
+        .replace("(rule ((= x (Nb 0))) ((Gb (Fb x))) :ruleset b)",
+            "(rule ((= x (Nb 0))) ((Gb (Fb x))) :ruleset b)\n(rule ((= x (Nb 1))) ((Gb (Fb x))) :ruleset b)");
+    let mut old=executor(&source,false);
+    let mut new=executor(&source,true);
+    old.execute().unwrap();new.execute_until(Some(2)).unwrap();
+    let report=new.scoped_execution_report();
+    assert_eq!(report["global_observer"],false);
+    assert!(report["stats"]["rhs_group_reuses"].as_u64().unwrap()>0,"{report}");
+    let plan=new.graph.program.completion_plan.as_ref().unwrap();
+    let b=&new.graph.program.sets["b"];
+    let active:Vec<_>=b.iter().filter(|&&rid|new.graph.program.rules[rid].query.iter().any(|a|
+        matches!(a.call,eggfuse_cell_runtime::program::Call::Table(t) if new.graph.program.tables[t].name=="Nb"))).collect();
+    assert_eq!(active.len(),2);
+    let width=plan.rule_demands[*active[0]].rhs.len() as u64;
+    assert_eq!(report["stats"]["rhs_demand_probes"],width);
+    new.execute().unwrap();compare(&old,&new);
+    if let Ok(path)=std::env::var("SHARED_SCOPE_EVIDENCE") {
+        std::fs::write(path,serde_json::to_vec_pretty(&serde_json::json!({
+            "scope":"standalone Cell CPU short fixture; no timing", "checkpoint":report,
+            "previous_probes":width*2,"current_probes":width,
+            "exact_final_graph_and_run_fields":true})).unwrap()).unwrap();
+    }
+}
+
+#[test]
+fn identical_union_operands_do_not_predict_an_unrelated_repair_fence() {
+    let source=SOURCE.replace("((Gb (Fb x))) :ruleset b)","((union x x)) :ruleset b)");
+    let mut old=executor(&source,false);
+    let mut new=executor(&source,true);
+    let plan=new.graph.program.completion_plan.as_ref().unwrap();
+    let rules=&new.graph.program.sets["b"];
+    let rid=*rules.iter().find(|&&r|new.graph.program.templates[new.graph.program.rules[r].template].ops.iter().any(|op|
+        matches!(op,eggfuse_cell_runtime::program::Op::Union(a,b) if a==b))).unwrap();
+    assert!(plan.rule_demands[rid].rhs.is_empty());
+    old.execute().unwrap();new.execute_until(Some(2)).unwrap();
+    let checkpoint=new.scoped_execution_report();
+    assert_eq!(checkpoint["global_observer"],false);
+    assert!(new.graph.pending_completion_tasks()>0);
+    assert_eq!(checkpoint["stats"]["rhs_completions"],0);
+    new.execute().unwrap();compare(&old,&new);
+    if let Ok(path)=std::env::var("NOOP_UNION_EVIDENCE") {
+        std::fs::write(path,serde_json::to_vec_pretty(&serde_json::json!({
+            "scope":"standalone Cell CPU; exact static union identity only", "checkpoint":checkpoint,
+            "final_graph_and_ordered_runs_equal":true})).unwrap()).unwrap();
+    }
+}
+
+#[test]
+fn constructor_alias_union_keeps_constructor_access_but_not_sort_wide_fence() {
+    let source=SOURCE.replace("((Gb (Fb x))) :ruleset b)","((union (Fb x) (Fb x))) :ruleset b)");
+    let p=program(&source);
+    let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+    let fb=p.tables.iter().position(|t|t.name=="Fb").unwrap();
+    let rid=*p.sets["b"].iter().find(|&&r|p.rules[r].query.iter().any(|a|
+        matches!(a.call,eggfuse_cell_runtime::program::Call::Table(t) if p.tables[t].name=="Nb"))).unwrap();
+    assert_eq!(plan.rule_demands[rid].rhs.as_ref(), &[fb]);
+    let mut old=executor(&source,false);let mut new=executor(&source,true);
+    old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
+}
+
+#[test]
+fn matched_constructor_alias_removes_only_its_rhs_access() {
+    for deletes in [false,true] {
+        let mut source=String::from("(datatype E (N i64) (F E)) (ruleset r) (ruleset retire)\n(rule ((= u (F x))) ((F x)) :ruleset r)\n(F (N 0)) (run-schedule (run r))");
+        if deletes {source=source.replace("(F (N 0))", "(rule ((= u (F x))) ((delete (F x))) :ruleset retire)\n(F (N 0))").replace("(run-schedule (run r))", "(run-schedule (seq (run r) (run retire)))");}
+        let p=program(&source);
+        let f=p.tables.iter().position(|t|t.name=="F").unwrap();
+        let rid=p.sets["r"][0];
+        let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+        assert!(plan.rule_demands[rid].query.contains(&f));
+        assert_eq!(plan.rule_demands[rid].rhs.contains(&f),deletes);
+        assert_eq!(plan.rule_demands[rid].accesses.contains(&f),deletes);
+        let mut old=executor(&source,false);let mut new=executor(&source,true);
+        old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
+    }
+}

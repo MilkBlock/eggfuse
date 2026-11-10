@@ -1,0 +1,21 @@
+{
+  "baseline_commit": "e3630ee8",
+  "decision": "reject unconditional nonconsecutive bitset takeover",
+  "scope": "standalone Cell CPU short fixture; operation counts and scratch capacity, no timing",
+  "baseline": {
+    "rhs_demand_probes": 2,
+    "rhs_group_checks": 1,
+    "rhs_group_reuses": 1,
+    "rhs_group_word_writes": 0,
+    "rhs_group_capacity_bytes": 0
+  },
+  "experiment": {
+    "rhs_demand_probes": 2,
+    "rhs_group_checks": 2,
+    "rhs_group_reuses": 1,
+    "rhs_group_word_writes": 2,
+    "rhs_group_capacity_bytes": 32
+  },
+  "semantic_checks": "8 staged and 8 merge completion tests passed",
+  "limitations": "Only consecutive duplicate groups occur in this fixture. This rejects unconditional overhead on that covered case; it does not establish a general speed comparison or absence of benefit on long nonconsecutive scopes. Rule group-ID storage and allocation costs are additional, not included in operation totals."
+}

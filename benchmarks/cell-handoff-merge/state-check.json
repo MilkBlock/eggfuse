@@ -1,0 +1,42 @@
+{
+  "scope": "standalone Cell CPU; selected v2 state plan versus materialized control and pre-merge runtime; no timing",
+  "exact_final_graph_and_runs": true,
+  "runs": 1428,
+  "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+  "lanes": {
+    "state": {
+      "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159",
+      "stats": {
+        "history_inherited_slots": 195,
+        "history_inherited_reads": 71,
+        "history_inheritance_marks": 232,
+        "history_capture_reads": 1313,
+        "history_slots_written": 1313
+      }
+    },
+    "materialized": {
+      "program_sha256": "64d3f0229f90bb5748fdef572392d31b2415dc896d7ae76df14824299e5100bd",
+      "stats": {
+        "history_inherited_slots": 0,
+        "history_inherited_reads": 0,
+        "history_inheritance_marks": 0,
+        "history_capture_reads": 1508,
+        "history_slots_written": 1508
+      }
+    }
+  },
+  "semantic_acceptance": "pass",
+  "acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "handoff": {
+    "sum": {
+      "schema": "eggfuse-worker-handoff/v3",
+      "sha256": "5c8b023738ee20c9daadf3739a170663219ec2e5eb0d9d095394d1248b297045",
+      "bytes": 2237935
+    },
+    "ray": {
+      "schema": "eggfuse-worker-handoff/v3",
+      "sha256": "5af638e2bcc93c0e27dd3276a354014ec1e11796aa611d226b709df17e1d29ad",
+      "bytes": 7202409
+    }
+  }
+}

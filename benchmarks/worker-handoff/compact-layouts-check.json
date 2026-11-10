@@ -1,0 +1,11 @@
+{
+  "scope": "compiler handoff artifact only; no executor changes or timing",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "before_bytes": 1044950,
+  "after_bytes": 705544,
+  "reduction": 0.3248059715775874,
+  "rules": 582,
+  "layouts": 582,
+  "exact_expansion": true,
+  "forecast_unchanged": true
+}
