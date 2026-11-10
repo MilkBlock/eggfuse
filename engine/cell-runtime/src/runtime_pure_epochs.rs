@@ -30,7 +30,7 @@ impl Executor {
                 stats.bound_rhs_rule_checks += rules;
                 return Ok(false);
             };
-            let (ready, cost) = forecast.readiness(&code.writes);
+            let (ready, cost) = forecast.readiness(code.writes.iter().copied());
             checks += cost;
             if !ready {
                 let stats = &mut self.completion.as_mut().unwrap().stats;

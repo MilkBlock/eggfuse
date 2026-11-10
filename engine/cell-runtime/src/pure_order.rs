@@ -134,7 +134,7 @@ impl Order {
         counts: &mut Counts,
         before: u64,
     ) -> Option<bool> {
-        let (ready, checks) = forecast.readiness(&[table]);
+        let (ready, checks) = forecast.readiness(std::iter::once(table));
         counts.pure_epoch_order_checks += checks;
         if ready {
             // Complete influence visits result-only uses too: if this result

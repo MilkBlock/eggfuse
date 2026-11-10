@@ -4,9 +4,9 @@ use super::*;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct Rule {
-    pub query: std::rc::Rc<[usize]>,
-    pub rhs: std::rc::Rc<[usize]>,
-    pub accesses: std::rc::Rc<[usize]>,
+    pub query: TableSet,
+    pub rhs: TableSet,
+    pub accesses: TableSet,
     /// Shared Cell operand wiring and ordered source positions. The concrete
     /// closure must still be proved; None retains the ordinary scoped path.
     pub(crate) pure: Option<std::rc::Rc<crate::cell::BoundRhs>>,
@@ -84,7 +84,7 @@ impl Rule {
                 rhs.insert(*t);
                 opaque_rhs |= plan.opaque_tables.contains(t);
                 if matches!(op, Op::Set(..)) {
-                    rhs.extend(plan.completion_reads[*t].iter().copied());
+                    rhs.extend(plan.completion_reads[*t].iter());
                     rhs.extend((0..n).filter(|&other| plan.affects(*t, other)));
                 }
             }
@@ -96,7 +96,7 @@ impl Rule {
         };
         for (t, (names, unknown)) in sorts.iter().enumerate() {
             if !unions.is_empty() && (*unknown || !names.is_disjoint(&unions)) {
-                rhs.extend(plan.completion_reads[t].iter().copied());
+                rhs.extend(plan.completion_reads[t].iter());
                 rhs.extend((0..n).filter(|&other| plan.affects(t, other)));
             }
         }

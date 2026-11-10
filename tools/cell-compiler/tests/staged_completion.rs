@@ -220,19 +220,19 @@ fn matched_entry_origins_survive_completion_and_publication_before_rhs() {
 fn identical_completion_obligations_share_owners_across_rules() {
     let p=program("(relation A (i64)) (relation B (i64)) (ruleset r)\n(rule ((A x)) ((B x)) :ruleset r)\n(rule ((A x) (= x 1)) ((B x)) :ruleset r)\n(A 1) (run-schedule (run r))");
     let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
-    let mut owners=std::collections::BTreeMap::new();
+    let mut owners=std::collections::BTreeMap::<Vec<usize>,eggfuse_cell_runtime::table_set::TableSet>::new();
     let mut duplicates=0;
     for list in plan.rule_demands.iter().flat_map(|d| [&d.query,&d.rhs,&d.accesses])
         .chain(plan.completion_reads.iter()).chain(plan.query_demands.values()) {
-        if let Some(previous)=owners.get(list.as_ref()) {
-            assert!(std::rc::Rc::ptr_eq(previous,list));duplicates+=1;
+        if let Some(previous)=owners.get(&list.to_vec()) {
+            assert!(previous.ptr_eq(list));duplicates+=1;
         } else {owners.insert(list.to_vec(),list.clone());}
     }
     assert!(duplicates>0);
     // Scheduled query demand borrows the same list as the rule, and identical
     // scope lists share too. The exact serialized proof remains unchanged.
     assert!(plan.query_demands.values().any(|list| plan.rule_demands.iter()
-        .any(|d| std::rc::Rc::ptr_eq(&d.query, list))));
+        .any(|d| d.query.ptr_eq(list))));
     let mut pointers:std::collections::BTreeMap<_,_>=owners.iter().map(|(k,v)| (k.clone(),v.as_ptr())).collect();
     for scope in plan.rulesets.values() {
         if let Some(previous)=pointers.insert(scope.tables().to_vec(),scope.tables().as_ptr()) {
@@ -302,7 +302,7 @@ fn constructor_alias_union_keeps_constructor_access_but_not_sort_wide_fence() {
     let fb=p.tables.iter().position(|t|t.name=="Fb").unwrap();
     let rid=*p.sets["b"].iter().find(|&&r|p.rules[r].query.iter().any(|a|
         matches!(a.call,eggfuse_cell_runtime::program::Call::Table(t) if p.tables[t].name=="Nb"))).unwrap();
-    assert_eq!(plan.rule_demands[rid].rhs.as_ref(), &[fb]);
+    assert_eq!(plan.rule_demands[rid].rhs.to_vec(), &[fb]);
     let mut old=executor(&source,false);let mut new=executor(&source,true);
     old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
 }

@@ -3,6 +3,7 @@ mod read_epoch;
 pub mod checksum;
 pub mod cell;
 pub mod completion_plan;
+pub mod table_set;
 mod depth_plan;
 #[cfg(feature = "structural-depth")]
 mod depth_runtime;

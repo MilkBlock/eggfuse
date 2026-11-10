@@ -187,7 +187,7 @@ impl Executor {
         let global = self.global_completion_observer();
         if !global && self.completion.as_ref().unwrap().port_scopes {
             let demand = plan.query_demands.get(set).ok_or("unknown query demand")?;
-            if self.wait_for_ports(demand, Some(set))? {
+            if self.wait_for_ports(demand.iter(), Some(set))? {
                 self.completion.as_mut().unwrap().stats.query_completions += 1;
             }
             return Ok(());
@@ -212,12 +212,12 @@ impl Executor {
         self.graph.changed = changed;
         Ok(())
     }
-    fn wait_for_ports(&mut self, demand: &[usize], query_set: Option<&str>) -> Result<bool> {
+    fn wait_for_ports(&mut self, demand: impl Iterator<Item=usize> + Clone, query_set: Option<&str>) -> Result<bool> {
         let forecast = match self.completion.as_mut().unwrap().forecast.take() {
             Some(f) => f,
             None => self.graph.forecast_port_completion()?,
         };
-        let (allowed, checks) = forecast.select(demand, false);
+        let (allowed, checks) = forecast.select(demand.clone(), false);
         let changed = self.graph.changed;
         let before = self.graph.stats.unions;
         let diagnostic = (self.progress && query_set.is_some()).then(|| {
@@ -237,7 +237,7 @@ impl Executor {
                 let rules = self.graph.program.sets[set]
                     .iter()
                     .filter_map(|&rid| {
-                        let conflicts = forecast.conflicts(&plan.rule_demands[rid].query);
+                        let conflicts = forecast.conflicts(plan.rule_demands[rid].query.iter());
                         (!conflicts.is_empty()).then(|| json!({"rule":rid,"conflicts":conflicts}))
                     })
                     .collect::<Vec<_>>();
@@ -307,7 +307,7 @@ impl Executor {
             }
         }
         let state = self.completion.as_mut().unwrap();
-        let mut previous = None;
+        let mut previous: Option<&crate::table_set::TableSet> = None;
         for (rid, _) in &patch.groups {
             state.stats.rhs_selected_rules += 1;
             let rhs = &plan.rule_demands[*rid].rhs;
@@ -316,13 +316,13 @@ impl Executor {
             // first-occurrence ordering and never cache across source Runs.
             if let Some(old) = previous {
                 state.stats.rhs_group_checks += 1;
-                if std::rc::Rc::ptr_eq(old, rhs) {
+                if old.ptr_eq(rhs) {
                     state.stats.rhs_group_reuses += 1;
                     continue;
                 }
             }
             previous = Some(rhs);
-            for &table in rhs.iter() {
+            for table in rhs.iter() {
                 state.stats.rhs_demand_probes += 1;
                 if !state.rhs_seen[table] {
                     state.rhs_seen[table] = true;
@@ -345,8 +345,8 @@ impl Executor {
                 .map(|(rid, bindings)| {
                     json!({
                         "rule":rid,"bindings":bindings.len(),
-                        "access_conflicts":forecast.conflicts(&plan.rule_demands[*rid].accesses),
-                        "all_conflicts":forecast.conflicts(&plan.rule_demands[*rid].rhs),
+                        "access_conflicts":forecast.conflicts(plan.rule_demands[*rid].accesses.iter()),
+                        "all_conflicts":forecast.conflicts(plan.rule_demands[*rid].rhs.iter()),
                     })
                 })
                 .collect::<Vec<_>>();
@@ -358,7 +358,7 @@ impl Executor {
         let mut access_ready = true;
         let mut checks = 0;
         for (rid, _) in &patch.groups {
-            let (ready, cost) = forecast.readiness(&plan.rule_demands[*rid].accesses);
+            let (ready, cost) = forecast.readiness(plan.rule_demands[*rid].accesses.iter());
             checks += cost;
             if !ready {
                 access_ready = false;
@@ -374,7 +374,7 @@ impl Executor {
             .peak_matched_origin_slots
             .max(self.stage_spine.matched_origin_slots());
         self.stage_spine.retain_matched_origins(true);
-        let result = self.wait_for_ports(&demand, None);
+        let result = self.wait_for_ports(demand.iter().copied(), None);
         self.stage_spine.retain_matched_origins(false);
         let state = self.completion.as_mut().unwrap();
         state.matched = false;
@@ -419,7 +419,7 @@ impl Executor {
                     .unchanged_influence_reuses += 1;
             } else {
                 let forecast = self.graph.forecast_port_completion()?;
-                let (allowed, checks) = forecast.select(&[], true);
+                let (allowed, checks) = forecast.select(std::iter::empty(), true);
                 let completed = self.graph.complete_port_selection(&allowed, checks)?;
                 let forecast = if completed && self.graph.pending_completion_tasks() > 0 {
                     self.graph.forecast_port_completion()?

@@ -41,15 +41,26 @@ def audit(catalog, completion, program):
     unique = set(map(tuple, owners))
     assert len(owners) == census['lists'] and len(unique) == census['unique_lists']
     assert sum(map(len, owners)) == census['logical_values']
-    word, remainder = divmod(census['handles_bytes'], 2*len(owners))
+    hybrid = census.get('encoding') == 'hybrid-v1'
+    word, remainder = divmod(census['handles_bytes'], (1 if hybrid else 2)*len(owners))
     assert remainder == 0 and word in (4, 8)
-    payload = sum(len(row)*word for row in unique)
-    assert payload + len(unique)*2*word == census['shared_payload_and_rc_bytes']
+    if hybrid:
+        assert word == census['word_bytes']
+        owner_bytes = census['owner_bytes']
+        assert owner_bytes >= 2*word
+    else:
+        owner_bytes = 2*word
+    def payload_bytes(row):
+        sparse = len(row)*word
+        dense = (row[-1]//64+1)*8 if row else 0
+        return min(sparse,dense) if hybrid else sparse
+    payload = sum(payload_bytes(row) for row in unique)
+    assert payload + len(unique)*owner_bytes == census['shared_payload_and_rc_bytes']
     # The old rule-only demand census is a subset, not another allocation group.
     demands = {tuple(r[k]) for r in plan['rule_demands'] for k in ('query', 'rhs', 'accesses')}
     assert demands <= unique
     assert len(demands) == completion['storage']['unique_lists']
-    assert sum(len(row)*word+2*word for row in demands) == completion['storage']['shared_payload_and_rc_bytes']
+    assert sum(payload_bytes(row)+owner_bytes for row in demands) == completion['storage']['shared_payload_and_rc_bytes']
     extra = {
         'all_table_lists_once': total(census, ('shared_payload_and_rc_bytes', 'handles_bytes')),
         'repair_matrices': total(completion['matrices'], ('shared_payload_and_rc_bytes', 'directory_bytes')),
@@ -60,13 +71,16 @@ def audit(catalog, completion, program):
     estimate = {
         'table_universe': tables, 'word_bytes': word,
         'unique_lists': len(unique), 'dense_candidate_lists': len(dense),
-        'current_unique_id_payload_bytes': payload,
+        'current_unique_id_payload_bytes': sum(len(row)*word for row in unique),
+        'actual_encoded_payload_bytes': payload, 'encoding':census.get('encoding','usize-list'),
         'dense_candidate_current_payload_bytes': sum(len(row)*word for row in dense),
         'bitmap_bytes_per_dense_list': bitmap_bytes,
         'hybrid_unique_payload_bytes': sum(min(len(row)*word, bitmap_bytes) for row in unique),
         'scope': 'Payload estimate only, not implemented or measured retained storage. Excludes variant descriptors, ownership, interning and iteration costs; no speed prediction.',
     }
-    estimate['potential_payload_bytes_saved'] = payload-estimate['hybrid_unique_payload_bytes']
+    estimate['potential_payload_bytes_saved'] = estimate['current_unique_id_payload_bytes']-estimate['hybrid_unique_payload_bytes']
+    if hybrid:
+        estimate['scope'] = 'Hybrid encoding is implemented; actual_encoded_payload_bytes is reconciled with the census. The fixed-universe hybrid estimate remains only a payload model; no speed prediction.'
     return {
         'program': digest,
         'catalog': {'components_bytes': core, 'counted_subtotal_bytes': sum(core.values())},
