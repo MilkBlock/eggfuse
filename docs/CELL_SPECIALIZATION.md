@@ -67,6 +67,35 @@ not add general extraction of executable programs from arbitrary ripsat
 eclasses, or a new specialization engine for scalar and mutable operations.
 Opaque source contracts and unsupported cases keep their original operations.
 
+## Equivalent-route recognition
+
+After integrating `c1ffd8ef` and `14d1d8c0` at `3dfb684d`, exact equivalent
+derivations can inherit an already-proved local completion route. This lowers
+into the same `CompletedPlan` and shared publication path. Oversized projections
+keep ordinary execution; identical executable programs share immutable storage.
+
+The next compiler change replaces per-transition whole-catalog scans with one
+temporary index keyed by normalized structure, constructor table and output
+ports. It borrows the canonical structures; it is dropped before runtime.
+Candidate order and the last matching final-stage output preference remain
+unchanged, as do composition limits, exact typed terminal proof and fallback.
+This discharges repeated candidate/port discovery during Bake, not a Run's
+remaining receipt checks or repair obligations.
+
+In the opposite-construction-order regression, the old loop visited four
+catalog positions; the index visits only the two equivalent output sources,
+performs one new terminal proof and admits the same one route. The existing
+test verifies that only the alternative producer has run when that consumer
+actually completes, with exact Run/effect parity. `completion_search` records
+index entries, route probes, candidate visits, proof checks and admissions for
+that compilation. Building/storing this temporary index is added compiler work;
+these counts do not establish wall-time or runtime savings. No new execution
+observations are fabricated from the inferred route.
+
+Early v1 completion contracts without the transition census remain loadable;
+present transition contracts are checked exactly, as are all executable switch
+programs and entry-dispatch proofs.
+
 ## Iterative Bake
 
 Entry dispatch is generated inside `state_plan::completion`, so both offline

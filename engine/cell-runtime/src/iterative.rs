@@ -267,8 +267,14 @@ impl Catalog {
             s.inherited = Some(inherited);
         }
         if let Some(completion)=raw.get("completion") {
+            let mut contracts = s.completion_contracts(p);
+            // Early v1 exports predate the compile-only transition census.
+            // Executable switch and source/port proofs are still checked above.
+            if completion["contracts"].get("transitions").is_none() {
+                contracts.as_object_mut().unwrap().remove("transitions");
+            }
             if completion["schema"]!="eggfuse-ripsat-completion/v1"
-                || completion["contracts"]!=s.completion_contracts(p) {
+                || completion["contracts"]!=contracts {
                 return Err("invalid ripsat completion structures".into());
             }
             if let Some(entries) = completion.get("entry_dispatch") {
@@ -381,8 +387,33 @@ impl Catalog {
         let catalog=Self::parse(p,plan)?;
         let room=catalog.limits.total.saturating_sub(catalog.units.len())
             .min(catalog.limits.per_round);
-        if room==0 {return Ok(());}
+        if room==0 {
+            plan["completion_search"] = json!({"scope":"compile-only; not runtime savings",
+                "indexed_outputs":0,"route_probes":0,"candidate_visits":0,"proof_checks":0,"admitted":0});
+            return Ok(());
+        }
         let normalized=catalog.units.iter().map(|u|crate::cell_completion::normalize(p,&u.path)).collect::<Vec<_>>();
+        // Build the final-stage output incidence index once. Borrow canonical
+        // structures/ports; no graph clones or runtime producer subscriptions.
+        // Reverse operation order preserves the old last-output preference.
+        let mut outputs = BTreeMap::new();
+        let mut indexed_outputs = 0;
+        for (left, alternative) in normalized.iter().enumerate() {
+            let Some(alternative) = alternative else { continue };
+            let unit = &catalog.units[left];
+            let cell = Definition::new(p, unit.last().0)?;
+            let mut seen = BTreeSet::new();
+            for (stage, site, columns) in alternative.ports.iter().rev() {
+                let Site::Effect(op) = *site else { continue };
+                if *stage != unit.path.len()-1 { continue; }
+                let Some(relation) = cell.relation(*site) else { continue };
+                if !seen.insert((relation.table, columns)) { continue; }
+                outputs.entry((&alternative.structure, relation.table, columns))
+                    .or_insert_with(Vec::new).push((left, op));
+                indexed_outputs += 1;
+            }
+        }
+        let (mut route_probes, mut candidate_visits, mut proof_checks) = (0, 0, 0);
         let mut paths=catalog.units.iter().map(|u|u.path.to_vec()).collect::<BTreeSet<_>>();
         let mut extensions=vec![];
         let mut additions=vec![];
@@ -392,21 +423,16 @@ impl Catalog {
             let stage=original.path.len()-1;
             let Some((_,_,columns))=source.ports.iter().find(|(s,site,_)|*s==stage && *site==Site::Effect(join.output)) else{continue};
             let table=Definition::new(p,original.last().0)?.relation(Site::Effect(join.output)).ok_or("missing completion output")?.table;
-            for (left,alternative) in normalized.iter().enumerate() {
-                let Some(alternative)=alternative else{continue};
-                if left==join.left || alternative.structure!=source.structure {continue;}
-                let unit=&catalog.units[left];
-                let cell=Definition::new(p,unit.last().0)?;
-                let output=alternative.ports.iter().rev().find_map(|(stage,site,cols)| {
-                    let Site::Effect(op)=*site else{return None};
-                    (*stage==unit.path.len()-1 && cols==columns
-                        && cell.relation(*site).is_some_and(|r|r.table==table)).then_some(op)
-                });
-                let Some(output)=output else{continue};
+            route_probes += 1;
+            let Some(candidates) = outputs.get(&(&source.structure, table, columns)) else { continue };
+            for &(left, output) in candidates {
+                candidate_visits += 1;
+                if left == join.left { continue; }
                 let candidate=Join{left,output,right:join.right};
                 if catalog.jumps.contains_key(&candidate) {continue;}
                 let Some(combined)=catalog.combine(p,candidate) else{continue};
                 if paths.contains(combined.path.as_ref()) {continue;}
+                proof_checks += 1;
                 let proof=crate::result_handoff::terminal(p,&combined.path,true,true);
                 if !proof.complete || proof.reuse.is_empty() {continue;}
                 paths.insert(combined.path.to_vec());
@@ -418,6 +444,9 @@ impl Catalog {
                 if additions.len()==room {break 'joins;}
             }
         }
+        plan["completion_search"] = json!({"scope":"compile-only; not runtime savings",
+            "indexed_outputs":indexed_outputs,"route_probes":route_probes,
+            "candidate_visits":candidate_visits,"proof_checks":proof_checks,"admitted":additions.len()});
         if !additions.is_empty() {
             plan["joins"].as_array_mut().ok_or("missing completion joins")?.extend(additions);
             let object=plan.as_object_mut().unwrap();
@@ -440,7 +469,10 @@ impl Catalog {
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
         if completion {Self::extend_completion_entries(p,plan)?;}
-        else {plan.as_object_mut().unwrap().remove("completion_extensions");}
+        else {
+            plan.as_object_mut().unwrap().remove("completion_extensions");
+            plan.as_object_mut().unwrap().remove("completion_search");
+        }
         let cat = Self::parse(p, plan)?;
         plan["rhs_handoffs"] = crate::result_handoff::Switch::build(
             p,

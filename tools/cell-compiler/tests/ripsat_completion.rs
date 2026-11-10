@@ -160,7 +160,11 @@ fn check_entry_dispatch(raw: &Value) {
     // Existing v1 artifacts remain valid without the optional dispatch export.
     let mut old = raw.clone();
     old["iterative_bake"]["completion"].as_object_mut().unwrap().remove("entry_dispatch");
+    old["iterative_bake"]["completion"]["contracts"].as_object_mut().unwrap().remove("transitions");
     Program::parse(seal(old)).unwrap();
+    let mut corrupt_transition = raw.clone();
+    corrupt_transition["iterative_bake"]["completion"]["contracts"]["transitions"] = json!([{"from":99999}]);
+    assert!(Program::parse(seal(corrupt_transition)).is_err());
     for field in ["entries", "switch_sha256", "dynamic_checks", "default"] {
         let mut forged = raw.clone();
         forged["iterative_bake"]["completion"]["entry_dispatch"][field] = Value::Null;
@@ -226,6 +230,12 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
     raw["iterative_bake"]=plan;
     let raw=seal(raw);
     let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    check_entry_dispatch(&compiled);
+    let search = &compiled["iterative_bake"]["completion_search"];
+    assert_eq!(search["route_probes"], 1);
+    assert_eq!(search["candidate_visits"], 2, "only the two equivalent output sources are visited");
+    assert_eq!(search["proof_checks"], 1);
+    assert_eq!(search["admitted"], 1);
     let additions=compiled["iterative_bake"]["completion_extensions"].as_array().unwrap();
     assert!(additions.iter().any(|e|e["to"]==json!({"left":second,"output":other_output,"right":consumer})),"{additions:?}");
     let edges=&compiled["iterative_bake"]["completion"]["cell_egraph"]["completion_transitions"];
