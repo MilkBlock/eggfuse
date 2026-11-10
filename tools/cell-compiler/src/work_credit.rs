@@ -165,6 +165,18 @@ impl Work {
             } else { 0 };
             work.insert(format!("query_workers/stats/constructors/{field}"), value);
         }
+        // Canonical reads use the original index/fields, without a new domain.
+        // The point lookup is already charged by key_lookup_calls. Expose and
+        // charge the candidate/field work once; coverage itself earns no credit.
+        // Earlier serial reports did not itemize these operations, so this
+        // conservative accounting is not a latency estimate for that baseline.
+        for field in ["canonical_candidates", "canonical_field_checks", "canonical_result_reads"] {
+            let value = if report["query_workers"]["constructor_access"] == "canonical-or-stable/v1" {
+                report["query_workers"]["stats"]["constructors"][field].as_u64()
+                    .ok_or_else(|| format!("missing canonical query work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/constructors/{field}"), value);
+        }
         // Charge both paths, summing rules so changing context admission cannot
         // hide work by adding/removing a per-rule key from the comparison.
         let contexts = report["local_context"]["rules"].as_object()

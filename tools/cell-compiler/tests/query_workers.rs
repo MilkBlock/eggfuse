@@ -8,7 +8,10 @@ fn run_mode(source: &str, workers: Option<(usize, usize)>, stable: bool) -> Exec
     let core = eggfuse_bake::device_frontend::core("cell-query-workers", source).unwrap();
     let program = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
     let graph = if stable { Graph::new_with_local_congruence(program) } else { Graph::new(program) };
-    let mut e = Executor::new(graph.unwrap(), true);
+    execute(graph.unwrap(), workers)
+}
+fn execute(graph: Graph, workers: Option<(usize, usize)>) -> Executor {
+    let mut e = Executor::new(graph, true);
     if let Some((workers, grain)) = workers { e.use_query_workers(workers, grain).unwrap(); }
     e.execute().unwrap();
     e
@@ -107,8 +110,8 @@ fn constructor_points_and_residual_enumeration_keep_all_answers() {
     let report = after.report();
     let stats = &report["query_workers"]["stats"];
     assert!(stats["entries"].as_u64().unwrap() > 0);
-    // Without complete stable ownership the same constructor queries still
-    // use the exhaustive serial host, including its residual enumeration.
+    // Ordinary plans requiring residual enumeration still retain their
+    // exhaustive host; they must never use stable-domain reads accidentally.
     let ordinary = run_mode(source, Some((2,1)), false);
     same(&run_mode(source, None, false), &ordinary);
     assert_eq!(ordinary.report()["query_workers"]["stats"]["constructors"]["lookups"], 0);
@@ -161,16 +164,53 @@ fn constructor_domains_follow_both_aliases_visibility_and_recreation() {
     source += r#"
 (run-schedule (seq (run hide) (run see) (run remove) (run see) (run restore) (run see)))
 "#;
-    let before = run(&source, None);
-    for workers in [1,2,4] {
-        let after = run(&source, Some((workers,16)));
-        same(&before, &after);
+    for stable in [false, true] {
+        let before = run_mode(&source, None, stable);
+        for workers in [1,2,4] {
+            let after = run_mode(&source, Some((workers,16)), stable);
+            same(&before, &after);
+            let r = after.report();
+            let work = &r["query_workers"]["stats"]["constructors"];
+            if stable {
+                assert!(work["lookups"].as_u64().unwrap() > 0);
+                assert!(work["domains"].as_u64().unwrap() > 0);
+                assert!(work["signal_visits"].as_u64().unwrap() > 0);
+                assert!(work["candidate_pushes"].as_u64().unwrap() > 0);
+                assert_eq!(work["canonical_lookups"],0);
+            } else {
+                assert!(work["canonical_lookups"].as_u64().unwrap() > 0);
+                assert!(work["canonical_field_checks"].as_u64().unwrap() > 0);
+                assert_eq!(work["lookups"],0);
+                assert_eq!(work["domains"],0);
+            }
+        }
+    }
+}
+
+#[test]
+fn canonical_queries_keep_exact_keys_under_forced_hash_collisions() {
+    let source = r#"
+(datatype E (N i64) (Gate E) (Pair E E i64) (Write))
+(relation Found (E E E))
+(ruleset make) (ruleset see) (ruleset join)
+(rule ((= x (N i))) ((Gate x)) :ruleset make)
+(rule ((Gate x) (= y (N 7)) (= p (Pair x y 5)) (= w (Write))) ((Found x p w)) :ruleset see)
+(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset join)
+(Pair (N 0) (N 7) 6) (Pair (N 1) (N 7) 5) (Pair (N 2) (N 7) 5) (Write)
+(run-schedule (seq (run make) (run see) (run join) (run see)))
+(check (Found (N 0) (Pair (N 1) (N 7) 5) (Write)) (Found (N 2) (Pair (N 2) (N 7) 5) (Write)))
+"#;
+    let core = eggfuse_bake::device_frontend::core("canonical-collisions",source).unwrap();
+    let p = Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let before = execute(Graph::new_with_union_digest(p.clone(),0).unwrap(),None);
+    for workers in [1,4] {
+        let after = execute(Graph::new_with_union_digest(p.clone(),0).unwrap(),Some((workers,1)));
+        same(&before,&after);
         let r = after.report();
         let work = &r["query_workers"]["stats"]["constructors"];
-        assert!(work["lookups"].as_u64().unwrap() > 0);
-        assert!(work["domains"].as_u64().unwrap() > 0);
-        assert!(work["signal_visits"].as_u64().unwrap() > 0);
-        assert!(work["candidate_pushes"].as_u64().unwrap() > 0);
+        assert!(work["canonical_lookups"].as_u64().unwrap()>0);
+        assert!(work["canonical_candidates"].as_u64().unwrap()>work["canonical_lookups"].as_u64().unwrap());
+        assert_eq!(work["lookups"],0);
     }
 }
 

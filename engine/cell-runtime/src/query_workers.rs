@@ -195,6 +195,7 @@ impl Executor {
         self.query_workers.as_ref().map_or(json!({"enabled":false}), |w|
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
                 "organization":"cell-run/v4","winner_ordering":"input-depth-ordinal/v1",
+                "constructor_access":"canonical-or-stable/v1",
                 "scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
     }
     pub(super) fn query_worker_batch(

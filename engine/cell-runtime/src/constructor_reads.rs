@@ -6,6 +6,10 @@ use ports::guard;
 
 #[derive(Default, Serialize)]
 pub(crate) struct Work {
+    pub canonical_lookups: u64,
+    pub canonical_candidates: u64,
+    pub canonical_field_checks: u64,
+    pub canonical_result_reads: u64,
     pub lookups: u64,
     pub candidates: u64,
     pub hint_probes: u64,
@@ -35,6 +39,7 @@ impl Work {
             column_checks, type_guards, type_rejections, results, class_probes, class_jumps,
             signal_root_lookups, signal_parent_probes, domain_key_fields, metadata_reads,
             candidate_pushes, candidate_growths, candidate_sort_comparisons);
+        add!(canonical_lookups, canonical_candidates, canonical_field_checks, canonical_result_reads);
         self.reads.node_lookups += other.reads.node_lookups;
         self.reads.port_reads += other.reads.port_reads;
         self.reads.parent_probes += other.reads.parent_probes;
