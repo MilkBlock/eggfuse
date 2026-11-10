@@ -1,0 +1,2491 @@
+{
+  "scope": "Standalone Cell CPU, short correctness/work checks; not speed or native egglog measurements",
+  "baseline_commit": "00f33da0",
+  "binaries": {
+    "baseline": "e6425d4aae8e94b57f7a1d5b6f89b4ffc49d027be08c8be0cc06733475c99be8",
+    "candidate": "13f96aa79b5760979c6de9f175b767397f3c37ba446bc06a6784f4f16ceb5076"
+  },
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "cases": {
+    "sum": {
+      "program_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+      "lanes": {
+        "baseline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "920e1e93d19e004f4adae92943c3a1d69c56b66d658ac15bd9dbf9758608bfb1"
+        },
+        "off": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "d2b437f2c70bfa6e2b2f4d84403a1ca34450bc038994e79c34e6d80b596e0a0c"
+        },
+        "inline": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 485,
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 685,
+              "answers": 787,
+              "batch_buffers": 1666,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_code_reads": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "cell_task_clears": 1448,
+              "cell_task_emissions": 1448,
+              "cell_task_growths": 17,
+              "cell_task_links": 1422,
+              "cell_task_probes": 1907,
+              "cell_task_records": 1448,
+              "chunks": 1453,
+              "compiled_cell_code_bytes": 41304,
+              "completion_binding_moves": 416,
+              "completion_error_checks": 1448,
+              "completion_headers": 785,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 2,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 1912,
+              "coordinator_frame_capacity_bytes": 384,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 107112,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 4,
+              "frame_cache_borrows": 1453,
+              "frame_capacity_bytes": 384,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 931,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 51200,
+              "peak_cell_task_bytes": 29296,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "ungrouped_inline_entries": 0,
+              "winner_order_comparisons": 2334,
+              "worker_entries": [
+                0
+              ],
+              "worker_frame_capacity_bytes": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "f5fb95c61f84bb01e43ab1a12dc79d4e94dae2e62b143f2260f4f40c4557fff1"
+        },
+        "two": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 485,
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 685,
+              "answers": 787,
+              "batch_buffers": 1666,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_code_reads": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "cell_task_clears": 1448,
+              "cell_task_emissions": 1448,
+              "cell_task_growths": 17,
+              "cell_task_links": 1422,
+              "cell_task_probes": 1907,
+              "cell_task_records": 1448,
+              "chunks": 1453,
+              "compiled_cell_code_bytes": 41304,
+              "completion_binding_moves": 416,
+              "completion_error_checks": 1448,
+              "completion_headers": 785,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 4,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 0,
+              "coordinator_frame_capacity_bytes": 0,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 107112,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 6,
+              "frame_cache_borrows": 1453,
+              "frame_capacity_bytes": 384,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 931,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 51200,
+              "peak_cell_task_bytes": 29296,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "ungrouped_inline_entries": 0,
+              "winner_order_comparisons": 2334,
+              "worker_entries": [
+                1428,
+                484
+              ],
+              "worker_frame_capacity_bytes": [
+                384,
+                224
+              ],
+              "worker_steps": [
+                1752,
+                555
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "0370e5c964c03c6b3c1cdd968020902b37ffa8a0aa63c25d393d58a660dae12b"
+        },
+        "four": {
+          "runs": 1428,
+          "hashes": {
+            "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+            "runs": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 1,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 485,
+              "admission_entry_checks": 3688,
+              "admission_table_checks": 1713,
+              "answer_buffer_allocations": 685,
+              "answers": 787,
+              "batch_buffers": 1666,
+              "batches": 173,
+              "borrowed_job_headers": 1907,
+              "cell_code_reads": 1907,
+              "cell_instances": 1448,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 7,
+              "cell_source_reads": 1907,
+              "cell_task_clears": 1448,
+              "cell_task_emissions": 1448,
+              "cell_task_growths": 17,
+              "cell_task_links": 1422,
+              "cell_task_probes": 1907,
+              "cell_task_records": 1448,
+              "chunks": 1453,
+              "compiled_cell_code_bytes": 41304,
+              "completion_binding_moves": 416,
+              "completion_error_checks": 1448,
+              "completion_headers": 785,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 6,
+                "candidate_pushes": 74,
+                "candidate_sort_comparisons": 40,
+                "candidates": 935,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 1172,
+                "domains": 894,
+                "hint_hits": 764,
+                "hint_probes": 1658,
+                "lookups": 1755,
+                "metadata_reads": 876,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 1087,
+                  "node_lookups": 1019,
+                  "parent_probes": 2044,
+                  "port_reads": 1819,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 74,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 11503,
+                "slice_steps": 8560,
+                "type_guards": 8560,
+                "type_rejections": 8476
+              },
+              "coordinator_entries": 0,
+              "coordinator_frame_capacity_bytes": 0,
+              "cross_rule_cells": 251,
+              "deferred_winner_moves": 1703,
+              "entries": 1912,
+              "entry_buffer_bytes": 107112,
+              "entry_headers": 1912,
+              "entry_mask_checks": 3688,
+              "frame_allocations": 13,
+              "frame_cache_borrows": 1453,
+              "frame_capacity_bytes": 384,
+              "guard_rejections": 65,
+              "guards": 220,
+              "key_operations": 0,
+              "max_entries_per_cell": 27,
+              "multi_entry_cells": 356,
+              "output_buffer_capacity": 931,
+              "owner_rejections": 2,
+              "peak_cell_queue_bytes": 51200,
+              "peak_cell_task_bytes": 29296,
+              "point_reads": 2087,
+              "result_writes": 1107,
+              "rule_admissions": 870,
+              "seed_range_comparisons": 1571,
+              "seed_selection_visits": 933,
+              "serial_order_headers": 720,
+              "spine_entries": 1907,
+              "spine_point_reads": 2082,
+              "static_rule_skips": 300,
+              "steps": 2307,
+              "task_order_headers": 1907,
+              "ungrouped_inline_entries": 0,
+              "winner_order_comparisons": 2334,
+              "worker_entries": [
+                1085,
+                397,
+                255,
+                175
+              ],
+              "worker_frame_capacity_bytes": [
+                384,
+                192,
+                288,
+                384
+              ],
+              "worker_steps": [
+                1381,
+                430,
+                290,
+                206
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18692,
+          "report_sha256": "f96916b620baf9bf8e88c073743df562fdb93c6393ae224843da7154c4751a71"
+        }
+      }
+    },
+    "fixture": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "d9fd9e7209778e98d8384c800660ccea42cc2fb78a8a6ee6226c86975a7d0fec"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "792dfb34161a19a191c6c814474f2e7cc9c634b6d95219076f5082d15efb0da1"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 79,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 1244,
+              "coordinator_frame_capacity_bytes": 256,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 3,
+              "frame_cache_borrows": 79,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                0
+              ],
+              "worker_frame_capacity_bytes": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "1c0604352a5d73aadf41aa1d5116c8a1caca61e554802172a74b1666bf8a1e39"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 79,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "coordinator_frame_capacity_bytes": 184,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 8,
+              "frame_cache_borrows": 79,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                812,
+                429
+              ],
+              "worker_frame_capacity_bytes": [
+                256,
+                256
+              ],
+              "worker_steps": [
+                1154,
+                758
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "a48d427760a002c67d04a56b46410c220493cf304361981b5d6fdc864022725e"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 270,
+              "admission_table_checks": 79,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 79,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "coordinator_frame_capacity_bytes": 184,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1244,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1244,
+              "entry_mask_checks": 270,
+              "frame_allocations": 14,
+              "frame_cache_borrows": 79,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 330,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1591,
+              "result_writes": 894,
+              "rule_admissions": 11,
+              "seed_range_comparisons": 280,
+              "seed_selection_visits": 1242,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1921,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                447,
+                272,
+                253,
+                269
+              ],
+              "worker_frame_capacity_bytes": [
+                256,
+                256,
+                256,
+                256
+              ],
+              "worker_steps": [
+                591,
+                464,
+                374,
+                483
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18520,
+          "report_sha256": "9220003c77e04613e612307818b3c33febb331e2ad77cd5fbd9e656594d14cc4"
+        }
+      }
+    },
+    "fixture-collisions": {
+      "program_sha256": "969bfa0936208c35f7b22fa1c1975cdf147c71be9617c16d1db13f4ccd36873f",
+      "lanes": {
+        "baseline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "e9def162ff34cd5e6834411c4dda40da2df22482cb28a05d1c953f689ac1e21c"
+        },
+        "off": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": false
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "e43299083f5cf17374459bcb89c9b98473c961f25ad4fb1526c9b6d8cda4095d"
+        },
+        "inline": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 80,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 1263,
+              "coordinator_frame_capacity_bytes": 256,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 3,
+              "frame_cache_borrows": 80,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                0
+              ],
+              "worker_frame_capacity_bytes": [
+                0
+              ],
+              "worker_steps": [
+                0
+              ]
+            },
+            "workers": 1
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "1bdbdcf6bd6771eba68a3131a1380830ee2ef1b35052b0ed7ec4925a5cf7aad0"
+        },
+        "two": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 80,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "coordinator_frame_capacity_bytes": 184,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 8,
+              "frame_cache_borrows": 80,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                764,
+                496
+              ],
+              "worker_frame_capacity_bytes": [
+                256,
+                256
+              ],
+              "worker_steps": [
+                1137,
+                832
+              ]
+            },
+            "workers": 2
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "1c8186bacebb3da22e153053b9a0ac58267fa19053fb68bca4f0d525ef6dcd51"
+        },
+        "four": {
+          "runs": 9,
+          "hashes": {
+            "state.json": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+            "stages.json": "6286ed0dc7c3a0c6b1d21b9dd8830747bcacf04767b1bb584292d46169bd40f9",
+            "binding-audit.json": "45d5a3f7a24b373af45750718b6917abbbd21b5cbc820e97d455edc54f1d3c57",
+            "runs": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb"
+          },
+          "query_workers": {
+            "enabled": true,
+            "grain": 16,
+            "organization": "cell-run/v4",
+            "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+            "stats": {
+              "active_template_visits": 1,
+              "admission_entry_checks": 401,
+              "admission_table_checks": 82,
+              "answer_buffer_allocations": 33,
+              "answers": 220,
+              "batch_buffers": 33,
+              "batches": 11,
+              "borrowed_job_headers": 131,
+              "cell_code_reads": 131,
+              "cell_instances": 128,
+              "cell_order_comparisons": 0,
+              "cell_queue_growths": 6,
+              "cell_source_reads": 128,
+              "cell_task_clears": 128,
+              "cell_task_emissions": 128,
+              "cell_task_growths": 14,
+              "cell_task_links": 127,
+              "cell_task_probes": 128,
+              "cell_task_records": 128,
+              "chunks": 80,
+              "compiled_cell_code_bytes": 1480,
+              "completion_binding_moves": 0,
+              "completion_error_checks": 9,
+              "completion_headers": 131,
+              "completion_slot_initializations": 0,
+              "completion_slot_writes": 0,
+              "constructors": {
+                "candidate_growths": 0,
+                "candidate_pushes": 0,
+                "candidate_sort_comparisons": 0,
+                "candidates": 512,
+                "class_jumps": 0,
+                "class_probes": 0,
+                "column_checks": 0,
+                "domain_key_fields": 0,
+                "domains": 0,
+                "hint_hits": 129,
+                "hint_probes": 129,
+                "lookups": 512,
+                "metadata_reads": 512,
+                "reads": {
+                  "equality_guards": 0,
+                  "key_fields": 512,
+                  "node_lookups": 512,
+                  "parent_probes": 641,
+                  "port_reads": 641,
+                  "scalar_guards": 0,
+                  "shared_symbol_guards": 0
+                },
+                "results": 0,
+                "signal_parent_probes": 0,
+                "signal_root_lookups": 0,
+                "signal_visits": 0,
+                "slice_steps": 0,
+                "type_guards": 0,
+                "type_rejections": 0
+              },
+              "coordinator_entries": 3,
+              "coordinator_frame_capacity_bytes": 184,
+              "cross_rule_cells": 0,
+              "deferred_winner_moves": 131,
+              "entries": 1263,
+              "entry_buffer_bytes": 53416,
+              "entry_headers": 1263,
+              "entry_mask_checks": 401,
+              "frame_allocations": 14,
+              "frame_cache_borrows": 80,
+              "frame_capacity_bytes": 256,
+              "guard_rejections": 24,
+              "guards": 349,
+              "key_operations": 0,
+              "max_entries_per_cell": 1,
+              "multi_entry_cells": 0,
+              "output_buffer_capacity": 255,
+              "owner_rejections": 620,
+              "peak_cell_queue_bytes": 25600,
+              "peak_cell_task_bytes": 13632,
+              "point_reads": 1629,
+              "result_writes": 932,
+              "rule_admissions": 12,
+              "seed_range_comparisons": 332,
+              "seed_selection_visits": 1261,
+              "serial_order_headers": 5,
+              "spine_entries": 131,
+              "spine_point_reads": 133,
+              "static_rule_skips": 0,
+              "steps": 1978,
+              "task_order_headers": 131,
+              "ungrouped_inline_entries": 3,
+              "winner_order_comparisons": 128,
+              "worker_entries": [
+                493,
+                416,
+                207,
+                144
+              ],
+              "worker_frame_capacity_bytes": [
+                256,
+                256,
+                256,
+                256
+              ],
+              "worker_steps": [
+                658,
+                656,
+                367,
+                288
+              ]
+            },
+            "workers": 4
+          },
+          "key_lookup_calls": 18691,
+          "report_sha256": "042501443c64728ea76f39f1781f9b3c556139389957c66d6703755345146569"
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "sum": {
+      "before": {
+        "runs": 1428,
+        "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "runs_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+        "report_sha256": "550460ffe4525fb2c463d1f97a1b5c802de2e9e7dc86c686d9d6772b2d725577",
+        "query_workers": {
+          "enabled": true,
+          "grain": 1,
+          "organization": "cell-run/v3",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "admission_entry_checks": 3688,
+            "admission_table_checks": 1713,
+            "answer_buffer_allocations": 685,
+            "answers": 787,
+            "batch_buffers": 1837,
+            "batches": 173,
+            "borrowed_job_headers": 1907,
+            "cell_instances": 1448,
+            "cell_order_comparisons": 7792,
+            "cell_queue_growths": 7,
+            "cell_source_reads": 1907,
+            "chunks": 1453,
+            "completion_binding_moves": 416,
+            "completion_error_checks": 1448,
+            "completion_headers": 785,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 7,
+              "candidate_pushes": 74,
+              "candidate_sort_comparisons": 40,
+              "candidates": 935,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 1172,
+              "domains": 894,
+              "hint_hits": 764,
+              "hint_probes": 1658,
+              "lookups": 1755,
+              "metadata_reads": 876,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 1087,
+                "node_lookups": 1019,
+                "parent_probes": 2044,
+                "port_reads": 1819,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 74,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 11503,
+              "slice_steps": 8560,
+              "type_guards": 8560,
+              "type_rejections": 8476
+            },
+            "coordinator_entries": 0,
+            "coordinator_frame_capacity_bytes": 0,
+            "cross_rule_cells": 251,
+            "deferred_winner_moves": 1703,
+            "entries": 1912,
+            "entry_buffer_bytes": 137624,
+            "entry_headers": 1912,
+            "entry_mask_checks": 3688,
+            "frame_allocations": 14,
+            "frame_cache_borrows": 1453,
+            "frame_capacity_bytes": 384,
+            "guard_rejections": 65,
+            "guards": 220,
+            "key_operations": 0,
+            "max_entries_per_cell": 27,
+            "multi_entry_cells": 356,
+            "output_buffer_capacity": 931,
+            "owner_rejections": 2,
+            "peak_cell_queue_bytes": 59392,
+            "point_reads": 2087,
+            "result_writes": 1107,
+            "rule_admissions": 870,
+            "seed_range_comparisons": 1571,
+            "seed_selection_visits": 933,
+            "serial_order_headers": 720,
+            "spine_entries": 1907,
+            "spine_point_reads": 2082,
+            "static_rule_skips": 300,
+            "steps": 2307,
+            "task_order_headers": 1907,
+            "winner_order_comparisons": 2790,
+            "worker_entries": [
+              1029,
+              423,
+              251,
+              209
+            ],
+            "worker_frame_capacity_bytes": [
+              320,
+              384,
+              288,
+              384
+            ],
+            "worker_steps": [
+              1240,
+              519,
+              305,
+              243
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18692
+      },
+      "after": {
+        "runs": 1428,
+        "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "runs_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+        "report_sha256": "f96916b620baf9bf8e88c073743df562fdb93c6393ae224843da7154c4751a71",
+        "query_workers": {
+          "enabled": true,
+          "grain": 1,
+          "organization": "cell-run/v4",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "active_template_visits": 485,
+            "admission_entry_checks": 3688,
+            "admission_table_checks": 1713,
+            "answer_buffer_allocations": 685,
+            "answers": 787,
+            "batch_buffers": 1666,
+            "batches": 173,
+            "borrowed_job_headers": 1907,
+            "cell_code_reads": 1907,
+            "cell_instances": 1448,
+            "cell_order_comparisons": 0,
+            "cell_queue_growths": 7,
+            "cell_source_reads": 1907,
+            "cell_task_clears": 1448,
+            "cell_task_emissions": 1448,
+            "cell_task_growths": 17,
+            "cell_task_links": 1422,
+            "cell_task_probes": 1907,
+            "cell_task_records": 1448,
+            "chunks": 1453,
+            "compiled_cell_code_bytes": 41304,
+            "completion_binding_moves": 416,
+            "completion_error_checks": 1448,
+            "completion_headers": 785,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 6,
+              "candidate_pushes": 74,
+              "candidate_sort_comparisons": 40,
+              "candidates": 935,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 1172,
+              "domains": 894,
+              "hint_hits": 764,
+              "hint_probes": 1658,
+              "lookups": 1755,
+              "metadata_reads": 876,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 1087,
+                "node_lookups": 1019,
+                "parent_probes": 2044,
+                "port_reads": 1819,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 74,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 11503,
+              "slice_steps": 8560,
+              "type_guards": 8560,
+              "type_rejections": 8476
+            },
+            "coordinator_entries": 0,
+            "coordinator_frame_capacity_bytes": 0,
+            "cross_rule_cells": 251,
+            "deferred_winner_moves": 1703,
+            "entries": 1912,
+            "entry_buffer_bytes": 107112,
+            "entry_headers": 1912,
+            "entry_mask_checks": 3688,
+            "frame_allocations": 13,
+            "frame_cache_borrows": 1453,
+            "frame_capacity_bytes": 384,
+            "guard_rejections": 65,
+            "guards": 220,
+            "key_operations": 0,
+            "max_entries_per_cell": 27,
+            "multi_entry_cells": 356,
+            "output_buffer_capacity": 931,
+            "owner_rejections": 2,
+            "peak_cell_queue_bytes": 51200,
+            "peak_cell_task_bytes": 29296,
+            "point_reads": 2087,
+            "result_writes": 1107,
+            "rule_admissions": 870,
+            "seed_range_comparisons": 1571,
+            "seed_selection_visits": 933,
+            "serial_order_headers": 720,
+            "spine_entries": 1907,
+            "spine_point_reads": 2082,
+            "static_rule_skips": 300,
+            "steps": 2307,
+            "task_order_headers": 1907,
+            "ungrouped_inline_entries": 0,
+            "winner_order_comparisons": 2334,
+            "worker_entries": [
+              1085,
+              397,
+              255,
+              175
+            ],
+            "worker_frame_capacity_bytes": [
+              384,
+              192,
+              288,
+              384
+            ],
+            "worker_steps": [
+              1381,
+              430,
+              290,
+              206
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18692
+      },
+      "net_saved_operations": -1661
+    },
+    "fixture": {
+      "before": {
+        "runs": 9,
+        "state_sha256": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+        "runs_sha256": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb",
+        "report_sha256": "0ce2a9732119ba0fd5152c289b1a7560f38ea2370caabae543d5a0d7d9bc9483",
+        "query_workers": {
+          "enabled": true,
+          "grain": 16,
+          "organization": "cell-run/v3",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "admission_entry_checks": 270,
+            "admission_table_checks": 79,
+            "answer_buffer_allocations": 33,
+            "answers": 220,
+            "batch_buffers": 35,
+            "batches": 11,
+            "borrowed_job_headers": 131,
+            "cell_instances": 129,
+            "cell_order_comparisons": 129,
+            "cell_queue_growths": 6,
+            "cell_source_reads": 131,
+            "chunks": 79,
+            "completion_binding_moves": 0,
+            "completion_error_checks": 9,
+            "completion_headers": 131,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 0,
+              "candidate_pushes": 0,
+              "candidate_sort_comparisons": 0,
+              "candidates": 512,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 0,
+              "domains": 0,
+              "hint_hits": 129,
+              "hint_probes": 129,
+              "lookups": 512,
+              "metadata_reads": 512,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 512,
+                "node_lookups": 512,
+                "parent_probes": 641,
+                "port_reads": 641,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 0,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 0,
+              "slice_steps": 0,
+              "type_guards": 0,
+              "type_rejections": 0
+            },
+            "coordinator_entries": 3,
+            "coordinator_frame_capacity_bytes": 184,
+            "cross_rule_cells": 1,
+            "deferred_winner_moves": 131,
+            "entries": 1244,
+            "entry_buffer_bytes": 55512,
+            "entry_headers": 1244,
+            "entry_mask_checks": 270,
+            "frame_allocations": 14,
+            "frame_cache_borrows": 79,
+            "frame_capacity_bytes": 256,
+            "guard_rejections": 24,
+            "guards": 330,
+            "key_operations": 0,
+            "max_entries_per_cell": 3,
+            "multi_entry_cells": 1,
+            "output_buffer_capacity": 255,
+            "owner_rejections": 620,
+            "peak_cell_queue_bytes": 29696,
+            "point_reads": 1591,
+            "result_writes": 894,
+            "rule_admissions": 11,
+            "seed_range_comparisons": 280,
+            "seed_selection_visits": 1242,
+            "serial_order_headers": 5,
+            "spine_entries": 131,
+            "spine_point_reads": 133,
+            "static_rule_skips": 0,
+            "steps": 1921,
+            "task_order_headers": 131,
+            "winner_order_comparisons": 128,
+            "worker_entries": [
+              447,
+              301,
+              288,
+              205
+            ],
+            "worker_frame_capacity_bytes": [
+              256,
+              256,
+              256,
+              256
+            ],
+            "worker_steps": [
+              559,
+              438,
+              528,
+              387
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18520
+      },
+      "after": {
+        "runs": 9,
+        "state_sha256": "8ff83acba34ea28ada296d7be18bcc0bea712f1da8c31a961357dbeeb861cc91",
+        "runs_sha256": "8e093c818caf71107ca1629c5285e8bd9320a9ffda8465627db2c9c484c7b9cb",
+        "report_sha256": "9220003c77e04613e612307818b3c33febb331e2ad77cd5fbd9e656594d14cc4",
+        "query_workers": {
+          "enabled": true,
+          "grain": 16,
+          "organization": "cell-run/v4",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "active_template_visits": 1,
+            "admission_entry_checks": 270,
+            "admission_table_checks": 79,
+            "answer_buffer_allocations": 33,
+            "answers": 220,
+            "batch_buffers": 33,
+            "batches": 11,
+            "borrowed_job_headers": 131,
+            "cell_code_reads": 131,
+            "cell_instances": 128,
+            "cell_order_comparisons": 0,
+            "cell_queue_growths": 6,
+            "cell_source_reads": 128,
+            "cell_task_clears": 128,
+            "cell_task_emissions": 128,
+            "cell_task_growths": 14,
+            "cell_task_links": 127,
+            "cell_task_probes": 128,
+            "cell_task_records": 128,
+            "chunks": 79,
+            "compiled_cell_code_bytes": 1480,
+            "completion_binding_moves": 0,
+            "completion_error_checks": 9,
+            "completion_headers": 131,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 0,
+              "candidate_pushes": 0,
+              "candidate_sort_comparisons": 0,
+              "candidates": 512,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 0,
+              "domains": 0,
+              "hint_hits": 129,
+              "hint_probes": 129,
+              "lookups": 512,
+              "metadata_reads": 512,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 512,
+                "node_lookups": 512,
+                "parent_probes": 641,
+                "port_reads": 641,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 0,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 0,
+              "slice_steps": 0,
+              "type_guards": 0,
+              "type_rejections": 0
+            },
+            "coordinator_entries": 3,
+            "coordinator_frame_capacity_bytes": 184,
+            "cross_rule_cells": 0,
+            "deferred_winner_moves": 131,
+            "entries": 1244,
+            "entry_buffer_bytes": 53416,
+            "entry_headers": 1244,
+            "entry_mask_checks": 270,
+            "frame_allocations": 14,
+            "frame_cache_borrows": 79,
+            "frame_capacity_bytes": 256,
+            "guard_rejections": 24,
+            "guards": 330,
+            "key_operations": 0,
+            "max_entries_per_cell": 1,
+            "multi_entry_cells": 0,
+            "output_buffer_capacity": 255,
+            "owner_rejections": 620,
+            "peak_cell_queue_bytes": 25600,
+            "peak_cell_task_bytes": 13632,
+            "point_reads": 1591,
+            "result_writes": 894,
+            "rule_admissions": 11,
+            "seed_range_comparisons": 280,
+            "seed_selection_visits": 1242,
+            "serial_order_headers": 5,
+            "spine_entries": 131,
+            "spine_point_reads": 133,
+            "static_rule_skips": 0,
+            "steps": 1921,
+            "task_order_headers": 131,
+            "ungrouped_inline_entries": 3,
+            "winner_order_comparisons": 128,
+            "worker_entries": [
+              447,
+              272,
+              253,
+              269
+            ],
+            "worker_frame_capacity_bytes": [
+              256,
+              256,
+              256,
+              256
+            ],
+            "worker_steps": [
+              591,
+              464,
+              374,
+              483
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18520
+      },
+      "net_saved_operations": -651
+    },
+    "ray-prefix": {
+      "before": {
+        "runs": 128,
+        "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+        "runs_sha256": "d1b01bd3f2c2dd6726b4da7c95decb53fde8300ac20bf5ab7d99cb1f8518d59a",
+        "report_sha256": "7a8113fd1e7f539772d7a411d6fe3155f30f2369877ef9562a424d91888576e8",
+        "query_workers": {
+          "enabled": true,
+          "grain": 64,
+          "organization": "cell-run/v3",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "admission_entry_checks": 23743,
+            "admission_table_checks": 372,
+            "answer_buffer_allocations": 128,
+            "answers": 2560,
+            "batch_buffers": 703,
+            "batches": 64,
+            "borrowed_job_headers": 21186,
+            "cell_instances": 19543,
+            "cell_order_comparisons": 140137,
+            "cell_queue_growths": 11,
+            "cell_source_reads": 21186,
+            "chunks": 436,
+            "completion_binding_moves": 177,
+            "completion_error_checks": 436,
+            "completion_headers": 2560,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 0,
+              "candidate_pushes": 0,
+              "candidate_sort_comparisons": 0,
+              "candidates": 3345,
+              "class_jumps": 4521,
+              "class_probes": 18614,
+              "column_checks": 0,
+              "domain_key_fields": 8573,
+              "domains": 8098,
+              "hint_hits": 1927,
+              "hint_probes": 10025,
+              "lookups": 11443,
+              "metadata_reads": 3345,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 2182,
+                "node_lookups": 3345,
+                "parent_probes": 5292,
+                "port_reads": 5272,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 0,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 0,
+              "slice_steps": 0,
+              "type_guards": 0,
+              "type_rejections": 0
+            },
+            "coordinator_entries": 939,
+            "coordinator_frame_capacity_bytes": 160,
+            "cross_rule_cells": 484,
+            "deferred_winner_moves": 3382,
+            "entries": 21186,
+            "entry_buffer_bytes": 1525392,
+            "entry_headers": 21186,
+            "entry_mask_checks": 23743,
+            "frame_allocations": 10,
+            "frame_cache_borrows": 436,
+            "frame_capacity_bytes": 160,
+            "guard_rejections": 9291,
+            "guards": 9291,
+            "key_operations": 0,
+            "max_entries_per_cell": 687,
+            "multi_entry_cells": 489,
+            "output_buffer_capacity": 6454,
+            "owner_rejections": 0,
+            "peak_cell_queue_bytes": 950272,
+            "point_reads": 21229,
+            "result_writes": 11301,
+            "rule_admissions": 172,
+            "seed_range_comparisons": 955,
+            "seed_selection_visits": 1615,
+            "serial_order_headers": 425,
+            "spine_entries": 21186,
+            "spine_point_reads": 21229,
+            "static_rule_skips": 14,
+            "steps": 30520,
+            "task_order_headers": 21186,
+            "winner_order_comparisons": 3926,
+            "worker_entries": [
+              6276,
+              5700,
+              4391,
+              3880
+            ],
+            "worker_frame_capacity_bytes": [
+              160,
+              160,
+              160,
+              160
+            ],
+            "worker_steps": [
+              9041,
+              8442,
+              6374,
+              5650
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 88737
+      },
+      "after": {
+        "runs": 128,
+        "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+        "runs_sha256": "d1b01bd3f2c2dd6726b4da7c95decb53fde8300ac20bf5ab7d99cb1f8518d59a",
+        "report_sha256": "7e1937b1800faf7760b1ad3589917bdc85b86cb770af51ea75a72dde78d1052f",
+        "query_workers": {
+          "enabled": true,
+          "grain": 64,
+          "organization": "cell-run/v4",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "active_template_visits": 122,
+            "admission_entry_checks": 23743,
+            "admission_table_checks": 372,
+            "answer_buffer_allocations": 124,
+            "answers": 2560,
+            "batch_buffers": 639,
+            "batches": 64,
+            "borrowed_job_headers": 21186,
+            "cell_code_reads": 21186,
+            "cell_instances": 18943,
+            "cell_order_comparisons": 0,
+            "cell_queue_growths": 11,
+            "cell_source_reads": 20247,
+            "cell_task_clears": 18943,
+            "cell_task_emissions": 18943,
+            "cell_task_growths": 25,
+            "cell_task_links": 20125,
+            "cell_task_probes": 20247,
+            "cell_task_records": 18943,
+            "chunks": 417,
+            "compiled_cell_code_bytes": 41304,
+            "completion_binding_moves": 177,
+            "completion_error_checks": 417,
+            "completion_headers": 2560,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 0,
+              "candidate_pushes": 0,
+              "candidate_sort_comparisons": 0,
+              "candidates": 3345,
+              "class_jumps": 4521,
+              "class_probes": 18614,
+              "column_checks": 0,
+              "domain_key_fields": 8573,
+              "domains": 8098,
+              "hint_hits": 1927,
+              "hint_probes": 10025,
+              "lookups": 11443,
+              "metadata_reads": 3345,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 2182,
+                "node_lookups": 3345,
+                "parent_probes": 5292,
+                "port_reads": 5272,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 0,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 0,
+              "slice_steps": 0,
+              "type_guards": 0,
+              "type_rejections": 0
+            },
+            "coordinator_entries": 939,
+            "coordinator_frame_capacity_bytes": 160,
+            "cross_rule_cells": 298,
+            "deferred_winner_moves": 3382,
+            "entries": 21186,
+            "entry_buffer_bytes": 1186416,
+            "entry_headers": 21186,
+            "entry_mask_checks": 23743,
+            "frame_allocations": 10,
+            "frame_cache_borrows": 417,
+            "frame_capacity_bytes": 160,
+            "guard_rejections": 9291,
+            "guards": 9291,
+            "key_operations": 0,
+            "max_entries_per_cell": 687,
+            "multi_entry_cells": 303,
+            "output_buffer_capacity": 6557,
+            "owner_rejections": 0,
+            "peak_cell_queue_bytes": 819200,
+            "peak_cell_task_bytes": 327152,
+            "point_reads": 21229,
+            "result_writes": 11301,
+            "rule_admissions": 172,
+            "seed_range_comparisons": 955,
+            "seed_selection_visits": 1615,
+            "serial_order_headers": 425,
+            "spine_entries": 21186,
+            "spine_point_reads": 21229,
+            "static_rule_skips": 14,
+            "steps": 30520,
+            "task_order_headers": 21186,
+            "ungrouped_inline_entries": 939,
+            "winner_order_comparisons": 3934,
+            "worker_entries": [
+              6615,
+              5192,
+              4238,
+              4202
+            ],
+            "worker_frame_capacity_bytes": [
+              160,
+              160,
+              160,
+              160
+            ],
+            "worker_steps": [
+              9488,
+              7707,
+              6252,
+              6060
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 88737
+      },
+      "net_saved_operations": 22659
+    },
+    "sum-g64": {
+      "before": {
+        "runs": 1428,
+        "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "runs_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+        "report_sha256": "ef8bfaffd14210d63721a98dbc712cfc1f5742f6644f49f2df5b20ccc22c35f2",
+        "query_workers": {
+          "enabled": true,
+          "grain": 64,
+          "organization": "cell-run/v3",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "admission_entry_checks": 3688,
+            "admission_table_checks": 1713,
+            "answer_buffer_allocations": 260,
+            "answers": 785,
+            "batch_buffers": 1833,
+            "batches": 171,
+            "borrowed_job_headers": 1907,
+            "cell_instances": 1448,
+            "cell_order_comparisons": 7792,
+            "cell_queue_growths": 7,
+            "cell_source_reads": 1907,
+            "chunks": 486,
+            "completion_binding_moves": 416,
+            "completion_error_checks": 486,
+            "completion_headers": 785,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 5,
+              "candidate_pushes": 74,
+              "candidate_sort_comparisons": 40,
+              "candidates": 931,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 1171,
+              "domains": 893,
+              "hint_hits": 760,
+              "hint_probes": 1653,
+              "lookups": 1750,
+              "metadata_reads": 872,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 1083,
+                "node_lookups": 1015,
+                "parent_probes": 2036,
+                "port_reads": 1811,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 74,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 11501,
+              "slice_steps": 8558,
+              "type_guards": 8558,
+              "type_rejections": 8474
+            },
+            "coordinator_entries": 1516,
+            "coordinator_frame_capacity_bytes": 384,
+            "cross_rule_cells": 251,
+            "deferred_winner_moves": 1703,
+            "entries": 1907,
+            "entry_buffer_bytes": 137304,
+            "entry_headers": 1907,
+            "entry_mask_checks": 3688,
+            "frame_allocations": 14,
+            "frame_cache_borrows": 486,
+            "frame_capacity_bytes": 384,
+            "guard_rejections": 65,
+            "guards": 220,
+            "key_operations": 0,
+            "max_entries_per_cell": 27,
+            "multi_entry_cells": 356,
+            "output_buffer_capacity": 1185,
+            "owner_rejections": 0,
+            "peak_cell_queue_bytes": 59392,
+            "point_reads": 2082,
+            "result_writes": 1105,
+            "rule_admissions": 870,
+            "seed_range_comparisons": 1571,
+            "seed_selection_visits": 0,
+            "serial_order_headers": 720,
+            "spine_entries": 1907,
+            "spine_point_reads": 2082,
+            "static_rule_skips": 300,
+            "steps": 2302,
+            "task_order_headers": 1907,
+            "winner_order_comparisons": 2790,
+            "worker_entries": [
+              200,
+              106,
+              38,
+              47
+            ],
+            "worker_frame_capacity_bytes": [
+              288,
+              160,
+              336,
+              288
+            ],
+            "worker_steps": [
+              227,
+              151,
+              73,
+              56
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18692
+      },
+      "after": {
+        "runs": 1428,
+        "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "runs_sha256": "f7ad3674677050ec0ddc7c4c6d5f028fa630ee4e553a0e4a50ad14bbd24fb5db",
+        "report_sha256": "a594cea8b7b74b0ff9b895b8a8fd06855118916429ddb64dbece15035895e294",
+        "query_workers": {
+          "enabled": true,
+          "grain": 64,
+          "organization": "cell-run/v4",
+          "scope": "source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged",
+          "stats": {
+            "active_template_visits": 34,
+            "admission_entry_checks": 3688,
+            "admission_table_checks": 1713,
+            "answer_buffer_allocations": 123,
+            "answers": 785,
+            "batch_buffers": 1662,
+            "batches": 171,
+            "borrowed_job_headers": 1907,
+            "cell_code_reads": 1907,
+            "cell_instances": 238,
+            "cell_order_comparisons": 0,
+            "cell_queue_growths": 7,
+            "cell_source_reads": 391,
+            "cell_task_clears": 238,
+            "cell_task_emissions": 238,
+            "cell_task_growths": 17,
+            "cell_task_links": 357,
+            "cell_task_probes": 391,
+            "cell_task_records": 238,
+            "chunks": 203,
+            "compiled_cell_code_bytes": 41304,
+            "completion_binding_moves": 416,
+            "completion_error_checks": 203,
+            "completion_headers": 785,
+            "completion_slot_initializations": 0,
+            "completion_slot_writes": 0,
+            "constructors": {
+              "candidate_growths": 5,
+              "candidate_pushes": 74,
+              "candidate_sort_comparisons": 40,
+              "candidates": 931,
+              "class_jumps": 0,
+              "class_probes": 0,
+              "column_checks": 0,
+              "domain_key_fields": 1171,
+              "domains": 893,
+              "hint_hits": 760,
+              "hint_probes": 1653,
+              "lookups": 1750,
+              "metadata_reads": 872,
+              "reads": {
+                "equality_guards": 0,
+                "key_fields": 1083,
+                "node_lookups": 1015,
+                "parent_probes": 2036,
+                "port_reads": 1811,
+                "scalar_guards": 0,
+                "shared_symbol_guards": 0
+              },
+              "results": 74,
+              "signal_parent_probes": 0,
+              "signal_root_lookups": 0,
+              "signal_visits": 11501,
+              "slice_steps": 8558,
+              "type_guards": 8558,
+              "type_rejections": 8474
+            },
+            "coordinator_entries": 1516,
+            "coordinator_frame_capacity_bytes": 384,
+            "cross_rule_cells": 114,
+            "deferred_winner_moves": 1703,
+            "entries": 1907,
+            "entry_buffer_bytes": 106792,
+            "entry_headers": 1907,
+            "entry_mask_checks": 3688,
+            "frame_allocations": 15,
+            "frame_cache_borrows": 203,
+            "frame_capacity_bytes": 384,
+            "guard_rejections": 65,
+            "guards": 220,
+            "key_operations": 0,
+            "max_entries_per_cell": 27,
+            "multi_entry_cells": 116,
+            "output_buffer_capacity": 1478,
+            "owner_rejections": 0,
+            "peak_cell_queue_bytes": 51200,
+            "peak_cell_task_bytes": 29296,
+            "point_reads": 2082,
+            "result_writes": 1105,
+            "rule_admissions": 870,
+            "seed_range_comparisons": 1571,
+            "seed_selection_visits": 0,
+            "serial_order_headers": 720,
+            "spine_entries": 1907,
+            "spine_point_reads": 2082,
+            "static_rule_skips": 300,
+            "steps": 2302,
+            "task_order_headers": 1907,
+            "ungrouped_inline_entries": 1516,
+            "winner_order_comparisons": 2086,
+            "worker_entries": [
+              195,
+              81,
+              68,
+              47
+            ],
+            "worker_frame_capacity_bytes": [
+              288,
+              288,
+              336,
+              256
+            ],
+            "worker_steps": [
+              231,
+              99,
+              102,
+              75
+            ]
+          },
+          "workers": 4
+        },
+        "key_lookup_calls": 18692
+      },
+      "net_saved_operations": 7748
+    }
+  },
+  "limits": "Raytrace is a 128-Run prefix only. Grain 1 exercises coverage, not recommended speed. Counters are uncalibrated operations, not cache misses or total allocation counts.",
+  "raytrace_prefix_binaries": {
+    "before": "296dc6383c47aece6e45937646c3a32bd1bd3ddf1a343c57d64e2fc2e261ccd7",
+    "after": "6bc81b31108ee7b6d40cae6dd76823d8a27319f2e7fb72670fbfeee3be24803a"
+  },
+  "raytrace_prefix_program": "dfd8ad90c2d036ce6f05444f744a3846b05213c8f0b358b251e85b629182a601"
+}

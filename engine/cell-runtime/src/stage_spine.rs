@@ -2042,13 +2042,13 @@ impl Programs {
                 // here on reset. Either way, borrow its original result slots.
                 displaced_history.current().or_else(|| cursor.state.history.current())
             } else { None };
-            let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
             #[cfg(feature = "sparse-cells")]
             if let Some(workers) = workers.as_deref_mut()
-                && workers.spine_entry(rid, pivot, &cursor) {
-                workers.enqueue_spine(g, rid, pivot, _ordinal, watermark, row, cursor, facts);
+                && let Some(code) = workers.spine_entry(rid, pivot, &cursor) {
+                workers.enqueue_spine(g, code, _ordinal, watermark, row, cursor, facts);
                 continue;
             }
+            let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
             self.stats.cell_query_entries += 1;
             let mut values = smallvec::SmallVec::<[Value; 4]>::new();
             // Keep rejected queries off the heap in the common short case. Only

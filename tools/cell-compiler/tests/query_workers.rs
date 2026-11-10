@@ -55,6 +55,8 @@ fn small_cell_runs_execute_inline_without_spawning_more_work() {
     assert_eq!(q["entries"], q["coordinator_entries"]);
     assert!(q["entries"].as_u64().unwrap() > 0);
     assert!(q["worker_entries"].as_array().unwrap().iter().all(|v| v == 0));
+    assert_eq!(q["cell_task_probes"], 0, "small Runs never build a Cell grouping index");
+    assert_eq!(q["ungrouped_inline_entries"], q["spine_entries"]);
 }
 
 #[test]

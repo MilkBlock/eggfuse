@@ -26,7 +26,7 @@ mod query;
 #[path = "cell_match.rs"]
 mod matched;
 pub(crate) use matched::{Matched, QueryFacts};
-pub(crate) use query::{Access, Queries, Query, query_order};
+pub(crate) use query::{Access, Queries, Query, SharedQuery, query_order};
 pub(crate) use query::{bind_query, query_operand, ScopedStep};
 #[path = "cell_links.rs"]
 mod links;

@@ -6,6 +6,17 @@ use serde::Serialize;
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub cell_task_probes: u64,
+    pub cell_task_records: u64,
+    pub cell_task_links: u64,
+    pub cell_task_emissions: u64,
+    pub cell_task_clears: u64,
+    pub cell_task_growths: u64,
+    pub cell_code_reads: u64,
+    pub active_template_visits: u64,
+    pub ungrouped_inline_entries: u64,
+    pub peak_cell_task_bytes: u64,
+    pub compiled_cell_code_bytes: u64,
     pub frame_cache_borrows: u64,
     pub frame_capacity_bytes: u64,
     pub worker_frame_capacity_bytes: Vec<u64>,
@@ -64,8 +75,10 @@ pub(crate) struct Workers {
     grain: usize,
     stats: Counts,
     cell_plans: Vec<Option<CellPlan>>,
+    cell_codes: Vec<CellCode>,
+    tasks: CellTasks,
     cell_queries: Vec<CellQuery>,
-    rule_facts: Vec<Option<QueryFacts>>,
+    rule_facts: Vec<Option<RuleRun>>,
     inline_frame: Frame,
 }
 
@@ -150,18 +163,23 @@ impl Executor {
             Some(rayon::ThreadPoolBuilder::new().num_threads(workers)
                 .thread_name(|i| format!("cell-query-{i}")).build().map_err(|e| e.to_string())?)
         };
+        let (cell_plans, cell_codes) = CellPlan::compile(&self.graph.program);
+        let compiled_cell_code_bytes = (cell_codes.capacity() * std::mem::size_of::<CellCode>()
+            + cell_plans.capacity() * std::mem::size_of::<Option<CellPlan>>()
+            + cell_plans.iter().flatten().map(|p| p.entries.capacity() * std::mem::size_of::<Option<usize>>()
+                + p.tables.len() * std::mem::size_of::<usize>()).sum::<usize>()) as u64;
         self.query_workers = Some(Workers { pool, grain,
-            cell_plans: CellPlan::compile(&self.graph.program), cell_queries: Vec::new(),
+            cell_plans, cell_codes, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
-            stats: Counts { worker_entries: vec![0; workers], worker_steps: vec![0; workers],
+            stats: Counts { compiled_cell_code_bytes, worker_entries: vec![0; workers], worker_steps: vec![0; workers],
                 worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
         Ok(())
     }
     pub(super) fn query_worker_report(&self) -> J {
         self.query_workers.as_ref().map_or(json!({"enabled":false}), |w|
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
-                "organization":"cell-run/v3","scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
+                "organization":"cell-run/v4","scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
     }
     pub(super) fn query_worker_batch(
         &mut self, rid: usize, rule: &Rule, kernel: &crate::row_kernel::Kernel,
@@ -325,42 +343,133 @@ impl Workers {
 // This is derived from the existing Cell queries. It selects code, never live
 // facts or a producer's subscriber list.
 struct CellPlan {
-    entries: Vec<bool>,
+    entries: Vec<Option<usize>>,
     tables: Box<[usize]>,
 }
+struct CellCode {
+    query: crate::cell::SharedQuery,
+    rule: usize,
+    pivot: usize,
+    slots: usize,
+    reads: usize,
+}
+struct RuleRun { facts: QueryFacts, watermark: u64 }
 impl CellPlan {
-    fn compile(p: &Program) -> Vec<Option<Self>> {
+    fn compile(p: &Program) -> (Vec<Option<Self>>, Vec<CellCode>) {
         let mut local = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
         for route in p.multi_stage.routes.values() {
             local[route.consumer][route.anchor] |= route.reads.iter().any(|r| r.witness.is_some());
         }
-        p.rules.iter().enumerate().map(|(rid, r)| {
+        let mut codes = Vec::new();
+        let plans = p.rules.iter().enumerate().map(|(rid, r)| {
             let mut tables = BTreeSet::new();
             let entries = (0..r.query.len()).map(|pivot| {
-                if local[rid][pivot] { return false; }
-                let Some(points) = p.cell_queries.point_tables(rid, pivot).filter(|p| !p.is_empty()) else { return false };
+                if local[rid][pivot] { return None; }
+                let points = p.cell_queries.point_tables(rid, pivot).filter(|p| !p.is_empty())?;
                 tables.extend(points.iter().copied());
-                true
+                let query = p.cell_queries.get(rid, pivot).unwrap().clone();
+                let code = codes.len();
+                codes.push(CellCode { rule: rid, pivot, slots: query.result_slots(), reads: query.steps.len() + 1, query });
+                Some(code)
             }).collect::<Vec<_>>();
-            entries.iter().any(|&v| v).then(|| Self { entries, tables: tables.into_iter().collect() })
-        }).collect()
+            entries.iter().any(Option::is_some).then(|| Self { entries, tables: tables.into_iter().collect() })
+        }).collect();
+        (plans, codes)
     }
 }
 struct CellQuery {
-    cell: (usize, Dependency),
-    rule: usize,
-    pivot: usize,
+    code: usize,
+    next: usize,
     ordinal: usize,
-    watermark: u64,
     row: Rc<Row>,
     cursor: Option<crate::stage_spine::Cursor>,
 }
 struct QueryRead<'a> {
-    query: &'a crate::cell::Query,
-    known: &'a QueryFacts,
-    pivot: usize,
-    watermark: u64,
+    source: usize,
+    code: &'a CellCode,
     entry: Entry<'a>,
+}
+struct Chunk {
+    entries: std::ops::Range<usize>,
+    slots: usize,
+    reads: usize,
+}
+fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCode],
+    headers: &mut Vec<QueryRead<'a>>, chunk: &mut Chunk, counts: &mut Counts) {
+    let q = &queries[source];
+    let code = &codes[q.code];
+    counts.cell_code_reads += 1;
+    chunk.slots = chunk.slots.max(code.slots);
+    chunk.reads = chunk.reads.max(code.reads);
+    headers.push(QueryRead { source, code,
+        entry: Entry { values: &q.row.values, epoch: q.row.epoch, witness: q.row.witness } });
+}
+// Transient work, not subscriptions: each Run links only its already activated
+// Entries. The shared template buckets contain no facts or later consumers.
+// One flat arena avoids allocating a Vec for every physical Cell.
+struct CellTask {
+    first: usize,
+    last: usize,
+    count: usize,
+    first_rule: usize,
+    cross_rule: bool,
+    next: usize,
+}
+struct CellTasks {
+    by_cell: rustc_hash::FxHashMap<(usize, Dependency), usize>,
+    cells: Vec<CellTask>,
+    templates: Vec<(usize, usize)>, // task index + 1; zero is empty
+    active: Vec<usize>,
+}
+impl CellTasks {
+    fn new(templates: usize) -> Self {
+        Self { by_cell: Default::default(), cells: Vec::new(), templates: vec![(0, 0); templates], active: Vec::new() }
+    }
+    fn push(&mut self, cell: (usize, Dependency), source: usize, rule: usize, queries: &mut [CellQuery], counts: &mut Counts) {
+        counts.cell_task_probes += 1;
+        let capacity = self.by_cell.capacity();
+        match self.by_cell.entry(cell) {
+            std::collections::hash_map::Entry::Occupied(index) => {
+                let task = &mut self.cells[*index.get()];
+                queries[task.last].next = source;
+                task.last = source;
+                task.count += 1;
+                task.cross_rule |= task.first_rule != rule;
+                counts.cell_task_links += 1;
+            }
+            std::collections::hash_map::Entry::Vacant(index) => {
+                let id = self.cells.len();
+                index.insert(id);
+                counts.cell_task_growths += u64::from(self.cells.len() == self.cells.capacity());
+                self.cells.push(CellTask { first: source, last: source, count: 1, first_rule: rule, cross_rule: false, next: 0 });
+                let (first, last) = &mut self.templates[cell.0];
+                if *last == 0 {
+                    counts.cell_task_growths += u64::from(self.active.len() == self.active.capacity());
+                    self.active.push(cell.0);
+                    *first = id + 1;
+                } else {
+                    self.cells[*last - 1].next = id + 1;
+                    counts.cell_task_links += 1;
+                }
+                *last = id + 1;
+                counts.cell_task_records += 1;
+            }
+        }
+        counts.cell_task_growths += u64::from(self.by_cell.capacity() != capacity);
+    }
+    fn bytes(&self) -> u64 {
+        // Hash-map entry capacity excludes its private control bytes.
+        (self.by_cell.capacity() * std::mem::size_of::<((usize, Dependency), usize)>()
+            + self.cells.capacity() * std::mem::size_of::<CellTask>()
+            + self.templates.capacity() * std::mem::size_of::<(usize, usize)>()
+            + self.active.capacity() * std::mem::size_of::<usize>()) as u64
+    }
+    fn clear(&mut self, counts: &mut Counts) {
+        counts.cell_task_clears += self.cells.len() as u64;
+        self.by_cell.clear();
+        self.cells.clear();
+        for template in self.active.drain(..) { self.templates[template] = (0, 0); }
+    }
 }
 impl Workers {
     pub(crate) fn admit_spine_rule(&mut self, g: &Graph, rid: usize) -> bool {
@@ -372,15 +481,35 @@ impl Workers {
         };
         g.query_reads(&plan.tables, &mut self.stats.admission_table_checks).is_some()
     }
-    pub(crate) fn spine_entry(&mut self, rid: usize, pivot: usize, cursor: &crate::stage_spine::Cursor) -> bool {
+    pub(crate) fn spine_entry(&mut self, rid: usize, pivot: usize, cursor: &crate::stage_spine::Cursor) -> Option<usize> {
         self.stats.entry_mask_checks += 1;
-        if !self.cell_plans[rid].as_ref().unwrap().entries[pivot] { return false; }
+        let code = self.cell_plans[rid].as_ref().unwrap().entries[pivot]?;
         self.stats.admission_entry_checks += 1;
-        cursor.uncached_query()
+        cursor.uncached_query().then_some(code)
     }
-    pub(crate) fn enqueue_spine(&mut self, g: &Graph, rid: usize, pivot: usize,
+    pub(crate) fn enqueue_spine(&mut self, g: &Graph, code: usize,
         ordinal: usize, watermark: u64, row: Rc<Row>, cursor: crate::stage_spine::Cursor, known: &QueryFacts) {
-        if self.rule_facts[rid].is_none() { self.rule_facts[rid] = Some(known.clone()); }
+        let rid = self.cell_codes[code].rule;
+        if self.rule_facts[rid].is_none() { self.rule_facts[rid] = Some(RuleRun { facts: known.clone(), watermark }); }
+        debug_assert_eq!(self.rule_facts[rid].as_ref().unwrap().watermark, watermark);
+        if self.cell_queries.len() == self.cell_queries.capacity() { self.stats.cell_queue_growths += 1; }
+        self.cell_queries.push(CellQuery { code, next: usize::MAX, ordinal, row, cursor: Some(cursor) });
+        // A small Run is one inline task: all of its Cells already stay on one
+        // host, so it needs no grouping index. If it grows, activate the queued
+        // prefix once, then append each later Entry directly to its Cell task.
+        if self.cell_queries.len() == self.grain {
+            for source in 0..self.cell_queries.len() { self.group_source(g, source); }
+        } else if self.cell_queries.len() > self.grain {
+            self.group_source(g, self.cell_queries.len() - 1);
+        }
+        self.stats.entry_headers += 1;
+        self.stats.peak_cell_queue_bytes = self.stats.peak_cell_queue_bytes.max(
+            (self.cell_queries.capacity() * std::mem::size_of::<CellQuery>()) as u64);
+    }
+    fn group_source(&mut self, g: &Graph, source: usize) {
+        let q = &self.cell_queries[source];
+        let row = &q.row;
+        let rid = self.cell_codes[q.code].rule;
         // The actual result's physical Cell selects locality; it is never
         // assumed to be (logical producer, effect position). Unknown boundary
         // functions retain their own identity rather than claiming a Cell.
@@ -392,11 +521,7 @@ impl Workers {
         });
         let cell = actual.map_or((g.program.table_templates[row.table], row.witness),
             |(template, cell)| (template, Dependency::Fact(FactRef { cell, op: 0 })));
-        if self.cell_queries.len() == self.cell_queries.capacity() { self.stats.cell_queue_growths += 1; }
-        self.cell_queries.push(CellQuery { cell, rule: rid, pivot, ordinal, watermark, row, cursor: Some(cursor) });
-        self.stats.entry_headers += 1;
-        self.stats.peak_cell_queue_bytes = self.stats.peak_cell_queue_bytes.max(
-            (self.cell_queries.capacity() * std::mem::size_of::<CellQuery>()) as u64);
+        self.tasks.push(cell, source, rid, &mut self.cell_queries, &mut self.stats);
     }
     pub(crate) fn record_deferred_storage(&mut self, serial: usize) {
         self.stats.deferred_winner_moves += serial as u64;
@@ -415,59 +540,66 @@ impl Workers {
             .ok_or("Cell query Run snapshot changed before completion")?;
         // The move-only coordinator records retain the original Entry and
         // cursor. Only small borrowed headers cross the thread boundary.
-        let mut comparisons = 0;
-        let mut order: Vec<_> = (0..self.cell_queries.len()).collect();
-        self.stats.task_order_headers += order.len() as u64;
-        order.sort_unstable_by(|&a,&b| {
-            comparisons += 1;
-            self.cell_queries[a].cell.cmp(&self.cell_queries[b].cell).then_with(|| a.cmp(&b))
-        });
-        self.stats.cell_order_comparisons += comparisons;
         let mut ranges = Vec::new();
-        let mut start = 0;
-        let mut cell_start = 0;
-        for i in 1..=self.cell_queries.len() {
-            let end = i == self.cell_queries.len();
-            let new_cell = end || self.cell_queries[order[i]].cell != self.cell_queries[order[cell_start]].cell;
-            if new_cell {
-                self.stats.cell_instances += 1;
-                self.stats.multi_entry_cells += u64::from(i - cell_start > 1);
-                self.stats.cross_rule_cells += u64::from(order[cell_start..i].iter()
-                    .any(|&q| self.cell_queries[q].rule != self.cell_queries[order[cell_start]].rule));
-                self.stats.max_entries_per_cell = self.stats.max_entries_per_cell.max((i - cell_start) as u64);
-                cell_start = i;
+        let mut headers = Vec::with_capacity(self.cell_queries.len());
+        if self.tasks.cells.is_empty() {
+            debug_assert!(self.cell_queries.len() < self.grain);
+            self.stats.ungrouped_inline_entries += self.cell_queries.len() as u64;
+            let mut chunk = Chunk { entries: 0..self.cell_queries.len(), slots: 0, reads: 0 };
+            for source in 0..self.cell_queries.len() {
+                append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats);
             }
-            if end || (new_cell && (i - start >= self.grain
-                || self.cell_queries[order[i]].cell.0 != self.cell_queries[order[start]].cell.0)) {
-                ranges.push(start..i);
-                start = i;
+            ranges.push(chunk);
+        }
+        for &template in &self.tasks.active {
+            self.stats.active_template_visits += 1;
+            let mut chunk = Chunk { entries: headers.len()..headers.len(), slots: 0, reads: 0 };
+            let mut task = self.tasks.templates[template].0;
+            while task != 0 {
+                let cell = &self.tasks.cells[task - 1];
+                self.stats.cell_task_emissions += 1;
+                self.stats.cell_instances += 1;
+                self.stats.multi_entry_cells += u64::from(cell.count > 1);
+                self.stats.cross_rule_cells += u64::from(cell.cross_rule);
+                self.stats.max_entries_per_cell = self.stats.max_entries_per_cell.max(cell.count as u64);
+                let mut source = cell.first;
+                while source != usize::MAX {
+                    append_query(source, &self.cell_queries, &self.cell_codes, &mut headers, &mut chunk, &mut self.stats);
+                    source = self.cell_queries[source].next;
+                }
+                task = cell.next;
+                chunk.entries.end = headers.len();
+                if chunk.entries.len() >= self.grain || task == 0 {
+                    ranges.push(chunk);
+                    chunk = Chunk { entries: headers.len()..headers.len(), slots: 0, reads: 0 };
+                }
             }
         }
-        let headers = order.iter().map(|&i| &self.cell_queries[i]).map(|q| QueryRead {
-            query: g.program.cell_queries.get(q.rule, q.pivot).unwrap().as_ref(),
-            known: self.rule_facts[q.rule].as_ref().unwrap(), pivot: q.pivot, watermark: q.watermark,
-            entry: Entry { values: &q.row.values, epoch: q.row.epoch, witness: q.row.witness },
-        }).collect::<Vec<_>>();
+        debug_assert_eq!(headers.len(), self.cell_queries.len());
+        // Source indices now live in the borrowed header, not a second vector.
+        self.stats.task_order_headers += headers.len() as u64;
         self.stats.borrowed_job_headers += headers.len() as u64;
         self.stats.entry_buffer_bytes += (headers.capacity() * std::mem::size_of::<QueryRead<'_>>()) as u64;
+        self.stats.peak_cell_task_bytes = self.stats.peak_cell_task_bytes.max(self.tasks.bytes());
         let key_nodes = g.program.key_nodes();
         let pooled = self.pool.is_some() && headers.len() >= self.grain;
-        let run = |range: &std::ops::Range<usize>, frame: &mut Frame| {
-            let chunk = &headers[range.clone()];
-            let max_slots = chunk.iter().map(|q| q.query.result_slots()).max().unwrap_or(0);
-            let max_reads = chunk.iter().map(|q| q.query.steps.len() + 1).max().unwrap_or(0);
+        let rule_facts = &self.rule_facts;
+        let run = |range: &Chunk, frame: &mut Frame| {
+            let chunk = &headers[range.entries.clone()];
             let mut counts = Counts { entries: chunk.len() as u64, chunks: 1, ..Default::default() };
-            frame.prepare(max_slots, max_reads, &mut counts);
+            frame.prepare(range.slots, range.reads, &mut counts);
             let mut answers = Vec::new();
             let mut first_error = None;
-            for (&source, q) in order[range.clone()].iter().zip(chunk) {
-                let answer = evaluate(q.query, &q.entry, q.pivot, &reads, key_nodes, true,
-                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts).map(|epoch| epoch.filter(|&e| e >= q.watermark).map(|epoch| {
+            for q in chunk {
+                let code = q.code;
+                let known = rule_facts[code.rule].as_ref().unwrap();
+                let answer = evaluate(&code.query, &q.entry, code.pivot, &reads, key_nodes, true,
+                    &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts).map(|epoch| epoch.filter(|&e| e >= known.watermark).map(|epoch| {
                         counts.answers += 1;
                         crate::cell::Matched { direct: None, epoch,
-                            values: q.query.inputs.iter().map(|f| f.operand_in(reads.parents,
+                            values: code.query.inputs.iter().map(|f| f.operand_in(reads.parents,
                                 |col| &q.entry.values[col], &frame.values, None).into_owned()).collect(),
-                            facts: q.known.with_rows(frame.witnesses.iter().copied()),
+                            facts: known.facts.with_rows(frame.witnesses.iter().copied()),
                         }
                     }));
                 match answer {
@@ -479,11 +611,11 @@ impl Workers {
                             answers.reserve_exact(chunk.len());
                             counts.answer_buffer_allocations += 1;
                         }
-                        answers.push((source, answer));
+                        answers.push((q.source, answer));
                     }
                     Ok(None) => {}
-                    Err(error) => if first_error.as_ref().is_none_or(|(index, _)| source < *index) {
-                        first_error = Some((source, error));
+                    Err(error) => if first_error.as_ref().is_none_or(|(index, _)| q.source < *index) {
+                        first_error = Some((q.source, error));
                     },
                 }
             }
@@ -496,13 +628,14 @@ impl Workers {
             self.pool.as_ref().unwrap().install(|| ranges.par_iter().map(|range| with_worker_frame(|frame| run(range, frame))).collect())
         } else { ranges.iter().map(|range| self.inline_frame.with(|frame| run(range, frame))).collect() };
         self.stats.batches += 1;
-        self.stats.batch_buffers += 4; // order, ranges, borrowed headers, chunks
+        self.stats.batch_buffers += 3; // ranges, borrowed headers, chunks
         self.stats.completion_error_checks += chunks.len() as u64;
         // Cell grouping reorders queries. Preserve the first source-order
         // error without materializing a completion slot for every failed match.
         let error = chunks.iter_mut().filter_map(|(_, error, _, _)| error.take()).min_by_key(|(index, _)| *index);
+        self.tasks.clear(&mut self.stats);
         if let Some((_, error)) = error {
-            for q in self.cell_queries.drain(..) { self.rule_facts[q.rule] = None; }
+            for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
             return Err(error);
         }
         for (answers, _, counts, worker) in chunks {
@@ -516,14 +649,14 @@ impl Workers {
             self.stats.completion_headers += counts.completion_headers;
             for (source, answer) in answers {
                 let q = &mut self.cell_queries[source];
-                spine.record_worker_answer(q.rule, q.ordinal, answer,
+                spine.record_worker_answer(self.cell_codes[q.code].rule, q.ordinal, answer,
                     q.cursor.take().expect("one positive completion per Cell query"));
             }
         }
         // finish_worker_rule already restores each rule's source ordinals
         // before winner selection. No second, dense reorder is necessary.
         // Drop negative cursors and clear even rules with no positive answers.
-        for q in self.cell_queries.drain(..) { self.rule_facts[q.rule] = None; }
+        for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
         Ok(())
     }
 }

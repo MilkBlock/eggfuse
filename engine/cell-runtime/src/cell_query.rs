@@ -7,7 +7,14 @@ use crate::{
 };
 use serde::Serialize;
 use serde_json::json;
-use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
+use std::{borrow::Cow, collections::BTreeMap};
+#[cfg(any(test, not(feature = "sparse-cells")))]
+use std::rc::Rc;
+
+#[cfg(feature = "sparse-cells")]
+pub(crate) type SharedQuery = std::sync::Arc<Query>;
+#[cfg(not(feature = "sparse-cells"))]
+pub(crate) type SharedQuery = Rc<Query>;
 
 impl QueryFrame for crate::entry_schedule::Inputs {
     #[inline]
@@ -573,7 +580,7 @@ pub(crate) fn query_order(
 /// remains authoritative; this table owns no live instance facts.
 #[derive(Clone, Debug, Default)]
 pub(crate) struct Queries {
-    entries: Vec<Vec<Option<Rc<Query>>>>,
+    entries: Vec<Vec<Option<SharedQuery>>>,
     count: usize,
     shared: usize,
     #[cfg(feature = "sparse-cells")]
@@ -604,7 +611,7 @@ impl Queries {
                     shared_count += 1;
                     query
                 }
-                None => Rc::new(
+                None => SharedQuery::new(
                     Query::compile(&p.rules[*rid], *pivot, order)
                         .ok_or("invalid Cell query certificate")?,
                 ),
@@ -622,7 +629,7 @@ impl Queries {
         })
     }
     #[inline]
-    pub(crate) fn get(&self, rid: usize, pivot: usize) -> Option<&Rc<Query>> {
+    pub(crate) fn get(&self, rid: usize, pivot: usize) -> Option<&SharedQuery> {
         self.entries.get(rid)?.get(pivot)?.as_ref()
     }
     #[cfg(feature = "sparse-cells")]

@@ -8,7 +8,7 @@ use std::{collections::BTreeSet, rc::Rc};
 #[derive(Clone, Debug)]
 pub(crate) struct Kernel {
     pub pivot: usize,
-    pub query: Rc<Query>,
+    pub query: crate::cell::SharedQuery,
     /// Derived only after multi_stage's source wiring has been validated. These
     /// are shared plans, never consumer lists attached to live producers.
     pub routes: Option<Rc<crate::cell::RouteDispatch>>,
@@ -74,7 +74,7 @@ fn plan(r: &Rule, pivot: usize, _tables: &[Table]) -> Option<Kernel> {
     if !r.seminaive || r.direct.is_some() || !matches!(r.query[pivot].call, Call::Table(_)) {
         return None;
     }
-    let query = Rc::new(Query::residual(r, pivot)?);
+    let query = crate::cell::SharedQuery::new(Query::residual(r, pivot)?);
     #[cfg(feature = "sparse-cells")]
     let point_tables = query.point_tables();
     #[cfg(feature = "sparse-cells")]
