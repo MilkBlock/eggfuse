@@ -215,3 +215,30 @@ schema tag and self-checksum, including all 582 rules and the forecast. Compiler
 unit/integration checks pass (13 library tests and four state/handoff tests).
 The runtime and its input Program are unchanged, so this step does not require
 new inference timing or claim a new semantic execution result.
+
+## Predict repair influence using existing Cell union identities
+
+RHS dependency derivation now resolves union operands through the Cell's
+existing ordered Copy/constructor alias proof. Equal resolved operands add no
+union-induced sort-wide repair scope. The actual union instruction, query,
+constructor accesses and ordinary execution checks are untouched. Other unions
+retain the previous conservative transitive influence. Opaque literal handling
+also remains conservative. No equality solver, runtime equality cache or
+future-union assumption is introduced.
+
+The source Run may discharge an otherwise false repair fence only after the
+rule actually matches; unmatched RHS obligations still do not activate. A
+short `union x x` fixture now leaves unrelated repair pending across that Run
+and reaches the same graph and ordered Run fields as ordinary completion.
+A duplicate-constructor fixture confirms the Fb access stays live while the
+identity union contributes no extra sort-wide scope. Existing nonidentity-union,
+mutable merge, late input and publication tests still pass (18 total).
+
+See `noop-union-check.json`. Reproduce with NOOP_UNION_EVIDENCE=OUTPUT and the
+staged_completion test
+identical_union_operands_do_not_predict_an_unrelated_repair_fence, plus
+constructor_alias_union_keeps_constructor_access_but_not_sort_wide_fence.
+The frozen sum-bits full forecast is exactly unchanged versus the saved prior
+plan: it offers no extra scope-reduction opportunity here. No speedup, additional
+sum-bits repair saving or broad runtime compression is claimed. This extends
+what typed Cell facts can prove, without treating occurrence counts as proof.

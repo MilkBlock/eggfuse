@@ -261,3 +261,39 @@ fn matched_rules_reuse_the_same_compiled_rhs_scope() {
             "exact_final_graph_and_run_fields":true})).unwrap()).unwrap();
     }
 }
+
+#[test]
+fn identical_union_operands_do_not_predict_an_unrelated_repair_fence() {
+    let source=SOURCE.replace("((Gb (Fb x))) :ruleset b)","((union x x)) :ruleset b)");
+    let mut old=executor(&source,false);
+    let mut new=executor(&source,true);
+    let plan=new.graph.program.completion_plan.as_ref().unwrap();
+    let rules=&new.graph.program.sets["b"];
+    let rid=*rules.iter().find(|&&r|new.graph.program.templates[new.graph.program.rules[r].template].ops.iter().any(|op|
+        matches!(op,eggfuse_cell_runtime::program::Op::Union(a,b) if a==b))).unwrap();
+    assert!(plan.rule_demands[rid].rhs.is_empty());
+    old.execute().unwrap();new.execute_until(Some(2)).unwrap();
+    let checkpoint=new.scoped_execution_report();
+    assert_eq!(checkpoint["global_observer"],false);
+    assert!(new.graph.pending_completion_tasks()>0);
+    assert_eq!(checkpoint["stats"]["rhs_completions"],0);
+    new.execute().unwrap();compare(&old,&new);
+    if let Ok(path)=std::env::var("NOOP_UNION_EVIDENCE") {
+        std::fs::write(path,serde_json::to_vec_pretty(&serde_json::json!({
+            "scope":"standalone Cell CPU; exact static union identity only", "checkpoint":checkpoint,
+            "final_graph_and_ordered_runs_equal":true})).unwrap()).unwrap();
+    }
+}
+
+#[test]
+fn constructor_alias_union_keeps_constructor_access_but_not_sort_wide_fence() {
+    let source=SOURCE.replace("((Gb (Fb x))) :ruleset b)","((union (Fb x) (Fb x))) :ruleset b)");
+    let p=program(&source);
+    let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
+    let fb=p.tables.iter().position(|t|t.name=="Fb").unwrap();
+    let rid=*p.sets["b"].iter().find(|&&r|p.rules[r].query.iter().any(|a|
+        matches!(a.call,eggfuse_cell_runtime::program::Call::Table(t) if p.tables[t].name=="Nb"))).unwrap();
+    assert_eq!(plan.rule_demands[rid].rhs.as_ref(), &[fb]);
+    let mut old=executor(&source,false);let mut new=executor(&source,true);
+    old.execute().unwrap();new.execute().unwrap();compare(&old,&new);
+}

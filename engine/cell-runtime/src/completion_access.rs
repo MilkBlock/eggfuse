@@ -18,6 +18,7 @@ impl Rule {
         rid: usize,
         sorts: &[(BTreeSet<String>, bool)],
     ) -> Self {
+        let cell = crate::cell::Definition::new(p,rid).expect("validated completion rule");
         let rule = &p.rules[rid];
         let template = &p.templates[rule.template];
         let n = p.tables.len();
@@ -42,7 +43,10 @@ impl Rule {
         let mut unions = BTreeSet::new();
         for op in template.ops.iter() {
             match op {
-                Op::Union(a, b) => {
+                // Existing ordered Cell aliases prove identical values, not
+                // merely a possible future union. Such a union adds no repair
+                // influence; the instruction itself still executes normally.
+                Op::Union(a, b) if cell.value(a) != cell.value(b) => {
                     for arg in [a, b] {
                         if let Arg::Slot(slot) = arg {
                             let (names, unknown) =
