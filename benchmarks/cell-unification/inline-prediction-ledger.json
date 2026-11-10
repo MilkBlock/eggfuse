@@ -1,0 +1,44 @@
+{
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "catalog": {
+    "components_bytes": {
+      "catalog_paths": 5864,
+      "switch_dispatch": 4920,
+      "export_interfaces": 1256,
+      "state_array_once": 4680,
+      "capture_programs": 208,
+      "transition_programs": 1112,
+      "completion_programs": 1552
+    },
+    "counted_subtotal_bytes": 19592
+  },
+  "optional_completion_plan": {
+    "components_bytes": {
+      "all_table_lists_once": 63800,
+      "repair_matrices": 30760,
+      "scope_masks": 2480
+    },
+    "counted_subtotal_bytes": 97040,
+    "scope": "Explicit Plan::derive inventory; absent from executions that do not construct this optional plan."
+  },
+  "table_representation_candidate": {
+    "table_universe": 401,
+    "word_bytes": 8,
+    "unique_lists": 771,
+    "dense_candidate_lists": 94,
+    "current_unique_id_payload_bytes": 108456,
+    "actual_encoded_payload_bytes": 9120,
+    "encoding": "hybrid-v2-inline3",
+    "dense_candidate_current_payload_bytes": 95296,
+    "bitmap_bytes_per_dense_list": 56,
+    "hybrid_unique_payload_bytes": 18424,
+    "scope": "Hybrid encoding is implemented; actual_encoded_payload_bytes is reconciled with the census. The fixed-universe hybrid estimate remains only a payload model; no speed prediction.",
+    "potential_payload_bytes_saved": 90032
+  },
+  "limits": "Selected retained structures only, not total runtime memory or RSS. Excludes allocator rounding, top-level headers, other catalog indexes, initial-state array, slot layouts, rule pure plans, merge metadata and serialized artifacts. State arrays and subset demand lists are counted once. No performance or new takeover claim.",
+  "inputs_sha256": {
+    "catalog": "6fc88d7a4d31c2982c43de18936da1bd2f2a0991a7869863608b88d47fcee5ee",
+    "completion": "b296de888522d0e047e4ce02e47bc0fa30bc2f5541be9408bd96e8f1ee760db3",
+    "program": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  }
+}

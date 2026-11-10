@@ -11,9 +11,10 @@ use serde::Serialize;
 use std::{
     collections::{BTreeMap, BTreeSet},
     rc::Rc,
+    num::NonZeroUsize,
 };
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct Reuse {
     pub equal_output: bool,
     pub op: usize,
@@ -23,7 +24,7 @@ pub(crate) struct Reuse {
     #[serde(skip)]
     pub port: Option<ResultPort>,
 }
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct QueryReuse {
     pub atom: usize,
     pub back: usize,
@@ -535,7 +536,7 @@ impl History {
     }
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct Terminal {
     pub reuse: Vec<Reuse>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -556,31 +557,76 @@ pub(crate) struct Switch {
     reuse_results: bool,
     pub(crate) congruence: bool,
     pub(crate) query_ports: bool,
-    nodes: Vec<Node>,
-    by_rule: Vec<Vec<Option<usize>>>,
-    roots: Vec<Option<usize>>,
+    nodes: Box<[Node]>,
+    by_rule: DispatchRows,
+    roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
-    leaves: BTreeMap<Entry, usize>,
-    pub exports: Vec<Vec<Site>>,
+    exports: Rows<Site>,
     pub depth: usize,
 }
+type DispatchRows = Rows<Option<NonZeroUsize>>;
+
+/// CSR rows preserve slots and direct rule indexing without one allocation
+/// and a fat pointer per rule. Empty adjacent rows share the same offset.
+#[derive(Clone, Debug)]
+struct Rows<T> {
+    offsets: Box<[usize]>,
+    slots: Box<[T]>,
+}
+impl<T> Default for Rows<T> {
+    fn default() -> Self { Self { offsets: Box::new([]), slots: Box::new([]) } }
+}
+impl<T> Rows<T> {
+    fn compile(rows: Vec<Vec<T>>) -> Self {
+        if rows.is_empty() { return Self::default(); }
+        let mut offsets = Vec::with_capacity(rows.len()+1);
+        let mut slots = Vec::new();
+        offsets.push(0);
+        for row in rows {
+            slots.extend(row);
+            offsets.push(slots.len());
+        }
+        Self { offsets: offsets.into_boxed_slice(), slots: slots.into_boxed_slice() }
+    }
+    fn get(&self, rule: usize) -> Option<&[T]> {
+        let end = *self.offsets.get(rule.checked_add(1)?)?;
+        Some(&self.slots[self.offsets[rule]..end])
+    }
+    fn len(&self) -> usize { self.offsets.len().saturating_sub(1) }
+}
+type Transition = ((usize, usize), usize);
+
 #[derive(Clone, Debug, Serialize)]
-struct Node {
+struct Node<C = Rc<[Capture]>, N = Rc<[Transition]>, P = Rc<Terminal>> {
     unit: usize,
     failure: usize,
-    program: Terminal,
-    next: Vec<((usize, usize), usize)>,
-    supply: Vec<Capture>,
+    program: P,
+    next: N,
+    supply: C,
     #[serde(skip)]
     keep_history: usize,
     #[serde(skip)]
     layout: Option<Rc<SlotLayout>>,
 }
 
+fn share_program(program: Terminal, pool: &mut BTreeSet<Rc<Terminal>>) -> Rc<Terminal> {
+    if let Some(existing) = pool.get(&program) { return existing.clone(); }
+    let shared = Rc::new(program);
+    pool.insert(shared.clone());
+    shared
+}
+
+fn share_slice<T: Ord>(values: Vec<T>, pool: &mut BTreeSet<Rc<[T]>>) -> Rc<[T]> {
+    if let Some(existing) = pool.get(values.as_slice()) { return existing.clone(); }
+    let shared: Rc<[T]> = values.into();
+    pool.insert(shared.clone());
+    shared
+}
+
 /// Liveness after this Cell completes. A successor's direct read needs `back`
 /// frames; its future retention needs one fewer before it adds its own frame.
 /// Include inherited edges and default restarts, not just trie children.
-fn retained_depths(nodes: &[Node], initial: &[usize]) -> Vec<usize> {
+fn retained_depths(nodes: &[Node<Vec<Capture>, Vec<Transition>, Terminal>], initial: &[usize]) -> Vec<usize> {
     let reads = nodes.iter().map(|n| n.program.reuse.iter().map(|r| r.back)
         .chain(n.program.queries.iter().map(|r| r.back)).max().unwrap_or(0)).collect::<Vec<_>>();
     let mut keep = nodes.iter().map(|n| usize::from(!n.supply.is_empty())).collect::<Vec<_>>();
@@ -605,16 +651,95 @@ impl Default for Terminal {
     }
 }
 impl Switch {
+    pub(crate) fn exports(&self, rule: usize) -> &[Site] {
+        self.exports.get(rule).unwrap_or(&[])
+    }
+    pub(crate) fn completion_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut payload = 0;
+        for node in &self.nodes {
+            if seen.insert(Rc::as_ptr(&node.program) as usize) {
+                payload += node.program.reuse.capacity()*std::mem::size_of::<Reuse>()
+                    +node.program.queries.capacity()*std::mem::size_of::<QueryReuse>();
+            }
+        }
+        serde_json::json!({
+            "states":self.nodes.len(),
+            "lowered_reads":self.nodes.iter().map(|n| (
+                n.program.reuse.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>(),
+                n.program.queries.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>()
+            )).collect::<Vec<_>>(),
+            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
+            "program_owner_bytes":seen.len()*(std::mem::size_of::<Terminal>()+2*std::mem::size_of::<usize>()),
+            "read_payload_bytes":payload})
+    }
+    pub(crate) fn transition_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut payload = 0;
+        for node in &self.nodes {
+            if seen.insert(Rc::as_ptr(&node.next) as *const Transition as usize) {
+                payload += std::mem::size_of_val(node.next.as_ref());
+            }
+        }
+        serde_json::json!({
+            "states":self.nodes.len(),
+            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
+            "transition_payload_bytes":payload,
+            "transition_owner_bytes":seen.len()*2*std::mem::size_of::<usize>()})
+    }
+    pub(crate) fn capture_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut payload = 0;
+        for node in &self.nodes {
+            if seen.insert(Rc::as_ptr(&node.supply) as *const Capture as usize) {
+                payload += node.supply.len()*std::mem::size_of::<Capture>();
+            }
+        }
+        serde_json::json!({
+            "states":self.nodes.len(), "node_capacity":self.nodes.len(),
+            "captures":self.nodes.iter().map(|n|n.supply.iter().map(|c|(c.site,c.port.rule(),c.port.slot())).collect::<Vec<_>>()).collect::<Vec<_>>(),
+            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
+            "capture_payload_bytes":payload,
+            "capture_owner_bytes":seen.len()*2*std::mem::size_of::<usize>()})
+    }
+    pub(crate) fn export_storage(&self) -> serde_json::Value {
+        serde_json::json!({
+            "interfaces":(0..self.exports.len()).map(|r|(r,self.exports.get(r).unwrap())).filter(|(_,s)|!s.is_empty()).collect::<Vec<_>>(),
+            "directory_bytes":std::mem::size_of_val(self.exports.offsets.as_ref()),
+            "slot_bytes":std::mem::size_of_val(self.exports.slots.as_ref())})
+    }
+    pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
+        serde_json::json!({"rule_rows":self.by_rule.len(),
+            "rule_slots":self.by_rule.slots.len(),
+            "root_slots":self.roots.len(),
+            "row_directory_bytes":std::mem::size_of_val(self.by_rule.offsets.as_ref()),
+            "rule_slot_bytes":std::mem::size_of_val(self.by_rule.slots.as_ref()),
+            "root_slot_bytes":std::mem::size_of_val(self.roots.as_ref()),
+            "duplicate_lookup_entry_bytes":0})
+    }
     /// Lower the validated portable transfer certificate with the Cell's own
     /// alias proofs. Keep one executable completion flag, without changing the
     /// historical wire certificate or relaxing its exact validation.
     pub(crate) fn complete_cells(&mut self, p: &Program, rule: impl Fn(usize) -> usize) {
         for node in self.nodes.iter_mut().skip(1) {
             let rid = rule(node.unit);
-            node.program.complete = !node.program.reuse.is_empty()
+            let complete = !node.program.reuse.is_empty()
                 && Definition::new(p, rid).expect("validated Cell")
                     .closes_with(&p.known_results.static_skip[rid], self.congruence,
                         |op| node.program.reuse.iter().any(|r| r.op == op));
+            if node.program.complete != complete {
+                Rc::make_mut(&mut node.program).complete = complete;
+            }
+        }
+        // Re-intern after the authoritative post-certificate lowering. This
+        // must not mutate a program shared with another state or catalog clone.
+        let mut programs = BTreeSet::<Rc<Terminal>>::new();
+        for node in &mut self.nodes {
+            if let Some(existing) = programs.get(node.program.as_ref()) {
+                node.program = existing.clone();
+            } else {
+                programs.insert(node.program.clone());
+            }
         }
     }
 
@@ -644,7 +769,7 @@ impl Switch {
         }
         let mut paths = prefixes.into_iter().collect::<Vec<_>>();
         paths.sort_by_key(|(p, _)| p.len());
-        let blank = || Node {
+        let blank = || Node::<Vec<Capture>, Vec<Transition>, Terminal> {
             unit: 0,
             failure: 0,
             program: Default::default(),
@@ -766,9 +891,27 @@ impl Switch {
                     .or_insert_with(|| SlotLayout::compile(rule,layout)).clone();
             }
         }
+        // Freeze only after every ResultPort has its final rule/slot identity.
+        // The pool is compile-local: states share immutable capture programs,
+        // while each completed instance retains its own Results and lifetime.
+        let mut pool = BTreeSet::<Rc<[Capture]>>::new();
+        let mut transitions = BTreeSet::<Rc<[Transition]>>::new();
+        let mut programs = BTreeSet::<Rc<Terminal>>::new();
+        let mut frozen = Vec::with_capacity(nodes.len());
+        for node in nodes {
+            let supply = share_slice(node.supply, &mut pool);
+            frozen.push(Node { unit: node.unit, failure: node.failure,
+                program: share_program(node.program, &mut programs), next: share_slice(node.next, &mut transitions), supply,
+                keep_history: node.keep_history, layout: node.layout });
+        }
+        drop(pool);
+        drop(transitions);
+        drop(programs);
+        let nodes = frozen.into_boxed_slice();
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
         for (&(rid, pivot), &leaf) in leaves {
+            let leaf = NonZeroUsize::new(leaf.checked_add(1).expect("Cell leaf address overflow")).unwrap();
             let Some(pivot) = pivot else {
                 roots[rid] = Some(leaf);
                 continue;
@@ -777,6 +920,13 @@ impl Switch {
             entries.resize(entries.len().max(pivot + 1), None);
             entries[pivot] = Some(leaf);
         }
+        // Missing trailing rows and roots are already handled by checked lookup.
+        while by_rule.last().is_some_and(Vec::is_empty) { by_rule.pop(); }
+        while roots.last() == Some(&None) { roots.pop(); }
+        let by_rule = DispatchRows::compile(by_rule);
+        let roots = roots.into_boxed_slice();
+        while exports.last().is_some_and(Vec::is_empty) { exports.pop(); }
+        let exports = Rows::compile(exports);
         Self {
             reuse_results,
             congruence,
@@ -785,17 +935,16 @@ impl Switch {
             by_rule,
             roots,
             initial,
-            leaves: leaves.clone(),
             exports,
             depth,
         }
     }
     pub(crate) fn leaf(&self, r: usize, p: usize) -> Option<usize> {
-        self.by_rule.get(r)?.get(p).copied().flatten()
+        self.by_rule.get(r)?.get(p).copied().flatten().map(|id| id.get()-1)
     }
     pub(crate) fn unique_root(&self, rule: usize, require_supply: bool) -> Option<usize> {
         if let Some(leaf) = self.roots.get(rule).copied().flatten() {
-            let pc = self.initial[leaf];
+            let pc = self.initial[leaf.get()-1];
             return (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc);
         }
         let mut leaves = self.by_rule.get(rule)?.iter().flatten();
@@ -803,7 +952,7 @@ impl Switch {
         if leaves.next().is_some() {
             return None;
         }
-        let pc = self.initial[leaf];
+        let pc = self.initial[leaf.get()-1];
         (!require_supply || !self.nodes[pc].supply.is_empty()).then_some(pc)
     }
     pub(crate) fn active(&self, pc: usize) -> usize {
@@ -847,10 +996,10 @@ impl Switch {
         self.nodes.get(id)?.layout.as_ref()
     }
     pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize, Option<&Rc<SlotLayout>>) {
-        self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_slice(), n.keep_history,n.layout.as_ref()))
+        self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_ref(), n.keep_history,n.layout.as_ref()))
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
-        self.nodes.get(id).map(|n| &n.program)
+        self.nodes.get(id).map(|n| n.program.as_ref())
     }
     pub(crate) fn artifact(&self) -> serde_json::Value {
         serde_json::json!({"schema":if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
@@ -860,7 +1009,11 @@ impl Switch {
     }
     pub(crate) fn replay(&self, path: &[(Option<usize>, Entry)]) -> usize {
         path.iter().fold(0, |s, (op, e)| {
-            self.advance(s, op.unwrap_or(0), self.leaves[e])
+            let leaf = match *e {
+                (r, Some(p)) => self.leaf(r, p),
+                (r, None) => self.roots.get(r).copied().flatten().map(|id|id.get()-1),
+            }.expect("validated Cell path entry");
+            self.advance(s, op.unwrap_or(0), leaf)
         })
     }
 }
@@ -874,6 +1027,127 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn dispatch_rows_preserve_empty_rows_and_extreme_missing_indices() {
+        let rows = DispatchRows::compile(vec![vec![], vec![NonZeroUsize::new(1), None], vec![], vec![]]);
+        assert_eq!(rows.len(), 4);
+        assert_eq!(rows.offsets.as_ref(), &[0, 0, 2, 2, 2]);
+        assert_eq!(rows.get(0), Some([].as_slice()));
+        assert_eq!(rows.get(1).unwrap(), &[NonZeroUsize::new(1), None]);
+        assert_eq!(rows.get(2), Some([].as_slice()));
+        assert_eq!(rows.get(3), Some([].as_slice()));
+        assert_eq!(rows.get(4), None);
+        assert_eq!(rows.get(usize::MAX), None);
+        assert_eq!(DispatchRows::compile(vec![]).get(0), None);
+    }
+    #[test]
+    fn completion_sharing_preserves_lowered_ports_and_copy_on_write() {
+        let program = |slot| Terminal {
+            reuse: vec![Reuse { equal_output: true, op: 2, back: 1, rule: 4,
+                donor: Site::Effect(2), port: Some(ResultPort::new(4, slot)) }],
+            queries: vec![QueryReuse { atom: 0, back: 1, rule: 4,
+                donor: Site::Query(0), port: Some(ResultPort::new(4, slot)) }],
+            complete: false,
+        };
+        let mut pool = BTreeSet::new();
+        let a = share_program(program(0), &mut pool);
+        let mut same = share_program(program(0), &mut pool);
+        let other = share_program(program(1), &mut pool);
+        assert!(Rc::ptr_eq(&a, &same));
+        // The portable certificate omits ports; it is not an interning key.
+        assert_eq!(serde_json::to_value(&a).unwrap(), serde_json::to_value(&other).unwrap());
+        assert!(!Rc::ptr_eq(&a, &other));
+        Rc::make_mut(&mut same).complete = true;
+        assert!(!a.complete);
+        assert!(same.complete);
+        assert!(!Rc::ptr_eq(&a, &same));
+        let completed = share_program((*same).clone(), &mut pool);
+        assert!(!Rc::ptr_eq(&a, &completed));
+        drop(pool);
+        assert_eq!(a.reuse[0].port, Some(ResultPort::new(4, 0)));
+        assert_eq!(other.queries[0].port, Some(ResultPort::new(4, 1)));
+    }
+    #[test]
+    fn transition_pool_preserves_labels_targets_and_fallback() {
+        let mut pool = BTreeSet::new();
+        let a = share_slice(vec![((7, 2), 1)], &mut pool);
+        let same = share_slice(vec![((7, 2), 1)], &mut pool);
+        assert!(Rc::ptr_eq(&a, &same));
+        for edge in [((8, 2), 1), ((7, 3), 1), ((7, 2), 0)] {
+            assert!(!Rc::ptr_eq(&a, &share_slice(vec![edge], &mut pool)));
+        }
+        drop(pool);
+        let mut switch = Switch::default();
+        switch.initial = vec![0, 0, 0, 1];
+        switch.nodes = [a, same].into_iter().map(|next| Node {
+            unit: 0, failure: 0, program: Rc::new(Terminal::default()), next,
+            supply: Rc::from([]), keep_history: 0, layout: None,
+        }).collect();
+        assert_eq!(switch.advance(0, 7, 2), 1);
+        assert_eq!(switch.advance(1, 7, 2), 1);
+        assert_eq!(switch.advance(0, 8, 2), 0);
+        assert_eq!(switch.advance(0, 7, 3), 1);
+    }
+    #[test]
+    fn capture_pool_keys_include_actual_ports_and_outlive_compiler_pool() {
+        let mut pool = BTreeSet::new();
+        let capture = |rule, slot| Capture { site: Site::Effect(2), port: ResultPort::new(rule, slot) };
+        let a = share_slice(vec![capture(4, 0)], &mut pool);
+        let b = share_slice(vec![capture(4, 0)], &mut pool);
+        let other_rule = share_slice(vec![capture(5, 0)], &mut pool);
+        let other_slot = share_slice(vec![capture(4, 1)], &mut pool);
+        assert!(Rc::ptr_eq(&a, &b));
+        assert!(!Rc::ptr_eq(&a, &other_rule));
+        assert!(!Rc::ptr_eq(&a, &other_slot));
+        let empty = share_slice(vec![], &mut pool);
+        assert!(Rc::ptr_eq(&empty, &share_slice(vec![], &mut pool)));
+        drop(pool);
+        drop(a);
+        assert_eq!(b.as_ref(), &[capture(4, 0)]);
+        assert_eq!(Rc::strong_count(&b), 1);
+    }
+    #[test]
+    fn compact_exports_preserve_slot_order_and_missing_rules() {
+        let mut switch = Switch::default();
+        assert!(switch.exports(0).is_empty());
+        switch.exports = Rows::compile(vec![vec![], vec![Site::Query(0), Site::Effect(2)], vec![]]);
+        assert!(switch.exports(0).is_empty());
+        assert_eq!(switch.exports(1), &[Site::Query(0), Site::Effect(2)]);
+        assert_eq!(switch.exports(1).binary_search(&Site::Effect(2)), Ok(1));
+        assert!(switch.exports(2).is_empty());
+        assert!(switch.exports(3).is_empty());
+        assert!(switch.exports(usize::MAX).is_empty());
+        let clone = switch.clone();
+        drop(switch);
+        assert_eq!(clone.exports(1), &[Site::Query(0), Site::Effect(2)]);
+    }
+    #[test]
+    fn packed_dispatch_preserves_holes_roots_and_replay() {
+        let address = |id: usize| NonZeroUsize::new(id.checked_add(1).unwrap());
+        assert_eq!(address(usize::MAX-1).unwrap().get()-1, usize::MAX-1);
+        assert_eq!(std::mem::size_of::<Option<NonZeroUsize>>(), std::mem::size_of::<usize>());
+        let mut switch = Switch::default();
+        assert_eq!(switch.leaf(0, 0), None);
+        assert_eq!(switch.unique_root(0, false), None);
+        switch.by_rule = DispatchRows::compile(vec![vec![address(0), None],
+            vec![address(1), address(2)]]);
+        switch.initial = vec![1, 2, 3];
+        switch.nodes = (0..4).map(|unit| Node { unit, failure: 0,
+            program: Rc::new(Terminal::default()), next: Rc::from([]), supply: Rc::from([]),
+            keep_history: 0, layout: None }).collect();
+        assert_eq!(switch.leaf(0, 0), Some(0));
+        assert_eq!(switch.leaf(0, 1), None);
+        assert_eq!(switch.leaf(0, 2), None);
+        assert_eq!(switch.leaf(2, 0), None);
+        assert_eq!(switch.unique_root(0, false), Some(1));
+        assert_eq!(switch.unique_root(0, true), None);
+        assert_eq!(switch.unique_root(1, false), None);
+        switch.roots = vec![None, address(0)].into_boxed_slice();
+        assert_eq!(switch.unique_root(1, false), Some(1));
+        switch.nodes[1].next = Rc::from([((7, 2), 2)]);
+        assert_eq!(switch.replay(&[(None, (1, None)), (Some(7), (1, Some(1)))]), 2);
+        assert_eq!(switch.replay(&[(None, (0, Some(0)))]), 1);
+    }
     #[test]
     fn compiled_result_ports_preserve_holes_and_real_returned_addresses() {
         let first = ResultPort::new(4, 0);

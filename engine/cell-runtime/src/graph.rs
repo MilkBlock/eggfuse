@@ -2386,7 +2386,7 @@ impl Graph {
         self.epoch = epoch;
         result
     }
-    fn repair_selected(&mut self, allowed: Option<&[bool]>) -> Result<()> {
+    fn repair_selected(&mut self, allowed: Option<crate::table_mask::Selection<'_>>) -> Result<()> {
         if self.union_digest.is_some() {
             return self.propagate_union_digests();
         }

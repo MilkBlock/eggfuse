@@ -1426,20 +1426,14 @@ impl Programs {
             self.stats.output_registrations += 1;
             let output = self.outputs[rid][position];
             let (i, table, source) = (output.operation, output.table, output.receipt_source);
-            let receipt = if self.receipts { effects.get(i).or_else(|| {
-                match source? {
-                    Site::Query(atom) => {
-                        let w = query_fact(atom)?;
-                        self.stats.alias_query_forwards += 1;
-                        Some(w)
-                    }
-                    Site::Effect(op) => {
-                        let w = effects.get(op)?;
-                        self.stats.alias_effect_forwards += 1;
-                        Some(w)
-                    }
+            let receipt = if self.receipts { output.receipt(&query_fact, |op| effects.get(op)) } else { None };
+            if receipt.is_some() {
+                match source {
+                    Some(Site::Query(_)) => self.stats.alias_query_forwards += 1,
+                    Some(Site::Effect(_)) => self.stats.alias_effect_forwards += 1,
+                    None => (),
                 }
-            }) } else { None };
+            }
             let publication = Publication {
                 slot,
                 receipt,

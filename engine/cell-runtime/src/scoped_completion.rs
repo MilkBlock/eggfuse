@@ -60,7 +60,7 @@ impl Graph {
             .as_ref()
             .unwrap()
             .pending
-            .first(Some(&scope.predecessors))
+            .first(Some(crate::table_mask::Selection::Packed(&scope.predecessors)))
             .is_some()
         {
             return Ok(false);
@@ -88,7 +88,7 @@ impl Graph {
             .counts
             .scope_requests += 1;
         let epoch = self.epoch;
-        let result = self.repair_selected(Some(&scope.predecessors));
+        let result = self.repair_selected(Some(crate::table_mask::Selection::Packed(&scope.predecessors)));
         self.epoch = epoch;
         result?;
         assert!(
@@ -178,7 +178,7 @@ impl Graph {
             "pending_owned_tables":pending.active_tables().collect::<Vec<_>>(),
             "scope":"compiler-scoped Graph completion; Executor mode reported separately"})
     }
-    pub(super) fn next_scoped_dirty(&mut self, allowed: Option<&[bool]>) -> Option<Dependency> {
+    pub(super) fn next_scoped_dirty(&mut self, allowed: Option<crate::table_mask::Selection<'_>>) -> Option<Dependency> {
         let Some(allowed) = allowed else {
             return self.dirty.first().copied();
         };
@@ -195,7 +195,7 @@ impl Graph {
             .legacy_frontier_probes += probes;
         next
     }
-    pub(super) fn pending_opaque_completion(&self, allowed: &[bool]) -> bool {
+    pub(super) fn pending_opaque_completion(&self, allowed: crate::table_mask::Selection<'_>) -> bool {
         let opaque = &self.program.completion_plan.as_ref().unwrap().opaque_tables;
         self.dirty
             .iter()
@@ -219,7 +219,7 @@ impl Graph {
             .counts
             .opaque_full_completions += 1;
     }
-    pub(super) fn next_scoped_marker(&mut self, allowed: Option<&[bool]>) -> Option<FactRef> {
+    pub(super) fn next_scoped_marker(&mut self, allowed: Option<crate::table_mask::Selection<'_>>) -> Option<FactRef> {
         let Some(allowed) = allowed else {
             return self.dirty_markers.first().copied();
         };

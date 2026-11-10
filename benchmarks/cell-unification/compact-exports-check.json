@@ -1,0 +1,108 @@
+{
+  "scope": "standalone Cell CPU ordinary loaded catalog; retained exports structures",
+  "baseline_commit": "d75aed32",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_entries_and_state_contracts_equal": true,
+  "baseline": {
+    "interfaces": [
+      [
+        55,
+        [
+          {
+            "Query": 0
+          }
+        ]
+      ],
+      [
+        137,
+        [
+          {
+            "Query": 0
+          },
+          {
+            "Effect": 2
+          }
+        ]
+      ],
+      [
+        143,
+        [
+          {
+            "Query": 0
+          },
+          {
+            "Effect": 1
+          },
+          {
+            "Effect": 2
+          }
+        ]
+      ]
+    ],
+    "directory_bytes": 13968,
+    "slot_bytes": 384
+  },
+  "candidate": {
+    "interfaces": [
+      [
+        55,
+        [
+          {
+            "Query": 0
+          }
+        ]
+      ],
+      [
+        137,
+        [
+          {
+            "Query": 0
+          },
+          {
+            "Effect": 2
+          }
+        ]
+      ],
+      [
+        143,
+        [
+          {
+            "Query": 0
+          },
+          {
+            "Effect": 1
+          },
+          {
+            "Effect": 2
+          }
+        ]
+      ]
+    ],
+    "directory_bytes": 1160,
+    "slot_bytes": 96
+  },
+  "baseline_bytes": 14352,
+  "candidate_bytes": 1256,
+  "bytes_saved": 13096,
+  "fractional_reduction": 0.9124860646599777,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "774aa012cf468f2416772b40d8ca99981971f86720f55780eb09027892651bd3",
+    "candidate": "8af87cd2f08baaa5565f9996d00a589d109c7ea96658d59eda893a24e73b4208"
+  },
+  "inspections": {
+    "before": "ee94b8063e28f7a43543f6c393430fddd69dfbd4739f96bca22ebf03be725517",
+    "after": "d84f56e85ebc64a9f814569dd9572b00e3e713ed018bf31b7c8d6ae8bcf8b059"
+  },
+  "baseline_probe_patch_sha256": "4a298a881ae8f4fcce396922df593c52b805069690b39d0ed0e90511f5030aba",
+  "limits": "Counts export directory and slot arrays including baseline capacity. Excludes allocator overhead, switch header and other switch data. No speed or new cross-stage takeover claim."
+}

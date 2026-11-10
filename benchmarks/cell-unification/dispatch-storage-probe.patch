@@ -1,0 +1,32 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 381e222d..ef050340 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -105,6 +105,7 @@ impl State {
+ }
+ impl Catalog {
+     /// Retained path storage only; excludes tree-node overhead and other catalog data.
++    pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
+     pub fn path_storage(&self) -> J {
+         let item=std::mem::size_of::<(Option<usize>,Entry)>();
+         json!({"units":self.units.len(),"unit_capacity":self.units.capacity(),
+diff --git a/engine/cell-runtime/src/result_handoff.rs b/engine/cell-runtime/src/result_handoff.rs
+index f357215b..68c59ac9 100644
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -593,6 +593,15 @@ impl Default for Terminal {
+     }
+ }
+ impl Switch {
++    pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
++        serde_json::json!({"rule_rows":self.by_rule.len(),
++            "rule_slots":self.by_rule.iter().map(Vec::len).sum::<usize>(),
++            "root_slots":self.roots.len(),
++            "row_directory_bytes":self.by_rule.capacity()*std::mem::size_of::<Vec<Option<usize>>>(),
++            "rule_slot_bytes":self.by_rule.iter().map(|r|r.capacity()*std::mem::size_of::<Option<usize>>()).sum::<usize>(),
++            "root_slot_bytes":self.roots.capacity()*std::mem::size_of::<Option<usize>>(),
++            "duplicate_lookup_entry_bytes":self.leaves.len()*std::mem::size_of::<(Entry,usize)>()})
++    }
+     /// Lower the validated portable transfer certificate with the Cell's own
+     /// alias proofs. Keep one executable completion flag, without changing the
+     /// historical wire certificate or relaxing its exact validation.

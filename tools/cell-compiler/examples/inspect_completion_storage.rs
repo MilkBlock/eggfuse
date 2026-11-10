@@ -8,7 +8,7 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
     let influence:Vec<_>=(0..p.tables.len()).map(|a|(0..p.tables.len()).map(|b|plan.affects(a,b)).collect::<Vec<_>>()).collect();
     let waits:Vec<_>=(0..p.tables.len()).map(|t|serde_json::to_value(plan.scope(&[t]).unwrap()).unwrap()).collect();
     let signature=eggfuse_cell_runtime::checksum::artifact_digest(&serde_json::json!({"affects":influence,"singleton_scopes":waits}));
-    let report=serde_json::json!({"program":p.artifact["sha256"],"closure_sha256":signature,"storage":plan.demand_storage(),"matrices":plan.matrix_storage(),"plan":plan});
+    let report=serde_json::json!({"program":p.artifact["sha256"],"closure_sha256":signature,"storage":plan.demand_storage(),"matrices":plan.matrix_storage(),"table_lists":plan.table_list_storage(),"scope_masks":plan.scope_mask_storage(),"plan":plan});
     std::fs::write(output,serde_json::to_vec_pretty(&report)?)?;
     Ok(())
 }

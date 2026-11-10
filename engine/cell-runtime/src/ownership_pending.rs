@@ -190,7 +190,7 @@ impl Pending {
         self.refresh(table, before);
         removed
     }
-    pub fn first(&self, allowed: Option<&[bool]>) -> Option<(FactRef, usize)> {
+    pub fn first(&self, allowed: Option<crate::table_mask::Selection<'_>>) -> Option<(FactRef, usize)> {
         if let Some(flat) = &self.flat {
             assert!(allowed.is_none(), "scoped queue is not enabled");
             return flat.first().map(|&f| (f, usize::MAX));
@@ -222,7 +222,7 @@ impl Pending {
     pub fn prefix_before(
         &self,
         before: Option<Dependency>,
-        allowed: Option<&[bool]>,
+        allowed: Option<crate::table_mask::Selection<'_>>,
         limit: usize,
     ) -> (
         smallvec::SmallVec<[(FactRef, usize); 16]>,
@@ -307,7 +307,7 @@ mod tests {
         assert!(p.insert(0, fact(3), 9));
         assert!(!p.insert(0, fact(5), 8));
         assert!(!p.insert(0, fact(5), 4));
-        assert_eq!(p.first(Some(&[true, false, false])), Some((fact(3), 0)));
+        assert_eq!(p.first(Some(crate::table_mask::Selection::Flags(&[true, false, false]))), Some((fact(3), 0)));
         assert_eq!(p.pop(fact(3), 0), Some(9));
         // Re-enqueue after removal starts a new task, even at an earlier epoch.
         assert!(p.insert(0, fact(3), 2));
@@ -353,8 +353,10 @@ mod tests {
                 ),
                 _ => {
                     let mask = [true, step % 2 == 0, step % 3 == 0];
-                    let first = reference.first(Some(&mask));
-                    assert_eq!(live.first(Some(&mask)), first);
+                    let first = reference.first(Some(crate::table_mask::Selection::Flags(&mask)));
+                    let packed:crate::table_mask::Mask=mask.iter().copied().collect();
+                    let selected=crate::table_mask::Selection::Packed(&packed);
+                    assert_eq!(live.first(Some(selected)), first);
                     if let Some((f, t)) = first {
                         assert_eq!(live.pop(f, t), reference.pop(f, t));
                     }
@@ -384,6 +386,11 @@ mod tests {
             live.prefix_before(None, None, 16),
             reference.prefix_before(None, None, 16)
         );
+        // Prefix traversal uses the settled queues, not a frozen read epoch.
+        let mask=[true,false,true];
+        let packed:crate::table_mask::Mask=mask.into_iter().collect();
+        assert_eq!(live.prefix_before(None,Some(crate::table_mask::Selection::Packed(&packed)),16),
+            reference.prefix_before(None,Some(crate::table_mask::Selection::Flags(&mask)),16));
         // Retained delta capacities must carry no membership or old head into
         // a later epoch, including after ordinary writes between epochs.
         for round in 0..3 {

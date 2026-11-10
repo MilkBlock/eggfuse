@@ -1,0 +1,37 @@
+{
+  "scope": "standalone Cell CPU optional completion prediction; retained table-list storage",
+  "baseline_commit": "d13227b7",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "closure_sha256": "3c1ed8bb91320b1cb264e318b44e9bb865fd078480f365c69d10f04f954570c7",
+  "exact_plan_and_closure_equal": true,
+  "storage": {
+    "lists": 2209,
+    "logical_values": 70646,
+    "unique_lists": 771,
+    "shared_payload_and_rc_bytes": 120792,
+    "handles_bytes": 35344
+  },
+  "baseline_bytes": 172712,
+  "candidate_bytes": 156136,
+  "bytes_saved": 16576,
+  "fractional_reduction": 0.09597480198249109,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "6ebf9bfeaa47dfcb8495540a0e30aec09656a322e3d782e2d478049c2d39c430",
+    "candidate": "7f139cf72c3ebbac624b83d5ee5e326a839cc5982dfc5d6f2fc85767e7e09729"
+  },
+  "inspection_sha256": {
+    "before": "2bfeb4c7e4acd732829dbf0e7e30df55a0b2430d8b5b6a9f4ec60a02e2e57a41",
+    "after": "192a1cae3aeb172e25d1f3c9cc2a384aa8f24f38f5b34b6b71617c4ea376d644"
+  },
+  "limits": "64-bit model: previous nonshared Vec headers 24 bytes and exact-length payload; Rc headers estimated as two words. Includes all table-list handles, excludes outer container headers, allocator rounding, temporary construction and unrelated storage. No latency, whole-process RSS or new cross-Run takeover claim."
+}

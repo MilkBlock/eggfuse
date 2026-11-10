@@ -1,0 +1,24 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/stage_spine/effect_plan_slot_bytes": [
+      6376,
+      3985
+    ]
+  },
+  "publication_net_saved_operations": 0,
+  "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159",
+  "scope": "standalone Cell CPU; retained shared slot-descriptor storage",
+  "baseline_commit": "07c62ee5 (same kernel as ea4109ee)",
+  "binaries": {
+    "baseline": "24f2d7d7b12996e46c931f25837af7df54a5c9ce139891fb76c25245a49228ea",
+    "candidate": "6ebf9bfeaa47dfcb8495540a0e30aec09656a322e3d782e2d478049c2d39c430"
+  },
+  "semantic_acceptance": "pass",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "retained_bytes_saved": 2391,
+  "limits": "Descriptor array capacities only, excluding allocator rounding. Plan headers, other indexes, instance frames and work counts are unchanged. Packed descriptors use by-value unaligned reads; no latency benefit is claimed."
+}

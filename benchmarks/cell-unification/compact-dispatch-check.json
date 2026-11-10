@@ -1,0 +1,48 @@
+{
+  "scope": "standalone Cell CPU ordinary loaded catalog; retained dispatch structures",
+  "baseline_commit": "9e0bac8a",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_entries_and_state_contracts_equal": true,
+  "baseline": {
+    "rule_rows": 582,
+    "rule_slots": 38,
+    "root_slots": 582,
+    "row_directory_bytes": 13968,
+    "rule_slot_bytes": 1856,
+    "root_slot_bytes": 9312,
+    "duplicate_lookup_entry_bytes": 1024
+  },
+  "candidate": {
+    "rule_rows": 576,
+    "rule_slots": 38,
+    "root_slots": 0,
+    "row_directory_bytes": 9216,
+    "rule_slot_bytes": 304,
+    "root_slot_bytes": 0,
+    "duplicate_lookup_entry_bytes": 0
+  },
+  "baseline_bytes": 26160,
+  "candidate_bytes": 9520,
+  "bytes_saved": 16640,
+  "fractional_reduction": 0.636085626911315,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "4c0f6cfa5ee7072d0997fe1c197c6b29e7647ac00326f355f2636eea080fac35",
+    "candidate": "42235c36a733e29b0b9cb28a34eb21aa2898a377ac6e2acfb903e82c7bca20e6"
+  },
+  "inspections": {
+    "before": "38fbffb8029682eccedf869d901deef0602a87374da386a059c76a94f73a9836",
+    "after": "7c4cbeb8c86712ac8452ce9850b422426e6e00456f0e3ad1c3a14a190e483584"
+  },
+  "baseline_probe_patch_sha256": "0bae31f997a17742d7f0bb33d292d847dd79b6446acdaedcf73b2926940117d7",
+  "limits": "Counts rule-row directory, nullable leaf arrays and former duplicate lookup entry payloads. Excludes BTree node spare slots/links, allocator rounding, switch header and other switch data. No speed or new cross-stage takeover claim."
+}

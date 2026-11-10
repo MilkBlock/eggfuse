@@ -1,0 +1,29 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 50230321..49b3bfad 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -105,6 +105,7 @@ impl State {
+ }
+ impl Catalog {
+     /// Retained switch dispatch arrays; excludes allocator overhead.
++    pub fn export_storage(&self) -> J { self.switch.export_storage() }
+     pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
+     /// Retained path storage only; excludes tree-node overhead and other catalog data.
+     pub fn path_storage(&self) -> J {
+diff --git a/engine/cell-runtime/src/result_handoff.rs b/engine/cell-runtime/src/result_handoff.rs
+index da5e2c9a..44e4c2f3 100644
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -618,6 +618,12 @@ impl Default for Terminal {
+     }
+ }
+ impl Switch {
++    pub(crate) fn export_storage(&self) -> serde_json::Value {
++        serde_json::json!({
++            "interfaces":self.exports.iter().enumerate().filter(|(_,r)|!r.is_empty()).collect::<Vec<_>>(),
++            "directory_bytes":self.exports.capacity()*std::mem::size_of::<Vec<Site>>(),
++            "slot_bytes":self.exports.iter().map(|r|r.capacity()*std::mem::size_of::<Site>()).sum::<usize>()})
++    }
+     pub(crate) fn dispatch_storage(&self) -> serde_json::Value {
+         serde_json::json!({"rule_rows":self.by_rule.len(),
+             "rule_slots":self.by_rule.slots.len(),

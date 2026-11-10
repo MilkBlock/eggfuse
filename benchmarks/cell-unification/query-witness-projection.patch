@@ -1,0 +1,153 @@
+diff --git a/engine/cell-runtime/src/stage_spine.rs b/engine/cell-runtime/src/stage_spine.rs
+index 5f89cf7e..7985c621 100644
+--- a/engine/cell-runtime/src/stage_spine.rs
++++ b/engine/cell-runtime/src/stage_spine.rs
+@@ -528,6 +528,9 @@ pub struct Stats {
+     cell_query_entries: u64,
+     cell_query_steps: u64,
+     cell_query_result_writes: u64,
++    cell_query_witness_writes: u64,
++    cell_query_witness_checks: u64,
++    cell_query_witness_dispatches: u64,
+     guard_rejections: u64,
+     bindings: u64,
+     steps_executed: u64,
+@@ -1958,10 +1961,27 @@ impl Programs {
+         complete: bool,
+         watermark: u64,
+         facts: &QueryFacts,
++    ) -> Result<Option<Coverage>> {
++        self.stats.cell_query_witness_dispatches += 1;
++        // The existing compiled demand selects the collector once per rule
++        // invocation. Empty projections have no per-row capture branch or list;
++        // a single requested witness stays inline even in a long query.
++        match facts {
++            QueryFacts::None => self.finish_answers_projected::<0>(g, rid, ready, covered, complete, watermark, facts),
++            QueryFacts::One(..) => self.finish_answers_projected::<1>(g, rid, ready, covered, complete, watermark, facts),
++            _ => self.finish_answers_projected::<2>(g, rid, ready, covered, complete, watermark, facts),
++        }
++    }
++    fn finish_answers_projected<const PROJECTION: u8>(
++        &mut self, g: &mut Graph, rid: usize,
++        ready: impl ExactSizeIterator<Item = (usize, Rc<Row>, Cursor)>,
++        covered: BTreeSet<(usize, Dependency)>, complete: bool, watermark: u64,
++        facts: &QueryFacts,
+     ) -> Result<Option<Coverage>> {
+         if !complete && covered.is_empty() {
+             return Ok(None);
+         }
++        let wanted_atom = match facts { QueryFacts::One(atom, _) => *atom, _ => usize::MAX };
+         #[cfg(feature = "sparse-cells")]
+         let mut results = std::mem::take(&mut self.answer_scratch);
+         #[cfg(not(feature = "sparse-cells"))]
+@@ -2031,6 +2051,7 @@ impl Programs {
+             // Keep rejected queries off the heap in the common short case. Only
+             // successful matches materialize the requested Cell fact projection.
+             let mut found_witnesses = smallvec::SmallVec::<[(usize, Dependency); 4]>::new();
++            let mut single_witness = None;
+             for (position, step) in query.steps.iter().enumerate() {
+                 self.stats.cell_query_steps += 1;
+                 let bound = step.bind::<PortKey>(|v| v.operand(g, |col| &row.values[col], &values, None));
+@@ -2044,7 +2065,16 @@ impl Programs {
+                             (&mut self.structural, row.witness),
+                         )? else { return Ok(None); };
+                         epoch = epoch.max(found.epoch);
+-                        found_witnesses.push((step.atom, found.witness));
++                        if PROJECTION == 1 {
++                            self.stats.cell_query_witness_checks += 1;
++                            if step.atom == wanted_atom {
++                                single_witness = Some((step.atom, found.witness));
++                                self.stats.cell_query_witness_writes += 1;
++                            }
++                        } else if PROJECTION == 2 {
++                            self.stats.cell_query_witness_writes += 1;
++                            found_witnesses.push((step.atom, found.witness));
++                        }
+                         Ok(Some(found.values.last().unwrap().clone()))
+                     }
+                     Call::Primitive(name, output) => {
+@@ -2067,8 +2097,12 @@ impl Programs {
+             }
+             if epoch >= watermark {
+                 let inputs = query.inputs.iter().map(|v| v.read(g, |col| &row.values[col], &values, None)).collect();
+-                let facts = facts.with_rows(std::iter::once((pivot, row.witness))
+-                    .chain(found_witnesses));
++                let facts = if PROJECTION == 0 { QueryFacts::None }
++                    else if PROJECTION == 1 {
++                        facts.with_rows(std::iter::once((pivot, row.witness)).chain(single_witness))
++                    } else {
++                        facts.with_rows(std::iter::once((pivot, row.witness)).chain(found_witnesses))
++                    };
+                 #[cfg(feature = "iterative-bake")]
+                 if cursor.via_block && cursor.state.direct {
+                     self.training.seal_moves += query.inputs.len() as u64;
+diff --git a/tools/cell-compiler/src/work_credit.rs b/tools/cell-compiler/src/work_credit.rs
+index 445b8ebd..aeb5416d 100644
+--- a/tools/cell-compiler/src/work_credit.rs
++++ b/tools/cell-compiler/src/work_credit.rs
+@@ -18,6 +18,9 @@ impl Work {
+                 "history_capture_reads", "history_slots_written", "history_allocations",
+                 "history_inherited_reads", "history_inheritance_marks", "history_heap_frames",
+                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards", "cell_query_result_writes",
++                // Demand dispatch and single-witness selection are new costs;
++                // charge them alongside actual intermediate witness writes.
++                "cell_query_witness_writes", "cell_query_witness_checks", "cell_query_witness_dispatches",
+                 "scoped_anchor_checks", "scoped_direct_checks", "scoped_receipt_checks",
+                 "local_witness_contexts", "local_witness_route_probes", "local_witness_route_steps", "local_witness_key_fields",
+                 "local_witness_route_comparisons", "local_witness_read_index_probes",
+@@ -310,6 +313,8 @@ mod tests {
+             "/stage_spine/stats/fragment_receipt_spills", "/entry_schedule/stats/publication_slot_probes",
+             "/stage_spine/stats/cell_output_receipts", "/stage_spine/stats/cell_output_slot_reads",
+             "/stage_spine/stats/effect_output_copies", "/stage_spine/stats/receipt_attempts",
++            "/stage_spine/stats/cell_query_witness_writes", "/stage_spine/stats/cell_query_witness_checks",
++            "/stage_spine/stats/cell_query_witness_dispatches",
+             "/stage_spine/stats/cell_output_deliveries",
+             "/stage_spine/stats/completion_boundary_records", "/stage_spine/stats/completion_boundary_reads",
+             "/stage_spine/stats/completion_order_checks", "/stage_spine/stats/completion_cell_visits",
+diff --git a/tools/cell-compiler/tests/entry_publications.rs b/tools/cell-compiler/tests/entry_publications.rs
+index 82965548..d9bc9057 100644
+--- a/tools/cell-compiler/tests/entry_publications.rs
++++ b/tools/cell-compiler/tests/entry_publications.rs
+@@ -265,3 +265,42 @@ fn effect_donor_occupies_publication_slot_without_fabricating_alias_execution()
+     // Gateway must not reserve and initialize a permanently empty raw slot.
+     assert_eq!(s["effect_slots_initialized"], s["effect_frames"], "{s}");
+ }
++
++#[test]
++fn query_with_no_exported_witness_keeps_no_intermediate_receipt_list() {
++    let source = r#"
++(datatype E (N i64) (Start E) (F E) (Gateway E) (Out E))
++(ruleset make) (ruleset consume)
++(rule ((Start x)) ((F x) (Gateway x)) :ruleset make)
++(rule ((Gateway x) (F x)) ((Out x)) :ruleset consume)
++(Start (N 1))
++(run-schedule (seq (run make) (run consume)))
++(check (Out (N 1)))
++"#;
++    let (_, nodes) = compare_mode(source, false);
++    let report = nodes.report();
++    let s = &report["stage_spine"]["stats"];
++    assert!(s["cell_query_steps"].as_u64().unwrap() > 0, "exercise a non-pivot read: {s}");
++    assert!(s["cell_query_witness_dispatches"].as_u64().unwrap() > 0);
++    assert_eq!(s["cell_query_witness_writes"], 0, "{s}");
++    assert_eq!(s["cell_query_witness_checks"], 0, "empty demand has no per-row filter");
++}
++
++#[test]
++fn single_query_witness_survives_other_ports_and_pivot_choices() {
++    let source = r#"
++(datatype E (N i64) (Start E) (F E) (H E) (J E) (Gateway E) (Out E))
++(ruleset make) (ruleset consume)
++(rule ((Start x)) ((F x) (H x) (J x) (Gateway x)) :ruleset make)
++(rule ((Gateway x) (F x) (H x) (J x)) ((F x) (Out x)) :ruleset consume)
++(Start (N 1))
++(run-schedule (seq (run make) (run consume)))
++(check (Out (N 1)))
++"#;
++    let (_, nodes) = compare_mode(source, false);
++    let report = nodes.report();
++    let s = &report["stage_spine"]["stats"];
++    assert!(s["alias_query_forwards"].as_u64().unwrap() > 0, "retain the requested F receipt");
++    assert!(s["cell_query_witness_checks"].as_u64().unwrap()
++        > s["cell_query_witness_writes"].as_u64().unwrap(), "do not retain unrelated ports: {s}");
++}

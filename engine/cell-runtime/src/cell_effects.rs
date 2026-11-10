@@ -29,10 +29,13 @@ impl CompletedEffects for SingleEffect {
     fn finish(self, _: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> { None }
 }
 
-#[derive(Clone, Copy)]
-struct EffectSlot { index:NonZeroU32, history:Option<u8> }
+// Keep the full u32 slot range. Only padding is removed; history is encoded
+// as 0 (absent) or 1..=64. Copy packed fields by value, never borrow them.
+#[repr(C, packed)]
+#[derive(Clone, Copy, Default)]
+struct EffectSlot { index:Option<NonZeroU32>, history:u8 }
 pub(crate) struct EffectPlan {
-    slots: Vec<Option<EffectSlot>>,
+    slots: Vec<EffectSlot>,
     width: usize,
     pub outputs: usize,
     #[cfg(feature = "sparse-cells")]
@@ -94,7 +97,7 @@ impl Registration {
 impl EffectPlan {
     pub fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize, full: bool) -> Self {
         let cell = Definition::new(p, rule).expect("typed Cell");
-        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published,
+        let mut plan = Self { slots: vec![EffectSlot::default(); cell.template.ops.len()], width: 0, outputs: published,
             #[cfg(feature = "sparse-cells")]
             registration: Registration::compile(p, rule, outputs, published),
             #[cfg(feature = "sparse-cells")]
@@ -110,20 +113,29 @@ impl EffectPlan {
             });
         }
         debug_assert_eq!(plan.width, published, "distinct retained Cell sources");
-        // Raw operation receipts remain distinct: closed completion may record
-        // an alias, whereas ordinary execution skips it. History must observe
-        // that distinction before publication fills any remaining output slots.
-        for output in outputs { plan.require(output.operation); }
+        // Every executor, including closed completion and first-miss resume,
+        // skips these instructions. Their raw receipts are always absent, so
+        // they need no transient slot. A retained query-alias publication may
+        // still own a prefix slot above, filled only after history capture.
+        let executes = |op: usize| !p.known_results.static_skip[rule][op];
+        for output in outputs {
+            if executes(output.operation) { plan.require(output.operation); }
+        }
         for output in outputs {
             if let Some(Site::Effect(op)) = output.receipt_source { plan.require(op); }
         }
         #[cfg(feature = "iterative-bake")]
         for (slot,site) in p.iterative.exports(rule).iter().enumerate() {
-            if let Site::Effect(op) = *site { plan.require(op); if slot < 64 { plan.slots[op].as_mut().unwrap().history=Some(slot as u8); } }
+            if let Site::Effect(op) = *site {
+                if executes(op) {
+                    plan.require(op);
+                    if slot < 64 { plan.slots[op].history=slot as u8+1; }
+                }
+            }
         }
         if full {
             for op in 0..cell.template.ops.len() {
-                if cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
+                if executes(op) && cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
             }
         }
         #[cfg(feature = "sparse-cells")]
@@ -145,8 +157,8 @@ impl EffectPlan {
                 let mut transient = vec![None; plan.width];
                 let mut transient_width = 0;
                 for (op, slot) in plan.slots.iter().enumerate() {
-                    if let Some(slot) = slot && slot.history.is_none() && !p.known_results.static_skip[rule][op] {
-                        transient[slot.index.get() as usize - 1] = Some(transient_width);
+                    if let Some(index) = slot.index && slot.history == 0 && executes(op) {
+                        transient[index.get() as usize - 1] = Some(transient_width);
                         transient_width += 1;
                     }
                 }
@@ -169,7 +181,7 @@ impl EffectPlan {
         #[cfg(not(feature = "sparse-cells"))]
         { 0 }
     }
-    pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<Option<EffectSlot>>() }
+    pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<EffectSlot>() }
     pub(crate) fn registration_bytes(&self) -> usize {
         #[cfg(feature = "sparse-cells")]
         { std::mem::size_of::<Option<Registration>>() + self.registration.as_ref().map_or(0, |r|
@@ -178,9 +190,10 @@ impl EffectPlan {
         { 0 }
     }
     fn require(&mut self, op: usize) {
-        if self.slots[op].is_none() {
+        let index = self.slots[op].index;
+        if index.is_none() {
             self.width += 1;
-            self.slots[op] = Some(EffectSlot { index:NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap(), history:None });
+            self.slots[op] = EffectSlot { index:Some(NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap()), history:0 };
         }
     }
 }
@@ -228,13 +241,13 @@ impl Effects {
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
-        let descriptor = plan.slots.get(operation)?.as_ref()?;
-        let slot = descriptor.index.get() as usize - 1;
+        let descriptor = *plan.slots.get(operation)?;
+        let slot = descriptor.index?.get() as usize - 1;
         #[cfg(feature = "sparse-cells")]
         let slot = if self.joint {
-            if let Some(port) = descriptor.history {
+            if descriptor.history != 0 {
                 self.targets += 1;
-                return self.history.get_mut(port as usize);
+                return self.history.get_mut(descriptor.history as usize - 1);
             }
             plan.joint.as_ref()?.transient[slot]?
         } else { slot };
@@ -245,21 +258,22 @@ impl Effects {
     pub fn record_handoff(&mut self, operation:usize, receipt:Dependency, input:&crate::result_handoff::Input, original:bool, track:bool) {
         let Some(plan)=&self.plan else { return };
         self.probes+=1;
-        let Some(Some(slot))=plan.slots.get(operation) else { return };
+        let Some(slot)=plan.slots.get(operation) else { return };
+        let Some(index)=slot.index else { return };
         self.targets+=1;
         #[cfg(feature = "sparse-cells")]
         if self.joint {
-            if let Some(port) = slot.history { self.history[port as usize] = Some(receipt); }
-            else if let Some(index) = plan.joint.as_ref().unwrap().transient[slot.index.get() as usize - 1] {
+            if slot.history != 0 { self.history[slot.history as usize - 1] = Some(receipt); }
+            else if let Some(index) = plan.joint.as_ref().unwrap().transient[index.get() as usize - 1] {
                 self.buffer[self.first + index] = Some(receipt);
             }
             return;
         }
-        self.buffer[self.first+slot.index.get() as usize-1]=Some(receipt);
+        self.buffer[self.first+index.get() as usize-1]=Some(receipt);
         // Provenance rides in the existing operation-to-slot descriptor: no
         // second index or per-instance source map is queried or maintained.
         if track && input.from_history && input.back==1 && original
-            && let Some(history)=slot.history { self.forwarded |= 1<<history; }
+            && let Some(history)=slot.history.checked_sub(1) { self.forwarded |= 1<<history; }
     }
     pub fn record(&mut self, operation: usize, receipt: Dependency) {
         if let Some(slot) = self.slot(operation) { *slot = Some(receipt); }
@@ -307,11 +321,11 @@ impl CompletedEffects for Effects {
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
         let plan = self.plan.as_ref()?;
-        let descriptor = plan.slots.get(operation)?.as_ref()?;
-        let slot = descriptor.index.get() as usize - 1;
+        let descriptor = *plan.slots.get(operation)?;
+        let slot = descriptor.index?.get() as usize - 1;
         #[cfg(feature = "sparse-cells")]
         let slot = if self.joint {
-            if let Some(port) = descriptor.history { return self.history.get(port as usize).copied().flatten(); }
+            if descriptor.history != 0 { return self.history.get(descriptor.history as usize - 1).copied().flatten(); }
             plan.joint.as_ref()?.transient[slot]?
         } else { slot };
         self.buffer[self.first + slot]
@@ -328,5 +342,37 @@ impl CompletedEffects for Effects {
         }
         self.buffer.truncate(self.first + if publish { self.keep } else { 0 });
         Some((self.buffer, plan.width, self.probes, self.targets))
+    }
+}
+
+#[cfg(all(test, feature = "iterative-bake"))]
+mod packed_slot_tests {
+    use super::*;
+
+    #[test]
+    fn packed_descriptors_preserve_absence_and_both_history_mask_ends() {
+        assert_eq!(std::mem::size_of::<EffectSlot>(), 5);
+        let largest = EffectSlot { index:NonZeroU32::new(u32::MAX), history:64 };
+        let index = largest.index;
+        assert_eq!(index.unwrap().get(), u32::MAX, "slot range is not truncated");
+        let plan = Rc::new(EffectPlan { slots:vec![EffectSlot::default(),
+            EffectSlot { index:NonZeroU32::new(1), history:64 },
+            EffectSlot { index:NonZeroU32::new(2), history:1 }], width:2, outputs:0,
+            #[cfg(feature = "sparse-cells")] registration:None,
+            #[cfg(feature = "sparse-cells")] joint:None });
+        let mut effects = Effects::begin(plan, vec![Some(Dependency::Function(99))], false);
+        let mut input = crate::result_handoff::Input {
+            op:1, back:1, fact:None, equal_output:false, from_history:true,
+        };
+        effects.record_handoff(1, Dependency::Function(7), &input, true, true);
+        assert_eq!(effects.get(1), Some(Dependency::Function(7)));
+        assert_eq!(effects.forwarded(), 1u64 << 63);
+        input.op=2;
+        effects.record_handoff(2, Dependency::Function(8), &input, true, true);
+        assert_eq!(effects.get(2), Some(Dependency::Function(8)));
+        assert_eq!(effects.forwarded(), (1u64 << 63)|1);
+        effects.record(0, Dependency::Function(9));
+        assert_eq!(effects.get(0), None);
+        assert_eq!(effects.buffer[0], Some(Dependency::Function(99)));
     }
 }

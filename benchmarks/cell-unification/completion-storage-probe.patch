@@ -1,0 +1,35 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 9aacfe46..01a5ea01 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -105,6 +105,7 @@ impl State {
+ }
+ impl Catalog {
+     /// State array and transition storage; excludes allocator overhead.
++    pub fn completion_storage(&self) -> J { self.switch.completion_storage() }
+     pub fn transition_storage(&self) -> J { self.switch.transition_storage() }
+     /// State array and shared capture storage; excludes allocator overhead.
+     pub fn capture_storage(&self) -> J { self.switch.capture_storage() }
+diff --git a/engine/cell-runtime/src/result_handoff.rs b/engine/cell-runtime/src/result_handoff.rs
+index d6882e0d..e2de0a8a 100644
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -635,6 +635,18 @@ impl Switch {
+     pub(crate) fn exports(&self, rule: usize) -> &[Site] {
+         self.exports.get(rule).unwrap_or(&[])
+     }
++    pub(crate) fn completion_storage(&self) -> serde_json::Value {
++        serde_json::json!({
++            "states":self.nodes.len(),
++            "lowered_reads":self.nodes.iter().map(|n| (
++                n.program.reuse.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>(),
++                n.program.queries.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>()
++            )).collect::<Vec<_>>(),
++            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
++            "program_owner_bytes":0,
++            "read_payload_bytes":self.nodes.iter().map(|n|n.program.reuse.capacity()*std::mem::size_of::<Reuse>()
++                +n.program.queries.capacity()*std::mem::size_of::<QueryReuse>()).sum::<usize>()})
++    }
+     pub(crate) fn transition_storage(&self) -> serde_json::Value {
+         let mut seen = BTreeSet::new();
+         let mut payload = 0;

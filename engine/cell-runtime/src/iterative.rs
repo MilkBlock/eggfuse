@@ -57,10 +57,13 @@ impl Limits {
 }
 #[derive(Clone, Debug)]
 struct Unit {
-    first: Entry,
-    last: Entry,
-    path: Vec<(Option<usize>, Entry)>,
-    terminal: bool,
+    path: Box<[(Option<usize>, Entry)]>,
+}
+impl Unit {
+    // Parsed leaves are nonempty and composition concatenates nonempty paths.
+    fn first(&self) -> Entry { self.path[0].1 }
+    fn last(&self) -> Entry { self.path.last().expect("nonempty Cell path").1 }
+    fn terminal(&self) -> bool { self.last().1.is_some() }
 }
 #[derive(Clone, Debug, Default)]
 pub struct Catalog {
@@ -68,7 +71,6 @@ pub struct Catalog {
     units: Vec<Unit>,
     leaves: BTreeMap<Entry, Id>,
     jumps: BTreeMap<Join, Id>,
-    paths: BTreeSet<Vec<(Option<usize>, Entry)>>,
     switch: crate::result_handoff::Switch,
     inherited: Option<Vec<bool>>,
     track_slots: bool,
@@ -102,6 +104,25 @@ impl State {
     }
 }
 impl Catalog {
+    /// State array and completion programs; excludes allocator overhead.
+    pub fn completion_storage(&self) -> J { self.switch.completion_storage() }
+    /// State array and transition storage; excludes allocator overhead.
+    pub fn transition_storage(&self) -> J { self.switch.transition_storage() }
+    /// State array and shared capture storage; excludes allocator overhead.
+    pub fn capture_storage(&self) -> J { self.switch.capture_storage() }
+    /// Retained export directory and slots; excludes allocator overhead.
+    pub fn export_storage(&self) -> J { self.switch.export_storage() }
+    /// Retained switch dispatch arrays; excludes allocator overhead.
+    pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
+    /// Retained path storage only; excludes tree-node overhead and other catalog data.
+    pub fn path_storage(&self) -> J {
+        let item=std::mem::size_of::<(Option<usize>,Entry)>();
+        json!({"units":self.units.len(),"unit_capacity":self.units.capacity(),
+            "unit_record_bytes":std::mem::size_of::<Unit>(),
+            "unit_array_bytes":self.units.capacity()*std::mem::size_of::<Unit>(),
+            "path_payload_bytes":self.units.iter().map(|u|u.path.len()*item).sum::<usize>(),
+            "lookup_key_bytes":0,"lookup_payload_bytes":0})
+    }
     pub(crate) fn layout_storage(&self) -> (usize,usize) { self.switch.layout_storage() }
     pub fn seed(p: &Program, limits: Limits) -> Result<J> {
         Self::seed_with_roots(p, limits, &[])
@@ -151,6 +172,9 @@ impl Catalog {
             limits,
             ..Default::default()
         };
+        // Duplicate-path validation is a construction obligation, not runtime
+        // state. Drop its owned keys when the checked catalog is complete.
+        let mut paths = BTreeSet::new();
         for e in array(&p.artifact["spine_blocks"]["entries"])? {
             let entry = (
                 e["consumer"].as_u64().unwrap() as usize,
@@ -162,24 +186,18 @@ impl Catalog {
             let path = vec![(None, entry)];
             let id = s.units.len();
             s.leaves.insert(entry, id);
-            s.paths.insert(path.clone());
+            paths.insert(path.clone());
             s.units.push(Unit {
-                first: entry,
-                last: entry,
-                path,
-                terminal: true,
+                path: path.into_boxed_slice(),
             });
         }
         for rule in roots {
             let entry = (rule, None);
             let path = vec![(None, entry)];
             s.leaves.insert(entry, s.units.len());
-            s.paths.insert(path.clone());
+            paths.insert(path.clone());
             s.units.push(Unit {
-                first: entry,
-                last: entry,
-                path,
-                terminal: false,
+                path: path.into_boxed_slice(),
             });
         }
         for j in array(&raw["joins"])? {
@@ -187,12 +205,13 @@ impl Catalog {
             let u = s
                 .combine(p, join)
                 .ok_or("invalid or oversized binary continuation")?;
-            if s.units.len() >= limits.total || !s.paths.insert(u.path.clone()) {
+            if s.units.len() >= limits.total || !paths.insert(u.path.to_vec()) {
                 return Err("duplicate continuation or catalog full".into());
             }
             s.jumps.insert(join, s.units.len());
             s.units.push(u);
         }
+        drop(paths);
         if let Some(raw) = raw.get("rhs_handoffs") {
             let (congruence, query_ports) = match raw["schema"].as_str() {
                 Some("eggfuse-result-switch/v1") => (false, false),
@@ -205,7 +224,7 @@ impl Catalog {
                 .ok_or("missing result switch policy")?;
             s.switch = crate::result_handoff::Switch::build(
                 p,
-                s.units.iter().map(|u| u.path.as_slice()),
+                s.units.iter().map(|u| u.path.as_ref()),
                 &s.leaves,
                 reuse,
                 congruence,
@@ -214,7 +233,7 @@ impl Catalog {
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
             }
-            s.switch.complete_cells(p, |unit| s.units[unit].last.0);
+            s.switch.complete_cells(p, |unit| s.units[unit].last().0);
         }
         if let Some(raw) = raw.get("state_plan") {
             let mut expected = s.state_contracts(p);
@@ -250,7 +269,7 @@ impl Catalog {
     /// Reconstruct executable state contracts from the validated Cell program.
     /// This intentionally promises no saturation under new external inputs.
     pub fn state_contracts(&self, p: &Program) -> J {
-        self.switch.state_contracts(p, |u| self.units[u].last)
+        self.switch.state_contracts(p, |u| self.units[u].last())
     }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
@@ -278,7 +297,7 @@ impl Catalog {
         let cat = Self::parse(p, plan)?;
         plan["rhs_handoffs"] = crate::result_handoff::Switch::build(
             p,
-            cat.units.iter().map(|u| u.path.as_slice()),
+            cat.units.iter().map(|u| u.path.as_ref()),
             &cat.leaves,
             reuse,
             congruence,
@@ -289,7 +308,7 @@ impl Catalog {
     }
     pub(crate) fn tracks_slots(&self) -> bool { self.track_slots }
     pub(crate) fn exports(&self, rid: usize) -> &[crate::cell::Site] {
-        self.switch.exports.get(rid).map_or(&[], Vec::as_slice)
+        self.switch.exports(rid)
     }
     pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
         self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
@@ -350,23 +369,20 @@ impl Catalog {
         if size > self.limits.depth.min(self.limits.nodes) {
             return None;
         }
-        let table = match p.templates[p.rules[l.last.0].template].ops.get(j.output)? {
+        let table = match p.templates[p.rules[l.last().0].template].ops.get(j.output)? {
             Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t,
             _ => return None,
         };
-        let pivot = r.first.1?;
-        if !matches!(p.rules[r.first.0].query[pivot].call,Call::Table(t) if t==table) {
+        let pivot = r.first().1?;
+        if !matches!(p.rules[r.first().0].query[pivot].call,Call::Table(t) if t==table) {
             return None;
         }
-        let mut path = l.path.clone();
-        let mut tail = r.path.clone();
+        let mut path = l.path.to_vec();
+        let mut tail = r.path.to_vec();
         tail[0].0 = Some(j.output);
         path.extend(tail);
         Some(Unit {
-            first: l.first,
-            last: r.last,
-            path,
-            terminal: r.terminal,
+            path: path.into_boxed_slice(),
         })
     }
     pub(crate) fn enabled(&self) -> bool {
@@ -440,7 +456,7 @@ impl Catalog {
                     .count();
                 state.stack.drain(..state.stack.len() - keep);
             }
-            return (self.units[unit].terminal, Default::default());
+            return (self.units[unit].terminal(), Default::default());
         }
         let Some(&id) = self.leaves.get(&(rule, Some(pivot))) else {
             return (false, std::mem::take(state).history);
@@ -490,7 +506,7 @@ impl Catalog {
             })
             .count();
         state.stack.drain(..state.stack.len() - keep);
-        (self.units[right.unit].terminal, Default::default())
+        (self.units[right.unit].terminal(), Default::default())
     }
     pub fn entries(&self) -> Vec<J> {
         self.units
@@ -507,6 +523,9 @@ impl Catalog {
             .collect()
     }
     pub fn select(&self, p: &Program, profile: &Training) -> Vec<(Join, Evidence)> {
+        // Offline selection borrows existing immutable keys. Neither copies
+        // of their contents nor a persistent runtime index are necessary.
+        let existing:BTreeSet<_>=self.units.iter().map(|u|u.path.as_ref()).collect();
         let mut choices = vec![];
         for (&join, e) in &profile.pairs {
             if e.visits < self.limits.support {
@@ -515,7 +534,7 @@ impl Catalog {
             let Some(u) = self.combine(p, join) else {
                 continue;
             };
-            if self.paths.contains(&u.path) {
+            if existing.contains(u.path.as_ref()) {
                 continue;
             }
             let mut e = e.clone();
@@ -564,8 +583,8 @@ impl Catalog {
                     let Some(_) = self.combine(p, *next) else {
                         continue;
                     };
-                    let mut path = u.path.clone();
-                    let mut suffix = tail.path.clone();
+                    let mut path = u.path.to_vec();
+                    let mut suffix = tail.path.to_vec();
                     suffix[0].0 = Some(next.output);
                     path.extend(suffix);
                     let old = self.switch.program(self.switch.replay(&path)).unwrap();
@@ -715,22 +734,16 @@ mod tests {
         for i in 0..4 {
             c.leaves.insert((i, Some(0)), i);
             c.units.push(Unit {
-                first: (i, Some(0)),
-                last: (i, Some(0)),
-                terminal: true,
-                path: vec![(None, (i, Some(0)))],
+                path: vec![(None, (i, Some(0)))].into_boxed_slice(),
             });
         }
         for (l, r) in [(0, 1), (2, 3), (4, 5)] {
-            let mut path = c.units[l].path.clone();
-            let mut right = c.units[r].path.clone();
+            let mut path = c.units[l].path.to_vec();
+            let mut right = c.units[r].path.to_vec();
             right[0].0 = Some(0);
             path.extend(right);
             let unit = Unit {
-                first: c.units[l].first,
-                last: c.units[r].last,
-                path,
-                terminal: true,
+                path: path.into_boxed_slice(),
             };
             c.jumps.insert(
                 Join {

@@ -70,20 +70,20 @@ pub(crate) struct Forecast {
 }
 impl Forecast {
     /// Optional progress diagnostics; this is not part of the scope proof.
-    pub(crate) fn conflicts(&self, demand: &[usize]) -> Vec<(usize, usize)> {
+    pub(crate) fn conflicts(&self, demand: impl Iterator<Item=usize> + Clone) -> Vec<(usize, usize)> {
         self.groups
             .iter()
             .flat_map(|g| {
                 demand
-                    .iter()
-                    .filter(|&&t| g.tables[t])
-                    .map(move |&t| (g.table, t))
+                    .clone()
+                    .filter(|&t| g.tables[t])
+                    .map(move |t| (g.table, t))
             })
             .collect()
     }
     /// Selecting one table also selects every pending group stored in that
     /// table. Close over their complete future effects before running repair.
-    pub(crate) fn select(&self, demand: &[usize], eager: bool) -> (Vec<bool>, u64) {
+    pub(crate) fn select(&self, demand: impl Iterator<Item=usize> + Clone, eager: bool) -> (Vec<bool>, u64) {
         let mut selected = vec![false; self.tables];
         let mut chosen = vec![false; self.groups.len()];
         let mut required = smallvec::SmallVec::<[usize; 8]>::new();
@@ -98,7 +98,7 @@ impl Forecast {
                 }
                 let needed = (eager && !group.pure)
                     || selected[group.table]
-                    || demand.iter().chain(required.iter()).any(|&t| {
+                    || demand.clone().chain(required.iter().copied()).any(|t| {
                         checks += 1;
                         group.tables[t]
                     });
@@ -142,10 +142,10 @@ impl Forecast {
     pub(crate) fn has_ordered_tasks(&self) -> bool {
         self.groups.iter().any(|g| !g.pure)
     }
-    pub(crate) fn readiness(&self, demand: &[usize]) -> (bool, u64) {
+    pub(crate) fn readiness(&self, demand: impl Iterator<Item=usize> + Clone) -> (bool, u64) {
         let mut checks = 0;
         let ready = self.groups.iter().all(|g| {
-            demand.iter().all(|&t| {
+            demand.clone().all(|t| {
                 checks += 1;
                 !g.tables[t]
             })
@@ -187,7 +187,7 @@ impl Graph {
             tables: (0..self.program.tables.len())
                 .map(|t| plan.affects(table, t))
                 .collect(),
-            reads: plan.completion_reads[table].clone(),
+            reads: plan.completion_reads[table].to_vec(),
             pure: plan.deferrable[table],
             global: plan.global_effects(table),
         }
@@ -311,7 +311,7 @@ impl Graph {
                     if !boundary_tables.insert(t) {
                         continue;
                     }
-                    influence.reads.extend(&types.completion_reads[t]);
+                    influence.reads.extend(types.completion_reads[t].iter());
                     for (other, affected) in influence.tables.iter_mut().enumerate() {
                         counts.membership_checks += 1;
                         *affected |= types.affects(t, other);
@@ -471,7 +471,7 @@ impl Graph {
         }
         counts.scope_completions += 1;
         let epoch = self.epoch;
-        let result = self.repair_selected(Some(allowed));
+        let result = self.repair_selected(Some(crate::table_mask::Selection::Flags(allowed)));
         self.epoch = epoch;
         result?;
         let remaining = self.pending_completion_tasks();
@@ -548,7 +548,7 @@ mod tests {
             ],
         };
         assert!(!forecast.groups[1].tables[2]);
-        let (allowed, _) = forecast.select(&[], true);
+        let (allowed, _) = forecast.select(std::iter::empty(), true);
         assert_eq!(allowed, vec![true, true, true]);
     }
 }

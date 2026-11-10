@@ -117,6 +117,16 @@ pub(crate) struct Output {
     pub receipt_source: Option<Site>,
 }
 impl Output {
+    /// Static aliases are skipped by every RHS executor. Read their actual
+    /// donor directly, never probe the absent raw alias receipt first. A missing
+    /// donor remains missing; this does not prove visibility or current Eq.
+    pub(crate) fn receipt<T>(&self, query: impl FnOnce(usize) -> Option<T>,
+        effect: impl FnOnce(usize) -> Option<T>) -> Option<T> {
+        match self.receipt_source.unwrap_or(Site::Effect(self.operation)) {
+            Site::Query(atom) => query(atom),
+            Site::Effect(op) => effect(op),
+        }
+    }
     /// Lay out the completed Cell's retained prefix and transient boundaries.
     /// Exact constructor aliases share an actual query/effect receipt source;
     /// only their last publication can win. Eq values alone are not this proof.
@@ -389,5 +399,26 @@ mod tests {
             cell.local_relations().map(|r| r.site).collect::<Vec<_>>(),
             vec![Site::Query(0), Site::Effect(1)]
         );
+    }
+}
+
+#[cfg(test)]
+mod output_receipt_tests {
+    use super::{Output, Site};
+
+    #[test]
+    fn static_source_reads_only_actual_donor_even_when_missing() {
+        let mut output = Output { operation: 9, table: 0, receipt_source: Some(Site::Effect(2)) };
+        let receipt = output.receipt::<usize>(|_| panic!("effect donor is not a query"), |op| {
+            assert_eq!(op, 2, "never probe skipped operation 9");
+            None
+        });
+        assert_eq!(receipt, None, "a missing donor does not fabricate an output");
+        output.receipt_source = Some(Site::Query(3));
+        assert_eq!(output.receipt(|atom| { assert_eq!(atom, 3); Some(42) },
+            |_| panic!("query alias must not read any effect slot")), Some(42));
+        output.receipt_source = None;
+        assert_eq!(output.receipt(|_| panic!("ordinary effect has no query donor"),
+            |op| { assert_eq!(op, 9); Some(17) }), Some(17));
     }
 }

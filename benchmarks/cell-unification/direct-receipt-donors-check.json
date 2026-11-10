@@ -1,0 +1,27 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {},
+  "publication_net_saved_operations": 0,
+  "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159",
+  "scope": "standalone Cell CPU, normal sum-bits; unchanged measured work, no timing campaign",
+  "baseline_commit": "4d8caa0d",
+  "binaries": {
+    "baseline": "e6e124c3db7c248c1c24491bff86f557e66bc0690e7267c548881b23fd574916",
+    "candidate": "24f2d7d7b12996e46c931f25837af7df54a5c9ce139891fb76c25245a49228ea"
+  },
+  "reports": {
+    "baseline": "4d020ba63dcecc1a77ad87dec9515f6074d7c86a514e9afe4ad8de84b1b9277f",
+    "candidate": "202e76b89d897675d5253d55d363873bec4ca2f4aa95f716373956edf169c07a"
+  },
+  "semantic_acceptance": "pass",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "successful_alias_forwards": {
+    "alias_query_forwards": 1604,
+    "alias_effect_forwards": 294
+  },
+  "redundant_raw_probes_removed_lower_bound": 1898,
+  "limits": "Removed-probe bound is derived from successful forwards and the old/new source paths, not a new measured probe counter or a latency claim. Missing donors also avoid the raw probe but are excluded from this bound. Publication and history work remain unchanged."
+}

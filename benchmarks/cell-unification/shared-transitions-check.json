@@ -1,0 +1,42 @@
+{
+  "scope": "standalone Cell CPU ordinary loaded catalog; retained transitions structures",
+  "baseline_commit": "bd421908",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_entries_and_state_contracts_equal": true,
+  "baseline": {
+    "states": 65,
+    "node_array_bytes": 8320,
+    "transition_payload_bytes": 3264,
+    "transition_owner_bytes": 0
+  },
+  "candidate": {
+    "states": 65,
+    "node_array_bytes": 7800,
+    "transition_payload_bytes": 936,
+    "transition_owner_bytes": 176
+  },
+  "baseline_bytes": 11584,
+  "candidate_bytes": 8912,
+  "bytes_saved": 2672,
+  "fractional_reduction": 0.23066298342541436,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "e00c59a9770540c87f19ddbcc7d79ca75998d0e0f33e4924a8ec7aa4a347c738",
+    "candidate": "11d72d9d0c9bd5b484d84b13392e6f91cec1229fe93cfe04977b8c0c26eb7c3d"
+  },
+  "inspections": {
+    "before": "1689368a3d114794fc475b83befdec430ab50c4ef99b68e077c669938369afe5",
+    "after": "925db6602e5f4f6632a6c2ba46591ea515c6448cfe3e4f23a82c837cac6bc2bb"
+  },
+  "baseline_probe_patch_sha256": "5d8e59cb4904c936bf7aaeb96d481ff4b14e04e5573ead7f86d239f441d6ab53",
+  "limits": "Counts node array once, unique transition payloads and two-word Rc owners. Node array overlaps capture census; do not add those totals. Excludes other node-owned arrays and allocator rounding. No speed or takeover claim."
+}

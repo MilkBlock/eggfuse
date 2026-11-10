@@ -1,0 +1,45 @@
+{
+  "scope": "standalone Cell CPU optional completion prediction; retained hybrid storage",
+  "baseline_commit": "9cc5437f",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "closure_sha256": "3c1ed8bb91320b1cb264e318b44e9bb865fd078480f365c69d10f04f954570c7",
+  "exact_plan_and_closure_equal": true,
+  "storage": {
+    "encoding": "hybrid-v1",
+    "word_bytes": 8,
+    "owner_bytes": 48,
+    "lists": 2209,
+    "logical_values": 70646,
+    "unique_lists": 771,
+    "shared_payload_and_rc_bytes": 54936,
+    "handles_bytes": 17672
+  },
+  "allocation_model": {
+    "baseline_retained_blocks": 771,
+    "candidate_retained_blocks": 1541,
+    "scope": "Source-layout count: one Rc block per unique set, plus one nonempty boxed payload in hybrid. Not allocator-event instrumentation; excludes temporary interning and allocator rounding."
+  },
+  "baseline_bytes": 156136,
+  "candidate_bytes": 72608,
+  "bytes_saved": 83528,
+  "fractional_reduction": 0.5349695137572372,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "8feae6cdc05105f96338f9e741b931c1e3efdc6c285f88f5de0b39b6298d8a16",
+    "candidate": "570a03fed41d28d5a9c50f8b415fbd3399212f788b91eea36dc12107df2c97ff"
+  },
+  "inspection_sha256": {
+    "before": "368ca0f0e018e189a89ae841dbd62ee6b37451b9a59bf5190fba1ce3de18956e",
+    "after": "1d3a43101a3bfbc7f6c6616035e61167e4994792ccf5df8c4e87cca0764801f9"
+  },
+  "limits": "Hybrid counts shared objects, encoding descriptors, payloads, two-word Rc headers and all handles. Excludes allocator rounding, compiler temporaries and unrelated plan storage. No speed or new takeover claim."
+}

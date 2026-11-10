@@ -386,3 +386,314 @@ The retained-matrix reduction (64,160 -> 30,760 logical bytes) remains valid,
 but must be reported with this time cost, not as RHS publication acceleration.
 Further speed work should target measured repeated Entry/publication work;
 this measurement does not justify more prediction-builder micro-optimization.
+
+## Use executed-operation proofs to compress RHS receipt frames
+
+The next repeated-work target is the actual Cell effect frame, rather than
+one-time forecast construction. The last catalog's normal sum-bits execution
+initializes 12,028 receipt slots. EffectPlan still allocated raw slots for
+constructor aliases that every execution path already skips, including closed
+completion, prefix execution and first-miss resume. Such raw results are always
+absent. The older comment that closed completion could record them was stale.
+
+EffectPlan now uses the executor's validated static_skip proof to omit these
+transient slots, including full structural capture and history-only demands.
+There is no runtime filter or new instance metadata. Original effect donors
+remain allocated; a retained query-alias output still reserves its final prefix
+slot and fills it only after history observes the raw absence. An omitted raw
+slot returns None as before. The operation-to-slot descriptor array stays the
+same size. This does not change RHS instructions, published output positions,
+Run order, receipt resolution, visibility checks or cross-stage history facts.
+
+Normal sum-bits before/after b840448c/39512f71 kernel:
+
+- Receipt slot initializations: 12,028 -> 10,790, removing 1,238 (10.3%).
+- All other normalized work fields are unchanged, including publication work.
+- Exact final state and all 1,428 ordered Run signatures agree.
+- Required native choice diagnosis: pass, bound to the candidate state hash.
+- Entry publication, closed-alias and state-inheritance suites: 16 tests pass
+  both in the ordinary feature set and with structural-depth enabled. The
+  existing effect-donor regression additionally requires one initialized slot
+  per one-source frame; the skipped duplicate must not allocate an empty slot.
+
+This is an actual execution-frame reduction, not broader takeover of internal
+cross-stage publication. Source aliases provide the typed proof; the scheduled
+switch must still preserve actual witness, inherited absence and boundary
+publication. No allocation-count, peak-RSS or speed benefit is inferred from
+these initialization counts. This is the first implementation since the last
+requested timing checkpoint; no timing campaign was run.
+
+Saved result: `../cell-unification/elided-receipt-slots-check.json`.
+Reproduce normal runs with the same release features as the timing section,
+using baseline and candidate binaries and fresh `baseline`/`candidate`
+subdirectories under a pre-created root. Run the required choice diagnosis on
+saved native references and the candidate export, then check them with:
+
+```sh
+python3 benchmarks/cell-unification/check_elided_receipts.py \
+  --root out/elided-receipt-slots \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/closure-current-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/cell-unification/elided-receipt-slots-check.json
+```
+
+## Read the compiled receipt donor directly
+
+The previous normal catalog execution had 1,604 successful query-alias forwards
+and 294 effect-alias forwards, versus 1,313 history capture reads and 195 already
+inherited slots. Before publication, every alias first probed its skipped raw
+operation and only then read the compiler-known source. The raw result is absent
+by the same execution proof used for receipt-frame compression.
+
+Cell Output now selects the existing query/effect source before reading it.
+Ordinary outputs still read their own actual receipt. A missing donor returns
+None and keeps the existing publication fallback; source identity is neither a
+visibility certificate nor permission to replace a returned receipt with a
+producer/op address. No cache, runtime index, consumer list or extra instance
+state is introduced. Source Run publication order and history capture remain
+unchanged. This does not discharge another cross-Run publication boundary.
+
+On the same sum-bits program, before/after 4d8caa0d, all normalized work counters,
+1,428 ordered Run signatures and the final graph are identical. The required
+choice diagnosis passes. At least 1,898 redundant raw-slot probes disappear:
+this lower bound follows from the successful forwarding counters and the old
+and new code paths, not a new probe counter. Missing donors can save further
+probes but are excluded from the bound. No latency or publication-work reduction
+is claimed. This is implementation two since the last timing checkpoint.
+
+The 16 entry-publication, closed-alias and state-inheritance tests pass with
+iterative-bake, sparse-cells, view-ports and structural-depth. A runtime unit
+check verifies donor-only access including missing donors (no raw-alias read),
+query donors (no effect read), and ordinary output receipts. Existing tests
+retain deletion, union, aborted RHS, cross-stage inheritance and winner-order
+coverage. Saved evidence is `../cell-unification/direct-receipt-donors-check.json`.
+Use `check_elided_receipts.py --mode donors` with the fresh baseline/candidate
+exports and the required semantic acceptance JSON to reproduce the work check.
+
+## Rejected query-witness projection experiment
+
+The existing QueryFacts demand selected three specialized query collectors:
+no intermediate witness list for None, one inline witness for One, and the old
+list for All/Ports/Tracked. Source queries, guards, epochs, required final facts
+and publication stayed unchanged. The candidate patch and metering-only control
+patch are saved in `../cell-unification/`; neither is installed in the kernel.
+Both patches apply to 07c62ee5 individually (do not apply them on top of each
+other). The control adds three counters to the original collector. The timing
+baseline is unmodified 07c62ee5, built with the same release feature set.
+
+Sum-bits intermediate witness writes fell 2,178 -> 131, but the new path added
+487 single-atom comparisons and 870 demand dispatches. Charging all three yields
+690 fewer equal-weight operations. `check_witness_projection.py` verifies the
+metered control against the saved unmodified execution and checks that all other
+normalized work is unchanged. Exact final state, all 1,428 Run signatures and
+native choice diagnosis agree. Eleven Entry publication tests, seven query
+receipt tests, eleven witness-source tests, three closed-alias tests and four
+credit tests passed, including empty/single demand and added-cost charging.
+
+The user requested a speed gate before further work. One warmup and seven
+alternating pairs per mode, using `time_alias_scopes.py`, produced:
+
+| Mode | Inference median ms (old -> trial) | Wall median ms (old -> trial) |
+| --- | ---: | ---: |
+| normal | 25.521 -> 26.017 | 139.586 -> 142.702 |
+| scoped | 31.598 -> 31.230 | 173.496 -> 174.240 |
+
+Paired inference ratios were 1.0153 [0.9847, 1.0343] and 1.0027
+[0.9020, 1.0277], respectively (95% bootstrap intervals). Neither establishes a
+speed benefit; wall-time intervals also cross 1. The small work-count saving
+is insufficient evidence of acceleration. Runtime and credit changes were
+withdrawn, retaining only reproducible patches and text evidence. No Raytrace
+campaign was run. The user then directed further work toward storage compression
+and deferred hotspot investigation until the parallel branch returns instances
+directly. `query-witness-projection-timing.json` contains individual samples and
+binary hashes; `query-witness-projection-check.json` contains work/semantic checks.
+
+## Pack shared effect-slot descriptors without another index
+
+Following the user's direction to defer hotspot work until the parallel branch
+returns instances directly, compression continues in the existing shared Cell
+layout. EffectPlan previously stored an optional descriptor containing a u32
+slot and an optional u8 history position. On this target each entry occupied
+8 bytes. A packed descriptor stores the same optional full-range NonZeroU32
+and one byte encoding absent history as 0 and positions 0..63 as 1..64.
+Each entry is now 5 bytes. No slot-range restriction, side index, per-instance
+metadata, layout-owner header or runtime relationship maintenance is added.
+Packed fields are copied by value; Rust rejects unaligned references, and no
+unsafe block is used. The tradeoff is potentially unaligned descriptor loads,
+not a claimed execution speed improvement.
+
+The actual lazily retained sum-bits descriptors decrease from 6,376 to 3,985
+bytes (797 entries, saving 2,391 bytes / 37.5%). This is only descriptor-array
+capacity, excluding allocator rounding; it is not a 37.5% reduction of total
+runtime storage. Shared Plan headers, publication storage, instance result
+frames, logical work and inheritance coverage are unchanged. Previous catalog
+executions identify these retained layouts. Scheduled cross-Run inheritance
+keeps its original slot mapping and provenance checks; packing proves no new
+work redundant and receives no extra Bake operation credit.
+
+Seventeen tests pass: a packed-descriptor test preserves absent slots, the full
+u32 index, both ends of the 64-bit inheritance mask and an existing arena prefix;
+plus the sixteen Entry publication, closed-alias and state-inheritance tests
+with full structural capture compiled in. Exact sum-bits final state, all 1,428
+ordered Run signatures and every normalized work field agree. Required native
+choice diagnosis passes. No additional speed campaign was run.
+
+`../cell-unification/packed-effect-slots-check.json` records the retained census
+and binary hashes. Reproduce with saved baseline/candidate exports using
+`check_elided_receipts.py --mode packed`, the same program/binary arguments as
+previous checks, and `out/packed-effect-slots` as root. The checker accepts only
+the descriptor-byte change, checks the exact 8-to-5 ratio and requires semantic
+acceptance bound to the candidate state.
+
+## Share table lists across completion, rules and scheduled scopes
+
+The current catalog's prediction contains 401 completion-read lists but only
+seven different contents. Previously these lists, ruleset query demands and
+scope table lists used independent Vec storage, even when equal to an already
+shared per-rule demand. These 463 additional owners now join the existing
+compile-local exact-content pool. All 2,209 table-list owners share 771 distinct
+immutable arrays. No maintained graph, per-instance binding copy or runtime
+interning lookup is introduced. The pool is discarded after construction.
+Completion directories are boxed so conversion cannot retain the wider old
+Vec descriptor capacity. Scope input order is preserved; interning never sorts
+or weakens an obligation. Runtime consumers read the same slices. Mutable port
+influence construction still copies into its own work buffer as before.
+
+For the frozen sum-bits prediction, retained table-list storage changes
+172,712 -> 156,136 bytes, saving 16,576 (9.6%). This includes list handles and
+estimated two-word Rc headers. The old nonshared lists use 24-byte Vec headers
+and exact-length payloads on this 64-bit target. Outer container headers,
+allocator rounding and temporary interning/construction are excluded. This is
+optional completion-plan storage, not total runtime memory or a speed result.
+The actual execution catalog and every conservative cross-Run obligation are
+unchanged; no additional publication or repair is credited as eliminated.
+
+The full serialized plan, prior storage reports, every affects(a,b) answer and
+every singleton waiting scope match the baseline d13227b7 exactly. Thirty-one
+staged/merge/scoped tests pass, including extended pointer-sharing checks across
+rule demands, completion reads, scheduled query demands and scope lists, plus
+clone/drop lifetime validation. A scoped sum-bits run has unchanged normalized
+work, final graph and all 1,428 ordered Run signatures. Required native choice
+diagnosis passes. No timing campaign was run.
+
+Reproduce the before/after inspection with the respective versions of
+`inspect_completion_storage`. The new version adds only the `table_lists`
+census; `check_table_lists.py` removes that diagnostic field and requires all
+remaining inspection JSON to be identical. Run baseline and candidate with
+`--local-congruence --port-scopes`, and supply the saved semantic acceptance:
+
+```sh
+python3 benchmarks/worker-handoff/check_table_lists.py \
+  --before /private/tmp/table-lists-before.json \
+  --after /private/tmp/table-lists-after.json \
+  --root out/shared-table-lists \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/packed-effect-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/worker-handoff/shared-table-lists-check.json
+```
+
+## Pack retained scope membership and read it without decompression
+
+The current catalog's 31 scheduled scopes retain 401 predecessor flags each.
+These are now boxed u64 masks with an exact logical length. Construction and
+serialization preserve boolean order, including empty scopes and final-word
+padding. Serialization still emits the original bool array, so the worker
+preparation contract and complete prediction proof remain byte-for-byte
+identical at the JSON-value level.
+
+Queue selection, dirty-node selection, opaque-merge fallback, repair batches
+and parallel read-batch preparation borrow a Selection over either a packed
+scope or the existing mutable boolean flags. No scope is expanded into a
+temporary boolean array. This is a representation change, not a new scheduler
+or an equality proof. Every selected task and original Run boundary remains
+live; no additional cross-stage discharge is credited. The existing actual
+scoped execution is the control for ordered work and semantic validation.
+
+For the frozen catalog, retained flag payload drops 12,431 -> 1,736 bytes.
+Including the unchanged 744 bytes of descriptors, the measured/modelled scope
+mask total drops 13,175 -> 2,480 bytes (-81.2%). Allocator rounding, other Scope
+fields, temporary masks and process RSS are excluded. Reading a bit now needs
+bit extraction and the shared selector supports two representations; unchanged
+logical counters do not imply unchanged latency. No timing campaign was run,
+following the user's instruction to keep working on compression and defer
+hotspot investigation until the parallel instance-return path is ready.
+
+All other inspection JSON is identical to d3c12092: the full serialized Plan,
+every influence pair, every singleton wait scope, and previous storage reports.
+Fifty merge/scoped/staged/read-batch/port-completion tests pass. Two mask tests
+cover 0/1/63/64/65/127/128/129/401 widths, clone lifetime, serialization, all-zero,
+all-one and mixed bits; padding cannot be addressed as a table. A queue test
+compares packed and boolean selection through 2,000 changes, reinsertion and
+read epochs, then compares batch prefixes at the legal settled boundary.
+Scoped sum-bits preserves all normalized work, final graph and 1,428 ordered Run
+signatures. Required native choice diagnosis passes.
+
+`packed-scope-masks-check.json` records storage and scoped-runtime checks.
+Reproduce via `inspect_completion_storage` before/after, the ordinary saved
+scoped runs, and `check_table_lists.py --mode masks` with those inspection files,
+program, binaries and artifact root. The checker removes only the new
+`scope_masks` diagnostic before requiring exact inspection equality.
+
+## Retain Cell paths once and derive their metadata
+
+Compression now targets the ordinary loaded iterative Cell catalog, rather than
+only optional completion prediction. The actual 64-unit catalog retained both
+its executable paths and a second owned BTreeSet of identical paths for duplicate
+checking. Each unit also stored first/last Entry and terminal status, although
+these are determined by its nonempty path. The first/last Entry are the path
+endpoints; a terminal matching unit ends in Some(pivot), while a completed
+producer root ends in None.
+
+Units now retain only a boxed exact-length path. Parsing still rejects duplicate
+paths with a temporary owned set, dropped before result-switch construction.
+Offline Bake selection builds a temporary set of borrowed slices over the
+existing paths, preserving exact duplicate exclusion without retaining a second
+runtime index. Original rule/operation/pivot identities, joins, dispatch stacks,
+state contracts, result witnesses, retirement and Run boundaries are unchanged.
+A catalog clone remains independently valid. Endpoint/terminal reads now derive
+from the path; this is not a latency claim or new cross-stage takeover.
+
+On the frozen sum-bits catalog:
+
+| Retained path component | Before bytes | After bytes |
+| --- | ---: | ---: |
+| Unit array (64 records) | 5,120 | 1,024 |
+| Path array capacities | 7,040 | 4,840 |
+| Duplicate lookup keys | 1,536 | 0 |
+| Duplicate lookup payload | 4,840 | 0 |
+| Total counted components | 18,536 | 5,864 |
+
+A unit record shrinks 80 -> 16 bytes. These components save 12,672 bytes (68.4%).
+The model excludes BTree node links/spare key slots, allocator rounding, the
+catalog header, other indexes, switch state and the retained JSON artifact.
+It is not a whole-program memory claim. Parse-time temporary duplication and
+per-selection borrowed lookup preparation remain; no speed measurement was run.
+
+All 64 expanded entries and every finite state contract match exactly. Nineteen
+tests pass across inheritance, closed aliases, query receipts, dispatch and two
+compiler-selection/producer-root regressions. The new regression checks clone
+lifetime and rejection of a duplicate path after removal of the retained index.
+Ordinary sum-bits has unchanged normalized work, exact final graph and all 1,428
+ordered Run signatures; required native choice diagnosis passes. The last actual
+catalog's applied work remains authoritative: this change compresses its
+representation without crediting additional queries or publications as saved.
+
+For baseline 0126e0cd, apply the reporting-only
+`../cell-unification/catalog-storage-probe.patch` and copy the new
+`inspect_cell_catalog` example; the patch does not change execution. Run the
+example with iterative-bake,sparse-cells,view-ports before and after to collect
+path capacities and complete entries/contracts. The baseline runtime binary is
+unmodified. Validate saved normal runs and required semantic acceptance with:
+
+```sh
+python3 benchmarks/cell-unification/check_catalog_paths.py \
+  --before /private/tmp/cell-catalog-before.json \
+  --after /private/tmp/cell-catalog-after.json \
+  --root out/compact-cell-catalog \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/scope-mask-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/cell-unification/compact-catalog-check.json
+```

@@ -1,0 +1,596 @@
+{
+  "scope": "standalone Cell CPU ordinary loaded catalog; retained captures structures",
+  "baseline_commit": "a183c982",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_entries_and_state_contracts_equal": true,
+  "baseline": {
+    "states": 65,
+    "node_capacity": 128,
+    "captures": [
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      []
+    ],
+    "node_array_bytes": 17408,
+    "capture_payload_bytes": 1440,
+    "capture_owner_bytes": 0
+  },
+  "candidate": {
+    "states": 65,
+    "node_capacity": 65,
+    "captures": [
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          143,
+          0
+        ],
+        [
+          {
+            "Effect": 1
+          },
+          143,
+          1
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          143,
+          2
+        ]
+      ],
+      [
+        [
+          {
+            "Query": 0
+          },
+          55,
+          0
+        ]
+      ],
+      [],
+      [],
+      [
+        [
+          {
+            "Query": 0
+          },
+          137,
+          0
+        ],
+        [
+          {
+            "Effect": 2
+          },
+          137,
+          1
+        ]
+      ],
+      []
+    ],
+    "node_array_bytes": 8320,
+    "capture_payload_bytes": 144,
+    "capture_owner_bytes": 64
+  },
+  "baseline_bytes": 18848,
+  "candidate_bytes": 8528,
+  "bytes_saved": 10320,
+  "fractional_reduction": 0.5475382003395586,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "8af87cd2f08baaa5565f9996d00a589d109c7ea96658d59eda893a24e73b4208",
+    "candidate": "e00c59a9770540c87f19ddbcc7d79ca75998d0e0f33e4924a8ec7aa4a347c738"
+  },
+  "inspections": {
+    "before": "2f588c93dda16170430ae8a9b9c153e812cddff1eda3bfc7bc6023e9ec31ff94",
+    "after": "188fdb3ac333dedce1f349115f3bf53455238056ed3b385b7a0af14bc4851b98"
+  },
+  "baseline_probe_patch_sha256": "0c41297ce7366a0faed66e90e131fc951c4dde370e81fce7a6d0df17b421da0b",
+  "limits": "Counts node-array capacity, unique capture payloads and two-word Rc owners. Excludes other node-owned arrays, allocator rounding and switch header. No speed or new takeover claim."
+}

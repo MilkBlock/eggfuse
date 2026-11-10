@@ -637,7 +637,7 @@ impl Graph {
         m.composition.heap = heap;
         m.composition.columns = columns;
     }
-    pub(super) fn pop_owned_before(&mut self, next: Option<Dependency>, allowed: Option<&[bool]>) -> Option<FactRef> {
+    pub(super) fn pop_owned_before(&mut self, next: Option<Dependency>, allowed: Option<crate::table_mask::Selection<'_>>) -> Option<FactRef> {
         let m = self.ownership.as_mut()?;
         let (f,table) = m.pending.first(allowed)?;
         if next.is_some_and(|d| d < Dependency::Fact(f)) {

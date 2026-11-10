@@ -1,0 +1,32 @@
+{
+  "runs": 1428,
+  "ordered_hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {
+    "/stage_spine/stats/cell_query_witness_checks": [
+      0,
+      487
+    ],
+    "/stage_spine/stats/cell_query_witness_dispatches": [
+      0,
+      870
+    ],
+    "/stage_spine/stats/cell_query_witness_writes": [
+      2178,
+      131
+    ]
+  },
+  "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159",
+  "net_saved_witness_work": 690,
+  "scope": "standalone Cell CPU, normal sum-bits; work counts, not a timing campaign",
+  "baseline_commit": "07c62ee5 plus witness-projection-meter.patch",
+  "meter_patch_sha256": "d1073a321f04471840f11b79fe05270daa67fd78767c7c42eeae96fbef877920",
+  "binaries": {
+    "baseline": "def2f5f339a0e254d6c99c9def40c9ef7ea8899271f517c40521ac6daaf571ff",
+    "candidate": "4c5782f211a4f7a75b70fd41b0abcd0d4c8f41f1438f165a3911fb1a4be3dc7a"
+  },
+  "semantic_acceptance": "pass",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "limits": "Dispatches, single-atom comparisons and actual intermediate writes are charged once. No query, publication, repair or final required witness is removed. Equal-weight savings are not a speed estimate; monomorphized code-size costs are unmeasured."
+}

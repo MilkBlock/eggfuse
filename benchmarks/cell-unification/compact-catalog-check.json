@@ -1,0 +1,48 @@
+{
+  "scope": "standalone Cell CPU ordinary loaded catalog; retained path structures",
+  "baseline_commit": "0126e0cd",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "exact_entries_and_state_contracts_equal": true,
+  "baseline": {
+    "units": 64,
+    "unit_capacity": 64,
+    "unit_record_bytes": 80,
+    "unit_array_bytes": 5120,
+    "path_payload_bytes": 7040,
+    "lookup_key_bytes": 1536,
+    "lookup_payload_bytes": 4840
+  },
+  "candidate": {
+    "units": 64,
+    "unit_capacity": 64,
+    "unit_record_bytes": 16,
+    "unit_array_bytes": 1024,
+    "path_payload_bytes": 4840,
+    "lookup_key_bytes": 0,
+    "lookup_payload_bytes": 0
+  },
+  "baseline_bytes": 18536,
+  "candidate_bytes": 5864,
+  "bytes_saved": 12672,
+  "fractional_reduction": 0.6836426413465688,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "2f8e82efe2066beed3b8bbd461f64fc0be8328b971773f9065bf0ae321e4fbd2",
+    "candidate": "4c0f6cfa5ee7072d0997fe1c197c6b29e7647ac00326f355f2636eea080fac35"
+  },
+  "inspections": {
+    "before": "9f58552c81791046b20145824f0c8513fbb291478930fa050bd87ff252ed6ff0",
+    "after": "e556235d48f5fd0590e704fe779ceb4cb36c05a7fadf9a3132fef4f48e574722"
+  },
+  "baseline_probe_patch_sha256": "a7c6579b54d5f2d0473ac872a3fee76d6f39fc9e95b1426d28a0409a9ecf2b12",
+  "limits": "Counts unit-array capacity, path-array capacities and former duplicate lookup keys/payloads. Excludes BTree node spare slots/links, allocator rounding, catalog header, other indexes, state switch and JSON artifact storage. No speed or new cross-stage takeover claim."
+}

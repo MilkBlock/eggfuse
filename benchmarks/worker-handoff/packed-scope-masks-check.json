@@ -1,0 +1,36 @@
+{
+  "scope": "standalone Cell CPU optional completion prediction; retained masks storage",
+  "baseline_commit": "d3c12092",
+  "program": "30dd2fe6a539db57a31303bdf272b230f22268abd978611e327fa0bc8e535b1b",
+  "closure_sha256": "3c1ed8bb91320b1cb264e318b44e9bb865fd078480f365c69d10f04f954570c7",
+  "exact_plan_and_closure_equal": true,
+  "storage": {
+    "scopes": 31,
+    "old_boolean_payload_bytes": 12431,
+    "packed_payload_bytes": 1736,
+    "descriptor_bytes": 744
+  },
+  "baseline_bytes": 13175,
+  "candidate_bytes": 2480,
+  "bytes_saved": 10695,
+  "fractional_reduction": 0.8117647058823529,
+  "runtime": {
+    "runs": 1428,
+    "ordered_hashes": {
+      "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "changed_work": {},
+    "publication_net_saved_operations": 0,
+    "program_sha256": "c28f371b479fd1382d1455a753e10a80da2267ba96e2875de18da7ea7df2e159"
+  },
+  "semantic_acceptance": "pass",
+  "binaries": {
+    "baseline": "7f139cf72c3ebbac624b83d5ee5e326a839cc5982dfc5d6f2fc85767e7e09729",
+    "candidate": "2f8e82efe2066beed3b8bbd461f64fc0be8328b971773f9065bf0ae321e4fbd2"
+  },
+  "inspection_sha256": {
+    "before": "192a1cae3aeb172e25d1f3c9cc2a384aa8f24f38f5b34b6b71617c4ea376d644",
+    "after": "368ca0f0e018e189a89ae841dbd62ee6b37451b9a59bf5190fba1ce3de18956e"
+  },
+  "limits": "64-bit model: previous nonshared Vec headers 24 bytes and exact-length payload. Includes 24-byte mask descriptors; words are boxed with exact capacity. Excludes outer container headers, allocator rounding, temporary construction and unrelated storage. No latency, whole-process RSS or new cross-Run takeover claim."
+}
