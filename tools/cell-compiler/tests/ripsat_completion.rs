@@ -107,6 +107,7 @@ fn direct_completion_projects_real_results_and_preserves_every_run() {
         fixture::emit(&source,&dir.path().join("case")).unwrap();
         let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
         let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+        check_entry_dispatch(&compiled);
         let (before,expected)=execute(raw); let (after,actual)=execute(compiled.clone());
         assert_eq!(expected,actual,"exact boundaries and ordered inputs/effects on the actual optimized path");
         assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
@@ -135,6 +136,43 @@ fn direct_completion_projects_real_results_and_preserves_every_run() {
     }
 }
 
+fn check_entry_dispatch(raw: &Value) {
+    let plan = &raw["iterative_bake"];
+    let dispatch = &plan["completion"]["entry_dispatch"];
+    let switch = &plan["rhs_handoffs"];
+    assert_eq!(dispatch["switch_sha256"], artifact_digest(switch));
+    let programs = switch["completion_states"].as_array().unwrap();
+    let mut routed = std::collections::BTreeSet::new();
+    for entry in dispatch["entries"].as_array().unwrap() {
+        assert!(!entry["states"].as_array().unwrap().is_empty());
+        for pc in entry["states"].as_array().unwrap() {
+            let pc = pc.as_u64().unwrap() as usize;
+            assert!(routed.insert(pc), "one execution entry per program");
+            assert!(!programs[pc].is_null());
+            assert_eq!(entry["rule"], programs[pc]["rule"]);
+        }
+    }
+    // Includes all suffix/fallback destinations, not just learned join edges.
+    for (pc, program) in programs.iter().enumerate() {
+        assert_eq!(routed.contains(&pc), !program.is_null());
+    }
+    assert_eq!(dispatch["programs"], routed.len());
+    // Existing v1 artifacts remain valid without the optional dispatch export.
+    let mut old = raw.clone();
+    old["iterative_bake"]["completion"].as_object_mut().unwrap().remove("entry_dispatch");
+    Program::parse(seal(old)).unwrap();
+    for field in ["entries", "switch_sha256", "dynamic_checks", "default"] {
+        let mut forged = raw.clone();
+        forged["iterative_bake"]["completion"]["entry_dispatch"][field] = Value::Null;
+        assert!(Program::parse(seal(forged)).is_err(), "unchecked {field}");
+    }
+    if !routed.is_empty() {
+        let mut forged = raw.clone();
+        forged["iterative_bake"]["completion"]["entry_dispatch"]["entries"][0]["states"][0] = json!(0);
+        assert!(Program::parse(seal(forged)).is_err());
+    }
+}
+
 #[test]
 #[cfg(feature = "sparse-cells")]
 fn deletable_results_keep_the_original_rhs_responsibility() {
@@ -142,6 +180,7 @@ fn deletable_results_keep_the_original_rhs_responsibility() {
     fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
     let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
     let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    check_entry_dispatch(&compiled);
     let (before,expected)=execute(raw); let (after,actual)=execute(compiled);
     assert_eq!(expected,actual);
     assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());

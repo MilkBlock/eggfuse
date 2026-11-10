@@ -167,3 +167,7 @@ certificates and query-class masks. The compiler requires all authoritative
 source fields to be unchanged. Old fragment observations select the same code;
 their provenance is retained, and no new observation or performance support is
 claimed. A stale checksum alone is never accepted as the new certificate.
+## Executable lowering and entry dispatch
+
+See [Cell specialization](CELL_SPECIALIZATION.md) for the checked entry export,
+per-iteration regeneration, and the shared Cell completion/publication path.

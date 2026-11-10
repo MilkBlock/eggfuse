@@ -271,6 +271,11 @@ impl Catalog {
                 || completion["contracts"]!=s.completion_contracts(p) {
                 return Err("invalid ripsat completion structures".into());
             }
+            if let Some(entries) = completion.get("entry_dispatch") {
+                if *entries != s.completion_entries(p) {
+                    return Err("invalid completion entry dispatch".into());
+                }
+            }
         }
         Ok(s)
     }
@@ -278,6 +283,32 @@ impl Catalog {
     /// This intentionally promises no saturation under new external inputs.
     pub fn state_contracts(&self, p: &Program) -> J {
         self.switch.state_contracts(p, |u| self.units[u].last())
+    }
+    /// Compile-only routing information. Program IDs are existing switch PCs,
+    /// not a second completion graph or an instance-side binding registry.
+    pub fn completion_entries(&self, p: &Program) -> J {
+        let switch = self.switch.artifact();
+        let mut entries = BTreeMap::<Entry, Vec<usize>>::new();
+        if let Some(states) = switch["completion_states"].as_array() {
+            for (pc, program) in states.iter().enumerate().filter(|(_, p)| !p.is_null()) {
+                let unit = self.switch.active(pc);
+                let entry = self.units[unit].last();
+                debug_assert_eq!(program["rule"].as_u64(), Some(entry.0 as u64));
+                entries.entry(entry).or_default().push(pc);
+            }
+        }
+        let programs = entries.values().map(Vec::len).sum::<usize>();
+        let rows = entries.into_iter().map(|((rule, pivot), states)| {
+            let leaf = self.leaves[&(rule, pivot)];
+            json!({"rule":rule,"template":p.rules[rule].template,"pivot":pivot,"leaf":leaf,"states":states})
+        }).collect::<Vec<_>>();
+        json!({"schema":"eggfuse-completion-entry-dispatch/v1",
+            "switch_sha256":crate::checksum::artifact_digest(&p.artifact["iterative_bake"]["rhs_handoffs"]),
+            "entries":rows,"programs":programs,
+            "default":"ordinary","program_index":"rhs_handoffs.completion_states[state]",
+            "activation":"after-successful-match-before-rhs",
+            "publication":"original-source-run",
+            "dynamic_checks":["execution-mode","publication-layout","actual-result-projection","receipt-visibility"]})
     }
     /// Finite constructor structures and exact prefix inclusion maps. This is
     /// reconstructed during loading; runtime instances do not retain the graphs.
@@ -355,7 +386,7 @@ impl Catalog {
         Ok(())
     }
     pub(crate) fn tracks_slots(&self) -> bool { self.track_slots }
-    pub(crate) fn direct_completion(&self,s:&State) -> Option<&Rc<crate::cell_completion::Direct>> {
+    pub(crate) fn direct_completion(&self,s:&State) -> Option<&Rc<crate::cell::CompletedPlan>> {
         self.switch.direct(s.pc)
     }
     pub(crate) fn completion_enabled(&self) -> bool { self.switch.completion_enabled() }

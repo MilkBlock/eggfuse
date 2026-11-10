@@ -385,6 +385,13 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             "runs":stamp.2.len(),"final_state_sha256":stamp.0,"schedule_sha256":stamp.1,
             "ordered_rhs_sha256":format!("{:x}",Sha256::digest(serde_json::to_vec(&stamp.2)?)),"stop":stopped,"resumed_steps":spine["resumed_steps"]}));
         history.last_mut().unwrap()["credit"] = credit;
+        if completion {
+            let dispatch = &plan["completion"]["entry_dispatch"];
+            history.last_mut().unwrap()["completion_entries"] = json!({
+                "eligible_entries":dispatch["entries"].as_array().map_or(0,Vec::len),
+                "eligible_states":dispatch["programs"],
+                "scope":"static coverage, not saved work"});
+        }
         history.last_mut().unwrap()["ordered_writes_sha256"] = artifact_digest(&json!(stamp.3)).into();
         history.last_mut().unwrap()["ordered_resumes_sha256"] = artifact_digest(&json!(stamp.4)).into();
         // Immutable round checkpoints make an interrupted run inspectable.

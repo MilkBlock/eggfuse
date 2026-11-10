@@ -20,6 +20,13 @@ pub(crate) use binding::bind_relation;
 mod results;
 #[cfg(feature = "iterative-bake")]
 pub(crate) use results::{Capture, ResultPort, Results, SlotLayout};
+#[cfg(feature = "iterative-bake")]
+#[path = "cell_specialization.rs"]
+mod specialization;
+#[cfg(feature = "iterative-bake")]
+pub(crate) use specialization::{CompletedPlan, compile_projections};
+#[cfg(feature = "sparse-cells")]
+pub(crate) use effects::ProjectedEffects;
 
 #[path = "cell_query.rs"]
 mod query;

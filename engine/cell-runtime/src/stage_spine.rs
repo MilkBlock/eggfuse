@@ -1390,42 +1390,17 @@ impl Programs {
         Some(results)
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn complete_direct(&mut self,g:&Graph,rid:usize,cell:u32,mut step:Started,
-        results:crate::cell::Results) {
-        let Started::Live(cursor)=&mut step else {unreachable!("validated completion cursor")};
-        self.training.applied(&g.program.iterative,&mut cursor.state,g.program.rules[rid].inputs.len());
-        self.stats.completed_steps+=1;
+    pub(crate) fn complete_direct(&mut self,g:&Graph,rid:usize,cell:u32,step:Started,
+        results:crate::cell::Results,query_fact:impl Fn(usize)->Option<Dependency>) -> Result<()> {
         self.stats.ripsat_completed+=1;
         self.stats.ripsat_projected_slots+=results.len() as u64;
-        if self.outputs[rid].is_empty() {return;}
-        self.capture_unions.get_or_insert(g.stats.unions);
-        // Move only the completion view. All dependency slots remain in the
-        // original owner; history and Entry publication share this projection.
-        step.remember(&g.program.iterative,rid,|_|unreachable!(),|_|unreachable!(),0,
-            Some(results),&mut self.stats);
-        let slot=self.pending_steps.len();
-        self.pending_steps.push(Completion::new(step));
-        let width=self.cell_output_widths[rid];
-        if width!=0 {
-            self.install_delivery(rid,slot,cell,0,true);
-            self.count_output_receipts(rid,width);
-        }
-        // Uncovered Entry ownership remains an ordinary boundary publication,
-        // reading the same projected frame rather than creating an RHS packet.
-        for position in width..self.outputs[rid].len() {
-            let output=self.outputs[rid][position];
-            self.stats.ripsat_boundary_reads+=1;
-            self.stats.output_registrations+=1;
-            let port=self.effect_plans[rid].get().unwrap().history_effect(output.operation)
-                .expect("direct completion retains every actual effect");
-            let receipt=self.pending_steps[slot].results().output(port).expect("validated completion witness");
-            let publication=Publication{slot,receipt:Some(receipt),output:output.operation,
-                #[cfg(feature="spine-shapes")] source:crate::graph::FactRef{cell,op:output.operation as u32}};
-            self.capture_receipt(rid,slot,cell,position,output.table,publication,receipt,None);
-        }
-        self.stats.captured_anchors+=self.outputs[rid].len() as u64;
-        self.stats.unmaterialized_anchor_keys+=self.outputs[rid].len() as u64;
-        self.stats.captured_contexts+=1;
+        self.stats.ripsat_boundary_reads+=self.outputs[rid].len().saturating_sub(self.cell_output_widths[rid]) as u64;
+        let effects=crate::cell::ProjectedEffects {
+            results:Some(results), plan:self.effect_plans[rid].get().cloned(),
+            published:self.cell_output_widths[rid],
+        };
+        self.complete(g,rid,cell,step,query_fact,effects,
+            |_|Err("specialized Cell escaped its validated publication boundary".into()))
     }
     pub(crate) fn complete<E: crate::cell::CompletedEffects>(
         &mut self,
@@ -1459,12 +1434,12 @@ impl Programs {
         self.capture_unions.get_or_insert(g.stats.unions);
         let slot = self.pending_steps.len();
         #[cfg(feature = "sparse-cells")]
-        let sealed = effects.output_frame().and_then(|frame| {
-            self.stats.output_span_checks += 1;
-            frame.sealed_outputs()
-        });
+        let joint = effects.has_joint_results();
         #[cfg(feature = "sparse-cells")]
-        let joint = effects.output_frame().is_some_and(|frame| frame.has_joint_results());
+        let sealed = if joint || effects.output_frame().is_some() {
+            self.stats.output_span_checks += 1;
+            effects.sealed_outputs()
+        } else { None };
         #[cfg(not(feature = "sparse-cells"))]
         let joint = false;
         #[cfg(feature = "iterative-bake")]
@@ -1565,7 +1540,7 @@ impl Programs {
             // Individual boundaries only read this frame. The permanent
             // prefix has no query aliases to fill, so raw RHS evidence remains
             // unchanged. Move it once after boundary registration is done.
-            let prepared = effects.output_frame().unwrap().take_results(rid).unwrap();
+            let prepared = effects.take_results(rid).unwrap();
             let CompletionPhase::Started(step) = &mut self.pending_steps[slot].phase else { unreachable!() };
             step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
                 effects.forwarded(), Some(prepared), &mut self.stats);

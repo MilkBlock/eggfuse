@@ -16,7 +16,42 @@ pub(crate) trait CompletedEffects {
     fn get(&self, operation: usize) -> Option<Dependency>;
     #[cfg(feature = "sparse-cells")]
     fn output_frame(&mut self) -> Option<&mut Effects>;
+    #[cfg(feature = "sparse-cells")]
+    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize, usize)> {
+        Effects::sealed_outputs(self.output_frame()?)
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn has_joint_results(&mut self) -> bool {
+        self.output_frame().is_some_and(|frame| Effects::has_joint_results(frame))
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn take_results(&mut self, rule: usize) -> Option<super::Results> {
+        Effects::take_results(self.output_frame()?, rule)
+    }
     fn finish(self, publish: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)>;
+}
+
+/// A specialized Cell completes through the same publication interface as an
+/// executed RHS. It owns a view of actual results, never a second receipt array.
+#[cfg(feature = "sparse-cells")]
+pub(crate) struct ProjectedEffects {
+    pub results: Option<super::Results>,
+    pub plan: Option<Rc<EffectPlan>>,
+    pub published: usize,
+}
+#[cfg(feature = "sparse-cells")]
+impl CompletedEffects for ProjectedEffects {
+    const DEFERRED_KEYS: bool = false;
+    fn get(&self, operation: usize) -> Option<Dependency> {
+        self.results.as_ref()?.output(self.plan.as_ref()?.history_effect(operation)?)
+    }
+    fn output_frame(&mut self) -> Option<&mut Effects> { None }
+    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize, usize)> {
+        (self.published != 0).then_some((0, self.published, 0, 0))
+    }
+    fn has_joint_results(&mut self) -> bool { true }
+    fn take_results(&mut self, _: usize) -> Option<super::Results> { self.results.take() }
+    fn finish(self, _: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> { None }
 }
 pub(crate) struct SingleEffect(pub usize, pub Dependency);
 impl CompletedEffects for SingleEffect {

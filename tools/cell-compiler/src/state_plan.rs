@@ -6,7 +6,8 @@ use serde_json::{Value, json};
 pub fn completion(p: &Program) -> Result<Value, Box<dyn std::error::Error>> {
     let contracts=p.iterative.completion_contracts(p);
     let registry=eggfuse_bake::native_analyze::register_cpu_completion_structures(&contracts)?;
-    Ok(json!({"schema":"eggfuse-ripsat-completion/v1","contracts":contracts,"cell_egraph":registry}))
+    Ok(json!({"schema":"eggfuse-ripsat-completion/v1","contracts":contracts,"cell_egraph":registry,
+        "entry_dispatch":p.iterative.completion_entries(p)}))
 }
 
 pub fn compile(p: &Program) -> Result<Value, Box<dyn std::error::Error>> {

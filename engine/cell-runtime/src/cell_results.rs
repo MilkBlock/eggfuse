@@ -34,10 +34,10 @@ mod joint_tests {
 
     #[test]
     fn baked_permutations_reuse_one_owner_through_repeated_completions() {
-        use crate::cell_completion::{Direct,compile_projections};
+        use crate::cell::{CompletedPlan,compile_projections};
         let make=|rule,source| {
             let layout=SlotLayout::compile(rule,vec![Some(ResultPort::new(source,1)),Some(ResultPort::new(source,0))]).unwrap();
-            Some(Rc::new(Direct {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![]}))
+            Some(Rc::new(CompletedPlan {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![]}))
         };
         let mut plans=[make(1,0),make(2,1),make(1,2)];
         compile_projections(&mut plans,std::iter::empty());
@@ -187,7 +187,7 @@ impl Results {
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
-    pub(crate) fn project_complete(plan:&crate::cell_completion::Direct,owner:Rc<Trail>,probes:&mut u64) -> Option<Self> {
+    pub(crate) fn project_complete(plan:&crate::cell::CompletedPlan,owner:Rc<Trail>,probes:&mut u64) -> Option<Self> {
         let (rule,layout)=(plan.rule,&plan.layout);
         let width=layout.sources.len();
         if width==0 || width>64 || layout.sources.iter().any(Option::is_none) {return None;}

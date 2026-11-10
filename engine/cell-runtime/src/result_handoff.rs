@@ -425,7 +425,7 @@ impl History {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
-    pub(crate) fn project_complete(&self,plan:&crate::cell_completion::Direct,probes:&mut u64) -> Option<Results> {
+    pub(crate) fn project_complete(&self,plan:&crate::cell::CompletedPlan,probes:&mut u64) -> Option<Results> {
         Results::project_complete(plan,self.snapshot(plan.back)?,probes)
     }
     pub(crate) fn capture(
@@ -566,7 +566,7 @@ pub(crate) struct Switch {
     initial: Vec<usize>,
     exports: Rows<Site>,
     completion: bool,
-    direct: Box<[Option<Rc<crate::cell_completion::Direct>>]>,
+    direct: Box<[Option<Rc<crate::cell::CompletedPlan>>]>,
     pub depth: usize,
 }
 type DispatchRows = Rows<Option<NonZeroUsize>>;
@@ -679,7 +679,7 @@ impl Switch {
             "direct_states":self.direct.iter().flatten().count(),
             "direct_array_bytes":std::mem::size_of_val(self.direct.as_ref()),
             "direct_program_bytes":self.direct.iter().flatten().map(|p|
-                std::mem::size_of::<crate::cell_completion::Direct>()+2*std::mem::size_of::<usize>()
+                std::mem::size_of::<crate::cell::CompletedPlan>()+2*std::mem::size_of::<usize>()
                 +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
                 +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>(),
             "read_payload_bytes":payload})
@@ -978,9 +978,9 @@ impl Switch {
             let cell=Definition::new(p,rule).unwrap();
             let outputs=exports[rule].iter().enumerate().map(|(slot,&site)|(site,cell.relation(site).unwrap().table,slot)).collect();
             let required_sources=layout.sources.iter().flatten().fold(0,|mask,p|mask | (1u64<<p.slot()));
-            direct[id]=Some(Rc::new(crate::cell_completion::Direct{rule,back,layout,outputs,required_sources,projections:vec![]}));
+            direct[id]=Some(Rc::new(crate::cell::CompletedPlan{rule,back,layout,outputs,required_sources,projections:vec![]}));
         }
-        if completion {crate::cell_completion::compile_projections(&mut direct,layouts.values().flatten().cloned());}
+        if completion {crate::cell::compile_projections(&mut direct,layouts.values().flatten().cloned());}
         // Freeze only after every ResultPort has its final rule/slot identity.
         // The pool is compile-local: states share immutable capture programs,
         // while each completed instance retains its own Results and lifetime.
@@ -1095,7 +1095,7 @@ impl Switch {
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| n.program.as_ref())
     }
-    pub(crate) fn direct(&self,id:usize) -> Option<&Rc<crate::cell_completion::Direct>> {
+    pub(crate) fn direct(&self,id:usize) -> Option<&Rc<crate::cell::CompletedPlan>> {
         self.direct.get(id)?.as_ref()
     }
     pub(crate) fn completion_enabled(&self) -> bool { self.completion }
