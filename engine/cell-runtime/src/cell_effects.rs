@@ -29,17 +29,20 @@ impl CompletedEffects for SingleEffect {
     fn finish(self, _: bool) -> Option<(Vec<Option<Dependency>>, usize, u64, u64)> { None }
 }
 
-#[derive(Clone, Copy)]
-struct EffectSlot { index:NonZeroU32, history:Option<u8> }
+// Keep the full u32 slot range. Only padding is removed; history is encoded
+// as 0 (absent) or 1..=64. Copy packed fields by value, never borrow them.
+#[repr(C, packed)]
+#[derive(Clone, Copy, Default)]
+struct EffectSlot { index:Option<NonZeroU32>, history:u8 }
 pub(crate) struct EffectPlan {
-    slots: Vec<Option<EffectSlot>>,
+    slots: Vec<EffectSlot>,
     width: usize,
     pub outputs: usize,
 }
 impl EffectPlan {
     pub fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize, full: bool) -> Self {
         let cell = Definition::new(p, rule).expect("typed Cell");
-        let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published };
+        let mut plan = Self { slots: vec![EffectSlot::default(); cell.template.ops.len()], width: 0, outputs: published };
         // The retained prefix belongs to the actual producer, even when its
         // publication is attached to a later alias operation. Output::prepare
         // has already selected one last output per exact source.
@@ -66,7 +69,7 @@ impl EffectPlan {
             if let Site::Effect(op) = *site {
                 if executes(op) {
                     plan.require(op);
-                    if slot < 64 { plan.slots[op].as_mut().unwrap().history=Some(slot as u8); }
+                    if slot < 64 { plan.slots[op].history=slot as u8+1; }
                 }
             }
         }
@@ -77,11 +80,12 @@ impl EffectPlan {
         }
         plan
     }
-    pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<Option<EffectSlot>>() }
+    pub(crate) fn slot_bytes(&self) -> usize { self.slots.capacity()*std::mem::size_of::<EffectSlot>() }
     fn require(&mut self, op: usize) {
-        if self.slots[op].is_none() {
+        let index = self.slots[op].index;
+        if index.is_none() {
             self.width += 1;
-            self.slots[op] = Some(EffectSlot { index:NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap(), history:None });
+            self.slots[op] = EffectSlot { index:Some(NonZeroU32::new(u32::try_from(self.width).expect("Cell receipt layout exhausted")).unwrap()), history:0 };
         }
     }
 }
@@ -106,7 +110,7 @@ impl Effects {
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
-        let slot = plan.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
+        let slot = plan.slots.get(operation)?.index?.get() as usize - 1;
         self.targets += 1;
         Some(&mut self.buffer[self.first + slot])
     }
@@ -114,13 +118,14 @@ impl Effects {
     pub fn record_handoff(&mut self, operation:usize, receipt:Dependency, input:&crate::result_handoff::Input, original:bool, track:bool) {
         let Some(plan)=&self.plan else { return };
         self.probes+=1;
-        let Some(Some(slot))=plan.slots.get(operation) else { return };
+        let Some(slot)=plan.slots.get(operation) else { return };
+        let Some(index)=slot.index else { return };
         self.targets+=1;
-        self.buffer[self.first+slot.index.get() as usize-1]=Some(receipt);
+        self.buffer[self.first+index.get() as usize-1]=Some(receipt);
         // Provenance rides in the existing operation-to-slot descriptor: no
         // second index or per-instance source map is queried or maintained.
         if track && input.from_history && input.back==1 && original
-            && let Some(history)=slot.history { self.forwarded |= 1<<history; }
+            && let Some(history)=slot.history.checked_sub(1) { self.forwarded |= 1<<history; }
     }
     pub fn record(&mut self, operation: usize, receipt: Dependency) {
         if let Some(slot) = self.slot(operation) { *slot = Some(receipt); }
@@ -151,7 +156,7 @@ impl CompletedEffects for Effects {
     fn forwarded(&self) -> u64 { self.forwarded }
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
-        let slot = self.plan.as_ref()?.slots.get(operation)?.as_ref()?.index.get() as usize - 1;
+        let slot = self.plan.as_ref()?.slots.get(operation)?.index?.get() as usize - 1;
         self.buffer[self.first + slot]
     }
     #[cfg(feature = "sparse-cells")]
@@ -160,5 +165,35 @@ impl CompletedEffects for Effects {
         let plan = self.plan.take()?;
         self.buffer.truncate(self.first + if publish { self.keep } else { 0 });
         Some((self.buffer, plan.width, self.probes, self.targets))
+    }
+}
+
+#[cfg(all(test, feature = "iterative-bake"))]
+mod packed_slot_tests {
+    use super::*;
+
+    #[test]
+    fn packed_descriptors_preserve_absence_and_both_history_mask_ends() {
+        assert_eq!(std::mem::size_of::<EffectSlot>(), 5);
+        let largest = EffectSlot { index:NonZeroU32::new(u32::MAX), history:64 };
+        let index = largest.index;
+        assert_eq!(index.unwrap().get(), u32::MAX, "slot range is not truncated");
+        let plan = Rc::new(EffectPlan { slots:vec![EffectSlot::default(),
+            EffectSlot { index:NonZeroU32::new(1), history:64 },
+            EffectSlot { index:NonZeroU32::new(2), history:1 }], width:2, outputs:0 });
+        let mut effects = Effects::begin(plan, vec![Some(Dependency::Function(99))], false);
+        let mut input = crate::result_handoff::Input {
+            op:1, back:1, fact:None, equal_output:false, from_history:true,
+        };
+        effects.record_handoff(1, Dependency::Function(7), &input, true, true);
+        assert_eq!(effects.get(1), Some(Dependency::Function(7)));
+        assert_eq!(effects.forwarded(), 1u64 << 63);
+        input.op=2;
+        effects.record_handoff(2, Dependency::Function(8), &input, true, true);
+        assert_eq!(effects.get(2), Some(Dependency::Function(8)));
+        assert_eq!(effects.forwarded(), (1u64 << 63)|1);
+        effects.record(0, Dependency::Function(9));
+        assert_eq!(effects.get(0), None);
+        assert_eq!(effects.buffer[0], Some(Dependency::Function(99)));
     }
 }

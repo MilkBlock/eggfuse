@@ -8,11 +8,25 @@ from check_mixed_outputs import pair
 
 
 def check(args):
-    allowed = {'/stage_spine/stats/effect_slots_initialized'} if args.mode == 'slots' else set()
+    allowed = {'slots': {'/stage_spine/stats/effect_slots_initialized'},
+               'donors': set(), 'packed': {'/stage_spine/effect_plan_slot_bytes'}}[args.mode]
     result = pair(args.root, ('baseline', 'candidate'), args.program, allowed=allowed, charged=set())
     acceptance = load(args.root / 'semantic-acceptance.json')
     assert acceptance['status'] == 'pass'
     assert acceptance['input_sha256']['cpu_values'] == result['ordered_hashes']['state.json']
+    if args.mode == 'packed':
+        before, after = result['changed_work']['/stage_spine/effect_plan_slot_bytes']
+        assert before * 5 == after * 8
+        result.update(scope='standalone Cell CPU; retained shared slot-descriptor storage',
+            baseline_commit='07c62ee5 (same kernel as ea4109ee)',
+            binaries={k: sha(getattr(args, k)) for k in ('baseline', 'candidate')},
+            semantic_acceptance='pass',
+            semantic_acceptance_sha256=sha(args.root/'semantic-acceptance.json'),
+            retained_bytes_saved=before-after,
+            limits='Descriptor array capacities only, excluding allocator rounding. '
+                   'Plan headers, other indexes, instance frames and work counts are unchanged. '
+                   'Packed descriptors use by-value unaligned reads; no latency benefit is claimed.')
+        return result
     if args.mode == 'donors':
         stats = load(args.root / 'candidate/report.json')['stage_spine']['stats']
         result.update(
@@ -51,6 +65,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('root', 'program', 'baseline', 'candidate', 'output'):
         parser.add_argument('--'+name, type=Path, required=True)
-    parser.add_argument('--mode', choices=('slots', 'donors'), default='slots')
+    parser.add_argument('--mode', choices=('slots', 'donors', 'packed'), default='slots')
     args = parser.parse_args()
     args.output.write_text(json.dumps(check(args), indent=2)+'\n')

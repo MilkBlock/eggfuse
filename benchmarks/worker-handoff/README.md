@@ -508,3 +508,40 @@ campaign was run. The user then directed further work toward storage compression
 and deferred hotspot investigation until the parallel branch returns instances
 directly. `query-witness-projection-timing.json` contains individual samples and
 binary hashes; `query-witness-projection-check.json` contains work/semantic checks.
+
+## Pack shared effect-slot descriptors without another index
+
+Following the user's direction to defer hotspot work until the parallel branch
+returns instances directly, compression continues in the existing shared Cell
+layout. EffectPlan previously stored an optional descriptor containing a u32
+slot and an optional u8 history position. On this target each entry occupied
+8 bytes. A packed descriptor stores the same optional full-range NonZeroU32
+and one byte encoding absent history as 0 and positions 0..63 as 1..64.
+Each entry is now 5 bytes. No slot-range restriction, side index, per-instance
+metadata, layout-owner header or runtime relationship maintenance is added.
+Packed fields are copied by value; Rust rejects unaligned references, and no
+unsafe block is used. The tradeoff is potentially unaligned descriptor loads,
+not a claimed execution speed improvement.
+
+The actual lazily retained sum-bits descriptors decrease from 6,376 to 3,985
+bytes (797 entries, saving 2,391 bytes / 37.5%). This is only descriptor-array
+capacity, excluding allocator rounding; it is not a 37.5% reduction of total
+runtime storage. Shared Plan headers, publication storage, instance result
+frames, logical work and inheritance coverage are unchanged. Previous catalog
+executions identify these retained layouts. Scheduled cross-Run inheritance
+keeps its original slot mapping and provenance checks; packing proves no new
+work redundant and receives no extra Bake operation credit.
+
+Seventeen tests pass: a packed-descriptor test preserves absent slots, the full
+u32 index, both ends of the 64-bit inheritance mask and an existing arena prefix;
+plus the sixteen Entry publication, closed-alias and state-inheritance tests
+with full structural capture compiled in. Exact sum-bits final state, all 1,428
+ordered Run signatures and every normalized work field agree. Required native
+choice diagnosis passes. No additional speed campaign was run.
+
+`../cell-unification/packed-effect-slots-check.json` records the retained census
+and binary hashes. Reproduce with saved baseline/candidate exports using
+`check_elided_receipts.py --mode packed`, the same program/binary arguments as
+previous checks, and `out/packed-effect-slots` as root. The checker accepts only
+the descriptor-byte change, checks the exact 8-to-5 ratio and requires semantic
+acceptance bound to the candidate state.
