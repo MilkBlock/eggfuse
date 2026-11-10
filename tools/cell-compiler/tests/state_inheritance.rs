@@ -86,3 +86,19 @@ fn mixed_exports_share_old_slots_and_keep_new_constructor_results() {
     assert!(a["stage_spine"]["stats"]["history_slots_written"].as_u64().unwrap()>b["stage_spine"]["stats"]["history_slots_written"].as_u64().unwrap());
     assert_eq!(a["key_lookup_calls"],b["key_lookup_calls"]);
 }
+
+#[test]
+fn worker_handoff_is_bound_to_operations_and_catalog() {
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
+    let raw=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw).unwrap();
+    let plan=eggfuse_cell_compiler::worker_handoff::compile(&p);
+    assert!(!plan["entry_schedule"].is_null());
+    assert_eq!(plan["rules"].as_array().unwrap().len(),p.rules.len());
+    eggfuse_cell_compiler::worker_handoff::validate(&p,&plan).unwrap();
+    for field in ["program","stage_contracts","entry_schedule","rules","obligations"] {
+        let mut corrupt=plan.clone();corrupt[field]=Value::Null;
+        assert!(eggfuse_cell_compiler::worker_handoff::validate(&p,&corrupt).is_err());
+    }
+}

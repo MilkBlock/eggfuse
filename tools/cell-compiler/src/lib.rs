@@ -1,4 +1,6 @@
 #[cfg(feature = "iterative-bake")]
+pub mod worker_handoff;
+#[cfg(feature = "iterative-bake")]
 pub mod state_plan;
 mod bench;
 #[cfg(feature = "iterative-bake")]
