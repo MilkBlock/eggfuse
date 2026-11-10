@@ -295,3 +295,23 @@ retains 3. Changing the consumer to the connected value still admits the real
 bridge. The existing two-Run-old result/deleted-sibling regression also retains
 its three deep handoffs. These checks measure recognition and retained catalog
 size, not elapsed inference performance or native egglog semantic acceptance.
+
+### Unions already proved by the constructor prefix
+
+Normalization now permits a Union only when its operands are already identical
+under the symbolic prefix's aliases and constructor congruence. It does not
+insert the Union into that congruence or into entry assumptions. A genuine
+new equality still makes the path opaque. Source effects remain authoritative;
+this recognition change does not independently remove runtime Union execution.
+The regression checks structural sharing with an inert Union and rejection of
+an equality between distinct constructors, with an actual Union instruction
+present in the compiled fixture.
+
+The saved sum-bits training catalog had 121 observed implementations, including
+98 opaque ones. Their syntactic blockers were Union (15), Set (25), both (57),
+and Set plus a primitive effect (1). Replaying after inert-Union support leaves
+all 98 opaque. Final state, schedule, ordered RHS, writes and resumes hashes
+match the preceding replay. Thus this finite extension does not improve that
+workload's coverage or establish any speed gain. Further coverage requires
+representing real equality effects and mutable writes with their stage/order
+obligations, rather than weakening assumptions or eliding those effects.

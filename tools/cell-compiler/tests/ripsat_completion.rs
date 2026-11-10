@@ -369,3 +369,35 @@ fn separate_pair_instances_do_not_train_a_three_cell_bridge() {
         assert_eq!(bridges,usize::from(connected),"{rounds}");
     }
 }
+
+#[test]
+fn already_proven_union_does_not_hide_constructor_structure() {
+    let source = r#"
+(datatype E (N i64) (Start E) (F E) (G E))
+(ruleset a)
+(rule ((Start x)) ((F x)) :ruleset a :name "plain")
+(rule ((Start x)) ((let lhs (F x)) (let rhs (F x)) (union lhs rhs)) :ruleset a :name "inert")
+(rule ((Start x)) ((let lhs (F x)) (let rhs (G x)) (union lhs rhs)) :ruleset a :name "real")
+(Start (N 1))
+(run-schedule (run a))
+"#;
+    let core=eggfuse_bake::device_frontend::core("inert-union",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let ids=["plain","inert","real"].map(|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap());
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":ids.map(|r|json!({"edge":[0,0,r,0],"visits":1}))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,3).unwrap();
+    let mut raw=p.artifact; raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let plan=Catalog::seed(&p,Limits::default()).unwrap();
+    assert!(p.templates[p.rules[ids[1]].template].ops.iter().any(|op|matches!(op,eggfuse_cell_runtime::program::Op::Union(..))));
+    let mut raw=p.artifact; raw["iterative_bake"]=plan;
+    let p=Program::parse(seal(raw)).unwrap();
+    let contracts=p.iterative.completion_contracts(&p);
+    let implementations=contracts["implementations"].as_array().unwrap();
+    let entry=|rid|implementations.iter().find(|i|i["source_path"][0][1][0]==rid).unwrap();
+    assert!(entry(ids[0]).get("normalization").is_none());
+    assert_eq!(entry(ids[0])["class"],entry(ids[1])["class"]);
+    assert_eq!(entry(ids[2])["normalization"],"opaque-source-contract");
+}

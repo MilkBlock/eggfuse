@@ -170,7 +170,7 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
     for (stage,&(_, (rid,pivot))) in path.iter().enumerate() {
         let cell=Definition::new(p,rid).ok()?;
         if cell.rule.query.iter().any(|a|!matches!(a.call,Call::Table(t) if p.tables[t].constructor && p.tables[t].virtual_fact))
-            || cell.template.ops.iter().any(|op|!matches!(op,Op::Copy(..)|Op::Let(_,Call::Table(_),_))) { return None; }
+            || cell.template.ops.iter().any(|op|!matches!(op,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Union(..))) { return None; }
         let mut slots=cell.template.sorts.iter().map(|sort|b.fresh(format!("sort:{sort}"))).collect::<Vec<_>>();
         if stage!=0 {
             let relation=cell.relation(Site::Query(pivot?))?;
@@ -189,6 +189,15 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
         b.close();
         for (op,ins) in cell.template.ops.iter().enumerate() {
             if let Op::Copy(dst,arg)=ins { slots[*dst]=b.arg(arg,&slots); continue; }
+            if let Op::Union(a,c)=ins {
+                // Only an equality already established by this prefix is inert.
+                // Never feed the Union into entry assumptions or constructor
+                // closure: a genuine equality effect remains unsupported.
+                let a=b.arg(a,&slots); let c=b.arg(c,&slots);
+                b.close();
+                if b.eq.root(a)!=b.eq.root(c) { return None; }
+                continue;
+            }
             let relation=cell.relation(Site::Effect(op))?;
             if !p.tables[relation.table].constructor || !p.tables[relation.table].virtual_fact { return None; }
             let columns=relation.columns().map(|a|b.arg(a,&slots)).collect::<Vec<_>>();
