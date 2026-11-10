@@ -441,6 +441,42 @@ mod set_counts_test {
     use super::*;
     #[cfg(feature = "sparse-cells")]
     #[test]
+    fn fused_worker_selection_matches_source_order_then_stable_depth_selection() {
+        // Arrival order is independent of source ordinal. Include equal keys,
+        // unequal depths, exact depth ties and different prepared output slots.
+        let spec = [(5, 9, 1), (0, 7, 2), (4, 7, 5), (2, 9, 3), (3, 7, 5), (1, 8, 1)];
+        let mut expected = spec.to_vec();
+        expected.sort_unstable_by_key(|&(ordinal, _, _)| ordinal);
+        expected.sort_by(|a, b| a.1.cmp(&b.1).then_with(|| b.2.cmp(&a.2)));
+        expected.dedup_by_key(|row| row.1);
+        for seed in 0..64 {
+            let mut state = seed + 1u64;
+            let mut arrivals = spec.to_vec();
+            for i in (1..arrivals.len()).rev() {
+                state = state.wrapping_mul(6364136223846793005).wrapping_add(1);
+                arrivals.swap(i, state as usize % (i + 1));
+            }
+            let mut rows = arrivals.into_iter().map(|(ordinal, key, depth)| {
+                let root = Rc::new(Root { id: ordinal as u64, epoch: 1, set: 0, context: OnceCell::new() });
+                let mut cursor = Cursor::fresh(root, 0);
+                cursor.depth = depth;
+                let mut answer = Matched::matched([(1, Value::Int(key))].into_iter().collect(), QueryFacts::None, 1);
+                if ordinal % 2 == 0 { answer.values.insert(15, Value::Int(ordinal as i64)); }
+                (ordinal, Winner { answer, cursor })
+            }).collect::<Vec<_>>();
+            let mut comparisons = 0;
+            select_worker_winners(&mut rows, &[1], &mut comparisons);
+            let actual = rows.iter().map(|(ordinal, winner)| {
+                let Value::Int(key) = winner.answer.values[&1] else { unreachable!() };
+                assert_eq!(winner.cursor.root.id, *ordinal as u64);
+                (*ordinal, key, winner.cursor.depth)
+            }).collect::<Vec<_>>();
+            assert_eq!(actual, expected);
+            assert!(comparisons > 0);
+        }
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
     fn joint_delivery_retirement_cannot_turn_a_mask_into_an_arena_offset() {
         for width in [1, 32] {
             let mut delivery = Delivery::new(7, 123, width, true, 9);
@@ -734,6 +770,18 @@ pub struct Programs {
 // One owned execution fragment. Its inputs are also the winner key; there is
 // no empty answer shell plus a separately moved binding vector.
 struct Winner { answer: Matched, cursor: Cursor }
+#[cfg(feature = "sparse-cells")]
+fn select_worker_winners(results: &mut Vec<(usize, Winner)>, inputs: &[usize], comparisons: &mut u64) {
+    // A total source ordinal preserves the old stable key/depth selection
+    // without restoring source order first or stripping a temporary vector.
+    results.sort_unstable_by(|(a_order, a), (b_order, b)| {
+        *comparisons += 1;
+        a.answer.compare_inputs(&b.answer, inputs)
+            .then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
+            .then_with(|| a_order.cmp(b_order))
+    });
+    results.dedup_by(|(_, a), (_, b)| a.answer.compare_inputs(&b.answer, inputs).is_eq());
+}
 #[cfg(feature = "sparse-cells")]
 type Winners = Vec<Winner>;
 #[cfg(not(feature = "sparse-cells"))]
@@ -2301,15 +2349,6 @@ impl Programs {
             });
             results.dedup_by(|a, b| a.answer.compare_inputs(&b.answer, inputs).is_eq());
         }
-        if complete {
-            self.stats.query_takeovers += 1;
-        } else {
-            self.stats.partial_queries += 1;
-        }
-        self.stats.pivots_skipped += covered_count as u64;
-        *self.stats.covered_by_rule.entry(rid).or_default() += covered_count as u64;
-        self.stats.bindings += results.len() as u64;
-        *self.stats.bindings_by_rule.entry(rid).or_default() += results.len() as u64;
         #[cfg(feature = "sparse-cells")]
         let rows = results.drain(..);
         #[cfg(not(feature = "sparse-cells"))]
@@ -2317,7 +2356,20 @@ impl Programs {
             winner.answer.values = values;
             winner
         });
-        let answers = rows
+        let answers = self.seal_winners(rid, inputs, complete, covered_count, rows);
+        #[cfg(feature = "sparse-cells")]
+        { self.answer_scratch = results; }
+        answers
+    }
+    fn seal_winners(&mut self, rid: usize, inputs: &[usize], complete: bool, covered_count: usize,
+        rows: impl ExactSizeIterator<Item = Winner>) -> Vec<Matched> {
+        if complete { self.stats.query_takeovers += 1; }
+        else { self.stats.partial_queries += 1; }
+        self.stats.pivots_skipped += covered_count as u64;
+        *self.stats.covered_by_rule.entry(rid).or_default() += covered_count as u64;
+        self.stats.bindings += rows.len() as u64;
+        *self.stats.bindings_by_rule.entry(rid).or_default() += rows.len() as u64;
+        rows
             .map(|Winner { mut answer, cursor }| {
                 self.stats.query_fragment_sealed_slots += answer.values.len() as u64;
                 self.stats.query_fragment_sealed_capacity_bytes += answer.values.capacity_bytes() as u64;
@@ -2350,12 +2402,7 @@ impl Programs {
                 self.origins[rid].insert(answer.input_values(inputs).cloned().collect(), cursor);
                 answer
             })
-            .collect();
-        #[cfg(feature = "sparse-cells")]
-        {
-            self.answer_scratch = results;
-        }
-        answers
+            .collect()
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_queries[rid].is_some() }
@@ -2372,12 +2419,11 @@ impl Programs {
         results.push((ordinal, Winner { answer, cursor }));
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64, winner_moves: &mut u64) -> Option<(bool, Vec<Matched>)> {
+    pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64) -> Option<(bool, Vec<Matched>)> {
         let (complete, covered, mut results) = self.deferred_queries[rid].take()?;
-        *winner_moves += results.len() as u64;
-        results.sort_unstable_by(|(a,_),(b,_)| { *order_comparisons += 1; a.cmp(b) });
-        Some((complete, self.seal_answers(rid, inputs, complete, covered,
-            results.into_iter().map(|(_, winner)| winner).collect())))
+        select_worker_winners(&mut results, inputs, order_comparisons);
+        Some((complete, self.seal_winners(rid, inputs, complete, covered,
+            results.into_iter().map(|(_, winner)| winner))))
     }
     pub fn shared(&self) -> bool {
         self.enabled && self.partial && self.shared_entries

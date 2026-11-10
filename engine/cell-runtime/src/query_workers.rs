@@ -27,6 +27,8 @@ pub(crate) struct Counts {
     pub completion_slot_writes: u64,
     pub completion_headers: u64,
     pub completion_error_checks: u64,
+    // input-depth-ordinal/v1 counts the fused comparator. Older reports count
+    // only the preliminary ordinal sort, omitting their second key sort.
     pub winner_order_comparisons: u64,
     pub deferred_winner_moves: u64,
     pub completion_binding_moves: u64,
@@ -179,7 +181,8 @@ impl Executor {
     pub(super) fn query_worker_report(&self) -> J {
         self.query_workers.as_ref().map_or(json!({"enabled":false}), |w|
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
-                "organization":"cell-run/v4","scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
+                "organization":"cell-run/v4","winner_ordering":"input-depth-ordinal/v1",
+                "scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
     }
     pub(super) fn query_worker_batch(
         &mut self, rid: usize, rule: &Rule, kernel: &crate::row_kernel::Kernel,
@@ -527,11 +530,10 @@ impl Workers {
     }
     pub(crate) fn record_deferred_storage(&mut self, serial: usize) {
         self.stats.deferred_winner_moves += serial as u64;
-        self.stats.batch_buffers += 3; // serial ordinals, deferred pairs, restored winners
+        self.stats.batch_buffers += 2; // serial ordinals and deferred pairs
     }
-    pub(crate) fn record_completion(&mut self, comparisons: u64, winners: u64, bindings: u64) {
+    pub(crate) fn record_completion(&mut self, comparisons: u64, bindings: u64) {
         self.stats.winner_order_comparisons += comparisons;
-        self.stats.deferred_winner_moves += winners;
         self.stats.completion_binding_moves += bindings;
     }
     pub(crate) fn record_serial_order(&mut self) { self.stats.serial_order_headers += 1; }
@@ -655,8 +657,8 @@ impl Workers {
                     q.cursor.take().expect("one positive completion per Cell query"));
             }
         }
-        // finish_worker_rule already restores each rule's source ordinals
-        // before winner selection. No second, dense reorder is necessary.
+        // finish_worker_rule selects by input, depth and original ordinal in
+        // one pass. Completion order need not be restored separately.
         // Drop negative cursors and clear even rules with no positive answers.
         for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
         Ok(())

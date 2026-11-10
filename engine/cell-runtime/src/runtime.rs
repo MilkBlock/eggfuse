@@ -2469,9 +2469,9 @@ impl Executor {
         #[cfg(feature = "sparse-cells")]
         if let Some(workers) = &mut self.query_workers {
             workers.finish_run(&mut self.graph, &mut self.stage_spine)?;
-            let (mut order_comparisons, mut winner_moves, mut binding_moves) = (0, 0, 0);
+            let (mut order_comparisons, mut binding_moves) = (0, 0);
             for (rid, residual) in &mut work {
-                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &self.graph.program.rules[*rid].inputs, &mut order_comparisons, &mut winner_moves) {
+                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &self.graph.program.rules[*rid].inputs, &mut order_comparisons) {
                     binding_moves += residual.len() as u64;
                     let previous_answers = residual.len();
                     let mut merged = answers;
@@ -2482,7 +2482,7 @@ impl Executor {
                     }
                 }
             }
-            self.query_workers.as_mut().unwrap().record_completion(order_comparisons, winner_moves, binding_moves);
+            self.query_workers.as_mut().unwrap().record_completion(order_comparisons, binding_moves);
             count = work.iter().map(|(_, b)| b.len()).sum();
             work.retain(|(_, b)| !b.is_empty());
         }
