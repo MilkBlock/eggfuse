@@ -1,0 +1,34 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/runtime-baseline",
+      "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/program-old.json",
+      "args": [
+        "--local-congruence"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "64"
+      }
+    },
+    "compatible": {
+      "runtime": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/runtime-candidate",
+      "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/program-old.json",
+      "args": [
+        "--local-congruence"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "64"
+      }
+    },
+    "selected": {
+      "runtime": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/runtime-candidate",
+      "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-state-timing/program-selected.json",
+      "args": [
+        "--local-congruence"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "64"
+      }
+    }
+  }
+}
