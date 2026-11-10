@@ -1,0 +1,31 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 757d450f..750e29b8 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -105,6 +105,7 @@ impl State {
+ }
+ impl Catalog {
+     /// Retained export directory and slots; excludes allocator overhead.
++    pub fn capture_storage(&self) -> J { self.switch.capture_storage() }
+     pub fn export_storage(&self) -> J { self.switch.export_storage() }
+     /// Retained switch dispatch arrays; excludes allocator overhead.
+     pub fn dispatch_storage(&self) -> J { self.switch.dispatch_storage() }
+diff --git a/engine/cell-runtime/src/result_handoff.rs b/engine/cell-runtime/src/result_handoff.rs
+index 1b52b539..7ae4e900 100644
+--- a/engine/cell-runtime/src/result_handoff.rs
++++ b/engine/cell-runtime/src/result_handoff.rs
+@@ -626,6 +626,14 @@ impl Switch {
+     pub(crate) fn exports(&self, rule: usize) -> &[Site] {
+         self.exports.get(rule).unwrap_or(&[])
+     }
++    pub(crate) fn capture_storage(&self) -> serde_json::Value {
++        serde_json::json!({
++            "states":self.nodes.len(), "node_capacity":self.nodes.capacity(),
++            "captures":self.nodes.iter().map(|n|n.supply.iter().map(|c|(c.site,c.port.rule(),c.port.slot())).collect::<Vec<_>>()).collect::<Vec<_>>(),
++            "node_array_bytes":self.nodes.capacity()*std::mem::size_of::<Node>(),
++            "capture_payload_bytes":self.nodes.iter().map(|n|n.supply.capacity()*std::mem::size_of::<Capture>()).sum::<usize>(),
++            "capture_owner_bytes":0})
++    }
+     pub(crate) fn export_storage(&self) -> serde_json::Value {
+         serde_json::json!({
+             "interfaces":(0..self.exports.len()).map(|r|(r,self.exports.get(r).unwrap())).filter(|(_,s)|!s.is_empty()).collect::<Vec<_>>(),

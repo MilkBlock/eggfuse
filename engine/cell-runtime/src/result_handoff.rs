@@ -545,7 +545,7 @@ pub(crate) struct Switch {
     reuse_results: bool,
     pub(crate) congruence: bool,
     pub(crate) query_ports: bool,
-    nodes: Vec<Node>,
+    nodes: Box<[Node]>,
     by_rule: DispatchRows,
     roots: Box<[Option<NonZeroUsize>]>,
     initial: Vec<usize>,
@@ -583,22 +583,29 @@ impl<T> Rows<T> {
     fn len(&self) -> usize { self.offsets.len().saturating_sub(1) }
 }
 #[derive(Clone, Debug, Serialize)]
-struct Node {
+struct Node<C = Rc<[Capture]>> {
     unit: usize,
     failure: usize,
     program: Terminal,
     next: Vec<((usize, usize), usize)>,
-    supply: Vec<Capture>,
+    supply: C,
     #[serde(skip)]
     keep_history: usize,
     #[serde(skip)]
     layout: Option<Rc<SlotLayout>>,
 }
 
+fn share_captures(captures: Vec<Capture>, pool: &mut BTreeSet<Rc<[Capture]>>) -> Rc<[Capture]> {
+    if let Some(existing) = pool.get(captures.as_slice()) { return existing.clone(); }
+    let shared: Rc<[Capture]> = captures.into();
+    pool.insert(shared.clone());
+    shared
+}
+
 /// Liveness after this Cell completes. A successor's direct read needs `back`
 /// frames; its future retention needs one fewer before it adds its own frame.
 /// Include inherited edges and default restarts, not just trie children.
-fn retained_depths(nodes: &[Node], initial: &[usize]) -> Vec<usize> {
+fn retained_depths(nodes: &[Node<Vec<Capture>>], initial: &[usize]) -> Vec<usize> {
     let reads = nodes.iter().map(|n| n.program.reuse.iter().map(|r| r.back)
         .chain(n.program.queries.iter().map(|r| r.back)).max().unwrap_or(0)).collect::<Vec<_>>();
     let mut keep = nodes.iter().map(|n| usize::from(!n.supply.is_empty())).collect::<Vec<_>>();
@@ -625,6 +632,21 @@ impl Default for Terminal {
 impl Switch {
     pub(crate) fn exports(&self, rule: usize) -> &[Site] {
         self.exports.get(rule).unwrap_or(&[])
+    }
+    pub(crate) fn capture_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut payload = 0;
+        for node in &self.nodes {
+            if seen.insert(Rc::as_ptr(&node.supply) as *const Capture as usize) {
+                payload += node.supply.len()*std::mem::size_of::<Capture>();
+            }
+        }
+        serde_json::json!({
+            "states":self.nodes.len(), "node_capacity":self.nodes.len(),
+            "captures":self.nodes.iter().map(|n|n.supply.iter().map(|c|(c.site,c.port.rule(),c.port.slot())).collect::<Vec<_>>()).collect::<Vec<_>>(),
+            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
+            "capture_payload_bytes":payload,
+            "capture_owner_bytes":seen.len()*2*std::mem::size_of::<usize>()})
     }
     pub(crate) fn export_storage(&self) -> serde_json::Value {
         serde_json::json!({
@@ -802,6 +824,19 @@ impl Switch {
                     .or_insert_with(|| SlotLayout::compile(rule,layout)).clone();
             }
         }
+        // Freeze only after every ResultPort has its final rule/slot identity.
+        // The pool is compile-local: states share immutable capture programs,
+        // while each completed instance retains its own Results and lifetime.
+        let mut pool = BTreeSet::<Rc<[Capture]>>::new();
+        let mut frozen = Vec::with_capacity(nodes.len());
+        for node in nodes {
+            let supply = share_captures(node.supply, &mut pool);
+            frozen.push(Node { unit: node.unit, failure: node.failure,
+                program: node.program, next: node.next, supply,
+                keep_history: node.keep_history, layout: node.layout });
+        }
+        drop(pool);
+        let nodes = frozen.into_boxed_slice();
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
         for (&(rid, pivot), &leaf) in leaves {
@@ -890,7 +925,7 @@ impl Switch {
         self.nodes.get(id)?.layout.as_ref()
     }
     pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize, Option<&Rc<SlotLayout>>) {
-        self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_slice(), n.keep_history,n.layout.as_ref()))
+        self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_ref(), n.keep_history,n.layout.as_ref()))
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| &n.program)
@@ -935,6 +970,24 @@ mod tests {
         assert_eq!(DispatchRows::compile(vec![]).get(0), None);
     }
     #[test]
+    fn capture_pool_keys_include_actual_ports_and_outlive_compiler_pool() {
+        let mut pool = BTreeSet::new();
+        let capture = |rule, slot| Capture { site: Site::Effect(2), port: ResultPort::new(rule, slot) };
+        let a = share_captures(vec![capture(4, 0)], &mut pool);
+        let b = share_captures(vec![capture(4, 0)], &mut pool);
+        let other_rule = share_captures(vec![capture(5, 0)], &mut pool);
+        let other_slot = share_captures(vec![capture(4, 1)], &mut pool);
+        assert!(Rc::ptr_eq(&a, &b));
+        assert!(!Rc::ptr_eq(&a, &other_rule));
+        assert!(!Rc::ptr_eq(&a, &other_slot));
+        let empty = share_captures(vec![], &mut pool);
+        assert!(Rc::ptr_eq(&empty, &share_captures(vec![], &mut pool)));
+        drop(pool);
+        drop(a);
+        assert_eq!(b.as_ref(), &[capture(4, 0)]);
+        assert_eq!(Rc::strong_count(&b), 1);
+    }
+    #[test]
     fn compact_exports_preserve_slot_order_and_missing_rules() {
         let mut switch = Switch::default();
         assert!(switch.exports(0).is_empty());
@@ -961,7 +1014,7 @@ mod tests {
             vec![address(1), address(2)]]);
         switch.initial = vec![1, 2, 3];
         switch.nodes = (0..4).map(|unit| Node { unit, failure: 0,
-            program: Terminal::default(), next: vec![], supply: vec![],
+            program: Terminal::default(), next: vec![], supply: Rc::from([]),
             keep_history: 0, layout: None }).collect();
         assert_eq!(switch.leaf(0, 0), Some(0));
         assert_eq!(switch.leaf(0, 1), None);
