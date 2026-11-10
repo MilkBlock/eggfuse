@@ -1083,12 +1083,13 @@
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed. Cell 路线证明现借用同一份构造子别名，原始 source slot 仍逐项校验；域已返回唯一 witness 时直接读取，不再重新按 key 查找。sum-bits 查询 19237→18692，旧接线兼容对照已取得全部 545 次减少；扩大接线 6325→6825 只再省 11 次解码、多 12 次路线比较，等权 Work 单项净值 -1，目录容量合计多 4524 字节。c2f665a2 的五组交错实测：相对 135dfb1b，配对推理比 1.0131 [1.0061,1.0438]，整进程比 1.0435 [1.0305,1.0863]；本轮性能回退。新增接线加载中位数 68.685→73.211ms（同一运行时），尚未证明覆盖扩张值得默认采用。纯 witness 直读对照的时间区间跨 1；计数减少不等于加速。下一步收缩低收益接线及其加载成本。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
         "benchmarks/witness-sources/README.md",
-        "benchmarks/cell-unification/retention-check.json"
+        "benchmarks/cell-unification/retention-check.json",
+        "benchmarks/cell-unification/alias-routes-check.json"
       ],
       "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
@@ -1264,12 +1265,13 @@
           }
         ]
       },
-      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes. 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed.",
+      "gaps": "receipt_hits 只说明找到地址；当前存活、完整 key、结果约束仍需验证。只读取已有捕获范围，未保存的关系仍回退；排除零参数读取避免用更昂贵的分派换取 lookup 计数下降。row_reads 是实际行读取，donor/read 尝试不一定访问行；Spine 的行读取已包含在 decoded_rows，不能重复收费。新增静态元数据的解析成本仍须在最终计时中检查。 key_reads_avoided 包括原本可命中 PointPorts 的读取，不等于等量哈希查询。 Entry-managed seeds carry publication locations; entry_publication_reads counts attempts, including empty handles. publication_probes counts the remaining legacy map probes. 完整/残余入口共用静态 Cell 路线目录；直接索引和见证源索引仍有成本，比较归零不是速度收益。目录容量不含 Rc 与 allocator 元数据；route_index_probes 是 route_probes 的子集，不重复评分。 Compiled Cell transitions now bound result-history retention per state, including inherited jumps and restart paths. Deep short fixtures reduce history container allocations 10→6 and slot writes 10→8 with unchanged lookups/fallbacks; sum-bits work is unchanged. These are structural counters, not total allocator bytes or timing evidence. Added static retention words, deep-frame enum tags and fixed-point setup remain to be timed. Cell 路线证明现借用同一份构造子别名，原始 source slot 仍逐项校验；域已返回唯一 witness 时直接读取，不再重新按 key 查找。sum-bits 查询 19237→18692，旧接线兼容对照已取得全部 545 次减少；扩大接线 6325→6825 只再省 11 次解码、多 12 次路线比较，等权 Work 单项净值 -1，目录容量合计多 4524 字节。c2f665a2 的五组交错实测：相对 135dfb1b，配对推理比 1.0131 [1.0061,1.0438]，整进程比 1.0435 [1.0305,1.0863]；本轮性能回退。新增接线加载中位数 68.685→73.211ms（同一运行时），尚未证明覆盖扩张值得默认采用。纯 witness 直读对照的时间区间跨 1；计数减少不等于加速。下一步收缩低收益接线及其加载成本。",
       "evidence": [
         "benchmarks/witness-prefix/register-prefix-design.md",
         "benchmarks/witness-prefix/normal/README.md",
         "benchmarks/witness-sources/README.md",
-        "benchmarks/cell-unification/retention-check.json"
+        "benchmarks/cell-unification/retention-check.json",
+        "benchmarks/cell-unification/alias-routes-check.json"
       ],
       "status": "真实来源与已有 receipt 交接已实现；专项及全工作区检查通过；最新短样例观测见 witness-sources，尚无新的整体加速结论",
       "introduced_in": "094fb2ed"
@@ -1345,11 +1347,12 @@
           }
         ]
       },
-      "gaps": "本轮补导出已有 known_stats；旧 report 中缺失，不得补零。static plan 数不是运行时消除次数。 QueryFacts and requested row projection now belong to Cell; the static alias plan remains here. Moving this representation does not establish full known-results takeover. Native marker emission and typed static aliases now execute one Cell construction proof, preserving the first actual query/effect result and ordered fresh construction. Typed Copy/invalidation use the same flow; native lexical binding and purity/deletion eligibility remain frontend obligations. The 5853 sum-bits static eliminations already existed; this rewrite adds no runtime credit. Proof-state/key layout costs are not yet timed or allocation-profiled. Shared propagation does not unify marker selection or iterative materialization boundaries.",
+      "gaps": "本轮补导出已有 known_stats；旧 report 中缺失，不得补零。static plan 数不是运行时消除次数。 QueryFacts and requested row projection now belong to Cell; the static alias plan remains here. Moving this representation does not establish full known-results takeover. Native marker emission and typed static aliases now execute one Cell construction proof, preserving the first actual query/effect result and ordered fresh construction. Typed Copy/invalidation use the same flow; native lexical binding and purity/deletion eligibility remain frontend obligations. The 5853 sum-bits static eliminations already existed; this rewrite adds no runtime credit. Proof-state/key layout costs are not yet timed or allocation-profiled. Shared propagation does not unify marker selection or iterative materialization boundaries. Cell 路线证明现借用同一份构造子别名，原始 source slot 仍逐项校验；域已返回唯一 witness 时直接读取，不再重新按 key 查找。sum-bits 查询 19237→18692，旧接线兼容对照已取得全部 545 次减少；扩大接线 6325→6825 只再省 11 次解码、多 12 次路线比较，等权 Work 单项净值 -1，目录容量合计多 4524 字节。c2f665a2 的五组交错实测：相对 135dfb1b，配对推理比 1.0131 [1.0061,1.0438]，整进程比 1.0435 [1.0305,1.0863]；本轮性能回退。新增接线加载中位数 68.685→73.211ms（同一运行时），尚未证明覆盖扩张值得默认采用。纯 witness 直读对照的时间区间跨 1；计数减少不等于加速。下一步收缩低收益接线及其加载成本。",
       "evidence": [
         "docs/RHS_BLOCK_WORK.md",
         "benchmarks/cell-unification/match-completion-results.json",
-        "benchmarks/cell-unification/construction-check.json"
+        "benchmarks/cell-unification/construction-check.json",
+        "benchmarks/cell-unification/alias-routes-check.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

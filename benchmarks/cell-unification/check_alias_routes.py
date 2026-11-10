@@ -142,6 +142,11 @@ def collect(root, commit, timed):
         limits='Singleton witness reuse supplies all 545 saved lookups. New route coverage alone scores -1 in the equal-weight ledger and adds 4524 reported static directory bytes; neither is a time/allocator measurement. Source-slot validation, liveness, visibility and delta ownership remain. General materialization, Bake composition and final parallel acceptance remain incomplete.')
     if timed:
         result['timing'] = timing(root, commit)
+        result['performance_status'] = {
+            comparison: {field: ('regression_observed' if v['paired_bootstrap_95_interval'][0] > 1
+                else 'gain_observed' if v['paired_bootstrap_95_interval'][1] < 1 else 'unresolved')
+                for field, v in values.items()}
+            for comparison, values in result['timing']['comparisons'].items()}
     result['timing_cadence'] = dict(last_timed_commit=commit if timed else '808aadb3',
         implementation_commits_since_timing=0 if timed else 2,
         reason='User explicitly requested timing after this commit; resume five implementation commits thereafter.')

@@ -3,14 +3,15 @@
   "goal_status": "active",
   "timing_cadence": {
     "implementation_commits_between_checks": 5,
-    "last_timed_commit": "808aadb3",
-    "implementation_commits_since_timing": 1,
-    "evidence": "benchmarks/cell-unification/closed-cells-check.json",
+    "last_timed_commit": "c2f665a2",
+    "implementation_commits_since_timing": 0,
+    "evidence": "benchmarks/cell-unification/alias-routes-check.json",
     "rule": "Measure once after every five implementation commits; evidence-only commits do not count. Retain the prior timing checkpoint and historical 24c4ae8a as controls.",
-    "checkpoint_status": "inference_gain_not_established_preservation_unresolved",
-    "latest_batch_exception": "User requested a check after the current commit. One implementation since 311a3ef8 was included; resume the five-commit cadence from 808aadb3.",
+    "checkpoint_status": "regression_observed_against_immediate_baseline",
+    "latest_batch_exception": "User explicitly requested timing after this commit. This batch includes 135dfb1b and c2f665a2; resume every five implementation commits from c2f665a2.",
     "implementation_commits_in_last_batch": [
-      "808aadb3"
+      "135dfb1b",
+      "c2f665a2"
     ]
   },
   "baseline_commit": "27f1c503",
@@ -50,9 +51,11 @@
         "Cell Entry selects the winner before receipt visibility validation and slot/queue maintenance. The separate publication_slot API is removed; same-batch losers reuse an existing proof, later batches revalidate, and failed validation cannot install a publication.",
         "Cell output layout removes earlier permanent Entry publications with an identical proven actual receipt source, preserving the last original operation and demanded donor/history slots; no runtime alias index is added.",
         "The same Cell effect layout maps actual effect donors directly to retained publication slots; raw operation receipts stay distinct for history and closed/full capture. Query aliases and boundaries retain required copies.",
-        "Validated Cell aliases complete closed admission without a second runtime proof representation. Iterative/structural handoff and ordinary/local prefixes share Start; a miss promotes the completed frame/receipts and resumes at the source operation instead of replaying the prefix."
+        "Validated Cell aliases complete closed admission without a second runtime proof representation. Iterative/structural handoff and ordinary/local prefixes share Start; a miss promotes the completed frame/receipts and resumes at the source operation instead of replaying the prefix.",
+        "Cell route proofs borrow existing constructor aliases while preserving exact original exported slots. Singleton query domains transfer the actual witness into the existing continuation with full key, liveness, visibility and delta checks; covered duplicate key lookups are removed."
       ],
       "remaining": [
+        "Reduce low-yield route admission/loading before expanding coverage: c2f665a2 regresses by paired inference ratio 1.0131 and process ratio 1.0435 against 135dfb1b, despite 545 fewer lookups.",
         "Source routing, physical fallback, current result slots and compiled continuation retention are shared. Legacy boundary publication ownership, wider path coverage and final performance acceptance still require integration.",
         "Unify the legacy publication boundary owner where its coverage permits; retain exact fallback behavior until then.",
         "Verify speed after removing remaining dispatch work; current entry-delivery timing is inconclusive and does not establish a gain."
@@ -94,7 +97,9 @@
       "publication_winner_checks": "benchmarks/cell-unification/publication-winners-check.json",
       "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json",
       "output_donor_checks": "benchmarks/cell-unification/output-donors-results.json",
-      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json"
+      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json",
+      "alias_route_status": "Semantics verified; all 545 lookup savings come from singleton witness reuse. New alias routes score -1 separately; actual candidate timing regresses against the immediate baseline. Coverage expansion is not performance accepted."
     },
     {
       "id": "query",
@@ -350,7 +355,9 @@
       "retention_checks": "benchmarks/cell-unification/retention-check.json",
       "publication_credit_checks": "benchmarks/cell-unification/mixed-outputs-check.json",
       "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json",
-      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json"
+      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json",
+      "alias_route_status": "Semantics verified; all 545 lookup savings come from singleton witness reuse. New alias routes score -1 separately; actual candidate timing regresses against the immediate baseline. Coverage expansion is not performance accepted."
     },
     {
       "id": "multithread_after_rewrite",
@@ -473,7 +480,8 @@
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
       "history_checks": "benchmarks/cell-unification/history-check.json",
-      "retention_checks": "benchmarks/cell-unification/retention-check.json"
+      "retention_checks": "benchmarks/cell-unification/retention-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json"
     },
     {
       "id": "C4",
@@ -484,7 +492,8 @@
       "route_checks": "benchmarks/cell-unification/routes-results.json",
       "producer_checks": "benchmarks/cell-unification/producer-check.json",
       "history_checks": "benchmarks/cell-unification/history-check.json",
-      "retention_checks": "benchmarks/cell-unification/retention-check.json"
+      "retention_checks": "benchmarks/cell-unification/retention-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json"
     },
     {
       "id": "D1",
@@ -493,7 +502,8 @@
       "metrics_from_catalog": "D1",
       "match_completion_checks": "benchmarks/cell-unification/match-completion-results.json",
       "remaining": "Static constructor source/alias propagation shares Cell construction proof with marker emission. Dynamic donor planning, read validity, and full iterative composition still require integration.",
-      "construction_checks": "benchmarks/cell-unification/construction-check.json"
+      "construction_checks": "benchmarks/cell-unification/construction-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json"
     },
     {
       "id": "D2",
@@ -655,7 +665,8 @@
       "publication_winner_limits": "3114 receipt visibility checks removed in sum-bits; Entry probes and receipt resolution calls unchanged. Credit now separately charges each Cell output resolution. Under that common basis, cumulative publication work remains 920 operations above 3e622300; speed and complete unification remain unproven.",
       "output_selection_checks": "benchmarks/cell-unification/output-selection-check.json",
       "output_donor_checks": "benchmarks/cell-unification/output-donors-results.json",
-      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json"
+      "closed_cell_checks": "benchmarks/cell-unification/closed-cells-check.json",
+      "alias_route_checks": "benchmarks/cell-unification/alias-routes-check.json"
     }
   ],
   "build_rule": "Use distinct Cargo target directories for different worktrees; freeze each binary before switching source trees. Normal timing and allocation/ordered-audit builds are separate.",
