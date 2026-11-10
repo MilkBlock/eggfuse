@@ -260,6 +260,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let mut reference = None;
     let mut history = Vec::new();
     let compile_plan = |plan: &mut J| -> Result<Program> {
+        plan.as_object_mut().unwrap().remove("state_plan");
         if query_ports {
             Catalog::emit_query_handoffs(&seed, plan)?;
         } else if congruence {
@@ -271,7 +272,12 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         artifact.as_object_mut().unwrap().remove("sha256");
         artifact["iterative_bake"] = plan.clone();
         artifact["sha256"] = artifact_digest(&artifact).into();
-        Ok(Program::parse(artifact)?)
+        let mut p = Program::parse(artifact)?;
+        plan["state_plan"] = crate::state_plan::compile(&p)?;
+        p.artifact.as_object_mut().unwrap().remove("sha256");
+        p.artifact["iterative_bake"] = plan.clone();
+        p.artifact["sha256"] = artifact_digest(&p.artifact).into();
+        Ok(Program::parse(p.artifact)?)
     };
     for round in 0..=rounds {
         let p = compile_plan(&mut plan)?;

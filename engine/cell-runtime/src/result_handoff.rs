@@ -379,6 +379,21 @@ impl History {
         read: impl Fn(usize) -> Option<Dependency>,
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
+        self.capture_selected(limit, rid, wanted, true, read, effect)
+    }
+    pub(crate) fn capture_selected(
+        &mut self, limit: usize, rid: usize, wanted: &[Capture], inherit: bool,
+        read: impl Fn(usize) -> Option<Dependency>, effect: impl Fn(usize) -> Option<Dependency>,
+    ) -> CaptureWork {
+        if !inherit && limit > 1 && wanted.is_empty() && self.frames.is_some() {
+            let stored = match self.frames.as_deref().unwrap() { Trail::One(_) => 1, Trail::Many(v) => v.len() };
+            let count = (stored + self.empty).min(limit - 1);
+            let mut frames = Vec::with_capacity(count + 1);
+            frames.extend((1..=count).rev().map(|back| self.snapshot(back)));
+            frames.push(None);
+            *self = Self { frames:Some(Rc::new(Trail::Many(frames))), empty:0 };
+            return CaptureWork { slots:count+1, allocations:2, ..Default::default() };
+        }
         if limit == 0 {
             *self = Self::default();
             return CaptureWork::default();
@@ -700,6 +715,23 @@ impl Switch {
             .iter()
             .find(|(k, _)| *k == (op, leaf))
             .map_or(self.initial[leaf], |x| x.1)
+    }
+    pub(crate) fn state_contracts(&self, p: &Program, entry: impl Fn(usize) -> Entry) -> serde_json::Value {
+        serde_json::Value::Array(self.nodes.iter().enumerate().map(|(id, n)| {
+            if id == 0 { return serde_json::json!({"initial":true,"can_inherit":false}); }
+            let (rid, pivot) = entry(n.unit);
+            let rule = &p.artifact["recipe"]["rules"][rid];
+            serde_json::json!({
+                "environment":p.artifact["recipe"]["sha256"],
+                "interface":{"query":rule["query"],"pivot":pivot,"sorts":p.templates[p.rules[rid].template].sorts},
+                "effects":rule["effects"],
+                "activation":{"rule":rid,"boundary":"original-source-run","position":"after-rhs-before-publication","union_commit":"source-run-boundary"},
+                "completion_program":n.program,"exports":n.supply,"retained_stages":n.keep_history,
+                "transitions":n.next,"restart":n.failure,
+                "inheritance":{"storage":"existing-results","distance_delta":1,"retain":n.keep_history},
+                "can_inherit":n.supply.is_empty() && n.keep_history > 0
+            })
+        }).collect())
     }
     pub(crate) fn capture(&self, id: usize) -> (&[Capture], usize) {
         self.nodes.get(id).map_or((&[], 0), |n| (n.supply.as_slice(), n.keep_history))

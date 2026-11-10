@@ -4,7 +4,7 @@ use eggfuse_cell_runtime::{checksum::artifact_digest, compiler,
 use serde_json::{Value as J, json};
 use std::{fs, path::Path};
 
-fn emit(source: &str, out: &Path) -> Result<(), Box<dyn std::error::Error>> {
+pub(crate) fn emit(source: &str, out: &Path) -> Result<(), Box<dyn std::error::Error>> {
     let core = eggfuse_bake::device_frontend::core("retention", source)?;
     let p = Program::parse(compiler::compile(core, &Default::default())?)?;
     let rules = p.artifact["recipe"]["rules"].as_array().unwrap();

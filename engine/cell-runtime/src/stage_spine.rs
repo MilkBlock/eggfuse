@@ -275,11 +275,12 @@ impl Started {
         stats: &mut Stats,
     ) {
         if let Self::Live(c) = self {
-            let (sources, depth) = cat.capture(&c.state);
-            let work = c.state.history.capture(
+            let (sources, depth, inherit) = cat.capture(&c.state);
+            let work = c.state.history.capture_selected(
                 depth,
                 rid,
                 sources,
+                inherit,
                 read,
                 effect,
             );

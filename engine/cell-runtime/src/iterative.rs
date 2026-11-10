@@ -70,6 +70,7 @@ pub struct Catalog {
     jumps: BTreeMap<Join, Id>,
     paths: BTreeSet<Vec<(Option<usize>, Entry)>>,
     switch: crate::result_handoff::Switch,
+    inherited: Option<Vec<bool>>,
 }
 #[derive(Clone, Copy, Debug)]
 struct Segment {
@@ -213,7 +214,31 @@ impl Catalog {
             }
             s.switch.complete_cells(p, |unit| s.units[unit].last.0);
         }
+        if let Some(raw) = raw.get("state_plan") {
+            let expected = s.state_contracts(p);
+            if raw["schema"] != "eggfuse-cell-state-plan/v1" || raw["contracts"] != expected {
+                return Err("Cell state contract mismatch".into());
+            }
+            let choices = raw["implementations"].as_array().ok_or("missing Cell implementations")?;
+            let contracts = expected.as_array().unwrap();
+            if choices.len() != contracts.len() { return Err("Cell implementation count".into()); }
+            let mut inherited = Vec::new();
+            for (choice, contract) in choices.iter().zip(contracts) {
+                let carry = match choice.as_str() {
+                    Some("materialize") => false,
+                    Some("inherit") if contract["can_inherit"] == true => true,
+                    _ => return Err("unproved Cell inheritance".into()),
+                };
+                inherited.push(carry);
+            }
+            s.inherited = Some(inherited);
+        }
         Ok(s)
+    }
+    /// Reconstruct executable state contracts from the validated Cell program.
+    /// This intentionally promises no saturation under new external inputs.
+    pub fn state_contracts(&self, p: &Program) -> J {
+        self.switch.state_contracts(p, |u| self.units[u].last)
     }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
@@ -234,6 +259,7 @@ impl Catalog {
         congruence: bool,
         query_ports: bool,
     ) -> Result<()> {
+        plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
@@ -255,8 +281,9 @@ impl Catalog {
     pub(crate) fn result_port(&self, rid: usize, site: crate::cell::Site) -> Option<crate::cell::ResultPort> {
         self.exports(rid).binary_search(&site).ok().map(|slot| crate::cell::ResultPort::new(rid, slot))
     }
-    pub(crate) fn capture(&self, s: &State) -> (&[crate::cell::Capture], usize) {
-        self.switch.capture(s.pc)
+    pub(crate) fn capture(&self, s: &State) -> (&[crate::cell::Capture], usize, bool) {
+        let (sources, depth) = self.switch.capture(s.pc);
+        (sources, depth, self.inherited.as_ref().is_none_or(|v| v.get(s.pc).copied().unwrap_or(false)))
     }
     /// A fully executed rule seeds its producer node, or a unique legacy leaf.
     /// Keep this restricted to v2 receipts a compiled continuation demands.

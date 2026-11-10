@@ -316,3 +316,40 @@ The quiescence proof covered 769 / 1,428 and 7,551 / 16,883 source Runs. Each st
 A binding is sealed while the LHS snapshot is repaired. During its RHS, a trusted frame can supply already-canonical stored slots while the union generation still agrees. Historical frames and parent columns keep ordinary resolution, and a real union invalidates the certificate. The retained implementation confines permission to the individual apply call even on failure. Three paired medians were 19.512 / 19.234 ms and 7.079 / 6.958 s inference, 113.548 / 112.671 ms and 10.437 / 10.332 s CLI, and 152.55 / 152.56 MiB and 1,986.00 / 1,986.75 MiB RSS. Visits, RHS, effective writes, Spine, schedule and final graph matched. The narrower permission lifetime is also covered by a focused union-invalidation test.
 
 An entry node keeps the maximum epoch it has inserted since its last full refresh. If that upper bound is below a consumer's watermark, its ordered delta is empty. The source rule still runs at the same place, but this pivot need not prepare inversion, Spine routing or Free Join admission. Removing the previous maximum only makes the bound conservative. Three standard-release pairs on the experimental stack gave 20.286 / 19.493 ms and 6.960 / 6.995 s inference, 116.459 / 114.232 ms and 10.278 / 10.302 s CLI, and 154.00 / 153.78 MiB and 2,031.59 / 2,014.53 MiB RSS. Both full audits and logical visit counts matched.
+
+### Finite Cell state inheritance
+
+`iterative_bake.state_plan` uses `eggfuse-cell-state-plan/v1`. Its `contracts`
+are reconstructed from validated typed Cell programs: query interface and sorts,
+ordered effects, completion proofs, exported sources, retained stage distance,
+original source-Run activation and transitions. These are conservative contracts
+for fixed interfaces, not certificates of saturation under new external inputs.
+Expanded execution history remains available as implementation provenance.
+
+Compile-time `state_plan::compile` registers `Materialize(contract)` and, only
+for an empty export transfer with retained history, the equivalent
+`Inherit(contract)` in an egglog egraph. Extraction uses container-transfer
+weights 3 and 1. The extracted `implementations` array is installed in the
+runtime catalog; it directly selects history materialization or carrying the
+existing result owner. The loader reconstructs every contract and rejects
+unproved inheritance or changed stage contracts. Recompilation discards stale
+state plans before deriving and extracting replacements.
+
+Original RHS effects, queued unions and source-Run publication continue through
+the ordinary executor. Inherited slots retain their actual returned references
+and existing liveness, generation, key and delta checks. This first version
+covers intermediate Cells without new result exports. Nonempty frame transfer,
+general publication elimination, multi-producer joins and broader state
+normalization remain future work.
+
+`tests/state_inheritance.rs` exercises normal, deletion and intervening-union
+chains, compares inherited and materialized final graphs, ordered Run fields,
+stage snapshots and binding audits, and rejects forged contracts/selections.
+The diagnostic result is in
+[the saved evidence](../benchmarks/cell-unification/state-plan-check.json).
+Reproduce with `cargo test --locked -p eggfuse-cell-compiler --features
+sparse-cells,view-ports,iterative-bake --test state_inheritance`.
+The 6-to-2 history allocation comparison demonstrates selectable takeover of
+existing carrying; it is not an additional gain over `f4fd21cb`. The cost model
+excludes added compilation, JSON storage and runtime plan reads. No speed
+measurement or native egglog runtime speedup is claimed.
