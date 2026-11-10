@@ -2357,9 +2357,15 @@ impl Graph {
                     self.retired_port_slots
                         .insert(other.witness, std::mem::take(&mut target.port_slot));
                 }
-                target.hidden |= r.hidden;
-                target.epoch = self.epoch;
-                self.changes.touch(r.table, other.witness);
+                // Retiring a duplicate does not itself change the surviving
+                // row. Its output union is queued above and will publish any
+                // actual Eq change through the ordinary completion path.
+                // A synthetic delta here can replay a nonmonotone source RHS.
+                if r.hidden && !target.hidden {
+                    target.hidden = true;
+                    target.epoch = self.epoch;
+                    self.changes.touch(r.table, other.witness);
+                }
             }
             if self.receipt_tracking {
                 self.receipt_forwards
@@ -2469,16 +2475,17 @@ impl Graph {
                                 && self.functions[j].value == Value::Int(0)
                                 && (self.functions[j].key == key
                                     || self.units.change_block(j, &row.values));
-                            if shared_unit {
+                            let value_changed = if shared_unit {
                                 self.function_decoded[j] = Some(row.values.clone());
                                 self.units.stats.fast_merges += 1;
+                                false
                             } else {
                                 let old = canon(&self.functions[j].value, &self.parents);
                                 #[cfg(feature = "slot-transfer-audit")]
                                 let before = old.clone();
                                 let next = self.merge_value(
                                     row.table,
-                                    old,
+                                    old.clone(),
                                     row.values.last().unwrap().clone(),
                                 )?;
                                 #[cfg(feature = "slot-transfer-audit")]
@@ -2492,10 +2499,20 @@ impl Graph {
                                         &next,
                                     )?;
                                 }
-                                self.function_decoded[j] = None;
-                                self.functions[j].value = next;
+                                let changed = old != next;
+                                if changed {
+                                    self.function_decoded[j] = None;
+                                    self.functions[j].value = next;
+                                }
+                                changed
+                            };
+                            // Match normal set/merge semantics: an absorbed
+                            // value retires its old key without refreshing the
+                            // survivor's semi-naive timestamp.
+                            if value_changed {
+                                self.functions[j].epoch = self.epoch;
+                                self.changes.touch(row.table, Dependency::Function(j));
                             }
-                            self.functions[j].epoch = self.epoch;
                             #[cfg(feature = "receipt-slots")]
                             if self.functions[i].port_slot != 0 {
                                 self.retired_port_slots.insert(
@@ -2518,7 +2535,6 @@ impl Graph {
                                 let target = self.function(j).unwrap();
                                 self.subscribe(target.table, target.witness, &target.values);
                             }
-                            self.changes.touch(row.table, Dependency::Function(j));
                             continue;
                         }
                     }

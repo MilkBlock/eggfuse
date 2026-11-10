@@ -82,6 +82,11 @@ index through an ordinary three-atom query. This does not establish that the
 refill discrepancy is harmless or just an allowed extraction tie; its source
 contract remains outside the sum-bits acceptance proof and needs investigation.
 
+Follow-up: [collision delta repair](../cell-collision-delta/README.md) isolates
+and fixes this discrepancy. Retiring a duplicate had incorrectly refreshed an
+unchanged survivor's timestamp and replayed the fill rule. The saved baseline
+fixture and measurements above remain the original checkpoint evidence.
+
 ## Reproduction
 
 Freeze baseline and candidate executable paths from Cargo JSON, using the

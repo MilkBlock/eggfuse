@@ -1,0 +1,212 @@
+{
+  "baseline_commit": "d1fba785",
+  "scope": "standalone Cell CPU; collision-delta correctness fix and bounded work, no throughput claim",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "exact_final_bijection": {
+        "rows": 4045,
+        "eq_values": 2193,
+        "exact_bijection": true
+      },
+      "source_schedule_and_changed_flags_equal": true,
+      "queries": [
+        17661,
+        12526
+      ],
+      "work": {
+        "bindings": [
+          10226,
+          7265
+        ],
+        "constructor_requests": [
+          11502,
+          8033
+        ],
+        "function_updates": [
+          1450,
+          1450
+        ],
+        "unions": [
+          1039,
+          1039
+        ],
+        "logical_facts_created": [
+          3739,
+          3739
+        ],
+        "repaired_dependencies": [
+          1496,
+          1496
+        ],
+        "single_writes": [
+          1422,
+          1121
+        ]
+      },
+      "changed_binding_batches": {
+        "type-analysis": {
+          "runs": 15,
+          "before": 949,
+          "after": 425
+        },
+        "type-helpers": {
+          "runs": 4,
+          "before": 37,
+          "after": 12
+        },
+        "cell-spine-complete": {
+          "runs": 15,
+          "before": 116,
+          "after": 49
+        },
+        "always-run": {
+          "runs": 22,
+          "before": 3905,
+          "after": 1971
+        },
+        "is-resolved": {
+          "runs": 3,
+          "before": 208,
+          "after": 44
+        },
+        "terms": {
+          "runs": 3,
+          "before": 135,
+          "after": 25
+        },
+        "cicm-index": {
+          "runs": 2,
+          "before": 45,
+          "after": 27
+        },
+        "terms-helpers-helpers": {
+          "runs": 1,
+          "before": 2,
+          "after": 1
+        },
+        "interval-analysis": {
+          "runs": 2,
+          "before": 4,
+          "after": 0
+        },
+        "passthrough": {
+          "runs": 2,
+          "before": 10,
+          "after": 2
+        },
+        "context": {
+          "runs": 8,
+          "before": 710,
+          "after": 640
+        },
+        "drop": {
+          "runs": 1,
+          "before": 14,
+          "after": 0
+        },
+        "term-subst": {
+          "runs": 1,
+          "before": 40,
+          "after": 36
+        },
+        "canon": {
+          "runs": 1,
+          "before": 10,
+          "after": 2
+        },
+        "all-optimizations": {
+          "runs": 1,
+          "before": 16,
+          "after": 6
+        }
+      },
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": [
+        "90a07fa4f23060fe5442134a8abd0955e211d781092706fdf3d18f82206f819e",
+        "9791ed72af25e4bdbf4f9d0b5acf5107c189e899dab68bbf715b694b5f16ab63"
+      ],
+      "state_sha256": [
+        "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+        "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      ]
+    },
+    "ray1280": {
+      "runs": 1280,
+      "exact_final_bijection": {
+        "rows": 249137,
+        "eq_values": 190708,
+        "exact_bijection": true
+      },
+      "source_schedule_and_changed_flags_equal": true,
+      "queries": [
+        690981,
+        609685
+      ],
+      "work": {
+        "bindings": [
+          403192,
+          357982
+        ],
+        "constructor_requests": [
+          475811,
+          432291
+        ],
+        "function_updates": [
+          24935,
+          24935
+        ],
+        "unions": [
+          33888,
+          33888
+        ],
+        "logical_facts_created": [
+          244877,
+          244877
+        ],
+        "repaired_dependencies": [
+          50374,
+          50374
+        ],
+        "single_writes": [
+          32109,
+          28853
+        ]
+      },
+      "changed_binding_batches": {
+        "type-analysis": {
+          "runs": 55,
+          "before": 32731,
+          "after": 24660
+        },
+        "type-helpers": {
+          "runs": 116,
+          "before": 8691,
+          "after": 1619
+        },
+        "always-run": {
+          "runs": 25,
+          "before": 302718,
+          "after": 273234
+        },
+        "cell-spine-complete": {
+          "runs": 24,
+          "before": 2234,
+          "after": 1651
+        }
+      },
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": [
+        "5ba12b4fd310b7e2d26b87193ea16637dfb152ea5528d2d6583b2298dd056a4f",
+        "a4ef8d267696f9a07afdadbce43502badf2e136f6a4b33811f89690306eb77b9"
+      ],
+      "state_sha256": [
+        "ae313aa10b89a821340306b09678c2a616ddd18e7bba9d9c0ab5e3228dc36dc6",
+        "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+      ]
+    }
+  },
+  "runtime_sha256": "948ab38ff08efa22952f392899a9bc5e72efbfc397d14363d4ce70d5af474351",
+  "prefix_sha256": "b7d9868554354424ededc74c3c7deb64b4486fb84a20fda8fac4ac74ca9d5588",
+  "sum_native_acceptance_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+}
