@@ -57,6 +57,9 @@ fn failed_rhs_does_not_train_a_completed_transition() {
     let mut e=Executor::new(Graph::new(p).unwrap(),true);
     e.collect_iterative_pairs();
     assert!(e.execute().is_err());
+    let history = e.iterative_training().completion_history(&e.graph.program);
+    assert!(history["events"].as_array().unwrap().iter().all(|event| event["entry"][0] != bridge),
+        "failed RHS must not enter the runtime trace");
     let report=e.report();
     assert!(report["stage_spine"]["stats"]["resumed_steps"].as_u64().unwrap()>0);
     let hits=report["stage_spine"]["iterative_bake"]["applied_units"].as_object().unwrap();
@@ -230,6 +233,10 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
         Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
         raw["iterative_bake"]=plan;
         let raw=seal(raw);
+        let checked = Program::parse(raw.clone()).unwrap();
+        let mut unseen = raw["iterative_bake"].clone();
+        Catalog::emit_observed_ripsat_handoffs(&checked, &mut unseen, &Default::default()).unwrap();
+        assert_eq!(unseen["joins"], raw["iterative_bake"]["joins"], "unobserved catalog implementations must not seed inferred routes");
         // Measured Bake must not insert the inferred route while constructing its
         // baseline. Even without observed proposals it must score that route.
         let tmp = tempfile::tempdir().unwrap();
@@ -248,6 +255,20 @@ fn a_second_derivation_inherits_an_existing_completion_at_its_own_output_positio
             assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
             let history: Value = serde_json::from_slice(&std::fs::read(out.join("rounds.json")).unwrap()).unwrap();
             assert_eq!(history[0]["units"], 4, "unscored inferred route entered baseline");
+            let trace: Value = serde_json::from_slice(&std::fs::read(out.join("round-0/cell-history.json")).unwrap()).unwrap();
+            let graph: Value = serde_json::from_slice(&std::fs::read(out.join("round-0/cell-egraph.json")).unwrap()).unwrap();
+            assert_eq!(graph["origin"]["kind"], "completed-cell-runtime-history");
+            assert_eq!(trace["program_sha256"], history[0]["source_program"]);
+            let events = trace["events"].as_array().unwrap();
+            assert!(!events.is_empty());
+            assert!(events.iter().any(|e| e["parent"].is_u64() && e["run"] != e["producer_run"]));
+            assert_eq!(graph["registered_compositions"], trace["contracts"]["implementations"].as_array().unwrap().len());
+            for (id, event) in events.iter().enumerate() {
+                if let Some(parent) = event["parent"].as_u64() {
+                    assert!((parent as usize) < id);
+                    assert_eq!(events[parent as usize]["run"], event["producer_run"]);
+                }
+            }
             if rounds == 1 {
                 let trials = history[0]["credit"]["trials"].as_array().unwrap();
                 assert_eq!(trials.len(), 1);

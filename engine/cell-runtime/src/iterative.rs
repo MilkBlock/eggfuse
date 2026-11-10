@@ -94,7 +94,7 @@ pub(crate) struct State {
     pc: usize,
     active: Option<Id>,
     pub(crate) collect_pairs: bool,
-    samples: Option<Rc<Vec<(usize, usize, Option<crate::graph::Dependency>)>>>,
+    samples: Option<Rc<Vec<(usize, usize, Option<crate::graph::Dependency>, Option<usize>)>>>,
 }
 impl State {
     pub fn fused(&self, catalog: &Catalog) -> bool {
@@ -367,26 +367,30 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
-        Self::emit_policy(p, plan, reuse, false, false, false, false)
+        Self::emit_policy(p, plan, reuse, false, false, false, false, None)
     }
     pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, false, false, false)
+        Self::emit_policy(p, plan, true, true, false, false, false, None)
     }
     pub fn emit_query_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, false, false)
+        Self::emit_policy(p, plan, true, true, true, false, false, None)
     }
     pub fn emit_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true, true)
+        Self::emit_policy(p, plan, true, true, true, true, true, None)
     }
     /// Lower exactly this catalog without silently admitting equivalent routes.
     pub fn emit_existing_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true, false)
+        Self::emit_policy(p, plan, true, true, true, true, false, None)
+    }
+    /// Inferred routes must connect implementations seen in completed runtime history.
+    pub fn emit_observed_ripsat_handoffs(p: &Program, plan: &mut J, observed: &BTreeSet<Id>) -> Result<()> {
+        Self::emit_policy(p, plan, true, true, true, true, true, Some(observed))
     }
     /// Transfer a known local application to another implementation of the
     /// exact same completed Cell. Positions are matched by constructor
     /// incidence, not rule IDs or physical addresses. This is one bounded
     /// graph expansion per Bake call, not enumeration of complete histories.
-    fn extend_completion_entries(p:&Program,plan:&mut J) -> Result<()> {
+    fn extend_completion_entries(p:&Program,plan:&mut J,observed:Option<&BTreeSet<Id>>) -> Result<()> {
         use crate::cell::{Definition,Site};
         let catalog=Self::parse(p,plan)?;
         let room=catalog.limits.total.saturating_sub(catalog.units.len())
@@ -404,6 +408,7 @@ impl Catalog {
         let mut indexed_outputs = 0;
         for (left, alternative) in normalized.iter().enumerate() {
             let Some(alternative) = alternative else { continue };
+            if observed.is_some_and(|seen| !seen.contains(&left)) { continue; }
             let unit = &catalog.units[left];
             let cell = Definition::new(p, unit.last().0)?;
             let mut seen = BTreeSet::new();
@@ -422,6 +427,7 @@ impl Catalog {
         let mut extensions=vec![];
         let mut additions=vec![];
         'joins: for (&join,_) in &catalog.jumps {
+            if observed.is_some_and(|seen| !seen.contains(&join.left)) { continue; }
             let Some(source)=&normalized[join.left] else{continue};
             let original=&catalog.units[join.left];
             let stage=original.path.len()-1;
@@ -467,13 +473,14 @@ impl Catalog {
         query_ports: bool,
         completion: bool,
         expand: bool,
+        observed: Option<&BTreeSet<Id>>,
     ) -> Result<()> {
         plan.as_object_mut().ok_or("missing iterative catalog")?.remove("state_plan");
         plan.as_object_mut().unwrap().remove("completion");
         plan.as_object_mut()
             .ok_or("missing iterative catalog")?
             .remove("rhs_handoffs");
-        if expand {Self::extend_completion_entries(p,plan)?;}
+        if expand {Self::extend_completion_entries(p,plan,observed)?;}
         else if !completion {
             plan.as_object_mut().unwrap().remove("completion_extensions");
             plan.as_object_mut().unwrap().remove("completion_search");
@@ -832,8 +839,23 @@ pub struct Evidence {
     pub witness: Option<crate::graph::Dependency>,
     width: u64,
 }
+/// A successful logical Cell execution, not a physical constructor owner.
+/// Parent is an earlier execution on this cursor, including across Runs.
+#[derive(Clone, Serialize)]
+struct TraceEvent {
+    parent: Option<usize>,
+    unit: Id,
+    entry: Entry,
+    output: usize,
+    run: usize,
+    producer_run: usize,
+    witness: Option<crate::graph::Dependency>,
+    truncated_parent: bool,
+}
 #[derive(Default)]
 pub struct Training {
+    trace: Vec<TraceEvent>,
+    trace_dropped: u64,
     pub(crate) collect_pairs: bool,
     pairs: BTreeMap<Join, Evidence>,
     hits: BTreeMap<Id, u64>,
@@ -858,14 +880,7 @@ impl Training {
         }
         // In training only, retain a bounded witness window. With a multi-step
         // right operand its *first* Run identifies the sampled join boundary.
-        if s.collect_pairs && s.active.is_some() {
-            let window = Rc::make_mut(s.samples.get_or_insert_with(Default::default));
-            let limit = c.limits.depth.min(c.limits.nodes);
-            if window.len() == limit {
-                window.remove(0);
-            }
-            window.push((parent_run, self.run, s.witness));
-        }
+        self.trace_completed(c, s, id, parent_run);
         let Some(j) = s.pending else { return };
         // Once a right operand already takes the direct origin, extending its
         // left boundary earns no second credit for the same operation.
@@ -879,7 +894,7 @@ impl Training {
             };
             window[i]
         } else {
-            (parent_run, self.run, s.witness)
+            (parent_run, self.run, s.witness, None)
         };
         let saves_key = s.complete && !s.fused(c) && !c.switch.enabled();
         if self.pairs.len() == c.limits.candidates && !self.pairs.contains_key(&j) {
@@ -908,8 +923,69 @@ impl Training {
             e.avoidable_origin_slots += inputs as u64;
         }
     }
+    pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State) {
+        if let Some(id) = s.active { self.trace_completed(c, s, id, 0); }
+    }
+    fn trace_completed(&mut self, c: &Catalog, s: &mut State, id: Id, parent_run: usize) {
+        if s.collect_pairs {
+            let parent = s.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
+            let trace = if self.trace.len() < c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes)) {
+                let index = self.trace.len();
+                self.trace.push(TraceEvent { parent, unit:id, entry:c.units[id].last(),
+                    output:s.output, run:self.run, producer_run:parent_run, witness:s.witness,
+                    truncated_parent:parent.is_none() && parent_run!=0 });
+                Some(index)
+            } else { self.trace_dropped += 1; None };
+            let window = Rc::make_mut(s.samples.get_or_insert_with(Default::default));
+            let limit = c.limits.depth.min(c.limits.nodes);
+            if window.len() == limit {
+                window.remove(0);
+            }
+            window.push((parent_run, self.run, s.witness, trace));
+        }
+    }
+    pub fn completed_trace_units(&self) -> BTreeSet<Id> {
+        self.trace.iter().map(|e|e.unit).collect()
+    }
+    /// Materialize compile-time history from completed cursor executions only.
+    /// Paths are bounded suffixes; the event links retain their actual ancestry.
+    pub fn completion_history(&self, p: &Program) -> J {
+        let mut catalog = Catalog::default();
+        let mut units = BTreeMap::new();
+        let mut event_units: Vec<usize> = Vec::new();
+        let limit = p.iterative.limits.depth.min(p.iterative.limits.nodes);
+        for event in &self.trace {
+            let mut path = event.parent.map(|parent| {
+                catalog.units[event_units[parent]].path.to_vec()
+            }).unwrap_or_default();
+            path.push(((!path.is_empty()).then_some(event.output), event.entry));
+            if path.len() > limit { path.remove(0); path[0].0 = None; }
+            let next = catalog.units.len();
+            let unit = *units.entry(path.clone()).or_insert_with(|| {
+                catalog.units.push(Unit { path:path.clone().into_boxed_slice() }); next
+            });
+            event_units.push(unit);
+            // A native transition references only the exact observed prefix.
+            if let Some(parent) = event.parent {
+                let left = event_units[parent];
+                if catalog.units[left].path.len()+1 == path.len() {
+                    let leaf = vec![(None,event.entry)];
+                    let next = catalog.units.len();
+                    let right = *units.entry(leaf.clone()).or_insert_with(|| {
+                        catalog.units.push(Unit {path:leaf.into_boxed_slice()}); next
+                    });
+                    catalog.jumps.insert(Join {left,output:event.output,right}, unit);
+                }
+            }
+        }
+        json!({"schema":"eggfuse-cell-runtime-history/v1",
+            "program_sha256":p.artifact["sha256"],"events":self.trace,
+            "event_units":event_units,"dropped_events":self.trace_dropped,
+            "contracts":catalog.completion_contracts(p),
+            "scope":"bounded completed cursor lineage; not all matches or committed mutations"})
+    }
     pub fn report(&self) -> J {
-        json!({"applied_units":self.hits,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
+        json!({"applied_units":self.hits,"trace_events":self.trace.len(),"trace_dropped":self.trace_dropped,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
     }
 }
 
@@ -959,6 +1035,32 @@ mod tests {
         assert_eq!(previous.get(1, port), Some(Dependency::Function(7)));
         assert!(state.history.current().is_none());
         assert!(state.stack.is_empty() && !state.direct);
+    }
+    #[test]
+    fn completed_trace_keeps_fork_ancestry_and_reports_capacity_loss() {
+        let mut c = Catalog::default();
+        for rule in 0..3 {
+            c.units.push(Unit {path:vec![(None,(rule,Some(0)))].into_boxed_slice()});
+        }
+        let mut training = Training {run:1,..Default::default()};
+        let mut source = State {active:Some(0),collect_pairs:true,..Default::default()};
+        training.applied(&c,&mut source,1);
+        let mut left = source.clone();
+        left.active=Some(1); training.run=2; training.applied(&c,&mut left,1);
+        source.active=Some(2); training.run=3; training.applied(&c,&mut source,1);
+        assert_eq!(training.trace.len(),3);
+        assert_eq!(training.trace[1].parent,Some(0));
+        assert_eq!(training.trace[2].parent,Some(0));
+        assert_eq!(training.trace[2].producer_run,1);
+        c.limits.candidates=1; c.limits.depth=1;
+        training.run=4; training.applied(&c,&mut source,1);
+        assert_eq!(training.trace.len(),3);
+        assert_eq!(training.trace_dropped,1);
+        assert_eq!(source.samples.as_ref().unwrap().last().unwrap().3,None);
+        let mut ordinary = State {active:Some(0),..Default::default()};
+        training.applied(&c,&mut ordinary,1);
+        assert!(ordinary.samples.is_none());
+        assert_eq!(training.trace_dropped,1);
     }
     #[test]
     fn tail_counters_remain_bounded_and_credit_only_complete_entries() {

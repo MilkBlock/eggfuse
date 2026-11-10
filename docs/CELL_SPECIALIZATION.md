@@ -98,6 +98,46 @@ programs and entry-dispatch proofs.
 
 ## Iterative Bake
 
+### Recognition from actual Cell history
+
+For `ripsat-completion`, each round now builds `cell-egraph.json` **after**
+training execution, from completed cursor history rather than the entire
+static catalog. The matching `cell-history.json` retains logical execution
+events, parent event indices, rule/pivot, source output position, producer and
+consumer Runs, and the witness observed at the boundary. A witness is historical
+provenance, not a current-liveness proof or a physical ownership claim.
+
+Root executions are recorded after successful RHS completion and root seeding;
+resumed executions extend the parent's event chain. Cloned cursors share their
+parent event, so forks remain explicit. A failed RHS records no completion.
+The existing training sample window carries the event index; ordinary inference
+does not allocate this trace, and no second binding or runtime fact graph is
+maintained. Training adds event storage and one index per retained sample.
+
+The trace budget is `candidates * min(depth, nodes)` events. Collection stops
+at that budget and reports dropped events. Truncated parents are explicit;
+the bounded sample window is not described as full-program tracing. This
+covers existing eligible Cell cursors, not every residual match or physical
+mutation. Identical observed paths share an implementation, with `event_units`
+mapping each execution back to it. To recover one execution's cross-stage trace,
+follow `events[id].parent`; to collect a Cell's histories, select its event-unit
+indices first. These are offline operations on the export.
+
+The native ripsat registry receives normalized structures of those executed
+paths and their observed prefix transitions. Measured inferred-route candidates
+are additionally restricted to source implementations recorded in the trace;
+typed completion proof, exact output incidence and measured admission still
+apply. Candidate routes remain predictions, never fabricated trace events.
+Explicit static/offline expansion remains available as a separate policy.
+
+The short retained-chain check records 6 executions, 4 cross-Run parent edges,
+5 path implementations and 4 native eclasses, with no dropped events. Two
+independent chains remain distinguishable (`0→2→4` and `1→3→5`) even though
+their structures share classes. Tests cover failed RHS exclusion, fork ancestry,
+capacity loss, disabled inference collection, observed-only expansion, and
+the mapping of exported histories into the native registry. These are history
+and semantic checks, not performance measurements.
+
 Measured admission now separates lowering from structural expansion. The
 baseline is lowered with `emit_existing_ripsat_handoffs`, which cannot add
 joins. Observed join proposals may carry inferred equivalent routes and are

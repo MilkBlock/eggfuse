@@ -260,10 +260,13 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     fs::create_dir(out)?;
     let mut reference = None;
     let mut history = Vec::new();
-    let compile_plan = |plan: &mut J, expand: bool| -> Result<Program> {
+    let compile_plan = |plan: &mut J, expand: bool, observed: Option<&std::collections::BTreeSet<usize>>| -> Result<Program> {
         plan.as_object_mut().unwrap().remove("state_plan");
         if completion {
-            if expand { Catalog::emit_ripsat_handoffs(&seed,plan)?; }
+            if expand {
+                if let Some(observed) = observed { Catalog::emit_observed_ripsat_handoffs(&seed,plan,observed)?; }
+                else { Catalog::emit_ripsat_handoffs(&seed,plan)?; }
+            }
             else { Catalog::emit_existing_ripsat_handoffs(&seed,plan)?; }
         } else if query_ports {
             Catalog::emit_query_handoffs(&seed, plan)?;
@@ -293,10 +296,10 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         // Reuse the exact scored artifact, including inferred joins and IDs.
         let p = match prepared.take() {
             Some(p) => p,
-            None => compile_plan(&mut plan, !measured)?,
+            None => compile_plan(&mut plan, !measured, None)?,
         };
         let units = p.iterative.entries();
-        let registry = eggfuse_bake::native_analyze::register_cpu_blocks(
+        let catalog_registry = if completion { None } else { Some(eggfuse_bake::native_analyze::register_cpu_blocks(
             &plan,
             &units,
             plan["joins"].as_array().unwrap(),
@@ -305,7 +308,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
                 max_nodes: limits.nodes,
                 max_units: limits.total,
             },
-        )?;
+        )?) };
         let (exec, stamp) = replay(p, true, config)?;
         if let Some(expected) = &reference {
             if expected != &stamp {
@@ -325,6 +328,14 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         } else {
             vec![]
         };
+        let observed_units = train.completed_trace_units();
+        let runtime_history = completion.then(|| train.completion_history(&p));
+        let registry = if let Some(trace) = &runtime_history {
+            let mut registry = eggfuse_bake::native_analyze::register_cpu_completion_structures(&trace["contracts"])?;
+            registry["origin"] = json!({"kind":"completed-cell-runtime-history", "program_sha256":p.artifact["sha256"],
+                "events":trace["events"].as_array().unwrap().len(), "dropped_events":trace["dropped_events"]});
+            registry
+        } else { catalog_registry.unwrap() };
         let train_report = train.report();
         let direct_origins = train.direct_origins;
         let report = exec.report();
@@ -352,7 +363,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
                 if let Some((join, _)) = &proposal {
                     candidate["joins"].as_array_mut().unwrap().push(json!(join));
                 }
-                let candidate = compile_plan(&mut candidate, true)?;
+                let candidate = compile_plan(&mut candidate, true, Some(&observed_units))?;
                 if candidate.artifact["iterative_bake"]["joins"] == plan["joins"] { continue; }
                 let compile_seconds = start.elapsed().as_secs_f64();
                 let candidate_hash = candidate.artifact["sha256"].clone();
@@ -422,6 +433,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         fs::create_dir(&dir)?;
         save(&dir.join("catalog.json"), &plan)?;
         save(&dir.join("cell-egraph.json"), &registry)?;
+        if let Some(trace) = &runtime_history { save(&dir.join("cell-history.json"), trace)?; }
         save(&out.join("rounds.json"), &json!(history))?;
         eprintln!(
             "round {round}: {} blocks, {} new, {} direct origins",

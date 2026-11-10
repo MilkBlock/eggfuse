@@ -1445,6 +1445,7 @@ impl Programs {
         #[cfg(feature = "iterative-bake")]
         let step = {
             let mut s = step;
+            let root = matches!(s, Started::Root { .. });
             s.seed_root(
                 &g.program.iterative,
                 rid,
@@ -1452,6 +1453,9 @@ impl Programs {
                 self.training.collect_pairs,
                 &mut self.stats,
             );
+            if root && let Started::Live(cursor) = &mut s {
+                self.training.trace_root(&g.program.iterative, &mut cursor.state);
+            }
             if !joint {
                 s.remember(&g.program.iterative, rid,
                     &query_fact, |i| effects.get(i), effects.forwarded(),
