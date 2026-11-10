@@ -2,7 +2,8 @@
 
 Baseline: `aeb059e0`. This is the standalone Cell CPU query executor, not native
 egglog. Query workers remain opt-in. This change is the fifth implementation in
-the current measurement batch; the full speed checkpoint follows separately.
+the current measurement batch. The [full speed checkpoint](checkpoint.md)
+finds no demonstrated throughput win against the parent or historical fastest.
 
 ## Opportunity and proof
 
