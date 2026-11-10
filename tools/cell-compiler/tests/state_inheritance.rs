@@ -107,8 +107,8 @@ fn worker_handoff_is_bound_to_operations_and_catalog() {
     }
     assert_eq!(plan["completion_forecast"]["status"],"derived");
     for rule in plan["rules"].as_array().unwrap() {
-        for effect in rule["effects"].as_array().unwrap() {
-            if let Some(table)=effect["entry_route"].as_u64() {
+        for effect in plan["layouts"][rule["layout"].as_u64().unwrap() as usize]["effects"].as_array().unwrap() {
+            if let Some(table)=effect["table"].as_u64() {
                 for node in plan["entry_routes"][table as usize].as_array().unwrap() {
                     assert_eq!(plan["entry_schedule"]["nodes"][node.as_u64().unwrap() as usize]["table"],p.tables[table as usize].name);
                 }
@@ -116,7 +116,7 @@ fn worker_handoff_is_bound_to_operations_and_catalog() {
         }
     }
     eggfuse_cell_compiler::worker_handoff::validate(&p,&plan).unwrap();
-    for field in ["program","stage_contracts","entry_schedule","rules","obligations","entry_routes","completion_forecast"] {
+    for field in ["program","stage_contracts","entry_schedule","rules","obligations","entry_routes","completion_forecast","layouts","worker_execution_proved","required_order","established_after"] {
         let mut corrupt=plan.clone();corrupt[field]=Value::Null;
         assert!(eggfuse_cell_compiler::worker_handoff::validate(&p,&corrupt).is_err());
     }

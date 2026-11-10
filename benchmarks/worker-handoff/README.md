@@ -178,3 +178,40 @@ so it establishes an added cost on already-covered input, not the absence of
 benefit on other workloads. Further selection should use actual matched-rule
 sequences and scope lengths rather than interpreting increased coverage as
 saved work. No new runtime cache remains from this experiment.
+
+## v3: remove redundant per-operation and per-rule fields
+
+The entire v2 handoff, including the repair forecast, can be reconstructed from
+v3. Rules reference a template layout holding frame width, definitions and
+ordered effects. Operation position is its array index; Entry route is the
+existing table ID. Effect kind determines whether the result is an actual
+returned receipt, a local value or no result. No node address is inferred from
+producer/op coordinates. Worker permission remains globally false; original
+rule/match ordering and successful-match/winner establishment are common
+constraints, not repeated fields on every rule.
+
+Readers must explicitly accept v3 and reconstruct-validate the sidecar.
+Layouts may be shared by rules using the same template, but this sample has
+582 distinct layouts for 582 rules: the measured saving is primarily removal
+of redundant fields, not template coalescing. No facts, stages, predicted tables
+or remaining runtime obligations are discarded. This format is preparation,
+not permission to eliminate publication or repair.
+
+`compact-layouts-check.json` records compact UTF-8 size 1,044,950 -> 705,544
+bytes (-32.5%), with the repair forecast unchanged. Unlike the earlier v2
+addition, the full artifact is now also smaller than v1's 905,056 bytes, while
+retaining the added forecast. This measures encoded artifact size, not retained
+runtime graph memory, loading latency or execution speed.
+
+Generate v2 on 0a3e6f65 and v3 on this commit using emit_worker_handoff, the same
+program and separate Cargo target directories. Run:
+
+```
+python3 benchmarks/worker-handoff/check_compact_layouts.py --before V2.json --after V3.json --output CHECK.json
+```
+
+The check expands every rule/effect and compares the entire content except the
+schema tag and self-checksum, including all 582 rules and the forecast. Compiler
+unit/integration checks pass (13 library tests and four state/handoff tests).
+The runtime and its input Program are unchanged, so this step does not require
+new inference timing or claim a new semantic execution result.

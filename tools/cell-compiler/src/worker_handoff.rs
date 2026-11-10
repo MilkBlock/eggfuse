@@ -33,7 +33,7 @@ fn pack_forecast(mut value:Value)->Value {
 }
 
 pub fn compile(p: &Program) -> Value {
-    let rules: Vec<_> = p.rules.iter().enumerate().map(|(rid,r)| {
+    let mut rules: Vec<_> = p.rules.iter().enumerate().map(|(rid,r)| {
         let t=&p.templates[r.template];
         let effects:Vec<_>=t.ops.iter().enumerate().map(|(op,ins)| {
             let (reads,write,table,kind)=match ins {
@@ -59,6 +59,27 @@ pub fn compile(p: &Program) -> Value {
             "required_order":"original-rule-and-match-ordinal",
             "established_after":"successful-match-and-winner-selection"})
     }).collect();
+    let mut layouts=Vec::new();
+    let mut by_template=std::collections::BTreeMap::new();
+    for rule in &mut rules {
+        let template=rule["template"].as_u64().unwrap();
+        let object=rule.as_object_mut().unwrap();
+        let mut effects=object.remove("effects").unwrap();
+        for effect in effects.as_array_mut().unwrap() {
+            let fields=effect.as_object_mut().unwrap();
+            // Position is the operation ordinal; route is the table; kind
+            // determines address semantics. Permission is global and false.
+            for key in ["operation","entry_route","result_address","worker_execution_proved"] {fields.remove(key);}
+        }
+        let layout=json!({"effects":effects,
+            "frame_slots":object.remove("frame_slots").unwrap(),
+            "slot_definitions":object.remove("slot_definitions").unwrap()});
+        let index=*by_template.entry(template).or_insert_with(|| {
+            let index=layouts.len();layouts.push(layout);index
+        });
+        object.insert("layout".into(),json!(index));
+        object.remove("required_order");object.remove("established_after");
+    }
     // Tables own candidate routes once; effects refer to the shared route.
     let routes:Vec<_>=p.tables.iter().map(|table|
         p.artifact["entry_schedule"]["nodes"].as_array().into_iter().flatten()
@@ -78,8 +99,11 @@ pub fn compile(p: &Program) -> Value {
         Ok(plan)=>json!({"status":"derived","plan":pack_forecast(serde_json::to_value(plan).unwrap())}),
         Err(error)=>json!({"status":"unsupported","reason":error}),
     };
-    let mut result=json!({"schema":"eggfuse-worker-handoff/v2",
-        "program":p.artifact["sha256"],"rules":rules,
+    let mut result=json!({"schema":"eggfuse-worker-handoff/v3",
+        "program":p.artifact["sha256"],"rules":rules,"layouts":layouts,
+        "required_order":"original-rule-and-match-ordinal",
+        "established_after":"successful-match-and-winner-selection",
+        "worker_execution_proved":false,
         "stage_contracts":contracts,"entry_routes":routes,
         "completion_forecast":completion,
         "obligations":["residual-enumeration","winner-and-delta-ownership","original-run-and-effect-order",
