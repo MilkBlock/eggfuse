@@ -39,6 +39,10 @@ Raytrace 128 Run 的图、签名和逻辑计数一致；README compile/run/bench
 入口通过。详见 [results.json](results.json)。这里不声称完整 Raytrace native
 正确性或速度收益，普通 release 的统一计时另行记录。
 
+后续已完成[五次修改后的统一计时](timing.md)：未建立超过历史较快配置的
+总体加速，Raytrace 相对上次四线程检查点中位数慢 0.46%。工作量减少不能
+单独作为速度验收。
+
 ## 复现
 
 冻结基线普通、allocator 和 query_prefix 二进制，记录 SHA256 到
