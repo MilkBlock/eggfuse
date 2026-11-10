@@ -240,3 +240,25 @@ fn completed_cell_publishes_only_last_exact_alias_without_dropping_donors() {
     assert!(s["alias_effect_forwards"].as_u64().unwrap() > 0, "{s}");
     assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
 }
+
+#[test]
+fn effect_donor_occupies_publication_slot_without_fabricating_alias_execution() {
+    let source = r#"
+(datatype E (N i64) (Start E) (Gateway E) (Out E))
+(ruleset make) (ruleset consume)
+(rule ((Start x)) ((Gateway x) (Gateway x)) :ruleset make)
+(rule ((Gateway x)) ((Out x)) :ruleset consume)
+(Start (N 1))
+(run-schedule (seq (run make) (run consume)))
+(check (Out (N 1)))
+"#;
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let report = nodes.report();
+    let s = &report["stage_spine"]["stats"];
+    assert_eq!(s["effect_output_copies"], 0, "{s}");
+    assert!(s["effect_outputs_reused"].as_u64().unwrap() > 0);
+    // The skipped alias must still have no raw result. Completion reads its
+    // actual donor, whose result already occupies the final publication slot.
+    assert!(s["alias_effect_forwards"].as_u64().unwrap() > 0);
+}

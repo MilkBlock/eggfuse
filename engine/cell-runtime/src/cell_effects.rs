@@ -37,6 +37,19 @@ impl EffectPlan {
     pub fn compile(p: &Program, rule: usize, outputs: &[Output], published: usize, full: bool) -> Self {
         let cell = Definition::new(p, rule).expect("typed Cell");
         let mut plan = Self { slots: vec![None; cell.template.ops.len()], width: 0, outputs: published };
+        // The retained prefix belongs to the actual producer, even when its
+        // publication is attached to a later alias operation. Output::prepare
+        // has already selected one last output per exact source.
+        for output in &outputs[..published] {
+            plan.require(match output.receipt_source {
+                Some(Site::Effect(donor)) => donor,
+                _ => output.operation,
+            });
+        }
+        debug_assert_eq!(plan.width, published, "distinct retained Cell sources");
+        // Raw operation receipts remain distinct: closed completion may record
+        // an alias, whereas ordinary execution skips it. History must observe
+        // that distinction before publication fills any remaining output slots.
         for output in outputs { plan.require(output.operation); }
         for output in outputs {
             if let Some(Site::Effect(op)) = output.receipt_source { plan.require(op); }
@@ -93,8 +106,8 @@ impl Effects {
         assert!(self.keep != 0, "Cell outputs need a reserved completion span");
         self.first
     }
-    /// Actual effect returns already occupy their final output slot. A skipped
-    /// effect's proven alias is filled only after history captured the raw RHS.
+    /// Actual effect donors already occupy their final output slot. Query
+    /// aliases are filled only after history captured the raw RHS.
     #[cfg(feature = "sparse-cells")]
     pub fn retain_output(&mut self, position: usize, receipt: Dependency) -> bool {
         assert!(position < self.keep);
