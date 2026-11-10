@@ -287,6 +287,7 @@ impl Started {
             stats.history_slots_written += work.slots as u64;
             stats.history_allocations += work.allocations as u64;
             stats.history_empty_slots_written += work.empty_slots as u64;
+            stats.history_carried_steps += u64::from(work.carried);
         }
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
@@ -404,6 +405,7 @@ pub struct Stats {
     history_slots_written: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
+    history_carried_steps: u64,
     history_result_reads: u64,
     legacy_entry_writes: u64,
     legacy_retirement_checks: u64,
@@ -2262,6 +2264,7 @@ impl Programs {
         #[cfg(feature = "iterative-bake")]
         let report = {
             let mut r = report;
+            r["history_handle_bytes"] = std::mem::size_of::<crate::result_handoff::History>().into();
             r["iterative_bake"] = self.training.report();
             r
         };

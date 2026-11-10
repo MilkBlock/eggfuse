@@ -317,18 +317,59 @@ enum Trail {
     One(Results),
     // Each entry is empty or One. Reuse an existing One when a later Cell
     // needs a deeper history; do not copy its results into another owner.
-    Many(Vec<History>),
+    Many(Vec<Option<Rc<Trail>>>),
 }
 #[derive(Clone, Debug, Default)]
-pub(crate) struct History(Option<Rc<Trail>>);
+pub(crate) struct History {
+    frames: Option<Rc<Trail>>,
+    // Empty intermediate Cells advance source-stage positions without
+    // republishing the same results into another history container.
+    empty: usize,
+}
 #[derive(Default)]
 pub(crate) struct CaptureWork {
     pub reads: usize,
     pub slots: usize,
     pub allocations: usize,
     pub empty_slots: usize,
+    pub carried: bool,
 }
 impl History {
+    fn one(results: Option<Results>) -> Self {
+        Self { frames: results.map(|r| Rc::new(Trail::One(r))), empty: 0 }
+    }
+    /// Advance across a Cell with no actual exported results. The existing
+    /// immutable frames stay shared; trim only when the compiled lifetime ends.
+    fn carry(&mut self, limit: usize, work: &mut CaptureWork) {
+        if self.frames.is_none() { return; }
+        self.empty += 1;
+        let keep = limit.saturating_sub(self.empty);
+        if keep == 0 { *self = Self::default(); return; }
+        if let Some(Trail::Many(frames)) = self.frames.as_deref() {
+            if frames.len() > keep {
+                if keep == 1 {
+                    // A nonempty history always ends with its last real frame.
+                    self.frames = frames.last().unwrap().clone();
+                } else {
+                    let retained = frames[frames.len() - keep..].to_vec();
+                    work.slots += retained.len();
+                    work.allocations += 2;
+                    self.frames = Some(Rc::new(Trail::Many(retained)));
+                }
+            }
+        }
+        work.carried = true;
+    }
+    /// One existing frame, excluding empty-stage bookkeeping. Many never
+    /// embeds another Many, so retaining a result cannot retain expired history.
+    fn snapshot(&self, back: usize) -> Option<Rc<Trail>> {
+        let back = back.checked_sub(self.empty).filter(|&b| b > 0)?;
+        match self.frames.as_deref() {
+            Some(Trail::One(_)) if back == 1 => self.frames.clone(),
+            Some(Trail::Many(v)) => v.len().checked_sub(back).and_then(|i| v[i].clone()),
+            _ => None,
+        }
+    }
     pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
     pub(crate) fn capture(
         &mut self,
@@ -339,11 +380,13 @@ impl History {
         effect: impl Fn(usize) -> Option<Dependency>,
     ) -> CaptureWork {
         if limit == 0 {
-            self.0 = None;
+            *self = Self::default();
             return CaptureWork::default();
         }
-        if wanted.is_empty() && self.0.is_none() {
-            return CaptureWork::default();
+        if wanted.is_empty() {
+            let mut work = CaptureWork::default();
+            self.carry(limit, &mut work);
+            return work;
         }
         let mut results = Results::new(rid);
         let mut empty_slots = 0;
@@ -357,38 +400,39 @@ impl History {
             }
         }
         let mut work = CaptureWork { reads: wanted.len(), slots: results.len(),
-            empty_slots, allocations: 0 };
+            empty_slots, allocations: 0, carried: false };
         let frame = (results.len() != 0).then_some(results);
-        if limit == 1 {
+        if frame.is_none() {
+            self.carry(limit, &mut work);
+            return work;
+        }
+        if limit == 1 || self.frames.is_none() || self.empty >= limit - 1 {
             work.allocations = usize::from(frame.is_some());
-            self.0 = frame.map(|f| Rc::new(Trail::One(f)));
+            *self = Self::one(frame);
             return work;
         }
-        let prev = match self.0.as_deref() {
-            Some(Trail::Many(v)) => v.as_slice(),
-            Some(Trail::One(_)) => std::slice::from_ref(self),
-            _ => &[],
+        let stored = match self.frames.as_deref() {
+            Some(Trail::Many(v)) => v.len(),
+            Some(Trail::One(_)) => 1,
+            _ => 0,
         };
-        let prev = &prev[prev.len().saturating_sub(limit - 1)..];
-        if frame.is_none() && !prev.iter().any(|h| h.0.is_some()) {
-            self.0 = None;
-            return work;
-        }
-        work.slots += prev.len() + 1;
-        work.allocations = 2 + usize::from(frame.is_some());
-        let mut v = Vec::with_capacity(prev.len() + 1);
-        v.extend_from_slice(prev);
-        v.push(History(frame.map(|f| Rc::new(Trail::One(f)))));
-        self.0 = Some(Rc::new(Trail::Many(v)));
+        let retained = (stored + self.empty).min(limit - 1);
+        work.slots += retained + 1;
+        work.allocations = 3;
+        let mut v = Vec::with_capacity(retained + 1);
+        v.extend((1..=retained).rev().map(|back| self.snapshot(back)));
+        v.push(Self::one(frame).frames);
+        *self = Self { frames: Some(Rc::new(Trail::Many(v))), empty: 0 };
         work
     }
     pub(crate) fn get(&self, back: usize, port: ResultPort) -> Option<Dependency> {
         self.frame(back)?.get(port)
     }
     fn frame(&self, back: usize) -> Option<&Results> {
-        match self.0.as_deref()? {
+        let back = back.checked_sub(self.empty).filter(|&b| b > 0)?;
+        match self.frames.as_deref()? {
             Trail::One(e) if back == 1 => Some(e),
-            Trail::Many(v) => match v.get(v.len().checked_sub(back)?)?.0.as_deref()? {
+            Trail::Many(v) => match v.get(v.len().checked_sub(back)?)?.as_deref()? {
                 Trail::One(result) => Some(result),
                 Trail::Many(_) => unreachable!("Cell history entries contain one completed frame"),
             },
@@ -735,7 +779,7 @@ mod tests {
         let mut history = History::default();
         assert_eq!(history.capture(1, 4, &capture, |_| None, |_| Some(old)).allocations, 1);
         let published = history.clone();
-        assert_eq!(history.capture(2, 8, &[], |_| None, |_| None).allocations, 2);
+        assert_eq!(history.capture(2, 8, &[], |_| None, |_| None).allocations, 0);
         assert_eq!(history.get(1, port), None);
         assert_eq!(history.get(2, port), Some(old));
         history.capture(1, 4, &capture, |_| None, |_| Some(new));
@@ -745,8 +789,59 @@ mod tests {
         history.capture(3, 8, &[], |_| None, |_| None);
         assert_eq!(history.get(3, port), Some(new));
         history.capture(0, 8, &[], |_| None, |_| None);
-        assert!(history.0.is_none());
+        assert!(history.frames.is_none());
         assert_eq!(published.get(1, port), Some(old));
+    }
+    #[test]
+    fn empty_completion_keeps_the_original_owner_and_releases_expired_frames() {
+        let port = ResultPort::new(4, 0);
+        let capture = [Capture { site: Site::Effect(2), port }];
+        let mut history = History::default();
+        history.capture(4, 4, &capture, |_| None, |_| Some(Dependency::Function(9)));
+        let owner = Rc::downgrade(history.frames.as_ref().unwrap());
+        let published = history.clone();
+        for back in 2..=4 {
+            let work = history.capture(4, 8, &[], |_| None, |_| None);
+            assert!(work.carried);
+            assert_eq!((work.reads, work.slots, work.allocations), (0, 0, 0));
+            assert!(Rc::ptr_eq(history.frames.as_ref().unwrap(), published.frames.as_ref().unwrap()));
+            assert_eq!(history.get(back, port), Some(Dependency::Function(9)));
+            assert_eq!(history.current().map(|r| r.get(port)), None);
+        }
+        history.capture(4, 8, &[], |_| None, |_| None);
+        assert!(history.frames.is_none());
+        assert_eq!(published.get(1, port), Some(Dependency::Function(9)));
+        drop(published);
+        assert!(owner.upgrade().is_none());
+    }
+    #[test]
+    fn carried_cells_match_a_dense_stage_history_through_missing_results_and_resets() {
+        let captures = [Capture { site: Site::Query(0), port: ResultPort::new(4, 0) },
+            Capture { site: Site::Effect(2), port: ResultPort::new(4, 2) }];
+        let mut history = History::default();
+        let mut dense = Vec::<[Option<Dependency>; 3]>::new();
+        let mut published = vec![];
+        let mut random = 17u64;
+        for step in 0..300 {
+            random = random.wrapping_mul(6364136223846793005).wrapping_add(1);
+            let limit = (random >> 32) as usize % 6;
+            let empty = random & 3 == 0;
+            let a = (!empty && random & 4 != 0).then_some(Dependency::Function(step * 2));
+            let b = (!empty && random & 8 != 0).then_some(Dependency::Function(step * 2 + 1));
+            history.capture(limit, 4, if empty { &[] } else { &captures }, |_| a, |_| b);
+            dense.push([a, None, b]);
+            dense.drain(..dense.len().saturating_sub(limit));
+            if step % 11 == 0 { published.push((history.clone(), dense.clone())); }
+            for (h, d) in std::iter::once((&history, &dense)).chain(published.iter().map(|(h, d)| (h, d))) {
+                for back in 0usize..=7 {
+                    for slot in 0..3 {
+                        let expected = back.checked_sub(1).and_then(|b| d.len().checked_sub(b + 1)).and_then(|i| d[i][slot]);
+                        assert_eq!(h.get(back, ResultPort::new(4, slot)), expected, "step {step}, back {back}, slot {slot}");
+                        assert_eq!(h.get(back, ResultPort::new(5, slot)), None);
+                    }
+                }
+            }
+        }
     }
     #[test]
     fn completed_cells_retain_only_reachable_future_reads() {
