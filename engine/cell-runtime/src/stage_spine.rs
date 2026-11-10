@@ -641,10 +641,14 @@ pub struct Programs {
 
     #[cfg(feature = "sparse-cells")]
     answer_scratch: Winners,
+    #[cfg(feature = "sparse-cells")]
+    deferred_queries: Vec<Option<(bool, usize, Vec<(usize, Winner)>)>>,
     pub stats: Stats,
 }
 #[cfg(feature = "sparse-cells")]
-type Winners = Vec<(Vec<Value>, (Matched, Cursor))>;
+type Winner = (Vec<Value>, (Matched, Cursor));
+#[cfg(feature = "sparse-cells")]
+type Winners = Vec<Winner>;
 #[cfg(not(feature = "sparse-cells"))]
 type Winners = BTreeMap<Vec<Value>, (Matched, Cursor)>;
 fn record_answer(
@@ -945,6 +949,8 @@ impl Programs {
 
             #[cfg(feature = "sparse-cells")]
             answer_scratch: vec![],
+            #[cfg(feature = "sparse-cells")]
+            deferred_queries: (0..p.rules.len()).map(|_| None).collect(),
             stats: Stats::default(),
         };
         if !enabled {
@@ -1975,17 +1981,9 @@ impl Programs {
         let mut results = Winners::new();
         let covered_count = if complete { ready.len() } else { covered.len() };
         #[cfg(feature = "sparse-cells")]
-        let mut ready = ready;
+        let mut workers = workers.and_then(|w| if w.admit_spine_rule(g, rid) { Some(w) } else { None });
         #[cfg(feature = "sparse-cells")]
-        let mut buffered = Vec::new();
-        #[cfg(feature = "sparse-cells")]
-        let mut completed = if let Some(workers) = workers.filter(|w| w.should_buffer(ready.len())) {
-            buffered.extend(&mut ready);
-            workers.spine_batch(g, &self.queries, rid, &buffered, buffered.capacity(),
-                &self.local_witness_entries[rid], watermark, facts, &mut self.stats)?
-        } else { Vec::new() }.into_iter().peekable();
-        #[cfg(feature = "sparse-cells")]
-        let ready = ready.chain(buffered);
+        let mut ordinals = Vec::new();
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
@@ -2046,14 +2044,9 @@ impl Programs {
             } else { None };
             let query = self.queries.get(rid, pivot).expect("certified Cell Entry");
             #[cfg(feature = "sparse-cells")]
-            if completed.peek().is_some_and(|(i, _)| *i == _ordinal) {
-                let (_, answer) = completed.next().unwrap();
-                if let Some(answer) = answer? {
-                    if cursor.via_block && cursor.state.direct {
-                        self.training.seal_moves += query.inputs.len() as u64;
-                    }
-                    record_answer(&mut results, answer.values, answer.facts, answer.epoch, cursor);
-                }
+            if let Some(workers) = workers.as_deref_mut()
+                && workers.spine_entry(rid, pivot, &cursor) {
+                workers.enqueue_spine(g, rid, pivot, _ordinal, watermark, row, cursor, facts);
                 continue;
             }
             self.stats.cell_query_entries += 1;
@@ -2104,8 +2097,30 @@ impl Programs {
                     self.training.seal_moves += query.inputs.len() as u64;
                 }
                 record_answer(&mut results, inputs, facts, epoch, cursor);
+                #[cfg(feature = "sparse-cells")]
+                if let Some(workers) = workers.as_deref_mut() {
+                    ordinals.push(_ordinal);
+                    workers.record_serial_order();
+                }
             }
         }
+        #[cfg(feature = "sparse-cells")]
+        if workers.as_ref().is_some_and(|w| w.pending_rule(rid)) {
+            // Keep each original winner/cursor once until every Cell in this
+            // read-only Run has completed. No intermediate binding is sealed.
+            workers.as_deref_mut().unwrap().record_deferred_storage(results.len());
+            self.deferred_queries[rid] = Some((complete, covered_count, ordinals.into_iter().zip(results).collect()));
+            return Ok(Some(Coverage { complete, covered, answers: Vec::new() }));
+        }
+        let answers = self.seal_answers(rid, complete, covered_count, results);
+        Ok(Some(Coverage {
+            complete,
+            covered,
+            answers,
+        }))
+    }
+    fn seal_answers(&mut self, rid: usize, complete: bool, covered_count: usize,
+        mut results: Winners) -> Vec<Matched> {
         #[cfg(feature = "sparse-cells")]
         {
             // Stable ordering retains the first producer when duplicate
@@ -2170,11 +2185,28 @@ impl Programs {
         {
             self.answer_scratch = results;
         }
-        Ok(Some(Coverage {
-            complete,
-            covered,
-            answers,
-        }))
+        answers
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_queries[rid].is_some() }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn record_worker_answer(&mut self, rid: usize, ordinal: usize,
+        answer: Matched, cursor: Cursor) {
+        if cursor.via_block && cursor.state.direct {
+            self.training.seal_moves += answer.values.len() as u64;
+        }
+        let (_, _, results) = self.deferred_queries[rid].as_mut().expect("deferred Cell query");
+        let values = answer.values;
+        let answer = Matched { values: Vec::new(), ..answer };
+        results.push((ordinal, (values, (answer, cursor))));
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn finish_worker_rule(&mut self, rid: usize, order_comparisons: &mut u64, winner_moves: &mut u64) -> Option<(bool, Vec<Matched>)> {
+        let (complete, covered, mut results) = self.deferred_queries[rid].take()?;
+        *winner_moves += results.len() as u64;
+        results.sort_unstable_by(|(a,_),(b,_)| { *order_comparisons += 1; a.cmp(b) });
+        Some((complete, self.seal_answers(rid, complete, covered,
+            results.into_iter().map(|(_, winner)| winner).collect())))
     }
     pub fn shared(&self) -> bool {
         self.enabled && self.partial && self.shared_entries

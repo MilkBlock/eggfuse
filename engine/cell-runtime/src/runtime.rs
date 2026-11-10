@@ -1865,8 +1865,14 @@ impl Executor {
                 None,
             )?;
         }
-        let key_slots = { rule.inputs.as_slice() };
         found.retain(|b| probe || !rule.seminaive || b.epoch >= self.watermarks[rid]);
+        #[cfg(feature = "sparse-cells")]
+        if self.stage_spine.deferred(rid) { return Ok(found); }
+        self.dedup_bindings(rid, found)
+    }
+    fn dedup_bindings(&mut self, rid: usize, mut found: Vec<Binding>) -> Result<Vec<Binding>> {
+        let rule = &self.graph.program.rules[rid];
+        let key_slots = rule.inputs.as_slice();
         let n = found.len() as u64;
         self.dedup_rows += n;
         self.dedup_full_elements += n * rule.inputs.len() as u64;
@@ -2450,13 +2456,40 @@ impl Executor {
             }
             self.watermarks[rid] = self.graph.epoch;
             if !self.dirty[rid] && let Some(sets) = &mut self.ready_sets { sets.clean(rid); }
-            if !bindings.is_empty() {
+            let deferred = {
+                #[cfg(feature = "sparse-cells")]
+                { self.stage_spine.deferred(rid) }
+                #[cfg(not(feature = "sparse-cells"))]
+                { false }
+            };
+            if !bindings.is_empty() || deferred {
                 count += bindings.len();
                 work.push((rid, bindings));
             }
         }
         if let (Some(id),Some(sets)) = (set_id,&mut self.ready_sets) {
             sets.finish(id,self.graph.epoch);
+        }
+        #[cfg(feature = "sparse-cells")]
+        if let Some(workers) = &mut self.query_workers {
+            workers.finish_run(&mut self.graph, &mut self.stage_spine)?;
+            let (mut order_comparisons, mut winner_moves, mut binding_moves) = (0, 0, 0);
+            for (rid, residual) in &mut work {
+                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &mut order_comparisons, &mut winner_moves) {
+                    binding_moves += residual.len() as u64;
+                    let previous_answers = residual.len();
+                    let rule = &self.graph.program.rules[*rid];
+                    let mut merged: Vec<_> = answers.into_iter().map(|a| Binding::matched(rule, a)).collect();
+                    merged.append(residual);
+                    *residual = if complete { merged } else { self.dedup_bindings(*rid, merged)? };
+                    if self.profile_queries {
+                        self.query_profile[*rid].3 = self.query_profile[*rid].3 - previous_answers as u64 + residual.len() as u64;
+                    }
+                }
+            }
+            self.query_workers.as_mut().unwrap().record_completion(order_comparisons, winner_moves, binding_moves);
+            count = work.iter().map(|(_, b)| b.len()).sum();
+            work.retain(|(_, b)| !b.is_empty());
         }
         let patch = StagePatch { groups: work, len: count };
         if self.completion.is_some() {

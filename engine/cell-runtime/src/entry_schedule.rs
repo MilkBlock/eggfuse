@@ -176,6 +176,12 @@ pub struct Seed {
 }
 impl Seed {
     pub fn atom(&self) -> usize { self.consumer.atom }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn for_atom<'a>(seeds: &'a [Self], atom: usize, comparisons: &mut u64) -> &'a [Self] {
+        let first = seeds.partition_point(|s| { *comparisons += 1; s.atom() < atom });
+        let end = seeds[first..].partition_point(|s| { *comparisons += 1; s.atom() == atom });
+        &seeds[first..first + end]
+    }
 }
 /// Sparse private suffix writes over immutable compiled parameter projections.
 /// No initial full-width parameter array is cloned for a scheduled consumer.

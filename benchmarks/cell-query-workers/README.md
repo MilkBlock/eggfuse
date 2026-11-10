@@ -1,5 +1,7 @@
 # Cell 查询的并行接管
 
+本页记录 `13cfd235` 的首次接管。后续见 [完整 Raytrace 线程实测](raytrace-full.md) 和 [按 Cell 实例跨规则组织查询](../cell-run-queries/README.md)。
+
 这次修改在 **standalone Cell CPU** 中执行真实查询，不是 native egglog 运行时的线程优化。基线为 `efc06d49`；功能显式通过 `--query-workers N` 开启，默认关闭。`N=1` 在调用线程运行同一个新 host，`N>=2` 使用固定 Rayon pool；`--query-grain` 默认为 64，与线程数独立。
 
 ## 从上一轮实际执行得到的机会

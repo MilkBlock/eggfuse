@@ -2845,11 +2845,11 @@
     {
       "id": "H5",
       "category": "H",
-      "title": "借用现有 Entry 的完整函数查询并行执行",
+      "title": "按 Cell 实例归组的源 Run 查询执行",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）",
-      "compile_fact": "原 Cell Query 的全键函数读取和标量指令；静态排除构造子枚举、特殊端口索引和其他查询 host 的已有前缀",
-      "replaces": "覆盖范围内的串行 Cell 查询；跨阶段函数读取不再生成临时 Row 或经过 read_port 缓存分派",
-      "live_obligations": "Run 必须已 settled；普通函数索引有效；跨阶段 Entry 没有上下文缓存、历史结果或局部见证路线。保留 delta 归属、watermark、原位置去重、实际结果引用、存活状态以及原 RHS/Run 顺序。",
+      "compile_fact": "从原 Cell Query 编译 Entry 能力表；在源 Run 的只读边界内跨规则合并同一实际 Cell 实例，保留原 Query 与现有槽位",
+      "replaces": "不合格 Cell 查询的批量缓冲和逐 Entry 类型准入；重复遍历全体 seed；已覆盖查询的串行 host 和逐规则 worker 等待",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/function_reads.rs",
@@ -2924,6 +2924,66 @@
             "source": "report",
             "pointer": "/query_workers/stats/output_buffer_capacity",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/rule_admissions",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/entry_mask_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/seed_range_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/cell_source_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/cell_order_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/serial_order_headers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/winner_order_comparisons",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/deferred_winner_moves",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/completion_binding_moves",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/cell_queue_growths",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/borrowed_job_headers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/peak_cell_queue_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -2946,15 +3006,45 @@
             "source": "report",
             "pointer": "/query_workers/stats/worker_entries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/cell_instances",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/multi_entry_cells",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/cross_rule_cells",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/coordinator_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/stats/worker_steps",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "pre_resume_port_lookups 降低只表示读取离开了串行 host；总 key 查询仍计入 key_lookup_calls。worker Entries/answers 是查询完成量，不是 committed mutations。Bake 对新增准备和缓冲工作收费，不奖励并行覆盖量。未测本版完整 Raytrace 线程扩展性，未证明 repair stall 消失或整体加速。",
+      "gaps": "Entry 掩码检查与恢复源顺序仍有成本，不能只报告准入下降。worker_entries 仅含池线程，coordinator_entries 单列 inline 工作；两者之和是 entries。未把静态指令数当作耗时权重。构造子/枚举、已有 history/context、特殊端口索引仍保留原路径，尚未消除 repair 等待。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
-        "benchmarks/cell-query-workers/results.json"
+        "benchmarks/cell-query-workers/results.json",
+        "benchmarks/cell-query-workers/raytrace-full.md",
+        "benchmarks/cell-run-queries/README.md",
+        "benchmarks/cell-run-queries/checks.json",
+        "benchmarks/cell-run-queries/timing-summary.json",
+        "benchmarks/cell-run-queries/work-sum.json"
       ],
-      "status": "已实现 opt-in 查询接管；短样例逐 Run/有序绑定检查、sum-bits 专用语义验收及 Raytrace 128 Run 前缀检查通过；待速度验收"
+      "status": "Cell 实例跨规则归组已接入；跨规则读后写/别名/有序绑定测试、sum-bits 专用验收和完整 Raytrace Run 签名通过。16 次完整进程测量未建立加速：新 4 worker 中位数 11.561 s，旧 4 worker 10.779 s；成对区间仍跨 1。"
     },
     {
       "id": "I1",

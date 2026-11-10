@@ -34,12 +34,12 @@ fn point_queries_keep_mutation_boundaries_delta_ownership_and_result_aliases() {
             assert!(stats["point_reads"].as_u64().unwrap() > stats["answers"].as_u64().unwrap());
             assert!(stats["owner_rejections"].as_u64().unwrap() > 0);
             assert_eq!(stats["entries"].as_u64().unwrap(), stats["worker_entries"].as_array().unwrap()
-                .iter().map(|v| v.as_u64().unwrap()).sum::<u64>());
+                .iter().map(|v| v.as_u64().unwrap()).sum::<u64>() + stats["coordinator_entries"].as_u64().unwrap());
         }
     }
 }
 #[test]
-fn small_batches_keep_original_reads_and_mutations() {
+fn small_cell_runs_execute_inline_without_spawning_more_work() {
     let source = include_str!("fixtures/cell-point-queries.egg");
     let before = run(source, None);
     let after = run(source, Some((4,4096)));
@@ -47,7 +47,10 @@ fn small_batches_keep_original_reads_and_mutations() {
     let (a,b) = (before.report(),after.report());
     assert_eq!(a["stats"], b["stats"]);
     assert_eq!(a["key_lookup_calls"], b["key_lookup_calls"]);
-    assert_eq!(b["query_workers"]["stats"]["entries"], 0);
+    let q = &b["query_workers"]["stats"];
+    assert_eq!(q["entries"], q["coordinator_entries"]);
+    assert!(q["entries"].as_u64().unwrap() > 0);
+    assert!(q["worker_entries"].as_array().unwrap().iter().all(|v| v == 0));
 }
 #[test]
 fn uncovered_constructor_and_enumeration_queries_keep_all_answers() {
@@ -62,7 +65,13 @@ fn uncovered_constructor_and_enumeration_queries_keep_all_answers() {
 (run-schedule (run see))
 (check (Found (Leaf 0) (Wrap (Leaf 1)) 7) (Found (Leaf 0) (Wrap (Leaf 2)) 7))
 "#;
-    same(&run(source,None), &run(source,Some((2,1))));
+    let after = run(source, Some((2,1)));
+    same(&run(source,None), &after);
+    let report = after.report();
+    let stats = &report["query_workers"]["stats"];
+    assert_eq!(stats["entry_headers"], 0);
+    assert_eq!(stats["entry_mask_checks"], 0);
+    assert_eq!(stats["cell_source_reads"], 0);
 }
 
 #[test]
@@ -90,5 +99,44 @@ fn stage_entries_keep_guards_late_ports_and_ordered_winners() {
         assert!(report["query_workers"]["stats"]["spine_entries"].as_u64().unwrap() > 0);
         assert_eq!(before.report()["stage_spine"]["stats"]["cell_query_steps"],
             report["stage_spine"]["stats"]["cell_query_steps"]);
+    }
+}
+
+#[test]
+fn one_cell_runs_entries_for_multiple_rules_before_any_rhs_writes() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E) (Gate E) (Gate2 E))
+(function Cost (E) i64 :merge new)
+(function Out1 (E) i64 :merge new)
+(function Out2 (E) i64 :merge new)
+(function Out3 (E) i64 :merge new)
+(ruleset make) (ruleset consume)
+(rule ((Start x)) ((Gate x) (Gate2 x)) :ruleset make)
+(rule ((Gate x) (= c (Cost x))) ((set (Cost x) (+ c 10)) (set (Out1 x) c)) :ruleset consume)
+(rule ((Gate2 x) (= c (Cost x))) ((set (Out2 x) c)) :ruleset consume)
+(rule ((Gate x) (= c (Cost x)) (= n (+ c 1))) ((set (Out3 x) n)) :ruleset consume)
+"#);
+    // One producer reuses a constructor in a different physical Cell. Grouping
+    // must use actual source identity, without changing the returned binding.
+    source += "(Gate2 (N 0))\n";
+    for i in 0..32 { source += &format!("(Start (N {i})) (set (Cost (N {i})) {})\n", i+1); }
+    source += "(run-schedule (seq (run make) (run consume)))\n";
+    for i in 0..32 {
+        source += &format!("(check (= (Out1 (N {i})) {0}) (= (Out2 (N {i})) {0}) (= (Out3 (N {i})) {1}))\n",i+1,i+2);
+    }
+    source += "(run-schedule (run consume))\n";
+    for i in 0..32 {
+        source += &format!("(check (= (Out1 (N {i})) {0}) (= (Out2 (N {i})) {0}) (= (Out3 (N {i})) {1}))\n",i+11,i+12);
+    }
+    let before = run(&source, None);
+    for workers in [1,2,4] {
+        let after = run(&source, Some((workers,16)));
+        same(&before, &after);
+        let report = after.report();
+        let stats = &report["query_workers"]["stats"];
+        assert!(stats["cross_rule_cells"].as_u64().unwrap() >= 31, "{stats}");
+        assert!(stats["max_entries_per_cell"].as_u64().unwrap() >= 3);
+        assert!(stats["spine_entries"].as_u64().unwrap() >= 95);
+        assert!(stats["seed_range_comparisons"].as_u64().unwrap() > 0);
     }
 }

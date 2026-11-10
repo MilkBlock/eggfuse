@@ -22,12 +22,13 @@ def main():
     p.add_argument('fixture_program', type=Path)
     p.add_argument('saved_semantic', type=Path)
     p.add_argument('output', type=Path)
+    p.add_argument('--baseline-commit', default='efc06d49')
     a = p.parse_args()
     a.output.mkdir()
     cases = [('sum', a.sum_program, False, 64), ('fixture', a.fixture_program, True, 64),
              ('fixture-collisions', a.fixture_program, True, 0)]
     result = {'scope': 'standalone Cell CPU; one process per semantic/work configuration; not a speed measurement',
-              'baseline_commit': 'efc06d49', 'binaries': {'baseline':sha(a.baseline), 'candidate':sha(a.candidate)},
+              'baseline_commit': a.baseline_commit, 'binaries': {'baseline':sha(a.baseline), 'candidate':sha(a.candidate)},
               'cases': {}}
     keys = ('ordinal','ruleset','path','iterations','epoch','logical_matches','executed_bindings','changed')
     for case, program, audit, bits in cases:
@@ -59,7 +60,7 @@ def main():
             if workers is not None:
                 assert report['query_workers']['stats']['spine_entries'] > 0
                 assert report['query_workers']['stats']['answers'] > 0
-                assert report['query_workers']['stats']['entries'] == sum(report['query_workers']['stats']['worker_entries'])
+                assert report['query_workers']['stats']['entries'] == sum(report['query_workers']['stats']['worker_entries']) + report['query_workers']['stats'].get('coordinator_entries', 0)
         result['cases'][case] = {'program_sha256':sha(program), 'lanes':evidence}
     semantic = a.output / 'semantic'
     semantic.mkdir()

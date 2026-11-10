@@ -101,26 +101,26 @@
 
 证据：[benchmarks/witness-prefix/design.md](../../benchmarks/witness-prefix/design.md) · [benchmarks/witness-prefix/README.md](../../benchmarks/witness-prefix/README.md)
 
-## H5 · 借用现有 Entry 的完整函数查询并行执行
+## H5 · 按 Cell 实例归组的源 Run 查询执行
 
 启用条件：sparse-cells 构建；--query-workers N；--query-grain N（默认 64）。
 
-编译期依据：原 Cell Query 的全键函数读取和标量指令；静态排除构造子枚举、特殊端口索引和其他查询 host 的已有前缀。
+编译期依据：从原 Cell Query 编译 Entry 能力表；在源 Run 的只读边界内跨规则合并同一实际 Cell 实例，保留原 Query 与现有槽位。
 
-替代的旧工作：覆盖范围内的串行 Cell 查询；跨阶段函数读取不再生成临时 Row 或经过 read_port 缓存分派。
+替代的旧工作：不合格 Cell 查询的批量缓冲和逐 Entry 类型准入；重复遍历全体 seed；已覆盖查询的串行 host 和逐规则 worker 等待。
 
-运行时仍须满足：Run 必须已 settled；普通函数索引有效；跨阶段 Entry 没有上下文缓存、历史结果或局部见证路线。保留 delta 归属、watermark、原位置去重、实际结果引用、存活状态以及原 RHS/Run 顺序。
+运行时仍须满足：只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。
 
 代码：[query_workers.rs](../../engine/cell-runtime/src/query_workers.rs) · [function_reads.rs](../../engine/cell-runtime/src/function_reads.rs) · [stage_spine.rs](../../engine/cell-runtime/src/stage_spine.rs) · [cell_query.rs](../../engine/cell-runtime/src/cell_query.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/stage_spine/stats/pre_resume_port_lookups [value]`<br>`report:/key_lookup_calls [value]`<br>`report:/inference_seconds [value]` |
-| 成本 / 剩余工作 | `report:/query_workers/stats/admission_entry_checks [value]`<br>`report:/query_workers/stats/admission_table_checks [value]`<br>`report:/query_workers/stats/seed_selection_visits [value]`<br>`report:/query_workers/stats/entry_headers [value]`<br>`report:/query_workers/stats/chunks [value]`<br>`report:/query_workers/stats/frame_allocations [value]`<br>`report:/query_workers/stats/batch_buffers [value]`<br>`report:/query_workers/stats/answer_buffer_allocations [value]`<br>`report:/query_workers/stats/entry_buffer_bytes [value]`<br>`report:/query_workers/stats/output_buffer_capacity [value]` |
-| 覆盖 / 规模 / 回退 | `report:/query_workers/stats/entries [value]`<br>`report:/query_workers/stats/spine_entries [value]`<br>`report:/query_workers/stats/spine_point_reads [value]`<br>`report:/query_workers/stats/worker_entries [value]` |
+| 成本 / 剩余工作 | `report:/query_workers/stats/admission_entry_checks [value]`<br>`report:/query_workers/stats/admission_table_checks [value]`<br>`report:/query_workers/stats/seed_selection_visits [value]`<br>`report:/query_workers/stats/entry_headers [value]`<br>`report:/query_workers/stats/chunks [value]`<br>`report:/query_workers/stats/frame_allocations [value]`<br>`report:/query_workers/stats/batch_buffers [value]`<br>`report:/query_workers/stats/answer_buffer_allocations [value]`<br>`report:/query_workers/stats/entry_buffer_bytes [value]`<br>`report:/query_workers/stats/output_buffer_capacity [value]`<br>`report:/query_workers/stats/rule_admissions [value]`<br>`report:/query_workers/stats/entry_mask_checks [value]`<br>`report:/query_workers/stats/seed_range_comparisons [value]`<br>`report:/query_workers/stats/cell_source_reads [value]`<br>`report:/query_workers/stats/cell_order_comparisons [value]`<br>`report:/query_workers/stats/serial_order_headers [value]`<br>`report:/query_workers/stats/winner_order_comparisons [value]`<br>`report:/query_workers/stats/deferred_winner_moves [value]`<br>`report:/query_workers/stats/completion_binding_moves [value]`<br>`report:/query_workers/stats/cell_queue_growths [value]`<br>`report:/query_workers/stats/borrowed_job_headers [value]`<br>`report:/query_workers/stats/peak_cell_queue_bytes [value]` |
+| 覆盖 / 规模 / 回退 | `report:/query_workers/stats/entries [value]`<br>`report:/query_workers/stats/spine_entries [value]`<br>`report:/query_workers/stats/spine_point_reads [value]`<br>`report:/query_workers/stats/worker_entries [value]`<br>`report:/query_workers/stats/cell_instances [value]`<br>`report:/query_workers/stats/multi_entry_cells [value]`<br>`report:/query_workers/stats/cross_rule_cells [value]`<br>`report:/query_workers/stats/coordinator_entries [value]`<br>`report:/query_workers/stats/worker_steps [value]` |
 
-解释与缺口：pre_resume_port_lookups 降低只表示读取离开了串行 host；总 key 查询仍计入 key_lookup_calls。worker Entries/answers 是查询完成量，不是 committed mutations。Bake 对新增准备和缓冲工作收费，不奖励并行覆盖量。未测本版完整 Raytrace 线程扩展性，未证明 repair stall 消失或整体加速。
+解释与缺口：Entry 掩码检查与恢复源顺序仍有成本，不能只报告准入下降。worker_entries 仅含池线程，coordinator_entries 单列 inline 工作；两者之和是 entries。未把静态指令数当作耗时权重。构造子/枚举、已有 history/context、特殊端口索引仍保留原路径，尚未消除 repair 等待。
 
-状态：已实现 opt-in 查询接管；短样例逐 Run/有序绑定检查、sum-bits 专用语义验收及 Raytrace 128 Run 前缀检查通过；待速度验收。
+状态：Cell 实例跨规则归组已接入；跨规则读后写/别名/有序绑定测试、sum-bits 专用验收和完整 Raytrace Run 签名通过。16 次完整进程测量未建立加速：新 4 worker 中位数 11.561 s，旧 4 worker 10.779 s；成对区间仍跨 1。。
 
-证据：[benchmarks/cell-query-workers/README.md](../../benchmarks/cell-query-workers/README.md) · [benchmarks/cell-query-workers/results.json](../../benchmarks/cell-query-workers/results.json)
+证据：[benchmarks/cell-query-workers/README.md](../../benchmarks/cell-query-workers/README.md) · [benchmarks/cell-query-workers/results.json](../../benchmarks/cell-query-workers/results.json) · [benchmarks/cell-query-workers/raytrace-full.md](../../benchmarks/cell-query-workers/raytrace-full.md) · [benchmarks/cell-run-queries/README.md](../../benchmarks/cell-run-queries/README.md) · [benchmarks/cell-run-queries/checks.json](../../benchmarks/cell-run-queries/checks.json) · [benchmarks/cell-run-queries/timing-summary.json](../../benchmarks/cell-run-queries/timing-summary.json) · [benchmarks/cell-run-queries/work-sum.json](../../benchmarks/cell-run-queries/work-sum.json)

@@ -75,6 +75,21 @@ impl Work {
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
         }
+        let cell_tasks = match report["query_workers"].get("organization") {
+            None => false, // recorded 13cfd235 Entry-batch host
+            Some(J::String(version)) if version == "cell-run/v1" => true,
+            _ => return Err("unknown query worker organization".into()),
+        };
+        for field in ["rule_admissions", "entry_mask_checks", "cell_source_reads",
+            "cell_order_comparisons", "cell_queue_growths", "borrowed_job_headers",
+            "serial_order_headers", "seed_range_comparisons", "winner_order_comparisons",
+            "deferred_winner_moves", "completion_binding_moves"] {
+            let value = if cell_tasks {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing Cell task work {field}"))?
+            } else { 0 };
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
         // Charge both paths, summing rules so changing context admission cannot
         // hide work by adding/removing a per-rule key from the comparison.
         let contexts = report["local_context"]["rules"].as_object()

@@ -65,7 +65,7 @@ def collect(a):
         worker=[r.get('query_workers') or {'enabled':False} for r in rows]
         for q in worker:
             if q['enabled']:
-                assert q['stats']['entries']==sum(q['stats']['worker_entries'])
+                assert q['stats']['entries']==sum(q['stats']['worker_entries'])+q['stats'].get('coordinator_entries',0)
         counts=[q.get('stats',{}).get('worker_entries',[]) for q in worker]
         summary['lanes'][name]={'args':lane['args'],'runtime_sha256':lane['runtime_sha256'],
             'program_file_sha256':lane['program_file_sha256'],
