@@ -1,0 +1,332 @@
+{
+  "runs": 1428,
+  "hashes": {
+    "state.json": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+  },
+  "changed_work": {},
+  "carried_steps": 0,
+  "history_handle_bytes": 16,
+  "program_file_sha256": "f53caa87061810acd6381d29a02761ef48ed5c13fbb81fd43bcc971aa44f5f0c",
+  "reports_sha256": [
+    "16fbb62ab57bcba57ebc4be51ba23b90fa97b8fbb85fc0cd04f0890e6bc11fef",
+    "34254fff842713200839be4b6f1b641aeaabc4c9f12cf4ca9ca5aa4b2455b297"
+  ],
+  "scope": "standalone Cell CPU; short semantic/work checks, not native egglog or a timing/allocator campaign",
+  "candidate_commit": "14e112c7",
+  "baseline_commit": "c2f665a2",
+  "semantic_acceptance": "pass",
+  "fixtures": {
+    "chain-64": {
+      "runs": 4,
+      "hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2",
+        "stages.json": "e43c0eca2bc990fd2275328f556b271aa1829d9aa77dc162d04529945c88a4c9",
+        "binding-audit.json": "90742cea26da8190147e3907b180c854338c5c611a616466ac5843ed9adee7d0"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "reports_sha256": [
+        "6f6c12921cab2342687e19791e349eb67b72b931ba67abcb41c50f13acf72ba3",
+        "a3c1c22d55f544755ba6d4c7c5976c2e1a1fb569cf56e7e71a3083bab11d0fa6"
+      ]
+    },
+    "chain-0": {
+      "runs": 4,
+      "hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2",
+        "stages.json": "e43c0eca2bc990fd2275328f556b271aa1829d9aa77dc162d04529945c88a4c9",
+        "binding-audit.json": "90742cea26da8190147e3907b180c854338c5c611a616466ac5843ed9adee7d0"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "reports_sha256": [
+        "8d630bfbbcbb8c96a595a83125c7ee3d3c7e4383d174f8c3197f405adfc513f2",
+        "f2d97febc4e49c878a985b920bce49c0bf49718b543a27c60228a5c7b6394315"
+      ]
+    },
+    "retired-64": {
+      "runs": 5,
+      "hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4",
+        "stages.json": "aa35caa82d5b8286702021a0bfed64221ba1f612f4cf31b2e3e5761ab7137ded",
+        "binding-audit.json": "e5d2e571fecaa0938e9a9eaa1ff83452bbe17c62a9fe93b10e54ab84b3ca1960"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "reports_sha256": [
+        "b1a035175a2706f1301191b983a2f0bdc099b5b9dab03e08fa2cdb89cca37721",
+        "0d630b8245dafee5c07c9aa9b88c222c139202b86e796a53fa9587ba934cc090"
+      ]
+    },
+    "retired-0": {
+      "runs": 5,
+      "hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4",
+        "stages.json": "aa35caa82d5b8286702021a0bfed64221ba1f612f4cf31b2e3e5761ab7137ded",
+        "binding-audit.json": "e5d2e571fecaa0938e9a9eaa1ff83452bbe17c62a9fe93b10e54ab84b3ca1960"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "reports_sha256": [
+        "e1f826eebdce11c5caeb8873b558e87f84637177f043a2439a7e93bdbd3890af",
+        "9fd7e34766ad89dfc047287e403ae2ae24ac4de441d291513c82cabf6cfbc110"
+      ]
+    },
+    "chain-64-normal": {
+      "runs": 4,
+      "hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "reports_sha256": [
+        "61c8c5d3f86705e2872066e8c91e7cb4c57891a2bd94636c8b7938aa97133424",
+        "f70b883252c39febec8b3f9ef69f4098a2a4512b10913fc89e9932b331ba5901"
+      ]
+    },
+    "chain-0-normal": {
+      "runs": 4,
+      "hashes": {
+        "state.json": "0e41de31232bec49f0b41d5a1b5d78601a7376817c371e0770f5ee41fec2ffc2"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "a4f4eda3bae25e0b17ce38498b9bad80ee91670bb1e5d7b8f71937cc9a15df40",
+      "reports_sha256": [
+        "413e6380f54c98e221c50745ce6789244fcc709d306a2b5fdd2c960eb1ae9ec8",
+        "2b43d0cb0f6087768f1b66a5f2eee69d4b2dbf63fe6c1ae50302afca955f4768"
+      ]
+    },
+    "retired-64-normal": {
+      "runs": 5,
+      "hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "reports_sha256": [
+        "efd93f3c979deff8ccb8851bfd1cb914e612503f638499ac64d68a4b71928e0c",
+        "cc73f361e47634e098dae37d7abe9998f21d1f190cb4463095f7dbc09723184d"
+      ]
+    },
+    "retired-0-normal": {
+      "runs": 5,
+      "hashes": {
+        "state.json": "f598eda96ed3c78c37d781ba8f20e69a743639e18bb591d428e8324589e74ab4"
+      },
+      "changed_work": {
+        "/stage_spine/stats/history_allocations": [
+          6,
+          2
+        ],
+        "/stage_spine/stats/history_slots_written": [
+          8,
+          4
+        ]
+      },
+      "carried_steps": 2,
+      "history_handle_bytes": 16,
+      "program_file_sha256": "4355bfd224c13c130f2c51afb831e7381ae11206890c7e49689e3aeb9ca9de81",
+      "reports_sha256": [
+        "9846503c5fc6fae2830d9b75b156fb64460f655dc5350d0a795c13e6a3de7c69",
+        "faec05b30e0d9a3115c3a7f5ce2aebf441792924964c11f626b1cd1f645e516f"
+      ]
+    }
+  },
+  "tests": {
+    "history": {
+      "passed": 8,
+      "sha256": "aa50e8b1d4155831459d9559f9471447f39b8d4d72bb449176e45dd5d5ce789b"
+    },
+    "witness": {
+      "passed": 11,
+      "sha256": "d1141e634c12566ed86e41c2a2f765a82f4559e2b6dfe6e9e6d23c3889aab883"
+    },
+    "query": {
+      "passed": 7,
+      "sha256": "1528457c337ca490544d5f211c2bc1e2e618b0498af1e4d7760593337d26f150"
+    },
+    "matched": {
+      "passed": 3,
+      "sha256": "5dd8f1d8d5e7b8c1d1b2f7eaa1842503ec2602112edff11f3c3c7c62ef4f1b85"
+    },
+    "switch": {
+      "passed": 1,
+      "sha256": "dbfe7b032d28dc1a9ff6a10ad57ddf296dc07022c6f8ed5ef792d537518870be"
+    }
+  },
+  "work_credit": {
+    "sum": {
+      "net_saved_operations": 0,
+      "changed_counters": {}
+    },
+    "chain": {
+      "net_saved_operations": 8,
+      "changed_counters": {
+        "stage_spine/stats/history_allocations": {
+          "before": 6,
+          "after": 2,
+          "saved": 4
+        },
+        "stage_spine/stats/history_slots_written": {
+          "before": 8,
+          "after": 4,
+          "saved": 4
+        }
+      }
+    },
+    "retired": {
+      "net_saved_operations": 8,
+      "changed_counters": {
+        "stage_spine/stats/history_allocations": {
+          "before": 6,
+          "after": 2,
+          "saved": 4
+        },
+        "stage_spine/stats/history_slots_written": {
+          "before": 8,
+          "after": 4,
+          "saved": 4
+        }
+      }
+    }
+  },
+  "binaries": {
+    "baseline": "5e767711eedc91b473d966486fb279f814539212e54471a6eb4c277e14477f81",
+    "candidate": "f07e3a21e945c9cd29c9cc5d2f787802d788dcbcbeeeb6e48f4f92a6ae4657a3"
+  },
+  "unchanged_work_metrics": 347,
+  "changed_work_metrics": {
+    "report:/stage_spine/history_handle_bytes [value]": [
+      {
+        "status": "missing_counter"
+      },
+      {
+        "status": "observed",
+        "value": 16
+      }
+    ],
+    "report:/stage_spine/stats/history_carried_steps [value]": [
+      {
+        "status": "missing_counter"
+      },
+      {
+        "status": "observed",
+        "value": 0
+      }
+    ]
+  },
+  "opportunity": {
+    "baseline": "c2f665a2",
+    "prior_catalog": {
+      "history": {
+        "history_allocations": 663,
+        "history_capture_reads": 1508,
+        "history_empty_slots_written": 0,
+        "history_result_reads": 592,
+        "history_slots_written": 1508
+      },
+      "deep_handoff_reads": 0
+    },
+    "selected_scope": "Empty intermediate stages in existing admitted deep Cells carry the original result owner. Existing sum-bits catalog has no deep handoff reads; do not predict a sum-bits gain.",
+    "proof": "Reuse the existing per-state supply and retained_depths bound. A source stage without exported results only advances the logical distance to the original owner; it does not create a new result frame. Dynamic receipt reads and Run boundaries retain their original checks.",
+    "rejected_identity_attempt": {
+      "history_allocations": [
+        663,
+        658
+      ],
+      "history_slots_written": [
+        1508,
+        1493
+      ],
+      "history_capture_reads": [
+        1508,
+        1579
+      ],
+      "net_saved_operations": -51,
+      "decision": "discarded; actual receipt equality probes cost more than the saved transfer work"
+    }
+  },
+  "representation_cost": "History handle grows from one pointer (8 bytes in baseline source) to 16 bytes with an empty-stage offset; entries inside a deep history remain pointer-sized. Slot reads now adjust that offset. No total allocator or speed claim.",
+  "limits": "Removes result-history transfer at intermediate Cells without new exports. A stage may still execute graph effects; original Run/publication boundaries and ordinary witness validation remain. Nonempty result-frame transfers and generic Entry publication are not removed. Sum-bits does not exercise this takeover.",
+  "timing_cadence": {
+    "last_timed_commit": "c2f665a2",
+    "implementation_commits_since_timing": 1
+  }
+}
