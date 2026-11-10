@@ -175,7 +175,13 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
         let cell=Definition::new(p,rid).ok()?;
         if cell.rule.query.iter().any(|a|!matches!(a.call,Call::Table(t) if p.tables[t].constructor && p.tables[t].virtual_fact))
             || cell.template.ops.iter().any(|op|!matches!(op,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Union(..))) { return None; }
-        let mut slots=cell.template.sorts.iter().map(|sort|b.fresh(format!("sort:{sort}"))).collect::<Vec<_>>();
+        // Type identity must not depend on serde_json's object iteration
+        // order. The native compiler enables preserve_order transitively,
+        // whereas the standalone runtime can deserialize the same schema
+        // into sorted maps. Use the shared artifact encoding on both sides.
+        let mut slots=cell.template.sorts.iter().map(|sort|
+            b.fresh(format!("sort:{}",crate::checksum::canonical(sort,false)))
+        ).collect::<Vec<_>>();
         if stage!=0 {
             let relation=cell.relation(Site::Query(pivot?))?;
             let columns=relation.columns().collect::<Vec<_>>();

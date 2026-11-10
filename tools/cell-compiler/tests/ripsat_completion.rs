@@ -41,6 +41,19 @@ fn alternate_routes_share_the_native_cell_registry_but_keep_entry_proofs() {
     // The actual ripsat registry, not a CPU-only map, interns both derivations.
     assert_eq!(result["cell_egraph"]["registered_compositions"],3);
     assert_eq!(result["cell_egraph"]["eclasses"],2);
+
+    // The native compiler enables serde_json/preserve_order transitively;
+    // the standalone runtime need not. Reordering schema objects must not
+    // change the checked Cell identity embedded in the same artifact.
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(p).unwrap();
+    let mut sorted=compiled.clone();
+    sorted.sort_all_objects();
+    assert_ne!(serde_json::to_string(&compiled).unwrap(),serde_json::to_string(&sorted).unwrap(),
+        "exercise different object iteration order, not just equal JSON values");
+    assert_eq!(artifact_digest(&compiled),artifact_digest(&sorted));
+    Program::parse(sorted.clone()).expect("completion proofs survive canonical JSON serialization");
+    sorted["iterative_bake"]["completion"]["contracts"]["structures"][0]["colors"][0]=json!("different sort");
+    assert!(Program::parse(seal(sorted)).is_err(),"type constraints still belong to the proof");
 }
 
 #[test]

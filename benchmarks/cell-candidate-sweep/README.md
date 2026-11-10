@@ -6,6 +6,12 @@ the [one-candidate check](../cell-history-admission/README.md) to the remaining
 ranked candidates and then resumes the shipped catalog. No runtime code changes
 or new workload executions are needed to collect the report.
 
+The subsequent [independent-runtime check](../cell-completion-portability/README.md)
+found and fixed a JSON-order-dependent type identity in completion artifacts.
+These trials executed the runtime inside the compiler process. Their work
+counts do not by themselves prove that the exported proof is portable to a
+separately built runtime, or measure conversion from the shipped v1 program.
+
 ## Results and limits
 
 | Starting catalog and backend | Executable trials | Equal-weight work scores | Outcome |

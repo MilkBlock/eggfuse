@@ -1,0 +1,103 @@
+{
+  "scope": "standalone Cell CPU sum-bits, artifact portability and work counts; not speed admission",
+  "baseline": {
+    "commit": "58a6dddf",
+    "runtime_tree_sha256": "7a47109171cd5eba333fb032d6cd55b2e403b885329ead92b4ffb861a3655fda",
+    "runtime_sha256": "40151aa19392e014b08a0c9bdd147929f2d23751df4c526a6db401b58d360e9e",
+    "provenance": "benchmarks/cell-execution-state/results.json runtime-after; source tree verified against 58a6dddf",
+    "discarded_control": "first local target binary had old Entry/State layouts; not used as baseline"
+  },
+  "inspection": [
+    {
+      "binary": "runtime-before",
+      "binary_sha256": "40151aa19392e014b08a0c9bdd147929f2d23751df4c526a6db401b58d360e9e",
+      "artifact": "old-program.json",
+      "artifact_file_sha256": "6eb1dc23f7e006eb4b76e04e1d44f17a6a5e2e80f6cc418895a3b30a973332b9",
+      "program_sha256": "4e64baf8bcab3841614deddf50682c71ebc08130108b13c1eaded0aecf88e64b",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Error: \"invalid ripsat completion structures\""
+    },
+    {
+      "binary": "runtime-before",
+      "binary_sha256": "40151aa19392e014b08a0c9bdd147929f2d23751df4c526a6db401b58d360e9e",
+      "artifact": "compiled/program.json",
+      "artifact_file_sha256": "4be5aef1e9d713beb02215678188d374751950b56505e6cf67a750d6cb95b3d2",
+      "program_sha256": "2e6a09044eb266837e963bd4a9d41f3d021e815669acf36a8900f165eace7e10",
+      "exit_code": 0,
+      "stdout": "{\"backend\":\"cell-cpu\",\"context_cut_orientations\":17,\"context_cut_rules\":4,\"validated\":true}",
+      "stderr": ""
+    },
+    {
+      "binary": "runtime-after",
+      "binary_sha256": "89d50d2ddd4bc1695f36b8e8b2025764c51e731a9b7381e62b102d2c5ff5fa8e",
+      "artifact": "compiled/program.json",
+      "artifact_file_sha256": "4be5aef1e9d713beb02215678188d374751950b56505e6cf67a750d6cb95b3d2",
+      "program_sha256": "2e6a09044eb266837e963bd4a9d41f3d021e815669acf36a8900f165eace7e10",
+      "exit_code": 0,
+      "stdout": "{\"backend\":\"cell-cpu\",\"context_cut_orientations\":17,\"context_cut_rules\":4,\"validated\":true}",
+      "stderr": ""
+    }
+  ],
+  "same_program_integer_counters_and_layouts": 1105,
+  "same_program_counter_differences": 0,
+  "ordered_runs": 1428,
+  "semantic_acceptance": "pass",
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "reports": {
+    "shipped": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_file_sha256": "71a2ba4099a325fa25d34d5438c9f7c127eb9220041cf3a8169e5c66613a272b",
+      "state_file_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 18692,
+      "handoff_attempts": 592,
+      "completion_work": {
+        "history_allocations": 663,
+        "joint_history_frames": 534,
+        "joint_history_query_reads": 534,
+        "joint_history_query_writes": 534,
+        "ripsat_completed": 0,
+        "ripsat_plan_probes": 0,
+        "ripsat_layout_checks": 0,
+        "ripsat_witness_checks": 0,
+        "ripsat_witness_fallbacks": 0
+      }
+    },
+    "control": {
+      "program_sha256": "2e6a09044eb266837e963bd4a9d41f3d021e815669acf36a8900f165eace7e10",
+      "report_file_sha256": "4ed691fc7cc99b58cefcaa9a5ac2dc83c597f65f985481d1eb839e29d5202cb2",
+      "state_file_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 18692,
+      "handoff_attempts": 262,
+      "completion_work": {
+        "history_allocations": 498,
+        "joint_history_frames": 369,
+        "joint_history_query_reads": 369,
+        "joint_history_query_writes": 369,
+        "ripsat_completed": 165,
+        "ripsat_plan_probes": 2692,
+        "ripsat_layout_checks": 223,
+        "ripsat_witness_checks": 633,
+        "ripsat_witness_fallbacks": 58
+      }
+    },
+    "normal": {
+      "program_sha256": "2e6a09044eb266837e963bd4a9d41f3d021e815669acf36a8900f165eace7e10",
+      "report_file_sha256": "fffd2e951afd6c5f20bd7e439b582e99444a54490171da03fffe5adf2809eb81",
+      "state_file_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "key_lookup_calls": 18692,
+      "handoff_attempts": 262,
+      "completion_work": {
+        "history_allocations": 498,
+        "joint_history_frames": 369,
+        "joint_history_query_reads": 369,
+        "joint_history_query_writes": 369,
+        "ripsat_completed": 165,
+        "ripsat_plan_probes": 2692,
+        "ripsat_layout_checks": 223,
+        "ripsat_witness_checks": 633,
+        "ripsat_witness_fallbacks": 58
+      }
+    }
+  }
+}
