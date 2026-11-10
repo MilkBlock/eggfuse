@@ -315,3 +315,31 @@ match the preceding replay. Thus this finite extension does not improve that
 workload's coverage or establish any speed gain. Further coverage requires
 representing real equality effects and mutable writes with their stage/order
 obligations, rather than weakening assumptions or eliding those effects.
+
+### Ordered terminal Union obligations
+
+Constructor normalization now retains genuine terminal Unions as a separate
+ordered list of operand pairs in the compile-time structure. The reused Fact
+encoding's `table` field is the Union ordinal within this list, not a runtime
+table ID. Canonical labeling includes both operands and the ordinal. Unions do
+not enter constructor congruence or entry assumptions. Thus equality effects
+remain distinct from already-established equality, and different Union orders
+do not acquire the same structural contract.
+
+Coverage is deliberately limited to a suffix of the final stage: copies and
+Unions may follow a genuine Union, but constructors or later stages may not.
+Prefix inheritance from a structure with terminal Unions is declined. Set and
+mutable reads remain unsupported. This creates no runtime graph and does not
+remove Union instructions; ordinary typed completion and source effect ordering
+remain authoritative. A normalized structure alone does not authorize skipping
+an effect.
+
+The sum-bits history replay reduces opaque implementations from 98 to 94 of
+121. All five final-state/schedule/ordered-effect audit hashes match the inert-
+Union version. The old optional `iterative_bake.completion` export was removed
+from a scratch copy of the same source plan and its artifact checksum recomputed
+before regeneration: old exported structural proofs are correctly rejected when
+they differ from the newly derived structures. No proof checks were relaxed.
+This is four additional recognizable paths, not a measured speedup or a completed
+cross-Union takeover. Tests retain distinct entry ports, preserve Union order,
+and reject construction after a genuine Union.

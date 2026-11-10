@@ -18,6 +18,8 @@ pub struct Structure {
     colors: Vec<String>,
     assumptions: Vec<Fact>,
     completed: Vec<Fact>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    terminal_unions: Vec<Fact>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -34,6 +36,7 @@ struct Builder {
     colors: Vec<String>,
     literals: BTreeMap<Value, usize>,
     facts: Vec<Fact>,
+    terminal_unions: Vec<Fact>,
     assumptions: Vec<Fact>,
     ports: Vec<(usize, Site, Vec<usize>)>,
 }
@@ -73,7 +76,7 @@ impl Builder {
         self.facts.push(Fact { table, columns });
     }
     fn finish(self) -> Option<Normalized> {
-        let used = self.facts.iter().flat_map(|f| &f.columns)
+        let used = self.facts.iter().chain(&self.terminal_unions).flat_map(|f| &f.columns)
             .map(|&s| self.eq.root(s)).collect::<BTreeSet<_>>();
         let roots = used.iter().copied().collect::<Vec<_>>();
         let ids = roots.iter().enumerate().map(|(i,&s)|(s,i)).collect::<BTreeMap<_,_>>();
@@ -87,7 +90,7 @@ impl Builder {
             if let Some(&id)=ids.get(&self.eq.root(s)) { colors[id].insert(color.clone()); }
         }
         let colors = colors.into_iter().map(|c|serde_json::to_string(&c).unwrap()).collect();
-        let raw = Structure { colors, assumptions:project(&self.assumptions), completed:project(&self.facts) };
+        let raw = Structure { colors, assumptions:project(&self.assumptions), completed:project(&self.facts), terminal_unions:project(&self.terminal_unions) };
         let (structure, mapping) = canonical(raw)?;
         let map = |s|mapping[ids[&self.eq.root(s)]];
         Some(Normalized { structure,
@@ -111,7 +114,7 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
     let mut labels=colors(raw.colors.clone());
     loop {
         let mut incidence=vec![vec![];n];
-        for (role,facts) in [(0,&raw.assumptions),(1,&raw.completed)] {
+        for (role,facts) in [(0,&raw.assumptions),(1,&raw.completed),(2,&raw.terminal_unions)] {
             for f in facts {
                 let adjacent=f.columns.iter().map(|&s|labels[s]).collect::<Vec<_>>();
                 for (column,&s) in f.columns.iter().enumerate() {
@@ -143,7 +146,7 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
             let project=|facts:&[Fact]| facts.iter().map(|f|Fact{table:f.table,columns:f.columns.iter().map(|&s|map[s]).collect()})
                 .collect::<BTreeSet<_>>().into_iter().collect();
             let candidate=Structure { colors:order.iter().map(|&s|raw.colors[s].clone()).collect(),
-                assumptions:project(&raw.assumptions),completed:project(&raw.completed) };
+                assumptions:project(&raw.assumptions),completed:project(&raw.completed), terminal_unions:project(&raw.terminal_unions) };
             if best.as_ref().is_none_or(|(b,_)|candidate<*b) { *best=Some((candidate,map)); }
             return;
         }
@@ -161,7 +164,8 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
     best
 }
 
-/// Supported paths have immutable positive constructor facts only. The source
+/// Supported paths have immutable constructor facts and optional ordered
+/// terminal Union obligations, which do not feed constructor closure. The source
 /// scheduler still owns rule/Run order. A finite constructor fixed point is not
 /// a claim that every rule in the source program has saturated.
 pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Normalized> {
@@ -190,14 +194,17 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
         for (op,ins) in cell.template.ops.iter().enumerate() {
             if let Op::Copy(dst,arg)=ins { slots[*dst]=b.arg(arg,&slots); continue; }
             if let Op::Union(a,c)=ins {
-                // Only an equality already established by this prefix is inert.
-                // Never feed the Union into entry assumptions or constructor
-                // closure: a genuine equality effect remains unsupported.
+                // Keep genuine terminal equalities as ordered obligations,
+                // never as entry assumptions or constructor congruence.
                 let a=b.arg(a,&slots); let c=b.arg(c,&slots);
                 b.close();
-                if b.eq.root(a)!=b.eq.root(c) { return None; }
+                if b.eq.root(a)!=b.eq.root(c) {
+                    if stage+1!=path.len() { return None; }
+                    b.terminal_unions.push(Fact {table:b.terminal_unions.len(),columns:vec![a,c]});
+                }
                 continue;
             }
+            if !b.terminal_unions.is_empty() { return None; }
             let relation=cell.relation(Site::Effect(op))?;
             if !p.tables[relation.table].constructor || !p.tables[relation.table].virtual_fact { return None; }
             let columns=relation.columns().map(|a|b.arg(a,&slots)).collect::<Vec<_>>();
@@ -214,6 +221,7 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
 /// from runtime numbering or probabilistic membership. New assumptions are
 /// explicit and must still be matched by the consumer.
 pub(crate) fn extension(before:&Normalized,after:&Normalized) -> Option<Json> {
+    if !before.structure.terminal_unions.is_empty() { return None; }
     let mut mapping=BTreeMap::new();
     for (&symbol,&source) in &before.symbols {
         let target=*after.symbols.get(&symbol)?;
@@ -246,8 +254,24 @@ mod tests {
         assert_ne!(shape(false,false,false).structure,shape(true,false,true).structure);
     }
     #[test]
+    fn terminal_union_order_is_not_entry_equality() {
+        let build = |reverse: bool| {
+            let mut b=Builder::default();
+            let x=b.fresh("x".into()); let y=b.fresh("y".into()); let z=b.fresh("z".into());
+            b.relation(0,vec![x,y],true);
+            let pairs=if reverse {vec![vec![y,z],vec![x,y]]} else {vec![vec![x,y],vec![y,z]]};
+            b.terminal_unions=pairs.into_iter().enumerate().map(|(table,columns)|Fact {table,columns}).collect();
+            b.finish().unwrap()
+        };
+        let a=build(false); let b=build(true);
+        assert_ne!(a.structure,b.structure);
+        assert_eq!(a.structure.colors.len(),3,"terminal equalities must not collapse entry ports");
+        assert!(extension(&a,&a).is_none(),"post-Union prefix inheritance is not supported");
+    }
+
+    #[test]
     fn symmetric_ports_are_exact_and_bounded() {
-        let raw=Structure{colors:vec!["E".into();9],assumptions:vec![],completed:vec![]};
+        let raw=Structure{colors:vec!["E".into();9],assumptions:vec![],completed:vec![],terminal_unions:vec![]};
         assert!(canonical(raw).is_none(),"decline rather than silently identify a symmetric cell");
         let mut a=Builder::default();
         let x=a.fresh("E".into()); let y=a.fresh("E".into());
