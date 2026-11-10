@@ -116,6 +116,16 @@ impl Work {
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
         }
+        for field in ["fixed_read_probes", "fixed_read_fills", "fixed_read_clears",
+            "fixed_key_fields", "shared_first_reads"] {
+            let value = if report["query_workers"]["first_read_sharing"] == "literal-run/v1" {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing shared first read work {field}"))?
+            } else { 0 };
+            // Physical table reads already enter key_lookup_calls. Hits and
+            // rejected Entries are outcomes, not an extra saved-work credit.
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
         let cell_tasks = match report["query_workers"].get("organization") {
             None => false, // recorded 13cfd235 Entry-batch host
             Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3" | "cell-run/v4") => true,
@@ -377,6 +387,12 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     assert!(work.0["query_workers/stats/chunks"] > 0);
     report["query_workers"]["stats"]["answers"] = u64::MAX.into();
     assert_eq!(Work::read(&report).unwrap().0, work.0);
+    report["query_workers"]["stats"]["fixed_read_hits"] = u64::MAX.into();
+    report["query_workers"]["stats"]["fixed_rejected_entries"] = u64::MAX.into();
+    assert_eq!(Work::read(&report).unwrap().0, work.0);
+    let mut missing = report.clone();
+    missing["query_workers"]["stats"].as_object_mut().unwrap().remove("fixed_read_probes");
+    assert!(Work::read(&missing).is_err());
     report["query_workers"]["stats"].as_object_mut().unwrap().remove("frame_allocations");
     assert!(Work::read(&report).is_err());
 }

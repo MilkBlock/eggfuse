@@ -270,6 +270,14 @@ impl Step {
             expected: self.check_result.as_ref().map(field),
         }
     }
+    /// A shared read has already bound and consumed its key. The per-Entry
+    /// result predicate still uses the original instruction semantics.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn bind_result<'a>(
+        &'a self, field: impl FnMut(&'a Field) -> Cow<'a, Value>,
+    ) -> BoundStep<'a, ()> {
+        BoundStep { args: (), expected: self.check_result.as_ref().map(field) }
+    }
 }
 impl<A> BoundStep<'_, A> {
     pub(crate) fn evaluate(
@@ -280,6 +288,18 @@ impl<A> BoundStep<'_, A> {
     }
 }
 impl Query {
+    /// Only the unconditional first point read may be shared before dispatch.
+    /// Later reads can be guarded or depend on earlier runtime results.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn first_literal_read(&self) -> Option<(usize, Vec<Value>)> {
+        let step = self.steps.first()?;
+        let Call::Table(table) = step.call else { return None };
+        if step.expansion.is_some() { return None; }
+        let key = step.key.iter().map(|field| match field {
+            Field::Literal(v) => Some(v.clone()), _ => None,
+        }).collect::<Option<Vec<_>>>()?;
+        Some((table, key))
+    }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn point_tables(&self) -> Option<Box<[usize]>> {
         self.steps.iter().all(|s| s.expansion.is_none())
@@ -646,6 +666,28 @@ impl Queries {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn shared_first_read_keeps_result_guards_and_never_hoists_past_a_guard() {
+        let read = Step { atom: 1, call: Call::Table(4), key: vec![Field::Literal(Value::Int(7))],
+            check_result: Some(Field::Anchor(0)), expansion: None };
+        let query = Query::new(vec![read.clone()], vec![]);
+        assert_eq!(query.first_literal_read(), Some((4, vec![Value::Int(7)])));
+        // Binding the predicate must never visit or rebuild the key.
+        for value in [8, 9] {
+            let expected = Value::Int(9);
+            let bound = read.bind_result(|field| {
+                assert_eq!(field, &Field::Anchor(0));
+                Cow::Borrowed(&expected)
+            });
+            assert_eq!(bound.evaluate(|()| Ok(Some(Value::Int(value)))).unwrap(),
+                (value == 9).then_some(Value::Int(9)));
+        }
+        let guard = Step { call: Call::Primitive("<".into(), "Unit".into()), ..read.clone() };
+        assert!(Query::new(vec![guard, read.clone()], vec![]).first_literal_read().is_none());
+        let dependent = Step { key: vec![Field::Anchor(0)], ..read };
+        assert!(Query::new(vec![dependent], vec![]).first_literal_read().is_none());
+    }
     #[test]
     fn guarded_pair_preserves_bound_results_and_folds_guard_outputs() {
         use crate::cell::Operand::Slot;

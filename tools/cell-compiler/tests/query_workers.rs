@@ -280,3 +280,44 @@ fn one_cell_runs_entries_for_multiple_rules_before_any_rhs_writes() {
         assert!(stats["seed_range_comparisons"].as_u64().unwrap() > 0);
     }
 }
+
+#[test]
+fn shared_first_reads_keep_missing_keys_mutable_updates_and_entry_guards() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E i64) (Start2 E i64) (Start3 E i64) (Gate E i64) (Token))
+(function Config (i64) i64 :merge new)
+(function Out (E) i64 :merge new)
+(relation Accepted (E))
+(ruleset make) (ruleset make2) (ruleset make3) (ruleset see) (ruleset fill) (ruleset change)
+(rule ((Start x i)) ((Gate x i)) :ruleset make)
+(rule ((Start2 x i)) ((Gate x i)) :ruleset make2)
+(rule ((Start3 x i)) ((Gate x i)) :ruleset make3)
+(rule ((Gate x i) (= c (Config 7))) ((set (Out x) c)) :ruleset see)
+(rule ((Gate x i) (= i (Config 7)) (Token)) ((Accepted x)) :ruleset see)
+(rule ((Token)) ((set (Config 7) 9)) :ruleset fill)
+(rule ((Token)) ((set (Config 7) 13)) :ruleset change)
+(Token) (set (Config 0) 1)
+"#);
+    for i in 0..96 {
+        let start = if i < 32 { "Start" } else if i < 64 { "Start2" } else { "Start3" };
+        source += &format!("({start} (N {i}) {})\n", if i % 2 == 0 { 9 } else { 13 });
+    }
+    source += "(run-schedule (seq (run make) (run see) (run fill) (run make2) (run see)))\n";
+    for i in 0..64 { source += &format!("(check (= (Out (N {i})) 9))\n"); }
+    source += "(run-schedule (seq (run change) (run make3) (run see)))\n";
+    for i in 0..96 { source += &format!("(check (= (Out (N {i})) 13))\n"); }
+    for stable in [false, true] {
+        let before = run_mode(&source, None, stable);
+        for (workers, grain) in [(1, 1), (4, 1), (4, 4096)] {
+            let after = run_mode(&source, Some((workers, grain)), stable);
+            same(&before, &after);
+            let r = after.report();
+            let s = &r["query_workers"]["stats"];
+            assert!(s["fixed_read_hits"].as_u64().unwrap() > 0, "{s}");
+            assert!(s["shared_first_reads"].as_u64().unwrap() > 0, "{s}");
+            assert!(s["fixed_rejected_entries"].as_u64().unwrap() > 0, "{s}");
+            assert_eq!(s["fixed_read_fills"], s["fixed_read_clears"]);
+            assert!(r["key_lookup_calls"].as_u64().unwrap() < before.report()["key_lookup_calls"].as_u64().unwrap());
+        }
+    }
+}
