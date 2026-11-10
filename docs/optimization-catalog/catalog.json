@@ -2847,9 +2847,9 @@
       "category": "H",
       "title": "按 Cell 实例归组的源 Run 查询执行",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）",
-      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务",
-      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引",
-      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。",
+      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/query_reads.rs",
@@ -3105,6 +3105,26 @@
             "source": "report",
             "pointer": "/query_workers/stats/compiled_cell_code_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/consumer_seed_deliveries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/cell_entry_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/legacy_route_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/seed_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3177,10 +3197,15 @@
             "source": "report",
             "pointer": "/query_workers/stats/ungrouped_inline_entries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/entry_schedule/stats/cell_entry_deliveries",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "当前任务索引仍需逐 Entry 探查并保留额外容量；上游 Seed、route 与 Cursor 准备未消除。代码/字段页 Arc 原子引用计数、硬件缓存事件未单独计量。枚举及已有 history/context/local-witness 保持旧 host；RHS/repair 未并行化。逐规则 search_s 不包括延迟完成，不能用作调度权重。",
+      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
         "benchmarks/cell-query-workers/results.json",
@@ -3200,9 +3225,13 @@
         "benchmarks/cell-activation-tasks/README.md",
         "benchmarks/cell-activation-tasks/results.json",
         "benchmarks/cell-activation-tasks/work-sum-g64.json",
-        "benchmarks/cell-activation-tasks/work-ray-prefix.json"
+        "benchmarks/cell-activation-tasks/work-ray-prefix.json",
+        "benchmarks/cell-entry-partition/README.md",
+        "benchmarks/cell-entry-partition/results.json",
+        "benchmarks/cell-entry-partition/work-sum-g64.json",
+        "benchmarks/cell-entry-partition/work-ray-prefix.json"
       ],
-      "status": "cell-run/v4 激活时形成 Cell 任务，共享编译代码并删除归组排序；g64 sum-bits/128-Run Raytrace 净少 7,748/22,659 等权操作。grain 1 sum 与短例仍增工作，索引增加内存。语义短检查通过，完整线程加速仍未证实"
+      "status": "cell-run/v4 + partitioned-cell-entries/v1：Cell Entry 直接交接，残余队列只含未接管输入；sum-bits/128-Run Raytrace 省 5,738/25,285 个 Seed，g64 净少 6,293/27,099 项等权操作。83 项相关测试和 sum-bits 指定验收通过；完整线程加速仍未证实"
     },
     {
       "id": "I1",

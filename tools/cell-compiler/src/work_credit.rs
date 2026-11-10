@@ -32,6 +32,10 @@ impl Work {
                 "completion_boundary_records", "completion_boundary_reads", "completion_order_checks", "completion_cell_visits",
             ]),
             ("entry_schedule/stats", &[
+                // Seed construction is a distinct intermediate handoff before
+                // worker/task headers. This existing counter covers old reports
+                // too; direct Cell Entries do not manufacture a Seed to skip it.
+                "consumer_seed_deliveries",
                 "entry_publication_writes", "entry_retirement_checks", "predicate_checks", "row_decodes",
                 "publication_slot_probes", "publication_pending_pushes", "fragment_pending_writes", "fragment_pending_reads",
             ]),

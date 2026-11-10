@@ -9,6 +9,10 @@ use rustc_hash::FxHashMap as HashMap;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value as J, json};
 use std::{collections::BTreeMap, rc::Rc};
+
+// Survey hosts still inspect the complete Seed stream. Normal Cell execution
+// partitions already owned Entries before constructing residual Seed packets.
+pub(crate) const DETACH_CELL_ENTRIES: bool = !cfg!(feature = "family-survey");
 #[cfg(not(feature = "sparse-cells"))]
 use {crate::graph::FactRef, std::collections::BTreeSet};
 
@@ -443,6 +447,7 @@ pub struct Stats {
     parameter_packets_reused: u64,
     consumer_calls: u64,
     consumer_seed_deliveries: u64,
+    cell_entry_deliveries: u64,
     borrowed_slots: u64,
     retired_packets: u64,
 }
@@ -815,6 +820,9 @@ impl Scheduler {
     pub fn seeds(&mut self, g: &Graph, rid: usize, watermark: u64) -> Result<Vec<Seed>> {
         self.seeds_where(g, rid, watermark, |_, _, _| true)
     }
+    pub(crate) fn record_cell_deliveries(&mut self, count: usize) {
+        self.stats.cell_entry_deliveries += count as u64;
+    }
     pub(crate) fn seeds_where(
         &mut self,
         g: &Graph,
@@ -1032,7 +1040,10 @@ impl Scheduler {
         { stats["node_notifications"] = (self.stats.node_notifications
             + self.states.iter().map(|s|s.pending_count() as u64).sum::<u64>()).into(); }
         json!({"enabled":self.enabled,"nodes":self.plan.nodes.len(),"stats":stats,
+            "consumer_transport":if DETACH_CELL_ENTRIES { "partitioned-cell-entries/v1" } else { "survey-seeds/v1" },
             "seed_bytes":std::mem::size_of::<Seed>(),
+            "cell_entry_bytes":std::mem::size_of::<(usize, Rc<Row>, crate::stage_spine::Cursor)>(),
+            "legacy_route_bytes":std::mem::size_of::<(usize, crate::stage_spine::Cursor)>(),
             "live_packets":self.states.iter().map(|s|s.rows.len()).sum::<usize>(),
             "scope":"compiled Cell Entry projection, current row and publication location; consumer watermarks and residual/RHS remain source scheduled"})
     }

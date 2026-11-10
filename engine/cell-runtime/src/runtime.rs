@@ -1153,6 +1153,7 @@ impl Executor {
         let early_join = scheduled_entry && rule.direct.is_none() && self.free_join.has_entry(rid);
         let route_spine = scheduled_entry && self.stage_spine.enabled;
         let active_spine = route_spine && self.stage_spine.active_for_rule(rid);
+        let detach_spine = crate::entry_schedule::DETACH_CELL_ENTRIES;
         let mut spine_routes = Vec::new();
         let mut legacy_cursor_probes = 0;
         let mut node_cursor_reads = 0;
@@ -1253,7 +1254,11 @@ impl Executor {
                                 cursors.and_then(|entries| entries.get(&w))
                             };
                             if let Some(cursor) = cursor {
-                                spine_routes.push((out.len(), cursor.expand()));
+                                // Cell Query reads the already validated Row
+                                // directly. It never uses Seed's consumer-slot
+                                // projection, publication handle or empty domain.
+                                spine_routes.push((atom, entry.row.clone(), cursor.expand()));
+                                if detach_spine { return Ok(()); }
                                 // Keep domain slots aligned with the shared seed vector.
                                 if early_join {
                                     entry_domains.push(Domains::new());
@@ -1335,7 +1340,8 @@ impl Executor {
                             }
                         }
                         if active_spine {
-                            let ordinary = (out.len() - start) - (spine_routes.len() - claimed);
+                            let ordinary = (out.len() - start)
+                                - if detach_spine { 0 } else { spine_routes.len() - claimed };
                             self.stage_spine
                                 .record_fallbacks(rid, atom, ordinary as u64);
                         }
@@ -1354,6 +1360,8 @@ impl Executor {
         };
         self.stage_spine.stats.legacy_cursor_probes += legacy_cursor_probes;
         self.stage_spine.stats.node_cursor_reads += node_cursor_reads;
+        let detached_count = if detach_spine { spine_routes.len() } else { 0 };
+        self.entry_schedule.record_cell_deliveries(detached_count);
         let mut stage_covered = BTreeSet::new();
         let mut found = vec![];
         if !probe && rule.seminaive {
@@ -1362,7 +1370,7 @@ impl Executor {
                 Some(seeds) if route_spine => self.stage_spine.answers_routed(
                     &mut self.graph,
                     rid,
-                    seeds,
+                    seeds.len(),
                     spine_routes,
                     watermark,
                     &query_facts,
@@ -1378,16 +1386,10 @@ impl Executor {
             if self.graph.program.neighbor_plans[rid].is_some()
                 && let Some(seeds) = &scheduled
             {
-                let claimed = coverage.as_ref().map_or(0, |coverage| {
-                    if coverage.complete {
-                        seeds.len()
-                    } else {
-                        coverage.covered.len()
-                    }
-                });
+                let claimed = coverage.as_ref().map_or(0, |coverage| coverage.claimed);
                 let stats = self.neighbor.stats(rid);
                 stats.spine_entries += claimed as u64;
-                stats.residual_entries += (seeds.len() - claimed) as u64;
+                stats.residual_entries += (seeds.len() + detached_count - claimed) as u64;
             }
             if let Some(coverage) = coverage {
                 found = coverage.answers.into_iter()

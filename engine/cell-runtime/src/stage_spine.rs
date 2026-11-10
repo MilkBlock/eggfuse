@@ -360,6 +360,7 @@ impl std::fmt::Debug for DirectOrigin {
 pub(crate) struct Coverage {
     pub answers: Vec<Matched>,
     pub covered: BTreeSet<(usize, Dependency)>,
+    pub claimed: usize,
     pub complete: bool,
 }
 /// Keep the current source set's counter directly accessible between RHS
@@ -1842,11 +1843,13 @@ impl Programs {
                 covered.insert((pivot, w));
             }
         }
+        let covered_count = if complete { ready.len() } else { covered.len() };
         self.finish_answers(
             g,
             rid,
             ready.into_iter(),
             covered,
+            covered_count,
             complete,
             watermark,
             facts,
@@ -1914,49 +1917,41 @@ impl Programs {
         &mut self,
         g: &mut Graph,
         rid: usize,
-        seeds: &[Seed],
-        mut routes: Vec<(usize, Cursor)>,
+        scheduled_count: usize,
+        mut routes: Vec<(usize, Rc<Row>, Cursor)>,
         watermark: u64,
         facts: &QueryFacts,
         #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
+        let detached = crate::entry_schedule::DETACH_CELL_ENTRIES;
+        let residual_count = if detached { scheduled_count } else { scheduled_count - routes.len() };
         self.stats.routed_spine_seeds += routes.len() as u64;
-        self.stats.routed_matcher_seeds += (seeds.len() - routes.len()) as u64;
+        self.stats.routed_matcher_seeds += residual_count as u64;
         if !self.active_for_rule(rid) {
+            if detached && !routes.is_empty() { return Err("detached Cell Entry lost its query owner".into()); }
             return Ok(None);
         }
         self.stats.query_attempts += 1;
         if routes.is_empty() {
-            self.stats.uncovered_queries += u64::from(!seeds.is_empty());
+            self.stats.uncovered_queries += u64::from(residual_count != 0);
             return Ok(None);
         }
         let clock = Instant::now();
-        let complete = routes.len() == seeds.len();
+        let complete = residual_count == 0;
         if !complete {
             self.stats.mixed_routed_queries += 1;
             self.stats.uncovered_queries += 1;
         }
         // Equal-depth continuations retain the original witness/atom tie break.
-        routes.sort_unstable_by_key(|(i, _)| (seeds[*i].packet.row.witness, seeds[*i].atom()));
+        routes.sort_unstable_by_key(|(pivot, row, _)| (row.witness, *pivot));
         let mut covered = BTreeSet::new();
-        // A complete takeover has no residual consumer for the coverage set.
-        // Stream each validated Entry directly into its Cell query program.
-        if !complete {
-            covered.extend(
-                routes
-                    .iter()
-                    .map(|(i, _)| (seeds[*i].atom(), seeds[*i].packet.row.witness)),
-            );
+        // Partitioned inputs cannot enumerate these Entries again. Only a
+        // survey's retained full Seed stream needs a coverage exclusion set.
+        if !complete && !detached {
+            covered.extend(routes.iter().map(|(pivot, row, _)| (*pivot, row.witness)));
         }
-        let ready = routes.into_iter().map(|(i, cursor)| {
-            let seed = &seeds[i];
-            (
-                seed.atom(),
-                seed.packet.row.clone(),
-                cursor,
-            )
-        });
-        let result = self.finish_answers(g, rid, ready, covered, complete, watermark, facts,
+        let covered_count = routes.len();
+        let result = self.finish_answers(g, rid, routes.into_iter(), covered, covered_count, complete, watermark, facts,
             #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
@@ -1967,19 +1962,19 @@ impl Programs {
         rid: usize,
         ready: impl ExactSizeIterator<Item = (usize, Rc<Row>, Cursor)>,
         covered: BTreeSet<(usize, Dependency)>,
+        covered_count: usize,
         complete: bool,
         watermark: u64,
         facts: &QueryFacts,
         #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
-        if !complete && covered.is_empty() {
+        if !complete && covered_count == 0 {
             return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
         let mut results = std::mem::take(&mut self.answer_scratch);
         #[cfg(not(feature = "sparse-cells"))]
         let mut results = Winners::new();
-        let covered_count = if complete { ready.len() } else { covered.len() };
         #[cfg(feature = "sparse-cells")]
         let mut workers = workers.and_then(|w| if w.admit_spine_rule(g, rid) { Some(w) } else { None });
         #[cfg(feature = "sparse-cells")]
@@ -2110,12 +2105,13 @@ impl Programs {
             // read-only Run has completed. No intermediate binding is sealed.
             workers.as_deref_mut().unwrap().record_deferred_storage(results.len());
             self.deferred_queries[rid] = Some((complete, covered_count, ordinals.into_iter().zip(results).collect()));
-            return Ok(Some(Coverage { complete, covered, answers: Vec::new() }));
+            return Ok(Some(Coverage { complete, covered, claimed: covered_count, answers: Vec::new() }));
         }
         let answers = self.seal_answers(rid, complete, covered_count, results);
         Ok(Some(Coverage {
             complete,
             covered,
+            claimed: covered_count,
             answers,
         }))
     }

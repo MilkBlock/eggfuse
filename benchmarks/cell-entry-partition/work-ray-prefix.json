@@ -1,0 +1,1863 @@
+{
+  "net_saved_operations": 27099,
+  "counters": {
+    "cell_ownership/stats/body_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/boundary_body_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/boundary_insert_attempts": {
+      "before": 51769,
+      "after": 51769,
+      "saved": 0
+    },
+    "cell_ownership/stats/boundary_probes": {
+      "before": 1805,
+      "after": 1805,
+      "saved": 0
+    },
+    "cell_ownership/stats/boundary_rebuilds": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/component_lifetime_growths": {
+      "before": 14,
+      "after": 14,
+      "saved": 0
+    },
+    "cell_ownership/stats/component_lifetime_updates": {
+      "before": 39094,
+      "after": 39094,
+      "saved": 0
+    },
+    "cell_ownership/stats/component_signal_retire_visits": {
+      "before": 85,
+      "after": 85,
+      "saved": 0
+    },
+    "cell_ownership/stats/components_created": {
+      "before": 21595,
+      "after": 21595,
+      "saved": 0
+    },
+    "cell_ownership/stats/components_retired": {
+      "before": 17,
+      "after": 17,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_entry_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_frames": {
+      "before": 21595,
+      "after": 21595,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_materializations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_missing_sources": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_requests": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_shape_builds": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_shape_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_transition_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/composition_unbaked_fallbacks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/dispatch_comparisons": {
+      "before": 23801,
+      "after": 23801,
+      "saved": 0
+    },
+    "cell_ownership/stats/dispatch_heap_pops": {
+      "before": 7666,
+      "after": 7666,
+      "saved": 0
+    },
+    "cell_ownership/stats/dispatch_heap_pushes": {
+      "before": 7666,
+      "after": 7666,
+      "saved": 0
+    },
+    "cell_ownership/stats/dispatch_scratch_growths": {
+      "before": 6,
+      "after": 6,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_body_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_column_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_legacy_fact_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_legacy_visits": {
+      "before": 25165,
+      "after": 25165,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_owner_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_planning_calls": {
+      "before": 50240,
+      "after": 50240,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_planning_signals": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_planning_slice_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_queries": {
+      "before": 50240,
+      "after": 50240,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_results": {
+      "before": 144369,
+      "after": 144369,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_route_probes": {
+      "before": 130107,
+      "after": 130107,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_signal_visits": {
+      "before": 130107,
+      "after": 130107,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_slice_steps": {
+      "before": 385592,
+      "after": 385592,
+      "saved": 0
+    },
+    "cell_ownership/stats/domain_type_guards": {
+      "before": 385592,
+      "after": 385592,
+      "saved": 0
+    },
+    "cell_ownership/stats/key_completions": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/marker_anchor_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/marker_entries": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/marker_union_requests": {
+      "before": 1333,
+      "after": 1333,
+      "saved": 0
+    },
+    "cell_ownership/stats/owner_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/port_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/query_class_probes": {
+      "before": 87645,
+      "after": 87645,
+      "saved": 0
+    },
+    "cell_ownership/stats/query_class_range_jumps": {
+      "before": 14347,
+      "after": 14347,
+      "saved": 0
+    },
+    "cell_ownership/stats/row_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_activations": {
+      "before": 6720,
+      "after": 6720,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_binding_reads": {
+      "before": 106802,
+      "after": 106802,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_bindings_created": {
+      "before": 79047,
+      "after": 79047,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_bindings_retired": {
+      "before": 51,
+      "after": 51,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_parent_probes": {
+      "before": 68,
+      "after": 68,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_port_attaches": {
+      "before": 106802,
+      "after": 106802,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_port_detaches": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/signal_root_queries": {
+      "before": 51,
+      "after": 51,
+      "saved": 0
+    },
+    "cell_ownership/stats/slice_steps": {
+      "before": 9138,
+      "after": 9138,
+      "saved": 0
+    },
+    "cell_ownership/stats/unbound_query_calls": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "cell_ownership/stats/unbound_query_rows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "entry_schedule/stats/consumer_seed_deliveries": {
+      "before": 52057,
+      "after": 26772,
+      "saved": 25285
+    },
+    "entry_schedule/stats/entry_publication_writes": {
+      "before": 24990,
+      "after": 24990,
+      "saved": 0
+    },
+    "entry_schedule/stats/entry_retirement_checks": {
+      "before": 20931,
+      "after": 20931,
+      "saved": 0
+    },
+    "entry_schedule/stats/fragment_pending_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "entry_schedule/stats/fragment_pending_writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "entry_schedule/stats/predicate_checks": {
+      "before": 51602,
+      "after": 51602,
+      "saved": 0
+    },
+    "entry_schedule/stats/publication_pending_pushes": {
+      "before": 13498,
+      "after": 13498,
+      "saved": 0
+    },
+    "entry_schedule/stats/publication_slot_probes": {
+      "before": 35591,
+      "after": 35591,
+      "saved": 0
+    },
+    "entry_schedule/stats/row_decodes": {
+      "before": 43050,
+      "after": 43050,
+      "saved": 0
+    },
+    "fact_decode_calls": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "fact_decode_ports": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "free_join/bucket_rows_examined": {
+      "before": 1064,
+      "after": 1064,
+      "saved": 0
+    },
+    "free_join/bucket_rows_materialized": {
+      "before": 2530,
+      "after": 2530,
+      "saved": 0
+    },
+    "free_join/cover_rows": {
+      "before": 8580,
+      "after": 8580,
+      "saved": 0
+    },
+    "free_join/disjoint_key_reads": {
+      "before": 106,
+      "after": 106,
+      "saved": 0
+    },
+    "free_join/entry_bucket_rows_examined": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "free_join/entry_bucket_rows_materialized": {
+      "before": 22009,
+      "after": 22009,
+      "saved": 0
+    },
+    "free_join/entry_cache_hits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "free_join/entry_probes": {
+      "before": 114987,
+      "after": 114987,
+      "saved": 0
+    },
+    "free_join/entry_rows": {
+      "before": 108601,
+      "after": 108601,
+      "saved": 0
+    },
+    "free_join/key_groups": {
+      "before": 8481,
+      "after": 8481,
+      "saved": 0
+    },
+    "free_join/probes": {
+      "before": 8483,
+      "after": 8483,
+      "saved": 0
+    },
+    "free_join/reverse_epoch_bins": {
+      "before": 402,
+      "after": 402,
+      "saved": 0
+    },
+    "free_join/reverse_keys": {
+      "before": 7272,
+      "after": 7272,
+      "saved": 0
+    },
+    "free_join/reverse_refs": {
+      "before": 3826,
+      "after": 3826,
+      "saved": 0
+    },
+    "key_lookup_calls": {
+      "before": 88737,
+      "after": 88737,
+      "saved": 0
+    },
+    "local_context/branch_slot_clears": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/prefix_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/prefix_slots_copied": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/terminal_binding_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/terminal_result_writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/terminal_scratch_slots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_context/terminal_slots_copied": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/fallback_queries": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/fallback_rows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/birth_attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/completion_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/completion_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/obligation_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/obligation_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/port_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/prepare_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "local_union_cells/stats/row_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "maintenance/stats/repair_candidate_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "maintenance/stats/repair_key_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "maintenance/stats/reverse_insert_attempts": {
+      "before": 11574,
+      "after": 11574,
+      "saved": 0
+    },
+    "maintenance/stats/reverse_merge_inserts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "maintenance/stats/reverse_remove_attempts": {
+      "before": 243,
+      "after": 243,
+      "saved": 0
+    },
+    "maintenance/stats/subscription_calls": {
+      "before": 3916,
+      "after": 3916,
+      "saved": 0
+    },
+    "maintenance/stats/subscription_value_visits": {
+      "before": 18421,
+      "after": 18421,
+      "saved": 0
+    },
+    "maintenance/stats/union_frontier_probes": {
+      "before": 1805,
+      "after": 1805,
+      "saved": 0
+    },
+    "maintenance/stats/union_wake_visits": {
+      "before": 1,
+      "after": 1,
+      "saved": 0
+    },
+    "port_completion/stats/forecasts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/legacy_boundaries": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/membership_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/output_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_birth_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_frontier_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_frontier_roots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_order_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_order_refinements": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/pure_epoch_source_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/root_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/scratch_growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/seed_candidates": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/seed_roots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/signal_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "port_completion/stats/static_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "publication/column_rows": {
+      "before": 30091,
+      "after": 30091,
+      "saved": 0
+    },
+    "publication/neighbor_rows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "publication/range_rows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "publication/row_reads": {
+      "before": 29184,
+      "after": 29184,
+      "saved": 0
+    },
+    "query_workers/stats/active_template_visits": {
+      "before": 122,
+      "after": 122,
+      "saved": 0
+    },
+    "query_workers/stats/admission_entry_checks": {
+      "before": 23743,
+      "after": 23743,
+      "saved": 0
+    },
+    "query_workers/stats/admission_table_checks": {
+      "before": 372,
+      "after": 372,
+      "saved": 0
+    },
+    "query_workers/stats/answer_buffer_allocations": {
+      "before": 124,
+      "after": 124,
+      "saved": 0
+    },
+    "query_workers/stats/batch_buffers": {
+      "before": 639,
+      "after": 639,
+      "saved": 0
+    },
+    "query_workers/stats/borrowed_job_headers": {
+      "before": 21186,
+      "after": 21186,
+      "saved": 0
+    },
+    "query_workers/stats/cell_code_reads": {
+      "before": 21186,
+      "after": 21186,
+      "saved": 0
+    },
+    "query_workers/stats/cell_order_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/cell_queue_growths": {
+      "before": 11,
+      "after": 11,
+      "saved": 0
+    },
+    "query_workers/stats/cell_source_reads": {
+      "before": 20247,
+      "after": 20247,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_clears": {
+      "before": 18943,
+      "after": 18943,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_emissions": {
+      "before": 18943,
+      "after": 18943,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_growths": {
+      "before": 25,
+      "after": 25,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_links": {
+      "before": 20125,
+      "after": 20125,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_probes": {
+      "before": 20247,
+      "after": 20247,
+      "saved": 0
+    },
+    "query_workers/stats/cell_task_records": {
+      "before": 18943,
+      "after": 18943,
+      "saved": 0
+    },
+    "query_workers/stats/chunks": {
+      "before": 417,
+      "after": 417,
+      "saved": 0
+    },
+    "query_workers/stats/completion_binding_moves": {
+      "before": 177,
+      "after": 177,
+      "saved": 0
+    },
+    "query_workers/stats/completion_error_checks": {
+      "before": 417,
+      "after": 417,
+      "saved": 0
+    },
+    "query_workers/stats/completion_headers": {
+      "before": 2560,
+      "after": 2560,
+      "saved": 0
+    },
+    "query_workers/stats/completion_slot_initializations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/completion_slot_writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/constructors/candidate_growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/constructors/candidate_pushes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/constructors/candidate_sort_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "query_workers/stats/constructors/domain_key_fields": {
+      "before": 8573,
+      "after": 8573,
+      "saved": 0
+    },
+    "query_workers/stats/constructors/metadata_reads": {
+      "before": 3345,
+      "after": 3345,
+      "saved": 0
+    },
+    "query_workers/stats/deferred_winner_moves": {
+      "before": 3382,
+      "after": 3382,
+      "saved": 0
+    },
+    "query_workers/stats/entry_headers": {
+      "before": 21186,
+      "after": 21186,
+      "saved": 0
+    },
+    "query_workers/stats/entry_mask_checks": {
+      "before": 23743,
+      "after": 23743,
+      "saved": 0
+    },
+    "query_workers/stats/frame_allocations": {
+      "before": 10,
+      "after": 10,
+      "saved": 0
+    },
+    "query_workers/stats/frame_cache_borrows": {
+      "before": 417,
+      "after": 417,
+      "saved": 0
+    },
+    "query_workers/stats/rule_admissions": {
+      "before": 172,
+      "after": 172,
+      "saved": 0
+    },
+    "query_workers/stats/seed_range_comparisons": {
+      "before": 955,
+      "after": 756,
+      "saved": 199
+    },
+    "query_workers/stats/seed_selection_visits": {
+      "before": 1615,
+      "after": 0,
+      "saved": 1615
+    },
+    "query_workers/stats/serial_order_headers": {
+      "before": 425,
+      "after": 425,
+      "saved": 0
+    },
+    "query_workers/stats/task_order_headers": {
+      "before": 21186,
+      "after": 21186,
+      "saved": 0
+    },
+    "query_workers/stats/winner_order_comparisons": {
+      "before": 3934,
+      "after": 3934,
+      "saved": 0
+    },
+    "repair_cells/stats/attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_cells/stats/effect_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_cells/stats/port_writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_cells/stats/row_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_cells/stats/steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_ports/stats/attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_ports/stats/field_copies": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "repair_ports/stats/port_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/base_head_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/base_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/base_successor_ranges": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/base_successor_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/live_inserts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/live_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/live_removes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/merge_live_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/overlay_head_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/shadow_insert_attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/shadow_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/table_activations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/queue_overlay/table_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/advanced_task_epochs": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/cause_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/cause_growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/cause_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/completion_epoch_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/completion_epoch_joins": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/head_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/head_updates": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/legacy_frontier_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/mixed_epoch_inserts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_completion/stats/scope_requests": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_expression_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_input_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_key_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_ops": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_overlay_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_rule_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_scratch_growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/bound_rhs_value_slots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/eager_waits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/publication_table_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/readiness_dependency_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/rhs_demand_growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/rhs_demand_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/rhs_selected_rules": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "scoped_executor/stats/ruleset_waits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "sieve/stats/build_rows": {
+      "before": 68782,
+      "after": 68782,
+      "saved": 0
+    },
+    "sieve/stats/dependency_rows": {
+      "before": 15304,
+      "after": 15304,
+      "saved": 0
+    },
+    "sieve/stats/probes": {
+      "before": 79816,
+      "after": 79816,
+      "saved": 0
+    },
+    "sieve/stats/rule_uses": {
+      "before": 611,
+      "after": 611,
+      "saved": 0
+    },
+    "sieve/stats/update_rows": {
+      "before": 149377,
+      "after": 149377,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/activity_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/base_snapshots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/channel_builds": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/channel_receives": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/epochs": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/input_buffer_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/ordered_slot_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/projected_tasks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/reader_activity_updates": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/result_buffer_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/row_handle_clones": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/slot_abandons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/slot_collection_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/slot_publications": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlap/task_spawns": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlay/copied_units": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlay/growths": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlay/merged_entries": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/overlay/writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/collected_tasks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/dispatches": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/order_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/pending_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/preflight_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/prepared_candidates": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/prepared_tasks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/queue_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/queue_head_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/queue_successor_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/read_set_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/read_set_queries": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/read_set_slots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/recorded_answers": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/result_refreshes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/scratch_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/completion_batches/stats/selection_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/anchor_probes": {
+      "before": 3696,
+      "after": 3696,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/attempts": {
+      "before": 2282,
+      "after": 2282,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/boundary_candidates": {
+      "before": 5117,
+      "after": 5117,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/boundary_indexed_steps": {
+      "before": 37202,
+      "after": 37202,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/boundary_signals": {
+      "before": 39203,
+      "after": 39203,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/boundary_sites": {
+      "before": 37112,
+      "after": 37112,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/boundary_uncompiled_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/candidate_buffer_growths": {
+      "before": 65,
+      "after": 65,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/candidate_sort_comparisons": {
+      "before": 5424,
+      "after": 5424,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/condition_visits": {
+      "before": 65,
+      "after": 65,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/equality_guards": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/inactive_sites": {
+      "before": 17,
+      "after": 17,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/local_candidates": {
+      "before": 198,
+      "after": 198,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/operator_guards": {
+      "before": 48,
+      "after": 48,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/pending_sites": {
+      "before": 867,
+      "after": 867,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/scalar_guards": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/local_conditions/stats/shared_symbol_guards": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/pool_builds": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/candidate_batches": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/chunks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/collected_results": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/prepared_candidates": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/rounds": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/stats/scratch_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/parallel_guards/workers": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/stats/birth_hint_probes": {
+      "before": 72612,
+      "after": 72612,
+      "saved": 0
+    },
+    "stable_ports/stats/equality_completions": {
+      "before": 2282,
+      "after": 2282,
+      "saved": 0
+    },
+    "stable_ports/stats/equality_enqueues": {
+      "before": 2282,
+      "after": 2282,
+      "saved": 0
+    },
+    "stable_ports/stats/key_candidates": {
+      "before": 169240,
+      "after": 169240,
+      "saved": 0
+    },
+    "stable_ports/stats/key_field_comparisons": {
+      "before": 327961,
+      "after": 327961,
+      "saved": 0
+    },
+    "stable_ports/stats/legacy_key_enqueues": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/stats/node_lookups": {
+      "before": 760310,
+      "after": 760310,
+      "saved": 0
+    },
+    "stable_ports/stats/node_retirement_probes": {
+      "before": 907,
+      "after": 907,
+      "saved": 0
+    },
+    "stable_ports/stats/notifications": {
+      "before": 7666,
+      "after": 7666,
+      "saved": 0
+    },
+    "stable_ports/stats/notified_columns": {
+      "before": 7666,
+      "after": 7666,
+      "saved": 0
+    },
+    "stable_ports/stats/pending_candidate_skips": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/stats/port_domain_probes": {
+      "before": 50240,
+      "after": 50240,
+      "saved": 0
+    },
+    "stable_ports/stats/port_reads": {
+      "before": 819465,
+      "after": 819465,
+      "saved": 0
+    },
+    "stable_ports/stats/ports_installed": {
+      "before": 106802,
+      "after": 106802,
+      "saved": 0
+    },
+    "stable_ports/stats/root_parent_probes": {
+      "before": 868451,
+      "after": 868451,
+      "saved": 0
+    },
+    "stable_ports/stats/root_resolutions": {
+      "before": 819465,
+      "after": 819465,
+      "saved": 0
+    },
+    "stable_ports/stats/row_views": {
+      "before": 194677,
+      "after": 194677,
+      "saved": 0
+    },
+    "stable_ports/stats/rows_installed": {
+      "before": 38187,
+      "after": 38187,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/anchor_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/operator_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/order_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/pending_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/publications": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/signal_visits": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/site_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stable_ports/unique_publication/stats/static_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/capture_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/captured_anchors": {
+      "before": 53839,
+      "after": 53839,
+      "saved": 0
+    },
+    "stage_spine/stats/cell_output_deliveries": {
+      "before": 35455,
+      "after": 35455,
+      "saved": 0
+    },
+    "stage_spine/stats/cell_output_receipts": {
+      "before": 35455,
+      "after": 35455,
+      "saved": 0
+    },
+    "stage_spine/stats/cell_output_slot_reads": {
+      "before": 35455,
+      "after": 35455,
+      "saved": 0
+    },
+    "stage_spine/stats/cell_query_result_writes": {
+      "before": 11621,
+      "after": 11621,
+      "saved": 0
+    },
+    "stage_spine/stats/completion_boundary_reads": {
+      "before": 136,
+      "after": 136,
+      "saved": 0
+    },
+    "stage_spine/stats/completion_boundary_records": {
+      "before": 136,
+      "after": 136,
+      "saved": 0
+    },
+    "stage_spine/stats/completion_cell_visits": {
+      "before": 24185,
+      "after": 24185,
+      "saved": 0
+    },
+    "stage_spine/stats/completion_order_checks": {
+      "before": 4873,
+      "after": 4873,
+      "saved": 0
+    },
+    "stage_spine/stats/context_reads": {
+      "before": 5,
+      "after": 5,
+      "saved": 0
+    },
+    "stage_spine/stats/contexts_created": {
+      "before": 2238,
+      "after": 2238,
+      "saved": 0
+    },
+    "stage_spine/stats/direct_publication_hash_probes": {
+      "before": 19180,
+      "after": 19180,
+      "saved": 0
+    },
+    "stage_spine/stats/effect_output_copies": {
+      "before": 1808,
+      "after": 1808,
+      "saved": 0
+    },
+    "stage_spine/stats/fragment_packets": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/fragment_receipt_spills": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/guards": {
+      "before": 9291,
+      "after": 9291,
+      "saved": 0
+    },
+    "stage_spine/stats/history_allocations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/history_capture_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/history_slots_written": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/legacy_cursor_probes": {
+      "before": 9731,
+      "after": 9731,
+      "saved": 0
+    },
+    "stage_spine/stats/legacy_entry_writes": {
+      "before": 17076,
+      "after": 17076,
+      "saved": 0
+    },
+    "stage_spine/stats/legacy_retirement_checks": {
+      "before": 8594,
+      "after": 8594,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_contexts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_history_borrows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_key_fields": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_read_index_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_receipt_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_receipt_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_route_comparisons": {
+      "before": 3760,
+      "after": 3760,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_route_probes": {
+      "before": 940,
+      "after": 940,
+      "saved": 0
+    },
+    "stage_spine/stats/local_witness_route_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/node_cursor_reads": {
+      "before": 15554,
+      "after": 15554,
+      "saved": 0
+    },
+    "stage_spine/stats/origin_key_slots": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/origin_map_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/origin_map_writes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/port_cache_fills": {
+      "before": 432,
+      "after": 432,
+      "saved": 0
+    },
+    "stage_spine/stats/query_receipt_attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/receipt_attempts": {
+      "before": 42066,
+      "after": 42066,
+      "saved": 0
+    },
+    "stage_spine/stats/root_handles_created": {
+      "before": 1900,
+      "after": 1900,
+      "saved": 0
+    },
+    "stage_spine/stats/scoped_anchor_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/scoped_direct_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stage_spine/stats/scoped_receipt_checks": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/cells_created": {
+      "before": 21595,
+      "after": 21595,
+      "saved": 0
+    },
+    "stats/constructor_requests": {
+      "before": 50955,
+      "after": 50955,
+      "saved": 0
+    },
+    "stats/decoded_rows": {
+      "before": 11541,
+      "after": 11541,
+      "saved": 0
+    },
+    "stats/handoff_attempts": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/key_operations": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/context_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/history_borrows": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/key_fields": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/plan_comparisons": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/plan_index_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/publication_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/receipt_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/receipt_steps": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/row_reads": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_prefix/source_index_probes": {
+      "before": 0,
+      "after": 0,
+      "saved": 0
+    },
+    "stats/register_result_writes": {
+      "before": 9908,
+      "after": 9908,
+      "saved": 0
+    },
+    "stats/repaired_dependencies": {
+      "before": 1,
+      "after": 1,
+      "saved": 0
+    },
+    "stats/residual_candidates": {
+      "before": 43105,
+      "after": 43105,
+      "saved": 0
+    },
+    "stats/union_requests": {
+      "before": 7675,
+      "after": 7675,
+      "saved": 0
+    }
+  },
+  "unit": "one observed operation per counter; equal weights, not elapsed time",
+  "performance_admission": "unvalidated proxy; a positive sum alone does not establish acceleration",
+  "scope": "complete inference including failed candidates and unused source captures; excludes compilation and replay cost"
+}

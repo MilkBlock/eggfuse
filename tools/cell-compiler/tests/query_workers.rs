@@ -115,6 +115,26 @@ fn constructor_points_and_residual_enumeration_keep_all_answers() {
 }
 
 #[test]
+fn partitioned_cell_entries_keep_mixed_enumeration_and_late_inputs() {
+    let source = include_str!("fixtures/cell-entry-partition.egg");
+    let before = run(source, None);
+    for workers in [1, 2, 4] {
+        let after = run(source, Some((workers, 16)));
+        same(&before, &after);
+        let r = after.report();
+        let detached = r["entry_schedule"]["stats"]["cell_entry_deliveries"].as_u64().unwrap();
+        let partitioned = r["entry_schedule"]["consumer_transport"] == "partitioned-cell-entries/v1";
+        if partitioned { assert!(detached > 0); }
+        else { assert_eq!(detached, 0); }
+        assert!(r["entry_schedule"]["stats"]["consumer_seed_deliveries"].as_u64().unwrap() > 0);
+        assert!(r["stage_spine"]["stats"]["mixed_routed_queries"].as_u64().unwrap() > 0);
+        if partitioned {
+            assert!(r["query_workers"]["stats"]["spine_entries"].as_u64().unwrap() > 0);
+        }
+    }
+}
+
+#[test]
 fn constructor_domains_follow_both_aliases_visibility_and_recreation() {
     let mut source = String::from(r#"
 (datatype E (N i64) (Start E) (Gate E) (Pair E E i64))
