@@ -615,7 +615,7 @@ mod tests {
     fn guarded_pair_preserves_bound_results_and_folds_guard_outputs() {
         use crate::cell::Operand::Slot;
         let mut rule = Rule {
-            constructor_only: false, template: 0, seminaive: true, direct: None,
+            completion: Default::default(), template: 0, seminaive: true, direct: None,
             inputs: Rc::new(vec![0, 3, 4, 2]),
             query: Rc::new(vec![
                 Atom { call: Call::Table(0), args: vec![Slot(0), Slot(1), Slot(2)] },
@@ -640,7 +640,7 @@ mod tests {
     fn staged_ports_preserve_dependencies_guards_and_bound_results() {
         use crate::cell::Operand::{Literal, Slot};
         let mut rule = Rule {
-            constructor_only: false,
+            completion: Default::default(),
             template: 0,
             seminaive: true,
             direct: None,
@@ -682,7 +682,7 @@ mod tests {
     fn residual_expansion_never_certifies_a_complete_entry() {
         use crate::cell::Operand::Slot;
         let rule = Rule {
-            constructor_only: false,
+            completion: Default::default(),
             template: 0,
             seminaive: true,
             direct: None,
@@ -716,7 +716,7 @@ mod tests {
     fn keyed_port_preserves_bound_result_constraints_and_slot_order() {
         use crate::cell::Operand::{Literal, Slot};
         let rule = Rule {
-            constructor_only: false,
+            completion: Default::default(),
             template: 3,
             seminaive: true,
             direct: None,

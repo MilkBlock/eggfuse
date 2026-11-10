@@ -49,7 +49,7 @@ struct Binding {
     values: crate::slots::Slots,
     epoch: u64,
     parent: Option<FactRef>,
-    continuation: Option<(usize, u32, bool)>,
+    continuation: Option<(u32, bool)>,
     compiled: bool,
 }
 impl Binding {
@@ -170,7 +170,6 @@ pub struct Executor {
     progress: bool,
 
     continuation_stats: ContinuationStats,
-    handoffs: BTreeSet<(usize, usize)>,
 }
 // Keep the ordinary lane's rows owned: optional shared entry caches must not
 // introduce reference-counted heap allocations when the feature is disabled.
@@ -372,7 +371,6 @@ impl Executor {
             progress: std::env::var_os("CELL_CPU_PROGRESS").is_some(),
 
             continuation_stats: ContinuationStats::default(),
-            handoffs: BTreeSet::new(),
         };
         #[cfg(feature="sparse-cells")]
         if e.graph.ownership_enabled() {e.use_entry_publications().expect("entry ownership configured before execution");}
@@ -807,7 +805,7 @@ impl Executor {
         env: &mut QueryEnv,
         remaining: &mut [bool],
         mut epoch: u64,
-    ) -> Result<(bool, u64, Option<(usize, u32)>)> {
+    ) -> Result<(bool, u64, Option<u32>)> {
         let Some(context) = self.graph.continuation_context(seed.witness) else {
             return Ok((true, epoch, None));
         };
@@ -926,7 +924,7 @@ impl Executor {
             epoch = epoch.max(stamp);
             self.continuation_stats.projected_atoms += 1;
         }
-        Ok((true, epoch, Some((route.producer, depth))))
+        Ok((true, epoch, Some(depth)))
     }
     fn merge_points(
         &mut self,
@@ -1512,14 +1510,13 @@ impl Executor {
                                 .continuation_context(row.witness)
                                 .ok_or("missing continuation context")?;
                             {
-                                if let Some(route) = self.graph.program.multi_stage.routes.get(&(
+                                if self.graph.program.multi_stage.routes.get(&(
                                     source.template,
                                     source.op,
                                     rid,
                                     anchor,
-                                )) {
+                                )).is_some() {
                                     b.continuation = Some((
-                                        route.producer,
                                         source
                                             .depth
                                             .checked_add(1)
@@ -1823,7 +1820,7 @@ impl Executor {
                             }
                             if origin.is_some() {
                                 for binding in &mut found[before..] {
-                                    binding.continuation = origin.map(|(p, d)| (p, d, residual));
+                                    binding.continuation = origin.map(|depth| (depth, residual));
                                 }
                             }
                             Ok(())
@@ -1931,6 +1928,13 @@ impl Executor {
         });
         let template = self.graph.program.rules[rid].template;
         let origin = b.continuation;
+        // Every admitted continuation counts once, including Cells that finish
+        // without a physical RHS frame. Only surviving frames need recipe_depth.
+        if let Some((depth, residual)) = origin {
+            if residual { self.continuation_stats.residual_bindings += 1; }
+            else { self.continuation_stats.complete_bindings += 1; }
+            self.continuation_stats.max_depth = self.continuation_stats.max_depth.max(depth);
+        }
         if b.compiled {
             self.continuation_stats.compiled_bindings += 1;
         }
@@ -2014,19 +2018,23 @@ impl Executor {
         let mut failed_input = None;
         #[cfg(feature = "iterative-bake")]
         {
-            let iterative_closed = !available.is_empty() && stage_cursor.as_ref()
+            let matched = self.graph.program.rules[rid].completion == crate::cell::Completion::Matched;
+            let iterative_closed = !matched && !available.is_empty() && stage_cursor.as_ref()
                 .is_some_and(|s| s.closed(&self.graph.program.iterative));
             #[cfg(feature = "structural-depth")]
-            let structural_closed = if !iterative_closed && self.stage_spine.structural.execute
+            let structural_closed = if !matched && !iterative_closed && self.stage_spine.structural.execute
                 && origin.is_none() { closed } else { None };
-            let selected = if iterative_closed { Some(available.as_slice()) } else { None };
+            let selected = if matched { Some(&[][..]) }
+                else if iterative_closed { Some(available.as_slice()) } else { None };
             #[cfg(feature = "structural-depth")]
             let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
             if let Some(selected) = selected {
-                let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, true);
-                let (start, unions) = self.graph.start_handoff(rid, &mut b.values, b.parent, selected, &mut receipts)?;
+                let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched);
+                let (start, unions) = self.graph.start_completion(rid, &mut b.values, b.parent, selected, &mut receipts)?;
                 match start {
                     Start::Complete { cell, frame } => {
+                        if matched { self.graph.stats.matched_cells_completed += 1; }
+                        else { self.graph.stats.handoff_closed += 1; }
                         #[cfg(feature = "structural-depth")]
                         {
                             if let Some(d) = structural_closed {
@@ -2120,7 +2128,7 @@ impl Executor {
         // prefixes share first-miss promotion and the same completion handling.
         let ordinary = |me: &mut Self, values: crate::slots::Slots,
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
-            if me.graph.program.rules[rid].constructor_only
+            if me.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
                 && stage_cursor.is_none() && origin.is_none()
             {
                 let width = me.graph.program.templates[template].ops.len();
@@ -2164,15 +2172,8 @@ impl Executor {
             }
         };
 
-        if let Some((producer, depth, residual)) = origin {
+        if let Some((depth, _)) = origin {
             self.graph.rhs_frame_mut(cell).unwrap().recipe_depth = depth;
-            self.handoffs.insert((producer, rid));
-            if residual {
-                self.continuation_stats.residual_bindings += 1;
-            } else {
-                self.continuation_stats.complete_bindings += 1;
-            }
-            self.continuation_stats.max_depth = self.continuation_stats.max_depth.max(depth);
         }
         let ops = self.graph.program.templates[template].ops.clone();
         let mut completed = true;

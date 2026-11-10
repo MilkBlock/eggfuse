@@ -56,10 +56,21 @@ pub(crate) use symbols::SymbolKey;
 #[path = "cell_handoff.rs"]
 mod handoff;
 #[cfg(feature = "iterative-bake")]
-pub(crate) use handoff::{HandoffCounts, HandoffFrame, Preflight, apply_handoff, complete_handoff};
+pub(crate) use handoff::{HandoffCounts, CompletionFrame, apply_handoff, complete_handoff};
 #[cfg(feature = "iterative-bake")]
 pub(crate) use eval::CellFrame;
 pub(crate) use query::Field;
+
+/// Static selection from the source Cell and its existing alias proofs. This
+/// replaces a separate constructor-only flag; it adds no instance state.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
+pub(crate) enum Completion {
+    #[default]
+    Dynamic,
+    Constructors,
+    #[cfg(feature = "iterative-bake")]
+    Matched,
+}
 
 /// A position in a Cell definition, never a physical address of its result.
 /// Keep the wire representation shared by existing recipe and Bake artifacts.
@@ -130,6 +141,18 @@ impl Relation<'_> {
     }
 }
 impl<'a> Definition<'a> {
+    pub(crate) fn completion(&self, _aliases: &[bool]) -> Completion {
+        #[cfg(feature = "iterative-bake")]
+        if self.closes_with(_aliases, true, |_| false) {
+            return Completion::Matched;
+        }
+        if self.template.ops.iter().all(|op| match op {
+            Op::Copy(..) => true,
+            Op::Let(_, Call::Table(t), _) => self.tables[*t].virtual_fact && self.tables[*t].constructor,
+            _ => false,
+        }) { Completion::Constructors } else { Completion::Dynamic }
+    }
+
     /// Every source operation needs either an existing Cell alias proof, an
     /// allowed deferred effect, or a supplied result. The caller still validates
     /// supplied receipts and commits effects only at the original Run boundary.
@@ -301,7 +324,7 @@ mod tests {
     #[test]
     fn mutable_reads_and_merge_proposals_keep_distinct_authority() {
         let rule = Rule {
-            constructor_only: false,
+            completion: Default::default(),
             template: 0,
             query: Rc::new(vec![Atom {
                 call: Call::Table(0),

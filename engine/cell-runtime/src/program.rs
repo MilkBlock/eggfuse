@@ -44,7 +44,7 @@ pub struct Template {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Rule {
     #[serde(default)]
-    pub(crate) constructor_only: bool,
+    pub(crate) completion: crate::cell::Completion,
     pub template: usize,
     pub query: Rc<Vec<Atom>>,
     pub inputs: Rc<Vec<usize>>,
@@ -304,13 +304,8 @@ impl Program {
                     }
                 }
             }
-            let constructor_only = ops.iter().all(|op| match op {
-                Op::Copy(..) => true,
-                Op::Let(_, Call::Table(t), _) => tables[*t].virtual_fact && tables[*t].constructor,
-                _ => false,
-            });
             rules.push(Rule {
-                constructor_only,
+                completion: Default::default(),
                 template: templates.len(),
                 query: Rc::new(query),
                 inputs: Rc::new(inputs),
@@ -507,6 +502,10 @@ impl Program {
         p.merge_programs =
             crate::merge_programs::Programs::parse(&p, &p.artifact["merge_programs"])?;
         p.known_results = crate::known_results::Plans::parse(&p, &p.artifact["known_results"])?;
+        for rid in 0..p.rules.len() {
+            p.rules[rid].completion = crate::cell::Definition::new(&p, rid)?
+                .completion(&p.known_results.static_skip[rid]);
+        }
         #[cfg(feature = "rhs-locals")]
         {
             p.local_rhs = crate::local_rhs::derive(&p, &p.known_results);

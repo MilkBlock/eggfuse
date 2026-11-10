@@ -181,6 +181,10 @@ pub struct Stats {
     pub handoff_deep: u64,
     #[serde(default)]
     pub handoff_closed: u64,
+    /// Cells completed from matched inputs and static aliases alone. Coverage,
+    /// not an additional work credit: rhs_frames_avoided includes these Cells.
+    #[serde(default)]
+    pub matched_cells_completed: u64,
     #[serde(default)]
     pub handoff_closed_fallback: u64,
     #[serde(default)]
@@ -1441,10 +1445,10 @@ impl Graph {
         self.changed = true;
         Ok(())
     }
-    /// Complete the witnessed Cell prefix. On the first miss, retain its frame,
+    /// Complete a Cell from matched inputs and any required witnesses. On the first miss, retain its frame,
     /// receipts and ordered effects and resume the original RHS at that op.
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn start_handoff(
+    pub(crate) fn start_completion(
         &mut self,
         rule: usize,
         inputs: &mut crate::slots::Slots,
@@ -1452,14 +1456,17 @@ impl Graph {
         transfers: &[crate::result_handoff::Input],
         receipts: &mut crate::cell::Effects,
     ) -> Result<(cell_prefix::Start, u64)> {
-        use crate::cell::{CellFrame, HandoffFrame, HandoffCounts, Preflight, complete_handoff};
+        use crate::cell::{CellFrame, HandoffCounts, CompletionFrame, complete_handoff};
         let template = self.program.rules[rule].template;
         let ops = self.program.templates[template].ops.clone();
         let aliases = self.program.known_results.static_skip[rule].clone();
         let cell = self.next_cell;
-        let mut pending = Preflight {
+        #[cfg(feature = "sparse-cells")]
+        self.trust_sealed_frame(cell);
+        let before_unions = self.stats.union_requests;
+        let mut pending = CompletionFrame {
             cell, frame: self.new_cell(template, Default::default(), None),
-            inputs, unions: Default::default(),
+            inputs,
         };
         let mut transfers = transfers.iter().peekable();
         let mut counts = HandoffCounts::default();
@@ -1475,14 +1482,11 @@ impl Graph {
                 continue;
             }
             match instruction {
-                Op::Copy(dst, a) => {
-                    let value = pending.argument(self, a)?;
-                    pending.assign(self, *dst, value)?;
-                }
+                Op::Copy(..) => {} // The same lazy projection as the ordinary Cell RHS.
                 Op::Union(a, b) => {
                     let a = pending.argument(self, a)?;
                     let b = pending.argument(self, b)?;
-                    pending.union(self, a, b)?;
+                    self.enqueue_source_union(a, b)?;
                 }
                 Op::Let(_, Call::Table(_), _) | Op::Set(..) => {
                     let Some(input) = transfers.next() else { first_miss = Some(op); break; };
@@ -1502,9 +1506,8 @@ impl Graph {
         }
         let reserved = self.reserve_cell_id()?;
         debug_assert_eq!(cell, reserved);
-        let Preflight { frame, unions, .. } = pending;
-        let count = unions.len() as u64;
-        for (a, b) in unions { self.enqueue_union(a, b)?; }
+        let CompletionFrame { frame, .. } = pending;
+        let count = self.stats.union_requests - before_unions;
         counts.commit(&mut self.stats);
         // The completed prefix will not run again, even after a later miss.
         self.known_stats.static_eliminated += skipped;
@@ -1524,7 +1527,6 @@ impl Graph {
             cell_prefix::Start::Resume { cell, next_op }
         } else {
             self.stats.rhs_frames_avoided += 1;
-            self.stats.handoff_closed += 1;
             cell_prefix::Start::Complete { cell, frame }
         };
         Ok((start, count))

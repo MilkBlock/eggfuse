@@ -5,22 +5,14 @@ use crate::{graph::{Cell, Graph, Stats}, program::{Arg, Call, Op, Result},
     result_handoff::Input, slots::Slots, value::Value};
 use smallvec::SmallVec;
 
-pub(crate) trait HandoffFrame: CellFrame {
-    fn union(&mut self, g: &mut Graph, a: Value, b: Value) -> Result<()>;
-}
-impl HandoffFrame for RhsFrame<'_> {
-    fn union(&mut self, g: &mut Graph, a: Value, b: Value) -> Result<()> { g.enqueue_union(a, b) }
-}
-
-/// Own only computed slots and deferred effects while borrowing matched inputs.
-/// Completion or promotion commits this source prefix exactly once.
-pub(crate) struct Preflight<'a> {
+/// Own only computed results while borrowing matched inputs. A first miss
+/// promotes this prefix, so effects can use the ordinary ordered union queue.
+pub(crate) struct CompletionFrame<'a> {
     pub cell: u32,
     pub frame: Cell,
     pub inputs: &'a Slots,
-    pub unions: SmallVec<[(Value, Value); 2]>,
 }
-impl CellFrame for Preflight<'_> {
+impl CellFrame for CompletionFrame<'_> {
     fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value> {
         g.argument_in(self.cell, &self.frame, Some(self.inputs), arg)
     }
@@ -29,12 +21,6 @@ impl CellFrame for Preflight<'_> {
     }
     fn assign(&mut self, _: &mut Graph, slot: usize, value: Value) -> Result<()> {
         self.frame.values.insert(slot, value);
-        Ok(())
-    }
-}
-impl HandoffFrame for Preflight<'_> {
-    fn union(&mut self, _: &mut Graph, a: Value, b: Value) -> Result<()> {
-        self.unions.push((a, b));
         Ok(())
     }
 }
@@ -52,7 +38,7 @@ impl HandoffCounts {
 
 /// Return None before applying this instruction when its receipt is absent or
 /// no longer proves the complete current key. No lookup or second key buffer.
-pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl HandoffFrame,
+pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl CellFrame,
     instruction: &Op, input: &Input, counts: &mut HandoffCounts) -> Result<Option<crate::graph::Dependency>> {
     let Some(fact) = input.fact else { return Ok(None); };
     let (table, args) = match instruction {
@@ -76,7 +62,7 @@ pub(crate) fn complete_handoff(g: &mut Graph, frame: &mut impl HandoffFrame,
                 return Err("non-equality constructor result".into());
             }
             if input.equal_output && value == &rhs { counts.noop += 1; }
-            else { frame.union(g, value.clone(), rhs)?; }
+            else { g.enqueue_union(value.clone(), rhs)?; }
             counts.sets += 1;
         }
         _ => unreachable!(),
