@@ -1,0 +1,149 @@
+{
+  "baseline_commit": "560faaf7",
+  "scope": "standalone Cell CPU; separate allocation diagnostic; no throughput or graph sparsity claim",
+  "decision": "reject from production path; compact slots trade bytes for more allocator events",
+  "rules": 582,
+  "dense_input_layouts": 582,
+  "patch_sha256": "0f2f160c83e52c029d142888231f271c7beaf3af21931d033e77aacacc679b0c",
+  "binaries": {
+    "runtime-before-alloc": "87c7972b6bd455ebe7d7a22ab2497bab5d3d89d84b82b8e91100307dfaefe20f",
+    "prefix-before-alloc": "e286002ee35b566040baa189994e41df7c24e08878f543101b87af258b6bd4f5",
+    "runtime-after-alloc": "d4ee59f360fc229517be0e683923e057c00aca7d59a02a8b40669850daca0db0",
+    "prefix-after-alloc": "bccd71a9670db7bd3630a19dedac70de40ef53c5f1fb19dc343f7fb4265fffc5"
+  },
+  "semantic_acceptance_sha256": "d0aa68319b36511a9bd4030a9f86a8f901f5a6ee16d4d4964a0971b1011ea292",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "variants": {
+        "baseline": {
+          "report_sha256": "60aab59191673f45068ca4c8951e700e56b96f82f463491f935b2d08b9a3bf7e",
+          "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "allocations": {
+            "alloc_calls": 94101,
+            "free_calls": 66395,
+            "live_bytes_after": 141611262,
+            "live_bytes_before": 135855077,
+            "peak_live_requested_bytes": 142247416,
+            "realloc_calls": 18243,
+            "released_bytes": 18840554,
+            "requested_bytes": 24596739,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 112344,
+          "fragment_header_bytes": 120,
+          "winner_bytes": 208,
+          "fragment_capacity_bytes": 283896,
+          "query_lookups": 18633
+        },
+        "bounded_holes": {
+          "report_sha256": "476215cacc2043c813bc8bcee85debebd6b3bb673c826f1205a3c9c6864beaf1",
+          "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "allocations": {
+            "alloc_calls": 94110,
+            "free_calls": 66404,
+            "live_bytes_after": 141482988,
+            "live_bytes_before": 135858571,
+            "peak_live_requested_bytes": 142088622,
+            "realloc_calls": 19322,
+            "released_bytes": 18069274,
+            "requested_bytes": 23693691,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 113432,
+          "fragment_header_bytes": 128,
+          "winner_bytes": 216,
+          "fragment_capacity_bytes": 189264,
+          "query_lookups": 18633
+        },
+        "immediate_sparse_conversion": {
+          "report_sha256": "ff622436d38925472ba242df6fa4cd18bbbdf54df79a0da7eb68f46b4f3c6136",
+          "state_sha256": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+          "allocations": {
+            "alloc_calls": 98690,
+            "free_calls": 70984,
+            "live_bytes_after": 141511380,
+            "live_bytes_before": 135858571,
+            "peak_live_requested_bytes": 142116406,
+            "realloc_calls": 16494,
+            "released_bytes": 18533378,
+            "requested_bytes": 24186187,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 115184,
+          "fragment_header_bytes": 128,
+          "winner_bytes": 216,
+          "fragment_capacity_bytes": 189264,
+          "query_lookups": 18633
+        }
+      }
+    },
+    "ray128": {
+      "runs": 128,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "variants": {
+        "baseline": {
+          "report_sha256": "e07e0e3235b326cc526ac46c16811c4e1bb18f9bb784032db394205a45ea98bf",
+          "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+          "allocations": {
+            "alloc_calls": 331419,
+            "free_calls": 112706,
+            "live_bytes_after": 438575125,
+            "live_bytes_before": 386892728,
+            "peak_live_requested_bytes": 438998744,
+            "realloc_calls": 42373,
+            "released_bytes": 87144810,
+            "requested_bytes": 138827207,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 373792,
+          "fragment_header_bytes": 120,
+          "winner_bytes": 208,
+          "fragment_capacity_bytes": 370896,
+          "query_lookups": 87361
+        },
+        "bounded_holes": {
+          "report_sha256": "a6dfc59ed40956f2b5f658a298a02d679ded0bfdd9b7febffaf5b4bafe848afd",
+          "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+          "allocations": {
+            "alloc_calls": 331422,
+            "free_calls": 112709,
+            "live_bytes_after": 437461004,
+            "live_bytes_before": 386896223,
+            "peak_live_requested_bytes": 437991935,
+            "realloc_calls": 48182,
+            "released_bytes": 85739210,
+            "requested_bytes": 136303991,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 379604,
+          "fragment_header_bytes": 128,
+          "winner_bytes": 216,
+          "fragment_capacity_bytes": 247264,
+          "query_lookups": 87361
+        },
+        "immediate_sparse_conversion": {
+          "report_sha256": "2905bd916695a6ee4aa7e5edd68e3442d18962712cd08eb9d773412950be3081",
+          "state_sha256": "a851f2cd923fb8f79f4ddfb47e6b8bd0fd4701b28c160792a4662d02d1a47c85",
+          "allocations": {
+            "alloc_calls": 350559,
+            "free_calls": 131846,
+            "live_bytes_after": 437757084,
+            "live_bytes_before": 386896223,
+            "peak_live_requested_bytes": 438234295,
+            "realloc_calls": 33850,
+            "released_bytes": 86491642,
+            "requested_bytes": 137352503,
+            "scope": "allocator requests during execute; separate diagnostic build; excludes setup and export; requested bytes are not RSS"
+          },
+          "alloc_plus_realloc_calls": 384409,
+          "fragment_header_bytes": 128,
+          "winner_bytes": 216,
+          "fragment_capacity_bytes": 247264,
+          "query_lookups": 87361
+        }
+      }
+    }
+  }
+}

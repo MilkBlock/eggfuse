@@ -70,6 +70,12 @@ most work is necessary boundary enumeration, change the partition or host.
 
 ## Reproduce
 
+The subsequent [dense input storage experiment](../cell-dense-inputs/README.md)
+kept the same owned Cell instance through query and RHS, but traded fewer
+requested bytes for more allocator events. Its kernel change was rejected;
+it removed no queries or publication work. The attribute-propagation takeover
+and its cross-Run validity obligations above remain open.
+
 Build the runtime with the same features as the checkpoint and freeze its
 Cargo-reported executable. Use a separate output and never treat this run as
 a timing sample:

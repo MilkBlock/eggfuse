@@ -1,0 +1,367 @@
+diff --git a/engine/cell-runtime/src/execute_kernel.rs b/engine/cell-runtime/src/execute_kernel.rs
+index a00aec01..79f78c3e 100644
+--- a/engine/cell-runtime/src/execute_kernel.rs
++++ b/engine/cell-runtime/src/execute_kernel.rs
+@@ -388,3 +388,2 @@ impl Frame {
+-            values: r.inputs.iter().zip(&k.query.inputs)
+-                .map(|(s, field)| (*s, field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded)))
+-                .collect(),
++            values: r.inputs.bind(k.query.inputs.iter()
++                .map(|field| field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded))),
+diff --git a/engine/cell-runtime/src/local_context.rs b/engine/cell-runtime/src/local_context.rs
+index 0bdf9f35..f2e3a768 100644
+--- a/engine/cell-runtime/src/local_context.rs
++++ b/engine/cell-runtime/src/local_context.rs
+@@ -661,2 +661,2 @@ fn emit(
+-        let values: crate::slots::Slots = plan.inputs.iter().zip(&query.inputs).map(|(&slot, f)| (slot, f.read(g,
+-            |slot| p.values[slot].as_ref().unwrap(), &results, expanded))).collect();
++        let values = plan.inputs.bind(query.inputs.iter().map(|f| f.read(g,
++            |slot| p.values[slot].as_ref().unwrap(), &results, expanded)));
+diff --git a/engine/cell-runtime/src/program.rs b/engine/cell-runtime/src/program.rs
+index f5a9ca43..05921add 100644
+--- a/engine/cell-runtime/src/program.rs
++++ b/engine/cell-runtime/src/program.rs
+@@ -10 +10 @@ pub type Result<T> = std::result::Result<T, String>;
+-pub type InputSlots = std::sync::Arc<Vec<usize>>;
++type SharedInputs = std::sync::Arc<InputLayout>;
+@@ -12 +12,66 @@ pub type InputSlots = std::sync::Arc<Vec<usize>>;
+-pub type InputSlots = Rc<Vec<usize>>;
++type SharedInputs = Rc<InputLayout>;
++#[derive(Debug)]
++struct InputLayout {
++    slots: Vec<usize>,
++    dense: bool,
++}
++#[derive(Clone, Debug)]
++pub struct InputSlots(SharedInputs);
++impl From<Vec<usize>> for InputSlots {
++    fn from(slots: Vec<usize>) -> Self {
++        let dense = slots.iter().copied().eq(0..slots.len());
++        Self(SharedInputs::new(InputLayout { slots, dense }))
++    }
++}
++impl std::ops::Deref for InputSlots {
++    type Target = Vec<usize>;
++    fn deref(&self) -> &Self::Target { &self.0.slots }
++}
++impl AsRef<Vec<usize>> for InputSlots {
++    fn as_ref(&self) -> &Vec<usize> { &self.0.slots }
++}
++impl InputSlots {
++    /// Query fields follow this shared layout. Do not rebuild a map on the
++    /// RHS side: the returned owned storage also belongs to the Cell instance.
++    pub(crate) fn bind(&self, values: impl ExactSizeIterator<Item = Value>) -> crate::slots::Slots {
++        assert_eq!(values.len(), self.len(), "Cell input layout width");
++        if self.0.dense { crate::slots::Slots::dense(values) }
++        else { self.iter().copied().zip(values).collect() }
++    }
++}
++impl Serialize for InputSlots {
++    fn serialize<S: serde::Serializer>(&self, s: S) -> std::result::Result<S::Ok, S::Error> {
++        self.0.slots.serialize(s)
++    }
++}
++impl<'de> Deserialize<'de> for InputSlots {
++    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> std::result::Result<Self, D::Error> {
++        Ok(Vec::<usize>::deserialize(d)?.into())
++    }
++}
++#[cfg(test)]
++mod input_layout_tests {
++    use super::*;
++    #[test]
++    fn binding_uses_layout_order_and_preserves_serialization() {
++        for ids in [vec![], vec![0, 1, 2, 3], vec![0, 3, 4, 2], vec![1, 1000]] {
++            let input: InputSlots = ids.clone().into();
++            let values: Vec<_> = (0..ids.len()).map(|i| Value::Int(i as i64)).collect();
++            let slots = input.bind(values.clone().into_iter());
++            let expected: crate::slots::Slots = ids.iter().copied().zip(values).collect();
++            assert_eq!(slots, expected);
++            assert_eq!(matches!(slots, crate::slots::Slots::Dense { .. }), ids.iter().copied().eq(0..ids.len()));
++            let encoded = serde_json::to_string(&input).unwrap();
++            assert_eq!(encoded, serde_json::to_string(&ids).unwrap());
++            let decoded: InputSlots = serde_json::from_str(&encoded).unwrap();
++            assert_eq!(decoded.as_ref(), &ids);
++            assert_eq!(decoded.0.dense, input.0.dense);
++        }
++    }
++    #[test]
++    #[should_panic(expected = "Cell input layout width")]
++    fn binding_rejects_a_missing_input() {
++        let input: InputSlots = vec![0, 1].into();
++        input.bind([Value::Int(1)].into_iter());
++    }
++}
+diff --git a/engine/cell-runtime/src/query_workers.rs b/engine/cell-runtime/src/query_workers.rs
+index 4673c714..3994f94f 100644
+--- a/engine/cell-runtime/src/query_workers.rs
++++ b/engine/cell-runtime/src/query_workers.rs
+@@ -244 +244 @@ impl Executor {
+-        let input_slots = rule.inputs.as_slice();
++        let input_slots = &rule.inputs;
+@@ -264,2 +264,2 @@ impl Executor {
+-                    values: input_slots.iter().zip(&query.inputs).map(|(&slot, field)|
+-                        (slot, field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())).collect(),
++                    values: input_slots.bind(query.inputs.iter().map(|field|
++                        field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())),
+@@ -764,3 +764,3 @@ impl Workers {
+-                            code.inputs.iter().zip(&code.query.inputs).map(|(&slot, f)|
+-                                (slot, f.operand_in(reads.parents,
+-                                    |col| &q.entry.values[col], &frame.values, None).into_owned())).collect(),
++                            code.inputs.bind(code.query.inputs.iter().map(|f|
++                                f.operand_in(reads.parents,
++                                    |col| &q.entry.values[col], &frame.values, None).into_owned())),
+diff --git a/engine/cell-runtime/src/runtime.rs b/engine/cell-runtime/src/runtime.rs
+index 80c00a9b..22c581f4 100644
+--- a/engine/cell-runtime/src/runtime.rs
++++ b/engine/cell-runtime/src/runtime.rs
+@@ -64 +64 @@ mod fragment_tests {
+-        assert_eq!(binding.values.keys().copied().collect::<Vec<_>>(), [1, 15, 1000]);
++        assert_eq!(binding.values.keys().collect::<Vec<_>>(), [1, 15, 1000]);
+@@ -1879 +1879 @@ impl Executor {
+-            .all(|b| b.values.len() == key_slots.len() && b.values.keys().eq(key_slots))
++            .all(|b| b.values.len() == key_slots.len() && b.values.keys().eq(key_slots.iter().copied()))
+@@ -2530 +2530 @@ impl Executor {
+-            self.binding_audit.push(json!({"ruleset":set,"bindings":patch.iter().map(|(rid,b)|{let template=&self.graph.program.templates[self.graph.program.rules[*rid].template];json!({"rule":rid,"values":b.values.iter().map(|(i,v)|json!({"slot":i,"value":crate::value::exported(v,&template.sorts[*i])})).collect::<Vec<_>>()})}).collect::<Vec<_>>()}));
++            self.binding_audit.push(json!({"ruleset":set,"bindings":patch.iter().map(|(rid,b)|{let template=&self.graph.program.templates[self.graph.program.rules[*rid].template];json!({"rule":rid,"values":b.values.iter().map(|(i,v)|json!({"slot":i,"value":crate::value::exported(v,&template.sorts[i])})).collect::<Vec<_>>()})}).collect::<Vec<_>>()}));
+diff --git a/engine/cell-runtime/src/slots.rs b/engine/cell-runtime/src/slots.rs
+index 5486101d..32b6321d 100644
+--- a/engine/cell-runtime/src/slots.rs
++++ b/engine/cell-runtime/src/slots.rs
+@@ -7 +7,170 @@ pub struct FrameMap<K, V>(Vec<(K, V)>);
+-pub type Slots = FrameMap<usize, crate::value::Value>;
++use crate::value::Value;
++
++/// The query, winner and RHS own the same storage. Consecutive input slots
++/// have implicit addresses. Small SSA holes stay in the same array; wide
++/// gaps use an ordered sparse map without renumbering any slot.
++#[derive(Clone, Debug)]
++pub enum Slots {
++    Dense { values: Vec<Option<Value>>, live: usize },
++    Sparse(FrameMap<usize, Value>),
++}
++impl Default for Slots {
++    fn default() -> Self { Self::Dense { values: Vec::new(), live: 0 } }
++}
++impl Slots {
++    pub(crate) fn dense(values: impl Iterator<Item = Value>) -> Self {
++        let values: Vec<_> = values.map(Some).collect();
++        Self::Dense { live: values.len(), values }
++    }
++    pub fn get(&self, k: &usize) -> Option<&Value> {
++        match self { Self::Dense { values, .. } => values.get(*k).and_then(Option::as_ref), Self::Sparse(v) => v.get(k) }
++    }
++    pub fn get_mut(&mut self, k: &usize) -> Option<&mut Value> {
++        match self { Self::Dense { values, .. } => values.get_mut(*k).and_then(Option::as_mut), Self::Sparse(v) => v.get_mut(k) }
++    }
++    pub fn contains_key(&self, k: &usize) -> bool { self.get(k).is_some() }
++    pub fn len(&self) -> usize {
++        match self { Self::Dense { live, .. } => *live, Self::Sparse(v) => v.len() }
++    }
++    pub fn is_empty(&self) -> bool { self.len() == 0 }
++    pub(crate) fn capacity_bytes(&self) -> usize {
++        match self {
++            Self::Dense { values, .. } => values.capacity() * std::mem::size_of::<Option<Value>>(),
++            Self::Sparse(v) => v.capacity_bytes(),
++        }
++    }
++    fn make_sparse(&mut self, extra: usize) -> &mut FrameMap<usize, Value> {
++        if let Self::Dense { values, live } = self {
++            let mut pairs = Vec::with_capacity(*live + extra);
++            pairs.extend(std::mem::take(values).into_iter().enumerate()
++                .filter_map(|(k, v)| v.map(|v| (k, v))));
++            *self = Self::Sparse(FrameMap(pairs));
++        }
++        let Self::Sparse(v) = self else { unreachable!() };
++        v
++    }
++    pub fn insert(&mut self, k: usize, value: Value) -> Option<Value> {
++        if let Self::Dense { values, live } = self {
++            if let Some(slot) = values.get_mut(k) {
++                let old = slot.replace(value);
++                *live += usize::from(old.is_none());
++                return old;
++            }
++            // Copy/alias instructions can leave small SSA gaps. Keep the
++            // original array when its occupied span costs no more than pairs;
++            // arbitrary large IDs must never force a huge dense allocation.
++            let span_bytes = k.saturating_add(1).saturating_mul(std::mem::size_of::<Option<Value>>());
++            let pair_bytes = live.saturating_add(1).saturating_mul(std::mem::size_of::<(usize, Value)>());
++            if k == values.len() || span_bytes <= pair_bytes {
++                values.resize_with(k + 1, || None);
++                values[k] = Some(value);
++                *live += 1;
++                return None;
++            }
++        }
++        self.make_sparse(1).insert(k, value)
++    }
++    pub fn remove(&mut self, k: &usize) -> Option<Value> {
++        match self {
++            Self::Dense { values, live } => {
++                let old = values.get_mut(*k)?.take()?;
++                *live -= 1;
++                while values.last().is_some_and(Option::is_none) { values.pop(); }
++                Some(old)
++            }
++            Self::Sparse(values) => values.remove(k),
++        }
++    }
++    pub fn iter(&self) -> SlotIter<'_> {
++        match self {
++            Self::Dense { values, .. } => SlotIter::Dense(values.iter().enumerate()),
++            Self::Sparse(v) => SlotIter::Sparse(v.0.iter()),
++        }
++    }
++    pub fn keys(&self) -> impl Iterator<Item = usize> { self.iter().map(|(k, _)| k) }
++    pub fn values(&self) -> impl Iterator<Item = &Value> { self.iter().map(|(_, v)| v) }
++}
++pub enum SlotIter<'a> {
++    Dense(std::iter::Enumerate<std::slice::Iter<'a, Option<Value>>>),
++    Sparse(std::slice::Iter<'a, (usize, Value)>),
++}
++impl<'a> Iterator for SlotIter<'a> {
++    type Item = (usize, &'a Value);
++    fn next(&mut self) -> Option<Self::Item> {
++        match self { Self::Dense(v) => v.find_map(|(k, v)| v.as_ref().map(|v| (k, v))), Self::Sparse(v) => v.next().map(|(k, v)| (*k, v)) }
++    }
++    fn size_hint(&self) -> (usize, Option<usize>) {
++        match self { Self::Dense(v) => (0, v.size_hint().1), Self::Sparse(v) => v.size_hint() }
++    }
++}
++pub enum SlotIntoIter {
++    Dense(std::iter::Enumerate<std::vec::IntoIter<Option<Value>>>),
++    Sparse(std::vec::IntoIter<(usize, Value)>),
++}
++impl Iterator for SlotIntoIter {
++    type Item = (usize, Value);
++    fn next(&mut self) -> Option<Self::Item> {
++        match self { Self::Dense(v) => v.find_map(|(k, v)| v.map(|v| (k, v))), Self::Sparse(v) => v.next() }
++    }
++    fn size_hint(&self) -> (usize, Option<usize>) {
++        match self { Self::Dense(v) => (0, v.size_hint().1), Self::Sparse(v) => v.size_hint() }
++    }
++}
++impl IntoIterator for Slots {
++    type Item = (usize, Value);
++    type IntoIter = SlotIntoIter;
++    fn into_iter(self) -> Self::IntoIter {
++        match self {
++            Self::Dense { values, .. } => SlotIntoIter::Dense(values.into_iter().enumerate()),
++            Self::Sparse(v) => SlotIntoIter::Sparse(v.0.into_iter()),
++        }
++    }
++}
++impl FromIterator<(usize, Value)> for Slots {
++    fn from_iter<I: IntoIterator<Item = (usize, Value)>>(i: I) -> Self {
++        let mut it = i.into_iter();
++        let Some(first) = it.next() else { return Self::default(); };
++        let mut slots = if first.0 == 0 {
++            Self::Dense { values: Vec::with_capacity(it.size_hint().0 + 1), live: 0 }
++        } else {
++            Self::Sparse(FrameMap(Vec::with_capacity(it.size_hint().0 + 1)))
++        };
++        slots.insert(first.0, first.1);
++        slots.extend(it);
++        slots
++    }
++}
++impl Extend<(usize, Value)> for Slots {
++    fn extend<I: IntoIterator<Item = (usize, Value)>>(&mut self, i: I) {
++        for (k, v) in i { self.insert(k, v); }
++    }
++}
++impl Index<&usize> for Slots {
++    type Output = Value;
++    fn index(&self, k: &usize) -> &Value { self.get(k).expect("missing Cell slot") }
++}
++impl PartialEq for Slots {
++    fn eq(&self, other: &Self) -> bool { self.cmp(other).is_eq() }
++}
++impl Eq for Slots {}
++impl PartialOrd for Slots {
++    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> { Some(self.cmp(other)) }
++}
++impl Ord for Slots {
++    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
++        match (self, other) {
++            (Self::Dense { values: a, live: al }, Self::Dense { values: b, live: bl })
++                if *al == a.len() && *bl == b.len() => a.cmp(b),
++            (Self::Sparse(a), Self::Sparse(b)) => a.cmp(b),
++            _ => self.iter().cmp(other.iter()),
++        }
++    }
++}
++impl Serialize for Slots {
++    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> { s.collect_map(self.iter()) }
++}
++impl<'de> Deserialize<'de> for Slots {
++    fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
++        Ok(BTreeMap::<usize, Value>::deserialize(d)?.into_iter().collect())
++    }
++}
+@@ -114,0 +284,49 @@ mod tests {
++    fn dense_and_sparse_storage_have_identical_map_semantics() {
++        let mut slots = Slots::dense((0..8).map(Value::Int));
++        let mut reference: BTreeMap<_, _> = (0..8).map(|i| (i, Value::Int(i as i64))).collect();
++        // Exercise in-place replacement, tail growth, a hole, removal and
++        // unordered reinsertion without ever renumbering a live SSA slot.
++        let mut seed = 19u64;
++        for i in 0..400 {
++            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
++            let k = ((seed >> 32) % 29) as usize;
++            if i % 3 == 0 {
++                assert_eq!(slots.remove(&k), reference.remove(&k));
++            } else {
++                assert_eq!(slots.insert(k, Value::Int(i)), reference.insert(k, Value::Int(i)));
++            }
++            assert_eq!(slots.len(), reference.len());
++            assert!(slots.iter().eq(reference.iter().map(|(&k, v)| (k, v))));
++            for k in 0..30 { assert_eq!(slots.get(&k), reference.get(&k)); }
++        }
++        assert_eq!(slots.clone().into_iter().collect::<BTreeMap<_, _>>(), reference);
++        let json = serde_json::to_string(&slots).unwrap();
++        assert_eq!(json, serde_json::to_string(&reference).unwrap());
++        assert_eq!(serde_json::from_str::<Slots>(&json).unwrap(), slots);
++    }
++    #[test]
++    fn representation_does_not_change_winner_order_or_checkpoint_shape() {
++        let dense = Slots::dense([Value::Eq(9), Value::Int(2)].into_iter());
++        let sparse = Slots::Sparse([(0, Value::Eq(9)), (1, Value::Int(2))].into_iter().collect());
++        assert_eq!(dense, sparse);
++        let mut variants = vec![dense.clone(), sparse.clone()];
++        variants.push([(0, Value::Eq(8))].into_iter().collect());
++        variants.push([(0, Value::Eq(9)), (1000, Value::Int(2))].into_iter().collect());
++        variants.push(Slots::default());
++        for a in &variants { for b in &variants {
++            let a_ref: BTreeMap<_, _> = a.clone().into_iter().collect();
++            let b_ref: BTreeMap<_, _> = b.clone().into_iter().collect();
++            assert_eq!(a.cmp(b), a_ref.cmp(&b_ref));
++        }}
++        assert_eq!(serde_json::to_string(&dense).unwrap(), serde_json::to_string(&sparse).unwrap());
++        let mut tail = dense.clone();
++        assert_eq!(tail.remove(&1), Some(Value::Int(2)));
++        assert_eq!(tail.get(&0), dense.get(&0));
++        tail.insert(1, Value::Int(3));
++        assert!(matches!(tail, Slots::Dense { .. }));
++        let mut hole = dense;
++        hole.remove(&0);
++        assert_eq!(hole.get(&1), Some(&Value::Int(2)));
++        assert_eq!(hole.get(&0), None);
++    }
++    #[test]
+diff --git a/engine/cell-runtime/src/stage_spine.rs b/engine/cell-runtime/src/stage_spine.rs
+index 9435d665..e37fbf39 100644
+--- a/engine/cell-runtime/src/stage_spine.rs
++++ b/engine/cell-runtime/src/stage_spine.rs
+@@ -2369,2 +2369,2 @@ impl Programs {
+-                let inputs: crate::slots::Slots = g.program.rules[rid].inputs.iter().zip(&query.inputs)
+-                    .map(|(&slot, v)| (slot, v.read(g, |col| &row.values[col], &values, None))).collect();
++                let inputs = g.program.rules[rid].inputs.bind(query.inputs.iter()
++                    .map(|v| v.read(g, |col| &row.values[col], &values, None)));
+@@ -2615 +2615 @@ impl Programs {
+-            "query_fragment_layout":"owned-instance/v1","query_winner_bytes":std::mem::size_of::<Winner>(),
++            "query_fragment_layout":"owned-instance/dense-inputs-v2","query_winner_bytes":std::mem::size_of::<Winner>(),
+@@ -2617,0 +2618,2 @@ impl Programs {
++            "query_fragment_dense_slot_bytes":std::mem::size_of::<Option<Value>>(),
++            "query_fragment_slot_bytes_scope":"sparse pair stride; capacity counters include actual dense/sparse allocation",
