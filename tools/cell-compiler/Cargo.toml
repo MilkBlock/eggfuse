@@ -30,3 +30,7 @@ iterative-bake = ["eggfuse-cell-runtime/iterative-bake","eggfuse-cell-runtime/sl
 [[example]]
 name = "emit_worker_handoff"
 required-features = ["iterative-bake"]
+
+[[example]]
+name = "inspect_cell_catalog"
+required-features = ["iterative-bake"]

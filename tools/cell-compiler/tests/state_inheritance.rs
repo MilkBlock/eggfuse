@@ -121,3 +121,20 @@ fn worker_handoff_is_bound_to_operations_and_catalog() {
         assert!(eggfuse_cell_compiler::worker_handoff::validate(&p,&corrupt).is_err());
     }
 }
+
+#[test]
+fn catalog_rejects_duplicate_paths_without_retaining_a_runtime_lookup_copy() {
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
+    let mut raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw.clone()).unwrap();
+    let entries=p.iterative.entries();
+    let cloned=p.iterative.clone();
+    drop(p);
+    assert_eq!(entries,cloned.entries());
+    assert_eq!(cloned.path_storage()["lookup_payload_bytes"],0);
+    let joins=raw["iterative_bake"]["joins"].as_array_mut().unwrap();
+    assert!(!joins.is_empty());
+    joins.push(joins[0].clone());
+    assert!(matches!(Program::parse(seal(raw)),Err(e) if e.contains("duplicate continuation")));
+}

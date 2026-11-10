@@ -635,3 +635,65 @@ Reproduce via `inspect_completion_storage` before/after, the ordinary saved
 scoped runs, and `check_table_lists.py --mode masks` with those inspection files,
 program, binaries and artifact root. The checker removes only the new
 `scope_masks` diagnostic before requiring exact inspection equality.
+
+## Retain Cell paths once and derive their metadata
+
+Compression now targets the ordinary loaded iterative Cell catalog, rather than
+only optional completion prediction. The actual 64-unit catalog retained both
+its executable paths and a second owned BTreeSet of identical paths for duplicate
+checking. Each unit also stored first/last Entry and terminal status, although
+these are determined by its nonempty path. The first/last Entry are the path
+endpoints; a terminal matching unit ends in Some(pivot), while a completed
+producer root ends in None.
+
+Units now retain only a boxed exact-length path. Parsing still rejects duplicate
+paths with a temporary owned set, dropped before result-switch construction.
+Offline Bake selection builds a temporary set of borrowed slices over the
+existing paths, preserving exact duplicate exclusion without retaining a second
+runtime index. Original rule/operation/pivot identities, joins, dispatch stacks,
+state contracts, result witnesses, retirement and Run boundaries are unchanged.
+A catalog clone remains independently valid. Endpoint/terminal reads now derive
+from the path; this is not a latency claim or new cross-stage takeover.
+
+On the frozen sum-bits catalog:
+
+| Retained path component | Before bytes | After bytes |
+| --- | ---: | ---: |
+| Unit array (64 records) | 5,120 | 1,024 |
+| Path array capacities | 7,040 | 4,840 |
+| Duplicate lookup keys | 1,536 | 0 |
+| Duplicate lookup payload | 4,840 | 0 |
+| Total counted components | 18,536 | 5,864 |
+
+A unit record shrinks 80 -> 16 bytes. These components save 12,672 bytes (68.4%).
+The model excludes BTree node links/spare key slots, allocator rounding, the
+catalog header, other indexes, switch state and the retained JSON artifact.
+It is not a whole-program memory claim. Parse-time temporary duplication and
+per-selection borrowed lookup preparation remain; no speed measurement was run.
+
+All 64 expanded entries and every finite state contract match exactly. Nineteen
+tests pass across inheritance, closed aliases, query receipts, dispatch and two
+compiler-selection/producer-root regressions. The new regression checks clone
+lifetime and rejection of a duplicate path after removal of the retained index.
+Ordinary sum-bits has unchanged normalized work, exact final graph and all 1,428
+ordered Run signatures; required native choice diagnosis passes. The last actual
+catalog's applied work remains authoritative: this change compresses its
+representation without crediting additional queries or publications as saved.
+
+For baseline 0126e0cd, apply the reporting-only
+`../cell-unification/catalog-storage-probe.patch` and copy the new
+`inspect_cell_catalog` example; the patch does not change execution. Run the
+example with iterative-bake,sparse-cells,view-ports before and after to collect
+path capacities and complete entries/contracts. The baseline runtime binary is
+unmodified. Validate saved normal runs and required semantic acceptance with:
+
+```sh
+python3 benchmarks/cell-unification/check_catalog_paths.py \
+  --before /private/tmp/cell-catalog-before.json \
+  --after /private/tmp/cell-catalog-after.json \
+  --root out/compact-cell-catalog \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/scope-mask-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/cell-unification/compact-catalog-check.json
+```

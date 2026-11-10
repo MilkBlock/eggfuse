@@ -1,0 +1,21 @@
+diff --git a/engine/cell-runtime/src/iterative.rs b/engine/cell-runtime/src/iterative.rs
+index 0ef2ddc0..179b32ba 100644
+--- a/engine/cell-runtime/src/iterative.rs
++++ b/engine/cell-runtime/src/iterative.rs
+@@ -102,6 +102,16 @@ impl State {
+     }
+ }
+ impl Catalog {
++    /// Retained path storage only; excludes tree-node overhead and other catalog data.
++    pub fn path_storage(&self) -> J {
++        let item=std::mem::size_of::<(Option<usize>,Entry)>();
++        json!({"units":self.units.len(),"unit_capacity":self.units.capacity(),
++            "unit_record_bytes":std::mem::size_of::<Unit>(),
++            "unit_array_bytes":self.units.capacity()*std::mem::size_of::<Unit>(),
++            "path_payload_bytes":self.units.iter().map(|u|u.path.capacity()*item).sum::<usize>(),
++            "lookup_key_bytes":self.paths.len()*std::mem::size_of::<Vec<(Option<usize>,Entry)>>(),
++            "lookup_payload_bytes":self.paths.iter().map(|p|p.capacity()*item).sum::<usize>()})
++    }
+     pub(crate) fn layout_storage(&self) -> (usize,usize) { self.switch.layout_storage() }
+     pub fn seed(p: &Program, limits: Limits) -> Result<J> {
+         Self::seed_with_roots(p, limits, &[])
