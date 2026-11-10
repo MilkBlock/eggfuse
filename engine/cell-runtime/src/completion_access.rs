@@ -84,7 +84,7 @@ impl Rule {
                 rhs.insert(*t);
                 opaque_rhs |= plan.opaque_tables.contains(t);
                 if matches!(op, Op::Set(..)) {
-                    rhs.extend(&plan.completion_reads[*t]);
+                    rhs.extend(plan.completion_reads[*t].iter().copied());
                     rhs.extend((0..n).filter(|&other| plan.affects(*t, other)));
                 }
             }
@@ -96,7 +96,7 @@ impl Rule {
         };
         for (t, (names, unknown)) in sorts.iter().enumerate() {
             if !unions.is_empty() && (*unknown || !names.is_disjoint(&unions)) {
-                rhs.extend(&plan.completion_reads[t]);
+                rhs.extend(plan.completion_reads[t].iter().copied());
                 rhs.extend((0..n).filter(|&other| plan.affects(t, other)));
             }
         }

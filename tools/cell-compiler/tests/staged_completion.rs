@@ -222,14 +222,23 @@ fn identical_completion_obligations_share_owners_across_rules() {
     let plan=eggfuse_cell_runtime::completion_plan::Plan::derive(&p).unwrap();
     let mut owners=std::collections::BTreeMap::new();
     let mut duplicates=0;
-    for demand in &plan.rule_demands {
-        for list in [&demand.query,&demand.rhs,&demand.accesses] {
-            if let Some(previous)=owners.get(list.as_ref()) {
-                assert!(std::rc::Rc::ptr_eq(previous,list));duplicates+=1;
-            } else {owners.insert(list.to_vec(),list.clone());}
-        }
+    for list in plan.rule_demands.iter().flat_map(|d| [&d.query,&d.rhs,&d.accesses])
+        .chain(plan.completion_reads.iter()).chain(plan.query_demands.values()) {
+        if let Some(previous)=owners.get(list.as_ref()) {
+            assert!(std::rc::Rc::ptr_eq(previous,list));duplicates+=1;
+        } else {owners.insert(list.to_vec(),list.clone());}
     }
     assert!(duplicates>0);
+    // Scheduled query demand borrows the same list as the rule, and identical
+    // scope lists share too. The exact serialized proof remains unchanged.
+    assert!(plan.query_demands.values().any(|list| plan.rule_demands.iter()
+        .any(|d| std::rc::Rc::ptr_eq(&d.query, list))));
+    let mut pointers:std::collections::BTreeMap<_,_>=owners.iter().map(|(k,v)| (k.clone(),v.as_ptr())).collect();
+    for scope in plan.rulesets.values() {
+        if let Some(previous)=pointers.insert(scope.tables().to_vec(),scope.tables().as_ptr()) {
+            assert_eq!(previous,scope.tables().as_ptr());
+        }
+    }
     let snapshot=serde_json::to_value(&plan).unwrap();
     let cloned=plan.clone();drop(plan);
     assert_eq!(snapshot,serde_json::to_value(&cloned).unwrap());

@@ -14,7 +14,7 @@ mod effects;
 #[derive(Clone, Debug, Serialize)]
 pub struct Scope {
     source: String,
-    tables: Vec<usize>,
+    tables: std::rc::Rc<[usize]>,
     pub(crate) predecessors: Vec<bool>,
 }
 impl Scope {
@@ -30,7 +30,7 @@ pub struct Plan {
     #[serde(skip)]
     waits: Box<[std::rc::Rc<[u64]>]>,
     /// Tables that completion may read, including merges reached by its effects.
-    pub completion_reads: Vec<Vec<usize>>,
+    pub completion_reads: Box<[std::rc::Rc<[usize]>]>,
     pub merges: Vec<effects::Merge>,
     #[serde(skip)]
     global_effects: Vec<bool>,
@@ -40,7 +40,7 @@ pub struct Plan {
     pub deferrable: Vec<bool>,
     pub rulesets: BTreeMap<String, Scope>,
     /// Mandatory source snapshot reads, before any RHS can run.
-    pub query_demands: BTreeMap<String, Vec<usize>>,
+    pub query_demands: BTreeMap<String, std::rc::Rc<[usize]>>,
     /// Separate source reads, RHS accesses, and conservative union effects.
     pub rule_demands: Vec<access::Rule>,
 }
@@ -169,6 +169,12 @@ impl Plan {
         let mut rows=BTreeSet::new();
         let affects=share_rows(affects,&mut rows);
         let waits=share_rows(waits,&mut rows);
+        // One compile-local pool covers the same typed table obligations in
+        // completion, per-rule accesses and scheduled scopes. Runtime owners
+        // keep direct immutable slices; the interning index is discarded.
+        let mut sets = BTreeSet::<std::rc::Rc<[usize]>>::new();
+        let completion_reads = completion_reads.into_iter()
+            .map(|list| share_tables(list, &mut sets)).collect::<Vec<_>>().into_boxed_slice();
         let mut plan = Self {
             source,
             global_effects,
@@ -200,7 +206,6 @@ impl Plan {
             .collect();
         // Identical conservative obligations share immutable storage across
         // rules and stages. Equality is exact, never inferred from a digest.
-        let mut sets = BTreeSet::<std::rc::Rc<[usize]>>::new();
         for demand in &mut plan.rule_demands {
             for list in [&mut demand.query, &mut demand.rhs, &mut demand.accesses] {
                 if let Some(shared) = sets.get(list.as_ref()) { *list = shared.clone(); }
@@ -222,12 +227,11 @@ impl Plan {
                     }
                 }
             }
-            plan.rulesets.insert(
-                name.clone(),
-                plan.scope(&tables.into_iter().collect::<Vec<_>>())?,
-            );
-            plan.query_demands
-                .insert(name.clone(), queries.into_iter().collect());
+            let mut scope = plan.scope(&tables.into_iter().collect::<Vec<_>>())?;
+            if let Some(shared) = sets.get(scope.tables.as_ref()) { scope.tables = shared.clone(); }
+            else { sets.insert(scope.tables.clone()); }
+            plan.rulesets.insert(name.clone(), scope);
+            plan.query_demands.insert(name.clone(), share_tables(queries.into_iter().collect(), &mut sets));
         }
         Ok(plan)
     }
@@ -260,6 +264,26 @@ impl Plan {
             "unshared_payload_bytes":unshared,"shared_payload_and_rc_bytes":shared,
             "shared_handles_bytes":self.rule_demands.len()*3*std::mem::size_of::<std::rc::Rc<[usize]>>()})
     }
+    /// Retained table-list storage across all shared obligation owners. This
+    /// excludes container headers, allocator rounding and the temporary pool.
+    pub fn table_list_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut shared = 0;
+        let mut lists = 0;
+        let mut values = 0;
+        for list in self.rule_demands.iter().flat_map(|d| [&d.query, &d.rhs, &d.accesses])
+            .chain(self.completion_reads.iter()).chain(self.query_demands.values())
+            .chain(self.rulesets.values().map(|s| &s.tables)) {
+            lists += 1;
+            values += list.len();
+            if seen.insert(list.as_ptr() as usize) {
+                shared += std::mem::size_of_val(list.as_ref()) + 2*std::mem::size_of::<usize>();
+            }
+        }
+        serde_json::json!({"lists":lists,"logical_values":values,"unique_lists":seen.len(),
+            "shared_payload_and_rc_bytes":shared,
+            "handles_bytes":lists*std::mem::size_of::<std::rc::Rc<[usize]>>()})
+    }
     /// Compile once per template when the optional bound-effect path is enabled.
     /// Ordinary scoped execution does not allocate or retain this code.
     pub(crate) fn prepare_pure_rhs(&mut self, p: &Program) {
@@ -280,7 +304,7 @@ impl Plan {
         }
         Ok(Scope {
             source: self.source.clone(),
-            tables: tables.to_vec(),
+            tables: tables.into(),
             predecessors: self
                 .waits
                 .iter()
@@ -345,6 +369,13 @@ fn transitive(rows: &mut [Vec<u64>]) {
             }
         }
     }
+}
+
+fn share_tables(list: Vec<usize>, pool: &mut BTreeSet<std::rc::Rc<[usize]>>) -> std::rc::Rc<[usize]> {
+    if let Some(shared) = pool.get(list.as_slice()) { return shared.clone(); }
+    let shared: std::rc::Rc<[usize]> = list.into();
+    pool.insert(shared.clone());
+    shared
 }
 
 fn share_rows(rows:Vec<Vec<u64>>, pool:&mut BTreeSet<std::rc::Rc<[u64]>>)->Box<[std::rc::Rc<[u64]>]> {

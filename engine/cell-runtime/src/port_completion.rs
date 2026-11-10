@@ -187,7 +187,7 @@ impl Graph {
             tables: (0..self.program.tables.len())
                 .map(|t| plan.affects(table, t))
                 .collect(),
-            reads: plan.completion_reads[table].clone(),
+            reads: plan.completion_reads[table].to_vec(),
             pure: plan.deferrable[table],
             global: plan.global_effects(table),
         }
@@ -311,7 +311,7 @@ impl Graph {
                     if !boundary_tables.insert(t) {
                         continue;
                     }
-                    influence.reads.extend(&types.completion_reads[t]);
+                    influence.reads.extend(types.completion_reads[t].iter().copied());
                     for (other, affected) in influence.tables.iter_mut().enumerate() {
                         counts.membership_checks += 1;
                         *affected |= types.affects(t, other);

@@ -545,3 +545,51 @@ and binary hashes. Reproduce with saved baseline/candidate exports using
 previous checks, and `out/packed-effect-slots` as root. The checker accepts only
 the descriptor-byte change, checks the exact 8-to-5 ratio and requires semantic
 acceptance bound to the candidate state.
+
+## Share table lists across completion, rules and scheduled scopes
+
+The current catalog's prediction contains 401 completion-read lists but only
+seven different contents. Previously these lists, ruleset query demands and
+scope table lists used independent Vec storage, even when equal to an already
+shared per-rule demand. These 463 additional owners now join the existing
+compile-local exact-content pool. All 2,209 table-list owners share 771 distinct
+immutable arrays. No maintained graph, per-instance binding copy or runtime
+interning lookup is introduced. The pool is discarded after construction.
+Completion directories are boxed so conversion cannot retain the wider old
+Vec descriptor capacity. Scope input order is preserved; interning never sorts
+or weakens an obligation. Runtime consumers read the same slices. Mutable port
+influence construction still copies into its own work buffer as before.
+
+For the frozen sum-bits prediction, retained table-list storage changes
+172,712 -> 156,136 bytes, saving 16,576 (9.6%). This includes list handles and
+estimated two-word Rc headers. The old nonshared lists use 24-byte Vec headers
+and exact-length payloads on this 64-bit target. Outer container headers,
+allocator rounding and temporary interning/construction are excluded. This is
+optional completion-plan storage, not total runtime memory or a speed result.
+The actual execution catalog and every conservative cross-Run obligation are
+unchanged; no additional publication or repair is credited as eliminated.
+
+The full serialized plan, prior storage reports, every affects(a,b) answer and
+every singleton waiting scope match the baseline d13227b7 exactly. Thirty-one
+staged/merge/scoped tests pass, including extended pointer-sharing checks across
+rule demands, completion reads, scheduled query demands and scope lists, plus
+clone/drop lifetime validation. A scoped sum-bits run has unchanged normalized
+work, final graph and all 1,428 ordered Run signatures. Required native choice
+diagnosis passes. No timing campaign was run.
+
+Reproduce the before/after inspection with the respective versions of
+`inspect_completion_storage`. The new version adds only the `table_lists`
+census; `check_table_lists.py` removes that diagnostic field and requires all
+remaining inspection JSON to be identical. Run baseline and candidate with
+`--local-congruence --port-scopes`, and supply the saved semantic acceptance:
+
+```sh
+python3 benchmarks/worker-handoff/check_table_lists.py \
+  --before /private/tmp/table-lists-before.json \
+  --after /private/tmp/table-lists-after.json \
+  --root out/shared-table-lists \
+  --program out/cell-slot-inheritance/compact-final/program.json \
+  --baseline /private/tmp/packed-effect-runtime \
+  --candidate /private/tmp/eggfuse-state-target/release/eggfuse-cell-runtime \
+  --output benchmarks/worker-handoff/shared-table-lists-check.json
+```
