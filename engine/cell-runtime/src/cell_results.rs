@@ -54,14 +54,19 @@ mod joint_tests {
         let b=Dependency::Fact(FactRef{cell:71,op:8});
         let slots=vec![Some(a),Some(b)]; let address=slots.as_ptr();
         let original=Rc::new(Trail::One(Results::from_outputs(0,slots)));
-        let mut owner=original.clone(); let mut probes=0;
+        let mut owner=ResultFrame { owner:original.clone(), projection:None }; let mut probes=0;
         for i in 0..101 {
             let plan=plans[if i==0 {0}else if i%2==1 {1}else{2}].as_ref().unwrap();
             let next=Results::project_complete(plan,owner,&mut probes).unwrap();
             assert_eq!(next.stored_len(),0);
             assert!(Rc::ptr_eq(next.parent_owner().unwrap(),&original));
             assert_eq!(next.output(0),Some(if i%2==0 {b}else{a}));
-            owner=Rc::new(Trail::One(next));
+            let (frame, allocations)=ResultFrame::retain(next);
+            assert_eq!(allocations,0);
+            assert!(Rc::ptr_eq(&frame.owner,&original));
+            assert_eq!(frame.view().unwrap().output(0),Some(if i%2==0 {b}else{a}));
+            assert_eq!(frame.view().unwrap().get(ResultPort::new(99,0)),None);
+            owner=frame;
         }
         let Trail::One(base)=original.as_ref() else{unreachable!()};
         assert_eq!(base.slots.as_ptr(),address);
@@ -126,6 +131,56 @@ impl SlotLayout {
     }
     fn project(&self, mask:u64) -> u64 {
         self.shifts.iter().fold(0,|v,&(shift,bits)|v|if shift>=0 {(mask&bits)<<(shift as usize)} else {(mask&bits)>>((-shift) as usize)})
+    }
+}
+/// An owned history position. A completely inherited result keeps the donor
+/// owner and its shared slot program directly, without allocating a new Trail.
+#[derive(Clone, Debug)]
+pub(crate) struct ResultFrame {
+    pub(crate) owner: Rc<Trail>,
+    pub(crate) projection: Option<Rc<SlotLayout>>,
+}
+impl ResultFrame {
+    pub(crate) fn retain(mut results: Results) -> (Self, usize) {
+        if results.slots.is_empty()
+            && results.projection.as_ref().is_some_and(|p| p.valid == results.forwarded)
+        {
+            return (Self { owner: results.parent.take().unwrap(), projection: results.projection.take() }, 0);
+        }
+        (Self { owner: Rc::new(Trail::One(results)), projection: None }, 1)
+    }
+    pub(crate) fn view(&self) -> Option<ResultView<'_>> {
+        let Trail::One(results) = self.owner.as_ref() else { return None; };
+        Some(ResultView { results, projection: self.projection.as_deref() })
+    }
+}
+/// A borrowed read of existing result storage, with the logical consumer's
+/// ResultPort identity. Neither publication nor query completion copies slots.
+#[derive(Clone, Copy)]
+pub(crate) struct ResultView<'a> {
+    results: &'a Results,
+    projection: Option<&'a SlotLayout>,
+}
+impl ResultView<'_> {
+    fn rule(self) -> usize { self.projection.map_or(self.results.rule, |p| p.rule) }
+    pub(crate) fn get(self, port: ResultPort) -> Option<Dependency> {
+        if let Some(projection) = self.projection {
+            if port.rule() != projection.rule { return None; }
+            return self.results.get(*projection.sources.get(port.slot())?.as_ref()?);
+        }
+        self.results.get(port)
+    }
+    pub(crate) fn get_counted(self, port: ResultPort, extra: &mut u64) -> Option<Dependency> {
+        if let Some(projection) = self.projection {
+            if port.rule() == projection.rule && projection.sources.get(port.slot()).is_some_and(Option::is_some) {
+                *extra += 1;
+            }
+            self.get(port)
+        } else { self.results.get_counted(port, extra) }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn output(self, slot: usize) -> Option<Dependency> {
+        self.get(ResultPort::new(self.rule(), slot))
     }
 }
 #[derive(Clone, Debug)]
@@ -197,33 +252,41 @@ impl Results {
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
-    pub(crate) fn project_complete(plan:&crate::cell::CompletedPlan,owner:Rc<Trail>,probes:&mut u64) -> Option<Self> {
+    pub(crate) fn project_complete(plan:&crate::cell::CompletedPlan,frame:ResultFrame,probes:&mut u64) -> Option<Self> {
         let (rule,layout)=(plan.rule,&plan.layout);
         let width=layout.sources.len();
         if width==0 || width>64 || layout.sources.iter().any(Option::is_none) {return None;}
         let mask=u64::MAX >> (64-width);
-        let Trail::One(old)=owner.as_ref() else {return None};
-        if old.rule!=layout.source_rule {return None;}
-        let (projection,parent)=if let Some(previous)=&old.projection {
-            if old.forwarded & plan.required_sources != plan.required_sources {return None;}
+        let view=frame.view()?;
+        if view.rule()!=layout.source_rule {return None;}
+        let old=view.results;
+        let previous=frame.projection.as_ref().or(old.projection.as_ref());
+        let (projection,parent)=if let Some(previous)=previous {
+            let forwarded=if frame.projection.is_some() {previous.valid} else {old.forwarded};
+            if forwarded & plan.required_sources != plan.required_sources {return None;}
             let composed=plan.projections.iter().find_map(|(source,target)| {
                 *probes+=1;
                 Rc::ptr_eq(source,previous).then_some(target.clone())
             })?;
-            (composed,old.parent.clone()?)
-        } else {(layout.clone(),owner)};
+            let parent=if frame.projection.is_some() {frame.owner.clone()} else {old.parent.clone()?};
+            (composed,parent)
+        } else {(layout.clone(),frame.owner)};
         Some(Self{rule,slots:SmallVec::new(),projection:Some(projection),parent:Some(parent),forwarded:mask})
     }
     pub fn inherits(&self, port: ResultPort) -> bool { port.slot() < 64 && self.forwarded & (1 << port.slot()) != 0 }
-    pub fn prepare(&mut self, layout:&Rc<SlotLayout>, previous:Rc<Trail>, flags:u64) {
-        let Trail::One(old)=previous.as_ref() else { return };
-        if old.rule!=layout.source_rule { return; }
-        let allowed=if old.parent.is_some() {
+    pub fn prepare(&mut self, layout:&Rc<SlotLayout>, previous:ResultFrame, flags:u64) {
+        let Some(view)=previous.view() else {return};
+        if view.rule()!=layout.source_rule { return; }
+        let old=view.results;
+        let allowed=if let Some(projection)=&previous.projection {
+            layout.project(projection.valid & projection.identity)
+        } else if old.parent.is_some() {
             layout.project(old.forwarded & old.projection.as_ref().unwrap().identity)
         } else { layout.valid };
         let forwarded=flags & allowed;
         if forwarded!=0 {
-            self.parent=Some(if let Some(parent)=&old.parent { parent.clone() } else { previous });
+            self.parent=Some(if previous.projection.is_some() { previous.owner }
+                else if let Some(parent)=&old.parent { parent.clone() } else { previous.owner });
             self.projection=Some(layout.clone());
             self.forwarded=forwarded;
         }

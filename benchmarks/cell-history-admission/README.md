@@ -70,3 +70,8 @@ a view-aware lifetime/slot lookup design; it is not the rejected unique-owner
 mutation experiment. Rule-specific ResultPort identity, deferred publication,
 actual foreign constructor addresses and retirement checks remain mandatory.
 No wrapper allocations have been eliminated by this audit.
+
+The subsequent [projected-owner implementation](../cell-projected-owner/README.md)
+removes 165 of the combined catalog's 534 history owner allocations while
+retaining both live slots. It also grows inline history handles by eight bytes;
+the work reduction is not yet a speedup or total-memory claim.

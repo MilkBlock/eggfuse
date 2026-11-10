@@ -4,7 +4,7 @@
 use crate::{
     graph::{Dependency, FactRef},
     iterative::Entry,
-    cell::{Capture, Definition, ResultPort, Results, Site, SlotLayout},
+    cell::{Capture, Definition, ResultFrame, ResultPort, Results, ResultView, Site, SlotLayout},
     program::*,
 };
 use serde::Serialize;
@@ -319,7 +319,7 @@ pub(crate) enum Trail {
     One(Results),
     // Each entry is empty or One. Reuse an existing One when a later Cell
     // needs a deeper history; do not copy its results into another owner.
-    Many(Vec<Option<Rc<Trail>>>),
+    Many(Vec<Option<ResultFrame>>),
 }
 /// Reporting-only census of result storage reachable from published Entries.
 /// Shared owners (including inherited leaves) and layouts are counted once.
@@ -340,6 +340,17 @@ pub(crate) struct HistoryStorage {
     seen_layouts: BTreeSet<usize>,
 }
 impl HistoryStorage {
+    fn layout(&mut self, layout: &Rc<SlotLayout>) {
+        if self.seen_layouts.insert(Rc::as_ptr(layout) as usize) {
+            self.layouts += 1;
+            self.layout_bytes += layout.storage_bytes();
+            self.rc_header_bytes += 2 * std::mem::size_of::<usize>();
+        }
+    }
+    fn frame(&mut self, frame: &ResultFrame) {
+        if let Some(layout) = &frame.projection { self.layout(layout); }
+        self.visit(&frame.owner);
+    }
     fn visit(&mut self, owner: &Rc<Trail>) {
         if !self.seen.insert(Rc::as_ptr(owner) as usize) { return; }
         self.owners += 1;
@@ -350,24 +361,18 @@ impl HistoryStorage {
                 let (bytes, parent, layout) = results.storage_parts();
                 self.result_array_bytes += bytes;
                 if let Some(parent) = parent { self.visit(parent); }
-                if let Some(layout) = layout {
-                    if self.seen_layouts.insert(Rc::as_ptr(layout) as usize) {
-                        self.layouts += 1;
-                        self.layout_bytes += layout.storage_bytes();
-                        self.rc_header_bytes += 2 * std::mem::size_of::<usize>();
-                    }
-                }
+                if let Some(layout) = layout { self.layout(layout); }
             }
             Trail::Many(frames) => {
-                self.history_array_bytes += frames.capacity() * std::mem::size_of::<Option<Rc<Trail>>>();
-                for frame in frames.iter().flatten() { self.visit(frame); }
+                self.history_array_bytes += frames.capacity() * std::mem::size_of::<Option<ResultFrame>>();
+                for frame in frames.iter().flatten() { self.frame(frame); }
             }
         }
     }
 }
 #[derive(Clone, Debug, Default)]
 pub(crate) struct History {
-    frames: Option<Rc<Trail>>,
+    frames: Option<ResultFrame>,
     // Empty intermediate Cells advance source-stage positions without
     // republishing the same results into another history container.
     empty: usize,
@@ -385,10 +390,7 @@ pub(crate) struct CaptureWork {
 }
 impl History {
     pub(crate) fn count_storage(&self, census: &mut HistoryStorage) {
-        if let Some(owner) = &self.frames { census.visit(owner); }
-    }
-    fn one(results: Option<Results>) -> Self {
-        Self { frames: results.map(|r| Rc::new(Trail::One(r))), empty: 0 }
+        if let Some(frame) = &self.frames { census.frame(frame); }
     }
     /// Advance across a Cell with no actual exported results. The existing
     /// immutable frames stay shared; trim only when the compiled lifetime ends.
@@ -397,7 +399,7 @@ impl History {
         self.empty += 1;
         let keep = limit.saturating_sub(self.empty);
         if keep == 0 { *self = Self::default(); return; }
-        if let Some(Trail::Many(frames)) = self.frames.as_deref() {
+        if let Some(Trail::Many(frames)) = self.frames.as_ref().map(|f| f.owner.as_ref()) {
             if frames.len() > keep {
                 if keep == 1 {
                     // A nonempty history always ends with its last real frame.
@@ -406,7 +408,7 @@ impl History {
                     let retained = frames[frames.len() - keep..].to_vec();
                     work.slots += retained.len();
                     work.allocations += 2;
-                    self.frames = Some(Rc::new(Trail::Many(retained)));
+                    self.frames = Some(ResultFrame { owner: Rc::new(Trail::Many(retained)), projection: None });
                 }
             }
         }
@@ -414,9 +416,9 @@ impl History {
     }
     /// One existing frame, excluding empty-stage bookkeeping. Many never
     /// embeds another Many, so retaining a result cannot retain expired history.
-    fn snapshot(&self, back: usize) -> Option<Rc<Trail>> {
+    fn snapshot(&self, back: usize) -> Option<ResultFrame> {
         let back = back.checked_sub(self.empty).filter(|&b| b > 0)?;
-        match self.frames.as_deref() {
+        match self.frames.as_ref().map(|f| f.owner.as_ref()) {
             Some(Trail::One(_)) if back == 1 => self.frames.clone(),
             Some(Trail::Many(v)) => v.len().checked_sub(back).and_then(|i| v[i].clone()),
             _ => None,
@@ -424,7 +426,7 @@ impl History {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
-    pub(crate) fn current(&self) -> Option<&Results> { self.frame(1) }
+    pub(crate) fn current(&self) -> Option<ResultView<'_>> { self.frame(1) }
     pub(crate) fn project_complete(&self,plan:&crate::cell::CompletedPlan,probes:&mut u64) -> Option<Results> {
         Results::project_complete(plan,self.snapshot(plan.back)?,probes)
     }
@@ -448,12 +450,12 @@ impl History {
         layout: Option<&Rc<SlotLayout>>, forwarded: u64,
         read: impl Fn(usize)->Option<Dependency>, effect: impl Fn(usize)->Option<Dependency>) -> CaptureWork {
         if !inherit && limit > 1 && wanted.is_empty() && self.frames.is_some() {
-            let stored = match self.frames.as_deref().unwrap() { Trail::One(_) => 1, Trail::Many(v) => v.len() };
+            let stored = match self.frames.as_ref().unwrap().owner.as_ref() { Trail::One(_) => 1, Trail::Many(v) => v.len() };
             let count = (stored + self.empty).min(limit - 1);
             let mut frames = Vec::with_capacity(count + 1);
             frames.extend((1..=count).rev().map(|back| self.snapshot(back)));
             frames.push(None);
-            *self = Self { frames:Some(Rc::new(Trail::Many(frames))), empty:0 };
+            *self = Self { frames:Some(ResultFrame { owner: Rc::new(Trail::Many(frames)), projection: None }), empty:0 };
             return CaptureWork { slots:count+1, allocations:2, ..Default::default() };
         }
         if limit == 0 {
@@ -496,28 +498,28 @@ impl History {
         self.retain_results(limit, results, CaptureWork { shared_slots, ..Default::default() })
     }
     fn retain_results(&mut self, limit: usize, results: Results, mut work: CaptureWork) -> CaptureWork {
-        let frame = (results.len() != 0).then_some(results);
-        if frame.is_none() {
+        if results.len() == 0 {
             self.carry(limit, &mut work);
             return work;
         }
+        let (frame, allocations) = ResultFrame::retain(results);
         if limit == 1 || self.frames.is_none() || self.empty >= limit - 1 {
-            work.allocations = usize::from(frame.is_some());
-            *self = Self::one(frame);
+            work.allocations = allocations;
+            *self = Self { frames: Some(frame), empty: 0 };
             return work;
         }
-        let stored = match self.frames.as_deref() {
+        let stored = match self.frames.as_ref().map(|f| f.owner.as_ref()) {
             Some(Trail::Many(v)) => v.len(),
             Some(Trail::One(_)) => 1,
             _ => 0,
         };
         let retained = (stored + self.empty).min(limit - 1);
         work.slots += retained + 1;
-        work.allocations = 3;
+        work.allocations = 2 + allocations;
         let mut v = Vec::with_capacity(retained + 1);
         v.extend((1..=retained).rev().map(|back| self.snapshot(back)));
-        v.push(Self::one(frame).frames);
-        *self = Self { frames: Some(Rc::new(Trail::Many(v))), empty: 0 };
+        v.push(Some(frame));
+        *self = Self { frames: Some(ResultFrame { owner: Rc::new(Trail::Many(v)), projection: None }), empty: 0 };
         work
     }
     pub(crate) fn get_counted(&self, back: usize, port: ResultPort, extra:&mut u64) -> Option<Dependency> {
@@ -526,14 +528,12 @@ impl History {
     pub(crate) fn get(&self, back: usize, port: ResultPort) -> Option<Dependency> {
         self.frame(back)?.get(port)
     }
-    fn frame(&self, back: usize) -> Option<&Results> {
+    fn frame(&self, back: usize) -> Option<ResultView<'_>> {
         let back = back.checked_sub(self.empty).filter(|&b| b > 0)?;
-        match self.frames.as_deref()? {
-            Trail::One(e) if back == 1 => Some(e),
-            Trail::Many(v) => match v.get(v.len().checked_sub(back)?)?.as_deref()? {
-                Trail::One(result) => Some(result),
-                Trail::Many(_) => unreachable!("Cell history entries contain one completed frame"),
-            },
+        let frame = self.frames.as_ref()?;
+        match frame.owner.as_ref() {
+            Trail::One(_) if back == 1 => frame.view(),
+            Trail::Many(v) => v.get(v.len().checked_sub(back)?)?.as_ref()?.view(),
             _ => return None,
         }
     }
@@ -1321,13 +1321,13 @@ mod tests {
         let capture = [Capture { site: Site::Effect(2), port }];
         let mut history = History::default();
         history.capture(4, 4, &capture, |_| None, |_| Some(Dependency::Function(9)));
-        let owner = Rc::downgrade(history.frames.as_ref().unwrap());
+        let owner = Rc::downgrade(&history.frames.as_ref().unwrap().owner);
         let published = history.clone();
         for back in 2..=4 {
             let work = history.capture(4, 8, &[], |_| None, |_| None);
             assert!(work.carried);
             assert_eq!((work.reads, work.slots, work.allocations), (0, 0, 0));
-            assert!(Rc::ptr_eq(history.frames.as_ref().unwrap(), published.frames.as_ref().unwrap()));
+            assert!(Rc::ptr_eq(&history.frames.as_ref().unwrap().owner, &published.frames.as_ref().unwrap().owner));
             assert_eq!(history.get(back, port), Some(Dependency::Function(9)));
             assert_eq!(history.current().map(|r| r.get(port)), None);
         }
@@ -1418,20 +1418,72 @@ mod tests {
             let work=h.capture_layout(1,4,&wanted,true,Some(&layout),6,
                 |_|Some(Dependency::Function(epoch+10)), |_|panic!("do not reread inherited effects"));
             assert_eq!((work.inherited,work.slots,work.reads,work.heap_frames),(2,1,1,0));
-            let Trail::One(current)=h.frames.as_deref().unwrap() else { panic!() };
-            assert!(Rc::ptr_eq(current.parent_owner().unwrap(),&owner));
+            let Trail::One(current)=h.frames.as_ref().unwrap().owner.as_ref() else { panic!() };
+            assert!(Rc::ptr_eq(current.parent_owner().unwrap(),&owner.owner));
             assert_eq!(h.get(1,wanted[0].port),Some(Dependency::Function(epoch+10)));
             assert_eq!(h.get(1,wanted[1].port),Some(Dependency::Function(1)));
         }
         let mut storage=HistoryStorage::default();
         h.count_storage(&mut storage);
         h.clone().count_storage(&mut storage);
-        storage.visit(&owner);
+        storage.frame(&owner);
         assert_eq!((storage.owners,storage.layouts),(2,1));
         assert_eq!(storage.owner_payload_bytes,2*std::mem::size_of::<Trail>());
-        assert_eq!(storage.result_array_bytes,h.current().unwrap().parent_owner().map(|_| {
-            let Trail::One(r)=owner.as_ref() else { unreachable!() }; r.storage_parts().0
+        assert_eq!(storage.result_array_bytes,h.frames.as_ref().unwrap().view().map(|_| {
+            let Trail::One(r)=owner.owner.as_ref() else { unreachable!() }; r.storage_parts().0
         }).unwrap());
+    }
+    #[test]
+    fn projected_history_keeps_logical_ports_through_empty_stages_and_deeper_retention() {
+        let captures = [Capture { site: Site::Effect(0), port: ResultPort::new(4, 0) },
+            Capture { site: Site::Effect(1), port: ResultPort::new(4, 1) }];
+        let mut h = History::default();
+        h.capture(1, 4, &captures, |_| None, |i| Some(Dependency::Function(i + 10)));
+        let published = h.clone();
+        let owner = Rc::downgrade(&h.frames.as_ref().unwrap().owner);
+        let layout = SlotLayout::compile(5, vec![Some(captures[1].port), Some(captures[0].port)]).unwrap();
+        let wanted = [Capture { site: Site::Effect(0), port: ResultPort::new(5, 0) },
+            Capture { site: Site::Effect(1), port: ResultPort::new(5, 1) }];
+        let work = h.capture_layout(1, 5, &wanted, true, Some(&layout), 3,
+            |_| panic!("no query recapture"), |_| panic!("no effect recapture"));
+        assert_eq!((work.allocations, work.slots, work.reads), (0, 0, 0));
+        assert!(Rc::ptr_eq(&h.frames.as_ref().unwrap().owner, &published.frames.as_ref().unwrap().owner));
+        assert_eq!(h.get(1, wanted[0].port), Some(Dependency::Function(11)));
+        assert_eq!(h.get(1, captures[0].port), None);
+        assert_eq!(published.get(1, captures[0].port), Some(Dependency::Function(10)));
+        let mut extra = 0;
+        assert_eq!(h.get_counted(1, wanted[1].port, &mut extra), Some(Dependency::Function(10)));
+        assert_eq!(extra, 1);
+        let mut storage = HistoryStorage::default();
+        h.count_storage(&mut storage);
+        published.count_storage(&mut storage);
+        assert_eq!((storage.owners, storage.layouts), (1, 1));
+        h.capture(3, 8, &[], |_| None, |_| None);
+        h.capture(3, 4, &captures, |_| None, |i| Some(Dependency::Function(i + 20)));
+        assert_eq!(h.get(1, captures[0].port), Some(Dependency::Function(20)));
+        assert_eq!(h.get(2, wanted[0].port), None);
+        assert_eq!(h.get(3, wanted[0].port), Some(Dependency::Function(11)));
+        drop(published);
+        assert!(owner.upgrade().is_some());
+        h.capture(1, 8, &[], |_| None, |_| None);
+        assert!(owner.upgrade().is_none());
+    }
+    #[test]
+    fn partial_inheritance_from_a_projected_frame_does_not_reuse_wrong_ports() {
+        let captures = [Capture { site: Site::Effect(0), port: ResultPort::new(4, 0) }];
+        let mut h = History::default();
+        h.capture(1, 4, &captures, |_| None, |_| Some(Dependency::Function(10)));
+        let layout = SlotLayout::compile(5, vec![Some(captures[0].port)]).unwrap();
+        let wanted = [Capture { site: Site::Effect(0), port: ResultPort::new(5, 0) }];
+        h.capture_layout(1, 5, &wanted, true, Some(&layout), 1, |_| None, |_| unreachable!());
+        let again = SlotLayout::compile(6, vec![Some(wanted[0].port)]).unwrap();
+        // Ordinary inheritance has no baked composed layout for this renamed
+        // source. It must read the actual result instead of exposing rule 4 as 5.
+        let last = [Capture { site: Site::Effect(0), port: ResultPort::new(6, 0) }];
+        let work = h.capture_layout(1, 6, &last, true, Some(&again), 1,
+            |_| None, |_| Some(Dependency::Function(20)));
+        assert_eq!((work.inherited, work.reads), (0, 1));
+        assert_eq!(h.get(1, last[0].port), Some(Dependency::Function(20)));
     }
     #[test]
     fn completed_cells_retain_only_reachable_future_reads() {

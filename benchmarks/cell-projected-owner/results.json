@@ -1,0 +1,537 @@
+{
+  "scope": "standalone Cell CPU executing sum-bits; not native egglog throughput",
+  "status": "pass",
+  "performance_admission": "unmeasured; fewer owner allocations, larger inline history handles",
+  "identity": {
+    "baseline_commit": "bf03e8245c8b934ed721bc468bf6c206e66312a3",
+    "runtime_source_sha256": {
+      "engine/cell-runtime/src/allocation_metrics.rs": "231e5f33c79a2ea1da8b871440943f420f3edda1ec2fe562a816c1bbb6e8b2ff",
+      "engine/cell-runtime/src/cell.rs": "4ce67ee4eeed43b9442e0e908782d7af9335cc5acd850a220e55c8b4c71ce6e8",
+      "engine/cell-runtime/src/cell_arena.rs": "316e64fed12a660f829f47355e817e233a3aee96c8094f91766645bfc6787457",
+      "engine/cell-runtime/src/cell_binding.rs": "0beceaeeae9c10943b9ddc80e6a3de08f791c96b107f3e3ecbd7fa304eaf5f91",
+      "engine/cell-runtime/src/cell_bound.rs": "f43b35d527192287cf8d32eec3e1ef1b10ce7bddc86fa4f24cce104cd99ce88a",
+      "engine/cell-runtime/src/cell_completion.rs": "9f3e1e0075a833237b868be4ff71306066f33861ba6ec489b11d11beaac3b004",
+      "engine/cell-runtime/src/cell_construction.rs": "f3fba3bcff35c2355586c7d99dd823c8660de336a9e4c8e8f68244705c4dc56f",
+      "engine/cell-runtime/src/cell_effects.rs": "17cb6db1533b06b5e61b928d00182ab6abe39c7c3bdd265b51bc738aa1741c95",
+      "engine/cell-runtime/src/cell_eval.rs": "eba6cb5347a7776dfa7e2592944e4c445096026d056c70ad6081006209c6c8dc",
+      "engine/cell-runtime/src/cell_handoff.rs": "109114073a0d0d22a2b4744ad850c5ed835fb0be92906d8a44702fe9170403f3",
+      "engine/cell-runtime/src/cell_links.rs": "a89da53618e4897b1f23fecad8ad6024f54b389c1b044fc9827f552123c84d33",
+      "engine/cell-runtime/src/cell_match.rs": "81fbde312bbf94601b62a88820bc8e566cd3069d0619eeff1e6c541e7b54cc84",
+      "engine/cell-runtime/src/cell_ownership.rs": "eb8c8085267899da842c2c82c4bf4badb06bac01e04cce38321c80cdefa7e5b6",
+      "engine/cell-runtime/src/cell_prefix.rs": "1ba314f939060f3c0a3bf0a3f1b037051987790e57992c62a80b7e85a1a3594e",
+      "engine/cell-runtime/src/cell_producer.rs": "41a325c4edc5bdd06d4cad4ad6b3dd035da7d0b73bdfb29b90199b38be6ad7c4",
+      "engine/cell-runtime/src/cell_query.rs": "36e8c04a4827c64e14ddcc99833b5dac79a647b44754581e29cbb9ac3a28c047",
+      "engine/cell-runtime/src/cell_results.rs": "5cea858ac0280f82a77cf49d547ae1d461eeccf6a28c6d522f2ef3adf03bc5fa",
+      "engine/cell-runtime/src/cell_routes.rs": "519c9915e50dd0e1bc6ef570492b9caedb274d3256bc1db054a6668e67f10c4c",
+      "engine/cell-runtime/src/cell_specialization.rs": "e4b27923fb89a093bc294ae0ebca6d42c90a3a7f7ed4c979a6f387ae6a23eeb4",
+      "engine/cell-runtime/src/cell_symbols.rs": "523efc704553ef3599d00d6af4d14ceeb4462241c655321cbdc57c29123cbfcc",
+      "engine/cell-runtime/src/change_batch.rs": "68824d48fe4db86c9fc2a03a4a6addb313abc2b29d13717dd8a90810e120464a",
+      "engine/cell-runtime/src/checksum.rs": "cda002a41339bfe61b09b0b8ba8bb7209154f49967d156690b543701b73f6076",
+      "engine/cell-runtime/src/compiler/mod.rs": "29c9b80dd9aa8109af63f4113cf983453efe8f7d0d86ed98968c42bef1ce55f9",
+      "engine/cell-runtime/src/compiler/recipe.rs": "a13ffc341febdfa96622bc2410f7bb44903988435aff7d52b5dac3309cd356f4",
+      "engine/cell-runtime/src/compiler/spine_blocks.rs": "5616251ed7edfa549889a3591be9f66e76435ecd07bb9641ed72adc4a0a00f88",
+      "engine/cell-runtime/src/completion_access.rs": "858fda4a6fdb8d318895f97616dd3ccafbf997c460055b1b7ec81a22480bbee2",
+      "engine/cell-runtime/src/completion_effects.rs": "5174a4c0a817bfbf7bfeaba5e95d498dd7aced686b7f389ca9f278229d2a8ad6",
+      "engine/cell-runtime/src/completion_overlap.rs": "22c98d875a5cbe5179eb7cb5ffe3ffdc80c3d78179b30d1f00a11c150b92266c",
+      "engine/cell-runtime/src/completion_plan.rs": "f212ce12102a6506e85ac568d82b122687a8cb52cf966663397b47050933935c",
+      "engine/cell-runtime/src/completion_read_batches.rs": "8949a891a81756c398f680083e98dcda0113705067e31757aa239d77f14336cb",
+      "engine/cell-runtime/src/congruence_cells.rs": "a6072962d2312f7d7a7223a5a1f895db6348c13b095077ba3de28cf28157cd91",
+      "engine/cell-runtime/src/constructor_reads.rs": "3e406b6d21957391d080e202b9b933c6e50eafb28c380fffe91a156f0795048f",
+      "engine/cell-runtime/src/context_admission.rs": "c9e5a875bef6377e535847a8f65cafb4d96b8736835ab553a193498c95394ab9",
+      "engine/cell-runtime/src/context_cuts.rs": "cec8f33e9d90f9203a2e1933bd0d0c176c25e1268d25ccb3fc581d6064971a9f",
+      "engine/cell-runtime/src/context_wire.rs": "a08b935ae54214b7b68b3818a96d4f9e822622052c56c3c36414defae54ecc5c",
+      "engine/cell-runtime/src/depth_focus.rs": "2c6a0898361661e21f40d9aac6eb0871fbfd8ffee9985d8b3fcf0dd3ac6fd4b9",
+      "engine/cell-runtime/src/depth_plan.rs": "e646ba2d370c2418958c36b847d139d07a28322f443a2a071338dd7f62972e11",
+      "engine/cell-runtime/src/depth_runtime.rs": "07bcf9708db9ba29fe0a0ef4ee6cb8d27ed79a08263fd629dfe2692a6c4d640b",
+      "engine/cell-runtime/src/entry_join.rs": "ee84a32ecc39d832da789f79ab7e1fcb03a32aaa64fb936e1a603f17c021c0a9",
+      "engine/cell-runtime/src/entry_schedule.rs": "197182468536eccf5ad7156b09eb98b5d539bee0193cd8fa8c681c7aa4326024",
+      "engine/cell-runtime/src/epoch_runs.rs": "5146f4163f97a59a55f6c7ebdfe8ff6f33eb7a15c6fcdc11f62113c5f78e614f",
+      "engine/cell-runtime/src/execute_kernel.rs": "c445a2a5ee62f6a3d6896602a7f1cf7e81db977dd245c42d3d52062f66290c71",
+      "engine/cell-runtime/src/extract.rs": "ed11011dc02b11b562cc8453d9b5fa72148abb5ff502006e9dc050533c4da817",
+      "engine/cell-runtime/src/family_frontier.rs": "d0183e99f4b942d2dbceab4b70ba983044150a13ab3beaddfe89dbaa66a285bd",
+      "engine/cell-runtime/src/family_overlap.rs": "7544d63bd92cb516b93ca7aa50ec89c32ced10ad3ab81795057ff89c72db8298",
+      "engine/cell-runtime/src/family_port_trial.rs": "80ec5f672e4b375f81f3bcaed115eff40a6adf6c94a96e97098c97f35f73adbd",
+      "engine/cell-runtime/src/family_replay.rs": "ac504e8519b7c51d6c01701ed08eac227a042702268e42d523ca0bb5a6954818",
+      "engine/cell-runtime/src/family_scan.rs": "9a3b1cd5fec665d4cbcd9bb964b5280c2986cb5292039dd4d76cafa45ff20d75",
+      "engine/cell-runtime/src/family_survey.rs": "cc29c239a8a7ca6812c612745f5158c3f14b036c91ae489a30b09f74d0cef03c",
+      "engine/cell-runtime/src/free_join.rs": "bccb3eb0e94c5c6ad076f2bf642d07aa7b3d2a934aefd578114c4cceab58cfe4",
+      "engine/cell-runtime/src/graph.rs": "76702860c18301b282a56e6b396ec30efb37482096d211c8805ff34ed6cc0085",
+      "engine/cell-runtime/src/iterative.rs": "3a130e5fddd96f56de9e73e06b4b0680d40ec692b153e9c5dec6883d8fc1753f",
+      "engine/cell-runtime/src/known_results.rs": "9509bc048c29bc64924fa6681e724037271b0550b45e2178b8a0ece52e054eda",
+      "engine/cell-runtime/src/lib.rs": "b847737fa495257fdc630b938df9c63a96a5158b4d48c2043b62a341e495a1da",
+      "engine/cell-runtime/src/local_context.rs": "de090bd839c9797b56dd9507419625ab57c1aca21d1479e1177502726f8cd07d",
+      "engine/cell-runtime/src/local_port_conditions.rs": "19a77ccdcc37342b07ea9728ca3749dc941deca116621a1cb612328dcfc25cf9",
+      "engine/cell-runtime/src/local_rhs.rs": "fb6ccf706ce0f50bbc548e51c2f25e19c6271afd37f0674663c6c25386470af6",
+      "engine/cell-runtime/src/local_union_cells.rs": "08c27ba3bcda5d379844596741eb5e4cc0e37829fa8206826c6f8ff21f1fa823",
+      "engine/cell-runtime/src/main.rs": "262d4a6d48eea7c2cc9248bd0f878391e0f7fa22876be787a130c282b3e5f608",
+      "engine/cell-runtime/src/maintenance.rs": "506839714e3ebba96f78d31a859ad268fb0fcc5556275999743a0a3bf20cbceb",
+      "engine/cell-runtime/src/merge_contract.rs": "d3da86f5e7ec1a6f3d01fabe9c79f7cf47e81f6575f84b33d279591c5694c3e0",
+      "engine/cell-runtime/src/merge_programs.rs": "d5baa505ec34dd891e39da0b20d9eff62734e40f1e632ebc302873054a9eef48",
+      "engine/cell-runtime/src/multistage.rs": "7a619695feb1467ce086774378c9f3aa96c6ab673df1c12287b1769b09a36729",
+      "engine/cell-runtime/src/neighbor.rs": "d1ec7f09ff4a82a70d36b7d5ddcfbb7cf6a7797f3ea6f7ccf94e98a8bd5a7a33",
+      "engine/cell-runtime/src/ordered_run.rs": "220f9b10e4fed1d87cd171f020bd1b3c707e7ed60cfd36a6f4adeac72cdeddad",
+      "engine/cell-runtime/src/ownership_composition.rs": "27bc079309fee3319334dc53c39585c9f7faadd0bd56c940dfd9b7ad72518a14",
+      "engine/cell-runtime/src/ownership_conditions.rs": "ee2c14048d6e86a898c07819d4d81cb6676e6f92ea38cad5fe1a0a58d101e453",
+      "engine/cell-runtime/src/ownership_effects.rs": "3771f5aa1c595475406766f0bdb6b25d78cd48bd2e943da9ceb7a73e285e8476",
+      "engine/cell-runtime/src/ownership_pending.rs": "107e467a5ec285e8f829273c91aaf1f8deba8ae3efac18c090d3186275191136",
+      "engine/cell-runtime/src/ownership_queries.rs": "c679a8e4687a10ad237d9f673e98a3b667b98f87f8bdb6ee371a50a3b4b874cb",
+      "engine/cell-runtime/src/ownership_query_classes.rs": "b7cdd22fdf1f7ef6d952cdb9e5a17b85f6a944982148d913ae570f08f4242b9e",
+      "engine/cell-runtime/src/ownership_slices.rs": "7787ebac61cfdc9c2b031514905ce253d425771ac85155c0ee40d39f53d161e5",
+      "engine/cell-runtime/src/ownership_wire.rs": "20633c7931338f2791b0b5b416292f41cea67dbf16d3b88416584ee7d1348053",
+      "engine/cell-runtime/src/parallel_port_guards.rs": "047dba568568e19d1ad7cd0388eaf9ed1c748af56b690d6f505361cf610767e9",
+      "engine/cell-runtime/src/parent_epoch.rs": "e9607195aa56ff1bdc7eb7b508286d29c7c84a0716013386ebd6b2709f0f7a1e",
+      "engine/cell-runtime/src/pending_epoch.rs": "6ab386bccf5f369878117e86acfdce0bd1bdad58c30b15ff9b27c22a35be08db",
+      "engine/cell-runtime/src/physical_plan.rs": "29311623b93eec28930b9f9834a7c747580e97f9f813c004b20a4e11b92cde49",
+      "engine/cell-runtime/src/point_ports.rs": "cb7d4b36ae8200f787eb5da8622ccb40b4beea581e2b9a929d47777f49b9e585",
+      "engine/cell-runtime/src/port_completion.rs": "5a871a8a49f6524c58930ea60c4a7205fbed14cb2dd545f769338331a25f7c4b",
+      "engine/cell-runtime/src/port_guard.rs": "51ab649d285650693d15e2ac01edb7596366f0e0449fb2c6efc94c4214b8bd93",
+      "engine/cell-runtime/src/port_keys.rs": "5f8a16c68f3e4a21c9b8de8d6460352c87929909507ab61b35294ea594e4422f",
+      "engine/cell-runtime/src/prefix_proof.rs": "9a08af7d0fe548f8bd91c9b66c5690ff09890202e54ab48db79e177e77814ce1",
+      "engine/cell-runtime/src/producer.rs": "0f51c0a0245630ef107da99824020f58ee8752fb10a4628dba681cfd82db8ab1",
+      "engine/cell-runtime/src/program.rs": "53e5d9f5b7230c46b6f8ced9e450e51bedd312636f4c1d0ad4374368e5537733",
+      "engine/cell-runtime/src/projection_survey.rs": "f3d22481f0c265d75609d4a41326e9e93a2ac2f34225208e2a12299b2072e429",
+      "engine/cell-runtime/src/pure_effects.rs": "0b51c61685d066166499c312426b87deef7369af2fd1a6eb0c78b373f5d106c7",
+      "engine/cell-runtime/src/pure_order.rs": "f7810945f77a44d64a4eef7ff4e0abb495a50d78da95db9d895c407c3a7b9a13",
+      "engine/cell-runtime/src/query.rs": "fb38dadfd13ce1d987b0e63d0615acd93ba8721ebc30696eef2a9c72d905b86d",
+      "engine/cell-runtime/src/query_reads.rs": "089f37791604b8083fbca4375cc1b0233fd307f43eb8631b6db0cedfd7cf2f2d",
+      "engine/cell-runtime/src/query_sharing_audit.rs": "098e3aa47f97513f1f2a18d3957131269ba2d0854197cc0dbe4591c5f0b69418",
+      "engine/cell-runtime/src/query_workers.rs": "5914246ab4db648da7504a62ac443b0a43960decdc0ca9c0ea8758786a332224",
+      "engine/cell-runtime/src/range_index.rs": "4e18d4138912540b680c7b0ff13481911b6b9a4944b6f47faa1a49a3d3bf2b83",
+      "engine/cell-runtime/src/read_epoch.rs": "f0c240f2cb3563a0d56d804fb3c5e9c83b8faf0d2671671bd086b4a82a41d2a9",
+      "engine/cell-runtime/src/ready_sets.rs": "5f4383af127253b3febfb2e79166a30cb9bd0db148f13bc6f41bc4f0fbf248db",
+      "engine/cell-runtime/src/receipt_slots.rs": "ca1bec9f4de1545a4abdc07f17a291562ebdee00f91b85f4da31f09caeb6c987",
+      "engine/cell-runtime/src/repair_cells.rs": "6763d9b3b4c9118add558c27a343945099937758ed36a3c171845e7aa2c84e1f",
+      "engine/cell-runtime/src/repair_ports.rs": "9ffc18d26332e3035f4e939bca6d74dfe45bc03d11aadfc55918bc0ada285cc0",
+      "engine/cell-runtime/src/result_handoff.rs": "5489d8febcdd888260e2fabbb497b5e9831f5c2c81d4df2dcca56efbf9b6cbe8",
+      "engine/cell-runtime/src/reverse_uses.rs": "5927eb8c110cf059d371bb6a3e2600da392a0b9fbb55ad89a0b8dcaf91701702",
+      "engine/cell-runtime/src/rhs_work.rs": "e659e6b8ae69b34f24f3251a45611bb7f931cb8c4386a8a6d70ce4076742b1f3",
+      "engine/cell-runtime/src/root_directory.rs": "921e5b21aaac72e9548a51d3a29370847e2eaab7655f02123e857b5293d7c88f",
+      "engine/cell-runtime/src/row_kernel.rs": "32e9be02d453bb1234163e1b0cf69da76602ba3ac97c8d44dbe06fd221c50edd",
+      "engine/cell-runtime/src/runtime.rs": "fc7dc03a776e08c5b82ff7e179e5ade64dc5384b5c73fa9b692e6e683ffc4f53",
+      "engine/cell-runtime/src/runtime_completion.rs": "0a794ac331eb10ff879e8f5f6efc9400c01c8dba0f3fac718d2a09f569467cac",
+      "engine/cell-runtime/src/runtime_pure_epochs.rs": "445ae6de4a54dd03f5651328d3a04ed6340e27739127d0d18a90c1105898fb2d",
+      "engine/cell-runtime/src/scalar_keys.rs": "6ba10ef8a8fdbd6b4c399317e9edaf1af7172dc90070583812533c90e61856df",
+      "engine/cell-runtime/src/schedule.rs": "c61461aa321e2da1030fe24aa7898efa04561268889330c91126177e6bf8046b",
+      "engine/cell-runtime/src/scoped_completion.rs": "56dfccda25095e167ba896632a37f07e0aa0bbfc3917b177cc183e1da6644020",
+      "engine/cell-runtime/src/semijoin.rs": "4968c7847b42efded77d53925a28ddce41d056b815e4f371f53fd86eddba8ad4",
+      "engine/cell-runtime/src/shared_frontier.rs": "1949a283cb0ee100057c46ed63af37cb60e3ceabd053efd4e67ebae61679ad84",
+      "engine/cell-runtime/src/sieve.rs": "f7fde339050cada08b239d438baca90b6fc1e0127fcb83e3ab875f435319a604",
+      "engine/cell-runtime/src/slots.rs": "ae0a7c620593f4e462ef97319b6e94b77a7b665b5ab6631e3b7cadd87f341198",
+      "engine/cell-runtime/src/spine_blocks.rs": "3d7e00cab63a88293ac70ccbdb9238ea58ebaa6cbaa61e7c99efe38300dc6f8b",
+      "engine/cell-runtime/src/spine_shapes.rs": "24ec84dfc9805a38af40c670a10a524694b3f2b5a373063b903d7b51b403c4cf",
+      "engine/cell-runtime/src/stable_ports.rs": "d6c49c84293a107047f0148d90258a5b9ecbe763f0e60f4215c4804d0cabbce1",
+      "engine/cell-runtime/src/stage_spine.rs": "66312fda6891e720833266c5ed954f12ae772c909f2732eff132d0e0f38ce261",
+      "engine/cell-runtime/src/support_keys.rs": "cd1da5f13fc9dd81e19efd92f80c4910800e4be478069dad3c5d2a554135f046",
+      "engine/cell-runtime/src/table_directory.rs": "4e9bc691e874e24be28cf06626584c16eff0533f1690a742dcc5d3e0b565373d",
+      "engine/cell-runtime/src/table_mask.rs": "1180d18d9629c14a037bb6e02c59f50656dc09763e54e04f30d4409816c37a73",
+      "engine/cell-runtime/src/table_set.rs": "da684b8d786bcad8a66fcdd43fb32e681b822e57f03394d5cc82b999f1b38cd2",
+      "engine/cell-runtime/src/tiny_set.rs": "9b64b7cb23573f4099db52f5c524301282f214672fa394bba9fc2b83ebcc3592",
+      "engine/cell-runtime/src/transfer_audit.rs": "881c9a255466fa7ecdb971b99982769953e3ffc6760e8032aaff21d27c57cf97",
+      "engine/cell-runtime/src/union_digest.rs": "5c6506930956104e50f13da88a373355574b55988662bd9828a9b92e429b84ac",
+      "engine/cell-runtime/src/unique_port_publication.rs": "23545daa98bc629f8822828da413ea1f280773d89d11440c189e78fc494f9872",
+      "engine/cell-runtime/src/unit_ports.rs": "87b358110a918e5453ba81e5ab5a054d0e67dd2262946bc894b1535f51d626db",
+      "engine/cell-runtime/src/value.rs": "0a51b283eec4654b74df3782ce428ccffd8b3e45af82554008382b681d03d169",
+      "engine/cell-runtime/src/view_exec.rs": "da0a231b3654857ce3438ec444b003bfc05272893913c8fba7879346ce625582",
+      "engine/cell-runtime/src/view_plan.rs": "1ddbd2a299c9185004a05c4fb1dae9c349d98098e7258bdeed4b2465c2d60586",
+      "engine/cell-runtime/src/writer_frames.rs": "ee60572d0819fd9813aa615b2edc77e297fef3cbc4e33c25cfbad4a80da624f1"
+    },
+    "features": [
+      "sparse-cells",
+      "view-ports",
+      "storage-metrics"
+    ]
+  },
+  "binary_sha256": {
+    "runtime-before": "7272f35a4c056e78d8175c484ce693ee7d92a6f213de6c8f1e2fdf3f505fcfeb",
+    "runtime-after": "ddecf5a243c5a1288c5a2125af1fd0d0480c3a41742f199c1f950c80f4b39e2f"
+  },
+  "source_program": "c02cdd06cf6346c38a16043c675299946d8042d30388f43676a2dfb24110e470",
+  "candidate_program": "f2f9ce9b91b81d9b0c8d83c2ceb8c8d5e619b73d3eb256573e8b1ae93bbd559b",
+  "changed_work": {
+    "stage_spine/stats/history_allocations": {
+      "before": 534,
+      "after": 369
+    }
+  },
+  "unchanged_work_counters": 676,
+  "layout_costs": {
+    "entry_schedule/cell_entry_bytes": {
+      "before": 184,
+      "after": 192
+    },
+    "entry_schedule/legacy_route_bytes": {
+      "before": 176,
+      "after": 184
+    },
+    "stage_spine/completion_record_bytes": {
+      "before": 184,
+      "after": 192
+    },
+    "stage_spine/history_handle_bytes": {
+      "before": 16,
+      "after": 24
+    },
+    "stage_spine/query_winner_bytes": {
+      "before": 288,
+      "after": 296
+    }
+  },
+  "reachable_history_storage": {
+    "before": {
+      "history_array_bytes": 0,
+      "layout_bytes": 112,
+      "layouts": 1,
+      "owner_payload_bytes": 9152,
+      "owners": 143,
+      "rc_header_bytes": 2304,
+      "result_array_bytes": 4352
+    },
+    "after": {
+      "history_array_bytes": 0,
+      "layout_bytes": 112,
+      "layouts": 1,
+      "owner_payload_bytes": 8704,
+      "owners": 136,
+      "rc_header_bytes": 2192,
+      "result_array_bytes": 4352
+    }
+  },
+  "ordered_runs": 1428,
+  "audit_hashes": {
+    "final_state_sha256": "36a0fe935af1bf37d1e403855b078f275456f24fef5f98d15dfc4b2082c9e12d",
+    "schedule_sha256": "436d5589aca5911c3e75f90bb34b7fa6dcc1de3fd0c062f79db73712f931e2d2",
+    "ordered_rhs_sha256": "fa55e20d9f323d436c5348dc7de415aa50a90275764e0cd038378d52cf518a5a",
+    "ordered_writes_sha256": "f474604bbae6d87bb1dc7265f2a1ca0d137d35e2be88334c64d5624cbeff8b33",
+    "ordered_resumes_sha256": "d6766db41e1b164d751ff13054e24dbf84ef89c90d56e9c4faa978260843291e"
+  },
+  "equal_weight_admission_score": {
+    "before": 2603,
+    "after": 2768
+  },
+  "native_semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(18653042966541)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "eq": "Cell(554050781269)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+      "cpu_values": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1"
+    },
+    "status": "pass"
+  },
+  "validation": {
+    "unit.log": "a3bb50b0b33c19ae2b9558bf72c248fed6b2174f04a3a07bbf7d388241cc28dc",
+    "unit-default.log": "c629ab4bc6e50fabc65130544f5f52c4a8030ad3f421e9b6c05a7f465ff45008",
+    "check-minimal.log": "a09467423f0190977f9c896ad203ee6265b9240a3ca84d5149d69e7a50013e0d",
+    "integration.log": "4ef2395fef4e27baf1bbad805ec0cf643a382c8c459e11b05fdb884ba8d3e23d",
+    "readme-compile.log": "1564b3b10d05d0df31ed47ff51f04de6049ce4e87e378192317a36e39b1e5bf0",
+    "readme-run.log": "f3761b5c216219266d0f99d87a87fd80d9347b791e4dc2a230e92e5faf6479d9",
+    "readme-bench.log": "4c99441a2f7a8dd5e563751c9573a124a1b1ce65a5c0d0394ac188d502378436"
+  }
+}

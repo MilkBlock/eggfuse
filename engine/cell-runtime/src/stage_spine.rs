@@ -62,7 +62,7 @@ pub(crate) struct Published {
 }
 #[cfg(feature = "sparse-cells")]
 impl Published {
-    pub(crate) fn cell_results(&self) -> (usize, usize, Option<&crate::cell::Results>) {
+    pub(crate) fn cell_results(&self) -> (usize, usize, Option<crate::cell::ResultView<'_>>) {
         // A publication knows its logical producer even when it retained no
         // results. Do not expand a root or recover a physical Cell to find it.
         let (producer, results) = match &self.base {
@@ -116,7 +116,7 @@ pub(crate) type Published = Cursor;
 #[cfg(not(feature = "sparse-cells"))]
 impl Cursor {
     #[cfg(feature = "iterative-bake")]
-    pub(crate) fn cell_results(&self) -> (usize, usize, Option<&crate::cell::Results>) {
+    pub(crate) fn cell_results(&self) -> (usize, usize, Option<crate::cell::ResultView<'_>>) {
         (self.producer, self.state.output, self.state.history.current())
     }
     pub(crate) fn expand(&self) -> Self {
@@ -231,7 +231,7 @@ enum CompletionPhase {
 }
 impl Completion {
     #[cfg(feature = "sparse-cells")]
-    fn results(&self) -> &crate::cell::Results {
+    fn results(&self) -> crate::cell::ResultView<'_> {
         let history = match &self.phase {
             CompletionPhase::Started(Started::Live(c)) => &c.state.history,
             CompletionPhase::Published(PublishedBase::Active(c)) => &c.state.history,
@@ -838,7 +838,7 @@ fn read_port(
     args: PortKey,
     stats: &mut Stats,
     local: Option<&mut LocalWitness>,
-    #[cfg(feature = "iterative-bake")] local_results: Option<&crate::cell::Results>,
+    #[cfg(feature = "iterative-bake")] local_results: Option<crate::cell::ResultView<'_>>,
     #[cfg(feature = "structural-depth")] structural: (&mut crate::depth_runtime::Depth, Dependency),
 ) -> Result<Option<Row>> {
     let key = (table, args);
@@ -977,7 +977,7 @@ impl Publication {
 impl Programs {
     #[cfg(feature = "iterative-bake")]
     pub(crate) fn cell_results<'a>(&'a self, entries: &'a crate::entry_schedule::Scheduler,
-        seed: &Seed) -> Option<(usize, usize, Option<&'a crate::cell::Results>)> {
+        seed: &Seed) -> Option<(usize, usize, Option<crate::cell::ResultView<'a>>)> {
         #[cfg(feature = "sparse-cells")]
         if self.entry_owned_tables[seed.packet.row.table] {
             return entries.publication(seed).map(Published::cell_results);
