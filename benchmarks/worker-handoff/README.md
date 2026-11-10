@@ -131,3 +131,29 @@ the plan. The normal runtime's 1,428 sum-bits Runs and final state agree with th
 frozen prior execution, and choice_diagnosis reports pass. No performance
 campaign was run. The next opportunity is to make the same typed scopes support
 actual work elimination, rather than treating shared storage as a repair win.
+
+## Reuse selected RHS scopes within a Run
+
+The matched-rule loop now recognizes consecutive rules referencing the same
+interned RHS demand owner. It traverses that scope only once, preserving the
+first-occurrence table order and the original per-table deduplication for all
+other scopes. The previous-owner handle is stack-local and never survives the
+call: no cached readiness or facts cross source Runs. Access readiness, current
+repair conflicts, liveness and visibility checks are unchanged.
+
+`rhs_group_checks` counts actual pointer comparisons and is charged by Work;
+`rhs_group_reuses` is coverage only and earns no separate credit. On the new
+short staged fixture two active rules have the same two-table scope. The old
+loop would make four table probes (computed from that exact selected input);
+the observed new loop makes two probes plus one pointer comparison. Final graph
+and ordered Run fields agree with ordinary completion. The saved evidence is
+`shared-scope-check.json`; its old probe count is an explicit model of the old
+loop, not a separate binary measurement. No latency or general repair speedup
+is established. Unmatched rules remain absent, nonconsecutive duplicates are
+not optimized, and varied adjacent scopes pay the additional comparison.
+
+Reproduce using SHARED_SCOPE_EVIDENCE=OUTPUT with the staged_completion test
+matched_rules_reuse_the_same_compiled_rhs_scope. The current evidence records
+16 passing staged/merge tests. This optimization acts on the actual selected
+instances, using exact immutable typed scopes from Bake; training frequency
+is not treated as a validity certificate.

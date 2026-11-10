@@ -234,3 +234,30 @@ fn identical_completion_obligations_share_owners_across_rules() {
     let cloned=plan.clone();drop(plan);
     assert_eq!(snapshot,serde_json::to_value(&cloned).unwrap());
 }
+
+#[test]
+fn matched_rules_reuse_the_same_compiled_rhs_scope() {
+    let source=SOURCE.replace("(Na 0) (Na 1) (Nb 0) (set", "(Na 0) (Na 1) (Nb 0) (Nb 1) (set")
+        .replace("(rule ((= x (Nb 0))) ((Gb (Fb x))) :ruleset b)",
+            "(rule ((= x (Nb 0))) ((Gb (Fb x))) :ruleset b)\n(rule ((= x (Nb 1))) ((Gb (Fb x))) :ruleset b)");
+    let mut old=executor(&source,false);
+    let mut new=executor(&source,true);
+    old.execute().unwrap();new.execute_until(Some(2)).unwrap();
+    let report=new.scoped_execution_report();
+    assert_eq!(report["global_observer"],false);
+    assert!(report["stats"]["rhs_group_reuses"].as_u64().unwrap()>0,"{report}");
+    let plan=new.graph.program.completion_plan.as_ref().unwrap();
+    let b=&new.graph.program.sets["b"];
+    let active:Vec<_>=b.iter().filter(|&&rid|new.graph.program.rules[rid].query.iter().any(|a|
+        matches!(a.call,eggfuse_cell_runtime::program::Call::Table(t) if new.graph.program.tables[t].name=="Nb"))).collect();
+    assert_eq!(active.len(),2);
+    let width=plan.rule_demands[*active[0]].rhs.len() as u64;
+    assert_eq!(report["stats"]["rhs_demand_probes"],width);
+    new.execute().unwrap();compare(&old,&new);
+    if let Ok(path)=std::env::var("SHARED_SCOPE_EVIDENCE") {
+        std::fs::write(path,serde_json::to_vec_pretty(&serde_json::json!({
+            "scope":"standalone Cell CPU short fixture; no timing", "checkpoint":report,
+            "previous_probes":width*2,"current_probes":width,
+            "exact_final_graph_and_run_fields":true})).unwrap()).unwrap();
+    }
+}
