@@ -577,3 +577,26 @@ sum-bits 相对 c07c314e：捕获提案 12,898→12,574，Entry 探测 9,027→8
 sum-bits 的 1,428 个 Run、最终 state 保持，331 项目录指标不变、15 项相关工作指标改变；choice_diagnosis pass，22 个编译组件重新 lowering 一致。对象为 standalone Cell CPU。产物 out/cell-output-selection，复核 `python3 benchmarks/cell-unification/check_output_selection.py ROOT OUTPUT --commit COMMIT`。短样例用 emit_cell_source 分别编译 mixed-cell-outputs.egg 和 aliased-cell-outputs.egg 到 ROOT/fixture-mixed、ROOT/fixture-aliased，再调用 run_retention_fixtures.run(ROOT, ('mixed','aliased'), audit=True/False)。普通 release 使用 sparse-cells,view-ports,storage-metrics，测试构建另用独立 target。
 
 这是 acab2911 测速后的第 4 个实现提交，不另做速度采样。当前接管限于同一 Cell 的精确来源，跨 Cell 仍需 Entry 判断。后续优先消除 retained alias 对 donor receipt 的搬运；必须先保住 raw effect 历史与最后 operation 身份，不能简单把两个槽混为一份。源码 marker 物化、一般 Bake 组合、全局 Cell 选择以及最终多线程验收仍未完成。
+
+## Effect donor 直接占据 Cell 发布槽及第五提交测速
+
+上一目录仍有 1,762 次输出补写，检查发现 retained alias 的前缀槽绑定的是最后发布的 operation，实际 donor 却写入临时后缀，再在完成时搬到前缀。Cell 已证明来源唯一，因此现由 EffectPlan 将实际 effect donor 放入最终发布槽；最后 operation 继续决定续执行地址。每个原始 operation 的收据仍保持独立，普通执行跳过别名时不能伪造一次返回，闭合/完整结构捕获实际记录过的结果也不能丢失。query 来源及未覆盖边界保持必要处理，没有增加实例字段、运行时映射或另一种发布接口。
+
+sum-bits 相对 23d923e4：effect_output_copies 1,762→1,484，effect_outputs_reused 6,688→6,966，其余工作完全一致，包括槽初始化、输出登记/解析、实际发布、别名来源、历史捕获及查询。278 次已有补写操作消失，复用增加不重复计分；当前相对混合输出之前 3e622300 累计净节省 1,024 项等权工作。没有减少槽位/全量分配的证据，也不能用这 278 次搬运直接解释时间差。
+
+38 项相关测试及最小 feature 编译通过。新增测试要求纯效果别名无需输出补写，且被跳过操作仍通过 donor 读取，不能冒充自己执行。已有两短样例作审计/正常及普通/全碰撞哈希对照，16 个进程均小于 1 秒；alias 正常样例补写 4→2，其他模式工作保持，最终 state、Run 及适用的逐阶段/绑定审计一致。sum-bits 的 1,428 个 Run、最终 state 保持；344 项目录指标不变，仅上述 2 项改变。choice_diagnosis pass，22 个编译组件重新 lowering 一致。
+
+实现提交 311a3ef8 是 acab2911 后第 5 个：3e622300、3e8c8680、c07c314e、23d923e4、311a3ef8。提交后仅跑一次四路交错 sum-bits 测速，各 1 次预热、7 次正式样本，无同时构建。三个对照的冻结二进制 SHA 与原检查点一致，全部正式样本 state 和 Run 序列相同。普通 release features 为 sparse-cells,view-ports,storage-metrics；这是 standalone Cell CPU，不是 native egglog 性能。
+
+| 版本 | 推理中位数 ms | 进程中位数 ms | setup 中位数 ms | 推理结束峰值 RSS bytes |
+|---|---:|---:|---:|---:|
+| 311a3ef8 候选 | 24.770375 | 130.405833 | 3.077042 | 179732480 |
+| 23d923e4 直接前版 | 25.225291 | 131.535250 | 3.118833 | 179732480 |
+| acab2911 上次测速 | 25.213292 | 131.118584 | 3.017292 | 179781632 |
+| 24c4ae8a 历史配置 | 24.898125 | 134.440458 | 3.570416 | 179503104 |
+
+候选/直接前版的配对推理比为 **0.983497 [0.977410, 0.990010]**，本轮观察到约 1.65% 改善；进程比 0.992656 [0.950232, 1.007235] 仍跨 1。相对上次测速的推理比 0.992991 [0.950677, 1.012077]、进程比 0.991254 [0.968760, 1.018750] 均跨 1。相对历史配置的推理比 1.012020 [0.990254, 1.024693] 跨 1，进程比 0.979181 [0.973724, 0.999843]；不能用进程差异替代推理收益。区间为同轮配对 bootstrap 95%，保留全部样本，不把各中位数之比当成配对结论。RSS 中位数相对前版相同、上次低 48 KiB、历史高 224 KiB，非分配器计数。没有建立整体严格速度保持或超过历史推理水平。
+
+产物 out/cell-output-donors；复核 `python3 benchmarks/cell-unification/check_output_selection.py ROOT OUTPUT --commit 311a3ef8 --phase donors --timing`。原选择阶段的校验输出也重新检查为逐字节一致。测速命令使用 output-donors-timing-spec.json 和既有 witness-prefix/measure.py，repeat=7、warmups=1；节奏从 311a3ef8 归零。
+
+下一处更直接的跨阶段障碍已定位：result_handoff::is_complete 对每个 table operation 要求单独 reuse，而复用计划主动排除 static_skip；finish_handoff 同样逐操作索取 transfer。因此普通路径已经能省掉的静态别名，仍可能阻止整个 Cell 闭合。下一轮先核对实际目录的受阻范围，再让闭合准入和执行共同消费 Cell 的既有证明。源码 marker 物化、一般 Bake 组合、其余优化族重写和最终多线程验收仍未完成。

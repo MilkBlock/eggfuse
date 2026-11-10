@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 from check_links import load, sha
 from check_mixed_outputs import pair, ALLOWED, CHARGED
+from collect_sieve import timing
 
 SPINE = '''alias_effect_forwards alias_query_forwards captured_anchors cell_output_checks
 cell_output_deliveries cell_output_receipts cell_output_slot_reads cell_output_slots
@@ -21,11 +22,14 @@ AUDIT = {'/stable_ports/stats/' + k for k in (
     'node_lookups', 'port_reads', 'root_parent_probes', 'root_resolutions')}
 AUDIT.add('/storage/sealed_slot_reads')
 COST = CHARGED | {'/stage_spine/stats/' + k for k in ('cell_output_deliveries', 'captured_anchors')}
+DONORS = {'/stage_spine/stats/' + k for k in ('effect_output_copies', 'effect_outputs_reused')}
 
 
-def collect(root, commit):
+def collect(root, commit, phase='selection', timed=False):
+    donors = phase == 'donors'
+    allowed = DONORS if donors else SELECTION
     program = root / 'sum/program.json'
-    result = pair(root, ('run-baseline', 'run-candidate'), program, allowed=SELECTION, charged=COST)
+    result = pair(root, ('run-baseline', 'run-candidate'), program, allowed=allowed, charged=COST)
     assert result['publication_net_saved_operations'] > 0
     cumulative = pair(root, ('run-before-mixed', 'run-candidate'), program,
         allowed=ALLOWED | SELECTION, charged=COST)
@@ -41,7 +45,7 @@ def collect(root, commit):
             if not any(s in k for s in ('_seconds', '_ns ', '/phases/', 'peak_rss'))})
     assert metrics[0].keys() == metrics[1].keys()
     changes = {k: [v, metrics[1][k]] for k, v in metrics[0].items() if v != metrics[1][k]}
-    assert all(k.startswith('report:') and k[7:].split(' [')[0] in SELECTION for k in changes)
+    assert all(k.startswith('report:') and k[7:].split(' [')[0] in allowed for k in changes)
     fixtures = {}
     for audit in (True, False):
         suffix = '' if audit else '-normal'
@@ -64,9 +68,9 @@ def collect(root, commit):
             fixture = root / f'fixture-{case}'
             for bits in (64, 0):
                 f = pair(fixture, (f'baseline-{bits}{suffix}', f'candidate-{bits}{suffix}'),
-                    fixture / 'program.json', audit, allowed=SELECTION | (AUDIT if audit else set()), charged=COST)
-                if case == 'mixed':
-                    assert not f['changed_work']  # Eq alone is never an alias proof.
+                    fixture / 'program.json', audit, allowed=allowed | (AUDIT if audit and not donors else set()), charged=COST)
+                if case == 'mixed' or (donors and audit):
+                    assert not f['changed_work']  # Eq-only / unretained outputs stay unchanged.
                 else:
                     assert f['publication_net_saved_operations'] > 0
                     stats = load(fixture / f'candidate-{bits}{suffix}/report.json')['stage_spine']['stats']
@@ -74,7 +78,9 @@ def collect(root, commit):
                     assert stats['alias_effect_forwards'] > 0 and stats['alias_query_forwards'] > 0
                 fixtures[f'{case}-{bits}{suffix}'] = f
     tests = {}
-    for name, count in (('layout', 3), ('publications', 8), ('publications-all', 8), ('witness', 8), ('scoped', 12)):
+    counts = [('publications', 9), ('publications-all', 9), ('witness', 8), ('scoped', 12)] if donors else [
+        ('layout', 3), ('publications', 8), ('publications-all', 8), ('witness', 8), ('scoped', 12)]
+    for name, count in counts:
         path = root / f'test-{name}.log'
         assert sum(map(int, re.findall(r'test result: ok\. (\d+) passed; 0 failed;', path.read_text()))) == count
         tests[name] = dict(passed=count, sha256=sha(path))
@@ -86,7 +92,7 @@ def collect(root, commit):
     relower = load(root / 'relower.json')
     assert relower['status'] == 'pass' and relower['program_sha256'] == load(program)['sha256']
     result.update(scope='standalone Cell CPU; saved normal release work checks, no timing or allocator campaign',
-        baseline_commit='c07c314e', candidate_commit=commit, semantic_acceptance='pass',
+        baseline_commit='23d923e4' if donors else 'c07c314e', candidate_commit=commit, semantic_acceptance='pass',
         unchanged_work_metrics=len(metrics[0]) - len(changes), changed_work_metrics=changes,
         before_mixed_commit='3e622300', before_mixed=cumulative, fixtures=fixtures, tests=tests,
         minimal_sha256=sha(root / 'test-minimal.log'), scoped_sha256=sha(root / 'scoped-executor.json'),
@@ -96,6 +102,28 @@ def collect(root, commit):
         removed='Earlier permanent Entry outputs sharing the same proven query/effect receipt source. Last original operation remains the continuation address; donor receipt and demanded history slots remain live.',
         limits='Selection runs while building the static Cell output layout, adding a temporary source set only for multi-output Cells with eligible aliases. Eq-only, mutable, deletable and uncovered boundaries remain; no instance index is added. Equal-weight work is not speed. Source marker materialization, general Bake composition and final parallel acceptance remain incomplete.',
         timing_cadence=dict(last_timed_commit='acab2911', implementation_commits_since_timing=4))
+    if donors:
+        result['removed'] = ('Effect donor to retained output copies. The original producer writes directly into the '
+            'final Cell output slot, while each operation keeps its distinct raw receipt for completion/history. '
+            'Query aliases, boundary storage and original publication positions remain unchanged.')
+        result['limits'] = ('No slot-count, allocation or general closure reduction: raw operation receipts remain '
+            'distinct, including full structural capture. Only static slot placement changes; instance layout and '
+            'receipt access are unchanged. Source marker materialization, general Bake composition and final parallel '
+            'acceptance remain incomplete. Equal-weight work is not time or a causal explanation of timing changes.')
+        result['timing_cadence'] = dict(last_timed_commit='acab2911', implementation_commits_since_timing=5,
+            implementation_commits_in_batch=['3e622300', '3e8c8680', 'c07c314e', '23d923e4', commit])
+    if timed:
+        assert donors, 'Timing checkpoint belongs to the fifth implementation'
+        result['timing'] = timing(root, commit, commits=dict(baseline='23d923e4', candidate=commit,
+            last_timed='acab2911', historical='24c4ae8a'))
+        prior = Path(__file__).with_name('projection-candidates-results.json')
+        direct = Path(__file__).with_name('output-selection-check.json')
+        assert result['binaries']['baseline'] == load(direct)['binaries']['candidate']
+        for current, previous in [('last_timed', 'candidate'), ('historical', 'historical')]:
+            assert result['timing']['lanes'][current]['runtime_sha256'] == load(prior)['timing']['lanes'][previous]['runtime_sha256']
+        result['control_evidence_sha256'] = {p.name: sha(p) for p in (direct, prior)}
+        result['scope'] = 'standalone Cell CPU; normal release work checks and one five-commit timing campaign; no allocator campaign'
+        result['timing_cadence'].update(last_timed_commit=commit, implementation_commits_since_timing=0)
     return result
 
 
@@ -104,5 +132,7 @@ if __name__ == '__main__':
     p.add_argument('root', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--commit', required=True)
+    p.add_argument('--phase', choices=('selection', 'donors'), default='selection')
+    p.add_argument('--timing', action='store_true')
     args = p.parse_args()
-    args.output.write_text(json.dumps(collect(args.root.resolve(), args.commit), indent=2) + '\n')
+    args.output.write_text(json.dumps(collect(args.root.resolve(), args.commit, args.phase, args.timing), indent=2) + '\n')

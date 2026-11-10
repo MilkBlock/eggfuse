@@ -1,0 +1,32 @@
+{
+  "lanes": {
+    "baseline": {
+      "runtime": "out/cell-output-donors/runtime-baseline",
+      "program": "out/cell-output-donors/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "candidate": {
+      "runtime": "out/cell-output-donors/runtime-candidate",
+      "program": "out/cell-output-donors/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "last_timed": {
+      "runtime": "out/cell-output-donors/runtime-last_timed",
+      "program": "out/cell-output-donors/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    },
+    "historical": {
+      "runtime": "out/cell-output-donors/runtime-historical",
+      "program": "out/cell-output-donors/sum/program.json",
+      "args": [
+        "--local-congruence"
+      ]
+    }
+  }
+}
