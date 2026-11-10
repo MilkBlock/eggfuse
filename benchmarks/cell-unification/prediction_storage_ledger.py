@@ -41,7 +41,8 @@ def audit(catalog, completion, program):
     unique = set(map(tuple, owners))
     assert len(owners) == census['lists'] and len(unique) == census['unique_lists']
     assert sum(map(len, owners)) == census['logical_values']
-    hybrid = census.get('encoding') == 'hybrid-v1'
+    hybrid = census.get('encoding') in ('hybrid-v1','hybrid-v2-inline3')
+    inline = census.get('encoding') == 'hybrid-v2-inline3'
     word, remainder = divmod(census['handles_bytes'], (1 if hybrid else 2)*len(owners))
     assert remainder == 0 and word in (4, 8)
     if hybrid:
@@ -51,6 +52,8 @@ def audit(catalog, completion, program):
     else:
         owner_bytes = 2*word
     def payload_bytes(row):
+        if inline and len(row)<=3:
+            return 0
         sparse = len(row)*word
         dense = (row[-1]//64+1)*8 if row else 0
         return min(sparse,dense) if hybrid else sparse

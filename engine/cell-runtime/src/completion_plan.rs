@@ -281,7 +281,7 @@ impl Plan {
                 shared += list.storage_bytes();
             }
         }
-        serde_json::json!({"encoding":"hybrid-v1","word_bytes":std::mem::size_of::<usize>(),"owner_bytes":TableSet::owner_bytes(),
+        serde_json::json!({"encoding":"hybrid-v2-inline3","word_bytes":std::mem::size_of::<usize>(),"owner_bytes":TableSet::owner_bytes(),
             "lists":lists,"logical_values":values,"unique_lists":seen.len(),
             "shared_payload_and_rc_bytes":shared,
             "handles_bytes":lists*std::mem::size_of::<TableSet>()})
