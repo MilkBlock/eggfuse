@@ -1152,3 +1152,10 @@ pub fn register_cpu_repair_blocks(
 ) -> Result<Json> {
     saturated_rule_composition_pipeline::cpu_block_egraph(plan, units, joins, limits, repair)
 }
+
+/// Register typed, alpha-normalized completion contracts in the same Cell
+/// egraph used by native ripsat composition. Derivations are provenance, not
+/// extra parents in the structural identity of an already completed Cell.
+pub fn register_cpu_completion_structures(contracts: &Json) -> Result<Json> {
+    saturated_rule_composition_pipeline::cpu_completion_egraph(contracts)
+}

@@ -3,6 +3,12 @@
 use eggfuse_cell_runtime::{program::Program, checksum::artifact_digest};
 use serde_json::{Value, json};
 
+pub fn completion(p: &Program) -> Result<Value, Box<dyn std::error::Error>> {
+    let contracts=p.iterative.completion_contracts(p);
+    let registry=eggfuse_bake::native_analyze::register_cpu_completion_structures(&contracts)?;
+    Ok(json!({"schema":"eggfuse-ripsat-completion/v1","contracts":contracts,"cell_egraph":registry}))
+}
+
 pub fn compile(p: &Program) -> Result<Value, Box<dyn std::error::Error>> {
     let contracts = p.iterative.state_contracts(p);
     let mut graph = egglog::EGraph::default();

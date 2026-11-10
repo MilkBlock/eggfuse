@@ -752,6 +752,27 @@ impl Pipeline {
 
 /// Register already validated finite CPU programs. The expanded layout keeps
 /// native Cell IDs meaningful independently of the round that produced them.
+pub(super) fn cpu_completion_egraph(contracts:&Json) -> Result<Json> {
+    if contracts["schema"] != "eggfuse-constructor-completion-contracts/v1" {
+        return Err("unsupported CPU completion contract".into());
+    }
+    let structures=contracts["structures"].as_array().ok_or("missing completion structures")?;
+    let implementations=contracts["implementations"].as_array().ok_or("missing completion entries")?;
+    let mut registry=cell_egraph::Registry::new()?;
+    for (id,implementation) in implementations.iter().enumerate() {
+        let class=implementation["class"].as_u64().and_then(|n|usize::try_from(n).ok())
+            .ok_or("invalid completion class")?;
+        let structure=structures.get(class).ok_or("missing completion class")?;
+        let descriptor=json!({"kind":"completed-positive-constructor-cell",
+            "recipe":contracts["recipe"],"structure":structure});
+        registry.register_descriptor(id,&[],&descriptor,&Json::Null)?;
+    }
+    let mut report=registry.report();
+    report["scope"]=json!("exact finite constructor completion structures; source Runs remain authoritative");
+    report["implementations"]=contracts["implementations"].clone();
+    Ok(report)
+}
+
 pub(super) fn cpu_block_egraph(
     plan: &Json,
     units: &[Json],

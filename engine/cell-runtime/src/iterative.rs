@@ -271,6 +271,29 @@ impl Catalog {
     pub fn state_contracts(&self, p: &Program) -> J {
         self.switch.state_contracts(p, |u| self.units[u].last())
     }
+    /// Finite constructor structures and exact prefix inclusion maps. This is
+    /// reconstructed during loading; runtime instances do not retain the graphs.
+    pub fn completion_contracts(&self, p: &Program) -> J {
+        use crate::cell_completion::{normalize, extension};
+        let mut shapes = BTreeMap::new();
+        let mut structures = vec![];
+        let mut implementations = vec![];
+        for (unit,u) in self.units.iter().enumerate() {
+            let Some(n) = normalize(p,&u.path) else { continue; };
+            let next=shapes.len();
+            let class=*shapes.entry(n.structure.clone()).or_insert_with(|| {
+                structures.push(serde_json::to_value(&n.structure).unwrap()); next
+            });
+            let prefix = if u.path.len()>1 { normalize(p,&u.path[..u.path.len()-1]) } else { None };
+            let transition = prefix.as_ref().and_then(|before| extension(before,&n));
+            implementations.push(json!({"unit":unit,"class":class,"ports":n.ports,
+                "source_path":u.path,"extension":transition,
+                "established":"successful-rhs","visible":"original-run-after-completion"}));
+        }
+        json!({"schema":"eggfuse-constructor-completion-contracts/v1",
+            "recipe":p.artifact["recipe"]["sha256"],"structures":structures,"implementations":implementations,
+            "scope":"finite positive constructor closure; not whole-program saturation"})
+    }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
     }

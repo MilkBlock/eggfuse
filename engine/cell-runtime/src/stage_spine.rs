@@ -1204,9 +1204,6 @@ impl Programs {
             self.stats.resumed_steps += 1;
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::resume(cursor.root.id, cursor.producer, rid, cursor.depth);
-            #[cfg(feature = "iterative-bake")]
-            self.training
-                .applied(&p.iterative, &mut cursor.state, p.rules[rid].inputs.len());
             #[cfg(feature = "spine-blocks")]
             {
                 self.stats.block_resumptions += u64::from(cursor.via_block);
@@ -1348,7 +1345,7 @@ impl Programs {
         g: &Graph,
         rid: usize,
         _cell: u32,
-        step: Started,
+        mut step: Started,
         query_fact: impl Fn(usize) -> Option<Dependency>,
         effects: E,
         mut key: impl FnMut(&[Arg]) -> Result<Vec<Value>>,
@@ -1356,6 +1353,14 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let mut effects = effects;
         self.stats.completed_steps += 1;
+        // A selected query continuation is not an applied rule. Record its
+        // bounded provenance only after every source RHS operation succeeded.
+        // Queued unions still retain their original publication boundary.
+        #[cfg(feature = "iterative-bake")]
+        if let Started::Live(cursor) = &mut step {
+            self.training.applied(&g.program.iterative, &mut cursor.state,
+                g.program.rules[rid].inputs.len());
+        }
         self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
             self.finish_effects(effects, false);

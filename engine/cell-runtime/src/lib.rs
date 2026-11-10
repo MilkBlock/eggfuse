@@ -65,6 +65,8 @@ pub use mimalloc::MiMalloc as RuntimeAllocator;
 
 #[cfg(feature = "iterative-bake")]
 mod result_handoff;
+#[cfg(feature = "iterative-bake")]
+pub mod cell_completion;
 
 pub mod context_admission;
 mod local_context;
