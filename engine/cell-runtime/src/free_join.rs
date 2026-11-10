@@ -255,23 +255,37 @@ impl FreeJoin {
             .as_ref()
             .is_some_and(|p| p.entries[rid].iter().any(|steps| !steps.is_empty()))
     }
-    /// An exhaustive one-read Cell can reject a missing unary constructor
-    /// before expanding its Cursor. Reuse the existing typed Entry projection;
-    /// neither a new query plan nor a runtime consumer list is needed.
+    /// Reject an unsupported first point read before expanding a Cursor.
+    /// Read the existing Cell instruction's Entry operand; do not build another
+    /// projection or move a test ahead of an earlier primitive/read.
     #[cfg(feature = "sparse-cells")]
-    pub(super) fn point_support(&mut self, program: &Program, rid: usize, pivot: usize) -> Option<(usize, usize)> {
+    pub(super) fn point_support(&mut self, program: &Program, rid: usize, pivot: usize) -> Option<(usize, usize, usize)> {
         self.stats.point_support_plans += 1;
         let kernel = program.kernels[rid][pivot].as_ref()?;
-        let [first] = kernel.query.steps.as_slice() else { return None; };
+        let first = kernel.query.steps.first()?;
         if !matches!(first.access(), crate::cell::Access::Key) { return None; }
         let Call::Table(table) = first.call else { return None; };
         let table_def = &program.tables[table];
-        if !table_def.constructor || table_def.schema.len() != 2 || table_def.schema[0]["kind"] != "eq" { return None; }
-        let plan = self.entry.as_ref()?;
-        let step = plan.entries[rid][pivot].iter().find(|s| s.atom == first.atom)?;
-        let projection = &plan.projections[step.projection];
-        let [(0, crate::entry_join::Source::Cover(source))] = projection.columns.as_slice() else { return None; };
-        Some((table, *source))
+        let select = |column: usize, field: &crate::cell::Field| {
+            let crate::cell::Field::Anchor(source) = field else { return None; };
+            (column + 1 < table_def.schema.len() && table_def.schema[column]["kind"] == "eq")
+                .then_some((table, column, *source))
+        };
+        first.key.iter().enumerate().find_map(|(column, field)| select(column, field))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(super) fn missing_support(&mut self, g: &Graph, index: &QueryIndexes,
+        support: Option<(usize, usize, usize)>, row: &Row) -> bool {
+        let Some((table, column, source)) = support else { return false; };
+        self.stats.point_support_checks += 1;
+        match index.current_key_support(g, table, column, &row.values[source]) {
+            Some(false) => {
+                self.stats.point_support_rejected += 1;
+                true
+            }
+            None => { self.stats.point_support_unavailable += 1; false }
+            Some(true) => false,
+        }
     }
     pub fn reverse(
         &mut self,

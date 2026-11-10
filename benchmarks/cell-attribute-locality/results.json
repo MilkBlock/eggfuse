@@ -1,0 +1,283 @@
+{
+  "baseline_commit": "98e0ffd3",
+  "scope": "standalone Cell CPU; bounded work checks, no throughput or general sparsity proof",
+  "before_ray1280_attribution": [
+    {
+      "rule": 148,
+      "matches": 21,
+      "actual_updates": 21,
+      "unchanged_writes": 0
+    },
+    {
+      "rule": 151,
+      "matches": 1480,
+      "actual_updates": 1480,
+      "unchanged_writes": 0
+    },
+    {
+      "rule": 153,
+      "matches": 7311,
+      "actual_updates": 2769,
+      "unchanged_writes": 4542
+    },
+    {
+      "rule": 154,
+      "matches": 4196,
+      "actual_updates": 2985,
+      "unchanged_writes": 1211
+    },
+    {
+      "rule": 155,
+      "matches": 2991,
+      "actual_updates": 2956,
+      "unchanged_writes": 35
+    }
+  ],
+  "family_totals": {
+    "bindings": 17578,
+    "function_updates": 11774,
+    "unchanged_single_writes": 5804
+  },
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "exact_graph_and_ordered_runs_equal": true,
+      "queries": [
+        12526,
+        12085
+      ],
+      "support": {
+        "point_support_checks": [
+          1409,
+          2552
+        ],
+        "point_support_plans": [
+          573,
+          573
+        ],
+        "point_support_rejected": [
+          850,
+          1291
+        ],
+        "point_support_unavailable": [
+          259,
+          325
+        ]
+      },
+      "worker_entries": [
+        1188,
+        1007
+      ],
+      "ripsat_completions": 0,
+      "family_entries": {
+        "148": [
+          0,
+          0
+        ],
+        "151": [
+          22,
+          9
+        ],
+        "153": [
+          202,
+          33
+        ],
+        "154": [
+          58,
+          20
+        ],
+        "155": [
+          102,
+          55
+        ]
+      },
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": [
+        "9791ed72af25e4bdbf4f9d0b5acf5107c189e899dab68bbf715b694b5f16ab63",
+        "619fdffe35eb62653bb0b82fcad8a80422adfb97182dea376d7a7374902da2e6"
+      ],
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "ray1280": {
+      "runs": 1280,
+      "exact_graph_and_ordered_runs_equal": true,
+      "queries": [
+        609685,
+        578591
+      ],
+      "support": {
+        "point_support_checks": [
+          83145,
+          141730
+        ],
+        "point_support_plans": [
+          1543,
+          1543
+        ],
+        "point_support_rejected": [
+          56230,
+          87324
+        ],
+        "point_support_unavailable": [
+          13646,
+          24776
+        ]
+      },
+      "worker_entries": [
+        51537,
+        39389
+      ],
+      "ripsat_completions": 0,
+      "family_entries": {
+        "148": [
+          0,
+          0
+        ],
+        "151": [
+          889,
+          186
+        ],
+        "153": [
+          11000,
+          411
+        ],
+        "154": [
+          4582,
+          161
+        ],
+        "155": [
+          5986,
+          3127
+        ]
+      },
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": [
+        "a4ef8d267696f9a07afdadbce43502badf2e136f6a4b33811f89690306eb77b9",
+        "82a4e916e91c407f4d0c144740bd491b7eaed2b6b268be19a860bca46c4a4cda"
+      ],
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+    },
+    "sum-stable": {
+      "runs": 1428,
+      "exact_graph_and_ordered_runs_equal": true,
+      "queries": [
+        12526,
+        12085
+      ],
+      "support": {
+        "point_support_checks": [
+          1409,
+          2552
+        ],
+        "point_support_plans": [
+          573,
+          573
+        ],
+        "point_support_rejected": [
+          850,
+          1291
+        ],
+        "point_support_unavailable": [
+          259,
+          325
+        ]
+      },
+      "worker_entries": [
+        1188,
+        1007
+      ],
+      "ripsat_completions": 0,
+      "family_entries": {
+        "148": [
+          0,
+          0
+        ],
+        "151": [
+          22,
+          9
+        ],
+        "153": [
+          202,
+          33
+        ],
+        "154": [
+          58,
+          20
+        ],
+        "155": [
+          102,
+          55
+        ]
+      },
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": [
+        "2f6336fa82f5e63d5590a37d1a071635e4ba4845c4b5f23b72be1de5e7ce9fbb",
+        "60a11d3e37ac6d112e138da4944c8d8f7ae7a36db4c3569b86bc0084b120763a"
+      ],
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "sum-completed": {
+      "runs": 1428,
+      "exact_graph_and_ordered_runs_equal": true,
+      "queries": [
+        12526,
+        12085
+      ],
+      "support": {
+        "point_support_checks": [
+          1409,
+          2552
+        ],
+        "point_support_plans": [
+          573,
+          573
+        ],
+        "point_support_rejected": [
+          850,
+          1291
+        ],
+        "point_support_unavailable": [
+          259,
+          325
+        ]
+      },
+      "worker_entries": [
+        1188,
+        1007
+      ],
+      "ripsat_completions": 155,
+      "family_entries": {
+        "148": [
+          0,
+          0
+        ],
+        "151": [
+          22,
+          9
+        ],
+        "153": [
+          202,
+          33
+        ],
+        "154": [
+          58,
+          20
+        ],
+        "155": [
+          102,
+          55
+        ]
+      },
+      "program_sha256": "2e6a09044eb266837e963bd4a9d41f3d021e815669acf36a8900f165eace7e10",
+      "report_sha256": [
+        "45357ba8046109e4ea936173f4c5cb5b6a64206d84d166e1b5b358da019f14e5",
+        "2ebf45c319b29c6560e1fd5de2c45bef156f94b63078129638313ca00736a6ae"
+      ],
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    }
+  },
+  "attribution_report_sha256": "e1a0469cf0f37ffefe4fee19d4786549b0075c983074d2a79d6abf095ced1b93",
+  "runtime_sha256": "20a756a93f53062ac54df61453fa7f57005168ca8ec82ec2aace4992b0299212",
+  "prefix_sha256": "31a88488ddc0eb71df874b1048bae31426555f1fcd7f942e70bdf2b943a0f251",
+  "native_acceptance_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+}

@@ -1249,16 +1249,9 @@ impl Executor {
                             }
                             let entry = batch.entry(w).expect("current delta entry");
                             #[cfg(feature = "sparse-cells")]
-                            if let Some((table, source)) = point_support {
-                                self.free_join.stats.point_support_checks += 1;
-                                match self.query_indexes.current_key_support(&self.graph, table, 0, &entry.row.values[source]) {
-                                    Some(false) => {
-                                        self.free_join.stats.point_support_rejected += 1;
-                                        return Ok(());
-                                    }
-                                    None => self.free_join.stats.point_support_unavailable += 1,
-                                    Some(true) => (),
-                                }
+                            if point_only && self.free_join.missing_support(
+                                &self.graph, &self.query_indexes, point_support, &entry.row) {
+                                return Ok(());
                             }
                             let cursor = if node_owns {
                                 node_cursor_reads += 1;

@@ -87,6 +87,10 @@ and fixes this discrepancy. Retiring a duplicate had incorrectly refreshed an
 unchanged survivor's timestamp and replayed the fill rule. The saved baseline
 fixture and measurements above remain the original checkpoint evidence.
 
+The [first-attribute-read extension](../cell-attribute-locality/README.md) uses
+the Cell instruction's Entry operand directly and admits current mutable reads
+and longer point queries, while retaining ordinary residual admission.
+
 ## Reproduction
 
 Freeze baseline and candidate executable paths from Cargo JSON, using the

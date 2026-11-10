@@ -64,6 +64,89 @@ fn constructor_support_keeps_late_keys_unions_and_recreated_rows() {
     }
 }
 #[test]
+fn residual_expansion_keeps_ordinary_admission_and_late_rows() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E) (Wrap i64 E))
+(function Cost (E) i64 :merge new)
+(function Out (E i64) i64 :merge new)
+(relation Warm (E i64))
+(ruleset warm) (ruleset fill) (ruleset change) (ruleset see)
+(ruleset late) (ruleset join) (ruleset remove) (ruleset again)
+(rule ((Wrap i x) (Start x) (= c (Cost x))) ((Warm x i)) :ruleset warm)
+(rule ((Start x)) ((set (Cost x) 1)) :ruleset fill)
+(rule ((Start x)) ((set (Cost x) 2)) :ruleset change)
+(rule ((= c (Cost x)) (= w (Wrap i x))) ((set (Out x i) c)) :ruleset see)
+(rule ((= x (N 60))) ((Wrap 7 x)) :ruleset late)
+(rule ((= x (N 1)) (= y (N 61))) ((union x y)) :ruleset join)
+(rule ((= x (N 2))) ((delete (Wrap 0 x))) :ruleset remove)
+(rule ((= x (N 2))) ((Wrap 0 x)) :ruleset again)
+"#);
+    for i in 0..64 {
+        source.push_str(&format!("(Start (N {i}))\n"));
+        if i < 32 { source.push_str(&format!("(Wrap 0 (N {i})) (Wrap 1 (N {i}))\n")); }
+    }
+    source.push_str(r#"
+(run-schedule (seq (run fill) (run warm) (run see) (run change) (run see)
+ (run late) (run see) (run join) (run see) (run remove) (run see)))
+(check (= (Out (N 60) 7) 2) (= (Out (N 61) 0) 2) (= (Out (N 61) 1) 2))
+(check (Wrap 1 (N 2)))
+(run-schedule (seq (run again) (run see)))
+(check (Wrap 0 (N 2)) (= (Out (N 2) 0) 2) (= (Out (N 2) 1) 2))
+"#);
+    let native_source = source.replace("(check (Wrap 1 (N 2)))",
+        "(fail (check (Wrap 0 (N 2))))\n(check (Wrap 1 (N 2)))");
+    egglog::EGraph::default().parse_and_run_program(None, &native_source).unwrap();
+    for stable in [false, true] {
+        let before = run_mode(&source, None, stable);
+        let removed = before.snapshots[10]["rows"].as_array().unwrap();
+        let n2 = &removed.iter().find(|r| r["table"] == "N" && r["values"][0]["value"] == 2)
+            .unwrap()["values"][1];
+        assert!(!removed.iter().any(|r| r["table"] == "Wrap"
+            && r["values"][0]["value"] == 0 && r["values"][1] == *n2));
+        for workers in [1, 4] {
+            let after = run_mode(&source, Some((workers, 1)), stable);
+            same(&before, &after);
+            assert_eq!(after.report()["free_join"]["point_support_rejected"], 0,
+                "residual expansions already have Free Join admission");
+        }
+    }
+}
+#[test]
+fn mutable_point_support_observes_late_values_deletion_and_recreation() {
+    let mut source = String::from(r#"
+(datatype E (N i64) (Start E) (Wrap E))
+(function Cost (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(relation Warm (E))
+(ruleset warm) (ruleset see) (ruleset late) (ruleset remove) (ruleset again)
+(rule ((Wrap x) (Start x) (= c (Cost x))) ((Warm x)) :ruleset warm)
+(rule ((Wrap x) (= c (Cost x))) ((set (Out x) c)) :ruleset see)
+(rule ((= x (N 60))) ((set (Cost x) 7)) :ruleset late)
+(rule ((= x (N 2))) ((delete (Cost x))) :ruleset remove)
+(rule ((= x (N 2))) ((set (Cost x) 9)) :ruleset again)
+"#);
+    for i in 0..64 {
+        source.push_str(&format!("(Start (N {i})) (Wrap (N {i}))\n"));
+        if i < 32 { source.push_str(&format!("(set (Cost (N {i})) 1)\n")); }
+    }
+    source.push_str(r#"
+(run-schedule (seq (run warm) (run see) (run late) (run see)))
+(check (= (Out (N 60)) 7) (= (Out (N 2)) 1))
+(run-schedule (seq (run remove) (run see) (run again) (run see)))
+(check (= (Out (N 60)) 7) (= (Out (N 2)) 9))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    for stable in [false, true] {
+        let before = run_mode(&source, None, stable);
+        for workers in [1, 4] {
+            let after = run_mode(&source, Some((workers, 1)), stable);
+            same(&before, &after);
+            assert!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0,
+                "the missing mutable read must reject Entries");
+        }
+    }
+}
+#[test]
 fn point_queries_keep_mutation_boundaries_delta_ownership_and_result_aliases() {
     let source = include_str!("fixtures/cell-point-queries.egg");
     let before = run(source, None);
