@@ -8,20 +8,39 @@ mod allocation_metrics;
 static ALLOCATOR: allocation_metrics::Meter = allocation_metrics::Meter;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    let [program, output, runs, workers, grain, mode @ ..] = args.as_slice() else {
-        return Err("expected PROGRAM OUTPUT RUNS WORKERS GRAIN [canonical|stable]".into());
+    let [program, output, runs, workers, grain, options @ ..] = args.as_slice() else {
+        return Err("expected PROGRAM OUTPUT RUNS WORKERS GRAIN [canonical|stable] [--repair-ports] [--entry-publications]".into());
     };
+    let mut mode = None;
+    let mut repair_ports = false;
+    let mut entry_publications = false;
+    for option in options {
+        match option.as_str() {
+            "canonical" | "stable" if mode.is_none() => mode = Some(option.as_str()),
+            "--repair-ports" if !repair_ports => repair_ports = true,
+            "--entry-publications" if !entry_publications => entry_publications = true,
+            _ => return Err(format!("unknown or repeated prefix option: {option}").into()),
+        }
+    }
+    let mode = mode.unwrap_or("stable");
     let program = Program::parse(serde_json::from_slice(&std::fs::read(program)?)?)?;
     let graph = match mode {
-        [] => Graph::new_with_local_congruence(program)?,
-        [mode] if mode == "stable" => Graph::new_with_local_congruence(program)?,
-        [mode] if mode == "canonical" => Graph::new(program)?,
-        _ => return Err("expected at most one backend: canonical or stable".into()),
+        "stable" => Graph::new_with_local_congruence(program)?,
+        "canonical" if repair_ports => Graph::new_with_repair_ports(program)?,
+        "canonical" => Graph::new(program)?,
+        _ => unreachable!(),
     };
     let mut e = Executor::new(graph, false);
+    if entry_publications {
+        #[cfg(feature = "sparse-cells")]
+        e.use_entry_publications()?;
+        #[cfg(not(feature = "sparse-cells"))]
+        return Err("entry publications require sparse-cells".into());
+    }
     let workers: usize = workers.parse()?;
+    let grain: usize = grain.parse()?;
     #[cfg(feature = "sparse-cells")]
-    if workers != 0 { e.use_query_workers(workers, grain.parse()?)?; }
+    if workers != 0 { e.use_query_workers(workers, grain)?; }
     #[cfg(not(feature = "sparse-cells"))]
     if workers != 0 { let _ = grain; return Err("query workers require sparse-cells".into()); }
     let runs = runs.parse()?;
@@ -33,7 +52,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let output = std::path::Path::new(output);
     std::fs::create_dir(output)?;
     std::fs::write(output.join("state.json"), serde_json::to_vec(&e.graph.export()?)?)?;
-    let report = e.report();
+    let mut report = e.report();
+    report["prefix_configuration"] = serde_json::json!({
+        "backend":mode, "requested_repair_ports":repair_ports,
+        "requested_entry_publications":entry_publications,
+        "requested_runs":runs, "workers":workers, "grain":grain,
+    });
     #[cfg(feature = "allocation-metrics")]
     let report = {
         let mut report = report;

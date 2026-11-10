@@ -1,0 +1,189 @@
+{
+  "runtime_commit": "a1f3dcb2",
+  "scope": "standalone Cell CPU; diagnostic setup correction; no runtime optimization or throughput claim",
+  "limits": "Raytrace is a 1280-Run prefix, not a full run or independent native proof. Run records are compared, not per-Run graph snapshots.",
+  "comparisons": {
+    "sum_prefix_vs_main_cli": {
+      "exact_final_graph": true,
+      "ordered_run_records": true,
+      "bindings_and_effect_counts": true,
+      "queries_equal": true,
+      "report_sha256": [
+        "619fdffe35eb62653bb0b82fcad8a80422adfb97182dea376d7a7374902da2e6",
+        "6cecc52ae0045b005d79db121beb3c83d2f832b5a0da0cdb20adff1fb48328b5"
+      ]
+    },
+    "ray_legacy_compatibility": {
+      "exact_final_graph": true,
+      "ordered_run_records": true,
+      "bindings_and_effect_counts": true,
+      "queries_equal": true,
+      "report_sha256": [
+        "82a4e916e91c407f4d0c144740bd491b7eaed2b6b268be19a860bca46c4a4cda",
+        "aeabbf4b7099217e2b0bf9c2428adb53f96e205c0006c8c34bd6519a4d6d0fe2"
+      ]
+    },
+    "ray_configurations": {
+      "exact_final_graph": true,
+      "ordered_run_records": true,
+      "bindings_and_effect_counts": true,
+      "queries_equal": true,
+      "report_sha256": [
+        "aeabbf4b7099217e2b0bf9c2428adb53f96e205c0006c8c34bd6519a4d6d0fe2",
+        "deec165725b45cb00d256c6b89de7c1aa423347141c39711a85583cfb557700a"
+      ]
+    }
+  },
+  "cases": {
+    "sum": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 2000,
+        "workers": 4
+      },
+      "runs_completed": 1428,
+      "repair_ports_enabled": true,
+      "queries": 12085,
+      "execution_counts": {
+        "bindings": 7265,
+        "constructor_requests": 8033,
+        "logical_facts_created": 3739,
+        "function_updates": 1450,
+        "unions": 1039,
+        "single_writes": 1121,
+        "transient_writes": 526
+      },
+      "repaired_dependencies": 1496,
+      "entry_references": {
+        "node_entry_references": 1642,
+        "legacy_entry_references": 451
+      },
+      "spine_work": {
+        "completed_steps": 5590,
+        "anchor_publications": 6588,
+        "ripsat_completed": 0,
+        "history_capture_reads": 70,
+        "history_slots_written": 70,
+        "history_shared_slots": 1050,
+        "history_allocations": 485,
+        "legacy_entry_writes": 1973,
+        "output_registrations": 3996,
+        "cell_output_receipts": 5827,
+        "cell_output_registrations": 957,
+        "cell_output_slot_reads": 5827,
+        "cell_output_slots": 5827,
+        "cell_output_spans": 4430,
+        "cell_output_span_seals": 3750,
+        "cell_output_sealed_receipts": 4870,
+        "fragment_deliveries": 3980
+      },
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": "6cecc52ae0045b005d79db121beb3c83d2f832b5a0da0cdb20adff1fb48328b5",
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82"
+    },
+    "ray1280-legacy": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": false,
+        "requested_repair_ports": false,
+        "requested_runs": 1280,
+        "workers": 4
+      },
+      "runs_completed": 1280,
+      "repair_ports_enabled": false,
+      "queries": 578591,
+      "execution_counts": {
+        "bindings": 357982,
+        "constructor_requests": 432291,
+        "logical_facts_created": 244877,
+        "function_updates": 24935,
+        "unions": 33888,
+        "single_writes": 28853,
+        "transient_writes": 6037
+      },
+      "repaired_dependencies": 50374,
+      "entry_references": {
+        "node_entry_references": 0,
+        "legacy_entry_references": 126640
+      },
+      "spine_work": {
+        "completed_steps": 280091,
+        "anchor_publications": 295161,
+        "ripsat_completed": 0,
+        "history_capture_reads": 91617,
+        "history_slots_written": 91617,
+        "history_shared_slots": 0,
+        "history_allocations": 40929,
+        "legacy_entry_writes": 295161,
+        "output_registrations": 444049,
+        "cell_output_receipts": 0,
+        "cell_output_registrations": 0,
+        "cell_output_slot_reads": 0,
+        "cell_output_slots": 0,
+        "cell_output_spans": 0,
+        "cell_output_span_seals": 0,
+        "cell_output_sealed_receipts": 0,
+        "fragment_deliveries": 0
+      },
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": "aeabbf4b7099217e2b0bf9c2428adb53f96e205c0006c8c34bd6519a4d6d0fe2",
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+    },
+    "ray1280": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 1280,
+        "workers": 4
+      },
+      "runs_completed": 1280,
+      "repair_ports_enabled": true,
+      "queries": 578591,
+      "execution_counts": {
+        "bindings": 357982,
+        "constructor_requests": 432291,
+        "logical_facts_created": 244877,
+        "function_updates": 24935,
+        "unions": 33888,
+        "single_writes": 28853,
+        "transient_writes": 6037
+      },
+      "repaired_dependencies": 24519,
+      "entry_references": {
+        "node_entry_references": 88181,
+        "legacy_entry_references": 38459
+      },
+      "spine_work": {
+        "completed_steps": 280091,
+        "anchor_publications": 295161,
+        "ripsat_completed": 0,
+        "history_capture_reads": 7729,
+        "history_slots_written": 7729,
+        "history_shared_slots": 83888,
+        "history_allocations": 40929,
+        "legacy_entry_writes": 111187,
+        "output_registrations": 206385,
+        "cell_output_receipts": 296507,
+        "cell_output_registrations": 59311,
+        "cell_output_slot_reads": 296507,
+        "cell_output_slots": 296507,
+        "cell_output_spans": 238952,
+        "cell_output_span_seals": 205685,
+        "cell_output_sealed_receipts": 237196,
+        "fragment_deliveries": 179027
+      },
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": "deec165725b45cb00d256c6b89de7c1aa423347141c39711a85583cfb557700a",
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+    }
+  },
+  "prefix_sha256": "791e347a38a687424372f128c85bb10577a2c7075c1add4aa9b78be1f4d22d65",
+  "runtime_sha256": "20a756a93f53062ac54df61453fa7f57005168ca8ec82ec2aace4992b0299212",
+  "native_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a"
+}

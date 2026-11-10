@@ -4,6 +4,13 @@ Baseline: `98e0ffd3`, after correcting synthetic collision deltas. This changes
 the standalone Cell CPU, not native egglog. It records bounded work and
 semantic checks; no new full throughput result or general sparsity proof.
 
+Configuration clarification: the historical canonical Raytrace prefix below
+did not enable `--repair-ports --entry-publications`; both sides used the same
+legacy setup. Its work reductions remain valid for that setup, but its repair
+and publication counts do not describe the main throughput configuration.
+See the [aligned diagnostic](../cell-prefix-configuration/README.md). The
+sum-bits main-CLI lanes already enabled those options.
+
 ## Opportunity from actual executions
 
 Fresh attribution of the first 1,280 Raytrace Runs shows 17,578 `Expr-size`

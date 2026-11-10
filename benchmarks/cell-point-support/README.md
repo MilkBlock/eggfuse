@@ -5,6 +5,12 @@ not a native egglog change. It has bounded work and allocation evidence, but
 no new throughput result or general sparsity proof. Query workers remain
 optional; the gate also applies to serial Cell queries.
 
+Configuration clarification: both historical Raytrace prefix lanes used the
+legacy canonical helper without `--repair-ports --entry-publications`. Their
+before/after reductions remain valid for that setup; its repair/publication
+costs do not describe the main throughput configuration. See the
+[aligned diagnostic](../cell-prefix-configuration/README.md).
+
 ## Evidence and compiler proof
 
 The [attribute attribution](../cell-attribute-profile/README.md) found that

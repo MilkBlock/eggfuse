@@ -4,6 +4,11 @@ Baseline: `d1fba785`. This fixes the standalone Cell CPU's source execution
 semantics; the vendored native egglog implementation is unchanged. Bounded
 work reductions below are not a throughput result or a graph sparsity proof.
 
+Configuration clarification: both historical Raytrace prefix lanes used the
+legacy canonical helper without `--repair-ports --entry-publications`. The
+comparison is consistent, but its repair/publication costs differ from the main
+throughput configuration. See the [aligned diagnostic](../cell-prefix-configuration/README.md).
+
 ## Cause and correction
 
 The previous [Entry support experiment](../cell-point-support/README.md)
