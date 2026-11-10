@@ -66,6 +66,13 @@ pub(crate) fn compile_projections(plans:&mut [Option<Rc<Direct>>],
             }
         }
     }
+    // Multiple entries can select the same lowered completion. The pool is
+    // compile-local; runtime states share one immutable program and its maps.
+    let mut shared = BTreeMap::new();
+    for plan in plans.iter_mut().flatten() {
+        let key = serde_json::to_string(&plan.artifact()).unwrap();
+        *plan = shared.entry(key).or_insert_with(|| plan.clone()).clone();
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]

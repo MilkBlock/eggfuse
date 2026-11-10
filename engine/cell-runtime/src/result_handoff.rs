@@ -668,6 +668,12 @@ impl Switch {
                     +node.program.queries.capacity()*std::mem::size_of::<QueryReuse>();
             }
         }
+        let mut direct_seen = BTreeSet::new();
+        let direct_bytes = self.direct.iter().flatten()
+            .filter(|p| direct_seen.insert(Rc::as_ptr(p) as usize))
+            .map(|p| std::mem::size_of::<crate::cell_completion::Direct>()+2*std::mem::size_of::<usize>()
+                +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
+                +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>();
         serde_json::json!({
             "states":self.nodes.len(),
             "lowered_reads":self.nodes.iter().map(|n| (
@@ -678,10 +684,8 @@ impl Switch {
             "program_owner_bytes":seen.len()*(std::mem::size_of::<Terminal>()+2*std::mem::size_of::<usize>()),
             "direct_states":self.direct.iter().flatten().count(),
             "direct_array_bytes":std::mem::size_of_val(self.direct.as_ref()),
-            "direct_program_bytes":self.direct.iter().flatten().map(|p|
-                std::mem::size_of::<crate::cell_completion::Direct>()+2*std::mem::size_of::<usize>()
-                +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
-                +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>(),
+            "direct_programs":direct_seen.len(),
+            "direct_program_bytes":direct_bytes,
             "read_payload_bytes":payload})
     }
     pub(crate) fn transition_storage(&self) -> serde_json::Value {

@@ -359,7 +359,10 @@ fn spine_routes_live_witnesses_and_plans_the_rest_of_the_same_query() {
         assert!(spine["routed_matcher_seeds"].as_u64().unwrap() > 0);
     }
     assert_eq!(
-        counts["consumer_seed_deliveries"].as_u64().unwrap(),
+        // A detached Cell Entry reaches the query without constructing a Seed.
+        // Both transports still account for exactly the routed entries.
+        counts["consumer_seed_deliveries"].as_u64().unwrap()
+            + counts["cell_entry_deliveries"].as_u64().unwrap(),
         spine["routed_spine_seeds"].as_u64().unwrap()
             + spine["routed_matcher_seeds"].as_u64().unwrap()
     );

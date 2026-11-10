@@ -10,6 +10,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [Cell 任务内的构造子查询](benchmarks/cell-constructor-queries/README.md)：借用现有 signal 域完成精确查询，完整 Raytrace key 读取覆盖增至 26.2%；四线程仍未超过同路径单线程。
 
+[Ripsat Cell 直接补全](docs/RIPSAT_CELL_COMPLETION.md)：按已完成局部结构共享推导与静态转换，复用实例结果槽，删除覆盖范围内的 RHS 重放和转存；[验证与成本](benchmarks/ripsat-cell-completion/README.md)。
+
 ```sh
 cargo cell-compile --case sum-bits --output out/sum-bits
 cargo cell-run --program out/sum-bits/program.json --output out/run

@@ -14,11 +14,11 @@ entry proofs, and compile the extension to a state transition with inherited
 slots. A transition whose results already exist must not replay a synthetic RHS
 or materialize another receipt array just to rediscover them.
 
-The current CPU Cell egraph registers ordered continuation paths. Its state
+At the merge baseline, the CPU Cell egraph registers ordered continuation paths. Its state
 extractor chooses materialization or history inheritance; it does not yet
 identify different derivations of the same completed structure. Cursor carries
 actual result witnesses and original Run positions, but `Training::applied`
-currently runs before the RHS. Closed RHS completion still walks instructions,
+ran before the RHS. The baseline closed RHS completion walks instructions,
 builds a temporary Cell, assigns result values, records receipts and captures
 them again. These are concrete takeover opportunities, not evidence of a speedup.
 
@@ -167,3 +167,28 @@ certificates and query-class masks. The compiler requires all authoritative
 source fields to be unchanged. Old fragment observations select the same code;
 their provenance is retained, and no new observation or performance support is
 claimed. A stale checksum alone is never accepted as the new certificate.
+
+
+Structural alternatives now participate in executable Bake. Given an already
+checked `(D, local output, consumer)` transition, one bounded expansion finds
+other implementations with exactly the same normalized assumptions/completion
+structure and corresponding output incidence. It compiles their own local
+operation/port map and rechecks the typed terminal proof before adding a join.
+This is inferred coverage, not a fabricated execution observation. New entries
+remain within the existing depth/node/catalog limits; each subsequent iteration
+can learn from actual successful applications of the expanded catalog.
+
+The native ripsat registry stores `CellCompletion(Cell, application, Cell)`.
+Its application key uses normalized output incidence and the checked consumer
+entry, while local operation numbers stay in the implementation maps. The
+regression has two producers with opposite construction order and different
+Gateway positions: two source edges become one native relation row. Only the
+second producer has run when its consumer completes, proving actual reuse of
+the inferred route. Identical lowered direct programs are also interned; static
+storage reports unique program allocations separately from selecting states.
+
+No Bloom filter is introduced for this small finite fanout. Exact state-indexed
+lookup already avoids a candidate scan. This implementation proves finite local
+constructor closure and already completed RHS projection; it does not claim
+whole-program saturation, skip fresh values/effects, or remove the remaining
+Run-boundary repair barrier.
