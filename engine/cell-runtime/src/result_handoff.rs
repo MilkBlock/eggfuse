@@ -14,7 +14,7 @@ use std::{
     num::NonZeroUsize,
 };
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct Reuse {
     pub equal_output: bool,
     pub op: usize,
@@ -24,7 +24,7 @@ pub(crate) struct Reuse {
     #[serde(skip)]
     pub port: Option<ResultPort>,
 }
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct QueryReuse {
     pub atom: usize,
     pub back: usize,
@@ -524,7 +524,7 @@ impl History {
     }
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize)]
 pub(crate) struct Terminal {
     pub reuse: Vec<Reuse>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -585,16 +585,23 @@ impl<T> Rows<T> {
 type Transition = ((usize, usize), usize);
 
 #[derive(Clone, Debug, Serialize)]
-struct Node<C = Rc<[Capture]>, N = Rc<[Transition]>> {
+struct Node<C = Rc<[Capture]>, N = Rc<[Transition]>, P = Rc<Terminal>> {
     unit: usize,
     failure: usize,
-    program: Terminal,
+    program: P,
     next: N,
     supply: C,
     #[serde(skip)]
     keep_history: usize,
     #[serde(skip)]
     layout: Option<Rc<SlotLayout>>,
+}
+
+fn share_program(program: Terminal, pool: &mut BTreeSet<Rc<Terminal>>) -> Rc<Terminal> {
+    if let Some(existing) = pool.get(&program) { return existing.clone(); }
+    let shared = Rc::new(program);
+    pool.insert(shared.clone());
+    shared
 }
 
 fn share_slice<T: Ord>(values: Vec<T>, pool: &mut BTreeSet<Rc<[T]>>) -> Rc<[T]> {
@@ -607,7 +614,7 @@ fn share_slice<T: Ord>(values: Vec<T>, pool: &mut BTreeSet<Rc<[T]>>) -> Rc<[T]> 
 /// Liveness after this Cell completes. A successor's direct read needs `back`
 /// frames; its future retention needs one fewer before it adds its own frame.
 /// Include inherited edges and default restarts, not just trie children.
-fn retained_depths(nodes: &[Node<Vec<Capture>, Vec<Transition>>], initial: &[usize]) -> Vec<usize> {
+fn retained_depths(nodes: &[Node<Vec<Capture>, Vec<Transition>, Terminal>], initial: &[usize]) -> Vec<usize> {
     let reads = nodes.iter().map(|n| n.program.reuse.iter().map(|r| r.back)
         .chain(n.program.queries.iter().map(|r| r.back)).max().unwrap_or(0)).collect::<Vec<_>>();
     let mut keep = nodes.iter().map(|n| usize::from(!n.supply.is_empty())).collect::<Vec<_>>();
@@ -634,6 +641,25 @@ impl Default for Terminal {
 impl Switch {
     pub(crate) fn exports(&self, rule: usize) -> &[Site] {
         self.exports.get(rule).unwrap_or(&[])
+    }
+    pub(crate) fn completion_storage(&self) -> serde_json::Value {
+        let mut seen = BTreeSet::new();
+        let mut payload = 0;
+        for node in &self.nodes {
+            if seen.insert(Rc::as_ptr(&node.program) as usize) {
+                payload += node.program.reuse.capacity()*std::mem::size_of::<Reuse>()
+                    +node.program.queries.capacity()*std::mem::size_of::<QueryReuse>();
+            }
+        }
+        serde_json::json!({
+            "states":self.nodes.len(),
+            "lowered_reads":self.nodes.iter().map(|n| (
+                n.program.reuse.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>(),
+                n.program.queries.iter().map(|r|r.port.map(|p|(p.rule(),p.slot()))).collect::<Vec<_>>()
+            )).collect::<Vec<_>>(),
+            "node_array_bytes":std::mem::size_of_val(self.nodes.as_ref()),
+            "program_owner_bytes":seen.len()*(std::mem::size_of::<Terminal>()+2*std::mem::size_of::<usize>()),
+            "read_payload_bytes":payload})
     }
     pub(crate) fn transition_storage(&self) -> serde_json::Value {
         let mut seen = BTreeSet::new();
@@ -685,10 +711,23 @@ impl Switch {
     pub(crate) fn complete_cells(&mut self, p: &Program, rule: impl Fn(usize) -> usize) {
         for node in self.nodes.iter_mut().skip(1) {
             let rid = rule(node.unit);
-            node.program.complete = !node.program.reuse.is_empty()
+            let complete = !node.program.reuse.is_empty()
                 && Definition::new(p, rid).expect("validated Cell")
                     .closes_with(&p.known_results.static_skip[rid], self.congruence,
                         |op| node.program.reuse.iter().any(|r| r.op == op));
+            if node.program.complete != complete {
+                Rc::make_mut(&mut node.program).complete = complete;
+            }
+        }
+        // Re-intern after the authoritative post-certificate lowering. This
+        // must not mutate a program shared with another state or catalog clone.
+        let mut programs = BTreeSet::<Rc<Terminal>>::new();
+        for node in &mut self.nodes {
+            if let Some(existing) = programs.get(node.program.as_ref()) {
+                node.program = existing.clone();
+            } else {
+                programs.insert(node.program.clone());
+            }
         }
     }
 
@@ -718,7 +757,7 @@ impl Switch {
         }
         let mut paths = prefixes.into_iter().collect::<Vec<_>>();
         paths.sort_by_key(|(p, _)| p.len());
-        let blank = || Node {
+        let blank = || Node::<Vec<Capture>, Vec<Transition>, Terminal> {
             unit: 0,
             failure: 0,
             program: Default::default(),
@@ -845,15 +884,17 @@ impl Switch {
         // while each completed instance retains its own Results and lifetime.
         let mut pool = BTreeSet::<Rc<[Capture]>>::new();
         let mut transitions = BTreeSet::<Rc<[Transition]>>::new();
+        let mut programs = BTreeSet::<Rc<Terminal>>::new();
         let mut frozen = Vec::with_capacity(nodes.len());
         for node in nodes {
             let supply = share_slice(node.supply, &mut pool);
             frozen.push(Node { unit: node.unit, failure: node.failure,
-                program: node.program, next: share_slice(node.next, &mut transitions), supply,
+                program: share_program(node.program, &mut programs), next: share_slice(node.next, &mut transitions), supply,
                 keep_history: node.keep_history, layout: node.layout });
         }
         drop(pool);
         drop(transitions);
+        drop(programs);
         let nodes = frozen.into_boxed_slice();
         let mut by_rule = vec![vec![]; p.rules.len()];
         let mut roots = vec![None; p.rules.len()];
@@ -946,7 +987,7 @@ impl Switch {
         self.nodes.get(id).map_or((&[], 0, None), |n| (n.supply.as_ref(), n.keep_history,n.layout.as_ref()))
     }
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
-        self.nodes.get(id).map(|n| &n.program)
+        self.nodes.get(id).map(|n| n.program.as_ref())
     }
     pub(crate) fn artifact(&self) -> serde_json::Value {
         serde_json::json!({"schema":if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth})
@@ -988,6 +1029,33 @@ mod tests {
         assert_eq!(DispatchRows::compile(vec![]).get(0), None);
     }
     #[test]
+    fn completion_sharing_preserves_lowered_ports_and_copy_on_write() {
+        let program = |slot| Terminal {
+            reuse: vec![Reuse { equal_output: true, op: 2, back: 1, rule: 4,
+                donor: Site::Effect(2), port: Some(ResultPort::new(4, slot)) }],
+            queries: vec![QueryReuse { atom: 0, back: 1, rule: 4,
+                donor: Site::Query(0), port: Some(ResultPort::new(4, slot)) }],
+            complete: false,
+        };
+        let mut pool = BTreeSet::new();
+        let a = share_program(program(0), &mut pool);
+        let mut same = share_program(program(0), &mut pool);
+        let other = share_program(program(1), &mut pool);
+        assert!(Rc::ptr_eq(&a, &same));
+        // The portable certificate omits ports; it is not an interning key.
+        assert_eq!(serde_json::to_value(&a).unwrap(), serde_json::to_value(&other).unwrap());
+        assert!(!Rc::ptr_eq(&a, &other));
+        Rc::make_mut(&mut same).complete = true;
+        assert!(!a.complete);
+        assert!(same.complete);
+        assert!(!Rc::ptr_eq(&a, &same));
+        let completed = share_program((*same).clone(), &mut pool);
+        assert!(!Rc::ptr_eq(&a, &completed));
+        drop(pool);
+        assert_eq!(a.reuse[0].port, Some(ResultPort::new(4, 0)));
+        assert_eq!(other.queries[0].port, Some(ResultPort::new(4, 1)));
+    }
+    #[test]
     fn transition_pool_preserves_labels_targets_and_fallback() {
         let mut pool = BTreeSet::new();
         let a = share_slice(vec![((7, 2), 1)], &mut pool);
@@ -1000,7 +1068,7 @@ mod tests {
         let mut switch = Switch::default();
         switch.initial = vec![0, 0, 0, 1];
         switch.nodes = [a, same].into_iter().map(|next| Node {
-            unit: 0, failure: 0, program: Terminal::default(), next,
+            unit: 0, failure: 0, program: Rc::new(Terminal::default()), next,
             supply: Rc::from([]), keep_history: 0, layout: None,
         }).collect();
         assert_eq!(switch.advance(0, 7, 2), 1);
@@ -1053,7 +1121,7 @@ mod tests {
             vec![address(1), address(2)]]);
         switch.initial = vec![1, 2, 3];
         switch.nodes = (0..4).map(|unit| Node { unit, failure: 0,
-            program: Terminal::default(), next: Rc::from([]), supply: Rc::from([]),
+            program: Rc::new(Terminal::default()), next: Rc::from([]), supply: Rc::from([]),
             keep_history: 0, layout: None }).collect();
         assert_eq!(switch.leaf(0, 0), Some(0));
         assert_eq!(switch.leaf(0, 1), None);
