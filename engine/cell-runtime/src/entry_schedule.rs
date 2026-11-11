@@ -550,6 +550,7 @@ impl Entry<'_> {
 impl<'a> Batch<'a> {
     #[cfg(any(
         feature = "projection-shared",
+        feature = "entry-admission-audit",
         feature = "family-overlap",
         feature = "family-frontiers",
         feature = "family-scan"

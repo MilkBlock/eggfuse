@@ -1238,7 +1238,14 @@ impl Executor {
                         };
                         #[cfg(feature = "family-frontiers")]
                         let mut delivered = 0;
+                        #[cfg(feature = "entry-admission-audit")]
+                        let gate_probe = early_sieve.then(|| self.sieve.begin_entry_audit(
+                            self.graph.epoch, rid, atom, batch.node(), watermark));
+                        #[cfg(feature = "entry-admission-audit")]
+                        let mut gate_visits = 0;
                         let mut deliver = |w| {
+                            #[cfg(feature = "entry-admission-audit")]
+                            { gate_visits += 1; }
                             #[cfg(feature = "family-frontiers")]
                             {
                                 delivered += 1;
@@ -1305,6 +1312,8 @@ impl Executor {
                         let shared_rows = shared.as_deref().map(Vec::as_slice);
                         #[cfg(not(feature = "projection-shared"))]
                         let shared_rows: Option<&[Dependency]> = None;
+                        #[cfg(feature = "entry-admission-audit")]
+                        let full_delta = shared_rows.is_none() && inverted.is_none();
                         #[cfg(feature = "family-scan")]
                         if shared_rows.is_none() && inverted.is_none() {
                             self.raw_scan
@@ -1322,6 +1331,10 @@ impl Executor {
                             for &(_, w) in batch.delta() {
                                 deliver(w)?
                             }
+                        }
+                        #[cfg(feature = "entry-admission-audit")]
+                        if let Some(probe) = gate_probe {
+                            self.sieve.finish_entry_audit(probe, gate_visits, full_delta);
                         }
                         #[cfg(feature = "family-frontiers")]
                         {

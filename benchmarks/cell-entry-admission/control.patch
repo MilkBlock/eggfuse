@@ -1,0 +1,12 @@
+diff --git a/engine/cell-runtime/src/sieve.rs b/engine/cell-runtime/src/sieve.rs
+--- a/engine/cell-runtime/src/sieve.rs
++++ b/engine/cell-runtime/src/sieve.rs
+@@ -33,7 +33,7 @@ impl Spec {
+     /// Narrow Cell projections use exact inline-width support keys in allows().
+     /// Only wider projections (or the legacy representation) read the Bloom.
+     fn needs_bloom(&self) -> bool {
+-        !cfg!(feature = "sparse-cells") || self.cols.len() > 2
++        true
+     }
+ }
+ #[cfg(feature = "sparse-cells")]

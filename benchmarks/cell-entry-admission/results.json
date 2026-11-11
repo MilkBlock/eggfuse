@@ -1,0 +1,246 @@
+{
+  "baseline_commit": "ac850f2c",
+  "scope": "standalone Cell CPU; diagnostics, not timing or native egglog",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "ordered_run_sha256": "89eff49b643b0f213878c9cc733bb279088bfccdbe12930c7c9ad4fac386f2c8",
+      "exact_state_effects_and_admission_counts": true,
+      "bloom_bytes": [
+        20976,
+        328
+      ],
+      "ordinary_sieve_probes": 12873,
+      "batch_audit": {
+        "batches": 5195,
+        "empty_batches": 94,
+        "peak_run_groups": 28,
+        "restricted_batches": 268,
+        "scope": "untimed batch census; no saved work or speed claim"
+      },
+      "classes": 978,
+      "statically_shared_classes": 66,
+      "totals": {
+        "batches": 2105,
+        "rows": 10894,
+        "probes": 10968,
+        "rejects": 9068,
+        "reused_batches": 9,
+        "repeated_rows": 18,
+        "repeated_probes": 18,
+        "repeated_rejects": 3
+      },
+      "report_sha256": [
+        "d62873b18008ad5e982fa8a78dc08625a205b0f1a8be5baad14c0609fb87366f",
+        "2929bbd31d0d8b584ad57f74fe898dab472f8a2e391ccee834c8733ae46c6d67"
+      ],
+      "dominance": {
+        "scope": "offline implication opportunity, not an implemented takeover or latency estimate",
+        "counts": {
+          "observed_batches": 2105,
+          "observed_rows": 10894,
+          "observed_probes": 10968,
+          "peak_negative_records": 18,
+          "fully_rejected_batches": 1459,
+          "potential_batches": 4,
+          "potential_rows": 5,
+          "potential_probes": 5,
+          "observed_rejections_in_potential_batches": 5,
+          "partial_rejection_batches": 0,
+          "implied_batches": 2,
+          "implied_probes": 2,
+          "identical_batches": 2,
+          "identical_probes": 3
+        },
+        "transition_pairs": [
+          {
+            "weak": 932,
+            "strong": 934,
+            "batches": 2
+          },
+          {
+            "weak": 443,
+            "strong": 443,
+            "batches": 2
+          }
+        ]
+      },
+      "dominance_report_sha256": "8b55e934838752ca2cc3caaa9a1d28a5e2e4a3b584bcd167a697251e56b68a75"
+    },
+    "ray1280": {
+      "runs": 1280,
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "ordered_run_sha256": "c965b76beb476f702d0a701011400102c314dc4effe533d42200e2b22c2ff75c",
+      "exact_state_effects_and_admission_counts": true,
+      "bloom_bytes": [
+        791600,
+        0
+      ],
+      "ordinary_sieve_probes": 573074,
+      "batch_audit": {
+        "batches": 13332,
+        "empty_batches": 104,
+        "peak_run_groups": 40,
+        "restricted_batches": 1011,
+        "scope": "untimed batch census; no saved work or speed claim"
+      },
+      "classes": 978,
+      "statically_shared_classes": 66,
+      "totals": {
+        "batches": 7053,
+        "rows": 538790,
+        "probes": 540409,
+        "rejects": 461009,
+        "reused_batches": 200,
+        "repeated_rows": 5644,
+        "repeated_probes": 5644,
+        "repeated_rejects": 1434
+      },
+      "report_sha256": [
+        "9444ddfc8e0f71c9831d84cfb1304b5ed0e903f1058fa40517fb8bce6207ef75",
+        "ae06a4344d46f1655080ba4a451899b6ae63311afcface6d439cb1e2c26fc533"
+      ]
+    },
+    "ray-full": {
+      "runs": 16883,
+      "state_sha256": "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7",
+      "ordered_run_sha256": "87c8f5f5c8a525f3e9ec4580c73a4188dcc973e927736411f484d98755f5cd96",
+      "exact_state_effects_and_admission_counts": true,
+      "bloom_bytes": [
+        3263648,
+        50184
+      ],
+      "ordinary_sieve_probes": 10916139,
+      "batch_audit": {
+        "batches": 97237,
+        "empty_batches": 256,
+        "peak_run_groups": 48,
+        "restricted_batches": 11103,
+        "scope": "untimed batch census; no saved work or speed claim"
+      },
+      "classes": 978,
+      "statically_shared_classes": 66,
+      "totals": {
+        "batches": 52986,
+        "rows": 10234747,
+        "probes": 10259500,
+        "rejects": 9197075,
+        "reused_batches": 625,
+        "repeated_rows": 25819,
+        "repeated_probes": 26759,
+        "repeated_rejects": 16823
+      },
+      "report_sha256": [
+        "de0382f14ea138263218783b32ca37a932356e7a621416efcab4a90354e5f90a",
+        "360de5aca7847ed06472942396cc30753114a581147a9a5b4e62532326b3b60e"
+      ],
+      "dominance": {
+        "scope": "offline implication opportunity, not an implemented takeover or latency estimate",
+        "counts": {
+          "observed_batches": 52986,
+          "observed_rows": 10234747,
+          "observed_probes": 10259500,
+          "peak_negative_records": 29,
+          "fully_rejected_batches": 31837,
+          "potential_batches": 312,
+          "potential_rows": 2787,
+          "potential_probes": 2791,
+          "observed_rejections_in_potential_batches": 2787,
+          "partial_rejection_batches": 0,
+          "implied_batches": 109,
+          "implied_probes": 1021,
+          "identical_batches": 203,
+          "identical_probes": 1770
+        },
+        "transition_pairs": [
+          {
+            "weak": 921,
+            "strong": 921,
+            "batches": 129
+          },
+          {
+            "weak": 932,
+            "strong": 934,
+            "batches": 92
+          },
+          {
+            "weak": 348,
+            "strong": 348,
+            "batches": 26
+          },
+          {
+            "weak": 443,
+            "strong": 443,
+            "batches": 16
+          },
+          {
+            "weak": 369,
+            "strong": 369,
+            "batches": 8
+          },
+          {
+            "weak": 726,
+            "strong": 726,
+            "batches": 8
+          },
+          {
+            "weak": 733,
+            "strong": 733,
+            "batches": 8
+          },
+          {
+            "weak": 716,
+            "strong": 726,
+            "batches": 6
+          },
+          {
+            "weak": 720,
+            "strong": 733,
+            "batches": 6
+          },
+          {
+            "weak": 894,
+            "strong": 894,
+            "batches": 4
+          },
+          {
+            "weak": 894,
+            "strong": 911,
+            "batches": 4
+          },
+          {
+            "weak": 540,
+            "strong": 540,
+            "batches": 2
+          },
+          {
+            "weak": 534,
+            "strong": 534,
+            "batches": 2
+          },
+          {
+            "weak": 931,
+            "strong": 933,
+            "batches": 1
+          }
+        ]
+      },
+      "dominance_report_sha256": "df4dc8a144e437e2b9f49f4f27720a48372854d791e2838de251026693184bd6"
+    }
+  },
+  "forced_zero_bit_fingerprints": {
+    "exact_state_work_and_runs": true,
+    "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+    "reports_sha256": [
+      "d07d3245ca29fdc8cc1b6e651772bbd577529d807c2b5b3413facb85bc2e3c21",
+      "57731aa483f9ad55b662c98554359db96f31193ad47b254ff78ba7672ca12162"
+    ]
+  },
+  "native_sum_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a",
+  "binaries": {
+    "observer": "313114912e6b9101d27311a9f5b7f18c46b21965f61603073b0a6a8228a04232",
+    "observer-after": "35f40524162e3b9725b3c82bc4098d032fa2cf4e3a55617b35978b75249e2b6e",
+    "observer-dominance": "c1933d2b80f50f6efb0eb0c7fafce88451ce1150fec84561f5f6e994e785dbe3"
+  }
+}

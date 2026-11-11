@@ -33,9 +33,9 @@
 
 启用条件：产物具备计划；范围索引按需求构建。
 
-编译期依据：共享列投影、类型正确的范围约束、版本化候选域。
+编译期依据：共享列投影、类型正确的范围约束、版本化候选域；同一 Cell 投影宽度决定窄精确集合或宽 Bloom 表示。
 
-替代的旧工作：读取后才拒绝的无关候选。
+替代的旧工作：读取后才拒绝的无关候选；删除窄精确集合从不读取的 Bloom 构建与增量维护。
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
@@ -44,14 +44,14 @@
 | 指标用途 | 精确数据路径 |
 |---|---|
 | 收益观察（需基线差值） | `report:/free_join/entry_rejections [value]`<br>`report:/free_join/disjoint_rule_skips [value]`<br>`report:/sieve/stats/rejected [value]` |
-| 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]`<br>`report:/free_join/entry_rows [value]`<br>`report:/free_join/entry_probes [value]`<br>`report:/free_join/entry_cache_hits [value]`<br>`report:/free_join/cover_rows [value]`<br>`report:/free_join/key_groups [value]`<br>`report:/free_join/bucket_rows_examined [value]`<br>`report:/free_join/bucket_rows_materialized [value]`<br>`report:/free_join/reverse_keys [value]`<br>`report:/free_join/reverse_refs [value]`<br>`report:/free_join/reverse_epoch_bins [value]`<br>`report:/free_join/disjoint_key_reads [value]`<br>`report:/sieve/stats/rule_uses [value]`<br>`report:/sieve/stats/dependency_rows [value]` |
+| 成本 / 剩余工作 | `report:/free_join/probes [value]`<br>`report:/free_join/entry_bucket_rows_examined [value]`<br>`report:/free_join/entry_bucket_rows_materialized [value]`<br>`report:/sieve/stats/build_rows [value]`<br>`report:/sieve/stats/update_rows [value]`<br>`report:/sieve/stats/probes [value]`<br>`report:/publication/range_rows [value]`<br>`report:/free_join/entry_rows [value]`<br>`report:/free_join/entry_probes [value]`<br>`report:/free_join/entry_cache_hits [value]`<br>`report:/free_join/cover_rows [value]`<br>`report:/free_join/key_groups [value]`<br>`report:/free_join/bucket_rows_examined [value]`<br>`report:/free_join/bucket_rows_materialized [value]`<br>`report:/free_join/reverse_keys [value]`<br>`report:/free_join/reverse_refs [value]`<br>`report:/free_join/reverse_epoch_bins [value]`<br>`report:/free_join/disjoint_key_reads [value]`<br>`report:/sieve/stats/rule_uses [value]`<br>`report:/sieve/stats/dependency_rows [value]`<br>`report:/sieve/bloom_bytes [value]` |
 | 覆盖 / 规模 / 回退 | `program:/free_join_entry [count]`<br>`program:/physical_plan/ranges [count]` |
 
-解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model.
+解释与缺口：不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/sieve-results.json](../../benchmarks/cell-unification/sieve-results.json)
+证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/sieve-results.json](../../benchmarks/cell-unification/sieve-results.json) · [benchmarks/cell-entry-admission/README.md](../../benchmarks/cell-entry-admission/README.md) · [benchmarks/cell-entry-admission/results.json](../../benchmarks/cell-entry-admission/results.json)
 
 ## B3 · 邻居、局部 context 与 view 消费
 

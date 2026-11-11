@@ -11,6 +11,9 @@ use rustc_hash::FxHashMap as HashMap;
 use rustc_hash::FxHashSet as HashSet;
 use std::collections::VecDeque;
 use std::hash::{Hash, Hasher};
+#[cfg(feature = "entry-admission-audit")]
+#[path = "entry_admission_audit.rs"]
+mod entry_audit;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct Guard {
@@ -22,6 +25,13 @@ struct Spec {
     table: usize,
     cols: Vec<usize>,
     guards: Vec<Guard>,
+}
+impl Spec {
+    /// Narrow Cell projections use exact inline-width support keys in allows().
+    /// Only wider projections (or the legacy representation) read the Bloom.
+    fn needs_bloom(&self) -> bool {
+        !cfg!(feature = "sparse-cells") || self.cols.len() > 2
+    }
 }
 #[cfg(feature = "sparse-cells")]
 #[path = "support_keys.rs"]
@@ -123,6 +133,8 @@ pub struct Stats {
     pub per_rule: Vec<(u64, u64)>,
 }
 pub struct Sieve {
+    #[cfg(feature = "entry-admission-audit")]
+    audit: entry_audit::Audit,
     pub enabled: bool,
     specs: Vec<Spec>,
     states: Vec<Summary>,
@@ -146,6 +158,8 @@ impl Sieve {
     pub fn new(program: &Program) -> Self {
         let enabled = true;
         let mut s = Self {
+            #[cfg(feature = "entry-admission-audit")]
+            audit: Default::default(),
             enabled,
             specs: vec![],
             states: vec![],
@@ -260,7 +274,18 @@ impl Sieve {
             }
         }
         s.active = vec![false; s.rules.len()];
+        #[cfg(feature = "entry-admission-audit")]
+        { s.audit = entry_audit::Audit::new(program, &s.rules); }
         s
+    }
+    #[cfg(feature = "entry-admission-audit")]
+    pub(crate) fn begin_entry_audit(&mut self, epoch: u64, rid: usize, atom: usize,
+        node: usize, watermark: u64) -> entry_audit::Probe {
+        self.audit.begin(epoch, rid, atom, node, watermark, &self.stats)
+    }
+    #[cfg(feature = "entry-admission-audit")]
+    pub(crate) fn finish_entry_audit(&mut self, probe: entry_audit::Probe, visits: u64, full_delta: bool) {
+        self.audit.finish(probe, visits, full_delta, &self.stats)
     }
     fn admit(&mut self, id: usize, keys: &[u64]) -> Option<Projection> {
         self.admit_into::<false>(id, keys)
@@ -284,7 +309,7 @@ impl Sieve {
         if !fresh {
             return None;
         }
-        if !COLD {
+        if !COLD && spec.needs_bloom() {
             state.bloom.grow(&state.keys, self.collide);
             state.bloom.insert(&k);
         }
@@ -313,7 +338,9 @@ impl Sieve {
         // No parent consumes this summary until its complete initial support
         // is installed. Size and populate its Bloom filter just once.
         let state = &mut self.states[id];
-        if !state.keys.is_empty() { state.bloom.grow(&state.keys, self.collide); }
+        if self.specs[id].needs_bloom() && !state.keys.is_empty() {
+            state.bloom.grow(&state.keys, self.collide);
+        }
         state.built = true;
         self.stats.builds += 1;
         Ok(())
@@ -430,7 +457,17 @@ impl Sieve {
         self.active.fill(false);
     }
     pub fn report(&self) -> serde_json::Value {
-        serde_json::json!({"enabled":self.enabled,"specifications":self.specs.len(),"active_summaries":self.states.iter().filter(|s|s.built).count(),"stored_keys":self.states.iter().map(|s|s.keys.len()).sum::<usize>(),"bloom_bytes":self.states.iter().map(|s|s.bloom.words.len()*8).sum::<usize>(),"key_payload_bytes":self.states.iter().flat_map(|s|s.keys.iter()).map(|k|k.len()*8).sum::<usize>(),"stats":self.stats,"scope":"complete visible-table semijoin summaries; not Cell-only proof credit"})
+        #[allow(unused_mut)]
+        let mut report = serde_json::json!({"enabled":self.enabled,"specifications":self.specs.len(),"active_summaries":self.states.iter().filter(|s|s.built).count(),"stored_keys":self.states.iter().map(|s|s.keys.len()).sum::<usize>(),"bloom_bytes":self.states.iter().map(|s|s.bloom.words.len()*8).sum::<usize>(),"key_payload_bytes":self.states.iter().flat_map(|s|s.keys.iter()).map(|k|k.len()*8).sum::<usize>(),"stats":self.stats,"scope":"complete visible-table semijoin summaries; not Cell-only proof credit"});
+        #[cfg(feature = "entry-admission-audit")]
+        {
+            report["entry_admission_audit"] = self.audit.report();
+            report["entry_admission_audit"]["specs"] = self.specs.iter().map(|s|
+                serde_json::json!({"table":s.table,"cols":s.cols,
+                    "guards":s.guards.iter().map(|g| (&g.child,&g.cols)).collect::<Vec<_>>()})
+            ).collect::<Vec<_>>().into();
+        }
+        report
     }
 }
 
@@ -458,10 +495,12 @@ mod tests {
     #[test]
     fn new_key_propagates_even_if_or_did_not_change_bits() {
         let mut s = Sieve {
+            #[cfg(feature = "entry-admission-audit")]
+            audit: Default::default(),
             enabled: true,
             specs: vec![Spec {
                 table: 0,
-                cols: vec![0],
+                cols: vec![0, 1, 2],
                 guards: vec![],
             }],
             states: vec![Summary::default()],
@@ -472,10 +511,27 @@ mod tests {
             collide: true,
             stats: Stats::default(),
         };
-        assert_eq!(s.admit(0, &[7]).as_deref(), Some(&[7][..]));
+        assert_eq!(s.admit(0, &[7, 70, 700]).as_deref(), Some(&[7, 70, 700][..]));
         let bits = s.states[0].bloom.words.clone();
-        assert_eq!(s.admit(0, &[8]).as_deref(), Some(&[8][..]));
+        assert!(!bits.is_empty(), "wide projection still exercises Bloom collisions");
+        assert_eq!(s.admit(0, &[8, 80, 800]).as_deref(), Some(&[8, 80, 800][..]));
         assert_eq!(bits, s.states[0].bloom.words);
-        assert_eq!(s.admit(0, &[8]), None);
+        assert_eq!(s.admit(0, &[8, 80, 800]), None);
+        #[cfg(feature = "sparse-cells")]
+        for width in 0..=2 {
+            s.specs[0].cols = (0..width).collect();
+            s.invalidate();
+            let first = [7,70];
+            assert!(s.admit(0, &first).is_some());
+            assert!(s.states[0].bloom.words.is_empty(), "exact support has no Bloom to maintain");
+            assert!(s.states[0].allows(&first, &s.specs[0].cols));
+            if width != 0 {
+                let next = [8,80];
+                assert!(!s.states[0].allows(&next, &s.specs[0].cols));
+                assert!(s.admit(0, &next).is_some(), "new narrow support still propagates");
+                assert!(s.states[0].allows(&next, &s.specs[0].cols));
+            }
+            assert!(s.states[0].bloom.words.is_empty());
+        }
     }
 }

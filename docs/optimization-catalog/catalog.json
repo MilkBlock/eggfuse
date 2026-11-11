@@ -392,8 +392,8 @@
       "category": "B",
       "title": "Free Join、Sieve 与范围过滤",
       "activation": "产物具备计划；范围索引按需求构建",
-      "compile_fact": "共享列投影、类型正确的范围约束、版本化候选域",
-      "replaces": "读取后才拒绝的无关候选",
+      "compile_fact": "共享列投影、类型正确的范围约束、版本化候选域；同一 Cell 投影宽度决定窄精确集合或宽 Bloom 表示",
+      "replaces": "读取后才拒绝的无关候选；删除窄精确集合从不读取的 Bloom 构建与增量维护",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
       "sources": [
         "engine/cell-runtime/src/entry_join.rs",
@@ -520,6 +520,11 @@
             "source": "report",
             "pointer": "/sieve/stats/dependency_rows",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/bloom_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -535,12 +540,14 @@
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census.",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
         "benchmarks/cell-unification/links-check.json",
-        "benchmarks/cell-unification/sieve-results.json"
+        "benchmarks/cell-unification/sieve-results.json",
+        "benchmarks/cell-entry-admission/README.md",
+        "benchmarks/cell-entry-admission/results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
