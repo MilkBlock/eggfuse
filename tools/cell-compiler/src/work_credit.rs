@@ -94,6 +94,19 @@ impl Work {
             };
             work.insert(format!("stage_spine/stats/{field}"),value);
         }
+        // Member proofs may fail even when a sibling was absorbed. Charge
+        // dispatch, eligibility and every actual output probe; coverage is not
+        // an independent saving over the omitted bindings/RHS/publications.
+        let absorption = &report["neighbor_context"]["absorption"];
+        for field in ["mixed_candidates", "mixed_checks", "mixed_output_probes"] {
+            let value = match absorption.get("row_completion") {
+                None => 0,
+                Some(J::String(v)) if v == "cell-min-row/v1" => absorption["stats"][field].as_u64()
+                    .ok_or_else(||format!("missing Cell member completion work {field}"))?,
+                _ => return Err("unknown Cell member completion".into()),
+            };
+            work.insert(format!("neighbor_context/absorption/stats/{field}"), value);
+        }
         // A field test is new work even when it prevents a whole summary update.
         // Historical reports have no such test; missing new counters are errors.
         let column_checks = match report["sieve"].get("column_influence") {
@@ -435,6 +448,20 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    #[cfg(feature = "cell-absorption")]
+    {
+        let mut member_report = report.clone();
+        member_report["neighbor_context"]["absorption"]["stats"]["mixed_output_probes"] = 9.into();
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 9);
+        member_report["neighbor_context"]["absorption"]["stats"]["mixed_absorbed"] = u64::MAX.into();
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 9);
+        member_report["neighbor_context"]["absorption"]["stats"].as_object_mut().unwrap().remove("mixed_checks");
+        assert!(Work::read(&member_report).unwrap_err().contains("missing Cell member completion"));
+        member_report["neighbor_context"]["absorption"].as_object_mut().unwrap().remove("row_completion");
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 0);
+        member_report["neighbor_context"]["absorption"]["row_completion"] = "unknown".into();
+        assert!(Work::read(&member_report).is_err());
+    }
     let mut sealed_report = report.clone();
     sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
     assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);

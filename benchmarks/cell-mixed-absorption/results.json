@@ -1,0 +1,359 @@
+{
+  "scope": "standalone Cell CPU; short work and semantic checks, not performance evidence",
+  "control_commit": "6e6f51dd",
+  "binaries": {
+    "before": "9e0ea94514b0a9ac003500b5a38d708fe66df56a3c08cd2b921c0fa99769fde1",
+    "after": "3031ffba038a4deb857e461de1daaf2e6c3c81a7713bc7f79d878f802f7d709a"
+  },
+  "cases": {
+    "fixture": {
+      "program_sha256": "9ff38ed54512a1ff8f7337c1258fcefddd9b729f5dc5be993dcdc7aac538f952",
+      "lanes": {
+        "before": {
+          "report_sha256": "34d7038f0cc1da99c3a18b6bce1592933219b424b3a8f01f2a1dcdab32376e0b",
+          "state_sha256": "4ff23196aee9c36f4e75c70c28ce5d4a3bfd12db552e376239839ee881adc0e4",
+          "runs": 19,
+          "run_signature_sha256": "3b1b5db246b07e54441b82510469f7a4c1e44939465969bb6ede65b28a2bbf74",
+          "effects": {
+            "function_updates": 18,
+            "unions": 2,
+            "logical_facts_created": 16
+          },
+          "queries": 34,
+          "graph_work": {
+            "bindings": 32,
+            "single_writes": 18,
+            "constructor_requests": 12,
+            "union_requests": 2,
+            "decoded_rows": 10
+          },
+          "absorption": {
+            "capability_entries": 16,
+            "compiled_capability_bytes": 144,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 400,
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 1,
+              "checks": 2,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 0,
+              "missing_outputs": 0,
+              "output_probes": 2,
+              "rejection_hits": 1,
+              "rejection_reads": 1,
+              "reused_bounds": 0,
+              "single_absorbed": 0,
+              "single_candidates": 1,
+              "single_checks": 1,
+              "single_fresh_fallbacks": 1,
+              "single_missing_outputs": 0,
+              "single_output_probes": 0
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 0,
+            "cell_output_slot_reads": 0,
+            "direct_publication_hash_probes": 28,
+            "output_registrations": 30
+          }
+        },
+        "after": {
+          "report_sha256": "1d5ad61b28da2e5a824bd9747a8df9bbac465e5e6d52398b1f43d7775166d64c",
+          "state_sha256": "4ff23196aee9c36f4e75c70c28ce5d4a3bfd12db552e376239839ee881adc0e4",
+          "runs": 19,
+          "run_signature_sha256": "3b1b5db246b07e54441b82510469f7a4c1e44939465969bb6ede65b28a2bbf74",
+          "effects": {
+            "function_updates": 18,
+            "unions": 2,
+            "logical_facts_created": 16
+          },
+          "queries": 34,
+          "graph_work": {
+            "bindings": 29,
+            "single_writes": 15,
+            "constructor_requests": 12,
+            "union_requests": 2,
+            "decoded_rows": 10
+          },
+          "absorption": {
+            "capability_entries": 16,
+            "compiled_capability_bytes": 144,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 400,
+            "row_completion": "cell-min-row/v1",
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 1,
+              "checks": 2,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 3,
+              "missing_outputs": 0,
+              "mixed_absorbed": 3,
+              "mixed_candidates": 12,
+              "mixed_checks": 12,
+              "mixed_fresh_fallbacks": 2,
+              "mixed_missing_outputs": 0,
+              "mixed_output_probes": 10,
+              "output_probes": 2,
+              "rejection_hits": 1,
+              "rejection_reads": 1,
+              "reused_bounds": 0,
+              "single_absorbed": 0,
+              "single_candidates": 1,
+              "single_checks": 1,
+              "single_fresh_fallbacks": 1,
+              "single_missing_outputs": 0,
+              "single_output_probes": 0
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 0,
+            "cell_output_slot_reads": 0,
+            "direct_publication_hash_probes": 25,
+            "output_registrations": 27
+          }
+        }
+      }
+    },
+    "sum": {
+      "program_sha256": "a174bd8845043ec5f8c5611e0cd9f36486ba15219c3e08aca9fff3ac5c1de6df",
+      "lanes": {
+        "before": {
+          "report_sha256": "842ae1bfd2be05fb61352a4bdec2b33860c94cbb1989c4eb0c0f28b92998c3ad",
+          "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+          "runs": 1428,
+          "run_signature_sha256": "66b5d94e703ea51c1365fdb58b1170bf3f6453d95ab63cb254066488d25f7c0b",
+          "effects": {
+            "function_updates": 1450,
+            "unions": 1039,
+            "logical_facts_created": 3739
+          },
+          "queries": 12061,
+          "graph_work": {
+            "bindings": 7224,
+            "single_writes": 1080,
+            "constructor_requests": 8014,
+            "union_requests": 2434,
+            "decoded_rows": 2499
+          },
+          "absorption": {
+            "capability_entries": 769,
+            "compiled_capability_bytes": 6168,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 23280,
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 0,
+              "checks": 0,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 41,
+              "missing_outputs": 0,
+              "output_probes": 0,
+              "rejection_hits": 0,
+              "rejection_reads": 0,
+              "reused_bounds": 0,
+              "single_absorbed": 41,
+              "single_candidates": 45,
+              "single_checks": 45,
+              "single_fresh_fallbacks": 4,
+              "single_missing_outputs": 0,
+              "single_output_probes": 41
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 5599,
+            "cell_output_slot_reads": 5228,
+            "direct_publication_hash_probes": 3669,
+            "output_registrations": 3768
+          }
+        },
+        "after": {
+          "report_sha256": "7d50ede75d6495a691c61760d1bd273539af365ca3d13a6834c36e0aaa1a67d9",
+          "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+          "runs": 1428,
+          "run_signature_sha256": "66b5d94e703ea51c1365fdb58b1170bf3f6453d95ab63cb254066488d25f7c0b",
+          "effects": {
+            "function_updates": 1450,
+            "unions": 1039,
+            "logical_facts_created": 3739
+          },
+          "queries": 12061,
+          "graph_work": {
+            "bindings": 7193,
+            "single_writes": 1049,
+            "constructor_requests": 8014,
+            "union_requests": 2434,
+            "decoded_rows": 2499
+          },
+          "absorption": {
+            "capability_entries": 769,
+            "compiled_capability_bytes": 6168,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 23280,
+            "row_completion": "cell-min-row/v1",
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 0,
+              "checks": 0,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 72,
+              "missing_outputs": 0,
+              "mixed_absorbed": 31,
+              "mixed_candidates": 61,
+              "mixed_checks": 61,
+              "mixed_fresh_fallbacks": 2,
+              "mixed_missing_outputs": 28,
+              "mixed_output_probes": 59,
+              "output_probes": 0,
+              "rejection_hits": 0,
+              "rejection_reads": 0,
+              "reused_bounds": 0,
+              "single_absorbed": 41,
+              "single_candidates": 45,
+              "single_checks": 45,
+              "single_fresh_fallbacks": 4,
+              "single_missing_outputs": 0,
+              "single_output_probes": 41
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 5599,
+            "cell_output_slot_reads": 5228,
+            "direct_publication_hash_probes": 3669,
+            "output_registrations": 3768
+          }
+        }
+      }
+    },
+    "ray128": {
+      "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "lanes": {
+        "before": {
+          "report_sha256": "7c0ac4592362c41d1b72bd9e006a0d0893f91ab88b40e1adcb47f6eeb8d4234c",
+          "state_sha256": "cb129186e0ed140e4f6cac32652811f26c9e83677ee6f5a35e727d60d1e1e784",
+          "runs": 128,
+          "run_signature_sha256": "bc7e27d0a56cc79a8312ac52585fb0391d6b9be403e53555b0d2c5c351373d69",
+          "effects": {
+            "function_updates": 3659,
+            "unions": 1805,
+            "logical_facts_created": 38187
+          },
+          "queries": 74265,
+          "graph_work": {
+            "bindings": 35903,
+            "single_writes": 3040,
+            "constructor_requests": 48858,
+            "union_requests": 7021,
+            "decoded_rows": 10503
+          },
+          "absorption": {
+            "capability_entries": 769,
+            "compiled_capability_bytes": 6168,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 23280,
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 0,
+              "checks": 0,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 0,
+              "missing_outputs": 0,
+              "output_probes": 0,
+              "rejection_hits": 0,
+              "rejection_reads": 0,
+              "reused_bounds": 0,
+              "single_absorbed": 0,
+              "single_candidates": 0,
+              "single_checks": 0,
+              "single_fresh_fallbacks": 0,
+              "single_missing_outputs": 0,
+              "single_output_probes": 0
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 34062,
+            "cell_output_slot_reads": 33616,
+            "direct_publication_hash_probes": 18365,
+            "output_registrations": 19241
+          }
+        },
+        "after": {
+          "report_sha256": "6d7a229962c5bac1bb0d50a89cfa16d5fa051a23e25bdb63f06a636f5ce253f5",
+          "state_sha256": "cb129186e0ed140e4f6cac32652811f26c9e83677ee6f5a35e727d60d1e1e784",
+          "runs": 128,
+          "run_signature_sha256": "bc7e27d0a56cc79a8312ac52585fb0391d6b9be403e53555b0d2c5c351373d69",
+          "effects": {
+            "function_updates": 3659,
+            "unions": 1805,
+            "logical_facts_created": 38187
+          },
+          "queries": 74265,
+          "graph_work": {
+            "bindings": 35903,
+            "single_writes": 3040,
+            "constructor_requests": 48858,
+            "union_requests": 7021,
+            "decoded_rows": 10503
+          },
+          "absorption": {
+            "capability_entries": 769,
+            "compiled_capability_bytes": 6168,
+            "condition_bytes_per_neighborhood": 32,
+            "enabled": true,
+            "plans": 1,
+            "removed_context_plan_bytes": 23280,
+            "row_completion": "cell-min-row/v1",
+            "stats": {
+              "bound_builds": 0,
+              "bound_rejections": 0,
+              "checks": 0,
+              "fresh_constructor_fallbacks": 0,
+              "groups_absorbed": 0,
+              "matches_absorbed": 0,
+              "missing_outputs": 0,
+              "mixed_absorbed": 0,
+              "mixed_candidates": 0,
+              "mixed_checks": 0,
+              "mixed_fresh_fallbacks": 0,
+              "mixed_missing_outputs": 0,
+              "mixed_output_probes": 0,
+              "output_probes": 0,
+              "rejection_hits": 0,
+              "rejection_reads": 0,
+              "reused_bounds": 0,
+              "single_absorbed": 0,
+              "single_candidates": 0,
+              "single_checks": 0,
+              "single_fresh_fallbacks": 0,
+              "single_missing_outputs": 0,
+              "single_output_probes": 0
+            }
+          },
+          "spine": {
+            "cell_output_deliveries": 34062,
+            "cell_output_slot_reads": 33616,
+            "direct_publication_hash_probes": 18365,
+            "output_registrations": 19241
+          }
+        }
+      }
+    }
+  },
+  "sum_native_acceptance_sha256": "1291e35ee65a56ae25e9f62ac4d6f25812a37acaef152598345f8cb9d718365b"
+}

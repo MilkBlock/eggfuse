@@ -277,8 +277,8 @@ impl Frame {
                         arg.agrees(&row.values[*col], &exec.graph, |col| &seed.values[col], &self.results, Some((position, row)))
                     }) { return Ok(()); }
                     #[cfg(feature = "cell-absorption")]
-                    if refs.len() == 1 && let Some(active) = absorption
-                        && exec.neighbor.absorbs_single(&exec.graph, rid, active, row) {
+                    if let Some(active) = absorption
+                        && exec.neighbor.absorbs_row(&exec.graph, rid, active, row, refs.len() == 1) {
                         return Ok(());
                     }
                     self.witnesses[ins.atom] = Some(w);
