@@ -45,7 +45,7 @@ storage, repair ports, Entry publication and absorption on both sides:
 
 | Work | sum-bits | Raytrace first 1,280 Runs |
 |---|---:|---:|
-| Point lookups, unchanged | 12,061 | 577,506 |
+| Graph key lookups, unchanged | 12,061 | 577,506 |
 | Positive function reads projected directly | 184 | 8,238 |
 | Neighbor cache hits, unchanged | 39 | 4,015 |
 | Neighbor cache probes, unchanged | 65 | 4,442 |
@@ -92,4 +92,8 @@ python3 benchmarks/cell-point-results/check.py BEFORE AFTER FIXTURE_PROGRAM SUM_
 ```
 
 The fifth-implementation timing comparison is a separate campaign with frozen
-normal executables and complete source workloads.
+normal executables and complete source workloads. See the
+[query transport checkpoint](../cell-query-transport-checkpoint/README.md): the
+five changes together improve Raytrace inference by about 2.8% against the
+previous checkpoint in that campaign. It does not isolate this projection's
+contribution or establish 2x.
