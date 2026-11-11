@@ -1,0 +1,214 @@
+{
+  "scope": "standalone Cell CPU; work and semantic evidence, not timing",
+  "control_commit": "8369a224",
+  "runtime_sha256": "9641aafc997100ca26957ad682b0554062818a18b4e36cbad1f7fe3de8b46b2a",
+  "control_runtime_sha256": "5f22206e9e161280feb328338700194a9df77c3929c9cd48ef646f7822493bd8",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "original_logical_graph_work_unchanged": true,
+      "prefix_source_work": {
+        "constructor_prefix_checks": 945,
+        "constructor_prefix_discarded_slots": 0,
+        "constructor_prefix_frames": 945,
+        "constructor_prefix_operations": 2022,
+        "constructor_prefix_receipt_writes": 1107,
+        "constructor_prefix_rejected": 0,
+        "constructor_prefix_table_checks": 2022
+      },
+      "constructor_preparation_before": {
+        "attempts": 4860,
+        "hits": 2894,
+        "key_fields": 9354,
+        "key_spills": 0,
+        "lookups": 4860,
+        "misses": 1966,
+        "missing_inputs": 0,
+        "result_writes": 2894,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 4860,
+        "hits": 3971,
+        "key_fields": 11703,
+        "key_spills": 0,
+        "lookups": 6190,
+        "misses": 2219,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 44400,
+        "prefix_instances": 945,
+        "prefix_slot_growths": 880,
+        "prefix_slot_writes": 2022,
+        "prefix_witness_bytes": 18880,
+        "prefix_witness_growths": 945,
+        "result_writes": 3971,
+        "unavailable": 0
+      },
+      "additional_worker_probes": 1330,
+      "additional_source_lookups_removed": 1077,
+      "total_key_lookups": [
+        14221,
+        14474
+      ],
+      "constructor_boundaries": [
+        11160,
+        9397
+      ],
+      "other_boundaries": [
+        0,
+        3774,
+        310,
+        75,
+        0,
+        0
+      ],
+      "instance_header_bytes": [
+        144,
+        152
+      ],
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        438600,
+        487784
+      ],
+      "fragment_storage": {
+        "query_fragment_capacity_bytes": [
+          193656,
+          193656
+        ],
+        "query_fragment_sealed_capacity_bytes": [
+          191016,
+          191016
+        ],
+        "query_fragment_sealed_slots": [
+          7959,
+          7959
+        ],
+        "query_fragment_slots": [
+          8069,
+          8069
+        ]
+      },
+      "plan": {
+        "handoff_rules": 2,
+        "inline_evidence_bytes": 24,
+        "instance_bytes": 152,
+        "prefix_operations": 304,
+        "prefix_rules": 99,
+        "rules": 366,
+        "schema": "cell-constructor-preparation/v4",
+        "scope": "existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"
+      },
+      "net_saved_uncalibrated_operations": -11800,
+      "work_ledger_sha256": "4433f882e51392456f8e5090825cb76368adf0193126c0417d883d564653fccd"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "original_logical_graph_work_unchanged": true,
+      "prefix_source_work": {
+        "constructor_prefix_checks": 284545,
+        "constructor_prefix_discarded_slots": 0,
+        "constructor_prefix_frames": 284545,
+        "constructor_prefix_operations": 483504,
+        "constructor_prefix_receipt_writes": 262894,
+        "constructor_prefix_rejected": 0,
+        "constructor_prefix_table_checks": 483504
+      },
+      "constructor_preparation_before": {
+        "attempts": 885192,
+        "hits": 559812,
+        "key_fields": 1714986,
+        "key_spills": 0,
+        "lookups": 885192,
+        "misses": 325380,
+        "missing_inputs": 0,
+        "result_writes": 559812,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 885192,
+        "hits": 758771,
+        "key_fields": 2459620,
+        "key_spills": 0,
+        "lookups": 1230531,
+        "misses": 471760,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 13555992,
+        "prefix_instances": 284545,
+        "prefix_slot_growths": 274769,
+        "prefix_slot_writes": 483504,
+        "prefix_witness_bytes": 5083984,
+        "prefix_witness_growths": 284545,
+        "result_writes": 758771,
+        "unavailable": 0
+      },
+      "additional_worker_probes": 345339,
+      "additional_source_lookups_removed": 198959,
+      "total_key_lookups": [
+        4022556,
+        4168936
+      ],
+      "constructor_boundaries": [
+        2503393,
+        2066773
+      ],
+      "other_boundaries": [
+        0,
+        1428463,
+        29924,
+        9349,
+        0,
+        92
+      ],
+      "instance_header_bytes": [
+        144,
+        152
+      ],
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        2365624,
+        2419688
+      ],
+      "fragment_storage": {
+        "query_fragment_capacity_bytes": [
+          45609096,
+          45622632
+        ],
+        "query_fragment_sealed_capacity_bytes": [
+          45559704,
+          45573672
+        ],
+        "query_fragment_sealed_slots": [
+          1898321,
+          1898897
+        ],
+        "query_fragment_slots": [
+          1900379,
+          1900937
+        ]
+      },
+      "plan": {
+        "handoff_rules": 2,
+        "inline_evidence_bytes": 24,
+        "instance_bytes": 152,
+        "prefix_operations": 353,
+        "prefix_rules": 99,
+        "rules": 366,
+        "schema": "cell-constructor-preparation/v4",
+        "scope": "existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"
+      },
+      "net_saved_uncalibrated_operations": -2772172,
+      "work_ledger_sha256": "9db9555756435eeb2ab97d614f2ff621d085e78eecaeaf5a40546d74e1e3a3de"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

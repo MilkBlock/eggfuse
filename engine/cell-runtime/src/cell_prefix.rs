@@ -27,6 +27,10 @@ impl<'a> SourcePrefix<'a> {
     pub fn new(width: usize, aliases: Option<&'a [bool]>) -> Self {
         Self { positions: 0..width, aliases }
     }
+    pub fn starting_at(mut self, position: usize) -> Self {
+        self.positions.start = position;
+        self
+    }
 }
 impl Prefix for SourcePrefix<'_> {
     #[cfg(feature = "sparse-cells")]

@@ -1500,6 +1500,8 @@ impl Programs {
     pub fn capture_receipts(&self, rid: usize) -> bool {
         self.enabled && self.receipts && self.outputs.get(rid).is_some_and(|ops| !ops.is_empty())
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn permanent_tables(&self) -> &[bool] { &self.permanent }
     pub(crate) fn alias_query_facts(&self, g: &Graph, rid: usize) -> QueryFacts {
         // Only an admitted continuation (or explicit fragment training) reads
         // the ownership Entry receipts. Keep the original Spine alias plan

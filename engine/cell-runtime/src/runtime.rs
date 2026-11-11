@@ -2108,7 +2108,24 @@ impl Executor {
         #[cfg(feature = "iterative-bake")]
         let mut b = b;
         #[cfg(feature = "sparse-cells")]
-        let mut constructor = b.constructor.take();
+        let (mut constructor, prefix) = {
+            use crate::cell::constructor_prepare::Prepared;
+            // Replace the former single-witness take with one dispatch; rules
+            // without a prefix incur no additional prefix-admission pass.
+            match std::mem::take(&mut b.constructor) {
+                Prepared::Found(witness) => (Some(witness),None),
+                Prepared::Prefix(results) => {
+                    let mut witness=None;
+                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,results,&mut witness);
+                    (witness,prefix)
+                },
+                _ => (None,None),
+            }
+        };
+        #[cfg(feature = "sparse-cells")]
+        let prefix_ready = prefix.is_some();
+        #[cfg(not(feature = "sparse-cells"))]
+        let prefix_ready = false;
         #[cfg(feature = "sparse-cells")]
         { self.graph.stats.constructor_prepared_inputs += u64::from(constructor.is_some()); }
         #[cfg(feature = "slot-transfer-audit")]
@@ -2209,7 +2226,7 @@ impl Executor {
             return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
-        if !full_effects && let Some(step)=stage_cursor.as_ref()
+        if !prefix_ready && !full_effects && let Some(step)=stage_cursor.as_ref()
             && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
             let cell=self.graph.reserve_completed_cell()?;
             if let Some(unions)=unions {
@@ -2256,7 +2273,7 @@ impl Executor {
                 else if iterative_closed { Some(available.as_slice()) } else { None };
             #[cfg(feature = "structural-depth")]
             let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
-            if let Some(selected) = selected {
+            if let Some(selected) = selected.filter(|_|!prefix_ready) {
                 let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched, stage_cursor.as_ref(), &b.known);
                 #[cfg(feature = "rhs-work-audit")]
                 let closed_inputs = (structural_closed.is_some()
@@ -2343,7 +2360,7 @@ impl Executor {
         let (mut effect_receipts, resume_start) =
             (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None::<Start>);
         #[cfg(feature = "rhs-locals")]
-        let local = if resume_start.is_none() && {
+        let local = if !prefix_ready && resume_start.is_none() && {
             #[cfg(feature="sparse-cells")] { b.prepared==0 }
             #[cfg(not(feature="sparse-cells"))] { true }
         } && self.local_width > 0
@@ -2366,6 +2383,14 @@ impl Executor {
         let prepared=b.prepared;
         #[cfg(not(feature="sparse-cells"))]
         let prepared=0;
+        #[cfg(feature="sparse-cells")]
+        let prefix_end = prefix.map_or(prepared,|results| {
+            let lazy = self.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
+                && stage_cursor.is_none() && origin.is_none();
+            self.graph.consume_constructor_prefix(rid,results,&mut effect_receipts,lazy)
+        });
+        #[cfg(not(feature="sparse-cells"))]
+        let prefix_end = prepared;
         #[allow(unused_mut)]
         let mut ordinary = |me: &mut Self, values: crate::slots::Slots,
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
@@ -2373,7 +2398,7 @@ impl Executor {
                 && stage_cursor.is_none() && origin.is_none()
             {
                 let width = me.graph.program.templates[template].ops.len();
-                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases),
+                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases).starting_at(prefix_end),
                     #[cfg(feature = "sparse-cells")]
                     me.graph.program.executions[rid].constructor.as_ref().map(|p|(p.operation,&mut constructor)))
             } else {
@@ -2381,7 +2406,7 @@ impl Executor {
                 let cell = me.graph.begin_transient(template, values, b.parent)?;
                 #[cfg(not(feature = "sparse-cells"))]
                 let cell = me.graph.linked_slots(template, values, b.parent)?;
-                Ok(Start::Resume { cell, next_op: prepared })
+                Ok(Start::Resume { cell, next_op: prefix_end })
             }
         };
         #[cfg(feature = "rhs-locals")]
@@ -3198,19 +3223,23 @@ impl Executor {
                 "progress_bytes":std::mem::size_of::<usize>(),
                 "rhs_owner_bytes":std::mem::size_of::<owned_cell::Execution>(),
                 "position_owner":"Cell.completed_prefix",
-                "worker_scope":"query and input-derived scalar results; original Run/effect/publication order"});
+                "worker_scope":"query, input-derived scalars and existing constructor prefixes; original Run/effect/publication order"});
         #[cfg(feature = "sparse-cells")]
         { report["cell_execution"]["suspension"] = json!({"schema":"owned-rhs-context/v1",
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v3",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v4",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),
+            "prefix_rules":self.graph.program.executions.iter()
+                .filter(|p|p.constructor.as_ref().is_some_and(|p|p.prefix_width()!=0)).count(),
+            "prefix_operations":self.graph.program.executions.iter()
+                .filter_map(|p|p.constructor.as_ref()).map(|p|p.prefix_width()).sum::<usize>(),
             "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),
             "inline_evidence_bytes":std::mem::size_of::<crate::cell::constructor_prepare::Prepared>(),
-            "scope":"existing Cell handoff owns covered constructors; otherwise one input-ready witness with source certificate/lifetime validation; no speculative Eq slot"}); }
+            "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

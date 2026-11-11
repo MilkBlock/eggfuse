@@ -153,6 +153,20 @@ mod point_results_test;
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Stats {
     #[serde(default)]
+    pub constructor_prefix_checks: u64,
+    #[serde(default)]
+    pub constructor_prefix_table_checks: u64,
+    #[serde(default)]
+    pub constructor_prefix_rejected: u64,
+    #[serde(default)]
+    pub constructor_prefix_discarded_slots: u64,
+    #[serde(default)]
+    pub constructor_prefix_frames: u64,
+    #[serde(default)]
+    pub constructor_prefix_operations: u64,
+    #[serde(default)]
+    pub constructor_prefix_receipt_writes: u64,
+    #[serde(default)]
     pub rhs_context_suspends: u64,
     #[serde(default)]
     pub constructor_prepared_inputs: u64,
@@ -2463,6 +2477,10 @@ impl Graph {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn has_visibility_changes(&self, t: usize) -> bool {
         self.visibility_tainted[t]
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn constructor_prefix_table_ready(&self, table: usize) -> bool {
+        !self.visibility_tainted[table] && self.dirty_facts[table].is_empty()
     }
     pub fn hide(&mut self, t: usize, key: &[Value], delete: bool) -> Result<bool> {
         if self.union_digest.is_some() {

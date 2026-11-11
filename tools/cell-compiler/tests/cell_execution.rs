@@ -52,6 +52,61 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn worker_constructor_prefix_continues_to_first_missing_result_and_exports_actual_foreign_results() {
+    for existing in [0,1,2,3] {
+        for union in [false,true] {
+            let seed = (0..16).map(|n| {
+                let mut term=format!("(N {n})");
+                for name in ["F","G","H"].iter().take(existing) {term=format!("({name} {term})");}
+                term
+            }).collect::<Vec<_>>().join("\n");
+            let effect=if union {"(union (H (G (F x))) x)"} else {"(H (G (F x)))"};
+            let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E) (Seen E))
+(ruleset step) (ruleset next)
+(rule ((= x (N n))) ({effect}) :ruleset step)
+(rule ((H x)) ((Seen x)) :ruleset next)
+{seed}
+(run-schedule (seq (run step) (run next) (run step) (run next)))
+"#);
+            egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+            for stable in [false,true] {
+                let create=|workers| {
+                    let p=Program::parse(artifact(&source)).unwrap();
+                    let g=if stable {Graph::new_with_local_congruence(p).unwrap()}
+                        else {Graph::new_with_repair_ports(p).unwrap()};
+                    let mut e=Executor::new(g,true);
+                    e.use_entry_publications().unwrap();e.use_query_workers(workers,1).unwrap();e
+                };
+                let mut control=create(4);control.execute().unwrap();
+                for workers in [1,4] {
+                    let mut candidate=create(workers);
+                    candidate.use_cell_execution(1).unwrap();candidate.execute().unwrap();
+                    same(&control,&candidate);
+                    // union(H(...),x) lowers its final constructor into an
+                    // ordered Set. Only F/G may belong to its worker prefix.
+                    let local = existing.min(if union {2} else {3});
+                    assert!(candidate.graph.stats.constructor_prefix_operations >= (local*16) as u64,
+                        "existing={existing} union={union} stable={stable} workers={workers}: {}",
+                        serde_json::json!({"execution":candidate.report()["cell_execution"],
+                            "preparation":candidate.report()["query_workers"]["stats"]["execution"],
+                            "rule":candidate.graph.program.artifact["recipe"]["rules"][0]}));
+                    assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+                    assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+                    assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+                    let report=candidate.report();
+                    if existing!=0 {
+                        assert!(report["query_workers"]["stats"]["execution"]["constructor"]["prefix_slot_writes"].as_u64().unwrap()>0);
+                    } else {
+                        assert!(report["query_workers"]["stats"]["execution"]["constructor"]["misses"].as_u64().unwrap()>=16);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn prepared_constructor_witnesses_replace_source_lookups_in_both_execution_paths() {
     for stable in [false,true] {
     for scalar in [false, true] {

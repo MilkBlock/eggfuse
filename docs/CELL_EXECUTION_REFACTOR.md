@@ -197,3 +197,15 @@ overall objective complete until all applicable items above are proven.
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.
   Grain 64 runs those suffixes inline. Independent parked-frame scheduling and
   a throughput/utilization improvement remain unproven; dispatch stays opt-in.
+- Workers now continue existing permanent constructor prefixes in the original
+  slots; see [prefix continuation](../benchmarks/cell-constructor-prefix/README.md).
+  The original Run certificate and table readiness validate the whole mutation-free
+  prefix before source effects. Invalid prefixes clear all prepared Eq slots.
+  Raytrace skips 483,504 source instructions and removes 436,620 ordinary
+  constructor boundaries, but adds 345,339 probes against 198,959 additional
+  avoided source lookups. Total queries increase by 146,380. New slot growth,
+  temporary witness arrays, header/compiled storage and receipt writes are charged.
+  Final states and ordered Run summaries match; native sum acceptance passes.
+  The result buffer still transfers demanded witnesses into Effects, and shared
+  effects still run synchronously. This is broader worker continuation, not
+  independent parked scheduling or evidence of throughput improvement.

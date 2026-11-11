@@ -1,9 +1,12 @@
-//! Resolve one input-ready constructor boundary in the existing Run read view.
-//! The instance carries only an actual witness, never a speculative Eq result.
-//! Its original source instruction still validates and commits that result.
+//! Resolve constructor boundaries in the existing Run read view. A single
+//! input-ready probe retains its witness; a checked permanent prefix continues
+//! in the instance slots. Source validation consumes or clears those values
+//! before any shared effect, preserving the original instruction order.
 use crate::{cell::{Definition, Instance}, graph::{Dependency, FactRef},
     program::{Arg, Call, Op, Program}, value::{Value, canon}};
 use serde::Serialize;
+#[path = "cell_constructor_prefix.rs"]
+mod prefix;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct Plan {
@@ -13,6 +16,7 @@ pub(crate) struct Plan {
     // result donor need no per-instance history admission checks.
     pub handoff: bool,
     keys: Vec<Arg>,
+    prefix: Vec<prefix::Step>,
 }
 
 #[cfg(test)]
@@ -21,7 +25,7 @@ mod tests {
     use crate::{graph::Graph, program::{Rule, Template}, slots::Slots, cell::QueryFacts};
     use std::{collections::BTreeMap, rc::Rc, sync::Arc};
 
-    fn graph() -> Graph {
+    pub(super) fn graph() -> Graph {
         let eq = serde_json::json!({"kind":"eq","name":"E"});
         let template = Template { name:"prepared-constructor".into(), sorts:vec![eq.clone();2],
             defs:BTreeMap::from([(1,0)]), parent_columns:BTreeMap::new(),
@@ -119,9 +123,13 @@ pub(crate) enum Prepared {
     Untried,
     Absent,
     Found(FactRef),
+    // Actual result witnesses in the shared prefix plan's order. Values stay
+    // in Instance.values; this is neither another binding nor an effect log.
+    Prefix(Vec<FactRef>),
 }
 impl Prepared {
     pub fn pending(&self) -> bool { matches!(self, Self::Untried) }
+    #[cfg(test)]
     pub fn take(&mut self) -> Option<FactRef> {
         match std::mem::replace(self, Self::Absent) { Self::Found(f) => Some(f), _ => None }
     }
@@ -137,11 +145,19 @@ pub(crate) struct Counts {
     pub hits: u64,
     pub misses: u64,
     pub result_writes: u64,
+    pub prefix_instances: u64,
+    pub prefix_slot_writes: u64,
+    pub prefix_slot_growths: u64,
+    pub prefix_capacity_bytes: u64,
+    pub prefix_witness_growths: u64,
+    pub prefix_witness_bytes: u64,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
         macro_rules! add { ($($f:ident),*) => { $(self.$f += other.$f;)* }; }
         add!(attempts, unavailable, missing_inputs, key_fields, key_spills, lookups, hits, misses, result_writes);
+        add!(prefix_instances, prefix_slot_writes, prefix_slot_growths, prefix_capacity_bytes,
+            prefix_witness_growths, prefix_witness_bytes);
     }
 }
 impl Plan {
@@ -165,17 +181,23 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys }); }
+                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![] }); }
         }
         None
     }
-    pub fn storage_bytes(&self) -> usize { self.keys.capacity() * std::mem::size_of::<Arg>() }
+    pub fn storage_bytes(&self) -> usize { self.keys.capacity() * std::mem::size_of::<Arg>()
+        + self.prefix.capacity() * std::mem::size_of::<prefix::Step>()
+        + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>() }
     pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
         counts: &mut Counts) {
         if !instance.constructor.pending() { return; }
         instance.constructor = Prepared::Absent;
         counts.attempts += 1;
+        if !self.prefix.is_empty() {
+            self.prepare_prefix(instance, reads, scratch, work, counts);
+            return;
+        }
         let Some(reads) = reads.filter(|r| r.constructor_available(self.table)) else {
             counts.unavailable += 1; return;
         };

@@ -197,7 +197,10 @@ impl Executor {
             grain, counts: Default::default(),
         });
         for rule in 0..self.graph.program.rules.len() {
-            let constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
+            let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
+            if let Some(plan) = &mut constructor {
+                plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables());
+            }
             self.graph.program.executions[rule].constructor = constructor;
         }
         Ok(())
