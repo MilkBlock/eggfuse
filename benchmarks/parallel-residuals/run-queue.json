@@ -1,0 +1,371 @@
+{
+  "control_commit": "15b0b4c1",
+  "scope": "standalone Cell CPU, not native egglog",
+  "goal_achieved": false,
+  "runtime_sha256": "4b20278952fc3a620e53e76283e9f5633e6ac3b30b4224f7bc653bd5231c946a",
+  "limits": "Work and semantic diagnostics only; no throughput/utilization claim. New headers, result capacities and task times can include point queries in the same Run/chunk. Old residual-only fields are not directly comparable. Capacities exclude instance payloads, allocator metadata and pool bookkeeping; totals are not simultaneously live memory.",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "before_report_sha256": "c6c9496c78d6f558ca0ba528c270361bde0a074efcda1251b382201b348fee7b",
+      "after_report_sha256": "4c3bd8b2bf499a2c8fedc9b2e2633fda2255ddd3c33376ee46a4699e5a9a670d",
+      "same_graph_counters_and_total_key_lookups": true,
+      "same_sieve_counts_publication_index_coverage_and_entry_schedule": true,
+      "same_residual_query_work": true,
+      "work_before": {
+        "admission_probes": 11046,
+        "admission_rejected": 7370,
+        "admission_rows": 5293,
+        "answer_capacity_bytes": 633120,
+        "answers": 3397,
+        "batches": 1872,
+        "chunks": 1876,
+        "coordinator_entries": 10077,
+        "direct_batches": 1872,
+        "direct_entries": 10348,
+        "entries": 10348,
+        "entry_header_capacity_bytes": 141936,
+        "execute_seconds": 0.0013859019999999988,
+        "expansion_probes": 37,
+        "expansion_rows": 3998,
+        "filter_probes": 2053,
+        "filter_rejected": 1596,
+        "index_rows_examined": 9626,
+        "input_rows": 11944,
+        "point_reads": 609,
+        "prepare_seconds": 0.0003459650000000017,
+        "row_reads": 4333,
+        "worker_entries": [
+          180,
+          27,
+          64,
+          0
+        ],
+        "worker_inputs": [
+          217,
+          54,
+          64,
+          0
+        ],
+        "worker_rows": [
+          95,
+          26,
+          0,
+          0
+        ],
+        "worker_task_seconds": [
+          3.0499e-05,
+          1.5584e-05,
+          7.459e-06,
+          0.0
+        ]
+      },
+      "work_after": {
+        "admission_probes": 11046,
+        "admission_rejected": 7370,
+        "admission_rows": 5293,
+        "answer_capacity_bytes": 845696,
+        "answers": 3397,
+        "batches": 279,
+        "chunks": 741,
+        "coordinator_entries": 3002,
+        "direct_batches": 1872,
+        "direct_entries": 10348,
+        "entries": 10348,
+        "entry_header_capacity_bytes": 511440,
+        "execute_seconds": 0.0025488390000000007,
+        "expansion_probes": 37,
+        "expansion_rows": 3998,
+        "filter_probes": 2053,
+        "filter_rejected": 1596,
+        "index_rows_examined": 9626,
+        "input_rows": 11944,
+        "merge_capacity_bytes": 735896,
+        "merged_runs": 279,
+        "mixed_runs": 99,
+        "order_comparisons": 8195,
+        "point_reads": 609,
+        "prepare_seconds": 0.0005116580000000067,
+        "queued_row_owners": 11944,
+        "row_reads": 4333,
+        "run_pool_calls": 59,
+        "worker_entries": [
+          2620,
+          1746,
+          1964,
+          1016
+        ],
+        "worker_inputs": [
+          2939,
+          2026,
+          2145,
+          1140
+        ],
+        "worker_rows": [
+          906,
+          893,
+          538,
+          463
+        ],
+        "worker_task_seconds": [
+          0.0005807489999999999,
+          0.0005188320000000002,
+          0.00041442199999999985,
+          0.00032663099999999997
+        ]
+      },
+      "shared_dispatch": {
+        "batches": [
+          2000,
+          308
+        ],
+        "chunks": [
+          2004,
+          800
+        ],
+        "entries": [
+          11355,
+          11355
+        ],
+        "answers": [
+          3907,
+          3907
+        ],
+        "cell_instances": [
+          0,
+          2559
+        ],
+        "multi_entry_cells": [
+          0,
+          1702
+        ],
+        "cross_rule_cells": [
+          0,
+          1554
+        ],
+        "cell_task_records": [
+          0,
+          2559
+        ],
+        "cell_task_probes": [
+          0,
+          8871
+        ],
+        "cell_task_links": [
+          0,
+          8333
+        ],
+        "entry_buffer_bytes": [
+          198328,
+          518040
+        ],
+        "peak_cell_queue_bytes": [
+          7680,
+          65536
+        ],
+        "peak_cell_task_bytes": [
+          15728,
+          35440
+        ],
+        "compiled_cell_code_bytes": [
+          47448,
+          104792
+        ],
+        "answer_buffer_allocations": [
+          1179,
+          934
+        ],
+        "output_buffer_capacity": [
+          6145,
+          6877
+        ]
+      },
+      "new_plan_capacity_bytes": 234976
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "before_report_sha256": "bd088ae7896c30f70344340e1ef46f48a3481fab430dcda2c1fc95ac9369d433",
+      "after_report_sha256": "15ffeaafa442415eddab54972d3f848ea21a81404e170cfbb1de25dbaa638a34",
+      "same_graph_counters_and_total_key_lookups": true,
+      "same_sieve_counts_publication_index_coverage_and_entry_schedule": true,
+      "same_residual_query_work": true,
+      "work_before": {
+        "admission_probes": 1958314,
+        "admission_rejected": 1371346,
+        "admission_rows": 879783,
+        "answer_capacity_bytes": 85102080,
+        "answers": 560582,
+        "batches": 19395,
+        "chunks": 48701,
+        "coordinator_entries": 154607,
+        "direct_batches": 19395,
+        "direct_entries": 1881965,
+        "entries": 1881965,
+        "entry_header_capacity_bytes": 25478712,
+        "execute_seconds": 0.18316164999999826,
+        "expansion_probes": 1242,
+        "expansion_rows": 760392,
+        "filter_probes": 372680,
+        "filter_rejected": 320723,
+        "index_rows_examined": 1709268,
+        "input_rows": 2202688,
+        "point_reads": 75625,
+        "prepare_seconds": 0.029809330000000914,
+        "row_reads": 826235,
+        "worker_entries": [
+          497435,
+          452965,
+          406806,
+          370152
+        ],
+        "worker_inputs": [
+          599376,
+          524012,
+          458489,
+          416539
+        ],
+        "worker_rows": [
+          210599,
+          167268,
+          167137,
+          162172
+        ],
+        "worker_task_seconds": [
+          0.09208158999999994,
+          0.0823333179999995,
+          0.07447909700000013,
+          0.06967456899999994
+        ]
+      },
+      "work_after": {
+        "admission_probes": 1958314,
+        "admission_rejected": 1371346,
+        "admission_rows": 879783,
+        "answer_capacity_bytes": 122156672,
+        "answers": 560582,
+        "batches": 2785,
+        "chunks": 39772,
+        "coordinator_entries": 14297,
+        "direct_batches": 19395,
+        "direct_entries": 1881965,
+        "entries": 1881965,
+        "entry_header_capacity_bytes": 95786680,
+        "execute_seconds": 0.3112078539999997,
+        "expansion_probes": 1242,
+        "expansion_rows": 760392,
+        "filter_probes": 372680,
+        "filter_rejected": 320723,
+        "index_rows_examined": 1709268,
+        "input_rows": 2202688,
+        "merge_capacity_bytes": 114950464,
+        "merged_runs": 2785,
+        "mixed_runs": 1105,
+        "order_comparisons": 4460810,
+        "point_reads": 75625,
+        "prepare_seconds": 0.1019395419999981,
+        "queued_row_owners": 2202688,
+        "row_reads": 826235,
+        "run_pool_calls": 1466,
+        "worker_entries": [
+          498365,
+          474732,
+          455964,
+          438607
+        ],
+        "worker_inputs": [
+          599153,
+          557656,
+          529749,
+          497091
+        ],
+        "worker_rows": [
+          199274,
+          170279,
+          196258,
+          188474
+        ],
+        "worker_task_seconds": [
+          0.11140200499999976,
+          0.09738962499999997,
+          0.09556329400000005,
+          0.09373148299999992
+        ]
+      },
+      "shared_dispatch": {
+        "batches": [
+          22253,
+          4538
+        ],
+        "chunks": [
+          59005,
+          47552
+        ],
+        "entries": [
+          2328381,
+          2328381
+        ],
+        "answers": [
+          923965,
+          923965
+        ],
+        "cell_instances": [
+          379709,
+          915270
+        ],
+        "multi_entry_cells": [
+          17475,
+          358570
+        ],
+        "cross_rule_cells": [
+          4687,
+          332698
+        ],
+        "cell_task_records": [
+          379709,
+          915270
+        ],
+        "cell_task_probes": [
+          416080,
+          2608158
+        ],
+        "cell_task_links": [
+          412692,
+          2596739
+        ],
+        "entry_buffer_bytes": [
+          50478008,
+          105964160
+        ],
+        "peak_cell_queue_bytes": [
+          983040,
+          8388608
+        ],
+        "peak_cell_task_bytes": [
+          327280,
+          3424112
+        ],
+        "compiled_cell_code_bytes": [
+          47488,
+          104832
+        ],
+        "answer_buffer_allocations": [
+          73155,
+          95368
+        ],
+        "output_buffer_capacity": [
+          1095413,
+          1281338
+        ]
+      },
+      "new_plan_capacity_bytes": 234984
+    }
+  },
+  "sum_native_acceptance": {
+    "status": "pass",
+    "report_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

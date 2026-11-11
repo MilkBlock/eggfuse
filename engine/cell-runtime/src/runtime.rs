@@ -1172,8 +1172,6 @@ impl Executor {
         let mut node_cursor_reads = 0;
         let mut entry_domains = Vec::new();
         let mut found = vec![];
-        #[cfg(feature = "parallel-residuals")]
-        let mut worker_completed = None::<query_workers::Completed>;
         let scheduled = if scheduled_entry {
             let watermark = self.watermarks[rid];
             Some(if early_join || route_spine {
@@ -1276,9 +1274,8 @@ impl Executor {
                             { true }
                         } {
                             self.query_workers.as_mut().unwrap().expansion_entries(
-                                &self.graph, &mut self.query_indexes, self.free_join.entry_plan(),
-                                &mut self.sieve, rid, &rule, batch, inverted.as_deref(),
-                                &query_facts, &mut found, worker_completed.get_or_insert_with(Default::default))?;
+                                &self.graph, &mut self.query_indexes, rid, batch,
+                                inverted.as_deref(), watermark, &query_facts)?;
                             return Ok(());
                         }
                         #[cfg(feature = "parallel-entry-filters")]
@@ -1470,10 +1467,6 @@ impl Executor {
             None
         };
         self.stage_spine.stats.legacy_cursor_probes += legacy_cursor_probes;
-        #[cfg(feature = "parallel-residuals")]
-        let direct_entries = worker_completed.map_or(0, |done| done.apply(&mut self.graph) as usize);
-        #[cfg(not(feature = "parallel-residuals"))]
-        let direct_entries = 0;
         self.stage_spine.stats.node_cursor_reads += node_cursor_reads;
         let detached_count = if detach_spine { spine_routes.len() } else { 0 };
         self.entry_schedule.record_cell_deliveries(detached_count);
@@ -1503,7 +1496,7 @@ impl Executor {
                 let claimed = coverage.as_ref().map_or(0, |coverage| coverage.claimed);
                 let stats = self.neighbor.stats(rid);
                 stats.spine_entries += claimed as u64;
-                stats.residual_entries += (seeds.len() + detached_count + direct_entries - claimed) as u64;
+                stats.residual_entries += (seeds.len() + detached_count - claimed) as u64;
             }
             if let Some(coverage) = coverage {
                 found = coverage.answers;
@@ -1709,7 +1702,7 @@ impl Executor {
                         .is_some_and(|plan| plan.pivots.contains(&pivot));
                 #[cfg(feature = "parallel-residuals")]
                 if let (Some(kernel), Some(seeds)) = (&kernel, &scheduled)
-                    && self.expansion_worker_batch(rid,&rule,kernel,seeds,&query_facts,&mut found)? {
+                    && self.expansion_worker_batch(rid,kernel,seeds,&query_facts,found.len())? {
                     continue;
                 }
                 #[cfg(feature = "sparse-cells")]
@@ -1988,6 +1981,8 @@ impl Executor {
         found.retain(|b| probe || !rule.seminaive || b.epoch >= self.watermarks[rid]);
         #[cfg(feature = "sparse-cells")]
         if self.stage_spine.deferred(rid) { return Ok(found); }
+        #[cfg(feature="parallel-residuals")]
+        if self.query_workers.as_ref().is_some_and(|w|w.pending_expansion(rid)) {return Ok(found);}
         self.dedup_bindings(rid, found)
     }
     fn dedup_bindings(&mut self, rid: usize, mut found: Vec<Binding>) -> Result<Vec<Binding>> {
@@ -2599,6 +2594,8 @@ impl Executor {
                 #[cfg(not(feature = "sparse-cells"))]
                 { false }
             };
+            #[cfg(feature="parallel-residuals")]
+            let deferred=deferred || self.query_workers.as_ref().is_some_and(|w|w.pending_expansion(rid));
             #[cfg(feature = "cell-absorption")]
             let absorbed = {
                 let pending = self.neighbor.pending_absorbed(rid);
@@ -2617,9 +2614,28 @@ impl Executor {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(workers) = &mut self.query_workers {
-            workers.finish_run(&mut self.graph, &mut self.stage_spine)?;
+            workers.finish_run(&mut self.graph, &mut self.stage_spine,
+                #[cfg(feature="parallel-residuals")] &self.query_indexes,
+                #[cfg(feature="parallel-residuals")] &mut self.sieve,
+                #[cfg(feature="parallel-residuals")] self.free_join.entry_plan())?;
             let (mut order_comparisons, mut binding_moves) = (0, 0);
             for (rid, residual) in &mut work {
+                #[cfg(feature="parallel-residuals")]
+                {
+                    let previous=residual.len();
+                    if let Some((n,direct,candidates))=self.query_workers.as_mut().unwrap()
+                        .finish_expansion_rule(*rid,residual,&self.graph.program.rules[*rid].inputs) {
+                        self.dedup_rows+=n as u64;
+                        let fields=(n*self.graph.program.rules[*rid].inputs.len()) as u64;
+                        self.dedup_full_elements+=fields;self.dedup_elements+=fields;
+                        self.dedup_duplicates+=(n-residual.len()) as u64;
+                        if self.graph.program.neighbor_plans[*rid].is_some() {self.neighbor.stats(*rid).residual_entries+=direct;}
+                        if self.profile_queries {
+                            self.query_profile[*rid].2+=candidates;
+                            self.query_profile[*rid].3=self.query_profile[*rid].3-previous as u64+residual.len() as u64;
+                        }
+                    }
+                }
                 if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &self.graph.program.rules[*rid].inputs, &mut order_comparisons) {
                     binding_moves += residual.len() as u64;
                     let previous_answers = residual.len();

@@ -209,3 +209,89 @@ python3 benchmarks/parallel-residuals/collect_entries.py ROOT PRIOR_ROOT RESULTS
 are ignored under `out/residual-entry-takeover`. Remaining query barriers still
 occur per kernel/pivot; this change does not yet combine these tasks with the
 Run-wide physical-Cell queue. RHS, publication and repair remain coordinated.
+
+## One physical-Cell queue for the source Run
+
+Follow-up control: `15b0b4c1`. Its actual Raytrace execution still dispatched
+19,395 residual batches, including inline batches. Direct Entry borrowing had
+removed Seed/domain handoffs, but each kernel/pivot still completed separately.
+This change appends eligible residual Query code to the existing Cell code
+table and queues its original Entries alongside point continuations. There is
+one completion call for the queued source Run, organized by actual physical
+Cell and shared template. This shares scheduling and locality, **not query
+prefix computation**. Ordinary point batches outside this queue remain.
+
+The proof comes from the original Query, Free Join projections and source-Run
+read boundary. This does not learn a new Ripsat equivalence from the catalog,
+discharge a future Run or give Bake new reuse credit. It removes the covered
+per-kernel execution/join and result handoff; it does not remove the predicates
+or enumeration. Entries with active Spine/absorption/prefix specializations
+retain their existing paths.
+
+Each queued Entry keeps one coordinator-owned `Rc<Row>` until completion;
+workers borrow the Row itself. They never receive the Rc or Cursor. Existing
+columns are prepared when the old batch would have used them, including lazy
+columns of already indexed tables. The final read views borrow those prepared
+maps. Matching another rule does not mutate the graph. Results rejoin before
+any RHS write, with the original watermark, delta ownership and visible values.
+
+Winner selection uses one stable sort by input key and original source order.
+Direct Entries precede ordinary residual answers; compatible already-filtered
+Seeds retain their original position between serial kernel results. Expansion
+row order remains stable within one source. The owned instances then enter
+the original ordered RHS; no second set of input bindings or fact graph is
+introduced. Failure clears queued owners and active Run metadata.
+
+| Complete diagnostic | sum-bits | Raytrace |
+|---|---:|---:|
+| Original residual source batches (unchanged) | 1,872 | 19,395 |
+| New Run completions containing residual work | 279 | 2,785 |
+| Of those, calls to the worker pool | 59 | 1,466 |
+| Runs sharing the queue with point continuations | 99 | 1,105 |
+| Chunks containing residual work, before → after | 1,876 → 741 | 48,701 → 39,772 |
+| Queued Row owners (new) | 11,944 | 2,202,688 |
+| Header capacity bytes, before → after | 141,936 → 511,440 | 25,478,712 → 95,786,680 |
+| Chunk answer capacity bytes, before → after | 633,120 → 845,696 | 85,102,080 → 122,156,672 |
+| Per-rule ordered merge capacity bytes (newly recorded) | 735,896 | 114,950,464 |
+| Shared Cell queue peak capacity bytes | 65,536 | 8,388,608 |
+| Shared task grouping peak capacity bytes | 35,440 | 3,424,112 |
+
+These costs matter. The old residual header held only a borrowed Row pointer;
+the new mixed header additionally identifies code, source and prepared reads.
+It borrows the Row instead of repeating its value/epoch/witness fields, but is
+still 40 bytes on this target versus the old 8 bytes. New header totals include
+point Entries in the same Runs; answer totals include point results in mixed
+chunks. Merge buffers hold source-order metadata beside moved instances. The
+new plan metadata uses 234,976 / 234,984 bytes; shared code capacity also grows
+and is recorded. Capacity sums are not peak memory or allocation totals, and
+the fields omit nested instance storage, sort scratch and pool bookkeeping.
+
+All residual query, admission and filtering work counts remain exact. Ordinary
+graph counters, total key reads, Sieve, publication, Entry scheduling and index
+coverage also remain exact. Complete states and ordered Run signatures match
+the control: 1,428 / 16,883 Runs. The earlier 18,927 extra Raytrace key reads
+relative to the non-residual baseline remain. There is **no new throughput or
+utilization measurement**, and fewer batches alone do not establish a gain.
+Task/execute times now include shared point work and cannot be compared with
+the previous residual-only phase timers.
+
+Acceptance includes 33 integration tests, a new native-checked mixed point/
+residual fixture with same-Run writes and cross-rule Cell grouping, forced
+zero-bit fingerprints, and 99 runtime unit tests. A new unit test checks lazy
+column preparation before borrowing. Minimal/all-feature checks and README
+compile/run/bench (repeat 1) pass; the latter is only a command smoke. Native
+sum-bits acceptance returns `pass` / exit 0 without changing its contract.
+Raytrace agreement remains a relative regression check.
+
+Freeze the binary as `ROOT/runtime`, run the same flags above into fresh
+`ROOT/sum-checked` and `ROOT/ray-checked`, and prepare the saved semantic inputs
+under `ROOT/semantic`. The collector reads saved outputs and launches no tests:
+
+```sh
+python3 benchmarks/marker-handoff/choice_diagnosis.py ROOT/semantic ROOT/semantic-acceptance.json
+python3 benchmarks/parallel-residuals/collect_run_queue.py ROOT PRIOR_ENTRY_ROOT RESULTS.json
+```
+
+[run-queue.json](run-queue.json) retains both dispatch and storage costs. Raw
+artifacts remain ignored under `out/residual-run-queue`. RHS, publication and
+repair remain coordinated; full CPU utilization is not achieved.

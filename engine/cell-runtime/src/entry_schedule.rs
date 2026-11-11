@@ -549,8 +549,8 @@ impl Entry<'_> {
 }
 impl<'a> Batch<'a> {
     #[cfg(feature = "parallel-residuals")]
-    pub(crate) fn row(&self, witness: Dependency) -> Option<&'a Row> {
-        self.entry(witness).map(|entry| entry.packet.row.as_ref())
+    pub(crate) fn shared_row(&self, witness: Dependency) -> Option<Rc<Row>> {
+        self.entry(witness).map(|entry| entry.packet.row.clone())
     }
     #[cfg(any(
         feature = "projection-shared",

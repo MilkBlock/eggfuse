@@ -43,15 +43,42 @@ impl<'a> Read<'a> {
     }
 }
 impl QueryIndexes {
-    pub(crate) fn read_columns<'a>(&'a mut self, graph: &Graph, layout: &[(usize,Vec<usize>)], entry_table: usize) -> Result<Read<'a>> {
-        for (table, columns) in layout { self.ensure_selected(graph, *table, columns.iter().copied())?; }
-        let tables = layout.iter().map(|(table, columns)| {
-            let index = &self.tables[table];
-            (*table, TableRead { keys: &index.keys,
-                columns: columns.iter().map(|&c| (c, index.column(c))).collect() })
+    pub(crate) fn prepare_columns(&mut self, graph:&Graph, layout:&[(usize,Vec<usize>)]) -> Result<()> {
+        for (table,columns) in layout {
+            self.ensure_selected(graph,*table,columns.iter().copied())?;
+            // An existing table can still have lazy, uninitialized columns.
+            // Finish those on the coordinator before creating worker borrows.
+            for &column in columns { self.tables[table].column(column); }
+        }
+        Ok(())
+    }
+    pub(crate) fn read_columns<'a>(&'a self, layout:&[(usize,Vec<usize>)], entry_table:usize) -> Read<'a> {
+        let tables=layout.iter().map(|(table,columns)| {
+            let index=&self.tables[table];
+            (*table,TableRead {keys:&index.keys,columns:columns.iter().map(|&c|
+                (c,index.values[c].get().expect("prepared Run column"))).collect()})
         }).collect();
-        // Match Sieve::allow's existing directory access. Do not create a new
-        // index solely for Entry filtering when ordinary matching had none.
-        Ok(Read { tables, bits: self.bits, entry_keys: self.tables.get(&entry_table).map(|i| &i.keys) })
+        Read {tables,bits:self.bits,entry_keys:self.tables.get(&entry_table).map(|i|&i.keys)}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn run_borrows_finish_lazy_columns_of_existing_tables() {
+        let mut graph=crate::query::test_projection_graph();
+        graph.set_function(0,vec![Value::Int(1),Value::Int(2)],Value::Int(3)).unwrap();
+        let mut index=QueryIndexes::default();
+        index.ensure_selected(&graph,0,[0]).unwrap();
+        assert!(index.tables[&0].values[1].get().is_none());
+        index.prepare_columns(&graph,&[(0,vec![1])]).unwrap();
+        assert!(index.tables[&0].values[1].get().is_some());
+        let read=index.read_columns(&[(0,vec![1])],0);
+        let key=read.fingerprint(&Value::Int(2));
+        let domain=read.domain(0,smallvec::smallvec![(1,key)]);
+        assert_eq!(domain.iter().count(),1);
+        assert_eq!(index.builds,1,"preparing another column reuses the table");
     }
 }

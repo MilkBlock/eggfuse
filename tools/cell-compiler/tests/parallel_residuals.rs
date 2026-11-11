@@ -84,3 +84,43 @@ fn function_expansion_reads_current_values_after_delete_and_recreation() {
     assert_eq!(before.binding_audit,after.binding_audit);
     assert!(after.report()["query_workers"]["residual_expansion"]["stats"]["expansion_rows"].as_u64().unwrap()>0, "{}", after.report()["query_workers"]);
 }
+
+#[test]
+fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
+    let mut s=String::from(r#"
+(datatype E (N i64) (Start E) (Gate E) (Wrap i64 E))
+(function Cost (E) i64 :merge new)
+(function Point (E) i64 :merge new)
+(function Out1 (E i64) i64 :merge new)
+(function Out2 (E i64) i64 :merge new)
+(ruleset make) (ruleset consume)
+(rule ((Start x)) ((Gate x)) :ruleset make)
+(rule ((Gate x) (= c (Cost x)))
+      ((set (Cost x) (+ c 10)) (set (Point x) c)) :ruleset consume)
+(rule ((Start x) (Wrap i x) (= c (Cost x))) ((set (Out1 x i) c)) :ruleset consume)
+(rule ((Start x) (Wrap i x) (= c (Cost x))) ((set (Out2 x i) (+ c 1))) :ruleset consume)
+"#);
+    for i in 0..64 {
+        s+=&format!("(Start (N {i})) (Wrap 0 (N {i})) (Wrap 1 (N {i})) (set (Cost (N {i})) 1)\n");
+    }
+    s+="(run-schedule (seq (run make) (run consume)))\n";
+    for i in 0..64 {
+        s+=&format!("(check (= (Point (N {i})) 1) (= (Out1 (N {i}) 0) 1) (= (Out2 (N {i}) 1) 2))\n");
+    }
+    s+="(run-schedule (run consume))\n";
+    for i in 0..64 {
+        s+=&format!("(check (= (Point (N {i})) 11) (= (Out1 (N {i}) 1) 11) (= (Out2 (N {i}) 0) 12))\n");
+    }
+    egglog::EGraph::default().parse_and_run_program(None,&s).unwrap();
+    let before=run(&s,0,false);
+    for workers in [1,2,4] {
+        let after=run(&s,workers,true);
+        assert_eq!(before.snapshots,after.snapshots,"no same-Run RHS leakage");
+        assert_eq!(before.binding_audit,after.binding_audit,"deterministic winner and expansion order");
+        let r=after.report(); let work=&r["query_workers"]["residual_expansion"]["stats"];
+        assert!(work["mixed_runs"].as_u64().unwrap()>0,"{r}");
+        assert!(work["direct_batches"].as_u64().unwrap()>work["merged_runs"].as_u64().unwrap(),"{work}");
+        assert!(r["query_workers"]["stats"]["cross_rule_cells"].as_u64().unwrap()>0);
+        assert_eq!(work["queued_row_owners"],work["input_rows"]);
+    }
+}
