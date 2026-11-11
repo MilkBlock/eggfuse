@@ -672,6 +672,11 @@ impl Program {
 fn verify_source(j: &J) -> Result<()> {
     let ir = &j["recipe"];
     let core = &j["source_core"];
+    if let Some(bits) = core.get("float_zero_bits") {
+        if !matches!(bits.as_i64(), Some(0) | Some(i64::MIN)) {
+            return Err("float zero representative must encode positive or negative zero".into());
+        }
+    }
     let mut unsupported = std::collections::BTreeSet::new();
     fn inspect(j: &J, spec: &J, bad: &mut std::collections::BTreeSet<String>) {
         match j {

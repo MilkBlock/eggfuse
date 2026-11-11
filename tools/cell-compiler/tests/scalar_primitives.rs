@@ -206,3 +206,25 @@ fn float_function_keys_merge_zero_and_nan_identities() {
     assert_eq!(a, b);
     assert_eq!(a.len(), 2);
 }
+
+#[cfg(feature = "sparse-cells")]
+#[test]
+fn unestablished_float_representation_is_not_raced_by_workers() {
+    let source = r#"(function Out () String :merge old)
+        (relation Input (f64 f64)) (Input -1.0e-308 1.0e-308)
+        (rule ((Input x y)) ((set (Out) (to-string (* x y))))) (run 1)"#;
+    let core = eggfuse_bake::device_frontend::core("float-workers", source).unwrap();
+    assert!(core["float_zero_bits"].is_null());
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let mut cpu = Executor::new(Graph::new(p).unwrap(), false);
+    assert!(cpu.use_query_workers(4, 1).unwrap_err().contains("zero representative"));
+    cpu.execute().unwrap();
+}
+
+#[test]
+fn malformed_float_representation_metadata_is_rejected() {
+    let source = "(function Out () String :merge old) (rule () ((set (Out) (to-string 0.0)))) (run 1)";
+    let mut core = eggfuse_bake::device_frontend::core("bad-zero", source).unwrap();
+    core["float_zero_bits"] = json!(1);
+    assert!(compiler::compile(core, &BTreeSet::new()).is_err());
+}

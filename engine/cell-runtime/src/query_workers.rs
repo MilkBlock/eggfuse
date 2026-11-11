@@ -177,6 +177,21 @@ impl Executor {
     pub fn use_query_workers(&mut self, workers: usize, grain: usize) -> Result<()> {
         if workers == 0 || grain == 0 { return Err("query workers and grain must be positive".into()); }
         if self.query_workers.is_some() { return Err("query workers already configured".into()); }
+        // With no pre-existing zero representative, float-to-string observes
+        // which zero computation interns first. Do not introduce a worker race
+        // for that native scalar choice; the ordinary execution path remains.
+        fn observes_zero(j: &J) -> bool {
+            match j {
+                J::Array(xs) => xs.iter().any(observes_zero),
+                J::Object(xs) => (j["primitive"] == "to-string" && j["inputs"] == serde_json::json!(["f64"]))
+                    || xs.values().any(observes_zero),
+                _ => false,
+            }
+        }
+        let core = &self.graph.program.artifact["source_core"];
+        if workers > 1 && core["float_zero_bits"].is_null() && observes_zero(core) {
+            return Err("parallel float-to-string requires an established zero representative; use ordinary execution or one worker".into());
+        }
         let pool = if workers == 1 { None } else {
             Some(rayon::ThreadPoolBuilder::new().num_threads(workers)
                 .thread_name(|i| format!("cell-query-{i}")).build().map_err(|e| e.to_string())?)
