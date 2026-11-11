@@ -6,6 +6,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [完整测速与源 Run 选择验证](benchmarks/cell-publication-windows/README.md)：当前串行推理相对历史最快对照有收益；四线程尚未建立额外加速，未达到 2×。记录 Raytrace 历史 hoist 选择的边界证据、完整计时及验收限制。
 
+[Cell 变化局部性](benchmarks/cell-change-locality/README.md)：用实际 Get / Expr-size 匹配与提交区分单步扇出、变化后的重复传播和 min 吸收。热点窗口呈现较小扇出，但尚未证明可免除工作或全局稀疏性。
+
 [Cell 查询并行接管](benchmarks/cell-query-workers/README.md)：复用现有 Entry 和 Query，在源 Run 内并行完成有证明覆盖的函数查询；默认关闭，尚未建立整体加速。
 
 [按 Cell 实例组织查询](benchmarks/cell-run-queries/README.md)：同一源 Run 内跨规则归组、借用实例字段并复用临时帧，保留原发布顺序；完整 Raytrace 的工作量、性能与正确性对照。

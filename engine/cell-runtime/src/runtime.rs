@@ -2449,6 +2449,8 @@ impl Executor {
             if let Some(sets) = &self.ready_sets {
                 self.watermarks[rid] = self.watermarks[rid].max(sets.watermark(rid));
             }
+            #[cfg(feature = "slot-transfer-audit")]
+            crate::transfer_audit::observation::watermark(rid, self.watermarks[rid]);
             let bindings = self.matches(rid, false)?;
             #[cfg(feature = "family-survey")]
             self.survey.rule(
@@ -2535,6 +2537,8 @@ impl Executor {
         };
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::record_run(patch.iter().map(|(rid, b)| (rid, &b.values)))?;
+        #[cfg(feature = "slot-transfer-audit")]
+        crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter());
         let matches = patch.len;
         let search_end = Instant::now();
         let search_seconds = search_end.duration_since(start).as_secs_f64() - scope_wait_seconds;

@@ -1,5 +1,7 @@
 //! Ordered RHS inputs for each Run, used by iterative Bake and the audit build.
 use std::cell::Cell;
+#[path = "cell_observation.rs"]
+pub mod observation;
 thread_local! {
     static DIGESTS: std::cell::RefCell<Vec<String>> = const { std::cell::RefCell::new(Vec::new()) };
     static ACTIVE: Cell<bool> = const { Cell::new(false) };
@@ -66,6 +68,7 @@ pub(crate) fn effective(
     old: Option<&crate::value::Value>,
     new: &crate::value::Value,
 ) -> Result<(), String> {
+    observation::write(epoch, SOURCE.get(), table, index, key, old, new);
     WRITES.with_borrow_mut(|state| {
         if let Some((count, hash)) = state {
             serde_json::to_writer(hash, &(epoch, SOURCE.get(), table, index, key, old, new))

@@ -31,6 +31,8 @@
 
 正确性门槛始终独立：最终状态、源 Run 调度、按序 RHS/写入/resume，以及删除、重建、可见性和 union 后的语义一致。逻辑 rule matches、候选数和执行过的 binding 均不等于 committed mutations。针对发生改变的路径，还要证明测试确实进入了该路径；例如 `audit_receipts` 会禁用片段发布快路。
 
+[变化局部性诊断](../../benchmarks/cell-change-locality/README.md) 补充 B/C/I 的选题证据：从实际实例与源 Run 写入统计新属性行的使用扇出、输入改变后的重复匹配和 min 吸收。它既不计入优化接管数量，也不给 Bake 增加信用。运行时可提前证明且净省工作，才是下一项候选的准入条件。
+
 ## 本轮三项工作的位置
 
 | 工作 | 目录条目 | 当前完成范围 |

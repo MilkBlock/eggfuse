@@ -64,3 +64,7 @@ required-features = ["family-survey"]
 [[example]]
 name = "rank_rhs_work"
 required-features = ["rhs-work-audit", "rhs-locals"]
+
+[[example]]
+name = "cell_change_windows"
+required-features = ["sparse-cells", "slot-transfer-audit"]
