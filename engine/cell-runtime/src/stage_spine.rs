@@ -466,24 +466,72 @@ mod set_counts_test {
                 state = state.wrapping_mul(6364136223846793005).wrapping_add(1);
                 arrivals.swap(i, state as usize % (i + 1));
             }
-            let mut rows = arrivals.into_iter().map(|(ordinal, key, depth)| {
+            let mut cursors = Vec::new();
+            let mut roots = Vec::new();
+            let mut stats = Stats::default();
+            let rows = arrivals.into_iter().map(|(ordinal, key, depth)| {
                 let root = Rc::new(Root { id: ordinal as u64, epoch: 1, set: 0, context: OnceCell::new() });
+                roots.push((ordinal, Rc::downgrade(&root)));
                 let mut cursor = Cursor::fresh(root, 0);
                 cursor.depth = depth;
                 let mut answer = Matched::matched([(1, Value::Int(key))].into_iter().collect(), QueryFacts::None, 1);
                 if ordinal % 2 == 0 { answer.values.insert(15, Value::Int(ordinal as i64)); }
-                (ordinal, Winner { answer, cursor })
+                Winner::new(answer, cursor, ordinal, &mut cursors, &mut stats)
             }).collect::<Vec<_>>();
+            // Only the owned candidates cross threads. Their original Cursor
+            // owners, including Rc roots, stay in this source Run's arena.
+            let allocation = rows.as_ptr() as usize;
+            let mut rows = std::thread::spawn(move || rows).join().unwrap();
+            assert_eq!(rows.as_ptr() as usize, allocation);
             let mut comparisons = 0;
-            select_worker_winners(&mut rows, &[1], &mut comparisons);
-            let actual = rows.iter().map(|(ordinal, winner)| {
+            assert_eq!(select_worker_winners(&mut rows, &[1], &mut comparisons, &mut cursors), 3);
+            let actual = rows.iter().map(|winner| {
                 let Value::Int(key) = winner.answer.values[&1] else { unreachable!() };
-                assert_eq!(winner.cursor.root.id, *ordinal as u64);
-                (*ordinal, key, winner.cursor.depth)
+                let cursor = cursors[winner.answer.direct.as_ref().unwrap().0].as_ref().unwrap();
+                assert_eq!(cursor.root.id, winner.ordinal as u64);
+                (winner.ordinal, key, winner.depth)
             }).collect::<Vec<_>>();
             assert_eq!(actual, expected);
             assert!(comparisons > 0);
+            for (ordinal, root) in &roots {
+                assert_eq!(root.upgrade().is_some(), expected.iter().any(|r|r.0 == *ordinal));
+            }
+            for mut winner in rows { drop(take_origin(&mut cursors, winner.answer.direct.take().unwrap())); }
+            assert!(cursors.is_empty());
+            assert!(roots.iter().all(|(_, root)| root.upgrade().is_none()));
         }
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn deferred_group_removal_and_abort_preserve_live_origin_handles() {
+        let g = crate::query::test_projection_graph();
+        let mut spine = Programs::new(&g.program);
+        spine.direct_sealed_answers = true;
+        spine.deferred_slots.resize(8, usize::MAX);
+        let mut roots = Vec::new();
+        for rule in [3, 6] {
+            let root = Rc::new(Root { id: rule as u64, epoch: 1, set: 0, context: OnceCell::new() });
+            roots.push(Rc::downgrade(&root));
+            let answer = Matched::matched([(0, Value::Int(rule as i64))].into_iter().collect(), QueryFacts::None, 1);
+            let winner = Winner::new(answer, Cursor::fresh(root, 0), 0,
+                &mut spine.sealed_cursors, &mut spine.stats);
+            spine.deferred_slots[rule] = spine.deferred_queries.len();
+            spine.deferred_queries.push(DeferredQuery { rule, complete: true, covered: 1, rows: vec![winner] });
+        }
+        let allocations = spine.deferred_frames().map(|(r, rows)| (r, rows.as_ptr() as usize)).collect::<Vec<_>>();
+        let (_, mut first) = spine.finish_worker_rule(3, &[0], &mut 0).unwrap();
+        assert!(!spine.deferred(3));
+        assert!(spine.deferred(6));
+        assert_eq!(spine.deferred_frames().map(|(r, rows)| (r, rows.as_ptr() as usize)).collect::<Vec<_>>(), allocations[1..]);
+        assert_eq!(take_origin(&mut spine.sealed_cursors, first[0].direct.take().unwrap()).root.id, 3);
+        assert!(roots[0].upgrade().is_none());
+        assert!(roots[1].upgrade().is_some());
+        // Abort the other query without exposing or committing its candidate.
+        spine.discard_query_candidates();
+        assert!(!spine.deferred(6));
+        assert!(spine.deferred_frames().next().is_none());
+        assert!(roots[1].upgrade().is_none());
+        assert_eq!(spine.stats.aborted_cursor_releases, 1);
     }
     #[cfg(feature = "sparse-cells")]
     #[test]
@@ -510,6 +558,13 @@ mod set_counts_test {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    candidate_cursor_stores: u64,
+    candidate_cursor_growths: u64,
+    candidate_cursor_peak_bytes: u64,
+    losing_cursor_releases: u64,
+    aborted_cursor_releases: u64,
+    deferred_group_growths: u64,
+    deferred_group_peak_bytes: u64,
     query_fragment_frames: u64,
     query_fragment_slots: u64,
     query_fragment_capacity_bytes: u64,
@@ -788,7 +843,8 @@ pub struct Programs {
     origins: Vec<HashMap<Vec<Value>, Cursor>>,
     origin_rules: Vec<usize>,
     retain_matched_origins: bool,
-    // Sealed bindings own move-only indices into this Run's winning cursors.
+    // Query candidates and sealed bindings use the same move-only origin.
+    // The Rc-backed Cursor stays on the coordinator throughout worker access.
     #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
     sealed_cursors: Vec<Option<Cursor>>,
     next_context: u64,
@@ -796,28 +852,71 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     answer_scratch: Winners,
     #[cfg(feature = "sparse-cells")]
-    deferred_queries: Vec<Option<(bool, usize, Vec<(usize, Winner)>)>>,
+    deferred_queries: Vec<DeferredQuery>,
+    #[cfg(feature = "sparse-cells")]
+    deferred_slots: Vec<usize>,
     pub stats: Stats,
 }
 // One owned execution fragment. Its inputs are also the winner key; there is
 // no empty answer shell plus a separately moved binding vector.
+#[cfg(not(feature = "sparse-cells"))]
 struct Winner { answer: Matched, cursor: Cursor }
 #[cfg(feature = "sparse-cells")]
-fn select_worker_winners(results: &mut Vec<(usize, Winner)>, inputs: &[usize], comparisons: &mut u64) {
+pub(crate) struct Winner {
+    pub(crate) answer: Matched,
+    ordinal: usize,
+    depth: u32,
+}
+#[cfg(feature = "sparse-cells")]
+struct DeferredQuery { rule: usize, complete: bool, covered: usize, rows: Vec<Winner> }
+#[cfg(feature = "sparse-cells")]
+impl Winner {
+    fn new(mut answer: Matched, cursor: Cursor, ordinal: usize,
+        cursors: &mut Vec<Option<Cursor>>, stats: &mut Stats) -> Self {
+        debug_assert!(answer.direct.is_none());
+        let depth = cursor.depth;
+        answer.direct = Some(DirectOrigin(cursors.len()));
+        stats.candidate_cursor_stores += 1;
+        stats.candidate_cursor_growths += u64::from(cursors.len() == cursors.capacity());
+        cursors.push(Some(cursor));
+        stats.candidate_cursor_peak_bytes = stats.candidate_cursor_peak_bytes.max(
+            (cursors.capacity() * std::mem::size_of::<Option<Cursor>>()) as u64);
+        Self { answer, ordinal, depth }
+    }
+}
+#[cfg(feature = "sparse-cells")]
+fn take_origin(cursors: &mut Vec<Option<Cursor>>, token: DirectOrigin) -> Cursor {
+    let cursor = cursors[token.0].take().expect("owned Spine cursor");
+    // Only vacant trailing slots are reused. Every remaining token keeps its
+    // address; the consumed move-only token cannot refer to a later occupant.
+    while cursors.last().is_some_and(Option::is_none) { cursors.pop(); }
+    cursor
+}
+#[cfg(feature = "sparse-cells")]
+fn select_worker_winners(results: &mut Vec<Winner>, inputs: &[usize], comparisons: &mut u64,
+    cursors: &mut Vec<Option<Cursor>>) -> usize {
     // A total source ordinal preserves the old stable key/depth selection
     // without restoring source order first or stripping a temporary vector.
-    results.sort_unstable_by(|(a_order, a), (b_order, b)| {
+    results.sort_unstable_by(|a, b| {
         *comparisons += 1;
         a.answer.compare_inputs(&b.answer, inputs)
-            .then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
-            .then_with(|| a_order.cmp(b_order))
+            .then_with(|| b.depth.cmp(&a.depth))
+            .then_with(|| a.ordinal.cmp(&b.ordinal))
     });
-    results.dedup_by(|(_, a), (_, b)| a.answer.compare_inputs(&b.answer, inputs).is_eq());
+    let before = results.len();
+    results.dedup_by(|a, b| {
+        if a.answer.compare_inputs(&b.answer, inputs).is_eq() {
+            drop(take_origin(cursors, a.answer.direct.take().expect("candidate origin")));
+            true
+        } else { false }
+    });
+    before - results.len()
 }
 #[cfg(feature = "sparse-cells")]
 type Winners = Vec<Winner>;
 #[cfg(not(feature = "sparse-cells"))]
 type Winners = BTreeMap<crate::slots::Slots, Winner>;
+#[cfg(not(feature = "sparse-cells"))]
 fn record_answer(
     results: &mut Winners,
     values: crate::slots::Slots,
@@ -1108,7 +1207,9 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             answer_scratch: vec![],
             #[cfg(feature = "sparse-cells")]
-            deferred_queries: (0..p.rules.len()).map(|_| None).collect(),
+            deferred_queries: Vec::new(),
+            #[cfg(feature = "sparse-cells")]
+            deferred_slots: vec![usize::MAX; p.rules.len()],
             stats: Stats::default(),
         };
         if !enabled {
@@ -1210,7 +1311,7 @@ impl Programs {
             return None;
         }
         #[cfg(all(feature = "iterative-bake", feature = "sparse-cells"))]
-        let supplied = direct.map(|token| self.sealed_cursors[token.0].take().expect("sealed Spine cursor"));
+        let supplied = direct.map(|token| take_origin(&mut self.sealed_cursors, token));
         #[cfg(all(feature = "iterative-bake", not(feature = "sparse-cells")))]
         let supplied = direct.map(|d| *d.0);
         #[cfg(not(feature = "iterative-bake"))]
@@ -2415,8 +2516,6 @@ impl Programs {
         let mut results = Winners::new();
         #[cfg(feature = "sparse-cells")]
         let mut workers = workers.and_then(|w| if w.admit_spine_rule(g, rid) { Some(w) } else { None });
-        #[cfg(feature = "sparse-cells")]
-        let mut ordinals = Vec::new();
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
@@ -2533,20 +2632,23 @@ impl Programs {
                 self.stats.query_fragment_frames += 1;
                 self.stats.query_fragment_slots += inputs.len() as u64;
                 self.stats.query_fragment_capacity_bytes += inputs.capacity_bytes() as u64;
-                record_answer(&mut results, inputs, facts, epoch, cursor);
                 #[cfg(feature = "sparse-cells")]
-                if let Some(workers) = workers.as_deref_mut() {
-                    ordinals.push(_ordinal);
-                    workers.record_serial_order();
-                }
+                results.push(Winner::new(Matched::matched(inputs, facts, epoch), cursor, _ordinal,
+                    &mut self.sealed_cursors, &mut self.stats));
+                #[cfg(not(feature = "sparse-cells"))]
+                record_answer(&mut results, inputs, facts, epoch, cursor);
             }
         }
         #[cfg(feature = "sparse-cells")]
         if workers.as_ref().is_some_and(|w| w.pending_rule(rid)) {
             // Keep each original winner/cursor once until every Cell in this
             // read-only Run has completed. No intermediate binding is sealed.
-            workers.as_deref_mut().unwrap().record_deferred_storage(results.len());
-            self.deferred_queries[rid] = Some((complete, covered_count, ordinals.into_iter().zip(results).collect()));
+            debug_assert_eq!(self.deferred_slots[rid], usize::MAX);
+            self.deferred_slots[rid] = self.deferred_queries.len();
+            self.stats.deferred_group_growths += u64::from(self.deferred_queries.len() == self.deferred_queries.capacity());
+            self.deferred_queries.push(DeferredQuery { rule: rid, complete, covered: covered_count, rows: results });
+            self.stats.deferred_group_peak_bytes = self.stats.deferred_group_peak_bytes.max(
+                (self.deferred_queries.capacity() * std::mem::size_of::<DeferredQuery>()) as u64);
             return Ok(Some(Coverage { complete, covered, claimed: covered_count, answers: Vec::new() }));
         }
         let answers = self.seal_answers(rid, &g.program.rules[rid].inputs, complete, covered_count, results);
@@ -2561,14 +2663,8 @@ impl Programs {
         mut results: Winners) -> Vec<Matched> {
         #[cfg(feature = "sparse-cells")]
         {
-            // Stable ordering retains the first producer when duplicate
-            // bindings have the same depth, as in the ordered-map route.
-            // The matched inputs define identity even when a worker has
-            // continued the instance and filled some of its RHS result slots.
-            results.sort_by(|a, b| {
-                a.answer.compare_inputs(&b.answer, inputs).then_with(|| b.cursor.depth.cmp(&a.cursor.depth))
-            });
-            results.dedup_by(|a, b| a.answer.compare_inputs(&b.answer, inputs).is_eq());
+            self.stats.losing_cursor_releases += select_worker_winners(&mut results, inputs,
+                &mut 0, &mut self.sealed_cursors) as u64;
         }
         #[cfg(feature = "sparse-cells")]
         let rows = results.drain(..);
@@ -2591,7 +2687,13 @@ impl Programs {
         self.stats.bindings += rows.len() as u64;
         *self.stats.bindings_by_rule.entry(rid).or_default() += rows.len() as u64;
         rows
-            .map(|Winner { mut answer, cursor }| {
+            .map(|winner| {
+                let mut answer = winner.answer;
+                #[cfg(feature = "sparse-cells")]
+                let cursor = self.sealed_cursors[answer.direct.as_ref().expect("candidate origin").0]
+                    .as_ref().expect("retained candidate cursor");
+                #[cfg(not(feature = "sparse-cells"))]
+                let cursor = winner.cursor;
                 self.stats.query_fragment_sealed_slots += answer.values.len() as u64;
                 self.stats.query_fragment_sealed_capacity_bytes += answer.values.capacity_bytes() as u64;
                 #[cfg(feature = "iterative-bake")]
@@ -2605,15 +2707,12 @@ impl Programs {
                     // Stable sealing keeps the Spine binding on an equal RHS key.
                     // Unsealed continuations still resolve by key.
                     self.stats.sealed_partial_origins += u64::from(!complete);
-                    #[cfg(feature = "sparse-cells")]
-                    {
-                        answer.direct = Some(DirectOrigin(self.sealed_cursors.len()));
-                        self.sealed_cursors.push(Some(cursor));
-                    }
                     #[cfg(not(feature = "sparse-cells"))]
                     { answer.direct = Some(DirectOrigin(Box::new(cursor))); }
                     return answer;
                 }
+                #[cfg(feature = "sparse-cells")]
+                let cursor = take_origin(&mut self.sealed_cursors, answer.direct.take().unwrap());
                 if self.origins[rid].is_empty() {
                     self.origin_rules.push(rid);
                 }
@@ -2626,25 +2725,43 @@ impl Programs {
             .collect()
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_queries[rid].is_some() }
+    pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_slots[rid] != usize::MAX }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn deferred_frames(&mut self) -> impl Iterator<Item = (usize, &mut [Winner])> {
+        self.deferred_queries.iter_mut().map(|q| (q.rule, q.rows.as_mut_slice()))
+    }
+    /// A failed source query cannot commit any of its accepted candidates.
+    /// Release their origins as well as the candidate arrays, including roots
+    /// already sealed by an earlier rule in this same read-only Run.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn discard_query_candidates(&mut self) {
+        for q in self.deferred_queries.drain(..) { self.deferred_slots[q.rule] = usize::MAX; }
+        self.stats.aborted_cursor_releases += self.sealed_cursors.iter().filter(|c|c.is_some()).count() as u64;
+        self.sealed_cursors.clear();
+        for rid in self.origin_rules.drain(..) { self.origins[rid].clear(); }
+    }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn record_worker_answer(&mut self, rid: usize, ordinal: usize,
         answer: Matched, cursor: Cursor) {
         if cursor.via_block && cursor.state.direct {
             self.training.seal_moves += answer.values.len() as u64;
         }
-        let (_, _, results) = self.deferred_queries[rid].as_mut().expect("deferred Cell query");
         self.stats.query_fragment_frames += 1;
         self.stats.query_fragment_slots += answer.values.len() as u64;
         self.stats.query_fragment_capacity_bytes += answer.values.capacity_bytes() as u64;
-        results.push((ordinal, Winner { answer, cursor }));
+        let winner = Winner::new(answer, cursor, ordinal, &mut self.sealed_cursors, &mut self.stats);
+        self.deferred_queries[self.deferred_slots[rid]].rows.push(winner);
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64) -> Option<(bool, Vec<Matched>)> {
-        let (complete, covered, mut results) = self.deferred_queries[rid].take()?;
-        select_worker_winners(&mut results, inputs, order_comparisons);
-        Some((complete, self.seal_winners(rid, inputs, complete, covered,
-            results.into_iter().map(|(_, winner)| winner))))
+        let slot = std::mem::replace(&mut self.deferred_slots[rid], usize::MAX);
+        if slot == usize::MAX { return None; }
+        let DeferredQuery { rule, complete, covered, mut rows } = self.deferred_queries.swap_remove(slot);
+        debug_assert_eq!(rule, rid);
+        if let Some(moved) = self.deferred_queries.get(slot) { self.deferred_slots[moved.rule] = slot; }
+        self.stats.losing_cursor_releases += select_worker_winners(&mut rows, inputs,
+            order_comparisons, &mut self.sealed_cursors) as u64;
+        Some((complete, self.seal_winners(rid, inputs, complete, covered, rows.into_iter())))
     }
     pub fn shared(&self) -> bool {
         self.enabled && self.partial && self.shared_entries
@@ -2763,7 +2880,17 @@ impl Programs {
         #[cfg(feature = "structural-depth")]
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
+        #[cfg(feature = "sparse-cells")]
+        let candidate_storage = json!({"layout":"owned-origin/v2",
+            "rule_slot_bytes":self.deferred_slots.capacity()*std::mem::size_of::<usize>(),
+            "deferred_group_bytes":self.deferred_queries.capacity()*std::mem::size_of::<DeferredQuery>(),
+            "cursor_capacity_bytes":self.sealed_cursors.capacity()*std::mem::size_of::<Option<Cursor>>(),
+            "pending_groups":self.deferred_queries.len(),
+            "pending_cursor_slots":self.sealed_cursors.len()});
+        #[cfg(not(feature = "sparse-cells"))]
+        let candidate_storage = J::Null;
         let report = json!({"output_registration":"cell-span/v1",
+            "query_candidate_storage":candidate_storage,
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",
             "history_sealing":"unique-cell-results/v1",

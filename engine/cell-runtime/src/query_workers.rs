@@ -756,16 +756,18 @@ impl Workers {
         let cell = physical_cell(g, row);
         self.tasks.push(cell, source, rid, &mut self.cell_queries, &mut self.stats);
     }
-    pub(crate) fn record_deferred_storage(&mut self, serial: usize) {
-        self.stats.deferred_winner_moves += serial as u64;
-        self.stats.batch_buffers += 2; // serial ordinals and deferred pairs
-    }
     pub(crate) fn record_completion(&mut self, comparisons: u64, bindings: u64) {
         self.stats.winner_order_comparisons += comparisons;
         self.stats.completion_binding_moves += bindings;
     }
-    pub(crate) fn record_serial_order(&mut self) { self.stats.serial_order_headers += 1; }
     pub(crate) fn pending_rule(&self, rid: usize) -> bool { self.rule_facts[rid].is_some() }
+    pub(crate) fn discard_queries(&mut self, g: &mut Graph, spine: &mut crate::stage_spine::Programs) {
+        self.tasks.clear(&mut self.stats);
+        for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
+        #[cfg(feature="parallel-residuals")]
+        self.expansion.discard();
+        self.finish_read_accounting(g, spine);
+    }
     pub(crate) fn finish_run(&mut self, g: &mut Graph, spine: &mut crate::stage_spine::Programs,
         matches: &mut [(usize, Vec<Binding>)],
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
@@ -776,10 +778,12 @@ impl Workers {
             #[cfg(feature="parallel-residuals")] sieve,
             #[cfg(feature="parallel-residuals")] entries);
         if outcome.is_err() {
-            self.tasks.clear(&mut self.stats);
-            for q in self.cell_queries.drain(..) {self.rule_facts[self.cell_codes[q.code].rule]=None;}
-            #[cfg(feature="parallel-residuals")] self.expansion.discard();
-        }
+            self.discard_queries(g, spine);
+            spine.discard_query_candidates();
+        } else { self.finish_read_accounting(g, spine); }
+        outcome
+    }
+    fn finish_read_accounting(&mut self, g: &mut Graph, spine: &mut crate::stage_spine::Programs) {
         // Also clear an all-negative Run and error paths. A later mutable write,
         // new constructor, visibility change or union must be read anew.
         g.record_constructor_query_work(&self.first_reads.work);
@@ -792,14 +796,13 @@ impl Workers {
             self.first_reads.results[id] = None;
             self.stats.fixed_read_clears += 1;
         }
-        outcome
     }
     fn finish_queries(&mut self, g: &mut Graph, spine: &mut crate::stage_spine::Programs,
         matches: &mut [(usize, Vec<Binding>)],
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
         #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan) -> Result<()> {
-        let mut ready = ready::borrow(g, matches, &mut self.matched);
+        let mut ready = ready::borrow(g, matches, spine, &mut self.matched);
         if self.cell_queries.is_empty() && ready.is_empty() { return Ok(()); }
         #[cfg(feature="parallel-residuals")]
         let prepared=self.expansion.prepare(indexes,sieve,entries);
@@ -955,6 +958,8 @@ impl Workers {
         self.stats.execution.add(&completed.execution);
         self.matched.execution.add(&completed.execution);
         self.matched.instances += completed.instances;
+        self.matched.deferred_instances += completed.deferred_instances;
+        self.matched.deferred_operations += completed.deferred_operations;
         self.matched.chunks += completed.chunks;
         self.matched.empty_chunks += completed.empty_chunks;
         self.matched.histogram_growths += completed.histogram_growths;

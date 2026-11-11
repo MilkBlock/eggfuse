@@ -111,13 +111,19 @@ overall objective complete until all applicable items above are proven.
   batching. Raytrace consumes all 93,181 added prepared results and reduces
   later worker segments from 62,632 to 3,046. Header/admission, slot growth and
   mixed/matched-only invocation costs are recorded; no speedup is established.
+- Deferred serial candidates now join that same invocation through their
+  original owned arrays. The existing coordinator Cursor arena provides a
+  move-only origin handle; selection releases losing origins and preserves
+  source order. Separate ordinal and deferred-conversion containers are removed;
+  see [work and acceptance](../benchmarks/cell-execution-deferred/README.md).
+  Additional 29 / 4,283 prepared results are all consumed, removing the remaining
+  observed 29 / 3,046 later scalar dispatches. Earlier Cursor storage, rule-slot
+  mapping and group/slot growth are charged; no new speedup is established.
 - Cursor/receipt ownership, completion/publication unification and Bake
-  composition of those continuations remain live work. Serial Spine answers
-  paired with Cursor in `deferred_queries` still sit outside the borrowed Run
-  groups until worker winner sealing. Their execution state should join the
-  same ownership path without copying bindings or moving Rc cursors to workers.
-  The graph's single `active_rhs` owner and synchronous frontier waits still
-  prevent independent parked-frame scheduling after shared effects.
+  composition of those continuations remain live work. The graph's single
+  `active_rhs` owner and synchronous frontier waits still prevent independent
+  parked-frame scheduling after shared effects. Removing scalar dispatch does
+  not establish that shared effects or repair can now execute concurrently.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

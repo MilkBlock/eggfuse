@@ -2684,7 +2684,19 @@ impl Executor {
             }
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::observation::watermark(rid, self.watermarks[rid]);
-            let bindings = self.matches(rid, false)?;
+            let bindings = match self.matches(rid, false) {
+                Ok(bindings) => bindings,
+                Err(error) => {
+                    #[cfg(feature = "sparse-cells")]
+                    {
+                        if let Some(workers) = &mut self.query_workers {
+                            workers.discard_queries(&mut self.graph, &mut self.stage_spine);
+                        }
+                        self.stage_spine.discard_query_candidates();
+                    }
+                    return Err(error);
+                }
+            };
             #[cfg(feature = "family-survey")]
             self.survey.rule(
                 self.graph.epoch,
