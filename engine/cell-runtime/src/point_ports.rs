@@ -6,7 +6,7 @@ use crate::cell::Access;
 struct Receipt {
     epoch: u64,
     key: u64,
-    row: Option<Row>,
+    row: Option<crate::graph::Point>,
 }
 pub(super) struct PointPorts {
     tables: Vec<Option<Box<[Option<Receipt>]>>>,
@@ -42,9 +42,9 @@ impl PointPorts {
         graph: &mut Graph,
         t: usize,
         args: &[Value],
-    ) -> Result<Option<Row>> {
+    ) -> Result<Option<crate::graph::Point>> {
         let ([Value::Eq(key)], Some(slots)) = (args, &mut self.tables[t]) else {
-            return graph.lookup_canonical(t, args);
+            return graph.lookup_point(t, args);
         };
         let pos = (key ^ key.rotate_left(32)).wrapping_mul(0x9e3779b185ebca87) >> 59;
         let slot = &mut slots[pos as usize];
@@ -57,7 +57,7 @@ impl PointPorts {
             graph.stats.shared_negative_hits += u64::from(hit.row.is_none());
             return Ok(hit.row.clone());
         }
-        let row = graph.lookup_canonical(t, args)?;
+        let row = graph.lookup_point(t, args)?;
         *slot = Some(Receipt {
             epoch: graph.epoch,
             key: *key,

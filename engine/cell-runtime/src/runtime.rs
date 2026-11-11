@@ -3075,7 +3075,10 @@ impl Executor {
         let repair_cells = self.graph.repair_cell_report();
         #[cfg(not(feature = "spine-blocks"))]
         let repair_cells = J::Null;
-        json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
+        let point_transport = json!({"schema":"cell-point-result/v1",
+            "point_bytes":std::mem::size_of::<crate::graph::Point>(),
+            "row_bytes":std::mem::size_of::<Row>()});
+        let mut report = json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "scoped_completion":self.graph.scoped_completion_report(),
             "scoped_executor":self.scoped_execution_report(),
@@ -3088,6 +3091,8 @@ impl Executor {
                 "subtrie_bytes":std::mem::size_of::<Subtrie>()},
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
-            "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
+            "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}});
+        report["query_point_transport"] = point_transport;
+        report
     }
 }

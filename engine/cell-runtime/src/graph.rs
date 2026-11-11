@@ -132,8 +132,28 @@ pub struct Row {
     pub epoch: u64,
     pub witness: Dependency,
 }
+/// A complete-key Cell query already owns its inputs. Carry only the returned
+/// value and the original row's validity/ownership metadata into its suffix.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct Point {
+    pub value: Value,
+    pub hidden: bool,
+    pub epoch: u64,
+    pub witness: Dependency,
+}
+impl From<&Row> for Point {
+    fn from(row: &Row) -> Self {
+        Self { value: row.values.last().expect("query row result").clone(),
+            hidden: row.hidden, epoch: row.epoch, witness: row.witness }
+    }
+}
+#[cfg(test)]
+#[path = "point_results_test.rs"]
+mod point_results_test;
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Stats {
+    #[serde(default)]
+    pub function_point_reads: u64,
     #[serde(default)]
     pub merge_program_calls: u64,
     #[serde(default)]
@@ -1256,6 +1276,30 @@ impl Graph {
             key.iter().cloned().enumerate().collect()
         });
         result
+    }
+    pub(crate) fn lookup_point(&mut self, table: usize, key: &[Value]) -> Result<Option<Point>> {
+        // Research observers keep their ordinary lookup instrumentation. The
+        // general constructor path also retains exact candidates and hidden-row
+        // selection; only its receiving cache projects the result.
+        #[cfg(all(feature = "sparse-cells", not(any(feature = "family-overlap", feature = "rhs-work-audit"))))]
+        if !self.program.tables[table].virtual_fact && !self.port_keys_enabled(table) {
+            self.key_lookup_calls.set(self.key_lookup_calls.get() + 1);
+            let index = if key.is_empty() && self.program.tables[table].schema.len() == 1
+                && self.members[table].len() <= 1 {
+                self.members[table].iter().next().map(|&word| word as usize)
+            } else { self.function_index(table, key) };
+            let point = index.and_then(|i| {
+                let f = self.functions.get(i).filter(|f| f.live)?;
+                // Match function() exactly even at a scoped completion boundary:
+                // a retained decoded row is authoritative until invalidated.
+                let value = self.function_decoded[i].as_ref().map_or_else(
+                    || canon(&f.value, &self.parents), |fields| fields.last().unwrap().clone());
+                Some(Point { value, hidden: false, epoch: f.epoch, witness: Dependency::Function(i) })
+            });
+            self.stats.function_point_reads += u64::from(point.is_some());
+            return Ok(point);
+        }
+        Ok(self.lookup_canonical(table, key)?.as_ref().map(Point::from))
     }
     #[inline]
     fn lookup_canonical_inner(&self, table: usize, key: &[Value]) -> Result<Option<Row>> {

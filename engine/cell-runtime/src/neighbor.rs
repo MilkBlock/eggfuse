@@ -1,7 +1,7 @@
 //! Demand-driven context for attributes read on a constructor's children.
 //! Only uncovered delta entries reach these caches, inside the ordinary kernel.
 use crate::{
-    graph::{Dependency, Graph, Row},
+    graph::{Dependency, Graph, Point, Row},
     program::*,
     value::Value,
 };
@@ -100,7 +100,7 @@ pub(crate) struct Stats {
 #[derive(Default)]
 struct Ports {
     version: u64,
-    rows: FxHashMap<u64, Option<Row>>,
+    rows: FxHashMap<u64, Option<Point>>,
     keys: FxHashMap<usize, u64>,
 }
 #[derive(Default, Serialize)]
@@ -402,7 +402,7 @@ impl Context {
         rid: usize,
         t: usize,
         key: &[Value],
-    ) -> Result<Option<Row>> {
+    ) -> Result<Option<Point>> {
         #[cfg(feature = "family-overlap")]
         let point_clock = crate::family_overlap::clock();
         let [Value::Eq(id)] = key else {
@@ -434,8 +434,8 @@ impl Context {
         }
         stats.point_probes += 1;
         g.stats.residual_candidates += 1;
-        let row = g.lookup_canonical(t, key)?;
-        if let Some(Row {
+        let row = g.lookup_point(t, key)?;
+        if let Some(Point {
             witness: Dependency::Function(i),
             ..
         }) = &row
@@ -563,7 +563,7 @@ impl PortWriter<'_> {
         if let Some((k, row)) = current
             && let Some(slot) = cache.rows.get_mut(&k)
         {
-            *slot = Some(row.clone());
+            *slot = Some(Point::from(row));
             cache.keys.insert(i, k);
             self.published.refreshed += 1;
         }
@@ -673,7 +673,7 @@ mod tests {
         };
         for insert_first in [false, true] {
             let mut cache = Ports::default();
-            cache.rows.insert(7, Some(original.clone()));
+            cache.rows.insert(7, Some(Point::from(&original)));
             cache.keys.insert(3, 7);
             let mut ctx = Context {
                 #[cfg(feature = "cell-absorption")]
@@ -750,14 +750,14 @@ mod tests {
         assert_eq!(ctx.ports[0].as_ref().unwrap().version, g.query_versions[0]);
         assert_eq!(ctx.ports[1].as_ref().unwrap().version, old[1]);
         assert_ne!(old[1], g.query_versions[1]);
-        assert_eq!(ctx.ports[1].as_ref().unwrap().rows[&7].as_ref().unwrap().values[1], Value::Int(1));
+        assert_eq!(ctx.ports[1].as_ref().unwrap().rows[&7].as_ref().unwrap().value, Value::Int(1));
         g.changes.clear();
         std::mem::swap(&mut g.changes, &mut deferred);
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
         for table in 0..2 {
-            assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().values[1], Value::Int(2));
+            assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().value, Value::Int(2));
             let selected = ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 2,
                 &Rc::new(g.witnesses(table))).unwrap();
             assert!(selected.is_empty());
@@ -776,7 +776,7 @@ mod tests {
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
-        assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().values[1], Value::Int(3));
+        assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().value, Value::Int(3));
         assert_eq!(ctx.stats[0].point_probes, 2, "updates preserve positive and negative reads");
     }
 }

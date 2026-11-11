@@ -361,7 +361,7 @@ impl Frame {
                         #[cfg(feature = "sparse-cells")]
                         { exec.point_ports.read(&mut exec.graph, *t, &args)? }
                         #[cfg(not(feature = "sparse-cells"))]
-                        { exec.graph.lookup_canonical(*t, &args)? }
+                        { exec.graph.lookup_point(*t, &args)? }
                     };
                     let Some(row) = row else {
                         return Ok(None);
@@ -372,7 +372,7 @@ impl Frame {
                     }
                     epoch = epoch.max(row.epoch);
                     self.witnesses[ins.atom] = Some(row.witness);
-                    Ok(Some(row.values.last().unwrap().clone()))
+                    Ok(Some(row.value))
                 }
                 Call::Primitive(name, sort) => {
                     if name.starts_with("cell-key-") {
