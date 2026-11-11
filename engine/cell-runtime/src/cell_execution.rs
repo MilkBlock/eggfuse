@@ -227,6 +227,14 @@ impl Plan {
             && matches!(&template.ops[position], Op::Let(dst,..) if values.contains_key(dst))
     }
     #[cfg(feature = "sparse-cells")]
+    pub fn has_preparation(&self) -> bool {
+        self.segments[0].local_operations > 0 || !self.input_ready.is_empty()
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn needs_preparation(&self, instance: &super::Instance) -> bool {
+        self.has_preparation() && !instance.preparation_attempted
+    }
+    #[cfg(feature = "sparse-cells")]
     pub fn prepare(
         &self,
         template: &Template,
@@ -234,15 +242,15 @@ impl Plan {
         counts: &mut Counts,
     ) {
         let first = &self.segments[0];
-        if (first.local_operations == 0 && self.input_ready.is_empty())
-            || instance.parent.is_some()
-            || instance.continuation.is_some()
-        {
-            return;
-        }
+        if !self.needs_preparation(instance) { return; }
+        instance.preparation_attempted = true;
         debug_assert_eq!(instance.prepared, 0);
         counts.instances += 1;
         let bytes = instance.values.capacity_bytes();
+        // Completed matches may retain a parent or continuation provenance.
+        // Only their owned scalar values are used here. Missing projections
+        // stay deferred; no worker reads a parent or manipulates a Cursor.
+        instance.values.reserve_exact(first.outputs.len() + self.input_ready.len());
         for (position, op) in template.ops[..first.end].iter().enumerate() {
             match op {
                 Op::Copy(..) => (),
@@ -356,6 +364,35 @@ mod tests {
             Call::Primitive("+".into(), "i64".into()),
             vec![Arg::Slot(a), Arg::Slot(b)],
         )
+    }
+    #[test]
+    fn captured_parent_preparation_keeps_partial_results_and_defers_missing_operands() {
+        let t = template(vec![add(2, 0, 0), add(3, 2, 1),
+            Op::Union(Arg::Slot(6), Arg::Slot(6)), add(4, 3, 1)]);
+        let plan = Plan::derive(&[], &t, &[0, 1, 6]);
+        let mut values = crate::slots::Slots::with_capacity(6);
+        values.extend([(0, Value::Int(3)), (6, Value::Eq(9))]);
+        let mut instance = super::super::Instance::matched(values, super::super::QueryFacts::None, 17);
+        // No graph or parent is available to this computation. Captured owned
+        // scalars remain sufficient even with source-continuation provenance.
+        instance.parent = Some(crate::graph::FactRef { cell: 999, op: 4 });
+        instance.continuation = Some((5, true));
+        let mut first = Counts::default();
+        plan.prepare(&t, &mut instance, &mut first);
+        assert_eq!(first.operations, 1);
+        assert_eq!(first.deferred_failures, 1);
+        assert_eq!(instance.prepared, 1);
+        assert_eq!(instance.values[&2], Value::Int(6));
+        assert!(!instance.values.contains_key(&3));
+        let mut repeated = Counts::default();
+        plan.prepare(&t, &mut instance, &mut repeated);
+        assert_eq!(repeated.instances, 0);
+        assert_eq!(repeated.operations, 0);
+        assert_eq!(repeated.deferred_failures, 0, "a Run batch must not retry failed preparation");
+        assert_eq!(instance.prepared, 1, "the source executor resumes at the missing operand");
+        assert_eq!(instance.values[&2], Value::Int(6));
+        assert!(!instance.values.contains_key(&4));
+        assert_eq!(instance.continuation, Some((5, true)));
     }
     #[test]
     fn ready_analysis_follows_copy_wiring_and_never_prepares_mutable_dependencies() {

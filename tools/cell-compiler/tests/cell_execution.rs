@@ -52,6 +52,109 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn completed_matches_share_the_run_worker_invocation_without_answer_packets() {
+    let source = format!(r#"{HEADER}
+(rule ((= x (N n)))
+ ((let a (+ n 1)) (F x a) (let b (* a 2)) (set (Out x) b)) :ruleset step)
+{}
+(run-schedule (run step))
+(check (= (Out (N 2)) 6))
+"#, initial());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for (workers, grain) in [(1, 1), (2, 1), (4, 64)] {
+        let mut candidate = executor(&source, workers);
+        candidate.use_cell_execution(grain).unwrap();
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        let report = candidate.report();
+        let stats = &report["query_workers"]["stats"];
+        let matched = &report["query_workers"]["matched"];
+        assert_eq!(matched["execution"]["operations"], 128, "{report}");
+        assert_eq!(matched["execution"]["later_operations"], 64);
+        assert_eq!(matched["matched_only_invocations"], 1);
+        assert_eq!(stats["answers"], 0, "existing matches produce no second answer vector");
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations, 64);
+        assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 64);
+        assert_eq!(report["cell_execution"]["runtime"]["stats"]["worker_segments"], 0);
+        assert_eq!(matched[if workers > 1 { "worker_operations" } else { "inline_operations" }], 128);
+    }
+}
+
+#[test]
+fn completed_matches_and_cross_stage_queries_use_one_mixed_invocation() {
+    let source = format!(r#"{HEADER}
+(datatype Gated (Gate E))
+(ruleset make)
+(rule ((Start x)) ((Gate x)) :ruleset make)
+(rule ((= x (N n))) ((let a (+ n 1)) (set (Out x) a)) :ruleset step)
+(rule ((Gate x) (= n (Input x))) ((let b (+ n 3)) (set (Current x) b)) :ruleset step)
+{}
+(run-schedule (seq (run make) (run step)))
+(check (= (Out (N 2)) 3) (= (Current (N 2)) 5))
+"#, initial());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for workers in [1, 4] {
+        let mut candidate = executor(&source, workers);
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        let report = candidate.report();
+        let stats = &report["query_workers"]["stats"];
+        assert!(report["query_workers"]["matched"]["mixed_invocations"].as_u64().unwrap() > 0, "{report}");
+        assert!(stats["answers"].as_u64().unwrap() > 0);
+        assert!(report["query_workers"]["matched"]["execution"]["operations"].as_u64().unwrap() > 0);
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations, 128);
+    }
+}
+
+#[test]
+fn completed_matches_defer_scalar_failure_until_after_the_original_shared_effect() {
+    let source = format!(r#"{HEADER}
+(rule ((= x (N n)))
+ ((let a (+ n 1)) (set (Current x) a) (let b (/ a 0)) (set (Out x) b)) :ruleset step)
+{}
+(run-schedule (run step))
+"#, initial());
+    let mut control = executor(&source, 0);
+    let error = control.execute().unwrap_err();
+    for workers in [1, 4] {
+        let mut candidate = executor(&source, workers);
+        candidate.use_cell_execution(1).unwrap();
+        assert_eq!(candidate.execute().unwrap_err(), error);
+        assert_eq!(candidate.graph.export().unwrap(), control.graph.export().unwrap());
+        let report = candidate.report();
+        assert_eq!(report["query_workers"]["matched"]["execution"]["later_deferred_failures"], 64);
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations, 1,
+            "speculation for later bindings must not count as consumed work");
+    }
+}
+
+#[test]
+fn accepted_matches_keep_captured_scalars_when_an_earlier_rhs_deletes_their_source() {
+    let source = format!(r#"{HEADER}
+(rule ((= x (N n))) ((delete (N n))) :ruleset step)
+(rule ((= x (N n))) ((let a (+ n 1)) (F x a) (set (Out x) a)) :ruleset step)
+{}
+(run-schedule (run step))
+"#, initial());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for workers in [1, 4] {
+        let mut candidate = executor(&source, workers);
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations, 64,
+            "deleting an earlier witness must not cancel accepted source-Run bindings");
+        assert!(candidate.report()["query_workers"]["matched"]["execution"]["operations"]
+            .as_u64().unwrap() >= 64);
+    }
+}
+
+#[test]
 fn worker_query_continues_into_owned_slots_and_keeps_run_snapshot() {
     let source = format!(
         r#"{HEADER}

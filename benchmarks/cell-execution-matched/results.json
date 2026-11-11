@@ -1,0 +1,311 @@
+{
+  "scope": "standalone Cell CPU",
+  "control_commit": "35a59e30",
+  "runtime_sha256": "fbb31c739e662ecb49b5cb0db93180fff6f92ddb2b58681295bb667e3c1f9e80",
+  "control_runtime_sha256": "1a881c7e7e9ddbe282ca4e2ff4db702c45f86fa46d0e9c8c9e774da50a3420c4",
+  "limits": "Complete work and semantic checks, not throughput or utilization evidence. Source shared effects remain ordered. New matched preparation is a subset of total preparation, not additional savings. Capacity bytes are cumulative and exclude allocator overhead; they are not peak memory.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "6ff032eb0a9e1f41830d938800a83ccd7309335c02ac0f738d680dfa63036a84",
+      "after_report_sha256": "80fe7019925ecc2b72c2f6994ca3d02e5b908b199cfdb91d7ad2d9b3604c6121",
+      "same_state_ordered_run_summaries_and_checked_graph_query_maintenance_work": true,
+      "preparation_before": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 217,
+        "later_deferred_failures": 0,
+        "later_operations": 83,
+        "operations": 220,
+        "reserved_rhs_slot_bytes": 5280,
+        "slot_writes": 220
+      },
+      "preparation_after": {
+        "capacity_growth_bytes": 11184,
+        "deferred_failures": 0,
+        "frame_growths": 293,
+        "instances": 611,
+        "later_deferred_failures": 0,
+        "later_operations": 522,
+        "operations": 840,
+        "reserved_rhs_slot_bytes": 5280,
+        "slot_writes": 840
+      },
+      "consumed_before": {
+        "prepared_rhs_operations": 137,
+        "prepared_rhs_later_operations": 83
+      },
+      "consumed_after": {
+        "prepared_rhs_operations": 318,
+        "prepared_rhs_later_operations": 522
+      },
+      "prepared_added": 620,
+      "consumed_added": 620,
+      "consumed_added_outside_resumption_counter": 15,
+      "total_prepared_not_consumed": 0,
+      "matched": {
+        "admission_instances": 135,
+        "chunks": 135,
+        "empty_chunks": 0,
+        "execution": {
+          "capacity_growth_bytes": 11184,
+          "deferred_failures": 0,
+          "frame_growths": 293,
+          "instances": 394,
+          "later_deferred_failures": 0,
+          "later_operations": 439,
+          "operations": 620,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 620
+        },
+        "groups": 135,
+        "header_capacity_bytes": 9216,
+        "header_growths": 72,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 270,
+        "instances": 394,
+        "matched_only_invocations": 1,
+        "mixed_invocations": 71,
+        "rule_checks": 2705,
+        "worker_operations": 350
+      },
+      "instance_header_bytes": 128,
+      "resumption_before": {
+        "boundaries": [
+          11160,
+          0,
+          3774,
+          310,
+          75,
+          0,
+          0
+        ],
+        "capacity_growth_bytes": 37488,
+        "failures": 0,
+        "frames": 5173,
+        "local_operations": 634,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 467,
+        "slot_growths": 202,
+        "worker_operations": 634,
+        "worker_segments": 467,
+        "worker_wait_ns": 3221480
+      },
+      "resumption_after": {
+        "boundaries": [
+          11160,
+          0,
+          3774,
+          310,
+          75,
+          0,
+          0
+        ],
+        "capacity_growth_bytes": 3864,
+        "failures": 0,
+        "frames": 5173,
+        "local_operations": 29,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 29,
+        "slot_growths": 23,
+        "worker_operations": 29,
+        "worker_segments": 29,
+        "worker_wait_ns": 217127
+      },
+      "worker_preparation_before": [
+        104,
+        4,
+        12,
+        18
+      ],
+      "worker_preparation_after": [
+        103,
+        358,
+        14,
+        14
+      ],
+      "compiled_plan_bytes": 400632,
+      "query_batch_buffers_before_after": [
+        1524,
+        1524
+      ],
+      "spine_fragment_storage": {
+        "query_fragment_slots": [
+          8069,
+          8069
+        ],
+        "query_fragment_capacity_bytes": [
+          193656,
+          193656
+        ],
+        "query_fragment_sealed_slots": [
+          7930,
+          7930
+        ],
+        "query_fragment_sealed_capacity_bytes": [
+          190320,
+          190320
+        ]
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "fff2d62090b56ae76b86445aceffa900911091d1fbdccc406b205302b2cf6a70",
+      "after_report_sha256": "78ca287cd308f702c8cf2757ea9170b68f96aab0fd31a8aea9c1e9b298bfdabf",
+      "same_state_ordered_run_summaries_and_checked_graph_query_maintenance_work": true,
+      "preparation_before": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 351282,
+        "later_deferred_failures": 0,
+        "later_operations": 9280,
+        "operations": 351310,
+        "reserved_rhs_slot_bytes": 8431440,
+        "slot_writes": 351310
+      },
+      "preparation_after": {
+        "capacity_growth_bytes": 1037832,
+        "deferred_failures": 0,
+        "frame_growths": 29248,
+        "instances": 405552,
+        "later_deferred_failures": 0,
+        "later_operations": 85289,
+        "operations": 444491,
+        "reserved_rhs_slot_bytes": 8431440,
+        "slot_writes": 444491
+      },
+      "consumed_before": {
+        "prepared_rhs_operations": 341694,
+        "prepared_rhs_later_operations": 9280
+      },
+      "consumed_after": {
+        "prepared_rhs_operations": 358866,
+        "prepared_rhs_later_operations": 85289
+      },
+      "prepared_added": 93181,
+      "consumed_added": 93181,
+      "consumed_added_outside_resumption_counter": 525,
+      "total_prepared_not_consumed": 336,
+      "matched": {
+        "admission_instances": 1362,
+        "chunks": 1933,
+        "empty_chunks": 0,
+        "execution": {
+          "capacity_growth_bytes": 1037832,
+          "deferred_failures": 0,
+          "frame_growths": 29248,
+          "instances": 54270,
+          "later_deferred_failures": 0,
+          "later_operations": 76009,
+          "operations": 93181,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 93181
+        },
+        "groups": 1362,
+        "header_capacity_bytes": 86272,
+        "header_growths": 674,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 2291,
+        "instances": 54270,
+        "matched_only_invocations": 9,
+        "mixed_invocations": 664,
+        "rule_checks": 42861,
+        "worker_operations": 90890
+      },
+      "instance_header_bytes": 128,
+      "resumption_before": {
+        "boundaries": [
+          2503393,
+          0,
+          1428463,
+          29924,
+          9349,
+          0,
+          92
+        ],
+        "capacity_growth_bytes": 5228856,
+        "failures": 0,
+        "frames": 1020508,
+        "local_operations": 95702,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 62632,
+        "slot_growths": 24286,
+        "worker_operations": 95702,
+        "worker_segments": 62632,
+        "worker_wait_ns": 362124960
+      },
+      "resumption_after": {
+        "boundaries": [
+          2503393,
+          0,
+          1428463,
+          29924,
+          9349,
+          0,
+          92
+        ],
+        "capacity_growth_bytes": 511560,
+        "failures": 0,
+        "frames": 1020508,
+        "local_operations": 3046,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 3046,
+        "slot_growths": 3045,
+        "worker_operations": 3046,
+        "worker_segments": 3046,
+        "worker_wait_ns": 17313469
+      },
+      "worker_preparation_before": [
+        66172,
+        110265,
+        87771,
+        85904
+      ],
+      "worker_preparation_after": [
+        65937,
+        182832,
+        97446,
+        94787
+      ],
+      "compiled_plan_bytes": 2327656,
+      "query_batch_buffers_before_after": [
+        22452,
+        22452
+      ],
+      "spine_fragment_storage": {
+        "query_fragment_slots": [
+          1900379,
+          1900379
+        ],
+        "query_fragment_capacity_bytes": [
+          45609096,
+          45609096
+        ],
+        "query_fragment_sealed_slots": [
+          1894038,
+          1894038
+        ],
+        "query_fragment_sealed_capacity_bytes": [
+          45456912,
+          45456912
+        ]
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

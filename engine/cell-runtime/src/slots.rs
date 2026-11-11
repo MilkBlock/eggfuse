@@ -41,6 +41,10 @@ impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
     pub(crate) fn capacity_bytes(&self) -> usize {
         self.0.capacity() * std::mem::size_of::<(K, V)>()
     }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn reserve_exact(&mut self, additional: usize) {
+        self.0.reserve_exact(additional);
+    }
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }

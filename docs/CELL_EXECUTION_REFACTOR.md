@@ -104,11 +104,20 @@ overall objective complete until all applicable items above are proven.
   see [work and acceptance](../benchmarks/cell-execution-inputs/README.md).
   Raytrace removes 9,280 of 71,912 later worker round trips; 95,702 local
   operations remain outside this takeover. No new speedup is claimed.
+- Already completed source-Run matches now join the existing worker invocation
+  through their original owned arrays; see [work and acceptance](../benchmarks/cell-execution-matched/README.md).
+  Captured scalars permit preparation despite parent/continuation provenance,
+  and an attempt flag prevents failed speculation from being retried during
+  batching. Raytrace consumes all 93,181 added prepared results and reduces
+  later worker segments from 62,632 to 3,046. Header/admission, slot growth and
+  mixed/matched-only invocation costs are recorded; no speedup is established.
 - Cursor/receipt ownership, completion/publication unification and Bake
-  composition of those continuations remain live work. The next opportunity
-  is batching already completed source-Run matches with the existing worker
-  invocation, preserving their slot ownership and proving parent/continuation
-  eligibility, rather than creating a separate preparation pass.
+  composition of those continuations remain live work. Serial Spine answers
+  paired with Cursor in `deferred_queries` still sit outside the borrowed Run
+  groups until worker winner sealing. Their execution state should join the
+  same ownership path without copying bindings or moving Rc cursors to workers.
+  The graph's single `active_rhs` owner and synchronous frontier waits still
+  prevent independent parked-frame scheduling after shared effects.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

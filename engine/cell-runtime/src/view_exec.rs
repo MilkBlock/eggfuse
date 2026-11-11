@@ -324,6 +324,8 @@ impl Group {
         self.streams[ordinal].as_mut().unwrap().push(Binding {
             #[cfg(feature="sparse-cells")]
             prepared: 0,
+            #[cfg(feature="sparse-cells")]
+            preparation_attempted: false,
             view_source: match (self.view, d.witness) {
                 (Some(_), Dependency::Function(i)) => Some(i),
                 _ => None,

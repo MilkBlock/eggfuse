@@ -398,6 +398,8 @@ impl Frame {
         out.push(Binding {
             #[cfg(feature="sparse-cells")]
             prepared: 0,
+            #[cfg(feature="sparse-cells")]
+            preparation_attempted: false,
             #[cfg(feature = "view-consumers")]
             view_source: None,
             #[cfg(feature = "iterative-bake")]

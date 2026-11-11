@@ -454,6 +454,8 @@ impl Executor {
             out.push(Binding {
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
+                #[cfg(feature="sparse-cells")]
+                preparation_attempted: false,
                 #[cfg(feature = "view-consumers")]
                 view_source: None,
                 #[cfg(feature = "iterative-bake")]
@@ -974,6 +976,8 @@ impl Executor {
             out.push(Binding {
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
+                #[cfg(feature="sparse-cells")]
+                preparation_attempted: false,
                 #[cfg(feature = "view-consumers")]
                 view_source: None,
                 #[cfg(feature = "iterative-bake")]
@@ -1624,6 +1628,8 @@ impl Executor {
                         found.push(Binding {
                             #[cfg(feature="sparse-cells")]
                             prepared: 0,
+                            #[cfg(feature="sparse-cells")]
+                            preparation_attempted: false,
                             #[cfg(feature = "view-consumers")]
                             view_source: None,
                             #[cfg(feature = "iterative-bake")]
@@ -1782,6 +1788,8 @@ impl Executor {
                             found.push(Binding {
                                 #[cfg(feature="sparse-cells")]
                                 prepared: 0,
+                                #[cfg(feature="sparse-cells")]
+                                preparation_attempted: false,
                                 #[cfg(feature = "view-consumers")]
                                 view_source: None,
                                 direct: None,
@@ -1961,6 +1969,8 @@ impl Executor {
                                 found.push(Binding {
                                     #[cfg(feature="sparse-cells")]
                                     prepared: 0,
+                                    #[cfg(feature="sparse-cells")]
+                                    preparation_attempted: false,
                                     #[cfg(feature = "view-consumers")]
                                     view_source: None,
                                     #[cfg(feature = "iterative-bake")]
@@ -2725,7 +2735,7 @@ impl Executor {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(workers) = &mut self.query_workers {
-            workers.finish_run(&mut self.graph, &mut self.stage_spine,
+            workers.finish_run(&mut self.graph, &mut self.stage_spine, &mut work,
                 #[cfg(feature="parallel-residuals")] &self.query_indexes,
                 #[cfg(feature="parallel-residuals")] &mut self.sieve,
                 #[cfg(feature="parallel-residuals")] self.free_join.entry_plan())?;

@@ -25,6 +25,11 @@ pub(crate) struct Instance {
     pub epoch: u64,
     pub parent: Option<FactRef>,
     pub continuation: Option<(u32, bool)>,
+    // Captured inputs do not change between query completion and the Run's
+    // worker batch. A failed/missing speculative result must not be retried
+    // there; the source RHS remains responsible at its original position.
+    #[cfg(feature="sparse-cells")]
+    pub preparation_attempted: bool,
     pub compiled: bool,
 }
 pub(crate) struct InputView<'a> { instance:&'a Instance, inputs:&'a [usize] }
@@ -59,6 +64,8 @@ impl Instance {
             direct: None,
             #[cfg(feature="sparse-cells")]
             prepared: 0,
+            #[cfg(feature="sparse-cells")]
+            preparation_attempted: false,
             values, known, epoch, parent: None, continuation: None, compiled: true,
         }
     }
