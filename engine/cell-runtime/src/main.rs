@@ -59,6 +59,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --parallel-entry-filters (complete large Entry filters on query workers)");
         #[cfg(feature = "parallel-residuals")]
         println!("  --parallel-residuals (Cell expansion queries and admission on query workers)");
+        #[cfg(feature = "parallel-publication")]
+        println!("  --parallel-publication (publish independent repaired index partitions on query workers)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -123,6 +125,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--parallel-entry-filters" => {}
             #[cfg(feature = "parallel-residuals")]
             "--parallel-residuals" => {}
+            #[cfg(feature = "parallel-publication")]
+            "--parallel-publication" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -245,6 +249,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|x| x == "--parallel-residuals") {
         runtime.use_parallel_residuals()?;
     }
+    #[cfg(feature = "parallel-publication")]
+    if args.iter().any(|x| x == "--parallel-publication") {runtime.use_parallel_publication()?;}
     #[cfg(feature = "structural-depth")]
     {
         let survey = args.iter().any(|x| x == "--structural-survey");

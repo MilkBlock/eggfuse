@@ -17,6 +17,7 @@ name = "cell"
 harness = false
 
 [features]
+parallel-publication = ["parallel-residuals", "eggfuse-cell-runtime/parallel-publication"]
 parallel-residuals = ["sparse-cells", "eggfuse-cell-runtime/parallel-residuals"]
 completion-overlap-probes = ["eggfuse-cell-runtime/completion-overlap-probes"]
 sparse-cells = ["eggfuse-cell-runtime/sparse-cells"]

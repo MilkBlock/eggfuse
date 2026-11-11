@@ -8,6 +8,9 @@ use crate::{
     range_index::RangeIndex,
 };
 use rustc_hash::FxHashMap;
+#[cfg(feature = "parallel-publication")]
+#[path = "parallel_publication.rs"]
+mod parallel;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Change {
@@ -130,6 +133,8 @@ impl Change {
 
 #[derive(Default, serde::Serialize)]
 pub(crate) struct Publication {
+    #[cfg(feature = "parallel-publication")]
+    parallel: parallel::Stats,
     #[cfg(feature = "view-storage")]
     view_column_rows: u64,
     row_reads: u64,
@@ -153,8 +158,14 @@ impl Publication {
         columns: &mut QueryIndexes,
         mut ranges: Option<&mut RangeIndex>,
         neighbor: &mut Context,
+        #[cfg(feature = "parallel-publication")] workers:Option<(Option<&rayon::ThreadPool>,usize)>,
         mut publish_ports: impl FnMut(usize, &FxHashMap<Dependency, Change>, bool),
     ) -> Result<()> {
+        #[cfg(feature = "parallel-publication")]
+        if let Some((pool,grain))=workers
+            && self.publish_parallel(g,columns,ranges.as_deref_mut(),neighbor,pool,grain,&mut publish_ports)? {
+            return Ok(());
+        }
         columns.begin_publication(g);
         for (t, changes) in g.changes.tables() {
             let count = changes.len() as u64;

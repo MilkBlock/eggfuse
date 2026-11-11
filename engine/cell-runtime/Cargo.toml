@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+parallel-publication = ["parallel-residuals"]
 parallel-residuals = ["sparse-cells"]
 sparse-cells = ["iterative-bake"]
 cell-absorption = ["sparse-cells"]

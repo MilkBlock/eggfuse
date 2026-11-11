@@ -56,6 +56,8 @@ struct Bucket {
     refinements: Refinements,
 }
 struct Columns {
+    #[cfg(feature = "parallel-publication")]
+    publication_buffer: Vec<(Dependency,usize)>,
     #[cfg(feature = "projection-stamps")]
     write_version: u64,
     values: Vec<std::cell::OnceCell<HashMap<u64, Bucket>>>,
@@ -279,6 +281,8 @@ pub struct RefinementStats {
 #[path = "table_directory.rs"]
 mod table_directory;
 pub struct QueryIndexes {
+    #[cfg(feature = "parallel-publication")]
+    publication_buffers:usize,
     pub revision: u64,
     #[cfg(feature = "sparse-cells")]
     tables: table_directory::TableDirectory,
@@ -302,6 +306,27 @@ pub(crate) struct ColumnWriter<'a> {
     references: &'a mut usize,
     updated: &'a mut u64,
     changes: Option<&'a mut Vec<(Dependency, usize)>>,
+}
+
+/// Exclusive ownership of one existing index during repaired publication.
+/// Rows and column maps are moved, never copied into a parallel index.
+#[cfg(feature = "parallel-publication")]
+pub(crate) struct PublicationTask {
+    table: usize, index: Columns, bits: u32, before: usize, references: usize,
+    updated: u64, changes: Vec<(Dependency, usize)>, track_changes: bool, growths:u64, buffer_before:usize,
+}
+#[cfg(feature = "parallel-publication")]
+impl PublicationTask {
+    pub fn update(&mut self, witness: Dependency, row: Option<&Row>) {
+        let capacity=self.changes.capacity();
+        ColumnWriter { table:self.table,index:&mut self.index,bits:self.bits,
+            references:&mut self.references,updated:&mut self.updated,
+            changes:self.track_changes.then_some(&mut self.changes) }.update(witness,row);
+        self.growths+=u64::from(self.changes.capacity()!=capacity);
+    }
+    pub fn finish(&mut self, version:u64) { self.index.version=version; }
+    pub fn buffer_bytes(&self)->usize { self.changes.capacity()*std::mem::size_of::<(Dependency,usize)>() }
+    pub fn buffer_growths(&self)->u64 {self.growths}
 }
 impl ColumnWriter<'_> {
     pub fn finish(self, version: u64) {
@@ -354,6 +379,8 @@ pub enum ReadStamp {
 impl Default for QueryIndexes {
     fn default() -> Self {
         Self {
+            #[cfg(feature = "parallel-publication")]
+            publication_buffers:0,
             revision: 0,
             tables: Default::default(),
             references: 0,
@@ -502,12 +529,16 @@ impl QueryIndexes {
         self.revision += 1;
         self.tables.clear();
         self.references = 0;
+        #[cfg(feature = "parallel-publication")]
+        {self.publication_buffers=0;}
     }
     pub fn invalidate(&mut self, graph: &Graph) {
         self.revision += 1;
         self.tables.retain(|table, index| {
             if index.version != graph.query_versions[*table] {
                 self.references -= index.keys.len() * index.values.len();
+                #[cfg(feature = "parallel-publication")]
+                {self.publication_buffers-=index.publication_buffer.capacity();}
                 false
             } else {
                 true
@@ -533,7 +564,34 @@ impl QueryIndexes {
         self.revision += u64::from(!g.changes.is_empty());
     }
 
-    #[cfg(feature = "view-consumers")]
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn take_publication(&mut self, table:usize, version:u64)->Option<PublicationTask> {
+        let mut index=self.tables.remove(&table)?;
+        #[cfg(feature = "projection-stamps")]
+        { index.write_version=version; }
+        let _=version;
+        let before=index.keys.len()*index.values.len();
+        let changes=std::mem::take(&mut index.publication_buffer);
+        debug_assert!(changes.is_empty());
+        let buffer_before=changes.capacity();
+        Some(PublicationTask {table,index,bits:self.bits,before,references:before,
+            updated:0,changes,track_changes:self.track_changes,growths:0,buffer_before})
+    }
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn restore_publication(&mut self, mut task:PublicationTask) {
+        self.references=self.references-task.before+task.references;
+        self.updated_facts+=task.updated;
+        self.publication_buffers=self.publication_buffers-task.buffer_before+task.changes.capacity();
+        self.changes.extend(task.changes.drain(..));
+        task.index.publication_buffer=task.changes;
+        self.tables.insert(task.table,task.index);
+    }
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn publication_buffer_bytes(&self)->usize {
+        self.publication_buffers*std::mem::size_of::<(Dependency,usize)>()
+    }
+
+    #[cfg(any(feature = "view-consumers",feature = "parallel-publication"))]
     pub(crate) fn has_columns(&self, table: usize) -> bool {
         self.tables.contains_key(&table)
     }
@@ -567,9 +625,13 @@ impl QueryIndexes {
         {
             let old = self.tables.remove(&table).unwrap();
             self.references -= old.keys.len() * old.values.len();
+            #[cfg(feature = "parallel-publication")]
+            {self.publication_buffers-=old.publication_buffer.capacity();}
         }
         if !self.tables.contains_key(&table) {
             let mut index = Columns {
+                #[cfg(feature = "parallel-publication")]
+                publication_buffer:Vec::new(),
                 #[cfg(feature = "projection-stamps")]
                 write_version: graph.query_versions[table],
                 values: (0..graph.program.tables[table].schema.len())

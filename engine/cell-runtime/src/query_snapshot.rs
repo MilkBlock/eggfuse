@@ -81,4 +81,48 @@ mod tests {
         assert_eq!(domain.iter().count(),1);
         assert_eq!(index.builds,1,"preparing another column reuses the table");
     }
+
+    #[cfg(feature = "parallel-publication")]
+    #[test]
+    fn publication_moves_existing_columns_and_reuses_only_empty_change_storage() {
+        let mut graph=crate::query::test_projection_graph();
+        graph.set_function(0,vec![Value::Int(1),Value::Int(2)],Value::Int(3)).unwrap();
+        let mut index=QueryIndexes::default();
+        index.track_changes=true;
+        index.ensure_selected(&graph,0,[0]).unwrap();
+        let row=graph.row(graph.witnesses(0)[0]).unwrap().unwrap();
+        let mut task=index.take_publication(0,graph.query_versions[0]).unwrap();
+        assert!(!index.tables.contains_key(&0));
+        task.update(row.witness,None);
+        task.update(row.witness,Some(&row));
+        task.finish(graph.query_versions[0]);
+        let bytes=task.buffer_bytes();assert!(bytes>0);
+        index.restore_publication(task);
+        assert_eq!(index.publication_buffer_bytes(),bytes);
+        assert!(index.tables[&0].values[0].get().is_some());
+        assert_eq!(index.changes,[(row.witness,0)]);
+        let task=index.take_publication(0,graph.query_versions[0]).unwrap();
+        assert_eq!(task.buffer_growths(),0);
+        assert_eq!(task.buffer_bytes(),bytes);
+        index.restore_publication(task);
+        assert_eq!(index.changes.len(),1,"scratch retains capacity, never notifications");
+        index.clear();assert_eq!(index.publication_buffer_bytes(),0);
+    }
+
+    #[cfg(feature = "parallel-publication")]
+    #[test]
+    fn publication_reads_require_repair_but_keep_unpublished_changes() {
+        let mut graph=crate::query::test_projection_graph();
+        graph.set_function(0,vec![Value::Int(1),Value::Int(2)],Value::Int(3)).unwrap();
+        graph.repair().unwrap();
+        assert!(!graph.changes.is_empty());
+        assert!(graph.query_reads(&[0],&mut 0).is_none(),"next Run is not yet published");
+        let witness=graph.witnesses(0)[0];
+        let read=graph.publication_reads([0].into_iter()).unwrap();
+        assert_eq!(read.row(witness).unwrap().unwrap().values,graph.row(witness).unwrap().unwrap().values);
+        graph.enqueue_union(Value::Eq(1),Value::Eq(2)).unwrap();
+        assert!(graph.publication_reads([0].into_iter()).is_none(),"pending equality forbids the borrow");
+        graph.repair().unwrap();
+        assert!(graph.publication_reads([0].into_iter()).is_some());
+    }
 }

@@ -382,6 +382,8 @@ fn evaluate(
 }
 
 impl Workers {
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn publication_pool(&self)->(Option<&rayon::ThreadPool>,usize) { (self.pool.as_ref(),self.grain) }
     fn expansion_report(&self) -> J {
         #[cfg(feature = "parallel-residuals")]
         { self.expansion.report() }

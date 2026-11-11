@@ -517,6 +517,33 @@ pub(crate) struct PortWriter<'a> {
     published: &'a mut Publication,
     profiling: bool,
 }
+#[cfg(feature = "parallel-publication")]
+pub(crate) struct PublicationTask { table:usize, cache:Ports, published:Publication, profiling:bool }
+#[cfg(feature = "parallel-publication")]
+impl PublicationTask {
+    pub fn update(&mut self,witness:Dependency,row:Option<&Row>) {
+        PortWriter {table:self.table,cache:&mut self.cache,published:&mut self.published,
+            profiling:self.profiling}.update(witness,row);
+    }
+    pub fn finish(&mut self,version:u64) {self.cache.version=version;}
+}
+#[cfg(feature = "parallel-publication")]
+impl Context {
+    pub(crate) fn take_publication(&mut self,table:usize)->Option<PublicationTask> {
+        if self.ports[table].as_ref()?.rows.is_empty() {return None;}
+        Some(PublicationTask {table,cache:self.ports[table].take()?,published:Default::default(),profiling:self.profiling})
+    }
+    pub(crate) fn has_publication(&self,table:usize)->bool {
+        self.ports[table].as_ref().is_some_and(|p|!p.rows.is_empty())
+    }
+    pub(crate) fn restore_publication(&mut self,task:PublicationTask) {
+        self.published.checked+=task.published.checked;
+        self.published.refreshed+=task.published.refreshed;
+        self.published.retired+=task.published.retired;
+        self.published.nanoseconds+=task.published.nanoseconds;
+        self.ports[task.table]=Some(task.cache);
+    }
+}
 impl PortWriter<'_> {
     /// A demanded but absent key must see an insertion. Replacement and
     /// retirement can arrive in either order after same-key coalescence.
@@ -730,7 +757,8 @@ mod tests {
         g.changes.defer_unready(&[true, false], &mut deferred);
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
-            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+            &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert_eq!(ctx.ports[0].as_ref().unwrap().version, g.query_versions[0]);
         assert_eq!(ctx.ports[1].as_ref().unwrap().version, old[1]);
         assert_ne!(old[1], g.query_versions[1]);
@@ -739,7 +767,8 @@ mod tests {
         std::mem::swap(&mut g.changes, &mut deferred);
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
-            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+            &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         for table in 0..2 {
             assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().values[1], Value::Int(2));
             let selected = ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 2,
@@ -753,13 +782,15 @@ mod tests {
         g.hide(0, &key, true).unwrap();
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
-            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+            &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert!(ctx.point(&mut g, 0, 0, &key).unwrap().is_none());
         g.changes.clear();
         g.set_function(0, key.to_vec(), Value::Int(3)).unwrap();
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
-            &g, &mut columns, Some(&mut ranges), &mut ctx, |_, _, _| {}).unwrap();
+            &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().values[1], Value::Int(3));
         assert_eq!(ctx.stats[0].point_probes, 2, "updates preserve positive and negative reads");
     }

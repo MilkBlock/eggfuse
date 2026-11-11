@@ -24,11 +24,24 @@ struct Canonical<'a> {
 }
 impl Graph {
     pub(crate) fn query_reads(&self, tables: &[usize], checks: &mut u64) -> Option<QueryReads<'_>> {
+        if !self.settled() {return None;}
+        self.sealed_reads(tables.iter().copied(),checks)
+    }
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn publication_reads(&self,tables:impl Iterator<Item=usize>)->Option<QueryReads<'_>> {
+        // Publication deliberately precedes draining changes and garbage.
+        // Repair must be complete; the immutable borrow prevents collection
+        // or any later RHS from touching these authoritative rows until join.
+        if !self.pending_unions.is_empty() || !self.dirty.is_empty()
+            || !self.dirty_markers.is_empty() || !self.ownership_settled() {return None;}
+        self.sealed_reads(tables,&mut 0)
+    }
+    fn sealed_reads(&self,mut tables:impl Iterator<Item=usize>,checks:&mut u64)->Option<QueryReads<'_>> {
         // Birth installs decoded fields; canonical repair replaces them or
         // retires the fact before this borrow. Only stable storage may omit
         // them at a settled boundary, and retains its existing coverage proof.
         let canonical = self.stable_ports.is_none();
-        if !self.settled() || tables.iter().any(|&t| {
+        if tables.any(|t| {
             *checks += 1;
             self.units.owned[t] || (self.program.tables[t].virtual_fact && !canonical && !self.constructor_query_table(t))
         }) {

@@ -72,6 +72,14 @@ pub(super) struct State {
     pub stats: Counts,
 }
 impl Executor {
+    #[cfg(feature = "parallel-publication")]
+    pub fn use_parallel_publication(&mut self)->Result<()> {
+        if !self.steps.is_empty() {return Err("configure parallel publication before execution".into());}
+        if self.query_workers.is_none() {return Err("parallel publication requires query workers".into());}
+        if cfg!(feature="family-survey") {return Err("parallel publication does not support per-table family surveys".into());}
+        self.publication.enable_parallel();
+        Ok(())
+    }
     pub fn use_scoped_execution(&mut self) -> Result<()> {
         if self.completion.is_some() {
             return Ok(());
@@ -552,6 +560,8 @@ impl Executor {
             &mut self.query_indexes,
             self.range_index.as_mut(),
             &mut self.neighbor,
+            #[cfg(feature = "parallel-publication")]
+            self.query_workers.as_ref().filter(|_|self.publication.parallel_enabled()).map(|w|w.publication_pool()),
             |_table, _changes, _indexed| {
                 #[cfg(feature = "view-consumers")]
                 self.blocks

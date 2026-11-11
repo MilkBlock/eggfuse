@@ -98,6 +98,15 @@ pub(crate) struct RangeWriter<'a> {
     table: &'a mut TableRanges,
     stats: &'a mut Stats,
 }
+#[cfg(feature = "parallel-publication")]
+pub(crate) struct PublicationTask { id:usize, table:TableRanges, stats:Stats }
+#[cfg(feature = "parallel-publication")]
+impl PublicationTask {
+    pub fn update(&mut self,witness:Dependency,row:Option<&Row>)->Result<()> {
+        RangeWriter {table:&mut self.table,stats:&mut self.stats}.update(witness,row)
+    }
+    pub fn finish(&mut self,version:u64) {self.table.version=version;}
+}
 impl RangeWriter<'_> {
     pub(crate) fn update(&mut self, witness: Dependency, row: Option<&Row>) -> Result<()> {
         let clock = Instant::now();
@@ -113,6 +122,19 @@ impl RangeWriter<'_> {
     }
 }
 impl RangeIndex {
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn has_publication(&self,table:usize)->bool {self.tables.contains_key(&table)}
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn take_publication(&mut self,table:usize)->Option<PublicationTask> {
+        Some(PublicationTask {id:table,table:self.tables.remove(&table)?,stats:Default::default()})
+    }
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn restore_publication(&mut self,task:PublicationTask) {
+        self.stats.update_rows+=task.stats.update_rows;
+        self.stats.changed_entries+=task.stats.changed_entries;
+        self.stats.maintenance_ns+=task.stats.maintenance_ns;
+        self.tables.insert(task.id,task.table);
+    }
     pub(crate) fn writer(&mut self, table: usize) -> Option<RangeWriter<'_>> {
         Some(RangeWriter { table: self.tables.get_mut(&table)?, stats: &mut self.stats })
     }
