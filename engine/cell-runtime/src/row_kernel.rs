@@ -180,11 +180,11 @@ impl PortWrite {
         };
         Some(Self{key:*key,value:value.clone(),add})
     }
-    pub(crate) fn project(&self,slots:&crate::slots::Slots,parents:&crate::value::Parents)->Result<(crate::value::Value,i64,Option<usize>)>{
+    pub(crate) fn project(&self,slots:&crate::slots::Slots,parents:&crate::value::Parents,prepared:bool)->Result<(crate::value::Value,i64,Option<usize>)>{
         use crate::value::Value;
         let Value::Eq(key)=slots[&self.key] else{return Err("invalid producer expression port".into())};
         let int=|a:&Arg|match a {Arg::Literal(Value::Int(v))=>Ok(*v),Arg::Slot(s)=>match &slots[s]{Value::Int(v)=>Ok(*v),_=>Err("invalid integer port".to_string())},_=>Err("invalid integer operand".to_string())};
-        let (v,dst)=if let Some((dst,a,b))=&self.add{(int(a)?.checked_add(int(b)?).ok_or("RHS primitive failed: +")?,Some(*dst))}else{(int(&self.value)?,None)};
+        let (v,dst)=if prepared { (int(&self.value)?,None) } else if let Some((dst,a,b))=&self.add{(int(a)?.checked_add(int(b)?).ok_or("RHS primitive failed: +")?,Some(*dst))}else{(int(&self.value)?,None)};
         Ok((Value::Eq(crate::value::root(parents,key)),v,dst))
     }
 }

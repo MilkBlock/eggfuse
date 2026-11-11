@@ -197,7 +197,12 @@ fn small_cell_runs_execute_inline_without_spawning_more_work() {
     let after = run(source, Some((4,4096)));
     same(&before, &after);
     let (a,b) = (before.report(),after.report());
-    assert_eq!(a["stats"], b["stats"]);
+    let (mut old_stats,mut new_stats)=(a["stats"].clone(),b["stats"].clone());
+    assert_eq!(old_stats.as_object_mut().unwrap().remove("prepared_rhs_operations"),Some(0.into()));
+    let consumed=new_stats.as_object_mut().unwrap().remove("prepared_rhs_operations").unwrap().as_u64().unwrap();
+    assert!(consumed>0,"inline continuation must remove its original RHS computation");
+    assert!(b["query_workers"]["stats"]["execution"]["operations"].as_u64().unwrap()>=consumed);
+    assert_eq!(old_stats,new_stats,"same graph and query work apart from consumed local preparation");
     assert_eq!(a["key_lookup_calls"], b["key_lookup_calls"]);
     let q = &b["query_workers"]["stats"];
     assert_eq!(q["entries"], q["coordinator_entries"]);

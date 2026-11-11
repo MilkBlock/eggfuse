@@ -32,6 +32,8 @@ pub(crate) use effects::ProjectedEffects;
 
 #[path = "cell_query.rs"]
 mod query;
+#[path = "cell_execution.rs"]
+pub(crate) mod execution;
 #[path = "cell_match.rs"]
 mod matched;
 pub(crate) use matched::{Instance, Instance as Matched, QueryFacts};
@@ -347,7 +349,7 @@ mod tests {
             sorts: vec![],
             parent_columns: BTreeMap::new(),
             defs: BTreeMap::from([(1, 0), (2, 1)]),
-            ops: Rc::new(vec![
+            ops: std::sync::Arc::new(vec![
                 Op::Copy(1, Arg::Slot(0)),
                 Op::Copy(2, Arg::Slot(1)),
                 Op::Union(Arg::Slot(0), Arg::Slot(3)),
@@ -375,7 +377,7 @@ mod tests {
             sorts: vec![],
             defs: BTreeMap::from([(2, 0)]),
             parent_columns: BTreeMap::new(),
-            ops: Rc::new(vec![
+            ops: std::sync::Arc::new(vec![
                 Op::Let(2, Call::Table(0), vec![Arg::Slot(0)]),
                 Op::Set(0, vec![Arg::Slot(0)], Arg::Literal(Value::Int(7))),
                 Op::Hide(0, vec![Arg::Slot(0)], true),

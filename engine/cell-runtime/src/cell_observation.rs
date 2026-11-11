@@ -43,7 +43,7 @@ pub(crate) fn watermark(rule: usize, watermark: u64) {
     });
 }
 
-pub(crate) fn matched<'a>(epoch: u64, rows: impl Iterator<Item = (&'a usize, &'a Instance)>) {
+pub(crate) fn matched<'a>(epoch: u64, rows: impl Iterator<Item = (&'a usize, &'a Instance)>, rules:&[crate::program::Rule]) {
     CAPTURE.with_borrow_mut(|c| {
         let Some(c) = c else { return };
         for (ordinal, (rule, row)) in rows.enumerate() {
@@ -58,7 +58,7 @@ pub(crate) fn matched<'a>(epoch: u64, rows: impl Iterator<Item = (&'a usize, &'a
             if !c.details { continue; }
             c.matches.push(json!({"ordinal":ordinal, "rule":rule,
                 "watermark":c.watermarks.get(rule), "epoch":row.epoch,
-                "values":row.values, "direct":direct,
+                "values":row.input_view(&rules[*rule].inputs), "direct":direct,
                 "parent":row.parent, "continuation":row.continuation}));
         }
     });

@@ -122,7 +122,7 @@ impl Plans {
             let Call::Table(table)=p.rules[rid].query[pivot].call else {return None;};
             let code=codes.len();
             codes.push(CellCode {first_read:None,query:k.query.clone(),inputs:p.rules[rid].inputs.clone(),
-                rule:rid,pivot,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
+                rule:rid,template:p.rules[rid].template,pivot,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
                 #[cfg(feature="cell-query-sharing-audit")] audit_prefixes:Vec::new(),});
             Some(Plan {layout:layout.into_iter().map(|(t,c)|(t,c.into_iter().collect())).collect(),
                 tables:tables.into_iter().collect(),expanded:expanded.atom,code,table,active:false,
@@ -338,7 +338,7 @@ pub(super) struct ChunkWork {
 }
 impl Prepared<'_> {
     pub fn evaluate(&self,q:&QueryRead<'_>,reads:&crate::graph::query_reads::QueryReads<'_>,
-        key_nodes:&J,known:&RuleRun,frame:&mut Frame,chunk:&mut ChunkWork,answers:&mut Vec<(usize,Binding)>)->Result<()> {
+        key_nodes:&J,known:&RuleRun,frame:&mut Frame,chunk:&mut ChunkWork,answers:&mut Vec<(usize,Binding)>,local:&crate::cell::execution::Plan,template:&Template)->Result<()> {
         let (c,w)=(&mut chunk.counts,&mut chunk.work);
         let entry=Entry {values:&q.row.values,epoch:q.row.epoch,witness:q.row.witness};
         let before=(w.filter_probes,w.filter_rejected,w.direct_entries,c.point_reads+w.row_reads);
@@ -374,7 +374,7 @@ impl Prepared<'_> {
             }
             w.partitioned_admitted+=u64::from(self.partitioned);
             frame.witnesses.clear();frame.witnesses.push((q.code.pivot,entry.witness));
-            Host {query:&q.code.query,entry:&entry,pivot:q.code.pivot,reads,index:&self.index,key_nodes,
+            Host {local,template,query:&q.code.query,entry:&entry,pivot:q.code.pivot,reads,index:&self.index,key_nodes,
                 inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
@@ -394,6 +394,7 @@ impl Prepared<'_> {
     }
 }
 struct Host<'a,'g,'i> {
+    local:&'a crate::cell::execution::Plan, template:&'a Template,
     query:&'a crate::cell::Query, entry:&'a Entry<'a>, pivot:usize,
     reads:&'a crate::graph::query_reads::QueryReads<'g>, index:&'a Read<'i>, key_nodes:&'a J,
     inputs:&'a [usize], known:&'a QueryFacts, frame:&'a mut Frame,
@@ -450,10 +451,11 @@ impl Host<'_, '_, '_> {
         }
         if epoch < self.watermark { return Ok(()); }
         if self.answers.len() == self.answers.capacity() { self.counts.answer_buffer_allocations += 1; }
-        let mut answer=Binding::matched(self.inputs.iter().zip(&self.query.inputs).map(|(&slot,f)|
-            (slot,f.operand_in(self.reads.parents,|c|&self.entry.values[c],&self.frame.values,expanded).into_owned())).collect(),
+        let mut answer=Binding::matched(self.local.slots(self.inputs.iter().zip(&self.query.inputs).map(|(&slot,f)|
+            (slot,f.operand_in(self.reads.parents,|c|&self.entry.values[c],&self.frame.values,expanded).into_owned())),&mut self.counts.execution),
             self.known.with_rows(self.frame.witnesses.iter().copied()),epoch);
         answer.compiled=true;
+        self.local.prepare(self.template,&mut answer,&mut self.counts.execution);
         self.answers.push((self.source,answer));
         self.counts.answers+=1;
         Ok(())

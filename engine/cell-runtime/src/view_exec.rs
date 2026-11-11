@@ -322,6 +322,8 @@ impl Group {
         known.record(m.driver_atom, Some(d.witness));
         known.record(m.peer_atom, Some(p.witness));
         self.streams[ordinal].as_mut().unwrap().push(Binding {
+            #[cfg(feature="sparse-cells")]
+            prepared: 0,
             view_source: match (self.view, d.witness) {
                 (Some(_), Dependency::Function(i)) => Some(i),
                 _ => None,

@@ -6,7 +6,6 @@ use crate::value::Value;
 use serde::Serialize;
 use std::{
     collections::{BTreeMap, BTreeSet},
-    rc::Rc,
 };
 
 #[derive(Clone, Debug, Serialize)]
@@ -25,7 +24,7 @@ pub(crate) enum BoundValue {
 pub(crate) struct BoundRhs {
     pub writes: Vec<usize>,
     #[serde(skip)]
-    pub ops: Rc<Vec<Op>>,
+    pub ops: std::sync::Arc<Vec<Op>>,
     pub values: Vec<BoundValue>,
     /// Original effect positions in source order, with contiguous input wiring.
     pub effects: Vec<usize>,

@@ -177,6 +177,7 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
             json!(crate::view_plan::derive(&p, &spine)),
         ),
         ("single_writes", crate::row_kernel::writes_wire(&p)),
+        ("cell_execution", crate::cell::execution::Plan::wire(&p.executions)),
         ("neighbor_entries", json!(&p.neighbor_plans)),
         ("row_kernels", crate::row_kernel::wire(&p.rules, &p.kernels)),
         ("physical_plan", json!(&p.physical)),

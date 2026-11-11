@@ -18,13 +18,23 @@ pub(crate) struct Instance {
     // Query completion writes the RHS's owned slot storage directly. Winner
     // selection borrows its values; it must not assemble a second binding.
     pub values: Slots,
+    // Prepared local prefix, not a committed effect position.
+    #[cfg(feature="sparse-cells")]
+    pub prepared: usize,
     pub known: QueryFacts,
     pub epoch: u64,
     pub parent: Option<FactRef>,
     pub continuation: Option<(u32, bool)>,
     pub compiled: bool,
 }
+pub(crate) struct InputView<'a> { instance:&'a Instance, inputs:&'a [usize] }
+impl serde::Serialize for InputView<'_> {
+    fn serialize<S:serde::Serializer>(&self,s:S)->Result<S::Ok,S::Error> {
+        s.collect_map(self.inputs.iter().map(|slot|(slot,&self.instance.values[slot])))
+    }
+}
 impl Instance {
+    pub(crate) fn input_view<'a>(&'a self,inputs:&'a [usize])->InputView<'a> {InputView{instance:self,inputs}}
     /// Match identity is the source Cell's input projection. Computed RHS
     /// slots remain owned by the same instance but cannot select a different
     /// winner or change the continuation lookup key.
@@ -47,6 +57,8 @@ impl Instance {
             view_source: None,
             #[cfg(feature = "iterative-bake")]
             direct: None,
+            #[cfg(feature="sparse-cells")]
+            prepared: 0,
             values, known, epoch, parent: None, continuation: None, compiled: true,
         }
     }

@@ -232,6 +232,8 @@ pub struct Stats {
     #[serde(default)]
     pub single_writes: u64,
     #[serde(default)]
+    pub prepared_rhs_operations: u64,
+    #[serde(default)]
     pub transient_writes: u64,
     pub direct_bindings: u64,
     #[serde(default)]
@@ -756,6 +758,7 @@ impl Graph {
         parent: Option<FactRef>,
         write: &crate::row_kernel::Write,
         keep_key: bool,
+        #[cfg(feature="sparse-cells")] prepared:usize,
     ) -> Result<(u32, usize, Option<Vec<Value>>, bool)> {
         let id = self.reserve_cell_id()?;
         #[cfg(feature = "sparse-cells")]
@@ -764,7 +767,7 @@ impl Graph {
         let before = self.stats.function_updates;
         #[cfg(feature="sparse-cells")]
         if parent.is_none() && let Some(ports)=&write.ports {
-            let (key,value,dst)=ports.project(&values,&self.parents)?;
+            let (key,value,dst)=ports.project(&values,&self.parents,write.prefix.last().is_some_and(|&op|op<prepared))?;
             let i=self.set_function_canonical(write.table,std::slice::from_ref(&key),Value::Int(value))?;
             let changed=self.stats.function_updates!=before;
             if changed{
@@ -777,6 +780,8 @@ impl Graph {
         let mut frame = self.new_cell(template, values, parent);
         let ops = self.program.templates[template].ops.clone();
         for &op in &write.prefix {
+            #[cfg(feature="sparse-cells")]
+            if op<prepared {continue;}
             let Op::Let(dst, call, args) = &ops[op] else { unreachable!("validated scalar Cell prefix") };
             crate::cell::evaluate_call(self, &mut crate::cell::LocalCall { cell: id, frame: &mut frame },
                 op, *dst, call, args)?;

@@ -448,6 +448,8 @@ impl Executor {
     ) -> Result<()> {
         if !remaining.iter().any(|pending| *pending) {
             out.push(Binding {
+                #[cfg(feature="sparse-cells")]
+                prepared: 0,
                 #[cfg(feature = "view-consumers")]
                 view_source: None,
                 #[cfg(feature = "iterative-bake")]
@@ -966,6 +968,8 @@ impl Executor {
     ) -> Result<()> {
         let Some((&i, tail)) = order.split_first() else {
             out.push(Binding {
+                #[cfg(feature="sparse-cells")]
+                prepared: 0,
                 #[cfg(feature = "view-consumers")]
                 view_source: None,
                 #[cfg(feature = "iterative-bake")]
@@ -1614,6 +1618,8 @@ impl Executor {
                     }
                     if !remaining.iter().any(|v| *v) {
                         found.push(Binding {
+                            #[cfg(feature="sparse-cells")]
+                            prepared: 0,
                             #[cfg(feature = "view-consumers")]
                             view_source: None,
                             #[cfg(feature = "iterative-bake")]
@@ -1770,6 +1776,8 @@ impl Executor {
                             }
                             known.mark(sol.depth);
                             found.push(Binding {
+                                #[cfg(feature="sparse-cells")]
+                                prepared: 0,
                                 #[cfg(feature = "view-consumers")]
                                 view_source: None,
                                 direct: None,
@@ -1947,6 +1955,8 @@ impl Executor {
                             }
                             if !remaining.iter().any(|v| *v) {
                                 found.push(Binding {
+                                    #[cfg(feature="sparse-cells")]
+                                    prepared: 0,
                                     #[cfg(feature = "view-consumers")]
                                     view_source: None,
                                     #[cfg(feature = "iterative-bake")]
@@ -2127,7 +2137,11 @@ impl Executor {
             );
             let (cell, index, mut key, changed) = self
                 .graph
-                .apply_write(template, b.values, b.parent, &write, keep_key)?;
+                .apply_write(template, b.values, b.parent, &write, keep_key,
+                    #[cfg(feature="sparse-cells")] b.prepared)?;
+            #[cfg(feature="sparse-cells")]
+            { self.graph.stats.prepared_rhs_operations+=self.graph.program.executions[rid]
+                .prepared_operations(&self.graph.program.templates[template],b.prepared) as u64; }
             let receipts = crate::cell::SingleEffect(write.op, Dependency::Function(index));
             #[cfg(feature = "structural-depth")]
             if self.stage_spine.structural.capture_rule(rid) {
@@ -2285,7 +2299,10 @@ impl Executor {
         let (mut effect_receipts, resume_start) =
             (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None::<Start>);
         #[cfg(feature = "rhs-locals")]
-        let local = if resume_start.is_none() && self.local_width > 0
+        let local = if resume_start.is_none() && {
+            #[cfg(feature="sparse-cells")] { b.prepared==0 }
+            #[cfg(not(feature="sparse-cells"))] { true }
+        } && self.local_width > 0
             && self.local_selection.as_ref().is_none_or(|s| s[rid])
             && origin.is_none()
             && !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_)))
@@ -2301,6 +2318,10 @@ impl Executor {
         let inspect_births = (local.clone(), stage_cursor.is_some());
         // Selection supplies only Cell positions and accounting. Admitted
         // prefixes share first-miss promotion and the same completion handling.
+        #[cfg(feature="sparse-cells")]
+        let prepared=b.prepared;
+        #[cfg(not(feature="sparse-cells"))]
+        let prepared=0;
         let ordinary = |me: &mut Self, values: crate::slots::Slots,
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
             if me.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
@@ -2313,7 +2334,7 @@ impl Executor {
                 let cell = me.graph.begin_transient(template, values, b.parent)?;
                 #[cfg(not(feature = "sparse-cells"))]
                 let cell = me.graph.linked_slots(template, values, b.parent)?;
-                Ok(Start::Resume { cell, next_op: 0 })
+                Ok(Start::Resume { cell, next_op: prepared })
             }
         };
         #[cfg(feature = "rhs-locals")]
@@ -2327,6 +2348,11 @@ impl Executor {
         let start = if let Some(start) = resume_start { start } else {
             ordinary(self, b.values, &mut effect_receipts)?
         };
+        #[cfg(feature="sparse-cells")]
+        if matches!(&start,Start::Resume{next_op,..} if *next_op==prepared) {
+            self.graph.stats.prepared_rhs_operations+=self.graph.program.executions[rid]
+                .prepared_operations(&self.graph.program.templates[template],prepared) as u64;
+        }
         let (cell, first_op) = match start {
             Start::Resume { cell, next_op } => (cell, next_op),
             Start::Complete { cell, frame } => {
@@ -2701,9 +2727,9 @@ impl Executor {
             None
         };
         #[cfg(feature = "slot-transfer-audit")]
-        crate::transfer_audit::record_run(patch.iter().map(|(rid, b)| (rid, &b.values)))?;
+        crate::transfer_audit::record_run(patch.iter().map(|(rid, b)| (rid, b.input_view(&self.graph.program.rules[*rid].inputs))))?;
         #[cfg(feature = "slot-transfer-audit")]
-        crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter());
+        crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter(),&self.graph.program.rules);
         let matches = patch.len;
         #[cfg(feature = "cell-absorption")]
         let matches = matches + absorbed_matches;
@@ -2713,7 +2739,7 @@ impl Executor {
         self.replay
             .run(&self.graph, set, &patch, &self.survey.samples[run_start..])?;
         if self.audit {
-            self.binding_audit.push(json!({"ruleset":set,"bindings":patch.iter().map(|(rid,b)|{let template=&self.graph.program.templates[self.graph.program.rules[*rid].template];json!({"rule":rid,"values":b.values.iter().map(|(i,v)|json!({"slot":i,"value":crate::value::exported(v,&template.sorts[*i])})).collect::<Vec<_>>()})}).collect::<Vec<_>>()}));
+            self.binding_audit.push(json!({"ruleset":set,"bindings":patch.iter().map(|(rid,b)|{let template=&self.graph.program.templates[self.graph.program.rules[*rid].template];json!({"rule":rid,"values":self.graph.program.rules[*rid].inputs.iter().map(|i|{let v=&b.values[i];json!({"slot":i,"value":crate::value::exported(v,&template.sorts[*i])})}).collect::<Vec<_>>()})}).collect::<Vec<_>>()}));
         }
         let phase = if self.audit || cfg!(feature = "family-replay") {
             Instant::now()
@@ -3186,6 +3212,13 @@ impl Executor {
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}});
+        report["cell_execution"]=json!({"schema":"cell-execution-boundaries/v1",
+                "rules":self.graph.program.executions.len(),
+                "segments":self.graph.program.executions.iter().map(|p|p.segments.len()).sum::<usize>(),
+                "compiled_payload_bytes":self.graph.program.executions.capacity()*std::mem::size_of::<crate::cell::execution::Plan>()
+                    +self.graph.program.executions.iter().map(|p|p.storage_bytes()).sum::<usize>(),
+                "progress_bytes":if cfg!(feature="sparse-cells") {std::mem::size_of::<usize>()} else {0},
+                "worker_scope":"query to first dependency boundary; original Run/effect/publication order"});
         report["query_point_transport"] = point_transport;
         report
     }

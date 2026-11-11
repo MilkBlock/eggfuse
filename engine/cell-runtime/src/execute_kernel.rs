@@ -396,6 +396,8 @@ impl Frame {
             .filter_map(|(atom, &w)| w.map(|w| (atom, w))));
         exec.graph.stats.register_answers += 1;
         out.push(Binding {
+            #[cfg(feature="sparse-cells")]
+            prepared: 0,
             #[cfg(feature = "view-consumers")]
             view_source: None,
             #[cfg(feature = "iterative-bake")]

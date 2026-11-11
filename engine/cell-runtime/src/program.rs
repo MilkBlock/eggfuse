@@ -44,7 +44,7 @@ pub struct Template {
     pub name: String,
     pub sorts: Vec<J>,
     pub defs: BTreeMap<usize, usize>,
-    pub ops: Rc<Vec<Op>>,
+    pub ops: std::sync::Arc<Vec<Op>>,
     pub parent_columns: BTreeMap<usize, usize>,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -109,6 +109,8 @@ pub struct Program {
     pub marker_tables: std::collections::BTreeSet<usize>,
     #[serde(skip)]
     pub(crate) cell_queries: Rc<crate::cell::Queries>,
+    #[serde(skip)]
+    pub(crate) executions: Vec<crate::cell::execution::Plan>,
     #[serde(skip)]
     pub(crate) cell_links: Rc<Vec<crate::cell::QueryLinks>>,
     pub multi_stage: crate::multistage::MultiStage,
@@ -322,7 +324,7 @@ impl Program {
                 name: r["metadata"]["name"].as_str().unwrap_or("rule").into(),
                 sorts,
                 defs,
-                ops: Rc::new(ops),
+                ops: std::sync::Arc::new(ops),
                 parent_columns,
             });
         }
@@ -335,7 +337,7 @@ impl Program {
                 name: format!("import/{}", t.name),
                 sorts: t.schema.clone(),
                 defs: BTreeMap::from([(dst, 0)]),
-                ops: Rc::new(vec![op]),
+                ops: std::sync::Arc::new(vec![op]),
                 parent_columns: BTreeMap::new(),
             });
         }
@@ -388,6 +390,7 @@ impl Program {
             view_blocks: Default::default(),
             marker_tables: Default::default(),
             cell_queries: Default::default(),
+            executions: vec![],
             cell_links: Default::default(),
             multi_stage: crate::multistage::MultiStage::default(),
             entry_schedule: crate::entry_schedule::Plan::default(),
@@ -403,6 +406,11 @@ impl Program {
             artifact: j,
         };
         p.validate()?;
+        p.executions=p.rules.iter().map(|r|crate::cell::execution::Plan::derive(&p.tables,&p.templates[r.template],&r.inputs)).collect();
+        if let Some(raw)=p.artifact.get("cell_execution")
+            && *raw!=crate::cell::execution::Plan::wire(&p.executions) {
+            return Err("Cell execution boundaries differ from typed recipe".into());
+        }
         p.cell_links = Rc::new(p.rules.iter().map(|r| crate::cell::QueryLinks::compile(&r.query)).collect());
         p.physical = Rc::new(crate::physical_plan::Plan::derive(&p));
         p.repair_ports = crate::graph::repair_ports::Plan::derive(&p);

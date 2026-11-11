@@ -16,6 +16,8 @@ impl<K, V> Default for FrameMap<K, V> {
     }
 }
 impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn with_capacity(capacity:usize)->Self { Self(Vec::with_capacity(capacity)) }
     fn position(&self, k: &K) -> Option<usize> {
         if let Ok(i) = (*k).try_into()
             && self.0.get(i).is_some_and(|(old, _)| old == k)

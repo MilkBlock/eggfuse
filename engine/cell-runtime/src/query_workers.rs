@@ -13,6 +13,8 @@ mod sharing_audit;
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub execution: crate::cell::execution::Counts,
+    pub worker_local_operations: Vec<u64>,
     #[cfg(feature = "cell-query-sharing-audit")]
     pub sharing_audit: sharing_audit::Counts,
     pub fixed_read_probes: u64,
@@ -214,7 +216,7 @@ impl Executor {
             cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
-            stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_steps: vec![0; workers],
+            stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_steps: vec![0; workers],
                 #[cfg(feature = "cell-query-sharing-audit")]
                 sharing_audit,
                 worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
@@ -263,6 +265,8 @@ impl Executor {
         let input_slots = rule.inputs.as_slice();
         let query_width = rule.query.len();
         let key_nodes = self.graph.program.key_nodes();
+        let local=&self.graph.program.executions[rid];
+        let template=&self.graph.program.templates[rule.template];
         let pooled = workers.pool.is_some();
         let run = |chunk: &[Entry<'_>], frame: &mut Frame| -> Result<(Vec<Binding>, Counts, Option<usize>)> {
             let mut counts = Counts { entries: chunk.len() as u64, chunks: 1,
@@ -275,15 +279,19 @@ impl Executor {
                     #[cfg(feature = "cell-query-sharing-audit")] None,
                 )? else { continue };
                 if answers.len() == answers.capacity() { counts.answer_buffer_allocations += 1; }
-                answers.push(Binding {
+                let mut answer=Binding {
+                    #[cfg(feature="sparse-cells")]
+                    prepared: 0,
                     #[cfg(feature="view-consumers")]
                     view_source: None,
                     direct: None,
                     known: known.with_rows(frame.witnesses.iter().copied()),
-                    values: input_slots.iter().zip(&query.inputs).map(|(&slot, field)|
-                        (slot, field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())).collect(),
+                    values: local.slots(input_slots.iter().zip(&query.inputs).map(|(&slot, field)|
+                        (slot, field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())),&mut counts.execution),
                     epoch, parent: None, continuation: None, compiled: true,
-                });
+                };
+                local.prepare(template,&mut answer,&mut counts.execution);
+                answers.push(answer);
             }
             counts.answers = answers.len() as u64;
             counts.output_buffer_capacity = answers.capacity() as u64;
@@ -399,8 +407,10 @@ impl Workers {
         #[cfg(feature = "cell-query-sharing-audit")]
         self.stats.sharing_audit.add(&c.sharing_audit);
         self.stats.constructors.add(&c.constructors);
+        self.stats.execution.add(&c.execution);
         if let Some(worker) = worker {
             self.stats.worker_entries[worker] += c.entries;
+            self.stats.worker_local_operations[worker] += c.execution.operations;
             self.stats.worker_steps[worker] += c.steps;
             self.stats.worker_frame_capacity_bytes[worker] = self.stats.worker_frame_capacity_bytes[worker].max(c.frame_capacity_bytes);
         } else {
@@ -440,6 +450,7 @@ struct CellCode {
     query: crate::cell::SharedQuery,
     inputs: InputSlots,
     rule: usize,
+    template: usize,
     pivot: usize,
     slots: usize,
     reads: usize,
@@ -509,7 +520,7 @@ impl CellPlan {
                 let code = codes.len();
                 codes.push(CellCode {
                     #[cfg(feature = "parallel-residuals")] expansion:false,
-                    first_read: None, rule: rid, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
+                    first_read: None, rule: rid, template:r.template, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
                     #[cfg(feature = "cell-query-sharing-audit")]
                     audit_prefixes: prefixes.compile(&query),
                     inputs: r.inputs.clone(), query });
@@ -823,6 +834,8 @@ impl Workers {
         self.stats.peak_cell_task_bytes = self.stats.peak_cell_task_bytes.max(self.tasks.bytes());
         let key_nodes = g.program.key_nodes();
         let pooled = self.pool.is_some() && headers.len() >= self.grain;
+        let local=&g.program.executions;
+        let templates=&g.program.templates;
         let rule_facts = &self.rule_facts;
         let first_reads = &self.first_reads.results;
         let run = |range: &Chunk, frame: &mut Frame| {
@@ -841,7 +854,7 @@ impl Workers {
                 let known = rule_facts[code.rule].as_ref().unwrap();
                 #[cfg(feature="parallel-residuals")]
                 if code.expansion {
-                    if let Err(error)=prepared[q.expansion].evaluate(q,&reads,key_nodes,known,frame,&mut residual,&mut answers) {
+                    if let Err(error)=prepared[q.expansion].evaluate(q,&reads,key_nodes,known,frame,&mut residual,&mut answers,&local[code.rule],&templates[code.template]) {
                         let order=query_error_order(q,known);
                         if first_error.as_ref().is_none_or(|(old,_)|order<*old) {first_error=Some((order,error));}
                     }
@@ -858,15 +871,16 @@ impl Workers {
                 ).map(|epoch| epoch.filter(|&e| e >= known.watermark).map(|epoch| {
                         counts.answers += 1;
                         crate::cell::Matched::matched(
-                            code.inputs.iter().zip(&code.query.inputs).map(|(&slot, f)|
+                            local[code.rule].slots(code.inputs.iter().zip(&code.query.inputs).map(|(&slot, f)|
                                 (slot, f.operand_in(reads.parents,
-                                    |col| &entry.values[col], &frame.values, None).into_owned())).collect(),
+                                    |col| &entry.values[col], &frame.values, None).into_owned())),&mut counts.execution),
                             known.facts.with_rows(frame.witnesses.iter().copied()), epoch)
                     }));
                 #[cfg(feature = "cell-query-sharing-audit")]
                 probe.end(matches!(answer, Ok(Some(_))), answer.is_err());
                 match answer {
-                    Ok(Some(answer)) => {
+                    Ok(Some(mut answer)) => {
+                        local[code.rule].prepare(&templates[code.template],&mut answer,&mut counts.execution);
                         // Point-only tasks reserve once. Mixed expansions may
                         // return more rows, so also charge subsequent growth.
                         if answers.len() == answers.capacity() {

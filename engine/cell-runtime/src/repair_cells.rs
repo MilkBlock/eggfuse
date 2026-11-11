@@ -124,7 +124,7 @@ impl Catalog {
                             json!({"kind":"Unit"}),
                         ],
                         defs: BTreeMap::from([(2, op)]),
-                        ops: Rc::new(ops),
+                        ops: std::sync::Arc::new(ops),
                         parent_columns: BTreeMap::new(),
                     }
                 };
