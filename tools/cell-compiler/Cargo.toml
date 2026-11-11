@@ -19,6 +19,7 @@ harness = false
 [features]
 completion-overlap-probes = ["eggfuse-cell-runtime/completion-overlap-probes"]
 sparse-cells = ["eggfuse-cell-runtime/sparse-cells"]
+cell-absorption = ["sparse-cells", "eggfuse-cell-runtime/cell-absorption"]
 rhs-locals = ["eggfuse-cell-runtime/rhs-locals"]
 receipt-slots = ["structural-depth","eggfuse-cell-runtime/receipt-slots"]
 structural-depth = ["eggfuse-cell-runtime/structural-depth"]

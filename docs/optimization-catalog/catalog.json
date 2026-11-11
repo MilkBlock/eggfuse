@@ -548,10 +548,10 @@
       "id": "B3",
       "category": "B",
       "title": "邻居、局部 context 与 view 消费",
-      "activation": "窄 context 默认；通用 cut 需 admission；view-ports 为 feature",
-      "compile_fact": "受需求约束的 sibling/parent 投影与完整 residual",
-      "replaces": "重复解码父节点及重复局部连接",
-      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "activation": "窄 context 默认；通用 cut 需 admission；view-ports 为 feature；cell-absorption feature + 显式运行时启用，默认关闭",
+      "compile_fact": "受需求约束的 sibling/parent 投影与完整 residual；实验性纯单写 min 吸收由现有 Cell query、write 与类型/删除约束推导",
+      "replaces": "重复解码父节点及重复局部连接；已证明整个构造子域被吸收时，免除逐行绑定、单写与该次应用的完成/发布",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 吸收守卫要求旧构造子、精确域与输入、不可删除输出和全局 completion；原 Entry 来源、结构失效、残余匹配及 Run 可见性继续有效。",
       "sources": [
         "engine/cell-runtime/src/neighbor.rs",
         "engine/cell-runtime/src/local_context.rs",
@@ -575,6 +575,11 @@
             "source": "report",
             "pointer": "/local_context/rules/*/root_reuses",
             "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/matches_absorbed",
+            "reduce": "value"
           }
         ],
         "cost": [
@@ -627,6 +632,26 @@
             "source": "report",
             "pointer": "/local_context/rules/*/terminal_result_writes",
             "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/bound_builds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/output_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/condition_bytes_per_neighborhood",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -644,10 +669,40 @@
             "source": "report",
             "pointer": "/view_consumers/groups",
             "reduce": "count"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/enabled",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/plans",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/groups_absorbed",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/reused_bounds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/missing_outputs",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/fresh_constructor_fallbacks",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Context now directly returns requested Cell facts, removing its outgoing full witness array and executor conversion. Required prefix witnesses remain. Fact projection now precedes context deduplication; no allocation savings are inferred from output binding counts. The f1c69507 short checkpoint does not establish a speedup or resolve speed preservation. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts. Retained witnesses now contain only completed prefix table reads in Cell instruction order. A static witness width replaces branching metadata and bounds construction capacity; no dynamic source map is added. Existing copied-slot credit observes sum-bits 14→13 and short fixtures 77→56 / 51→36 / 77→56. Root leases and cross-Run validity remain; stack length maintenance and projection traversal are not exhaustive instruction counts. Cell prefix candidates and exact-value leases now come from one index selection; ordinary enumeration shares the same refinement implementation. Over-budget fallback, absent-bucket evidence and base-bucket exact-value invalidation remain distinct. Removed preparation/selection calls are not separately operation-counted; unchanged metrics do not establish speedup. Cross-Run scope/version storage and remaining index lifecycle remain. Context validity now belongs to its actual shared Cell plan: compiled instructions supply endpoints and prefix read scope, removing separate orientation identity and source-Rule access. Existing snapshot storage is refreshed only when needed; no temporary version vector is built for validation. Exact leases, literal-union resets and scope changes remain guarded. Neighbor/view, admission/Bake, wider index lifecycle and speed acceptance remain incomplete. View pair predicates, bound guard results and output fields now execute Cell Query. Separate view Port/Test/Comparison runtime representations are removed. Three-way comparison dispatch remains a derived specialization; candidate directories and publication lifetimes remain. Shared query metadata and generic guard binding overhead require timing; unchanged work counts do not imply a speedup. The cc472d0f five-implementation sum-bits checkpoint has paired inference/process intervals crossing 1 against immediate, last-timed and historical controls; neither speedup nor strict speed preservation is established. Neighbor/range read caches now share the query-column table-publication lifecycle: resolve each selected table once, update from common rows, finish only delivered tables. The neighbor subscription list/global version sweep and range per-row table lookups/version stores are removed. Necessary old-key identity and candidate storage remain. Maintenance timers cover cache updates; common version completion has no separate clock. No numeric savings or speedup are inferred from unchanged work counters.",
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Context now directly returns requested Cell facts, removing its outgoing full witness array and executor conversion. Required prefix witnesses remain. Fact projection now precedes context deduplication; no allocation savings are inferred from output binding counts. The f1c69507 short checkpoint does not establish a speedup or resolve speed preservation. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts. Retained witnesses now contain only completed prefix table reads in Cell instruction order. A static witness width replaces branching metadata and bounds construction capacity; no dynamic source map is added. Existing copied-slot credit observes sum-bits 14→13 and short fixtures 77→56 / 51→36 / 77→56. Root leases and cross-Run validity remain; stack length maintenance and projection traversal are not exhaustive instruction counts. Cell prefix candidates and exact-value leases now come from one index selection; ordinary enumeration shares the same refinement implementation. Over-budget fallback, absent-bucket evidence and base-bucket exact-value invalidation remain distinct. Removed preparation/selection calls are not separately operation-counted; unchanged metrics do not establish speedup. Cross-Run scope/version storage and remaining index lifecycle remain. Context validity now belongs to its actual shared Cell plan: compiled instructions supply endpoints and prefix read scope, removing separate orientation identity and source-Rule access. Existing snapshot storage is refreshed only when needed; no temporary version vector is built for validation. Exact leases, literal-union resets and scope changes remain guarded. Neighbor/view, admission/Bake, wider index lifecycle and speed acceptance remain incomplete. View pair predicates, bound guard results and output fields now execute Cell Query. Separate view Port/Test/Comparison runtime representations are removed. Three-way comparison dispatch remains a derived specialization; candidate directories and publication lifetimes remain. Shared query metadata and generic guard binding overhead require timing; unchanged work counts do not imply a speedup. The cc472d0f five-implementation sum-bits checkpoint has paired inference/process intervals crossing 1 against immediate, last-timed and historical controls; neither speedup nor strict speed preservation is established. Neighbor/range read caches now share the query-column table-publication lifecycle: resolve each selected table once, update from common rows, finish only delivered tables. The neighbor subscription list/global version sweep and range per-row table lookups/version stores are removed. Necessary old-key identity and candidate storage remain. Maintenance timers cover cache updates; common version completion has no separate clock. No numeric savings or speedup are inferred from unchanged work counters. Opt-in min absorption removes 207,182 complete-Raytrace binding/write/completion paths but adds 389,878 output probes. These probes are outside key_lookup_calls; checks exclude early eligibility dispatch. Each existing Neighborhood gains 32 bytes. sum-bits and early Raytrace have no takeovers. Publication provenance can change; selected source-Run checks and full relative state pass, not an independent native Raytrace proof. No automatic Bake credit, general sparsity or throughput claim; see the experiment for net allocation costs.",
       "evidence": [
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",
@@ -666,7 +721,9 @@
         "benchmarks/cell-unification/leased-query-check.json",
         "benchmarks/cell-unification/context-scope-check.json",
         "benchmarks/cell-unification/view-query-results.json",
-        "benchmarks/cell-unification/read-publication-check.json"
+        "benchmarks/cell-unification/read-publication-check.json",
+        "benchmarks/cell-absorption-guard/README.md",
+        "benchmarks/cell-absorption-guard/results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

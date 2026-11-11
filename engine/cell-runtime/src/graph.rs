@@ -645,6 +645,19 @@ impl Graph {
         self.next_cell = id.checked_add(1).ok_or("Cell identity exhausted")?;
         Ok(id)
     }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn reserve_absorbed_cells(&mut self, count: usize) -> Result<()> {
+        // Preserve later constructor IDs across this experiment. These are
+        // unused identity positions, not committed operations or live Cells.
+        let count = u32::try_from(count).map_err(|_| "Cell identity exhausted")?;
+        self.next_cell = self.next_cell.checked_add(count).ok_or("Cell identity exhausted")?;
+        Ok(())
+    }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn absorption_value(&self, table: usize, key: &Value) -> Option<i64> {
+        let f = self.functions.get(self.function_index(table, std::slice::from_ref(key))?)?;
+        match f.value { Value::Int(v) if f.live => Some(v), _ => None }
+    }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn reserve_completed_cell(&mut self) -> Result<u32> {
         // Source identity order remains identical to ordinary closed RHS

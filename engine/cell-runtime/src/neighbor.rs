@@ -115,6 +115,62 @@ struct Neighborhood {
     // Holding the original domain prevents allocator address reuse.
     _domain: Rc<Vec<Dependency>>,
     rows: Rc<Vec<Row>>,
+    #[cfg(feature = "cell-absorption")]
+    absorption: Option<(usize, u64, i64)>,
+}
+/// This is a condition on one existing Cell query, not another consumer graph.
+/// The only effect copies the input attribute into a permanent min function.
+#[cfg(feature = "cell-absorption")]
+#[derive(Clone, Copy, Debug)]
+struct Absorption {
+    pivot: usize,
+    structure: usize,
+    attribute: usize,
+    input_column: usize,
+}
+#[cfg(feature = "cell-absorption")]
+fn absorption(p: &Program, rid: usize) -> Option<Absorption> {
+    let r = &p.rules[rid];
+    if !r.seminaive || r.query.len() != 2 { return None; }
+    let w = p.writes[rid].as_ref()?;
+    if !w.prefix.is_empty() || p.physical.merges[w.table] != Some(crate::physical_plan::ScalarMerge::Min) {
+        return None;
+    }
+    // Deletion anywhere in the program would invalidate an old scalar bound.
+    if p.templates.iter().any(|t| t.ops.iter().any(|op| matches!(op, Op::Hide(t,_,_) if *t == w.table))) {
+        return None;
+    }
+    for pivot in 0..2 {
+        let input = &r.query[pivot];
+        if !matches!(input.call, Call::Table(t) if t == w.table) { continue; }
+        let [Arg::Slot(key), Arg::Slot(value)] = input.args.as_slice() else { continue; };
+        let ctor = &r.query[1-pivot];
+        let Call::Table(table) = ctor.call else { continue; };
+        if !p.tables[table].constructor || !p.tables[table].virtual_fact { continue; }
+        let Some((Arg::Slot(result), fields)) = ctor.args.split_last() else { continue; };
+        if w.key != [Arg::Slot(*result)] || w.value != Arg::Slot(*value) { continue; }
+        let slots = ctor.args.iter().map(|a| match a { Arg::Slot(s) => Some(*s), _ => None })
+            .collect::<Option<std::collections::BTreeSet<_>>>()?;
+        if slots.len() != ctor.args.len() || slots.contains(value) { continue; }
+        let Some(column) = fields.iter().position(|a| a == &Arg::Slot(*key)) else { continue; };
+        let kernel = p.kernels[rid][pivot].as_ref()?;
+        if kernel.query.steps.len() != 1 || kernel.query.steps[0].expansion.is_none() { continue; }
+        return Some(Absorption { pivot, structure: table, attribute: w.table, input_column: column });
+    }
+    None
+}
+#[cfg(feature = "cell-absorption")]
+#[derive(Default, Serialize)]
+struct AbsorptionStats {
+    checks: u64,
+    reused_bounds: u64,
+    bound_builds: u64,
+    output_probes: u64,
+    missing_outputs: u64,
+    fresh_constructor_fallbacks: u64,
+    groups_absorbed: u64,
+    matches_absorbed: u64,
+    pending: Vec<usize>,
 }
 #[derive(Default)]
 struct Groups {
@@ -126,6 +182,12 @@ struct Groups {
 const KEY_LIMIT: usize = 4096;
 const ROW_LIMIT: usize = 65536;
 pub(crate) struct Context {
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) absorption_enabled: bool,
+    #[cfg(feature = "cell-absorption")]
+    absorption_plans: Vec<Option<Absorption>>,
+    #[cfg(feature = "cell-absorption")]
+    absorption_stats: AbsorptionStats,
     ports: Vec<Option<Ports>>,
     published: Publication,
     groups: FxHashMap<usize, Groups>,
@@ -135,6 +197,12 @@ pub(crate) struct Context {
 impl Context {
     pub fn new(p: &Program, profiling: bool) -> Self {
         Self {
+            #[cfg(feature = "cell-absorption")]
+            absorption_enabled: false,
+            #[cfg(feature = "cell-absorption")]
+            absorption_plans: (0..p.rules.len()).map(|r| absorption(p, r)).collect(),
+            #[cfg(feature = "cell-absorption")]
+            absorption_stats: AbsorptionStats { pending: vec![0; p.rules.len()], ..Default::default() },
             ports: (0..p.tables.len()).map(|_| None).collect(),
             published: Publication::default(),
             groups: FxHashMap::default(),
@@ -164,8 +232,75 @@ impl Context {
             .map(|cache| cache.rows.len())
             .sum();
         let parent_refs: usize = self.groups.values().map(|cache| cache.rows).sum();
-        serde_json::json!({"demanded_keys":demanded_keys,"parent_refs":parent_refs,"mode":"neighbors","publication":self.published,"timed_maintenance":self.profiling,"rules":rules})
+        #[allow(unused_mut)]
+        let mut report = serde_json::json!({"demanded_keys":demanded_keys,"parent_refs":parent_refs,"mode":"neighbors","publication":self.published,"timed_maintenance":self.profiling,"rules":rules});
+        #[cfg(feature = "cell-absorption")]
+        { report["absorption"] = serde_json::json!({"enabled":self.absorption_enabled,
+            "plans":self.absorption_plans.iter().filter(|p| p.is_some()).count(),
+            "condition_bytes_per_neighborhood":std::mem::size_of::<Option<(usize,u64,i64)>>(),
+            "stats":self.absorption_stats}); }
+        report
     }
+    /// A current cached constructor domain plus a permanent min upper bound
+    /// proves that every covered source effect is already absorbed. No logical
+    /// mutation or new producer evidence is published for those omitted effects.
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn absorbs(&mut self, g: &Graph, rid: usize, pivot: usize, seed: &Row,
+        watermark: u64, table: usize, domain: &Rc<Vec<Dependency>>) -> bool {
+        if !self.absorption_enabled { return false; }
+        let Some(plan) = self.absorption_plans[rid] else { return false; };
+        if pivot != plan.pivot || table != plan.structure || seed.table != plan.attribute
+            || seed.hidden || seed.epoch < watermark || g.has_visibility_changes(plan.attribute) {
+            return false;
+        }
+        let [key @ Value::Eq(key_id), Value::Int(candidate)] = seed.values.as_ref() else { return false; };
+        let Some(groups) = self.groups.get_mut(&table).filter(|s| s.version == g.query_versions[table]) else { return false; };
+        let Some(group) = groups.by_domain.get_mut(&(Rc::as_ptr(domain) as usize)) else { return false; };
+        let stats = &mut self.absorption_stats;
+        stats.checks += 1;
+        // This pivot must own the entire domain; another fresh constructor may
+        // also have a Spine continuation and must keep ordinary winner selection.
+        if group.rows.last().is_none_or(|r| r.epoch >= watermark) {
+            stats.fresh_constructor_fallbacks += 1;
+            return false;
+        }
+        let upper = if let Some((_, _, upper)) = group.absorption.filter(|(rule, id, _)| *rule == rid && *id == *key_id) {
+            stats.reused_bounds += 1;
+            upper
+        } else {
+            let mut upper = i64::MIN;
+            for row in group.rows.iter() {
+                // Candidate domains can be supersets. Cache a bound only for
+                // an exact one-key domain, so its length is the match count.
+                if row.values.get(plan.input_column) != Some(key) { return false; }
+                stats.output_probes += 1;
+                let Some(value) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
+                    stats.missing_outputs += 1;
+                    return false;
+                };
+                upper = upper.max(value);
+            }
+            stats.bound_builds += 1;
+            group.absorption = Some((rid, *key_id, upper));
+            upper
+        };
+        if *candidate < upper {
+            // A smaller old bound is still valid; refreshing is optional and
+            // charged. Do it only on a later visit, not twice in this query.
+            group.absorption = None;
+            return false;
+        }
+        stats.groups_absorbed += 1;
+        stats.matches_absorbed += group.rows.len() as u64;
+        stats.pending[rid] += group.rows.len();
+        true
+    }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn pending_absorbed(&self, rule: usize) -> usize { self.absorption_stats.pending[rule] }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn absorbed_in_run(&self) -> usize { self.absorption_stats.pending.iter().sum() }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn take_absorbed(&mut self, rule: usize) -> usize { std::mem::take(&mut self.absorption_stats.pending[rule]) }
     pub fn point(
         &mut self,
         g: &mut Graph,
@@ -279,6 +414,8 @@ impl Context {
             Neighborhood {
                 _domain: domain,
                 rows: Rc::new(rows),
+                #[cfg(feature = "cell-absorption")]
+                absorption: None,
             },
         );
         if let Some(clock) = clock {
@@ -347,6 +484,51 @@ pub(crate) enum Access {
 mod tests {
     use super::*;
 
+    #[cfg(feature = "cell-absorption")]
+    #[test]
+    fn cached_condition_keeps_its_key_epoch_and_domain_generation() {
+        use crate::graph::FactRef;
+        use serde_json::json;
+        let tables = [json!({"name":"Get","schema":[{"kind":"eq"},{"kind":"i64"},{"kind":"eq"}],
+            "constructor":true,"virtual_fact":true,"internal":false,"merge":null}),
+            json!({"name":"Cost","schema":[{"kind":"eq"},{"kind":"i64"}],
+            "constructor":false,"virtual_fact":false,"internal":false,
+            "merge":{"call":{"primitive":"min","output":"i64"},"args":[{"var":"old"},{"var":"new"}]}})];
+        let p = serde_json::from_value(json!({
+            "multi_stage":crate::multistage::MultiStage::default(),
+            "entry_schedule":crate::entry_schedule::Plan::default(),"tables":tables,"templates":[],"rules":[],
+            "sets":{},"control":[],"initial":[],"table_templates":[],"artifact":{}
+        })).unwrap();
+        let mut g = Graph::new(p).unwrap();
+        g.merge_programs_enabled = false;
+        for (key,value) in [(8,3),(9,4)] { g.set_function(1,vec![Value::Eq(key)],Value::Int(value)).unwrap(); }
+        let rows: Vec<_> = [8,9].into_iter().enumerate().map(|(i,key)| Row { table:0,
+            values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(i as i64),Value::Eq(key)]),
+            epoch:1,witness:Dependency::Fact(FactRef { cell:i as u32,op:0 }),hidden:false }).collect();
+        let domain: Rc<Vec<Dependency>> = Rc::new(rows.iter().map(|r|r.witness).collect());
+        let mut c = Context::new(&g.program,false);
+        c.absorption_enabled = true;
+        c.absorption_plans.push(Some(Absorption { pivot:1, structure:0, attribute:1,input_column:0 }));
+        c.absorption_stats.pending.push(0);
+        c.groups.insert(0, Groups { version:g.query_versions[0], rows:2,
+            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:Rc::new(rows),absorption:None })].into_iter().collect() });
+        let mut seed = Row { table:1, values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]),
+            epoch:5,witness:Dependency::Function(20),hidden:false };
+        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain));
+        let probes = c.absorption_stats.output_probes;
+        // Smaller outputs preserve an old upper bound without new subscriptions.
+        g.set_function(1,vec![Value::Eq(8)],Value::Int(1)).unwrap();
+        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert_eq!(c.absorption_stats.output_probes,probes);
+        seed.values = crate::graph::row_fields(vec![Value::Eq(99),Value::Int(10)]);
+        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"a broad domain pointer is not an input identity");
+        seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]);
+        assert!(!c.absorbs(&g,0,1,&seed,1,0,&domain),"fresh constructors keep winner selection");
+        g.query_versions[0] += 1;
+        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"old membership cannot close a new domain");
+        assert_eq!(c.absorption_stats.matches_absorbed,4);
+    }
+
     #[test]
     fn replacement_and_retirement_commute_for_a_subscribed_key() {
         let original = Row {
@@ -367,6 +549,12 @@ mod tests {
             cache.rows.insert(7, Some(original.clone()));
             cache.keys.insert(3, 7);
             let mut ctx = Context {
+                #[cfg(feature = "cell-absorption")]
+                absorption_enabled: false,
+                #[cfg(feature = "cell-absorption")]
+                absorption_plans: vec![],
+                #[cfg(feature = "cell-absorption")]
+                absorption_stats: Default::default(),
                 ports: vec![Some(cache)],
                 groups: Default::default(),
                 published: Default::default(),

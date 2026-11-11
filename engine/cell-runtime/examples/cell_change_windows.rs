@@ -26,9 +26,11 @@ fn rows(graph: &Graph, tables: &BTreeSet<usize>) -> Result<Json, String> {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    let [program, windows, output, mode] = args.as_slice() else {
-        return Err("expected PROGRAM WINDOWS.json OUTPUT observe|control|census".into());
+    let [program, windows, output, mode, options @ ..] = args.as_slice() else {
+        return Err("expected PROGRAM WINDOWS.json OUTPUT observe|control|census [--cell-absorption]".into());
     };
+    let absorption = match options { [] => false, [flag] if flag == "--cell-absorption" => true,
+        _ => return Err("unknown window option".into()) };
     let observe = match mode.as_str() {
         "observe" => true, "control" | "census" => false, _ => return Err("unknown mode".into()),
     };
@@ -49,6 +51,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .chain(std::iter::once(table)).collect();
     let mut e = Executor::new(Graph::new_with_repair_ports(p)?, false);
     e.use_entry_publications()?;
+    if absorption {
+        #[cfg(feature = "cell-absorption")]
+        e.use_cell_absorption()?;
+        #[cfg(not(feature = "cell-absorption"))]
+        return Err("Cell absorption requires cell-absorption".into());
+    }
     let output = Path::new(output);
     std::fs::create_dir(output)?;
     let mut checks = vec![];

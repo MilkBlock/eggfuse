@@ -1,0 +1,295 @@
+{
+  "baseline_commit": "e1610f4c",
+  "scope": "standalone Cell CPU; opt-in structural absorption experiment, no timing claim",
+  "limits": "No general sparsity theorem or 2x result. Raytrace relative state and selected Run checks, not independent native proof.",
+  "native_sum_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "conditions": {
+        "bound_builds": 0,
+        "checks": 0,
+        "fresh_constructor_fallbacks": 0,
+        "groups_absorbed": 0,
+        "matches_absorbed": 0,
+        "missing_outputs": 0,
+        "output_probes": 0,
+        "reused_bounds": 0
+      },
+      "logical_runs_and_actual_mutations_equal": true,
+      "point_queries": [
+        12085,
+        12085
+      ],
+      "allocations": {
+        "alloc_calls": [
+          81034,
+          81034
+        ],
+        "realloc_calls": [
+          13476,
+          13476
+        ],
+        "requested_bytes": [
+          19575539,
+          19576691
+        ]
+      },
+      "entry": {
+        "entry_publication_writes": [
+          4620,
+          4620
+        ],
+        "publication_slot_probes": [
+          6069,
+          6069
+        ],
+        "staged_root_records": [
+          228,
+          228
+        ]
+      },
+      "binding_single_write_and_completion_savings": 0,
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "reports_sha256": [
+        "caf3d91970d19cf5f87f23ed66cdb6099cc66715769e56154c936e0c6036a2d1",
+        "cbf0b90c09378e47fda15ea6a4d0359a4d8709f92f1661a0d94bdafb0d971095"
+      ]
+    },
+    "ray1280": {
+      "runs": 1280,
+      "conditions": {
+        "bound_builds": 0,
+        "checks": 0,
+        "fresh_constructor_fallbacks": 0,
+        "groups_absorbed": 0,
+        "matches_absorbed": 0,
+        "missing_outputs": 0,
+        "output_probes": 0,
+        "reused_bounds": 0
+      },
+      "logical_runs_and_actual_mutations_equal": true,
+      "point_queries": [
+        578591,
+        578591
+      ],
+      "allocations": {
+        "alloc_calls": [
+          2325464,
+          2325464
+        ],
+        "realloc_calls": [
+          343486,
+          343485
+        ],
+        "requested_bytes": [
+          960936284,
+          961008284
+        ]
+      },
+      "entry": {
+        "entry_publication_writes": [
+          184485,
+          184485
+        ],
+        "publication_slot_probes": [
+          296908,
+          296908
+        ],
+        "staged_root_records": [
+          5654,
+          5654
+        ]
+      },
+      "binding_single_write_and_completion_savings": 0,
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "reports_sha256": [
+        "c81cb9c1973f4004f2e434cb1b0221554fe7c4833d24d9d3985b1831ae725500",
+        "60f7f07631d9f5057f80c78e62df0a0ba867abbb58cefb01fb68c13ebd782032"
+      ]
+    },
+    "ray-full": {
+      "runs": 16883,
+      "conditions": {
+        "bound_builds": 110009,
+        "checks": 142008,
+        "fresh_constructor_fallbacks": 0,
+        "groups_absorbed": 32831,
+        "matches_absorbed": 207182,
+        "missing_outputs": 0,
+        "output_probes": 389878,
+        "reused_bounds": 31999
+      },
+      "logical_runs_and_actual_mutations_equal": true,
+      "point_queries": [
+        2555377,
+        2555377
+      ],
+      "allocations": {
+        "alloc_calls": [
+          20174808,
+          19967543
+        ],
+        "realloc_calls": [
+          2586171,
+          2585625
+        ],
+        "requested_bytes": [
+          6683647285,
+          6556743403
+        ]
+      },
+      "entry": {
+        "entry_publication_writes": [
+          2305276,
+          2098933
+        ],
+        "publication_slot_probes": [
+          2950152,
+          2742970
+        ],
+        "staged_root_records": [
+          834716,
+          627534
+        ]
+      },
+      "binding_single_write_and_completion_savings": 207182,
+      "state_sha256": "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7",
+      "reports_sha256": [
+        "07595e43f53608cc2f3830b4444daf206f5e5353d66bb033fbc32d06160e0099",
+        "9a87d86c402233195dd02fdfc543c2e497157da87c7c2ce8d6e67a734b320e02"
+      ]
+    }
+  },
+  "full_rooted_equality": {
+    "scope": "exact full rooted graph comparison; no excluded tables",
+    "inputs": [
+      "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7"
+    ],
+    "status": "pass",
+    "proof": {
+      "rows": 1034514,
+      "eq_values": 524655,
+      "exact_bijection": true
+    }
+  },
+  "disabled_feature_layout_cost": {
+    "alloc_calls": [
+      20174808,
+      20174808
+    ],
+    "realloc_calls": [
+      2586171,
+      2586171
+    ],
+    "requested_bytes": [
+      6683647285,
+      6683895221
+    ]
+  },
+  "windows": [
+    {
+      "run": 10354,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "d5c2bd729096dab9a8cf978df9fcc559d889055d5173931e098e63002ffabd8c",
+      "after_sha256": "ad84a28bb972f1561aabe9b31c0863addd8233810bcfb2a42c199aba2c048cf1"
+    },
+    {
+      "run": 10406,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "f02af4dbcccf3f191f506eb247dd0647b04648f337c8e753c86f4a5f2d1076ae",
+      "after_sha256": "358cd08f4d8ea5d50f6b1473b34f6037964c045c03d33212371bfe788e8c31e0"
+    },
+    {
+      "run": 10410,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "be8201ed2337605bb0752029461d2d2fb56c1eb5fdf65ec077ca08a0cc56039c",
+      "after_sha256": "298310dbb1d878f5a43e080d8379048463986a387deadc3d077eab4180002803"
+    },
+    {
+      "run": 10413,
+      "removed_get_matches": 1333,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "b6107cb3bf7a65399d86ff352c7b7300ca3f37d51e8e807a718cb7cf550f464d",
+      "after_sha256": "71beed012692f5db9e86a70b06ed4b01088fe681e94e55dfb74ebc94cd531069"
+    },
+    {
+      "run": 10416,
+      "removed_get_matches": 1381,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "89d2a7c3e2035ddf4c5ad42d5719779adffe4af01164319cc5d8680ad5fdc053",
+      "after_sha256": "7d9c31e99bda717216fbf5ae7cbfbfd9dc9bead9953c6beac3cbe8ed63796422"
+    },
+    {
+      "run": 10419,
+      "removed_get_matches": 1412,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "442c2275729d50fb46dbc174906c4f6123a335e175fb110b3d854bfc1b413564",
+      "after_sha256": "4fbf47cf454399a899cd69a1c1ac43a90a4b2c9407a70cfbec9bc41dbe275ef2"
+    },
+    {
+      "run": 10422,
+      "removed_get_matches": 983,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "d1032cee9ddbd352df9c1b89e13ca95ca955af1ec6831baeb1fbea749d20375b",
+      "after_sha256": "0795191ddc242bc024f1e36e279bb450e7a36abc88d77d59f3fe0d6403265a18"
+    },
+    {
+      "run": 10425,
+      "removed_get_matches": 1224,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "1f37b7f7c10a6e1e4e34b873368defc725fa950d505eba1f85bb2c91c5a0c6dc",
+      "after_sha256": "94c4b5c3d28e111297dcb7a63dd00df94bfb67652d23735daed57291f08d40e3"
+    },
+    {
+      "run": 10428,
+      "removed_get_matches": 1313,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "3bc60e959f74857546fdc861196449af1bbf88dba7c9f3823ee2baf63e0bcba3",
+      "after_sha256": "bfb5c2b99e8b0904bb96ca8d6fc7bfeab7828523bae48a67a924513b90bb8fa9"
+    },
+    {
+      "run": 10431,
+      "removed_get_matches": 1315,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "f8049bfa1ea236a2c8c53918c3eb4e79efe96bc9398f0f35010b73abbc64ecda",
+      "after_sha256": "5cdf69b23855d202deca557b6266abdc6dee4cfac90e57c20235fa41c269d485"
+    },
+    {
+      "run": 10452,
+      "removed_get_matches": 1100,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "1988666514737bddf26b214574ea475f249e5b67070e62dc90c6e7ae38eb9ff3",
+      "after_sha256": "f6d17f164f580fd06aff89d134234ede91086553b9e702f5edab302eac9183ef"
+    },
+    {
+      "run": 1107,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "fc2748eccbe56d276be92845b335409be379cb810ff0e8ed396c850145eb21b9",
+      "after_sha256": "50b669fa6572194dfcf92e522e4f48aa7ee5a3d2ca78829d05b08e71c88fcfd3"
+    },
+    {
+      "run": 1117,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "e00bbc2bc0a1131240d3411cd9285832eedb392f7aba328c9ba547bafb4e34e3",
+      "after_sha256": "a11b0b45e2df618ead04d98e258d6847e5c10c3681ae83e294f02653e4e93e0b"
+    },
+    {
+      "run": 1129,
+      "removed_get_matches": 0,
+      "states_and_ordered_actual_writes_equal": true,
+      "before_sha256": "69bd79104f913df622f327cd08bb80a1a28f750629f154e44491ad2ed1249b15",
+      "after_sha256": "08dd36e8e708b99c448c91e86ecd38cca95ea9fa4faeb41f48a853a77586f0bf"
+    }
+  ],
+  "binaries": {
+    "prefix": "a523b37df6cf3d58ce73bf82957efa30805e2b871580e921c8349fe9ba1ed528",
+    "observer": "ae238389d244efde36343c9ecbcfb5c528b8dd1407ba4cc41c3b4e745fd8816b"
+  }
+}

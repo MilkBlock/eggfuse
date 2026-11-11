@@ -398,6 +398,12 @@ impl Executor {
         });
         Ok(())
     }
+    #[cfg(feature = "cell-absorption")]
+    pub fn use_cell_absorption(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure Cell absorption before execution".into()); }
+        self.neighbor.absorption_enabled = true;
+        Ok(())
+    }
     fn deliver(&mut self) {
         use crate::change_batch::Change;
         let batch = &self.graph.changes;
@@ -2488,7 +2494,11 @@ impl Executor {
                 #[cfg(not(feature = "sparse-cells"))]
                 { false }
             };
-            if !bindings.is_empty() || deferred {
+            #[cfg(feature = "cell-absorption")]
+            let absorbed = self.neighbor.pending_absorbed(rid) != 0;
+            #[cfg(not(feature = "cell-absorption"))]
+            let absorbed = false;
+            if !bindings.is_empty() || deferred || absorbed {
                 count += bindings.len();
                 work.push((rid, bindings));
             }
@@ -2514,7 +2524,12 @@ impl Executor {
             }
             self.query_workers.as_mut().unwrap().record_completion(order_comparisons, binding_moves);
             count = work.iter().map(|(_, b)| b.len()).sum();
-            work.retain(|(_, b)| !b.is_empty());
+            work.retain(|(rid, b)| !b.is_empty() || {
+                #[cfg(feature = "cell-absorption")]
+                { self.neighbor.pending_absorbed(*rid) != 0 }
+                #[cfg(not(feature = "cell-absorption"))]
+                { let _ = rid; false }
+            });
         }
         let patch = StagePatch { groups: work, len: count };
         if self.completion.is_some() {
@@ -2546,6 +2561,8 @@ impl Executor {
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter());
         let matches = patch.len;
+        #[cfg(feature = "cell-absorption")]
+        let matches = matches + self.neighbor.absorbed_in_run();
         let search_end = Instant::now();
         let search_seconds = search_end.duration_since(start).as_secs_f64() - scope_wait_seconds;
         #[cfg(feature = "family-replay")]
@@ -2579,6 +2596,8 @@ impl Executor {
         #[cfg(not(feature = "sparse-cells"))]
         let groups = patch.groups.into_iter();
         for (rid, rows) in groups {
+            #[cfg(feature = "cell-absorption")]
+            self.graph.reserve_absorbed_cells(self.neighbor.take_absorbed(rid))?;
             let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
                 rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
             for binding in rows {

@@ -255,6 +255,12 @@ impl Frame {
                 } else {
                     crate::neighbor::Access::Direct
                 };
+                #[cfg(feature = "cell-absorption")]
+                if LOCAL && exec.completion.is_none()
+                    && exec.neighbor.absorbs(&exec.graph, rid, k.pivot, seed,
+                        exec.watermarks[rid], t, &refs) {
+                    return Ok(());
+                }
                 let mut visit = |row: &Row, exec: &mut Executor| -> Result<()> {
                     let w = row.witness;
                     if LOCAL {

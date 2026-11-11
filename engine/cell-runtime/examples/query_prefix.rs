@@ -9,16 +9,18 @@ static ALLOCATOR: allocation_metrics::Meter = allocation_metrics::Meter;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     let [program, output, runs, workers, grain, options @ ..] = args.as_slice() else {
-        return Err("expected PROGRAM OUTPUT RUNS WORKERS GRAIN [canonical|stable] [--repair-ports] [--entry-publications]".into());
+        return Err("expected PROGRAM OUTPUT RUNS WORKERS GRAIN [canonical|stable] [--repair-ports] [--entry-publications] [--cell-absorption]".into());
     };
     let mut mode = None;
     let mut repair_ports = false;
     let mut entry_publications = false;
+    let mut absorption = false;
     for option in options {
         match option.as_str() {
             "canonical" | "stable" if mode.is_none() => mode = Some(option.as_str()),
             "--repair-ports" if !repair_ports => repair_ports = true,
             "--entry-publications" if !entry_publications => entry_publications = true,
+            "--cell-absorption" if !absorption => absorption = true,
             _ => return Err(format!("unknown or repeated prefix option: {option}").into()),
         }
     }
@@ -31,6 +33,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         _ => unreachable!(),
     };
     let mut e = Executor::new(graph, false);
+    if absorption {
+        #[cfg(feature = "cell-absorption")]
+        e.use_cell_absorption()?;
+        #[cfg(not(feature = "cell-absorption"))]
+        return Err("Cell absorption requires cell-absorption".into());
+    }
     if entry_publications {
         #[cfg(feature = "sparse-cells")]
         e.use_entry_publications()?;
@@ -58,6 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "requested_entry_publications":entry_publications,
         "requested_runs":runs, "workers":workers, "grain":grain,
     });
+    if absorption { report["prefix_configuration"]["requested_cell_absorption"] = true.into(); }
     #[cfg(feature = "allocation-metrics")]
     let report = {
         let mut report = report;
