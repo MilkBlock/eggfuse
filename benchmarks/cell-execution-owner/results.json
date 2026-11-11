@@ -1,0 +1,203 @@
+{
+  "scope": "standalone Cell CPU",
+  "control_commit": "c7ad29e9",
+  "runtime_sha256": "bdb9e15f4282713001bf97ebeca0aeffb03b1b9fcac300088b84468d9edab38e",
+  "control_runtime_sha256": "17dd6156ae8fb0e127b1aead74012a1b0b11e01400203f88d018d23f5175d1bf",
+  "limits": "Work and semantic validation, not throughput evidence. The source driver still resolves boundaries synchronously; single active_rhs, ordinary output arena and current ownership Entry context remain scheduling limits. Owned header bytes exclude pointed-to storage and do not measure bytes copied or peak allocation.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "d1b646b7a195e0cbb598d26a1399efc04b4139f33f4b1c05bc19959ba395f24d",
+      "after_report_sha256": "38c22def7539a6fb48988d64d67fae0f5af96854c001f18cba2836f0373cd5ce",
+      "same_final_state_ordered_runs_and_checked_graph_query_rhs_publication_work": true,
+      "runtime_stats": {
+        "boundaries": [
+          11160,
+          0,
+          3774,
+          310,
+          75,
+          0,
+          0
+        ],
+        "capacity_growth_bytes": 0,
+        "failures": 0,
+        "frames": 5173,
+        "local_operations": 0,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 0,
+        "slot_growths": 0,
+        "worker_operations": 0,
+        "worker_segments": 0,
+        "worker_wait_ns": 0
+      },
+      "owned_control_bytes": 448,
+      "position_bytes": 8,
+      "worker_distributions": {
+        "worker_entries": [
+          [
+            3151,
+            2125,
+            2085,
+            1458
+          ],
+          [
+            3194,
+            2039,
+            1938,
+            1648
+          ]
+        ],
+        "worker_local_operations": [
+          [
+            104,
+            382,
+            15,
+            17
+          ],
+          [
+            107,
+            327,
+            62,
+            22
+          ]
+        ],
+        "worker_steps": [
+          [
+            1585,
+            939,
+            821,
+            738
+          ],
+          [
+            1607,
+            868,
+            800,
+            808
+          ]
+        ]
+      },
+      "joint_storage": {
+        "joint_scratch_borrows": 415,
+        "joint_scratch_growths": 1,
+        "joint_scratch_growth_bytes": 64,
+        "shared_output_arena_borrows": 3957
+      },
+      "shared_arena_borrows_before_after": [
+        4372,
+        3957
+      ],
+      "existing_result_storage_work": {
+        "effect_slots_initialized": 8056,
+        "effect_slot_probes": 9070,
+        "effect_slot_targets": 7283,
+        "history_allocations": 485,
+        "history_slots_written": 70,
+        "effect_output_copies": 358,
+        "cell_output_deliveries": 5599
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "8df89de529ed5461bd49044bca088857f134946ac773f159673db8a5c121b9be",
+      "after_report_sha256": "5d387d64f0b353104bcbee0d08ce8576ce16286479f4e3605fe1e4505f8dca15",
+      "same_final_state_ordered_runs_and_checked_graph_query_rhs_publication_work": true,
+      "runtime_stats": {
+        "boundaries": [
+          2503393,
+          0,
+          1428463,
+          29924,
+          9349,
+          0,
+          92
+        ],
+        "capacity_growth_bytes": 0,
+        "failures": 0,
+        "frames": 1020508,
+        "local_operations": 0,
+        "operand_boundaries": 0,
+        "prepared_operations_consumed": 0,
+        "segments": 0,
+        "slot_growths": 0,
+        "worker_operations": 0,
+        "worker_segments": 0,
+        "worker_wait_ns": 0
+      },
+      "owned_control_bytes": 448,
+      "position_bytes": 8,
+      "worker_distributions": {
+        "worker_entries": [
+          [
+            943531,
+            828328,
+            839465,
+            812707
+          ],
+          [
+            940487,
+            824995,
+            841827,
+            816722
+          ]
+        ],
+        "worker_local_operations": [
+          [
+            66695,
+            188547,
+            96856,
+            93169
+          ],
+          [
+            65790,
+            188144,
+            98753,
+            92580
+          ]
+        ],
+        "worker_steps": [
+          [
+            1100387,
+            907850,
+            928122,
+            912059
+          ],
+          [
+            1095573,
+            907612,
+            938231,
+            907002
+          ]
+        ]
+      },
+      "joint_storage": {
+        "joint_scratch_borrows": 42787,
+        "joint_scratch_growths": 1,
+        "joint_scratch_growth_bytes": 64,
+        "shared_output_arena_borrows": 699784
+      },
+      "shared_arena_borrows_before_after": [
+        742571,
+        699784
+      ],
+      "existing_result_storage_work": {
+        "effect_slots_initialized": 1202660,
+        "effect_slot_probes": 1780404,
+        "effect_slot_targets": 1112681,
+        "history_allocations": 52389,
+        "history_slots_written": 9602,
+        "effect_output_copies": 47192,
+        "cell_output_deliveries": 2114307
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

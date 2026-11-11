@@ -136,6 +136,8 @@ fn rhs_results_survive_entry_delivery_and_boundary_recreation_without_recapture(
             }
             if !audit {
                 assert!(new["joint_history_frames"].as_u64().unwrap() > 0, "{new}");
+                assert_eq!(new["joint_scratch_borrows"], new["joint_history_frames"],
+                    "joint result owners do not borrow the shared pending-publication arena");
                 assert!(new["joint_output_reads"].as_u64().unwrap() > 0, "{new}");
                 assert!(new["history_shared_slots"].as_u64().unwrap() > 0);
                 // Both executors automatically own eligible Entries. This fixture

@@ -577,6 +577,10 @@ pub struct Stats {
     history_shared_slots: u64,
     joint_history_checks: u64,
     joint_history_frames: u64,
+    joint_scratch_borrows: u64,
+    joint_scratch_growths: u64,
+    joint_scratch_growth_bytes: u64,
+    shared_output_arena_borrows: u64,
     joint_history_query_reads: u64,
     joint_history_query_writes: u64,
     joint_output_reads: u64,
@@ -832,6 +836,10 @@ pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     cell_outputs_pending: usize,
     cell_outputs: Vec<Option<Dependency>>,
+    // A joint Cell already owns its retained results. Its temporary receipts
+    // must not borrow all pending publications from unrelated completed Cells.
+    #[cfg(feature = "sparse-cells")]
+    effect_scratch: Vec<Option<Dependency>>,
     pending_anchors: Vec<(usize, Vec<Value>, Publication)>,
     marker_root: Vec<bool>,
     root_set: Rc<str>,
@@ -1183,6 +1191,8 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             cell_outputs_pending: 0,
             cell_outputs: vec![],
+            #[cfg(feature = "sparse-cells")]
+            effect_scratch: vec![],
             marker_root: p.rules.iter().map(|r| p.templates[r.template].ops.iter().any(|op| match op {
                 Op::Set(t, _, _) | Op::Let(_, Call::Table(t), _) => p.marker_tables.contains(t),
                 _ => false,
@@ -1462,7 +1472,12 @@ impl Programs {
                 // Supply is a checked subset of this rule's exports. Equal
                 // width proves complete coverage without per-instance maps.
                 if depth != 0 && sources.len() == width {
-                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, std::mem::take(&mut self.cell_outputs), _facts);
+                    let before = self.effect_scratch.capacity() * std::mem::size_of::<Option<Dependency>>();
+                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, std::mem::take(&mut self.effect_scratch), _facts);
+                    let growth = frame.scratch_capacity_bytes().saturating_sub(before);
+                    self.stats.joint_scratch_borrows += 1;
+                    self.stats.joint_scratch_growths += u64::from(growth != 0);
+                    self.stats.joint_scratch_growth_bytes += growth as u64;
                     self.stats.joint_history_frames += 1;
                     self.stats.joint_history_query_reads += queries as u64;
                     self.stats.joint_history_query_writes += queries as u64;
@@ -1470,16 +1485,25 @@ impl Programs {
                 }
             }
         }
+        self.stats.shared_output_arena_borrows += 1;
         crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
     }
     pub(crate) fn finish_effects(&mut self, effects: impl crate::cell::CompletedEffects, publish: bool) {
+        #[cfg(feature = "sparse-cells")]
+        let scratch = effects.owns_scratch();
         if let Some((buffer, slots, probes, targets)) = effects.finish(publish) {
-            debug_assert!(self.cell_outputs.is_empty(), "one executing Cell owns the output arena");
-            self.cell_outputs = buffer;
             self.stats.effect_frames += 1;
             self.stats.effect_slots_initialized += slots as u64;
             self.stats.effect_slot_probes += probes;
             self.stats.effect_slot_targets += targets;
+            #[cfg(feature = "sparse-cells")]
+            if scratch {
+                debug_assert!(buffer.is_empty());
+                if buffer.capacity() > self.effect_scratch.capacity() { self.effect_scratch = buffer; }
+                return;
+            }
+            debug_assert!(self.cell_outputs.is_empty(), "ordinary Cell owns the output arena");
+            self.cell_outputs = buffer;
         }
     }
     pub(crate) fn abort_effects(&mut self, effects: crate::cell::Effects) {

@@ -70,7 +70,6 @@ pub(crate) struct State {
     pub counts: Counts,
 }
 pub(crate) struct Yield {
-    pub next: usize,
     pub stop: Stop,
     pub counts: Counts,
 }
@@ -85,7 +84,6 @@ impl Plan {
         else {
             debug_assert_eq!(position, template.ops.len());
             return Yield {
-                next: position,
                 stop: Stop::Complete,
                 counts,
             };
@@ -141,7 +139,6 @@ impl Plan {
         counts.slot_growths += u64::from(growth != 0);
         counts.capacity_growth_bytes += growth as u64;
         Yield {
-            next: frame.completed_prefix,
             stop,
             counts,
         }

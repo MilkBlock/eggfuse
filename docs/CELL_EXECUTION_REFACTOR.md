@@ -120,10 +120,20 @@ overall objective complete until all applicable items above are proven.
   observed 29 / 3,046 later scalar dispatches. Earlier Cursor storage, rule-slot
   mapping and group/slot growth are charged; no new speedup is established.
 - Cursor/receipt ownership, completion/publication unification and Bake
-  composition of those continuations remain live work. The graph's single
-  `active_rhs` owner and synchronous frontier waits still prevent independent
-  parked-frame scheduling after shared effects. Removing scalar dispatch does
-  not establish that shared effects or repair can now execute concurrently.
+  composition now continue through an owned ordinary RHS continuation; see
+  [the ownership checkpoint](../benchmarks/cell-execution-owner/README.md).
+  One Cell position replaces duplicated loop/worker positions. Its existing
+  Cursor, handoff inputs and actual result buffer survive a returned boundary;
+  stale or failed deliveries cannot replay effects. The source driver still
+  resolves those boundaries synchronously. Joint result frames independently
+  own transient scratch instead of borrowing all pending publications, removing
+  415 / 42,787 exclusive arena borrows with one 64-byte scratch growth per case.
+  Existing logical work and source Run states are unchanged; no speedup claimed.
+- The graph's single `active_rhs`, writer-origin hint and sealed-input trust,
+  the apply-scoped ownership Entry context, and ordinary publication-arena spans
+  still prevent independent parked-frame scheduling after shared effects. These
+  owners must be addressed together; changing only the task queue is inadequate.
+  Removing scalar dispatch does not establish concurrent shared effects or repair.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

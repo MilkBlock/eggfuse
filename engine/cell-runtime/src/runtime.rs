@@ -23,6 +23,8 @@ pub(crate) mod query_workers;
 mod ready_sets;
 #[path = "runtime_completion.rs"]
 mod completion;
+#[path = "runtime_cell.rs"]
+mod owned_cell;
 #[path = "runtime_pure_epochs.rs"]
 mod pure_epochs;
 #[cfg(feature="sparse-cells")]
@@ -2074,16 +2076,25 @@ impl Executor {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
             self.graph.begin_owner_entry(rid,&anchors);
         }
-        let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
+        let result = (|| {
+            let Some(mut execution) = self.start_cell_execution(rid, b,
+                #[cfg(feature="structural-depth")] evidence)? else { return Ok(()) };
+            loop {
+                match self.advance_cell(&mut execution)? {
+                    owned_cell::Frontier::Boundary(operation) => self.resolve_cell_boundary(&mut execution, operation)?,
+                    owned_cell::Frontier::Complete | owned_cell::Frontier::Stopped => return self.finish_cell(execution),
+                }
+            }
+        })();
         self.graph.end_owner_entry();
         result
     }
-    fn apply_owned(
+    fn start_cell_execution(
         &mut self,
         rid: usize,
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
-    ) -> Result<()> {
+    ) -> Result<Option<owned_cell::Execution>> {
         #[cfg(feature = "iterative-bake")]
         let mut b = b;
         #[cfg(feature = "slot-transfer-audit")]
@@ -2168,7 +2179,7 @@ impl Executor {
                 #[cfg(feature = "sparse-cells")]
                 let step = if !changed && self.completion.is_none() {
                     let Some(step) = self.stage_spine.complete_absorbed_root(&self.graph, rid, cell,
-                        step, &write, index, &mut self.entry_schedule)? else { return Ok(()) };
+                        step, &write, index, &mut self.entry_schedule)? else { return Ok(None) };
                     step
                 } else { step };
                 self.stage_spine.complete(
@@ -2181,7 +2192,7 @@ impl Executor {
                     |_| key.take().ok_or("missing single-write boundary key".into()),
                 )?;
             }
-            return Ok(());
+            return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
         if !full_effects && let Some(step)=stage_cursor.as_ref()
@@ -2191,7 +2202,7 @@ impl Executor {
                 self.stage_spine.enqueue_direct_unions(&mut self.graph,rid,&b.values,&results,&unions)?;
             }
             return self.stage_spine.complete_direct(&self.graph,rid,cell,stage_cursor.unwrap(),results,
-                |i| b.known.receipt(i));
+                |i| b.known.receipt(i)).map(|()| None);
         }
         #[cfg(feature = "iterative-bake")]
         let available = stage_cursor
@@ -2262,7 +2273,7 @@ impl Executor {
                                 |i| b.known.receipt(i), receipts,
                                 |args| self.graph.frame_arguments(cell, &frame, args))?;
                         } else { self.stage_spine.finish_effects(receipts, false); }
-                        return Ok(());
+                        return Ok(None);
                     }
                     Start::Resume { cell, next_op } => {
                         failed_input = selected.iter().find(|input| input.op == next_op).copied();
@@ -2388,184 +2399,40 @@ impl Executor {
                     self.stage_spine.complete(g, rid, cell, cursor, |i| b.known.receipt(i),
                         effect_receipts, |args| g.frame_arguments(cell, &frame, args))?;
                 } else { self.stage_spine.finish_effects(effect_receipts, false); }
-                return Ok(());
+                return Ok(None);
             }
         };
 
         if let Some((depth, _)) = origin {
             self.graph.rhs_frame_mut(cell).unwrap().recipe_depth = depth;
         }
-        let ops = self.graph.program.templates[template].ops.clone();
-        let mut completed = true;
-        let mut completed_prefix = first_op;
+        self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = first_op;
         #[cfg(feature = "iterative-bake")]
-        let mut transfers = &available[available.partition_point(|input| input.op < first_op)..];
+        let mut transfer = available.partition_point(|input| input.op < first_op);
         #[cfg(feature = "iterative-bake")]
-        if let Some((input, tail)) = transfers.split_first()
-            && failed_input.as_ref() == Some(input)
-        {
-            // The same failed receipt was already checked before promotion.
-            // A different structural proposal at this op still gets its check.
-            transfers = tail;
+        if available.get(transfer).is_some_and(|input| failed_input.as_ref() == Some(input)) {
+            // This receipt was already rejected before first-miss promotion.
+            transfer += 1;
         }
         #[cfg(feature = "sparse-cells")]
-        let resumable = self.cell_execution.is_some();
-        #[cfg(not(feature = "sparse-cells"))]
-        let resumable = false;
-        #[cfg(feature = "sparse-cells")]
-        if let Some(execution) = &mut self.cell_execution {
-            execution.counts.frames += 1;
-            self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = first_op;
-        }
-        let mut next_op = first_op;
-        loop {
-            #[cfg(feature = "sparse-cells")]
-            if matches!(ops.get(next_op), Some(Op::Let(_, Call::Primitive(..), _)))
-                && self.graph.program.executions[rid].prepared_at(next_op,
-                    &self.graph.program.templates[template],
-                    &self.graph.rhs_frame(cell).unwrap().values) {
-                // Consume the existing result at its original source position.
-                // This also avoids dispatching an already prepared worker segment.
-                self.graph.stats.prepared_rhs_later_operations += 1;
-                next_op += 1;
-                completed_prefix = next_op;
-                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = next_op; }
-                continue;
-            }
-            #[cfg(feature = "sparse-cells")]
-            if let Some(execution) = &mut self.cell_execution
-                && matches!(ops.get(next_op), Some(Op::Let(_, Call::Primitive(..), _))) {
-                use crate::cell::execution::runtime::Stop;
-                let pool = self.query_workers.as_ref().and_then(|w| w.execution_pool());
-                let result = self.graph.resume_cell(rid, cell, pool, execution.grain);
-                self.graph.stats.prepared_rhs_later_operations += result.counts.prepared_operations_consumed;
-                execution.counts.add(result.counts);
-                next_op = result.next;
-                completed_prefix = next_op;
-                match result.stop {
-                    Stop::Complete => break,
-                    Stop::Failed(error) => return Err(error),
-                    Stop::Boundary(_) | Stop::Operand => (),
-                }
-            }
-            let Some(op) = ops.get(next_op) else { break };
-            let i = next_op;
-            next_op = i + 1;
-            #[cfg(feature = "sparse-cells")]
-            if let Some(execution) = &mut self.cell_execution {
-                use crate::cell::execution::BoundaryKind as K;
-                let kind = match op {
-                    Op::Let(_, Call::Table(t), _) => Some(if self.graph.program.tables[*t].virtual_fact { K::Constructor } else { K::MutableRead }),
-                    Op::Let(_, Call::Primitive(..), _) => Some(K::Primitive),
-                    Op::Set(..) => Some(K::Write), Op::Union(..) => Some(K::Union),
-                    Op::Hide(..) => Some(K::Visibility), Op::Panic => Some(K::Failure),
-                    Op::Copy(..) => None,
-                };
-                if let Some(kind) = kind { execution.counts.boundary(kind); }
-            }
-            if self.graph.known_stats.elide_static(aliases, i) {
-                completed_prefix = i + 1;
-                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
-                continue;
-            }
-
-            #[cfg(feature = "iterative-bake")]
-            if let Some((input, tail)) = transfers.split_first().filter(|(r, _)| r.op == i) {
-                transfers = tail;
-                if crate::cell::apply_handoff(&mut self.graph, cell, &mut effect_receipts, op, input)? {
-                    #[cfg(feature = "structural-depth")]
-                    if self.stage_spine.structural.execute
-                        && origin.is_none()
-                        && let Some((_, d)) = proven.iter().find(|(op, _)| *op == i)
-                    {
-                        self.stage_spine.structural.accepted(*d as usize);
-                    }
-                    completed_prefix = i + 1;
-                    if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
-                    continue;
-                }
-            }
+        if let Some(execution) = &mut self.cell_execution { execution.counts.frames += 1; }
+        Ok(Some(owned_cell::Execution {
+            rule: rid, cell, phase: owned_cell::Phase::Ready,
+            ops: self.graph.program.templates[template].ops.clone(),
+            aliases: static_skip, known: b.known, cursor: stage_cursor,
+            effects: effect_receipts, continuation: origin.is_some(),
+            work: owned_cell::Work::started(&self.graph, facts, updates, stage_counts),
             #[cfg(feature = "view-consumers")]
-            let source = b.view_source;
-            #[cfg(not(feature = "view-consumers"))]
-            let source = None;
-            if !(crate::cell::RhsFrame { cell, receipts: &mut effect_receipts })
-                .execute(&mut self.graph, i, op, source)?
-            {
-                completed_prefix = i + 1;
-                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
-                completed = false;
-                break;
-            }
-            completed_prefix = i + 1;
-            if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
-        }
-        if origin.is_some() {
-            self.continuation_stats.published_facts +=
-                self.graph.stats.logical_facts_created - facts;
-            self.continuation_stats.function_updates += self.graph.stats.function_updates - updates;
-        }
-        let state = self.graph.rhs_frame_mut(cell).unwrap();
-        state.completed = completed;
-        state.completed_prefix = completed_prefix;
-        if let Some((c, f, u)) = stage_counts {
-            self.stage_spine.effects(
-                self.graph.stats.constructor_requests - c,
-                self.graph.stats.function_updates - f,
-                self.graph.stats.union_requests - u,
-            );
-        }
-        #[cfg(feature = "structural-depth")]
-        if completed {
-            self.stage_spine.structural.capture(
-                &self.graph,
-                rid,
-                &b.known,
-                &effect_receipts,
-            );
-        }
-        if completed && let Some(cursor) = stage_cursor {
-            self.stage_spine.complete(
-                &self.graph,
-                rid,
-                cell,
-                cursor,
-                |i| b.known.receipt(i),
-                effect_receipts,
-                |args| self.graph.arguments(cell, args),
-            )?;
-        } else if !completed {
-            self.stage_spine.abort_effects(effect_receipts);
-        } else {
-            self.stage_spine.finish_effects(effect_receipts, false);
-        }
-        #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
-        if let (Some(block), root) = inspect_births {
-            for &op in &block.intermediate_ops {
-                if self
-                    .graph
-                    .rhs_frame(cell)
-                    .unwrap()
-                    .facts
-                    .contains_key(&(op as u32))
-                {
-                    let f = FactRef {
-                        cell,
-                        op: op as u32,
-                    };
-                    let table = self.graph.live_table(Dependency::Fact(f)).unwrap();
-                    self.graph.rhs_births.insert(
-                        f,
-                        rid,
-                        table,
-                        root,
-                        root && self.stage_spine.anchor_at(rid, op),
-                    );
-                }
-            }
-        }
-        self.graph.release_empty(cell);
-        Ok(())
+            view_source: b.view_source,
+            #[cfg(feature = "iterative-bake")]
+            transfers: available,
+            #[cfg(feature = "iterative-bake")]
+            transfer,
+            #[cfg(feature = "structural-depth")]
+            proven,
+            #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
+            inspect_births,
+        }))
     }
     fn probe(&mut self, set: &str) -> Result<bool> {
         self.wait_for_ruleset(set)?;
@@ -3307,7 +3174,9 @@ impl Executor {
                 "input_ready_operations":self.graph.program.executions.iter().map(|p|p.input_ready.len()).sum::<usize>(),
                 "compiled_payload_bytes":self.graph.program.executions.capacity()*std::mem::size_of::<crate::cell::execution::Plan>()
                     +self.graph.program.executions.iter().map(|p|p.storage_bytes()).sum::<usize>(),
-                "progress_bytes":if cfg!(feature="sparse-cells") {std::mem::size_of::<usize>()} else {0},
+                "progress_bytes":std::mem::size_of::<usize>(),
+                "rhs_owner_bytes":std::mem::size_of::<owned_cell::Execution>(),
+                "position_owner":"Cell.completed_prefix",
                 "worker_scope":"query and input-derived scalar results; original Run/effect/publication order"});
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {

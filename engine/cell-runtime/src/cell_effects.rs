@@ -12,6 +12,8 @@ use std::{num::NonZeroU32, rc::Rc};
 /// Static dispatch keeps the inline case allocation-free.
 pub(crate) trait CompletedEffects {
     const DEFERRED_KEYS: bool;
+    #[cfg(feature = "sparse-cells")]
+    fn owns_scratch(&self) -> bool { false }
     fn forwarded(&self) -> u64 { 0 }
     fn get(&self, operation: usize) -> Option<Dependency>;
     #[cfg(feature = "sparse-cells")]
@@ -262,6 +264,7 @@ impl Effects {
     }
     #[cfg(feature = "sparse-cells")]
     pub fn begin_joint(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, facts: &super::QueryFacts) -> (Self, usize) {
+        debug_assert!(buffer.is_empty(), "joint results own only private transient scratch");
         let joint = plan.joint.as_ref().unwrap();
         let first = buffer.len();
         buffer.resize(first + joint.transient_width, None);
@@ -270,6 +273,10 @@ impl Effects {
         let reads = joint.queries.len();
         let keep = plan.outputs;
         (Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded: 0, joint: true, history }, reads)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn scratch_capacity_bytes(&self) -> usize {
+        self.buffer.capacity() * std::mem::size_of::<Option<Dependency>>()
     }
     #[cfg(feature = "sparse-cells")]
     pub fn take_results(&mut self, rule: usize) -> Option<super::Results> {
@@ -356,6 +363,8 @@ impl Effects {
     }
 }
 impl CompletedEffects for Effects {
+    #[cfg(feature = "sparse-cells")]
+    fn owns_scratch(&self) -> bool { self.joint }
     fn forwarded(&self) -> u64 { self.forwarded }
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
@@ -387,6 +396,37 @@ impl CompletedEffects for Effects {
 #[cfg(all(test, feature = "iterative-bake"))]
 mod packed_slot_tests {
     use super::*;
+
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn simultaneous_joint_frames_keep_separate_results_and_private_transients() {
+        let plan = Rc::new(EffectPlan {
+            slots: vec![EffectSlot { index: NonZeroU32::new(1), history: 1 },
+                EffectSlot { index: NonZeroU32::new(2), history: 0 }],
+            width: 2, outputs: 1,
+            registration: Some(Registration { query_aliases: vec![], direct: 1, aliases: 0 }),
+            joint: Some(Box::new(JointResults { width: 1, queries: vec![], outputs: vec![0],
+                transient: vec![None, Some(0)], transient_width: 1 })),
+        });
+        let (mut a, _) = Effects::begin_joint(plan.clone(), vec![], &super::super::QueryFacts::None);
+        let (mut b, _) = Effects::begin_joint(plan, vec![], &super::super::QueryFacts::None);
+        for (frame, base) in [(&mut a, 10), (&mut b, 20)] {
+            assert!(frame.owns_scratch());
+            frame.record(0, Dependency::Fact(crate::graph::FactRef { cell: base, op: 7 }));
+            frame.record(1, Dependency::Function(base as usize));
+        }
+        assert_eq!(a.get(1), Some(Dependency::Function(10)));
+        assert_eq!(b.get(1), Some(Dependency::Function(20)));
+        assert_eq!(a.sealed_outputs(), Some((0, 1, 0, 0)));
+        assert_eq!(b.sealed_outputs(), Some((0, 1, 0, 0)));
+        let a_result = a.take_results(0).unwrap();
+        let b_result = b.take_results(0).unwrap();
+        let (a_scratch, _, _, _) = a.finish(true).unwrap();
+        let (b_scratch, _, _, _) = b.finish(true).unwrap();
+        assert!(a_scratch.is_empty() && b_scratch.is_empty());
+        assert_eq!(a_result.output(0), Some(Dependency::Fact(crate::graph::FactRef { cell: 10, op: 7 })));
+        assert_eq!(b_result.output(0), Some(Dependency::Fact(crate::graph::FactRef { cell: 20, op: 7 })));
+    }
 
     #[test]
     fn packed_descriptors_preserve_absence_and_both_history_mask_ends() {
