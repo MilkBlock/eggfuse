@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Equality-saturation engines share equivalent terms, but repeatedly execute related queries, construct intermediate bindings and maintain connections between rule applications. EggFuse exploits structural, temporal and storage locality through Cell templates and their actual instances. The compiler describes query completion, ordered effects and cross-stage Entry projections with a common slot layout. The runtime reuses actual result witnesses while retaining residual matching, equality repair and source-schedule visibility. Optional workers group query continuations by Cell; ordered graph effects remain coordinated. Offline iterative Bake uses observed applications to propose larger reusable structures and checks which queries, handoffs or effects they can discharge. It is one optimization mechanism within this architecture. A new audit of 127 unmodified upstream egglog inputs yields 26 exact final-state passes; 95 inputs are rejected by capability checks, five fail full compilation and one times out. On 288 captured eggcc pass inputs, single-thread inference totals 140.335 seconds for native egglog and 53.789 seconds for Cell, a ratio of 2.609, with 727.05 seconds of offline preparation. These are execution comparisons between standalone implementations, not suite-wide certified compiler speedups. Separately pinned learning and storage studies show why fewer lookups or smaller snapshots can still increase runtime maintenance. The evidence motivates sharing execution state and removing redundant maintenance together.
+Equality-saturation engines share equivalent terms, but repeatedly execute related queries, construct intermediate bindings and maintain connections between rule applications. EggFuse exploits structural, temporal and storage locality through Cell templates and their actual instances. The compiler describes query completion, ordered effects and cross-stage Entry projections with a common slot layout. The runtime reuses actual result witnesses while retaining residual matching, equality repair and source-schedule visibility. Optional workers group query continuations by Cell; ordered graph effects remain coordinated. Offline iterative Bake uses observed applications to propose larger reusable structures and checks which queries, handoffs or effects they can discharge. It is one optimization mechanism within this architecture. A new audit of 127 unmodified upstream egglog inputs yields 26 exact final-state passes; 95 inputs are rejected by capability checks, five fail full compilation and one times out. On 288 captured eggcc pass inputs, single-thread inference totals 140.335 seconds for the version-2.0 native baseline and 53.789 seconds for Cell, a ratio of 2.609, with 727.05 seconds of offline preparation. A separate paired native-version comparison gives a 1.440 aggregate inference ratio for the 2.0 baseline over the 3.0 release. These are execution comparisons, not suite-wide certified compiler speedups. Separately pinned learning and storage studies show why fewer lookups or smaller snapshots can still increase runtime maintenance. The evidence motivates sharing execution state and removing redundant maintenance together.
 \end{abstract}
 
 \section{Introduction}
@@ -163,6 +163,8 @@ We study how the dictionary changes across rounds, how much work a learned unit 
 \section{Evaluation}\label{sec:eval}
 \input{upstream-results}
 \input{eggcc-results}
+\input{egglog3-results}
+The native-version samples and reproducible adapter are pinned separately~\cite{native3artifact}.
 \subsection{Historical compiler-pass and Bake studies}
 The measurements below predate the current compatibility audit. Their pinned revisions and original semantic limitations remain authoritative; they are not measurements of the new scalar implementation.
 
@@ -322,7 +324,7 @@ w&=\mathrm{TermSingle}(b(\mathrm{Add},g(0),b(\mathrm{Sub},g(1),p))).
 All 19 constructor occurrences of this witness resolve to visible Cell rows. Appending the corresponding ground check to the native source produces a check failure, including in a native replay of the marked input~\cite{artifact}. This is a strict membership diagnostic. Subsequent reviewed sum-bits validation permits proven Add/Mul-equivalent extraction ties and legal maximum-size hoist choices, while requiring exact core equality and visibility. It therefore distinguishes a legal choice difference from a semantic failure; equal cost alone is insufficient. That contract is source-specific and does not certify all 288 inputs. Accordingly, Table~\ref{tab:suite} measures the specified historical executions and cannot establish a semantics-preserving acceleration of the full native compiler.
 
 
-\begin{thebibliography}{14}\small
+\begin{thebibliography}{15}\small
 \bibitem{tate} Ross Tate, Michael Stepp, Zachary Tatlock, and Sorin Lerner.
 Equality saturation: a new approach to optimization. \emph{POPL}, 2009.
 \href{https://doi.org/10.1145/1480881.1480915}{doi:10.1145/1480881.1480915}.
@@ -345,6 +347,8 @@ pattern/many object pattern match problem. \emph{Artificial Intelligence},
 \href{https://doi.org/10.1016/0004-3702(82)90020-0}{doi:10.1016/0004-3702(82)90020-0}.
 \bibitem{sequitur} Craig G. Nevill-Manning and Ian H. Witten. Identifying hierarchical structure in sequences: a linear-time algorithm. \emph{Journal of Artificial Intelligence Research}, 7:67--82, 1997. \href{https://arxiv.org/abs/cs/9709102}{arXiv:cs/9709102}.
 \bibitem{babble} David Cao, Rose Kunkel, Chandrakana Nandi, Max Willsey, Zachary Tatlock, and Nadia Polikarpova. babble: learning better abstractions with e-graphs and anti-unification. \emph{Proceedings of the ACM on Programming Languages}, 7(POPL), 2023. \href{https://doi.org/10.1145/3571207}{doi:10.1145/3571207}.
+\bibitem{native3artifact} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/2a784950aef627cc0766a92df2b29cca5ee3681f/benchmarks/egglog3-suite}{Paired egglog 2.0 and 3.0 release comparison on captured eggcc passes}, revision \texttt{2a784950}.
 \bibitem{currentartifact} EggFuse project.
 \href{https://github.com/MilkBlock/eggfuse/tree/ce01d785a9c88781bf0a7eb852c8849405f85002/benchmarks}{Scalar compatibility audit and refreshed eggcc replay}, revision \texttt{ce01d785}. Measured implementation: \texttt{8450e627}.
 \bibitem{manuscriptartifact} EggFuse project.

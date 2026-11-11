@@ -14,6 +14,10 @@ native replay records at `b89129cc` under `docs/papers/eggcc-cpu-techreport/`.
 The current 96 × 3 eggcc replay is documented in
 `../benchmarks/eggcc-suite/README.md`; its table retains the old per-pass format.
 
+A separate paired native 2.0/3.0 release comparison is documented in
+`../benchmarks/egglog3-suite/README.md`; it uses the same captured inputs and
+reruns both native versions. Its table is distinct from the earlier Cell replay.
+
 The new unmodified upstream `.egg` audit is documented in
 `../benchmarks/upstream-suite/README.md`. Its results have an explicit final-state
 contract; they are not a proof of complete egglog language or proof-mode support.

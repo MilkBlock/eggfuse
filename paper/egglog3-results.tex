@@ -1,0 +1,23 @@
+\subsection{Native egglog 3.0 comparison}
+
+We additionally compare the unchanged version-2.0 baseline binary with the upstream \texttt{v3.0.0} release (\texttt{8879605c}). Both native engines execute the same original captured sources, using one thread, ordinary release builds and the default Rust allocator. Three fresh-process pairs alternate order per input. The 3.0 timing adapter only changes the thread setter to its per-EGraph API; no kernel changes are applied. All 288 inputs complete. Table~\ref{tab:native-three} reports this new paired campaign; its 2.0 measurements are not copied from Table~\ref{tab:current-suite}.
+
+\begin{table}[ht]\centering\small
+
+\begin{tabular}{lrrr}\toprule Input set & Native 2.0 (s) & Native 3.0 (s) & 2.0 / 3.0\\\midrule
+
+Pass 1 & 30.295 & 22.490 & 1.347\\
+
+Pass 2 & 63.017 & 44.925 & 1.403\\
+
+Pass 3 & 47.548 & 30.391 & 1.565\\
+
+All passes & 140.860 & 97.805 & 1.440\\
+
+\bottomrule\end{tabular}
+
+\caption{Native version comparison: sums of per-input median inference times. A ratio above one favors 3.0.}\label{tab:native-three}\end{table}
+
+For complete three-pass workloads, the geometric mean of the 2.0/3.0 ratios is 1.040; 3.0 is faster on 49 of 96 workload totals. These measurements retain small regressions as well as improvements.
+
+The earlier Cell measurements are a separate campaign, not an interleaved Cell/3.0 comparison. Successful source execution does not certify native-version final-state equivalence. Release 3.0 changes relations to constructors and includes correctness changes, so lower time cannot be attributed exclusively to faster evaluation of identical logical work. The complete records and timing adapter are in \texttt{benchmarks/egglog3-suite/}.

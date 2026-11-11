@@ -43,10 +43,10 @@ def main():
         keys=['case','pass_number','status','native_ms','cell_ms','execution_time_ratio','prepare_s','native_cli_ms','cell_cli_ms','native_process_rss_bytes','cell_rss_through_inference_bytes','semantic_status']
         w=csv.DictWriter(f,fieldnames=keys,extrasaction='ignore');w.writeheader();w.writerows(rows)
     lines=[r'\subsection{Current eggcc replay}',
-      r'The new replay uses the historical corpus of 96 workloads and three pass inputs, fixed common training, and a transferred donor. The standalone Cell implementation is based on revision \texttt{8450e627}; the native timing binary is built from the pristine \texttt{egglog-baseline} tag. Three fresh-process pairs alternate order for each input. Offline compilation/Bake and linking are recorded separately. The host is an Apple M3 Max with 48 GiB RAM; runtime and offline analysis each use one thread.',
+      r'The new replay uses the historical corpus of 96 workloads and three pass inputs, fixed common training, and a transferred donor. The standalone Cell implementation is based on revision \texttt{8450e627}; the native version-2.0 timing binary is built from the pristine \texttt{egglog-baseline} tag. Three fresh-process pairs alternate order for each input. Offline compilation/Bake and linking are recorded separately. The host is an Apple M3 Max with 48 GiB RAM; runtime and offline analysis each use one thread.',
       f'The campaign completed {len(good)} of {len(rows)} attempted pass inputs (288 expected).',
       r'\begin{table}[ht]\centering\small',
-      r'\begin{tabular}{lrrrr}\toprule Input set & Native (s) & Cell (s) & Ratio of sums & Geometric mean\\\midrule']
+      r'\begin{tabular}{lrrrr}\toprule Input set & Native 2.0 (s) & Cell (s) & Ratio of sums & Geometric mean\\\midrule']
     for phase,x in result['phases'].items():
         ratio=x['execution_time_ratio']
         lines.append(f"Pass {phase} & {x['native_s']:.3f} & {x['cell_s']:.3f} & {ratio:.3f} & {x['geomean']:.3f}\\\\" if ratio is not None else f"{phase} & 0 & -- & -- & --\\\\")
@@ -61,7 +61,7 @@ def main():
     if ratios:
         (ROOT/'paper/current-workloads.dat').write_text('rank ratio\n'+'\n'.join(f'{i+1} {v:.9f}' for i,v in enumerate(ratios))+'\n')
         lines += [r'\begin{figure}[ht]\centering\begin{tikzpicture}',
-          r'\begin{axis}[width=0.87\linewidth,height=4cm,xlabel={Workload rank (three-pass totals)},ylabel={Native time / Cell time},axis lines=left,ymajorgrids,tick label style={font=\footnotesize},label style={font=\small}]',
+          r'\begin{axis}[width=0.87\linewidth,height=4cm,xlabel={Workload rank (three-pass totals)},ylabel={Native 2.0 time / Cell time},axis lines=left,ymajorgrids,tick label style={font=\footnotesize},label style={font=\small}]',
           r'\addplot[accent,thick,mark=*,mark size=0.75pt] table[x=rank,y=ratio]{current-workloads.dat};',
           r'\end{axis}\end{tikzpicture}',
           f'\\caption{{Current execution ratios for {len(ratios)} complete three-pass workloads, sorted. The geometric mean is {result["three_pass_ratios"]["geomean"]:.3f}. Semantic scope is the same as Table~\\ref{{tab:current-suite}}.}}\\label{{fig:current-dist}}\\end{{figure}}']

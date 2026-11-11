@@ -32,7 +32,7 @@ def main():
             target = source / path.relative_to(PAPER)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, target)
-        for name in ("eggcc-suite", "upstream-suite"):
+        for name in ("eggcc-suite", "upstream-suite", "egglog3-suite"):
             for path in sorted((REPO / "benchmarks" / name).iterdir()):
                 if path.suffix not in {".md", ".py", ".rs", ".json", ".jsonl", ".csv"}:
                     continue
@@ -45,8 +45,8 @@ def main():
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, target)
         (source / "anc" / "README.txt").write_text(
-            "Current benchmark sources and text results, from ce01d785.\n"
-            "Measured implementation: 8450e627.\n"
+            "Current benchmark sources and text results, from ce01d785 and 2a784950.\n"
+            "Measured Cell implementation: 8450e627; native 3.0 release: 8879605c.\n"
             "These drivers require the full repository and its validator tools.\n"
             "Historical evidence is linked separately in the manuscript.\n"
             "Large exports and executable binaries are not included.\n"

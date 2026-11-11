@@ -1,12 +1,12 @@
 \subsection{Current eggcc replay}
 
-The new replay uses the historical corpus of 96 workloads and three pass inputs, fixed common training, and a transferred donor. The standalone Cell implementation is based on revision \texttt{8450e627}; the native timing binary is built from the pristine \texttt{egglog-baseline} tag. Three fresh-process pairs alternate order for each input. Offline compilation/Bake and linking are recorded separately. The host is an Apple M3 Max with 48 GiB RAM; runtime and offline analysis each use one thread.
+The new replay uses the historical corpus of 96 workloads and three pass inputs, fixed common training, and a transferred donor. The standalone Cell implementation is based on revision \texttt{8450e627}; the native version-2.0 timing binary is built from the pristine \texttt{egglog-baseline} tag. Three fresh-process pairs alternate order for each input. Offline compilation/Bake and linking are recorded separately. The host is an Apple M3 Max with 48 GiB RAM; runtime and offline analysis each use one thread.
 
 The campaign completed 288 of 288 attempted pass inputs (288 expected).
 
 \begin{table}[ht]\centering\small
 
-\begin{tabular}{lrrrr}\toprule Input set & Native (s) & Cell (s) & Ratio of sums & Geometric mean\\\midrule
+\begin{tabular}{lrrrr}\toprule Input set & Native 2.0 (s) & Cell (s) & Ratio of sums & Geometric mean\\\midrule
 
 Pass 1 & 30.152 & 10.884 & 2.770 & 2.678\\
 
@@ -30,7 +30,7 @@ For \texttt{raytrace/raytrace.rs} Pass 3, native whole-process peak RSS is 459.0
 
 \begin{figure}[ht]\centering\begin{tikzpicture}
 
-\begin{axis}[width=0.87\linewidth,height=4cm,xlabel={Workload rank (three-pass totals)},ylabel={Native time / Cell time},axis lines=left,ymajorgrids,tick label style={font=\footnotesize},label style={font=\small}]
+\begin{axis}[width=0.87\linewidth,height=4cm,xlabel={Workload rank (three-pass totals)},ylabel={Native 2.0 time / Cell time},axis lines=left,ymajorgrids,tick label style={font=\footnotesize},label style={font=\small}]
 
 \addplot[accent,thick,mark=*,mark size=0.75pt] table[x=rank,y=ratio]{current-workloads.dat};
 
