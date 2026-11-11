@@ -53,6 +53,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --entry-publications (shared entry nodes own producer expressions)");
         #[cfg(feature = "cell-absorption")]
         println!("  --cell-absorption (experimental Cell min-write absorption)");
+        #[cfg(feature = "cell-entry-reverse")]
+        println!("  --cell-entry-reverse (experimental joined-support Entry selection)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -111,6 +113,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--entry-publications" => {}
             #[cfg(feature = "cell-absorption")]
             "--cell-absorption" => {}
+            #[cfg(feature = "cell-entry-reverse")]
+            "--cell-entry-reverse" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -220,6 +224,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "cell-absorption")]
     if args.iter().any(|x| x == "--cell-absorption") {
         runtime.use_cell_absorption()?;
+    }
+    #[cfg(feature = "cell-entry-reverse")]
+    if args.iter().any(|x| x == "--cell-entry-reverse") {
+        runtime.use_cell_entry_reverse()?;
     }
     #[cfg(feature = "structural-depth")]
     {

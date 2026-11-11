@@ -14,6 +14,11 @@ use std::hash::{Hash, Hasher};
 #[cfg(feature = "entry-admission-audit")]
 #[path = "entry_admission_audit.rs"]
 mod entry_audit;
+#[cfg(feature = "cell-entry-reverse")]
+#[path = "sieve_reverse.rs"]
+mod reverse;
+#[cfg(feature = "cell-entry-reverse")]
+use reverse::Stats as ReverseStats;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct Guard {
@@ -133,6 +138,10 @@ pub struct Stats {
     pub per_rule: Vec<(u64, u64)>,
 }
 pub struct Sieve {
+    #[cfg(feature = "cell-entry-reverse")]
+    pub(crate) reverse_enabled: bool,
+    #[cfg(feature = "cell-entry-reverse")]
+    reverse: ReverseStats,
     #[cfg(feature = "entry-admission-audit")]
     audit: entry_audit::Audit,
     pub enabled: bool,
@@ -158,6 +167,10 @@ impl Sieve {
     pub fn new(program: &Program) -> Self {
         let enabled = true;
         let mut s = Self {
+            #[cfg(feature = "cell-entry-reverse")]
+            reverse_enabled: false,
+            #[cfg(feature = "cell-entry-reverse")]
+            reverse: Default::default(),
             #[cfg(feature = "entry-admission-audit")]
             audit: Default::default(),
             enabled,
@@ -391,6 +404,15 @@ impl Sieve {
         w: Dependency,
         index: &QueryIndexes,
     ) -> bool {
+        self.allow_inner::<false>(rid, atom, table, w, index, 0)
+    }
+    #[cfg(feature = "cell-entry-reverse")]
+    pub(crate) fn allow_selected(&mut self, rid: usize, atom: usize, table: usize,
+        w: Dependency, index: &QueryIndexes, proven: usize) -> bool {
+        self.allow_inner::<true>(rid, atom, table, w, index, proven)
+    }
+    fn allow_inner<const SELECTED: bool>(&mut self, rid: usize, atom: usize, table: usize,
+        w: Dependency, index: &QueryIndexes, _proven: usize) -> bool {
         if !self.enabled {
             return true;
         }
@@ -401,7 +423,12 @@ impl Sieve {
         let Some(keys) = index.hashes(table, w) else {
             return true;
         }; // exact matcher handles hidden/stale rows
-        for guard in guards {
+        for (_position, guard) in guards.iter().enumerate() {
+            #[cfg(feature = "cell-entry-reverse")]
+            if SELECTED && _position == _proven {
+                self.reverse.probes_omitted += 1;
+                continue;
+            }
             self.stats.probes += 1;
             self.stats.per_rule[rid].0 += 1;
             if !self.states[guard.child].allows(keys, &guard.cols)
@@ -467,6 +494,8 @@ impl Sieve {
                     "guards":s.guards.iter().map(|g| (&g.child,&g.cols)).collect::<Vec<_>>()})
             ).collect::<Vec<_>>().into();
         }
+        #[cfg(feature = "cell-entry-reverse")]
+        { report["reverse"] = serde_json::json!({"enabled":self.reverse_enabled,"stats":self.reverse}); }
         report
     }
 }
@@ -495,6 +524,10 @@ mod tests {
     #[test]
     fn new_key_propagates_even_if_or_did_not_change_bits() {
         let mut s = Sieve {
+            #[cfg(feature = "cell-entry-reverse")]
+            reverse_enabled: false,
+            #[cfg(feature = "cell-entry-reverse")]
+            reverse: Default::default(),
             #[cfg(feature = "entry-admission-audit")]
             audit: Default::default(),
             enabled: true,

@@ -1,0 +1,85 @@
+{
+  "baseline_commit": "217e3285",
+  "scope": "standalone Cell CPU; sum-bits and Raytrace prefix work only, no timing",
+  "binary_sha256": "86726ac54c6eb1ad6d86c9e4baf4ad92ee4d51ebdc072b5d5eb649e5de6b67d6",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "run_signature_sha256": "f49475ce1d70973af29b9f362165280ad886790c035115193653bd20b52173bd",
+      "reports_sha256": [
+        "3fef115c1aec4c3334bb44c4a804fa1f4f6fbee4930f32829d8bbbc6f9b77f5a",
+        "aad4b8dfc9f512cd48737738bf3bef0ea2ea4193f8e22913ef3404ea4c9f1afe"
+      ],
+      "sieve_probes": [
+        12873,
+        10885
+      ],
+      "sieve_rejected_visits": [
+        9143,
+        7257
+      ],
+      "earlier_passing_guard_probes_avoided": 1,
+      "reverse": {
+        "attempts": 4927,
+        "candidate_capacity_bytes": 9216,
+        "copied_refs": 246,
+        "empty_batches": 20,
+        "epoch_bins": 1586,
+        "guards_considered": 2231,
+        "key_probes": 186,
+        "over_budget": 4,
+        "probes_omitted": 101,
+        "selected_batches": 59,
+        "selected_rows": 101,
+        "size_skips": 798,
+        "sort_comparisons": 104,
+        "unavailable": 0
+      },
+      "free_join_entry_probes": 17430,
+      "graph_effects_and_ordered_runs_equal": true,
+      "indexes_entry_free_join_and_support_maintenance_equal": true
+    },
+    "ray1280": {
+      "runs": 1280,
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "run_signature_sha256": "9c93f3e31413f679d2f29e4fb93ed03d237ffbf44da1429bb2827841dcd99075",
+      "reports_sha256": [
+        "869145550e060cb0e9bed9f5209164994be99f6c129350733baccc9ae95bd1ef",
+        "bd76bfa4ffcb371aeb797af5fa9894d633b5ea410c50ea4aa00dca52cd8b05ee"
+      ],
+      "sieve_probes": [
+        573074,
+        483921
+      ],
+      "sieve_rejected_visits": [
+        462419,
+        374589
+      ],
+      "earlier_passing_guard_probes_avoided": 0,
+      "reverse": {
+        "attempts": 12321,
+        "candidate_capacity_bytes": 440064,
+        "copied_refs": 13400,
+        "empty_batches": 367,
+        "epoch_bins": 7827,
+        "guards_considered": 8567,
+        "key_probes": 11216,
+        "over_budget": 853,
+        "probes_omitted": 1323,
+        "selected_batches": 446,
+        "selected_rows": 1323,
+        "size_skips": 440,
+        "sort_comparisons": 8238,
+        "unavailable": 0
+      },
+      "free_join_entry_probes": 1218004,
+      "graph_effects_and_ordered_runs_equal": true,
+      "indexes_entry_free_join_and_support_maintenance_equal": true
+    }
+  },
+  "sum_native_acceptance": {
+    "status": "pass",
+    "sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a"
+  }
+}

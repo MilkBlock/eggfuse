@@ -631,6 +631,31 @@ impl QueryIndexes {
         if index.version != graph.query_versions[table] { return None; }
         Some(index.values.get(column)?.get()?.contains_key(&fingerprint(value, self.bits)))
     }
+    /// Select from existing support keys without building or maintaining an index.
+    /// Budget includes key probes and copied references, including failed trials.
+    #[cfg(feature = "cell-entry-reverse")]
+    pub(crate) fn current_support_rows<'a>(&self, graph: &Graph, table: usize, column: usize,
+        keys: impl ExactSizeIterator<Item = &'a u64>, budget: usize,
+        probes: &mut u64, copied: &mut u64, capacity_bytes: &mut u64,
+    ) -> Option<std::result::Result<Vec<(u64, Dependency)>, ()>> {
+        let index = self.tables.get(&table)?;
+        if index.version != graph.query_versions[table] { return None; }
+        let column = index.values.get(column)?.get()?;
+        let Some(limit) = budget.checked_sub(keys.len()) else { return Some(Err(())); };
+        let mut rows = Vec::new();
+        for key in keys {
+            *probes += 1;
+            let Some(bucket) = column.get(key) else { continue; };
+            if bucket.facts.len() > limit - rows.len() {
+                *capacity_bytes += (rows.capacity() * std::mem::size_of::<(u64, Dependency)>()) as u64;
+                return Some(Err(()));
+            }
+            *copied += bucket.facts.len() as u64;
+            rows.extend(bucket.facts.iter().map(|&w| (0, w)));
+        }
+        *capacity_bytes += (rows.capacity() * std::mem::size_of::<(u64, Dependency)>()) as u64;
+        Some(Ok(rows))
+    }
     /// A one-column Free Join projection has exactly the same domain as the
     /// maintained column bucket, including in the presence of hash collisions.
     pub(crate) fn single_support(&mut self, graph: &Graph, table: usize, column:usize, key:u64) -> Result<Domain> {
@@ -864,6 +889,36 @@ pub(crate) fn test_projection_graph() -> Graph {
 #[cfg(all(test, feature = "sparse-cells"))]
 mod support_tests {
     use super::*;
+    #[cfg(feature = "cell-entry-reverse")]
+    #[test]
+    fn reverse_support_is_bounded_current_and_never_builds_columns() {
+        for bits in [64,0] {
+            let mut graph = test_projection_graph();
+            let mut index = test_projection_indexes(bits);
+            for i in 0..12 {
+                graph.set_function(0, vec![Value::Int(i),Value::Int(0)],Value::Int(7)).unwrap();
+            }
+            let keys = [index.fingerprint(&Value::Int(5))];
+            let (mut probes,mut copied,mut bytes) = (0,0,0);
+            assert!(index.current_support_rows(&graph,0,0,keys.iter(),32,&mut probes,&mut copied,&mut bytes).is_none());
+            assert_eq!(index.builds,0);
+            index.ensure_selected(&graph,0,[0]).unwrap();
+            graph.changes.clear();
+            assert!(index.current_support_rows(&graph,0,1,keys.iter(),32,&mut probes,&mut copied,&mut bytes).is_none());
+            let got = index.current_support_rows(&graph,0,0,keys.iter(),4,&mut probes,&mut copied,&mut bytes).unwrap();
+            assert_eq!(got.is_err(),bits==0,"a colliding bucket must respect the copy budget");
+            let mut rows = index.current_support_rows(&graph,0,0,keys.iter(),32,&mut probes,&mut copied,&mut bytes).unwrap().unwrap()
+                .into_iter().map(|(_,w)|w).collect::<Vec<_>>();
+            let mut expected=index.hash_candidates(0,&[0],&keys);
+            rows.sort_unstable(); expected.sort_unstable();
+            assert_eq!(rows,expected);
+            graph.set_function(0,vec![Value::Int(13),Value::Int(0)],Value::Int(8)).unwrap();
+            assert!(index.current_support_rows(&graph,0,0,keys.iter(),32,&mut probes,&mut copied,&mut bytes).is_none(),"stale source membership falls back");
+            index.update(&mut graph).unwrap();
+            let late = [index.fingerprint(&Value::Int(13))];
+            assert!(!index.current_support_rows(&graph,0,0,late.iter(),32,&mut probes,&mut copied,&mut bytes).unwrap().unwrap().is_empty());
+        }
+    }
     #[test]
     fn negative_support_needs_a_current_built_column_and_hits_are_only_candidates() {
         for bits in [64, 0] {

@@ -404,6 +404,12 @@ impl Executor {
         self.neighbor.absorption_enabled = true;
         Ok(())
     }
+    #[cfg(feature = "cell-entry-reverse")]
+    pub fn use_cell_entry_reverse(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure Cell Entry selection before execution".into()); }
+        self.sieve.reverse_enabled = true;
+        Ok(())
+    }
     fn deliver(&mut self) {
         use crate::change_batch::Change;
         let batch = &self.graph.changes;
@@ -1238,6 +1244,17 @@ impl Executor {
                         };
                         #[cfg(feature = "family-frontiers")]
                         let mut delivered = 0;
+                        #[cfg(feature = "cell-entry-reverse")]
+                        let selected = if early_sieve && inverted.is_none() && self.completion.is_none() && {
+                            #[cfg(feature = "projection-shared")]
+                            { shared.is_none() }
+                            #[cfg(not(feature = "projection-shared"))]
+                            { true }
+                        } {
+                            self.sieve.select_entries(&self.graph, &self.query_indexes, rid, batch)
+                        } else { None };
+                        #[cfg(feature = "cell-entry-reverse")]
+                        let selected_guard = selected.as_ref().map(|s| s.guard);
                         #[cfg(feature = "entry-admission-audit")]
                         let gate_probe = early_sieve.then(|| self.sieve.begin_entry_audit(
                             self.graph.epoch, rid, atom, batch.node(), watermark));
@@ -1253,12 +1270,15 @@ impl Executor {
                             #[cfg(feature = "family-overlap")]
                             self.overlap
                                 .seed(watermark, rid, batch.node(), batch.table, w);
-                            if early_sieve
-                                && !self
-                                    .sieve
-                                    .allow(rid, atom, batch.table, w, &self.query_indexes)
-                            {
-                                return Ok(());
+                            if early_sieve {
+                                #[cfg(feature = "cell-entry-reverse")]
+                                let allowed = match selected_guard {
+                                    Some(guard) => self.sieve.allow_selected(rid, atom, batch.table, w, &self.query_indexes, guard),
+                                    None => self.sieve.allow(rid, atom, batch.table, w, &self.query_indexes),
+                                };
+                                #[cfg(not(feature = "cell-entry-reverse"))]
+                                let allowed = self.sieve.allow(rid, atom, batch.table, w, &self.query_indexes);
+                                if !allowed { return Ok(()); }
                             }
                             let entry = batch.entry(w).expect("current delta entry");
                             #[cfg(feature = "sparse-cells")]
@@ -1312,14 +1332,22 @@ impl Executor {
                         let shared_rows = shared.as_deref().map(Vec::as_slice);
                         #[cfg(not(feature = "projection-shared"))]
                         let shared_rows: Option<&[Dependency]> = None;
-                        #[cfg(feature = "entry-admission-audit")]
+                        #[cfg(any(feature = "entry-admission-audit", feature = "family-scan"))]
                         let full_delta = shared_rows.is_none() && inverted.is_none();
+                        #[cfg(all(any(feature = "entry-admission-audit", feature = "family-scan"), feature = "cell-entry-reverse"))]
+                        let full_delta = full_delta && selected.is_none();
                         #[cfg(feature = "family-scan")]
-                        if shared_rows.is_none() && inverted.is_none() {
+                        if full_delta {
                             self.raw_scan
                                 .record(&self.current_stage, self.graph.epoch, rid, batch);
                         }
-                        if let Some(rows) = shared_rows {
+                        #[cfg(feature = "cell-entry-reverse")]
+                        let selected_rows = selected.map(|s| s.rows);
+                        #[cfg(not(feature = "cell-entry-reverse"))]
+                        let selected_rows: Option<Vec<(u64,Dependency)>> = None;
+                        if let Some(rows) = selected_rows {
+                            for (_,w) in rows { deliver(w)?; }
+                        } else if let Some(rows) = shared_rows {
                             for &w in rows {
                                 deliver(w)?;
                             }

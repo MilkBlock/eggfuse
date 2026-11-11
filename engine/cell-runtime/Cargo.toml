@@ -6,6 +6,7 @@ edition = "2024"
 [features]
 sparse-cells = ["iterative-bake"]
 cell-absorption = ["sparse-cells"]
+cell-entry-reverse = ["sparse-cells"]
 storage-metrics = ["dep:libc"]
 allocation-metrics = []
 cell-query-sharing-audit = ["sparse-cells"]
