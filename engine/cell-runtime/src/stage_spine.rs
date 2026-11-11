@@ -38,6 +38,27 @@ impl Cursor {
     pub(crate) fn uncached_query(&self) -> bool {
         self.root.context.get().is_none() && self.state.history.is_empty()
     }
+    /// The selected source constructor already has a compiled result donor.
+    /// Keep that existing handoff as its owner instead of probing again on a
+    /// worker. This is admission only: no witness is certified here, and stale
+    /// history still falls back at the original source operation.
+    fn retain_constructor_handoff(&self, catalog: &crate::iterative::Catalog, operation: usize,
+        answer: &mut Matched, stats: &mut Stats) {
+        stats.preparation_handoff_history_checks += 1;
+        if self.state.history.is_empty() { return; }
+        stats.preparation_handoff_checks += 1;
+        let Some(donor) = catalog.program(&self.state).iter().find(|donor| {
+            stats.preparation_handoff_operations += 1;
+            donor.op == operation
+        }) else { return; };
+        stats.preparation_handoff_reads += 1;
+        if matches!(self.state.history.get_counted(donor.back,
+            donor.port.expect("compiled Cell result port"), &mut stats.preparation_handoff_inherited_reads),
+            Some(Dependency::Fact(_))) {
+            answer.constructor = crate::cell::constructor_prepare::Prepared::Absent;
+            stats.preparation_handoff_skips += 1;
+        }
+    }
 }
 #[cfg(feature = "sparse-cells")]
 #[derive(Clone)]
@@ -666,6 +687,13 @@ pub struct Stats {
     history_inheritance_marks: u64,
     history_heap_frames:u64,
     history_result_reads: u64,
+    preparation_handoff_rule_checks: u64,
+    preparation_handoff_history_checks: u64,
+    preparation_handoff_checks: u64,
+    preparation_handoff_operations: u64,
+    preparation_handoff_reads: u64,
+    preparation_handoff_inherited_reads: u64,
+    preparation_handoff_skips: u64,
     legacy_entry_writes: u64,
     legacy_retirement_checks: u64,
     pub(crate) legacy_cursor_probes: u64,
@@ -2620,6 +2648,12 @@ impl Programs {
         let mut results = Winners::new();
         #[cfg(feature = "sparse-cells")]
         let mut workers = workers.and_then(|w| if w.admit_spine_rule(g, rid) { Some(w) } else { None });
+        #[cfg(feature = "sparse-cells")]
+        let preparation_operation = {
+            self.stats.preparation_handoff_rule_checks += 1;
+            g.program.executions[rid].constructor.as_ref()
+                .filter(|plan| plan.handoff).map(|plan| plan.operation)
+        };
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
@@ -2737,8 +2771,14 @@ impl Programs {
                 self.stats.query_fragment_slots += inputs.len() as u64;
                 self.stats.query_fragment_capacity_bytes += inputs.capacity_bytes() as u64;
                 #[cfg(feature = "sparse-cells")]
-                results.push(Winner::new(Matched::matched(inputs, facts, epoch), cursor, _ordinal,
-                    &mut self.sealed_cursors, &mut self.stats));
+                {
+                    let mut answer = Matched::matched(inputs, facts, epoch);
+                    if let Some(operation) = preparation_operation {
+                        cursor.retain_constructor_handoff(&g.program.iterative, operation, &mut answer, &mut self.stats);
+                    }
+                    results.push(Winner::new(answer, cursor, _ordinal,
+                        &mut self.sealed_cursors, &mut self.stats));
+                }
                 #[cfg(not(feature = "sparse-cells"))]
                 record_answer(&mut results, inputs, facts, epoch, cursor);
             }

@@ -9,6 +9,9 @@ use serde::Serialize;
 pub(crate) struct Plan {
     pub operation: usize,
     pub table: usize,
+    // Compile once from the authoritative switch. Rules without a possible
+    // result donor need no per-instance history admission checks.
+    pub handoff: bool,
     keys: Vec<Arg>,
 }
 
@@ -161,7 +164,8 @@ impl Plan {
             if keys.iter().all(|a| match a {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
-            }) { return Some(Self { operation, table:*table, keys }); }
+            }) { return Some(Self { operation, table:*table,
+                handoff: p.iterative.supplies_operation(rule, operation), keys }); }
         }
         None
     }

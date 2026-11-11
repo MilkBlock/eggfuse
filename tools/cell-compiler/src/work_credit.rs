@@ -89,6 +89,7 @@ impl Work {
             None => 0,
             Some(J::String(v)) if v == "cell-constructor-preparation/v1" => 1,
             Some(J::String(v)) if v == "cell-constructor-preparation/v2" => 2,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v3" => 3,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -111,6 +112,19 @@ impl Work {
             let key = format!("stats/{field}");
             let value = if constructor_preparation >= 2 {
                 report["stats"][field].as_u64().ok_or_else(||format!("missing constructor preparation work {key}"))?
+            } else { 0 };
+            work.insert(key, value);
+        }
+        // Admission borrows a compiled handoff and its existing result slot.
+        // Skipped probes earn no separate credit: they disappear from the
+        // ordinary lookup, preparation, dispatch and storage counters.
+        for field in ["preparation_handoff_rule_checks", "preparation_handoff_history_checks",
+            "preparation_handoff_checks", "preparation_handoff_operations",
+            "preparation_handoff_reads", "preparation_handoff_inherited_reads"] {
+            let key = format!("stage_spine/stats/{field}");
+            let value = if constructor_preparation >= 3 {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing constructor preparation work {key}"))?
             } else { 0 };
             work.insert(key, value);
         }
@@ -535,6 +549,9 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
     for key in ["stats/constructor_prepared_checks", "stats/constructor_prepared_fields",
         "stats/constructor_prepared_certificates", "stats/constructor_prepared_liveness_checks", "stats/constructor_prepared_result_reads",
+        "stage_spine/stats/preparation_handoff_checks", "stage_spine/stats/preparation_handoff_operations",
+        "stage_spine/stats/preparation_handoff_rule_checks", "stage_spine/stats/preparation_handoff_history_checks",
+        "stage_spine/stats/preparation_handoff_reads", "stage_spine/stats/preparation_handoff_inherited_reads",
         "query_workers/stats/execution/constructor/attempts", "query_workers/stats/execution/constructor/key_fields",
         "query_workers/stats/execution/constructor/key_spills", "query_workers/stats/execution/constructor/result_writes"] {
         let mut changed = report.clone();

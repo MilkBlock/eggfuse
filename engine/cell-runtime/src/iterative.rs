@@ -603,6 +603,10 @@ impl Catalog {
             .program(s.pc)
             .map_or(&[], |t| t.reuse.as_slice())
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn supplies_operation(&self, rule: usize, operation: usize) -> bool {
+        self.switch.supplies_operation(operation, |unit| self.units[unit].last().0 == rule)
+    }
     pub(crate) fn closed(&self, s: &State) -> bool {
         self.switch.program(s.pc).is_some_and(|p| p.complete)
     }

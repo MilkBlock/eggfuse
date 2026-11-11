@@ -55,6 +55,36 @@ fn program(source: &str) -> Program {
 }
 
 #[test]
+fn compiled_result_handoffs_replace_worker_prequeries_and_keep_source_fallback() {
+    for deleted in [false, true] {
+        let source = if deleted {
+            SOURCE.replace("(rule ((= s (SubTuple x i 1)))",
+                "(rule ((SubTuple x i 1)) ((delete (Get x i))) :ruleset b)\n(rule ((= s (SubTuple x i 1)))")
+        } else { SOURCE.to_owned() };
+        for workers in [1, 4] {
+            let p = program(&source);
+            let make = || {
+                let mut e = Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(), true);
+                e.use_entry_publications().unwrap();
+                e.use_query_workers(workers, 1).unwrap();
+                e
+            };
+            let mut reference = make(); reference.execute().unwrap();
+            let mut continued = make(); continued.use_cell_execution(1).unwrap(); continued.execute().unwrap();
+            assert_eq!(reference.snapshots, continued.snapshots, "every source Run; delete={deleted}");
+            assert_eq!(reference.binding_audit, continued.binding_audit);
+            assert_eq!(reference.graph.export().unwrap(), continued.graph.export().unwrap());
+            let report = continued.report();
+            assert!(report["stage_spine"]["stats"]["preparation_handoff_skips"].as_u64().unwrap() > 0,
+                "existing donor must suppress real preparation: {report}");
+            if deleted {
+                assert!(continued.graph.stats.handoff_stale > 0, "deleted donor retains ordinary source resolution");
+            }
+        }
+    }
+}
+
+#[test]
 fn rhs_results_survive_entry_delivery_and_boundary_recreation_without_recapture() {
     for source in [
         SOURCE.to_owned(),

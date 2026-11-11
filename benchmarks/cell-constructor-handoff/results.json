@@ -1,0 +1,295 @@
+{
+  "scope": "standalone Cell CPU; work and semantic evidence, not timing",
+  "control_commit": "0368e471",
+  "runtime_sha256": "5f22206e9e161280feb328338700194a9df77c3929c9cd48ef646f7822493bd8",
+  "control_runtime_sha256": "9213af540200f57b5cc2f79bd8b860db9a8dc28d8aba4e2cb2bbdfdd33b4a071",
+  "admission_counter_payload_bytes": 56,
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "original_graph_and_handoff_work_unchanged": true,
+      "admission_work": {
+        "preparation_handoff_rule_checks": 635,
+        "preparation_handoff_history_checks": 419,
+        "preparation_handoff_checks": 257,
+        "preparation_handoff_operations": 257,
+        "preparation_handoff_reads": 257,
+        "preparation_handoff_inherited_reads": 0,
+        "preparation_handoff_skips": 257
+      },
+      "constructor_preparation_before": {
+        "attempts": 5117,
+        "hits": 3151,
+        "key_fields": 9806,
+        "key_spills": 0,
+        "lookups": 5117,
+        "misses": 1966,
+        "missing_inputs": 0,
+        "result_writes": 3151,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 4860,
+        "hits": 2894,
+        "key_fields": 9354,
+        "key_spills": 0,
+        "lookups": 4860,
+        "misses": 1966,
+        "missing_inputs": 0,
+        "result_writes": 2894,
+        "unavailable": 0
+      },
+      "removed_probes": 257,
+      "source_witness_acceptances": [
+        2874,
+        2874
+      ],
+      "total_key_lookups": [
+        14478,
+        14221
+      ],
+      "matched_preparation_before": {
+        "admission_instances": 481,
+        "chunks": 481,
+        "constructor_groups": 448,
+        "deferred_groups": 26,
+        "deferred_instances": 70,
+        "deferred_operations": 29,
+        "empty_chunks": 338,
+        "execution": {
+          "capacity_growth_bytes": 11880,
+          "constructor": {
+            "attempts": 1965,
+            "hits": 1299,
+            "key_fields": 3493,
+            "key_spills": 0,
+            "lookups": 1965,
+            "misses": 666,
+            "missing_inputs": 0,
+            "result_writes": 1299,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 316,
+          "instances": 417,
+          "later_deferred_failures": 0,
+          "later_operations": 445,
+          "operations": 649,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 649
+        },
+        "groups": 481,
+        "header_capacity_bytes": 39040,
+        "header_growths": 234,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 238,
+        "instances": 2071,
+        "matched_only_invocations": 68,
+        "mixed_invocations": 126,
+        "rule_checks": 2957,
+        "worker_operations": 411
+      },
+      "matched_preparation_after": {
+        "admission_instances": 669,
+        "chunks": 461,
+        "constructor_groups": 428,
+        "deferred_groups": 26,
+        "deferred_instances": 70,
+        "deferred_operations": 29,
+        "empty_chunks": 318,
+        "execution": {
+          "capacity_growth_bytes": 11880,
+          "constructor": {
+            "attempts": 1708,
+            "hits": 1042,
+            "key_fields": 3041,
+            "key_spills": 0,
+            "lookups": 1708,
+            "misses": 666,
+            "missing_inputs": 0,
+            "result_writes": 1042,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 316,
+          "instances": 417,
+          "later_deferred_failures": 0,
+          "later_operations": 445,
+          "operations": 649,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 649
+        },
+        "groups": 461,
+        "header_capacity_bytes": 37440,
+        "header_growths": 227,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 238,
+        "instances": 1877,
+        "matched_only_invocations": 68,
+        "mixed_invocations": 126,
+        "rule_checks": 2957,
+        "worker_operations": 411
+      },
+      "instance_header_bytes": 144,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        433944,
+        438600
+      ],
+      "preparation_rules": 366,
+      "handoff_rules": 2,
+      "net_saved_uncalibrated_operations": 223,
+      "work_ledger_sha256": "16adca63daeb64791677d4abd0b032c40ad8e9eff8c620df52c135431c9b4143"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "original_graph_and_handoff_work_unchanged": true,
+      "admission_work": {
+        "preparation_handoff_rule_checks": 6124,
+        "preparation_handoff_history_checks": 43123,
+        "preparation_handoff_checks": 28127,
+        "preparation_handoff_operations": 28127,
+        "preparation_handoff_reads": 28127,
+        "preparation_handoff_inherited_reads": 0,
+        "preparation_handoff_skips": 28127
+      },
+      "constructor_preparation_before": {
+        "attempts": 913319,
+        "hits": 587939,
+        "key_fields": 1763225,
+        "key_spills": 0,
+        "lookups": 913319,
+        "misses": 325380,
+        "missing_inputs": 0,
+        "result_writes": 587939,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 885192,
+        "hits": 559812,
+        "key_fields": 1714986,
+        "key_spills": 0,
+        "lookups": 885192,
+        "misses": 325380,
+        "missing_inputs": 0,
+        "result_writes": 559812,
+        "unavailable": 0
+      },
+      "removed_probes": 28127,
+      "source_witness_acceptances": [
+        556868,
+        556847
+      ],
+      "total_key_lookups": [
+        4050662,
+        4022556
+      ],
+      "matched_preparation_before": {
+        "admission_instances": 5025,
+        "chunks": 11480,
+        "constructor_groups": 4806,
+        "deferred_groups": 210,
+        "deferred_instances": 9187,
+        "deferred_operations": 4283,
+        "empty_chunks": 9409,
+        "execution": {
+          "capacity_growth_bytes": 1140624,
+          "constructor": {
+            "attempts": 464871,
+            "hits": 330204,
+            "key_fields": 913891,
+            "key_spills": 0,
+            "lookups": 464871,
+            "misses": 134667,
+            "missing_inputs": 0,
+            "result_writes": 330204,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 33530,
+          "instances": 58552,
+          "later_deferred_failures": 0,
+          "later_operations": 76010,
+          "operations": 97464,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 97464
+        },
+        "groups": 5025,
+        "header_capacity_bytes": 382240,
+        "header_growths": 2280,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 2020,
+        "instances": 476559,
+        "matched_only_invocations": 769,
+        "mixed_invocations": 1195,
+        "rule_checks": 46635,
+        "worker_operations": 95444
+      },
+      "matched_preparation_after": {
+        "admission_instances": 18194,
+        "chunks": 11237,
+        "constructor_groups": 4709,
+        "deferred_groups": 210,
+        "deferred_instances": 9187,
+        "deferred_operations": 4283,
+        "empty_chunks": 9166,
+        "execution": {
+          "capacity_growth_bytes": 1140624,
+          "constructor": {
+            "attempts": 436744,
+            "hits": 302077,
+            "key_fields": 865652,
+            "key_spills": 0,
+            "lookups": 436744,
+            "misses": 134667,
+            "missing_inputs": 0,
+            "result_writes": 302077,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 33530,
+          "instances": 58552,
+          "later_deferred_failures": 0,
+          "later_operations": 76010,
+          "operations": 97464,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 97464
+        },
+        "groups": 4928,
+        "header_capacity_bytes": 377440,
+        "header_growths": 2259,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 2020,
+        "instances": 466415,
+        "matched_only_invocations": 769,
+        "mixed_invocations": 1193,
+        "rule_checks": 46635,
+        "worker_operations": 95444
+      },
+      "instance_header_bytes": 144,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        2360968,
+        2365624
+      ],
+      "preparation_rules": 366,
+      "handoff_rules": 2,
+      "net_saved_uncalibrated_operations": 90740,
+      "work_ledger_sha256": "d2c4329bf74a373e3f9e311d8a1602fbcb2fc12c27da22b6d4209fad529e5ef8"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

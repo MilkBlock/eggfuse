@@ -181,6 +181,17 @@ overall objective complete until all applicable items above are proven.
   is charged; the conservative equal-weight score does not improve, and no
   speedup is established. This reduces the contents of an ordered boundary but
   does not yet independently schedule parked Cells or parallelize shared effects.
+- Existing compiled Cell result donors now suppress redundant worker preparation
+  at the original matching outlet; see [handoff admission](../benchmarks/cell-constructor-handoff/README.md).
+  Raytrace removes 28,127 prequeries, with 21 restored source lookups after stale
+  handoffs, for 28,106 fewer total lookups. No bindings, history arrays or instance
+  fields are added. A shared compiled flag restricts admission to 2 of 366
+  preparation rules, adding 4,656 compiled-plan bytes. Original handoff validation
+  and source fallback remain live. Rule/history checks, comparisons and reads
+  are charged; the uncalibrated net work score improves by 223 / 90,740 operations.
+  Actual query/dispatch work decreases, but this does not establish throughput improvement or independent
+  parked scheduling. The remaining constructor misses and shared-effect boundary
+  work still require further takeover.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

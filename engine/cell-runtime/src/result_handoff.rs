@@ -1155,6 +1155,11 @@ impl Switch {
     pub(crate) fn program(&self, id: usize) -> Option<&Terminal> {
         self.nodes.get(id).map(|n| n.program.as_ref())
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn supplies_operation(&self, operation: usize, accepts_unit: impl Fn(usize) -> bool) -> bool {
+        self.nodes.iter().skip(1).any(|node| accepts_unit(node.unit)
+            && node.program.reuse.iter().any(|donor| donor.op == operation))
+    }
     pub(crate) fn direct(&self,id:usize) -> Option<&Rc<crate::cell::CompletedPlan>> {
         self.direct.get(id)?.as_ref()
     }
