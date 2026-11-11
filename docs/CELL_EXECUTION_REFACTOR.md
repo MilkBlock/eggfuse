@@ -137,6 +137,14 @@ overall objective complete until all applicable items above are proven.
   Empty buffers are recycled. Added pooling, growth, ownership-transfer and
   larger Completion-record costs are reported and charged by measured Bake.
   Ordinary history capture is still separate from this result array.
+- The fifth-change [timing checkpoint](../benchmarks/cell-execution-outputs/README.md#five-change-timing-checkpoint)
+  does not establish a speedup against the immediate control. Current four-worker
+  inference is 29.2% slower than serial on sum-bits and only 3.3% faster on
+  Raytrace; Raytrace still takes 5.617 s. Whole-process times vary across the
+  measurement sequence, so their medians do not isolate a runtime change.
+  All samples and exact state/Run signatures are retained. Remaining scalar
+  suffix dispatches are already zero in the observed work; extending useful
+  worker computation and removing ordered RHS/boundary work remain necessary.
 - The graph's single `active_rhs`, writer-origin hint and sealed-input trust,
   and the apply-scoped ownership Entry context still prevent independent parked
   execution after shared effects. These owners must move together; changing

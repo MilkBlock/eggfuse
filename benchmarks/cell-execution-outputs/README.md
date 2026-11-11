@@ -120,3 +120,54 @@ the existing interleaved whole-process harness. It includes the immediate
 four-worker control, refactor-tag and historical lanes, current serial and
 four-worker execution, and grain-1 continuation. It records every warmup/sample
 and verifies exact final-state and ordered Run signatures for every process.
+
+## Five-change timing checkpoint
+
+Implementation: `9345194d`; immediate control: `3ace9e35`. This is the fifth
+implementation change since `4ed640e2`. [timing.json](timing.json) retains every
+sample, warmup, binary/program hash, phase timer and exact semantic stamp.
+There is one warmup per lane, five measured sum-bits repetitions and three
+Raytrace repetitions, interleaved by the recorded order. These are normal
+standalone runtime binaries, without allocation instrumentation.
+
+| Lane | sum-bits inference median, ms | Raytrace inference median, s | Raytrace process wall median, s |
+|---|---:|---:|---:|
+| Immediate control, 4 workers | 21.570 | 5.600 | 8.659 |
+| Refactor-tag lane, 4 workers | 18.820 | 5.600 | 8.694 |
+| Historical lane, 4 workers | 19.999 | 5.657 | 21.055 |
+| Current serial | 15.524 | 5.810 | 22.257 |
+| Current 4 workers | 20.057 | 5.617 | 20.767 |
+| Current 4 workers, grain 1 | 20.594 | 5.758 | 21.063 |
+
+The immediate before/after inference ratios have paired bootstrap intervals
+that include one on both workloads. Thus the sum-bits median reduction of 7.0%
+and Raytrace increase of 0.3% do not establish an ownership-change speedup or
+regression. Current four-worker inference is 29.2% slower than current serial
+on sum-bits, and only 3.3% faster on Raytrace. It remains 6.6% slower than the
+refactor-tag lane on sum-bits. No full-worker utilization claim is supported.
+
+All process-wall samples are retained, including the apparent large Raytrace
+median differences. Raytrace wall time changes from roughly 21–24 seconds in
+the early measured processes to roughly 8–9 seconds in later processes across
+multiple binaries. This change is outside the comparably stable inference
+timer and interacts with lane order. The three-sample process medians therefore
+cannot isolate a runtime regression or improvement. The cause of this
+whole-process variation has not been established; it is not removed from the
+data or attributed to worker execution. Process-average core counts include
+loading/export and cannot measure inference utilization.
+
+Current four-worker Raytrace phase medians are search 2.328 s, RHS 1.731 s,
+query update 1.022 s, repair 0.516 s and delivery GC 0.018 s. They are independent
+medians, not additive critical-path measurements. Together with unchanged
+logical work and zero remaining observed scalar suffix dispatches, they show
+why a queue-only change would be insufficient: substantial source-ordered RHS
+and boundary work still needs a proved Cell takeover. Buffer ownership removes
+a prerequisite conflict; it does not remove these computations.
+
+Every warmup and measured process has the exact final state and all ordered
+Run signatures of its workload reference. Collection can be reproduced without
+rerunning the workload:
+
+```sh
+python3 benchmarks/cell-execution-resume/collect_timing.py out/cell-execution-outputs/timing benchmarks/cell-execution-outputs/timing.json
+```

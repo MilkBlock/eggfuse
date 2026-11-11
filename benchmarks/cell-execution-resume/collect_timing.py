@@ -31,6 +31,8 @@ def collect(root,output):
                 v={k:r[k] for k in ['iteration','inference_seconds','process_wall_seconds',
                                    'process_user_seconds','process_system_seconds']}
                 v['average_cores']=(r['process_user_seconds']+r['process_system_seconds'])/r['process_wall_seconds']
+                if 'phases' in r:
+                    v['phases'] = r['phases']
                 return v
             work['lanes'][name]={
                 'runtime_sha256':lane['runtime_sha256'],'program_file_sha256':lane['program_file_sha256'],
