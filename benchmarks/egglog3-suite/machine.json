@@ -1,0 +1,9 @@
+{
+  "host": "Apple M3 Max (Mac15,9)",
+  "ram_bytes": 51539607552,
+  "logical_cpus": 16,
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)\nbinary: rustc\ncommit-hash: 4a4ef493e3a1488c6e321570238084b38948f6db\ncommit-date: 2026-03-02\nhost: aarch64-apple-darwin\nrelease: 1.94.0\nLLVM version: 21.1.8\n",
+  "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+  "runtime_threads": 1,
+  "recorded_at_utc": "2026-11-11T09:49:13.335696+00:00"
+}

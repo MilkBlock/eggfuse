@@ -1,0 +1,18 @@
+{
+  "upstream_url": "https://github.com/egraphs-good/egglog",
+  "tag": "v3.0.0",
+  "tag_object": "5ea87d3f211e25e012bf16ea39cc100fcb6f45ce",
+  "commit": "8879605cafad303db25787406163a7e5bc845f5d",
+  "archive_sha256": "624b0b038801f6d6a5926ee64395ec1a981e357949b0f5069b63e13aee41eaec",
+  "baseline_tag": "egglog-baseline",
+  "baseline_commit": "62ae6baa5539af4468a8f1a94d6e108de4dcd2df",
+  "build": "cargo build --release --locked --no-default-features --example native-inference -j 2",
+  "kernel_changes": false,
+  "adapter_change_from_baseline": "set_num_threads(1) becomes per-EGraph rather than global",
+  "allocator": "Rust default in both native binaries",
+  "release_source_validation": {
+    "files_checked": 568,
+    "all_original_bytes_unchanged": true,
+    "only_added_file": "examples/native-inference.rs"
+  }
+}

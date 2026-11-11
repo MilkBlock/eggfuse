@@ -1,0 +1,14 @@
+{
+  "binaries": {
+    "egglog2": "5ad03cf2af4313ccdca5dd5e0b71be4b1fed753c7bc9d79cc11c965be361f88b",
+    "egglog3": "dfa914d8d33216316a8cd393751fb0446993df54e5b16fee7b77739fa33278d3"
+  },
+  "capture_sha256": "43e2b2c39e8b9c0ecebb7db899af75a1ae14005686e6f671716a0de8bead1213",
+  "repeats": 3,
+  "timeout_s": 360,
+  "threads": 1,
+  "filter": null,
+  "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "head": "495ae237c9f61d0c049dfe6420d061441e137dfb",
+  "semantic_scope": "original source execution; no native2/native3 final-state equivalence proof"
+}
