@@ -69,6 +69,16 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // A field test is new work even when it prevents a whole summary update.
+        // Historical reports have no such test; missing new counters are errors.
+        let column_checks = match report["sieve"].get("column_influence") {
+            None => 0,
+            Some(J::String(version)) if version == "cell-fields/v1" =>
+                report["sieve"]["stats"]["column_checks"].as_u64()
+                    .ok_or("missing Sieve column_checks")?,
+            _ => return Err("unknown Sieve column influence".into()),
+        };
+        work.insert("sieve/stats/column_checks".into(), column_checks);
         // Charge both attempted plan preparation and every support probe,
         // including unavailable columns. Rejections are outcomes; their saved
         // queries/dispatch are already absent from the original counters.
@@ -488,6 +498,7 @@ mod tests {
             "/free_join/reverse_keys", "/free_join/reverse_refs", "/free_join/reverse_epoch_bins", "/free_join/disjoint_key_reads",
             "/sieve/stats/rule_uses", "/sieve/stats/build_rows", "/sieve/stats/update_rows",
             "/sieve/stats/dependency_rows", "/sieve/stats/probes",
+            "/sieve/stats/column_checks",
         ];
         let mut costs = report.clone();
         for key in charged { bump(&mut costs, key); }
@@ -512,8 +523,17 @@ mod tests {
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
             "/sieve/stats/empty_join_skips",
+            "/sieve/stats/unchanged_column_rows",
         ] { bump(&mut outcomes, key); }
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
+        let mut legacy_columns = report.clone();
+        legacy_columns["sieve"].as_object_mut().unwrap().remove("column_influence");
+        assert_eq!(Work::read(&legacy_columns).unwrap().0["sieve/stats/column_checks"], 0);
+        let mut missing_columns = report.clone();
+        missing_columns["sieve"]["stats"].as_object_mut().unwrap().remove("column_checks");
+        assert!(Work::read(&missing_columns).unwrap_err().contains("column_checks"));
+        missing_columns["sieve"]["column_influence"] = "unknown".into();
+        assert!(Work::read(&missing_columns).unwrap_err().contains("unknown Sieve"));
         // Historical reports used one registration per captured output. Keep
         // those costs, while rejecting new reports missing their actual work.
         let mut legacy = report.clone();

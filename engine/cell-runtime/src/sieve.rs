@@ -30,13 +30,26 @@ struct Spec {
     table: usize,
     cols: Vec<usize>,
     guards: Vec<Guard>,
+    read_columns: u64,
 }
 impl Spec {
+    fn new(table: usize, cols: Vec<usize>, guards: Vec<Guard>) -> Self {
+        let read_columns = cols.iter().chain(guards.iter().flat_map(|g| &g.cols))
+            .fold(0, |mask, &c| mask | crate::query::column_bit(c));
+        Self { table, cols, guards, read_columns }
+    }
     /// Narrow Cell projections use exact inline-width support keys in allows().
     /// Only wider projections (or the legacy representation) read the Bloom.
     fn needs_bloom(&self) -> bool {
         !cfg!(feature = "sparse-cells") || self.cols.len() > 2
     }
+}
+#[derive(Clone)]
+struct Influence {
+    columns: u64,
+    members: Vec<usize>,
+    // Number of existing Summary::built members, updated only by ensure/reset.
+    built: usize,
 }
 #[cfg(feature = "sparse-cells")]
 #[path = "support_keys.rs"]
@@ -130,6 +143,8 @@ pub struct Stats {
     pub reused_summaries: u64,
     pub build_rows: u64,
     pub update_rows: u64,
+    pub column_checks: u64,
+    pub unchanged_column_rows: u64,
     pub dependency_rows: u64,
     pub added_keys: u64,
     pub probes: u64,
@@ -147,7 +162,7 @@ pub struct Sieve {
     pub enabled: bool,
     specs: Vec<Spec>,
     states: Vec<Summary>,
-    by_table: Vec<Vec<usize>>,
+    by_table: Vec<Vec<Influence>>,
     parents: Vec<Vec<(usize, usize)>>,
     // Incoming necessary conditions for each (rule, atom).
     rules: Vec<Vec<Vec<Guard>>>,
@@ -247,17 +262,12 @@ impl Sieve {
                     let Call::Table(table) = q[from].call else {
                         unreachable!()
                     };
-                    let spec = Spec {
-                        table,
-                        cols,
-                        guards,
-                    };
+                    let spec = Spec::new(table, cols, guards);
                     let id = if let Some(id) = intern.get(&spec) {
                         *id
                     } else {
                         let id = s.specs.len();
                         intern.insert(spec.clone(), id);
-                        s.by_table[table].push(id);
                         s.specs.push(spec);
                         s.states.push(Summary::default());
                         s.parents.push(vec![]);
@@ -281,6 +291,7 @@ impl Sieve {
             }
             s.rules.push(targets);
         }
+        s.compile_influence();
         for (p, spec) in s.specs.iter().enumerate() {
             for (g, guard) in spec.guards.iter().enumerate() {
                 s.parents[guard.child].push((p, g));
@@ -290,6 +301,19 @@ impl Sieve {
         #[cfg(feature = "entry-admission-audit")]
         { s.audit = entry_audit::Audit::new(program, &s.rules); }
         s
+    }
+    fn compile_influence(&mut self) {
+        for groups in &mut self.by_table { groups.clear(); }
+        for (id, spec) in self.specs.iter().enumerate() {
+            let groups = &mut self.by_table[spec.table];
+            if let Some(group) = groups.iter_mut().find(|g| g.columns == spec.read_columns) {
+                group.members.push(id);
+                group.built += usize::from(self.states[id].built);
+            } else {
+                groups.push(Influence { columns:spec.read_columns, members:vec![id],
+                    built:usize::from(self.states[id].built) });
+            }
+        }
     }
     #[cfg(feature = "entry-admission-audit")]
     pub(crate) fn begin_entry_audit(&mut self, epoch: u64, rid: usize, atom: usize,
@@ -355,6 +379,8 @@ impl Sieve {
             state.bloom.grow(&state.keys, self.collide);
         }
         state.built = true;
+        self.by_table[table].iter_mut().find(|group| group.columns == self.specs[id].read_columns)
+            .expect("compiled summary influence").built += 1;
         self.stats.builds += 1;
         Ok(())
     }
@@ -447,14 +473,25 @@ impl Sieve {
             return;
         }
         let mut queue = VecDeque::new();
-        for (w, table) in changes {
+        for (w, table, fields) in changes {
             if let Some(keys) = index.hashes(table, w) {
                 for i in 0..self.by_table[table].len() {
-                    let id = self.by_table[table][i];
-                    if self.states[id].built {
-                        self.stats.update_rows += 1;
-                        if let Some(k) = self.admit(id, keys) {
-                            queue.push_back((id, k))
+                    let group = &self.by_table[table][i];
+                    if group.built == 0 { continue; }
+                    // One test skips every built member without visiting its state.
+                    // Changed child support still enters through static parent wiring.
+                    self.stats.column_checks += 1;
+                    if fields != u64::MAX && fields & group.columns == 0 {
+                        self.stats.unchanged_column_rows += group.built as u64;
+                        continue;
+                    }
+                    for j in 0..group.members.len() {
+                        let id = self.by_table[table][i].members[j];
+                        if self.states[id].built {
+                            self.stats.update_rows += 1;
+                            if let Some(k) = self.admit(id, keys) {
+                                queue.push_back((id, k))
+                            }
                         }
                     }
                 }
@@ -482,10 +519,15 @@ impl Sieve {
             *state = Summary::default()
         }
         self.active.fill(false);
+        for group in self.by_table.iter_mut().flatten() { group.built = 0; }
     }
     pub fn report(&self) -> serde_json::Value {
         #[allow(unused_mut)]
         let mut report = serde_json::json!({"enabled":self.enabled,"specifications":self.specs.len(),"active_summaries":self.states.iter().filter(|s|s.built).count(),"stored_keys":self.states.iter().map(|s|s.keys.len()).sum::<usize>(),"bloom_bytes":self.states.iter().map(|s|s.bloom.words.len()*8).sum::<usize>(),"key_payload_bytes":self.states.iter().flat_map(|s|s.keys.iter()).map(|k|k.len()*8).sum::<usize>(),"stats":self.stats,"scope":"complete visible-table semijoin summaries; not Cell-only proof credit"});
+        report["column_influence"] = "cell-fields/v1".into();
+        report["influence_groups"] = self.by_table.iter().map(Vec::len).sum::<usize>().into();
+        report["influence_payload_bytes"] = (self.specs.len()*8
+            + self.by_table.iter().map(|groups| groups.len()*std::mem::size_of::<Influence>()).sum::<usize>()).into();
         #[cfg(feature = "entry-admission-audit")]
         {
             report["entry_admission_audit"] = self.audit.report();
@@ -503,6 +545,73 @@ impl Sieve {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn projection_and_guard_columns_both_contribute_to_influence() {
+        let spec = Spec::new(0, vec![0, 70], vec![Guard { cols:vec![2, 65], child:0 }]);
+        assert_eq!(spec.read_columns, 1 | 4 | (1 << 63));
+        assert_eq!(spec.read_columns & crate::query::column_bit(1), 0);
+        assert_ne!(spec.read_columns & crate::query::column_bit(130), 0,
+            "wide-column collisions conservatively retain maintenance");
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn field_updates_match_full_publication_and_late_children_still_propagate() {
+        use crate::value::Value;
+        fn fixture(g: &Graph, index: &mut QueryIndexes) -> Sieve {
+            let mut s = Sieve::new(&g.program);
+            s.specs = vec![
+                Spec::new(1, vec![0], vec![]),
+                Spec::new(0, vec![0], vec![Guard { cols:vec![1], child:0 }]),
+                Spec::new(0, vec![2], vec![]),
+                Spec::new(0, vec![], vec![]),
+                Spec::new(1, vec![], vec![]),
+            ];
+            s.states = (0..5).map(|_| Summary::default()).collect();
+            s.compile_influence();
+            s.parents = vec![vec![(1,0)],vec![],vec![],vec![],vec![]];
+            for id in 0..5 { s.ensure(id,g,index).unwrap(); }
+            s
+        }
+        let mut graph = crate::query::test_projection_graph();
+        let mut index = crate::query::test_projection_indexes(64);
+        index.track_changes = true;
+        let mut selected = fixture(&graph,&mut index);
+        let mut full = fixture(&graph,&mut index);
+        for (stage,(table,a,b,value)) in [(0,5,10,7),(0,5,10,9),(1,10,0,100),
+            (0,6,20,8),(0,5,10,11),(1,20,0,100)].into_iter().enumerate() {
+            graph.set_function(table,vec![Value::Int(a),Value::Int(b)],Value::Int(value)).unwrap();
+            index.update(&mut graph).unwrap();
+            if stage == 1 || stage == 4 {
+                assert!(index.changes.iter().all(|(_,_,fields)| *fields == crate::query::column_bit(2)));
+            } else {
+                assert!(index.changes.iter().all(|(_,_,fields)| *fields == u64::MAX));
+            }
+            let changes = index.changes.clone();
+            selected.publish(&mut index);
+            index.changes = changes.into_iter().map(|(w,t,_)| (w,t,u64::MAX)).collect();
+            full.publish(&mut index);
+            for (a,b) in selected.states.iter().zip(&full.states) {
+                let keys = |s:&Summary| { let mut keys=s.keys.iter().map(<[u64]>::to_vec).collect::<Vec<_>>(); keys.sort(); keys };
+                assert_eq!(keys(a),keys(b),"stage {stage}");
+            }
+            assert_eq!(selected.stats.added_keys,full.stats.added_keys);
+            assert_eq!(selected.stats.dependency_rows,full.stats.dependency_rows);
+            for group in selected.by_table.iter().flatten() {
+                assert_eq!(group.built,group.members.iter().filter(|&&id|selected.states[id].built).count());
+            }
+            if stage == 1 { assert!(selected.states[1].keys.is_empty()); }
+            if stage == 2 { assert!(!selected.states[1].keys.is_empty(),"late child wakes unchanged parent rows"); }
+            graph.changes.clear();
+        }
+        assert!(selected.stats.unchanged_column_rows > 0);
+        assert_eq!(selected.stats.update_rows + selected.stats.unchanged_column_rows,full.stats.update_rows);
+        assert_eq!(selected.states[1].keys.len(),2);
+        assert_eq!(selected.states[4].keys.len(),1,"new rows establish empty projections");
+        selected.invalidate();
+        assert!(selected.by_table.iter().flatten().all(|group|group.built==0));
+        for id in 0..5 { selected.ensure(id,&graph,&mut index).unwrap(); }
+        assert!(selected.by_table.iter().flatten().all(|group|group.built==group.members.len()));
+    }
     #[test]
     fn bloom_growth_never_loses_insertions() {
         let mut bloom = Bloom::default();
@@ -531,13 +640,9 @@ mod tests {
             #[cfg(feature = "entry-admission-audit")]
             audit: Default::default(),
             enabled: true,
-            specs: vec![Spec {
-                table: 0,
-                cols: vec![0, 1, 2],
-                guards: vec![],
-            }],
+            specs: vec![Spec::new(0, vec![0, 1, 2], vec![])],
             states: vec![Summary::default()],
-            by_table: vec![vec![0]],
+            by_table: vec![vec![Influence { columns:7, members:vec![0], built:0 }]],
             parents: vec![vec![]],
             rules: vec![],
             active: vec![],

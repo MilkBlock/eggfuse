@@ -13,6 +13,8 @@ use std::{
 };
 
 type Refinements = HashMap<Vec<(usize, u64)>, Rc<Vec<Dependency>>>;
+/// Wide columns share the last bit: collisions cause extra work, never omissions.
+pub(crate) const fn column_bit(column: usize) -> u64 { 1 << if column < 63 { column } else { 63 } }
 #[cfg(feature = "sparse-cells")]
 #[derive(Default)]
 struct SparseRefinements(Option<Box<Refinements>>);
@@ -91,9 +93,9 @@ impl Columns {
         }
         keys.len()
     }
-    fn put(&mut self, row: &Row, bits: u32, watch_reads: bool) -> (usize, usize) {
+    fn put(&mut self, row: &Row, bits: u32, watch_reads: bool) -> (usize, usize, u64) {
         if row.hidden {
-            return (self.remove(row.witness), 0);
+            return (self.remove(row.witness), 0, 0);
         }
         let keys = row
             .values
@@ -113,7 +115,7 @@ impl Columns {
                         bucket.refinements.clear();
                     }
                 }
-                return (0, 0);
+                return (0, 0, 0);
             }
             Entry::Occupied(mut entry) => Some(entry.insert(keys.clone())),
             Entry::Vacant(entry) => {
@@ -122,8 +124,12 @@ impl Columns {
             }
         };
         let mut changed = 0;
+        let mut fields = 0;
         for (col, &key) in keys.iter().enumerate() {
-            changed += usize::from(old.as_ref().is_none_or(|prior|prior[col]!=key));
+            if old.as_ref().is_none_or(|prior|prior[col]!=key) {
+                changed += 1;
+                fields |= column_bit(col);
+            }
             let Some(column)=self.values[col].get_mut() else { continue };
             if let Some(prior) = old.as_ref() {
                 let before = prior[col];
@@ -161,7 +167,9 @@ impl Columns {
             bucket.refinements.clear();
 
         }
-        (if old.is_some() { changed } else { 0 }, changed)
+        // A new witness also affects empty projections, irrespective of width.
+        (if old.is_some() { changed } else { 0 }, changed,
+            if old.is_some() { fields } else { u64::MAX })
     }
     /// Consume a selection made against this current index. Both ordinary
     /// Cell enumeration and retained-prefix reads use this exact refinement.
@@ -280,7 +288,7 @@ pub struct QueryIndexes {
     bits: u32,
     intersection: bool,
     pub refinements: RefinementStats,
-    pub changes: Vec<(Dependency, usize)>,
+    pub changes: Vec<(Dependency, usize, u64)>,
     pub track_changes: bool,
     pub peak_references: usize,
     pub decoded_facts: u64,
@@ -293,7 +301,7 @@ pub(crate) struct ColumnWriter<'a> {
     bits: u32,
     references: &'a mut usize,
     updated: &'a mut u64,
-    changes: Option<&'a mut Vec<(Dependency, usize)>>,
+    changes: Option<&'a mut Vec<(Dependency, usize, u64)>>,
 }
 impl ColumnWriter<'_> {
     pub fn finish(self, version: u64) {
@@ -301,16 +309,16 @@ impl ColumnWriter<'_> {
     }
 
     pub fn update(&mut self, witness: Dependency, row: Option<&Row>) {
-        let (removed, added) = if let Some(row) = row {
+        let (removed, added, fields) = if let Some(row) = row {
             *self.updated += 1;
             self.index.put(row, self.bits, self.index.leased_reads)
         } else {
-            (self.index.remove(witness), 0)
+            (self.index.remove(witness), 0, 0)
         };
         if added > 0
             && let Some(changes) = &mut self.changes
         {
-            changes.push((witness, self.table));
+            changes.push((witness, self.table, fields));
         }
         *self.references = *self.references - removed + added;
     }
@@ -568,7 +576,7 @@ impl QueryIndexes {
             for fact in graph.witnesses(table) {
                 self.decoded_facts += 1;
                 if let Some(row) = graph.row(fact)? {
-                    let (_, added) = index.put(&row, self.bits, false);
+                    let (_, added, _) = index.put(&row, self.bits, false);
                     self.references += added;
                 }
             }
