@@ -9,6 +9,8 @@ The [rejection-reuse follow-up](#reuse-the-actual-rejecting-output) below reduce
 the guard's acquisition cost without increasing its takeover scope or storage.
 The subsequent [singleton takeover](#single-constructor-domains) covers local
 queries that do not need a Neighborhood cache at all.
+The [Kernel capability](#compile-the-capability-into-the-cell-query) removes
+the separate runtime plan directory and repeated neighborhood lookup.
 
 ## Opportunity and completed takeover
 
@@ -320,3 +322,74 @@ python3 benchmarks/cell-absorption-guard/collect_singletons.py ROOT RESULTS.json
 [singletons.json](singletons.json) retains costs, actual publication differences,
 source-window proofs, and artifact hashes. The feature remains opt-in pending
 the normal-binary throughput checkpoint. No global sparsity or 2× claim follows.
+
+## Compile the capability into the Cell query
+
+Control: `af30e99f`. Admission now runs during typed Program lowering, after the
+ordinary query and single-write plans have been checked. Only the qualifying
+query orientation receives an `Absorption` capability in its shared Kernel.
+The rule's effect and query remain authoritative; the capability is regenerated
+from them, not trusted from a new artifact field. The serialized program format
+and source markers do not change. This is load-time lowering of the existing
+proof, not a new offline Bake certificate or broader semantic admission.
+
+Context no longer owns or derives a parallel per-rule absorption-plan vector.
+Execution tests the Kernel capability and borrows its seed values on the stack.
+Ineligible orientations do not call the singleton guard or repeat runtime
+rule/pivot/operator classification. The empty-capability test itself remains.
+Current seed visibility, watermark, permanent output requirements, and actual
+field/equality checks are still required.
+
+The existing Neighborhood lookup now also performs the whole-domain guard.
+It validates the current table version once, then passes the already-found
+group to the condition. The second table/domain map lookup is removed; successful
+absorption also returns before cloning/dropping the group's row Rc. Neither
+operation is counted as a new semantic takeover or an additional skipped match.
+
+| Observation | sum-bits | Raytrace prefix | Complete Raytrace |
+|---|---:|---:|---:|
+| Singleton helper calls, before → after | 122 → 45 | 7,804 → 2,957 | 962,906 → 302,599 |
+| Cached-domain checks using the existing lookup | 0 | 0 | 142,008 |
+| Executions omitted, unchanged | 41 | 2,794 | 509,296 |
+
+Both frozen programs have 769 query Kernels and one eligible capability. On this
+target, the additional Kernel option fields plus proof payload total **6,168 B**,
+replacing **23,280 B** of per-Context plan elements. These are type-payload size
+calculations: they exclude allocator headers, temporary lowering allocations,
+parse time and RSS. One small proof allocation replaces the plan-vector
+allocation; multiple Executors can share the same compiled Kernel. Existing
+Neighborhood conditions remain 32 bytes.
+
+Measured execution allocation calls/bytes stay equal on sum-bits and full
+Raytrace. The prefix has one extra worker scratch growth, reallocation, and
+192 requested bytes; this remains charged. Eligibility tests, stack-held seed
+values and metadata accesses are not free, and no timing result is inferred.
+
+The normal CLI now accepts `--cell-absorption` when built with that feature:
+
+```sh
+cargo build --release --locked -p eggfuse-cell-runtime --features cell-absorption,view-ports,storage-metrics --bin eggfuse-cell-runtime
+target/release/eggfuse-cell-runtime --program PROGRAM --output FRESH_OUTPUT --repair-ports --entry-publications --cell-absorption
+```
+
+Its sum-bits execution exercises the feature, agrees with the diagnostic's
+graph/work/Run signatures, and passes the unchanged native acceptance script.
+The three diagnostic cases retain exact complete/prefix states, graph counters,
+logical/executed Run signatures, and all absorption counts other than removed
+singleton helper entries. 98 runtime tests and 50 selected integration tests
+pass, including source-Run snapshots and the cache-generation regression now
+using the merged neighborhood path. No new Raytrace window captures were taken;
+the preceding 14-window evidence remains scoped to `af30e99f`. No-default-features
+and README command smoke checks pass.
+
+Saved artifacts are in `out/cell-absorption-kernels`, with the diagnostic binary
+as `prefix`, the ordinary executable as `runtime`, and the CLI output as `cli-sum`.
+The semantic directory's candidate export is the CLI state. Recheck using:
+
+```sh
+python3 benchmarks/cell-absorption-guard/collect_kernels.py ROOT RESULTS.json
+```
+
+[kernels.json](kernels.json) records the static payload accounting, actual helper
+entries, unchanged work, and diagnostic/native-acceptance artifact hashes. The
+feature remains disabled by default; throughput and the 2× objective are unproven.

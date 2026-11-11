@@ -250,15 +250,18 @@ impl Frame {
                     && let Value::Int(value) = target.read(&exec.graph, |col| &seed.values[col], &self.results, expanded) {
                     SumDomain::select(exec, (rid, k.pivot), t, *left, *right, value, refs)?
                 } else { refs };
+                #[cfg(feature = "cell-absorption")]
+                let absorption = if LOCAL && exec.neighbor.absorption_enabled && exec.completion.is_none() {
+                    k.absorption.as_deref().and_then(|p| p.activate(&exec.graph, seed, exec.watermarks[rid]))
+                } else { None };
                 let mut access = if LOCAL {
-                    exec.neighbor.neighborhood(&exec.graph, rid, t, &refs)
+                    exec.neighbor.neighborhood(&exec.graph, rid, t, &refs,
+                        #[cfg(feature = "cell-absorption")] absorption)
                 } else {
                     crate::neighbor::Access::Direct
                 };
                 #[cfg(feature = "cell-absorption")]
-                if LOCAL && refs.len() > 1 && exec.completion.is_none()
-                    && exec.neighbor.absorbs(&exec.graph, rid, k.pivot, seed,
-                        exec.watermarks[rid], t, &refs) {
+                if matches!(access, crate::neighbor::Access::Absorbed) {
                     return Ok(());
                 }
                 let mut visit = |row: &Row, exec: &mut Executor| -> Result<()> {
@@ -274,9 +277,8 @@ impl Frame {
                         arg.agrees(&row.values[*col], &exec.graph, |col| &seed.values[col], &self.results, Some((position, row)))
                     }) { return Ok(()); }
                     #[cfg(feature = "cell-absorption")]
-                    if LOCAL && refs.len() == 1 && exec.completion.is_none()
-                        && exec.neighbor.absorbs_single(&exec.graph, rid, k.pivot, seed,
-                            exec.watermarks[rid], row) {
+                    if refs.len() == 1 && let Some(active) = absorption
+                        && exec.neighbor.absorbs_single(&exec.graph, rid, active, row) {
                         return Ok(());
                     }
                     self.witnesses[ins.atom] = Some(w);

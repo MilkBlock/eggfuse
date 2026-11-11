@@ -419,6 +419,8 @@ impl Program {
         }
         p.writes = crate::row_kernel::writes(&p);
         p.neighbor_plans = crate::neighbor::derive(&p);
+        #[cfg(feature = "cell-absorption")]
+        crate::neighbor::compile_absorption(&mut p);
         if let Some(raw) = p.artifact.get("neighbor_entries")
             && *raw != serde_json::json!(p.neighbor_plans)
         {

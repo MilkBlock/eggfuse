@@ -1,0 +1,186 @@
+{
+  "baseline_commit": "af30e99f",
+  "scope": "standalone Cell CPU; no new timing or sparsity claim",
+  "native_sum_acceptance_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "exact_state_work_and_ordered_runs": true,
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "single_guard_calls": [
+        122,
+        45
+      ],
+      "checks_reusing_existing_domain_lookup": 0,
+      "executions_omitted": 41,
+      "compiled_metadata": {
+        "plans": 1,
+        "capability_entries": 769,
+        "compiled_capability_bytes": 6168,
+        "removed_context_plan_bytes": 23280,
+        "condition_bytes_per_neighborhood": 32
+      },
+      "allocations": {
+        "alloc_calls": [
+          80982,
+          80982
+        ],
+        "realloc_calls": [
+          13470,
+          13470
+        ],
+        "requested_bytes": [
+          19559075,
+          19559075
+        ]
+      },
+      "worker_scratch": {
+        "frame_allocations": [
+          4,
+          4
+        ],
+        "worker_frame_capacity_bytes": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reports_sha256": [
+        "38dbdd44d985607ffe69c784ba969d8615b04397faa1d9005183afc7c13f94a3",
+        "9a4240de5402f4f3a7f0afaeae4ed34e6f39fcdae4292985421d33f63513aad0"
+      ]
+    },
+    "ray1280": {
+      "runs": 1280,
+      "exact_state_work_and_ordered_runs": true,
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "single_guard_calls": [
+        7804,
+        2957
+      ],
+      "checks_reusing_existing_domain_lookup": 0,
+      "executions_omitted": 2794,
+      "compiled_metadata": {
+        "plans": 1,
+        "capability_entries": 769,
+        "compiled_capability_bytes": 6168,
+        "removed_context_plan_bytes": 23280,
+        "condition_bytes_per_neighborhood": 32
+      },
+      "allocations": {
+        "alloc_calls": [
+          2322668,
+          2322668
+        ],
+        "realloc_calls": [
+          343438,
+          343439
+        ],
+        "requested_bytes": [
+          959368604,
+          959368796
+        ]
+      },
+      "worker_scratch": {
+        "frame_allocations": [
+          14,
+          15
+        ],
+        "worker_frame_capacity_bytes": [
+          [
+            256,
+            160,
+            256,
+            256
+          ],
+          [
+            256,
+            256,
+            256,
+            256
+          ]
+        ]
+      },
+      "reports_sha256": [
+        "ca1f0c4fff5b0ba9b32631e00d768fa4e818b49426e1cf1ed0b7c7c87b65b936",
+        "002d589770b1a1953f5ec6a980d8b8bf30822f7662b2f39ab4e4af7dca4e9302"
+      ]
+    },
+    "ray-full": {
+      "runs": 16883,
+      "exact_state_work_and_ordered_runs": true,
+      "state_sha256": "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7",
+      "single_guard_calls": [
+        962906,
+        302599
+      ],
+      "checks_reusing_existing_domain_lookup": 142008,
+      "executions_omitted": 509296,
+      "compiled_metadata": {
+        "plans": 1,
+        "capability_entries": 769,
+        "compiled_capability_bytes": 6168,
+        "removed_context_plan_bytes": 23280,
+        "condition_bytes_per_neighborhood": 32
+      },
+      "allocations": {
+        "alloc_calls": [
+          19664843,
+          19664843
+        ],
+        "realloc_calls": [
+          2584391,
+          2584391
+        ],
+        "requested_bytes": [
+          6388349913,
+          6388349913
+        ]
+      },
+      "worker_scratch": {
+        "frame_allocations": [
+          17,
+          17
+        ],
+        "worker_frame_capacity_bytes": [
+          [
+            320,
+            256,
+            256,
+            256
+          ],
+          [
+            320,
+            256,
+            256,
+            256
+          ]
+        ]
+      },
+      "reports_sha256": [
+        "afbbe3a3c428b28995462b01e18a3dbac5ab59df9627d68abc64d96b9ae12e02",
+        "d3b0bebb57e7f5c0178d48ad857546a08925bfbdc8099a88bdd29bce7578e395"
+      ]
+    }
+  },
+  "cli": {
+    "enabled": true,
+    "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "report_sha256": "51fdcfa1650936a68aa4de94ff535017354918dd20a61a018e573c062653a726",
+    "exact_prefix_state_work_and_runs": true
+  },
+  "source_boundary_coverage": "50 selected integration tests include source-Run snapshots; no new Raytrace window capture. Prior 14-window evidence remains scoped to af30e99f.",
+  "binaries": {
+    "prefix": "f00a0fffa2d3023d315c29529f1907be78dd93d17da6a26eb2be4fb2621a1c06",
+    "runtime": "542210b6599bfc61967ad8585b2deb020b09c51d9945ed374176fe7ec0410343"
+  }
+}

@@ -132,14 +132,20 @@ enum Condition {
 /// The only effect copies the input attribute into a permanent min function.
 #[cfg(feature = "cell-absorption")]
 #[derive(Clone, Copy, Debug)]
-struct Absorption {
-    pivot: usize,
-    structure: usize,
+pub(crate) struct Absorption {
     attribute: usize,
     input_column: usize,
 }
 #[cfg(feature = "cell-absorption")]
-fn absorption(p: &Program, rid: usize) -> Option<Absorption> {
+pub(crate) fn compile_absorption(p: &mut Program) {
+    for rid in 0..p.rules.len() {
+        if let Some((pivot, plan)) = absorption(p, rid) {
+            Rc::make_mut(p.kernels[rid][pivot].as_mut().unwrap()).absorption = Some(Box::new(plan));
+        }
+    }
+}
+#[cfg(feature = "cell-absorption")]
+fn absorption(p: &Program, rid: usize) -> Option<(usize, Absorption)> {
     let r = &p.rules[rid];
     if !r.seminaive || r.query.len() != 2 { return None; }
     let w = p.writes[rid].as_ref()?;
@@ -165,9 +171,27 @@ fn absorption(p: &Program, rid: usize) -> Option<Absorption> {
         let Some(column) = fields.iter().position(|a| a == &Arg::Slot(*key)) else { continue; };
         let kernel = p.kernels[rid][pivot].as_ref()?;
         if kernel.query.steps.len() != 1 || kernel.query.steps[0].expansion.is_none() { continue; }
-        return Some(Absorption { pivot, structure: table, attribute: w.table, input_column: column });
+        return Some((pivot, Absorption { attribute: w.table, input_column: column }));
     }
     None
+}
+/// Stack-only reads of the active Cell's seed. No instance binding is retained.
+#[cfg(feature = "cell-absorption")]
+#[derive(Clone, Copy)]
+pub(crate) struct Activated<'a> {
+    plan: &'a Absorption,
+    key: u64,
+    value: i64,
+    watermark: u64,
+}
+#[cfg(feature = "cell-absorption")]
+impl Absorption {
+    pub(crate) fn activate<'a>(&'a self, g: &Graph, seed: &Row, watermark: u64) -> Option<Activated<'a>> {
+        if seed.table != self.attribute || seed.hidden || seed.epoch < watermark
+            || g.has_visibility_changes(self.attribute) { return None; }
+        let [Value::Eq(key), Value::Int(value)] = seed.values.as_ref() else { return None; };
+        Some(Activated { plan:self, key:*key, value:*value, watermark })
+    }
 }
 #[cfg(feature = "cell-absorption")]
 #[derive(Default, Serialize)]
@@ -204,8 +228,6 @@ pub(crate) struct Context {
     #[cfg(feature = "cell-absorption")]
     pub(crate) absorption_enabled: bool,
     #[cfg(feature = "cell-absorption")]
-    absorption_plans: Vec<Option<Absorption>>,
-    #[cfg(feature = "cell-absorption")]
     absorption_stats: AbsorptionStats,
     ports: Vec<Option<Ports>>,
     published: Publication,
@@ -218,8 +240,6 @@ impl Context {
         Self {
             #[cfg(feature = "cell-absorption")]
             absorption_enabled: false,
-            #[cfg(feature = "cell-absorption")]
-            absorption_plans: (0..p.rules.len()).map(|r| absorption(p, r)).collect(),
             #[cfg(feature = "cell-absorption")]
             absorption_stats: AbsorptionStats { pending: vec![0; p.rules.len()], ..Default::default() },
             ports: (0..p.tables.len()).map(|_| None).collect(),
@@ -254,8 +274,14 @@ impl Context {
         #[allow(unused_mut)]
         let mut report = serde_json::json!({"demanded_keys":demanded_keys,"parent_refs":parent_refs,"mode":"neighbors","publication":self.published,"timed_maintenance":self.profiling,"rules":rules});
         #[cfg(feature = "cell-absorption")]
-        { report["absorption"] = serde_json::json!({"enabled":self.absorption_enabled,
-            "plans":self.absorption_plans.iter().filter(|p| p.is_some()).count(),
+        {
+          let kernels = p.kernels.iter().flatten().flatten();
+          let entries = kernels.clone().count();
+          let plans = kernels.filter(|k| k.absorption.is_some()).count();
+          report["absorption"] = serde_json::json!({"enabled":self.absorption_enabled,
+            "plans":plans, "capability_entries":entries,
+            "compiled_capability_bytes":entries*std::mem::size_of::<Option<Box<Absorption>>>() + plans*std::mem::size_of::<Absorption>(),
+            "removed_context_plan_bytes":p.rules.len()*std::mem::size_of::<Option<(usize,usize,usize,usize)>>(),
             "condition_bytes_per_neighborhood":std::mem::size_of::<Condition>(),
             "stats":self.absorption_stats}); }
         report
@@ -264,13 +290,10 @@ impl Context {
     /// proves that every covered source effect is already absorbed. No logical
     /// mutation or new producer evidence is published for those omitted effects.
     #[cfg(feature = "cell-absorption")]
-    pub(crate) fn absorbs(&mut self, g: &Graph, rid: usize, pivot: usize, seed: &Row,
-        watermark: u64, table: usize, domain: &Rc<Vec<Dependency>>) -> bool {
-        let Some((plan, key_id, candidate)) = self.absorption_seed(g, rid, pivot, seed, watermark, table) else { return false; };
+    fn absorbs(g: &Graph, rid: usize, active: Activated<'_>, group: &mut Neighborhood,
+        stats: &mut AbsorptionStats) -> bool {
+        let Activated { plan, key:key_id, value:candidate, watermark } = active;
         let key = Value::Eq(key_id);
-        let Some(groups) = self.groups.get_mut(&table).filter(|s| s.version == g.query_versions[table]) else { return false; };
-        let Some(group) = groups.by_domain.get_mut(&(Rc::as_ptr(domain) as usize)) else { return false; };
-        let stats = &mut self.absorption_stats;
         stats.checks += 1;
         // This pivot must own the entire domain; another fresh constructor may
         // also have a Spine continuation and must keep ordinary winner selection.
@@ -328,27 +351,13 @@ impl Context {
         stats.pending[rid] += group.rows.len();
         true
     }
-    #[cfg(feature = "cell-absorption")]
-    fn absorption_seed(&self, g: &Graph, rid: usize, pivot: usize, seed: &Row,
-        watermark: u64, table: usize) -> Option<(Absorption, u64, i64)> {
-        if !self.absorption_enabled { return None; }
-        let plan = self.absorption_plans[rid]?;
-        if pivot != plan.pivot || table != plan.structure || seed.table != plan.attribute
-            || seed.hidden || seed.epoch < watermark || g.has_visibility_changes(plan.attribute) {
-            return None;
-        }
-        let [Value::Eq(key), Value::Int(candidate)] = seed.values.as_ref() else { return None; };
-        Some((plan, *key, *candidate))
-    }
     /// The matcher has one actual constructor candidate and has checked all of
     /// its fields. It need not allocate a cached Neighborhood or a binding to
     /// prove this single permanent min write is already absorbed at Run start.
     #[cfg(feature = "cell-absorption")]
-    pub(crate) fn absorbs_single(&mut self, g: &Graph, rid: usize, pivot: usize,
-        seed: &Row, watermark: u64, row: &Row) -> bool {
-        if !self.absorption_enabled { return false; }
+    pub(crate) fn absorbs_single(&mut self, g: &Graph, rid: usize, active: Activated<'_>, row: &Row) -> bool {
+        let Activated { plan, key, value:candidate, watermark } = active;
         self.absorption_stats.single_candidates += 1;
-        let Some((plan, key, candidate)) = self.absorption_seed(g, rid, pivot, seed, watermark, row.table) else { return false; };
         if row.hidden || row.values.get(plan.input_column) != Some(&Value::Eq(key)) { return false; }
         let stats = &mut self.absorption_stats;
         stats.single_checks += 1;
@@ -438,6 +447,7 @@ impl Context {
         rid: usize,
         t: usize,
         domain: &Rc<Vec<Dependency>>,
+        #[cfg(feature = "cell-absorption")] absorption: Option<Activated<'_>>,
     ) -> Access {
         if domain.len() < 2 || domain.len() > ROW_LIMIT {
             return Access::Direct;
@@ -447,9 +457,14 @@ impl Context {
         let version = g.query_versions[t];
         let id = Rc::as_ptr(domain) as usize;
         if version == cache.version
-            && let Some(hit) = cache.by_domain.get(&id)
+            && let Some(hit) = cache.by_domain.get_mut(&id)
         {
             stats.group_hits += 1;
+            #[cfg(feature = "cell-absorption")]
+            if let Some(active) = absorption
+                && Self::absorbs(g, rid, active, hit, &mut self.absorption_stats) {
+                return Access::Absorbed;
+            }
             return Access::Cached(hit.rows.clone());
         }
         let clock = self.profiling.then(Instant::now);
@@ -550,6 +565,8 @@ pub(crate) enum Access {
     Direct,
     Build(Vec<Row>),
     Cached(Rc<Vec<Row>>),
+    #[cfg(feature = "cell-absorption")]
+    Absorbed,
 }
 
 #[cfg(test)]
@@ -580,44 +597,46 @@ mod tests {
         let domain: Rc<Vec<Dependency>> = Rc::new(rows.iter().map(|r|r.witness).collect());
         let mut c = Context::new(&g.program,false);
         c.absorption_enabled = true;
-        c.absorption_plans.push(Some(Absorption { pivot:1, structure:0, attribute:1,input_column:0 }));
+        let plan = Absorption { attribute:1,input_column:0 };
+        c.stats.push(Stats::default());
+        let rows = Rc::new(rows);
         c.absorption_stats.pending.push(0);
         c.groups.insert(0, Groups { version:g.query_versions[0], rows:2,
-            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:Rc::new(rows),absorption:Condition::Empty })].into_iter().collect() });
+            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:rows.clone(),absorption:Condition::Empty })].into_iter().collect() });
+        let check = |c: &mut Context, g: &Graph, seed: &Row, watermark| matches!(
+            c.neighborhood(g,0,0,&domain,plan.activate(g,seed,watermark)), Access::Absorbed);
         let mut seed = Row { table:1, values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]),
             epoch:5,witness:Dependency::Function(20),hidden:false };
-        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert!(check(&mut c,&g,&seed,3));
         let probes = c.absorption_stats.output_probes;
         // Smaller outputs preserve an old upper bound without new subscriptions.
         g.set_function(1,vec![Value::Eq(8)],Value::Int(1)).unwrap();
-        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert!(check(&mut c,&g,&seed,3));
         assert_eq!(c.absorption_stats.output_probes,probes);
         seed.values = crate::graph::row_fields(vec![Value::Eq(99),Value::Int(10)]);
-        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"a broad domain pointer is not an input identity");
+        assert!(!check(&mut c,&g,&seed,3),"a broad domain pointer is not an input identity");
         seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]);
-        assert!(!c.absorbs(&g,0,1,&seed,1,0,&domain),"fresh constructors keep winner selection");
+        assert!(!check(&mut c,&g,&seed,1),"fresh constructors keep winner selection");
         g.query_versions[0] += 1;
-        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"old membership cannot close a new domain");
+        assert!(!check(&mut c,&g,&seed,3),"old membership cannot close a new domain");
         assert_eq!(c.absorption_stats.matches_absorbed,4);
 
         // A failed whole-domain condition only needs one current counterexample.
         // It stops scanning immediately, then reads the actual output directly
         // on the next attempt. Once that output improves, retry the full proof.
-        let groups = c.groups.get_mut(&0).unwrap();
-        groups.version = g.query_versions[0];
-        groups.by_domain.get_mut(&(Rc::as_ptr(&domain) as usize)).unwrap().absorption = Condition::Empty;
+        c.finish_group(0,0,domain.clone(),rows.as_ref().clone());
         let probes = c.absorption_stats.output_probes;
         seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(0)]);
-        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert!(!check(&mut c,&g,&seed,3));
         assert_eq!(c.absorption_stats.output_probes-probes,1,"do not read the rest of a rejected group");
         seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(-1)]);
-        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert!(!check(&mut c,&g,&seed,3));
         assert_eq!(c.absorption_stats.output_probes-probes,1,"reuse the actual output address");
         assert_eq!(c.absorption_stats.rejection_hits,1);
         g.set_function(1,vec![Value::Eq(8)],Value::Int(-2)).unwrap();
-        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"another output still rejects the proof");
+        assert!(!check(&mut c,&g,&seed,3),"another output still rejects the proof");
         g.set_function(1,vec![Value::Eq(9)],Value::Int(-3)).unwrap();
-        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain),"a rejection must not become a permanent negative cache");
+        assert!(check(&mut c,&g,&seed,3),"a rejection must not become a permanent negative cache");
         assert_eq!(c.absorption_stats.output_probes-probes,5);
         assert_eq!(c.absorption_stats.rejection_reads,3);
         assert_eq!(std::mem::size_of::<Condition>(),std::mem::size_of::<Option<(usize,u64,i64)>>());
@@ -645,8 +664,6 @@ mod tests {
             let mut ctx = Context {
                 #[cfg(feature = "cell-absorption")]
                 absorption_enabled: false,
-                #[cfg(feature = "cell-absorption")]
-                absorption_plans: vec![],
                 #[cfg(feature = "cell-absorption")]
                 absorption_stats: Default::default(),
                 ports: vec![Some(cache)],

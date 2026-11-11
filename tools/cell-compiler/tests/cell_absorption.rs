@@ -93,6 +93,7 @@ fn singleton_absorption_keeps_later_scalar_updates_and_consumers() {
         let stats = &report["neighbor_context"]["absorption"]["stats"];
         assert_eq!(stats["single_absorbed"],1,"{stats}");
         assert_eq!(stats["single_output_probes"],2,"the later lower input must still execute");
+        assert_eq!(stats["single_candidates"],stats["single_checks"],"only the compiled Cell orientation enters the guard");
         assert_eq!(stats["groups_absorbed"],0,"singletons must not create a domain cache");
         assert_eq!(before.graph.stats.bindings-after.graph.stats.bindings,1);
         assert_eq!(before.graph.stats.function_updates,after.graph.stats.function_updates);

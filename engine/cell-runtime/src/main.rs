@@ -51,6 +51,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --repair-ports (experimental typed constructor result-port propagation)");
         #[cfg(feature = "sparse-cells")]
         println!("  --entry-publications (shared entry nodes own producer expressions)");
+        #[cfg(feature = "cell-absorption")]
+        println!("  --cell-absorption (experimental Cell min-write absorption)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -107,6 +109,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" | "--overlap-completion" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
+            #[cfg(feature = "cell-absorption")]
+            "--cell-absorption" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -212,6 +216,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "sparse-cells")]
     if !ownership && args.iter().any(|x| x == "--entry-publications") {
         runtime.use_entry_publications()?;
+    }
+    #[cfg(feature = "cell-absorption")]
+    if args.iter().any(|x| x == "--cell-absorption") {
+        runtime.use_cell_absorption()?;
     }
     #[cfg(feature = "structural-depth")]
     {
