@@ -4,6 +4,8 @@ Baseline: annotated local tag `cell-execution-refactor-base`, commit `4ba83913`.
 Scope: standalone Cell CPU runtime. Native egglog remains the semantic reference
 for the reviewed sum-bits contract. This document is a completion checklist,
 not a claim that any unfinished phase is implemented or faster.
+The [execution walkthrough](CELL_EXECUTION_WALKTHROUGH.md) explains source traces,
+all boundary classes, the equivalence obligations and small-Cell batching.
 
 ## Evidence and objective
 
@@ -209,3 +211,11 @@ overall objective complete until all applicable items above are proven.
   The result buffer still transfers demanded witnesses into Effects, and shared
   effects still run synchronously. This is broader worker continuation, not
   independent parked scheduling or evidence of throughput improvement.
+- The constructor-prefix [fifth-change timing checkpoint](../benchmarks/cell-constructor-prefix/README.md#fifth-change-timing-checkpoint)
+  does not establish speedup: relative to `8369a224` with the same continuation
+  flags, sum-bits improves 3.0% but Raytrace regresses 2.0% in median, with
+  overlapping samples. Candidate Raytrace is 5.778 s, versus 5.533 s for the
+  refactor tag and 5.597 s for the historical control. It remains opt-in.
+  Four-worker prefix execution is only 2.1% faster than current serial on
+  Raytrace and 29.5% slower on sum-bits. Independent scheduling, removal of
+  temporary result storage and useful throughput/utilization remain unfinished.

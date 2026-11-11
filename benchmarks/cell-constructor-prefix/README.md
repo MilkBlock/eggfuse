@@ -98,6 +98,49 @@ or deletes after preparation and verifies removal of all prepared Eq slots
 before allocation. Compiler checks force hash/Sieve collisions. All-feature,
 no-default-feature and README compile/run/repeat-1 bench smoke checks pass.
 
+## Fifth-change timing checkpoint
+
+The five implementation commits since the preceding checkpoint are `38c39c56`,
+`bde30d99`, `0368e471`, `8369a224` and `356f0424`. The last is the candidate
+here. [timing.json](timing.json) preserves all measured samples, binary/program
+hashes, final-state and ordered-Run signatures, phase timings and process CPU.
+Full reports and warmups remain in ignored `out/cell-constructor-prefix/timing`.
+
+The frozen process harness uses one warmup and five sum-bits / three Raytrace
+samples per lane, deterministic shuffled order, fresh processes and equal-length
+path aliases. No Cargo builds or other benchmark cases run concurrently. Normal
+binaries have no allocation instrumentation. Every warmup and measured sample
+matches the common final-state and ordered-Run signatures.
+
+| Lane | sum-bits inference median | Raytrace inference median | Raytrace process wall median |
+|---|---:|---:|---:|
+| Immediate `8369a224`, 4 workers, continuation | 20.489 ms | 5.665 s | 10.179 s |
+| Refactor tag, 4 workers | 18.962 ms | 5.533 s | 9.996 s |
+| Retained historical control, 4 workers | 18.907 ms | 5.597 s | 10.146 s |
+| Current serial | 15.339 ms | 5.901 s | 10.345 s |
+| Current 4 workers, continuation disabled | 19.415 ms | 5.818 s | 10.206 s |
+| Current 4 workers, constructor prefix enabled | 19.867 ms | 5.778 s | 10.212 s |
+
+The prefix lane improves the immediate control's sum-bits median by 3.0% but
+regresses Raytrace by 2.0%. Raytrace samples overlap (control 5.430–5.786 s,
+candidate 5.673–5.790 s), so this is not a precision estimate of the regression;
+it clearly does **not establish a speedup**. The candidate also remains slower
+than the refactor tag and historical control on both workloads. Relative to
+current serial, four-worker prefix execution is 29.5% slower on sum-bits and
+only 2.1% faster on Raytrace. It stays opt-in.
+
+Raytrace prefix phase medians are search 2.455 s, RHS 1.705 s, query update
+1.042 s and repair 0.542 s. The immediate control's corresponding medians are
+2.402 / 1.698 / 1.020 / 0.522 s. Fewer source constructor boundaries have not
+produced a lower measured RHS median against that control. Process CPU/wall
+medians are 0.980 for prefix and 0.970 for control; these include setup/export
+and are **not inference-only utilization**. They do not prove that workers are
+fully occupied. Remaining synchronous shared effects, temporary witness copies,
+additional misses and slot allocations remain live optimization obligations.
+
+`summarize.py` reproduces the retained timing record from the raw harness output.
+No semantic validator rules, exclusions or performance defaults were changed.
+
 ## Reproduction
 
 Freeze the feature executable before README default builds. Reuse the control's
@@ -116,4 +159,5 @@ cargo run --release --locked -j1 -p eggfuse-cell-compiler --features cell-absorp
 python3 benchmarks/marker-handoff/choice_diagnosis.py ROOT/semantic ROOT/semantic-acceptance.json
 python3 benchmarks/cell-constructor-prefix/check.py ROOT PRIOR RESULTS.json
 python3 benchmarks/cell-constructor-prefix/measure.py ROOT/runtime PRIOR/runtime TAG/runtime HISTORICAL/runtime SUM_PROGRAM RAY_PROGRAM TIMING_OUTPUT
+python3 benchmarks/cell-constructor-prefix/summarize.py TIMING_OUTPUT TIMING_RESULTS.json
 ```
