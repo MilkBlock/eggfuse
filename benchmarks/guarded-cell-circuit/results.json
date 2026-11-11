@@ -1,0 +1,51 @@
+{
+  "status": "pass",
+  "scope": "standalone-bounded-semantic-prototype",
+  "gpu_execution": false,
+  "runtime_takeover": false,
+  "timing_claim": false,
+  "results": [
+    {
+      "chain_depth": 1,
+      "checked_assignments": 256,
+      "packed_batch_checked": true,
+      "logical_output_projections": 23,
+      "ground_horn_clauses": 54,
+      "offline_fixpoint_sweeps": 3,
+      "offline_bdd_nodes_allocated": 287,
+      "reachable_bdd_nodes": 117,
+      "distinct_output_guards": 17,
+      "threshold_gates": 142,
+      "threshold_depth": 9,
+      "output_map_entries_if_exporting_all": 23
+    },
+    {
+      "chain_depth": 8,
+      "checked_assignments": 256,
+      "packed_batch_checked": true,
+      "logical_output_projections": 65,
+      "ground_horn_clauses": 180,
+      "offline_fixpoint_sweeps": 3,
+      "offline_bdd_nodes_allocated": 287,
+      "reachable_bdd_nodes": 117,
+      "distinct_output_guards": 17,
+      "threshold_gates": 142,
+      "threshold_depth": 9,
+      "output_map_entries_if_exporting_all": 65
+    },
+    {
+      "chain_depth": 64,
+      "checked_assignments": 256,
+      "packed_batch_checked": true,
+      "logical_output_projections": 401,
+      "ground_horn_clauses": 1188,
+      "offline_fixpoint_sweeps": 3,
+      "offline_bdd_nodes_allocated": 287,
+      "reachable_bdd_nodes": 117,
+      "distinct_output_guards": 17,
+      "threshold_gates": 142,
+      "threshold_depth": 9,
+      "output_map_entries_if_exporting_all": 401
+    }
+  ]
+}
