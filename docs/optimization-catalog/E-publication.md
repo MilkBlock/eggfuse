@@ -9,9 +9,9 @@
 
 启用条件：普通执行路径；编译共享入口谓词。
 
-编译期依据：只发布当前 committed row，按消费者水位交付。
+编译期依据：只发布当前 committed row，按消费者水位交付；单入口表的私有行与完整 Entry 字段谓词由同一模板给出，Rc 独占性仍由运行时验证。
 
-替代的旧工作：重复逐规则登记、字段复制与重解码。
+替代的旧工作：重复逐规则登记、字段复制与重解码；独占的现有 Entry 行复用外层 Rc<Row> 分配，稀疏路径删除无参数包可复用的整行相等比较。
 
 运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
 
@@ -19,15 +19,15 @@
 
 | 指标用途 | 精确数据路径 |
 |---|---|
-| 收益观察（需基线差值） | `report:/entry_schedule/stats/parameter_packets_reused [value]`<br>`report:/entry_schedule/stats/borrowed_slots [value]` |
-| 成本 / 剩余工作 | `report:/entry_schedule/stats/predicate_checks [value]`<br>`report:/entry_schedule/stats/row_decodes [value]`<br>`report:/entry_schedule/stats/node_notifications [value]`<br>`report:/publication/row_reads [value]`<br>`report:/entry_schedule/seed_bytes [value]` |
+| 收益观察（需基线差值） | `report:/entry_schedule/stats/borrowed_slots [value]`<br>`report:/entry_schedule/stats/row_reuses [value]` |
+| 成本 / 剩余工作 | `report:/entry_schedule/stats/predicate_checks [value]`<br>`report:/entry_schedule/stats/row_decodes [value]`<br>`report:/entry_schedule/stats/node_notifications [value]`<br>`report:/publication/row_reads [value]`<br>`report:/entry_schedule/seed_bytes [value]`<br>`report:/entry_schedule/stats/row_reuse_checks [value]`<br>`report:/entry_schedule/stats/row_reuse_shared [value]` |
 | 覆盖 / 规模 / 回退 | `report:/entry_schedule/nodes [value]`<br>`report:/entry_schedule/live_packets [value]` |
 
-解释与缺口：参数共享是表示优化；不能省略可观察的 RHS 发布与源 Run 边界。
+解释与缺口：参数共享是表示优化；不能省略可观察的 RHS 发布与源 Run 边界。 4ebea808 后的 Entry 行复用在 sum-bits / Raytrace 1280 Run 少 586 / 2522 次分配，与实际 row_reuses 一一对应；新费用为所有权检查，未测速度。parameter_packets_reused 仅保留旧非稀疏参数向量路径，不能继续作为稀疏 Entry 收益。当前短 Raytrace 以新建行为主，不能外推完整覆盖。
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/CHANGE_BATCH.md](../../docs/CHANGE_BATCH.md)
+证据：[docs/CHANGE_BATCH.md](../../docs/CHANGE_BATCH.md) · [benchmarks/cell-entry-row-reuse/README.md](../../benchmarks/cell-entry-row-reuse/README.md) · [benchmarks/cell-entry-row-reuse/results.json](../../benchmarks/cell-entry-row-reuse/results.json)
 
 ## E2 · Entry 持有 producer publication
 

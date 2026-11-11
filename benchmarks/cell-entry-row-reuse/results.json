@@ -1,0 +1,110 @@
+{
+  "baseline_commit": "4ebea808",
+  "scope": "standalone Cell CPU; allocation diagnostics, not throughput",
+  "limits": "One allocator-instrumented run per lane and case, four workers. Raytrace covers 1280 Runs; no full Raytrace/native or general sparsity proof.",
+  "prefix_sha256": [
+    "dc7bd95c09b7e99692aee4487b0164fd6692bd3a3e5bf104437e299d9c73b561",
+    "59b35348bbba92c62b8f75e6b09127475f4f9c6256051474a2fef842c8bd93b0"
+  ],
+  "sum_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a",
+  "cases": {
+    "sum": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 2000,
+        "workers": 4
+      },
+      "runs": 1428,
+      "exact_final_graph_and_run_records": true,
+      "actual_effect_counts_unchanged": true,
+      "queries": 12085,
+      "row_work": {
+        "row_decodes": 5146,
+        "private_row_reads": 4051,
+        "row_reuse_checks": 586,
+        "row_reuses": 586,
+        "row_reuse_shared": 0
+      },
+      "legacy_parameter_reuse_counter": [
+        29,
+        0
+      ],
+      "allocations": {
+        "alloc_calls": [
+          81619,
+          81033
+        ],
+        "realloc_calls": [
+          13474,
+          13474
+        ],
+        "requested_bytes": [
+          19617059,
+          19574867
+        ]
+      },
+      "entry_publications": 4615,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": [
+        "df3f8d961a3e5b0e5db9078b001b2359ac9127fb4c8b3d02e9aa939f99d2a805",
+        "96394f3c283091714746ecfcb6889e3ee322811ed89bf9ba290640c29bc642bb"
+      ],
+      "state_sha256": [
+        "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+        "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82"
+      ]
+    },
+    "ray1280": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 1280,
+        "workers": 4
+      },
+      "runs": 1280,
+      "exact_final_graph_and_run_records": true,
+      "actual_effect_counts_unchanged": true,
+      "queries": 578591,
+      "row_work": {
+        "row_decodes": 224602,
+        "private_row_reads": 166623,
+        "row_reuse_checks": 2522,
+        "row_reuses": 2522,
+        "row_reuse_shared": 0
+      },
+      "legacy_parameter_reuse_counter": [
+        0,
+        0
+      ],
+      "allocations": {
+        "alloc_calls": [
+          2327985,
+          2325463
+        ],
+        "realloc_calls": [
+          343478,
+          343478
+        ],
+        "requested_bytes": [
+          961068812,
+          960887228
+        ]
+      },
+      "entry_publications": 183974,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": [
+        "93b1644435fc9611e367ce41c32d6d8e382b315525375e5dd0b3ca619f0f0e68",
+        "5a577ef38b7eaf9d8b92362dc70220e2d4672cfac3d703cd37854bb9c7ad4bc0"
+      ],
+      "state_sha256": [
+        "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+        "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+      ]
+    }
+  }
+}

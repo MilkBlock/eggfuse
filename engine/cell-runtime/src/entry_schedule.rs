@@ -169,6 +169,24 @@ pub struct Packet {
     #[cfg(not(feature = "sparse-cells"))]
     values: Rc<Vec<Option<Value>>>,
 }
+#[cfg(feature = "sparse-cells")]
+impl Packet {
+    /// Refresh a private Entry's existing row allocation after readers have
+    /// released it. Live seeds keep their immutable snapshot through the
+    /// shared fallback; the graph's decoded fields retain their own lifetime.
+    fn refresh_row(previous: &mut Option<Self>, row: Row, stats: &mut Stats) -> Rc<Row> {
+        let Some(mut packet) = previous.take() else { return Rc::new(row) };
+        stats.row_reuse_checks += 1;
+        if let Some(owned) = Rc::get_mut(&mut packet.row) {
+            *owned = row;
+            stats.row_reuses += 1;
+            packet.row
+        } else {
+            stats.row_reuse_shared += 1;
+            Rc::new(row)
+        }
+    }
+}
 #[derive(Clone)]
 pub struct Seed {
     pub packet: SharedPacket,
@@ -443,7 +461,11 @@ pub struct Stats {
     cold_rows: u64,
     row_decodes: u64,
     private_row_reads: u64,
+    row_reuse_checks: u64,
+    row_reuses: u64,
+    row_reuse_shared: u64,
     parameters_copied: u64,
+    // Legacy copied-parameter reuse; sparse Entries project the row directly.
     parameter_packets_reused: u64,
     consumer_calls: u64,
     consumer_seed_deliveries: u64,
@@ -942,15 +964,21 @@ impl Scheduler {
             #[cfg(feature = "sparse-cells")]
             let publication = previous.publication;
             let previous = previous.packet;
+            let had_previous = previous.is_some();
             if !full && let Some(p) = &previous {
                 s.remove_epoch(p.row.epoch, w);
             }
+            #[cfg(feature = "sparse-cells")]
+            let mut previous = previous;
             // A table with one compiled entry node has no sibling to consume
             // a shared decoded row before the next publication clears the cache.
             let row = if self.plan.tables[n.table].len() == 1 {
                 self.stats.private_row_reads += 1;
                 self.stats.row_decodes += 1;
-                g.row(w)?.map(Rc::new)
+                #[cfg(feature = "sparse-cells")]
+                { g.row(w)?.map(|row| Packet::refresh_row(&mut previous, row, &mut self.stats)) }
+                #[cfg(not(feature = "sparse-cells"))]
+                { g.row(w)?.map(Rc::new) }
             } else if let Some(row) = self.rows.get(&w) {
                 row.clone()
             } else {
@@ -960,29 +988,31 @@ impl Scheduler {
                 row
             };
             let Some(row) = row.filter(|r| r.table == n.table && !r.hidden) else {
-                self.stats.retired_packets += u64::from(previous.is_some());
+                self.stats.retired_packets += u64::from(had_previous);
                 continue;
             };
             self.stats.predicate_checks += 1;
+            #[cfg(not(feature = "sparse-cells"))]
             if !n.literal_identity
-                && let Some(_previous) = previous.as_ref().filter(|p| p.row.values == row.values)
+                && let Some(previous) = previous.as_ref().filter(|p| p.row.values == row.values)
             {
                 self.stats.parameter_packets_reused += 1;
                 s.insert_epoch(row.epoch, w);
-                #[cfg(feature = "sparse-cells")]
-                s.rows.insert(w, Stored { packet: Some(Packet { row }), publication });
-                #[cfg(not(feature = "sparse-cells"))]
                 s.rows.insert(
                     w,
                     Stored { packet: Some(Rc::new(Packet {
                         row,
-                        values: _previous.values.clone(),
+                        values: previous.values.clone(),
                     })) },
                 );
                 continue;
             }
             #[cfg(feature = "sparse-cells")]
             {
+                // The template contains all Entry predicates. Identity Entries
+                // have none; filtered Entries check only those fields. Comparing
+                // complete old/new rows cannot save a copied parameter packet:
+                // sparse Entries already project the current row itself.
                 let valid = n.checks.iter().all(|(col, check)| match check {
                     Arg::Slot(other) => row.values[*other] == row.values[*col],
                     Arg::Literal(v) => canon(v, &g.parents) == row.values[*col],
@@ -991,7 +1021,7 @@ impl Scheduler {
                     s.insert_epoch(row.epoch, w);
                     s.rows.insert(w, Stored { packet: Some(Packet { row }), publication });
                 } else {
-                    self.stats.retired_packets += u64::from(previous.is_some());
+                    self.stats.retired_packets += u64::from(had_previous);
                 }
             }
             #[cfg(not(feature = "sparse-cells"))]
@@ -1020,7 +1050,7 @@ impl Scheduler {
                     s.insert_epoch(row.epoch, w);
                     s.rows.insert(w, Stored { packet: Some(Rc::new(Packet { row, values })) });
                 } else {
-                    self.stats.retired_packets += u64::from(previous.is_some());
+                    self.stats.retired_packets += u64::from(had_previous);
                 }
             }
         }
@@ -1052,6 +1082,36 @@ impl Scheduler {
 #[cfg(all(test,feature="sparse-cells"))]
 mod pending_tests {
     use super::*;
+    #[test]
+    fn refreshing_an_entry_preserves_borrowed_snapshots_and_reuses_released_storage() {
+        let row = |epoch, value| Row { table: 0, witness: Dependency::Function(7),
+            values: crate::graph::row_fields(vec![Value::Eq(9), Value::Int(value)]),
+            epoch, hidden: false };
+        let mut stats = Stats::default();
+        let mut packet = Some(Packet { row: Rc::new(row(1, 10)) });
+        let reader = packet.as_ref().unwrap().row.clone();
+        let next = Packet::refresh_row(&mut packet, row(2, 20), &mut stats);
+        assert!(!Rc::ptr_eq(&reader, &next));
+        assert_eq!(reader.values[1], Value::Int(10));
+        assert_eq!(reader.epoch, 1);
+        let address = Rc::as_ptr(&next);
+        let decoded_snapshot = next.values.clone();
+        packet = Some(Packet { row: next });
+        let next = Packet::refresh_row(&mut packet, row(3, 30), &mut stats);
+        assert_eq!(Rc::as_ptr(&next), address);
+        assert_eq!(next.epoch, 3);
+        assert_eq!(next.values[1], Value::Int(30));
+        assert_eq!(decoded_snapshot[1], Value::Int(20));
+        // A weak observer must never upgrade to the replacement snapshot.
+        let weak = Rc::downgrade(&next);
+        packet = Some(Packet { row: next });
+        let next = Packet::refresh_row(&mut packet, row(4, 40), &mut stats);
+        assert_ne!(Rc::as_ptr(&next), address);
+        assert!(weak.upgrade().is_none(), "unowned prior snapshot is retired");
+        assert_eq!(stats.row_reuse_checks, 3);
+        assert_eq!(stats.row_reuses, 1);
+        assert_eq!(stats.row_reuse_shared, 2);
+    }
     #[test]
     fn failed_validation_cannot_leave_a_packetless_entry_or_reserve_a_slot() {
         let mut s = Scheduler {

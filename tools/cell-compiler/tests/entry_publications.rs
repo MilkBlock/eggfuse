@@ -198,6 +198,27 @@ fn deletable_function_outputs_retain_boundary_publication() {
 }
 
 #[test]
+fn refreshing_a_private_entry_rechecks_filters_before_reusing_its_packet() {
+    let source = r#"
+(datatype E (N i64) (Start E))
+(function score (E) i64 :merge new)
+(function out (E) i64 :merge new)
+(ruleset first) (ruleset change) (ruleset reset) (ruleset read)
+(rule ((Start x)) ((set (score x) 1)) :ruleset first)
+(rule ((Start x)) ((set (score x) 2)) :ruleset change)
+(rule ((Start x)) ((set (out x) 0)) :ruleset reset)
+(rule ((= 1 (score x))) ((set (out x) 1)) :ruleset read)
+(Start (N 0))
+(run-schedule (seq (run first) (run read) (run reset) (run change) (run read)))
+(check (= (out (N 0)) 0))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    assert!(nodes.report()["entry_schedule"]["stats"]["row_reuses"].as_u64().unwrap() > 0);
+}
+
+#[test]
 fn single_output_cells_keep_last_source_without_receipt_hash_coalescing() {
     let source = r#"
 (datatype E (N i64) (Start E i64) (Gateway E) (Out E))
