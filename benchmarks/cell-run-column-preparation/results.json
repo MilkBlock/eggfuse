@@ -1,0 +1,38 @@
+{
+  "control_commit": "10588f41",
+  "scope": "standalone Cell CPU",
+  "runtime_sha256": "b26226bdebecc564c3852f9e20891aba620d8e2c55ee493ab9c2dbc06d137354",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "9d14ecb7982678738d3958a632652c6ca5827fc2056053fc369b2372f3be0b61",
+      "after_report_sha256": "ec746346d9b9fd4585fbddfa927d0e437d38d38969b6b1803d13e59ad68073d6",
+      "same_state_ordered_runs_graph_queries_admission_filters_and_publication": true,
+      "old_prepare_calls_reconstructed": 3253,
+      "prepare_calls": 2342,
+      "reused_preparation": 911,
+      "partitioned_entries": 1381,
+      "partitioned_pivots": 470
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "24d07b90c29799cebbe01d1ae02a713ec71cb9ea2e7b3673e7cf00d67fcc6575",
+      "after_report_sha256": "d607d00b844589f0e0716a0a7c9dd1b7d60cf9cb72f61e9b3ff17427aa2ad3f3",
+      "same_state_ordered_runs_graph_queries_admission_filters_and_publication": true,
+      "old_prepare_calls_reconstructed": 1150684,
+      "prepare_calls": 42473,
+      "reused_preparation": 1108211,
+      "partitioned_entries": 1131289,
+      "partitioned_pivots": 23078
+    }
+  },
+  "limits": "No throughput claim. Old prepare calls are reconstructed from unchanged activation calls; the old binary has no dedicated prepare counter. Reuses count removed preparation calls, not allocations or logical/committed mutations.",
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

@@ -181,6 +181,8 @@ fn active_spine_keeps_owned_entries_and_transfers_uncovered_queries() {
         assert!(work["partitioned_entries"].as_u64().unwrap()>0,"{report}");
         assert!(work["partitioned_admitted"].as_u64().unwrap()>0,"{work}");
         assert!(work["partitioned_answers"].as_u64().unwrap()>0,"{work}");
+        assert!(work["column_prepares"].as_u64().unwrap()>0,"first activation prepares the layout");
+        assert!(work["column_prepare_reuses"].as_u64().unwrap()>0,"later Entries reuse this Run's preparation");
         assert!(report["stage_spine"]["stats"]["routed_spine_seeds"].as_u64().unwrap()>0,"must retain actual owned continuations");
         let pooled=work["partitioned_worker_entries"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>();
         assert_eq!(pooled+work["partitioned_inline_entries"].as_u64().unwrap(),work["partitioned_entries"].as_u64().unwrap());

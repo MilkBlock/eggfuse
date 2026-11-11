@@ -26,6 +26,7 @@ struct Work {
     partitioned_answers:u64, partitioned_admission_probes:u64,
     partitioned_expansion_rows:u64, partitioned_point_reads:u64,
     partitioned_worker_entries:Vec<u64>, partitioned_inline_entries:u64,
+    column_prepares:u64, column_prepare_reuses:u64,
 }
 #[derive(Default)]
 struct Output {
@@ -209,8 +210,14 @@ impl Workers {
     }
     fn activate_expansion(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,rid:usize,pivot:usize)->Result<usize> {
         let plan=self.expansion.rules[rid][pivot].as_mut().unwrap();
-        index.prepare_columns(g,&plan.layout)?;
-        if !plan.active {plan.active=true;self.expansion.active.push((rid,pivot));}
+        if !plan.active {
+            // A Cell's read layout is fixed and this Run cannot mutate the
+            // graph or retire its index columns before all queries join.
+            // finished()/discard() clear active before the next Run.
+            index.prepare_columns(g,&plan.layout)?;
+            self.expansion.work.column_prepares+=1;
+            plan.active=true;self.expansion.active.push((rid,pivot));
+        } else {self.expansion.work.column_prepare_reuses+=1;}
         self.expansion.outputs[rid].pending=true;
         Ok(plan.code)
     }
