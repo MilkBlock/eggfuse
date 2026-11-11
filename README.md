@@ -6,7 +6,7 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [Cell 继承与并行分支整合](benchmarks/cell-parallel-merge/README.md)：合入 `17d8dbe6` 的全部分支，接通字段变化掩码与并行发布，保留混合域吸收和结果封存。单候选内联、点结果投影与 worker 接管的收益存在覆盖，按实际路径记账。完整样例语义通过；下方两条分支的历史测速不代表合并后的性能。
 
-[最新多线程检查点](benchmarks/parallel-cell-publication/README.md#five-implementation-throughput-checkpoint)：五次实现后的完整对照仍未建立 Raytrace 总体加速。当前串行/四线程推理中位数为 6.050/6.017 s，配对区间跨持平；八线程为 6.965 s。sum-bits 四线程退化，worker 仍大部分时间等待。保留全部样本、成本及语义证据，实验路径默认关闭。
+[最新多线程检查点](benchmarks/cell-parallel-current/README.md)：`9ac332c4` 合并后完整 Raytrace 串行/四线程推理中位数为 5.507/5.240 s，约快 4.8%；八线程 5.734 s，反而较慢。四线程进程平均约使用 1.10 核，worker 在采样窗口仍约 91%–93% 的时间等待；sum-bits 四线程退化。保留全部交错样本与语义检查，尚未打满多核。
 
 [混合 Cell 的查询所有权分派](benchmarks/parallel-cell-partition/README.md)：有 Cursor 的入口保留接续，其余合格入口直接进入共享 worker 队列。完整 Raytrace 新增约 111 万个入口在线程上完成，免除约 84 万次 Seed/domain 交接和约 112 万次邻居缓存发布检查；总点读取不变，队列与结果整理成本已计入。这是工作量与语义验证，尚无新的整体速度或线程利用率结论。
 
