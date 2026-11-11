@@ -533,6 +533,9 @@ pub struct Stats {
     ripsat_projection_checks: u64,
     ripsat_boundary_reads: u64,
     ripsat_completed: u64,
+    ripsat_union_cells: u64,
+    ripsat_union_input_reads: u64,
+    ripsat_union_result_reads: u64,
     ripsat_projected_slots: u64,
     ripsat_layout_fallbacks: u64,
     ripsat_boundary_fallbacks: u64,
@@ -1383,7 +1386,7 @@ impl Programs {
     /// proves the full keys. Only actual receipt lifetime remains to validate.
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn prepare_direct_completion(&mut self,g:&Graph,rid:usize,step:&Started)
-        -> Option<crate::cell::Results> {
+        -> Option<(crate::cell::Results, Option<crate::cell::LazyUnions>)> {
         if !g.program.iterative.completion_enabled() {return None;}
         let Started::Live(cursor)=step else {return None};
         self.stats.ripsat_plan_probes+=1;
@@ -1415,7 +1418,45 @@ impl Programs {
                 self.stats.ripsat_witness_fallbacks+=1; return None;
             }
         }
-        Some(results)
+        Some((results,plan.unions.clone()))
+    }
+    /// All constructor results were validated before any union is enqueued.
+    /// Read the actual matched input or retained result, without a temporary
+    /// RHS frame, result assignment, or replay of the constructor instructions.
+    /// Only the ordinary source-Run completion may commit these equalities.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn enqueue_direct_unions(&mut self, g: &mut Graph, rid: usize,
+        inputs: &crate::slots::Slots, results: &crate::cell::Results,
+        program: &crate::cell::LazyUnions) -> Result<()> {
+        use crate::cell::UnionPort;
+        self.stats.ripsat_union_cells += 1;
+        for effect in program.iter() {
+            let (crate::cell::UnionEffect::Source(pair) | crate::cell::UnionEffect::Constructor(pair)) = effect;
+            let mut read = |port| -> Result<Value> {
+                let value = match port {
+                    UnionPort::Input(slot) => {
+                        self.stats.ripsat_union_input_reads += 1;
+                        inputs.get(&slot).cloned().ok_or("missing completed union input")?
+                    },
+                    UnionPort::Result(slot) => {
+                        self.stats.ripsat_union_result_reads += 1;
+                        let witness=results.get(crate::cell::ResultPort::new(rid,slot))
+                            .ok_or("missing completed union result")?;
+                        let row=g.row(g.resolve_receipt(witness))?.ok_or("retired completed union result")?;
+                        row.values.last().cloned().ok_or("empty completed union result")?
+                    },
+                };
+                Ok(crate::value::canon(&value,&g.parents))
+            };
+            let a=read(pair[0])?;
+            let b=read(pair[1])?;
+            match effect {
+                crate::cell::UnionEffect::Source(_) => g.enqueue_source_union(a,b)?,
+                crate::cell::UnionEffect::Constructor(_) => g.enqueue_union(a,b)?,
+            }
+        }
+        self.effects(0,0,program.len() as u64);
+        Ok(())
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn complete_direct(&mut self,g:&Graph,rid:usize,cell:u32,step:Started,
@@ -2713,6 +2754,7 @@ impl Programs {
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
         let report = json!({"output_registration":"cell-span/v1",
             "joint_result_storage":"cell-results/v1",
+            "union_completion":"cell-union-ports/v1",
             "completion_record_bytes":std::mem::size_of::<Completion>(),
             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),

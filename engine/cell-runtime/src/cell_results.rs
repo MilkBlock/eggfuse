@@ -46,7 +46,7 @@ mod joint_tests {
         use crate::cell::{CompletedPlan,compile_projections};
         let make=|rule,source| {
             let layout=SlotLayout::compile(rule,vec![Some(ResultPort::new(source,1)),Some(ResultPort::new(source,0))]).unwrap();
-            Some(Rc::new(CompletedPlan {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![]}))
+            Some(Rc::new(CompletedPlan {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![],unions:None}))
         };
         let mut plans=[make(1,0),make(2,1),make(1,2)];
         compile_projections(&mut plans,std::iter::empty());

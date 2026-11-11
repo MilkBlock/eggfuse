@@ -197,3 +197,13 @@ lookup already avoids a candidate scan. This implementation proves finite local
 constructor closure and already completed RHS projection; it does not claim
 whole-program saturation, skip fresh values/effects, or remove the remaining
 Run-boundary repair barrier.
+
+The opt-in [union-port specialization](../benchmarks/lazy-union-ports/README.md)
+extends executable completion to an already witnessed constructor RHS with
+remaining equality effects. Result-switch v5 binds their operands to existing
+input/result slots and shares the union code across constructor contexts. It
+preserves pre-commit constructor keys, the ordinary queue and original Run
+visibility. It does not relax the structural normalizer's terminal-union limit
+or equate different entry assumptions. The small fixture exercises actual
+takeover; current sum-bits and the short Raytrace prefix have no union takeover
+and establish no workload speed benefit.

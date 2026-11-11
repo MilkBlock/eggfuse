@@ -36,3 +36,7 @@ required-features = ["iterative-bake"]
 [[example]]
 name = "inspect_cell_catalog"
 required-features = ["iterative-bake"]
+
+[[example]]
+name = "emit_lazy_union"
+required-features = ["iterative-bake"]

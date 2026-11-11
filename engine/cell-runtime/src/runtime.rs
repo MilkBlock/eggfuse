@@ -2085,8 +2085,11 @@ impl Executor {
         }
         #[cfg(feature = "sparse-cells")]
         if !full_effects && let Some(step)=stage_cursor.as_ref()
-            && let Some(results)=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
+            && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
             let cell=self.graph.reserve_completed_cell()?;
+            if let Some(unions)=unions {
+                self.stage_spine.enqueue_direct_unions(&mut self.graph,rid,&b.values,&results,&unions)?;
+            }
             return self.stage_spine.complete_direct(&self.graph,rid,cell,stage_cursor.unwrap(),results,
                 |i| b.known.receipt(i));
         }

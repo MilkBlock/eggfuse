@@ -69,6 +69,19 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Union requests are already charged above. Charge only the new direct
+        // operand acquisition here, including actual result-row access; neither
+        // covered Cells nor queued unions earn a second saved-operation credit.
+        for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
+            let value = match report["stage_spine"].get("union_completion") {
+                None => 0,
+                Some(J::String(v)) if v == "cell-union-ports/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell union work {field}"))?,
+                _ => return Err("unknown Cell union completion".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
         // A field test is new work even when it prevents a whole summary update.
         // Historical reports have no such test; missing new counters are errors.
         let column_checks = match report["sieve"].get("column_influence") {
@@ -410,6 +423,17 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    let mut union_report=report.clone();
+    union_report["stage_spine"]["stats"]["ripsat_union_cells"]=u64::MAX.into();
+    assert_eq!(Work::read(&union_report).unwrap(),work,"coverage earns no credit");
+    union_report["stage_spine"]["stats"]["ripsat_union_result_reads"]=5.into();
+    assert_eq!(Work::read(&union_report).unwrap().0["stage_spine/stats/ripsat_union_result_reads"],5);
+    union_report["stage_spine"]["stats"].as_object_mut().unwrap().remove("ripsat_union_input_reads");
+    assert!(Work::read(&union_report).unwrap_err().contains("missing Cell union work"));
+    union_report["stage_spine"].as_object_mut().unwrap().remove("union_completion");
+    assert_eq!(Work::read(&union_report).unwrap().0["stage_spine/stats/ripsat_union_result_reads"],0);
+    union_report["stage_spine"]["union_completion"]="unknown".into();
+    assert!(Work::read(&union_report).is_err());
     assert!(work.0["query_workers/stats/frame_allocations"] > 0);
     assert!(work.0["query_workers/stats/chunks"] > 0);
     report["query_workers"]["stats"]["answers"] = u64::MAX.into();

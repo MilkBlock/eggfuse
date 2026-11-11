@@ -197,6 +197,106 @@ fn check_entry_dispatch(raw: &Value) {
 
 #[test]
 #[cfg(feature = "sparse-cells")]
+fn lazy_union_ports_complete_real_outputs_without_advancing_visibility() {
+    let base=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(Mid E)","(Mid E) (Wrap E) (Seen E)")
+        .replace("(N 1) (N 2)","(N 1) (N 2) (Start (Right (N 3)))\n(Wrap (Left (N 1))) (Wrap (Right (N 1)))")
+        .replace("(run c)","(run c) (run c)");
+    for (case,effects) in [
+        "((Left x) (Right x) (union (Left x) x))",
+        "((Left x) (Right x) (union (Left x) x) (union (Right x) (Left x)))",
+        "((Left x) (union (Left x) x) (Right x) (union (Right x) (Left x)) (union x (Right x)))",
+        "((Left x) (Right x) (union x m))",
+    ].into_iter().enumerate() {
+        let source=base.replace("((Left x) (Right x)) :ruleset c",&format!("{effects} :ruleset c"));
+        // These queries share the consumer Run. Pending union must not create
+        // a match until the following Run, including through parent congruence.
+        let target=if case==3 {"Mid"} else {"Left"};
+        let source=format!("{source}\n(check (= ({target} (N 1)) (N 1)))");
+        let source=source.replace("(N 1) (N 2)",
+            "(rule ((= wrapped (Wrap (Left x))) (= wrapped (Wrap (Right x)))) ((Seen x)) :ruleset c)\n(N 1) (N 2)");
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let dir=tempfile::tempdir().unwrap();
+        fixture::emit(&source,&dir.path().join("case")).unwrap();
+        let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+        let control=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+        let compiled=eggfuse_cell_compiler::completion_bake::compile_lazy_unions(Program::parse(raw).unwrap()).unwrap();
+        assert_eq!(control["iterative_bake"]["rhs_handoffs"]["schema"],"eggfuse-result-switch/v4");
+        assert_eq!(compiled["iterative_bake"]["rhs_handoffs"]["schema"],"eggfuse-result-switch/v5");
+        check_entry_dispatch(&compiled);
+        let checked=Program::parse(compiled.clone()).unwrap();
+        let mut next=compiled["iterative_bake"].clone();
+        Catalog::emit_existing_ripsat_handoffs(&checked,&mut next).unwrap();
+        assert_eq!(next["rhs_handoffs"]["schema"],"eggfuse-result-switch/v5");
+        Catalog::emit_observed_ripsat_handoffs(&checked,&mut next,&Default::default()).unwrap();
+        assert_eq!(next["rhs_handoffs"]["schema"],"eggfuse-result-switch/v5");
+        let (before,expected)=execute(control); let (after,actual)=execute(compiled.clone());
+        assert_eq!(expected,actual,"case {case}: every Run, ordered inputs, writes and resumes");
+        assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
+        let a=before.report(); let b=after.report();
+        for field in ["constructor_requests","function_updates","unions","union_requests","logical_facts_created"] {
+            assert_eq!(a["stats"][field],b["stats"][field],"{field}");
+        }
+        let s=&b["stage_spine"]["stats"];
+        assert!(s["ripsat_union_cells"].as_u64().unwrap()>0,"case {case}: {s}");
+        assert!(s["ripsat_union_input_reads"].as_u64().unwrap()>0);
+        if case<3 {assert!(s["ripsat_union_result_reads"].as_u64().unwrap()>0);}
+        else {
+            assert_eq!(s["ripsat_union_result_reads"],0);
+            assert!(compiled["iterative_bake"]["rhs_handoffs"]["completion_states"].as_array().unwrap()
+                .iter().filter_map(|p|p["lazy_unions"]["program"].as_array())
+                .flatten().any(|op|op.get("Source").is_some()));
+        }
+        assert!(a["stats"]["handoff_attempts"].as_u64().unwrap()>b["stats"]["handoff_attempts"].as_u64().unwrap());
+        assert!(a["stage_spine"]["stats"]["effect_slots_initialized"].as_u64().unwrap()>s["effect_slots_initialized"].as_u64().unwrap());
+        let mut forged=compiled;
+        let state=forged["iterative_bake"]["rhs_handoffs"]["completion_states"].as_array_mut().unwrap()
+            .iter_mut().find(|s|s.get("lazy_unions").is_some()).unwrap();
+        state["lazy_unions"]["program"][0].as_object_mut().unwrap().values_mut().next().unwrap()[1]=json!({"Input":99999});
+        assert!(Program::parse(seal(forged)).is_err(),"operand wiring is reconstructed, not trusted");
+    }
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn lazy_union_keeps_deletable_results_on_the_original_path() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("((Left x) (Right x)) :ruleset c","((Left x) (Right x) (union (Left x) (Right x))) :ruleset c");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let control=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    let candidate=eggfuse_cell_compiler::completion_bake::compile_lazy_unions(Program::parse(raw).unwrap()).unwrap();
+    let (before,expected)=execute(control);let (after,actual)=execute(candidate);
+    assert_eq!(expected,actual);
+    assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
+    assert_eq!(after.report()["stage_spine"]["stats"]["ripsat_union_cells"],0);
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn lazy_union_cannot_use_a_pending_set_to_prove_a_later_constructor() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(Mid E)","(Mid E) (Wrap E)")
+        .replace("((Left x) (Right x) (Gateway x))","((Left x) (Right x) (Wrap x) (Gateway x))")
+        .replace("((Left x) (Right x)) :ruleset c",
+            "((Left x) (Right x) (union (Left x) x) (Wrap (Left x))) :ruleset c");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let control=eggfuse_cell_compiler::completion_bake::compile(Program::parse(raw.clone()).unwrap()).unwrap();
+    let candidate=eggfuse_cell_compiler::completion_bake::compile_lazy_unions(Program::parse(raw).unwrap()).unwrap();
+    let (before,expected)=execute(control);let (after,actual)=execute(candidate);
+    assert_eq!(expected,actual);
+    assert_eq!(before.graph.stats.logical_facts_created,after.graph.stats.logical_facts_created,
+        "Wrap(Left(x)) must be constructed before pending equality can collide it with Wrap(x)");
+    assert_eq!(after.report()["stage_spine"]["stats"]["ripsat_union_cells"],0);
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
 fn deletable_results_keep_the_original_rhs_responsibility() {
     let dir=tempfile::tempdir().unwrap();
     fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
