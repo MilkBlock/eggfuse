@@ -81,6 +81,29 @@ impl Work {
             };
             work.insert(format!("stats/{field}"), value);
         }
+        // Constructor preparation replaces a source lookup only after exact
+        // validation. All speculative lookups already enter key_lookup_calls;
+        // any required decoding remains in fact_decode_calls. Cached-row
+        // validation pays its check and field counters. Outcomes earn no credit.
+        let constructor_preparation = match report["cell_execution"]["constructor_preparation"].get("schema") {
+            None => false,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v1" => true,
+            _ => return Err("unknown Cell constructor preparation accounting".into()),
+        };
+        for (group, fields) in [
+            ("stats", &["constructor_prepared_checks", "constructor_prepared_fields"][..]),
+            ("query_workers/stats/execution/constructor", &["attempts", "key_fields", "key_spills", "result_writes"]),
+        ] {
+            for field in fields {
+                let key = format!("{group}/{field}");
+                let enabled = constructor_preparation && (group == "stats" || report["query_workers"]["enabled"] == true);
+                let value = if enabled {
+                    report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                        .ok_or_else(||format!("missing constructor preparation work {key}"))?
+                } else { 0 };
+                work.insert(key, value);
+            }
+        }
         // Union requests are already charged above. Charge only the new direct
         // operand acquisition here, including actual result-row access; neither
         // covered Cells nor queued unions earn a second saved-operation credit.
@@ -500,6 +523,16 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
+    for key in ["stats/constructor_prepared_checks", "stats/constructor_prepared_fields",
+        "query_workers/stats/execution/constructor/attempts", "query_workers/stats/execution/constructor/key_fields",
+        "query_workers/stats/execution/constructor/key_spills", "query_workers/stats/execution/constructor/result_writes"] {
+        let mut changed = report.clone();
+        let value = changed.pointer_mut(&format!("/{key}")).unwrap();
+        *value = json!(value.as_u64().unwrap() + 1);
+        assert_eq!(work.savings(&Work::read(&changed).unwrap()).0, -1);
+        *changed.pointer_mut(&format!("/{key}")).unwrap() = J::Null;
+        assert!(Work::read(&changed).unwrap_err().contains("constructor preparation work"));
+    }
     for field in ["rhs_context_suspends", "rhs_context_resumes", "rhs_suspend_holds", "rhs_suspend_releases"] {
         let mut changed = report.clone();
         changed["stats"][field] = json!(report["stats"][field].as_u64().unwrap() + 1);

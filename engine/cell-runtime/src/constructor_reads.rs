@@ -54,6 +54,8 @@ impl Scratch {
 }
 
 pub(in crate::graph) struct Read<'a> {
+    owned_counts: &'a [usize],
+    members: &'a [TableRows<u64>],
     cells: &'a arena::Cells,
     intern: &'a HashMap<u64, crate::tiny_set::TinySet<FactRef>>,
     hash_mask: u64,
@@ -77,7 +79,8 @@ impl Graph {
     pub(in crate::graph) fn constructor_query_reader(&self) -> Option<Read<'_>> {
         let owner = self.ownership.as_ref()?;
         let guard = self.stable_port_reader().ok()?;
-        Some(Read { cells: &self.cells, intern: &self.intern,
+        Some(Read { owned_counts: &owner.tables, members: &self.members,
+            cells: &self.cells, intern: &self.intern,
             hash_mask: self.constructor_hash_mask(),
             plan: &self.program.cell_ownership, frames: &owner.composition.frames,
             components: owner.composition.components.reader(), shapes: &owner.composition.shapes,
@@ -103,6 +106,9 @@ impl Graph {
     }
 }
 impl Read<'_> {
+    pub fn complete_table(&self, table: usize) -> bool {
+        self.plan.tables[table] && self.owned_counts[table] == self.members[table].len()
+    }
     fn native_signal(&self, id: u64, w: &mut Work) -> Option<Signal> {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;

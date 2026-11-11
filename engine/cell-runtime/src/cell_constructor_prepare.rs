@@ -1,0 +1,167 @@
+//! Resolve one input-ready constructor boundary in the existing Run read view.
+//! The instance carries only an actual witness, never a speculative Eq result.
+//! Its original source instruction still validates and commits that result.
+use crate::{cell::{Definition, Instance}, graph::{Dependency, FactRef},
+    program::{Arg, Call, Op, Program}, value::{Value, canon}};
+use serde::Serialize;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct Plan {
+    pub operation: usize,
+    pub table: usize,
+    keys: Vec<Arg>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{graph::Graph, program::{Rule, Template}, slots::Slots, cell::QueryFacts};
+    use std::{collections::BTreeMap, rc::Rc, sync::Arc};
+
+    fn graph() -> Graph {
+        let eq = serde_json::json!({"kind":"eq","name":"E"});
+        let template = Template { name:"prepared-constructor".into(), sorts:vec![eq.clone();2],
+            defs:BTreeMap::from([(1,0)]), parent_columns:BTreeMap::new(),
+            ops:Arc::new(vec![Op::Let(1,Call::Table(0),vec![Arg::Slot(0)])]) };
+        let rule = Rule { template:0, query:Rc::new(vec![]), inputs:vec![0].into(),
+            completion:Default::default(),seminaive:false,direct:None };
+        let mut p:Program=serde_json::from_value(serde_json::json!({
+            "multi_stage":crate::multistage::MultiStage::default(),
+            "entry_schedule":crate::entry_schedule::Plan::default(),
+            "tables":[{"name":"F","schema":[eq,eq],"constructor":true,"virtual_fact":true,
+                "internal":false,"merge":null}],"templates":[template],"rules":[rule],
+            "sets":{},"control":[],"initial":[],"table_templates":[0],"artifact":{}
+        })).unwrap();
+        p.known_results.static_skip=vec![Rc::new(vec![false])];
+        p.executions=vec![crate::cell::execution::Plan::derive(&p.tables,&p.templates[0],&[0])];
+        Graph::new(p).unwrap()
+    }
+
+    #[test]
+    fn a_speculative_witness_never_assigns_an_eq_result_and_invalid_evidence_reuses_the_source_key() {
+        for change in ["unchanged","delete","hide","key","union"] {
+            let mut g=graph();
+            let producer=g.linked_frame(0,BTreeMap::from([(0,Value::Eq(9))]),None).unwrap();
+            let old=g.construct(producer,0,0,&[Arg::Slot(0)],1).unwrap();
+            g.repair().unwrap(); g.changes.clear();
+            let plan=Plan::derive(&g.program,0).unwrap();
+            let mut values=Slots::with_capacity(2); values.insert(0,Value::Eq(9));
+            let mut instance=Instance::matched(values,QueryFacts::None,0);
+            let mut counts=Counts::default();
+            plan.prepare(&mut instance,g.query_reads(&[],&mut 0).as_ref(),
+                &mut Default::default(),&mut Default::default(),&mut counts);
+            assert_eq!(counts.hits,1,"{change}");
+            assert!(!instance.values.contains_key(&1),"only source execution may assign the Eq result");
+            let witness=instance.constructor.take().unwrap();
+            assert_eq!(witness,FactRef{cell:producer,op:0});
+            g.epoch = 1; // Source effects follow the initial constructor birth.
+            match change {
+                "delete" => { assert!(g.hide(0,&[Value::Eq(9)],true).unwrap()); }
+                "hide" => { assert!(g.hide(0,&[Value::Eq(9)],false).unwrap()); }
+                "key" => { instance.values.insert(0,Value::Eq(11)); }
+                "union" => { g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap(); g.repair().unwrap(); }
+                _ => (),
+            }
+            let cell=g.begin_transient(0,instance.values,None).unwrap();
+            let lookups=g.key_lookup_calls.get();
+            let result=g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness).unwrap();
+            let accepted=matches!(change,"unchanged"|"union");
+            assert_eq!(g.key_lookup_calls.get()-lookups,u64::from(!accepted),"{change}");
+            assert_eq!(g.stats.constructor_prepared_accepted,u64::from(accepted),"{change}");
+            assert_eq!(g.stats.constructor_prepared_rejected,u64::from(!accepted),"{change}");
+            if matches!(change,"delete"|"key") { assert_ne!(result,old,"fresh identity after {change}"); }
+            else { assert_eq!(result,old,"{change}"); }
+        }
+    }
+}
+#[derive(Debug, Default)]
+pub(crate) enum Prepared {
+    #[default]
+    Untried,
+    Absent,
+    Found(FactRef),
+}
+impl Prepared {
+    pub fn pending(&self) -> bool { matches!(self, Self::Untried) }
+    pub fn take(&mut self) -> Option<FactRef> {
+        match std::mem::replace(self, Self::Absent) { Self::Found(f) => Some(f), _ => None }
+    }
+}
+#[derive(Default, Serialize)]
+pub(crate) struct Counts {
+    pub attempts: u64,
+    pub unavailable: u64,
+    pub missing_inputs: u64,
+    pub key_fields: u64,
+    pub key_spills: u64,
+    pub lookups: u64,
+    pub hits: u64,
+    pub misses: u64,
+    pub result_writes: u64,
+}
+impl Counts {
+    pub fn add(&mut self, other: &Self) {
+        macro_rules! add { ($($f:ident),*) => { $(self.$f += other.$f;)* }; }
+        add!(attempts, unavailable, missing_inputs, key_fields, key_spills, lookups, hits, misses, result_writes);
+    }
+}
+impl Plan {
+    pub fn derive(p: &Program, rule: usize) -> Option<Self> {
+        let cell = Definition::new(p, rule).ok()?;
+        // Captured input rewrites need a stronger temporal alias proof.
+        if cell.rule.inputs.iter().any(|s| cell.template.defs.contains_key(s)) { return None; }
+        let scalar = &p.executions[rule];
+        let mut ready = cell.rule.inputs.iter().copied().collect::<std::collections::BTreeSet<_>>();
+        ready.extend(scalar.segments[0].outputs.iter().copied());
+        for &op in &scalar.input_ready {
+            if let Op::Let(dst, ..) = cell.template.ops[op] { ready.insert(dst); }
+        }
+        for (operation, op) in cell.template.ops.iter().enumerate() {
+            if matches!(op, Op::Hide(..) | Op::Panic) { break; }
+            if p.known_results.static_skip[rule][operation] { continue; }
+            let Op::Let(_, Call::Table(table), args) = op else { continue };
+            if !p.tables[*table].constructor || !p.tables[*table].virtual_fact { continue; }
+            let keys: Vec<_> = args.iter().map(|a| cell.value(a)).collect();
+            if keys.iter().all(|a| match a {
+                Arg::Literal(_) => true,
+                Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
+            }) { return Some(Self { operation, table:*table, keys }); }
+        }
+        None
+    }
+    pub fn storage_bytes(&self) -> usize { self.keys.capacity() * std::mem::size_of::<Arg>() }
+    pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut Counts) {
+        if !instance.constructor.pending() { return; }
+        instance.constructor = Prepared::Absent;
+        counts.attempts += 1;
+        let Some(reads) = reads.filter(|r| r.constructor_available(self.table)) else {
+            counts.unavailable += 1; return;
+        };
+        let mut key = smallvec::SmallVec::<[Value; 4]>::new();
+        for arg in &self.keys {
+            let value = match arg {
+                Arg::Literal(v) => v,
+                Arg::Slot(s) => match instance.values.get(s) {
+                    Some(v) => v, None => { counts.missing_inputs += 1; return; }
+                },
+            };
+            counts.key_fields += 1;
+            key.push(canon(value, reads.parents));
+        }
+        counts.key_spills += u64::from(key.spilled());
+        counts.lookups += 1;
+        match reads.point(self.table, &key, scratch, work) {
+            Ok(Some((_, _, Dependency::Fact(fact)))) => {
+                instance.constructor = Prepared::Found(fact);
+                counts.hits += 1;
+                counts.result_writes += 1;
+            }
+            Ok(None) => counts.misses += 1,
+            // Speculation cannot introduce a query failure. The source
+            // operation remains responsible at its original effect position.
+            _ => counts.unavailable += 1,
+        }
+    }
+}

@@ -399,6 +399,8 @@ impl Frame {
             #[cfg(feature="sparse-cells")]
             prepared: 0,
             #[cfg(feature="sparse-cells")]
+            constructor: Default::default(),
+            #[cfg(feature="sparse-cells")]
             preparation_attempted: false,
             #[cfg(feature = "view-consumers")]
             view_source: None,

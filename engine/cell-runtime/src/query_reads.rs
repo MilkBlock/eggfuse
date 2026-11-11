@@ -58,6 +58,13 @@ impl Graph {
     }
 }
 impl QueryReads<'_> {
+    pub fn constructor_available(&self, table: usize) -> bool {
+        match &self.constructors {
+            Some(Constructors::Canonical(_)) => true,
+            Some(Constructors::Ports(read)) => read.complete_table(table),
+            None => false,
+        }
+    }
     #[cfg(feature = "parallel-residuals")]
     pub fn canonical_rows(&self) -> bool { matches!(self.constructors, Some(Constructors::Canonical(_))) }
     #[cfg(feature = "parallel-residuals")]

@@ -161,6 +161,16 @@ overall objective complete until all applicable items above are proven.
   work toward constructor resolution and local completion. Removing scalar
   dispatch, graph attachment and publication-arena borrowing alone does not
   establish concurrent shared effects, repair or useful full-worker utilization.
+- Input-ready constructor preparation now continues in the existing query
+  invocation and its actual witness stays with the instance into source RHS;
+  see [work and acceptance](../benchmarks/cell-constructor-preparation/README.md).
+  Both ordinary execution and constructor prefixes consume that witness without
+  a repeated serial lookup, retaining source order and fallback at the same
+  key. Raytrace removes 556,868 source lookups but adds 913,319 probes, 1,027,684
+  validation field checks and larger instance/owner headers. Total lookups and
+  uncalibrated work increase. This bounded takeover remains opt-in; compiler
+  selection/validation, independent parked scheduling and useful throughput
+  improvement remain necessary. It is not completion of the overall goal.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

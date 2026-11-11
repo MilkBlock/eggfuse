@@ -325,6 +325,8 @@ impl Group {
             #[cfg(feature="sparse-cells")]
             prepared: 0,
             #[cfg(feature="sparse-cells")]
+            constructor: Default::default(),
+            #[cfg(feature="sparse-cells")]
             preparation_attempted: false,
             view_source: match (self.view, d.witness) {
                 (Some(_), Dependency::Function(i)) => Some(i),

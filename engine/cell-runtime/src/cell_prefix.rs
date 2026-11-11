@@ -89,7 +89,8 @@ impl Graph {
     /// same frame and returns the next original operation; no prefix is replayed.
     pub(crate) fn start_cell<P: Prefix>(&mut self, template: usize,
         values: crate::slots::Slots, parent: Option<FactRef>,
-        receipts: &mut crate::cell::Effects, mut prefix: P) -> Result<Start> {
+        receipts: &mut crate::cell::Effects, mut prefix: P,
+        #[cfg(feature = "sparse-cells")] mut prepared: Option<(usize, &mut Option<FactRef>)>) -> Result<Start> {
         let cell = self.reserve_cell_id()?;
         #[cfg(feature = "sparse-cells")]
         if P::SEALED_INPUTS { self.trust_sealed_frame(cell); }
@@ -108,7 +109,11 @@ impl Graph {
             let assigned = if let Op::Set(_, _, v) = instruction {
                 Some(self.argument_in(cell, &frame, v)?)
             } else { None };
-            if let Some(row) = self.lookup_canonical(table, &key)? {
+            #[cfg(feature = "sparse-cells")]
+            let witness = prepared.as_mut().filter(|(position,_)| *position == op).and_then(|(_,fact)| fact.take());
+            #[cfg(not(feature = "sparse-cells"))]
+            let witness = None;
+            if let Some(row) = self.lookup_prepared_constructor(table, &key, witness)? {
                 let value = row.values.last().unwrap();
                 match instruction {
                     Op::Let(dst, ..) => {

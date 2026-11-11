@@ -457,6 +457,8 @@ impl Executor {
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
                 #[cfg(feature="sparse-cells")]
+                constructor: Default::default(),
+                #[cfg(feature="sparse-cells")]
                 preparation_attempted: false,
                 #[cfg(feature = "view-consumers")]
                 view_source: None,
@@ -978,6 +980,8 @@ impl Executor {
             out.push(Binding {
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
+                #[cfg(feature="sparse-cells")]
+                constructor: Default::default(),
                 #[cfg(feature="sparse-cells")]
                 preparation_attempted: false,
                 #[cfg(feature = "view-consumers")]
@@ -1631,6 +1635,8 @@ impl Executor {
                             #[cfg(feature="sparse-cells")]
                             prepared: 0,
                             #[cfg(feature="sparse-cells")]
+                            constructor: Default::default(),
+                            #[cfg(feature="sparse-cells")]
                             preparation_attempted: false,
                             #[cfg(feature = "view-consumers")]
                             view_source: None,
@@ -1790,6 +1796,8 @@ impl Executor {
                             found.push(Binding {
                                 #[cfg(feature="sparse-cells")]
                                 prepared: 0,
+                                #[cfg(feature="sparse-cells")]
+                                constructor: Default::default(),
                                 #[cfg(feature="sparse-cells")]
                                 preparation_attempted: false,
                                 #[cfg(feature = "view-consumers")]
@@ -1972,6 +1980,8 @@ impl Executor {
                                     #[cfg(feature="sparse-cells")]
                                     prepared: 0,
                                     #[cfg(feature="sparse-cells")]
+                                    constructor: Default::default(),
+                                    #[cfg(feature="sparse-cells")]
                                     preparation_attempted: false,
                                     #[cfg(feature = "view-consumers")]
                                     view_source: None,
@@ -2097,6 +2107,10 @@ impl Executor {
     ) -> Result<Option<owned_cell::Execution>> {
         #[cfg(feature = "iterative-bake")]
         let mut b = b;
+        #[cfg(feature = "sparse-cells")]
+        let mut constructor = b.constructor.take();
+        #[cfg(feature = "sparse-cells")]
+        { self.graph.stats.constructor_prepared_inputs += u64::from(constructor.is_some()); }
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
         let stage_cursor = self.stage_spine.begin_step(
@@ -2352,13 +2366,16 @@ impl Executor {
         let prepared=b.prepared;
         #[cfg(not(feature="sparse-cells"))]
         let prepared=0;
-        let ordinary = |me: &mut Self, values: crate::slots::Slots,
+        #[allow(unused_mut)]
+        let mut ordinary = |me: &mut Self, values: crate::slots::Slots,
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
             if me.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
                 && stage_cursor.is_none() && origin.is_none()
             {
                 let width = me.graph.program.templates[template].ops.len();
-                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases))
+                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases),
+                    #[cfg(feature = "sparse-cells")]
+                    me.graph.program.executions[rid].constructor.as_ref().map(|p|(p.operation,&mut constructor)))
             } else {
                 #[cfg(feature = "sparse-cells")]
                 let cell = me.graph.begin_transient(template, values, b.parent)?;
@@ -2370,7 +2387,9 @@ impl Executor {
         #[cfg(feature = "rhs-locals")]
         let start = if let Some(start) = resume_start { start } else if let Some(block) = local {
             self.graph.start_cell(template, b.values, b.parent, &mut effect_receipts,
-                crate::graph::cell_prefix::LocalPrefix::new(&block, &mut self.local_counts))?
+                crate::graph::cell_prefix::LocalPrefix::new(&block, &mut self.local_counts),
+                #[cfg(feature = "sparse-cells")]
+                self.graph.program.executions[rid].constructor.as_ref().map(|p|(p.operation,&mut constructor)))?
         } else {
             ordinary(self, b.values, &mut effect_receipts)?
         };
@@ -2421,6 +2440,8 @@ impl Executor {
             ops: self.graph.program.templates[template].ops.clone(),
             aliases: static_skip, known: b.known, cursor: stage_cursor,
             effects: effect_receipts, continuation: origin.is_some(),
+            #[cfg(feature = "sparse-cells")]
+            constructor,
             work: owned_cell::Work::started(&self.graph, facts, updates, stage_counts),
             #[cfg(feature = "view-consumers")]
             view_source: b.view_source,
@@ -3182,6 +3203,12 @@ impl Executor {
         { report["cell_execution"]["suspension"] = json!({"schema":"owned-rhs-context/v1",
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
+        #[cfg(feature = "sparse-cells")]
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v1",
+            "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
+            "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),
+            "inline_evidence_bytes":std::mem::size_of::<crate::cell::constructor_prepare::Prepared>(),
+            "scope":"one input-ready actual witness; validated at the original constructor; no speculative Eq slot"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

@@ -45,6 +45,8 @@ pub(super) struct Execution {
     pub known: QueryFacts,
     pub cursor: Option<crate::stage_spine::Started>,
     pub effects: crate::cell::Effects,
+    #[cfg(feature = "sparse-cells")]
+    pub constructor: Option<FactRef>,
     pub continuation: bool,
     pub work: Work,
     #[cfg(feature = "view-consumers")]
@@ -159,6 +161,15 @@ impl Executor {
                 return Ok(true);
             }
         }
+        #[cfg(feature = "sparse-cells")]
+        if self.graph.program.executions[execution.rule].constructor.as_ref()
+            .is_some_and(|plan| plan.operation == position)
+            && let Some(witness) = execution.constructor.take() {
+            let Op::Let(dst, Call::Table(table), args) = op else { unreachable!("checked constructor preparation") };
+            self.graph.construct_prepared(execution.cell, position, *table, args, *dst,
+                execution.effects.slot(position), witness)?;
+            return Ok(true);
+        }
         #[cfg(feature = "view-consumers")]
         let source = execution.view_source;
         #[cfg(not(feature = "view-consumers"))]
@@ -240,6 +251,7 @@ mod tests {
         let execution = Execution {
             rule: 0, cell, phase: Phase::Ready, ops, aliases: None, known: QueryFacts::None,
             cursor: None, effects: Effects::begin(plan, vec![], false), continuation: true, work: Work::default(),
+            constructor: None,
             #[cfg(feature = "view-consumers")]
             view_source: None,
             transfers: Default::default(), transfer: 0,

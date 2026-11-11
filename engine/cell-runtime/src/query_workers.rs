@@ -17,6 +17,7 @@ mod ready;
 pub(crate) struct Counts {
     pub execution: crate::cell::execution::Counts,
     pub worker_local_operations: Vec<u64>,
+    pub worker_constructor_lookups: Vec<u64>,
     #[cfg(feature = "cell-query-sharing-audit")]
     pub sharing_audit: sharing_audit::Counts,
     pub fixed_read_probes: u64,
@@ -195,6 +196,10 @@ impl Executor {
         self.cell_execution = Some(crate::cell::execution::runtime::State {
             grain, counts: Default::default(),
         });
+        for rule in 0..self.graph.program.rules.len() {
+            let constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
+            self.graph.program.executions[rule].constructor = constructor;
+        }
         Ok(())
     }
     #[cfg(feature = "parallel-entry-filters")]
@@ -232,7 +237,7 @@ impl Executor {
             cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
-            stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_steps: vec![0; workers],
+            stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_constructor_lookups:vec![0;workers], worker_steps: vec![0; workers],
                 #[cfg(feature = "cell-query-sharing-audit")]
                 sharing_audit,
                 worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
@@ -301,6 +306,8 @@ impl Executor {
                     #[cfg(feature="sparse-cells")]
                     prepared: 0,
                     #[cfg(feature="sparse-cells")]
+                    constructor: Default::default(),
+                    #[cfg(feature="sparse-cells")]
                     preparation_attempted: false,
                     #[cfg(feature="view-consumers")]
                     view_source: None,
@@ -311,6 +318,10 @@ impl Executor {
                     epoch, parent: None, continuation: None, compiled: true,
                 };
                 local.prepare(template,&mut answer,&mut counts.execution);
+                if let Some(plan) = &local.constructor {
+                    plan.prepare(&mut answer,Some(&reads),&mut frame.constructors,
+                        &mut counts.constructors,&mut counts.execution.constructor);
+                }
                 answers.push(answer);
             }
             counts.answers = answers.len() as u64;
@@ -336,7 +347,7 @@ impl Executor {
             self.graph.stats.register_result_writes += counts.result_writes;
             self.graph.stats.key_operations += counts.key_operations;
             self.graph.stats.residual_candidates += counts.point_reads;
-            self.graph.key_lookup_calls.set(self.graph.key_lookup_calls.get() + counts.point_reads);
+            self.graph.key_lookup_calls.set(self.graph.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups);
             out.append(&mut answers);
         }
         Ok(true)
@@ -432,6 +443,7 @@ impl Workers {
         if let Some(worker) = worker {
             self.stats.worker_entries[worker] += c.entries;
             self.stats.worker_local_operations[worker] += c.execution.operations;
+            self.stats.worker_constructor_lookups[worker] += c.execution.constructor.lookups;
             self.stats.worker_steps[worker] += c.steps;
             self.stats.worker_frame_capacity_bytes[worker] = self.stats.worker_frame_capacity_bytes[worker].max(c.frame_capacity_bytes);
         } else {
@@ -802,6 +814,7 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
         #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan) -> Result<()> {
+        let constructor_groups = self.matched.constructor_groups;
         let mut ready = ready::borrow(g, matches, spine, &mut self.matched);
         if self.cell_queries.is_empty() && ready.is_empty() { return Ok(()); }
         #[cfg(feature="parallel-residuals")]
@@ -810,10 +823,11 @@ impl Workers {
         let residual_active=!prepared.is_empty();
         #[cfg(not(feature="parallel-residuals"))]
         let residual_active=false;
-        let reads = if self.cell_queries.is_empty() { None } else {
-            Some(g.query_reads(&[], &mut self.stats.admission_table_checks)
-                .ok_or("Cell query Run snapshot changed before completion")?)
-        };
+        let reads = if self.cell_queries.is_empty() && constructor_groups == self.matched.constructor_groups { None }
+            else { g.query_reads(&[], &mut self.stats.admission_table_checks) };
+        if !self.cell_queries.is_empty() && reads.is_none() {
+            return Err("Cell query Run snapshot changed before completion".into());
+        }
         // The move-only coordinator records retain the original Entry and
         // cursor. Only small borrowed headers cross the thread boundary.
         let mut ranges = Vec::new();
@@ -911,6 +925,10 @@ impl Workers {
                 match answer {
                     Ok(Some(mut answer)) => {
                         local[code.rule].prepare(&templates[code.template],&mut answer,&mut counts.execution);
+                        if let Some(plan) = &local[code.rule].constructor {
+                            plan.prepare(&mut answer,Some(&reads),&mut frame.constructors,
+                                &mut counts.constructors,&mut counts.execution.constructor);
+                        }
                         // Point-only tasks reserve once. Mixed expansions may
                         // return more rows, so also charge subsequent growth.
                         if answers.len() == answers.capacity() {
@@ -947,14 +965,18 @@ impl Workers {
             self.pool.as_ref().unwrap().install(|| {
                 let queries = || ranges.par_iter().map(|range| with_worker_frame(|frame| run(range, frame))).collect();
                 if ready.is_empty() { (queries(), ready::Work::default()) }
-                else if ranges.is_empty() { (Vec::new(), ready::parallel(&mut ready, grain)) }
-                else { rayon::join(queries, || ready::parallel(&mut ready, grain)) }
+                else if ranges.is_empty() { (Vec::new(), ready::parallel(&mut ready, grain, reads.as_ref())) }
+                else { rayon::join(queries, || ready::parallel(&mut ready, grain, reads.as_ref())) }
             })
         } else {
             (ranges.iter().map(|range| self.inline_frame.with(|frame| run(range, frame))).collect(),
-                ready::inline(&mut ready, grain))
+                ready::inline(&mut ready, grain, reads.as_ref()))
         };
         drop(ready);
+        drop(reads);
+        g.record_constructor_query_work(&completed.constructors);
+        g.key_lookup_calls.set(g.key_lookup_calls.get() + completed.execution.constructor.lookups);
+        self.stats.constructors.add(&completed.constructors);
         self.stats.execution.add(&completed.execution);
         self.matched.execution.add(&completed.execution);
         self.matched.instances += completed.instances;
@@ -969,6 +991,9 @@ impl Workers {
         self.matched.inline_operations += completed.execution.operations - worker_operations;
         for (worker, operations) in completed.workers.into_iter().enumerate() {
             self.stats.worker_local_operations[worker] += operations;
+        }
+        for (worker, lookups) in completed.constructor_workers.into_iter().enumerate() {
+            self.stats.worker_constructor_lookups[worker] += lookups;
         }
         let elapsed=execution.map_or(0.0,|clock|clock.elapsed().as_secs_f64());
         let header_capacity=headers.capacity();
@@ -999,7 +1024,7 @@ impl Workers {
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
             spine.stats.record_query_worker(&counts);
-            g.key_lookup_calls.set(g.key_lookup_calls.get() + counts.point_reads);
+            g.key_lookup_calls.set(g.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups);
             g.stats.key_operations += counts.key_operations;
             self.absorb(&counts, worker);
             self.stats.completion_headers += counts.completion_headers;

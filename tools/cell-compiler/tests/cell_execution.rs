@@ -52,6 +52,91 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn prepared_constructor_witnesses_replace_source_lookups_in_both_execution_paths() {
+    for stable in [false,true] {
+    for scalar in [false, true] {
+        let rhs = if scalar { "(let a (+ n 1)) (F x a) (set (Out x) a)" }
+            else { "(F x n)" };
+        let existing: String = (0..64).map(|n| format!("(F (N {n}) {})\n", n + i32::from(scalar))).collect();
+        let source = format!("{HEADER}\n(rule ((= x (N n))) ({rhs}) :ruleset step)\n{}\n{existing}\n(run-schedule (run step))", initial());
+        egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+        let create = |workers| {
+            if !stable { return executor(&source, workers); }
+            let mut e=Executor::new(Graph::new_with_local_congruence(Program::parse(artifact(&source)).unwrap()).unwrap(),true);
+            e.use_entry_publications().unwrap(); e.use_query_workers(workers,8).unwrap(); e
+        };
+        let mut control = create(4);
+        control.execute().unwrap();
+        for workers in [1, 4] {
+            let mut candidate = create(workers);
+            candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();
+            same(&control, &candidate);
+            let r = candidate.report();
+            let prep = &r["query_workers"]["stats"]["execution"]["constructor"];
+            assert_eq!(prep["lookups"], 64, "{r}");
+            assert_eq!(prep["hits"], 64);
+            assert_eq!(candidate.graph.stats.constructor_prepared_accepted, 64);
+            assert_eq!(candidate.graph.stats.constructor_prepared_rejected, 0);
+            assert_eq!(candidate.graph.key_lookup_calls.get() - 64,
+                control.graph.key_lookup_calls.get() - 64, "one source lookup removed per accepted witness");
+            assert_eq!(candidate.graph.stats.rhs_frames_avoided, control.graph.stats.rhs_frames_avoided,
+                "constructor-only source prefixes retain their frame avoidance");
+            assert_eq!(r["query_workers"]["stats"]["worker_constructor_lookups"].as_array().unwrap()
+                .iter().map(|v|v.as_u64().unwrap()).sum::<u64>(), if workers > 1 {64} else {0});
+            eprintln!("constructor-preparation {}", serde_json::json!({"scalar":scalar,"workers":workers,"stable":stable,
+                "prepared":prep,"accepted":candidate.graph.stats.constructor_prepared_accepted,
+                "rejected":candidate.graph.stats.constructor_prepared_rejected}));
+        }
+    }
+    }
+}
+
+#[test]
+fn deleted_prepared_witnesses_cannot_supply_new_constructor_identity() {
+    let source = format!(r#"{HEADER}
+(rule ((= x (N n))) ((delete (F x n))) :ruleset step)
+(rule ((= x (N n))) ((F x n)) :ruleset step)
+{}
+{}
+(run-schedule (run step))
+"#, initial(), (0..64).map(|n|format!("(F (N {n}) {n})\n")).collect::<String>());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 4);
+    control.execute().unwrap();
+    let mut candidate = executor(&source, 4);
+    candidate.use_cell_execution(1).unwrap();
+    candidate.execute().unwrap();
+    same(&control, &candidate);
+    let prep = &candidate.report()["query_workers"]["stats"]["execution"]["constructor"];
+    assert_eq!(prep["hits"],64);
+    assert_eq!(candidate.graph.stats.constructor_prepared_accepted,0);
+    assert_eq!(candidate.graph.stats.constructor_prepared_rejected,64);
+    assert_eq!(candidate.graph.key_lookup_calls.get(),control.graph.key_lookup_calls.get()+64,
+        "stale speculation pays for both lookup paths");
+}
+
+#[test]
+fn absent_constructor_preparation_does_not_prove_absence_at_source_position() {
+    let source = format!(r#"{HEADER}
+(rule ((= x (N n))) ((F x n)) :ruleset step)
+(rule ((Start x) (= n (Input x))) ((F x n) (set (Out x) n)) :ruleset step)
+{}
+(run-schedule (run step)) (check (= (Out (N 2)) 2))
+"#,initial());
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,4); control.execute().unwrap();
+    let mut candidate=executor(&source,4); candidate.use_cell_execution(1).unwrap(); candidate.execute().unwrap();
+    same(&control,&candidate);
+    let r=candidate.report();
+    let prep=&r["query_workers"]["stats"]["execution"]["constructor"];
+    assert_eq!(prep["hits"],0);
+    assert!(prep["misses"].as_u64().unwrap()>=64);
+    assert_eq!(candidate.graph.stats.constructor_prepared_checks,0);
+    assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+}
+
+#[test]
 fn completed_matches_share_the_run_worker_invocation_without_answer_packets() {
     let source = format!(r#"{HEADER}
 (rule ((= x (N n)))

@@ -34,6 +34,9 @@ pub(crate) use effects::ProjectedEffects;
 mod query;
 #[path = "cell_execution.rs"]
 pub(crate) mod execution;
+#[cfg(feature = "sparse-cells")]
+#[path = "cell_constructor_prepare.rs"]
+pub(crate) mod constructor_prepare;
 #[path = "cell_match.rs"]
 mod matched;
 pub(crate) use matched::{Instance, Instance as Matched, QueryFacts};

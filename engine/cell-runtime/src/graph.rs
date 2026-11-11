@@ -155,6 +155,16 @@ pub struct Stats {
     #[serde(default)]
     pub rhs_context_suspends: u64,
     #[serde(default)]
+    pub constructor_prepared_inputs: u64,
+    #[serde(default)]
+    pub constructor_prepared_checks: u64,
+    #[serde(default)]
+    pub constructor_prepared_fields: u64,
+    #[serde(default)]
+    pub constructor_prepared_accepted: u64,
+    #[serde(default)]
+    pub constructor_prepared_rejected: u64,
+    #[serde(default)]
     pub rhs_context_resumes: u64,
     #[serde(default)]
     pub rhs_suspend_private: u64,
@@ -1742,7 +1752,7 @@ impl Graph {
         aa: &[Arg],
         dst: usize,
     ) -> Result<Value> {
-        self.construct_inner(cell, op, t, aa, dst, None, None)
+        self.construct_inner(cell, op, t, aa, dst, None, None, None)
     }
     pub fn construct_visible(
         &mut self,
@@ -1753,7 +1763,7 @@ impl Graph {
         dst: usize,
         visible: &mut bool,
     ) -> Result<Value> {
-        self.construct_inner(cell, op, t, aa, dst, Some(visible), None)
+        self.construct_inner(cell, op, t, aa, dst, Some(visible), None, None)
     }
     pub fn construct_recorded(
         &mut self,
@@ -1765,7 +1775,36 @@ impl Graph {
         receipt: &mut Option<Dependency>,
         visible: &mut bool,
     ) -> Result<Value> {
-        self.construct_inner(cell, op, t, aa, dst, Some(visible), Some(receipt))
+        self.construct_inner(cell, op, t, aa, dst, Some(visible), Some(receipt), None)
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn construct_prepared(&mut self, cell: u32, op: usize, table: usize,
+        args: &[Arg], dst: usize, receipt: Option<&mut Option<Dependency>>, witness: FactRef) -> Result<Value> {
+        self.construct_inner(cell, op, table, args, dst, None, receipt, Some(witness))
+    }
+    /// A prepared witness is evidence for this one source lookup, never an
+    /// assigned Eq value. Invalid evidence uses the very same current key.
+    pub(crate) fn lookup_prepared_constructor(&mut self, table: usize, key: &[Value],
+        witness: Option<FactRef>) -> Result<Option<Row>> {
+        #[cfg(feature = "sparse-cells")]
+        if let Some(witness) = witness {
+            self.stats.constructor_prepared_checks += 1;
+            if let Some((row, _)) = self.live_handoff_origin(witness, table)? {
+                let fields = &row.values[..row.values.len() - 1];
+                let equal = fields.len() == key.len() && fields.iter().zip(key).all(|(a,b)| {
+                    self.stats.constructor_prepared_fields += 1;
+                    a == b
+                });
+                if equal {
+                    self.stats.constructor_prepared_accepted += 1;
+                    return Ok(Some(row));
+                }
+            }
+            self.stats.constructor_prepared_rejected += 1;
+        }
+        #[cfg(not(feature = "sparse-cells"))]
+        let _ = witness;
+        self.lookup_canonical(table, key)
     }
     fn construct_inner(
         &mut self,
@@ -1776,10 +1815,11 @@ impl Graph {
         dst: usize,
         visible: Option<&mut bool>,
         receipt: Option<&mut Option<Dependency>>,
+        witness: Option<FactRef>,
     ) -> Result<Value> {
         self.stats.constructor_requests += 1;
         let key = self.inline_arguments(cell, aa)?;
-        let row = self.lookup_canonical(t, &key)?;
+        let row = self.lookup_prepared_constructor(t, &key, witness)?;
         if let Some(row) = row {
             if let Some(receipt) = receipt {
                 *receipt = Some(row.witness);

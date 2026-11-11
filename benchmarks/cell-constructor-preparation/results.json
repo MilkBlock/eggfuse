@@ -1,0 +1,210 @@
+{
+  "scope": "standalone Cell CPU; work and semantic evidence, not timing",
+  "control_commit": "38c39c56",
+  "runtime_sha256": "555a97f04af410da223df333a60f95d76d9f087f62d35bcaa92b7760f702e943",
+  "control_runtime_sha256": "f8e761908cff5d19f8f22cd0b5b48f955d7504999d7b46fa246602a2ba3f75ad",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_ordered_run_summaries_and_prior_graph_work": true,
+      "preparation": {
+        "attempts": 5117,
+        "hits": 3151,
+        "key_fields": 9806,
+        "key_spills": 0,
+        "lookups": 5117,
+        "misses": 1966,
+        "missing_inputs": 0,
+        "result_writes": 3151,
+        "unavailable": 0
+      },
+      "source": {
+        "constructor_prepared_inputs": 3131,
+        "constructor_prepared_checks": 2874,
+        "constructor_prepared_fields": 5250,
+        "constructor_prepared_accepted": 2874,
+        "constructor_prepared_rejected": 0
+      },
+      "worker_lookups": 3637,
+      "unused_before_source": 20,
+      "unused_at_source": 257,
+      "total_key_lookups": [
+        12235,
+        14478
+      ],
+      "source_key_lookups_removed": 2874,
+      "fact_decode_calls": [
+        1890,
+        1890
+      ],
+      "instance_header_bytes": [
+        128,
+        144
+      ],
+      "execution_header_bytes": [
+        440,
+        456
+      ],
+      "compiled_payload_bytes": [
+        400632,
+        433944
+      ],
+      "matched_preparation": {
+        "admission_instances": 481,
+        "chunks": 481,
+        "constructor_groups": 448,
+        "deferred_groups": 26,
+        "deferred_instances": 70,
+        "deferred_operations": 29,
+        "empty_chunks": 338,
+        "execution": {
+          "capacity_growth_bytes": 11880,
+          "constructor": {
+            "attempts": 1965,
+            "hits": 1299,
+            "key_fields": 3493,
+            "key_spills": 0,
+            "lookups": 1965,
+            "misses": 666,
+            "missing_inputs": 0,
+            "result_writes": 1299,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 316,
+          "instances": 417,
+          "later_deferred_failures": 0,
+          "later_operations": 445,
+          "operations": 649,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 649
+        },
+        "groups": 481,
+        "header_capacity_bytes": 39040,
+        "header_growths": 234,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 238,
+        "instances": 2071,
+        "matched_only_invocations": 68,
+        "mixed_invocations": 126,
+        "rule_checks": 2957,
+        "worker_operations": 411
+      },
+      "plan": {
+        "inline_evidence_bytes": 12,
+        "instance_bytes": 144,
+        "rules": 366,
+        "schema": "cell-constructor-preparation/v1",
+        "scope": "one input-ready actual witness; validated at the original constructor; no speculative Eq slot"
+      },
+      "net_saved_uncalibrated_operations": -41649,
+      "work_ledger_sha256": "aab8f90f614170ea06df47d726effeac675d888f3e98bf60e457c9ac1484f120"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_ordered_run_summaries_and_prior_graph_work": true,
+      "preparation": {
+        "attempts": 913319,
+        "hits": 587939,
+        "key_fields": 1763225,
+        "key_spills": 0,
+        "lookups": 913319,
+        "misses": 325380,
+        "missing_inputs": 0,
+        "result_writes": 587939,
+        "unavailable": 0
+      },
+      "source": {
+        "constructor_prepared_inputs": 586061,
+        "constructor_prepared_checks": 557955,
+        "constructor_prepared_fields": 1027684,
+        "constructor_prepared_accepted": 556868,
+        "constructor_prepared_rejected": 1087
+      },
+      "worker_lookups": 898878,
+      "unused_before_source": 1878,
+      "unused_at_source": 28106,
+      "total_key_lookups": [
+        3694211,
+        4050662
+      ],
+      "source_key_lookups_removed": 556868,
+      "fact_decode_calls": [
+        386247,
+        386247
+      ],
+      "instance_header_bytes": [
+        128,
+        144
+      ],
+      "execution_header_bytes": [
+        440,
+        456
+      ],
+      "compiled_payload_bytes": [
+        2327656,
+        2360968
+      ],
+      "matched_preparation": {
+        "admission_instances": 5025,
+        "chunks": 11480,
+        "constructor_groups": 4806,
+        "deferred_groups": 210,
+        "deferred_instances": 9187,
+        "deferred_operations": 4283,
+        "empty_chunks": 9409,
+        "execution": {
+          "capacity_growth_bytes": 1140624,
+          "constructor": {
+            "attempts": 464871,
+            "hits": 330204,
+            "key_fields": 913891,
+            "key_spills": 0,
+            "lookups": 464871,
+            "misses": 134667,
+            "missing_inputs": 0,
+            "result_writes": 330204,
+            "unavailable": 0
+          },
+          "deferred_failures": 0,
+          "frame_growths": 33530,
+          "instances": 58552,
+          "later_deferred_failures": 0,
+          "later_operations": 76010,
+          "operations": 97464,
+          "reserved_rhs_slot_bytes": 0,
+          "slot_writes": 97464
+        },
+        "groups": 5025,
+        "header_capacity_bytes": 382240,
+        "header_growths": 2280,
+        "histogram_capacity_bytes": 0,
+        "histogram_growths": 0,
+        "inline_operations": 2020,
+        "instances": 476559,
+        "matched_only_invocations": 769,
+        "mixed_invocations": 1195,
+        "rule_checks": 46635,
+        "worker_operations": 95444
+      },
+      "plan": {
+        "inline_evidence_bytes": 12,
+        "instance_bytes": 144,
+        "rules": 366,
+        "schema": "cell-constructor-preparation/v1",
+        "scope": "one input-ready actual witness; validated at the original constructor; no speculative Eq slot"
+      },
+      "net_saved_uncalibrated_operations": -7502264,
+      "work_ledger_sha256": "52de2cc40c2696d1c8c9e64b8f514b3546bafd815bef9ba43287e4885a269743"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

@@ -9,6 +9,8 @@ use crate::{
 /// No graph identity is allocated until the ordinary ordered commit path.
 #[derive(Debug)]
 pub(crate) struct Instance {
+    #[cfg(feature = "sparse-cells")]
+    pub constructor: super::constructor_prepare::Prepared,
     #[cfg(feature = "view-consumers")]
     pub view_source: Option<usize>,
     // The existing move-only continuation token follows its winning match.
@@ -58,6 +60,8 @@ impl Instance {
     }
     pub fn matched(values: Slots, known: QueryFacts, epoch: u64) -> Self {
         Self {
+            #[cfg(feature = "sparse-cells")]
+            constructor: Default::default(),
             #[cfg(feature = "view-consumers")]
             view_source: None,
             #[cfg(feature = "iterative-bake")]

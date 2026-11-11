@@ -39,6 +39,11 @@ pub(crate) struct Segment {
 }
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub(crate) struct Plan {
+    /// Selected from validated aliases when experimental Cell execution is
+    /// enabled. It is reconstructed, never trusted from an artifact hint.
+    #[cfg(feature = "sparse-cells")]
+    #[serde(skip)]
+    pub constructor: Option<super::constructor_prepare::Plan>,
     pub segments: Vec<Segment>,
     /// Source positions after the first boundary whose scalar operands are
     /// derived entirely from matched inputs. Outputs have unique SSA slots;
@@ -177,10 +182,17 @@ impl Plan {
                 }
             }
         }
-        Self { segments, input_ready }
+        Self { segments, input_ready,
+            #[cfg(feature = "sparse-cells")] constructor: None }
     }
     pub fn storage_bytes(&self) -> usize {
-        self.input_ready.capacity() * std::mem::size_of::<usize>()
+        let constructor = {
+            #[cfg(feature = "sparse-cells")]
+            { self.constructor.as_ref().map_or(0, |p| p.storage_bytes()) }
+            #[cfg(not(feature = "sparse-cells"))]
+            { 0 }
+        };
+        constructor + self.input_ready.capacity() * std::mem::size_of::<usize>()
             + self.segments.capacity() * std::mem::size_of::<Segment>()
             + self
                 .segments
@@ -228,11 +240,16 @@ impl Plan {
     }
     #[cfg(feature = "sparse-cells")]
     pub fn has_preparation(&self) -> bool {
+        self.has_scalar_preparation() || self.constructor.is_some()
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn has_scalar_preparation(&self) -> bool {
         self.segments[0].local_operations > 0 || !self.input_ready.is_empty()
     }
     #[cfg(feature = "sparse-cells")]
     pub fn needs_preparation(&self, instance: &super::Instance) -> bool {
-        self.has_preparation() && !instance.preparation_attempted
+        (self.has_scalar_preparation() && !instance.preparation_attempted)
+            || (self.constructor.is_some() && instance.constructor.pending())
     }
     #[cfg(feature = "sparse-cells")]
     pub fn prepare(
@@ -242,7 +259,7 @@ impl Plan {
         counts: &mut Counts,
     ) {
         let first = &self.segments[0];
-        if !self.needs_preparation(instance) { return; }
+        if !self.has_scalar_preparation() || instance.preparation_attempted { return; }
         instance.preparation_attempted = true;
         debug_assert_eq!(instance.prepared, 0);
         counts.instances += 1;
@@ -311,6 +328,7 @@ impl Plan {
 #[cfg(feature = "sparse-cells")]
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub constructor: super::constructor_prepare::Counts,
     pub instances: u64,
     pub operations: u64,
     pub later_operations: u64,
@@ -324,6 +342,7 @@ pub(crate) struct Counts {
 #[cfg(feature = "sparse-cells")]
 impl Counts {
     pub fn add(&mut self, other: &Self) {
+        self.constructor.add(&other.constructor);
         self.instances += other.instances;
         self.operations += other.operations;
         self.later_operations += other.later_operations;
