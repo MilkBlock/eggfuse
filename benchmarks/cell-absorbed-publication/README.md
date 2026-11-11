@@ -2,8 +2,8 @@
 
 Control: `9b1844ae`. This is the **standalone Cell CPU**, not native egglog.
 Work and allocation checks below establish a publication takeover, not a
-throughput improvement or a general sparsity theorem. No new timing campaign
-has been run for this change.
+throughput improvement or a general sparsity theorem. The subsequent five-commit
+timing checkpoint below measures cumulative changes, not this takeover alone.
 
 ## Opportunity and proof
 
@@ -95,7 +95,58 @@ Allocator-instrumented short executions:
 
 The additions reconcile with growth of the new temporary vector. These are
 cumulative requests, not RSS or traffic measurements. No full-Raytrace
-allocation measurement or throughput improvement is claimed here.
+allocation measurement was made.
+
+## Five-commit throughput checkpoint
+
+Candidate `9560f11e`, previous checkpoint `4cfd0f7e`, historical fastest
+`8fffff65`. All four lanes use frozen compatible programs, canonical repair
+ports and Entry publication. Ordinary release executables enable
+`sparse-cells,view-ports,storage-metrics`; no profiling or allocation instrumentation
+runs during timing. One warmup per lane precedes seven sum-bits and five
+Raytrace repetitions, interleaved in a reproducible shuffled order. No compilation
+runs concurrently. `timing.json` keeps the raw timing observations and hashes.
+
+| Median | Historical fast | Previous checkpoint | Current serial | Current four workers |
+|---|---:|---:|---:|---:|
+| sum-bits inference | 17.501 ms | 14.888 ms | 14.710 ms | 14.924 ms |
+| sum-bits whole process | 129.821 ms | 126.838 ms | 122.315 ms | 126.855 ms |
+| Raytrace inference | 6.452 s | 5.916 s | 5.765 s | 5.776 s |
+| Raytrace whole process | 9.304 s | 8.575 s | 8.436 s | 8.419 s |
+
+Current serial / previous checkpoint paired inference ratios are **0.993
+[0.974, 1.004]** for sum-bits and **0.973 [0.927, 1.015]** for Raytrace
+(paired bootstrap 95% intervals). Both cross parity: this campaign does not
+establish an incremental speedup. Whole-process intervals also cross parity.
+It does not isolate the contribution of the Entry-root takeover from the earlier
+inline-function and private-row changes.
+
+Current serial remains faster than the historical control in these inference
+samples: paired ratios 0.839 [0.820, 0.852] and 0.887 [0.859, 0.920]. This is
+well short of 2x. Four workers do not establish a benefit over current serial:
+inference ratios 1.019 [0.976, 1.075] and 1.003 [0.974, 1.053]. All observations,
+including large whole-process outliers, are retained. These finite samples do
+not establish strict non-regression or cross-machine performance guarantees.
+The four-worker configuration does real worker work on Raytrace (416,200 query
+entries across four workers). Sum-bits has no entries executed on workers at
+grain 64; that lane measures the configured coordinator path, not parallel scaling.
+
+Every measured and warmup candidate reproduces the previous checkpoint's exact
+final state and ordered Run signature. The historical control retains its own
+validated choices under the existing frozen source-window contract. Sum-bits
+uses the already accepted compatible export. No acceptance rules are changed.
+Raytrace evidence is relative, not an independent native proof. Actual writes,
+unions and matches remain equal to the checkpoint. Queries remain unchanged
+under the **same worker configuration**: Raytrace serial 2,584,660, four workers
+2,555,377; sum-bits serial 12,139, four workers 12,085. The worker-related query
+difference already existed at the previous checkpoint and earns no new credit.
+
+Decision: do not treat lower Completion counts as demonstrated latency savings.
+The next structural experiment must establish an absorption condition before
+query expansion and discharge internal execution with existing Cell evidence.
+Static membership alone is insufficient; scalar changes, new consumers, source
+publication and lifecycle obligations still matter. Small one-step fanout does
+not prove small transitive propagation or cheap reusable completion.
 
 ## Validation
 
@@ -137,3 +188,13 @@ The collector expects frozen binaries named `before-prefix`, `prefix` and
 `observer` in ROOT; it hashes them and the evidence. The semantic directory uses
 the documented unchanged native inputs and the candidate `run-values/state.json`.
 No generated binaries or raw graph exports are tracked.
+
+For the normal throughput checkpoint, `SAVED` is the frozen
+`out/cell-current-checkpoint` directory (including its accepted exports and input
+files), `CURRENT` is the frozen `9560f11e` normal executable, and the other binaries
+are the frozen `4cfd0f7e` and `8fffff65` executables. Use a fresh output directory:
+
+```sh
+python3 benchmarks/cell-absorbed-publication/measure.py SAVED ROOT/timing CURRENT CHECKPOINT FASTEST
+python3 benchmarks/cell-absorbed-publication/collect_timing.py ROOT/timing benchmarks/cell-absorbed-publication/timing.json
+```
