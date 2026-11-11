@@ -1,0 +1,43 @@
+\definecolor{combinedteal}{HTML}{126460}
+\definecolor{combinedorange}{HTML}{C76A18}
+\pgfplotstablegetelem{0}{seconds}\of{combined-totals.dat}
+\edef\combinedtwo{\pgfplotsretval}
+\pgfplotstablegetelem{1}{seconds}\of{combined-totals.dat}
+\edef\combinedthree{\pgfplotsretval}
+\pgfplotstablegetelem{2}{seconds}\of{combined-totals.dat}
+\edef\combinedfuse{\pgfplotsretval}
+\begin{tikzpicture}
+\begin{axis}[
+  width=4.7cm,height=4.9cm,
+  ybar,bar width=15pt,ymin=0,ymax=170,
+  symbolic x coords={2.0,3.0,EggFuse},xtick={2.0,3.0,EggFuse},
+  ylabel={Inference (s)},title={(a) All 288 inputs},
+  axis lines=left,ymajorgrids,grid style={black!12},
+  tick label style={font=\scriptsize},label style={font=\small},
+  title style={font=\small},
+  nodes near coords,point meta=y,
+  every node near coord/.append style={font=\scriptsize,/pgf/number format/fixed,/pgf/number format/precision=1},
+  enlarge x limits=0.25]
+\addplot[fill=black!35,draw=black!55,bar shift=0pt] coordinates {(2.0,\combinedtwo)};
+\addplot[fill=combinedorange,draw=combinedorange,bar shift=0pt] coordinates {(3.0,\combinedthree)};
+\addplot[fill=combinedteal,draw=combinedteal,bar shift=0pt] coordinates {(EggFuse,\combinedfuse)};
+\end{axis}
+\begin{axis}[
+  xshift=5.3cm,width=10.5cm,height=4.9cm,
+  xmin=1,xmax=96,ymin=0,ymax=4,
+  xtick={1,24,48,72,96},ytick={0,1,2,3,4},
+  xlabel={Same workload order (three-pass totals)},ylabel={Relative speed},
+  title={(b) Native 2.0 = 1},
+  axis lines=left,ymajorgrids,grid style={black!12},
+  tick label style={font=\scriptsize},label style={font=\small},
+  title style={font=\small},
+  legend style={font=\scriptsize,draw=none,at={(0.02,0.98)},anchor=north west,fill=white},
+  legend cell align=left]
+\addplot[combinedteal,thick,mark=*,mark size=0.65pt] table[x=rank,y=eggfuse]{combined-workloads.dat};
+\addlegendentry{EggFuse (batch A)}
+\addplot[combinedorange,thick,mark=diamond*,mark size=0.8pt] table[x=rank,y=native3]{combined-workloads.dat};
+\addlegendentry{egglog 3.0 (batch B)}
+\addplot[black!65,dashed,thick] table[x=rank,y=native2]{combined-workloads.dat};
+\addlegendentry{egglog 2.0 (batch B)}
+\end{axis}
+\end{tikzpicture}

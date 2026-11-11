@@ -48,10 +48,15 @@ of per-input medians. The workload geometric mean first sums the three pass
 medians for each workload. A version's total runtime improvement need not
 imply improvement on every input.
 
-The earlier Cell timing campaign is referenced separately, with checksums of
-the common source inputs. Cell is **not rerun in these native-version pairs**;
-its cross-campaign ratios are explicitly labeled. The rerun of the unchanged
-2.0 binary also exposes environmental drift between campaigns.
+The paper combines the earlier Cell campaign with this native-version campaign
+in one table and figure. `python3 benchmarks/egglog3-suite/combine.py` joins all
+288 matching source hashes, verifies the common native-2.0 executable and
+configuration, and retains all measured times without rescaling. Aggregate
+2.0 repeat drift is 0.37%; the median workload repeat ratio is 1.001. Cell comes
+from batch A and both plotted native series from batch B. The figure uses
+the same workload order and batch-B 2.0 denominator for all three engines.
+`combined-summary.json` also retains the workload drift range; a stable total
+does not imply every small input is equally stable.
 
 Successful original-source execution is not a proof of final-state or extracted
 program equivalence between versions. In particular, 3.0 changes relations to

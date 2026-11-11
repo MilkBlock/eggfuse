@@ -1,0 +1,64 @@
+{
+  "sources": [
+    "benchmarks/eggcc-suite/suite.jsonl",
+    "benchmarks/egglog3-suite/suite.jsonl"
+  ],
+  "normalization": "Common denominator for speed: batch B native2 time; no time rescaling or drift correction",
+  "batches": {
+    "A": [
+      "native2 repeat",
+      "EggFuse"
+    ],
+    "B": [
+      "native2 plotted baseline",
+      "native3"
+    ]
+  },
+  "inputs": 288,
+  "workloads": 96,
+  "phases": {
+    "1": {
+      "native2_a_s": 30.151973203,
+      "native2_s": 30.29452529,
+      "native3_s": 22.490088413,
+      "eggfuse_s": 10.88439133,
+      "native2_over_eggfuse": 2.7832998990491093,
+      "native3_over_eggfuse": 2.0662697371980654
+    },
+    "2": {
+      "native2_a_s": 63.327193413,
+      "native2_s": 63.017131546,
+      "native3_s": 44.92473483,
+      "eggfuse_s": 27.284530504,
+      "native2_over_eggfuse": 2.309628583741307,
+      "native3_over_eggfuse": 1.6465276843746273
+    },
+    "3": {
+      "native2_a_s": 46.856128003,
+      "native2_s": 47.548021002,
+      "native3_s": 30.390515413,
+      "eggfuse_s": 15.620048535,
+      "native2_over_eggfuse": 3.0440379807693088,
+      "native3_over_eggfuse": 1.945609537953974
+    },
+    "all": {
+      "native2_a_s": 140.335294619,
+      "native2_s": 140.859677838,
+      "native3_s": 97.805338656,
+      "eggfuse_s": 53.788970369,
+      "native2_over_eggfuse": 2.618746498988223,
+      "native3_over_eggfuse": 1.8183158737756355
+    }
+  },
+  "baseline_repeat": {
+    "aggregate_ratio": 1.0037366452995569,
+    "workload_median_ratio": 1.0010918333765813,
+    "workload_geomean_ratio": 1.0014158975990575,
+    "workload_min_ratio": 0.844728768331426,
+    "workload_max_ratio": 1.1008956529157188
+  },
+  "workload_geomeans": {
+    "native2_over_eggfuse": 2.4564051821232646,
+    "native3_over_eggfuse": 2.3628735170818294
+  }
+}

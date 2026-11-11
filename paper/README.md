@@ -14,9 +14,12 @@ native replay records at `b89129cc` under `docs/papers/eggcc-cpu-techreport/`.
 The current 96 × 3 eggcc replay is documented in
 `../benchmarks/eggcc-suite/README.md`; its table retains the old per-pass format.
 
-A separate paired native 2.0/3.0 release comparison is documented in
-`../benchmarks/egglog3-suite/README.md`; it uses the same captured inputs and
-reruns both native versions. Its table is distinct from the earlier Cell replay.
+The native 2.0/3.0 release comparison is documented in
+`../benchmarks/egglog3-suite/README.md`. The manuscript combines both same-machine
+campaigns in one table and figure, retaining raw times and recording the 0.37%
+aggregate drift of the repeated 2.0 executable. Every curve uses the same
+workload order and the same batch-B 2.0 denominator. Regenerate the joined
+data with `python3 benchmarks/egglog3-suite/combine.py` from the repository root.
 
 The new unmodified upstream `.egg` audit is documented in
 `../benchmarks/upstream-suite/README.md`. Its results have an explicit final-state
@@ -33,7 +36,8 @@ builds independently:
 
     python3 package.py
 
-Outputs are `dist/eggfuse.pdf` and `dist/eggfuse-arxiv-source.tar.gz`. The archive
+Outputs are `dist/eggfuse.pdf`, the standalone vector figure
+`dist/eggfuse-comparison.pdf`, and `dist/eggfuse-arxiv-source.tar.gz`. The archive
 includes current benchmark text records and drivers under `anc/`; it excludes
 binaries, generated caches and large graph exports. Running those benchmark
 drivers requires the repository, whereas building the manuscript requires only

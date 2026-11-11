@@ -21,6 +21,17 @@ def build(directory):
 
 def main():
     build(PAPER)
+    chart = DIST / 'eggfuse-comparison.tex'
+    chart.write_text(
+        '\\documentclass[tikz,border=4pt]{standalone}\n'
+        '\\usepackage[T1]{fontenc}\n\\usepackage{lmodern,pgfplots}\n'
+        '\\pgfplotsset{compat=1.18}\n\\begin{document}\n'
+        '\\input{figures/combined}\n\\end{document}\n'
+    )
+    subprocess.run(
+        ['latexmk', '-pdf', '-interaction=nonstopmode', '-halt-on-error',
+         '-outdir=dist', 'dist/eggfuse-comparison.tex'], cwd=PAPER, check=True,
+    )
     archive = DIST / "eggfuse-arxiv-source.tar.gz"
     with tempfile.TemporaryDirectory(prefix="eggfuse-paper-") as temporary:
         source = Path(temporary) / "source"
@@ -45,7 +56,7 @@ def main():
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(path, target)
         (source / "anc" / "README.txt").write_text(
-            "Current benchmark sources and text results, from ce01d785 and 2a784950.\n"
+            "Measurement records: ce01d785 and 2a784950; combined presentation sources included.\n"
             "Measured Cell implementation: 8450e627; native 3.0 release: 8879605c.\n"
             "These drivers require the full repository and its validator tools.\n"
             "Historical evidence is linked separately in the manuscript.\n"
@@ -68,6 +79,7 @@ def main():
     shutil.copyfile(DIST / "main.pdf", DIST / "eggfuse.pdf")
     print(f"Verified source archive: {archive}")
     print(f"PDF: {DIST / 'eggfuse.pdf'}")
+    print(f"Comparison figure: {DIST / 'eggfuse-comparison.pdf'}")
 
 
 if __name__ == "__main__":
