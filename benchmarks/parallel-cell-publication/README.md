@@ -213,3 +213,87 @@ lane. It compares the preceding serial checkpoint, current serial, preceding
 four-worker publication path, and the current path with one/four/eight workers.
 All samples and semantic signatures are retained by the shared process harness.
 The one-worker path runs inline, so comparisons also charge pool/dispatch costs.
+
+## Five-implementation throughput checkpoint
+
+Candidate: `aa2161e2`; preceding publication/winner control: `73c40b25`;
+preceding timed serial checkpoint: `e2da3a05`. Apple M3 Max, 16 logical CPUs.
+Current and preceding publication binaries use
+`cell-absorption,view-ports,parallel-publication`. The older checkpoint retains
+its frozen normal `storage-metrics,parallel-entry-filters` build. All lanes use
+the same frozen program per workload and enable absorption, repair ports and
+Entry publication. The same current executable supplies serial/1/4/8 lanes.
+No allocation instrumentation or `CELL_CPU_PROFILE` is enabled during timing.
+The current serial comparison includes dormant feature/layout/codegen costs.
+
+One warmup and seven sum-bits / five Raytrace repetitions per lane are
+interleaved in a fixed shuffled order. No own build or diagnostic runs overlap
+timing; process checks did not observe Cargo/rustc during this campaign. Other
+system activity is not controlled. All samples, warmups and execution order
+are retained in [timing.json](timing.json), including the 10.914 s Raytrace
+one-worker process sample. Medians of separately measured phases need not sum.
+
+| Configuration | sum-bits inference | sum-bits process | Raytrace inference | Raytrace process |
+|---|---:|---:|---:|---:|
+| Preceding checkpoint, serial | 15.773 ms | 121.909 ms | 6.294 s | 9.130 s |
+| Current binary, serial | 17.688 ms | 127.962 ms | 6.050 s | 9.064 s |
+| Before winner change, 4 workers | 21.418 ms | 129.065 ms | 6.027 s | 8.960 s |
+| Current, 1 inline worker | 17.948 ms | 125.775 ms | 6.354 s | 9.282 s |
+| Current, 4 workers | 20.559 ms | 130.404 ms | 6.017 s | 8.883 s |
+| Current, 8 workers | 24.832 ms | 133.676 ms | 6.965 s | 9.958 s |
+
+Paired inference ratios (trial/control; lower is faster) with 95% paired
+bootstrap intervals:
+
+| Comparison | sum-bits | Raytrace |
+|---|---:|---:|
+| Current 4 / preceding checkpoint serial | 1.263 [1.179, 1.565] | 0.997 [0.880, 1.064] |
+| Current 4 / current serial | 1.224 [1.162, 1.325] | 0.977 [0.959, 1.043] |
+| Current 4 / before winner change 4 | 0.946 [0.896, 1.109] | 0.998 [0.860, 1.081] |
+| Current 4 / current 1 | 1.118 [1.026, 1.349] | 0.943 [0.863, 1.084] |
+| Current 8 / current 4 | 1.181 [1.059, 1.287] | 1.153 [1.064, 1.260] |
+
+The five changes **do not establish an overall Raytrace speedup**, and
+sum-bits regresses under four-worker activation. The last winner change alone
+does not establish either a gain or a regression against its preceding
+four-worker binary. Eight workers regress both workloads here. Admission
+thresholds depend on worker count, so these are end-to-end configurations,
+not pure scaling of an identical task partition. The features remain opt-in;
+do not promote this path or claim success from the amount of transferred work.
+
+Raytrace winner completion itself has median wall residence 44.2 ms inline,
+35.4 ms with four workers and 37.1 ms with eight, including its pool calls.
+This is too small a component to explain a large overall improvement. Current
+four-worker phase medians remain search 2.541 s, RHS 1.729 s, index update
+1.161 s and repair 0.550 s. These whole phases include serial and worker work.
+
+A separate final five-second stack capture records 1,622 / 1,621 / 1,641 /
+1,657 parked samples out of 1,737 for each worker: 93.3%–95.4% wall-stack
+residence, not CPU percentages. Main-thread inference inclusive samples still
+include matching 618, publication 355, Entry batches 342, residual Frame steps
+108, and Free Join admission 104. They overlap; progress logging and sampling
+perturb this window. Complete-process average core use has median 1.016 for
+four workers and 1.106 for eight, including load/export/reporting. Neither is
+an inference-only utilization metric. **The full-utilization goal is unmet.**
+
+The next priority is the substantial serial query preparation and uncovered
+Cell execution, not more winner shards or threads. In particular, current
+residual admission excludes an entire rule when its Spine is active, while
+source Entries may already distinguish owned continuations from uncovered
+queries. Any per-Entry takeover must preserve the source coverage count,
+Spine winner priority, residual ordering, existing absorption/prefix reuse,
+and Run visibility; merely removing that guard would be incorrect. The
+observed stack samples identify the broader host bottleneck, not a measured
+cost attributable solely to this admission restriction.
+
+All 84 timed/warmup processes preserve their workload's exact final state and
+ordered logical/executed Run signature, with identical actual constructor
+requests, function updates, unions and created facts. The new normal sum-bits
+export passes the unchanged native acceptance contract and matches the timed
+state. Raytrace checks remain relative, not an independent native proof.
+Raw files are under `out/parallel-cell-winners`. Reproduce the summary after
+`measure.py` and the separate `profile.py` run with:
+
+```sh
+python3 benchmarks/parallel-cell-publication/collect_timing.py ROOT benchmarks/parallel-cell-publication/timing.json
+```
