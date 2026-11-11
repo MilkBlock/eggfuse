@@ -2618,13 +2618,14 @@ impl Executor {
                 #[cfg(feature="parallel-residuals")] &self.query_indexes,
                 #[cfg(feature="parallel-residuals")] &mut self.sieve,
                 #[cfg(feature="parallel-residuals")] self.free_join.entry_plan())?;
+            #[cfg(feature="parallel-residuals")]
+            workers.finish_expansion_rules(&mut work,&self.graph.program.rules);
             let (mut order_comparisons, mut binding_moves) = (0, 0);
             for (rid, residual) in &mut work {
                 #[cfg(feature="parallel-residuals")]
                 {
-                    let previous=residual.len();
-                    if let Some((n,direct,candidates))=self.query_workers.as_mut().unwrap()
-                        .finish_expansion_rule(*rid,residual,&self.graph.program.rules[*rid].inputs) {
+                    if let Some((n,previous,direct,candidates))=self.query_workers.as_mut().unwrap()
+                        .finish_expansion_rule(*rid) {
                         self.dedup_rows+=n as u64;
                         let fields=(n*self.graph.program.rules[*rid].inputs.len()) as u64;
                         self.dedup_full_elements+=fields;self.dedup_elements+=fields;

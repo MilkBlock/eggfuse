@@ -1,0 +1,89 @@
+{
+  "control_commit": "73c40b25",
+  "scope": "standalone Cell CPU, not native egglog",
+  "runtime_sha256": "4ef831f481a871e2839ce4ba834a1e1130e5c21aedd11a7586b0a0de4d2881be",
+  "goal_achieved": false,
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "62596ffc3e3d2a53d8d07d9106b07db41a5e56fb6c8087a54e2816e9a225c7d8",
+      "after_report_sha256": "1ff16b32a46efd439f577b67d369cb7b0c39c18678062f03488e84c1533cde60",
+      "same_state_ordered_runs_graph_queries_filters_publication_and_comparisons": true,
+      "plan_capacity_bytes_before": 234976,
+      "plan_capacity_bytes_after": 248944,
+      "residual_completion": {
+        "merge_capacity_bytes": 735896,
+        "merge_execute_seconds": 0.00041754000000000004,
+        "merge_inline_tasks": 1438,
+        "merge_pool_calls": 0,
+        "merge_prepare_seconds": 6.738399999999995e-05,
+        "merge_task_capacity_bytes": 250432,
+        "merge_tasks": 1438,
+        "merge_worker_rows": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "merge_worker_seconds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "merge_worker_tasks": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "order_comparisons": 8195
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "0732f6175c90196fac94fce9a077c4121f55190023c7c528ea18f93e537bb882",
+      "after_report_sha256": "497de130fdac39228585d54f9c1d7deeae97aac298489111d40122189e1690f3",
+      "same_state_ordered_runs_graph_queries_filters_publication_and_comparisons": true,
+      "plan_capacity_bytes_before": 234984,
+      "plan_capacity_bytes_after": 248952,
+      "residual_completion": {
+        "merge_capacity_bytes": 114950464,
+        "merge_execute_seconds": 0.03752493899999995,
+        "merge_inline_tasks": 11870,
+        "merge_pool_calls": 277,
+        "merge_prepare_seconds": 0.0006770260000000121,
+        "merge_task_capacity_bytes": 2659776,
+        "merge_tasks": 14404,
+        "merge_worker_rows": [
+          196675,
+          132738,
+          80801,
+          78738
+        ],
+        "merge_worker_seconds": [
+          0.01984468699999999,
+          0.008590200999999987,
+          0.008635866999999995,
+          0.008588251999999989
+        ],
+        "merge_worker_tasks": [
+          702,
+          889,
+          478,
+          465
+        ],
+        "order_comparisons": 4460810
+      }
+    }
+  },
+  "limits": "Work diagnostics, not timing or CPU utilization evidence. Tasks own existing vectors; new task capacity excludes existing answer buffers and pool bookkeeping. Per-task seconds are wall residence. Single-rule completion remains inline.",
+  "sum_native_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

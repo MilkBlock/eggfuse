@@ -19,9 +19,60 @@ struct Work {
     direct_batches:u64, worker_inputs:Vec<u64>, queued_row_owners:u64,
     merged_runs:u64, run_pool_calls:u64, mixed_runs:u64, order_comparisons:u64,
     merge_capacity_bytes:u64,
+    merge_pool_calls:u64, merge_tasks:u64, merge_inline_tasks:u64,
+    merge_task_capacity_bytes:u64, merge_prepare_seconds:f64, merge_execute_seconds:f64,
+    merge_worker_rows:Vec<u64>, merge_worker_tasks:Vec<u64>, merge_worker_seconds:Vec<f64>,
 }
 #[derive(Default)]
-struct Output { pending:bool, direct:u64, candidates:u64, rows:Vec<((usize,usize),Binding)> }
+struct Output {
+    pending:bool, direct:u64, candidates:u64, rows:Vec<((usize,usize),Binding)>,
+    merged:Option<(usize,usize)>, // (candidates before dedup, prior serial answers)
+}
+/// Each rule owns its existing answer vector and final RHS input vector. The
+/// input layout is borrowed from the Cell, not copied into every candidate.
+struct Merge<'a> {
+    rule:usize, inputs:&'a [usize], serial:&'a mut Vec<Binding>,
+    rows:Vec<((usize,usize),Binding)>, previous:usize, count:usize,
+    comparisons:u64, capacity_bytes:u64, worker:Option<usize>, seconds:f64,
+}
+impl Merge<'_> {
+    fn run(&mut self,pooled:bool) {
+        self.worker=pooled.then(rayon::current_thread_index).flatten();
+        let clock=Instant::now();
+        // Raw entries precede ordinary answers. Already-filtered Seeds keep
+        // their original position between serial kernel results. Stable ties
+        // retain expansion row order, exactly as the coordinator sorter did.
+        self.rows.extend(self.serial.drain(..).enumerate().map(|(i,b)|((i,usize::MAX),b)));
+        self.capacity_bytes=(self.rows.capacity()*std::mem::size_of::<((usize,usize),Binding)>()) as u64;
+        self.count=self.rows.len();
+        self.rows.sort_by(|(a,x),(b,y)| {self.comparisons+=1;
+            x.compare_inputs(y,self.inputs).then_with(||a.cmp(b))});
+        self.rows.dedup_by(|(_,x),(_,y)|x.compare_inputs(y,self.inputs).is_eq());
+        self.serial.extend(self.rows.drain(..).map(|(_,b)|b));
+        self.seconds=clock.elapsed().as_secs_f64();
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn residual_winners_preserve_source_and_stable_expansion_ties() {
+    let binding=|key,epoch|Binding::matched([(0,Value::Int(key))].into_iter().collect(),QueryFacts::None,epoch);
+    // Three distinct tie cases: direct vs serial, serial vs later pivot, and
+    // multiple expansion answers from exactly the same source Entry.
+    for pooled in [false,true] {
+        let mut serial=vec![binding(2,20),binding(1,10)];
+        let mut job=Merge {rule:0,inputs:&[0],previous:serial.len(),serial:&mut serial,
+            rows:vec![((0,2),binding(1,12)),((0,1),binding(1,11)),
+                ((1,0),binding(2,21)),((0,3),binding(3,30)),((0,3),binding(3,31))],
+            count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0};
+        if pooled {rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap().install(||job.run(true));}
+        else {job.run(false);}
+        assert_eq!(job.count,7);
+        assert_eq!(job.serial.iter().map(|b|b.epoch).collect::<Vec<_>>(),[11,20,30]);
+        assert_eq!(job.worker.is_some(),pooled);
+        assert!(job.rows.is_empty());
+    }
+}
 #[derive(Default)]
 pub(super) struct Plans {
     enabled:bool, rules:Vec<Vec<Option<Plan>>>, work:Work,
@@ -156,22 +207,43 @@ impl Workers {
     pub(crate) fn pending_expansion(&self,rid:usize)->bool {
         self.expansion.outputs.get(rid).is_some_and(|o|o.pending)
     }
-    pub(crate) fn finish_expansion_rule(&mut self,rid:usize,serial:&mut Vec<Binding>,inputs:&[usize])->Option<(usize,u64,u64)> {
+    pub(crate) fn finish_expansion_rules(&mut self,work:&mut [(usize,Vec<Binding>)],rules:&[Rule]) {
+        let clock=Instant::now();
+        let mut jobs=Vec::new();
+        for (rid,serial) in work {
+            let Some(output)=self.expansion.outputs.get_mut(*rid).filter(|o|o.pending) else {continue};
+            debug_assert!(output.merged.is_none());
+            jobs.push(Merge {rule:*rid,inputs:&rules[*rid].inputs,previous:serial.len(),serial,
+                rows:std::mem::take(&mut output.rows),count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0});
+        }
+        if jobs.is_empty() {return;}
+        let n=self.stats.worker_entries.len();
+        let pooled=self.pool.is_some() && jobs.iter().filter(|j|j.rows.len()+j.previous>=self.grain).take(2).count()==2
+            && jobs.iter().map(|j|j.rows.len()+j.previous).sum::<usize>()>=self.grain.saturating_mul(n).max(256);
+        self.expansion.work.merge_prepare_seconds+=clock.elapsed().as_secs_f64();
+        let clock=Instant::now();
+        if pooled {self.pool.as_ref().unwrap().install(||jobs.par_iter_mut().for_each(|job|job.run(true)));}
+        else {for job in &mut jobs {job.run(false);}}
+        let stats=&mut self.expansion.work;
+        stats.merge_execute_seconds+=clock.elapsed().as_secs_f64();
+        stats.merge_pool_calls+=u64::from(pooled);
+        stats.merge_task_capacity_bytes+=(jobs.capacity()*std::mem::size_of::<Merge<'_>>()) as u64;
+        stats.merge_worker_rows.resize(n,0);stats.merge_worker_tasks.resize(n,0);stats.merge_worker_seconds.resize(n,0.0);
+        for job in jobs {
+            stats.merge_tasks+=1;stats.order_comparisons+=job.comparisons;
+            stats.merge_capacity_bytes+=job.capacity_bytes;
+            if let Some(i)=job.worker {
+                stats.merge_worker_rows[i]+=job.count as u64;stats.merge_worker_tasks[i]+=1;
+                stats.merge_worker_seconds[i]+=job.seconds;
+            } else {stats.merge_inline_tasks+=1;}
+            self.expansion.outputs[job.rule].merged=Some((job.count,job.previous));
+        }
+    }
+    pub(crate) fn finish_expansion_rule(&mut self,rid:usize)->Option<(usize,usize,u64,u64)> {
         let output=self.expansion.outputs.get_mut(rid)?;
         if !std::mem::take(&mut output.pending) {return None;}
-        let mut rows=std::mem::take(&mut output.rows);
-        // Raw direct entries precede ordinary answers. Already-filtered Seeds
-        // occupy their original position between serial kernel results. Retain
-        // both orders in this one stable key/source sort, including expansion
-        // row order; no preliminary source sort or copied bindings are needed.
-        rows.extend(serial.drain(..).enumerate().map(|(i,b)|((i,usize::MAX),b)));
-        self.expansion.work.merge_capacity_bytes+=(rows.capacity()*std::mem::size_of::<((usize,usize),Binding)>()) as u64;
-        let n=rows.len();
-        rows.sort_by(|(a,x),(b,y)| {self.expansion.work.order_comparisons+=1;
-            x.compare_inputs(y,inputs).then_with(||a.cmp(b))});
-        rows.dedup_by(|(_,x),(_,y)|x.compare_inputs(y,inputs).is_eq());
-        serial.extend(rows.into_iter().map(|(_,b)|b));
-        Some((n,std::mem::take(&mut output.direct),std::mem::take(&mut output.candidates)))
+        let (n,previous)=output.merged.take().expect("joined residual winner selection");
+        Some((n,previous,std::mem::take(&mut output.direct),std::mem::take(&mut output.candidates)))
     }
     pub(super) fn record_expansion_answer(&mut self,rid:usize,position:usize,source:usize,answer:Binding) {
         self.expansion.outputs[rid].rows.push(((position,source),answer));

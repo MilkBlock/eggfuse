@@ -133,3 +133,83 @@ export. The collector reads existing reports and does not time workloads.
 Full Raytrace agreement remains a relative regression check, not an independent
 native proof. Raw exports, binaries and logs remain ignored under
 `out/parallel-cell-publication`.
+
+## Residual winner completion on workers
+
+Control: `73c40b25`. A new five-second stack diagnostic of that frozen binary
+still finds the four query workers parked in 1,606 / 1,607 / 1,614 / 1,618 of
+1,705 samples each. These are wall-stack counts, not CPU utilization. Of 1,704
+main-thread inference samples, matching has 595 inclusive samples, publication
+373, Entry batches 318, and residual Frame steps 121. Counts overlap. Progress
+logging accounts for 95 samples; an external compilation was also active.
+The complete 16,883 Run signatures, final state and graph counters agree with
+the saved execution. This diagnostic does not establish a throughput change.
+
+Beyond the still-uncovered query hosts, the complete execution reports
+4,460,810 residual winner comparisons on the coordinator. Rule input layouts
+are already compiled by their Cells; every rule owns its answer instances.
+Once query workers join, these independent vectors can be completed in parallel
+without any graph write or new cross-Run proof. The new path transfers the
+existing residual and final RHS vectors to exclusive per-rule tasks on the
+same pool. Each task merges ordinary residual answers, stably sorts by the
+original input key and source position, and deduplicates into its original
+RHS vector. Fully tied sources retain expansion order. The coordinator omits
+the old sorting loop, then performs the existing point/Spine merge and ordered
+RHS commit after all tasks join.
+
+The number of comparisons and required winners does not decrease. There is no
+new Ripsat composition or credit for crossing a Run. This is actual execution
+takeover, not a second query catalog or another binding representation. It
+preserves residual coverage, delta/watermark ownership, actual witnesses and
+the original source-order winner. There is no per-comparison atomic counter:
+each task retains its existing local count, merged after join.
+
+Parallel completion requires at least two rule vectors with `query_grain`
+candidate answers each, and at least
+`max(worker_count * query_grain, 256)` candidate answers in total. Other Runs
+execute the same operation inline. One large rule is still indivisible. New
+costs are a temporary task-header vector, another pool join for qualifying
+Runs, task timing, and moving existing vector owners. Reports charge
+`merge_task_capacity_bytes`, `merge_prepare_seconds`, `merge_execute_seconds`,
+`merge_pool_calls`, inline tasks, per-worker rows/tasks and task wall residence.
+The existing `merge_capacity_bytes` and `order_comparisons` remain comparable.
+
+The semantic fixture compares all Run states and ordered bindings while a
+point Cell writes a value also read by two residual rules. It requires the new
+winner pool path to execute. A unit test separately distinguishes direct vs
+ordinary answers, earlier vs later pivots, and completely tied expansion
+answers. Small sum-bits Runs are regression coverage; their presence alone
+does not prove parallel completion occurs.
+
+Complete execution evidence is in [winners.json](winners.json). Raytrace sends
+488,952 candidate answers through 2,534 worker rule tasks in 277 pool calls;
+11,870 small or single-rule tasks remain inline. Its 4,460,810 comparisons and
+114,950,464 cumulative answer-capacity bytes are unchanged. New temporary task
+headers sum to 2,659,776 capacity bytes; persistent per-rule completion
+metadata adds 13,968 bytes to each workload's plan capacity. Sum-bits has 1,438 inline
+tasks, zero pool calls, and 250,432 new cumulative task-header capacity bytes.
+No copied binding or extra query is counted as a saving.
+
+The full states, ordered Runs, graph counters, key reads, filters, publication
+counts and comparison counts agree with the control. The unchanged native
+sum-bits validator passes. The initial full Raytrace diagnostic spends about
+0.038 s inside winner completion including its pool calls; this is a small
+remaining component, not evidence that this change can saturate the workers.
+[winner-profile.json](winner-profile.json) retains the preceding sampled stacks
+and artifact hashes, with their coverage limits.
+
+Validation: 34 integration tests, 102 runtime unit tests, forced zero-bit
+fingerprint residual/publication fixtures, minimal and all-feature checks, and
+README compile/run/bench command smokes pass. The smoke benchmark uses repeat 1
+and is not throughput evidence. Final residual tests and complete exports use
+the admission gate that requires two nontrivial rule vectors.
+
+`profile.py RUNTIME PROGRAM SAVED_RUN OUTPUT` reproduces the separate stack
+diagnostic using a saved complete execution as the semantic reference; it
+does not require inventing a timing sample. `measure.py CURRENT BEFORE_MERGE
+LAST_CHECKPOINT SUM_PROGRAM RAY_PROGRAM OUTPUT` runs the five-implementation
+checkpoint with one warmup and seven sum-bits / five Raytrace samples per
+lane. It compares the preceding serial checkpoint, current serial, preceding
+four-worker publication path, and the current path with one/four/eight workers.
+All samples and semantic signatures are retained by the shared process harness.
+The one-worker path runs inline, so comparisons also charge pool/dispatch costs.

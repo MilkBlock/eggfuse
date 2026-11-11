@@ -122,5 +122,12 @@ fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
         assert!(work["direct_batches"].as_u64().unwrap()>work["merged_runs"].as_u64().unwrap(),"{work}");
         assert!(r["query_workers"]["stats"]["cross_rule_cells"].as_u64().unwrap()>0);
         assert_eq!(work["queued_row_owners"],work["input_rows"]);
+        assert!(work["merge_tasks"].as_u64().unwrap()>0);
+        if workers>1 {
+            assert!(work["merge_pool_calls"].as_u64().unwrap()>0,"winner sorting must actually reach the pool: {work}");
+            assert!(work["merge_worker_rows"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>()>=256);
+        } else {
+            assert_eq!(work["merge_pool_calls"],0);
+        }
     }
 }
