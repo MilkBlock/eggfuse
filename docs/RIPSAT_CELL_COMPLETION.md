@@ -205,5 +205,12 @@ input/result slots and shares the union code across constructor contexts. It
 preserves pre-commit constructor keys, the ordinary queue and original Run
 visibility. It does not relax the structural normalizer's terminal-union limit
 or equate different entry assumptions. The small fixture exercises actual
-takeover; current sum-bits and the short Raytrace prefix have no union takeover
+takeover; its initial sum-bits and short Raytrace checks have no union takeover
 and establish no workload speed benefit.
+
+The subsequent [result-sealing change](../benchmarks/cell-result-sealing/README.md)
+updates unique local receipt slots at their first publication using the existing
+Run forwarding map. Five sum-bits union completions then become executable.
+It preserves shared history, original visibility and ordinary fallback for later
+retirement; added checks/reads/writes are charged. This is a limited receipt
+lifetime repair, with no established throughput or 2x improvement.

@@ -105,6 +105,12 @@ slots. A larger structural normalizer is not justified as the immediate fix for
 a missing runtime witness. New templates should be selected only when their
 proofs discharge substantial remaining work and survive the required boundary.
 
+Follow-up: [Cell result sealing](../cell-result-sealing/README.md) identifies the
+14 new failures as populated references to retired constructors. Updating a
+fresh unique frame at its first publication enables five actual union completions
+on the same sum-bits input. That later implementation has separately charged
+costs and does not replace this initial zero-coverage result or establish speed.
+
 ## Validation and reproduction
 
 - 101 runtime unit tests and 44 compiler/unit/integration tests pass. Minimal

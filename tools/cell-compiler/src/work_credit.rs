@@ -82,6 +82,18 @@ impl Work {
             };
             work.insert(format!("stage_spine/stats/{field}"),value);
         }
+        // Sealing uses the existing Run forwarding map; every visited slot and
+        // actual update is new work. A repaired receipt itself earns no credit.
+        for field in ["history_seal_checks", "history_seal_reads", "history_seal_writes"] {
+            let value = match report["stage_spine"].get("history_sealing") {
+                None => 0,
+                Some(J::String(v)) if v == "unique-cell-results/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell history sealing work {field}"))?,
+                _ => return Err("unknown Cell history sealing".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
         // A field test is new work even when it prevents a whole summary update.
         // Historical reports have no such test; missing new counters are errors.
         let column_checks = match report["sieve"].get("column_influence") {
@@ -423,6 +435,15 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    let mut sealed_report = report.clone();
+    sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
+    assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);
+    sealed_report["stage_spine"]["stats"].as_object_mut().unwrap().remove("history_seal_writes");
+    assert!(Work::read(&sealed_report).unwrap_err().contains("missing Cell history sealing"));
+    sealed_report["stage_spine"].as_object_mut().unwrap().remove("history_sealing");
+    assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 0);
+    sealed_report["stage_spine"]["history_sealing"] = "unknown".into();
+    assert!(Work::read(&sealed_report).is_err());
     let mut union_report=report.clone();
     union_report["stage_spine"]["stats"]["ripsat_union_cells"]=u64::MAX.into();
     assert_eq!(Work::read(&union_report).unwrap(),work,"coverage earns no credit");

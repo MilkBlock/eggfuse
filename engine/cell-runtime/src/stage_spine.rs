@@ -541,6 +541,10 @@ pub struct Stats {
     ripsat_boundary_fallbacks: u64,
     ripsat_witness_fallbacks: u64,
     history_slots_written: u64,
+    history_seal_checks: u64,
+    history_seal_reads: u64,
+    history_seal_writes: u64,
+    history_seal_shared: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
     history_carried_steps: u64,
@@ -1748,7 +1752,7 @@ impl Programs {
             self.stats.fragment_direct_inserts_avoided += count as u64;
         }
     }
-    fn materialize_publication(&mut self, publication: Publication) -> Published {
+    fn materialize_publication(&mut self, _g: &Graph, publication: Publication) -> Published {
         let slot = publication.slot;
         #[cfg(feature = "sparse-cells")]
         let cursor = {
@@ -1766,7 +1770,14 @@ impl Programs {
                         self.stats.root_handles_created += 1;
                         PublishedBase::Root(Rc::new(Root { id, epoch, set, context: OnceCell::new() }), producer)
                     }
-                    Started::Live(c) => {
+                    Started::Live(mut c) => {
+                        if !c.state.history.is_empty() && !_g.receipt_forwards.is_empty() {
+                            self.stats.history_seal_checks += 1;
+                            if let Some((reads, writes)) = c.state.history.seal_current(|w| _g.resolve_receipt(w)) {
+                                self.stats.history_seal_reads += reads as u64;
+                                self.stats.history_seal_writes += writes as u64;
+                            } else { self.stats.history_seal_shared += 1; }
+                        }
                         self.stats.completion_cursor_moves += 1;
                         PublishedBase::Active(Rc::new(c))
                     }
@@ -1801,7 +1812,7 @@ impl Programs {
         self.stats.anchor_publications += 1;
         cursor
     }
-    fn install_anchor(&mut self, w: Dependency, table: usize, publication: Publication) {
+    fn install_anchor(&mut self, g: &Graph, w: Dependency, table: usize, publication: Publication) {
         #[cfg(feature = "sparse-cells")]
         if self.entry_owned_tables[table] {
             // Link normalized boundary exports to their source Cell. The short
@@ -1822,7 +1833,7 @@ impl Programs {
             self.stats.completion_boundary_records += 1;
             return;
         }
-        let cursor = self.materialize_publication(publication);
+        let cursor = self.materialize_publication(g, publication);
         self.stats.legacy_entry_writes += 1;
         if self.entries.insert(w, cursor).is_none() {
             if self.active_tables[table] == 0 {
@@ -1832,13 +1843,13 @@ impl Programs {
         }
     }
     #[cfg(feature = "sparse-cells")]
-    fn finish_boundary(&mut self, slot: usize, entries: &mut crate::entry_schedule::Scheduler) -> Result<()> {
+    fn finish_boundary(&mut self, g: &Graph, slot: usize, entries: &mut crate::entry_schedule::Scheduler) -> Result<()> {
         let id = self.pending_steps[slot].ready.expect("ready Cell export");
         let record = self.ready_publications[id.get() - 1];
         self.pending_steps[slot].ready = record.next;
         self.stats.completion_boundary_reads += 1;
         if entries.install_publication(record.table, record.witness, self.publication_order(slot, false),
-            0, record.publication.output, || Ok(self.materialize_publication(record.publication)))?.is_none() {
+            0, record.publication.output, || Ok(self.materialize_publication(g, record.publication)))?.is_none() {
             // Normalized boundary keys were counted before their receipts were
             // resolved. A later fragment can already own this same final key.
             self.stats.distinct_anchor_keys -= 1;
@@ -2013,7 +2024,7 @@ impl Programs {
                         self.direct_publications.remove(&w);
                     }
                 }
-                self.install_anchor(w, table, publication);
+                self.install_anchor(g, w, table, publication);
             } else {
                 self.stats.missing_capture_rows += 1;
             }
@@ -2031,7 +2042,7 @@ impl Programs {
                 self.stats.receipt_attempts += 1;
                 self.stats.receipt_hits += 1;
                 self.stats.receipt_redirects += u64::from(p.receipt != Some(w));
-                self.install_anchor(w, table, p);
+                self.install_anchor(g, w, table, p);
             }
             self.direct_publications = resolved;
         }
@@ -2074,7 +2085,7 @@ impl Programs {
                             if fragment { self.stats.fragment_delivery_checks += 1; }
                             if ready.is_some_and(|r| !r[table]) { pending = true; continue; }
                             while self.pending_steps[slot].ready.is_some_and(|i| self.ready_publications[i.get() - 1].publication.output > output.operation) {
-                                self.finish_boundary(slot, entries)?;
+                                self.finish_boundary(g, slot, entries)?;
                             }
                             let w = g.resolve_receipt(old);
                             let publication = Publication {
@@ -2089,7 +2100,7 @@ impl Programs {
                                     return Err("permanent Cell output lost visibility".into());
                                 }
                                 self.stats.receipt_hits += 1;
-                                Ok(self.materialize_publication(publication))
+                                Ok(self.materialize_publication(g, publication))
                             })?.is_some();
                             self.stats.distinct_anchor_keys += u64::from(installed);
                             self.stats.cell_output_deliveries += 1;
@@ -2109,7 +2120,7 @@ impl Programs {
                         }
                         self.pending_steps[slot].delivery = pending.then_some(delivery);
                     }
-                    while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries)?; }
+                    while self.pending_steps[slot].ready.is_some() { self.finish_boundary(g, slot, entries)?; }
                 }
                 self.ready_publications.clear();
             }
@@ -2755,6 +2766,7 @@ impl Programs {
         let report = json!({"output_registration":"cell-span/v1",
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",
+            "history_sealing":"unique-cell-results/v1",
             "completion_record_bytes":std::mem::size_of::<Completion>(),
             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),

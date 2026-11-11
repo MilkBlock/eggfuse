@@ -437,6 +437,26 @@ impl History {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<ResultView<'_>> { self.frame(1) }
+    /// A newly completed Cell has not published its current frame yet. Repair
+    /// may already have coalesced its receipts; update the unique local storage
+    /// before Entry/Cursor sharing outlives this Run's forwarding map. Previously
+    /// shared owners are deliberately left untouched and never copied or scanned.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn seal_current(&mut self, forward: impl FnMut(Dependency) -> Dependency) -> Option<(usize, usize)> {
+        if self.empty != 0 { return Some((0, 0)); }
+        let Some(frame) = self.frames.as_mut() else { return Some((0, 0)); };
+        if frame.projection.is_some() { return None; }
+        let results = match Rc::get_mut(&mut frame.owner)? {
+            Trail::One(results) => results,
+            Trail::Many(frames) => {
+                let Some(frame) = frames.last_mut().and_then(Option::as_mut) else { return Some((0, 0)); };
+                if frame.projection.is_some() { return None; }
+                let Trail::One(results) = Rc::get_mut(&mut frame.owner)? else { unreachable!("flat Cell history"); };
+                results
+            },
+        };
+        Some(results.seal_local(forward))
+    }
     pub(crate) fn project_complete(&self,plan:&crate::cell::CompletedPlan,probes:&mut u64) -> Option<Results> {
         Results::project_complete(plan,self.snapshot(plan.back)?,probes)
     }
@@ -1167,6 +1187,35 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    #[cfg(feature = "sparse-cells")]
+    fn publication_seals_only_unique_current_results_without_copying_history() {
+        let wanted = [Capture { site: Site::Effect(0), port: ResultPort::new(4, 0) },
+            Capture { site: Site::Effect(1), port: ResultPort::new(4, 1) }];
+        let mut h = History::default();
+        h.capture(2, 4, &wanted, |_| None, |i| Some(Dependency::Function(i)));
+        let address = Rc::as_ptr(&h.frames.as_ref().unwrap().owner);
+        assert_eq!(h.seal_current(|w| if w == Dependency::Function(0) {
+            Dependency::Function(8)
+        } else { w }), Some((2, 1)));
+        assert_eq!(Rc::as_ptr(&h.frames.as_ref().unwrap().owner), address);
+        assert_eq!(h.get(1, wanted[0].port), Some(Dependency::Function(8)));
+        let published = h.clone();
+        assert_eq!(h.seal_current(|_| panic!("shared history must not be scanned")), None);
+        assert_eq!(Rc::as_ptr(&h.frames.as_ref().unwrap().owner), address);
+        h.capture(2, 4, &wanted, |_| None, |i| Some(Dependency::Function(i + 10)));
+        assert_eq!(h.seal_current(|w| {
+            let Dependency::Function(i) = w else { unreachable!() };
+            assert!(i >= 10, "do not traverse preceding frames");
+            Dependency::Function(i + 10)
+        }), Some((2, 2)));
+        assert_eq!(h.get(1, wanted[0].port), Some(Dependency::Function(20)));
+        assert_eq!(h.get(2, wanted[0].port), Some(Dependency::Function(8)));
+        assert_eq!(published.get(1, wanted[0].port), Some(Dependency::Function(8)));
+        h.capture(2, 5, &[], |_| None, |_| None);
+        assert_eq!(h.seal_current(|_| panic!("empty stage has no new results")), Some((0, 0)));
+    }
+
     #[test]
     fn dispatch_rows_preserve_empty_rows_and_extreme_missing_indices() {
         let rows = DispatchRows::compile(vec![vec![], vec![NonZeroUsize::new(1), None], vec![], vec![]]);

@@ -276,6 +276,29 @@ fn lazy_union_keeps_deletable_results_on_the_original_path() {
 
 #[test]
 #[cfg(feature = "sparse-cells")]
+fn producer_repair_seals_real_results_before_cross_run_completion() {
+    let source = include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)",
+            "(rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset a)")
+        .replace("((Left x) (Right x)) :ruleset c", "((Left x) (Right x) (union (Left x) x)) :ruleset c");
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    fixture::emit(&source, &dir.path().join("case")).unwrap();
+    let raw: Value = serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let candidate = eggfuse_cell_compiler::completion_bake::compile_lazy_unions(Program::parse(raw.clone()).unwrap()).unwrap();
+    let (control, expected) = execute(raw);
+    let (after, actual) = execute(candidate);
+    assert_eq!(expected, actual, "repair forwarding preserves every Run and ordered effects");
+    assert_eq!(control.graph.export().unwrap(), after.graph.export().unwrap());
+    let report = after.report();
+    let stats = &report["stage_spine"]["stats"];
+    assert!(stats["history_seal_writes"].as_u64().unwrap() > 0, "must forward an actual retired result: {stats}");
+    assert!(stats["ripsat_union_cells"].as_u64().unwrap() > 0, "sealed producer must enable completion: {stats}");
+    assert_eq!(stats["ripsat_witness_fallbacks"], 0);
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
 fn lazy_union_cannot_use_a_pending_set_to_prove_a_later_constructor() {
     let source=include_str!("fixtures/history-retention.egg")
         .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
