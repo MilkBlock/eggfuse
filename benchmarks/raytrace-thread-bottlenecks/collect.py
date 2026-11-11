@@ -10,7 +10,7 @@ import runpy
 import shutil
 
 
-def sample_threads(path):
+def sample_threads(path, expected_threads=5):
     graph = path.read_text().split('Call graph:\n', 1)[1].split('Total number in stack', 1)[0]
     roots, stack = [], []
     for line in graph.splitlines():
@@ -46,7 +46,7 @@ def sample_threads(path):
                        'inclusive': dict(inclusive.most_common()),
                        'inference_inclusive': dict(inference_inclusive.most_common()),
                        'own': dict((k, v) for k, v in own.most_common() if v)})
-    assert len(result) == 5 and all(x['samples'] > 0 for x in result)
+    assert len(result) == expected_threads and all(x['samples'] > 0 for x in result)
     return result
 
 

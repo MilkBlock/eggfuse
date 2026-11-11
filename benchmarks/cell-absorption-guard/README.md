@@ -417,3 +417,150 @@ No-default-feature compilation and fresh README compile/run/bench (repeat 1)
 checks pass. A normal executable's short sum-bits run preserves the preceding
 Kernel version's state, work, and complete ordered Run signature. Throughput
 is assessed separately in the five-implementation checkpoint.
+
+## Five-implementation normal-binary checkpoint
+
+Candidate `2af82c27`, last timed control `9560f11e`, historical fastest
+`8fffff65`. This measures the **standalone Cell CPU**, not native egglog.
+Apple M3 Max, 16 logical CPUs, Darwin arm64. All lanes use frozen compatible
+inputs, canonical repair ports and Entry publication. The current executable
+has `cell-absorption,view-ports,storage-metrics`; controls use their previously
+recorded normal features. No allocation/profile instrumentation or concurrent
+compilation/diagnostic workload runs during timing.
+
+Each lane has one warmup followed by seven sum-bits or five Raytrace samples,
+interleaved in a reproducible shuffled order. The current off/on lanes use the
+**same executable**. The off/checkpoint comparison also charges compiled dormant
+metadata and cumulative code-generation differences. Worker grain is 64.
+
+| Median | Historical fast | Last checkpoint | Current off | Current on | Current on, 4 workers |
+|---|---:|---:|---:|---:|---:|
+| sum-bits inference | 17.655 ms | 15.269 ms | 14.929 ms | 15.089 ms | 15.211 ms |
+| sum-bits process | 123.089 ms | 123.131 ms | 123.131 ms | 123.202 ms | 125.165 ms |
+| Raytrace inference | 6.679 s | 5.891 s | 5.851 s | 5.750 s | 5.810 s |
+| Raytrace process | 9.094 s | 8.318 s | 8.288 s | 8.208 s | 8.215 s |
+
+Paired median ratios and paired-bootstrap 95% intervals (lower is faster):
+
+| Comparison | sum-bits inference | Raytrace inference | Raytrace process |
+|---|---:|---:|---:|
+| on / historical fast | 0.864 [0.845, 0.874] | 0.856 [0.853, 0.866] | 0.895 [0.888, 0.910] |
+| on / last checkpoint | 0.995 [0.988, 1.038] | 0.973 [0.968, 0.991] | 0.987 [0.960, 1.003] |
+| off / last checkpoint | 0.984 [0.969, 0.994] | 0.997 [0.991, 1.004] | 1.001 [0.981, 1.006] |
+| on / off | 1.000 [0.988, 1.033] | 0.9765 [0.9692, **1.0005**] | 0.986 [0.978, 0.997] |
+| on, 4 workers / on | 0.996 [0.980, 1.028] | 1.017 [1.004, 1.019] | 1.015 [0.992, 1.016] |
+
+The five changes establish a modest Raytrace inference improvement against the
+last checkpoint in these samples. Same-binary activation has a lower process
+time, but its inference interval still crosses parity; do not round away that
+crossing. Sum-bits has no established incremental on/checkpoint or on/off gain.
+Four workers regress Raytrace inference here despite executing real work. The
+sum-bits worker lane executes zero worker entries at grain 64. All samples,
+including outliers and warmups, are retained; this is finite-sample evidence on
+one machine, not a strict non-regression or general scaling guarantee.
+
+All enabled runs omit 41 sum-bits / 509,296 Raytrace bindings and pure writes,
+reconciled one-for-one to absorption counters. Actual constructor requests,
+function updates, unions and facts remain equal. Serial query counters are
+unchanged at 12,139 / 2,584,660; guard and RHS target reads are not in this query
+counter. The on4 values 12,085 / 2,555,377 already differed under the old worker
+configuration and earn no new absorption credit. Query reduction remains a
+separate uncompleted opportunity.
+
+Current serial Raytrace phase medians are search **2.420 s**, RHS **1.620 s**,
+query-index update **1.192 s**, repair **0.493 s**, and delivery GC **0.016 s**.
+Independent phase medians need not sum to the median inference time. Repair is
+about 8.6% of current inference: deleting that entire phase at unchanged other
+costs would only give about 1.09x, not the requested 2x. Half of the historical
+6.679 s is approximately 3.339 s, still about 2.411 s below this candidate.
+This arithmetic is a performance budget, not a proof that any phase can vanish.
+
+**Decision:** retain absorption as opt-in; its current benefit is small and does
+not justify expanding templates indiscriminately. The next investigation must
+use current query/index executions to separate small actual neighborhoods from
+repeated boundary discovery and necessary cross-Run propagation. A low degree
+or fewer bindings cannot establish a global sparsity theorem or predict latency.
+New composition must remove substantial remaining query/index work together
+with its handoff maintenance, and charge its live boundary checks.
+
+Every sample and warmup retains the exact validated control state and logical
+Run signature. Enabled lanes intentionally change executed-binding counts;
+their complete executed Run signatures repeat exactly within each lane.
+The new normal sum-bits export passes the unchanged native choice entrypoint;
+its state hash matches the timed samples. Raytrace evidence is relative, not
+an independent native proof. No new 14-window Raytrace capture is claimed;
+the previously documented window proofs and current Run-boundary fixtures
+retain their stated coverage.
+
+Saved root: `out/cell-absorption-checkpoint`; `runtime` is the frozen ordinary
+candidate. Inputs and accepted controls are in `out/cell-current-checkpoint`.
+The collector binds candidate acceptance to the timed state and verifies all
+samples, actual effects, logical/execute signatures and absorbed counts.
+
+```sh
+python3 benchmarks/cell-absorption-guard/measure.py SAVED ROOT/timing CURRENT LAST_TIMED HISTORICAL_FAST
+python3 benchmarks/marker-handoff/choice_diagnosis.py ROOT/semantic ROOT/semantic-acceptance.json
+python3 benchmarks/cell-absorption-guard/collect_timing.py ROOT/timing benchmarks/cell-absorption-guard/timing.json
+```
+
+[timing.json](timing.json) retains binary/input/proof hashes, all timing samples,
+uncertainty, actual work and the unchanged full absorption costs. The standalone
+runtime is approximately 1.17x the historical inference throughput in these
+paired Raytrace samples, still substantially short of 2x.
+
+## Where the remaining work occurs
+
+After timing, the same normal serial binary was sampled separately for five
+seconds at 2 ms intervals, triggered by its first source Run. This uses progress
+logging but **not `CELL_CPU_PROFILE`**: that flag disables ReadySets and changes
+the scheduling work, so it is unsuitable for attributing this normal lane.
+The diagnostic preserves the timed state, full executed Run signature, graph
+counters, Free Join counters and Entry counters exactly.
+
+Of 1,914 inference-resident stack samples, the selected inclusive counts are:
+
+| Stack | Samples |
+|---|---:|
+| `Executor::matches` | 756 |
+| `Scheduler::batches`, including its visitor | 367 |
+| `FreeJoin::admit` | 148 |
+| `publish_finished_tables` | 371 |
+| `Columns::put` | 104 |
+| `repair_selected` | 181 |
+
+These stacks overlap; do not add them or interpret them as exclusive CPU time.
+The window is not a whole-run census. Optimized inlining limits attribution,
+and 83 inference samples include progress logging, which is absent from timing.
+
+The diagnostic's **full-run counters**, distinct from its sampled stacks, show:
+
+- Sieve: 10,916,139 probes, 9,218,161 rejecting probes, 8,380,801 summary-row
+  updates. A probe is a condition check, not a distinct candidate or mutation.
+- Free Join admission: 5,079,216 entry rows, 5,516,162 probes, 2,751,866 empty
+  rejections and 263,357 delta-owner rejections; 3,118,476 bucket rows materialized.
+- Shared Entry: 2,232,211 row decodes and 2,251,622 notifications; existing
+  private-row reuse already handles 1,307,184 refreshes and must not earn credit
+  again.
+
+This changes the next investigation: inspect common Cell-entry conditions and
+candidate domains before adding more RHS-only completion templates. The source
+path still visits consumers, checks Sieve, then obtains residual Free Join
+domains before executing the Cell query. Determine which checks are equivalent
+under the **same** snapshot and which differ in predicates, watermark or delta
+ownership. Only the former can share a compiled batch admission and borrowed
+domain. Rejected candidates are not automatically removable; existing filters
+may be doing essential work cheaply. The counters do not prove graph density,
+nor do they yet establish repeated work across consumers.
+
+`profile.json` retains the validated sample-tree counts, full-run gating work,
+binary/state/report hashes and diagnostic limits. The existing sampler takes
+the on-lane manifest and one completed inner timing `samples.json`:
+
+```sh
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py ROOT/profile-manifest.json ROOT/timing/ray/0001-0003/samples.json ROOT/profile --lane on --duration 5 --interval-ms 2
+python3 benchmarks/cell-absorption-guard/collect_profile.py ROOT/profile benchmarks/cell-absorption-guard/profile.json
+```
+
+The shared tree parser still checks its historical five-thread fixture; this
+collector requests exactly one thread. No new runtime optimization or speed
+credit is attached to this diagnostic.

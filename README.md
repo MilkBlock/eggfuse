@@ -8,7 +8,7 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [Cell 变化局部性](benchmarks/cell-change-locality/README.md)：用实际 Get / Expr-size 匹配与提交区分单步扇出、变化后的重复传播和 min 吸收。热点窗口呈现较小扇出，但尚未证明可免除工作或全局稀疏性。
 
-[Cell 的吸收条件](benchmarks/cell-absorption-guard/README.md)：默认关闭的实验通过整组条件与单构造子检查，在完整 Raytrace 省去 509,296 次绑定及对应单写/完成。条件检查包含 345,327 次目标查询与 100,816 次直接读取；记录被替代的 RHS 查询、净分配与源 Run 检查，尚无速度结论。
+[Cell 的吸收条件](benchmarks/cell-absorption-guard/README.md)：默认关闭的实验在完整 Raytrace 省去 509,296 次绑定及对应单写/完成。五次实现改动相对上次测速版本的 Raytrace 推理配对耗时约降 2.7%；同二进制开关的推理区间仍略跨持平，整进程约降 1.4%。sum-bits 未建立增量收益，四 worker 的 Raytrace 推理约慢 1.7%。保留全部成本、样本及语义检查，未达到 2×。
 
 [Cell 查询并行接管](benchmarks/cell-query-workers/README.md)：复用现有 Entry 和 Query，在源 Run 内并行完成有证明覆盖的函数查询；默认关闭，尚未建立整体加速。
 
