@@ -1,0 +1,246 @@
+{
+  "baseline_commit": "9b1844ae",
+  "scope": "standalone Cell CPU; work and allocation diagnostics, not throughput",
+  "prefix_baseline_provenance": "991896e8 frozen prefix; 9b1844ae only added an inactive audit feature",
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "exact_graph_work_queries_and_ordered_runs": true,
+      "queries": 12085,
+      "completion_records_removed": 228,
+      "retained_work": {
+        "completed_steps": 5590,
+        "anchor_publications": 6588,
+        "resumed_steps": 2098,
+        "history_capture_reads": 70
+      },
+      "completion_record_bytes": 104,
+      "admission_checks": 291,
+      "entry_work": {
+        "publication_slot_probes": [
+          6069,
+          6069
+        ],
+        "entry_publication_writes": [
+          4615,
+          4620
+        ],
+        "staged_root_records": [
+          null,
+          228
+        ],
+        "staged_root_checks": [
+          null,
+          228
+        ],
+        "staged_root_redirects": [
+          null,
+          0
+        ],
+        "staged_root_winners": [
+          null,
+          223
+        ],
+        "peak_staged_roots": [
+          null,
+          12
+        ],
+        "staged_root_record_bytes": [
+          null,
+          24
+        ],
+        "staged_root_capacity_bytes": [
+          null,
+          384
+        ],
+        "publication_slot_bytes": [
+          null,
+          64
+        ]
+      },
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 2000,
+        "workers": 4
+      },
+      "allocations": {
+        "alloc_calls": [
+          81033,
+          81034
+        ],
+        "realloc_calls": [
+          13474,
+          13476
+        ],
+        "requested_bytes": [
+          19574867,
+          19575539
+        ]
+      },
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "report_sha256": [
+        "96394f3c283091714746ecfcb6889e3ee322811ed89bf9ba290640c29bc642bb",
+        "caf3d91970d19cf5f87f23ed66cdb6099cc66715769e56154c936e0c6036a2d1"
+      ]
+    },
+    "ray1280": {
+      "runs": 1280,
+      "exact_graph_work_queries_and_ordered_runs": true,
+      "queries": 578591,
+      "completion_records_removed": 5654,
+      "retained_work": {
+        "completed_steps": 280091,
+        "anchor_publications": 295161,
+        "resumed_steps": 103473,
+        "history_capture_reads": 7729
+      },
+      "completion_record_bytes": 104,
+      "admission_checks": 6035,
+      "entry_work": {
+        "publication_slot_probes": [
+          296906,
+          296908
+        ],
+        "entry_publication_writes": [
+          183974,
+          184485
+        ],
+        "staged_root_records": [
+          null,
+          5654
+        ],
+        "staged_root_checks": [
+          null,
+          5654
+        ],
+        "staged_root_redirects": [
+          null,
+          2
+        ],
+        "staged_root_winners": [
+          null,
+          5145
+        ],
+        "peak_staged_roots": [
+          null,
+          746
+        ],
+        "staged_root_record_bytes": [
+          null,
+          24
+        ],
+        "staged_root_capacity_bytes": [
+          null,
+          24576
+        ],
+        "publication_slot_bytes": [
+          null,
+          64
+        ]
+      },
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 1280,
+        "workers": 4
+      },
+      "allocations": {
+        "alloc_calls": [
+          2325463,
+          2325464
+        ],
+        "realloc_calls": [
+          343478,
+          343486
+        ],
+        "requested_bytes": [
+          960887228,
+          960936284
+        ]
+      },
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "report_sha256": [
+        "5a577ef38b7eaf9d8b92362dc70220e2d4672cfac3d703cd37854bb9c7ad4bc0",
+        "c81cb9c1973f4004f2e434cb1b0221554fe7c4833d24d9d3985b1831ae725500"
+      ]
+    }
+  },
+  "native_sum_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a",
+  "full_raytrace": {
+    "runs": 16883,
+    "exact_graph_work_queries_and_ordered_runs": true,
+    "queries": 2584660,
+    "completion_records_removed": 834716,
+    "retained_work": {
+      "completed_steps": 2877811,
+      "anchor_publications": 2126781,
+      "resumed_steps": 577650,
+      "history_capture_reads": 9602
+    },
+    "completion_record_bytes": 104,
+    "admission_checks": 839575,
+    "entry_work": {
+      "publication_slot_probes": [
+        2950150,
+        2950152
+      ],
+      "entry_publication_writes": [
+        1920291,
+        2305276
+      ],
+      "staged_root_records": [
+        null,
+        834716
+      ],
+      "staged_root_checks": [
+        null,
+        834716
+      ],
+      "staged_root_redirects": [
+        null,
+        2
+      ],
+      "staged_root_winners": [
+        null,
+        449733
+      ],
+      "peak_staged_roots": [
+        null,
+        4340
+      ],
+      "staged_root_record_bytes": [
+        null,
+        24
+      ],
+      "staged_root_capacity_bytes": [
+        null,
+        196608
+      ],
+      "publication_slot_bytes": [
+        null,
+        64
+      ]
+    },
+    "exact_final_state": true,
+    "fourteen_selected_ordered_audits_equal": true,
+    "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+    "allocation_measurement": null,
+    "limits": "Relative frozen Raytrace checks, not an independent native Raytrace proof or every-Run graph export."
+  },
+  "binaries": {
+    "before-prefix": "59b35348bbba92c62b8f75e6b09127475f4f9c6256051474a2fef842c8bd93b0",
+    "prefix": "f3a670cdb234b2d48ae35e32db4c544c4f20f5cac506404fc732208eb9fc8725",
+    "observer": "a42bad6c64acd9bfb9e427677763980366408abbfa94db5490aa8b83d31aa475"
+  },
+  "audit_artifacts": {
+    "ray-audit/report.json": "140d69306ebef100ed77f0d5176510314a4048a24985371d806e3ef71ecfbd06",
+    "ray-audit/checks.json": "5eb6ac4e80446abe6f74e70eb76a626a2d35870d2a098ad3e4fc298d247226af",
+    "census/report.json": "0c1f55fccec5fdba56014e9e32044fa9024c619ef3316a1dda2e7115836e17eb",
+    "census/checks.json": "13ce435cd5009780a655a6de3f2f186828c5db5fea8276deddbcb5292faeb849"
+  }
+}

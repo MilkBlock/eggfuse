@@ -2018,6 +2018,12 @@ impl Executor {
             }
             if let Some(step) = stage_cursor {
                 self.stage_spine.effects(0, u64::from(changed), 0);
+                #[cfg(feature = "sparse-cells")]
+                let step = if !changed && self.completion.is_none() {
+                    let Some(step) = self.stage_spine.complete_absorbed_root(&self.graph, rid, cell,
+                        step, &write, index, &mut self.entry_schedule)? else { return Ok(()) };
+                    step
+                } else { step };
                 self.stage_spine.complete(
                     &self.graph,
                     rid,

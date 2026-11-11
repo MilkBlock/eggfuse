@@ -441,6 +441,11 @@ impl State {
 #[derive(Default, Serialize)]
 pub struct Stats {
     entry_publication_writes: u64,
+    staged_root_records: u64,
+    staged_root_checks: u64,
+    staged_root_redirects: u64,
+    staged_root_winners: u64,
+    peak_staged_roots: usize,
     // Removed Pending-path counters stay zero for historical metric continuity.
     fragment_slot_probes: u64,
     publication_candidate_checks: u64,
@@ -484,7 +489,7 @@ pub struct Scheduler {
     #[cfg(feature = "sparse-cells")]
     publications: Vec<Option<PublicationSlot>>,
     #[cfg(feature = "sparse-cells")]
-    publication_batch: u64,
+    staged_roots: Vec<StagedRoot>,
     #[cfg(feature = "sparse-cells")]
     publication_free: Vec<std::num::NonZeroUsize>,
     pub stats: Stats,
@@ -492,7 +497,16 @@ pub struct Scheduler {
 #[cfg(feature = "sparse-cells")]
 struct PublicationSlot {
     published: crate::stage_spine::Published,
-    batch: u64,
+    // Programs assigns odd positions to stored completions. An even position
+    // denotes the roots between them, ordered by their existing root identity.
+    // This replaces the old batch number without widening an Entry slot.
+    order: u64,
+}
+#[cfg(feature = "sparse-cells")]
+struct StagedRoot {
+    function: usize,
+    slot: Option<std::num::NonZeroUsize>,
+    root: u64,
 }
 /// Immutable node contents after refresh, plus this consumer's delta frontier.
 #[derive(Clone, Copy)]
@@ -657,7 +671,7 @@ impl Scheduler {
             #[cfg(feature = "sparse-cells")]
             publications: vec![],
             #[cfg(feature = "sparse-cells")]
-            publication_batch: 0,
+            staged_roots: vec![],
             #[cfg(feature = "sparse-cells")]
             publication_free: vec![],
             enabled,
@@ -690,18 +704,13 @@ impl Scheduler {
         }
         self.publication_nodes.iter().map(Option::is_some).collect()
     }
+    /// Source completion order, followed by the shared output position, selects
+    /// the last writer even when an absorbed root staged its final slot earlier.
+    /// Ordinary completion still visits candidates in descending source order.
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn begin_publication(&mut self) {
-        self.publication_batch = self.publication_batch.checked_add(1).expect("publication generation exhausted");
-    }
-    /// Cell completion supplies candidates in descending source order against
-    /// one unchanged graph. The first validated candidate owns the Entry for
-    /// this batch; older candidates reuse that proof without preparing a slot.
-    /// A new batch must validate again, including when its Entry already exists.
-    #[cfg(feature = "sparse-cells")]
-    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency,
+    pub(crate) fn install_publication(&mut self, table: usize, w: Dependency, order: u64, root: u64, output: usize,
         make: impl FnOnce() -> Result<crate::stage_spine::Published>,
-    ) -> Result<bool> {
+    ) -> Result<Option<std::num::NonZeroUsize>> {
         self.stats.publication_candidate_checks += 1;
         self.stats.publication_slot_probes += 1;
         let node = self.publication_nodes[table].expect("compiled entry owner");
@@ -713,9 +722,10 @@ impl Scheduler {
             std::collections::hash_map::Entry::Vacant(_) => None,
         };
         if prior.is_some_and(|id| self.publications[id.get() - 1].as_ref()
-            .is_some_and(|p| p.batch == self.publication_batch)) {
+            .is_some_and(|p| (p.order, if p.order % 2 == 0 { p.published.root_identity() } else { 0 },
+                p.published.output_position()) >= (order, root, output))) {
             self.stats.publication_loser_skips += 1;
-            return Ok(false);
+            return Ok(None);
         }
         // Failed validation may not create a packetless Entry, reserve a slot,
         // queue a wakeup or destroy a previously valid publication.
@@ -735,9 +745,59 @@ impl Scheduler {
             self.publications.push(None);
             std::num::NonZeroUsize::new(self.publications.len()).unwrap()
         }));
-        self.publications[id.get() - 1] = Some(PublicationSlot { published, batch: self.publication_batch });
+        self.publications[id.get() - 1] = Some(PublicationSlot { published, order });
         self.stats.entry_publication_writes += 1;
-        Ok(true)
+        Ok(Some(id))
+    }
+    /// Only the executor's exclusive, globally completed RHS phase may stage
+    /// these slots. Readers retain their old cursors; no query can start until
+    /// repair forwarding and all later source publications have been resolved.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn stage_absorbed_root(&mut self, table: usize, function: usize, order: u64,
+        published: crate::stage_spine::Published) -> Result<()> {
+        let output = published.output_position();
+        let root = published.root_identity();
+        debug_assert_eq!(order % 2, 0);
+        let slot = self.install_publication(table, Dependency::Function(function), order, root, output, || Ok(published))?;
+        debug_assert!(slot.is_some(), "source completions are monotonically ordered");
+        self.staged_roots.push(StagedRoot { function, slot, root });
+        self.stats.staged_root_records += 1;
+        self.stats.peak_staged_roots = self.stats.peak_staged_roots.max(self.staged_roots.len());
+        Ok(())
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn resolve_staged_roots(&mut self, g: &Graph) -> Result<()> {
+        for i in 0..self.staged_roots.len() {
+            self.stats.staged_root_checks += 1;
+            let record = &self.staged_roots[i];
+            let Some(id) = record.slot else { continue };
+            let Some(p) = &self.publications[id.get()-1] else { continue };
+            if p.order % 2 != 0 || p.published.root_identity() != record.root { continue; }
+            let old = Dependency::Function(record.function);
+            let table = g.functions[record.function].table;
+            let w = g.resolve_receipt(old);
+            if !g.receipt_visible(w, table) {
+                return Err("permanent staged Cell result lost visibility".into());
+            }
+            if old == w { continue; }
+            let p = self.publications[id.get()-1].take().unwrap();
+            self.stats.staged_root_redirects += 1;
+            self.staged_roots[i].slot = self.install_publication(table, w, p.order, record.root,
+                p.published.output_position(), || Ok(p.published))?;
+        }
+        Ok(())
+    }
+    /// Count only sources that survived ordinary completions as well as repair
+    /// collisions. Earlier staged writes remain charged as actual slot writes.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn finish_staged_roots(&mut self) -> u64 {
+        let mut winners = 0;
+        for record in self.staged_roots.drain(..) {
+            if record.slot.is_some_and(|id| self.publications[id.get()-1].as_ref()
+                .is_some_and(|p| p.order % 2 == 0 && p.published.root_identity() == record.root)) { winners += 1; }
+        }
+        self.stats.staged_root_winners += winners;
+        winners
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publication_count(&self, table: usize) -> usize {
@@ -745,6 +805,7 @@ impl Scheduler {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publication(&self, seed: &Seed) -> Option<&crate::stage_spine::Published> {
+        debug_assert!(self.staged_roots.is_empty(), "query before staged Cell completion");
         let id = seed.publication?;
         Some(&self.publications[id.get() - 1].as_ref()?.published)
     }
@@ -759,6 +820,8 @@ impl Scheduler {
     /// Called before query-change records are consumed. Only committed rows and
     /// exact same-key forwarding retirements enter the shared pending domains.
     pub(crate) fn settled(&self,g:&Graph)->bool {
+        #[cfg(feature = "sparse-cells")]
+        if !self.staged_roots.is_empty() { return false; }
         !self.enabled || (self.rows.is_empty() && self.unions == g.stats.unions)
     }
     pub fn publish(&mut self, g: &Graph) {
@@ -890,6 +953,8 @@ impl Scheduler {
         watermark: u64,
         mut visit: impl FnMut(Batch<'_>, &mut Vec<Seed>) -> Result<()>,
     ) -> Result<Vec<Seed>> {
+        #[cfg(feature = "sparse-cells")]
+        debug_assert!(self.staged_roots.is_empty(), "query before staged Cell completion");
         self.stats.consumer_calls += 1;
         let mut out = vec![];
         for i in 0..self.plan.rules[rid].len() {
@@ -1067,8 +1132,13 @@ impl Scheduler {
         #[allow(unused_mut)]
         let mut stats = json!(&self.stats);
         #[cfg(feature = "sparse-cells")]
-        { stats["node_notifications"] = (self.stats.node_notifications
-            + self.states.iter().map(|s|s.pending_count() as u64).sum::<u64>()).into(); }
+        {
+            stats["node_notifications"] = (self.stats.node_notifications
+                + self.states.iter().map(|s|s.pending_count() as u64).sum::<u64>()).into();
+            stats["staged_root_record_bytes"] = std::mem::size_of::<StagedRoot>().into();
+            stats["staged_root_capacity_bytes"] = (self.staged_roots.capacity() * std::mem::size_of::<StagedRoot>()).into();
+            stats["publication_slot_bytes"] = std::mem::size_of::<Option<PublicationSlot>>().into();
+        }
         json!({"enabled":self.enabled,"nodes":self.plan.nodes.len(),"stats":stats,
             "consumer_transport":if DETACH_CELL_ENTRIES { "partitioned-cell-entries/v1" } else { "survey-seeds/v1" },
             "seed_bytes":std::mem::size_of::<Seed>(),
@@ -1118,13 +1188,12 @@ mod pending_tests {
             enabled: true, plan: Plan::default(),
             states: vec![State { rows: Entries::Owned(HashMap::default()), ..Default::default() }],
             rows: HashMap::default(), unions: 0, publication_nodes: vec![Some(0)],
-            publications: vec![], publication_batch: 0, publication_free: vec![],
+            publications: vec![], staged_roots: vec![], publication_free: vec![],
             stats: Stats::default(),
         };
         let w = Dependency::Function(7);
-        s.begin_publication();
         for _ in 0..2 {
-            assert_eq!(s.install_publication(0, w, || Err("stale".into())).unwrap_err(), "stale");
+            assert_eq!(s.install_publication(0, w, 1, 0, 0, || Err("stale".into())).unwrap_err(), "stale");
             assert!(s.states[0].rows.is_empty());
             assert!(s.states[0].pending.is_empty());
             assert!(s.publications.is_empty());

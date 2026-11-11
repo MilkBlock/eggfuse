@@ -62,6 +62,8 @@ pub(crate) struct Published {
 }
 #[cfg(feature = "sparse-cells")]
 impl Published {
+    pub(crate) fn output_position(&self) -> usize { self.output }
+    pub(crate) fn root_identity(&self) -> u64 { self.root_info().0 }
     pub(crate) fn cell_results(&self) -> (usize, usize, Option<crate::cell::ResultView<'_>>) {
         // A publication knows its logical producer even when it retained no
         // results. Do not expand a root or recover a physical Cell to find it.
@@ -552,6 +554,10 @@ pub struct Stats {
     root_handles_created: u64,
     #[cfg(feature = "sparse-cells")]
     deferred_single_roots: u64,
+    #[cfg(feature = "sparse-cells")]
+    absorbed_root_completions: u64,
+    #[cfg(feature = "sparse-cells")]
+    absorbed_root_checks: u64,
     contexts_created: u64,
     captured_contexts: u64,
     capture_reads: u64,
@@ -751,6 +757,8 @@ pub struct Programs {
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
     pending_steps: Vec<Completion>,
+    #[cfg(feature = "sparse-cells")]
+    publication_base: u64,
     #[cfg(feature = "sparse-cells")]
     pub(crate) compiled_commits: bool,
     #[cfg(feature = "sparse-cells")]
@@ -1055,6 +1063,8 @@ impl Programs {
             alias_query_facts: vec![],
             owner_queries: false,
             pending_steps: vec![],
+            #[cfg(feature = "sparse-cells")]
+            publication_base: 0,
             pending_anchors: vec![],
             #[cfg(feature = "sparse-cells")]
             compiled_commits: false,
@@ -1170,6 +1180,15 @@ impl Programs {
         Some(cursor)
     }
     pub(crate) fn completed_step_count(&self) -> u64 { self.stats.completed_steps }
+    /// Stored completions have odd positions; roots staged between them have
+    /// the preceding even position and use their existing monotone root IDs
+    /// to break ties. This needs no per-Completion order field. The base only
+    /// advances when the complete pending arena is drained, including scopes.
+    #[cfg(feature = "sparse-cells")]
+    fn publication_order(&self, slot: usize, between: bool) -> u64 {
+        self.publication_base.checked_add(slot as u64).and_then(|n| n.checked_mul(2))
+            .and_then(|n| n.checked_add(u64::from(!between))).expect("Cell publication order exhausted")
+    }
 
     pub(crate) fn begin_step(
         &mut self,
@@ -1578,6 +1597,40 @@ impl Programs {
         #[cfg(not(feature = "sparse-cells"))]
         { true }
     }
+    /// A completed, unchanged single write can put its root source directly
+    /// in the final Entry slot while the executor exclusively owns the RHS
+    /// phase. No query may observe these slots until repair and source-order
+    /// resolution finish. Live histories retain ordinary Cell completion.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn complete_absorbed_root(&mut self, g: &Graph, rid: usize, cell: u32,
+        step: Started, write: &crate::row_kernel::Write, index: usize,
+        entries: &mut crate::entry_schedule::Scheduler) -> Result<Option<Started>> {
+        self.stats.absorbed_root_checks += 1;
+        if !matches!(step, Started::Root { .. }) || !self.compiled_commits || !self.receipts
+            || self.audit_receipts || !self.permanent[write.table]
+            || g.has_visibility_changes(write.table) || !self.entry_owned_tables[write.table]
+            || self.outputs[rid].len() != 1 || self.cell_output_widths[rid] != 1
+            || self.outputs[rid][0].operation != write.op
+            || self.outputs[rid][0].receipt_source.is_some()
+            || g.program.iterative.root_has_state(rid, self.training.collect_pairs) {
+            return Ok(Some(step));
+        }
+        let Started::Root { id, producer, epoch, set } = step else { unreachable!() };
+        debug_assert_eq!(producer, rid);
+        self.stats.completed_steps += 1;
+        let published = Published {
+            base: PublishedBase::Solo { id, producer, epoch, stage: set, root: OnceCell::new() },
+            output: write.op,
+            #[cfg(feature = "spine-shapes")]
+            source: crate::graph::FactRef { cell, op: write.op as u32 },
+        };
+        #[cfg(not(feature = "spine-shapes"))]
+        let _ = cell;
+        entries.stage_absorbed_root(write.table, index, self.publication_order(self.pending_steps.len(), true), published)?;
+        self.stats.absorbed_root_completions += 1;
+        self.stats.captured_anchors += 1;
+        Ok(None)
+    }
     #[cfg(feature = "sparse-cells")]
     fn capture_receipt(&mut self, rid: usize, slot: usize, _cell: u32, position: usize,
         table: usize, publication: Publication, receipt: Dependency, mut effects: Option<&mut crate::cell::Effects>,
@@ -1743,8 +1796,8 @@ impl Programs {
         let record = self.ready_publications[id.get() - 1];
         self.pending_steps[slot].ready = record.next;
         self.stats.completion_boundary_reads += 1;
-        if !entries.install_publication(record.table, record.witness,
-            || Ok(self.materialize_publication(record.publication)))? {
+        if entries.install_publication(record.table, record.witness, self.publication_order(slot, false),
+            0, record.publication.output, || Ok(self.materialize_publication(record.publication)))?.is_none() {
             // Normalized boundary keys were counted before their receipts were
             // resolved. A later fragment can already own this same final key.
             self.stats.distinct_anchor_keys -= 1;
@@ -1786,6 +1839,10 @@ impl Programs {
             return Ok(());
         };
         let clock = Instant::now();
+        #[cfg(feature = "sparse-cells")]
+        if let Some(entries) = entries.as_deref_mut() {
+            entries.resolve_staged_roots(g)?;
+        }
         // Removed/coalesced anchors are not reusable. Other stale ports are
         // refreshed by exact keys when their legal consumer stage arrives.
         for (t, changes) in g.changes.tables() {
@@ -1940,7 +1997,6 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         if let Some(entries) = entries.as_deref_mut() {
             if !self.ready_publications.is_empty() || self.cell_outputs_pending != 0 {
-                entries.begin_publication();
                 // Source Cells and their shared output positions are in capture
                 // order. Reverse traversal sees the final Entry winner first.
                 for slot in (0..self.pending_steps.len()).rev() {
@@ -1985,14 +2041,15 @@ impl Programs {
                                 #[cfg(feature = "spine-shapes")]
                                 source: crate::graph::FactRef { cell: delivery.cell, op: output.operation as u32 },
                             };
-                            let installed = entries.install_publication(table, w, || {
+                            let installed = entries.install_publication(table, w, self.publication_order(slot, false),
+                                0, output.operation, || {
                                 self.stats.receipt_attempts += 1;
                                 if !g.receipt_visible(w, table) {
                                     return Err("permanent Cell output lost visibility".into());
                                 }
                                 self.stats.receipt_hits += 1;
                                 Ok(self.materialize_publication(publication))
-                            })?;
+                            })?.is_some();
                             self.stats.distinct_anchor_keys += u64::from(installed);
                             self.stats.cell_output_deliveries += 1;
                             if fragment { self.stats.fragment_deliveries += 1; }
@@ -2015,6 +2072,12 @@ impl Programs {
                 }
                 self.ready_publications.clear();
             }
+            let winners = entries.finish_staged_roots();
+            self.stats.anchor_publications += winners;
+            self.stats.deferred_single_roots += winners;
+            self.stats.receipt_attempts += winners;
+            self.stats.receipt_hits += winners;
+            self.stats.distinct_anchor_keys += winners;
         }
         let hits = self.stats.receipt_hits - hits_before;
         if hits > 0 {
@@ -2027,6 +2090,9 @@ impl Programs {
         // A deferred publication still addresses its original shared slot.
         // New source Runs append contexts; release the arena only when drained.
         if self.pending_publication_counts().0 == 0 {
+            #[cfg(feature = "sparse-cells")]
+            { self.publication_base = self.publication_base.checked_add(self.pending_steps.len() as u64)
+                .expect("Cell publication order exhausted"); }
             self.pending_steps.clear();
             #[cfg(feature = "sparse-cells")]
             self.cell_outputs.clear();

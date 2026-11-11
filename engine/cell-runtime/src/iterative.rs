@@ -584,6 +584,10 @@ impl Catalog {
             ..Default::default()
         })
     }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn root_has_state(&self, rule: usize, collect_pairs: bool) -> bool {
+        self.switch.congruence && self.switch.unique_root(rule, !collect_pairs).is_some()
+    }
     pub(crate) fn program(&self, s: &State) -> &[crate::result_handoff::Reuse] {
         self.switch
             .program(s.pc)

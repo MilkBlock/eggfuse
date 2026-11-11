@@ -178,6 +178,37 @@ fn inline_function_output_keeps_last_producer_forwarding_and_late_inputs() {
 }
 
 #[test]
+fn absorbed_roots_keep_source_order_through_forwarding_and_changed_writers() {
+    let source = r#"
+(datatype E (N i64) (Get E i64) (Ready E) (Out E i64))
+(function Input (E) i64 :merge new)
+(function Cost (E) i64 :merge (min old new))
+(ruleset make) (ruleset later) (ruleset read) (ruleset update)
+(rule ((= g (Get (N 0) 0))) ((set (Cost g) 0)) :ruleset make)
+(rule ((= g (Get x i)) (= n (Input x))) ((set (Cost g) n)) :ruleset make)
+(rule ((= g (Get (N 1) 1))) ((set (Cost g) 0)) :ruleset make)
+(rule ((= a (Get (N 0) 0)) (= b (Get (N 1) 0))) ((union a b)) :ruleset make)
+(rule ((= g (Get x i))) ((Ready g)) :ruleset later)
+(rule ((Ready g) (= n (Cost g))) ((Out g n)) :ruleset read)
+(rule ((= x (N 0))) ((set (Input x) 3)) :ruleset update)
+(rule ((= x (N 1))) ((set (Input x) 4)) :ruleset update)
+(set (Cost (Get (N 0) 0)) 1) (set (Cost (Get (N 0) 1)) 1)
+(set (Cost (Get (N 1) 0)) 1) (set (Cost (Get (N 1) 1)) 1)
+(set (Input (N 0)) 10) (set (Input (N 1)) 11)
+(run-schedule (seq (run make) (run later) (run read) (run update) (run make) (run read)))
+(check (Out (Get (N 0) 0) 0) (Out (Get (N 0) 1) 1) (Out (Get (N 1) 1) 0))
+"#;
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    let r = nodes.report();
+    let e = &r["entry_schedule"]["stats"];
+    assert!(r["stage_spine"]["stats"]["absorbed_root_completions"].as_u64().unwrap() > 0, "{r}");
+    assert!(e["staged_root_redirects"].as_u64().unwrap() > 0, "{e}");
+    assert!(e["staged_root_winners"].as_u64().unwrap() > 0, "{e}");
+    assert!(e["staged_root_records"].as_u64().unwrap() > e["staged_root_winners"].as_u64().unwrap(), "{e}");
+}
+
+#[test]
 fn deletable_function_outputs_retain_boundary_publication() {
     let source = r#"
 (datatype E (N i64) (Start E) (Seen E i64))
