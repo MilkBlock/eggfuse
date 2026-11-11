@@ -3332,8 +3332,8 @@
       "title": "按 Cell 实例归组的源 Run 查询执行",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）；parallel-residuals 构建 + --parallel-residuals 可接管无前缀/吸收/范围特化的单次展开查询",
       "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段",
-      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管",
-      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 新残余路径按 kernel/pivot 分块，未共享同一物理 Cell 的重复查询；所有权、watermark 和按序 RHS 不变；小批次 inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管；直接 Entry 路径删除 Sieve 幸存者的 Seed/consumer 克隆、空 domain 登记及稍后的 Seed→worker 交接，条件筛选与精确查询在同一任务中完成",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 新残余路径按 kernel/pivot 分块，未共享同一物理 Cell 的重复查询；所有权、watermark 和按序 RHS 不变；小批次 inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。 接管范围仍排除 active Cursor；保留 reverse 候选选择，selected/shared 投影与逐 Entry 审计走兼容路径。新增筛选失败候选和批次必须付账。",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/query_reads.rs",
@@ -3678,6 +3678,26 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/worker_task_seconds",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/input_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/filter_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/filter_rejected",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/worker_inputs",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3805,6 +3825,16 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/answers",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/direct_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/direct_batches",
+            "reduce": "value"
           }
         ]
       },
@@ -3847,9 +3877,10 @@
         "benchmarks/cell-query-sharing/README.md",
         "benchmarks/cell-query-sharing/results.json",
         "benchmarks/parallel-residuals/README.md",
-        "benchmarks/parallel-residuals/results.json"
+        "benchmarks/parallel-residuals/results.json",
+        "benchmarks/parallel-residuals/entry-takeover.json"
       ],
-      "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立；残余准入/枚举已接通并通过 Run 边界回归；Raytrace 新路径总 key 查询增加 18,927，默认关闭，没有新增速度或满载结论"
+      "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立；残余准入/枚举已接通并通过 Run 边界回归；Raytrace 新路径总 key 查询增加 18,927，默认关闭，没有新增速度或满载结论；直接 Entry 接管在完整 Raytrace 省掉 1,881,965 次 Seed/domain 交接，所有图/Sieve/发布计数不变，未新增测速结论"
     },
     {
       "id": "I1",

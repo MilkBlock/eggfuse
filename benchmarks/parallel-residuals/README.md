@@ -137,3 +137,75 @@ Prepare `semantic-final` with the saved native contract inputs and the fresh
 `sum-final/state.json`, as required by the existing choice-diagnosis contract.
 The collector does not launch workloads or compare timing. Raw exports,
 binaries and logs remain ignored under `out/parallel-residuals`.
+
+## Direct Entry filtering and query completion
+
+Follow-up control: `cef7db18`; same opt-in feature and original Cell query.
+The previous path still created a consumer Seed and an empty domain for every
+Sieve survivor, then selected those Seeds again and converted them to worker
+headers. These are transport objects, not additional query evidence.
+
+For the same admitted, non-Cursor Entries the scheduler now borrows their
+existing rows directly. Each worker performs the original Sieve conditions,
+Free Join checks and complete residual query in one task. Ordinary reverse
+candidate selection remains in use; separately selected/shared projections
+and per-Entry audits retain the previous path. An existing Entry row pointer
+crosses the thread boundary, not its owning `Rc`, consumer or publication state.
+Successful owned Instances still enter the original ordered RHS.
+
+This removes the covered Seed/consumer ownership clones, empty-domain records,
+and the later Seed-to-query handoff. It creates no runtime relationship index,
+extra bindings, cross-Run assumptions or new Bake credit. Graph accounting is
+reduced after the scheduler releases its borrow; that reduction carries no
+rows or query state. Completion accounting is created only for actual work.
+
+| Complete diagnostic | sum-bits | Raytrace |
+|---|---:|---:|
+| Consumer Seeds, before → after | 12,095 → 1,747 | 3,435,349 → 1,553,384 |
+| Seed/domain handoffs omitted | 10,348 | 1,881,965 |
+| Sieve probes in the combined task | 2,053 | 372,680 |
+| Candidate rows entering the combined task | 11,944 | 2,202,688 |
+| Header capacity bytes, before → after | 413,920 → 141,936 | 75,278,600 → 25,478,712 |
+| Task batches, before → after | 1,604 → 1,872 | 15,843 → 19,395 |
+| Answer-vector capacity bytes, before → after | 632,640 → 633,120 | 84,864,960 → 85,102,080 |
+
+The saved Seed and its corresponding empty domain describe one removed
+handoff, not two independent semantic takeovers. The lower `borrowed_slots`
+count is less consumer-projection bookkeeping; it does not mean those input
+fields no longer need to be read by the query.
+
+New costs remain visible: worker input includes Sieve-rejected candidates, and
+filter-only batches now enter this path. Raytrace has 320,723 such rejected
+rows and 48,701 chunks versus 41,191 before. Only borrowed row pointers are
+collected (8 bytes each on this target), rather than 40-byte Entry headers.
+Summed capacities are not allocator totals or peak memory. Preparation now
+includes gathering those pointers; the prior timer excluded scheduler Seed
+creation. Phase times are not a fair speed comparison. This checkpoint records
+no new throughput or utilization result.
+
+Both workloads preserve all ordinary graph counters, total key reads, every
+Sieve probe/rejection/per-rule count, publication work and indexed-column
+coverage. Exact final states and ordered logical/executed Run signatures agree
+(1,428 and 16,883 Runs). The 18,927 extra Raytrace key reads versus the earlier
+non-residual baseline have not been eliminated by this change.
+
+The new-path regression fixtures require actual direct Entry execution and
+equal Sieve counters. All 32 integration tests and forced-collision checks pass;
+98 runtime unit tests, minimal/all-feature builds and README command smokes
+pass. Native sum-bits acceptance returns `pass` / exit 0. Raytrace remains a
+relative regression comparison.
+
+Reproduce with the same flags above, using `ROOT/sum` and `ROOT/ray` as fresh
+output directories and freezing the executable as `ROOT/runtime`. Prepare the
+saved-input semantic contract under `ROOT/semantic` and write its result to
+`ROOT/semantic-acceptance.json`. The prior root has the preceding frozen
+`sum-final` and `ray-final` outputs:
+
+```sh
+python3 benchmarks/parallel-residuals/collect_entries.py ROOT PRIOR_ROOT RESULTS.json
+```
+
+[entry-takeover.json](entry-takeover.json) records checks and costs. Raw artifacts
+are ignored under `out/residual-entry-takeover`. Remaining query barriers still
+occur per kernel/pivot; this change does not yet combine these tasks with the
+Run-wide physical-Cell queue. RHS, publication and repair remain coordinated.

@@ -7,6 +7,8 @@ use serde::Serialize;
 #[cfg(feature = "parallel-residuals")]
 #[path = "query_expansion_workers.rs"]
 mod expansion;
+#[cfg(feature = "parallel-residuals")]
+pub(crate) use expansion::Completed;
 #[cfg(feature = "cell-query-sharing-audit")]
 #[path = "query_sharing_audit.rs"]
 mod sharing_audit;

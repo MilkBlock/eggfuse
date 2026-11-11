@@ -4,6 +4,7 @@ use super::*;
 use smallvec::SmallVec;
 pub(crate) struct Read<'a> {
     tables: SmallVec<[(usize, TableRead<'a>); 4]>,
+    entry_keys: Option<&'a HashMap<Dependency, SmallVec<[u64; 4]>>>,
     bits: u32,
 }
 struct TableRead<'a> {
@@ -24,6 +25,9 @@ impl Domain<'_> {
     pub fn take_examined(&self) -> u64 { self.examined.replace(0) }
 }
 impl<'a> Read<'a> {
+    pub fn entry_hashes(&self, witness: Dependency) -> Option<&[u64]> {
+        self.entry_keys?.get(&witness).map(|v| v.as_slice())
+    }
     pub fn fingerprint(&self, value: &Value) -> u64 { fingerprint(value, self.bits) }
     pub fn domain(&self, table: usize, selectors: SmallVec<[(usize,u64);4]>) -> Domain<'a> {
         let read = &self.tables.iter().find(|(t,_)| *t == table).expect("compiled read table").1;
@@ -39,13 +43,15 @@ impl<'a> Read<'a> {
     }
 }
 impl QueryIndexes {
-    pub(crate) fn read_columns<'a>(&'a mut self, graph: &Graph, layout: &[(usize,Vec<usize>)]) -> Result<Read<'a>> {
+    pub(crate) fn read_columns<'a>(&'a mut self, graph: &Graph, layout: &[(usize,Vec<usize>)], entry_table: usize) -> Result<Read<'a>> {
         for (table, columns) in layout { self.ensure_selected(graph, *table, columns.iter().copied())?; }
         let tables = layout.iter().map(|(table, columns)| {
             let index = &self.tables[table];
             (*table, TableRead { keys: &index.keys,
                 columns: columns.iter().map(|&c| (c, index.column(c))).collect() })
         }).collect();
-        Ok(Read { tables, bits: self.bits })
+        // Match Sieve::allow's existing directory access. Do not create a new
+        // index solely for Entry filtering when ordinary matching had none.
+        Ok(Read { tables, bits: self.bits, entry_keys: self.tables.get(&entry_table).map(|i| &i.keys) })
     }
 }

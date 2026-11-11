@@ -1171,6 +1171,9 @@ impl Executor {
         let mut legacy_cursor_probes = 0;
         let mut node_cursor_reads = 0;
         let mut entry_domains = Vec::new();
+        let mut found = vec![];
+        #[cfg(feature = "parallel-residuals")]
+        let mut worker_completed = None::<query_workers::Completed>;
         let scheduled = if scheduled_entry {
             let watermark = self.watermarks[rid];
             Some(if early_join || route_spine {
@@ -1185,7 +1188,7 @@ impl Executor {
                         let gate_clock = Instant::now();
                         let atom = batch.atom();
                         #[cfg(feature = "parallel-residuals")]
-                        let worker_expansion = early_join && self.free_join.planned && !active_spine && self.completion.is_none()
+                        let worker_expansion = early_join && self.free_join.enabled && self.free_join.planned && !active_spine && self.completion.is_none()
                             && self.query_workers.as_ref().is_some_and(|w| w.expansion_ready(&self.graph,rid,atom));
                         #[cfg(not(feature = "parallel-residuals"))]
                         let worker_expansion = false;
@@ -1260,6 +1263,24 @@ impl Executor {
                         } else { None };
                         #[cfg(feature = "cell-entry-reverse")]
                         let selected_guard = selected.as_ref().map(|s| s.guard);
+                        #[cfg(feature = "parallel-residuals")]
+                        if worker_expansion && !cfg!(feature = "entry-admission-audit") && {
+                            #[cfg(feature = "cell-entry-reverse")]
+                            { selected.is_none() }
+                            #[cfg(not(feature = "cell-entry-reverse"))]
+                            { true }
+                        } && {
+                            #[cfg(feature = "projection-shared")]
+                            { shared.is_none() }
+                            #[cfg(not(feature = "projection-shared"))]
+                            { true }
+                        } {
+                            self.query_workers.as_mut().unwrap().expansion_entries(
+                                &self.graph, &mut self.query_indexes, self.free_join.entry_plan(),
+                                &mut self.sieve, rid, &rule, batch, inverted.as_deref(),
+                                &query_facts, &mut found, worker_completed.get_or_insert_with(Default::default))?;
+                            return Ok(());
+                        }
                         #[cfg(feature = "parallel-entry-filters")]
                         let filtered = if early_sieve && inverted.is_none() && self.completion.is_none()
                             && {
@@ -1449,11 +1470,14 @@ impl Executor {
             None
         };
         self.stage_spine.stats.legacy_cursor_probes += legacy_cursor_probes;
+        #[cfg(feature = "parallel-residuals")]
+        let direct_entries = worker_completed.map_or(0, |done| done.apply(&mut self.graph) as usize);
+        #[cfg(not(feature = "parallel-residuals"))]
+        let direct_entries = 0;
         self.stage_spine.stats.node_cursor_reads += node_cursor_reads;
         let detached_count = if detach_spine { spine_routes.len() } else { 0 };
         self.entry_schedule.record_cell_deliveries(detached_count);
         let mut stage_covered = BTreeSet::new();
-        let mut found = vec![];
         if !probe && rule.seminaive {
             let watermark = self.watermarks[rid];
             let coverage = match &scheduled {
@@ -1479,7 +1503,7 @@ impl Executor {
                 let claimed = coverage.as_ref().map_or(0, |coverage| coverage.claimed);
                 let stats = self.neighbor.stats(rid);
                 stats.spine_entries += claimed as u64;
-                stats.residual_entries += (seeds.len() + detached_count - claimed) as u64;
+                stats.residual_entries += (seeds.len() + detached_count + direct_entries - claimed) as u64;
             }
             if let Some(coverage) = coverage {
                 found = coverage.answers;

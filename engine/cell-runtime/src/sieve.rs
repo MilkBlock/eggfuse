@@ -140,6 +140,27 @@ pub struct Stats {
     pub empty_join_skips: u64,
     pub per_rule: Vec<(u64, u64)>,
 }
+/// Borrow the existing necessary conditions for one Entry through query join.
+/// Missing fingerprints still pass to exact matching, as in `allow`.
+#[cfg(feature = "parallel-residuals")]
+pub(crate) struct EntryFilter<'a> {
+    guards: &'a [Guard],
+    states: &'a [Summary],
+}
+#[cfg(feature = "parallel-residuals")]
+impl EntryFilter<'_> {
+    pub fn allow(&self, keys: Option<&[u64]>, probes: &mut u64, rejected: &mut u64) -> bool {
+        let Some(keys) = keys else { return true };
+        for guard in self.guards {
+            *probes += 1;
+            if !self.states[guard.child].allows(keys, &guard.cols) {
+                *rejected += 1;
+                return false;
+            }
+        }
+        true
+    }
+}
 pub struct Sieve {
     #[cfg(feature = "parallel-entry-filters")]
     pub(crate) parallel_enabled: bool,
@@ -163,6 +184,17 @@ pub struct Sieve {
     pub stats: Stats,
 }
 impl Sieve {
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn entry_filter(&self, rid: usize, atom: usize) -> EntryFilter<'_> {
+        EntryFilter { guards: if self.enabled { &self.rules[rid][atom] } else { &[] }, states: &self.states }
+    }
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn record_entry_filter(&mut self, rid: usize, probes: u64, rejected: u64) {
+        self.stats.probes += probes;
+        self.stats.rejected += rejected;
+        self.stats.per_rule[rid].0 += probes;
+        self.stats.per_rule[rid].1 += rejected;
+    }
     #[cfg(feature = "family-frontiers")]
     pub(crate) fn survey_guards(&self, rule: usize, pivot: usize) -> Vec<(Vec<usize>, usize)> {
         self.rules[rule][pivot]

@@ -16,6 +16,36 @@ struct Work {
     answers: u64, point_reads: u64, prepare_seconds: f64, execute_seconds: f64,
     index_rows_examined:u64, entry_header_capacity_bytes:u64, answer_capacity_bytes:u64,
     worker_entries: Vec<u64>, worker_rows: Vec<u64>, worker_task_seconds:Vec<f64>,
+    input_rows:u64, filter_probes:u64, filter_rejected:u64, direct_entries:u64,
+    direct_batches:u64, worker_inputs:Vec<u64>,
+}
+// Accumulate normal graph accounting while Scheduler lends its immutable Run.
+// No rows or bindings are copied into this reduction.
+#[derive(Default)]
+pub(crate) struct Completed {
+    seeds:u64, answers:u64, writes:u64, rows:u64, candidates:u64, keys:u64, points:u64, direct:u64,
+    constructors:crate::graph::query_reads::Work,
+}
+impl Completed {
+    fn add(&mut self, c:&Counts, w:&Work) {
+        self.direct += w.direct_entries;
+        self.seeds += c.entries - w.admission_rejected;
+        self.answers += c.answers; self.writes += c.result_writes;
+        self.rows += w.expansion_rows; self.candidates += c.point_reads + w.row_reads;
+        self.keys += c.key_operations; self.points += c.point_reads;
+        self.constructors.add(&c.constructors);
+    }
+    pub fn apply(self, graph:&mut Graph) -> u64 {
+        graph.record_constructor_query_work(&self.constructors);
+        graph.stats.register_seeds += self.seeds;
+        graph.stats.register_answers += self.answers;
+        graph.stats.register_result_writes += self.writes;
+        graph.stats.register_expansion_rows += self.rows;
+        graph.stats.residual_candidates += self.candidates;
+        graph.stats.key_operations += self.keys;
+        graph.key_lookup_calls.set(graph.key_lookup_calls.get()+self.points);
+        self.direct
+    }
 }
 #[derive(Default)]
 pub(super) struct Plans {
@@ -80,33 +110,70 @@ impl Executor {
         if self.completion.is_some() || self.stage_spine.active_for_rule(rid) || !self.free_join.planned || !self.free_join.enabled { return Ok(false); }
         let Some(workers) = &mut self.query_workers else { return Ok(false); };
         if !workers.expansion_ready(&self.graph,rid,kernel.pivot) { return Ok(false); }
-        let prepare = Instant::now();
-        let plan = workers.expansion.rules[rid][kernel.pivot].as_ref().unwrap();
         let seeds = crate::entry_schedule::Seed::for_atom(seeds,kernel.pivot,&mut workers.stats.seed_range_comparisons);
         if seeds.is_empty() { return Ok(true); }
-        let reads = self.graph.query_reads(&plan.tables,&mut workers.stats.admission_table_checks)
+        let prepare = Instant::now();
+        let entries:Vec<_> = seeds.iter().map(|s| s.packet.row.as_ref()).collect();
+        let mut completed = Completed::default();
+        workers.expansion_rows(&self.graph,&mut self.query_indexes,self.free_join.entry_plan(),
+            rid,rule,kernel,entries,None,known,out,&mut completed,prepare)?;
+        completed.apply(&mut self.graph);
+        Ok(true)
+    }
+}
+impl Workers {
+    // Called inside Scheduler::batches: borrow actual Entry rows, never build a
+    // Seed/consumer projection or an empty per-Entry domain just to hand it off.
+    pub(crate) fn expansion_entries(&mut self, graph:&Graph, index:&mut crate::query::QueryIndexes,
+        entry_plan:&crate::entry_join::Plan, sieve:&mut crate::sieve::Sieve,
+        rid:usize, rule:&Rule, batch:crate::entry_schedule::Batch<'_>,
+        inverted:Option<&[Dependency]>, known:&QueryFacts, out:&mut Vec<Binding>, done:&mut Completed) -> Result<()> {
+        let prepare=Instant::now();
+        let kernel=graph.program.kernels[rid][batch.atom()].as_ref().expect("admitted expansion");
+        let row=|w|batch.row(w).expect("current delta entry");
+        let entries=match inverted {
+            Some(ws)=>ws.iter().map(|&w|row(w)).collect(),
+            None=>batch.delta().map(|&(_,w)|row(w)).collect(),
+        };
+        let before=(self.expansion.work.filter_probes,self.expansion.work.filter_rejected);
+        self.expansion_rows(graph,index,entry_plan,rid,rule,kernel,entries,
+            Some(sieve.entry_filter(rid,batch.atom())),known,out,done,prepare)?;
+        sieve.record_entry_filter(rid,self.expansion.work.filter_probes-before.0,
+            self.expansion.work.filter_rejected-before.1);
+        Ok(())
+    }
+    fn expansion_rows(&mut self, graph:&Graph, indexes:&mut crate::query::QueryIndexes,
+        entry_plan:&crate::entry_join::Plan, rid:usize, rule:&Rule, kernel:&crate::row_kernel::Kernel,
+        entries:Vec<&Row>, filter:Option<crate::sieve::EntryFilter<'_>>, known:&QueryFacts,
+        out:&mut Vec<Binding>, done:&mut Completed, prepare:Instant) -> Result<()> {
+        if entries.is_empty() { return Ok(()); }
+        let plan=self.expansion.rules[rid][kernel.pivot].as_ref().unwrap();
+        let reads=graph.query_reads(&plan.tables,&mut self.stats.admission_table_checks)
             .ok_or("residual snapshot changed after admission")?;
-        let index = self.query_indexes.read_columns(&self.graph, &plan.layout)?;
-        let entries:Vec<_> = seeds.iter().map(|s| Entry {values:&s.packet.row.values,
-            epoch:s.packet.row.epoch,witness:s.packet.row.witness}).collect();
-        let entry_plan = self.free_join.entry_plan();
+        let index=indexes.read_columns(graph,&plan.layout,entries[0].table)?;
         let steps = &entry_plan.entries[rid][kernel.pivot];
         let query = kernel.query.as_ref();
         let inputs = &rule.inputs;
         let query_width = rule.query.len();
         let pivot = kernel.pivot;
         let expanded = plan.expanded;
-        let key_nodes = self.graph.program.key_nodes();
-        let pooled = workers.pool.is_some() && entries.len() >= workers.grain;
-        workers.expansion.work.entry_header_capacity_bytes += (entries.capacity()*std::mem::size_of::<Entry<'_>>()) as u64;
-        workers.expansion.work.prepare_seconds += prepare.elapsed().as_secs_f64();
-        let run = |chunk:&[Entry<'_>], frame:&mut Frame| -> Result<_> {
+        let key_nodes = graph.program.key_nodes();
+        let pooled = self.pool.is_some() && entries.len() >= self.grain;
+        self.expansion.work.entry_header_capacity_bytes += (entries.capacity()*std::mem::size_of::<&Row>()) as u64;
+        self.expansion.work.prepare_seconds += prepare.elapsed().as_secs_f64();
+        let run = |chunk:&[&Row], frame:&mut Frame| -> Result<_> {
             let clock = Instant::now();
-            let mut counts = Counts { entries:chunk.len() as u64,chunks:1,..Default::default() };
-            let mut work = Work::default();
+            let mut counts = Counts { chunks:1,..Default::default() };
+            let mut work = Work { input_rows:chunk.len() as u64,..Default::default() };
             let mut answers = Vec::new();
             frame.prepare(query.result_slots(),query_width,&mut counts);
-            for entry in chunk {
+            for row in chunk {
+                if let Some(filter)=&filter {
+                    if !filter.allow(index.entry_hashes(row.witness),&mut work.filter_probes,&mut work.filter_rejected) { continue; }
+                    work.direct_entries += 1;
+                }
+                counts.entries += 1;
+                let entry=Entry {values:&row.values,epoch:row.epoch,witness:row.witness};
                 let owner = (entry.epoch,entry.witness);
                 let mut domain = None;
                 let mut accepted = true;
@@ -131,7 +198,7 @@ impl Executor {
                 }
                 if !accepted { continue; }
                 frame.witnesses.clear(); frame.witnesses.push((pivot,entry.witness));
-                let mut host = Host {query,entry,pivot,reads:&reads,index:&index,key_nodes,inputs,known,
+                let mut host = Host {query,entry:&entry,pivot,reads:&reads,index:&index,key_nodes,inputs,known,
                     frame,counts:&mut counts,work:&mut work,answers:&mut answers};
                 host.step(0,None,entry.epoch,domain.as_ref())?;
             }
@@ -143,43 +210,41 @@ impl Executor {
         };
         let clock=Instant::now();
         let completed:Vec<_> = if pooled {
-            workers.pool.as_ref().unwrap().install(|| entries.par_chunks(workers.grain)
+            self.pool.as_ref().unwrap().install(|| entries.par_chunks(self.grain)
                 .map(|c|with_worker_frame(|f|run(c,f))).collect())
-        } else { entries.chunks(workers.grain).map(|c|workers.inline_frame.with(|f|run(c,f))).collect() };
+        } else { entries.chunks(self.grain).map(|c|self.inline_frame.with(|f|run(c,f))).collect() };
         drop(index);
-        let total=&mut workers.expansion.work;
+        let total=&mut self.expansion.work;
         total.execute_seconds += clock.elapsed().as_secs_f64();
         total.batches += 1;
-        total.worker_entries.resize(workers.stats.worker_entries.len(),0);
-        total.worker_rows.resize(workers.stats.worker_entries.len(),0);
-        total.worker_task_seconds.resize(workers.stats.worker_entries.len(),0.0);
-        workers.stats.batches += 1;
-        workers.stats.batch_buffers += 2;
-        workers.stats.entry_headers += entries.len() as u64;
-        workers.stats.entry_buffer_bytes += (entries.capacity()*std::mem::size_of::<Entry<'_>>()) as u64;
+        total.direct_batches += u64::from(filter.is_some());
+        total.worker_inputs.resize(self.stats.worker_entries.len(),0);
+        total.worker_entries.resize(self.stats.worker_entries.len(),0);
+        total.worker_rows.resize(self.stats.worker_entries.len(),0);
+        total.worker_task_seconds.resize(self.stats.worker_entries.len(),0.0);
+        self.stats.batches += 1;
+        self.stats.batch_buffers += 2;
+        self.stats.entry_headers += entries.len() as u64;
+        self.stats.entry_buffer_bytes += (entries.capacity()*std::mem::size_of::<&Row>()) as u64;
         for result in completed {
             let (mut answers, counts, w, worker, seconds)=result?;
-            let total=&mut workers.expansion.work;
+            let total=&mut self.expansion.work;
+            total.input_rows += w.input_rows;
+            total.filter_probes += w.filter_probes; total.filter_rejected += w.filter_rejected;
+            total.direct_entries += w.direct_entries;
             total.entries += counts.entries; total.chunks += 1; total.answers += counts.answers;
             total.point_reads += counts.point_reads;
             total.admission_probes+=w.admission_probes; total.admission_rejected+=w.admission_rejected;
             total.admission_rows+=w.admission_rows; total.expansion_probes+=w.expansion_probes;
             total.expansion_rows+=w.expansion_rows; total.row_reads+=w.row_reads;
             total.index_rows_examined+=w.index_rows_examined; total.answer_capacity_bytes+=w.answer_capacity_bytes;
-            if let Some(i)=worker { total.worker_entries[i]+=counts.entries; total.worker_rows[i]+=w.expansion_rows;total.worker_task_seconds[i]+=seconds; }
+            if let Some(i)=worker { total.worker_inputs[i]+=w.input_rows; total.worker_entries[i]+=counts.entries; total.worker_rows[i]+=w.expansion_rows;total.worker_task_seconds[i]+=seconds; }
             else {total.coordinator_entries+=counts.entries;}
-            self.graph.record_constructor_query_work(&counts.constructors);
-            workers.absorb(&counts,worker);
-            self.graph.stats.register_seeds += counts.entries - w.admission_rejected;
-            self.graph.stats.register_answers += counts.answers;
-            self.graph.stats.register_result_writes += counts.result_writes;
-            self.graph.stats.register_expansion_rows += w.expansion_rows;
-            self.graph.stats.residual_candidates += counts.point_reads + w.row_reads;
-            self.graph.stats.key_operations += counts.key_operations;
-            self.graph.key_lookup_calls.set(self.graph.key_lookup_calls.get()+counts.point_reads);
+            done.add(&counts,&w);
+            self.absorb(&counts,worker);
             out.append(&mut answers);
         }
-        Ok(true)
+        Ok(())
     }
 }
 

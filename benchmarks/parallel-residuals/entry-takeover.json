@@ -1,0 +1,221 @@
+{
+  "control_commit": "cef7db18",
+  "scope": "standalone Cell CPU, not native egglog",
+  "goal_achieved": false,
+  "runtime_sha256": "480265233b58ca0b69d1468955c5de252357acc5848130adf650d306be995ad9",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "before_report_sha256": "1d8c1c792a64643e55fb7e3dae6ea06327c9dff2611a2fbdf560825cdbbc7fa8",
+      "after_report_sha256": "c6c9496c78d6f558ca0ba528c270361bde0a074efcda1251b382201b348fee7b",
+      "same_graph_counters_and_total_key_lookups": true,
+      "same_sieve_counts": true,
+      "same_publication_counts_and_index_coverage": true,
+      "consumer_seed_deliveries": [
+        12095,
+        1747
+      ],
+      "consumer_projection_slots": [
+        37445,
+        4896
+      ],
+      "handoffs_omitted": 10348,
+      "work_before": {
+        "admission_probes": 11046,
+        "admission_rejected": 7370,
+        "admission_rows": 5293,
+        "answer_capacity_bytes": 632640,
+        "answers": 3397,
+        "batches": 1604,
+        "chunks": 1606,
+        "coordinator_entries": 10170,
+        "entries": 10348,
+        "entry_header_capacity_bytes": 413920,
+        "execute_seconds": 0.0014244550000000022,
+        "expansion_probes": 37,
+        "expansion_rows": 3998,
+        "index_rows_examined": 9626,
+        "point_reads": 609,
+        "prepare_seconds": 0.00018341000000000125,
+        "row_reads": 4333,
+        "worker_entries": [
+          64,
+          50,
+          64,
+          0
+        ],
+        "worker_rows": [
+          64,
+          25,
+          0,
+          0
+        ],
+        "worker_task_seconds": [
+          1.1875e-05,
+          2.3292e-05,
+          2.55e-05,
+          0.0
+        ]
+      },
+      "work_after": {
+        "admission_probes": 11046,
+        "admission_rejected": 7370,
+        "admission_rows": 5293,
+        "answer_capacity_bytes": 633120,
+        "answers": 3397,
+        "batches": 1872,
+        "chunks": 1876,
+        "coordinator_entries": 10077,
+        "direct_batches": 1872,
+        "direct_entries": 10348,
+        "entries": 10348,
+        "entry_header_capacity_bytes": 141936,
+        "execute_seconds": 0.0013859019999999988,
+        "expansion_probes": 37,
+        "expansion_rows": 3998,
+        "filter_probes": 2053,
+        "filter_rejected": 1596,
+        "index_rows_examined": 9626,
+        "input_rows": 11944,
+        "point_reads": 609,
+        "prepare_seconds": 0.0003459650000000017,
+        "row_reads": 4333,
+        "worker_entries": [
+          180,
+          27,
+          64,
+          0
+        ],
+        "worker_inputs": [
+          217,
+          54,
+          64,
+          0
+        ],
+        "worker_rows": [
+          95,
+          26,
+          0,
+          0
+        ],
+        "worker_task_seconds": [
+          3.0499e-05,
+          1.5584e-05,
+          7.459e-06,
+          0.0
+        ]
+      }
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "before_report_sha256": "3f49f2d7f7be689efa77f69bf466a10819ee2ade8d7c245ad505c5bba4f9e90b",
+      "after_report_sha256": "bd088ae7896c30f70344340e1ef46f48a3481fab430dcda2c1fc95ac9369d433",
+      "same_graph_counters_and_total_key_lookups": true,
+      "same_sieve_counts": true,
+      "same_publication_counts_and_index_coverage": true,
+      "consumer_seed_deliveries": [
+        3435349,
+        1553384
+      ],
+      "consumer_projection_slots": [
+        9237666,
+        3482126
+      ],
+      "handoffs_omitted": 1881965,
+      "work_before": {
+        "admission_probes": 1958314,
+        "admission_rejected": 1371346,
+        "admission_rows": 879783,
+        "answer_capacity_bytes": 84864960,
+        "answers": 560582,
+        "batches": 15843,
+        "chunks": 41191,
+        "coordinator_entries": 160797,
+        "entries": 1881965,
+        "entry_header_capacity_bytes": 75278600,
+        "execute_seconds": 0.15800941399999938,
+        "expansion_probes": 1242,
+        "expansion_rows": 760392,
+        "index_rows_examined": 1709268,
+        "point_reads": 75625,
+        "prepare_seconds": 0.006719727999999869,
+        "row_reads": 826235,
+        "worker_entries": [
+          516088,
+          467414,
+          387438,
+          350228
+        ],
+        "worker_rows": [
+          202106,
+          179425,
+          166083,
+          154173
+        ],
+        "worker_task_seconds": [
+          0.07880436600000004,
+          0.06852476499999974,
+          0.0603048739999998,
+          0.055543330000000196
+        ]
+      },
+      "work_after": {
+        "admission_probes": 1958314,
+        "admission_rejected": 1371346,
+        "admission_rows": 879783,
+        "answer_capacity_bytes": 85102080,
+        "answers": 560582,
+        "batches": 19395,
+        "chunks": 48701,
+        "coordinator_entries": 154607,
+        "direct_batches": 19395,
+        "direct_entries": 1881965,
+        "entries": 1881965,
+        "entry_header_capacity_bytes": 25478712,
+        "execute_seconds": 0.18316164999999826,
+        "expansion_probes": 1242,
+        "expansion_rows": 760392,
+        "filter_probes": 372680,
+        "filter_rejected": 320723,
+        "index_rows_examined": 1709268,
+        "input_rows": 2202688,
+        "point_reads": 75625,
+        "prepare_seconds": 0.029809330000000914,
+        "row_reads": 826235,
+        "worker_entries": [
+          497435,
+          452965,
+          406806,
+          370152
+        ],
+        "worker_inputs": [
+          599376,
+          524012,
+          458489,
+          416539
+        ],
+        "worker_rows": [
+          210599,
+          167268,
+          167137,
+          162172
+        ],
+        "worker_task_seconds": [
+          0.09208158999999994,
+          0.0823333179999995,
+          0.07447909700000013,
+          0.06967456899999994
+        ]
+      }
+    }
+  },
+  "limits": "Complete work/semantic checks, no throughput campaign or utilization claim. Preparation now includes gathering borrowed Entry rows; prior preparation excluded Scheduler Seed creation. Phase numbers are not comparable. Capacity totals exclude Instance payloads, allocator headers and pool bookkeeping.",
+  "sum_native_acceptance": {
+    "status": "pass",
+    "report_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

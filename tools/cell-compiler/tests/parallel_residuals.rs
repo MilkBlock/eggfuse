@@ -47,6 +47,11 @@ fn complete_expansions_preserve_order_late_inputs_mutation_and_visibility() {
         let r=after.report();let stats=&r["query_workers"]["residual_expansion"]["stats"];
         assert!(stats["entries"].as_u64().unwrap()>0,"{stats}");
         assert!(stats["expansion_rows"].as_u64().unwrap()>0,"{stats}");
+        assert!(stats["direct_entries"].as_u64().unwrap()>0,"must omit Seed/domain handoffs");
+        assert!(stats["filter_probes"].as_u64().unwrap()>0,"filter and query execute together");
+        for key in ["probes", "rejected", "per_rule"] {
+            assert_eq!(r["sieve"]["stats"][key],before.report()["sieve"]["stats"][key],"same necessary filters: {key}");
+        }
         assert!(r["free_join"]["entry_probes"].as_u64().unwrap()<before.report()["free_join"]["entry_probes"].as_u64().unwrap());
         if workers>1 { assert!(stats["worker_rows"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>()>0); }
     }
