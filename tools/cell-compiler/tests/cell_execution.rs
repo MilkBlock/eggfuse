@@ -122,6 +122,9 @@ fn constructor_boundary_consumes_prepared_values_without_replay() {
     b.execute().unwrap();
     same(&a, &b);
     assert!(b.graph.stats.prepared_rhs_operations > 0);
+    assert_eq!(b.graph.stats.prepared_rhs_later_operations, 64);
+    assert_eq!(b.report()["query_workers"]["stats"]["execution"]["later_operations"], 64);
+    assert_eq!(b.report()["query_workers"]["stats"]["execution"]["frame_growths"], 0);
     let plan = artifact(&source)["cell_execution"].to_string();
     assert!(plan.contains("Constructor") && plan.contains("Write"));
 }
@@ -168,9 +171,18 @@ fn loader_reconstructs_dependency_cuts_from_source() {
     let mut encoded = artifact(&source);
     assert_eq!(
         encoded["cell_execution"]["schema"],
-        "cell-execution-boundaries/v1"
+        "cell-execution-boundaries/v2"
     );
     Program::parse(encoded.clone()).unwrap();
+    let mut legacy = encoded.clone();
+    legacy["cell_execution"]["schema"] = "cell-execution-boundaries/v1".into();
+    for rule in legacy["cell_execution"]["rules"].as_array_mut().unwrap() {
+        rule.as_object_mut().unwrap().remove("input_ready");
+    }
+    Program::parse(legacy).unwrap();
+    let mut forged = encoded.clone();
+    forged["cell_execution"]["rules"][0]["input_ready"] = serde_json::json!([1]);
+    assert!(Program::parse(forged).err().unwrap().contains("execution boundaries"));
     encoded["cell_execution"]["rules"][0]["segments"][0]["end"] = serde_json::json!(99999);
     assert!(
         Program::parse(encoded)
@@ -235,12 +247,7 @@ fn real_publication_preserves_each_run_through_foreign_reuse_union_and_recreatio
     a.execute().unwrap();
     b.execute().unwrap();
     assert!(b.graph.stats.prepared_rhs_operations > 0);
-    assert!(
-        b.report()["cell_execution"]["runtime"]["stats"]["worker_operations"]
-            .as_u64()
-            .unwrap()
-            > 0
-    );
+    assert!(b.graph.stats.prepared_rhs_later_operations > 0);
     assert!(
         b.report()["entry_schedule"]["stats"]["entry_publication_writes"]
             .as_u64()
@@ -251,7 +258,7 @@ fn real_publication_preserves_each_run_through_foreign_reuse_union_and_recreatio
 }
 
 #[test]
-fn post_boundary_workers_resume_actual_results_through_union_and_publication() {
+fn prepared_later_results_survive_union_and_publication_without_worker_round_trips() {
     let source = format!(
         r#"{HEADER}
 (ruleset observe)
@@ -277,7 +284,8 @@ fn post_boundary_workers_resume_actual_results_through_union_and_publication() {
         same(&control, &candidate);
         let report = candidate.report();
         let counts = &report["cell_execution"]["runtime"]["stats"];
-        assert!(counts["local_operations"].as_u64().unwrap() > 0);
+        assert_eq!(counts["local_operations"], 0);
+        assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 128);
         assert!(
             counts["boundaries"][3].as_u64().unwrap() > 0,
             "union remains a real boundary"
@@ -286,12 +294,8 @@ fn post_boundary_workers_resume_actual_results_through_union_and_publication() {
             candidate.graph.stats.union_requests,
             control.graph.stats.union_requests
         );
-        if workers > 1 && grain == 1 {
-            assert!(counts["worker_operations"].as_u64().unwrap() > 0);
-            assert!(counts["worker_segments"].as_u64().unwrap() > 0);
-        } else {
-            assert_eq!(counts["worker_operations"], 0);
-        }
+        assert_eq!(counts["worker_operations"], 0);
+        assert_eq!(counts["worker_segments"], 0);
     }
 }
 
@@ -331,5 +335,78 @@ fn a_worker_failure_after_a_shared_effect_preserves_the_exact_source_prefix() {
                 assert!(counts["boundaries"][5].as_u64().unwrap() > 0);
             }
         }
+    }
+}
+
+#[test]
+fn query_prepares_later_scalar_chains_without_an_initial_prefix_or_worker_round_trip() {
+    let source = format!(r#"{HEADER}
+(rule ((Start x) (= n (Input x)))
+ ((F x n) (let a (+ n 1)) (let b (* a 2)) (set (Out x) b)) :ruleset step)
+{} (run-schedule (run step)) (check (= (Out (N 2)) 6))"#, initial());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for workers in [1, 2, 4] {
+        for resume in [false, true] {
+            let mut candidate = executor(&source, workers);
+            if resume { candidate.use_cell_execution(1).unwrap(); }
+            candidate.execute().unwrap();
+            same(&control, &candidate);
+            assert_eq!(candidate.graph.stats.prepared_rhs_operations, 0);
+            assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 128);
+            let r = candidate.report();
+            assert_eq!(r["query_workers"]["stats"]["execution"]["later_operations"], 128);
+            assert_eq!(r["query_workers"]["stats"]["execution"]["frame_growths"], 0);
+            if resume {
+                assert_eq!(r["cell_execution"]["runtime"]["stats"]["worker_segments"], 0);
+                assert_eq!(r["cell_execution"]["runtime"]["stats"]["local_operations"], 0);
+            }
+        }
+    }
+}
+
+#[test]
+fn early_visibility_stop_discards_prepared_results_and_does_not_raise_future_errors() {
+    for tail in ["(let a (+ n 1))", "(let a (/ n 0))"] {
+        let source = format!(r#"{HEADER}
+(rule ((Start x) (= n (Input x)))
+ ((F x n) (delete (F x 1000)) {tail} (set (Out x) a)) :ruleset step)
+{} (run-schedule (run step))"#, initial());
+        let mut control = executor(&source, 0);
+        control.execute().unwrap();
+        let mut candidate = executor(&source, 4);
+        candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 0);
+        let r = candidate.report();
+        let prepared = &r["query_workers"]["stats"]["execution"];
+        if tail.contains('/') {
+            assert_eq!(prepared["later_deferred_failures"], 64);
+        } else { assert_eq!(prepared["later_operations"], 64); }
+        assert_eq!(r["cell_execution"]["runtime"]["stats"]["failures"], 0);
+    }
+}
+
+#[test]
+fn a_single_write_consumes_prepared_slots_between_unprepared_primitives() {
+    let source = format!(r#"{HEADER}
+(function Flag (E) bool :merge old)
+(rule ((Start x) (= n (Input x)))
+ ((let p (bool-< n 1000)) (let a (+ n 1))
+  (let q (bool-< a 1000)) (let both (and p q)) (set (Flag x) both)) :ruleset step)
+{} (run-schedule (run step)) (check (= (Flag (N 2)) true))"#, initial());
+    egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for workers in [1, 2, 4] {
+        let mut candidate = executor(&source, workers);
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        assert_eq!(candidate.graph.stats.single_writes, 64);
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations, 0);
+        assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 64);
+        assert_eq!(candidate.report()["query_workers"]["stats"]["execution"]["later_operations"], 64);
     }
 }

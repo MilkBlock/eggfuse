@@ -1,6 +1,6 @@
 //! Dependency cuts in authoritative Cell instructions. No instructions, graph
-//! facts or instance bindings are copied into this plan. Runtime progress is
-//! preparation only until the ordinary source-ordered executor consumes it.
+//! facts or instance bindings are copied into this plan. Query-side preparation
+//! does not advance source effects; the ordered executor consumes its results.
 use crate::{
     program::{Arg, Call, Op, Table, Template},
     value::Value,
@@ -40,6 +40,10 @@ pub(crate) struct Segment {
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub(crate) struct Plan {
     pub segments: Vec<Segment>,
+    /// Source positions after the first boundary whose scalar operands are
+    /// derived entirely from matched inputs. Outputs have unique SSA slots;
+    /// their presence is the preparation evidence, not a per-instance log.
+    pub input_ready: Vec<usize>,
 }
 
 fn scalar(template: &Template, arg: &Arg) -> bool {
@@ -154,10 +158,30 @@ impl Plan {
             });
             start = end + 1;
         }
-        Self { segments }
+        let mut ready = inputs.iter().copied().collect::<BTreeSet<_>>();
+        let mut input_ready = Vec::new();
+        // The ordinary operand reader gives captured input slots precedence
+        // over Copy definitions. Decline this optimization on input rewrites
+        // rather than treating a global Copy alias as the captured value.
+        if inputs.iter().all(|s| !template.defs.contains_key(s)) {
+            for (position, op) in template.ops.iter().enumerate() {
+                if matches!(op, Op::Panic) { break; }
+                if let Op::Let(dst, _, args) = op {
+                    if local(template, op) && args.iter().all(|a| match template.resolve_copy(a) {
+                        Arg::Literal(_) => true,
+                        Arg::Slot(s) => ready.contains(&s),
+                    }) {
+                        ready.insert(*dst);
+                        if position > segments[0].end { input_ready.push(position); }
+                    } else { ready.remove(dst); }
+                }
+            }
+        }
+        Self { segments, input_ready }
     }
     pub fn storage_bytes(&self) -> usize {
-        self.segments.capacity() * std::mem::size_of::<Segment>()
+        self.input_ready.capacity() * std::mem::size_of::<usize>()
+            + self.segments.capacity() * std::mem::size_of::<Segment>()
             + self
                 .segments
                 .iter()
@@ -167,7 +191,15 @@ impl Plan {
                 .sum::<usize>()
     }
     pub fn wire(plans: &[Self]) -> serde_json::Value {
-        serde_json::json!({"schema":"cell-execution-boundaries/v1","rules":plans})
+        serde_json::json!({"schema":"cell-execution-boundaries/v2","rules":plans})
+    }
+    pub fn checks_wire(plans: &[Self], raw: &serde_json::Value) -> bool {
+        if raw["schema"] == "cell-execution-boundaries/v1" {
+            // Old artifacts carry only cuts. New preparation eligibility is
+            // always reconstructed from the same checked typed recipe.
+            *raw == serde_json::json!({"schema":"cell-execution-boundaries/v1",
+                "rules":plans.iter().map(|p|serde_json::json!({"segments":p.segments})).collect::<Vec<_>>()})
+        } else { *raw == Self::wire(plans) }
     }
     #[cfg(feature = "sparse-cells")]
     pub fn slots(
@@ -175,7 +207,7 @@ impl Plan {
         fields: impl ExactSizeIterator<Item = (usize, Value)>,
         counts: &mut Counts,
     ) -> crate::slots::Slots {
-        let extra = self.segments[0].outputs.len();
+        let extra = self.segments[0].outputs.len() + self.input_ready.len();
         let mut slots = crate::slots::Slots::with_capacity(fields.len() + extra);
         slots.extend(fields);
         counts.reserved_rhs_slot_bytes += (extra * std::mem::size_of::<(usize, Value)>()) as u64;
@@ -190,6 +222,11 @@ impl Plan {
             .count()
     }
     #[cfg(feature = "sparse-cells")]
+    pub fn prepared_at(&self, position: usize, template: &Template, values: &crate::slots::Slots) -> bool {
+        self.input_ready.binary_search(&position).is_ok()
+            && matches!(&template.ops[position], Op::Let(dst,..) if values.contains_key(dst))
+    }
+    #[cfg(feature = "sparse-cells")]
     pub fn prepare(
         &self,
         template: &Template,
@@ -197,7 +234,7 @@ impl Plan {
         counts: &mut Counts,
     ) {
         let first = &self.segments[0];
-        if first.local_operations == 0
+        if (first.local_operations == 0 && self.input_ready.is_empty())
             || instance.parent.is_some()
             || instance.continuation.is_some()
         {
@@ -234,6 +271,30 @@ impl Plan {
             }
             instance.prepared = position + 1;
         }
+        // Failure is observed at its original RHS position. A missing result
+        // remains absent and uses the ordinary interpreter there. Stop further
+        // preparation on failure; no error packet or operation log is needed.
+        if instance.prepared == first.end {
+            for &position in &self.input_ready {
+                let Op::Let(dst, Call::Primitive(name, sort), args) = &template.ops[position]
+                    else { unreachable!("typed input-ready scalar operation") };
+                let args = args.iter().map(|a| match template.resolve_copy(a) {
+                    Arg::Literal(v) => Some(v),
+                    Arg::Slot(s) => instance.values.get(&s).cloned(),
+                }).collect::<Option<smallvec::SmallVec<[Value; 4]>>>();
+                let value = args.and_then(|args| crate::value::primitive(name, &args, sort,
+                    &serde_json::Value::Null).ok().flatten());
+                let Some(value) = value else {
+                    counts.deferred_failures += 1;
+                    counts.later_deferred_failures += 1;
+                    break;
+                };
+                instance.values.insert(*dst, value);
+                counts.operations += 1;
+                counts.later_operations += 1;
+                counts.slot_writes += 1;
+            }
+        }
         let growth = instance.values.capacity_bytes().saturating_sub(bytes);
         counts.capacity_growth_bytes += growth as u64;
         counts.frame_growths += u64::from(growth != 0);
@@ -244,6 +305,8 @@ impl Plan {
 pub(crate) struct Counts {
     pub instances: u64,
     pub operations: u64,
+    pub later_operations: u64,
+    pub later_deferred_failures: u64,
     pub slot_writes: u64,
     pub deferred_failures: u64,
     pub reserved_rhs_slot_bytes: u64,
@@ -255,6 +318,8 @@ impl Counts {
     pub fn add(&mut self, other: &Self) {
         self.instances += other.instances;
         self.operations += other.operations;
+        self.later_operations += other.later_operations;
+        self.later_deferred_failures += other.later_deferred_failures;
         self.slot_writes += other.slot_writes;
         self.deferred_failures += other.deferred_failures;
         self.reserved_rhs_slot_bytes += other.reserved_rhs_slot_bytes;
@@ -291,6 +356,37 @@ mod tests {
             Call::Primitive("+".into(), "i64".into()),
             vec![Arg::Slot(a), Arg::Slot(b)],
         )
+    }
+    #[test]
+    fn ready_analysis_follows_copy_wiring_and_never_prepares_mutable_dependencies() {
+        let t = template(vec![
+            Op::Let(2, Call::Table(0), vec![Arg::Slot(0)]),
+            Op::Copy(3, Arg::Slot(1)),
+            add(4, 3, 1),
+            add(5, 2, 4),
+            Op::Panic,
+            add(6, 1, 1),
+        ]);
+        let tables = [Table { name: "read".into(), schema: vec![], constructor: false,
+            virtual_fact: false, merge: json!(null), internal: false }];
+        let plan = Plan::derive(&tables, &t, &[0, 1]);
+        assert_eq!(plan.input_ready, [2]);
+        let mut counts = Counts::default();
+        let values = plan.slots([(0, Value::Int(9)), (1, Value::Int(3))].into_iter(), &mut counts);
+        let mut instance = super::super::Instance::matched(values, super::super::QueryFacts::None, 1);
+        plan.prepare(&t, &mut instance, &mut counts);
+        assert_eq!(instance.prepared, 0, "no source operation was completed");
+        assert_eq!(instance.values[&4], Value::Int(6));
+        assert!(!instance.values.contains_key(&2));
+        assert!(!instance.values.contains_key(&5));
+        assert!(!instance.values.contains_key(&6));
+        assert_eq!(counts.frame_growths, 0);
+        assert_eq!(counts.later_operations, 1);
+
+        let rewritten = template(vec![Op::Copy(1, Arg::Slot(0)),
+            Op::Let(2, Call::Table(0), vec![Arg::Slot(0)]), add(4, 1, 0)]);
+        assert!(Plan::derive(&tables, &rewritten, &[0, 1]).input_ready.is_empty(),
+            "captured input overwrite needs a stronger proof than Copy resolution");
     }
     #[test]
     fn local_completion_stops_at_mutable_read_and_records_exact_slot_cuts() {

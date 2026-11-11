@@ -1,0 +1,307 @@
+{
+  "scope": "standalone Cell CPU",
+  "control_commit": "4ed640e2",
+  "control_tag": null,
+  "runtime_sha256": "1a881c7e7e9ddbe282ca4e2ff4db702c45f86fa46d0e9c8c9e774da50a3420c4",
+  "limits": "Complete work/semantic runs, not throughput or utilization evidence. Prepared work includes losing candidates; only consumed operations remove serial RHS execution. Capacity bytes exclude allocator overhead. Later prepared values are consumed only at their source position; shared effects remain ordered. No new timing campaign or asynchronous parked-frame scheduling is established.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "before_report_sha256": "45d7b9633d9413f918e5374c19120b6abeff62f48d0283563c7dde4e6e59f1b5",
+      "after_report_sha256": "6ff032eb0a9e1f41830d938800a83ccd7309335c02ac0f738d680dfa63036a84",
+      "same_state_ordered_runs_and_graph_query_maintenance_work": true,
+      "plan": {
+        "compiled_payload_bytes": 400632,
+        "input_ready_operations": 21,
+        "progress_bytes": 8,
+        "rules": 582,
+        "runtime": {
+          "boundary_order": [
+            "Constructor",
+            "MutableRead",
+            "Write",
+            "Union",
+            "Visibility",
+            "Failure",
+            "Primitive"
+          ],
+          "enabled": true,
+          "grain": 1,
+          "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+          "stats": {
+            "boundaries": [
+              11160,
+              0,
+              3774,
+              310,
+              75,
+              0,
+              0
+            ],
+            "capacity_growth_bytes": 37488,
+            "failures": 0,
+            "frames": 5173,
+            "local_operations": 634,
+            "operand_boundaries": 0,
+            "prepared_operations_consumed": 0,
+            "segments": 467,
+            "slot_growths": 202,
+            "worker_operations": 634,
+            "worker_segments": 467,
+            "worker_wait_ns": 3221480
+          }
+        },
+        "schema": "cell-execution-boundaries/v2",
+        "segments": 2230,
+        "worker_scope": "query and input-derived scalar results; original Run/effect/publication order"
+      },
+      "preparation": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 217,
+        "later_deferred_failures": 0,
+        "later_operations": 83,
+        "operations": 220,
+        "reserved_rhs_slot_bytes": 5280,
+        "slot_writes": 220
+      },
+      "worker_local_operations": 138,
+      "inline_local_operations": 82,
+      "prepared_operations_not_consumed": 0,
+      "total_prepared_results_consumed": 220,
+      "later_preparation": {
+        "prepared": 83,
+        "consumed": 83,
+        "not_consumed": 0,
+        "worker_prepared": 62,
+        "inline_prepared": 21,
+        "resumption_before": {
+          "boundaries": [
+            11160,
+            0,
+            3774,
+            310,
+            75,
+            0,
+            0
+          ],
+          "capacity_growth_bytes": 47400,
+          "failures": 0,
+          "frames": 5173,
+          "local_operations": 717,
+          "operand_boundaries": 0,
+          "segments": 550,
+          "slot_growths": 261,
+          "worker_operations": 717,
+          "worker_segments": 550,
+          "worker_wait_ns": 3748545
+        },
+        "resumption_after": {
+          "boundaries": [
+            11160,
+            0,
+            3774,
+            310,
+            75,
+            0,
+            0
+          ],
+          "capacity_growth_bytes": 37488,
+          "failures": 0,
+          "frames": 5173,
+          "local_operations": 634,
+          "operand_boundaries": 0,
+          "prepared_operations_consumed": 0,
+          "segments": 467,
+          "slot_growths": 202,
+          "worker_operations": 634,
+          "worker_segments": 467,
+          "worker_wait_ns": 3221480
+        },
+        "query_preparation_before": {
+          "capacity_growth_bytes": 0,
+          "deferred_failures": 0,
+          "frame_growths": 0,
+          "instances": 137,
+          "operations": 137,
+          "reserved_rhs_slot_bytes": 3288,
+          "slot_writes": 137
+        },
+        "compiled_plan_bytes_added": 14416,
+        "spine_fragment_storage": {
+          "query_fragment_slots": [
+            8066,
+            8069
+          ],
+          "query_fragment_capacity_bytes": [
+            193584,
+            193656
+          ],
+          "query_fragment_sealed_slots": [
+            7927,
+            7930
+          ],
+          "query_fragment_sealed_capacity_bytes": [
+            190248,
+            190320
+          ]
+        }
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "before_report_sha256": "8e5bbc775412744cc48a8ffadc6c48eecb154ef9ea2d88c6b099cf43e8d7f9ce",
+      "after_report_sha256": "fff2d62090b56ae76b86445aceffa900911091d1fbdccc406b205302b2cf6a70",
+      "same_state_ordered_runs_and_graph_query_maintenance_work": true,
+      "plan": {
+        "compiled_payload_bytes": 2327656,
+        "input_ready_operations": 21,
+        "progress_bytes": 8,
+        "rules": 582,
+        "runtime": {
+          "boundary_order": [
+            "Constructor",
+            "MutableRead",
+            "Write",
+            "Union",
+            "Visibility",
+            "Failure",
+            "Primitive"
+          ],
+          "enabled": true,
+          "grain": 1,
+          "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+          "stats": {
+            "boundaries": [
+              2503393,
+              0,
+              1428463,
+              29924,
+              9349,
+              0,
+              92
+            ],
+            "capacity_growth_bytes": 5228856,
+            "failures": 0,
+            "frames": 1020508,
+            "local_operations": 95702,
+            "operand_boundaries": 0,
+            "prepared_operations_consumed": 0,
+            "segments": 62632,
+            "slot_growths": 24286,
+            "worker_operations": 95702,
+            "worker_segments": 62632,
+            "worker_wait_ns": 362124960
+          }
+        },
+        "schema": "cell-execution-boundaries/v2",
+        "segments": 16195,
+        "worker_scope": "query and input-derived scalar results; original Run/effect/publication order"
+      },
+      "preparation": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 351282,
+        "later_deferred_failures": 0,
+        "later_operations": 9280,
+        "operations": 351310,
+        "reserved_rhs_slot_bytes": 8431440,
+        "slot_writes": 351310
+      },
+      "worker_local_operations": 350112,
+      "inline_local_operations": 1198,
+      "prepared_operations_not_consumed": 336,
+      "total_prepared_results_consumed": 350974,
+      "later_preparation": {
+        "prepared": 9280,
+        "consumed": 9280,
+        "not_consumed": 0,
+        "worker_prepared": 9219,
+        "inline_prepared": 61,
+        "resumption_before": {
+          "boundaries": [
+            2503393,
+            0,
+            1428463,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "capacity_growth_bytes": 6034416,
+          "failures": 0,
+          "frames": 1020508,
+          "local_operations": 104982,
+          "operand_boundaries": 0,
+          "segments": 71912,
+          "slot_growths": 29081,
+          "worker_operations": 104982,
+          "worker_segments": 71912,
+          "worker_wait_ns": 418963203
+        },
+        "resumption_after": {
+          "boundaries": [
+            2503393,
+            0,
+            1428463,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "capacity_growth_bytes": 5228856,
+          "failures": 0,
+          "frames": 1020508,
+          "local_operations": 95702,
+          "operand_boundaries": 0,
+          "prepared_operations_consumed": 0,
+          "segments": 62632,
+          "slot_growths": 24286,
+          "worker_operations": 95702,
+          "worker_segments": 62632,
+          "worker_wait_ns": 362124960
+        },
+        "query_preparation_before": {
+          "capacity_growth_bytes": 0,
+          "deferred_failures": 0,
+          "frame_growths": 0,
+          "instances": 342030,
+          "operations": 342030,
+          "reserved_rhs_slot_bytes": 8208720,
+          "slot_writes": 342030
+        },
+        "compiled_plan_bytes_added": 14416,
+        "spine_fragment_storage": {
+          "query_fragment_slots": [
+            1900351,
+            1900379
+          ],
+          "query_fragment_capacity_bytes": [
+            45608424,
+            45609096
+          ],
+          "query_fragment_sealed_slots": [
+            1894010,
+            1894038
+          ],
+          "query_fragment_sealed_capacity_bytes": [
+            45456240,
+            45456912
+          ]
+        }
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  },
+  "control_runtime_commit": "ed662552",
+  "phase": "input-derived scalar preparation in the existing query invocation"
+}

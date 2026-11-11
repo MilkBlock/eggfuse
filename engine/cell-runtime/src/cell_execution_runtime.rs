@@ -25,6 +25,7 @@ pub(crate) struct Counts {
     pub frames: u64,
     pub segments: u64,
     pub local_operations: u64,
+    pub prepared_operations_consumed: u64,
     pub worker_segments: u64,
     pub worker_operations: u64,
     pub worker_wait_ns: u64,
@@ -51,6 +52,7 @@ impl Counts {
         self.frames += other.frames;
         self.segments += other.segments;
         self.local_operations += other.local_operations;
+        self.prepared_operations_consumed += other.prepared_operations_consumed;
         self.worker_segments += other.worker_segments;
         self.worker_operations += other.worker_operations;
         self.worker_wait_ns += other.worker_wait_ns;
@@ -98,6 +100,11 @@ impl Plan {
             match &template.ops[position] {
                 Op::Copy(..) => (),
                 Op::Let(dst, Call::Primitive(name, sort), args) => {
+                    if self.prepared_at(position, template, &frame.values) {
+                        counts.prepared_operations_consumed += 1;
+                        frame.completed_prefix = position + 1;
+                        continue;
+                    }
                     let args = args
                         .iter()
                         .map(|a| match template.resolve_copy(a) {
@@ -193,8 +200,8 @@ mod tests {
         let mut g = crate::query::test_projection_graph();
         let template = Template {
             name: "ordered-read".into(),
-            sorts: vec![serde_json::json!({"kind":"i64"}); 5],
-            defs: BTreeMap::from([(3, 0), (4, 1)]),
+            sorts: vec![serde_json::json!({"kind":"i64"}); 7],
+            defs: BTreeMap::from([(3, 0), (4, 1), (5, 2), (6, 3)]),
             parent_columns: BTreeMap::new(),
             ops: Arc::new(vec![
                 Op::Let(3, Call::Table(0), vec![Arg::Slot(0), Arg::Slot(1)]),
@@ -203,7 +210,11 @@ mod tests {
                     Call::Primitive("+".into(), "i64".into()),
                     vec![Arg::Slot(3), Arg::Literal(Value::Int(1))],
                 ),
-                Op::Set(1, vec![Arg::Slot(0), Arg::Slot(1)], Arg::Slot(4)),
+                Op::Let(5, Call::Primitive("+".into(), "i64".into()),
+                    vec![Arg::Slot(0), Arg::Slot(1)]),
+                Op::Let(6, Call::Primitive("+".into(), "i64".into()),
+                    vec![Arg::Slot(4), Arg::Slot(5)]),
+                Op::Set(1, vec![Arg::Slot(0), Arg::Slot(1)], Arg::Slot(6)),
             ]),
         };
         g.program
@@ -220,10 +231,15 @@ mod tests {
         });
         let key = [Value::Int(1), Value::Int(2)];
         g.set_function(0, key.to_vec(), Value::Int(5)).unwrap();
-        let mut values = Slots::with_capacity(5);
+        let mut values = Slots::with_capacity(7);
         values.extend([(0, key[0].clone()), (1, key[1].clone())]);
         let allocation = std::ptr::from_ref(values.get(&0).unwrap());
-        let cell = g.begin_transient(0, values, None).unwrap();
+        let mut instance = crate::cell::Instance::matched(values, Default::default(), 0);
+        let mut preparation = super::super::Counts::default();
+        g.program.executions[0].prepare(&g.program.templates[0], &mut instance, &mut preparation);
+        assert_eq!(preparation.later_operations, 1);
+        assert!(!instance.values.contains_key(&3), "mutable input remains unresolved");
+        let cell = g.begin_transient(0, instance.values, None).unwrap();
         let pool = rayon::ThreadPoolBuilder::new()
             .num_threads(2)
             .build()
@@ -251,26 +267,28 @@ mod tests {
         g.rhs_frame_mut(cell).unwrap().completed_prefix = 1;
         let next = g.resume_cell(0, cell, Some(&pool), 1);
         assert_eq!(next.stop, Stop::Boundary(BoundaryKind::Write));
-        assert_eq!(next.counts.worker_operations, 1);
+        assert_eq!(next.counts.worker_operations, 2);
+        assert_eq!(next.counts.prepared_operations_consumed, 1);
         assert_eq!(next.counts.slot_growths, 0);
-        assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix, 2);
+        assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix, 4);
         assert_eq!(g.slot(cell, 4).unwrap(), Value::Int(10));
+        assert_eq!(g.slot(cell, 6).unwrap(), Value::Int(13));
         assert_eq!(
             std::ptr::from_ref(g.rhs_frame(cell).unwrap().values.get(&0).unwrap()),
             allocation
         );
-        let instruction = g.program.templates[0].ops[2].clone();
+        let instruction = g.program.templates[0].ops[4].clone();
         (RhsFrame {
             cell,
             receipts: &mut receipts,
         })
-        .execute(&mut g, 2, &instruction, None)
+        .execute(&mut g, 4, &instruction, None)
         .unwrap();
-        g.rhs_frame_mut(cell).unwrap().completed_prefix = 3;
+        g.rhs_frame_mut(cell).unwrap().completed_prefix = 5;
         assert_eq!(g.resume_cell(0, cell, Some(&pool), 1).stop, Stop::Complete);
         assert_eq!(
             g.lookup_canonical(1, &key).unwrap().unwrap().values.last(),
-            Some(&Value::Int(10))
+            Some(&Value::Int(13))
         );
     }
 }

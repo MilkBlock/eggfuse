@@ -408,7 +408,7 @@ impl Program {
         p.validate()?;
         p.executions=p.rules.iter().map(|r|crate::cell::execution::Plan::derive(&p.tables,&p.templates[r.template],&r.inputs)).collect();
         if let Some(raw)=p.artifact.get("cell_execution")
-            && *raw!=crate::cell::execution::Plan::wire(&p.executions) {
+            && !crate::cell::execution::Plan::checks_wire(&p.executions,raw) {
             return Err("Cell execution boundaries differ from typed recipe".into());
         }
         p.cell_links = Rc::new(p.rules.iter().map(|r| crate::cell::QueryLinks::compile(&r.query)).collect());

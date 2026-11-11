@@ -234,6 +234,8 @@ pub struct Stats {
     #[serde(default)]
     pub prepared_rhs_operations: u64,
     #[serde(default)]
+    pub prepared_rhs_later_operations: u64,
+    #[serde(default)]
     pub completion_frame_result_writes: u64,
     #[serde(default)]
     pub completion_frame_growths: u64,
@@ -761,13 +763,14 @@ impl Graph {
     }
     pub(crate) fn apply_write(
         &mut self,
-        template: usize,
+        rule: usize,
         values: crate::slots::Slots,
         parent: Option<FactRef>,
         write: &crate::row_kernel::Write,
         keep_key: bool,
         #[cfg(feature="sparse-cells")] prepared:usize,
     ) -> Result<(u32, usize, Option<Vec<Value>>, bool)> {
+        let template = self.program.rules[rule].template;
         let id = self.reserve_cell_id()?;
         #[cfg(feature = "sparse-cells")]
         self.trust_sealed_frame(id);
@@ -790,6 +793,12 @@ impl Graph {
         for &op in &write.prefix {
             #[cfg(feature="sparse-cells")]
             if op<prepared {continue;}
+            #[cfg(feature="sparse-cells")]
+            if self.program.executions[rule].prepared_at(op,
+                &self.program.templates[template], &frame.values) {
+                self.stats.prepared_rhs_later_operations += 1;
+                continue;
+            }
             let Op::Let(dst, call, args) = &ops[op] else { unreachable!("validated scalar Cell prefix") };
             crate::cell::evaluate_call(self, &mut crate::cell::LocalCall { cell: id, frame: &mut frame },
                 op, *dst, call, args)?;

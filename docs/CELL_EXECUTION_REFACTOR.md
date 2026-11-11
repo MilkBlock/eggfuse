@@ -98,10 +98,17 @@ overall objective complete until all applicable items above are proven.
   [the resumption checkpoint](../benchmarks/cell-execution-resume/README.md).
   The host resolves shared effects once and waits for each frontier. Concurrent
   scheduling of multiple parked executions is still unimplemented.
+- Input-derived scalar operations beyond the first shared effect now prepare
+  in the existing query invocation and are consumed from the same slots at
+  their source position, including the single-write and mixed-resumption paths;
+  see [work and acceptance](../benchmarks/cell-execution-inputs/README.md).
+  Raytrace removes 9,280 of 71,912 later worker round trips; 95,702 local
+  operations remain outside this takeover. No new speedup is claimed.
 - Cursor/receipt ownership, completion/publication unification and Bake
-  composition of those continuations remain live work. The next concrete
-  opportunity is input-closed scalar islands beyond the first shared effect:
-  avoid those round trips while preserving source-positioned errors.
+  composition of those continuations remain live work. The next opportunity
+  is batching already completed source-Run matches with the existing worker
+  invocation, preserving their slot ownership and proving parent/continuation
+  eligibility, rather than creating a separate preparation pass.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

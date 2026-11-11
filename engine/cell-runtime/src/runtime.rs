@@ -2141,7 +2141,7 @@ impl Executor {
             );
             let (cell, index, mut key, changed) = self
                 .graph
-                .apply_write(template, b.values, b.parent, &write, keep_key,
+                .apply_write(rid, b.values, b.parent, &write, keep_key,
                     #[cfg(feature="sparse-cells")] b.prepared)?;
             #[cfg(feature="sparse-cells")]
             { self.graph.stats.prepared_rhs_operations+=self.graph.program.executions[rid]
@@ -2410,11 +2410,25 @@ impl Executor {
         let mut next_op = first_op;
         loop {
             #[cfg(feature = "sparse-cells")]
+            if matches!(ops.get(next_op), Some(Op::Let(_, Call::Primitive(..), _)))
+                && self.graph.program.executions[rid].prepared_at(next_op,
+                    &self.graph.program.templates[template],
+                    &self.graph.rhs_frame(cell).unwrap().values) {
+                // Consume the existing result at its original source position.
+                // This also avoids dispatching an already prepared worker segment.
+                self.graph.stats.prepared_rhs_later_operations += 1;
+                next_op += 1;
+                completed_prefix = next_op;
+                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = next_op; }
+                continue;
+            }
+            #[cfg(feature = "sparse-cells")]
             if let Some(execution) = &mut self.cell_execution
                 && matches!(ops.get(next_op), Some(Op::Let(_, Call::Primitive(..), _))) {
                 use crate::cell::execution::runtime::Stop;
                 let pool = self.query_workers.as_ref().and_then(|w| w.execution_pool());
                 let result = self.graph.resume_cell(rid, cell, pool, execution.grain);
+                self.graph.stats.prepared_rhs_later_operations += result.counts.prepared_operations_consumed;
                 execution.counts.add(result.counts);
                 next_op = result.next;
                 completed_prefix = next_op;
@@ -3265,13 +3279,14 @@ impl Executor {
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}});
-        report["cell_execution"]=json!({"schema":"cell-execution-boundaries/v1",
+        report["cell_execution"]=json!({"schema":"cell-execution-boundaries/v2",
                 "rules":self.graph.program.executions.len(),
                 "segments":self.graph.program.executions.iter().map(|p|p.segments.len()).sum::<usize>(),
+                "input_ready_operations":self.graph.program.executions.iter().map(|p|p.input_ready.len()).sum::<usize>(),
                 "compiled_payload_bytes":self.graph.program.executions.capacity()*std::mem::size_of::<crate::cell::execution::Plan>()
                     +self.graph.program.executions.iter().map(|p|p.storage_bytes()).sum::<usize>(),
                 "progress_bytes":if cfg!(feature="sparse-cells") {std::mem::size_of::<usize>()} else {0},
-                "worker_scope":"query to first dependency boundary; original Run/effect/publication order"});
+                "worker_scope":"query and input-derived scalar results; original Run/effect/publication order"});
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
