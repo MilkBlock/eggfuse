@@ -1367,6 +1367,29 @@ impl Graph {
     }
     fn subscribe(&mut self, table: usize, d: Dependency, values: &[Value]) {
         self.query_versions[table] += 1;
+        #[cfg(feature = "sparse-cells")]
+        if !values.is_empty()
+            && let Some(columns) = self.program.repair_ports.key_eq_columns.get(table).and_then(Option::as_ref)
+        {
+            // This existing typed Cell footprint excludes containers and names
+            // every Eq input. The output is Eq too. Birth operands and repaired
+            // Row views are already canonical at this call; no graph effect
+            // occurs between obtaining those fields and installing their uses.
+            // Raw local-completion fields still use subscribe_edges below.
+            let refs = columns.iter().copied().chain(std::iter::once(values.len() - 1))
+                .map(|column| {
+                    let Value::Eq(id) = values[column] else { panic!("typed constructor Eq port") };
+                    debug_assert_eq!(id, root(&self.parents, id), "unsealed constructor subscription");
+                    id
+                }).collect::<smallvec::SmallVec<[u64; 3]>>();
+            self.maintenance.subscription_calls += 1;
+            self.maintenance.canonical_subscription_calls += 1;
+            self.maintenance.subscription_value_visits += refs.len() as u64;
+            self.maintenance.subscription_scalar_fields_skipped += (values.len() - refs.len()) as u64;
+            self.maintenance.subscription_root_reads_omitted += refs.len() as u64;
+            self.replace_subscriptions(d, refs);
+            return;
+        }
         self.subscribe_edges(d, values);
     }
     #[cfg(not(feature = "sparse-cells"))]
@@ -1416,10 +1439,14 @@ impl Graph {
         for v in values {
             collect(v, &self.parents, &mut refs, &mut self.maintenance.subscription_value_visits);
         }
+        self.replace_subscriptions(d, refs);
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn replace_subscriptions(&mut self, d: Dependency, mut refs: smallvec::SmallVec<[u64; 3]>) {
         refs.sort_unstable();
         refs.dedup();
         use std::collections::hash_map::Entry;
-        let mut old = match self.dependencies.entry(d) {
+        let (mut old, refs) = match self.dependencies.entry(d) {
             Entry::Vacant(slot) => {
                 for &id in &refs {
                     maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
@@ -1430,7 +1457,15 @@ impl Graph {
                 return;
             }
             Entry::Occupied(slot) if *slot.get() == refs => return,
-            Entry::Occupied(slot) => slot.remove(),
+            Entry::Occupied(slot) if refs.is_empty() => (slot.remove(), &[][..]),
+            Entry::Occupied(slot) => {
+                // Keep the witness's existing directory slot. Only its Eq
+                // footprint changes; removing/reinserting the same witness
+                // cannot affect the reverse-edge difference below.
+                self.maintenance.subscription_sets_replaced_in_place += 1;
+                let stored = slot.into_mut();
+                (std::mem::replace(stored, refs), stored.as_slice())
+            }
         };
         for id in &mut old {
             *id = root(&self.parents, *id);
@@ -1445,13 +1480,10 @@ impl Graph {
                 }
             }
         }
-        for &id in &refs {
+        for &id in refs {
             if !old.contains(&id) {
                 maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
             }
-        }
-        if !refs.is_empty() {
-            self.dependencies.insert(d, refs);
         }
     }
     fn activate(

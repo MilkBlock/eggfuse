@@ -5,6 +5,10 @@ use super::*;
 pub struct Metrics {
     pub subscription_calls: u64,
     pub subscription_value_visits: u64,
+    pub canonical_subscription_calls: u64,
+    pub subscription_scalar_fields_skipped: u64,
+    pub subscription_root_reads_omitted: u64,
+    pub subscription_sets_replaced_in_place: u64,
     pub reverse_insert_attempts: u64,
     pub reverse_remove_attempts: u64,
     pub reverse_edges_created: u64,

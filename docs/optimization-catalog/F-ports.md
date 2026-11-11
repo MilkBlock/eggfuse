@@ -7,27 +7,27 @@
 
 ## F1 · result-only repair ports
 
-启用条件：--repair-ports。
+启用条件：--repair-ports；sparse-cells 同时复用已校验 footprint 准备普通构造子的订阅。
 
-编译期依据：typed key footprint 区分输入和结果变化。
+编译期依据：typed key footprint 区分输入和结果变化；完整标量构造子的 Eq 输入列及 Eq 输出，原始操作提供当前 canonical 字段。
 
-替代的旧工作：只有输出改变时的 key 重建与订阅重做。
+替代的旧工作：只有输出改变时的 key 重建与订阅重做；普通订阅的标量字段检查和新字段重复找根，以及存活 witness 订阅集合的删后重插。
 
-运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
+运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 新 Eq 集合仍排序去重；旧订阅 ID 仍 canonicalize。反向边差分、退役清理、union 唤醒、字段容器回退均保留，不能算作内部 repair 消除。
 
-代码：[repair_ports.rs](../../engine/cell-runtime/src/repair_ports.rs)
+代码：[repair_ports.rs](../../engine/cell-runtime/src/repair_ports.rs) · [graph.rs](../../engine/cell-runtime/src/graph.rs) · [maintenance.rs](../../engine/cell-runtime/src/maintenance.rs)
 
 | 指标用途 | 精确数据路径 |
 |---|---|
-| 收益观察（需基线差值） | `report:/stats/repair_key_hash_changes [value]`<br>`report:/stats/repaired_dependencies [value]` |
+| 收益观察（需基线差值） | `report:/stats/repair_key_hash_changes [value]`<br>`report:/stats/repaired_dependencies [value]`<br>`report:/maintenance/stats/subscription_scalar_fields_skipped [value]`<br>`report:/maintenance/stats/subscription_root_reads_omitted [value]`<br>`report:/maintenance/stats/subscription_sets_replaced_in_place [value]` |
 | 成本 / 剩余工作 | `report:/repair_ports/stats/attempts [value]`<br>`report:/repair_ports/stats/port_checks [value]`<br>`report:/repair_ports/stats/field_copies [value]` |
-| 覆盖 / 规模 / 回退 | `report:/repair_ports/enabled [value]` |
+| 覆盖 / 规模 / 回退 | `report:/repair_ports/enabled [value]`<br>`report:/maintenance/stats/canonical_subscription_calls [value]` |
 
-解释与缺口：收益必须与旧路径差值比较；key 改变仍有 repair。
+解释与缺口：收益必须与旧路径差值比较；key 改变仍有 repair。 Canonical subscription counters describe removed release-build work; debug assertions still check canonical roots. Existing Eq footprint storage is reused, with four global counters (32 B), no instance fields or second dependency graph. The selected footprint reads, exact set difference and reverse index remain. In-place replacement counts one removed remove/reinsert pair, not fewer edges. No timing gain is inferred from these counts.
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[benchmarks/result-port-repair/README.md](../../benchmarks/result-port-repair/README.md)
+证据：[benchmarks/result-port-repair/README.md](../../benchmarks/result-port-repair/README.md) · [benchmarks/cell-canonical-subscriptions/README.md](../../benchmarks/cell-canonical-subscriptions/README.md)
 
 ## F2 · Cell ownership 与共享 repair slices
 

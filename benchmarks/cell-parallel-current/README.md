@@ -2,6 +2,7 @@
 
 Frozen current code: `9ac332c4`. This measures the **standalone Cell CPU**, not
 native egglog. The subsequent canonical-subscription change is not included.
+Host: Apple M3 Max, 16 physical/logical cores, 48 GiB RAM, macOS 27.0.1.
 
 Complete programs, interleaved lanes, one warmup per lane, seven sum-bits and
 five Raytrace repetitions. All samples and warmups are retained in

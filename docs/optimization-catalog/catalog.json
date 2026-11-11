@@ -2517,12 +2517,14 @@
       "id": "F1",
       "category": "F",
       "title": "result-only repair ports",
-      "activation": "--repair-ports",
-      "compile_fact": "typed key footprint 区分输入和结果变化",
-      "replaces": "只有输出改变时的 key 重建与订阅重做",
-      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "activation": "--repair-ports；sparse-cells 同时复用已校验 footprint 准备普通构造子的订阅",
+      "compile_fact": "typed key footprint 区分输入和结果变化；完整标量构造子的 Eq 输入列及 Eq 输出，原始操作提供当前 canonical 字段",
+      "replaces": "只有输出改变时的 key 重建与订阅重做；普通订阅的标量字段检查和新字段重复找根，以及存活 witness 订阅集合的删后重插",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 新 Eq 集合仍排序去重；旧订阅 ID 仍 canonicalize。反向边差分、退役清理、union 唤醒、字段容器回退均保留，不能算作内部 repair 消除。",
       "sources": [
-        "engine/cell-runtime/src/repair_ports.rs"
+        "engine/cell-runtime/src/repair_ports.rs",
+        "engine/cell-runtime/src/graph.rs",
+        "engine/cell-runtime/src/maintenance.rs"
       ],
       "metrics": {
         "benefit": [
@@ -2534,6 +2536,21 @@
           {
             "source": "report",
             "pointer": "/stats/repaired_dependencies",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/subscription_scalar_fields_skipped",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/subscription_root_reads_omitted",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/subscription_sets_replaced_in_place",
             "reduce": "value"
           }
         ],
@@ -2559,12 +2576,18 @@
             "source": "report",
             "pointer": "/repair_ports/enabled",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/maintenance/stats/canonical_subscription_calls",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "收益必须与旧路径差值比较；key 改变仍有 repair。",
+      "gaps": "收益必须与旧路径差值比较；key 改变仍有 repair。 Canonical subscription counters describe removed release-build work; debug assertions still check canonical roots. Existing Eq footprint storage is reused, with four global counters (32 B), no instance fields or second dependency graph. The selected footprint reads, exact set difference and reverse index remain. In-place replacement counts one removed remove/reinsert pair, not fewer edges. No timing gain is inferred from these counts.",
       "evidence": [
-        "benchmarks/result-port-repair/README.md"
+        "benchmarks/result-port-repair/README.md",
+        "benchmarks/cell-canonical-subscriptions/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

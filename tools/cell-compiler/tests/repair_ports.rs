@@ -60,6 +60,14 @@ fn result_ports_preserve_mutable_merges_visibility_and_later_key_repairs() {
             > 0
     );
     assert!(b.graph.stats.repaired_dependencies < a.graph.stats.repaired_dependencies);
+    #[cfg(feature = "sparse-cells")]
+    {
+        let work = &b.graph.maintenance_report()["stats"];
+        assert!(work["canonical_subscription_calls"].as_u64().unwrap() > 0);
+        assert!(work["subscription_scalar_fields_skipped"].as_u64().unwrap() > 0);
+        assert!(work["subscription_root_reads_omitted"].as_u64().unwrap() > 0);
+        assert!(work["subscription_sets_replaced_in_place"].as_u64().unwrap() > 0);
+    }
     let mut corrupt = p.artifact.clone();
     corrupt["repair_ports"]["key_eq_columns"] = json!([]);
     assert!(Program::parse(corrupt).is_err());
