@@ -120,3 +120,54 @@ Prepare semantic inputs under the existing sum-bits contract, substituting the
 candidate export for `run-values/state.json`. The collector binds the frozen
 control and previous short observations by hashes. It reads saved results and
 never executes or times a workload. Raw data stay in ignored `out/`.
+
+## Complete publication uses the flat compiled route
+
+Follow-up control: `4abd900b` (the v1 implementation above). The actual executions
+showed that checking field scopes for every new witness adds unavoidable-success
+tests. Each table now stores one flat member array; selective groups refer to
+ranges of that same array. New/all-field notifications traverse it directly.
+There is no duplicate member layout or per-instance routing structure.
+
+The existing summary lifecycle also maintains a table-wide built count. With
+no built consumer, publication skips the source-index lookup entirely; later
+preparation still builds complete support from the ordinary current index.
+Group/table counts reset with summary invalidation. These are aggregate existing
+lifecycle states, not another set of facts or producer-consumer subscriptions.
+
+| Observation | sum-bits | Raytrace prefix | Complete Raytrace |
+|---|---:|---:|---:|
+| Group checks before | 6,026 | 255,996 | 2,185,417 |
+| Group checks after | 1,358 | 24,354 | 1,318,220 |
+| Row dispatches, newly charged | 4,096 | 178,346 | 2,147,286 |
+| Inactive-consumer index reads omitted | 826 | 24,826 | 404,105 |
+
+Remaining summary admissions and all other support work are unchanged. Masks,
+range headers and extra table headers have 34,104 bytes of logical live payload
+on this target, versus v1's 24,264; member IDs are stored once. Unused capacity,
+allocator overhead and temporary compilation storage are not included. The
+equal-weight dispatch/check subtotal grows by 1,280,089 on full Raytrace;
+neither it nor the omission counters predict latency. `cell-fields/v2` charges
+row dispatches as well as field checks, preserving v1 and historical accounting
+and rejecting missing v2 counters.
+
+101 runtime unit tests and five Bake-credit tests pass. The publication fixture
+additionally checks that new rows perform no group checks and that preparation
+after an inactive interval includes newly published rows. Whole state, all
+ordered Run fields and actual effects agree on sum-bits, prefix and full
+Raytrace; the original sum-bits native validator passes. Minimal compilation
+and README compile/run/bench smoke checks pass. There is no new timing claim.
+
+For this follow-up use `out/cell-column-dispatch` (or a fresh equivalent root),
+freeze `runtime-final`, and name candidate directories `sum-final`,
+`ray1280-final`, `ray-full-final`. The build flags and diagnostic arguments above
+are unchanged. Keep the saved v1 control exports from `4abd900b`, then run:
+
+```sh
+python3 benchmarks/marker-handoff/choice_diagnosis.py ROOT/semantic ROOT/semantic-acceptance.json
+python3 benchmarks/cell-column-influence/collect_dispatch.py ROOT RESULTS.json
+```
+
+[dispatch.json](dispatch.json) binds the frozen candidate, reviewed controls,
+native acceptance, states and work. Reproducing the original v1 results requires
+checking out `4abd900b`; current code produces the v2 follow-up.

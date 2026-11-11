@@ -73,12 +73,17 @@ impl Work {
         // Historical reports have no such test; missing new counters are errors.
         let column_checks = match report["sieve"].get("column_influence") {
             None => 0,
-            Some(J::String(version)) if version == "cell-fields/v1" =>
+            Some(J::String(version)) if version == "cell-fields/v1" || version == "cell-fields/v2" =>
                 report["sieve"]["stats"]["column_checks"].as_u64()
                     .ok_or("missing Sieve column_checks")?,
             _ => return Err("unknown Sieve column influence".into()),
         };
         work.insert("sieve/stats/column_checks".into(), column_checks);
+        let dispatches = if report["sieve"]["column_influence"] == "cell-fields/v2" {
+            report["sieve"]["stats"]["publication_dispatches"].as_u64()
+                .ok_or("missing Sieve publication_dispatches")?
+        } else { 0 };
+        work.insert("sieve/stats/publication_dispatches".into(), dispatches);
         // Charge both attempted plan preparation and every support probe,
         // including unavailable columns. Rejections are outcomes; their saved
         // queries/dispatch are already absent from the original counters.
@@ -499,6 +504,7 @@ mod tests {
             "/sieve/stats/rule_uses", "/sieve/stats/build_rows", "/sieve/stats/update_rows",
             "/sieve/stats/dependency_rows", "/sieve/stats/probes",
             "/sieve/stats/column_checks",
+            "/sieve/stats/publication_dispatches",
         ];
         let mut costs = report.clone();
         for key in charged { bump(&mut costs, key); }
@@ -524,11 +530,19 @@ mod tests {
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
             "/sieve/stats/empty_join_skips",
             "/sieve/stats/unchanged_column_rows",
+            "/sieve/stats/inactive_publications",
         ] { bump(&mut outcomes, key); }
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
         let mut legacy_columns = report.clone();
         legacy_columns["sieve"].as_object_mut().unwrap().remove("column_influence");
         assert_eq!(Work::read(&legacy_columns).unwrap().0["sieve/stats/column_checks"], 0);
+        assert_eq!(Work::read(&legacy_columns).unwrap().0["sieve/stats/publication_dispatches"], 0);
+        let mut v1 = report.clone();
+        v1["sieve"]["column_influence"] = "cell-fields/v1".into();
+        v1["sieve"]["stats"].as_object_mut().unwrap().remove("publication_dispatches");
+        assert_eq!(Work::read(&v1).unwrap().0["sieve/stats/publication_dispatches"], 0);
+        v1["sieve"]["column_influence"] = "cell-fields/v2".into();
+        assert!(Work::read(&v1).unwrap_err().contains("publication_dispatches"));
         let mut missing_columns = report.clone();
         missing_columns["sieve"]["stats"].as_object_mut().unwrap().remove("column_checks");
         assert!(Work::read(&missing_columns).unwrap_err().contains("column_checks"));
