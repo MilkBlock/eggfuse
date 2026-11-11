@@ -149,7 +149,7 @@ impl Work {
         // explicitly: output coverage is no longer proportional to this work.
         let sealed = match report["stage_spine"].get("output_registration") {
             None => false,
-            Some(J::String(version)) if version == "cell-span/v1" => true,
+            Some(J::String(version)) if version == "cell-span/v1" || version == "owned-cell-outputs/v2" => true,
             _ => return Err("unknown Cell output registration".into()),
         };
         for (field, old) in [("output_registrations", "captured_anchors"),
@@ -162,6 +162,17 @@ impl Work {
         for field in ["cell_output_span_seals", "output_span_checks", "output_residual_dispatches"] {
             let value = if sealed { report["stage_spine"]["stats"][field].as_u64()
                 .ok_or_else(|| format!("missing Cell registration work {field}"))? } else { 0 };
+            work.insert(format!("stage_spine/stats/{field}"), value);
+        }
+        // Independent result owners pay for the pool and ownership transfers.
+        // Reuse/coverage counters overlap these operations; capacity bytes are
+        // reported separately rather than adding bytes to an operation score.
+        for field in ["effect_buffer_takes", "effect_buffer_returns", "effect_buffer_growths",
+            "effect_buffer_pool_growths", "publication_buffer_moves"] {
+            let value = if report["stage_spine"]["output_registration"] == "owned-cell-outputs/v2" {
+                report["stage_spine"]["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing owned Cell output work {field}"))?
+            } else { 0 };
             work.insert(format!("stage_spine/stats/{field}"), value);
         }
         let joint = match report["stage_spine"].get("joint_result_storage") {
@@ -203,20 +214,20 @@ impl Work {
         }
         let cell_tasks = match report["query_workers"].get("organization") {
             None => false, // recorded 13cfd235 Entry-batch host
-            Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3" | "cell-run/v4") => true,
+            Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5") => true,
             _ => return Err("unknown query worker organization".into()),
         };
-        let indexed_tasks = matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v2" | "cell-run/v3" | "cell-run/v4"));
+        let indexed_tasks = matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5"));
         for field in ["cell_task_probes", "cell_task_records", "cell_task_links", "cell_task_emissions",
             "cell_task_clears", "cell_task_growths", "cell_code_reads", "active_template_visits"] {
-            let value = if report["query_workers"]["organization"] == "cell-run/v4" {
+            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v4" | "cell-run/v5")) {
                 report["query_workers"]["stats"][field].as_u64()
                     .ok_or_else(|| format!("missing Cell activation task work {field}"))?
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
         }
         for field in ["frame_cache_borrows", "completion_headers", "completion_error_checks"] {
-            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v3" | "cell-run/v4")) {
+            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v3" | "cell-run/v4" | "cell-run/v5")) {
                 report["query_workers"]["stats"][field].as_u64()
                     .ok_or_else(|| format!("missing sparse completion work {field}"))?
             } else { 0 };
@@ -238,6 +249,24 @@ impl Work {
                     .ok_or_else(|| format!("missing Cell completion work {field}"))?
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
+        }
+        // v5 borrows matched/deferred instances into the same invocation.
+        // Charge actual admission, scratch and preparation, including work on
+        // discarded candidates. Matched/deferred operation counts are subsets
+        // of stats/execution and must not be charged a second time.
+        for (group, fields) in [
+            ("matched", &["rule_checks", "admission_instances", "groups", "header_growths",
+                "chunks", "histogram_growths"][..]),
+            ("stats/execution", &["instances", "operations", "slot_writes", "frame_growths"]),
+        ] {
+            for field in fields {
+                let key = format!("query_workers/{group}/{field}");
+                let value = if report["query_workers"]["organization"] == "cell-run/v5" {
+                    report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                        .ok_or_else(|| format!("missing Cell preparation work {key}"))?
+                } else { 0 };
+                work.insert(key, value);
+            }
         }
         // Domain traversal and exact guards are folded into their existing
         // ownership/stable-port counters below. Only new scratch/metadata work
@@ -458,6 +487,21 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
+    for key in ["query_workers/matched/rule_checks", "query_workers/matched/header_growths",
+        "query_workers/stats/execution/operations", "query_workers/stats/execution/slot_writes"] {
+        let mut changed = report.clone();
+        let value = changed.pointer_mut(&format!("/{key}")).unwrap();
+        *value = json!(value.as_u64().unwrap() + 1);
+        assert_eq!(work.savings(&Work::read(&changed).unwrap()).0, -1);
+        *changed.pointer_mut(&format!("/{key}")).unwrap() = J::Null;
+        assert!(Work::read(&changed).unwrap_err().contains("preparation work"));
+    }
+    let mut coverage = report.clone();
+    coverage["query_workers"]["matched"]["deferred_operations"] = u64::MAX.into();
+    coverage["query_workers"]["matched"]["execution"]["operations"] = u64::MAX.into();
+    coverage["query_workers"]["stats"]["execution"]["later_operations"] = u64::MAX.into();
+    assert_eq!(Work::read(&coverage).unwrap(), work, "subsets do not earn or charge work twice");
     let mut domains = report.clone();
     domains["free_join"]["projection_shape_checks"] = 9.into();
     domains["free_join"]["inline_domain_deliveries"] = u64::MAX.into();
@@ -578,6 +622,9 @@ mod tests {
             "/stage_spine/stats/output_registrations", "/stage_spine/stats/cell_output_registrations",
             "/stage_spine/stats/cell_output_span_seals", "/stage_spine/stats/cell_output_slot_reads",
             "/stage_spine/stats/output_span_checks", "/stage_spine/stats/output_residual_dispatches",
+            "/stage_spine/stats/effect_buffer_takes", "/stage_spine/stats/effect_buffer_returns",
+            "/stage_spine/stats/effect_buffer_growths", "/stage_spine/stats/effect_buffer_pool_growths",
+            "/stage_spine/stats/publication_buffer_moves",
             "/stage_spine/stats/joint_history_checks", "/stage_spine/stats/joint_history_frames",
             "/stage_spine/stats/joint_history_query_reads", "/stage_spine/stats/joint_history_query_writes",
             "/stage_spine/stats/joint_output_reads", "/stage_spine/stats/effect_slots_initialized",
@@ -614,6 +661,8 @@ mod tests {
             "/stage_spine/stats/cell_output_checks", "/stage_spine/stats/effect_outputs_reused",
             "/stage_spine/stats/captured_anchors", "/stage_spine/stats/cell_output_receipts",
             "/stage_spine/stats/cell_output_sealed_receipts",
+            "/stage_spine/stats/owned_effect_frames", "/stage_spine/stats/effect_buffer_reuses",
+            "/stage_spine/stats/effect_buffer_growth_bytes", "/stage_spine/stats/effect_buffer_pool_growth_bytes",
             "/stage_spine/stats/history_shared_slots", "/stage_spine/stats/joint_output_mask_checks",
             "/stage_spine/stats/joint_output_mask_writes",
             "/entry_schedule/stats/fragment_slot_replacements", "/entry_schedule/stats/publication_pending_reuses",
@@ -647,6 +696,16 @@ mod tests {
         let legacy_work = Work::read(&legacy).unwrap();
         assert_eq!(legacy_work.0["stage_spine/stats/output_registrations"], report["stage_spine"]["stats"]["captured_anchors"].as_u64().unwrap());
         assert_eq!(legacy_work.0["stage_spine/stats/cell_output_span_seals"], 0);
+        assert_eq!(legacy_work.0["stage_spine/stats/effect_buffer_takes"], 0);
+        let mut old_spans = report.clone();
+        old_spans["stage_spine"]["output_registration"] = "cell-span/v1".into();
+        assert_eq!(Work::read(&old_spans).unwrap().0["stage_spine/stats/effect_buffer_takes"], 0);
+        for field in ["effect_buffer_takes", "effect_buffer_returns", "effect_buffer_growths",
+            "effect_buffer_pool_growths", "publication_buffer_moves"] {
+            let mut missing = report.clone();
+            missing["stage_spine"]["stats"].as_object_mut().unwrap().remove(field);
+            assert!(Work::read(&missing).unwrap_err().contains(field));
+        }
         legacy["stage_spine"].as_object_mut().unwrap().remove("joint_result_storage");
         assert_eq!(Work::read(&legacy).unwrap().0["stage_spine/stats/joint_history_frames"], 0);
         for field in ["joint_history_checks", "joint_history_frames", "joint_history_query_reads",

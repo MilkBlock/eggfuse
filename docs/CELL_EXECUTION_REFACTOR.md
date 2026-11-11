@@ -129,11 +129,19 @@ overall objective complete until all applicable items above are proven.
   own transient scratch instead of borrowing all pending publications, removing
   415 / 42,787 exclusive arena borrows with one 64-byte scratch growth per case.
   Existing logical work and source Run states are unchanged; no speedup claimed.
+- Ordinary effect results now have independent ownership through completion and
+  publication, including partial publication and abort; see
+  [owned output buffers](../benchmarks/cell-execution-outputs/README.md).
+  The retained array moves into its owning Completion without copying results;
+  global arena offsets and borrowing unrelated pending outputs are removed.
+  Empty buffers are recycled. Added pooling, growth, ownership-transfer and
+  larger Completion-record costs are reported and charged by measured Bake.
+  Ordinary history capture is still separate from this result array.
 - The graph's single `active_rhs`, writer-origin hint and sealed-input trust,
-  the apply-scoped ownership Entry context, and ordinary publication-arena spans
-  still prevent independent parked-frame scheduling after shared effects. These
-  owners must be addressed together; changing only the task queue is inadequate.
-  Removing scalar dispatch does not establish concurrent shared effects or repair.
+  and the apply-scoped ownership Entry context still prevent independent parked
+  execution after shared effects. These owners must move together; changing
+  only the task queue is inadequate. Removing scalar dispatch and publication
+  arena borrowing does not establish concurrent shared effects or repair.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

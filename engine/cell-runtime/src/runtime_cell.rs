@@ -194,7 +194,7 @@ impl Executor {
         } else if !completed {
             self.stage_spine.abort_effects(execution.effects);
         } else {
-            self.stage_spine.finish_effects(execution.effects, false);
+            self.stage_spine.finish_effects(execution.effects);
         }
         #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
         if let (Some(block), root) = execution.inspect_births {

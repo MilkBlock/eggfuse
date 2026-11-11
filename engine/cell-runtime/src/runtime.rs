@@ -2272,7 +2272,7 @@ impl Executor {
                             self.stage_spine.complete(&self.graph, rid, cell, cursor,
                                 |i| b.known.receipt(i), receipts,
                                 |args| self.graph.frame_arguments(cell, &frame, args))?;
-                        } else { self.stage_spine.finish_effects(receipts, false); }
+                        } else { self.stage_spine.finish_effects(receipts); }
                         return Ok(None);
                     }
                     Start::Resume { cell, next_op } => {
@@ -2398,7 +2398,7 @@ impl Executor {
                     let g = &self.graph;
                     self.stage_spine.complete(g, rid, cell, cursor, |i| b.known.receipt(i),
                         effect_receipts, |args| g.frame_arguments(cell, &frame, args))?;
-                } else { self.stage_spine.finish_effects(effect_receipts, false); }
+                } else { self.stage_spine.finish_effects(effect_receipts); }
                 return Ok(None);
             }
         };

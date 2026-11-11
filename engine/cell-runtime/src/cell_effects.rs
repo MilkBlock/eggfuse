@@ -1,25 +1,23 @@
 //! The actual receipts of one executing Cell. Retained output slots come first
 //! and become its publication storage without a copy. Boundary receipts follow
 //! in the same frame and are released after completion.
-//! The buffer is lent exclusively by the source-scheduled executor; no Entry
-//! can observe its unsealed suffix. Aborted RHS execution discards that suffix.
+//! Each execution owns its buffer; no unrelated pending publication is borrowed.
+//! Completion moves the retained prefix into its delivery without copying slots.
 use super::{Definition, Output, Site};
 use crate::{graph::Dependency, program::Program};
 use std::{num::NonZeroU32, rc::Rc};
 
 /// The completion interface is independent of receipt storage. Single writes
-/// carry their one actual return inline; other Cells can retain an arena span.
+/// carry their one actual return inline; other Cells own their result buffers.
 /// Static dispatch keeps the inline case allocation-free.
 pub(crate) trait CompletedEffects {
     const DEFERRED_KEYS: bool;
-    #[cfg(feature = "sparse-cells")]
-    fn owns_scratch(&self) -> bool { false }
     fn forwarded(&self) -> u64 { 0 }
     fn get(&self, operation: usize) -> Option<Dependency>;
     #[cfg(feature = "sparse-cells")]
     fn output_frame(&mut self) -> Option<&mut Effects>;
     #[cfg(feature = "sparse-cells")]
-    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize, usize)> {
+    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize)> {
         Effects::sealed_outputs(self.output_frame()?)
     }
     #[cfg(feature = "sparse-cells")]
@@ -48,8 +46,8 @@ impl CompletedEffects for ProjectedEffects {
         self.results.as_ref()?.output(self.plan.as_ref()?.history_effect(operation)?)
     }
     fn output_frame(&mut self) -> Option<&mut Effects> { None }
-    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize, usize)> {
-        (self.published != 0).then_some((0, self.published, 0, 0))
+    fn sealed_outputs(&mut self) -> Option<(usize, usize, usize)> {
+        (self.published != 0).then_some((self.published, 0, 0))
     }
     fn has_joint_results(&mut self) -> bool { true }
     fn take_results(&mut self, _: usize) -> Option<super::Results> { self.results.take() }
@@ -243,7 +241,6 @@ impl EffectPlan {
 pub(crate) struct Effects {
     plan: Option<Rc<EffectPlan>>,
     buffer: Vec<Option<Dependency>>,
-    first: usize,
     keep: usize,
     probes: u64,
     targets: u64,
@@ -255,10 +252,10 @@ pub(crate) struct Effects {
 }
 impl Effects {
     pub fn begin(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
-        let first = buffer.len();
-        buffer.resize(first + plan.width, None);
+        debug_assert!(buffer.is_empty(), "each Cell owns only its results");
+        buffer.resize(plan.width, None);
         let keep = if keep { plan.outputs } else { 0 };
-        Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded:0,
+        Self { plan: Some(plan), buffer, keep, probes: 0, targets: 0, forwarded:0,
             #[cfg(feature = "sparse-cells")] joint:false,
             #[cfg(feature = "sparse-cells")] history:vec![] }
     }
@@ -266,15 +263,13 @@ impl Effects {
     pub fn begin_joint(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, facts: &super::QueryFacts) -> (Self, usize) {
         debug_assert!(buffer.is_empty(), "joint results own only private transient scratch");
         let joint = plan.joint.as_ref().unwrap();
-        let first = buffer.len();
-        buffer.resize(first + joint.transient_width, None);
+        buffer.resize(joint.transient_width, None);
         let mut history = vec![None; joint.width];
         for &(atom, slot) in &joint.queries { history[slot] = facts.receipt(atom); }
         let reads = joint.queries.len();
         let keep = plan.outputs;
-        (Self { plan: Some(plan), buffer, first, keep, probes: 0, targets: 0, forwarded: 0, joint: true, history }, reads)
+        (Self { plan: Some(plan), buffer, keep, probes: 0, targets: 0, forwarded: 0, joint: true, history }, reads)
     }
-    #[cfg(feature = "sparse-cells")]
     pub fn scratch_capacity_bytes(&self) -> usize {
         self.buffer.capacity() * std::mem::size_of::<Option<Dependency>>()
     }
@@ -298,7 +293,7 @@ impl Effects {
             plan.joint.as_ref()?.transient[slot]?
         } else { slot };
         self.targets += 1;
-        Some(&mut self.buffer[self.first + slot])
+        Some(&mut self.buffer[slot])
     }
     #[cfg(feature = "iterative-bake")]
     pub fn record_handoff(&mut self, operation:usize, receipt:Dependency, input:&crate::result_handoff::Input, original:bool, track:bool) {
@@ -311,11 +306,11 @@ impl Effects {
         if self.joint {
             if slot.history != 0 { self.history[slot.history as usize - 1] = Some(receipt); }
             else if let Some(index) = plan.joint.as_ref().unwrap().transient[index.get() as usize - 1] {
-                self.buffer[self.first + index] = Some(receipt);
+                self.buffer[index] = Some(receipt);
             }
             return;
         }
-        self.buffer[self.first+index.get() as usize-1]=Some(receipt);
+        self.buffer[index.get() as usize-1]=Some(receipt);
         // Provenance rides in the existing operation-to-slot descriptor: no
         // second index or per-instance source map is queried or maintained.
         if track && input.from_history && input.back==1 && original
@@ -326,22 +321,17 @@ impl Effects {
     }
     #[cfg(feature = "sparse-cells")]
     pub fn keeps_outputs(&self) -> bool { self.keep != 0 }
-    #[cfg(feature = "sparse-cells")]
-    pub fn output_first(&self) -> usize {
-        assert!(self.keep != 0, "Cell outputs need a reserved completion span");
-        self.first
-    }
     /// Called only after successful execution and capture of raw RHS history.
-    /// The retained arena is already the Entry delivery storage: seal once,
+    /// The retained prefix becomes the Entry delivery storage: seal once,
     /// without rereading each effect or registering each output separately.
     #[cfg(feature = "sparse-cells")]
-    pub fn sealed_outputs(&self) -> Option<(usize, usize, usize, usize)> {
+    pub fn sealed_outputs(&self) -> Option<(usize, usize, usize)> {
         if self.keep == 0 { return None; }
         let plan = self.plan.as_ref()?.registration.as_ref()?;
         debug_assert!((0..self.keep).all(|position| plan.query_aliases.contains(&position)
             || if self.joint { self.history[self.plan.as_ref().unwrap().history_output(position)].is_some() }
-               else { self.buffer[self.first + position].is_some() }), "completed Cell must supply every proven effect result");
-        Some((self.first, plan.direct, plan.aliases, plan.query_aliases.len()))
+               else { self.buffer[position].is_some() }), "completed Cell must supply every proven effect result");
+        Some((plan.direct, plan.aliases, plan.query_aliases.len()))
     }
     #[cfg(feature = "sparse-cells")]
     pub fn query_output(&self, index: usize) -> usize {
@@ -352,7 +342,7 @@ impl Effects {
     #[cfg(feature = "sparse-cells")]
     pub fn retain_output(&mut self, position: usize, receipt: Dependency) -> bool {
         assert!(position < self.keep);
-        let slot = &mut self.buffer[self.first + position];
+        let slot = &mut self.buffer[position];
         if let Some(old) = *slot {
             debug_assert_eq!(old, receipt);
             false
@@ -363,8 +353,6 @@ impl Effects {
     }
 }
 impl CompletedEffects for Effects {
-    #[cfg(feature = "sparse-cells")]
-    fn owns_scratch(&self) -> bool { self.joint }
     fn forwarded(&self) -> u64 { self.forwarded }
     const DEFERRED_KEYS: bool = true;
     fn get(&self, operation: usize) -> Option<Dependency> {
@@ -376,7 +364,7 @@ impl CompletedEffects for Effects {
             if descriptor.history != 0 { return self.history.get(descriptor.history as usize - 1).copied().flatten(); }
             plan.joint.as_ref()?.transient[slot]?
         } else { slot };
-        self.buffer[self.first + slot]
+        self.buffer[slot]
     }
     #[cfg(feature = "sparse-cells")]
     fn output_frame(&mut self) -> Option<&mut Effects> { Some(self) }
@@ -384,11 +372,11 @@ impl CompletedEffects for Effects {
         let plan = self.plan.take()?;
         #[cfg(feature = "sparse-cells")]
         if self.joint {
-            self.buffer.truncate(self.first);
+            self.buffer.clear();
             let joint = plan.joint.as_ref().unwrap();
             return Some((self.buffer, joint.width + joint.transient_width, self.probes, self.targets));
         }
-        self.buffer.truncate(self.first + if publish { self.keep } else { 0 });
+        self.buffer.truncate(if publish { self.keep } else { 0 });
         Some((self.buffer, plan.width, self.probes, self.targets))
     }
 }
@@ -411,14 +399,13 @@ mod packed_slot_tests {
         let (mut a, _) = Effects::begin_joint(plan.clone(), vec![], &super::super::QueryFacts::None);
         let (mut b, _) = Effects::begin_joint(plan, vec![], &super::super::QueryFacts::None);
         for (frame, base) in [(&mut a, 10), (&mut b, 20)] {
-            assert!(frame.owns_scratch());
             frame.record(0, Dependency::Fact(crate::graph::FactRef { cell: base, op: 7 }));
             frame.record(1, Dependency::Function(base as usize));
         }
         assert_eq!(a.get(1), Some(Dependency::Function(10)));
         assert_eq!(b.get(1), Some(Dependency::Function(20)));
-        assert_eq!(a.sealed_outputs(), Some((0, 1, 0, 0)));
-        assert_eq!(b.sealed_outputs(), Some((0, 1, 0, 0)));
+        assert_eq!(a.sealed_outputs(), Some((1, 0, 0)));
+        assert_eq!(b.sealed_outputs(), Some((1, 0, 0)));
         let a_result = a.take_results(0).unwrap();
         let b_result = b.take_results(0).unwrap();
         let (a_scratch, _, _, _) = a.finish(true).unwrap();
@@ -439,7 +426,7 @@ mod packed_slot_tests {
             EffectSlot { index:NonZeroU32::new(2), history:1 }], width:2, outputs:0,
             #[cfg(feature = "sparse-cells")] registration:None,
             #[cfg(feature = "sparse-cells")] joint:None });
-        let mut effects = Effects::begin(plan, vec![Some(Dependency::Function(99))], false);
+        let mut effects = Effects::begin(plan, vec![], false);
         let mut input = crate::result_handoff::Input {
             op:1, back:1, fact:None, equal_output:false, from_history:true,
         };
@@ -452,6 +439,6 @@ mod packed_slot_tests {
         assert_eq!(effects.forwarded(), (1u64 << 63)|1);
         effects.record(0, Dependency::Function(9));
         assert_eq!(effects.get(0), None);
-        assert_eq!(effects.buffer[0], Some(Dependency::Function(99)));
+        assert_eq!(effects.buffer, vec![Some(Dependency::Function(7)), Some(Dependency::Function(8))]);
     }
 }

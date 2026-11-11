@@ -197,27 +197,26 @@ struct Completion {
 /// Storage of this Cell's outputs. The producer already lives in Completion's
 /// phase; port meanings and order come from that shared Cell definition.
 #[cfg(feature = "sparse-cells")]
-#[derive(Clone, Copy)]
 struct Delivery {
     source: OutputSource,
     #[cfg(feature = "spine-shapes")]
     cell: u32,
 }
 #[cfg(feature = "sparse-cells")]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 enum OutputSource {
-    Slots(u32),
+    Slots(Vec<Option<Dependency>>),
     History(u32),
     Function(u32),
 }
 #[cfg(feature = "sparse-cells")]
 impl Delivery {
-    fn new(first: usize, width: usize, joint: bool, _cell: u32) -> Self {
+    fn new(width: usize, joint: bool, _cell: u32) -> Self {
         Self {
             source: if joint {
                 assert!((1..=32).contains(&width));
                 OutputSource::History(u32::MAX >> (32 - width))
-            } else { OutputSource::Slots(u32::try_from(first).expect("Cell output arena exhausted")) },
+            } else { OutputSource::Slots(Vec::new()) },
             #[cfg(feature = "spine-shapes")] cell: _cell,
         }
     }
@@ -537,7 +536,7 @@ mod set_counts_test {
     #[test]
     fn joint_delivery_retirement_cannot_turn_a_mask_into_an_arena_offset() {
         for width in [1, 32] {
-            let mut delivery = Delivery::new(123, width, true, 9);
+            let mut delivery = Delivery::new(width, true, 9);
             for position in (0..width).rev() {
                 let OutputSource::History(mask) = &mut delivery.source else { panic!("lost history") };
                 assert_ne!(*mask & (1 << position), 0);
@@ -545,9 +544,55 @@ mod set_counts_test {
             }
             assert_eq!(delivery.source, OutputSource::History(0));
         }
-        let arena = Delivery::new(u32::MAX as usize, 64, false, 9);
-        assert_eq!(arena.source, OutputSource::Slots(u32::MAX));
-        assert_eq!(std::mem::size_of::<Option<OutputSource>>(), 8);
+        let owned = Delivery::new(64, false, 9);
+        assert_eq!(owned.source, OutputSource::Slots(Vec::new()));
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn concurrent_effect_owners_move_results_into_delivery_and_abort_independently() {
+        use crate::{cell::{CompletedEffects, Output}, program::{Rule, Template}};
+        let mut g = crate::query::test_projection_graph();
+        let ops = vec![Op::Set(0, vec![Arg::Slot(0), Arg::Slot(0)], Arg::Slot(1)),
+            Op::Set(1, vec![Arg::Slot(0), Arg::Slot(0)], Arg::Slot(1))];
+        g.program.templates.push(Template { name: "owned-outputs".into(),
+            sorts: vec![json!({"kind":"i64"}); 2], defs: Default::default(),
+            parent_columns: Default::default(), ops: ops.into() });
+        g.program.rules.push(Rule { template: 0, query: Rc::new(vec![]), inputs: vec![0, 1].into(),
+            completion: Default::default(), seminaive: false, direct: None });
+        g.program.known_results.static_skip.push(Rc::new(vec![false; 2]));
+        g.program.known_results.static_sources.push(vec![None; 2]);
+        let mut spine = Programs::new(&g.program);
+        spine.outputs[0] = vec![Output { operation: 0, table: 0, receipt_source: None },
+            Output { operation: 1, table: 1, receipt_source: None }];
+        spine.cell_output_widths[0] = 2;
+        spine.compiled_commits = true;
+        spine.receipts = true;
+        let mut first = spine.begin_effects(&g, 0, false, true, None, &QueryFacts::None);
+        let mut second = spine.begin_effects(&g, 0, false, true, None, &QueryFacts::None);
+        first.record(0, Dependency::Function(10));
+        second.record(0, Dependency::Function(20));
+        first.record(1, Dependency::Function(11));
+        second.record(1, Dependency::Function(21));
+        let original = first.slot(0).unwrap() as *mut Option<Dependency> as usize;
+        spine.pending_steps.push(Completion::new(Started::Root {
+            id: 1, producer: 0, epoch: 0, set: 0,
+        }));
+        spine.install_delivery(0, 0, 0, false);
+        spine.finish_effects_to(first, Some(0));
+        spine.abort_effects(second);
+        let mut third = spine.begin_effects(&g, 0, false, true, None, &QueryFacts::None);
+        assert_eq!(third.get(0), None, "recycled results must not become evidence");
+        third.record(0, Dependency::Function(30));
+        let OutputSource::Slots(results) = &mut spine.pending_steps[0].delivery.as_mut().unwrap().source else { panic!("owned delivery") };
+        assert_eq!(results.as_ptr() as usize, original, "completion moves ownership, not result slots");
+        assert_eq!(results, &[Some(Dependency::Function(10)), Some(Dependency::Function(11))]);
+        results[1] = None; // One table published; another still waits for completion.
+        spine.abort_effects(third);
+        let OutputSource::Slots(results) = &spine.pending_steps[0].delivery.as_ref().unwrap().source else { unreachable!() };
+        assert_eq!(results, &[Some(Dependency::Function(10)), None]);
+        assert_eq!(spine.stats.shared_output_arena_borrows, 0);
+        assert_eq!(spine.stats.publication_buffer_moves, 1);
+        assert_eq!(spine.stats.effect_buffer_reuses, 1);
     }
     #[test]
     fn serialization_includes_current_set_and_prior_occurrences() {
@@ -581,6 +626,15 @@ pub struct Stats {
     joint_scratch_growths: u64,
     joint_scratch_growth_bytes: u64,
     shared_output_arena_borrows: u64,
+    owned_effect_frames: u64,
+    effect_buffer_takes: u64,
+    effect_buffer_returns: u64,
+    effect_buffer_reuses: u64,
+    effect_buffer_growths: u64,
+    effect_buffer_growth_bytes: u64,
+    effect_buffer_pool_growths: u64,
+    effect_buffer_pool_growth_bytes: u64,
+    publication_buffer_moves: u64,
     joint_history_query_reads: u64,
     joint_history_query_writes: u64,
     joint_output_reads: u64,
@@ -835,11 +889,9 @@ pub struct Programs {
     cell_output_widths: Vec<usize>,
     #[cfg(feature = "sparse-cells")]
     cell_outputs_pending: usize,
-    cell_outputs: Vec<Option<Dependency>>,
-    // A joint Cell already owns its retained results. Its temporary receipts
-    // must not borrow all pending publications from unrelated completed Cells.
-    #[cfg(feature = "sparse-cells")]
-    effect_scratch: Vec<Option<Dependency>>,
+    // Only empty buffers are pooled. Live execution and publication each own
+    // their actual results, independently of every other Cell.
+    effect_buffers: Vec<Vec<Option<Dependency>>>,
     pending_anchors: Vec<(usize, Vec<Value>, Publication)>,
     marker_root: Vec<bool>,
     root_set: Rc<str>,
@@ -1190,9 +1242,7 @@ impl Programs {
             cell_output_widths: vec![0; p.rules.len()],
             #[cfg(feature = "sparse-cells")]
             cell_outputs_pending: 0,
-            cell_outputs: vec![],
-            #[cfg(feature = "sparse-cells")]
-            effect_scratch: vec![],
+            effect_buffers: vec![],
             marker_root: p.rules.iter().map(|r| p.templates[r.template].ops.iter().any(|op| match op {
                 Op::Set(t, _, _) | Op::Let(_, Call::Table(t), _) => p.marker_tables.contains(t),
                 _ => false,
@@ -1464,6 +1514,9 @@ impl Programs {
             && published != 0 && outputs[..published].iter().all(|o| !g.has_visibility_changes(o.table));
         #[cfg(not(feature = "sparse-cells"))]
         let keep = false;
+        let buffer = self.borrow_effect_buffer();
+        let before = buffer.capacity() * std::mem::size_of::<Option<Dependency>>();
+        self.stats.owned_effect_frames += 1;
         #[cfg(feature = "sparse-cells")]
         if keep && !full && !g.program.iterative.tracks_slots() && let Some(width) = plan.joint_width() {
             self.stats.joint_history_checks += 1;
@@ -1472,12 +1525,13 @@ impl Programs {
                 // Supply is a checked subset of this rule's exports. Equal
                 // width proves complete coverage without per-instance maps.
                 if depth != 0 && sources.len() == width {
-                    let before = self.effect_scratch.capacity() * std::mem::size_of::<Option<Dependency>>();
-                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, std::mem::take(&mut self.effect_scratch), _facts);
+                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, buffer, _facts);
                     let growth = frame.scratch_capacity_bytes().saturating_sub(before);
                     self.stats.joint_scratch_borrows += 1;
                     self.stats.joint_scratch_growths += u64::from(growth != 0);
                     self.stats.joint_scratch_growth_bytes += growth as u64;
+                    self.stats.effect_buffer_growths += u64::from(growth != 0);
+                    self.stats.effect_buffer_growth_bytes += growth as u64;
                     self.stats.joint_history_frames += 1;
                     self.stats.joint_history_query_reads += queries as u64;
                     self.stats.joint_history_query_writes += queries as u64;
@@ -1485,30 +1539,53 @@ impl Programs {
                 }
             }
         }
-        self.stats.shared_output_arena_borrows += 1;
-        crate::cell::Effects::begin(plan, std::mem::take(&mut self.cell_outputs), keep)
+        let frame = crate::cell::Effects::begin(plan, buffer, keep);
+        let growth = frame.scratch_capacity_bytes().saturating_sub(before);
+        self.stats.effect_buffer_growths += u64::from(growth != 0);
+        self.stats.effect_buffer_growth_bytes += growth as u64;
+        frame
     }
-    pub(crate) fn finish_effects(&mut self, effects: impl crate::cell::CompletedEffects, publish: bool) {
-        #[cfg(feature = "sparse-cells")]
-        let scratch = effects.owns_scratch();
-        if let Some((buffer, slots, probes, targets)) = effects.finish(publish) {
+    fn borrow_effect_buffer(&mut self) -> Vec<Option<Dependency>> {
+        self.stats.effect_buffer_takes += 1;
+        let buffer = self.effect_buffers.pop().unwrap_or_default();
+        self.stats.effect_buffer_reuses += u64::from(buffer.capacity() != 0);
+        debug_assert!(buffer.is_empty());
+        buffer
+    }
+    fn recycle_effect_buffer(&mut self, mut buffer: Vec<Option<Dependency>>) {
+        buffer.clear();
+        if buffer.capacity() == 0 { return; }
+        self.stats.effect_buffer_returns += 1;
+        let before = self.effect_buffers.capacity();
+        self.effect_buffers.push(buffer);
+        let growth = self.effect_buffers.capacity() - before;
+        self.stats.effect_buffer_pool_growths += u64::from(growth != 0);
+        self.stats.effect_buffer_pool_growth_bytes += (growth * std::mem::size_of::<Vec<Option<Dependency>>>()) as u64;
+    }
+    pub(crate) fn finish_effects(&mut self, effects: impl crate::cell::CompletedEffects) {
+        self.finish_effects_to(effects, None);
+    }
+    fn finish_effects_to(&mut self, effects: impl crate::cell::CompletedEffects, output: Option<usize>) {
+        if let Some((buffer, slots, probes, targets)) = effects.finish(output.is_some()) {
             self.stats.effect_frames += 1;
             self.stats.effect_slots_initialized += slots as u64;
             self.stats.effect_slot_probes += probes;
             self.stats.effect_slot_targets += targets;
             #[cfg(feature = "sparse-cells")]
-            if scratch {
-                debug_assert!(buffer.is_empty());
-                if buffer.capacity() > self.effect_scratch.capacity() { self.effect_scratch = buffer; }
+            if let Some(slot) = output
+                && let Some(Delivery { source: OutputSource::Slots(results), .. }) = &mut self.pending_steps[slot].delivery {
+                debug_assert!(results.is_empty());
+                *results = buffer;
+                self.stats.publication_buffer_moves += 1;
                 return;
             }
-            debug_assert!(self.cell_outputs.is_empty(), "ordinary Cell owns the output arena");
-            self.cell_outputs = buffer;
+            debug_assert!(buffer.is_empty());
+            self.recycle_effect_buffer(buffer);
         }
     }
     pub(crate) fn abort_effects(&mut self, effects: crate::cell::Effects) {
         self.stats.effect_aborted_frames += 1;
-        self.finish_effects(effects, false);
+        self.finish_effects(effects);
     }
     /// Exact dispatch selects a prechecked constructor completion. Inputs and
     /// the published anchor were already matched; the pure monotone template
@@ -1623,7 +1700,7 @@ impl Programs {
         }
         self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
-            self.finish_effects(effects, false);
+            self.finish_effects(effects);
             return Ok(());
         }
         let clock = E::DEFERRED_KEYS.then(Instant::now);
@@ -1663,11 +1740,11 @@ impl Programs {
         };
         self.pending_steps.push(Completion::new(step));
         #[cfg(feature = "sparse-cells")]
-        if let Some((first, count, aliases, _)) = sealed {
+        if let Some((count, aliases, _)) = sealed {
             // begin_effects admitted only permanent Entry-owned tables without
             // visibility loss. No source Hide can target such a table; union
             // forwarding and final Entry selection still run at publication.
-            self.install_delivery(rid, slot, _cell, first, joint);
+            self.install_delivery(rid, slot, _cell, joint);
             self.stats.cell_output_span_seals += 1;
             self.stats.cell_output_sealed_receipts += count as u64;
             self.stats.effect_outputs_reused += count as u64;
@@ -1677,12 +1754,12 @@ impl Programs {
             self.count_output_receipts(rid, count);
         }
         #[cfg(feature = "sparse-cells")]
-        let remaining = self.outputs[rid].len() - sealed.map_or(0, |(_, count, _, _)| count);
+        let remaining = self.outputs[rid].len() - sealed.map_or(0, |(count, _, _)| count);
         #[cfg(not(feature = "sparse-cells"))]
         let remaining = self.outputs[rid].len();
         for position in 0..remaining {
             #[cfg(feature = "sparse-cells")]
-            let position = if let Some((_, _, _, aliases)) = sealed {
+            let position = if let Some((_, _, aliases)) = sealed {
                 if position < aliases {
                     self.stats.output_residual_dispatches += 1;
                     effects.output_frame().unwrap().query_output(position)
@@ -1751,7 +1828,7 @@ impl Programs {
         let publish = self.pending_steps[slot].delivery.is_some();
         #[cfg(not(feature = "sparse-cells"))]
         let publish = false;
-        self.finish_effects(effects, publish);
+        self.finish_effects_to(effects, publish.then_some(slot));
         self.stats.captured_contexts += 1;
         if let Some(clock) = clock { self.stats.capture_seconds += clock.elapsed().as_secs_f64(); }
         Ok(())
@@ -1834,37 +1911,41 @@ impl Programs {
             self.count_output_receipts(rid, 1);
             return;
         }
-        let delivery = if let Some(delivery) = self.pending_steps[slot].delivery { delivery } else {
-            let first = if let Some(effects) = &effects { effects.output_first() } else {
-                let first = self.cell_outputs.len();
-                self.cell_outputs.resize(first + width, None);
-                first
-            };
-            self.install_delivery(rid, slot, _cell, first, false)
-        };
+        if self.pending_steps[slot].delivery.is_none() {
+            self.install_delivery(rid, slot, _cell, false);
+            if effects.is_none() {
+                let mut buffer = self.borrow_effect_buffer();
+                let before = buffer.capacity();
+                buffer.resize(width, None);
+                let growth = buffer.capacity() - before;
+                self.stats.effect_buffer_growths += u64::from(growth != 0);
+                self.stats.effect_buffer_growth_bytes += (growth * std::mem::size_of::<Option<Dependency>>()) as u64;
+                let OutputSource::Slots(results) = &mut self.pending_steps[slot].delivery.as_mut().unwrap().source else { unreachable!() };
+                *results = buffer;
+            }
+        }
         if let Some(effects) = effects.as_mut() {
             if effects.retain_output(position, receipt) { self.stats.effect_output_copies += 1; }
             else { self.stats.effect_outputs_reused += 1; }
         } else {
-            let OutputSource::Slots(first) = delivery.source else { unreachable!("Cell output arena") };
-            self.cell_outputs[first as usize + position] = Some(receipt);
+            let OutputSource::Slots(results) = &mut self.pending_steps[slot].delivery.as_mut().unwrap().source else { unreachable!("owned Cell outputs") };
+            results[position] = Some(receipt);
             self.stats.effect_output_copies += 1;
         }
         self.count_output_receipts(rid, 1);
     }
     #[cfg(feature = "sparse-cells")]
-    fn install_delivery(&mut self, rid: usize, slot: usize, _cell: u32, first: usize, joint: bool) -> Delivery {
+    fn install_delivery(&mut self, rid: usize, slot: usize, _cell: u32, joint: bool) {
         debug_assert!(self.pending_steps[slot].delivery.is_none());
         let width = self.cell_output_widths[rid];
         self.stats.cell_output_spans += 1;
         self.stats.cell_output_slots += width as u64;
         if !joint {
-            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
+            self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(self.cell_outputs_pending + width);
         }
         self.stats.joint_output_mask_writes += u64::from(joint);
-        let delivery = Delivery::new(first, width, joint, _cell);
+        let delivery = Delivery::new(width, joint, _cell);
         self.pending_steps[slot].delivery = Some(delivery);
-        delivery
     }
     #[cfg(feature = "sparse-cells")]
     fn count_output_receipts(&mut self, rid: usize, count: usize) {
@@ -1985,7 +2066,7 @@ impl Programs {
     pub(crate) fn settled(&self)->bool {
         self.pending_steps.is_empty() && self.pending_anchors.is_empty()
             && self.ready_publications.is_empty() && self.direct_publications.is_empty()
-            && self.cell_outputs.is_empty()
+            && self.cell_outputs_pending == 0
             && self.sealed_cursors.is_empty() && self.origin_rules.is_empty()
             && self.capture_unions.is_none() && self.entry_cache.is_empty() && self.row_cache.is_empty()
     }
@@ -2178,29 +2259,29 @@ impl Programs {
                 // order. Reverse traversal sees the final Entry winner first.
                 for slot in (0..self.pending_steps.len()).rev() {
                     self.stats.completion_cell_visits += 1;
-                    if let Some(mut delivery) = self.pending_steps[slot].delivery {
+                    if let Some(mut delivery) = self.pending_steps[slot].delivery.take() {
                         let mut pending = false;
                         let rule = self.pending_steps[slot].producer();
                         let width = self.cell_output_widths[rule];
                         let fragment = self.outputs[rule].len() >= 2;
                         for position in (0..width).rev() {
-                            let old = match delivery.source {
+                            let old = match &delivery.source {
                                 OutputSource::History(mask) => {
                                     self.stats.cell_output_slot_reads += 1;
                                     self.stats.joint_output_mask_checks += 1;
-                                    if mask & (1 << position) == 0 { continue; }
+                                    if *mask & (1 << position) == 0 { continue; }
                                     self.stats.joint_output_reads += 1;
                                     let port = self.effect_plans[rule].get().unwrap().history_output(position);
                                     self.pending_steps[slot].results().output(port)
                                 }
-                                OutputSource::Slots(first) => {
+                                OutputSource::Slots(results) => {
                                     self.stats.cell_output_slot_reads += 1;
-                                    self.cell_outputs[first as usize + position]
+                                    results[position]
                                 }
                                 OutputSource::Function(index) => {
                                     debug_assert_eq!(width, 1);
                                     self.stats.inline_function_reads += 1;
-                                    Some(Dependency::Function(index as usize))
+                                    Some(Dependency::Function(*index as usize))
                                 }
                             };
                             let Some(old) = old else { continue };
@@ -2238,12 +2319,13 @@ impl Programs {
                                     *mask &= !(1 << position);
                                     self.stats.joint_output_mask_writes += 1;
                                 }
-                                OutputSource::Slots(first) => self.cell_outputs[*first as usize + position] = None,
+                                OutputSource::Slots(results) => results[position] = None,
                                 OutputSource::Function(_) => (),
                             }
                             self.cell_outputs_pending -= 1;
                         }
-                        self.pending_steps[slot].delivery = pending.then_some(delivery);
+                        if pending { self.pending_steps[slot].delivery = Some(delivery); }
+                        else if let OutputSource::Slots(results) = delivery.source { self.recycle_effect_buffer(results); }
                     }
                     while self.pending_steps[slot].ready.is_some() { self.finish_boundary(g, slot, entries)?; }
                 }
@@ -2264,15 +2346,13 @@ impl Programs {
                 .entry("effect".into())
                 .or_default() += hits;
         }
-        // A deferred publication still addresses its original shared slot.
-        // New source Runs append contexts; release the arena only when drained.
+        // A deferred publication retains its own results. New source Runs append
+        // contexts without borrowing or relocating those live buffers.
         if self.pending_publication_counts().0 == 0 {
             #[cfg(feature = "sparse-cells")]
             { self.publication_base = self.publication_base.checked_add(self.pending_steps.len() as u64)
                 .expect("Cell publication order exhausted"); }
             self.pending_steps.clear();
-            #[cfg(feature = "sparse-cells")]
-            self.cell_outputs.clear();
             self.capture_unions = None;
         }
         if !self.retain_matched_origins {
@@ -2913,7 +2993,20 @@ impl Programs {
             "pending_cursor_slots":self.sealed_cursors.len()});
         #[cfg(not(feature = "sparse-cells"))]
         let candidate_storage = J::Null;
-        let report = json!({"output_registration":"cell-span/v1",
+        #[cfg(feature = "sparse-cells")]
+        let pending_result_bytes = self.pending_steps.iter().filter_map(|c| match &c.delivery {
+            Some(Delivery { source: OutputSource::Slots(results), .. }) => Some(results.capacity()),
+            _ => None,
+        }).sum::<usize>() * std::mem::size_of::<Option<Dependency>>();
+        #[cfg(not(feature = "sparse-cells"))]
+        let pending_result_bytes = 0;
+        let report = json!({"output_registration":"owned-cell-outputs/v2",
+            "owned_output_storage":{
+                "pooled_buffers":self.effect_buffers.len(),
+                "pool_header_bytes":self.effect_buffers.capacity()*std::mem::size_of::<Vec<Option<Dependency>>>(),
+                "pooled_capacity_bytes":self.effect_buffers.iter().map(|b|b.capacity()).sum::<usize>()*std::mem::size_of::<Option<Dependency>>(),
+                "pending_capacity_bytes":pending_result_bytes,
+                "completion_capacity_bytes":self.pending_steps.capacity()*std::mem::size_of::<Completion>()},
             "query_candidate_storage":candidate_storage,
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",

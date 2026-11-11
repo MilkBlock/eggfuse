@@ -1,0 +1,143 @@
+{
+  "scope": "standalone Cell CPU, not native egglog",
+  "control_commit": "3ace9e35",
+  "runtime_sha256": "b9408ec2daf2bf7705d3375a0ff32e6bb67f264665c3019365deea5aebb14ff4",
+  "control_runtime_sha256": "bdb9e15f4282713001bf97ebeca0aeffb03b1b9fcac300088b84468d9edab38e",
+  "limits": "Result ownership and work comparison; no throughput claim. Ordinary history capture, active_rhs and ownership Entry contexts remain. Capacity excludes allocator overhead; growth counters are not a complete allocation profile.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "38c22def7539a6fb48988d64d67fae0f5af96854c001f18cba2836f0373cd5ce",
+      "after_report_sha256": "032f4c5af5496fc669f81090a9abc0636408f18d3732d2ccfe8ffa641cecf5f7",
+      "same_final_state_ordered_run_summaries_and_checked_graph_query_rhs_publication_work": true,
+      "shared_arena_borrows_before_after": [
+        3957,
+        0
+      ],
+      "costs": {
+        "owned_effect_frames": 4372,
+        "effect_buffer_takes": 4372,
+        "effect_buffer_returns": 4317,
+        "effect_buffer_reuses": 4196,
+        "effect_buffer_growths": 128,
+        "effect_buffer_growth_bytes": 9520,
+        "effect_buffer_pool_growths": 6,
+        "effect_buffer_pool_growth_bytes": 3072,
+        "publication_buffer_moves": 3416
+      },
+      "storage": {
+        "completion_capacity_bytes": 30720,
+        "pending_capacity_bytes": 0,
+        "pool_header_bytes": 3072,
+        "pooled_buffers": 121,
+        "pooled_capacity_bytes": 9520
+      },
+      "completion_header_bytes_before_after": [
+        104,
+        120
+      ],
+      "execution_header_bytes_before_after": [
+        448,
+        440
+      ],
+      "changed_storage_counters": {
+        "joint_scratch_growth_bytes": [
+          64,
+          128
+        ],
+        "joint_scratch_growths": [
+          1,
+          2
+        ],
+        "peak_cell_output_slots": [
+          196,
+          196
+        ],
+        "shared_output_arena_borrows": [
+          3957,
+          0
+        ]
+      },
+      "existing_result_work": {
+        "effect_slots_initialized": 8056,
+        "effect_slot_probes": 9070,
+        "effect_slot_targets": 7283,
+        "history_allocations": 485,
+        "history_slots_written": 70,
+        "effect_output_copies": 358,
+        "cell_output_deliveries": 5599
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "5d387d64f0b353104bcbee0d08ce8576ce16286479f4e3605fe1e4505f8dca15",
+      "after_report_sha256": "c76c65022d89fea08a712566b183a4e0630ac014860b8f7247efc5e424bf47ef",
+      "same_final_state_ordered_run_summaries_and_checked_graph_query_rhs_publication_work": true,
+      "shared_arena_borrows_before_after": [
+        699784,
+        0
+      ],
+      "costs": {
+        "owned_effect_frames": 742571,
+        "effect_buffer_takes": 742571,
+        "effect_buffer_returns": 738267,
+        "effect_buffer_reuses": 699200,
+        "effect_buffer_growths": 39489,
+        "effect_buffer_growth_bytes": 2742768,
+        "effect_buffer_pool_growths": 15,
+        "effect_buffer_pool_growth_bytes": 1572864,
+        "publication_buffer_moves": 652828
+      },
+      "storage": {
+        "completion_capacity_bytes": 7864320,
+        "pending_capacity_bytes": 0,
+        "pool_header_bytes": 1572864,
+        "pooled_buffers": 39067,
+        "pooled_capacity_bytes": 2742768
+      },
+      "completion_header_bytes_before_after": [
+        104,
+        120
+      ],
+      "execution_header_bytes_before_after": [
+        448,
+        440
+      ],
+      "changed_storage_counters": {
+        "joint_scratch_growth_bytes": [
+          64,
+          1408
+        ],
+        "joint_scratch_growths": [
+          1,
+          22
+        ],
+        "peak_cell_output_slots": [
+          42909,
+          45362
+        ],
+        "shared_output_arena_borrows": [
+          699784,
+          0
+        ]
+      },
+      "existing_result_work": {
+        "effect_slots_initialized": 1202660,
+        "effect_slot_probes": 1780404,
+        "effect_slot_targets": 1112681,
+        "history_allocations": 52389,
+        "history_slots_written": 9602,
+        "effect_output_copies": 47192,
+        "cell_output_deliveries": 2114307
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}
