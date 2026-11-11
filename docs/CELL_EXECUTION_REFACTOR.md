@@ -102,4 +102,8 @@ overall objective complete until all applicable items above are proven.
   composition of those continuations remain live work. The next concrete
   opportunity is input-closed scalar islands beyond the first shared effect:
   avoid those round trips while preserving source-positioned errors.
-- Performance/utilization improvement for this refactor: unproven.
+- The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
+  finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
+  by 21.9% / 12.9% against current four-worker execution with resumption disabled.
+  Grain 64 runs those suffixes inline. Independent parked-frame scheduling and
+  a throughput/utilization improvement remain unproven; dispatch stays opt-in.

@@ -72,6 +72,37 @@ Raw complete outputs: ignored `out/cell-execution-frontiers`. Test/build logs:
 trial remains under `out/cell-execution-resume` and is not the final binary.
 Frozen exports are hardlinked after exact comparison; reruns need fresh paths.
 
+## Timing checkpoint
+
+[timing.json](timing.json) retains every interleaved sample, warmup, binary hash,
+semantic stamp and the first execution-work record per lane. Each lane has one
+warmup, five measured sum-bits runs and three measured Raytrace runs. All final
+exports and ordered Run signatures match. These are standalone Cell CPU runs.
+
+| Configuration | sum-bits inference median (ms) | Raytrace inference median (s) |
+|---|---:|---:|
+| Refactor tag `4ba83913`, four workers | 18.743 | 5.654465 |
+| Historical `9ac332c4`, four workers | 20.593 | 5.561115 |
+| Current `ed662552`, serial | 15.318 | 5.837032 |
+| Current, four workers, resumption disabled | 20.096 | 5.499842 |
+| Current, four workers, resumption grain 1 | 24.493 | 6.207348 |
+| Current, four workers, resumption grain 64 | 18.953 | 5.701071 |
+
+Grain 1 regresses the inference median by 21.9% / 12.9% against the same current
+four-worker binary with resumption disabled. Its Raytrace process CPU/wall ratio
+rises from 1.16 to 1.30 while throughput falls; these ratios include loading and
+export, and do not measure inference-only worker utilization. Grain 64 executes
+all later local segments inline in both workloads, so it is not evidence for
+parallel continuation. The small samples do not establish a reliable improvement
+over the historical fastest configuration. Keep post-boundary worker dispatch
+opt-in; source-ordered per-segment waiting has not achieved the refactor's
+performance objective. Next remove avoidable round trips using data dependencies
+and existing query-worker batches, before attempting more fine-grained dispatch.
+
+Raw measurements are under ignored `out/cell-execution-frontiers/timing`.
+The collector verifies semantic stamps and complete repetitions without rerunning
+the workloads. Cold warmups and all process-wall outliers remain in the record.
+
 ## Validation
 
 113 runtime unit tests and 35 selected integration tests pass, including forced
