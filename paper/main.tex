@@ -1,0 +1,365 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[left=1in,right=1in,top=0.9in,bottom=0.9in]{geometry}
+\usepackage{titling}
+\setlength{\droptitle}{-3em}
+\raggedbottom
+\usepackage{amsmath,amssymb,booktabs,tabularx}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows.meta,positioning}
+\pgfplotsset{compat=1.18}
+\usepackage[colorlinks=true,allcolors=blue!40!black]{hyperref}
+\urlstyle{same}
+\definecolor{ink}{HTML}{153947}
+\definecolor{accent}{HTML}{126460}
+\tikzset{
+  ef diagram/.style={x=1cm,y=1cm,font=\small,align=left},
+  ef plain/.style={draw=ink!65,rounded corners=2pt,text width=4.85cm,inner sep=5pt},
+  ef cell/.style={draw=accent,fill=accent!5,rounded corners=2pt,text width=5cm,inner sep=5pt},
+  ef key/.style={font=\small\sffamily,align=left,text width=3.25cm,inner sep=5pt},
+  ef head/.style={font=\small\sffamily\bfseries,text=ink,align=left},
+  ef flow/.style={-{Stealth[length=2mm]},thick,draw=ink},
+  ef ref/.style={-{Stealth[length=2mm]},dashed,draw=accent}
+}
+\newcommand{\run}{\textsc{Run}}
+\newcommand{\eg}{\textsc{EggFuse}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\ratio}[1]{#1\ensuremath{\times}}
+\title{\bfseries EggFuse: Exploiting Locality in E-Graphs}
+\input{authors}
+\date{}
+\hypersetup{pdfauthor={Minakami Yuki},pdfkeywords={equality saturation, incremental evaluation, rule compilation, e-graphs},pdftitle={EggFuse: Exploiting Locality in E-Graphs}}
+\begin{document}
+\maketitle
+\begin{abstract}
+Equality-saturation engines share equivalent terms, but repeatedly execute related queries, construct intermediate bindings and maintain connections between rule applications. EggFuse exploits structural, temporal and storage locality through Cell templates and their actual instances. The compiler describes query completion, ordered effects and cross-stage Entry projections with a common slot layout. The runtime reuses actual result witnesses while retaining residual matching, equality repair and source-schedule visibility. Optional workers group query continuations by Cell; ordered graph effects remain coordinated. Offline iterative Bake uses observed applications to propose larger reusable structures and checks which queries, handoffs or effects they can discharge. It is one optimization mechanism within this architecture. A new audit of 127 unmodified upstream egglog inputs yields 26 exact final-state passes; 95 inputs are rejected by capability checks, five fail full compilation and one times out. On 288 captured eggcc pass inputs, single-thread inference totals 140.335 seconds for native egglog and 53.789 seconds for Cell, a ratio of 2.609, with 727.05 seconds of offline preparation. These are execution comparisons between standalone implementations, not suite-wide certified compiler speedups. Separately pinned learning and storage studies show why fewer lookups or smaller snapshots can still increase runtime maintenance. The evidence motivates sharing execution state and removing redundant maintenance together.
+\end{abstract}
+
+\section{Introduction}
+An e-graph shares equivalent terms, while its execution engine must repeatedly
+find matching rows, bind parameters, produce effects and expose changes to later
+queries. These operations can revisit the same local relationships even when
+the concrete values differ. EggFuse asks how much of that relationship can be
+represented once and used throughout execution.
+
+The central unit is a Cell: shared typed instructions together with an instance
+of bound values and actual result witnesses. Compiler knowledge of those slots
+can connect matching, effect execution and subsequent Entry publication. The
+same definitions also support offline composition and optional locality-aware
+query scheduling. A source marker is useful when explicitly materializing a
+shared query view, but is not a mandatory second representation of facts already
+available through an Entry.
+
+This paper describes that execution architecture, the obligations that constrain
+reuse across unions and source Runs, and an evidence framework that separates
+supported execution, eliminated work and measured performance. Iterative Bake
+is the feedback mechanism for discovering additional reusable structures. We
+retain negative results: a smaller representation or fewer candidate visits
+need not make the complete runtime faster.
+
+\input{architecture}
+
+\section{Cell execution and publication}
+An e-graph represents terms modulo an evolving equivalence relation. Equality saturation adds terms and equalities, allowing a later extraction algorithm to choose among equivalent expressions~\cite{tate,egg}. Egglog combines this style of reasoning with relational queries and functions whose competing values are resolved by merge expressions~\cite{egglog}. A program can explicitly schedule rulesets, repeat them, and request saturation of a particular subprogram. We use \emph{Run} for one activation of a ruleset in that schedule. Two activations of the same ruleset can observe different input graphs.
+
+\paragraph{What gets compiled.}
+The Rust frontend reads the pass source and its declarations, applies the configured structural-key transformation, and lowers a marked source program to a typed recipe. A \emph{marker} is a maintained positive view of a conjunction of source atoms. The compiler can discover correlated constructor atoms in a left-hand side, choose occurrences for substitution, and issue the corresponding completion rules. A separate Bake input supplies observed Cell witnesses. The benchmark suite uses a common small training input for marker preparation. The later block-learning procedure uses actual workload executions. Keeping these sources of evidence distinct matters: an observed training co-occurrence can motivate a plan, while the typed recipe determines its operands, producers, and legal entry points.
+
+The recipe gives each rule an ordered query, numbered slots, and a sequence of right-hand-side (RHS) instructions. Query variables supply input slots. Copies, constructor calls, function writes, and union operations refer to slots or literals. The artifact also contains initial facts and source control. The loader checks recipe and catalog identities and reconstructs supported executable plans from typed definitions. Graph initialization installs the input facts before the first scheduled query. This is the boundary between offline preparation and measured inference.
+
+\paragraph{How a fact is represented.}
+The address \((80646,2)\) in the trace selects the \texttt{SubTuple} instruction of one invocation. Figure~\ref{fig:storage} opens up that address. We use symbolic values for the operands and show the newly created fact case.
+\input{figures/storage}
+To read Figure~\ref{fig:storage}, start with the witness at the bottom right. Its first component finds the instance; its second selects the instruction. The template supplies the operator, operand positions and literal 1. The instance supplies the bound values. For a newly created constructor, its result slot can denote an equality ID derived from the instance and slot; the union-find supplies the current representative. An instance may instead obtain an operand from a parent fact's column. Mutable function rows have their own physical row identities and can carry an optional producer reference.
+
+This representation permits different physical choices for the same logical operation. The engine may reconstruct fields from a recipe, share decoded fields across readers, or use a temporary frame for an RHS and retain storage only when a result needs a producer. Each choice has a cost. Reconstructing a row repeatedly consumes CPU time. Retaining decoded rows, reverse indexes, and continuations consumes memory. A smaller count of Cell instances establishes neither a smaller graph nor a proportionally smaller resident set.
+
+\paragraph{A Run with no handoff.}
+Each rule reads the Run's input snapshot. The executor prepares ordered bindings before applying effects. Shared entry nodes distribute changed rows to interested rules. A planned join can enter through a selective index or a complete key; a necessary-condition filter can reject an empty domain. The matcher checks the full terms before accepting a binding. This residual execution route remains available at every unsupported entry. Join planning and access-path selection have an independent literature, including Free Join~\cite{freejoin}; a continuation decides what work is already justified when the join begins.
+
+The executor applies the RHS effects in their prescribed order, repairs affected rows after unions, publishes changes, and advances the schedule. A successful logical match may write an existing value or request a union that already holds. We distinguish the stream of RHS inputs from the stream of \emph{effective writes}. Repetition and saturation use the source control's change condition. A block hit authorizes work at a scheduled entry; terminating the program remains a decision of the source schedule.
+
+\paragraph{What union changes.}
+An RHS requests equality between values. During repair the engine links their representatives, marks dependent facts and functions dirty through reverse uses, and invalidates affected row caches. A dirty constructor fact is read at its current values and compared against its new hash bucket using the full table and key. Figure~\ref{fig:repair} follows both possible identities through one collision. When several publications acquire one canonical anchor key, publication separately chooses the last producer in RHS effect order. This choice concerns the cursor attached to the surviving fact; it is distinct from the choice of equality representative.
+
+\input{figures/repair}
+\subsection{Passing a committed fact across a Run}
+The compiler chooses an \emph{anchor}: a producer output through which a particular consumer query atom, or pivot, can be entered. A \emph{receipt} identifies the actual fact returned by a matched read, a construction, or a checked RHS alias. A \emph{Spine} follows a sequence of admitted producer--consumer edges. Its cursor records enough of a successful path to interpret a later block. These pieces have different lifetimes. The rule template is shared across applications; a receipt belongs to an execution and may become unusable before its consumer is activated.
+
+\input{figures/boundary}
+The time axis in Figure~\ref{fig:boundary} returns to the recorded rule pair. A cursor names eligible work for a scheduled entry. Run-local same-key forwarding is applied where available; a receipt can fail validation at a later boundary.
+\paragraph{Producing and publishing.}
+The executor collects receipts for the inputs and effects requested by a plan. At the end of the Run, repair can coalesce two physical rows at the same canonical key. Where the route supplies a same-key forwarding relation, publication follows it. Colliding publications retain the winner in the effect order required by the route. An anchor that has disappeared or become hidden supplies no usable visible fact. The published state belongs to the repaired graph. If later work needs the origin of a skipped constructor operation, a successful handoff passes along its actual donor receipt.
+
+\paragraph{Consuming.}
+At its scheduled Run the consumer checks the anchor and the required ports. A plan can require a live fact in a particular table, equality of the complete canonical key, agreement of an output value, a primitive guard, and an eligible epoch. A symbolic proof at compile time establishes what would follow \emph{if} those checks succeed. For example, at rule 137 a valid receipt for \(\mathrm{Get}(t,i)\) supplies \(g\); a valid receipt for \(\mathrm{Single}(g)\) supplies its constructor result. A complete RHS plan preflights its inputs before committing any effect. A failure can therefore take the original RHS once. Explicit unions still required by the recipe retain their order.
+
+Partial information also has value. Suppose a consumer needs \(P(x,y)\) and \(Q(y,z)\), and only \(P\) is supplied. The executor can search \(Q\) with \(y\) bound. Conversely, a new \(Q\) may arrive after an old \(P\). Covering only the first direction would lose a legal binding. For a supported shared view, the implementation partitions work into a fresh driver joined with any peer, and a fresh peer joined with a strictly older driver. Other supported routes combine their own delta ownership, residual checks and ordered deduplication. An entry can claim complete coverage only for the pivots it can discharge. The remaining entries use the ordinary plan.
+
+\paragraph{What the checks establish.}
+For a fixed recipe, consider replacing an ordinary access inside an otherwise unchanged Run. If the supplied fact has the required table, key, visibility, and epoch, and passes the same output constraints, it can stand in for that access. If the specialized and residual paths together present the same ordered bindings, applying the same ordered effects to the same input state gives the reference Run's logical result. This is a local substitution argument. Establishing whole-program equivalence also requires complete pivot coverage, consistent repair, and a semantics-preserving source transformation. Section~\ref{sec:eval} separates current semantic contracts from execution measurements, and the appendix retains the historical strict native/Cell choice diagnostic.
+
+\section{Iterative Bake}\label{sec:bake}
+One rule pair can be compiled from its typed entry and effect. A catalog for an entire workload must choose among many possible paths. EggFuse starts with a finite set of admitted consumer/pivot leaves. In one training round it executes the schedule with a frozen catalog, observes adjacent units on the winning applied lineage, and proposes a bounded batch of additions. A binary addition has the form
+\[
+                   (u,\;j,\;v),
+\]
+where \(j\) is the publishing instruction linking the final producer in unit \(u\) to the entry of unit \(v\). The compiler checks the link, expands the path to count its primitive steps, and derives the available handoffs. A subsequent training round may use the new unit as either operand. A longer unit consumes a sequence of \emph{separately scheduled} activations. Suffix transitions preserve shorter opportunities when a longer continuation does not apply.
+
+The ranking objective depends on the work the runtime can actually elide. A direct binding handoff can save copies of a deduplication key. To specialize an RHS, the compiler symbolically evaluates a finite path and identifies a donor by its earlier rule, query or effect position, primitive-step distance, and consumer operation. Matching constructors with provably equal keys can supply candidate results. Mutable function results require fresh justification in the later Run. A lookup-oriented ranking weights additional provable reads by observed support; a proposed bridge still has to execute before its frequency can be credited. The deployable artifact binds the resulting catalog to the recipe and verifies its executable fields.
+
+In the within-workload training study~\cite{bakeartifact}, sum-bits and Raytrace each started with 32 leaves. The learner allowed four primitive steps, eight nodes per expanded path, 512 candidate shapes and up to eight additions per round. Four rounds grew each catalog to 64 units. Unit 48 expanded to entries \(143 \to 55 \to 143 \to 137\) and completed 33 times on sum-bits and 4,934 times on Raytrace. The final two entries are the pair compared in Figure~\ref{fig:path}. The four-step count measures applications of a learned block. It is distinct from the number of primitive steps through which an execution cursor can resume, and from the distance to an individual donor. In the RHS study, the observed successful donors for these workloads were one primitive step back~\cite{bakeartifact}.
+
+\paragraph{What is represented once.}
+The Bake Cell e-graph is a registry of reusable descriptions. Each admitted unit has an entry there. Its ordered parent links describe a composition; expansion must recover the checked sequence of rule entries and output ports. It grows as the learner acquires a vocabulary. The target e-graph, by contrast, holds the facts of the current workload. Hash-consing already shares identical concrete terms in that graph. Template sharing offers savings across \emph{distinct} occurrences with the same structure.
+
+For example, after the union above, consider the three rows for
+\(\mathrm{Get}(t,i)=g\), \(\mathrm{Single}(g)=s\), and \(\mathrm{SubTuple}(t,i,1)=s\).
+Their operator sequence, the literal 1, the repeated pair \((t,i)\), and the edge from \(g\) to \(\mathrm{Single}\) can all be described once. A possible instance encoding supplies \(t,i\) and the identities needed to expose \(g,s\). A decoder obtains the three rows from instruction positions. If another rule reads \(g\), it must still be able to find that row. A later union may require updating a representative, and subsumption may require a visibility bit. These are concrete costs of a lossless graph encoding. EggFuse's instruction-addressed facts implement this principle for individual templates; covering a larger target region with one learned instance is a further design step.
+
+For a fixed cover of disjoint row occurrences, let \(D\) be the additional bytes of the shared descriptor. For occurrence \(i\), let \(F_i\) be the bytes that can actually be retired from the existing representation, \(B_i\) the replacement bindings, and \(E_i\) the additional references, indexes, and repair metadata needed by external readers. Physical graph storage falls precisely when
+\[
+                         \sum_i (F_i-B_i-E_i) > D .
+\]
+Charging each shared allocation once matters: counting an internal row that another owner still retains would overstate \(F_i\). For time, suppose an extension is used \(n\) times per replay, saves mean access or construction time \(a\) per use, adds mean validation and decoding time \(v\) per use, and adds maintenance time \(m\) per replay. With the rest of the plan fixed its estimated saving is \(n(a-v)-m\). Offline training cost must also be amortized over deployments. Larger blocks can expose new donors and increase \(a\), but less frequent paths can reduce \(n\). Current admission ranks proxies such as supported slot copies or provable key reads. A policy seeking both progressive acceleration and compression would also evaluate the marginal time and byte savings of each proposed extension against the previous round. The engine preserves the logical facts through the source schedule in all cases.
+
+For deployment across inputs, EggFuse can reuse the learned structure while rebuilding its proofs. The suite linker matches a donor leaf's typed rule signature to the target program, retains reachable compositions, and rederives the target's RHS handoffs. This lets one training workload propose blocks for another even when their recipe-local rule identifiers differ. The timing study below used this transfer procedure; its setup cost is reported separately.
+
+\subsection{Learning from actual executions}
+Equality saturation shares terms that denote the same value. A different repetition appears when the same sequence of rules fires on thousands of \emph{different} values. The facts for different bindings must remain distinguishable, but the sequence of constructors, the flow of parameters between them, and the checks that allow a result to be reused may be identical. Can an engine learn that common structure from its own executions, then use it as a building block in the next round?
+
+A Cell instance supplies parameters to a shared instruction template. Each newly allocated fact can be named by the instance and instruction position; constructor reuse instead requires the actual returned witness. EggFuse uses these addresses to learn larger units with \emph{iterative Bake}. The starting vocabulary consists of short, checked rule entries. The engine executes the original schedule, observes two entries that actually met at a committed fact, and can give the pair a name. The next round can then observe a pair whose first operand is itself a learned pair. In Figure~\ref{fig:bake}, three such extensions expose a four-step path in a compiler workload. A fresh execution can follow the shared instructions with different parameter bindings. If the final step needs a constructor result already supplied by the first part of the path, a validated reference can replace a lookup. If the internal facts can also be recovered from the shared description and its parameters, the path offers a second opportunity: a smaller physical representation of those facts.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm,
+ block/.style={draw=accent, rounded corners=2pt, align=center, text width=3.3cm, inner sep=5pt},
+ arr/.style={-{Stealth[length=2mm]}, thick, draw=ink}]
+\node[block] (a) at (0,0) {\textbf{Round 1: unit 36}\\[-1pt]$143 \to 55$};
+\node[block] (b) at (4.6,0) {\textbf{Round 2: unit 41}\\[-1pt]$\mathrm{unit}\ 36 \to 143$};
+\node[block] (c) at (9.2,0) {\textbf{Round 3: unit 48}\\[-1pt]$\mathrm{unit}\ 41 \to 137$};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);
+\end{tikzpicture}
+\caption{How a block grows. Numbers inside the expressions are rule IDs; all four entries use pivot zero. Each arrow inside a block stands for a checked producer output feeding a later scheduled entry. On the final Raytrace replay, unit 48 completed 4,934 times. Each completion still spans four source activations.}
+\label{fig:bake}
+\end{figure}
+
+The last edge of unit 48 illustrates what makes a learned path executable. Consider two rules from the third optimization pass of eggcc, shown here in abbreviated form:
+\begin{align*}
+r_{143}:\quad& \mathrm{Get}(t,i)=g
+  &&\Longrightarrow\quad \mathrm{Single}(g)\equiv\mathrm{SubTuple}(t,i,1),\\
+r_{137}:\quad& \mathrm{SubTuple}(t,i,1)=s
+  &&\Longrightarrow\quad s\equiv\mathrm{Single}(\mathrm{Get}(t,i)).
+\end{align*}
+Rule 143 has seen the exact \(\mathrm{Get}\) row and obtained the result of \(\mathrm{Single}\). Rule 137 subsequently asks for both. A conventional implementation can recover them through keyed constructor lookups. The interesting opportunity arises even when those lookups are well indexed: the earlier application can identify \emph{which physical facts} the later application should try first.
+
+A rule execution trace records a concrete instance. During round zero of a Raytrace training run, the learned leaf for rule 143 published at instruction 2 in \run{} 1103. The leaf for rule 137 consumed the edge in \run{} 1107. The recorded anchor was fact \((80646,2)\), an instance identifier paired with an instruction position. Four intervening epoch increments matter. A union can change the key by which a fact is reached, two writes can acquire the same canonical key, and the consumer's other inputs may arrive independently. A compiler that simply concatenates the rule bodies loses the information carried by the intervening barriers.
+
+\input{figures/backends}
+
+We study how the dictionary changes across rounds, how much work a learned unit can discharge, and what must remain materialized for outside readers. These questions have different measurements. We count the operands in the dictionary, measure inference at each frozen catalog, and check the exported graph after each replay. This exposes both the benefit of recursive reuse and the point at which extra catalog entries buy little.
+
+\section{Evaluation}\label{sec:eval}
+\input{upstream-results}
+\input{eggcc-results}
+\subsection{Historical compiler-pass and Bake studies}
+The measurements below predate the current compatibility audit. Their pinned revisions and original semantic limitations remain authoritative; they are not measurements of the new scalar implementation.
+
+We first measure how much structure a learned dictionary shares, test lossless encoding on a workload graph, and replay the five successive catalog sizes on the two training workloads. We then measure deployment with a single donor over 96 workloads and use separate controlled studies to isolate constructor reuse and retention costs. All experiments use one CPU thread.
+
+\subsection{What changes from one Bake round to the next}
+The final catalog gives an exact check on the compression of its \emph{path descriptions}. Fix the common 32-leaf dictionary. A flat length-\(d\) composite names \(d\) leaves and \(d-1\) output ports. A binary composite names two existing operands and one output port. Counting these identifier fields over the learned entries gives the following totals. For Raytrace, the flat and parent-linked descriptions after rounds 1 through 4 contain respectively \(24/24,\;60/48,\;112/72,\;148/96\) fields. For sum-bits the counts are \(24/24,\;62/48,\;114/72,\;146/96\). We expanded every composition and checked the ordered leaf and port sequence. With a fixed field width, parent links save about 35\% of the final Raytrace path operand payload. This accounting excludes the common leaves, container overhead, expanded validation paths, and all workload instances. It measures a description that can be shared; physical graph compression has the additional boundary costs derived in Section~\ref{sec:bake}.
+
+\paragraph{Can a shared description shrink a target e-graph?}
+We tested one concrete motif in both frozen endpoints. An offline encoder starts from a flat stream of rows with interned typed values, then packs disjoint visible \texttt{Get--Single} pairs. A second encoding extends that definition with the \texttt{SubTuple} row from rule 143. Each group stores its bound value IDs and the positions needed to restore row order. The stream also includes the template definitions, the complete table and value dictionaries, all remaining rows, visibility, and anchors. This test supplies the two patterns from the rule pair, explicitly, to isolate the representation question from pattern discovery.
+
+We count distinct visible constructor keys as logical e-nodes. The sum-bits endpoint contains 2,820 such nodes (2,895 constructor rows including subsumed rows); Raytrace contains 653,663 (658,670 including subsumed rows). These counts agree across the five execution rounds. In the offline encoding a group of three constructor rows can occupy one physical record. We count its definition separately so that both the per-graph saving and the cost of sharing are visible.
+
+\begin{table}[ht]
+\centering\small
+\caption{Lossless snapshot packing, using supplied templates. The three rows per case are flat, pair, and extended triple. Constructor records include subsumed constructors; each packed group counts once. The third and fourth columns exclude and include one record per template, respectively. All data records also include ungrouped functions and relations. Net bytes exclude the incremental template definitions; gross bytes include them.}
+\label{tab:packed-nodes}
+\begin{tabular}{lrrrrrr}
+\toprule
+& & \multicolumn{2}{c}{Constructor records} & All data & \multicolumn{2}{c}{Complete snapshot (bytes)}\\
+\cmidrule(lr){3-4}\cmidrule(lr){6-7}
+Case & Defs & Data only & With defs & records & Net & Gross\\
+\midrule
+sum-bits & 0 & 2,895 & 2,895 & 4,045 & 207,203 & 207,203 \\
+sum-bits & 1 & 2,860 & 2,861 & 4,010 & 207,063 & 207,090 \\
+sum-bits & 2 & 2,825 & 2,827 & 3,975 & 206,503 & 206,551 \\
+\midrule
+Raytrace & 0 & 658,670 & 658,670 & 1,034,514 & 50,958,929 & 50,958,929 \\
+Raytrace & 1 & 654,288 & 654,289 & 1,030,132 & 50,941,401 & 50,941,429 \\
+Raytrace & 2 & 649,906 & 649,908 & 1,025,750 & 50,871,289 & 50,871,338 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+There are 35 disjoint triples on sum-bits and 4,382 on Raytrace. On Raytrace, 8,764 constructor data records disappear from the flat encoding; charging the two definition records leaves a saving of 8,762 out of 658,670 (1.33\%). On sum-bits the corresponding saving is 68 out of 2,895 (2.35\%). Definitions and instances differ in size, so we also compare the complete byte streams. They save 652 bytes on sum-bits and 87,591 bytes on Raytrace, including definitions, dictionaries, row positions, and anchors. All six streams decode to the exact original export bytes. The two supplied snapshot templates are distinct from the execution library's 32--64 units. These counts establish a storage reduction for the snapshot encodings; a live executor must also support indexed queries and repair.
+
+\paragraph{Learning the cover from records.}
+We next start with flat records and an empty template library. Each eligible edge connects a non-nullary constructor with a unique visible producing row for its typed result class to a different visible constructor that uses it. The learner enumerates edge shapes by producer table, consumer table, and input column. For each shape it constructs a disjoint cover in decreasing order of per-occurrence record saving, breaking ties by row ordinal. The winning shape maximizes net record savings among these greedy covers; a tie favors more bytes saved. After the first round, a candidate attaches a free row to any member of an existing group, in either edge direction. Only when no admissible extension remains does the learner try another seed. We require at least eight disjoint instances, positive net records and bytes, and at most eight members per group.
+
+The cost of exposing an intermediate depends on its readers. We count operand references in all rows, references inside nested sets, function-result references, and exported anchors. One exposed member value is accessible through the group record. Each additional exposed member requires a four-byte port record. This models access from outside the group in the frozen snapshot. For each admitted template we emit the entire stream, including original row positions, bindings, port records, and the cumulative dictionary. The decoder reconstructs the original byte stream, checks its SHA-256, and checks the exposed members independently against reader ordinals. A physical record total below counts ordinary data records, groups, additional ports, and definitions once each.
+
+\input{record-learning}
+\input{projection-layouts}
+\input{online-layouts}
+\input{round-results}
+
+The earlier 96-workload replay and its strict membership diagnostic are retained in the appendix, with their original revisions. Table~\ref{tab:current-suite} reports the new campaign.
+
+\subsection{What the handoff buys}
+To isolate RHS reuse, a separate study runs the same frozen 64-unit catalog with (i) the original execution, (ii) compiled dispatch with result reuse disabled, and (iii) the checked RHS handoff enabled. On sum-bits, dispatch performs 20,088 graph key lookups; enabling the handoff reduces this to 19,651. On Raytrace the corresponding counts are 5,647,088 and 5,598,854. Table~\ref{tab:handoff} gives the directly measured work. A graph key lookup is a runtime call; neither an attempted receipt nor a logical binding implies that a physical hash probe or an effective write occurred.
+
+\begin{table}[ht]
+\centering
+\caption{Effect of the fixed catalog's checked RHS handoff, relative to dispatch alone. Positive counts denote eliminated work. Timings are medians of eight measured pairs on sum-bits and four on Raytrace, after a warm-up.}
+\label{tab:handoff}
+\begin{tabular}{lrr}
+\toprule
+Metric & sum-bits & Raytrace\\
+\midrule
+Constructor requests avoided &272&30,896\\
+Constructor-set lookups reused &165&17,338\\
+Complete consumer frames avoided &165&17,152\\
+Net graph key lookups avoided &437&48,234\\
+\midrule
+Inference, dispatch &34.156 ms&15.139 s\\
+Inference, dispatch + handoff &33.937 ms&15.049 s\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These counters repeat deterministically on the frozen inputs. The timings for the two arms are close. Relearning for the lookup objective on Raytrace produces a 39-unit catalog, removes twelve further graph key lookups, and gives a median of 15.800~s~\cite{bakeartifact}. The catalog can identify real opportunities even when their marginal value is too small to pay for specialization. The entire engine comparison in Table~\ref{tab:suite} also includes different storage, matching, and RHS execution. Attributing its aggregate ratio to the handoff would conflate these mechanisms.
+
+For the two frozen Pass~3 cases, the archived within-Cell audit compares ordered per-Run RHS inputs, effective writes, resumption digests, winning prefix trees, schedule and final state. Sum-bits has 1,428 Runs, 3,034 resumed steps and maximum chain length 12. Raytrace has 16,883 Runs, 663,403 resumed steps and maximum chain length 29. These lengths count dynamic continuation steps; the bounded catalog in this study admits at most four steps per compiled unit. A separate sum-bits audit forces fingerprint collisions and still matches the reference digests.
+
+\subsection{The price of remembering}
+A broader structural-port experiment captures deeper producer neighborhoods. At depth three on Raytrace it replaces 307,305 Spine table probes and reduces constructor requests from 2,065,807 to 1,906,158, relative to its depth-zero control. Peak retained port references reach 6,437,149 and median inference rises from 12.99 to 21.19~s~\cite{cellsource}. A different experiment on exact fact references exposes the opposite problem: the eliminated operation can be cheap. Direct delivery saves 24,761 global lookup calls on Raytrace, of which 24,754 had used an existing singleton fast path. Actual fact-table hash probes fall by seven. Median inference is 8.344~s in the control and 8.351~s with delivery~\cite{receipts}. Both findings argue for pricing the access path that a block displaces.
+
+Memory is a separate constraint. In the ordinary-release suite, Raytrace Pass~3 reaches 470.78~MiB for the native process and 1,855.33~MiB for Cell through inference. Native records whole-process peak with no graph export; Cell samples its process high-water mark before export. Sum-bits gives 36.20 and 168.73~MiB under those respective windows. A separate allocator study counts 1,762.98~MiB of live requested allocations at the end of Raytrace inference. Graph allocations account for 494.6~MiB, retained artifact data for 378.5~MiB, entry allocations for 149.0~MiB, and continuation history for 2.3~MiB. The allocator charges each underlying shared allocation once. These are requested live bytes attributed by allocation site, distinct from peak RSS~\cite{artifact}.
+
+The same study asks whether all readers of an entry have advanced past its payload. Reclamation reduces Raytrace's retained entry packets from 665,584 to 82,355. The logical membership header stays available; a later request for an older watermark can rebuild visible rows. This illustrates a second use for compiler-derived consumers: their progress can establish when the last intended reader has finished. Retaining more history and reclaiming consumed payloads therefore address different parts of the footprint.
+
+\section{Relation to prior work and scope}
+Equality saturation and \emph{egg} supply the representation of alternatives and the need to restore congruence after equalities change~\cite{tate,egg}. Egglog adds relational rules, merges, and incremental execution~\cite{egglog}. Its existing incremental evaluation already avoids much repeated search. EggFuse targets a narrower physical question: given a scheduled match that would perform a valid access, can the witness held by its producer discharge that access? A full-key index lookup remains the appropriate fallback when provenance is unavailable.
+
+Hierarchical grammar inference can replace a recurring pair by a symbol that participates in subsequent pair formation~\cite{sequitur}. Library learning can use an e-graph to discover abstractions that shorten a corpus of programs modulo a theory~\cite{babble}. Here the learning input is a lineage of successful rule applications. The connecting symbol identifies the publishing instruction, the consumer runs at a later source boundary, and a stored reference must still satisfy the current graph. These conditions explain why a shorter description can have a more expensive execution.
+
+Rete shares tests and retains partial matches across changes~\cite{rete}. EggFuse shares some of that time--space trade-off. The state carried across a Run can also identify a \emph{committed RHS construction}, and the later consumer must account for equality repair, visibility, ordered effects, and its own scheduling boundary. Free Join explores how to combine join strategies inside a query~\cite{freejoin}. A compiler-proved handoff changes which inputs remain for the join to discover. Both forms of reuse can coexist in one ruleset.
+
+The reported timing campaigns evaluate the supported language fragment on one CPU thread; optional query workers are outside these measurements. The 96 workloads provide variation in input graphs while largely sharing one compiler's rules and schedules. Three pairs on one machine give limited resolution for small timing effects. Generalization to independently authored rule collections, parallel execution, and equivalent end-to-end extracted programs remains open. The most direct test of the last question is to find the earliest projected native/Cell divergence, then compare the extracted programs after resolution. The offline record objective can identify profitable groups and their reader boundaries. The online ablation locates two costs that a frozen cover omits: posting lists remain live, and a union affecting one member can trigger repair and later resealing of its whole page. The timings above measure the execution catalogs; the record objective is evaluated on frozen graphs.
+
+\paragraph{Artifacts.}
+The source package includes current compatibility and eggcc timing manifests, per-input samples, checksums, summaries and drivers in its \texttt{anc/} directory. These text records accompany the implementation and benchmark sources at revision \texttt{ce01d785}~\cite{currentartifact}; executing the drivers requires that repository. Historical per-round measurements, snapshot encoders and the record-learning ledger remain in the earlier manuscript archive~\cite{manuscriptartifact}. The public companion report archives the 288 captured inputs, the donor, raw process samples, executable identities, timing adapters and the ground membership check~\cite{artifact}. Its replay script is \texttt{reproduce/refresh-suite.sh}. The mechanism studies have their own revisions and build flags~\cite{bakeartifact,cellsource,receipts}. For a single Cell replay, the following commands compile one frozen case and execute its source schedule in a fresh output directory:
+\begin{verbatim}
+cargo cell-compile --case sum-bits --output out/sum
+cargo run --release --locked -p eggfuse-cell-runtime \
+  --features sparse-cells,view-ports,storage-metrics -- \
+  --program out/sum/program.json --output out/run
+\end{verbatim}
+
+\paragraph{Manuscript preparation.}
+OpenAI Codex assisted with drafting, typesetting, and checking numerical summaries against the archived measurements.
+
+\appendix
+\section{Historical replay and choice diagnostics}
+\paragraph{Inputs and configurations.}
+The corpus contains three pass inputs for each of 96 passing Bril and Rust workloads from an eggcc capture at revision \code{ae80f82}. In the originating compiler, Tiger extraction supplied the input to the next pass. Here both engines start from each captured pass boundary, so summing three pass times measures replay of three fixed inputs. A change in one backend's extracted program cannot propagate into the next input in this experiment.
+
+Native egglog executes the original unmarked source at the project's baseline tag, \code{62ae6baa}, using a timing adapter with optional join counters disabled. The standalone Cell engine at \code{27f098a2} executes a recipe compiled from the same source. Every target uses the same small marker-training program and a fixed sum-bits Pass~3 block donor. The linker deploys 59 units on Passes~1 and~2 and 64 on Pass~3. The remaining 95 workload names supply an across-workload transfer test within this compiler's shared rule families. The suite contains 288 completed inputs with three fresh processes per backend per input, using alternating order, ordinary Cargo release builds, Rust 1.94.0 and an Apple M3 Max. There is no excluded warm-up per input. The workstation was unisolated. We use the median of each input's three measurements~\cite{artifact}.
+
+\begin{table}[ht]
+\centering
+\caption{Inference on captured pass inputs. Times are sums of per-input medians. The last column gives each workload equal weight. In the final row, each workload contributes the ratio of its two three-pass totals.}
+\label{tab:suite}
+\begin{tabular}{lrrrr}
+\toprule
+Input set & Native (s) & Cell (s) & Ratio of sums & Geometric mean\\
+\midrule
+Pass 1 & 31.555 & 13.684 & \ratio{2.306} & \ratio{2.413}\\
+Pass 2 & 65.140 & 33.236 & \ratio{1.960} & \ratio{2.124}\\
+Pass 3 & 48.809 & 19.366 & \ratio{2.520} & \ratio{2.144}\\
+\midrule
+All passes &145.504&66.286&\ratio{2.195}&\ratio{2.197}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Distribution and preparation.}
+All 96 three-pass totals are lower for the Cell execution path. The ratios range from \ratio{1.738} to \ratio{3.424} (Figure~\ref{fig:dist}). Raytrace accounts for 34.5\% of the aggregate inference time saved; excluding it gives a ratio of \ratio{1.988}. Native timing starts after initialization at the first schedule. Cell inference includes matching, RHS execution, repair and publication. The sum of command-line medians is 165.828~s for native and 141.316~s for Cell. Their commands have different output duties: Cell exports its graph and report. Preparation of the 288 Cell artifacts takes another 826.63~s. At the observed aggregate inference saving of 79.22~s per replay, it would take about 10.4 replays of the \emph{whole prepared suite} to recover preparation from inference savings alone. One-shot compilation has a substantially different cost profile.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.87\linewidth,height=4.0cm,
+xmin=1,xmax=96,ymin=1.5,ymax=3.6,
+xtick={1,24,48,72,96},ytick={1.5,2,2.5,3,3.5},
+xlabel={Workload rank (96 three-pass totals)},ylabel={Native time / Cell time},
+tick label style={font=\footnotesize},label style={font=\small},
+axis lines=left,ymajorgrids,grid style={black!13},clip=false]
+\addplot[accent,thick,mark=*,mark size=0.75pt] table[x=rank,y=ratio]{workloads.dat};
+\end{axis}
+\end{tikzpicture}
+\caption{Each point is one workload, sorted by its three-pass inference ratio. The equal-weight geometric mean is \ratio{2.197}. These timings describe executions with the semantic limitation below.}
+\label{fig:dist}
+\end{figure}
+
+\paragraph{Observable discrepancy.}
+The 288 Cell endpoints reproduce the archived \emph{Cell} endpoints. A separate comparison with native egglog on sum-bits shows why this internal audit alone is insufficient. Both exports contain 3,206 rows after projection onto the original table names. Every table count agrees. Nevertheless, the following grounded term is visible in the Cell export:
+\[
+\begin{aligned}
+g(i)&=\mathrm{TermGet}(\mathrm{TermArg}(),i),\\
+b(o,x,y)&=\mathrm{TermBop}(o(),x,y),\\
+p&=b(\mathrm{Mul},b(\mathrm{Div},g(1),g(2)),
+                 \mathrm{TermConst}(\mathrm{Int}(2))),\\
+w&=\mathrm{TermSingle}(b(\mathrm{Add},g(0),b(\mathrm{Sub},g(1),p))).
+\end{aligned}
+\]
+All 19 constructor occurrences of this witness resolve to visible Cell rows. Appending the corresponding ground check to the native source produces a check failure, including in a native replay of the marked input~\cite{artifact}. This is a strict membership diagnostic. Subsequent reviewed sum-bits validation permits proven Add/Mul-equivalent extraction ties and legal maximum-size hoist choices, while requiring exact core equality and visibility. It therefore distinguishes a legal choice difference from a semantic failure; equal cost alone is insufficient. That contract is source-specific and does not certify all 288 inputs. Accordingly, Table~\ref{tab:suite} measures the specified historical executions and cannot establish a semantics-preserving acceleration of the full native compiler.
+
+
+\begin{thebibliography}{14}\small
+\bibitem{tate} Ross Tate, Michael Stepp, Zachary Tatlock, and Sorin Lerner.
+Equality saturation: a new approach to optimization. \emph{POPL}, 2009.
+\href{https://doi.org/10.1145/1480881.1480915}{doi:10.1145/1480881.1480915}.
+\bibitem{egg} Max Willsey, Chandrakana Nandi, Yisu Remy Wang, Oliver Flatt,
+Zachary Tatlock, and Pavel Panchekha. egg: Fast and extensible equality
+saturation. \emph{Proceedings of the ACM on Programming Languages}, 5(POPL), 2021.
+\href{https://doi.org/10.1145/3434304}{doi:10.1145/3434304}.
+\bibitem{egglog} Yihong Zhang, Yisu Remy Wang, Oliver Flatt, David Cao,
+Philip Zucker, Eli Rosenthal, Zachary Tatlock, and Max Willsey.
+Better together: unifying Datalog and equality saturation.
+\emph{Proceedings of the ACM on Programming Languages}, 7(PLDI), 2023.
+\href{https://doi.org/10.1145/3591239}{doi:10.1145/3591239}.
+\bibitem{freejoin} Yisu Remy Wang, Max Willsey, and Dan Suciu.
+Free Join: unifying worst-case optimal and traditional joins.
+\emph{Proceedings of the ACM on Management of Data}, 1(2), 2023.
+\href{https://doi.org/10.1145/3589295}{doi:10.1145/3589295}.
+\bibitem{rete} Charles L. Forgy. Rete: a fast algorithm for the many
+pattern/many object pattern match problem. \emph{Artificial Intelligence},
+19(1):17--37, 1982.
+\href{https://doi.org/10.1016/0004-3702(82)90020-0}{doi:10.1016/0004-3702(82)90020-0}.
+\bibitem{sequitur} Craig G. Nevill-Manning and Ian H. Witten. Identifying hierarchical structure in sequences: a linear-time algorithm. \emph{Journal of Artificial Intelligence Research}, 7:67--82, 1997. \href{https://arxiv.org/abs/cs/9709102}{arXiv:cs/9709102}.
+\bibitem{babble} David Cao, Rose Kunkel, Chandrakana Nandi, Max Willsey, Zachary Tatlock, and Nadia Polikarpova. babble: learning better abstractions with e-graphs and anti-unification. \emph{Proceedings of the ACM on Programming Languages}, 7(POPL), 2023. \href{https://doi.org/10.1145/3571207}{doi:10.1145/3571207}.
+\bibitem{currentartifact} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/ce01d785a9c88781bf0a7eb852c8849405f85002/benchmarks}{Scalar compatibility audit and refreshed eggcc replay}, revision \texttt{ce01d785}. Measured implementation: \texttt{8450e627}.
+\bibitem{manuscriptartifact} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/929aa61c30b7a290e4fc5262ff24994a542e9806/paper/evidence}{Historical manuscript evidence}, revision \texttt{929aa61c}.
+\bibitem{artifact} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/b89129cc356eefb3cd27e48833bfe1eb143381cb/docs/papers/eggcc-cpu-techreport}{Compiling scheduled egglog rules into reusable CPU execution blocks: technical report and replay artifact}, revision \texttt{b89129cc}.
+Captured inputs originate from \href{https://github.com/egraphs-good/eggcc/tree/ae80f82a403c1209fb084b115ee89470c7e66d0e}{eggcc revision \texttt{ae80f82}}.
+\bibitem{bakeartifact} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/4da35ee11454e56980f4f7d6a39a97420b2cd67d/tools/cell-compiler/benchmarks/runtime-modules}{Iterative Bake and guarded RHS completion: experiments and raw measurements}, revision \texttt{4da35ee1}.
+\bibitem{nativeimpl} Egglog implementation used in the replay.
+\href{https://github.com/MilkBlock/eggfuse/tree/62ae6baa5539af4468a8f1a94d6e108de4dcd2df/egglog/egglog-bridge/src}{Function-table backend} and
+\href{https://github.com/MilkBlock/eggfuse/tree/62ae6baa5539af4468a8f1a94d6e108de4dcd2df/egglog/core-relations/src}{rebuild and Free Join executor}, revision \texttt{62ae6baa}.
+\bibitem{cellsource} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/tree/27f098a251b87449d25cc833aee7c32a7411d340}{Cell CPU engine, structural-port study and Run audits}, revision \texttt{27f098a2}.
+\bibitem{receipts} EggFuse project.
+\href{https://github.com/MilkBlock/eggfuse/blob/b0fbe5e00824550aa7123b2859fc865290021dd2/docs/BLOCK_FACT_RECEIPTS.md}{Exact fact references for physical block ports: isolated and combined ablations}, revision \texttt{b0fbe5e0}.
+\end{thebibliography}
+\end{document}

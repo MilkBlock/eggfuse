@@ -1,0 +1,33 @@
+\paragraph{Which constraint kept compression low?}
+The output value of a secondary port already occurs in its group's binding vector. We changed the decoder to project the value from the slot named by the member's output, keeping the member mask. On the \emph{same} 31,123 Raytrace \texttt{TermGet}--\texttt{TCPair} pairs, explicit secondary ports give a net loss of one record; slot projection saves 31,122 records after charging the definition. Relaxing producer uniqueness on this edge gives exactly the same pairs. On the most frequent sum-bits edge, \texttt{TCPair}--\texttt{PotentialExtractedExpr}, relaxing uniqueness increases disjoint pairs from 84 to 159. Equality of observed field values justifies this offline encoding. Identifying which rule application actually produced a value is a separate obligation for a live handoff.
+
+A second limitation is the candidate vocabulary. Adjacent constructor rows of the same table can share parameters even when neither produced a fact consumed by the other. We tested two layouts on the final row order. A pair template requires at least one equal, typed class-valued field and stores equal columns once; other fields remain explicit bindings. A sequence template requires three or more consecutive rows for which \emph{every} dictionary-ID column follows an exact signed integer stride. It stores the length, base vector and stride vector. Member \(j\)'s entire row is given by \(\mathrm{base}+j\,\mathrm{stride}\). This exploits the observed numbering and order; arithmetic on the IDs is used only to recover the original field values.
+
+We preserve row ordinals and split the stream into 256-row pages. A directory entry locates each page, and scanning its headers locates a group and member offset. The decoder can project any member directly from the group. Readers with a row ordinal therefore need no second copy of the output ID. Dynamic programming selects a disjoint cover within each page, maximizing record savings and breaking ties by payload bytes. Layouts with fewer than eight selected instances are removed and the cover is recomputed. This separate offline layout ablation is fitted to each target snapshot.
+
+\begin{table}[ht]
+\centering\small
+\caption{Changing the representation on the same snapshots. Charged records include constructor data, all layout definitions and the entire page directory, even pages containing functions. Reductions use the original unindexed constructor count (2,895 and 658,670). Complete bytes use an identical typed value dictionary in all rows, including the flat control.}
+\label{tab:projected-layouts}
+\begin{tabular}{llrrrrr}
+\toprule
+Case & Layout & Data records & Defs & Page entries & Charged & Complete bytes\\
+\midrule
+sum-bits & Flat   & 2,895 & 0  & 16 & 2,911 & 105,062\\
+         & Pair   & 2,288 & 23 & 16 & 2,327 & 100,095\\
+         & Stride & 2,858 & 1  & 16 & 2,875 & 104,646\\
+         & Both   & 2,251 & 24 & 16 & 2,291 & 99,680\\
+\midrule
+Raytrace & Flat   & 658,670 & 0   & 4,042 & 662,712 & 25,482,635\\
+         & Pair   & 480,754 & 89  & 4,042 & 484,885 & 23,770,670\\
+         & Stride & 501,240 & 37  & 4,042 & 505,319 & 23,216,549\\
+         & Both   & 374,494 & 123 & 4,042 & 378,659 & 22,036,953\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The combined layout saves 20.86\% of charged constructor records on sum-bits and 42.51\% on Raytrace. On Raytrace the stride-only arm already saves 23.28\%, with no per-member residual values in its sequence records. In the combined arm, 131,765 secondary exposed Raytrace outputs can be projected (258 on sum-bits). Each decoded row, visibility and export digest was checked in all arms. Page-based lookups were also checked at page boundaries and at sampled interior ordinals. The measured interface supports retrieval by row ordinal in a frozen stream. A mutable index from a canonical key to an ordinal and the cost of invalidating groups during repair are outside this experiment.
+
+Whole-file savings also depend on the representation of values. The original Raytrace flat JSON value dictionary alone occupies 30,792,756 bytes. Encoding sort names once, equality IDs and integer literals as variable-length integers, and other values verbatim reduces it to 5,300,282 bytes, preserving dictionary order. Relative to the original flat streams in Table~\ref{tab:packed-nodes}, the typed dictionary \emph{and} both layouts save 51.89\% and 56.76\% of all bytes. Relative to the same typed flat controls in Table~\ref{tab:projected-layouts}, the layouts alone save 5.12\% and 13.52\%. Logical constructor counts are preserved in both comparisons.
+
+As a denominator check, we also enabled layouts on functions and relations and charged \emph{all} data records, definitions and page entries. With the same shared-equality-field requirement, counts fall from 4,045 to 3,340 on sum-bits and from 1,034,514 to 636,021 on Raytrace. Allowing equal typed literals as a pair field as well gives 2,943 and 510,965 records, reductions of 27.24\% and 50.61\%. Holding the compact dictionary fixed, the latter complete streams use 93,959 and 18,309,958 bytes, reductions of 10.57\% and 28.15\% relative to their paged flat controls. These figures include explicit per-member bindings for any fields that a pair cannot reconstruct.

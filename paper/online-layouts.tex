@@ -1,0 +1,36 @@
+\paragraph{What survives in the online executor?}
+We ported member projection and exact strides to the Cell CPU engine. The online address is the existing (Cell ID, instruction) witness. A page covers 256 Cell IDs. Groups in that page share a table, producing instruction, birth epoch and write epoch. A bitmap maps the original Cell ID to a member rank. At a repaired publication barrier, a successful group replaces the individual constructor fact states. Readers can obtain a complete row or project a key or result field. Existing lookup and reverse-use indexes and previously published references continue to address each logical fact. Online strides apply to runtime equality IDs or integer fields. These coordinates and the need to preserve epochs change the eligible cover relative to the frozen stream.
+
+Before a union dirties a member, or a collision, delete or hide mutates its state, the executor thaws its page, recovering the old keys for index removal. It can seal the surviving members again at the next barrier. A focused test covers a cross-member key collision, receipt forwarding to the keeper, garbage collection with a live packed owner, and hide/delete. The dependency repair, publication and page work are all inside the timed inference interval.
+
+\begin{table}[ht]
+\centering\small
+\caption{Online ablation. Medians of five fresh processes per arm and workload after warm-up, with rotated order. The off and three experimental arms share a release executable. RSS is the whole process high-water through inference. The last two columns are endpoint counts.}
+\label{tab:online}
+\begin{tabular}{llrrrrr}
+\toprule
+Case & Layout & Inference ms & CLI ms & RSS MiB & Constructors$^*$ & With indexes$^\dagger$\\
+\midrule
+sum-bits & Off &21.555&126.203&152.20&2,895&63,897\\
+ & Pair &23.897&128.744&152.31&2,498&63,500\\
+ & Stride &21.895&126.722&152.22&2,796&63,798\\
+ & Both &23.900&127.823&152.33&2,417&63,419\\
+\midrule
+Raytrace & Off &7,769.853&10,288.940&1,870.03&658,670&14,859,328\\
+ & Pair &8,338.817&10,887.733&1,885.05&499,296&14,699,954\\
+ & Stride &8,024.388&10,520.556&1,862.16&543,998&14,744,656\\
+ & Both &8,466.607&11,039.600&1,886.77&425,276&14,625,934\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+$^*$Flat states plus member groups, page-directory entries and a conservative charge for each distinct layout kind/table/instruction combination. $^\dagger$Adds table memberships, constructor hash buckets/postings, forward and reverse dependency headers/postings, column keys/buckets/postings and cached witness lists, retained parent references, shared entry packets, Spine entry references and context fact references. This inventory counts records and handles. Separate allocator measurements cover the complete live heap, including other caches, program data and temporary storage still retained.
+
+On Raytrace the combined arm serves 728,001 projected slot reads. It thaws 12,959 pages and restores 1,202,997 member states over the schedule, including repeated restorations of the same witness. Median sealing and thawing cost 275 and 117~ms respectively; whole repair rises from 597 to 733~ms. The nested thaw timer overlaps repair. Median whole inference increases by 697~ms. The combined arm reduces charged constructor records by 16.51\% on sum-bits and 35.43\% on Raytrace, but the corresponding reductions in the indexed inventory are only 0.75\% and 1.57\%. On Raytrace, end-of-inference live requested heap rises from 1,762.97 to 1,766.14~MiB. Stride alone has the lowest Raytrace peak RSS among the four arms but takes longer than off. The experimental path remains disabled by default. For every layout the separately instrumented execution matches the frozen ordered RHS inputs, effective writes, resumption stream, winning Spine tree, source schedule and final graph on both workloads.
+
+\paragraph{Is union-triggered materialization responsible?}
+We instrumented the immediate cause of every page thaw, then changed only the handling of sealed facts in equality repair. On Raytrace, unions directly restored 791,368 member states and collisions restored another 375,312 while updating their keepers. Together these account for 96.98\% of the 1,202,997 restorations. Only 6,734 of 226,523 effective unions directly thawed a page. The corresponding two causes on sum-bits account for 97.99\% of 5,184 restorations. The distinction matters: a small fraction of unions can invalidate a page containing many unaffected members.
+
+A second implementation retains the group's original field vectors and member ordinals. A sparse exception stores the previous indexed hash and the current epoch of a displaced member. Reads resolve representatives, and retirement masks preserve the ranks of surviving members. This eliminates all persistent restorations due to direct union and keeper updates on both workloads. On Raytrace, visibility changes still restore 36,384 states. A further variant projects the fields needed for repair into a temporary slot buffer and reads packed collision candidates directly, eliminating all 408,629 full packed-row reads during repair observed in the in-place variant. Both alternatives pass the ordered per-Run and final-state audits.
+
+In a separate four-arm matrix, Raytrace median inference times are 7.712~s (off), 8.427~s (whole-page thaw), 8.349~s (in-place) and 8.468~s (in-place with repair-slot projection). The last variant reduces the repair phase from 729 to 661~ms versus page thaw, yet improves whole inference in only two of four pairs. It retains 115,779 per-member hash/epoch exceptions at termination. On sum-bits, the corresponding inference medians are 21.527, 23.735, 24.283 and 24.241~ms. Thus the equality path explains most persistent restoration in this design. Eliminating that work with these implementations does not recover the whole-executor cost of online packing.

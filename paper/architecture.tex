@@ -1,0 +1,108 @@
+\section{Locality as an execution contract}\label{sec:architecture}
+EggFuse is a standalone CPU executor with an egglog-based compiler frontend.
+Its common representation is a \emph{Cell template} and its actual instances.
+A template describes query operands, an input-slot layout, ordered effects,
+and checked projections into later query entries. An instance contains the
+values and witnesses of one execution. Sharing a template does not equate its
+instances, and grouping instances for locality does not establish independence.
+
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{lXX}
+\toprule
+Operation & Shared compiler information & Live instance obligation\\
+\midrule
+Query completion & Operand slots, Entry projection, remaining query instructions & Bound values, actual witnesses, delta ownership and read visibility\\
+RHS execution & Ordered instructions and inherited/new result slots & Actual constructor result, committed effects and required ordering\\
+Later Entry & Static projection and legal source boundary & Available slots, generation and current fact lifetime\\
+Congruence & Covered local premises and boundary footprint & Current Eq tests, unresolved premises and uncovered repair\\
+Bake transition & Checked composition and compatible slot layout & Evidence that the matched assumptions and prior effects hold\\
+\bottomrule
+\end{tabularx}
+\caption{A shared description does not replace the live obligations of a Cell instance. These are properties of the existing query/effect/Entry operations, not a separately maintained runtime fact graph.}
+\label{tab:cell-contract}
+\end{table}
+
+\paragraph{Three forms of locality.}
+Structural locality shares instructions and repeated operand relationships
+across different bindings. Temporal locality carries an actual returned witness
+from its producer to a later scheduled consumer. Storage locality keeps related
+instance slots and query work together. These opportunities can overlap: one
+saved lookup must not receive separate credit for its marker, Entry and Cell
+representations. Larger templates also cost descriptor space, validation,
+dispatch and boundary maintenance; their existence alone establishes no saving.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=4mm, every node/.style={font=\small},
+ box/.style={draw=ink!65,rounded corners=2pt,text width=11.5cm,align=center,inner sep=5pt}]
+\node[box] (compile) {Typed source and original schedule $\longrightarrow$ Cell templates, slots, query and effect instructions};
+\node[box,below=of compile] (query) {Entry projects an existing instance $\longrightarrow$ query completion and successful instance};
+\node[box,below=of query] (effect) {Deterministic winner selection\\Ordered RHS execution and actual result slots};
+\node[box,below=of effect] (publish) {Required congruence completion $\longrightarrow$ publication at the source \run{} boundary};
+\node[box,below=of publish] (bake) {Observed applications $\longrightarrow$ offline Bake $\longrightarrow$ checked reusable continuations};
+\draw[ef flow] (compile)--(query);
+\draw[ef flow] (query)--(effect);
+\draw[ef flow] (effect)--(publish);
+\draw[ef ref] (publish)--(bake);
+\draw[ef ref] (bake.west) -- ++(-0.65,0) |- (compile.west);
+\draw[ef flow] (publish.east) -- ++(0.65,0) |- (query.east);
+\end{tikzpicture}
+\caption{The architecture has an execution path and an offline feedback path.
+Bake improves descriptions consumed by the executor; it does not replace the
+source schedule or authorize effects that have not executed.}
+\label{fig:architecture}
+\end{figure}
+
+\paragraph{Query and effect ownership.}
+A Shared Entry projects slots already owned by an instance into a consumer's
+query. It need not create another copy of the binding. Successful matching
+establishes assumptions; completed effects establish additional reusable facts.
+Constructor lookup can return a node owned by another Cell, so a logical
+producer and instruction position is not a universal result address. Reuse must
+retain the actual returned witness, check its lifetime and visibility, and
+resolve forwarding when necessary. Residual enumeration and union-enabled or
+late-input matches remain available outside proven coverage.
+
+\paragraph{Cross-stage completion.}
+A cursor identifies a checked continuation and its execution source. A compiled
+composition can inherit input slots, reuse completed result slots and project
+those same slots to a later Entry. It saves work only where the corresponding
+lookup, binding assembly, receipt or publication is removed. A dominance
+relation between local structures motivates a compiled transition, but does not
+by itself prove equality of observable effects. Ripsat completion checks the
+ordered operations and their result sources; a state switch can discharge an
+already established operation, while new values and effects still require
+execution. Static internal wiring belongs to the template. Unknown external
+connections retain their ordinary boundary handling.
+
+\paragraph{Equality and repair.}
+An Eq value denotes an evolving equivalence class. Stable ports can preserve
+edge addresses while class membership changes. Congruence still requires a
+proof that all corresponding constructor inputs are equal. Experimental local
+completion compiles some of these obligations into shared conditions; uncovered
+keys and mutable functions retain canonical repair. The current implementation
+does not eliminate every repair barrier. Completion precedes publication to
+readers that require the completed state, and deletion, subsumption and
+cross-stage visibility remain explicit obligations.
+
+\paragraph{Parallel execution.}
+Optional query workers borrow a fixed read view and process Cell-grouped entries.
+They return owned successful instances. The coordinator restores the required
+winner policy and performs ordered effects; arbitrary constructor insertion,
+union and mutable writes are not made race-free by Cell grouping. Locality
+reduces repeated access only when related work actually reuses data or completed
+computation. The current parallel path has not established a general end-to-end
+speedup, and it is not the default used in the compatibility study below.
+
+\paragraph{General execution and specialization.}
+The primitive registry and value representation define what the executor can
+run correctly. Bake defines which of that work it can prove redundant. Ordinary
+scalar operations execute through shared typed runtime semantics without
+requiring a learned template for every operation. Extending containers containing
+Eq values additionally requires their rebuilding and collision semantics.
+Complete primitive coverage, complete language coverage, and optimized coverage
+are therefore distinct properties. The historical studies in this paper use
+separately pinned implementations; this architectural description also covers
+the subsequent Cell unification work at the revision recorded in the artifact.

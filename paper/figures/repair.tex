@@ -1,0 +1,22 @@
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[ef diagram]
+\node[ef plain,text width=6cm,minimum height=1.63cm] (a) at (0,0) {
+\textbf{1. Two visible constructor facts}\\
+\(w_A:\ \mathrm{SubTuple}(A,7,1)\mapsto u_A\)\\
+\(w_B:\ \mathrm{SubTuple}(B,7,1)\mapsto u_B\)};
+\node[ef plain,text width=6cm,minimum height=1.63cm] (b) at (7.6,0) {
+\textbf{2. An RHS queues \(\mathrm{union}(A,B)\)}\\
+Repair chooses \(A\) as representative here.\\
+Reverse uses of \(B\) mark \(w_B\) dirty and invalidate its decoded fields.};
+\node[ef cell,text width=6cm,minimum height=1.95cm] (c) at (7.6,-2.52) {
+\textbf{3. Recheck the complete key}\\
+Decode \(w_B\) at the new representative. Its key \((A,7,1)\) matches \(w_A\) in the same table. Queue \(\mathrm{union}(u_A,u_B)\).};
+\node[ef cell,text width=6cm,minimum height=1.95cm] (e) at (0,-2.52) {
+\textbf{4. Coalesce and publish}\\
+Retire \(w_B\); record \(w_B\to w_A\) for receipt forwarding in this repair. Drain new unions and dirty rows before publication.};
+\draw[ef flow] (a)--(b);\draw[ef flow] (b)--(c);\draw[ef flow] (c)--(e);
+\end{tikzpicture}
+\caption{A hypothetical key collision for the fact in Figure~\ref{fig:storage}. Solid arrows give execution order. The equality map \(B\mapsto A\) acts on values; the forwarding map \(w_B\mapsto w_A\) acts on physical facts. Rule 143's own op 3 equates the results of \texttt{Single} and \texttt{SubTuple}; those rows have different tables and keep separate witnesses. The additional input union illustrated here gives two \emph{same-table, same-key} rows. With no matching key the dirty fact is reindexed and keeps its witness.}
+\label{fig:repair}
+\end{figure}

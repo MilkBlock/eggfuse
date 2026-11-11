@@ -1,0 +1,25 @@
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[ef diagram]
+\node[ef plain,text width=4.05cm,minimum height=2.02cm] (a) at (0,0) {
+\textbf{Producer / Run 1103}\\
+Rule 143 reads \texttt{Get}, obtains \texttt{Single}, and publishes through its \texttt{SubTuple} output at op 2.};
+\node[ef cell,text width=3.85cm,minimum height=2.02cm] (b) at (5.08,0) {
+\textbf{After repair}\\
+Anchor \((80646,2)\) identifies the winning cursor. Its demanded ports can supply \texttt{Get} and \texttt{Single} witnesses.};
+\node[ef plain,text width=4.05cm,minimum height=2.02cm] (c) at (10.23,0) {
+\textbf{Consumer / Run 1107}\\
+Rule 137 enters through \texttt{SubTuple(t,i,1)}. Bind \(t,i,s\) from the pivot; validate the donor ports.};
+\draw[ef flow] (a)--(b);\draw[ef flow] (b)--(c);
+\node[ef cell,text width=6cm,minimum height=1.62cm] (hit) at (1.18,-3.0) {
+\textbf{Hit: complete preflight}\\
+The \texttt{Get} and \texttt{Single} donors supply the expected rows. Use their results; omit the union only if equality is justified and still holds.};
+\node[ef plain,text width=6cm,minimum height=1.62cm] (miss) at (8.5,-3.0) {
+\textbf{Miss: ordinary access}\\
+A hidden or missing donor, changed key, or dirty constructor table fails the preflight. Run the ordinary RHS from its beginning.};
+\draw[ef flow] (c.south) -- ++(0,-0.33) -| (hit.north);
+\draw[ef flow] (c.south) -- ++(0,-0.33) -| (miss.north);
+\end{tikzpicture}
+\caption{Following a continuation. Run numbers and the anchor \((80646,2)\) are recorded on the Raytrace training edge. Boxes describe the guarded alternatives for this rule pair. Runs 1104--1106 follow the source schedule. The repaired anchor and donor references supply data; the Run 1107 activation supplies permission to use them. The hit arm checks table, visibility, complete canonical keys and required results before committing effects. Both arms rejoin the ordered commit stream.}
+\label{fig:boundary}
+\end{figure}

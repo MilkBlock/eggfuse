@@ -1,0 +1,21 @@
+\subsection{Unmodified upstream compatibility audit}
+
+We enumerate the 127 ordinary \code{.egg} inputs selected by the vendored CI benchmark, excluding its type-error and dedicated proof folders. Proof-testing variants and Rust API benchmarks remain separate. The external nightly input directory is absent. Each input retains its original bytes; no unsupported commands are stripped.
+
+\begin{table}[ht]\centering\small\begin{tabular}{lr}\toprule Outcome & Inputs\\\midrule
+
+Full compilation/Bake failed & 5\\
+
+Compilation timed out & 1\\
+
+Exact final-state contract passed & 26\\
+
+Capability preflight rejected & 95\\
+
+\bottomrule\end{tabular}\caption{Coverage of the unmodified upstream test inputs. Rejections and timeouts remain in the denominator.}\label{tab:upstream}\end{table}
+
+The scalar implementation covers the vendored integer, float, string, boolean and Unit sort primitives; differential tests also exercise overflow, failed guards, NaN, signed zero and float-key collisions. Identity-order primitives, extension sorts, custom Rust primitives and broader source-command support remain outside this extension. Many upstream tests are rejected by the flat source-control interface rather than their arithmetic.
+
+A pass requires successful source checks and an exact typed bijection of all original tables, scalar values, equality identities and visibility. Only compiler-generated tables are projected away. Unknown identities remain inconclusive. This final-state contract does not certify every unobserved Run boundary or proof generation. It applies no workload-specific algebraic or extraction-choice relaxation.
+
+We save three timing samples for supported executions, with native schedule execution, native CI-style parse/execute/serialize time and Cell inference in distinct columns. Cell compilation/Bake and setup are separate. The small tests primarily establish coverage; their timing ratios are not presented as robust throughput gains. The complete manifest, executable hashes, samples and reasons are in \code{benchmarks/upstream-suite/}.

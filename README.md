@@ -2,6 +2,8 @@
 
 This branch builds the Rust Cell compiler, offline Bake and standalone CPU executor in one Cargo workspace. The compiler uses the vendored egglog frontend for native analysis. The executor runs checked recipe IR, publishes at the original Run boundaries and exports a logical graph.
 
+[论文：EggFuse: Exploiting Locality in E-Graphs](paper/README.md) · [普通 primitive 与上游兼容性](benchmarks/upstream-suite/README.md) · [96 × 3 eggcc 重测](benchmarks/eggcc-suite/README.md)。Cell 模板、实例、Shared Entry、完成与发布构成执行架构；Iterative Bake 是其中的离线反馈环节。
+
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
 [完整测速与源 Run 选择验证](benchmarks/cell-publication-windows/README.md)：当前串行推理相对历史最快对照有收益；四线程尚未建立额外加速，未达到 2×。记录 Raytrace 历史 hoist 选择的边界证据、完整计时及验收限制。

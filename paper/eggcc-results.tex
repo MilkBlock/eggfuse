@@ -1,0 +1,39 @@
+\subsection{Current eggcc replay}
+
+The new replay uses the historical corpus of 96 workloads and three pass inputs, fixed common training, and a transferred donor. The standalone Cell implementation is based on revision \texttt{8450e627}; the native timing binary is built from the pristine \texttt{egglog-baseline} tag. Three fresh-process pairs alternate order for each input. Offline compilation/Bake and linking are recorded separately. The host is an Apple M3 Max with 48 GiB RAM; runtime and offline analysis each use one thread.
+
+The campaign completed 288 of 288 attempted pass inputs (288 expected).
+
+\begin{table}[ht]\centering\small
+
+\begin{tabular}{lrrrr}\toprule Input set & Native (s) & Cell (s) & Ratio of sums & Geometric mean\\\midrule
+
+Pass 1 & 30.152 & 10.884 & 2.770 & 2.678\\
+
+Pass 2 & 63.327 & 27.285 & 2.321 & 2.315\\
+
+Pass 3 & 46.856 & 15.620 & 3.000 & 2.430\\
+
+\midrule All passes & 140.335 & 53.789 & 2.609 & 2.453\\
+
+\bottomrule\end{tabular}
+
+\caption{Current captured-pass execution times: sums of per-input medians. Ratios compare these executions; they are not suite-wide certified compiler speedups.}\label{tab:current-suite}\end{table}
+
+Preparation totals 727.05 seconds. Native and Cell command-time sums are 159.385 and 102.089 seconds; Cell additionally writes its graph and report.
+
+As in the historical replay, native uses the default Rust allocator and Cell uses mimalloc. This is another implementation difference included in the aggregate timings. The Cell lane enables sparse storage, view ports and RSS measurement, with result-port repair and shared Entry publication. Repetitions must preserve its endpoint and ordered schedule digests. This proves repeatability, not equivalence to native egglog. The reviewed sum-bits choice contract passes separately; it is not extended to the other workloads. This replay does not execute the production extraction chain, and no suite-wide semantics-preserving acceleration is claimed.
+
+For \texttt{bril/core/sum-bits.bril} Pass 3, native whole-process peak RSS is 36.22 MiB and Cell peak RSS through inference is 157.14 MiB. These are explicitly different windows.
+
+For \texttt{raytrace/raytrace.rs} Pass 3, native whole-process peak RSS is 459.09 MiB and Cell peak RSS through inference is 1776.66 MiB. These are explicitly different windows.
+
+\begin{figure}[ht]\centering\begin{tikzpicture}
+
+\begin{axis}[width=0.87\linewidth,height=4cm,xlabel={Workload rank (three-pass totals)},ylabel={Native time / Cell time},axis lines=left,ymajorgrids,tick label style={font=\footnotesize},label style={font=\small}]
+
+\addplot[accent,thick,mark=*,mark size=0.75pt] table[x=rank,y=ratio]{current-workloads.dat};
+
+\end{axis}\end{tikzpicture}
+
+\caption{Current execution ratios for 96 complete three-pass workloads, sorted. The geometric mean is 2.453. Semantic scope is the same as Table~\ref{tab:current-suite}.}\label{fig:current-dist}\end{figure}

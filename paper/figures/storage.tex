@@ -1,0 +1,31 @@
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[ef diagram]
+\node[ef plain,text width=5.15cm,minimum height=2.65cm] (template) at (0,0) {
+\textbf{Shared template for rule 143}\\[3pt]
+\texttt{0: v3 = Get(v0,v1)}\\
+\texttt{1: v4 = Single(v3)}\\
+\texttt{2: v5 = SubTuple(v0,v1,1)}\\
+\texttt{3: union(v4,v5)}};
+\node[ef cell,text width=6.3cm,minimum height=2.65cm] (cell) at (7,0) {
+\textbf{One physical Cell instance \(c_A\)}\\[3pt]
+template ID; optional parent fact\\
+parameter slots, e.g.\ \(v_0=A,\ v_1=7,\ v_2=g\)\\
+fact state at op 2: visible, epoch, key hash\\
+optional shared decoded fields};
+\draw[ef ref] (cell.west) -- node[above,font=\scriptsize]{selects} (template.east);
+\node[ef key,text width=5.15cm] (idx) at (0,-2.82) {
+\textbf{Lookups into the same instance}\\
+fact hash bucket $\to$ candidate witnesses\\
+reverse use of \(A\) $\to$ affected witnesses};
+\node[ef cell,text width=6.3cm] (row) at (7,-2.82) {
+\textbf{Row exposed by \(w_A=(c_A,2)\)}\\
+\(\mathrm{SubTuple}(A,7,1)\mapsto u_A\)\\
+read operands from op 2 and slots;\\
+interpret \(v_5\) at its current representative};
+\draw[ef flow] (cell.south) -- node[right,font=\scriptsize]{decode / cached fields} (row.north);
+\draw[ef ref] (idx.east) -- node[above,font=\scriptsize]{\(w_A\)} (row.west);
+\end{tikzpicture}
+\caption{Storage for a newly created \texttt{SubTuple} fact. Dashed arrows denote references; the vertical arrow produces a logical row. \(c_A\) names an instance, 2 an instruction, and \(u_A\) an equality-class value. The instruction and slot numbers come from the recipe; \(A,7,g,u_A\) illustrate a binding. A template can be shared by many instances. A constructor hit at op 0 can designate a fact created in a different Cell. A learned Bake unit such as 48 names a composition of rule entries (Figure~\ref{fig:bake}).}
+\label{fig:storage}
+\end{figure}

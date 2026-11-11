@@ -1,0 +1,19 @@
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[ef diagram]
+\node[ef head,text width=3.25cm] at (0,0) {One source rule pair};
+\node[ef head,text width=4.85cm] at (4.75,0) {Native egglog};
+\node[ef head,text width=5.0cm] at (10.5,0) {EggFuse};
+\node[ef key] at (0,-1.12) {Producer 143\\obtains \texttt{Get(t,i)}};
+\node[ef plain] at (4.75,-1.12) {Store or find the canonical input/output row in the function table.};
+\node[ef cell] at (10.5,-1.12) {A constructor hit supplies its existing witness. A new fact can be named by (Cell ID, instruction).};
+\node[ef key] at (0,-2.87) {Repair after\\an equality changes};
+\node[ef plain] at (4.75,-2.87) {Rebuild affected table data using the union-find. The backend can use incremental or full table rebuild.};
+\node[ef cell] at (10.5,-2.87) {Follow reverse uses, rekey dirty rows and coalesce equal keys. Publish surviving receipts after repair.};
+\node[ef key] at (0,-4.62) {Consumer 137\\reads the same key};
+\node[ef plain] at (4.75,-4.62) {Match the scheduled LHS over table data. Its RHS can resolve \texttt{Get(t,i)} by key.};
+\node[ef cell] at (10.5,-4.62) {A checked entry may supply the RHS result by receipt. Ordinary matching and keyed access remain available.};
+\end{tikzpicture}
+\caption{Two physical execution paths for the motivating rules. Read each row across. Both systems maintain equality and support incremental queries. The native column describes the pinned baseline's function tables, rebuild and query machinery~\cite{nativeimpl}. The Cell column shows the additional producer-addressed handoff. The diagram illustrates mechanisms; the native/Cell membership difference in Section~\ref{sec:eval} limits equivalence claims.}
+\label{fig:path}
+\end{figure}

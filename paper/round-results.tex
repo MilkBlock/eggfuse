@@ -1,0 +1,53 @@
+\paragraph{Does the next replay run faster?}
+We rebuilt the single-thread Cell executor at \code{27f098a2} in ordinary release mode on the M3 Max. For each workload we held the input, seed blocks, compiler recipe, and executable fixed and replayed the successive copy-objective catalogs. Separate RHS-lookup specialization was disabled throughout. Each catalog had one warm-up followed by five fresh processes. We rotated the execution order within each block of five so that every catalog occupied every position once. All 60 processes, including warm-ups, reproduced the reference schedule digest and final graph digest for their workload. The archived training runs had independently compared the ordered RHS inputs at each round. Offline training time is outside the inference interval.
+
+\begin{table}[ht]
+\centering
+\caption{Growing a catalog over four Bake rounds. The copies-saved columns count origin-key slots whose copying was avoided in one replay. Times and process high-water RSS through inference are medians of the five measured processes per cell of the table.}
+\label{tab:rounds}
+\begin{tabular}{rr rrr rrr}
+\toprule
+& & \multicolumn{3}{c}{sum-bits} & \multicolumn{3}{c}{Raytrace}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+Round & Units & Copies saved & ms & MiB & Copies saved & s & MiB\\
+\midrule
+0 & 32 & 0     & 20.486 & 151.92 & 0       & 8.355 & 1,860.09\\
+1 & 40 & 1,146 & 20.621 & 152.12 & 115,246 & 8.085 & 1,868.09\\
+2 & 48 & 1,231 & 21.067 & 151.91 & 139,806 & 8.150 & 1,862.05\\
+3 & 56 & 1,592 & 20.259 & 152.00 & 172,960 & 7.970 & 1,856.59\\
+4 & 64 & 1,666 & 19.811 & 151.92 & 178,932 & 8.188 & 1,861.36\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Relative to round zero, the final catalog lowers median inference by 3.3\% on sum-bits (four of five paired blocks faster) and 2.0\% on Raytrace (five of five faster). Copies avoided increase at every round, whereas latency has intermediate reversals. On Raytrace, round three gives the lowest observed median. End-of-inference full Cell counts stay at 2,385 and 601,924 respectively in every replay. Peak RSS exhibits no progressive decline. Thus these rounds learn to bypass repeated execution work; larger savings in the live graph require reclaiming allocations on the strength of the learned representation, including its external-reader and repair obligations.
+
+
+\paragraph{Did the learner run out of candidates?}
+The five catalogs in Table~\ref{tab:rounds} consist of the seed and four growth rounds. Both workloads admitted the maximum eight units in every growth round and reached the 64-unit cap. The stop reason was the configured round limit. To probe this boundary we repeated sum-bits training with room for 160 units and 16 growth rounds. With the same depth limit of four, the first four batches matched exactly. The learner then admitted six more units and stopped at 70 after round five, with no further candidate satisfying the copy-objective policy. Raising the depth limit to eight in a separate training from the seed gave 75 units after round six and the same stop reason.
+
+The three terminal catalogs (64, 70 and 75 units) avoided 1,666, 1,702 and 1,746 origin-key slot copies respectively. In a separate timing matrix their median inference times were 20.951, 21.699 and 20.943~ms. We ran one warm-up per arm followed by all six permutations of arm order, using the same executable. Every training round matched the seed's ordered RHS, schedule and graph digests; all deployment samples matched the reference schedule and graph, ending with 2,385 full Cells. The deeper training therefore yields more countable reuse than the original catalog, with little difference in median latency on this input. The four-round Raytrace study leaves its saturation point open.
+
+\paragraph{How much of the live heap belongs to the library?}
+A diagnostic allocator counts requested bytes at allocation and subtracts them on free. After execution we sample the counter, drop the compiled seed and composition catalogs and their two parsed JSON fields, and sample it again. The difference is the library's exclusively reclaimable heap. Allocations with another owner stay charged to the remainder, as do other rules, indexes, cursors, graph data and executor state. The diagnostic discards the temporary input byte buffer after parsing. The graph stays alive and its export digest is checked after teardown. End-of-inference heap and process peak RSS have different sampling windows and allocation boundaries.
+
+\begin{table}[ht]
+\centering\small
+\caption{Live requested heap immediately after the last Run, measured in one separate diagnostic process per case and catalog. Library nodes are the seed and learned units. Library bytes are measured by teardown. Table~\ref{tab:rounds} reports peak RSS in the timed processes.}
+\label{tab:net-heap}
+\begin{tabular}{rrrrrrrr}
+\toprule
+& Library & \multicolumn{3}{c}{sum-bits} & \multicolumn{3}{c}{Raytrace}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+Round & nodes & Total MiB & Lib KiB & Net MiB & Total MiB & Lib KiB & Net MiB\\
+\midrule
+0 & 32 & 126.201 & 181.44 & 126.024 & 1,744.260 & 187.44 & 1,744.077 \\
+1 & 40 & 126.214 & 191.16 & 126.027 & 1,744.172 & 196.88 & 1,743.980 \\
+2 & 48 & 126.219 & 198.99 & 126.025 & 1,744.141 & 204.95 & 1,743.941 \\
+3 & 56 & 126.226 & 207.83 & 126.023 & 1,744.122 & 213.52 & 1,743.913 \\
+4 & 64 & 126.233 & 214.93 & 126.023 & 1,744.123 & 220.66 & 1,743.908 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The training registry contains one descriptor node per catalog unit in these five catalogs. Counting the two inventories together gives 653,695 to 653,727 entries on Raytrace (visible target constructors plus library nodes); removing the 32 to 64 library nodes recovers 653,663 target constructors throughout. For sum-bits the corresponding totals are 2,852 to 2,884, with 2,820 target constructors throughout. Library descriptors and constructor facts have different sizes. From seed to final round, the additional reclaimable library occupies about 33~KiB per workload. After subtracting the entire measured library, Raytrace's terminal heap changes by less than 0.2~MiB. Together with the invariant logical-node counts, this locates the observed reduction in physical records specifically in the offline snapshot experiment in Table~\ref{tab:packed-nodes}.

@@ -1,0 +1,27 @@
+On Raytrace, the first selected seed joins \texttt{TermBop} to input zero of \texttt{ExtractedExprCache} at 1,420 disjoint occurrences. At round two, 126 of these groups absorb another cache row using the same producer. The third member is a sibling consumer. In contrast, the most frequent seed, \texttt{TermGet} feeding \texttt{TCPair}, has 31,123 disjoint pairs. Both member outputs escape in every pair: the group replaces two flat records with one data record and one secondary port. Charging the definition leaves one more physical record and 16 more bytes than leaving those pairs flat. This explains why frequency alone would choose a different seed.
+
+\begin{table}[ht]
+\centering\small
+\caption{Greedy record-oriented Bake, selected checkpoints. Each round adds one definition and replaces two data records per new group. Exposed outputs include the primary output provided by the group. Extra counts the additional port records retained. Gross bytes include all flat and grouped data, ports, source positions, dictionaries, anchors and the cumulative library. The ancillary ledger covers every round.}
+\label{tab:record-bake}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Case & Round & New groups & Data records & Exposed & Extra & Library B & Gross B\\
+\midrule
+sum-bits & 0 & 0 & 4,045 & 0 & 0 & 0 & 207,203 \\
+sum-bits & 1 & 25 & 4,020 & 25 & 0 & 15 & 207,118 \\
+sum-bits & 2 & 20 & 4,000 & 45 & 0 & 31 & 207,054 \\
+sum-bits & 6 & 8 & 3,955 & 70 & 0 & 89 & 206,932 \\
+\midrule
+Raytrace & 0 & 0 & 1,034,514 & 0 & 0 & 0 & 50,958,929 \\
+Raytrace & 1 & 1,420 & 1,033,094 & 1,420 & 0 & 15 & 50,953,264 \\
+Raytrace & 2 & 126 & 1,032,968 & 1,420 & 0 & 28 & 50,952,773 \\
+Raytrace & 8 & 110 & 1,030,959 & 2,789 & 0 & 109 & 50,944,818 \\
+Raytrace & 16 & 1,319 & 1,024,192 & 4,108 & 0 & 220 & 50,917,861 \\
+Raytrace & 32 & 18 & 1,018,872 & 6,336 & 0 & 450 & 50,896,811 \\
+Raytrace & 64 & 65 & 1,008,581 & 7,659 & 0 & 925 & 50,856,122 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Sum-bits stops at round six when no candidate satisfies admission. Its 2,895 constructor records become 2,805 constructor data records plus six definitions, a net reduction of 84 (2.90\%). Raytrace reaches the 64-round budget with a profitable extension still admitted in the last round. Its 658,670 constructor records become 632,737 constructor data records plus 64 definitions, saving 25,869 (3.93\%). The selected covers happen to need no secondary port records: final groups provide 70 and 7,659 primary outputs respectively. Counting \emph{all} data, port and definition records, the totals fall from 4,045 to 3,961 on sum-bits and from 1,034,514 to 1,008,645 on Raytrace. Raytrace saves 2.50\% of records and 102,807 bytes (0.20\% of the complete stream). The byte saving is smaller because row positions and external value IDs remain explicit. Sum-bits saves 271 bytes, less than the supplied triple in Table~\ref{tab:packed-nodes}; the learned trees bind one edge per extension and use a different external-port policy. All seven sum-bits and 65 Raytrace representations, including round zero, recover their original graph byte for byte. These are in-snapshot compression measurements; the dynamic \run{} executor and its RSS are measured separately.
