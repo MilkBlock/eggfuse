@@ -1,0 +1,189 @@
+{
+  "scope": "execution-time comparison; suite-wide native semantics not certified",
+  "attempted": 288,
+  "complete": 288,
+  "expected": 288,
+  "failures": [],
+  "phases": {
+    "1": {
+      "inputs": 96,
+      "native_s": 30.151973203,
+      "cell_s": 10.88439133,
+      "execution_time_ratio": 2.770202971285488,
+      "geomean": 2.6783605913189596,
+      "prepare_s": 236.61798942103633,
+      "native_cli_s": 36.59019208690734,
+      "cell_cli_s": 24.19060261879349
+    },
+    "2": {
+      "inputs": 96,
+      "native_s": 63.327193413,
+      "cell_s": 27.284530504,
+      "execution_time_ratio": 2.3209926006868997,
+      "geomean": 2.3152126767237537,
+      "prepare_s": 226.34514096504427,
+      "native_cli_s": 69.66226241816184,
+      "cell_cli_s": 45.55730037702597
+    },
+    "3": {
+      "inputs": 96,
+      "native_s": 46.856128002999995,
+      "cell_s": 15.620048535,
+      "execution_time_ratio": 2.999742791964378,
+      "geomean": 2.430086802433928,
+      "prepare_s": 264.0834257922834,
+      "native_cli_s": 53.132684004085604,
+      "cell_cli_s": 32.3410074620333
+    }
+  },
+  "three_pass_cases": 96,
+  "three_pass_ratios": {
+    "min": 1.9852900643050242,
+    "median": 2.4363662916760913,
+    "max": 3.621299529076409,
+    "geomean": 2.452932081478448,
+    "above_one": 96
+  },
+  "selected": [
+    {
+      "case": "bril/core/sum-bits.bril",
+      "directory": "032-sum-bits",
+      "pass_number": 3,
+      "flat_sha256": "29b8396e56c0a08bc11ca9e5d52afdc25c138e5e4731d2780484bb004b3686d1",
+      "samples": [
+        {
+          "i": 1,
+          "order": [
+            "cell",
+            "native"
+          ],
+          "cell_ms": 15.027333,
+          "cell_rss_through_inference_bytes": 164773888,
+          "cell_cli_ms": 125.49045801279135,
+          "cell_process_rss_bytes": 194772992,
+          "native_ms": 40.043708,
+          "native_cli_ms": 101.16229098639451,
+          "native_process_rss_bytes": 38010880
+        },
+        {
+          "i": 2,
+          "order": [
+            "native",
+            "cell"
+          ],
+          "native_ms": 40.152417,
+          "native_cli_ms": 99.49245798634365,
+          "native_process_rss_bytes": 37978112,
+          "cell_ms": 14.98375,
+          "cell_rss_through_inference_bytes": 164773888,
+          "cell_cli_ms": 118.10575000708923,
+          "cell_process_rss_bytes": 194772992
+        },
+        {
+          "i": 3,
+          "order": [
+            "cell",
+            "native"
+          ],
+          "cell_ms": 14.715375,
+          "cell_rss_through_inference_bytes": 164773888,
+          "cell_cli_ms": 118.87808400206268,
+          "cell_process_rss_bytes": 194772992,
+          "native_ms": 41.37825,
+          "native_cli_ms": 102.95162501279265,
+          "native_process_rss_bytes": 37289984
+        }
+      ],
+      "semantic_status": "not_certified_against_native",
+      "compile_bake_s": 2.2373299160099123,
+      "link_s": 0.3719534580013715,
+      "prepare_s": 2.6092833740112837,
+      "units": 64,
+      "program_sha256": "7c68559fd9fc761a46ee30f3d0f2c80a1915c121ec188ec78bef8cce6cac0c24",
+      "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "schedule_sha256": "fb78cbb8fa68d21e111064d937c815eb33478b7adfb521829509b471f266dae8",
+      "runs": 1428,
+      "bindings": 7265,
+      "status": "complete",
+      "native_ms": 40.152417,
+      "cell_ms": 14.98375,
+      "native_cli_ms": 101.16229098639451,
+      "cell_cli_ms": 118.87808400206268,
+      "native_process_rss_bytes": 37978112,
+      "cell_process_rss_bytes": 194772992,
+      "cell_rss_through_inference_bytes": 164773888,
+      "execution_time_ratio": 2.679730841745224
+    },
+    {
+      "case": "raytrace/raytrace.rs",
+      "directory": "095-raytrace",
+      "pass_number": 3,
+      "flat_sha256": "c727cdf724b020ae585c4051fda36b66576c1ce4252a4d9d59fbb7522d0c7d4f",
+      "samples": [
+        {
+          "i": 1,
+          "order": [
+            "native",
+            "cell"
+          ],
+          "native_ms": 23190.175791,
+          "native_cli_ms": 23341.74995799549,
+          "native_process_rss_bytes": 482181120,
+          "cell_ms": 5678.479708,
+          "cell_rss_through_inference_bytes": 1857126400,
+          "cell_cli_ms": 8176.814250007737,
+          "cell_process_rss_bytes": 1951547392
+        },
+        {
+          "i": 2,
+          "order": [
+            "cell",
+            "native"
+          ],
+          "cell_ms": 5779.705334,
+          "cell_rss_through_inference_bytes": 1864286208,
+          "cell_cli_ms": 7926.808209012961,
+          "cell_process_rss_bytes": 1960148992,
+          "native_ms": 23070.989959,
+          "native_cli_ms": 23230.210250010714,
+          "native_process_rss_bytes": 481394688
+        },
+        {
+          "i": 3,
+          "order": [
+            "native",
+            "cell"
+          ],
+          "native_ms": 23075.466042,
+          "native_cli_ms": 23225.35183301079,
+          "native_process_rss_bytes": 475398144,
+          "cell_ms": 5723.793,
+          "cell_rss_through_inference_bytes": 1862959104,
+          "cell_cli_ms": 8047.700417024316,
+          "cell_process_rss_bytes": 1958723584
+        }
+      ],
+      "semantic_status": "not_certified_against_native",
+      "compile_bake_s": 4.289480042003561,
+      "link_s": 1.319342750008218,
+      "prepare_s": 5.608822792011779,
+      "units": 64,
+      "program_sha256": "8a74766e442d60a519dcbedbdb63fa633c85feb471b9c0fcfc6bc9c756a8f0d7",
+      "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "3138ad378062d30c0fb064774615049b9daa6d5d6317ce6c0cbbc4ef6d7db1e5",
+      "runs": 16883,
+      "bindings": 3447491,
+      "status": "complete",
+      "native_ms": 23075.466042,
+      "cell_ms": 5723.793,
+      "native_cli_ms": 23230.210250010714,
+      "cell_cli_ms": 8047.700417024316,
+      "native_process_rss_bytes": 481394688,
+      "cell_process_rss_bytes": 1958723584,
+      "cell_rss_through_inference_bytes": 1862959104,
+      "execution_time_ratio": 4.0314990500180565
+    }
+  ]
+}

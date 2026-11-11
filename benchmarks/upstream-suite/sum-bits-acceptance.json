@@ -1,0 +1,317 @@
+{
+  "schema": "eggfuse-choice-semantic-check/v1",
+  "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+  "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+  "comparisons": {
+    "native_source_vs_native_legacy": {
+      "status": "pass",
+      "proof": {
+        "core": {
+          "rows": 2374,
+          "eq_values": 1583,
+          "exact_bijection": true,
+          "tables": 239,
+          "includes_Expr_equality_and_visibility": true
+        },
+        "candidate_inventory_modulo_Add_Mul": {
+          "normalized_candidates": 185,
+          "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+          "left_raw_candidates": 192,
+          "right_raw_candidates": 192,
+          "equal_sets": true
+        },
+        "selected_expressions": 98,
+        "all_selected_candidates_are_current_minima": true,
+        "selected_cost_differences": 0,
+        "selected_term_differences": 10,
+        "all_explained_by_existing_Add_Mul_commutativity": true,
+        "first_term_difference": [
+          {
+            "left_expr": {
+              "eq": "Value(1819)",
+              "sort": "Expr"
+            },
+            "right_expr": {
+              "eq": "Value(1817)",
+              "sort": "Expr"
+            },
+            "left_term_and_cost": [
+              "TCPair",
+              [
+                "TermBop",
+                [
+                  "Mul"
+                ],
+                [
+                  "TermBop",
+                  [
+                    "Div"
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    1
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    2
+                  ]
+                ],
+                [
+                  "TermConst",
+                  [
+                    "Int",
+                    2
+                  ]
+                ]
+              ],
+              5
+            ],
+            "right_term_and_cost": [
+              "TCPair",
+              [
+                "TermBop",
+                [
+                  "Mul"
+                ],
+                [
+                  "TermConst",
+                  [
+                    "Int",
+                    2
+                  ]
+                ],
+                [
+                  "TermBop",
+                  [
+                    "Div"
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    1
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    2
+                  ]
+                ]
+              ],
+              5
+            ]
+          }
+        ],
+        "hoist_choices": 1,
+        "hoist_differences": [],
+        "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+      }
+    },
+    "native_legacy_vs_cpu_legacy": {
+      "status": "pass",
+      "proof": {
+        "core": {
+          "rows": 2374,
+          "eq_values": 1583,
+          "exact_bijection": true,
+          "tables": 239,
+          "includes_Expr_equality_and_visibility": true
+        },
+        "candidate_inventory_modulo_Add_Mul": {
+          "normalized_candidates": 185,
+          "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+          "left_raw_candidates": 192,
+          "right_raw_candidates": 192,
+          "equal_sets": true
+        },
+        "selected_expressions": 98,
+        "all_selected_candidates_are_current_minima": true,
+        "selected_cost_differences": 0,
+        "selected_term_differences": 10,
+        "all_explained_by_existing_Add_Mul_commutativity": true,
+        "first_term_difference": [
+          {
+            "left_expr": {
+              "eq": "Value(1817)",
+              "sort": "Expr"
+            },
+            "right_expr": {
+              "eq": "Cell(18653042966541)",
+              "sort": "Expr"
+            },
+            "left_term_and_cost": [
+              "TCPair",
+              [
+                "TermBop",
+                [
+                  "Mul"
+                ],
+                [
+                  "TermConst",
+                  [
+                    "Int",
+                    2
+                  ]
+                ],
+                [
+                  "TermBop",
+                  [
+                    "Div"
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    1
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    2
+                  ]
+                ]
+              ],
+              5
+            ],
+            "right_term_and_cost": [
+              "TCPair",
+              [
+                "TermBop",
+                [
+                  "Mul"
+                ],
+                [
+                  "TermBop",
+                  [
+                    "Div"
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    1
+                  ],
+                  [
+                    "TermGet",
+                    [
+                      "TermArg"
+                    ],
+                    2
+                  ]
+                ],
+                [
+                  "TermConst",
+                  [
+                    "Int",
+                    2
+                  ]
+                ]
+              ],
+              5
+            ]
+          }
+        ],
+        "hoist_choices": 1,
+        "hoist_differences": [
+          {
+            "left": {
+              "expr": {
+                "eq": "Value(163)",
+                "sort": "Expr"
+              },
+              "size": 1,
+              "candidates": 4
+            },
+            "right": {
+              "expr": {
+                "eq": "Cell(554050781269)",
+                "sort": "Expr"
+              },
+              "size": 1,
+              "candidates": 4
+            }
+          }
+        ],
+        "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+      }
+    },
+    "native_legacy_vs_native_values": {
+      "status": "pass",
+      "proof": {
+        "core": {
+          "rows": 2374,
+          "eq_values": 1583,
+          "exact_bijection": true,
+          "tables": 239,
+          "includes_Expr_equality_and_visibility": true
+        },
+        "candidate_inventory_modulo_Add_Mul": {
+          "normalized_candidates": 185,
+          "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+          "left_raw_candidates": 192,
+          "right_raw_candidates": 192,
+          "equal_sets": true
+        },
+        "selected_expressions": 98,
+        "all_selected_candidates_are_current_minima": true,
+        "selected_cost_differences": 0,
+        "selected_term_differences": 0,
+        "all_explained_by_existing_Add_Mul_commutativity": true,
+        "first_term_difference": [],
+        "hoist_choices": 1,
+        "hoist_differences": [],
+        "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+      }
+    },
+    "cpu_legacy_vs_cpu_values": {
+      "status": "pass",
+      "proof": {
+        "core": {
+          "rows": 2374,
+          "eq_values": 1583,
+          "exact_bijection": true,
+          "tables": 239,
+          "includes_Expr_equality_and_visibility": true
+        },
+        "candidate_inventory_modulo_Add_Mul": {
+          "normalized_candidates": 185,
+          "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+          "left_raw_candidates": 192,
+          "right_raw_candidates": 192,
+          "equal_sets": true
+        },
+        "selected_expressions": 98,
+        "all_selected_candidates_are_current_minima": true,
+        "selected_cost_differences": 0,
+        "selected_term_differences": 0,
+        "all_explained_by_existing_Add_Mul_commutativity": true,
+        "first_term_difference": [],
+        "hoist_choices": 1,
+        "hoist_differences": [],
+        "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+      }
+    }
+  },
+  "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+  "input_sha256": {
+    "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+    "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+    "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+    "cpu_legacy": "0f2e40232d0729597837e62956923795bd5926708872b5b8f69144e12f04e5b1",
+    "cpu_values": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "status": "pass"
+}

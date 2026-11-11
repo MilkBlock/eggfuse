@@ -1,0 +1,9 @@
+{
+  "artifact_revision": "b89129cc",
+  "manuscript_revision": "929aa61c",
+  "inputs": {
+    "captures.tar.gz": "83b5158a4b7fb8c07fa496ed04311078dc20b5bb603025d9683a9f8be397ac5c",
+    "donor.json.gz": "1770d490a2ba598c7ab97891c94addb6a59720a3b3397df2b949986edd199b5f",
+    "transfer.rs": "371ff688a33f9f9c93cee82236412934be36e9de90eb85d87587ef39fdc33438"
+  }
+}

@@ -1,0 +1,273 @@
+source,status,source_sha256,reason,cell_median_ms,native_schedule_seconds
+tests/before-proofs.egg,unsupported,31111e4964a37ef216cf30292707e88759c9ddabed65968ec2bcf573e5613776,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/bitwise.egg,unsupported,b742598e87b3be10f9ba702a0dcd53012ec61b870bc07ae6e7bb8b2c33cff987,"Error: ""missing schedule""
+",,[]
+tests/bool.egg,unsupported,87a792a6c0a7d7334cb18a74765f6cf778a01a836ddbe8b8674f46f3e9232db7,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/calc.egg,unsupported,3ff079c014166b73d74c3098c9c71db55512f70786d64481862775bc76cf09ae,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/combined-nested.egg,unsupported,d03845f929e851501770f1fb3806466fc9f866dc4b02c3ed12fa1220fe775187,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/complex-merge-func.egg,unsupported,d61a7f5b59b6511fa5a31110045c419abdb66ffde0e436f9737ede9fac6f9bc7,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/complex-merge-prim.egg,unsupported,fd174d3537c6ab97f7290cbd7de6d34640d6765527fe947a27ef20281223ec21,"Error: ""missing schedule""
+",,[]
+tests/container-fail.egg,unsupported,e3a3f5af1e6b65c0b98f020f504fbfe4edb70a3b9809bb78bc036a142c90fdc4,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/container-rebuild.egg,unsupported,986b09e45501c602e03c06157a8c1d6d5181f325d48cc9972f3d4983ac21ea36,"Error: ""missing schedule""
+",,[]
+tests/cykjson.egg,unsupported,21929e8395f9504f205b0f5c29625360a933561cd91525e4e93c3a845c252b69,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/delete.egg,unsupported,19b58cd090d16b2e74b23a2ceb8c27ada910896eeaadad4e95fd6ad20c007f32,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/eggcc-2mm.egg,compile_timeout,ce3913074600ae3037c1af4acdc4dd9f749a2c212c9fa4d650371b2f93c50ab3,"Cell compiler: native Bake
+[trace] consumed 2758 raw events; raw buffers drained; 2695 producer certificates
+",,[]
+tests/eggcc-extraction.egg,unsupported,2903ccf24673b1a80389efbae26c2164a12d3387c902a5893133665cc061cdc0,"Error: Custom { kind: Other, error: ""unsupported value"" }
+",,[]
+tests/extract-vec-bench.egg,unsupported,8597fa40b15f694d4f2613af8d6e411c2ceae6f3ef540342b8fca427d4027b18,"Error: ""missing schedule""
+",,[]
+tests/f64.egg,unsupported,5a99cdcd27ccb2d60c9fbc1da2ba71fa15803b23c2ad9943b4bdf16ffb484cf8,"Error: ""missing schedule""
+",,[]
+tests/factoring-multisets.egg,unsupported,62b7de71012a5465d5908408e02371c2ec518bc67cdb5677d77bc43fb6611a07,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/fail_wrong_assertion.egg,unsupported,4c958f39480b8d0c1df5a9d0c46848186696888b149c1c35e4b47e7303dbe1ac,"Error: ""missing schedule""
+",,[]
+tests/fibonacci-demand.egg,unsupported,03950a0421b8d40a3e6143af66aa35f4e4ed53acc53fe77d36a7602ae23f055f,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/filter-or-bool-neq.egg,unsupported,32f7b5aad8bd485663ed59f3ceedb90deddb1cfb31bc36976f7343a22a3884fd,"Error: ""missing schedule""
+",,[]
+tests/hardboiled_conv1d_128.egg,unsupported,6d5801a8ac2ccac250d4aea0e37d36f07798d3d3d9aa9285bf2c96d290e7ae48,"Error: ""unsupported primitive capabilities before execution: vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\"")] -> VecExpr""
+",,[]
+tests/hardboiled_conv1d_32.egg,unsupported,23b3cf69e408b9e081ef33ad625747d3084b0bf0f89f4c107a2f796dcd293d48,"Error: ""unsupported primitive capabilities before execution: vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\""), String(\""Expr\"")] -> VecExpr; vec-of [String(\""Expr\"")] -> VecExpr""
+",,[]
+tests/hidden_print_size.egg,unsupported,c15a08f800f0f9de48de8b6bb84cc5b506ee4d9f80a023eba55f28d55ea69c34,"Error: ""missing schedule""
+",,[]
+tests/i64.egg,unsupported,3ec6256351031cc9f325dffb0226bd3c329ced41d0e2560c40c39e3bd323fb36,"Error: ""missing schedule""
+",,[]
+tests/include.egg,unsupported,2f17699179396239b7d2d7399f32b0880e15d452ad4e1712b9efddf4f9875df7,"Error: ""missing schedule""
+",,[]
+tests/integer_math.egg,pass,35028bf4deabdb56a0fa325f223b69451060902d3cebcbc2e7c04d01ec8dcca8,,2.776333,"[0.000720667, 0.000650041, 0.000642709]"
+tests/internal_let.egg,unsupported,bd2074dea6fa6cbeda40ebbdf8e7cac2952682083fb44eafff09bf371c6813f4,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/intersection.egg,unsupported,6b633776c99f60cd03acb5de3aa02f1b3ad59515b101e6a9280f1461de1db2a0,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/interval.egg,unsupported,fdc0d15d58087f7d2c3ee1cf4fbacac95da20e1081cc00622ef60b49a4f81508,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/looking_up_global.egg,unsupported,ab64ea1347d0ff2c55b64c7e457a16c734720943e00df5e6cbc80ab8ac7f9b56,"Error: ""missing schedule""
+",,[]
+tests/looking_up_nonconstructor_in_rewrite_good.egg,pass,601e54f6d918f759d4953c92b7d846ae7f8552e7ea37c08161106d5e3fdde50e,,0.001084,"[2.875e-06, 2.042e-06, 1.916e-06]"
+tests/luminal-llama.egg,pass,4373641f7823e23506a0a9cf15c27398ef356ba995304724faa36d26db9cdacf,,24.293542000000002,"[0.023594875, 0.023921958, 0.025362333]"
+tests/map.egg,unsupported,b5b556e25a8460c577922a166de1ae9b41df7b46e582cbe03b8baf8db5e7c25c,"Error: ""missing schedule""
+",,[]
+tests/math-microbenchmark.egg,unsupported,aaa8942131b4db57e76710486718790e1d7f2cb9288aeb702c0c17019439cf16,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/merge-during-rebuild.egg,pass,2de4628f9056ed971cd069d9c14da9507a3d01888605cc486e4b351f86b435e2,,0.005582999999999999,"[2.7e-05, 2.9792e-05, 2.7083e-05]"
+tests/merge-saturates.egg,pass,cfe748cfe87e042628cfc0d91acaf46ddc84bc6876d808b6d1a4f42b4fc8fae1,,0.003292,"[5.375e-06, 5.25e-06, 5.875e-06]"
+tests/merge_read.egg,unsupported,b0bfcd61a4927dd1add6169d4eb4056eb85b9dd837222f445a58338c5b772629,"Error: ""missing schedule""
+",,[]
+tests/name-resolution.egg,pass,b48190b94c4368b520498e34ad6f9d5ae0984be08d2aeb818392d4840d55f97a,,0.012792000000000001,"[1.8416e-05, 1.2708e-05, 1.1833e-05]"
+tests/pair.egg,unsupported,a1ec855c8ea84451e9638753197670687bbbe06d4cb3d4b9f2f125a5d98ac1f9,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/pass-typecheck/shadow-local-before-global.egg,unsupported,b29e541762a430aa47a786addfad889f979091112732ae5a675664b08e1629bd,"Error: ""missing schedule""
+",,[]
+tests/primitives.egg,unsupported,27507a6c132275350ac61e58f01c034ad63714ca713c7d5237353779778df6ec,"Error: ""missing schedule""
+",,[]
+tests/print-function.egg,unsupported,020d0d3ed9660eb405f85f54833aaa7b04bf9f972c32cda12292ca1c13ba9e47,"Error: ""missing schedule""
+",,[]
+tests/proof-extract-cost.egg,unsupported,6ebb3200fc303824afbe379ba0435814f2e2624e39a58494154eb52ace6f733c,"Error: ""missing schedule""
+",,[]
+tests/python_array_optimize.egg,unsupported,b089895e0bf54d5da71e8e55172c2e7f4579960edab4d565c653bdbddcbf8af5,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/rat-pow-eval.egg,unsupported,b7d6cd74822c0cba3dedb8f02c3275cf5038cf424817e635eab8756abd63c8e2,"Error: ""missing schedule""
+",,[]
+tests/rectangle.egg,unsupported,9f12736adaf9211f112186b68e393933b0a8acc7a43179077ca8950089437f97,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/relation-query-allowed.egg,unsupported,cc55ba8cd66212ed3124307545eac74e4af6aed340d02b4939975fd6650800cb,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/repro-665-set-union.egg,unsupported,8bbe4c7dd1a9e386d575f2f7c2e69ed4ed261a12315e3286ec3f97a2e9b78060,"Error: Custom { kind: Other, error: ""device Set currently requires equality-sort elements"" }
+",,[]
+tests/repro-738-fn-sort.egg,unsupported,73b601c190cb76588d8e376c031842e705cee41250eaf2776ef4d3471a20b76a,"Error: ""missing schedule""
+",,[]
+tests/repro-define.egg,unsupported,53fc445d14a52edb9a174f68b8235de1c5db901ff4af7856a84c9bc324c069ec,"Error: ""missing schedule""
+",,[]
+tests/repro-desugar-143.egg,unsupported,e5f770ebfbbed6c11b2607cb0df6844cfc35b1ef4e26e7fdd6e7bc3e871bda64,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/repro-empty-query.egg,pass,a62f2fd1b95fe95df4d9f84340edb8208edd6465036d37ffdc3ced4a6633a244,,0.004209,"[1.8208e-05, 1.7125e-05, 1.3834e-05]"
+tests/repro-equal-constant.egg,pass,22065b4d29cbf3e970b8c00dee0bbdc35be95064120174b12168334f2a7c108a,,0.003167,"[2.0958e-05, 3.2041e-05, 2.1458e-05]"
+tests/repro-equal-constant2.egg,pass,e7ea91662a65a8b14cbcb45dc1d4623cc1d2b3122d26d7ac715b79c298c38acc,,0.005875,"[1.7916e-05, 1.7667e-05, 1.3958e-05]"
+tests/repro-filter-bug.egg,unsupported,9688f9b192e7d4ab64a4cb13f5c9c8d5f76b562c2f4fcba7d79f62a4c883656e,"Error: ""missing schedule""
+",,[]
+tests/repro-new-backend-delete.egg,pass,f060e4a16141f9ddef81a7868ec832b22195638253ffcb0f913eaa4d7ac8843a,,0.004041,"[5.875e-06, 4.416e-06, 5.458e-06]"
+tests/repro-new-backend-prims.egg,unsupported,98a8434f2121523a7b178da83cd9ad13047d991259d26b6a9d18b4e57a26cc0a,"Error: ""missing schedule""
+",,[]
+tests/repro-new-backend-python-vec.egg,unsupported,7dbbc333048cf546ada7fb1b4fa0158242b115e8b0e6001f5606753e4148b62d,"Error: Custom { kind: Other, error: ""unsupported value"" }
+",,[]
+tests/repro-noteqbug.egg,unsupported,f6be3e50dc783b76ac4617848f7b396a383cdec313b973e6d417ec9bc99f9260,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/repro-primitive-query.egg,pass,1b9ce1adb708977adfef36e50bae02bb57ef4abeb1a8613ecbf551e45c122047,,0.005208,"[1.1167e-05, 5.292e-06, 6.208e-06]"
+tests/repro-querybug.egg,pass,df638943ab166f4e739689cb095383c09240768d79fc3f5b48baf9ff47cc1a37,,0.008541,"[1.0083e-05, 8.375e-06, 9.75e-06]"
+tests/repro-querybug2.egg,pass,620b93dc6f97856e42d9ad97f9fadeaa2eab17557aa3b950c2eb146a89a9fb2e,,0.007166,"[2.7083e-05, 2.6458e-05, 2.0416e-05]"
+tests/repro-querybug3.egg,pass,f5dcb31c9fcc3fe3ee1ec798509219f9d6d8c76eff10d5bcc48e4a8adc9f292c,,0.015125,"[1.9833e-05, 1.9167e-05, 1.6041e-05]"
+tests/repro-querybug4.egg,pass,d11399a3a425fbe39e6f09675f0623cef7d9df3cf63764fcf97c7b74dd607bea,,0.008083,"[2.8375e-05, 3.6667e-05, 2.3541e-05]"
+tests/repro-should-saturate.egg,pass,660a13377ef477e0ec79913057acfe3f77dab7e4153a4bcbb963199141da280d,,0.003959,"[6.459e-06, 6.542e-06, 4.667e-06]"
+tests/repro-silly-panic.egg,pass,1a106cbeedc9755a20c1dced88cffe2354ecea9ab769b368f2969f4cd275df5e,,0.007,"[1.2708e-05, 1.2709e-05, 9.917e-06]"
+tests/repro-small-rebuild-fail-term-encoding.egg,unsupported,605279357ed6bc5d89d1740f3b768e79e4342f747e5465ac67942a6a537a5df1,"Error: ""missing schedule""
+",,[]
+tests/repro-typecheck-term-encoding.egg,unsupported,8cdc5cd2596e89a8caeeb2ad5bb9ea65294a3d4771aa33c8964b43027b551558,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/repro-typechecking-schedule.egg,pass,769bad109ff70cffb4d211a1f7aff4eec0e3997d5b2332e2c5d91f34a471193d,,0.001167,"[1.4542e-05, 1.0375e-05, 1.325e-05]"
+tests/repro-unsound-htutorial.egg,unsupported,a9ad718a5dbdd13689ad15719010e042bfbeccf1d6675fa151ff434d89c97f68,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/repro-unsound.egg,compile_failed,e83cf452d63026f7469b4c8b75b194ce9019cdeab83dfcc59d69d573aa64b069,"Cell compiler: native Bake
+[trace] consumed 33 raw events; raw buffers drained; 14 producer certificates
+[trace] consumed 50 raw events; raw buffers drained; 23 producer certificates
+[trace] consumed 82 raw events; raw buffers drained; 41 producer certificates
+[trace] consumed 170 raw events; raw buffers drained; 65 producer certificates
+[trace] consumed 270 raw events; raw buffers drained; 110 producer certificates
+[trace] consumed 488 raw events; raw buffers drained; 205 producer certificates
+[trace] consumed 1000 raw events; raw buffers drained; 415 producer certificates
+[trace] consumed 3827 raw events; raw buffers drained; 1359 producer certificates
+[trace] consumed 15344 raw events; raw buffers drained; 4684 producer certificates
+[trace] consumed 402148 raw events; raw buffers drained; 82014 producer certificates
+[trace] consumed 0 raw events; raw buffers drained; 82014 producer certificates
+Error: ""Bake environment error: in 18:34-40 of source_sk.egg: $r-zero\nunbound symbol $r-zero""
+Error: ""native Bake failed (exit status: 1)""
+",,[]
+tests/repro-vec-unequal.egg,unsupported,305d97f2ddfea190537560f32f15bf94be7138561d4ed0448916c153260082f0,"Error: ""missing schedule""
+",,[]
+tests/set_sort_function.egg,unsupported,de54bc9e87c17329e24adfbadfb0d3f20bb83638753eda890b23c1c202513a7f,"Error: ""missing schedule""
+",,[]
+tests/stratified.egg,unsupported,8851870489d209e59369c328bca848535d350b9afef884ba1e5af902f95fa9bb,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/stresstest_large_expr.egg,unsupported,daa8888b1a48f024743f0df75cb1493d06056493bc4b8e33c757f5a0ce3f470c,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/string.egg,unsupported,3825ea62db8eb33285cb34fc557c2652af282287f4f84f79dacf7774fea1aca7,"Error: ""missing schedule""
+",,[]
+tests/string_quotes.egg,unsupported,8fbb67a06814bf5e6849ab71c61b4e0112527d5807cb9c54bd13413ef4bb34d2,"Error: ""missing schedule""
+",,[]
+tests/subsume-relation.egg,unsupported,8da7a69c4e0c0c27cf61ed56631360f6dca9e2217e0d74e617e70b33c70c3d8c,"Error: ""missing schedule""
+",,[]
+tests/taylor51.egg,unsupported,6b5f5c461f0ae9dfb6a44995473ccc37ff7c98bac5e64433e13651fb0de56964,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/test-combined-steps.egg,unsupported,47cea019586d61f1fed04559381844a042641e8b722f1cffcb88761254b24e52,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/test-combined.egg,pass,3f41da4f15e07ebdce411f1ef164aaa68c106edb921c4bb8808ce32d3940be88,,0.022875,"[8.2625e-05, 0.0001605, 0.000159791]"
+tests/tricky-type-checking.egg,unsupported,43b77fe73f4f33b24aa0092251ee68331f8bf1f2b4d8e2cd4caaecca9c0d81b7,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/type-constraints-tests.egg,unsupported,6b6ea7ace3973c7942c68d97ee5acb36db3a3397871796e52b9dc6da60cb0efa,"Error: ""missing schedule""
+",,[]
+tests/typed_primitive_unstable_app.egg,unsupported,06274cf95b1f2734961309c3211971536bb1926c93c62d301c3b2e85312039ca,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/uf-extraction.egg,unsupported,243e2b8d1384c1c212ca1ac75ad9f097cac7d0893c07f0a4c9dc4ee5a7fe8c55,"Error: ""missing schedule""
+",,[]
+tests/until.egg,compile_failed,f01699caee576bd116da1baa4ed0909aaa79a13928ae6d4e0ca471b7cc3a4479,"Error: ""CPU compiler requires a self-contained flat program with supported rewrites""
+",,[]
+tests/use-at-in-string.egg,unsupported,1d5873e857ef05b7ce1c9cb5a753b889f94d4ece47d443ddeda7c3d6a9b23185,"Error: ""missing schedule""
+",,[]
+tests/vec.egg,unsupported,b4dae26adeccaca0e36a617f6c4f50f4fb29bf4626cd9bfaaabedfe6e5d06716,"Error: ""missing schedule""
+",,[]
+tests/web-demo/antiunify.egg,unsupported,e3c3ac21610be638c1d040fe6ee65fa1a699e4f704f91b8e4e4212c515841897,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/array.egg,unsupported,4150210bf45f6c39b59131c99b1b4782a7165c32c7e4dd17e40f80bc970c1bf4,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/bdd.egg,unsupported,e351f16a3f629be5fae7aff7dc991e49c534b6acb6411dfad358fd087463d93c,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/bignum.egg,unsupported,150fdbd0d4051195d91f4f3058ecac587c008f9fff51f6919605612788a71b89,"Error: ""missing schedule""
+",,[]
+tests/web-demo/birewrite.egg,compile_failed,f18779fbae84d2497c72b0c36c138b9d8c0a084bb3ccbfb8ffb5fe5516a5149b,"Error: ""CPU compiler requires a self-contained flat program with supported rewrites""
+",,[]
+tests/web-demo/combinators.egg,unsupported,bb2fa524669dd0bc01805ba6e75f57020fd689b9cc92dc82d796157aee87d797,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/cyk.egg,unsupported,cabdf39125253f8909fc86bab18818893fdd38bfde877d008fdb4ccf3caefe42,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/datatypes.egg,unsupported,e907320927796daab1a8768548bcf5cbe3d4e6127a39bbf6c26314ea6c8d01a4,"Error: ""missing schedule""
+",,[]
+tests/web-demo/eqsat-basic-multiset.egg,unsupported,7813dd58cc5c3a7b0905b3c59ce779b2d18848a182ce37c6f367667e270d1224,"Error: ""unsupported primitive capabilities before execution: multiset-contains [String(\""MathMultiSet\""), String(\""Math\"")] -> Unit; multiset-insert [String(\""MathMultiSet\""), String(\""Math\"")] -> MathMultiSet; multiset-length [String(\""MathMultiSet\"")] -> i64; multiset-of [String(\""Math\""), String(\""Math\"")] -> MathMultiSet; multiset-pick [String(\""MathMultiSet\"")] -> Math; multiset-remove [String(\""MathMultiSet\""), String(\""Math\"")] -> MathMultiSet; unstable-fn [String(\""String\""), String(\""MathMultiSet\"")] -> MathToMath; unstable-multiset-map [String(\""MathToMath\""), String(\""MathMultiSet\"")] -> MathMultiSet""
+",,[]
+tests/web-demo/eqsat-basic.egg,pass,c0fa15ae2849bfbb65b53b5168ee7ec338be4ff371d473668b94d25bf2ea7fa0,,0.041875,"[7.8458e-05, 9.5625e-05, 7.4541e-05]"
+tests/web-demo/eqsolve.egg,unsupported,fa0eff5560779b0ed9465f6107afdf99d2bfd4eb91035aa3c06d7bb796692299,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/fibonacci.egg,pass,00f379c91c9db87ebd03a9b49b3dbe4f2f691d190e8c94d65885dc2786441b41,,0.035667000000000004,"[5.6416e-05, 9.425e-05, 4.3375e-05]"
+tests/web-demo/fusion.egg,unsupported,f87ab447cd32fef8fd09612166f6210201f9e253df971c4c6110990afb4f7160,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/herbie-tutorial.egg,unsupported,c113d377c9e23e8f258f2de371428588cf006a848757a76325f3781e300de25b,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/herbie.egg,unsupported,b038f161ea1192cda90e9bb743cc1246d0d4476a1c4b7f3de981118cad598c0f,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/knapsack.egg,pass,1460a820f67a48e2936e7cd0c98b03792692216d232bbb78d7ed9f7dbb480058,,1.2947080000000002,"[0.0005725, 0.001390583, 0.000658959]"
+tests/web-demo/lambda.egg,unsupported,57fb5e001061ef550cb096b8ae7217ff1ddf40e72da6f53f1824711f10502592,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/levenshtein-distance.egg,unsupported,d8221bcc8becab140bf0da92adbee1db7b1e6f0099711b682454e5a42d679c24,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/list.egg,pass,0db0bffbf91fdd80d9f28c1fa62c51931c5fe98d8ac4e2e7c9b404113a79135d,,0.08708300000000001,"[0.000298, 0.000274208, 0.000218125]"
+tests/web-demo/math.egg,unsupported,fe2a35f8d05c48a162c6613c4784a5dde335ad4bcee17d397fcce97ad6da25f1,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/matrix.egg,unsupported,5393c786746a8be6b6ed400e53d3ff0d6bc43ab55e7fb2b2a71e4fbe1646c24d,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/multiset.egg,unsupported,969d139a2815492fe48f5a5525d5ff553264a02aaa0a88a7aca2e13c5b347862,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/naturals.egg,unsupported,79a42c5d2213d1ca662ba845e90e33a6ffa33f76f399ad95a8d69a65522ec4bb,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/path-union.egg,pass,0bcff8bd7fe7fc36ba91cb78c4878504c7a39f67cb60a7f5f31b1ecfa94c5b3c,,0.019458,"[7.5167e-05, 6.125e-05, 6.8583e-05]"
+tests/web-demo/path.egg,unsupported,48d9b827e2091445be34de8d8625a5cb46bf986632d3a6d8f9972682e4fc33fc,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/pathproof.egg,unsupported,33e6ffd4afb41005a3c37db670a0b1489cc3cc8096657ea100190e405951ac69,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/points-to.egg,pass,9e4a71a84fd5f78cf4e18cdc963c842103d5cbb27d27ac97e4009077add92947,,0.044125000000000004,"[0.0002405, 0.000115166, 9.825e-05]"
+tests/web-demo/prims.egg,unsupported,49ddcd6bd13041a2288933f2c544de15c3d43e4dcde6cd20a93f3938a5b3d6c9,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/push-pop.egg,unsupported,ab94f3162a0414055b8f9bba6bf3c001275dce5a6429964138bd66a4d24fec3c,"Error: ""missing schedule""
+",,[]
+tests/web-demo/resolution.egg,compile_failed,f0f9f21ce5399a9341fff717efc50a628b9cb9146c334cb080bc5a5a55b49624,"Cell compiler: native Bake
+[trace] consumed 136 raw events; raw buffers drained; 16 producer certificates
+[trace] consumed 753 raw events; raw buffers drained; 65 producer certificates
+[trace] consumed 466 raw events; raw buffers drained; 91 producer certificates
+[trace] consumed 0 raw events; raw buffers drained; 91 producer certificates
+[trace] consumed 0 raw events; raw buffers drained; 91 producer certificates
+Error: ""Bake environment error: in 12:17-22 of source_sk.egg: $false\nunbound symbol $false""
+Error: ""native Bake failed (exit status: 1)""
+",,[]
+tests/web-demo/rw-analysis.egg,compile_failed,ac395660d0bd33f1c79d82281e8b07d914dc4518c518e93b2a827278f9456748,"Cell compiler: native Bake
+[trace] consumed 64 raw events; raw buffers drained; 9 producer certificates
+[trace] consumed 40 raw events; raw buffers drained; 14 producer certificates
+[trace] consumed 44 raw events; raw buffers drained; 18 producer certificates
+[trace] consumed 33 raw events; raw buffers drained; 21 producer certificates
+[trace] consumed 22 raw events; raw buffers drained; 23 producer certificates
+[trace] consumed 11 raw events; raw buffers drained; 24 producer certificates
+[trace] consumed 8 raw events; raw buffers drained; 25 producer certificates
+[trace] consumed 35 raw events; raw buffers drained; 35 producer certificates
+[trace] consumed 16 raw events; raw buffers drained; 37 producer certificates
+[trace] consumed 14 raw events; raw buffers drained; 37 producer certificates
+[trace] consumed 36 raw events; raw buffers drained; 42 producer certificates
+[trace] consumed 126 raw events; raw buffers drained; 54 producer certificates
+[trace] consumed 8 raw events; raw buffers drained; 56 producer certificates
+[trace] consumed 36 raw events; raw buffers drained; 62 producer certificates
+[trace] consumed 48 raw events; raw buffers drained; 68 producer certificates
+[trace] consumed 36 raw events; raw buffers drained; 74 producer certificates
+[trace] consumed 36 raw events; raw buffers drained; 75 producer certificates
+[trace] consumed 7 raw events; raw buffers drained; 77 producer certificates
+[trace] consumed 19 raw events; raw buffers drained; 78 producer certificates
+[trace] consumed 0 raw events; raw buffers drained; 78 producer certificates
+[trace] consumed 0 raw events; raw buffers drained; 78 producer certificates
+Error: ""Bake environment error: in 20:26-29 of source_sk.egg: $top\nunbound symbol $top""
+Error: ""native Bake failed (exit status: 1)""
+",,[]
+tests/web-demo/schedule-demo.egg,unsupported,85933cb19663e4cf5bca2b056aa02f6b448bbd29dbffe7204bd3564ba2148d06,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/set.egg,unsupported,bb9c20751e9e50d12060cc2dc0a81fe43a69b10ea03f58783a63f3044f3be628,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/subsume.egg,unsupported,e705feb88176a471b505eddf4d23c11e5cdacfbaf607c68c784cf9d664896f58,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/towers-of-hanoi.egg,unsupported,93064f365e3a2a898b2176d7ce31536581f248b926bae1104258ad09446d2375,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/typecheck.egg,unsupported,128c8df36e24531d96930ab36188a76381cff342a69c0d0ea8e8da3c9fdaa4d7,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/typeinfer.egg,unsupported,ab1574e3356818601c27f68edf978dbc95a7e6aafab5166898875c68a3df9944,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]
+tests/web-demo/unification-points-to.egg,unsupported,c417541cc6bfd969e68435fd5702c9a906f7707f8c7c0aff0867b23c1d5f2747,"Error: ""only schedules and checks may follow initialization""
+",,[]
+tests/web-demo/unify.egg,pass,f62ad607e17062a758fffd755993f3335c647b5de410258aac8fa2b250d1c054,,0.017917000000000002,"[4.8125e-05, 0.000118625, 0.000106875]"
+tests/web-demo/unstable-fn.egg,unsupported,c17069f325ae1185f59f988bc6f514315d852084ec835c4de54f05270702aeb4,"Error: ""device bootstrap accepts declarations and facts only; flatten includes first""
+",,[]

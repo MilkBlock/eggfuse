@@ -1,0 +1,21 @@
+{
+  "scope": "Fresh-process, alternating native/Cell replay of the 96 x 3 captured passes.\nThis measures executions, not end-to-end production extraction equivalence.\n",
+  "native_tag": "62ae6baa5539af4468a8f1a94d6e108de4dcd2df",
+  "head": "8450e627cfe2f56667cbcb25598af098a7c07c1b",
+  "binaries": {
+    "compiler": "d83fbcf2180ca8da856351986199439e83b784f9a46886a8063c7f8a2cf2faa0",
+    "cell": "3f0671d86316e819dc5b846e304f00e07c323fab6a013f8c8d4e41628d0dd6f1",
+    "native": "5ad03cf2af4313ccdca5dd5e0b71be4b1fed753c7bc9d79cc11c965be361f88b",
+    "transfer": "4903806bdea1855d2d1f9914d672e64c9a33f9ac188e2394b5ed74f6112ce657"
+  },
+  "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "repeats": 3,
+  "threads": 1,
+  "capture_manifest_sha256": "43e2b2c39e8b9c0ecebb7db899af75a1ae14005686e6f671716a0de8bead1213",
+  "semantic_contract": "Cell endpoint/schedule determinism only; no suite-wide native semantic acceptance",
+  "current_flags": [
+    "--repair-ports",
+    "--entry-publications"
+  ],
+  "training": "fixed common Bake input and historical donor; no per-target catalog learning"
+}
