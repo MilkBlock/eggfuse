@@ -10,7 +10,6 @@ use serde::Serialize;
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     ops::Bound::{Excluded, Included, Unbounded},
-    rc::Rc,
     time::Instant,
 };
 
@@ -125,8 +124,8 @@ impl RangeIndex {
         column: usize,
         bound: Bound,
         threshold: i64,
-        rows: &Rc<Vec<Dependency>>,
-    ) -> Result<Rc<Vec<Dependency>>> {
+        rows: &crate::query::DomainRc<Vec<Dependency>>,
+    ) -> Result<crate::query::DomainRc<Vec<Dependency>>> {
         let cached = self.tables.entry(table).or_default();
         if cached.version != g.query_versions[table] {
             self.stats.invalidated_axes += cached.axes.len() as u64;
@@ -155,7 +154,7 @@ impl RangeIndex {
         self.stats.input_rows += rows.len() as u64;
         let Some(bucket) = axis.buckets.get(&prefix.1) else {
             self.stats.empty_domains += 1;
-            return Ok(Rc::new(vec![]));
+            return Ok(crate::query::DomainRc::new(vec![]));
         };
         let lo = *bucket.first_key_value().expect("nonempty prefix").0;
         let hi = *bucket.last_key_value().unwrap().0;
@@ -167,7 +166,7 @@ impl RangeIndex {
         };
         if !accepts(lo) && !accepts(hi) {
             self.stats.empty_domains += 1;
-            return Ok(Rc::new(vec![]));
+            return Ok(crate::query::DomainRc::new(vec![]));
         }
         if accepts(lo) && accepts(hi) {
             self.stats.output_rows += rows.len() as u64;
@@ -208,6 +207,6 @@ impl RangeIndex {
             self.stats.partial_output_rows += narrowed.len() as u64;
         }
         self.stats.output_rows += narrowed.len() as u64;
-        Ok(Rc::new(narrowed))
+        Ok(crate::query::DomainRc::new(narrowed))
     }
 }

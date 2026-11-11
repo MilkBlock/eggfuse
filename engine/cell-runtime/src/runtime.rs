@@ -215,7 +215,7 @@ impl QueryEnv {
             domains: Domains::new(),
         }
     }
-    fn domain(&self, atom: usize) -> Option<&Rc<Vec<Dependency>>> {
+    fn domain(&self, atom: usize) -> Option<&crate::query::DomainRc<Vec<Dependency>>> {
         self.domains
             .iter()
             .rev()
@@ -1184,6 +1184,11 @@ impl Executor {
                         #[cfg(feature = "family-frontiers")]
                         let gate_clock = Instant::now();
                         let atom = batch.atom();
+                        #[cfg(feature = "parallel-residuals")]
+                        let worker_expansion = early_join && self.free_join.planned && !active_spine && self.completion.is_none()
+                            && self.query_workers.as_ref().is_some_and(|w| w.expansion_ready(&self.graph,rid,atom));
+                        #[cfg(not(feature = "parallel-residuals"))]
+                        let worker_expansion = false;
                         #[cfg(feature = "sparse-cells")]
                         let point_only = rule.direct.is_none()
                             && self.graph.program.kernels[rid][atom]
@@ -1327,9 +1332,10 @@ impl Executor {
                                 if early_join {
                                     entry_domains.push(Domains::new());
                                 }
-                            } else if early_join && point_only {
-                                // The residual register block checks every full key and
-                                // its owner. It consumes no expansion domain.
+                            } else if early_join && (point_only || worker_expansion) {
+                                // Point blocks need no domain. Admitted expansion
+                                // workers perform Free Join themselves on the same
+                                // sealed Run; do not repeat it on the coordinator.
                                 entry_domains.push(Domains::new());
                             } else if early_join {
                                 let Some(domains) = self.free_join.admit(
@@ -1677,6 +1683,11 @@ impl Executor {
                     && self.graph.program.neighbor_plans[rid]
                         .as_ref()
                         .is_some_and(|plan| plan.pivots.contains(&pivot));
+                #[cfg(feature = "parallel-residuals")]
+                if let (Some(kernel), Some(seeds)) = (&kernel, &scheduled)
+                    && self.expansion_worker_batch(rid,&rule,kernel,seeds,&query_facts,&mut found)? {
+                    continue;
+                }
                 #[cfg(feature = "sparse-cells")]
                 if let (Some(kernel), Some(seeds)) = (&kernel, &scheduled)
                     && self.query_worker_batch(rid, &rule, kernel, seeds, &stage_covered,

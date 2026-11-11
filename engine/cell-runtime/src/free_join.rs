@@ -19,7 +19,7 @@ mod semijoin;
 #[cfg(feature = "projection-shared")]
 #[path = "shared_frontier.rs"]
 mod shared_frontier;
-type Rows = Rc<Vec<Dependency>>;
+type Rows = crate::query::DomainRc<Vec<Dependency>>;
 #[cfg(feature = "sparse-cells")]
 pub(super) type Domains = SmallVec<[Subtrie;1]>;
 #[cfg(not(feature = "sparse-cells"))]
@@ -150,6 +150,8 @@ struct Probe {
 }
 
 impl FreeJoin {
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn entry_plan(&self) -> &crate::entry_join::Plan { self.entry.as_ref().expect("entry plan") }
     pub fn new(p: &Program) -> Self {
         let enabled = true;
         let planned = true;
@@ -195,7 +197,7 @@ impl FreeJoin {
         ix: &mut QueryIndexes,
         rid: usize,
         batch: crate::entry_schedule::Batch<'_>,
-    ) -> Result<Option<Rc<Vec<Dependency>>>> {
+    ) -> Result<Option<crate::query::DomainRc<Vec<Dependency>>>> {
         self.shared
             .restrict(g, ix, self.entry.as_ref().unwrap(), rid, batch)
     }

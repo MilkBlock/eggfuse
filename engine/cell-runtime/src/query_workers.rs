@@ -1,8 +1,12 @@
-//! Execute complete point-query Cell continuations on a borrowed Run view.
+//! Execute Cell queries on a borrowed Run view: point continuations and, with
+//! parallel-residuals, connected residual expansion plus necessary admission.
 //! Entry values stay borrowed; successful bindings move into the original RHS.
 use super::*;
 use rayon::prelude::*;
 use serde::Serialize;
+#[cfg(feature = "parallel-residuals")]
+#[path = "query_expansion_workers.rs"]
+mod expansion;
 #[cfg(feature = "cell-query-sharing-audit")]
 #[path = "query_sharing_audit.rs"]
 mod sharing_audit;
@@ -87,6 +91,8 @@ pub(crate) struct Counts {
     pub worker_entries: Vec<u64>,
 }
 pub(crate) struct Workers {
+    #[cfg(feature = "parallel-residuals")]
+    expansion: expansion::Plans,
     pool: Option<rayon::ThreadPool>,
     grain: usize,
     stats: Counts,
@@ -203,6 +209,8 @@ impl Executor {
             + cell_plans.iter().flatten().map(|p| p.entries.capacity() * std::mem::size_of::<Option<usize>>()
                 + p.tables.len() * std::mem::size_of::<usize>()).sum::<usize>()) as u64;
         self.query_workers = Some(Workers { pool, grain,
+            #[cfg(feature = "parallel-residuals")]
+            expansion: Default::default(),
             cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
@@ -217,7 +225,8 @@ impl Executor {
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
                 "organization":"cell-run/v4","winner_ordering":"input-depth-ordinal/v1",
                 "constructor_access":"canonical-or-stable/v1", "first_read_sharing":"literal-run/v1",
-                "scope":"source-Run Cell point queries; borrowed slots and constructor domains; ordered RHS unchanged", "stats":w.stats}))
+                "scope":"source-Run Cell queries; borrowed slots and domains; optional residual expansion; ordered RHS unchanged", "stats":w.stats,
+                "residual_expansion":w.expansion_report()}))
     }
     pub(super) fn query_worker_batch(
         &mut self, rid: usize, rule: &Rule, kernel: &crate::row_kernel::Kernel,
@@ -373,6 +382,12 @@ fn evaluate(
 }
 
 impl Workers {
+    fn expansion_report(&self) -> J {
+        #[cfg(feature = "parallel-residuals")]
+        { self.expansion.report() }
+        #[cfg(not(feature = "parallel-residuals"))]
+        { json!({"enabled":false}) }
+    }
     #[cfg(feature = "parallel-entry-filters")]
     pub(crate) fn filter_pool(&self) -> Option<(&rayon::ThreadPool, usize)> {
         self.pool.as_ref().map(|p| (p, self.grain))

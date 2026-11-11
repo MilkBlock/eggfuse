@@ -9,7 +9,7 @@ type FrontierKey = (usize, u64, usize);
 enum Frontier {
     Seen,
     Deferred,
-    Rows(Rc<Vec<Dependency>>),
+    Rows(crate::query::DomainRc<Vec<Dependency>>),
 }
 #[derive(Default, serde::Serialize)]
 pub(crate) struct Stats {
@@ -58,7 +58,7 @@ impl Frontiers {
         plan: &Plan,
         rid: usize,
         batch: crate::entry_schedule::Batch<'_>,
-    ) -> Result<Option<Rc<Vec<Dependency>>>> {
+    ) -> Result<Option<crate::query::DomainRc<Vec<Dependency>>>> {
         let Some(p) = self.projection[rid][batch.atom()] else {
             return Ok(None);
         };
@@ -133,7 +133,7 @@ impl Frontiers {
         self.stats.source_rows += delta as u64;
         self.stats.delivered_rows += rows.len() as u64;
         self.retained += rows.len();
-        let rows = Rc::new(rows);
+        let rows = crate::query::DomainRc::new(rows);
         self.cached.insert(id, Frontier::Rows(rows.clone()));
         Ok(Some(rows))
     }

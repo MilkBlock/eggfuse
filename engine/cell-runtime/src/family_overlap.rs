@@ -16,7 +16,7 @@ struct Tally {
 #[derive(Default)]
 struct Memo {
     epoch: u64,
-    cache: Map<(u64, Dependency), (usize, Option<std::rc::Rc<Vec<Dependency>>>)>,
+    cache: Map<(u64, Dependency), (usize, Option<crate::query::DomainRc<Vec<Dependency>>>)>,
     ns: u64,
 }
 #[derive(Default)]
@@ -71,7 +71,7 @@ impl Overlap {
         w: Dependency,
         probed: bool,
         ns: u64,
-        result: &Option<std::rc::Rc<Vec<Dependency>>>,
+        result: &Option<crate::query::DomainRc<Vec<Dependency>>>,
     ) {
         let route = (self.set, table, projection, tie);
         let memo = self.reads.entry(route).or_default();

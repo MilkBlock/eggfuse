@@ -1,0 +1,209 @@
+{
+  "control_commit": "e2da3a05",
+  "scope": "standalone Cell CPU, not native egglog",
+  "goal_achieved": false,
+  "limits": "Work/semantic diagnostics only; no new speed or utilization conclusion. Ray control reuses the saved e2da3a05 profile with Entry filters enabled; candidate leaves those filters on the coordinator. Timings are not compared. Sum control is a feature-compiled but disabled development build. Candidate DomainRc uses Arc even with its runtime flag disabled; its cost requires a future normal timing comparison against the old build.",
+  "runtime_sha256": "68abb6fde0f1279c4f7d1f8160dc60d9736b61213473dec20e986572e15ed3e3",
+  "args": [
+    "--repair-ports",
+    "--entry-publications",
+    "--cell-absorption",
+    "--query-workers",
+    "4",
+    "--parallel-residuals"
+  ],
+  "workloads": {
+    "sum": {
+      "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "reference_report_sha256": "382d05600ea220c63575ace243d6a94908e5f3a13bcc0190142fe46e710aa5dc",
+      "candidate_report_sha256": "1d8c1c792a64643e55fb7e3dae6ea06327c9dff2611a2fbdf560825cdbbc7fa8",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "run_signature_sha256": "89eff49b643b0f213878c9cc733bb279088bfccdbe12930c7c9ad4fac386f2c8",
+      "actual_effects": {
+        "constructor_requests": 8033,
+        "function_updates": 1450,
+        "unions": 1039,
+        "logical_facts_created": 3739
+      },
+      "coordinator_free_join_probes": [
+        17430,
+        6384
+      ],
+      "key_lookup_calls": [
+        12085,
+        12186
+      ],
+      "graph_counts": {
+        "register_seeds": [
+          3717,
+          3717
+        ],
+        "register_answers": [
+          4193,
+          4193
+        ],
+        "register_expansion_rows": [
+          5308,
+          5308
+        ],
+        "residual_candidates": [
+          8943,
+          8943
+        ],
+        "shared_point_requests": [
+          629,
+          222
+        ],
+        "shared_point_hits": [
+          135,
+          34
+        ],
+        "shared_negative_hits": [
+          1,
+          0
+        ]
+      },
+      "residual_expansion": {
+        "compiled_entries": 572,
+        "enabled": true,
+        "stats": {
+          "admission_probes": 11046,
+          "admission_rejected": 7370,
+          "admission_rows": 5293,
+          "answer_capacity_bytes": 632640,
+          "answers": 3397,
+          "batches": 1604,
+          "chunks": 1606,
+          "coordinator_entries": 10170,
+          "entries": 10348,
+          "entry_header_capacity_bytes": 413920,
+          "execute_seconds": 0.0014244550000000022,
+          "expansion_probes": 37,
+          "expansion_rows": 3998,
+          "index_rows_examined": 9626,
+          "point_reads": 609,
+          "prepare_seconds": 0.00018341000000000125,
+          "row_reads": 4333,
+          "worker_entries": [
+            64,
+            50,
+            64,
+            0
+          ],
+          "worker_rows": [
+            64,
+            25,
+            0,
+            0
+          ],
+          "worker_task_seconds": [
+            1.1875e-05,
+            2.3292e-05,
+            2.55e-05,
+            0.0
+          ]
+        }
+      }
+    },
+    "ray": {
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "reference_report_sha256": "25f46d79a84a30507b458f70961021f09b197a177dfc925ea1c43c78c1064122",
+      "candidate_report_sha256": "3f49f2d7f7be689efa77f69bf466a10819ee2ade8d7c245ad505c5bba4f9e90b",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "run_signature_sha256": "87c8f5f5c8a525f3e9ec4580c73a4188dcc973e927736411f484d98755f5cd96",
+      "actual_effects": {
+        "constructor_requests": 1619819,
+        "function_updates": 1675916,
+        "unions": 226523,
+        "logical_facts_created": 820439
+      },
+      "coordinator_free_join_probes": [
+        5516162,
+        3559261
+      ],
+      "key_lookup_calls": [
+        2555377,
+        2574304
+      ],
+      "graph_counts": {
+        "register_seeds": [
+          1823166,
+          1823166
+        ],
+        "register_answers": [
+          1757315,
+          1757315
+        ],
+        "register_expansion_rows": [
+          2683660,
+          2683660
+        ],
+        "residual_candidates": [
+          3888647,
+          3888647
+        ],
+        "shared_point_requests": [
+          84121,
+          24225
+        ],
+        "shared_point_hits": [
+          21650,
+          2723
+        ],
+        "shared_negative_hits": [
+          375,
+          193
+        ]
+      },
+      "residual_expansion": {
+        "compiled_entries": 572,
+        "enabled": true,
+        "stats": {
+          "admission_probes": 1958314,
+          "admission_rejected": 1371346,
+          "admission_rows": 879783,
+          "answer_capacity_bytes": 84864960,
+          "answers": 560582,
+          "batches": 15843,
+          "chunks": 41191,
+          "coordinator_entries": 160797,
+          "entries": 1881965,
+          "entry_header_capacity_bytes": 75278600,
+          "execute_seconds": 0.15800941399999938,
+          "expansion_probes": 1242,
+          "expansion_rows": 760392,
+          "index_rows_examined": 1709268,
+          "point_reads": 75625,
+          "prepare_seconds": 0.006719727999999869,
+          "row_reads": 826235,
+          "worker_entries": [
+            516088,
+            467414,
+            387438,
+            350228
+          ],
+          "worker_rows": [
+            202106,
+            179425,
+            166083,
+            154173
+          ],
+          "worker_task_seconds": [
+            0.07880436600000004,
+            0.06852476499999974,
+            0.0603048739999998,
+            0.055543330000000196
+          ]
+        }
+      }
+    }
+  },
+  "sum_native_acceptance": {
+    "status": "pass",
+    "report_sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

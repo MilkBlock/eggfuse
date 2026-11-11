@@ -113,7 +113,7 @@ struct Publication {
 }
 struct Neighborhood {
     // Holding the original domain prevents allocator address reuse.
-    _domain: Rc<Vec<Dependency>>,
+    _domain: crate::query::DomainRc<Vec<Dependency>>,
     rows: Rc<Vec<Row>>,
     #[cfg(feature = "cell-absorption")]
     absorption: Condition,
@@ -444,7 +444,7 @@ impl Context {
         g: &Graph,
         rid: usize,
         t: usize,
-        domain: &Rc<Vec<Dependency>>,
+        domain: &crate::query::DomainRc<Vec<Dependency>>,
         #[cfg(feature = "cell-absorption")] absorption: Option<Activated<'_>>,
     ) -> Access {
         if domain.len() < 2 || domain.len() > ROW_LIMIT {
@@ -453,7 +453,7 @@ impl Context {
         let cache = self.groups.entry(t).or_default();
         let stats = &mut self.stats[rid];
         let version = g.query_versions[t];
-        let id = Rc::as_ptr(domain) as usize;
+        let id = crate::query::DomainRc::as_ptr(domain) as usize;
         if version == cache.version
             && let Some(hit) = cache.by_domain.get_mut(&id)
         {
@@ -485,7 +485,7 @@ impl Context {
         &mut self,
         rid: usize,
         table: usize,
-        domain: Rc<Vec<Dependency>>,
+        domain: crate::query::DomainRc<Vec<Dependency>>,
         mut rows: Vec<Row>,
     ) {
         let clock = self.profiling.then(Instant::now);
@@ -495,7 +495,7 @@ impl Context {
         self.stats[rid].group_builds += 1;
         self.stats[rid].build_visits += domain.len() as u64;
         cache.by_domain.insert(
-            Rc::as_ptr(&domain) as usize,
+            crate::query::DomainRc::as_ptr(&domain) as usize,
             Neighborhood {
                 _domain: domain,
                 rows: Rc::new(rows),
@@ -592,7 +592,7 @@ mod tests {
         let rows: Vec<_> = [8,9].into_iter().enumerate().map(|(i,key)| Row { table:0,
             values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(i as i64),Value::Eq(key)]),
             epoch:1,witness:Dependency::Fact(FactRef { cell:i as u32,op:0 }),hidden:false }).collect();
-        let domain: Rc<Vec<Dependency>> = Rc::new(rows.iter().map(|r|r.witness).collect());
+        let domain: crate::query::DomainRc<Vec<Dependency>> = crate::query::DomainRc::new(rows.iter().map(|r|r.witness).collect());
         let mut c = Context::new(&g.program,false);
         c.absorption_enabled = true;
         let plan = Absorption { attribute:1,input_column:0 };
@@ -600,7 +600,7 @@ mod tests {
         let rows = Rc::new(rows);
         c.absorption_stats.pending.push(0);
         c.groups.insert(0, Groups { version:g.query_versions[0], rows:2,
-            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:rows.clone(),absorption:Condition::Empty })].into_iter().collect() });
+            by_domain: [(crate::query::DomainRc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:rows.clone(),absorption:Condition::Empty })].into_iter().collect() });
         let check = |c: &mut Context, g: &Graph, seed: &Row, watermark| matches!(
             c.neighborhood(g,0,0,&domain,plan.activate(g,seed,watermark)), Access::Absorbed);
         let mut seed = Row { table:1, values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]),
@@ -719,7 +719,7 @@ mod tests {
             assert!(ctx.point(&mut g, 0, table, &key).unwrap().is_some());
             columns.ensure(&g, table).unwrap();
             ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 10,
-                &Rc::new(g.witnesses(table))).unwrap();
+                &crate::query::DomainRc::new(g.witnesses(table))).unwrap();
         }
         let old = g.query_versions.clone();
         g.changes.clear();
@@ -743,7 +743,7 @@ mod tests {
         for table in 0..2 {
             assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().values[1], Value::Int(2));
             let selected = ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 2,
-                &Rc::new(g.witnesses(table))).unwrap();
+                &crate::query::DomainRc::new(g.witnesses(table))).unwrap();
             assert!(selected.is_empty());
         }
         assert_eq!(ranges.stats.builds, 2, "published axes survive both batches");

@@ -1,0 +1,81 @@
+#![cfg(feature = "parallel-residuals")]
+use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
+fn run(source:&str, workers:usize, enabled:bool)->Executor {
+    let core=eggfuse_bake::device_frontend::core("parallel-residuals",source).unwrap();
+    let program=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let mut e=Executor::new(Graph::new_with_repair_ports(program).unwrap(),true);
+    e.use_entry_publications().unwrap();
+    if workers>0 {e.use_query_workers(workers,8).unwrap();}
+    if enabled {e.use_parallel_residuals().unwrap();}
+    e.execute().unwrap();e
+}
+#[test]
+fn complete_expansions_preserve_order_late_inputs_mutation_and_visibility() {
+    let mut s=String::from(r#"
+(datatype E (N i64) (Start E) (Wrap i64 E))
+(function Cost (E) i64 :merge new)
+(function Out (E i64) i64 :merge new)
+(ruleset read) (ruleset change) (ruleset late) (ruleset join) (ruleset remove) (ruleset again)
+(rule ((Start x) (Wrap i x) (= c (Cost x))) ((set (Out x i) c)) :ruleset read)
+(rule ((Start x)) ((set (Cost x) 2)) :ruleset change)
+(rule () ((Wrap 7 (N 120))) :ruleset late)
+(rule () ((union (N 2) (N 122))) :ruleset join)
+(rule () ((delete (Wrap 0 (N 3)))) :ruleset remove)
+(rule () ((Wrap 0 (N 3))) :ruleset again)
+"#);
+    for i in 0..128 {
+        s.push_str(&format!("(Start (N {i})) (set (Cost (N {i})) 1)\n"));
+        if i<64 {s.push_str(&format!("(Wrap 0 (N {i})) (Wrap 1 (N {i}))\n"));}
+    }
+    s.push_str(r#"
+(run-schedule (seq (run read) (run change) (run read) (run late) (run read)
+ (run join) (run read) (run remove) (run read) (run again) (run read)))
+(check (= (Out (N 120) 7) 2) (= (Out (N 122) 0) 2) (= (Out (N 3) 0) 2))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&s).unwrap();
+    let before=run(&s,0,false);
+    for workers in [1,2,4] {
+        let after=run(&s,workers,true);
+        assert_eq!(before.snapshots,after.snapshots,"every Run state and visibility");
+        assert_eq!(before.binding_audit,after.binding_audit,"ordered successful matches");
+        assert_eq!(before.steps.len(),after.steps.len());
+        for(a,b) in before.steps.iter().zip(&after.steps) {
+            for k in ["epoch","ruleset","path","iterations","logical_matches","executed_bindings","changed"] {
+                assert_eq!(a[k],b[k],"{k}");
+            }
+        }
+        let r=after.report();let stats=&r["query_workers"]["residual_expansion"]["stats"];
+        assert!(stats["entries"].as_u64().unwrap()>0,"{stats}");
+        assert!(stats["expansion_rows"].as_u64().unwrap()>0,"{stats}");
+        assert!(r["free_join"]["entry_probes"].as_u64().unwrap()<before.report()["free_join"]["entry_probes"].as_u64().unwrap());
+        if workers>1 { assert!(stats["worker_rows"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>()>0); }
+    }
+}
+
+#[test]
+fn function_expansion_reads_current_values_after_delete_and_recreation() {
+    let mut s=String::from(r#"
+(function Start (i64) i64 :merge new)
+(function Link (i64 i64) i64 :merge new)
+(function Out (i64 i64) i64 :merge new)
+(ruleset start) (ruleset read) (ruleset change) (ruleset remove) (ruleset again)
+(rule ((= v (Link x 1))) ((set (Start x) 1)) :ruleset start)
+(rule ((= g (Start x)) (= v (Link x y))) ((set (Out x y) v)) :ruleset read)
+(rule ((= g (Start x))) ((set (Link x 0) 2) (set (Start x) 2)) :ruleset change)
+(rule () ((delete (Link 3 0))) :ruleset remove)
+(rule () ((set (Link 3 0) 5)) :ruleset again)
+"#);
+    // A later Run creates the Entry, so it owns enumeration of the older Link
+    // rows independently of the bootstrap compiler's table write ordering.
+    for i in 0..128 {s.push_str(&format!("(set (Link {i} 0) 1) (set (Link {i} 1) 9)\n"));}
+    s.push_str(r#"
+(run-schedule (seq (run start) (run read) (run change) (run read) (run remove) (run read) (run again) (run read)))
+(check (= (Out 3 0) 5) (= (Out 4 0) 2) (= (Out 4 1) 9))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&s).unwrap();
+    let before=run(&s,0,false);
+    let after=run(&s,4,true);
+    assert_eq!(before.snapshots,after.snapshots);
+    assert_eq!(before.binding_audit,after.binding_audit);
+    assert!(after.report()["query_workers"]["residual_expansion"]["stats"]["expansion_rows"].as_u64().unwrap()>0, "{}", after.report()["query_workers"]);
+}

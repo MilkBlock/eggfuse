@@ -5,18 +5,18 @@ use smallvec::SmallVec;
 #[cfg(feature = "sparse-cells")]
 pub(super) struct SumDomain {
     version: u64,
-    source: Rc<Vec<Dependency>>,
-    groups: Option<rustc_hash::FxHashMap<i64, Rc<Vec<Dependency>>>>,
+    source: crate::query::DomainRc<Vec<Dependency>>,
+    groups: Option<rustc_hash::FxHashMap<i64, crate::query::DomainRc<Vec<Dependency>>>>,
 }
 #[cfg(feature = "sparse-cells")]
 impl SumDomain {
     fn select(exec: &mut Executor, site: (usize,usize), table: usize, left: usize, right: usize,
-        target: i64, refs: Rc<Vec<Dependency>>) -> Result<Rc<Vec<Dependency>>> {
+        target: i64, refs: crate::query::DomainRc<Vec<Dependency>>) -> Result<crate::query::DomainRc<Vec<Dependency>>> {
         let version = exec.graph.query_versions[table];
         let entry = exec.sum_domains.entry(site);
         use std::collections::hash_map::Entry;
         let slot = match entry {
-            Entry::Occupied(e) if e.get().version == version && Rc::ptr_eq(&e.get().source, &refs) => e.into_mut(),
+            Entry::Occupied(e) if e.get().version == version && crate::query::DomainRc::ptr_eq(&e.get().source, &refs) => e.into_mut(),
             other => {
                 other.insert_entry(Self { version, source: refs.clone(), groups: None });
                 return Ok(refs);
@@ -33,7 +33,7 @@ impl SumDomain {
                 };
                 if let Some(sum) = a.checked_add(*b) { groups.entry(sum).or_default().push(w); }
             }
-            slot.groups = Some(groups.into_iter().map(|(k,v)| (k, Rc::new(v))).collect());
+            slot.groups = Some(groups.into_iter().map(|(k,v)| (k, crate::query::DomainRc::new(v))).collect());
         }
         let subset = slot.groups.as_ref().unwrap().get(&target).cloned().unwrap_or_default();
         exec.graph.stats.sum_index_skips += (refs.len() - subset.len()) as u64;

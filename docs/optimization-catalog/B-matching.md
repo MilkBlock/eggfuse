@@ -37,7 +37,7 @@
 
 替代的旧工作：读取后才拒绝的无关候选；删除窄精确集合从不读取的 Bloom 构建与增量维护。
 
-运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。
+运行时仍须满足：当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 parallel-residuals 接管的 Free Join 准入从本组普通计数移到 query_workers.residual_expansion；须相加比较总工作，不能将协调线程计数减少当作净省探测。
 
 代码：[entry_join.rs](../../engine/cell-runtime/src/entry_join.rs) · [free_join.rs](../../engine/cell-runtime/src/free_join.rs) · [sieve.rs](../../engine/cell-runtime/src/sieve.rs) · [physical_plan.rs](../../engine/cell-runtime/src/physical_plan.rs) · [cell_links.rs](../../engine/cell-runtime/src/cell_links.rs) · [sieve_reverse.rs](../../engine/cell-runtime/src/sieve_reverse.rs) · [sieve_parallel.rs](../../engine/cell-runtime/src/sieve_parallel.rs)
 
@@ -51,7 +51,7 @@
 
 状态：已实现；性能结论仅适用于链接中的具体版本和配置。
 
-证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/sieve-results.json](../../benchmarks/cell-unification/sieve-results.json) · [benchmarks/cell-entry-admission/README.md](../../benchmarks/cell-entry-admission/README.md) · [benchmarks/cell-entry-admission/results.json](../../benchmarks/cell-entry-admission/results.json) · [benchmarks/cell-entry-reverse/README.md](../../benchmarks/cell-entry-reverse/README.md) · [benchmarks/cell-entry-reverse/results.json](../../benchmarks/cell-entry-reverse/results.json) · [benchmarks/parallel-entry-filters/README.md](../../benchmarks/parallel-entry-filters/README.md) · [benchmarks/parallel-entry-filters/results.json](../../benchmarks/parallel-entry-filters/results.json)
+证据：[docs/SEMIJOIN.md](../../docs/SEMIJOIN.md) · [benchmarks/cell-unification/steps.md](../../benchmarks/cell-unification/steps.md) · [benchmarks/cell-unification/links-check.json](../../benchmarks/cell-unification/links-check.json) · [benchmarks/cell-unification/sieve-results.json](../../benchmarks/cell-unification/sieve-results.json) · [benchmarks/cell-entry-admission/README.md](../../benchmarks/cell-entry-admission/README.md) · [benchmarks/cell-entry-admission/results.json](../../benchmarks/cell-entry-admission/results.json) · [benchmarks/cell-entry-reverse/README.md](../../benchmarks/cell-entry-reverse/README.md) · [benchmarks/cell-entry-reverse/results.json](../../benchmarks/cell-entry-reverse/results.json) · [benchmarks/parallel-entry-filters/README.md](../../benchmarks/parallel-entry-filters/README.md) · [benchmarks/parallel-entry-filters/results.json](../../benchmarks/parallel-entry-filters/results.json) · [benchmarks/parallel-residuals/README.md](../../benchmarks/parallel-residuals/README.md) · [benchmarks/parallel-residuals/results.json](../../benchmarks/parallel-residuals/results.json)
 
 ## B3 · 邻居、局部 context 与 view 消费
 

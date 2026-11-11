@@ -7,10 +7,18 @@ use crate::{
     value::Value,
 };
 use rustc_hash::FxHashMap as HashMap;
-use std::{
-    hash::{Hash, Hasher},
-    rc::Rc,
-};
+use std::hash::{Hash, Hasher};
+
+// Only candidate-domain ownership changes. Workers borrow prepared membership;
+// the cached domains must be Sync, while lazy Columns remain coordinator-owned.
+#[cfg(feature = "parallel-residuals")]
+pub(crate) use std::sync::Arc as DomainRc;
+#[cfg(not(feature = "parallel-residuals"))]
+pub(crate) use std::rc::Rc as DomainRc;
+use DomainRc as Rc;
+#[cfg(feature = "parallel-residuals")]
+#[path = "query_snapshot.rs"]
+pub(crate) mod snapshot;
 
 type Refinements = HashMap<Vec<(usize, u64)>, Rc<Vec<Dependency>>>;
 #[cfg(feature = "sparse-cells")]

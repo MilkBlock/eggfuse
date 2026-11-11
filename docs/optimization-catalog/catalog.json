@@ -394,7 +394,7 @@
       "activation": "产物具备计划；范围索引按需求构建",
       "compile_fact": "共享列投影、类型正确的范围约束、版本化候选域；同一 Cell 投影宽度决定窄精确集合或宽 Bloom 表示",
       "replaces": "读取后才拒绝的无关候选；删除窄精确集合从不读取的 Bloom 构建与增量维护",
-      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
+      "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 parallel-residuals 接管的 Free Join 准入从本组普通计数移到 query_workers.residual_expansion；须相加比较总工作，不能将协调线程计数减少当作净省探测。",
       "sources": [
         "engine/cell-runtime/src/entry_join.rs",
         "engine/cell-runtime/src/free_join.rs",
@@ -683,7 +683,9 @@
         "benchmarks/cell-entry-reverse/README.md",
         "benchmarks/cell-entry-reverse/results.json",
         "benchmarks/parallel-entry-filters/README.md",
-        "benchmarks/parallel-entry-filters/results.json"
+        "benchmarks/parallel-entry-filters/results.json",
+        "benchmarks/parallel-residuals/README.md",
+        "benchmarks/parallel-residuals/results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -3328,10 +3330,10 @@
       "id": "H5",
       "category": "H",
       "title": "按 Cell 实例归组的源 Run 查询执行",
-      "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）",
-      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影",
-      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器",
-      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。",
+      "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）；parallel-residuals 构建 + --parallel-residuals 可接管无前缀/吸收/范围特化的单次展开查询",
+      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 新残余路径按 kernel/pivot 分块，未共享同一物理 Cell 的重复查询；所有权、watermark 和按序 RHS 不变；小批次 inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/query_reads.rs",
@@ -3339,7 +3341,9 @@
         "engine/cell-runtime/src/cell_query.rs",
         "engine/cell-runtime/src/constructor_reads.rs",
         "engine/cell-runtime/src/cell_match.rs",
-        "engine/cell-runtime/src/slots.rs"
+        "engine/cell-runtime/src/slots.rs",
+        "engine/cell-runtime/src/query_expansion_workers.rs",
+        "engine/cell-runtime/src/query_snapshot.rs"
       ],
       "metrics": {
         "benefit": [
@@ -3629,6 +3633,51 @@
             "source": "report",
             "pointer": "/stage_spine/query_winner_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/admission_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/index_rows_examined",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/point_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/row_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/entry_header_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/answer_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/prepare_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/execute_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/worker_task_seconds",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3731,6 +3780,31 @@
             "source": "report",
             "pointer": "/query_workers/stats/sharing_audit/same_anchor_prefix_steps",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/coordinator_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/worker_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/expansion_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/answers",
+            "reduce": "value"
           }
         ]
       },
@@ -3771,9 +3845,11 @@
         "benchmarks/cell-winner-fold/timing.md",
         "benchmarks/cell-winner-fold/timing.json",
         "benchmarks/cell-query-sharing/README.md",
-        "benchmarks/cell-query-sharing/results.json"
+        "benchmarks/cell-query-sharing/results.json",
+        "benchmarks/parallel-residuals/README.md",
+        "benchmarks/parallel-residuals/results.json"
       ],
-      "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立"
+      "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立；残余准入/枚举已接通并通过 Run 边界回归；Raytrace 新路径总 key 查询增加 18,927，默认关闭，没有新增速度或满载结论"
     },
     {
       "id": "I1",

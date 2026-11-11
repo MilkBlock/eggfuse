@@ -57,6 +57,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --cell-entry-reverse (experimental joined-support Entry selection)");
         #[cfg(feature = "parallel-entry-filters")]
         println!("  --parallel-entry-filters (complete large Entry filters on query workers)");
+        #[cfg(feature = "parallel-residuals")]
+        println!("  --parallel-residuals (Cell expansion queries and admission on query workers)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -119,6 +121,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--cell-entry-reverse" => {}
             #[cfg(feature = "parallel-entry-filters")]
             "--parallel-entry-filters" => {}
+            #[cfg(feature = "parallel-residuals")]
+            "--parallel-residuals" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -236,6 +240,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "parallel-entry-filters")]
     if args.iter().any(|x| x == "--parallel-entry-filters") {
         runtime.use_parallel_entry_filters()?;
+    }
+    #[cfg(feature = "parallel-residuals")]
+    if args.iter().any(|x| x == "--parallel-residuals") {
+        runtime.use_parallel_residuals()?;
     }
     #[cfg(feature = "structural-depth")]
     {

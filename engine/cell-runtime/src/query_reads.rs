@@ -6,6 +6,8 @@ pub(crate) use cell_ownership::query_read::{Scratch, Work};
 pub(crate) struct QueryReads<'a> {
     keys: &'a [scalar_keys::FunctionKeys],
     functions: &'a [Function],
+    #[cfg(feature = "parallel-residuals")]
+    decoded: &'a [Option<RowFields>],
     constructors: Option<Constructors<'a>>,
     tables: &'a [Table],
     pub parents: &'a Parents,
@@ -37,10 +39,41 @@ impl Graph {
                 members: &self.members, hash_mask: self.constructor_hash_mask() }))
         } else { self.constructor_query_reader().map(Constructors::Ports) };
         Some(QueryReads { keys: &self.function_keys, functions: &self.functions, parents: &self.parents,
+            #[cfg(feature = "parallel-residuals")]
+            decoded: &self.function_decoded,
             constructors, tables: &self.program.tables })
     }
 }
 impl QueryReads<'_> {
+    #[cfg(feature = "parallel-residuals")]
+    pub fn canonical_rows(&self) -> bool { matches!(self.constructors, Some(Constructors::Canonical(_))) }
+    #[cfg(feature = "parallel-residuals")]
+    pub fn row(&self, witness: Dependency) -> Result<Option<Row>> {
+        match witness {
+            Dependency::Fact(fact) => {
+                let Some(Constructors::Canonical(read)) = &self.constructors else { return Err("unsealed expansion fields".into()); };
+                let Some(state) = read.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op)) else { return Ok(None) };
+                let (table, values) = state.decoded.as_ref().ok_or("canonical expansion lacks decoded fields")?;
+                Ok(Some(Row { table:*table, values:values.clone(), hidden:state.hidden, epoch:state.epoch, witness }))
+            }
+            Dependency::Function(index) => {
+                let Some(f) = self.functions.get(index).filter(|f| f.live) else { return Ok(None) };
+                let values = self.decoded[index].clone().unwrap_or_else(|| row_fields(
+                    f.key.iter().chain(std::iter::once(&f.value)).map(|v| canon(v,self.parents)).collect()));
+                Ok(Some(Row { table:f.table, values, hidden:false, epoch:f.epoch, witness }))
+            }
+        }
+    }
+    #[cfg(feature = "parallel-residuals")]
+    pub fn visible_epoch(&self, witness: Dependency) -> Option<u64> {
+        match witness {
+            Dependency::Fact(fact) => {
+                let Some(Constructors::Canonical(read)) = &self.constructors else { return None };
+                read.cells.get(&fact.cell)?.facts.get(&fact.op).filter(|s| !s.hidden).map(|s| s.epoch)
+            }
+            Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.epoch),
+        }
+    }
     pub fn point(&self, table: usize, keys: &[Value], scratch: &mut Scratch, work: &mut Work)
         -> Result<Option<(Value, u64, Dependency)>> {
         if self.tables[table].virtual_fact {
