@@ -215,7 +215,7 @@ impl QueryEnv {
             domains: Domains::new(),
         }
     }
-    fn domain(&self, atom: usize) -> Option<&Rc<Vec<Dependency>>> {
+    fn domain(&self, atom: usize) -> Option<&crate::query::Candidates> {
         self.domains
             .iter()
             .rev()
@@ -570,7 +570,7 @@ impl Executor {
                             self.free_join.stats.subtrie_uses += 1;
                             domain.rows.clone()
                         } else {
-                            self.query_indexes.candidates(&self.graph, *t, &bound)?
+                            self.query_indexes.candidates(&self.graph, *t, &bound)?.into()
                         }
                     }
                 };
@@ -601,8 +601,8 @@ impl Executor {
                                 guard.column,
                                 guard.bound,
                                 limit,
-                                &witnesses,
-                            )?;
+                                witnesses.shared().expect("range-sized candidate domain"),
+                            )?.into();
                             break;
                         }
                     }
@@ -3083,6 +3083,9 @@ impl Executor {
             "port_completion":self.graph.port_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "point_support_accounting":"current-column/v1","query_rule_profile":query_rule_profile,"view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
+            "query_domain_transport":{"schema":"cell-witness-domain/v1",
+                "candidate_bytes":std::mem::size_of::<crate::query::Candidates>(),
+                "subtrie_bytes":std::mem::size_of::<Subtrie>()},
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})

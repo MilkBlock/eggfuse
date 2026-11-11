@@ -581,6 +581,21 @@
             "source": "report",
             "pointer": "/sieve/stats/publication_dispatches",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/projection_shape_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_domain_transport/candidate_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_domain_transport/subtrie_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -638,10 +653,20 @@
             "source": "report",
             "pointer": "/sieve/stats/inactive_publications",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/inline_projection_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/inline_domain_deliveries",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Cell field influence now compiles 1,163 summaries into 374 shared read scopes: complete-Raytrace summary updates drop 8,380,801 -> 6,983,829, with 2,185,417 new group checks charged to Bake. The equal-weight subtotal grows by 788,445, so this is not a net work-credit or speed claim. New rows and child-support propagation retain complete publication; masks and group headers add 24,264 live payload bytes plus eight bytes per change record, excluding spare capacity. The v2 follow-up uses a flat complete-publication route and shared range groups: field checks drop to 1,318,220, 404,105 inactive-consumer index reads are omitted, and 2,147,286 row dispatches are separately charged. Its logical influence metadata payload is 34,104 bytes. Remaining support operations are unchanged; normal timing is still required.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Cell field influence now compiles 1,163 summaries into 374 shared read scopes: complete-Raytrace summary updates drop 8,380,801 -> 6,983,829, with 2,185,417 new group checks charged to Bake. The equal-weight subtotal grows by 788,445, so this is not a net work-credit or speed claim. New rows and child-support propagation retain complete publication; masks and group headers add 24,264 live payload bytes plus eight bytes per change record, excluding spare capacity. The v2 follow-up uses a flat complete-publication route and shared range groups: field checks drop to 1,318,220, 404,105 inactive-consumer index reads are omitted, and 2,147,286 row dispatches are separately charged. Its logical influence metadata payload is 34,104 bytes. Remaining support operations are unchanged; normal timing is still required. Single-column singleton candidates now travel inline through Cell admission and residual execution without a heap view. Larger domains retain their shared identity. Header growth and shape checks are explicit costs; research projection/frontier observers retain the old host. Inline reads are not avoided-allocation counts, and no speed gain is established by materialized-row reductions.",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
@@ -653,7 +678,9 @@
         "benchmarks/cell-entry-reverse/results.json",
         "benchmarks/cell-column-influence/README.md",
         "benchmarks/cell-column-influence/results.json",
-        "benchmarks/cell-column-influence/dispatch.json"
+        "benchmarks/cell-column-influence/dispatch.json",
+        "benchmarks/cell-inline-domains/README.md",
+        "benchmarks/cell-inline-domains/results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

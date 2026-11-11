@@ -241,21 +241,22 @@ impl Frame {
                 } else {
                     let bound = expansion.bind::<SmallVec<[Option<Value>; 6]>>(|field|
                         field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
-                    exec.query_indexes.candidates(&exec.graph, t, &bound)?
+                    exec.query_indexes.candidates(&exec.graph, t, &bound)?.into()
                 };
                 #[cfg(feature = "sparse-cells")]
                 let refs = if !LOCAL && refs.len() >= 8 && refs.len() <= 65536
                     && let Some((atom, left, right, target)) = &k.sum_filter
                     && *atom == ins.atom
                     && let Value::Int(value) = target.read(&exec.graph, |col| &seed.values[col], &self.results, expanded) {
-                    SumDomain::select(exec, (rid, k.pivot), t, *left, *right, value, refs)?
+                    SumDomain::select(exec, (rid, k.pivot), t, *left, *right, value,
+                        refs.shared().expect("multi-row domain").clone())?.into()
                 } else { refs };
                 #[cfg(feature = "cell-absorption")]
                 let absorption = if LOCAL && exec.neighbor.absorption_enabled && exec.completion.is_none() {
                     k.absorption.as_deref().and_then(|p| p.activate(&exec.graph, seed, exec.watermarks[rid]))
                 } else { None };
-                let mut access = if LOCAL {
-                    exec.neighbor.neighborhood(&exec.graph, rid, t, &refs,
+                let mut access = if LOCAL && let Some(shared) = refs.shared() {
+                    exec.neighbor.neighborhood(&exec.graph, rid, t, shared,
                         #[cfg(feature = "cell-absorption")] absorption)
                 } else {
                     crate::neighbor::Access::Direct
@@ -343,6 +344,7 @@ impl Frame {
                         visit(&row, exec)?;
                     }
                     if let crate::neighbor::Access::Build(rows) = access {
+                        let crate::query::Candidates::Shared(refs) = refs else { unreachable!("cached multi-row domain") };
                         exec.neighbor.finish_group(rid, t, refs, rows);
                     }
                 }

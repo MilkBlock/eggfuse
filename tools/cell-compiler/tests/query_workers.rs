@@ -28,6 +28,26 @@ fn same(a: &Executor, b: &Executor) {
     }
 }
 #[test]
+fn inline_candidate_domains_keep_late_rows_union_and_visibility() {
+    let source = include_str!("fixtures/inline-domains.egg");
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    for stable in [false, true] {
+        let before = run_mode(source, None, stable);
+        for workers in [1, 4] {
+            let after = run_mode(source, Some((workers, 1)), stable);
+            same(&before, &after);
+            let report = after.report();
+            // Research observers retain their original shared-domain host.
+            if report["projection_survey"].is_null() && report["semijoin"]["mode"] == "off"
+                && report["entry_schedule"]["consumer_transport"] == "partitioned-cell-entries/v1" {
+                assert!(report["free_join"]["inline_domain_deliveries"].as_u64().unwrap() > 0);
+                assert!(report["free_join"]["entry_bucket_rows_materialized"].as_u64().unwrap() > 0,
+                    "larger domains retain their shared views");
+            }
+        }
+    }
+}
+#[test]
 fn constructor_support_keeps_late_keys_unions_and_recreated_rows() {
     let mut source = String::from(r#"
 (datatype E (N i64) (Start E) (Wrap E))

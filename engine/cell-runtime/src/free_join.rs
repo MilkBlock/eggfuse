@@ -26,7 +26,7 @@ pub(super) type Domains = SmallVec<[Subtrie;1]>;
 pub(super) type Domains = Vec<Subtrie>;
 pub(super) struct Subtrie {
     pub atom: usize,
-    pub rows: Rows,
+    pub rows: crate::query::Candidates,
     pub projected_columns: usize,
 }
 pub(super) struct Group {
@@ -68,6 +68,9 @@ pub(super) struct Stats {
     single_domain_seeds: u64,
     entry_bucket_rows_examined: u64,
     entry_bucket_rows_materialized: u64,
+    projection_shape_checks: u64,
+    inline_projection_reads: u64,
+    inline_domain_deliveries: u64,
     pub entry_point_uses: u64,
     pub point_support_checks: u64,
     pub point_support_plans: u64,
@@ -442,13 +445,33 @@ impl FreeJoin {
             #[cfg(feature = "projection-survey")]
             let survey_key = key.clone();
             let direct;
+            let cached;
             let result: &Option<Rows> = if cfg!(feature = "sparse-cells")
                 && !cfg!(feature = "projection-stamps") && self.planned && shape.columns.len() == 1 {
                 self.stats.shared_column_reads += 1;
                 self.stats.entry_probes += 1;
                 direct = index.single_projection(g, shape.table, shape.columns[0].0, key[0],
-                    &mut self.stats.entry_bucket_rows_materialized)?;
-                &direct
+                    &mut self.stats.entry_bucket_rows_materialized,
+                    &mut self.stats.projection_shape_checks, &mut self.stats.inline_projection_reads)?;
+                // Inline candidates flow directly into the same exact executor;
+                // do not rebuild an Rc<Vec> at this handoff.
+                if let Some(crate::query::Candidates::Shared(rows)) = direct { cached = Some(rows); &cached }
+                else {
+                    #[cfg(feature = "sparse-cells")]
+                    if let Some(crate::query::Candidates::One(w)) = direct {
+                        if g.visible_epoch(w).is_some_and(|epoch| (epoch,w) > (row.epoch,row.witness)
+                            || ((epoch,w) == (row.epoch,row.witness) && step.atom < atom)) {
+                            self.stats.entry_delta_rejections += 1;
+                            return Ok(None);
+                        }
+                        self.stats.inline_domain_deliveries += 1;
+                        domains.push(Subtrie {atom:step.atom, rows:crate::query::Candidates::One(w),
+                            projected_columns:shape.columns.len()});
+                        continue;
+                    }
+                    self.stats.entry_rejections += 1;
+                    return Ok(None);
+                }
             } else if self.planned {
                 let (version, cache) = &mut self.by_projection[step.projection];
                 #[cfg(not(feature = "projection-stamps"))]
@@ -577,7 +600,7 @@ impl FreeJoin {
             }
             domains.push(Subtrie {
                 atom: step.atom,
-                rows: rows.clone(),
+                rows: rows.clone().into(),
                 projected_columns: shape.columns.len(),
             });
         }
@@ -695,7 +718,7 @@ impl FreeJoin {
                     };
                     children.push(Subtrie {
                         atom: probe.atom,
-                        rows: candidates,
+                        rows: candidates.into(),
                         projected_columns: probe.selectors.len(),
                     });
                 }

@@ -107,6 +107,16 @@ impl Work {
             };
             work.insert(format!("neighbor_context/absorption/stats/{field}"), value);
         }
+        // Candidate-shape dispatch is paid on every present single-column
+        // bucket, including shared domains. Inline deliveries earn no credit
+        // separate from the existing materialization/allocation observations.
+        let shapes = match report["query_domain_transport"].get("schema") {
+            None => 0,
+            Some(J::String(v)) if v == "cell-witness-domain/v1" => report["free_join"]["projection_shape_checks"].as_u64()
+                .ok_or("missing Cell domain shape work")?,
+            _ => return Err("unknown Cell domain transport".into()),
+        };
+        work.insert("free_join/projection_shape_checks".into(), shapes);
         // A field test is new work even when it prevents a whole summary update.
         // Historical reports have no such test; missing new counters are errors.
         let column_checks = match report["sieve"].get("column_influence") {
@@ -448,6 +458,16 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    let mut domains = report.clone();
+    domains["free_join"]["projection_shape_checks"] = 9.into();
+    domains["free_join"]["inline_domain_deliveries"] = u64::MAX.into();
+    assert_eq!(Work::read(&domains).unwrap().0["free_join/projection_shape_checks"], 9);
+    domains["free_join"].as_object_mut().unwrap().remove("projection_shape_checks");
+    assert!(Work::read(&domains).unwrap_err().contains("domain shape"));
+    domains.as_object_mut().unwrap().remove("query_domain_transport");
+    assert_eq!(Work::read(&domains).unwrap().0["free_join/projection_shape_checks"], 0);
+    domains["query_domain_transport"] = serde_json::json!({"schema":"unknown"});
+    assert!(Work::read(&domains).is_err());
     #[cfg(feature = "cell-absorption")]
     {
         let mut member_report = report.clone();
