@@ -19,6 +19,9 @@ mod entry_audit;
 mod reverse;
 #[cfg(feature = "cell-entry-reverse")]
 use reverse::Stats as ReverseStats;
+#[cfg(feature = "parallel-entry-filters")]
+#[path = "sieve_parallel.rs"]
+mod parallel;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct Guard {
@@ -138,6 +141,10 @@ pub struct Stats {
     pub per_rule: Vec<(u64, u64)>,
 }
 pub struct Sieve {
+    #[cfg(feature = "parallel-entry-filters")]
+    pub(crate) parallel_enabled: bool,
+    #[cfg(feature = "parallel-entry-filters")]
+    parallel: parallel::Stats,
     #[cfg(feature = "cell-entry-reverse")]
     pub(crate) reverse_enabled: bool,
     #[cfg(feature = "cell-entry-reverse")]
@@ -167,6 +174,10 @@ impl Sieve {
     pub fn new(program: &Program) -> Self {
         let enabled = true;
         let mut s = Self {
+            #[cfg(feature = "parallel-entry-filters")]
+            parallel_enabled: false,
+            #[cfg(feature = "parallel-entry-filters")]
+            parallel: Default::default(),
             #[cfg(feature = "cell-entry-reverse")]
             reverse_enabled: false,
             #[cfg(feature = "cell-entry-reverse")]
@@ -496,6 +507,8 @@ impl Sieve {
         }
         #[cfg(feature = "cell-entry-reverse")]
         { report["reverse"] = serde_json::json!({"enabled":self.reverse_enabled,"stats":self.reverse}); }
+        #[cfg(feature = "parallel-entry-filters")]
+        { report["parallel"] = serde_json::json!({"enabled":self.parallel_enabled,"stats":self.parallel}); }
         report
     }
 }
@@ -524,6 +537,10 @@ mod tests {
     #[test]
     fn new_key_propagates_even_if_or_did_not_change_bits() {
         let mut s = Sieve {
+            #[cfg(feature = "parallel-entry-filters")]
+            parallel_enabled: false,
+            #[cfg(feature = "parallel-entry-filters")]
+            parallel: Default::default(),
             #[cfg(feature = "cell-entry-reverse")]
             reverse_enabled: false,
             #[cfg(feature = "cell-entry-reverse")]

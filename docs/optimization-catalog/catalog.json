@@ -401,7 +401,8 @@
         "engine/cell-runtime/src/sieve.rs",
         "engine/cell-runtime/src/physical_plan.rs",
         "engine/cell-runtime/src/cell_links.rs",
-        "engine/cell-runtime/src/sieve_reverse.rs"
+        "engine/cell-runtime/src/sieve_reverse.rs",
+        "engine/cell-runtime/src/sieve_parallel.rs"
       ],
       "metrics": {
         "benefit": [
@@ -566,6 +567,41 @@
             "source": "report",
             "pointer": "/sieve/reverse/stats/sort_comparisons",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/attempts",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/epoch_bins",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/candidate_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/peak_candidate_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/prepare_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/pool_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/compact_seconds",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -608,10 +644,35 @@
             "source": "report",
             "pointer": "/sieve/reverse/stats/over_budget",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/batches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/kept",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/chunks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/parallel/stats/probes",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Optional parallel-entry-filters transfers the same ordered necessary guards to the query-worker pool and removes their coordinator evaluation; total guard counts stay equal. Full Raytrace transfers 5,606,010 probes with four workers but establishes no speedup; sampled workers still wait 97-98% of the window. Candidate preparation/compaction, buffer capacities and pool time are charged. Per-worker task seconds measure wall residence, not CPU utilization; parallel probe counts are coverage, not saved work.",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
@@ -620,7 +681,9 @@
         "benchmarks/cell-entry-admission/README.md",
         "benchmarks/cell-entry-admission/results.json",
         "benchmarks/cell-entry-reverse/README.md",
-        "benchmarks/cell-entry-reverse/results.json"
+        "benchmarks/cell-entry-reverse/results.json",
+        "benchmarks/parallel-entry-filters/README.md",
+        "benchmarks/parallel-entry-filters/results.json"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

@@ -55,6 +55,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --cell-absorption (experimental Cell min-write absorption)");
         #[cfg(feature = "cell-entry-reverse")]
         println!("  --cell-entry-reverse (experimental joined-support Entry selection)");
+        #[cfg(feature = "parallel-entry-filters")]
+        println!("  --parallel-entry-filters (complete large Entry filters on query workers)");
         #[cfg(feature = "structural-depth")]
         println!("  --structural-depth 0..3 [--structural-survey | --structural-catalog FILE]");
         #[cfg(feature = "rhs-locals")]
@@ -115,6 +117,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--cell-absorption" => {}
             #[cfg(feature = "cell-entry-reverse")]
             "--cell-entry-reverse" => {}
+            #[cfg(feature = "parallel-entry-filters")]
+            "--parallel-entry-filters" => {}
             _ => return Err(format!("unknown option {flag}").into()),
         }
     }
@@ -228,6 +232,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "cell-entry-reverse")]
     if args.iter().any(|x| x == "--cell-entry-reverse") {
         runtime.use_cell_entry_reverse()?;
+    }
+    #[cfg(feature = "parallel-entry-filters")]
+    if args.iter().any(|x| x == "--parallel-entry-filters") {
+        runtime.use_parallel_entry_filters()?;
     }
     #[cfg(feature = "structural-depth")]
     {

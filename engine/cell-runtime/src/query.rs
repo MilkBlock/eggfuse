@@ -365,6 +365,13 @@ impl Default for QueryIndexes {
     }
 }
 impl QueryIndexes {
+    /// Borrow only the immutable fingerprint directory, never lazy column caches.
+    #[cfg(feature = "parallel-entry-filters")]
+    pub(crate) fn current_fingerprints(&self, graph: &Graph, table: usize)
+        -> Option<&HashMap<Dependency, smallvec::SmallVec<[u64; 4]>>> {
+        let index = self.tables.get(&table)?;
+        (index.version == graph.query_versions[table]).then_some(&index.keys)
+    }
     /// Read one Cell expansion and its exact-value lease from the same selected
     /// bucket. None means over budget; an empty domain still returns a lease so
     /// later matching insertions invalidate a cached negative prefix.

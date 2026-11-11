@@ -1255,6 +1255,27 @@ impl Executor {
                         } else { None };
                         #[cfg(feature = "cell-entry-reverse")]
                         let selected_guard = selected.as_ref().map(|s| s.guard);
+                        #[cfg(feature = "parallel-entry-filters")]
+                        let filtered = if early_sieve && inverted.is_none() && self.completion.is_none()
+                            && {
+                                #[cfg(feature = "cell-entry-reverse")]
+                                { selected.is_none() }
+                                #[cfg(not(feature = "cell-entry-reverse"))]
+                                { true }
+                            } && {
+                                #[cfg(feature = "projection-shared")]
+                                { shared.is_none() }
+                                #[cfg(not(feature = "projection-shared"))]
+                                { true }
+                            } {
+                            self.query_workers.as_ref().and_then(|w| w.filter_pool())
+                                .and_then(|(pool, grain)| self.sieve.parallel_entries(
+                                    &self.graph, &self.query_indexes, rid, batch, pool, grain))
+                        } else { None };
+                        #[cfg(feature = "parallel-entry-filters")]
+                        let pre_filtered = filtered.is_some();
+                        #[cfg(not(feature = "parallel-entry-filters"))]
+                        let pre_filtered = false;
                         #[cfg(feature = "entry-admission-audit")]
                         let gate_probe = early_sieve.then(|| self.sieve.begin_entry_audit(
                             self.graph.epoch, rid, atom, batch.node(), watermark));
@@ -1270,7 +1291,7 @@ impl Executor {
                             #[cfg(feature = "family-overlap")]
                             self.overlap
                                 .seed(watermark, rid, batch.node(), batch.table, w);
-                            if early_sieve {
+                            if early_sieve && !pre_filtered {
                                 #[cfg(feature = "cell-entry-reverse")]
                                 let allowed = match selected_guard {
                                     Some(guard) => self.sieve.allow_selected(rid, atom, batch.table, w, &self.query_indexes, guard),
@@ -1336,6 +1357,8 @@ impl Executor {
                         let full_delta = shared_rows.is_none() && inverted.is_none();
                         #[cfg(all(any(feature = "entry-admission-audit", feature = "family-scan"), feature = "cell-entry-reverse"))]
                         let full_delta = full_delta && selected.is_none();
+                        #[cfg(all(any(feature = "entry-admission-audit", feature = "family-scan"), feature = "parallel-entry-filters"))]
+                        let full_delta = full_delta && !pre_filtered;
                         #[cfg(feature = "family-scan")]
                         if full_delta {
                             self.raw_scan
@@ -1345,8 +1368,12 @@ impl Executor {
                         let selected_rows = selected.map(|s| s.rows);
                         #[cfg(not(feature = "cell-entry-reverse"))]
                         let selected_rows: Option<Vec<(u64,Dependency)>> = None;
+                        #[cfg(not(feature = "parallel-entry-filters"))]
+                        let filtered: Option<Vec<(Dependency,bool)>> = None;
                         if let Some(rows) = selected_rows {
                             for (_,w) in rows { deliver(w)?; }
+                        } else if let Some(rows) = filtered {
+                            for (w,_) in rows { deliver(w)?; }
                         } else if let Some(rows) = shared_rows {
                             for &w in rows {
                                 deliver(w)?;

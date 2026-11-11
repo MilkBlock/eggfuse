@@ -173,6 +173,15 @@ struct Entry<'a> {
     witness: Dependency,
 }
 impl Executor {
+    #[cfg(feature = "parallel-entry-filters")]
+    pub fn use_parallel_entry_filters(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure Entry filters before execution".into()); }
+        if self.query_workers.as_ref().is_none_or(|w| w.pool.is_none()) {
+            return Err("parallel Entry filters require at least two query workers".into());
+        }
+        self.sieve.parallel_enabled = true;
+        Ok(())
+    }
     pub fn use_query_workers(&mut self, workers: usize, grain: usize) -> Result<()> {
         if workers == 0 || grain == 0 { return Err("query workers and grain must be positive".into()); }
         if self.query_workers.is_some() { return Err("query workers already configured".into()); }
@@ -364,6 +373,10 @@ fn evaluate(
 }
 
 impl Workers {
+    #[cfg(feature = "parallel-entry-filters")]
+    pub(crate) fn filter_pool(&self) -> Option<(&rayon::ThreadPool, usize)> {
+        self.pool.as_ref().map(|p| (p, self.grain))
+    }
     fn absorb(&mut self, c: &Counts, worker: Option<usize>) {
         #[cfg(feature = "cell-query-sharing-audit")]
         self.stats.sharing_audit.add(&c.sharing_audit);

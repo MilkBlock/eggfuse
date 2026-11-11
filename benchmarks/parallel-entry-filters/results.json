@@ -1,0 +1,1215 @@
+{
+  "control_commit": "50316626",
+  "scope": "standalone Cell CPU, not native egglog",
+  "goal_achieved": false,
+  "evidence_sha256": {
+    "timing/samples.json": "089245bfd8cd7ac77ba78d20ea9cb9b48f3c5d9c0caded12b503bcfa8d58de73",
+    "profile/diagnostic.json": "6a3e136780568fe36df67073c17d1124e2abcc1354129e19c29cbb28c0ba89c8",
+    "profile/stacks.txt": "84e0a55d5dbae8c6781d053d346f97b68cb025b9a9ed0f9c274068f010fc1e57",
+    "semantic-acceptance.json": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  },
+  "lanes": {
+    "serial": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption"
+      ],
+      "runtime_sha256": "cd1bd56412ef6f807ec5dd7314abb1663641de43228bc9e193bdec5c67d554c6",
+      "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 7.595109834,
+          "process_wall_seconds": 14.274009457993088,
+          "process_user_seconds": 8.836568999999997,
+          "process_system_seconds": 1.5040400000000007,
+          "phases": {
+            "delivery_gc": 0.019579542000000002,
+            "query_update": 1.607466092,
+            "repair": 0.594155709,
+            "rhs": 2.079636498,
+            "search": 3.289231706
+          },
+          "process_average_cores": 0.7244361880543322,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.652059292,
+          "process_wall_seconds": 11.867825499997707,
+          "process_user_seconds": 7.226022999999998,
+          "process_system_seconds": 1.3571279999999994,
+          "phases": {
+            "delivery_gc": 0.015893207,
+            "query_update": 1.167635956,
+            "repair": 0.482720205,
+            "rhs": 1.600243564,
+            "search": 2.382001437
+          },
+          "process_average_cores": 0.723228615048448,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 5.617184292,
+          "process_wall_seconds": 12.081220124993706,
+          "process_user_seconds": 7.215586999999999,
+          "process_system_seconds": 1.3901900000000005,
+          "phases": {
+            "delivery_gc": 0.01600214,
+            "query_update": 1.160152401,
+            "repair": 0.484665533,
+            "rhs": 1.564164292,
+            "search": 2.388706269
+          },
+          "process_average_cores": 0.7123268106171092,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        }
+      ],
+      "warmups": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.971768292,
+          "process_wall_seconds": 11.522914999979548,
+          "process_user_seconds": 7.518378,
+          "process_system_seconds": 1.118539,
+          "phases": {
+            "delivery_gc": 0.017008672,
+            "query_update": 1.235237874,
+            "repair": 0.508979286,
+            "rhs": 1.670337639,
+            "search": 2.536302808
+          },
+          "process_average_cores": 0.7495427155381542,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        }
+      ],
+      "median_inference_seconds": 5.652059292
+    },
+    "point4": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64"
+      ],
+      "runtime_sha256": "cd1bd56412ef6f807ec5dd7314abb1663641de43228bc9e193bdec5c67d554c6",
+      "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 14.617802917,
+          "process_wall_seconds": 21.762859416980064,
+          "process_user_seconds": 11.987918,
+          "process_system_seconds": 1.9032799999999996,
+          "phases": {
+            "delivery_gc": 0.027297136,
+            "query_update": 2.626986003,
+            "repair": 0.997750452,
+            "rhs": 3.341968505,
+            "search": 7.614448806
+          },
+          "process_average_cores": 0.6382983841342857,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.675087584,
+          "process_wall_seconds": 11.90016708400799,
+          "process_user_seconds": 7.345783999999995,
+          "process_system_seconds": 1.454804000000001,
+          "phases": {
+            "delivery_gc": 0.015949464,
+            "query_update": 1.180285906,
+            "repair": 0.482201582,
+            "rhs": 1.597754208,
+            "search": 2.39479894
+          },
+          "process_average_cores": 0.7395348265174062,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 5.756987292,
+          "process_wall_seconds": 12.268538250005804,
+          "process_user_seconds": 7.46764300000001,
+          "process_system_seconds": 1.4489839999999994,
+          "phases": {
+            "delivery_gc": 0.015874634,
+            "query_update": 1.205484624,
+            "repair": 0.476679249,
+            "rhs": 1.604086067,
+            "search": 2.450814435
+          },
+          "process_average_cores": 0.7267880507277051,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        }
+      ],
+      "warmups": [
+        {
+          "iteration": -1,
+          "inference_seconds": 6.4448184170000005,
+          "process_wall_seconds": 11.279879459005315,
+          "process_user_seconds": 8.173255999999999,
+          "process_system_seconds": 1.2281570000000004,
+          "phases": {
+            "delivery_gc": 0.018062116,
+            "query_update": 1.336403362,
+            "repair": 0.543135522,
+            "rhs": 1.836758623,
+            "search": 2.705794437
+          },
+          "process_average_cores": 0.8334675059399115,
+          "entry_filters": {
+            "enabled": false,
+            "stats": {
+              "attempts": 0,
+              "batches": 0,
+              "candidate_capacity_bytes": 0,
+              "chunks": 0,
+              "compact_seconds": 0.0,
+              "epoch_bins": 0,
+              "kept": 0,
+              "peak_candidate_bytes": 0,
+              "pool_seconds": 0.0,
+              "prepare_seconds": 0.0,
+              "probes": 0,
+              "rows": 0,
+              "worker_probes": [],
+              "worker_rows": [],
+              "worker_task_seconds": []
+            }
+          }
+        }
+      ],
+      "median_inference_seconds": 5.756987292
+    },
+    "filter4": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--query-grain",
+        "64",
+        "--parallel-entry-filters"
+      ],
+      "runtime_sha256": "cd1bd56412ef6f807ec5dd7314abb1663641de43228bc9e193bdec5c67d554c6",
+      "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 5.793170041,
+          "process_wall_seconds": 11.89772224999615,
+          "process_user_seconds": 7.575649999999996,
+          "process_system_seconds": 1.503086999999999,
+          "phases": {
+            "delivery_gc": 0.016321629,
+            "query_update": 1.205142281,
+            "repair": 0.493491425,
+            "rhs": 1.630134553,
+            "search": 2.44374738
+          },
+          "process_average_cores": 0.7630651320678572,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 2390,
+              "candidate_capacity_bytes": 202063872,
+              "chunks": 23039,
+              "compact_seconds": 0.005787881,
+              "epoch_bins": 67263,
+              "kept": 619113,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06474383799999987,
+              "prepare_seconds": 0.01907695499999998,
+              "probes": 5606010,
+              "rows": 5589338,
+              "worker_probes": [
+                1780065,
+                1470308,
+                1254981,
+                1100656
+              ],
+              "worker_rows": [
+                1774190,
+                1466232,
+                1251370,
+                1097546
+              ],
+              "worker_task_seconds": [
+                0.033617434999999904,
+                0.02788383599999999,
+                0.023988797000000048,
+                0.021308348000000036
+              ]
+            }
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.699124417,
+          "process_wall_seconds": 12.836307999998098,
+          "process_user_seconds": 7.476085000000012,
+          "process_system_seconds": 1.5650130000000004,
+          "phases": {
+            "delivery_gc": 0.015775418,
+            "query_update": 1.19879951,
+            "repair": 0.473010852,
+            "rhs": 1.591578195,
+            "search": 2.415876527
+          },
+          "process_average_cores": 0.7043378828243566,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 2390,
+              "candidate_capacity_bytes": 202063872,
+              "chunks": 23039,
+              "compact_seconds": 0.005687326000000007,
+              "epoch_bins": 67263,
+              "kept": 619113,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06611629699999998,
+              "prepare_seconds": 0.019641554000000002,
+              "probes": 5606010,
+              "rows": 5589338,
+              "worker_probes": [
+                1751176,
+                1453368,
+                1271530,
+                1129936
+              ],
+              "worker_rows": [
+                1745950,
+                1449699,
+                1267903,
+                1125786
+              ],
+              "worker_task_seconds": [
+                0.03340805100000004,
+                0.027630086000000054,
+                0.024467043000000004,
+                0.02184913799999997
+              ]
+            }
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 5.756365166,
+          "process_wall_seconds": 12.110487208992708,
+          "process_user_seconds": 7.542268000000007,
+          "process_system_seconds": 1.564631000000002,
+          "phases": {
+            "delivery_gc": 0.016944253,
+            "query_update": 1.195418027,
+            "repair": 0.503428179,
+            "rhs": 1.62053144,
+            "search": 2.416047811
+          },
+          "process_average_cores": 0.7519845273638233,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 2390,
+              "candidate_capacity_bytes": 202063872,
+              "chunks": 23039,
+              "compact_seconds": 0.0057838909999999985,
+              "epoch_bins": 67263,
+              "kept": 619113,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06407306800000011,
+              "prepare_seconds": 0.019249779999999977,
+              "probes": 5606010,
+              "rows": 5589338,
+              "worker_probes": [
+                1800528,
+                1471245,
+                1232555,
+                1101682
+              ],
+              "worker_rows": [
+                1795443,
+                1467713,
+                1228907,
+                1097275
+              ],
+              "worker_task_seconds": [
+                0.03382782299999997,
+                0.02782647000000003,
+                0.02362155000000001,
+                0.02122021100000003
+              ]
+            }
+          }
+        }
+      ],
+      "warmups": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.713278916,
+          "process_wall_seconds": 10.350203374982812,
+          "process_user_seconds": 7.475806,
+          "process_system_seconds": 1.2329269999999999,
+          "phases": {
+            "delivery_gc": 0.017298302,
+            "query_update": 1.189805641,
+            "repair": 0.499866463,
+            "rhs": 1.627138263,
+            "search": 2.37514259
+          },
+          "process_average_cores": 0.8414069448190397,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 2390,
+              "candidate_capacity_bytes": 202063872,
+              "chunks": 23039,
+              "compact_seconds": 0.005787846000000012,
+              "epoch_bins": 67263,
+              "kept": 619113,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06334302199999985,
+              "prepare_seconds": 0.019423729999999986,
+              "probes": 5606010,
+              "rows": 5589338,
+              "worker_probes": [
+                1792399,
+                1477362,
+                1237234,
+                1099015
+              ],
+              "worker_rows": [
+                1786636,
+                1474235,
+                1232668,
+                1095799
+              ],
+              "worker_task_seconds": [
+                0.03314844100000006,
+                0.027396265000000034,
+                0.02323370900000002,
+                0.020969628999999986
+              ]
+            }
+          }
+        }
+      ],
+      "median_inference_seconds": 5.756365166
+    },
+    "filter8": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "8",
+        "--query-grain",
+        "64",
+        "--parallel-entry-filters"
+      ],
+      "runtime_sha256": "cd1bd56412ef6f807ec5dd7314abb1663641de43228bc9e193bdec5c67d554c6",
+      "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 6.245179667,
+          "process_wall_seconds": 12.43620783300139,
+          "process_user_seconds": 8.111989000000001,
+          "process_system_seconds": 1.8345190000000002,
+          "phases": {
+            "delivery_gc": 0.016392737,
+            "query_update": 1.306395401,
+            "repair": 0.489521928,
+            "rhs": 1.737323868,
+            "search": 2.691371826
+          },
+          "process_average_cores": 0.7998023299036072,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 1153,
+              "candidate_capacity_bytes": 141262848,
+              "chunks": 15312,
+              "compact_seconds": 0.003847233999999998,
+              "epoch_bins": 68695,
+              "kept": 427855,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.07836859099999992,
+              "prepare_seconds": 0.014412517000000019,
+              "probes": 3782495,
+              "rows": 3768387,
+              "worker_probes": [
+                736979,
+                508002,
+                532224,
+                477710,
+                393408,
+                361016,
+                397250,
+                375906
+              ],
+              "worker_rows": [
+                734186,
+                506147,
+                530731,
+                476106,
+                391688,
+                360092,
+                395649,
+                373788
+              ],
+              "worker_task_seconds": [
+                0.016571317000000037,
+                0.010696181,
+                0.011344914999999988,
+                0.010347046000000004,
+                0.008554439999999996,
+                0.008036016000000005,
+                0.008700079999999992,
+                0.007910373999999994
+              ]
+            }
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 6.430172541,
+          "process_wall_seconds": 13.679692000005161,
+          "process_user_seconds": 8.319676999999999,
+          "process_system_seconds": 1.8571549999999988,
+          "phases": {
+            "delivery_gc": 0.017639186,
+            "query_update": 1.338829686,
+            "repair": 0.513931677,
+            "rhs": 1.820792954,
+            "search": 2.73470031
+          },
+          "process_average_cores": 0.7439372172996408,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 1153,
+              "candidate_capacity_bytes": 141262848,
+              "chunks": 15312,
+              "compact_seconds": 0.003897542000000001,
+              "epoch_bins": 68695,
+              "kept": 427855,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06685350799999998,
+              "prepare_seconds": 0.014397882999999988,
+              "probes": 3782495,
+              "rows": 3768387,
+              "worker_probes": [
+                727323,
+                507890,
+                506604,
+                493072,
+                392573,
+                384582,
+                400892,
+                369559
+              ],
+              "worker_rows": [
+                724999,
+                506053,
+                505214,
+                491241,
+                390570,
+                383018,
+                399058,
+                368234
+              ],
+              "worker_task_seconds": [
+                0.01642281100000002,
+                0.010825779000000025,
+                0.01095837999999999,
+                0.010478965000000008,
+                0.008455672999999995,
+                0.008431744,
+                0.008629592000000004,
+                0.007925457999999993
+              ]
+            }
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 6.229076583,
+          "process_wall_seconds": 12.685992125014309,
+          "process_user_seconds": 8.095324999999988,
+          "process_system_seconds": 1.9606959999999987,
+          "phases": {
+            "delivery_gc": 0.017996295,
+            "query_update": 1.285459729,
+            "repair": 0.515024917,
+            "rhs": 1.772584498,
+            "search": 2.633638642
+          },
+          "process_average_cores": 0.7926869968783498,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 1153,
+              "candidate_capacity_bytes": 141262848,
+              "chunks": 15312,
+              "compact_seconds": 0.0038420439999999985,
+              "epoch_bins": 68695,
+              "kept": 427855,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.07110895399999995,
+              "prepare_seconds": 0.01427037300000002,
+              "probes": 3782495,
+              "rows": 3768387,
+              "worker_probes": [
+                742015,
+                515928,
+                517419,
+                489952,
+                400007,
+                359476,
+                389573,
+                368125
+              ],
+              "worker_rows": [
+                739165,
+                514679,
+                516022,
+                488085,
+                398141,
+                357664,
+                388266,
+                366365
+              ],
+              "worker_task_seconds": [
+                0.01642517600000001,
+                0.011285952000000017,
+                0.011319057000000013,
+                0.010911928000000003,
+                0.009069077000000005,
+                0.008224849999999995,
+                0.008610042000000005,
+                0.007967425000000012
+              ]
+            }
+          }
+        }
+      ],
+      "warmups": [
+        {
+          "iteration": -1,
+          "inference_seconds": 6.4493490829999995,
+          "process_wall_seconds": 11.044819875009125,
+          "process_user_seconds": 8.315241,
+          "process_system_seconds": 1.565051,
+          "phases": {
+            "delivery_gc": 0.016990391,
+            "query_update": 1.333635286,
+            "repair": 0.510568309,
+            "rhs": 1.804912703,
+            "search": 2.778668719
+          },
+          "process_average_cores": 0.8945634344255738,
+          "entry_filters": {
+            "enabled": true,
+            "stats": {
+              "attempts": 86134,
+              "batches": 1153,
+              "candidate_capacity_bytes": 141262848,
+              "chunks": 15312,
+              "compact_seconds": 0.003884966000000007,
+              "epoch_bins": 68695,
+              "kept": 427855,
+              "peak_candidate_bytes": 786432,
+              "pool_seconds": 0.06985370400000007,
+              "prepare_seconds": 0.014422779,
+              "probes": 3782495,
+              "rows": 3768387,
+              "worker_probes": [
+                718420,
+                500586,
+                519945,
+                477245,
+                411655,
+                367728,
+                413634,
+                373282
+              ],
+              "worker_rows": [
+                716118,
+                498937,
+                518501,
+                475334,
+                410496,
+                365740,
+                411920,
+                371341
+              ],
+              "worker_task_seconds": [
+                0.016807726000000058,
+                0.011380535000000015,
+                0.011712076999999996,
+                0.011058420000000001,
+                0.009353538000000002,
+                0.008370131000000012,
+                0.009188096999999978,
+                0.008590138999999984
+              ]
+            }
+          }
+        }
+      ],
+      "median_inference_seconds": 6.245179667
+    }
+  },
+  "comparisons": {
+    "filter4_over_point4": {
+      "paired_median_ratio": 0.9998919354918736,
+      "ratio_of_medians": 0.9998919354918736,
+      "paired_bootstrap_95_interval": [
+        0.3963092178690371,
+        1.004235499918586
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    },
+    "filter4_over_serial": {
+      "paired_median_ratio": 1.0083270755964322,
+      "ratio_of_medians": 1.0184544904098294,
+      "paired_bootstrap_95_interval": [
+        0.7627500019902939,
+        1.0247776940838886
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    },
+    "filter8_over_filter4": {
+      "paired_median_ratio": 1.0821197758252157,
+      "ratio_of_medians": 1.084917215448246,
+      "paired_bootstrap_95_interval": [
+        1.0780245742488126,
+        1.1282737611095743
+      ],
+      "bootstrap_resamples": 10000,
+      "pairing": "same interleaved repetition index"
+    }
+  },
+  "limits": "Three interleaved samples per lane, one warmup; all retained. Background system/application activity was present. Whole-process average cores includes load/export and is not inference utilization. Eight workers also raise the filter admission threshold from 1024 to 2048 rows. No thread scaling or overall speedup established.",
+  "profile": {
+    "sampling": {
+      "command": [
+        "/usr/bin/sample",
+        "29866",
+        "5",
+        "2",
+        "-mayDie",
+        "-file",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/parallel-entry-filters/profile/stacks.txt"
+      ],
+      "trigger": "first source Run in progress log",
+      "trigger_seconds_since_launch": 0.39119349999236874,
+      "command_end_seconds_since_launch": 5.622278541006381,
+      "stacks_sha256": "84e0a55d5dbae8c6781d053d346f97b68cb025b9a9ed0f9c274068f010fc1e57",
+      "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+    },
+    "main_inference_inclusive": {
+      "eggfuse_cell_runtime::executor::Executor::execute_until": 1820,
+      "eggfuse_cell_runtime::executor::Executor::run": 1814,
+      "eggfuse_cell_runtime::executor::Executor::matches": 717,
+      "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables": 388,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::batches": 370,
+      "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$": 263,
+      "eggfuse_cell_runtime::cell::eval::RhsFrame::execute": 192,
+      "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit": 178,
+      "eggfuse_cell_runtime::change_batch::Publication::publish": 162,
+      "eggfuse_cell_runtime::executor::execute_kernel::Frame::start": 150,
+      "eggfuse_cell_runtime::graph::Graph::repair_selected": 150,
+      "eggfuse_cell_runtime::executor::execute_kernel::Frame::step": 148,
+      "eggfuse_cell_runtime::query::Columns::put": 107,
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges": 107,
+      "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct": 105,
+      "eggfuse_cell_runtime::sieve::Sieve::publish": 101,
+      "std::io::stdio::_eprint": 99,
+      "_$LT$$RF$std..io..stdio..Stderr$u20$as$u20$std..io..Write$GT$::write_fmt": 99,
+      "core::fmt::write": 99,
+      "_$LT$std..io..default_write_fmt..Adapter$LT$T$GT$$u20$as$u20$core..fmt..Write$GT$::write_str": 98,
+      "_$LT$std..io..stdio..StderrLock$u20$as$u20$std..io..Write$GT$::write_all": 98,
+      "write": 97,
+      "eggfuse_cell_runtime::graph::Graph::construct_inner": 96,
+      "eggfuse_cell_runtime::stage_spine::Programs::publish_impl": 80,
+      "eggfuse_cell_runtime::graph::Graph::apply_write": 78,
+      "eggfuse_cell_runtime::executor::execute_kernel::Frame::step::_$u7b$$u7b$closure$u7d$$u7d$": 76,
+      "eggfuse_cell_runtime::graph::Graph::activate": 75,
+      "eggfuse_cell_runtime::graph::Graph::set_inner": 72,
+      "eggfuse_cell_runtime::graph::Graph::insert_constructor": 70,
+      "eggfuse_cell_runtime::graph::Graph::set_function_from": 69,
+      "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell": 69,
+      "eggfuse_cell_runtime::stage_spine::Programs::complete": 65,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh": 64,
+      "eggfuse_cell_runtime::graph::Graph::complete_cell_collision": 63,
+      "eggfuse_cell_runtime::graph::Graph::fact": 61,
+      "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert": 60,
+      "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert": 57,
+      "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision": 57,
+      "eggfuse_cell_runtime::sieve::Sieve::admit": 53,
+      "eggfuse_cell_runtime::query::QueryIndexes::single_projection": 50,
+      "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch": 48,
+      "<deduplicated_symbol>": 46,
+      "rayon_core::registry::Registry::in_worker": 46,
+      "std::thread::local::LocalKey$LT$T$GT$::with": 46,
+      "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend": 46,
+      "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert": 46,
+      "core::slice::sort::stable::driftsort_main": 46,
+      "eggfuse_cell_runtime::graph::Graph::union": 45,
+      "rayon_core::latch::LockLatch::wait_and_reset": 44,
+      "_pthread_cond_wait": 44,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication": 44,
+      "__psynch_cvwait": 43,
+      "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate": 43,
+      "core::slice::sort::stable::drift::sort": 43,
+      "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..FromIterator$LT$$LP$K$C$V$RP$$GT$$GT$::from_iter": 41,
+      "core::slice::sort::stable::quicksort::quicksort": 39,
+      "alloc::raw_vec::RawVec$LT$T$C$A$GT$::grow_one": 38,
+      "eggfuse_cell_runtime::executor::Executor::solve": 38,
+      "eggfuse_cell_runtime::graph::Graph::retire": 38,
+      "eggfuse_cell_runtime::sieve::parallel::_$LT$impl$u20$eggfuse_cell_runtime..sieve..Sieve$GT$::parallel_entries": 35,
+      "eggfuse_cell_runtime::graph::Graph::lookup_canonical": 34,
+      "eggfuse_cell_runtime::stage_spine::Programs::answers_routed": 34,
+      "eggfuse_cell_runtime::stage_spine::Programs::finish_answers": 33,
+      "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::remove": 33,
+      "eggfuse_cell_runtime::entry_schedule::epoch_runs::Epochs::remove": 32,
+      "eggfuse_cell_runtime::executor::Executor::dedup_bindings": 32,
+      "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert": 31,
+      "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow": 30,
+      "eggfuse_cell_runtime::sieve::Summary::allows": 29,
+      "clock_gettime": 29,
+      "eggfuse_cell_runtime::executor::Executor::scan_domain": 28,
+      "core::iter::adapters::try_process": 28,
+      "_$LT$alloc..vec..Vec$LT$T$GT$$u20$as$u20$alloc..vec..spec_from_iter_nested..SpecFromIterNested$LT$T$C$I$GT$$GT$::from_iter": 27,
+      "mi_free": 27,
+      "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next": 27,
+      "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry": 27,
+      "mach_absolute_time": 27,
+      "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::remove": 27,
+      "std::sys::pal::unix::time::Timespec::now": 27,
+      "eggfuse_cell_runtime::value::root": 27,
+      "eggfuse_cell_runtime::graph::Graph::inline_arguments": 27,
+      "eggfuse_cell_runtime::sieve::Sieve::allow": 26,
+      "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash": 26,
+      "eggfuse_cell_runtime::cell::query::Step::bind": 26,
+      "clock_gettime_nsec_np": 26,
+      "eggfuse_cell_runtime::cell::binding::bind_operand": 25,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::publish_except": 25,
+      "eggfuse_cell_runtime::graph::cell_prefix::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::start_cell": 24,
+      "_platform_memmove": 23,
+      "core::slice::sort::unstable::quicksort::quicksort": 23,
+      "eggfuse_cell_runtime::graph::Graph::slot_fields": 23,
+      "eggfuse_cell_runtime::executor::query_workers::Workers::finish_run": 23,
+      "eggfuse_cell_runtime::graph::Graph::visible_epoch": 22,
+      "eggfuse_cell_runtime::executor::Executor::scan_row": 21,
+      "eggfuse_cell_runtime::executor::view_exec::Blocks::matches": 21,
+      "eggfuse_cell_runtime::graph::Graph::merge_value": 19,
+      "mi_theap_malloc_zero_aligned_at_overalloc": 18,
+      "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::remove": 17,
+      "eggfuse_cell_runtime::local_context::Contexts::matches": 17,
+      "eggfuse_cell_runtime::query::QueryIndexes::hash_candidates": 17,
+      "_mi_malloc_generic": 16,
+      "_mi_theap_realloc_zero": 16,
+      "eggfuse_cell_runtime::query::Columns::remove": 16,
+      "eggfuse_cell_runtime::graph::Graph::decode_fact": 16,
+      "core::fmt::num::imp::_$LT$impl$u20$core..fmt..Display$u20$for$u20$u64$GT$::fmt": 15,
+      "eggfuse_cell_runtime::query::QueryIndexes::hashes": 14,
+      "eggfuse_cell_runtime::graph::writer_frames::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::install_writer": 13,
+      "eggfuse_cell_runtime::stage_spine::Programs::begin_step": 13,
+      "eggfuse_cell_runtime::sieve::support_keys::Support::insert": 12,
+      "std::time::Instant::elapsed": 12,
+      "eggfuse_cell_runtime::graph::Graph::receipt_visible": 12,
+      "mi_page_queue_find_free_ex": 11,
+      "core::ptr::drop_in_place$LT$$u5b$eggfuse_cell_runtime..value..Value$u5d$$GT$": 11,
+      "eggfuse_cell_runtime::stage_spine::read_port": 11,
+      "_$LT$eggfuse_cell_runtime..value..Value$u20$as$u20$core..cmp..Ord$GT$::cmp": 11,
+      "eggfuse_cell_runtime::executor::view_exec::Group::emit": 11,
+      "_$LT$eggfuse_cell_runtime..cell..eval..MergeFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct": 11,
+      "eggfuse_cell_runtime::graph::Graph::dynamic_construct": 11,
+      "eggfuse_cell_runtime::row_kernel::PortWrite::project": 11,
+      "eggfuse_cell_runtime::query::QueryIndexes::ensure_selected": 10,
+      "eggfuse_cell_runtime::graph::Graph::function_index": 10,
+      "_$LT$eggfuse_cell_runtime..value..Value$u20$as$u20$core..cmp..PartialEq$GT$::eq": 10,
+      "alloc::collections::btree::node::Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..Edge$GT$::insert_recursing": 10,
+      "alloc::collections::btree::remove::_$LT$impl$u20$alloc..collections..btree..node..Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..KV$GT$$GT$::remove_leaf_kv": 10,
+      "alloc::sync::Arc$LT$$u5b$T$u5d$$GT$::from_iter_exact": 10,
+      "mi_malloc_aligned": 9,
+      "core::cell::once::OnceCell$LT$T$GT$::try_init": 9,
+      "eggfuse_cell_runtime::executor::free_join::FreeJoin::reverse": 9,
+      "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold": 9,
+      "eggfuse_cell_runtime::stage_spine::Programs::materialize_publication": 9,
+      "eggfuse_cell_runtime::graph::Graph::live_table": 9,
+      "hashbrown::raw::RawTable$LT$T$C$A$GT$::remove_entry": 9,
+      "eggfuse_cell_runtime::graph::reverse_uses::UseSet::remove": 9,
+      "eggfuse_cell_runtime::executor::view_exec::Group::emit_member": 8,
+      "core::slice::sort::shared::smallsort::small_sort_general": 8,
+      "core::hash::Hash::hash_slice": 8,
+      "eggfuse_cell_runtime::graph::writer_frames::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::detach_origin": 8,
+      "eggfuse_cell_runtime::graph::Graph::keep_writer": 8,
+      "eggfuse_cell_runtime::query::QueryIndexes::current_key_support": 7,
+      "mi_theap_malloc_zero_aligned_at_generic": 7,
+      "eggfuse_cell_runtime::sieve::Sieve::prepare": 7,
+      "eggfuse_cell_runtime::sieve::Sieve::ensure": 7,
+      "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::contains_key": 7,
+      "alloc::sync::Arc$LT$T$C$A$GT$::make_mut": 7,
+      "eggfuse_cell_runtime::graph::writer_frames::Directory::insert": 7,
+      "eggfuse_cell_runtime::query::QueryIndexes::probe": 6,
+      "mi_page_free_list_extend": 6,
+      "core::slice::sort::shared::smallsort::small_sort_general_with_scratch": 6,
+      "core::ptr::drop_in_place$LT$core..option..Option$LT$alloc..boxed..Box$LT$std..collections..hash..map..HashMap$LT$alloc..vec..Vec$LT$$LP$usize$C$u64$RP$$GT$$C$alloc..rc..Rc$LT$alloc..vec..Vec$LT$eggfuse_cell_runtime..graph..Dependency$GT$$GT$$C$rustc_hash..FxBuildHasher$GT$$GT$$GT$$GT$": 6,
+      "_platform_memcmp": 6,
+      "eggfuse_cell_runtime::stage_spine::Programs::install_anchor": 6,
+      "eggfuse_cell_runtime::graph::reverse_uses::UseSet::insert": 6,
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges::collect": 6,
+      "eggfuse_cell_runtime::change_batch::ChangeBatch::touch": 6,
+      "eggfuse_cell_runtime::graph::Graph::find_repair_collision": 6,
+      "eggfuse_cell_runtime::stage_spine::Programs::finish_worker_rule": 6,
+      "eggfuse_cell_runtime::stage_spine::Programs::begin_effects": 6,
+      "alloc::raw_vec::RawVecInner$LT$A$GT$::reserve::do_reserve_and_handle": 5,
+      "alloc::rc::Rc$LT$T$C$A$GT$::drop_slow": 5,
+      "alloc::sync::Arc$LT$T$C$A$GT$::drop_slow": 5,
+      "eggfuse_cell_runtime::neighbor::Context::point": 5,
+      "alloc::raw_vec::RawVecInner$LT$A$GT$::grow_amortized": 5,
+      "eggfuse_cell_runtime::executor::free_join::FreeJoin::partition": 5,
+      "_$LT$alloc..vec..Vec$LT$T$GT$$u20$as$u20$alloc..vec..spec_from_iter..SpecFromIter$LT$T$C$I$GT$$GT$::from_iter": 5,
+      "_$LT$alloc..collections..btree..map..BTreeMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..FromIterator$LT$$LP$K$C$V$RP$$GT$$GT$::from_iter": 5,
+      "eggfuse_cell_runtime::executor::Executor::points": 5,
+      "_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop": 5,
+      "eggfuse_cell_runtime::executor::view_exec::Blocks::publish_table": 5,
+      "eggfuse_cell_runtime::executor::view_exec::Directory::update": 5,
+      "eggfuse_cell_runtime::neighbor::PortWriter::update": 5,
+      "eggfuse_cell_runtime::graph::Graph::resolve_receipt": 5,
+      "eggfuse_cell_runtime::query::QueryIndexes::single_support": 4,
+      "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit::_$u7b$$u7b$closure$u7d$$u7d$": 4,
+      "smallvec::SmallVec$LT$A$GT$::reserve_one_unchecked": 4,
+      "smallvec::SmallVec$LT$A$GT$::try_grow": 4,
+      "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::insert": 4,
+      "eggfuse_cell_runtime::query::QueryIndexes::reverse_cover": 4,
+      "OUTLINED_FUNCTION_45": 4,
+      "eggfuse_cell_runtime::entry_schedule::Inputs::set": 4,
+      "eggfuse_cell_runtime::range_index::Axis::update": 4,
+      "eggfuse_cell_runtime::executor::query_workers::Workers::group_source": 4,
+      "core::slice::sort::shared::smallsort::sort4_stable": 4,
+      "eggfuse_cell_runtime::cell::query::Field::read": 4,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::terminal_batch": 4,
+      "eggfuse_cell_runtime::local_context::emit": 4,
+      "eggfuse_cell_runtime::executor::free_join::FreeJoin::disjoint": 4,
+      "eggfuse_cell_runtime::query::QueryIndexes::disjoint_small": 4,
+      "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::remove": 4,
+      "eggfuse_cell_runtime::range_index::RangeWriter::update": 4,
+      "eggfuse_cell_runtime::graph::Graph::store_cell": 4,
+      "eggfuse_cell_runtime::graph::arena::Cells::insert": 4,
+      "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$core..ops..index..Index$LT$$RF$u32$GT$$GT$::index": 4,
+      "eggfuse_cell_runtime::graph::Graph::new_cell": 4,
+      "eggfuse_cell_runtime::graph::Graph::begin_transient": 4,
+      "OUTLINED_FUNCTION_41": 3,
+      "_mi_arenas_collect": 3,
+      "eggfuse_cell_runtime::stage_spine::Published::expand": 3,
+      "OUTLINED_FUNCTION_32": 3,
+      "core::slice::sort::shared::smallsort::insertion_sort_shift_left": 3,
+      "eggfuse_cell_runtime::query::Columns::best": 3,
+      "core::hash::BuildHasher::hash_one": 3,
+      "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write": 3,
+      "eggfuse_cell_runtime::query::QueryIndexes::ensure": 3,
+      "_$LT$alloc..collections..btree..set..BTreeSet$LT$T$GT$$u20$as$u20$core..convert..From$LT$$u5b$T$u3b$$u20$N$u5d$$GT$$GT$::from": 3,
+      "core::ptr::drop_in_place$LT$eggfuse_cell_runtime..stage_spine..CompletionPhase$GT$": 3,
+      "eggfuse_cell_runtime::value::canon": 3,
+      "core::ptr::drop_in_place$LT$eggfuse_cell_runtime..graph..Cell$GT$": 3,
+      "_platform_memset": 3,
+      "eggfuse_cell_runtime::graph::scalar_keys::FunctionKeys::insert": 3,
+      "eggfuse_cell_runtime::iterative::Training::applied": 3,
+      "_$LT$eggfuse_cell_runtime..cell..effects..Effects$u20$as$u20$eggfuse_cell_runtime..cell..effects..CompletedEffects$GT$::finish": 3,
+      "eggfuse_cell_runtime::stage_spine::Started::seed_root": 3,
+      "eggfuse_cell_runtime::stage_spine::Programs::capture_receipt": 3,
+      "eggfuse_cell_runtime::stage_spine::SetCounts::add": 3,
+      "eggfuse_cell_runtime::graph::Graph::start_completion": 3,
+      "eggfuse_cell_runtime::stage_spine::Programs::complete_absorbed_root": 3,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::stage_absorbed_root": 3,
+      "rayon_core::sleep::Sleep::wake_any_threads": 2,
+      "rayon_core::sleep::Sleep::wake_specific_thread": 2,
+      "pthread_cond_signal": 2,
+      "__psynch_cvsignal": 2,
+      "eggfuse_cell_runtime::entry_schedule::Batch::delta_exceeds": 2,
+      "alloc::collections::btree::navigate::_$LT$impl$u20$alloc..collections..btree..node..NodeRef$LT$BorrowType$C$K$C$V$C$alloc..collections..btree..node..marker..LeafOrInternal$GT$$GT$::find_leaf_edges_spanning_range": 2,
+      "alloc::vec::Vec$LT$T$C$A$GT$::retain": 2,
+      "eggfuse_cell_runtime::entry_schedule::Batch::entry": 2,
+      "eggfuse_cell_runtime::value::primitive": 2,
+      "eggfuse_cell_runtime::neighbor::Context::finish_group": 2,
+      "alloc::vec::Vec$LT$T$C$A$GT$::extend_with": 2,
+      "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop": 2,
+      "_$LT$eggfuse_cell_runtime..value..Value$u20$as$u20$core..hash..Hash$GT$::hash": 2,
+      "alloc::collections::btree::append::_$LT$impl$u20$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Owned$C$K$C$V$C$alloc..collections..btree..node..marker..LeafOrInternal$GT$$GT$::bulk_push": 2,
+      "core::slice::sort::shared::smallsort::insert_tail": 2,
+      "core::slice::sort::shared::pivot::median3_rec": 2,
+      "_mach_boottime_usec": 2,
+      "gettimeofday": 2,
+      "__commpage_gettimeofday_internal": 2,
+      "eggfuse_cell_runtime::query::QueryIndexes::domain": 2,
+      "alloc::collections::btree::node::BalancingContext$LT$K$C$V$GT$::merge_tracking_child_edge": 2,
+      "_$LT$alloc..collections..btree..map..BTreeMap$LT$K$C$V$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop": 2,
+      "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::get": 2,
+      "eggfuse_cell_runtime::graph::Graph::retire_empty": 2,
+      "eggfuse_cell_runtime::cell::effects::Effects::slot": 2,
+      "eggfuse_cell_runtime::graph::unit_ports::Units::install": 2,
+      "eggfuse_cell_runtime::graph::Graph::arguments": 2,
+      "eggfuse_cell_runtime::graph::Graph::function_origin": 2,
+      "core::ptr::drop_in_place$LT$$LP$eggfuse_cell_runtime..value..Value$C$eggfuse_cell_runtime..value..Value$RP$$GT$": 2,
+      "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CellFrame$GT$::assign": 2,
+      "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$": 2,
+      "eggfuse_cell_runtime::result_handoff::History::capture_layout": 2,
+      "alloc::vec::in_place_collect::from_iter_in_place": 2,
+      "_$LT$alloc..vec..into_iter..IntoIter$LT$T$C$A$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold": 2,
+      "eggfuse_cell_runtime::cell::handoff::complete_handoff": 2,
+      "eggfuse_cell_runtime::cell::handoff::apply_handoff": 2,
+      "eggfuse_cell_runtime::query::QueryIndexes::probe::_$u7b$$u7b$closure$u7d$$u7d$": 1,
+      "_mi_bitmap_forall_setc_ranges": 1,
+      "mi_arena_try_purge_visitor": 1,
+      "mi_arena_try_purge_range": 1,
+      "_mi_os_purge_ex": 1,
+      "mi_os_decommit_ex": 1,
+      "madvise": 1,
+      "mi_theap_collect_ex": 1,
+      "eggfuse_cell_runtime::value::checked_integer_binary": 1,
+      "core::slice::_$LT$impl$u20$$u5b$T$u5d$$GT$::partition_point": 1,
+      "_mi_page_abandon": 1,
+      "mi_page_queue_remove": 1,
+      "core::ptr::drop_in_place$LT$smallvec..IntoIter$LT$$u5b$eggfuse_cell_runtime..executor..free_join..Group$u3b$$u20$2$u5d$$GT$$GT$": 1,
+      "eggfuse_cell_runtime::query::QueryIndexes::count": 1,
+      "eggfuse_cell_runtime::range_index::RangeIndex::select": 1,
+      "_$LT$alloc..collections..btree..dedup_sorted_iter..DedupSortedIter$LT$K$C$V$C$I$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next": 1,
+      "DYLD-STUB$$memcpy": 1,
+      "eggfuse_cell_runtime::iterative::Catalog::dispatch": 1,
+      "core::ptr::drop_in_place$LT$eggfuse_cell_runtime..executor..QueryEnv$GT$": 1,
+      "core::ptr::drop_in_place$LT$eggfuse_cell_runtime..entry_schedule..Inputs$GT$": 1,
+      "eggfuse_cell_runtime::sieve::Sieve::empty_join": 1,
+      "core::ptr::drop_in_place$LT$core..option..Option$LT$alloc..vec..Vec$LT$eggfuse_cell_runtime..entry_schedule..Seed$GT$$GT$$GT$": 1,
+      "eggfuse_cell_runtime::executor::query_workers::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::query_worker_batch": 1,
+      "eggfuse_cell_runtime::entry_schedule::Seed::for_atom": 1,
+      "eggfuse_cell_runtime::executor::execute_kernel::Frame::new": 1,
+      "_$LT$eggfuse_cell_runtime..cell..matched..QueryFacts$u20$as$u20$core..clone..Clone$GT$::clone": 1,
+      "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::get": 1,
+      "eggfuse_cell_runtime::stage_spine::Programs::alias_query_facts": 1,
+      "OUTLINED_FUNCTION_58": 1,
+      "alloc::collections::btree::node::BalancingContext$LT$K$C$V$GT$::bulk_steal_right": 1,
+      "core::ptr::drop_in_place$LT$eggfuse_cell_runtime..query..Bucket$GT$": 1,
+      "alloc::collections::vec_deque::VecDeque$LT$T$C$A$GT$::grow": 1,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::resolve_staged_roots": 1,
+      "hashbrown::raw::RawExtractIf$LT$T$C$A$GT$::next": 1,
+      "eggfuse_cell_runtime::stage_spine::Completion::producer": 1,
+      "eggfuse_cell_runtime::entry_schedule::Scheduler::finish_staged_roots": 1,
+      "core::slice::sort::shared::smallsort::sort8_stable": 1,
+      "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::pop_first": 1,
+      "alloc::collections::btree::remove::_$LT$impl$u20$alloc..collections..btree..node..Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..LeafOrInternal$GT$$C$alloc..collections..btree..node..marker..KV$GT$$GT$::remove_kv_tracking": 1,
+      "mi_page_fresh_alloc": 1,
+      "mi_arenas_page_regular_alloc": 1,
+      "_mi_page_init": 1,
+      "eggfuse_cell_runtime::graph::Graph::slot": 1,
+      "eggfuse_cell_runtime::graph::Graph::linked_slots": 1,
+      "core::ptr::drop_in_place$LT$alloc..vec..Vec$LT$eggfuse_cell_runtime..cell..binding..Operand$LT$eggfuse_cell_runtime..value..Value$C$usize$GT$$GT$$GT$": 1,
+      "_RNvCs5QKde7ScR4H_7___rustc35___rust_no_alloc_shim_is_unstable_v2": 1,
+      "alloc::sync::Arc$LT$T$C$A$GT$::clone_from_ref_in": 1,
+      "eggfuse_cell_runtime::graph::cell_ownership::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::native_signal": 1,
+      "alloc::sync::arcinner_layout_for_value_layout": 1,
+      "eggfuse_cell_runtime::graph::scoped_completion::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::next_scoped_dirty": 1,
+      "eggfuse_cell_runtime::graph::Graph::dependency_table": 1,
+      "eggfuse_cell_runtime::graph::unit_ports::Units::lookup": 1,
+      "DYLD-STUB$$write": 1,
+      "mi_bin": 1,
+      "_RNvCs5QKde7ScR4H_7___rustc14___rust_dealloc": 1,
+      "std::sys::pal::unix::time::Timespec::sub_timespec": 1,
+      "eggfuse_cell_runtime::cell::effects::Effects::take_results": 1,
+      "eggfuse_cell_runtime::iterative::Catalog::root_state": 1,
+      "alloc::collections::btree::map::entry::Entry$LT$K$C$V$C$A$GT$::or_default": 1,
+      "DYLD-STUB$$memcmp": 1,
+      "OUTLINED_FUNCTION_16": 1,
+      "alloc::vec::Vec$LT$T$C$A$GT$::dedup_by": 1,
+      "eggfuse_cell_runtime::cell::effects::Effects::begin": 1,
+      "eggfuse_cell_runtime::graph::Graph::live_handoff_origin": 1,
+      "mi_realloc_aligned": 1
+    },
+    "workers": [
+      {
+        "samples": 1823,
+        "condition_wait_samples": 1773
+      },
+      {
+        "samples": 1823,
+        "condition_wait_samples": 1782
+      },
+      {
+        "samples": 1823,
+        "condition_wait_samples": 1790
+      },
+      {
+        "samples": 1823,
+        "condition_wait_samples": 1791
+      }
+    ],
+    "limits": "Separate five-second sampled window; stack residence, not CPU time. Inclusive counts overlap; logging and sampling perturb the run."
+  },
+  "semantic": {
+    "raytrace_relative_reference": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "87c8f5f5c8a525f3e9ec4580c73a4188dcc973e927736411f484d98755f5cd96"
+    },
+    "actual_effects": {
+      "constructor_requests": 1619819,
+      "function_updates": 1675916,
+      "unions": 226523,
+      "logical_facts_created": 820439
+    },
+    "sum_native_acceptance": "pass",
+    "sum_state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+}
