@@ -49,8 +49,15 @@ fn repaired_publication_keeps_late_values_aliases_and_retirements() {
         let counts=b["publication"].as_object_mut().unwrap().remove("parallel").unwrap();
         assert_eq!(a["publication"],b["publication"],"one read per published row");
         assert_eq!(a["sieve"]["stats"],b["sieve"]["stats"],"ordered changes and collision invalidation");
+        let conditions=&b["sieve"]["publication"];
+        assert!(conditions["stats"]["batches"].as_u64().unwrap()>0,"{conditions}");
+        for key in ["pending_group_rows","pending_support_keys","pending_tasks"] {
+            assert_eq!(conditions[key],0,"publication owns no facts after join");
+        }
         assert!(counts["column_rows"].as_u64().unwrap()>0,"{counts}");
         if workers>1 {
+            assert!(conditions["stats"]["worker_rows"].as_array().unwrap().iter().map(|n|n.as_u64().unwrap()).sum::<u64>()>0,
+                "condition publication executes on workers: {conditions}");
             assert!(counts["pool_calls"].as_u64().unwrap()>0,"{counts}");
             assert!(counts["worker_rows"].as_array().unwrap().iter().filter(|n|n.as_u64().unwrap()>0).count()>1);
         }

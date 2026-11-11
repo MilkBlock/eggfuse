@@ -1,0 +1,125 @@
+{
+  "control_commit": "77f0dc81",
+  "scope": "standalone Cell CPU",
+  "runtime_sha256": "989a7ee0b61eae555efcce346b9230de338b701c04b0c90e16c2cda49bb17c45",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "before_report_sha256": "c8dac2c91a441ff5c0063f0a5b7c5eb5c9d71457595266ca98cb9fde53bc5522",
+      "after_report_sha256": "bcad545706098d130eb82cf84fafc306d3054d4f9ea087c6aa10502cf7a6826e",
+      "same_state_ordered_runs_graph_queries_summaries_and_publication": true,
+      "summary_updates_total": 31561,
+      "worker_summary_updates": 0,
+      "coordinator_summary_updates": 31561,
+      "staged_inline_updates": 0,
+      "condition_publication": {
+        "compiled": false,
+        "levels": 0,
+        "organization": "cell-condition-layers/v1",
+        "pending_group_rows": 0,
+        "pending_support_keys": 0,
+        "pending_tasks": 0,
+        "plan_payload_bytes": 0,
+        "scratch_capacity_bytes": 0,
+        "stats": {
+          "added_keys": 0,
+          "attempts": 657,
+          "batches": 0,
+          "borrowed_rows": 0,
+          "candidate_visits": 0,
+          "dependency_rows": 0,
+          "direct_rows": 0,
+          "enabled": true,
+          "execute_seconds": 0.0,
+          "group_headers": 0,
+          "inline_tasks": 0,
+          "levels": 0,
+          "peak_scratch_bytes": 0,
+          "pool_calls": 0,
+          "prepare_seconds": 0.0,
+          "prepared_columns": 0,
+          "restore_seconds": 0.0,
+          "row_header_capacity_bytes": 0,
+          "small_batches": 657,
+          "task_capacity_bytes": 0,
+          "tasks": 0,
+          "unavailable_calls": 0,
+          "worker_rows": [],
+          "worker_seconds": [],
+          "worker_tasks": []
+        }
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "before_report_sha256": "5c19cff729b6af50910348d4b042b8f918a2490c37a535220089e2ddf97f99db",
+      "after_report_sha256": "091ad51b291b2fff27de06126ae89574c7c3f3d3577c26740f0e7d4e4b6f451c",
+      "same_state_ordered_runs_graph_queries_summaries_and_publication": true,
+      "summary_updates_total": 7349679,
+      "worker_summary_updates": 6165681,
+      "coordinator_summary_updates": 1183998,
+      "staged_inline_updates": 78322,
+      "condition_publication": {
+        "compiled": true,
+        "levels": 9,
+        "organization": "cell-condition-layers/v1",
+        "pending_group_rows": 0,
+        "pending_support_keys": 0,
+        "pending_tasks": 0,
+        "plan_payload_bytes": 71363,
+        "scratch_capacity_bytes": 6621920,
+        "stats": {
+          "added_keys": 757151,
+          "attempts": 9327,
+          "batches": 1429,
+          "borrowed_rows": 1592668,
+          "candidate_visits": 306396,
+          "dependency_rows": 280995,
+          "direct_rows": 5963008,
+          "enabled": true,
+          "execute_seconds": 0.08177370999999996,
+          "group_headers": 894453,
+          "inline_tasks": 8845,
+          "levels": 3321,
+          "peak_scratch_bytes": 6621920,
+          "pool_calls": 1806,
+          "prepare_seconds": 0.0745732739999996,
+          "prepared_columns": 25924,
+          "restore_seconds": 0.0019399029999999544,
+          "row_header_capacity_bytes": 37197888,
+          "small_batches": 7898,
+          "task_capacity_bytes": 12418824,
+          "tasks": 47041,
+          "unavailable_calls": 0,
+          "worker_rows": [
+            1937319,
+            1453976,
+            1447360,
+            1327026
+          ],
+          "worker_seconds": [
+            0.04341425899999953,
+            0.036992805999999934,
+            0.03779470700000008,
+            0.035280144000000124
+          ],
+          "worker_tasks": [
+            11294,
+            10177,
+            8505,
+            8220
+          ]
+        }
+      }
+    }
+  },
+  "limits": "Complete work/semantic executions, not throughput evidence. Worker rows are transferred existing summary work, not saved operations or CPU utilization. Scratch/header bytes exclude allocator overhead.",
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

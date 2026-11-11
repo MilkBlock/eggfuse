@@ -572,7 +572,15 @@ impl Executor {
         self.free_join
             .gates
             .publish(&self.graph, &self.query_indexes);
-        self.sieve.publish(&mut self.query_indexes);
+        #[cfg(feature = "parallel-publication")]
+        let staged = self.query_workers.as_ref().filter(|_| self.publication.parallel_enabled())
+            .is_some_and(|workers| {
+                let (pool, grain) = workers.publication_pool();
+                self.sieve.publish_staged(&mut self.query_indexes, pool, grain)
+            });
+        #[cfg(not(feature = "parallel-publication"))]
+        let staged = false;
+        if !staged { self.sieve.publish(&mut self.query_indexes); }
         let publication_end = Instant::now();
         let query_update_seconds = publication_end.duration_since(phase).as_secs_f64();
         let phase = publication_end;

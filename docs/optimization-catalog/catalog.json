@@ -747,7 +747,7 @@
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Optional parallel-entry-filters transfers the same ordered necessary guards to the query-worker pool and removes their coordinator evaluation; total guard counts stay equal. Full Raytrace transfers 5,606,010 probes with four workers but establishes no speedup; sampled workers still wait 97-98% of the window. Candidate preparation/compaction, buffer capacities and pool time are charged. Per-worker task seconds measure wall residence, not CPU utilization; parallel probe counts are coverage, not saved work. Cell field influence now compiles 1,163 summaries into 374 shared read scopes: complete-Raytrace summary updates drop 8,380,801 -> 6,983,829, with 2,185,417 new group checks charged to Bake. The equal-weight subtotal grows by 788,445, so this is not a net work-credit or speed claim. New rows and child-support propagation retain complete publication; masks and group headers add 24,264 live payload bytes plus eight bytes per change record, excluding spare capacity. The v2 follow-up uses a flat complete-publication route and shared range groups: field checks drop to 1,318,220, 404,105 inactive-consumer index reads are omitted, and 2,147,286 row dispatches are separately charged. Its logical influence metadata payload is 34,104 bytes. Remaining support operations are unchanged; normal timing is still required. Single-column singleton candidates now travel inline through Cell admission and residual execution without a heap view. Larger domains retain their shared identity. Header growth and shape checks are explicit costs; research projection/frontier observers retain the old host. Inline reads are not avoided-allocation counts, and no speed gain is established by materialized-row reductions. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Optional parallel-entry-filters transfers the same ordered necessary guards to the query-worker pool and removes their coordinator evaluation; total guard counts stay equal. Full Raytrace transfers 5,606,010 probes with four workers but establishes no speedup; sampled workers still wait 97-98% of the window. Candidate preparation/compaction, buffer capacities and pool time are charged. Per-worker task seconds measure wall residence, not CPU utilization; parallel probe counts are coverage, not saved work. Cell field influence now compiles 1,163 summaries into 374 shared read scopes: complete-Raytrace summary updates drop 8,380,801 -> 6,983,829, with 2,185,417 new group checks charged to Bake. The equal-weight subtotal grows by 788,445, so this is not a net work-credit or speed claim. New rows and child-support propagation retain complete publication; masks and group headers add 24,264 live payload bytes plus eight bytes per change record, excluding spare capacity. The v2 follow-up uses a flat complete-publication route and shared range groups: field checks drop to 1,318,220, 404,105 inactive-consumer index reads are omitted, and 2,147,286 row dispatches are separately charged. Its logical influence metadata payload is 34,104 bytes. Remaining support operations are unchanged; normal timing is still required. Single-column singleton candidates now travel inline through Cell admission and residual execution without a heap view. Larger domains retain their shared identity. Header growth and shape checks are explicit costs; research projection/frontier observers retain the old host. Inline reads are not avoided-allocation counts, and no speed gain is established by materialized-row reductions. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign. H5 的 cell-condition-layers/v1 在原发布边界并行维护同一批摘要，全部既有过滤/支持计数必须相同；新增分派与容量在 H5 单独收费，不给 B2 重复记收益。",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
@@ -766,7 +766,8 @@
         "benchmarks/cell-column-influence/dispatch.json",
         "benchmarks/cell-inline-domains/README.md",
         "benchmarks/cell-inline-domains/results.json",
-        "benchmarks/cell-query-transport-checkpoint/README.md"
+        "benchmarks/cell-query-transport-checkpoint/README.md",
+        "benchmarks/cell-condition-publication/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -3501,9 +3502,9 @@
       "category": "H",
       "title": "源 Run 的 Cell 查询与索引发布",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）；parallel-residuals 构建 + --parallel-residuals 可接管无前缀/吸收/范围特化的单次展开查询；parallel-publication 构建 + --parallel-publication 可并行更新已完成 repair 的独占索引分区",
-      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段。发布复用这些 Cell 查询实际需要的列/范围/邻居索引；repair 完成后，现有表分区可独占移动给 worker，不要求不同 Cell 的 RHS 无冲突；混合规则按现有 Shared Entry 的实际 Cursor 所有权区分接续与未覆盖输入，不再因 Spine 活跃而拒绝整条规则的残余查询",
-      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管；直接 Entry 路径删除 Sieve 幸存者的 Seed/consumer 克隆、空 domain 登记及稍后的 Seed→worker 交接，条件筛选与精确查询在同一任务中完成；合格残余查询并入同一源 Run 的物理 Cell 队列，删除逐 kernel/pivot 执行汇合与结果交接；发布接管范围内的协调线程逐行读取及列/范围/邻居更新循环由同一线程池执行，原索引直接移动，完成后按源表顺序恢复通知；残余赢家按规则独占现有实例向量，在同一线程池完成合并、稳定排序和去重，协调线程不再重做这些比较；无 Cursor 的合格混合入口直接借用原 Row，删除协调线程准入、Seed/domain 交接和展开；对已转移的属性读取直接用权威函数槽，原邻居端口缓存不再产生 demand 和重复发布；同一封存 Run 的已激活 Cell 查询布局只准备一次索引列，删除后续 Entry 的重复 prepare_columns，下一 Run 和错误清理恢复未激活状态",
-      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 残余查询与 point 接续按实际 Cell 共同归组，但仍逐 Entry 执行；所有权、watermark 和按序 RHS 不变；小 Run inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。 接管范围仍排除 active Cursor；保留 reverse 候选选择，selected/shared 投影与逐 Entry 审计走兼容路径。新增筛选失败候选和批次必须付账。 排队期间保留原 Row 的一个 Rc；惰性索引列必须在协调线程准备完成。直接 Entry 与兼容 Seed 保留原匹配位置，不能以完成顺序选赢家。 发布只读边界要求 union/dirty/ownership completion 清空，但保留变化与待回收帧至汇合；后续 Run 仍须等待全部发布。稳定非 canonical 字段及特殊 Unit 存储回退，family survey 不准入。一个大表仍是一个任务；小批回退。；残余赢家任务完成后才进入原规则顺序的 point/Spine 合并与 RHS；同输入键按原来源位置选择，完全相同来源保留展开顺序。单规则和小批次保留 inline；新增一次池汇合与任务头必须计费；混合入口只筛选一次，保留有 Cursor 的来源和 Spine 优先级；每个 pivot 在共享计划保存原插入位置，worker 准入完成前不能证明全部 Spine 覆盖。原缓存命中转为函数索引访问，必须把 key_lookup_calls、neighbor point_hits 与 shared_point_hits 合并比较，负命中不重复相加；队列包括准入失败入口，需同时计费。整体加速和打满线程仍未证明",
+      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段。发布复用这些 Cell 查询实际需要的列/范围/邻居索引；repair 完成后，现有表分区可独占移动给 worker，不要求不同 Cell 的 RHS 无冲突；混合规则按现有 Shared Entry 的实际 Cursor 所有权区分接续与未覆盖输入，不再因 Spine 活跃而拒绝整条规则的残余查询；已有 Cell guard DAG 的静态依赖层与字段影响分组允许同层摘要独占交给 worker，子层完成后才激活父层",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管；直接 Entry 路径删除 Sieve 幸存者的 Seed/consumer 克隆、空 domain 登记及稍后的 Seed→worker 交接，条件筛选与精确查询在同一任务中完成；合格残余查询并入同一源 Run 的物理 Cell 队列，删除逐 kernel/pivot 执行汇合与结果交接；发布接管范围内的协调线程逐行读取及列/范围/邻居更新循环由同一线程池执行，原索引直接移动，完成后按源表顺序恢复通知；残余赢家按规则独占现有实例向量，在同一线程池完成合并、稳定排序和去重，协调线程不再重做这些比较；无 Cursor 的合格混合入口直接借用原 Row，删除协调线程准入、Seed/domain 交接和展开；对已转移的属性读取直接用权威函数槽，原邻居端口缓存不再产生 demand 和重复发布；同一封存 Run 的已激活 Cell 查询布局只准备一次索引列，删除后续 Entry 的重复 prepare_columns，下一 Run 和错误清理恢复未激活状态；大批次条件摘要的协调线程更新/传播由 worker 接管，覆盖传播直接借用 Domain，删除临时候选见证向量",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 残余查询与 point 接续按实际 Cell 共同归组，但仍逐 Entry 执行；所有权、watermark 和按序 RHS 不变；小 Run inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。 接管范围仍排除 active Cursor；保留 reverse 候选选择，selected/shared 投影与逐 Entry 审计走兼容路径。新增筛选失败候选和批次必须付账。 排队期间保留原 Row 的一个 Rc；惰性索引列必须在协调线程准备完成。直接 Entry 与兼容 Seed 保留原匹配位置，不能以完成顺序选赢家。 发布只读边界要求 union/dirty/ownership completion 清空，但保留变化与待回收帧至汇合；后续 Run 仍须等待全部发布。稳定非 canonical 字段及特殊 Unit 存储回退，family survey 不准入。一个大表仍是一个任务；小批回退。；残余赢家任务完成后才进入原规则顺序的 point/Spine 合并与 RHS；同输入键按原来源位置选择，完全相同来源保留展开顺序。单规则和小批次保留 inline；新增一次池汇合与任务头必须计费；混合入口只筛选一次，保留有 Cursor 的来源和 Spine 优先级；每个 pivot 在共享计划保存原插入位置，worker 准入完成前不能证明全部 Spine 覆盖。原缓存命中转为函数索引访问，必须把 key_lookup_calls、neighbor point_hits 与 shared_point_hits 合并比较，负命中不重复相加；队列包括准入失败入口，需同时计费。整体加速和打满线程仍未证明；条件摘要仍在原发布边界汇合；新支持沿原静态 parents 传播，删除/失效沿原机制处理，临时事实清空后只保留容量；小批次不初始化层计划",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/query_reads.rs",
@@ -3518,7 +3519,8 @@
         "engine/cell-runtime/src/change_batch.rs",
         "engine/cell-runtime/src/query.rs",
         "engine/cell-runtime/src/range_index.rs",
-        "engine/cell-runtime/src/neighbor.rs"
+        "engine/cell-runtime/src/neighbor.rs",
+        "engine/cell-runtime/src/sieve_publication.rs"
       ],
       "metrics": {
         "benefit": [
@@ -3983,6 +3985,61 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/column_prepare_reuses",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/group_headers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/borrowed_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/prepared_columns",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/candidate_visits",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/task_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/row_header_capacity_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/peak_scratch_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/prepare_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/execute_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/restore_seconds",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/plan_payload_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -4220,10 +4277,50 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/partitioned_inline_entries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/batches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/pool_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/inline_tasks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/small_batches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/unavailable_calls",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/worker_rows/*",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/publication/stats/worker_tasks/*",
+            "reduce": "sum"
           }
         ]
       },
-      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。 owned-instance/v1 仅完成查询到 RHS 的实例交接；候选格式更宽，编译输入引用增加 2,048 字节。旧 Binding 重装未在历史 Work 中收费，不能用跨表示的历史等权分数证明这步收益；新增片段覆盖数不奖励，完整 allocator 成本单独对照。 E3 的 cell-span/v1 进一步删除 RHS 到 Entry 的逐输出重复登记，效果执行和最终发布仍按序；历史保留尚未统一。 cell-results/v1 接通合格 RHS 结果到 Entry/history 的同一存储，并保留原 Run 发布；这减少协调线程交接，不是把图写入移入 worker。 Cell 输入投影现在独立决定赢家与 legacy origin key，实例的 RHS 结果不再参与身份。纯查询实例沿用连续 Slots 比较，无新 key 存储；这是提前执行 RHS 的正确性准备，尚非新增计算接管或加速。 winner-ordering input-depth-ordinal/v1 用唯一 source ordinal 保持同输入同深度的源顺序，残余合并仍执行。sum-bits 删除 1244 条中间赢家搬运和 383 个容器批次；execute alloc/realloc 少 286 次、累计请求少 308544 字节。旧比较计数遗漏第二次 key 排序，跨版本比较数不可直接作收益。本步未测完整速度。 114543ae 五提交检查点已完成：当前四线程 sum-bits/Raytrace 推理中位数 25.098 ms/8.476 s，上次完整计时四线程为 24.669 ms/8.436 s；未通过总体加速门槛。完整 Raytrace 少 432416 条赢家中间搬运，但末轮有波动，不能以工作计数代替性能验收。 cell-query-sharing-audit 只诊断、不接管。sum-bits/Raytrace128 跨入口重复读取为 24/734，同锚点同前缀步骤均为 0；其中可归于字面量查询键的重复为 4/679。诊断键/锚点复制成本仅存在于该 feature，不参与普通构建性能评分。下一切口是必达的输入无关读取，不给所有 Cell 加通用缓存。 Run 合并后的 header/answer 容量与 task/execute 时间可包含共同执行的 point 工作，不能与旧 residual-only 字段直接比较；批次减少不是速度收益。 独占分区发布的任务时间是 wall residence；搬走行数不等于减少工作或线程满载。新通知缓冲保留容量须付账，单个大分区仍限制并行度。 本轮完整测量已补齐：不能将百万级比较/发布行数等同于重负载。赢家整理只占数十毫秒；下一步应针对仍在协调线程的 Entry 准备和未接管 Cell 查询，保留吸收、前缀与残余赢家顺序，不能直接取消 active-Spine 准入限制。",
+      "gaps": "源 Entry 刷新、Cursor 展开、逐规则 route 排序仍存在；任务索引有额外探查与内存。直接交接同时覆盖串行/worker Cell host，不能视作新增线程工作。记录布局不是整体分配或 cache miss。枚举及已有 history/context/local-witness 保持原 host；RHS/repair 未并行化。逐规则 search_s 不含延迟完成。 owned-instance/v1 仅完成查询到 RHS 的实例交接；候选格式更宽，编译输入引用增加 2,048 字节。旧 Binding 重装未在历史 Work 中收费，不能用跨表示的历史等权分数证明这步收益；新增片段覆盖数不奖励，完整 allocator 成本单独对照。 E3 的 cell-span/v1 进一步删除 RHS 到 Entry 的逐输出重复登记，效果执行和最终发布仍按序；历史保留尚未统一。 cell-results/v1 接通合格 RHS 结果到 Entry/history 的同一存储，并保留原 Run 发布；这减少协调线程交接，不是把图写入移入 worker。 Cell 输入投影现在独立决定赢家与 legacy origin key，实例的 RHS 结果不再参与身份。纯查询实例沿用连续 Slots 比较，无新 key 存储；这是提前执行 RHS 的正确性准备，尚非新增计算接管或加速。 winner-ordering input-depth-ordinal/v1 用唯一 source ordinal 保持同输入同深度的源顺序，残余合并仍执行。sum-bits 删除 1244 条中间赢家搬运和 383 个容器批次；execute alloc/realloc 少 286 次、累计请求少 308544 字节。旧比较计数遗漏第二次 key 排序，跨版本比较数不可直接作收益。本步未测完整速度。 114543ae 五提交检查点已完成：当前四线程 sum-bits/Raytrace 推理中位数 25.098 ms/8.476 s，上次完整计时四线程为 24.669 ms/8.436 s；未通过总体加速门槛。完整 Raytrace 少 432416 条赢家中间搬运，但末轮有波动，不能以工作计数代替性能验收。 cell-query-sharing-audit 只诊断、不接管。sum-bits/Raytrace128 跨入口重复读取为 24/734，同锚点同前缀步骤均为 0；其中可归于字面量查询键的重复为 4/679。诊断键/锚点复制成本仅存在于该 feature，不参与普通构建性能评分。下一切口是必达的输入无关读取，不给所有 Cell 加通用缓存。 Run 合并后的 header/answer 容量与 task/execute 时间可包含共同执行的 point 工作，不能与旧 residual-only 字段直接比较；批次减少不是速度收益。 独占分区发布的任务时间是 wall residence；搬走行数不等于减少工作或线程满载。新通知缓冲保留容量须付账，单个大分区仍限制并行度。 本轮完整测量已补齐：不能将百万级比较/发布行数等同于重负载。赢家整理只占数十毫秒；下一步应针对仍在协调线程的 Entry 准备和未接管 Cell 查询，保留吸收、前缀与残余赢家顺序，不能直接取消 active-Spine 准入限制。 Cell 条件分层仅转移既有摘要工作，不消除逻辑检查；worker_rows 是覆盖，不能与列发布行数合并为节省量。新增层汇合、任务头和临时投影容量收费；各 worker/阶段时间是 wall residence，不能相加作 CPU 利用率。完整回归与独立采样见 cell-condition-publication；仍未打满线程。",
       "evidence": [
         "benchmarks/cell-query-workers/README.md",
         "benchmarks/cell-query-workers/results.json",
@@ -4273,7 +4370,10 @@
         "benchmarks/parallel-cell-partition/README.md",
         "benchmarks/parallel-cell-partition/results.json",
         "benchmarks/cell-run-column-preparation/README.md",
-        "benchmarks/cell-run-column-preparation/results.json"
+        "benchmarks/cell-run-column-preparation/results.json",
+        "benchmarks/cell-condition-publication/README.md",
+        "benchmarks/cell-condition-publication/results.json",
+        "benchmarks/cell-condition-publication/profile.json"
       ],
       "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立；残余准入/枚举已接通并通过 Run 边界回归；Raytrace 新路径总 key 查询增加 18,927，默认关闭，没有新增速度或满载结论；直接 Entry 接管在完整 Raytrace 省掉 1,881,965 次 Seed/domain 交接，所有图/Sieve/发布计数不变，未新增测速结论；Run 队列将 Raytrace 19,395 个源批次合入 2,785 次完成，查询/图/发布工作量不变，新增 Row 保留、归组与排序缓冲需付账，未建立加速；并行发布在完整 Raytrace 将 1,364,230 行索引更新移到 worker，772,626 行仍单分区 inline；sum-bits 全部小批回退。原图/查询/发布计数与有序 Run 不变，未新增速度结论；aa2161e2 五提交检查点：当前串行/四线程 Raytrace 中位数 6.050/6.017 s，配对比 0.977 [0.959,1.043]，未建立总体加速。sum-bits 四线程比当前串行慢；8/4 worker Raytrace 配对比 1.153 [1.064,1.260]。赢家整理转移 488,952 个候选但与此前四线程持平区间未排除，worker 仍有约 93%–95% 停驻栈，未满载，继续默认关闭"
     },

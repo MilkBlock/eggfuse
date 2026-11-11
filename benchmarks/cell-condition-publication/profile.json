@@ -1,0 +1,47 @@
+{
+  "scope": "standalone Cell CPU; sampled wall stacks, not CPU utilization or speed evidence",
+  "runtime_sha256": "989a7ee0b61eae555efcce346b9230de338b701c04b0c90e16c2cda49bb17c45",
+  "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+  "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+  "runs": 16883,
+  "stacks_sha256": "36b5dfd67791c7851625636a447965d04c04c5e80b9592335bbbca958bd509d0",
+  "limits": "Five-second partial window, progress logging and sampling perturb execution. Inclusive frames overlap. Concurrent external builds may affect residence times.",
+  "diagnostic_sha256": "991c973889fe9c52b8b036c4eb27da63679715fd4182d892f01356abf640c2cf",
+  "main_samples": 1621,
+  "main_selected_inclusive": {
+    "Executor::matches": 474,
+    "Scheduler::batches": 302,
+    "publish_finished_tables": 302,
+    "RhsFrame::execute": 178,
+    "repair_selected": 143,
+    "Workers::finish_run": 155,
+    "replace_subscriptions": 77,
+    "publish_staged": 47
+  },
+  "worker_parked": [
+    {
+      "thread": "Thread_12029582: cell-query-0",
+      "samples": 1621,
+      "condition_wait_samples": 1433,
+      "condition_wait_fraction": 0.8840222085132634
+    },
+    {
+      "thread": "Thread_12029583: cell-query-1",
+      "samples": 1621,
+      "condition_wait_samples": 1443,
+      "condition_wait_fraction": 0.8901912399753239
+    },
+    {
+      "thread": "Thread_12029584: cell-query-2",
+      "samples": 1621,
+      "condition_wait_samples": 1446,
+      "condition_wait_fraction": 0.892041949413942
+    },
+    {
+      "thread": "Thread_12029585: cell-query-3",
+      "samples": 1621,
+      "condition_wait_samples": 1456,
+      "condition_wait_fraction": 0.8982109808760025
+    }
+  ]
+}

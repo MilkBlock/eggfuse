@@ -7,7 +7,7 @@ pub(crate) struct Read<'a> {
     entry_keys: Option<&'a HashMap<Dependency, SmallVec<[u64; 4]>>>,
     bits: u32,
 }
-struct TableRead<'a> {
+pub(crate) struct TableRead<'a> {
     keys: &'a HashMap<Dependency, SmallVec<[u64; 4]>>,
     columns: SmallVec<[(usize, &'a HashMap<u64, Bucket>); 4]>,
 }
@@ -31,6 +31,14 @@ impl<'a> Read<'a> {
     pub fn fingerprint(&self, value: &Value) -> u64 { fingerprint(value, self.bits) }
     pub fn domain(&self, table: usize, selectors: SmallVec<[(usize,u64);4]>) -> Domain<'a> {
         let read = &self.tables.iter().find(|(t,_)| *t == table).expect("compiled read table").1;
+        read.domain(selectors)
+    }
+}
+impl<'a> TableRead<'a> {
+    #[cfg(feature = "parallel-publication")]
+    pub fn hashes(&self, witness: Dependency) -> &[u64] { &self.keys[&witness] }
+    pub fn domain(&self, selectors: SmallVec<[(usize,u64);4]>) -> Domain<'a> {
+        let read = self;
         let mut best: Option<&Bucket> = None;
         for &(column, hash) in &selectors {
             let map = read.columns.iter().find(|(c,_)| *c == column).expect("compiled read column").1;
@@ -43,6 +51,13 @@ impl<'a> Read<'a> {
     }
 }
 impl QueryIndexes {
+    /// Called on the coordinator before borrowing only the finished columns.
+    /// The Summary already owns a built table; no new table or row is created.
+    #[cfg(feature = "parallel-publication")]
+    pub(crate) fn publication_support(&self, table:usize, columns:&[usize]) -> TableRead<'_> {
+        let index=&self.tables[&table];
+        TableRead {keys:&index.keys,columns:columns.iter().map(|&c|(c,index.column(c))).collect()}
+    }
     pub(crate) fn prepare_columns(&mut self, graph:&Graph, layout:&[(usize,Vec<usize>)]) -> Result<()> {
         for (table,columns) in layout {
             self.ensure_selected(graph,*table,columns.iter().copied())?;

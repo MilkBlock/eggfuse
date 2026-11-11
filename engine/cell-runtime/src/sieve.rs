@@ -22,6 +22,9 @@ use reverse::Stats as ReverseStats;
 #[cfg(feature = "parallel-entry-filters")]
 #[path = "sieve_parallel.rs"]
 mod parallel;
+#[cfg(feature = "parallel-publication")]
+#[path = "sieve_publication.rs"]
+mod publication;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct Guard {
@@ -79,6 +82,19 @@ struct Summary {
     bloom: Bloom,
 }
 impl Summary {
+    fn insert<const COLD: bool>(&mut self, spec: &Spec, keys: &[u64], collide: bool) -> Option<Projection> {
+        let k: Projection = spec.cols.iter().map(|c| keys[*c]).collect();
+        #[cfg(feature = "sparse-cells")]
+        let fresh = self.keys.insert(&k);
+        #[cfg(not(feature = "sparse-cells"))]
+        let fresh = self.keys.insert(k.clone());
+        if !fresh { return None; }
+        if !COLD && spec.needs_bloom() {
+            self.bloom.grow(&self.keys, collide);
+            self.bloom.insert(&k);
+        }
+        Some(k)
+    }
     fn allows(&self, keys: &[u64], cols: &[usize]) -> bool {
         #[cfg(feature = "sparse-cells")]
         match (&self.keys, cols) {
@@ -186,6 +202,8 @@ impl EntryFilter<'_> {
     }
 }
 pub struct Sieve {
+    #[cfg(feature = "parallel-publication")]
+    publication: publication::State,
     #[cfg(feature = "parallel-entry-filters")]
     pub(crate) parallel_enabled: bool,
     #[cfg(feature = "parallel-entry-filters")]
@@ -230,6 +248,8 @@ impl Sieve {
     pub fn new(program: &Program) -> Self {
         let enabled = true;
         let mut s = Self {
+            #[cfg(feature = "parallel-publication")]
+            publication: Default::default(),
             #[cfg(feature = "parallel-entry-filters")]
             parallel_enabled: false,
             #[cfg(feature = "parallel-entry-filters")]
@@ -375,6 +395,8 @@ impl Sieve {
                 dispatch.groups.push(Influence { columns, members:start..dispatch.members.len(), built });
             }
         }
+        #[cfg(feature = "parallel-publication")]
+        { self.publication = Default::default(); }
     }
     #[cfg(feature = "entry-admission-audit")]
     pub(crate) fn begin_entry_audit(&mut self, epoch: u64, rid: usize, atom: usize,
@@ -396,21 +418,10 @@ impl Sieve {
                 return None;
             }
         }
-        let k: Projection = spec.cols.iter().map(|c| keys[*c]).collect();
         let state = &mut self.states[id];
         // Must track keys, NOT whether OR changed any Bloom bit. A new key can
         // collide with old bits and STILL needs upstream propagation.
-        #[cfg(feature = "sparse-cells")]
-        let fresh = state.keys.insert(&k);
-        #[cfg(not(feature = "sparse-cells"))]
-        let fresh = state.keys.insert(k.clone());
-        if !fresh {
-            return None;
-        }
-        if !COLD && spec.needs_bloom() {
-            state.bloom.grow(&state.keys, self.collide);
-            state.bloom.insert(&k);
-        }
+        let k = state.insert::<COLD>(spec, keys, self.collide)?;
         self.stats.added_keys += 1;
         Some(k)
     }
@@ -613,6 +624,8 @@ impl Sieve {
         #[allow(unused_mut)]
         let mut report = serde_json::json!({"enabled":self.enabled,"specifications":self.specs.len(),"active_summaries":self.states.iter().filter(|s|s.built).count(),"stored_keys":self.states.iter().map(|s|s.keys.len()).sum::<usize>(),"bloom_bytes":self.states.iter().map(|s|s.bloom.words.len()*8).sum::<usize>(),"key_payload_bytes":self.states.iter().flat_map(|s|s.keys.iter()).map(|k|k.len()*8).sum::<usize>(),"stats":self.stats,"scope":"complete visible-table semijoin summaries; not Cell-only proof credit"});
         report["column_influence"] = "cell-fields/v2".into();
+        #[cfg(feature = "parallel-publication")]
+        { report["publication"] = self.publication.report(); }
         report["influence_groups"] = self.by_table.iter().map(|d|d.groups.len()).sum::<usize>().into();
         report["influence_payload_bytes"] = (self.specs.len()*8
             + self.by_table.len()*(std::mem::size_of::<Dispatch>()-std::mem::size_of::<Vec<usize>>())
@@ -740,6 +753,8 @@ mod tests {
     #[test]
     fn new_key_propagates_even_if_or_did_not_change_bits() {
         let mut s = Sieve {
+            #[cfg(feature = "parallel-publication")]
+            publication: Default::default(),
             #[cfg(feature = "parallel-entry-filters")]
             parallel_enabled: false,
             #[cfg(feature = "parallel-entry-filters")]
