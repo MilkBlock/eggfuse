@@ -613,7 +613,7 @@ impl Depth {
                 Call::Primitive(name, ty) => {
                     // An optional route can visit guards in a different order.
                     // Defer a partial primitive to the original plan.
-                    let Ok(Some(v)) = value::primitive(name, &key, ty, g.program.key_nodes())
+                    let Ok(Some(v)) = g.primitive(name, &key, ty)
                     else {
                         complete = false;
                         continue;

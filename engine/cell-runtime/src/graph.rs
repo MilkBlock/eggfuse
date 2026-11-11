@@ -249,6 +249,7 @@ mod scalar_keys;
 #[path = "writer_frames.rs"]
 mod writer_frames;
 pub struct Graph {
+    pub(crate) scalars: value::ScalarContext,
     #[cfg(feature = "sparse-cells")]
     pub(crate) sealed_generation: Option<u64>,
     #[cfg(feature = "sparse-cells")]
@@ -449,6 +450,9 @@ impl Graph {
         }
     }
 
+    pub(crate) fn primitive(&self, name: &str, args: &[Value], output: &str) -> Result<Option<Value>> {
+        self.scalars.primitive(name, args, output, self.program.key_nodes())
+    }
     pub fn new(program: Program) -> Result<Self> {
         Self::new_mode(program, None)
     }
@@ -493,6 +497,7 @@ impl Graph {
             .map(scalar_keys::FunctionKeys::new)
             .collect();
         let mut g = Self {
+            scalars: value::ScalarContext::new(program.artifact["source_core"]["float_zero_bits"].as_i64()),
             #[cfg(feature = "sparse-cells")]
             sealed_generation: None,
             #[cfg(feature = "sparse-cells")]
@@ -631,7 +636,7 @@ impl Graph {
         }
         Ok(match string(&j["sort"])? {
             "String" => Value::Text(string(&j["value"])?.to_owned().into()),
-            "f64" => Value::Float(j["value"].as_i64().ok_or("f64 bits")?),
+            "f64" => Value::Float(crate::value::FloatBits(j["value"].as_i64().ok_or("f64 bits")?)),
             _ => Value::Int(
                 j["value"]
                     .as_i64()
@@ -1956,7 +1961,7 @@ impl Graph {
             {
                 self.stats.key_operations += 1;
             }
-            value::primitive(
+            self.scalars.primitive(
                 string(&e["call"]["primitive"])?,
                 &aa,
                 string(&e["call"]["output"])?,
@@ -2072,7 +2077,7 @@ impl Graph {
                 {
                     return Err("ambiguous merge port requires a pure lattice contract".into());
                 }
-                result = value::primitive(
+                result = self.scalars.primitive(
                     op,
                     &[old.clone(), value],
                     self.program.tables[t].schema.last().unwrap()["name"]

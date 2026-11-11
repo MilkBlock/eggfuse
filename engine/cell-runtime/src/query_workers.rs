@@ -1,6 +1,7 @@
 //! Execute complete point-query Cell continuations on a borrowed Run view.
 //! Entry values stay borrowed; successful bindings move into the original RHS.
 use super::*;
+use crate::value;
 use rayon::prelude::*;
 use serde::Serialize;
 #[cfg(feature = "cell-query-sharing-audit")]
@@ -244,6 +245,7 @@ impl Executor {
         let input_slots = rule.inputs.as_slice();
         let query_width = rule.query.len();
         let key_nodes = self.graph.program.key_nodes();
+        let scalars = &self.graph.scalars;
         let pooled = workers.pool.is_some();
         let run = |chunk: &[Entry<'_>], frame: &mut Frame| -> Result<(Vec<Binding>, Counts, Option<usize>)> {
             let mut counts = Counts { entries: chunk.len() as u64, chunks: 1,
@@ -251,7 +253,7 @@ impl Executor {
             frame.prepare(query.result_slots(), query_width, &mut counts);
             let mut answers = Vec::new();
             for entry in chunk {
-                let Some(epoch) = evaluate(query, entry, pivot, &reads, key_nodes, false, None,
+                let Some(epoch) = evaluate(query, entry, pivot, &reads, key_nodes, scalars, false, None,
                     &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts,
                     #[cfg(feature = "cell-query-sharing-audit")] None,
                 )? else { continue };
@@ -300,7 +302,7 @@ impl Executor {
 // hosts differ only in delta ownership and how completed frames are projected.
 fn evaluate(
     query: &crate::cell::Query, entry: &Entry<'_>, pivot: usize,
-    reads: &crate::graph::query_reads::QueryReads<'_>, key_nodes: &J,
+    reads: &crate::graph::query_reads::QueryReads<'_>, key_nodes: &J, scalars: &value::ScalarContext,
     spine: bool, first: Option<&PointResult>, values: &mut [Value], witnesses: &mut Vec<(usize, Dependency)>,
     scratch: &mut crate::graph::query_reads::Scratch, counts: &mut Counts,
     #[cfg(feature = "cell-query-sharing-audit")] mut audit: Option<(&mut sharing_audit::Probe, &[usize])>,
@@ -347,7 +349,7 @@ fn evaluate(
                 Call::Primitive(name, sort) => {
                     counts.guards += 1;
                     counts.key_operations += u64::from(name.starts_with("cell-key-"));
-                    value::primitive(name, &args, sort, key_nodes)
+                    scalars.primitive(name, &args, sort, key_nodes)
                 }
             })?
         };
@@ -738,6 +740,7 @@ impl Workers {
         self.stats.entry_buffer_bytes += (headers.capacity() * std::mem::size_of::<QueryRead<'_>>()) as u64;
         self.stats.peak_cell_task_bytes = self.stats.peak_cell_task_bytes.max(self.tasks.bytes());
         let key_nodes = g.program.key_nodes();
+        let scalars = &g.scalars;
         let pooled = self.pool.is_some() && headers.len() >= self.grain;
         let rule_facts = &self.rule_facts;
         let first_reads = &self.first_reads.results;
@@ -754,7 +757,7 @@ impl Workers {
                 let known = rule_facts[code.rule].as_ref().unwrap();
                 #[cfg(feature = "cell-query-sharing-audit")]
                 probe.start(q.audit_cell, q.source, code.rule, code.pivot);
-                let answer = evaluate(&code.query, &q.entry, code.pivot, &reads, key_nodes, true,
+                let answer = evaluate(&code.query, &q.entry, code.pivot, &reads, key_nodes, scalars, true,
                     code.first_read.map(|id| first_reads[id].as_ref().expect("activated first read")),
                     &mut frame.values, &mut frame.witnesses, &mut frame.constructors, &mut counts,
                     #[cfg(feature = "cell-query-sharing-audit")] Some((&mut probe, &code.audit_prefixes)),

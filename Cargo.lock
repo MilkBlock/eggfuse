@@ -343,6 +343,7 @@ dependencies = [
  "eggfuse-structural-key",
  "libc",
  "mimalloc",
+ "ordered-float",
  "rayon",
  "rustc-hash",
  "serde",

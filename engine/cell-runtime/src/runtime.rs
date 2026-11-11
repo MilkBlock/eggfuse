@@ -36,7 +36,7 @@ use crate::{
     cell::{QueryFrame, bind_query as bind, query_operand as operand},
     graph::*,
     program::*,
-    value::{self, Value},
+    value::Value,
 };
 use serde_json::{Value as J, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -518,7 +518,7 @@ impl Executor {
                     self.graph.stats.key_operations += 1;
                 }
                 if let Some(v) =
-                    value::primitive(name, &vals, output, self.graph.program.key_nodes())?
+                    self.graph.primitive(name, &vals, output)?
                 {
                     let mark = env.trail.len();
                     if bind(atom.args.last().unwrap(), &v, env, &self.graph) {
@@ -749,7 +749,7 @@ impl Executor {
                         self.graph.stats.key_operations += 1;
                     }
                     let Some(value) =
-                        value::primitive(name, &args, output, self.graph.program.key_nodes())?
+                        self.graph.primitive(name, &args, output)?
                     else {
                         return Ok(false);
                     };
@@ -994,7 +994,7 @@ impl Executor {
                     self.graph.stats.key_operations += 1;
                 }
                 if let Some(v) =
-                    value::primitive(name, &args, sort, self.graph.program.key_nodes())?
+                    self.graph.primitive(name, &args, sort)?
                 {
                     if bind(a.args.last().unwrap(), &v, env, &self.graph) {
                         self.merge_points(rid, query, tail, env, epoch, delta, out)?;

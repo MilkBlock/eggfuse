@@ -51,6 +51,14 @@ impl<K, V> InternTable<K, V> {
 }
 
 impl<K: Eq + Hash + Clone, V: NumericId> InternTable<K, V> {
+    /// Read an existing representative without inserting a new value.
+    pub fn lookup(&self, k: &K) -> Option<K> {
+        let hash = hash_value(k);
+        let shard = ((hash >> (64 - self.shards_log2)) & ((1 << self.shards_log2) - 1)) as usize;
+        let table = self.data[shard].lock().unwrap();
+        let values = self.vals.read();
+        table.find(hash, |v| k == &values[v.index()]).map(|v| values[v.index()].clone())
+    }
     pub fn intern(&self, k: &K) -> V {
         let hash = hash_value(k);
         // Use the top bits of the hash to pick the shard. Hashbrown uses the

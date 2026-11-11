@@ -1,6 +1,6 @@
 //! Execute original Cell instructions. Calls share operand dispatch across
 //! ordered merge callbacks, local scalar prefixes and the executing RHS.
-use crate::{graph::{Cell, Graph}, program::{Arg, Call, Op, Result}, value::{self, Value}};
+use crate::{graph::{Cell, Graph}, program::{Arg, Call, Op, Result}, value::Value};
 use super::Effects;
 use smallvec::SmallVec;
 
@@ -30,7 +30,7 @@ pub(crate) fn evaluate_call(g: &mut Graph, frame: &mut impl CallFrame,
         Call::Table(t) => frame.read(g, op, *t, &args)?,
         Call::Primitive(name, sort) => {
             if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
-            value::primitive(name, &args, sort, g.program.key_nodes())?
+            g.primitive(name, &args, sort)?
                 .ok_or_else(|| frame.failed_primitive(name))?
         }
     };

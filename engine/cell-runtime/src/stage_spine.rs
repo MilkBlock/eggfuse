@@ -6,7 +6,7 @@ use crate::{
     graph::{Dependency, Graph, Row},
     cell::{Matched, QueryFacts, QueryFrame, Site, bind_query as bind},
     program::*,
-    value::{self, Value, canon},
+    value::{Value, canon},
 };
 use rustc_hash::FxHashMap as HashMap;
 use serde::Serialize;
@@ -2454,7 +2454,7 @@ impl Programs {
                     Call::Primitive(name, output) => {
                         self.stats.guards += 1;
                         if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
-                        value::primitive(name, &args, output, g.program.key_nodes())
+                        g.primitive(name, &args, output)
                     }
                 })?;
                 let Some(result) = result else {

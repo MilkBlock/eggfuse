@@ -685,33 +685,16 @@ fn verify_source(j: &J) -> Result<()> {
                     .as_str()
                     .filter(|_| j["inputs"].is_array() && j["output"].is_string())
                 {
-                    let base = name.strip_prefix("bool-").unwrap_or(name);
                     let inputs = j["inputs"].as_array().cloned().unwrap_or_default();
                     let output = j["output"].as_str().unwrap_or("");
-                    let supported = match base {
+                    let supported = match name {
                         x if x.starts_with("cell-key-") => {
                             eggfuse_structural_key::signature(j, spec)
-                        }
-                        "+" | "-" | "*" | "/" | "%" | "min" | "max" => {
-                            inputs == [J::from("i64"), J::from("i64")] && output == "i64"
-                        }
-                        "<" | "<=" | ">" | ">=" => {
-                            inputs == [J::from("i64"), J::from("i64")]
-                                && matches!(output, "Unit" | "bool")
-                        }
-                        "=" | "!=" => {
-                            inputs.len() == 2
-                                && inputs[0] == inputs[1]
-                                && matches!(output, "Unit" | "bool")
-                        }
-                        "not" => inputs == [J::from("bool")] && output == "bool",
-                        "and" | "or" | "xor" | "implies" => {
-                            inputs == [J::from("bool"), J::from("bool")] && output == "bool"
                         }
                         "set-of" | "set-empty" | "set-insert" | "set-remove" | "set-union"
                         | "set-intersect" | "set-diff" | "set-contains" | "set-not-contains"
                         | "set-length" => true,
-                        _ => false,
+                        _ => crate::value::scalar_signature(name, &inputs.iter().map(|x| x.as_str().unwrap_or("")).collect::<Vec<_>>(), output),
                     };
                     if !supported {
                         bad.insert(format!("{name} {inputs:?} -> {output}"));

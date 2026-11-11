@@ -274,7 +274,7 @@ fn accepts(m: &Member, peer_key: usize, d: &Tuple, p: &Row, g: &Graph) -> Result
         let Call::Primitive(name, sort) = &step.call else { unreachable!("certified pair guard") };
         let bound = step.bind::<smallvec::SmallVec<[Value; 2]>>(|f|
             f.operand(g, |i| d.port(i), &[], expanded));
-        if bound.evaluate(|args| value::primitive(name, &args, sort, g.program.key_nodes()))?.is_none() {
+        if bound.evaluate(|args| g.primitive(name, &args, sort))?.is_none() {
             return Ok(false);
         }
     }

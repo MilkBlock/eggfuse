@@ -104,6 +104,12 @@ impl BaseValues {
         table.intern(p)
     }
 
+    /// Inspect the representation already chosen for an interned base value.
+    pub fn representative<P: BaseValue>(&self, p: &P) -> Option<P> {
+        let id = self.get_ty::<P>();
+        self.tables[id].as_any().downcast_ref::<BaseInternTable<P>>()?.table.lookup(p)
+    }
+
     /// Get the base value of type `P` corresponding to the given [`Value`].
     pub fn unwrap<P: BaseValue>(&self, v: Value) -> P {
         if P::MAY_UNBOX

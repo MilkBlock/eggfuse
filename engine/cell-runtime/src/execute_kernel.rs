@@ -188,7 +188,7 @@ impl Frame {
                     if name.starts_with("cell-key-") { exec.graph.stats.key_operations += 1; }
                     let args: SmallVec<[Value; 4]> = ins.key.iter()
                         .map(|arg| arg.read(&exec.graph, |col| &seed.values[col], &self.results, None)).collect();
-                    let Some(value) = value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
+                    let Some(value) = exec.graph.primitive(name, &args, sort)?
                     else {
                         exec.graph.stats.register_prefix.primitive_rejections += 1;
                         return Ok(None);
@@ -377,7 +377,7 @@ impl Frame {
                         exec.graph.stats.key_operations += 1;
                     }
                     let Some(v) =
-                        value::primitive(name, &args, sort, exec.graph.program.key_nodes())?
+                        exec.graph.primitive(name, &args, sort)?
                     else {
                         return Ok(None);
                     };

@@ -650,7 +650,7 @@ fn emit(
             let result = bound.evaluate(|args| {
                 let Call::Primitive(name, sort) = &step.call else { unreachable!("scalar suffix") };
                 if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
-                crate::value::primitive(name, &args, sort, g.program.key_nodes())
+                g.primitive(name, &args, sort)
             })?;
             let Some(value) = result else { continue 'prefix; };
             if step.check_result.is_none() {
@@ -677,7 +677,7 @@ fn scalar(g: &mut Graph, scoped: &ScopedStep, values: &mut [Option<Value>]) -> R
     let result = bound.evaluate(|args| {
         let Call::Primitive(name, sort) = &step.call else { unreachable!("scalar prefix") };
         if name.starts_with("cell-key-") { g.stats.key_operations += 1; }
-        crate::value::primitive(name, &args, sort, g.program.key_nodes())
+        g.primitive(name, &args, sort)
     })?;
     let Some(value) = result else { return Ok(false); };
     if scoped.bindings.len() == 1 {

@@ -34,7 +34,8 @@ impl FunctionKeys {
     fn word(&self, key: &[Value]) -> Option<u64> {
         match (self.scalar, key) {
             (Some(Kind::Eq), [Value::Eq(x)]) => Some(*x),
-            (Some(Kind::Int), [Value::Int(x)]) | (Some(Kind::Float), [Value::Float(x)]) => {
+            (Some(Kind::Float), [Value::Float(x)]) => Some(x.key_bits()),
+            (Some(Kind::Int), [Value::Int(x)]) => {
                 Some(*x as u64)
             }
             _ => None,

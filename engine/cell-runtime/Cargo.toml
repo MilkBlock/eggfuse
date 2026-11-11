@@ -45,6 +45,7 @@ sha2 = "0.10"
 smallvec = { version = "1", features = ["union"] }
 rustc-hash = "2.1"
 rayon = "1"
+ordered-float = "5.0"
 mimalloc = { version = "0.1", default-features = false }
 
 [[example]]

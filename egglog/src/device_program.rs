@@ -158,6 +158,18 @@ impl EGraph {
     pub fn export_device_program(&self, sets: &[String]) -> Result<Json> {
         let mut program = self.export_rule_program(sets)?;
         program["initial"] = self.device_snapshot()?;
+        // Signed zeros share identity, but to-string observes the first stored
+        // representation. Do not seed a zero when none has been interned yet.
+        fn observes_zero(j: &Json) -> bool {
+            match j {
+                Json::Array(xs) => xs.iter().any(observes_zero),
+                Json::Object(xs) => (j["primitive"] == "to-string" && j["inputs"] == json!(["f64"])) || xs.values().any(observes_zero),
+                _ => false,
+            }
+        }
+        if observes_zero(&program) && let Some(zero) = self.backend.base_values().representative(&crate::sort::F::from(crate::sort::OrderedFloat(0.0))) {
+            program["float_zero_bits"] = json!(zero.0.0.to_bits() as i64);
+        }
         Ok(program)
     }
 
