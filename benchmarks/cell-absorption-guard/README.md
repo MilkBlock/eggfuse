@@ -393,3 +393,27 @@ python3 benchmarks/cell-absorption-guard/collect_kernels.py ROOT RESULTS.json
 [kernels.json](kernels.json) records the static payload accounting, actual helper
 entries, unchanged work, and diagnostic/native-acceptance artifact hashes. The
 feature remains disabled by default; throughput and the 2× objective are unproven.
+
+## Count only scheduled Cells
+
+Control: `61a1a417`. The newly added logical-match accounting summed every rule's
+pending absorption counter at every non-idle source Run. The existing scheduled
+rule loop already reads the same counter to keep an absorbed-only rule in the
+RHS patch. It now accumulates that value in a Run-local scalar and removes the
+later whole-rule scan. No persistent counter, allocation, or subscription is
+added. Query workers do not modify the absorption Context; per-rule counts still
+reserve the same unused Cell identities and drain at the original RHS boundary.
+
+The saved full-Raytrace execution has 16,883 Runs, 7,556 idle early returns, and
+582 rule counters. Thus the former loop examined **5,428,314 counter elements**.
+This is a source-derived work count against that recorded execution, not a new
+dynamic counter or time saving. Current-catalog absorption evidence and its
+typed pure-min proof are unchanged; this deletes accounting introduced by our
+takeover, without claiming another completed Cell or new Bake capability.
+
+30 selected integration tests pass, including every-Run logical counts and
+graphs with absorption enabled/disabled and serial/four-worker execution.
+No-default-feature compilation and fresh README compile/run/bench (repeat 1)
+checks pass. A normal executable's short sum-bits run preserves the preceding
+Kernel version's state, work, and complete ordered Run signature. Throughput
+is assessed separately in the five-implementation checkpoint.

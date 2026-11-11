@@ -379,8 +379,6 @@ impl Context {
     #[cfg(feature = "cell-absorption")]
     pub(crate) fn pending_absorbed(&self, rule: usize) -> usize { self.absorption_stats.pending[rule] }
     #[cfg(feature = "cell-absorption")]
-    pub(crate) fn absorbed_in_run(&self) -> usize { self.absorption_stats.pending.iter().sum() }
-    #[cfg(feature = "cell-absorption")]
     pub(crate) fn take_absorbed(&mut self, rule: usize) -> usize { std::mem::take(&mut self.absorption_stats.pending[rule]) }
     pub fn point(
         &mut self,

@@ -2437,6 +2437,8 @@ impl Executor {
             .measure_bindings()
             .then(|| self.watermarks.clone());
         let mut count = 0;
+        #[cfg(feature = "cell-absorption")]
+        let mut absorbed_matches = 0;
         for rid in rules {
             // Only semi-naive rules clear their dirty flag. An untriggered
             // source occurrence still advances its own watermark.
@@ -2495,7 +2497,11 @@ impl Executor {
                 { false }
             };
             #[cfg(feature = "cell-absorption")]
-            let absorbed = self.neighbor.pending_absorbed(rid) != 0;
+            let absorbed = {
+                let pending = self.neighbor.pending_absorbed(rid);
+                absorbed_matches += pending;
+                pending != 0
+            };
             #[cfg(not(feature = "cell-absorption"))]
             let absorbed = false;
             if !bindings.is_empty() || deferred || absorbed {
@@ -2562,7 +2568,7 @@ impl Executor {
         crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter());
         let matches = patch.len;
         #[cfg(feature = "cell-absorption")]
-        let matches = matches + self.neighbor.absorbed_in_run();
+        let matches = matches + absorbed_matches;
         let search_end = Instant::now();
         let search_seconds = search_end.duration_since(start).as_secs_f64() - scope_wait_seconds;
         #[cfg(feature = "family-replay")]
