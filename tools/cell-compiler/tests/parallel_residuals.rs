@@ -131,3 +131,59 @@ fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
         }
     }
 }
+
+#[test]
+fn active_spine_keeps_owned_entries_and_transfers_uncovered_queries() {
+    let mut s=String::from(r#"
+(datatype E (N i64) (Gate E) (Start E E) (Pair E E))
+(function Cost (E) i64 :merge new)
+(function Out (E E) i64 :merge new)
+(ruleset make) (ruleset read) (ruleset change) (ruleset join) (ruleset remove) (ruleset again)
+(rule ((Start x y)) ((Pair x y)) :ruleset make)
+(rule ((Gate x) (Pair x y) (= c (Cost y))) ((set (Out x y) c)) :ruleset read)
+(rule ((Gate x) (Start x y)) ((set (Cost y) 2)) :ruleset change)
+(rule () ((union (N 0) (N 1))) :ruleset join)
+(rule () ((delete (Pair (N 3) (N 131)))) :ruleset remove)
+(rule () ((Pair (N 3) (N 131)) (set (Cost (N 131)) 5)) :ruleset again)
+"#);
+    for i in 0..128 {
+        s+=&format!("(Gate (N {i})) (Start (N {i}) (N {})) (set (Cost (N {})) 1)\n",i+128,i+128);
+        // The same rule sees both source-produced and bootstrap constructors.
+        if i>=64 {s+=&format!("(Pair (N {i}) (N {}))\n",i+128);}
+    }
+    s+=r#"
+(run-schedule (seq (run make) (run read) (run change) (run read) (run join) (run read)
+ (run remove) (run read) (run again) (run read)))
+(check (= (Out (N 3) (N 131)) 5) (= (Out (N 80) (N 208)) 2))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None,&s).unwrap();
+    let trace=|workers,enabled| {
+        #[cfg(feature="iterative-bake")]
+        use eggfuse_cell_runtime::transfer_audit as audit;
+        #[cfg(feature="iterative-bake")]
+        {audit::set_active(true);audit::enable_write_audit();}
+        let e=run(&s,workers,enabled);
+        #[cfg(feature="iterative-bake")]
+        {audit::set_active(false);}
+        #[cfg(feature="iterative-bake")]
+        let digests=(audit::take_digests(),audit::take_write_digests(),audit::take_resume_digests());
+        #[cfg(not(feature="iterative-bake"))]
+        let digests=();
+        (e,digests)
+    };
+    let (before,trace_before)=trace(4,false);
+    for workers in [1,2,4] {
+        let (after,trace_after)=trace(workers,true);
+        assert_eq!(before.snapshots,after.snapshots,"every Run and visibility");
+        assert_eq!(before.binding_audit,after.binding_audit,"input winners and RHS ordering");
+        assert_eq!(trace_before,trace_after,"actual effects and chosen continuation origins");
+        let report=after.report();let work=&report["query_workers"]["residual_expansion"]["stats"];
+        assert!(work["partitioned_entries"].as_u64().unwrap()>0,"{report}");
+        assert!(work["partitioned_admitted"].as_u64().unwrap()>0,"{work}");
+        assert!(work["partitioned_answers"].as_u64().unwrap()>0,"{work}");
+        assert!(report["stage_spine"]["stats"]["routed_spine_seeds"].as_u64().unwrap()>0,"must retain actual owned continuations");
+        let pooled=work["partitioned_worker_entries"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>();
+        assert_eq!(pooled+work["partitioned_inline_entries"].as_u64().unwrap(),work["partitioned_entries"].as_u64().unwrap());
+        assert_eq!(pooled>0,workers>1,"the newly uncovered queries must reach worker threads");
+    }
+}

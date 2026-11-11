@@ -3331,9 +3331,9 @@
       "category": "H",
       "title": "源 Run 的 Cell 查询与索引发布",
       "activation": "sparse-cells 构建；--query-workers N；--query-grain N（默认 64）；parallel-residuals 构建 + --parallel-residuals 可接管无前缀/吸收/范围特化的单次展开查询；parallel-publication 构建 + --parallel-publication 可并行更新已完成 repair 的独占索引分区",
-      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段。发布复用这些 Cell 查询实际需要的列/范围/邻居索引；repair 完成后，现有表分区可独占移动给 worker，不要求不同 Cell 的 RHS 无冲突",
-      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管；直接 Entry 路径删除 Sieve 幸存者的 Seed/consumer 克隆、空 domain 登记及稍后的 Seed→worker 交接，条件筛选与精确查询在同一任务中完成；合格残余查询并入同一源 Run 的物理 Cell 队列，删除逐 kernel/pivot 执行汇合与结果交接；发布接管范围内的协调线程逐行读取及列/范围/邻居更新循环由同一线程池执行，原索引直接移动，完成后按源表顺序恢复通知；残余赢家按规则独占现有实例向量，在同一线程池完成合并、稳定排序和去重，协调线程不再重做这些比较",
-      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 残余查询与 point 接续按实际 Cell 共同归组，但仍逐 Entry 执行；所有权、watermark 和按序 RHS 不变；小 Run inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。 接管范围仍排除 active Cursor；保留 reverse 候选选择，selected/shared 投影与逐 Entry 审计走兼容路径。新增筛选失败候选和批次必须付账。 排队期间保留原 Row 的一个 Rc；惰性索引列必须在协调线程准备完成。直接 Entry 与兼容 Seed 保留原匹配位置，不能以完成顺序选赢家。 发布只读边界要求 union/dirty/ownership completion 清空，但保留变化与待回收帧至汇合；后续 Run 仍须等待全部发布。稳定非 canonical 字段及特殊 Unit 存储回退，family survey 不准入。一个大表仍是一个任务；小批回退。；残余赢家任务完成后才进入原规则顺序的 point/Spine 合并与 RHS；同输入键按原来源位置选择，完全相同来源保留展开顺序。单规则和小批次保留 inline；新增一次池汇合与任务头必须计费",
+      "compile_fact": "原 Cell Query 的固定 Entry 代码、pivot 和临时帧上界可共享，point-only 能力由原指令推导；稳定构造子完整覆盖证明候选来自共享 wiring。运行时仅收集当前 Run 已激活的 Entry，按实际 Cell 形成任务；当前发布 Cursor 与完整 Cell Query 共同证明其直接读取原 Row，不需要残余 Seed 的消费者投影。可选残余路径从同一 Query 和 Free Join Entry plan 推导只读列布局；封存 Run 内借用已有 membership 和字段。发布复用这些 Cell 查询实际需要的列/范围/邻居索引；repair 完成后，现有表分区可独占移动给 worker，不要求不同 Cell 的 RHS 无冲突；混合规则按现有 Shared Entry 的实际 Cursor 所有权区分接续与未覆盖输入，不再因 Spine 活跃而拒绝整条规则的残余查询",
+      "replaces": "已覆盖函数/构造子查询的串行 host、完整临时 Row 读取与重复 seed 扫描；构造子完整覆盖下的旧反向依赖补充；逐规则 worker 等待；恢复源顺序的第二次排序和 Cursor 排序移动；逐任务重复创建值/见证/候选临时帧；负匹配结果物化及全部 Entry 的中间结果槽初始化/写回；Run 末的全量 Cell 归组排序、独立排列向量、worker 重复计算帧宽度和查询地址；小 Run 的归组索引；已接管 Entry 的 Seed、route 下标间接读取、空 domain 占位和混合查询覆盖排除集合；带源 ordinal 的赢家直接按输入/深度/ordinal 选择，删除恢复源顺序的预排序和独立 Winners 容器；合格残余 Entry 的协调线程 Free Join 准入、domain 物化和 Frame 枚举由 worker 接管；直接 Entry 路径删除 Sieve 幸存者的 Seed/consumer 克隆、空 domain 登记及稍后的 Seed→worker 交接，条件筛选与精确查询在同一任务中完成；合格残余查询并入同一源 Run 的物理 Cell 队列，删除逐 kernel/pivot 执行汇合与结果交接；发布接管范围内的协调线程逐行读取及列/范围/邻居更新循环由同一线程池执行，原索引直接移动，完成后按源表顺序恢复通知；残余赢家按规则独占现有实例向量，在同一线程池完成合并、稳定排序和去重，协调线程不再重做这些比较；无 Cursor 的合格混合入口直接借用原 Row，删除协调线程准入、Seed/domain 交接和展开；对已转移的属性读取直接用权威函数槽，原邻居端口缓存不再产生 demand 和重复发布",
+      "live_obligations": "只执行本 Run 已激活的 Entry；current value、delta/watermark、实际结果来源、live 位及缓存/history 归属仍须有效。恢复原 Entry 胜者顺序后按原规则/RHS 顺序提交。 线程缓冲仅跨 Run 保留容量，每批完成、报错或展开均释放值/见证；每个 point Entry 至多一个结果才可预留任务上限。 当前 Run 任务连接结束后清空；新的静态代码与 kernel/Stage Entry 共享同一 Query。 残余输入保持原图枚举、所有权和后续增量激活；route 仍按原 witness/pivot 排序。survey 模式保留完整 Seed 流。 残余查询与 point 接续按实际 Cell 共同归组，但仍逐 Entry 执行；所有权、watermark 和按序 RHS 不变；小 Run inline。借用索引令候选 domain 在 feature 构建中使用 Arc；旧 point 缓存命中可能丢失，必须计入新增 key lookup。 接管范围仍排除 active Cursor；保留 reverse 候选选择，selected/shared 投影与逐 Entry 审计走兼容路径。新增筛选失败候选和批次必须付账。 排队期间保留原 Row 的一个 Rc；惰性索引列必须在协调线程准备完成。直接 Entry 与兼容 Seed 保留原匹配位置，不能以完成顺序选赢家。 发布只读边界要求 union/dirty/ownership completion 清空，但保留变化与待回收帧至汇合；后续 Run 仍须等待全部发布。稳定非 canonical 字段及特殊 Unit 存储回退，family survey 不准入。一个大表仍是一个任务；小批回退。；残余赢家任务完成后才进入原规则顺序的 point/Spine 合并与 RHS；同输入键按原来源位置选择，完全相同来源保留展开顺序。单规则和小批次保留 inline；新增一次池汇合与任务头必须计费；混合入口只筛选一次，保留有 Cursor 的来源和 Spine 优先级；每个 pivot 在共享计划保存原插入位置，worker 准入完成前不能证明全部 Spine 覆盖。原缓存命中转为函数索引访问，必须把 key_lookup_calls、neighbor point_hits 与 shared_point_hits 合并比较，负命中不重复相加；队列包括准入失败入口，需同时计费。整体加速和打满线程仍未证明",
       "sources": [
         "engine/cell-runtime/src/query_workers.rs",
         "engine/cell-runtime/src/query_reads.rs",
@@ -3783,6 +3783,26 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/merge_worker_seconds",
             "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_admission_probes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_expansion_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_point_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/rule_run_capacity_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -3990,6 +4010,36 @@
             "source": "report",
             "pointer": "/query_workers/residual_expansion/stats/merge_worker_tasks",
             "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_entries",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_pivots",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_admitted",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_answers",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_worker_entries",
+            "reduce": "sum"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_workers/residual_expansion/stats/partitioned_inline_entries",
+            "reduce": "value"
           }
         ]
       },
@@ -4039,7 +4089,9 @@
         "benchmarks/parallel-cell-publication/results.json",
         "benchmarks/parallel-cell-publication/winners.json",
         "benchmarks/parallel-cell-publication/winner-profile.json",
-        "benchmarks/parallel-cell-publication/timing.json"
+        "benchmarks/parallel-cell-publication/timing.json",
+        "benchmarks/parallel-cell-partition/README.md",
+        "benchmarks/parallel-cell-partition/results.json"
       ],
       "status": "owned-instance/v1 查询与 RHS 共用 Cell Instance；cell-results/v1 接通合格输出到 Entry/history 的共享存储。sum-bits 短例与指定语义验收通过，RHS 图效果仍按序提交；完整多线程速度收益未建立；残余准入/枚举已接通并通过 Run 边界回归；Raytrace 新路径总 key 查询增加 18,927，默认关闭，没有新增速度或满载结论；直接 Entry 接管在完整 Raytrace 省掉 1,881,965 次 Seed/domain 交接，所有图/Sieve/发布计数不变，未新增测速结论；Run 队列将 Raytrace 19,395 个源批次合入 2,785 次完成，查询/图/发布工作量不变，新增 Row 保留、归组与排序缓冲需付账，未建立加速；并行发布在完整 Raytrace 将 1,364,230 行索引更新移到 worker，772,626 行仍单分区 inline；sum-bits 全部小批回退。原图/查询/发布计数与有序 Run 不变，未新增速度结论；aa2161e2 五提交检查点：当前串行/四线程 Raytrace 中位数 6.050/6.017 s，配对比 0.977 [0.959,1.043]，未建立总体加速。sum-bits 四线程比当前串行慢；8/4 worker Raytrace 配对比 1.153 [1.064,1.260]。赢家整理转移 488,952 个候选但与此前四线程持平区间未排除，worker 仍有约 93%–95% 停驻栈，未满载，继续默认关闭"
     },

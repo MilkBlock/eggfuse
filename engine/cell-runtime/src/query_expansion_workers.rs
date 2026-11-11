@@ -5,7 +5,7 @@ use smallvec::SmallVec;
 
 struct Plan {
     layout:Vec<(usize,Vec<usize>)>, tables:Vec<usize>, expanded:usize,
-    code:usize, table:usize, active:bool,
+    code:usize, table:usize, active:bool, partitioned:bool, serial_position:usize,
 }
 #[derive(Default,Serialize)]
 struct Work {
@@ -22,6 +22,10 @@ struct Work {
     merge_pool_calls:u64, merge_tasks:u64, merge_inline_tasks:u64,
     merge_task_capacity_bytes:u64, merge_prepare_seconds:f64, merge_execute_seconds:f64,
     merge_worker_rows:Vec<u64>, merge_worker_tasks:Vec<u64>, merge_worker_seconds:Vec<f64>,
+    partitioned_entries:u64, partitioned_pivots:u64, partitioned_admitted:u64,
+    partitioned_answers:u64, partitioned_admission_probes:u64,
+    partitioned_expansion_rows:u64, partitioned_point_reads:u64,
+    partitioned_worker_entries:Vec<u64>, partitioned_inline_entries:u64,
 }
 #[derive(Default)]
 struct Output {
@@ -120,7 +124,8 @@ impl Plans {
                 rule:rid,pivot,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
                 #[cfg(feature="cell-query-sharing-audit")] audit_prefixes:Vec::new(),});
             Some(Plan {layout:layout.into_iter().map(|(t,c)|(t,c.into_iter().collect())).collect(),
-                tables:tables.into_iter().collect(),expanded:expanded.atom,code,table,active:false})
+                tables:tables.into_iter().collect(),expanded:expanded.atom,code,table,active:false,
+                partitioned:false,serial_position:0})
         }).collect()).collect();
         Self {enabled:true,rules,ready:vec![0;codes.len()],outputs:(0..p.rules.len()).map(|_|Output::default()).collect(),..Default::default()}
     }
@@ -130,11 +135,15 @@ impl Plans {
             let plan=self.rules[rid][pivot].as_ref().unwrap();
             self.ready[plan.code]=i;
             Prepared {index:index.read_columns(&plan.layout,plan.table),filter:sieve.entry_filter(rid,pivot),
-                steps:&entries.entries[rid][pivot],projections:&entries.projections,expanded:plan.expanded}
+                steps:&entries.entries[rid][pivot],projections:&entries.projections,expanded:plan.expanded,
+                partitioned:plan.partitioned}
         }).collect()
     }
     pub fn finished(&mut self) {
-        for (rid,pivot) in self.active.drain(..) {self.rules[rid][pivot].as_mut().unwrap().active=false;}
+        for (rid,pivot) in self.active.drain(..) {
+            let plan=self.rules[rid][pivot].as_mut().unwrap();
+            plan.active=false;plan.partitioned=false;plan.serial_position=0;
+        }
     }
     pub fn discard(&mut self) {
         for &(rid,_) in &self.active {self.outputs[rid]=Output::default();}
@@ -168,6 +177,29 @@ impl Executor {
     }
 }
 impl Workers {
+    /// The Entry already passed Sieve and has no published Cursor. Its rule
+    /// may still have other, independently owned Spine continuations.
+    pub(crate) fn uncovered_expansion_entry(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,
+        rid:usize,pivot:usize,watermark:u64,row:Rc<Row>,known:&QueryFacts)->Result<()> {
+        let code=self.activate_expansion(g,index,rid,pivot)?;
+        let plan=self.expansion.rules[rid][pivot].as_mut().unwrap();
+        self.expansion.work.partitioned_pivots+=u64::from(!plan.partitioned);
+        plan.partitioned=true;
+        self.enqueue_query(g,code,0,watermark,row,None,known,false);
+        self.expansion.work.partitioned_entries+=1;
+        self.expansion.work.queued_row_owners+=1;
+        Ok(())
+    }
+    /// Record the original matcher's insertion point once per Cell query,
+    /// after its Spine prefix and all preceding serial pivots are known.
+    pub(crate) fn place_uncovered_expansion(&mut self,rid:usize,pivot:usize,position:usize) {
+        if let Some(plan)=self.expansion.rules.get_mut(rid).and_then(|r|r.get_mut(pivot)).and_then(Option::as_mut)
+            .filter(|p|p.partitioned) {plan.serial_position=position;}
+    }
+    pub(super) fn expansion_position(&self,rid:usize,pivot:usize,original:usize)->usize {
+        self.expansion.rules[rid][pivot].as_ref().filter(|p|p.partitioned)
+            .map_or(original,|p|p.serial_position)
+    }
     pub(crate) fn expansion_ready(&self,g:&Graph,rid:usize,pivot:usize)->bool {
         if !self.expansion.enabled {return false;}
         let Some(plan)=&self.expansion.rules[rid][pivot] else {return false;};
@@ -257,11 +289,17 @@ impl Workers {
         t.input_rows+=w.input_rows;t.filter_probes+=w.filter_probes;t.filter_rejected+=w.filter_rejected;t.direct_entries+=w.direct_entries;
         t.admission_probes+=w.admission_probes;t.admission_rejected+=w.admission_rejected;t.admission_rows+=w.admission_rows;
         t.expansion_probes+=w.expansion_probes;t.expansion_rows+=w.expansion_rows;t.row_reads+=w.row_reads;t.index_rows_examined+=w.index_rows_examined;
+        t.partitioned_admitted+=w.partitioned_admitted;t.partitioned_answers+=w.partitioned_answers;
+        t.partitioned_admission_probes+=w.partitioned_admission_probes;
+        t.partitioned_expansion_rows+=w.partitioned_expansion_rows;t.partitioned_point_reads+=w.partitioned_point_reads;
         t.answer_capacity_bytes+=(answer_capacity*std::mem::size_of::<(usize,Binding)>()) as u64;
         t.worker_entries.resize(self.stats.worker_entries.len(),0);t.worker_inputs.resize(self.stats.worker_entries.len(),0);
         t.worker_rows.resize(self.stats.worker_entries.len(),0);t.worker_task_seconds.resize(self.stats.worker_entries.len(),0.0);
-        if let Some(i)=worker {t.worker_entries[i]+=c.entries;t.worker_inputs[i]+=w.input_rows;t.worker_rows[i]+=w.expansion_rows;t.worker_task_seconds[i]+=seconds;}
-        else {t.coordinator_entries+=c.entries;}
+        t.partitioned_worker_entries.resize(self.stats.worker_entries.len(),0);
+        if let Some(i)=worker {
+            t.worker_entries[i]+=c.entries;t.worker_inputs[i]+=w.input_rows;t.worker_rows[i]+=w.expansion_rows;t.worker_task_seconds[i]+=seconds;
+            t.partitioned_worker_entries[i]+=w.partitioned_entries;
+        } else {t.coordinator_entries+=c.entries;t.partitioned_inline_entries+=w.partitioned_entries;}
         for (rid,probes,rejected,direct,candidates) in filters {
             sieve.record_entry_filter(rid,probes,rejected);
             self.expansion.outputs[rid].direct+=direct;
@@ -284,7 +322,7 @@ impl Workers {
 }
 pub(super) struct Prepared<'a> {
     index:Read<'a>,filter:crate::sieve::EntryFilter<'a>,steps:&'a [crate::entry_join::Step],
-    projections:&'a [crate::entry_join::Projection],expanded:usize,
+    projections:&'a [crate::entry_join::Projection],expanded:usize,partitioned:bool,
 }
 #[derive(Default)]
 pub(super) struct ChunkWork {
@@ -297,12 +335,16 @@ impl Prepared<'_> {
         let (c,w)=(&mut chunk.counts,&mut chunk.work);
         let entry=Entry {values:&q.row.values,epoch:q.row.epoch,witness:q.row.witness};
         let before=(w.filter_probes,w.filter_rejected,w.direct_entries,c.point_reads+w.row_reads);
+        let partition_before=(w.admission_probes,w.expansion_rows,c.point_reads,c.answers);
         let result=(|| {
             w.input_rows+=1;
             if q.filter {
                 if !self.filter.allow(self.index.entry_hashes(entry.witness),&mut w.filter_probes,&mut w.filter_rejected) {return Ok(());}
                 w.direct_entries+=1;
             }
+            // Partitioned Entries passed their necessary filter on the host;
+            // account their direct delivery without evaluating it again.
+            if self.partitioned {w.direct_entries+=1;w.partitioned_entries+=1;}
             c.entries+=1;
             let owner=(entry.epoch,entry.witness);
             let mut domain=None;
@@ -323,11 +365,18 @@ impl Prepared<'_> {
                 }
                 if step.atom==self.expanded {domain=Some(selected);}
             }
+            w.partitioned_admitted+=u64::from(self.partitioned);
             frame.witnesses.clear();frame.witnesses.push((q.code.pivot,entry.witness));
             Host {query:&q.code.query,entry:&entry,pivot:q.code.pivot,reads,index:&self.index,key_nodes,
                 inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
+        if self.partitioned {
+            w.partitioned_admission_probes+=w.admission_probes-partition_before.0;
+            w.partitioned_expansion_rows+=w.expansion_rows-partition_before.1;
+            w.partitioned_point_reads+=c.point_reads-partition_before.2;
+            w.partitioned_answers+=c.answers-partition_before.3;
+        }
         let stats=match chunk.filters.iter().position(|s|s.0==q.code.rule) {
             Some(i)=>&mut chunk.filters[i],
             None=>{chunk.filters.push((q.code.rule,0,0,0,0));chunk.filters.last_mut().unwrap()}

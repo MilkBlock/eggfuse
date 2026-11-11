@@ -6,6 +6,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [最新多线程检查点](benchmarks/parallel-cell-publication/README.md#five-implementation-throughput-checkpoint)：五次实现后的完整对照仍未建立 Raytrace 总体加速。当前串行/四线程推理中位数为 6.050/6.017 s，配对区间跨持平；八线程为 6.965 s。sum-bits 四线程退化，worker 仍大部分时间等待。保留全部样本、成本及语义证据，实验路径默认关闭。
 
+[混合 Cell 的查询所有权分派](benchmarks/parallel-cell-partition/README.md)：有 Cursor 的入口保留接续，其余合格入口直接进入共享 worker 队列。完整 Raytrace 新增约 111 万个入口在线程上完成，免除约 84 万次 Seed/domain 交接和约 112 万次邻居缓存发布检查；总点读取不变，队列与结果整理成本已计入。这是工作量与语义验证，尚无新的整体速度或线程利用率结论。
+
 [完整测速与源 Run 选择验证](benchmarks/cell-publication-windows/README.md)：当前串行推理相对历史最快对照有收益；四线程尚未建立额外加速，未达到 2×。记录 Raytrace 历史 hoist 选择的边界证据、完整计时及验收限制。
 
 [Cell 变化局部性](benchmarks/cell-change-locality/README.md)：用实际 Get / Expr-size 匹配与提交区分单步扇出、变化后的重复传播和 min 吸收。热点窗口呈现较小扇出，但尚未证明可免除工作或全局稀疏性。

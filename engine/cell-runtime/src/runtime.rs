@@ -1171,6 +1171,7 @@ impl Executor {
         let mut legacy_cursor_probes = 0;
         let mut node_cursor_reads = 0;
         let mut entry_domains = Vec::new();
+        let mut uncovered_worker_entries = 0usize;
         let mut found = vec![];
         let scheduled = if scheduled_entry {
             let watermark = self.watermarks[rid];
@@ -1186,7 +1187,7 @@ impl Executor {
                         let gate_clock = Instant::now();
                         let atom = batch.atom();
                         #[cfg(feature = "parallel-residuals")]
-                        let worker_expansion = early_join && self.free_join.enabled && self.free_join.planned && !active_spine && self.completion.is_none()
+                        let worker_expansion = early_join && self.free_join.enabled && self.free_join.planned && self.completion.is_none()
                             && self.query_workers.as_ref().is_some_and(|w| w.expansion_ready(&self.graph,rid,atom));
                         #[cfg(not(feature = "parallel-residuals"))]
                         let worker_expansion = false;
@@ -1207,6 +1208,7 @@ impl Executor {
                         } else { None };
                         let start = out.len();
                         let claimed = spine_routes.len();
+                        let uncovered_before = uncovered_worker_entries;
                         #[cfg(feature = "sparse-cells")]
                         let node_owns = active_spine && self.stage_spine.entry_owns(rid, atom, batch.table);
                         #[cfg(not(feature = "sparse-cells"))]
@@ -1262,7 +1264,7 @@ impl Executor {
                         #[cfg(feature = "cell-entry-reverse")]
                         let selected_guard = selected.as_ref().map(|s| s.guard);
                         #[cfg(feature = "parallel-residuals")]
-                        if worker_expansion && !cfg!(feature = "entry-admission-audit") && {
+                        if worker_expansion && !active_spine && !cfg!(feature = "entry-admission-audit") && {
                             #[cfg(feature = "cell-entry-reverse")]
                             { selected.is_none() }
                             #[cfg(not(feature = "cell-entry-reverse"))]
@@ -1350,7 +1352,13 @@ impl Executor {
                                 if early_join {
                                     entry_domains.push(Domains::new());
                                 }
-                            } else if early_join && (point_only || worker_expansion) {
+                            } else if active_spine && detach_spine && worker_expansion && !cfg!(feature="entry-admission-audit") {
+                                #[cfg(feature="parallel-residuals")]
+                                self.query_workers.as_mut().unwrap().uncovered_expansion_entry(
+                                    &self.graph,&mut self.query_indexes,rid,atom,watermark,entry.row.clone(),&query_facts)?;
+                                uncovered_worker_entries+=1;
+                                return Ok(());
+                            } else if early_join && (point_only || (worker_expansion && !active_spine)) {
                                 // Point blocks need no domain. Admitted expansion
                                 // workers perform Free Join themselves on the same
                                 // sealed Run; do not repeat it on the coordinator.
@@ -1449,7 +1457,8 @@ impl Executor {
                         }
                         if active_spine {
                             let ordinary = (out.len() - start)
-                                - if detach_spine { 0 } else { spine_routes.len() - claimed };
+                                - if detach_spine { 0 } else { spine_routes.len() - claimed }
+                                + uncovered_worker_entries - uncovered_before;
                             self.stage_spine
                                 .record_fallbacks(rid, atom, ordinary as u64);
                         }
@@ -1477,7 +1486,9 @@ impl Executor {
                 Some(seeds) if route_spine => self.stage_spine.answers_routed(
                     &mut self.graph,
                     rid,
-                    seeds.len(),
+                    // Deferred Free Join may reject some of these Entries.
+                    // Until it runs, none can prove complete Spine coverage.
+                    seeds.len()+uncovered_worker_entries,
                     spine_routes,
                     watermark,
                     &query_facts,
@@ -1686,6 +1697,10 @@ impl Executor {
                 let Call::Table(table) = atom.call else {
                     continue;
                 };
+                #[cfg(feature="parallel-residuals")]
+                if let Some(workers)=&mut self.query_workers {
+                    workers.place_uncovered_expansion(rid,pivot,found.len());
+                }
                 let kernel = use_kernel
                     .then(|| self.graph.program.kernels[rid][pivot].clone())
                     .flatten()

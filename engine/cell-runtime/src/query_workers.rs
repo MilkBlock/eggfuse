@@ -225,6 +225,7 @@ impl Executor {
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
                 "organization":"cell-run/v4","winner_ordering":"input-depth-ordinal/v1",
                 "constructor_access":"canonical-or-stable/v1", "first_read_sharing":"literal-run/v1",
+                "rule_run_capacity_bytes":w.rule_facts.capacity()*std::mem::size_of::<Option<RuleRun>>(),
                 "scope":"source-Run Cell queries; borrowed slots and domains; optional residual expansion; ordered RHS unchanged", "stats":w.stats,
                 "residual_expansion":w.expansion_report()}))
     }
@@ -484,7 +485,11 @@ impl FirstReads {
             + self.touched.capacity() * std::mem::size_of::<usize>()) as u64
     }
 }
-struct RuleRun { facts: QueryFacts, watermark: u64 }
+struct RuleRun {
+    facts: QueryFacts, watermark: u64,
+    #[cfg(feature="parallel-residuals")]
+    first_source:usize,
+}
 impl CellPlan {
     fn compile(p: &Program) -> (Vec<Option<Self>>, Vec<CellCode>) {
         let mut local = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
@@ -534,6 +539,12 @@ struct QueryRead<'a> {
     row: &'a Row,
     #[cfg(feature = "cell-query-sharing-audit")]
     audit_cell: (usize, Dependency),
+}
+fn query_error_order(q:&QueryRead<'_>,known:&RuleRun)->(usize,bool,usize) {
+    #[cfg(feature="parallel-residuals")]
+    { (known.first_source,q.code.expansion,q.source) }
+    #[cfg(not(feature="parallel-residuals"))]
+    { let _=known;(q.source,false,0) }
 }
 struct Chunk {
     entries: std::ops::Range<usize>,
@@ -684,7 +695,8 @@ impl Workers {
         cursor:Option<crate::stage_spine::Cursor>,known:&QueryFacts,
         #[cfg(feature="parallel-residuals")] filter:bool) {
         let rid = self.cell_codes[code].rule;
-        if self.rule_facts[rid].is_none() { self.rule_facts[rid] = Some(RuleRun { facts: known.clone(), watermark }); }
+        if self.rule_facts[rid].is_none() { self.rule_facts[rid] = Some(RuleRun { facts: known.clone(), watermark,
+            #[cfg(feature="parallel-residuals")] first_source:self.cell_queries.len(), }); }
         debug_assert_eq!(self.rule_facts[rid].as_ref().unwrap().watermark, watermark);
         if self.cell_queries.len() == self.cell_queries.capacity() { self.stats.cell_queue_growths += 1; }
         self.cell_queries.push(CellQuery { code, next: usize::MAX, ordinal, row, cursor,
@@ -829,8 +841,10 @@ impl Workers {
                 let known = rule_facts[code.rule].as_ref().unwrap();
                 #[cfg(feature="parallel-residuals")]
                 if code.expansion {
-                    if let Err(error)=prepared[q.expansion].evaluate(q,&reads,key_nodes,known,frame,&mut residual,&mut answers)
-                        && first_error.as_ref().is_none_or(|(index,_)|q.source<*index) {first_error=Some((q.source,error));}
+                    if let Err(error)=prepared[q.expansion].evaluate(q,&reads,key_nodes,known,frame,&mut residual,&mut answers) {
+                        let order=query_error_order(q,known);
+                        if first_error.as_ref().is_none_or(|(old,_)|order<*old) {first_error=Some((order,error));}
+                    }
                     continue;
                 }
                 counts.entries+=1;
@@ -862,9 +876,10 @@ impl Workers {
                         answers.push((q.source, answer));
                     }
                     Ok(None) => {}
-                    Err(error) => if first_error.as_ref().is_none_or(|(index, _)| q.source < *index) {
-                        first_error = Some((q.source, error));
-                    },
+                    Err(error) => {
+                        let order=query_error_order(q,known);
+                        if first_error.as_ref().is_none_or(|(old,_)|order<*old) {first_error=Some((order,error));}
+                    }
                 }
             }
             counts.completion_headers = answers.len() as u64;
@@ -918,8 +933,9 @@ impl Workers {
             for (source, answer) in answers {
                 #[cfg(feature="parallel-residuals")]
                 if self.cell_codes[self.cell_queries[source].code].expansion {
-                    let rid=self.cell_codes[self.cell_queries[source].code].rule;
-                    self.record_expansion_answer(rid,self.cell_queries[source].ordinal,source,answer);
+                    let q=&self.cell_queries[source];let code=&self.cell_codes[q.code];
+                    let (rid,position)=(code.rule,self.expansion_position(code.rule,code.pivot,q.ordinal));
+                    self.record_expansion_answer(rid,position,source,answer);
                     continue;
                 }
                 let q = &mut self.cell_queries[source];
