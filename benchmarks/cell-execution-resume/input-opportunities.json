@@ -1,0 +1,177 @@
+{
+  "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+  "report_sha256": "213000d3f558e1fa30625a0cc6538356594adeef70caff964c7257c0f207f5fb",
+  "rules": [
+    {
+      "rule": 1,
+      "later_scalar_sites": [
+        {
+          "operation": 24,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 43,
+      "later_scalar_sites": [
+        {
+          "operation": 4,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 45,
+      "later_scalar_sites": [
+        {
+          "operation": 2,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 59,
+      "later_scalar_sites": [
+        {
+          "operation": 2,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 62,
+      "later_scalar_sites": [
+        {
+          "operation": 4,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 5869
+    },
+    {
+      "rule": 138,
+      "later_scalar_sites": [
+        {
+          "operation": 3,
+          "input_closed": true
+        },
+        {
+          "operation": 4,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 8115
+    },
+    {
+      "rule": 146,
+      "later_scalar_sites": [
+        {
+          "operation": 3,
+          "input_closed": true
+        },
+        {
+          "operation": 4,
+          "input_closed": true
+        },
+        {
+          "operation": 5,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 20
+    },
+    {
+      "rule": 350,
+      "later_scalar_sites": [
+        {
+          "operation": 2,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 390,
+      "later_scalar_sites": [
+        {
+          "operation": 10,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 454,
+      "later_scalar_sites": [
+        {
+          "operation": 6,
+          "input_closed": true
+        },
+        {
+          "operation": 23,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 498,
+      "later_scalar_sites": [
+        {
+          "operation": 4,
+          "input_closed": true
+        },
+        {
+          "operation": 5,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 499,
+      "later_scalar_sites": [
+        {
+          "operation": 5,
+          "input_closed": true
+        },
+        {
+          "operation": 6,
+          "input_closed": true
+        },
+        {
+          "operation": 7,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 500,
+      "later_scalar_sites": [
+        {
+          "operation": 3,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    },
+    {
+      "rule": 501,
+      "later_scalar_sites": [
+        {
+          "operation": 4,
+          "input_closed": true
+        }
+      ],
+      "observed_spine_bindings": 0
+    }
+  ],
+  "later_scalar_sites": 21,
+  "input_closed_sites": 21,
+  "limits": "Candidate data availability only. Observed Spine bindings are a subset of matches, not committed mutations or predicted savings. Source errors, Hide termination and all shared effects must retain their original order."
+}

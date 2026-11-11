@@ -108,6 +108,8 @@ impl StagePatch {
 pub struct Executor {
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
+    #[cfg(feature = "sparse-cells")]
+    cell_execution: Option<crate::cell::execution::runtime::State>,
     completion: Option<completion::State>,
     #[cfg(feature = "sparse-cells")]
     work_scratch: Vec<(usize, Vec<Binding>)>,
@@ -308,6 +310,8 @@ impl Executor {
         let mut e = Self {
             #[cfg(feature = "sparse-cells")]
             query_workers: None,
+            #[cfg(feature = "sparse-cells")]
+            cell_execution: None,
             completion: None,
             #[cfg(feature = "sparse-cells")]
             work_scratch: vec![],
@@ -2394,9 +2398,50 @@ impl Executor {
             // A different structural proposal at this op still gets its check.
             transfers = tail;
         }
-        for (i, op) in ops.iter().enumerate().skip(first_op) {
+        #[cfg(feature = "sparse-cells")]
+        let resumable = self.cell_execution.is_some();
+        #[cfg(not(feature = "sparse-cells"))]
+        let resumable = false;
+        #[cfg(feature = "sparse-cells")]
+        if let Some(execution) = &mut self.cell_execution {
+            execution.counts.frames += 1;
+            self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = first_op;
+        }
+        let mut next_op = first_op;
+        loop {
+            #[cfg(feature = "sparse-cells")]
+            if let Some(execution) = &mut self.cell_execution
+                && matches!(ops.get(next_op), Some(Op::Let(_, Call::Primitive(..), _))) {
+                use crate::cell::execution::runtime::Stop;
+                let pool = self.query_workers.as_ref().and_then(|w| w.execution_pool());
+                let result = self.graph.resume_cell(rid, cell, pool, execution.grain);
+                execution.counts.add(result.counts);
+                next_op = result.next;
+                completed_prefix = next_op;
+                match result.stop {
+                    Stop::Complete => break,
+                    Stop::Failed(error) => return Err(error),
+                    Stop::Boundary(_) | Stop::Operand => (),
+                }
+            }
+            let Some(op) = ops.get(next_op) else { break };
+            let i = next_op;
+            next_op = i + 1;
+            #[cfg(feature = "sparse-cells")]
+            if let Some(execution) = &mut self.cell_execution {
+                use crate::cell::execution::BoundaryKind as K;
+                let kind = match op {
+                    Op::Let(_, Call::Table(t), _) => Some(if self.graph.program.tables[*t].virtual_fact { K::Constructor } else { K::MutableRead }),
+                    Op::Let(_, Call::Primitive(..), _) => Some(K::Primitive),
+                    Op::Set(..) => Some(K::Write), Op::Union(..) => Some(K::Union),
+                    Op::Hide(..) => Some(K::Visibility), Op::Panic => Some(K::Failure),
+                    Op::Copy(..) => None,
+                };
+                if let Some(kind) = kind { execution.counts.boundary(kind); }
+            }
             if self.graph.known_stats.elide_static(aliases, i) {
                 completed_prefix = i + 1;
+                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
                 continue;
             }
 
@@ -2412,6 +2457,7 @@ impl Executor {
                         self.stage_spine.structural.accepted(*d as usize);
                     }
                     completed_prefix = i + 1;
+                    if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
                     continue;
                 }
             }
@@ -2423,10 +2469,12 @@ impl Executor {
                 .execute(&mut self.graph, i, op, source)?
             {
                 completed_prefix = i + 1;
+                if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
                 completed = false;
                 break;
             }
             completed_prefix = i + 1;
+            if resumable { self.graph.rhs_frame_mut(cell).unwrap().completed_prefix = i + 1; }
         }
         if origin.is_some() {
             self.continuation_stats.published_facts +=
@@ -3224,6 +3272,13 @@ impl Executor {
                     +self.graph.program.executions.iter().map(|p|p.storage_bytes()).sum::<usize>(),
                 "progress_bytes":if cfg!(feature="sparse-cells") {std::mem::size_of::<usize>()} else {0},
                 "worker_scope":"query to first dependency boundary; original Run/effect/publication order"});
+        #[cfg(feature = "sparse-cells")]
+        if let Some(execution) = &self.cell_execution {
+            report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
+                "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
+                "scope":"same Cell resumes between ordered effects; coordinator waits for its frontier",
+                "stats":execution.counts});
+        }
         report["query_point_transport"] = point_transport;
         report
     }

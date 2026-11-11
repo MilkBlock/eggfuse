@@ -187,7 +187,7 @@ fn real_publication_preserves_each_run_through_foreign_reuse_union_and_recreatio
 (datatype Gated (Gate E))
 (ruleset make) (ruleset consume) (ruleset publish) (ruleset join) (ruleset remove) (ruleset again)
 (rule ((Start x)) ((Gate x)) :ruleset make)
-(rule ((Gate x) (= n (Input x))) ((let a (+ n 1)) (F x a)) :ruleset consume)
+(rule ((Gate x) (= n (Input x))) ((let a (+ n 1)) (F x a) (let b (+ a 0)) (F x b)) :ruleset consume)
 (rule ((= f (F x n))) ((set (Out x) n)) :ruleset publish)
 (rule () ((union (N 0) (N 1))) :ruleset join)
 (rule () ((delete (F (N 3) 4))) :ruleset remove)
@@ -210,6 +210,7 @@ fn real_publication_preserves_each_run_through_foreign_reuse_union_and_recreatio
         e.use_entry_publications().unwrap();
         if workers > 0 {
             e.use_query_workers(workers, 8).unwrap();
+            e.use_cell_execution(1).unwrap();
             #[cfg(feature = "parallel-residuals")]
             e.use_parallel_residuals().unwrap();
         }
@@ -235,10 +236,100 @@ fn real_publication_preserves_each_run_through_foreign_reuse_union_and_recreatio
     b.execute().unwrap();
     assert!(b.graph.stats.prepared_rhs_operations > 0);
     assert!(
+        b.report()["cell_execution"]["runtime"]["stats"]["worker_operations"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    assert!(
         b.report()["entry_schedule"]["stats"]["entry_publication_writes"]
             .as_u64()
             .unwrap()
             > 0,
         "this test must exercise actual owned Entry publication"
     );
+}
+
+#[test]
+fn post_boundary_workers_resume_actual_results_through_union_and_publication() {
+    let source = format!(
+        r#"{HEADER}
+(ruleset observe)
+(rule ((Start x) (= n (Input x)))
+ ((let a (+ n 1)) (let f (F x a)) (let b (* a 2))
+  (union f x) (let c (+ b 3)) (F f c) (set (Out x) c)) :ruleset step)
+(rule ((= f (F x n))) ((set (Current f) n)) :ruleset observe)
+{} (F (N 0) 1)
+(run-schedule (seq (run step) (run observe)))
+(check (= (Out (N 2)) 9) (= (F (N 2) 3) (N 2)))
+"#,
+        initial()
+    );
+    egglog::EGraph::default()
+        .parse_and_run_program(None, &source)
+        .unwrap();
+    let mut control = executor(&source, 0);
+    control.execute().unwrap();
+    for (workers, grain) in [(1, 1), (2, 1), (4, 1), (4, 64)] {
+        let mut candidate = executor(&source, workers);
+        candidate.use_cell_execution(grain).unwrap();
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        let report = candidate.report();
+        let counts = &report["cell_execution"]["runtime"]["stats"];
+        assert!(counts["local_operations"].as_u64().unwrap() > 0);
+        assert!(
+            counts["boundaries"][3].as_u64().unwrap() > 0,
+            "union remains a real boundary"
+        );
+        assert_eq!(
+            candidate.graph.stats.union_requests,
+            control.graph.stats.union_requests
+        );
+        if workers > 1 && grain == 1 {
+            assert!(counts["worker_operations"].as_u64().unwrap() > 0);
+            assert!(counts["worker_segments"].as_u64().unwrap() > 0);
+        } else {
+            assert_eq!(counts["worker_operations"], 0);
+        }
+    }
+}
+
+#[test]
+fn a_worker_failure_after_a_shared_effect_preserves_the_exact_source_prefix() {
+    for tail in [
+        "(let b (/ a 0)) (set (Out x) b)",
+        "(let b (* a 2)) (panic \"stop\")",
+    ] {
+        let source = format!(
+            r#"{HEADER}
+(rule ((Start x) (= n (Input x)))
+ ((let a (+ n 1)) (F x a) {tail}) :ruleset step)
+{} (run-schedule (run step))
+"#,
+            initial()
+        );
+        let mut control = executor(&source, 0);
+        let error = control.execute().unwrap_err();
+        for workers in [1, 2, 4] {
+            let mut candidate = executor(&source, workers);
+            candidate.use_cell_execution(1).unwrap();
+            assert_eq!(candidate.execute().unwrap_err(), error);
+            assert_eq!(
+                candidate.graph.export().unwrap(),
+                control.graph.export().unwrap()
+            );
+            assert_eq!(
+                candidate.graph.stats.constructor_requests,
+                control.graph.stats.constructor_requests
+            );
+            let report = candidate.report();
+            let counts = &report["cell_execution"]["runtime"]["stats"];
+            if tail.contains("/ a") {
+                assert_eq!(counts["failures"], 1);
+            } else {
+                assert!(counts["boundaries"][5].as_u64().unwrap() > 0);
+            }
+        }
+    }
 }

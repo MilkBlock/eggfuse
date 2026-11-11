@@ -1,0 +1,212 @@
+{
+  "scope": "standalone Cell CPU",
+  "control_commit": "4ba83913",
+  "control_tag": "cell-execution-refactor-base",
+  "runtime_sha256": "79ca88f7c9594dc6efa2baa40a4d97c8c6f2f32f03edbcfcbce4af0c07e41b01",
+  "limits": "Complete work/semantic runs, not throughput or utilization evidence. Prepared work includes losing candidates; only consumed operations remove serial RHS execution. Capacity bytes exclude allocator overhead. Resumption uses exclusive frame borrows; the coordinator waits for each frontier. No independent graph-effect scheduling or full utilization is established.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "before_report_sha256": "bcad545706098d130eb82cf84fafc306d3054d4f9ea087c6aa10502cf7a6826e",
+      "after_report_sha256": "45d7b9633d9413f918e5374c19120b6abeff62f48d0283563c7dde4e6e59f1b5",
+      "same_state_ordered_runs_and_graph_query_maintenance_work": true,
+      "plan": {
+        "compiled_payload_bytes": 386216,
+        "progress_bytes": 8,
+        "rules": 582,
+        "runtime": {
+          "boundary_order": [
+            "Constructor",
+            "MutableRead",
+            "Write",
+            "Union",
+            "Visibility",
+            "Failure",
+            "Primitive"
+          ],
+          "enabled": true,
+          "grain": 1,
+          "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+          "stats": {
+            "boundaries": [
+              11160,
+              0,
+              3774,
+              310,
+              75,
+              0,
+              0
+            ],
+            "capacity_growth_bytes": 47400,
+            "failures": 0,
+            "frames": 5173,
+            "local_operations": 717,
+            "operand_boundaries": 0,
+            "segments": 550,
+            "slot_growths": 261,
+            "worker_operations": 717,
+            "worker_segments": 550,
+            "worker_wait_ns": 3748545
+          }
+        },
+        "schema": "cell-execution-boundaries/v1",
+        "segments": 2230,
+        "worker_scope": "query to first dependency boundary; original Run/effect/publication order"
+      },
+      "preparation": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 137,
+        "operations": 137,
+        "reserved_rhs_slot_bytes": 3288,
+        "slot_writes": 137
+      },
+      "worker_local_operations": 76,
+      "inline_local_operations": 61,
+      "serial_rhs_operations_removed": 137,
+      "prepared_operations_not_consumed": 0,
+      "resumption": {
+        "boundary_order": [
+          "Constructor",
+          "MutableRead",
+          "Write",
+          "Union",
+          "Visibility",
+          "Failure",
+          "Primitive"
+        ],
+        "enabled": true,
+        "grain": 1,
+        "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+        "stats": {
+          "boundaries": [
+            11160,
+            0,
+            3774,
+            310,
+            75,
+            0,
+            0
+          ],
+          "capacity_growth_bytes": 47400,
+          "failures": 0,
+          "frames": 5173,
+          "local_operations": 717,
+          "operand_boundaries": 0,
+          "segments": 550,
+          "slot_growths": 261,
+          "worker_operations": 717,
+          "worker_segments": 550,
+          "worker_wait_ns": 3748545
+        }
+      }
+    },
+    "ray": {
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "before_report_sha256": "091ad51b291b2fff27de06126ae89574c7c3f3d3577c26740f0e7d4e4b6f451c",
+      "after_report_sha256": "8e5bbc775412744cc48a8ffadc6c48eecb154ef9ea2d88c6b099cf43e8d7f9ce",
+      "same_state_ordered_runs_and_graph_query_maintenance_work": true,
+      "plan": {
+        "compiled_payload_bytes": 2313240,
+        "progress_bytes": 8,
+        "rules": 582,
+        "runtime": {
+          "boundary_order": [
+            "Constructor",
+            "MutableRead",
+            "Write",
+            "Union",
+            "Visibility",
+            "Failure",
+            "Primitive"
+          ],
+          "enabled": true,
+          "grain": 1,
+          "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+          "stats": {
+            "boundaries": [
+              2503393,
+              0,
+              1428463,
+              29924,
+              9349,
+              0,
+              92
+            ],
+            "capacity_growth_bytes": 6034416,
+            "failures": 0,
+            "frames": 1020508,
+            "local_operations": 104982,
+            "operand_boundaries": 0,
+            "segments": 71912,
+            "slot_growths": 29081,
+            "worker_operations": 104982,
+            "worker_segments": 71912,
+            "worker_wait_ns": 418963203
+          }
+        },
+        "schema": "cell-execution-boundaries/v1",
+        "segments": 16195,
+        "worker_scope": "query to first dependency boundary; original Run/effect/publication order"
+      },
+      "preparation": {
+        "capacity_growth_bytes": 0,
+        "deferred_failures": 0,
+        "frame_growths": 0,
+        "instances": 342030,
+        "operations": 342030,
+        "reserved_rhs_slot_bytes": 8208720,
+        "slot_writes": 342030
+      },
+      "worker_local_operations": 340893,
+      "inline_local_operations": 1137,
+      "serial_rhs_operations_removed": 341694,
+      "prepared_operations_not_consumed": 336,
+      "resumption": {
+        "boundary_order": [
+          "Constructor",
+          "MutableRead",
+          "Write",
+          "Union",
+          "Visibility",
+          "Failure",
+          "Primitive"
+        ],
+        "enabled": true,
+        "grain": 1,
+        "scope": "same Cell resumes between ordered effects; coordinator waits for its frontier",
+        "stats": {
+          "boundaries": [
+            2503393,
+            0,
+            1428463,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "capacity_growth_bytes": 6034416,
+          "failures": 0,
+          "frames": 1020508,
+          "local_operations": 104982,
+          "operand_boundaries": 0,
+          "segments": 71912,
+          "slot_growths": 29081,
+          "worker_operations": 104982,
+          "worker_segments": 71912,
+          "worker_wait_ns": 418963203
+        }
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  },
+  "phase": "owned Cell resumption between source-ordered shared effects"
+}

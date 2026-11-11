@@ -41,6 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
         println!("  --query-workers N [--query-grain N] (Cell function-point query batches; 1 = inline; default grain 64)");
+        println!("  --cell-execution-grain N (experimental owned Cell resumption on query workers; source effects remain ordered)");
         println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
         println!("  --overlap-completion (experimental snapshot reads overlapping ordered commits; requires completion batches)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
@@ -76,7 +77,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
+            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" | "--cell-execution-grain" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -224,6 +225,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         { let _ = workers; return Err("query workers require sparse-cells".into()); }
     } else if opt("--query-grain").is_some() {
         return Err("query grain requires query workers".into());
+    }
+    if let Some(grain) = opt("--cell-execution-grain") {
+        #[cfg(feature = "sparse-cells")]
+        runtime.use_cell_execution(grain.parse()?)?;
+        #[cfg(not(feature = "sparse-cells"))]
+        { let _ = grain; return Err("Cell execution requires sparse-cells".into()); }
     }
     if scoped_execution { runtime.use_scoped_execution()?; }
     if port_scopes { runtime.use_port_scopes()?; }

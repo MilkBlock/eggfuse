@@ -7,14 +7,15 @@ fn compare(source: &str, congruence: bool) -> Executor {
     let p = fixture::program(source, congruence);
     let mut control = p.artifact.clone();
     control.as_object_mut().unwrap().remove("iterative_bake");
-    let execute = |p| {
+    let execute = |p, resume| {
         let mut e = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
         e.use_entry_publications().unwrap();
+        if resume { e.use_query_workers(2,8).unwrap(); e.use_cell_execution(1).unwrap(); }
         e.execute().unwrap();
         e
     };
-    let old = execute(Program::parse(control).unwrap());
-    let new = execute(p);
+    let old = execute(Program::parse(control).unwrap(), false);
+    let new = execute(p, true);
     assert_eq!(old.snapshots, new.snapshots);
     assert_eq!(old.binding_audit, new.binding_audit);
     assert_eq!(old.graph.export().unwrap(), new.graph.export().unwrap());

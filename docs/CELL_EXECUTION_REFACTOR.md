@@ -88,11 +88,18 @@ overall objective complete until all applicable items above are proven.
 - Source-derived boundary plans and direct query-to-local-prefix continuation
   implemented; [work and semantic acceptance](../benchmarks/cell-execution-prefix/README.md).
   First result slots share the query allocation; covered RHS calculations are
-  removed. Actual shared-effect suspension/resumption is not implemented yet.
+  removed.
 - Closed completion and first-miss promotion now retain that same owned slot
   array. The separate computed-result map, borrowed-input overlay and promotion
   merge are removed; [work and acceptance](../benchmarks/cell-execution-ownership/README.md).
   This is coordinator execution, not yet an independently parked worker Cell.
-- Cursor/result ownership, post-boundary execution, completion/publication
-  unification and Bake composition of those continuations remain live work.
+- Optional source-ordered resumption now retains progress in the actual Cell
+  and runs its later pure segments on the existing worker pool; see
+  [the resumption checkpoint](../benchmarks/cell-execution-resume/README.md).
+  The host resolves shared effects once and waits for each frontier. Concurrent
+  scheduling of multiple parked executions is still unimplemented.
+- Cursor/receipt ownership, completion/publication unification and Bake
+  composition of those continuations remain live work. The next concrete
+  opportunity is input-closed scalar islands beyond the first shared effect:
+  avoid those round trips while preserving source-positioned errors.
 - Performance/utilization improvement for this refactor: unproven.

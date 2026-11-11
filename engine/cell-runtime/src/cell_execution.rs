@@ -8,6 +8,10 @@ use crate::{
 use serde::Serialize;
 use std::collections::BTreeSet;
 
+#[cfg(feature = "sparse-cells")]
+#[path = "cell_execution_runtime.rs"]
+pub(crate) mod runtime;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
 pub(crate) enum BoundaryKind {
     Constructor,

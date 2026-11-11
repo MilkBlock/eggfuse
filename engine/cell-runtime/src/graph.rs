@@ -855,6 +855,17 @@ impl Graph {
         self.cells.get_mut(&id)
     }
     #[cfg(feature = "sparse-cells")]
+    pub(crate) fn execution_parts(&mut self, rule: usize, cell: u32)
+        -> (&crate::cell::execution::Plan, &crate::program::Template, &mut Cell) {
+        let template = &self.program.templates[self.program.rules[rule].template];
+        let frame = match &mut self.active_rhs {
+            Some((id, frame)) if *id == cell => frame,
+            _ => self.cells.get_mut(&cell).expect("owned executing Cell"),
+        };
+        debug_assert_eq!(frame.template, self.program.rules[rule].template);
+        (&self.program.executions[rule], template, frame)
+    }
+    #[cfg(feature = "sparse-cells")]
     pub(crate) fn begin_transient(
         &mut self,
         template: usize,

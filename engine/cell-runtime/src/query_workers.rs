@@ -181,6 +181,18 @@ struct Entry<'a> {
     witness: Dependency,
 }
 impl Executor {
+    pub fn use_cell_execution(&mut self, grain: usize) -> Result<()> {
+        if grain == 0 || self.query_workers.is_none() {
+            return Err("Cell execution requires query workers and positive grain".into());
+        }
+        if !self.steps.is_empty() || self.cell_execution.is_some() {
+            return Err("configure Cell execution once before the first Run".into());
+        }
+        self.cell_execution = Some(crate::cell::execution::runtime::State {
+            grain, counts: Default::default(),
+        });
+        Ok(())
+    }
     #[cfg(feature = "parallel-entry-filters")]
     pub fn use_parallel_entry_filters(&mut self) -> Result<()> {
         if !self.steps.is_empty() { return Err("configure Entry filters before execution".into()); }
@@ -391,6 +403,7 @@ fn evaluate(
 }
 
 impl Workers {
+    pub(crate) fn execution_pool(&self) -> Option<&rayon::ThreadPool> { self.pool.as_ref() }
     #[cfg(feature = "parallel-publication")]
     pub(crate) fn publication_pool(&self)->(Option<&rayon::ThreadPool>,usize) { (self.pool.as_ref(),self.grain) }
     fn expansion_report(&self) -> J {
