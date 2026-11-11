@@ -2,7 +2,7 @@ Title
 EggFuse: Exploiting Locality in E-Graphs
 
 Authors
-Minakami Yuki
+Junru Huang
 
 Suggested primary category
 cs.PL (Programming Languages)
