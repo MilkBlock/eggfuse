@@ -142,7 +142,8 @@ impl Ledger {
                 return Ok(None);
             }
             let e = queue.pop_front().unwrap();
-            if e.rule != r || e.epoch != g.epoch || &e.values != v {
+            if e.rule != r || e.epoch != g.epoch || e.values.len() != g.program.rules[r].inputs.len()
+                || g.program.rules[r].inputs.iter().any(|slot| e.values.get(slot) != v.get(slot)) {
                 return Err(format!("RHS cohort binding mismatch at {}", self.ordinal));
             }
             self.current = Some(e);
@@ -155,13 +156,13 @@ impl Ledger {
         }
         Ok(())
     }
-    pub fn closed(&mut self, g: &Graph, r: usize, v: &Slots) {
+    pub fn closed(&mut self, g: &Graph, r: usize, v: Slots) {
         if self.replay.is_none() {
             self.current = Some(Event {
                 ordinal: self.ordinal,
                 epoch: g.epoch,
                 rule: r,
-                values: v.clone(),
+                values: v,
                 unions: vec![],
             })
         }

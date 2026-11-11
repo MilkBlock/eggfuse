@@ -234,6 +234,14 @@ pub struct Stats {
     #[serde(default)]
     pub prepared_rhs_operations: u64,
     #[serde(default)]
+    pub completion_frame_result_writes: u64,
+    #[serde(default)]
+    pub completion_frame_growths: u64,
+    #[serde(default)]
+    pub completion_frame_growth_bytes: u64,
+    #[serde(default)]
+    pub completion_promoted_result_slots: u64,
+    #[serde(default)]
     pub transient_writes: u64,
     pub direct_bindings: u64,
     #[serde(default)]
@@ -789,9 +797,9 @@ impl Graph {
         let key = write
             .key
             .iter()
-            .map(|a| self.argument_in(id, &frame, None, a))
+            .map(|a| self.argument_in(id, &frame, a))
             .collect::<Result<Vec<_>>>()?;
-        let value = self.argument_in(id, &frame, None, &write.value)?;
+        let value = self.argument_in(id, &frame, &write.value)?;
         let i=self.set_function_canonical(write.table,&key,value)?;
         let changed=self.stats.function_updates!=before;
         if changed {
@@ -822,7 +830,7 @@ impl Graph {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(w) = self.writer(cell) {
-            return self.slot_fields(cell, w.template, w.parent, &w.values, None, i);
+            return self.slot_fields(cell, w.template, w.parent, &w.values, i);
         }
         Err("expired Cell reference".into())
     }
@@ -880,14 +888,14 @@ impl Graph {
             self.promote_active();
         }
     }
-    pub(crate) fn argument_in(&self, cell: u32, c: &Cell, inputs: Option<&crate::slots::Slots>, a: &Arg) -> Result<Value> {
+    pub(crate) fn argument_in(&self, cell: u32, c: &Cell, a: &Arg) -> Result<Value> {
         match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
-            Arg::Slot(i) => self.slot_fields(cell, c.template, c.parent, &c.values, inputs, *i),
+            Arg::Slot(i) => self.slot_fields(cell, c.template, c.parent, &c.values, *i),
         }
     }
     fn slot_in(&self, cell: u32, c: &Cell, i: usize) -> Result<Value> {
-        self.slot_fields(cell, c.template, c.parent, &c.values, None, i)
+        self.slot_fields(cell, c.template, c.parent, &c.values, i)
     }
     fn slot_fields(
         &self,
@@ -895,10 +903,9 @@ impl Graph {
         template: usize,
         parent: Option<FactRef>,
         values: &crate::slots::Slots,
-        inputs: Option<&crate::slots::Slots>,
         i: usize,
     ) -> Result<Value> {
-        if let Some(v) = values.get(&i).or_else(|| inputs.and_then(|v| v.get(&i))) {
+        if let Some(v) = values.get(&i) {
             #[cfg(feature = "sparse-cells")]
             if self.sealed_input_cell == Some(cell) {
                 self.sealed_reads.set(self.sealed_reads.get()+1);
@@ -908,7 +915,7 @@ impl Graph {
         }
         let arg = |a: &Arg| match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
-            Arg::Slot(s) => self.slot_fields(cell, template, parent, values, inputs, *s),
+            Arg::Slot(s) => self.slot_fields(cell, template, parent, values, *s),
         };
         if let Some(a) = self
             .program
@@ -969,15 +976,14 @@ impl Graph {
             _ => Err("invalid parent fact".into()),
         }
     }
-    /// One operand reader for stored, local and preflighted Cell frames. A
-    /// closed frame borrows its matched inputs instead of cloning them.
+    /// Stored, local and completing Cells read their one owned slot map.
     pub(crate) fn frame_arguments<C: FromIterator<Value>>(&self, cell: u32, frame: &Cell,
-        inputs: Option<&crate::slots::Slots>, args: &[Arg]) -> Result<C> {
-        args.iter().map(|arg| self.argument_in(cell, frame, inputs, arg)).collect()
+        args: &[Arg]) -> Result<C> {
+        args.iter().map(|arg| self.argument_in(cell, frame, arg)).collect()
     }
     fn collect_arguments<C: FromIterator<Value>>(&self, cell: u32, args: &[Arg]) -> Result<C> {
         if let Some(frame) = self.rhs_frame(cell) {
-            self.frame_arguments(cell, frame, None, args)
+            self.frame_arguments(cell, frame, args)
         } else {
             args.iter().map(|arg| self.argument(cell, arg)).collect()
         }
@@ -1027,9 +1033,9 @@ impl Graph {
         self.fact_decode_ports.set(self.fact_decode_ports.get() + args.len() as u64 + 1);
         let mut values = Vec::with_capacity(args.len() + 1);
         for arg in args {
-            values.push(self.argument_in(f.cell, c, None, arg)?);
+            values.push(self.argument_in(f.cell, c, arg)?);
         }
-        values.push(self.argument_in(f.cell, c, None, &result)?);
+        values.push(self.argument_in(f.cell, c, &result)?);
         Ok(Row {
             table,
             values: row_fields(values),
@@ -1568,12 +1574,12 @@ impl Graph {
     pub(crate) fn start_completion(
         &mut self,
         rule: usize,
-        inputs: &mut crate::slots::Slots,
+        values: crate::slots::Slots,
         parent: Option<FactRef>,
         transfers: &[crate::result_handoff::Input],
         receipts: &mut crate::cell::Effects,
     ) -> Result<(cell_prefix::Start, u64)> {
-        use crate::cell::{CellFrame, HandoffCounts, CompletionFrame, complete_handoff};
+        use crate::cell::{CellFrame, HandoffCounts, LocalCall, complete_handoff};
         let template = self.program.rules[rule].template;
         let ops = self.program.templates[template].ops.clone();
         let aliases = self.program.known_results.static_skip[rule].clone();
@@ -1581,10 +1587,13 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         self.trust_sealed_frame(cell);
         let before_unions = self.stats.union_requests;
-        let mut pending = CompletionFrame {
-            cell, frame: self.new_cell(template, Default::default(), None),
-            inputs,
-        };
+        // The matched allocation is the execution frame. Reused results are
+        // written here once, including when a later receipt fails validation.
+        // Keep captured inputs until promotion; only then may the ordinary
+        // parent projection replace input fields, exactly as on the old path.
+        let mut frame = self.new_cell(template, values, None);
+        let before_capacity = frame.values.capacity_bytes();
+        let mut pending = LocalCall { cell, frame: &mut frame };
         let mut transfers = transfers.iter().peekable();
         let mut counts = HandoffCounts::default();
         let mut skipped = 0;
@@ -1623,24 +1632,39 @@ impl Graph {
         }
         let reserved = self.reserve_cell_id()?;
         debug_assert_eq!(cell, reserved);
-        let CompletionFrame { frame, .. } = pending;
+        let growth = frame.values.capacity_bytes().saturating_sub(before_capacity);
+        self.stats.completion_frame_growth_bytes += growth as u64;
+        self.stats.completion_frame_growths += u64::from(growth != 0);
+        self.stats.completion_frame_result_writes += counts.lets;
+        let result_slots = counts.lets;
         let count = self.stats.union_requests - before_unions;
         counts.commit(&mut self.stats);
         // The completed prefix will not run again, even after a later miss.
         self.known_stats.static_eliminated += skipped;
         self.known_stats.avoided_lookups += skipped;
         let start = if let Some(next_op) = first_miss {
-            let mut resumed = self.new_cell(template, std::mem::take(inputs), parent);
-            resumed.values.extend(frame.values);
+            // Parent fields used to be removed from the input map before the
+            // separate computed map was merged back. Keep exactly that policy
+            // while retaining one allocation and already completed results.
+            let t = &self.program.templates[template];
+            frame.parent = parent.filter(|_| !t.parent_columns.is_empty());
+            if frame.parent.is_some() {
+                for slot in t.parent_columns.keys() {
+                    let computed = t.defs.get(slot).is_some_and(|&op|
+                        op < next_op && !aliases[op] && matches!(ops[op], Op::Let(..)));
+                    if !computed { frame.values.remove(slot); }
+                }
+            }
+            self.stats.completion_promoted_result_slots += result_slots;
             #[cfg(feature = "sparse-cells")]
             {
                 debug_assert!(self.active_rhs.is_none());
                 self.active_origin = None;
                 self.trust_sealed_frame(cell);
-                self.active_rhs = Some((cell, resumed));
+                self.active_rhs = Some((cell, frame));
             }
             #[cfg(not(feature = "sparse-cells"))]
-            self.store_cell(cell, resumed);
+            self.store_cell(cell, frame);
             cell_prefix::Start::Resume { cell, next_op }
         } else {
             self.stats.rhs_frames_avoided += 1;
@@ -2774,11 +2798,15 @@ mod sealed_input_tests {
         let values=std::iter::once((0,Value::Eq(9))).collect();
         graph.sealed_generation=Some(graph.stats.unions);
         graph.trust_sealed_frame(42);
-        assert_eq!(graph.slot_fields(42,0,None,&values,None,0).unwrap(),Value::Eq(9));
+        assert_eq!(graph.slot_fields(42,0,None,&values,0).unwrap(),Value::Eq(9));
         graph.union(9,2).unwrap();
         assert_eq!(graph.sealed_input_cell,None);
-        assert_eq!(graph.slot_fields(42,0,None,&values,None,0).unwrap(),Value::Eq(2));
+        assert_eq!(graph.slot_fields(42,0,None,&values,0).unwrap(),Value::Eq(2));
         graph.trust_sealed_frame(43);
         assert_eq!(graph.sealed_input_cell,None);
     }
 }
+
+#[cfg(all(test, feature="sparse-cells"))]
+#[path = "cell_completion_owned_test.rs"]
+mod owned_completion_tests;

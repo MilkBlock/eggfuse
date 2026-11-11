@@ -94,18 +94,19 @@ impl CallFrame for RhsFrame<'_> {
     }
 }
 
-/// A checked pure prefix uses the same Cell frame and call executor before the
-/// writer is committed. It has no permission to create/read table facts.
+/// Access to an exclusively owned frame before it is installed in the graph.
+/// Completion writes actual returned values here. Its CallFrame implementation
+/// allows pure calls only; it cannot create/read table facts on its own.
 pub(crate) struct LocalCall<'a> {
     pub cell: u32,
     pub frame: &'a mut Cell,
 }
 impl CellFrame for LocalCall<'_> {
     fn argument(&self, g: &Graph, arg: &Arg) -> Result<Value> {
-        g.argument_in(self.cell, self.frame, None, arg)
+        g.argument_in(self.cell, self.frame, arg)
     }
     fn arguments(&self, g: &Graph, args: &[Arg]) -> Result<Arguments> {
-        g.frame_arguments(self.cell, self.frame, None, args)
+        g.frame_arguments(self.cell, self.frame, args)
     }
     fn assign(&mut self, _: &mut Graph, slot: usize, value: Value) -> Result<()> {
         self.frame.values.insert(slot, value);

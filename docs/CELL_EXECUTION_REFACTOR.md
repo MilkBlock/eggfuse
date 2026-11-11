@@ -89,6 +89,10 @@ overall objective complete until all applicable items above are proven.
   implemented; [work and semantic acceptance](../benchmarks/cell-execution-prefix/README.md).
   First result slots share the query allocation; covered RHS calculations are
   removed. Actual shared-effect suspension/resumption is not implemented yet.
+- Closed completion and first-miss promotion now retain that same owned slot
+  array. The separate computed-result map, borrowed-input overlay and promotion
+  merge are removed; [work and acceptance](../benchmarks/cell-execution-ownership/README.md).
+  This is coordinator execution, not yet an independently parked worker Cell.
 - Cursor/result ownership, post-boundary execution, completion/publication
   unification and Bake composition of those continuations remain live work.
 - Performance/utilization improvement for this refactor: unproven.

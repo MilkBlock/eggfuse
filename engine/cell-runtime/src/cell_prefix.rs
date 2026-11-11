@@ -103,10 +103,10 @@ impl Graph {
                 Op::Let(_, Call::Table(t), args) | Op::Set(t, args, _) => (*t, args),
                 _ => return Err("unexpected operation in Cell constructor prefix".into()),
             };
-            let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, None, args)?;
+            let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, args)?;
             if matches!(instruction, Op::Let(..)) { self.stats.constructor_requests += 1; }
             let assigned = if let Op::Set(_, _, v) = instruction {
-                Some(self.argument_in(cell, &frame, None, v)?)
+                Some(self.argument_in(cell, &frame, v)?)
             } else { None };
             if let Some(row) = self.lookup_canonical(table, &key)? {
                 let value = row.values.last().unwrap();

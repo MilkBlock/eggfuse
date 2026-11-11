@@ -37,6 +37,7 @@ fn cell_aliases_complete_query_and_effect_sources_without_raw_alias_receipts() {
     assert_eq!(new.graph.stats.handoff_closed, 2);
     assert_eq!(new.graph.stats.handoff_closed_fallback, 0);
     assert_eq!(new.graph.stats.handoff_attempts, 4);
+    assert!(new.graph.stats.completion_frame_result_writes > 0);
     let report = new.report();
     assert!(report["stage_spine"]["stats"]["alias_query_forwards"].as_u64().unwrap() > 0);
     assert!(report["stage_spine"]["stats"]["alias_effect_forwards"].as_u64().unwrap() > 0);
@@ -51,6 +52,8 @@ fn late_miss_resumes_the_prefix_without_rechecking_or_requeuing_its_union() {
     // result, receipt frame and queued union survive first-miss promotion.
     assert_eq!(new.graph.stats.handoff_attempts, 4);
     assert_eq!(new.report()["stage_spine"]["stats"]["effect_aborted_frames"], 0);
+    assert!(new.graph.stats.completion_promoted_result_slots > 0,
+        "a real completed result must survive the late miss without a second slot merge");
 }
 
 #[test]

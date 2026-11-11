@@ -1,0 +1,22 @@
+{
+  "scope": "standalone Cell CPU",
+  "control_commit": "2ed50ac1",
+  "runtime_sha256": "c246f70c850bc9d560bc43340469c5c91c3a9c584a2049db1e3cf4f53e324a35",
+  "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+  "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "before_report_sha256": "b1e2a3058d290a66d190b958201e061cf640bcf4adb8e94119292142230fd30d",
+  "after_report_sha256": "bad2b3d175408d464f68e0f900d2f4c173b8104ddb33c1ce7a64e4371fec782e",
+  "runs": 1428,
+  "same_state_ordered_runs_and_prior_work_counters": true,
+  "completion_storage": {
+    "completion_frame_growth_bytes": 14040,
+    "completion_frame_growths": 195,
+    "completion_frame_result_writes": 195,
+    "completion_promoted_result_slots": 35
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  },
+  "limits": "Work/semantic check only, no speed comparison. Promoted result slots count the removed second insertion on a first-miss promotion. Growth bytes are added capacity, not allocation traffic or peak memory."
+}

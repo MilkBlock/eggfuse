@@ -67,7 +67,7 @@ pub(crate) use symbols::SymbolKey;
 #[path = "cell_handoff.rs"]
 mod handoff;
 #[cfg(feature = "iterative-bake")]
-pub(crate) use handoff::{HandoffCounts, CompletionFrame, apply_handoff, complete_handoff};
+pub(crate) use handoff::{HandoffCounts, apply_handoff, complete_handoff};
 #[cfg(feature = "iterative-bake")]
 pub(crate) use eval::CellFrame;
 pub(crate) use query::Field;

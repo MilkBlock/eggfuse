@@ -2219,7 +2219,12 @@ impl Executor {
             let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
             if let Some(selected) = selected {
                 let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched, stage_cursor.as_ref(), &b.known);
-                let (start, unions) = self.graph.start_completion(rid, &mut b.values, b.parent, selected, &mut receipts)?;
+                #[cfg(feature = "rhs-work-audit")]
+                let closed_inputs = (structural_closed.is_some()
+                    && !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))))
+                    .then(|| self.graph.program.rules[rid].inputs.iter()
+                        .map(|&slot| (slot, b.values[&slot].clone())).collect());
+                let (start, unions) = self.graph.start_completion(rid, std::mem::take(&mut b.values), b.parent, selected, &mut receipts)?;
                 match start {
                     Start::Complete { cell, frame } => {
                         if matched { self.graph.stats.matched_cells_completed += 1; }
@@ -2229,7 +2234,7 @@ impl Executor {
                             if let Some(d) = structural_closed {
                                 #[cfg(feature = "rhs-work-audit")]
                                 if !matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))) {
-                                    self.ledger.closed(&self.graph, rid, &b.values);
+                                    self.ledger.closed(&self.graph, rid, closed_inputs.unwrap());
                                 }
                                 self.stage_spine.structural.closed(d,
                                     matches!(&stage_cursor, Some(crate::stage_spine::Started::Live(_))));
@@ -2241,7 +2246,7 @@ impl Executor {
                             self.stage_spine.effects(0, 0, unions);
                             self.stage_spine.complete(&self.graph, rid, cell, cursor,
                                 |i| b.known.receipt(i), receipts,
-                                |args| self.graph.frame_arguments(cell, &frame, Some(&b.values), args))?;
+                                |args| self.graph.frame_arguments(cell, &frame, args))?;
                         } else { self.stage_spine.finish_effects(receipts, false); }
                         return Ok(());
                     }
@@ -2367,7 +2372,7 @@ impl Executor {
                     );
                     let g = &self.graph;
                     self.stage_spine.complete(g, rid, cell, cursor, |i| b.known.receipt(i),
-                        effect_receipts, |args| g.frame_arguments(cell, &frame, None, args))?;
+                        effect_receipts, |args| g.frame_arguments(cell, &frame, args))?;
                 } else { self.stage_spine.finish_effects(effect_receipts, false); }
                 return Ok(());
             }
