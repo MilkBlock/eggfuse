@@ -103,7 +103,8 @@ impl Columns {
             .map(|v| fingerprint(v, bits))
             .collect::<smallvec::SmallVec<[u64; 4]>>();
         use std::collections::hash_map::Entry;
-        let old = match self.keys.entry(row.witness) {
+        let entry = self.keys.entry(row.witness);
+        let old = match &entry {
             Entry::Occupied(entry) if entry.get() == &keys => {
                 // Equal fingerprints do not prove unchanged exact values (including
                 // forced collisions). Every changed witness invalidates read leases.
@@ -117,11 +118,8 @@ impl Columns {
                 }
                 return (0, 0, 0);
             }
-            Entry::Occupied(mut entry) => Some(entry.insert(keys.clone())),
-            Entry::Vacant(entry) => {
-                entry.insert(keys.clone());
-                None
-            }
+            Entry::Occupied(entry) => Some(entry.get()),
+            Entry::Vacant(_) => None,
         };
         let mut changed = 0;
         let mut fields = 0;
@@ -167,9 +165,16 @@ impl Columns {
             bucket.refinements.clear();
 
         }
+        // Preserve the old fields while updating reverse buckets, then transfer
+        // the new fingerprint array to its sole owner without cloning it.
+        let existed = old.is_some();
+        match entry {
+            Entry::Occupied(mut entry) => { entry.insert(keys); }
+            Entry::Vacant(entry) => { entry.insert(keys); }
+        }
         // A new witness also affects empty projections, irrespective of width.
-        (if old.is_some() { changed } else { 0 }, changed,
-            if old.is_some() { fields } else { u64::MAX })
+        (if existed { changed } else { 0 }, changed,
+            if existed { fields } else { u64::MAX })
     }
     /// Consume a selection made against this current index. Both ordinary
     /// Cell enumeration and retained-prefix reads use this exact refinement.

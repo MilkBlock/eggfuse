@@ -495,10 +495,12 @@ impl Sieve {
         let mut changes = std::mem::take(&mut index.changes);
         changes.sort_unstable();
         if !self.enabled {
+            changes.clear();
+            index.changes = changes;
             return;
         }
         let mut queue = VecDeque::new();
-        for (w, table, fields) in changes {
+        for &(w, table, fields) in &changes {
             self.stats.publication_dispatches += 1;
             if self.by_table[table].built == 0 {
                 // No built consumer can use this notification. A later ensure
@@ -549,6 +551,10 @@ impl Sieve {
                 }
             }
         }
+        // This is the index's original publication buffer, not retained facts.
+        // Empty it at the boundary and return its allocation to its owner.
+        changes.clear();
+        index.changes = changes;
     }
     pub fn invalidate(&mut self) {
         for state in &mut self.states {
