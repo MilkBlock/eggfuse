@@ -4,9 +4,13 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
+[Cell 继承与并行分支整合](benchmarks/cell-parallel-merge/README.md)：合入 `17d8dbe6` 的全部分支，接通字段变化掩码与并行发布，保留混合域吸收和结果封存。单候选内联、点结果投影与 worker 接管的收益存在覆盖，按实际路径记账。完整样例语义通过；下方两条分支的历史测速不代表合并后的性能。
+
 [最新多线程检查点](benchmarks/parallel-cell-publication/README.md#five-implementation-throughput-checkpoint)：五次实现后的完整对照仍未建立 Raytrace 总体加速。当前串行/四线程推理中位数为 6.050/6.017 s，配对区间跨持平；八线程为 6.965 s。sum-bits 四线程退化，worker 仍大部分时间等待。保留全部样本、成本及语义证据，实验路径默认关闭。
 
 [混合 Cell 的查询所有权分派](benchmarks/parallel-cell-partition/README.md)：有 Cursor 的入口保留接续，其余合格入口直接进入共享 worker 队列。完整 Raytrace 新增约 111 万个入口在线程上完成，免除约 84 万次 Seed/domain 交接和约 112 万次邻居缓存发布检查；总点读取不变，队列与结果整理成本已计入。这是工作量与语义验证，尚无新的整体速度或线程利用率结论。
+
+[最新维护优化检查点](benchmarks/cell-maintenance-checkpoint/README.md)：`d7b2b9ac` 的最近五项改动没有建立相对 `2af82c27` 的净加速，反向 Entry 选取和四线程也未建立独立收益。下降的维护计数不能代替耗时；现有证据既不证明全图稠密，也不保证稀疏性足以带来 2×。
 
 [完整测速与源 Run 选择验证](benchmarks/cell-publication-windows/README.md)：当前串行推理相对历史最快对照有收益；四线程尚未建立额外加速，未达到 2×。记录 Raytrace 历史 hoist 选择的边界证据、完整计时及验收限制。
 

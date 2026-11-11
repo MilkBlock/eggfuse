@@ -6,6 +6,13 @@ pub fn compile(p:Program) -> Result<Value,Box<dyn std::error::Error>> {
     Catalog::emit_ripsat_handoffs(&p,&mut plan)?;
     apply_plan(&p,plan)
 }
+/// Opt-in equality-parameter specialization. The ordinary completion compiler
+/// remains a reproducible v4 control, including artifact compatibility checks.
+pub fn compile_lazy_unions(p:Program) -> Result<Value,Box<dyn std::error::Error>> {
+    let mut plan=p.artifact["iterative_bake"].clone();
+    Catalog::emit_lazy_union_handoffs(&p,&mut plan)?;
+    apply_plan(&p,plan)
+}
 pub(crate) fn apply_plan(p:&Program,plan:Value) -> Result<Value,Box<dyn std::error::Error>> {
     let original=&p.artifact;
     let mut raw=p.artifact.clone();
@@ -59,11 +66,15 @@ fn restore_ownership(original:&Value,raw:&mut Value) -> Result<(),Box<dyn std::e
     Ok(())
 }
 pub(crate) fn run(args:Vec<String>) -> Result<(),Box<dyn std::error::Error>> {
-    let opts=crate::options(args.into_iter(),&["--program","--output"])?;
+    let opts=crate::options(args.into_iter(),&["--program","--output","--lazy-unions"])?;
     let input=opts.get("--program").ok_or("--program required")?;
     let out=std::path::Path::new(opts.get("--output").ok_or("--output required")?);
     let p=Program::parse(serde_json::from_slice(&std::fs::read(input)?)?)?;
-    let raw=compile(p)?;
+    let raw=match opts.get("--lazy-unions").map(String::as_str) {
+        None | Some("false") => compile(p)?,
+        Some("true") => compile_lazy_unions(p)?,
+        _ => return Err("--lazy-unions must be true or false".into()),
+    };
     std::fs::create_dir(out)?;
     std::fs::write(out.join("program.json"),serde_json::to_vec_pretty(&raw)?)?;
     std::fs::write(out.join("cell-egraph.json"),serde_json::to_vec_pretty(&raw["iterative_bake"]["completion"])?)?;

@@ -69,6 +69,69 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Union requests are already charged above. Charge only the new direct
+        // operand acquisition here, including actual result-row access; neither
+        // covered Cells nor queued unions earn a second saved-operation credit.
+        for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
+            let value = match report["stage_spine"].get("union_completion") {
+                None => 0,
+                Some(J::String(v)) if v == "cell-union-ports/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell union work {field}"))?,
+                _ => return Err("unknown Cell union completion".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
+        // Sealing uses the existing Run forwarding map; every visited slot and
+        // actual update is new work. A repaired receipt itself earns no credit.
+        for field in ["history_seal_checks", "history_seal_reads", "history_seal_writes"] {
+            let value = match report["stage_spine"].get("history_sealing") {
+                None => 0,
+                Some(J::String(v)) if v == "unique-cell-results/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell history sealing work {field}"))?,
+                _ => return Err("unknown Cell history sealing".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
+        // Member proofs may fail even when a sibling was absorbed. Charge
+        // dispatch, eligibility and every actual output probe; coverage is not
+        // an independent saving over the omitted bindings/RHS/publications.
+        let absorption = &report["neighbor_context"]["absorption"];
+        for field in ["mixed_candidates", "mixed_checks", "mixed_output_probes"] {
+            let value = match absorption.get("row_completion") {
+                None => 0,
+                Some(J::String(v)) if v == "cell-min-row/v1" => absorption["stats"][field].as_u64()
+                    .ok_or_else(||format!("missing Cell member completion work {field}"))?,
+                _ => return Err("unknown Cell member completion".into()),
+            };
+            work.insert(format!("neighbor_context/absorption/stats/{field}"), value);
+        }
+        // Candidate-shape dispatch is paid on every present single-column
+        // bucket, including shared domains. Inline deliveries earn no credit
+        // separate from the existing materialization/allocation observations.
+        let shapes = match report["query_domain_transport"].get("schema") {
+            None => 0,
+            Some(J::String(v)) if v == "cell-witness-domain/v1" => report["free_join"]["projection_shape_checks"].as_u64()
+                .ok_or("missing Cell domain shape work")?,
+            _ => return Err("unknown Cell domain transport".into()),
+        };
+        work.insert("free_join/projection_shape_checks".into(), shapes);
+        // A field test is new work even when it prevents a whole summary update.
+        // Historical reports have no such test; missing new counters are errors.
+        let column_checks = match report["sieve"].get("column_influence") {
+            None => 0,
+            Some(J::String(version)) if version == "cell-fields/v1" || version == "cell-fields/v2" =>
+                report["sieve"]["stats"]["column_checks"].as_u64()
+                    .ok_or("missing Sieve column_checks")?,
+            _ => return Err("unknown Sieve column influence".into()),
+        };
+        work.insert("sieve/stats/column_checks".into(), column_checks);
+        let dispatches = if report["sieve"]["column_influence"] == "cell-fields/v2" {
+            report["sieve"]["stats"]["publication_dispatches"].as_u64()
+                .ok_or("missing Sieve publication_dispatches")?
+        } else { 0 };
+        work.insert("sieve/stats/publication_dispatches".into(), dispatches);
         // Charge both attempted plan preparation and every support probe,
         // including unavailable columns. Rejections are outcomes; their saved
         // queries/dispatch are already absent from the original counters.
@@ -395,6 +458,50 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
+    let mut domains = report.clone();
+    domains["free_join"]["projection_shape_checks"] = 9.into();
+    domains["free_join"]["inline_domain_deliveries"] = u64::MAX.into();
+    assert_eq!(Work::read(&domains).unwrap().0["free_join/projection_shape_checks"], 9);
+    domains["free_join"].as_object_mut().unwrap().remove("projection_shape_checks");
+    assert!(Work::read(&domains).unwrap_err().contains("domain shape"));
+    domains.as_object_mut().unwrap().remove("query_domain_transport");
+    assert_eq!(Work::read(&domains).unwrap().0["free_join/projection_shape_checks"], 0);
+    domains["query_domain_transport"] = serde_json::json!({"schema":"unknown"});
+    assert!(Work::read(&domains).is_err());
+    #[cfg(feature = "cell-absorption")]
+    {
+        let mut member_report = report.clone();
+        member_report["neighbor_context"]["absorption"]["stats"]["mixed_output_probes"] = 9.into();
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 9);
+        member_report["neighbor_context"]["absorption"]["stats"]["mixed_absorbed"] = u64::MAX.into();
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 9);
+        member_report["neighbor_context"]["absorption"]["stats"].as_object_mut().unwrap().remove("mixed_checks");
+        assert!(Work::read(&member_report).unwrap_err().contains("missing Cell member completion"));
+        member_report["neighbor_context"]["absorption"].as_object_mut().unwrap().remove("row_completion");
+        assert_eq!(Work::read(&member_report).unwrap().0["neighbor_context/absorption/stats/mixed_output_probes"], 0);
+        member_report["neighbor_context"]["absorption"]["row_completion"] = "unknown".into();
+        assert!(Work::read(&member_report).is_err());
+    }
+    let mut sealed_report = report.clone();
+    sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
+    assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);
+    sealed_report["stage_spine"]["stats"].as_object_mut().unwrap().remove("history_seal_writes");
+    assert!(Work::read(&sealed_report).unwrap_err().contains("missing Cell history sealing"));
+    sealed_report["stage_spine"].as_object_mut().unwrap().remove("history_sealing");
+    assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 0);
+    sealed_report["stage_spine"]["history_sealing"] = "unknown".into();
+    assert!(Work::read(&sealed_report).is_err());
+    let mut union_report=report.clone();
+    union_report["stage_spine"]["stats"]["ripsat_union_cells"]=u64::MAX.into();
+    assert_eq!(Work::read(&union_report).unwrap(),work,"coverage earns no credit");
+    union_report["stage_spine"]["stats"]["ripsat_union_result_reads"]=5.into();
+    assert_eq!(Work::read(&union_report).unwrap().0["stage_spine/stats/ripsat_union_result_reads"],5);
+    union_report["stage_spine"]["stats"].as_object_mut().unwrap().remove("ripsat_union_input_reads");
+    assert!(Work::read(&union_report).unwrap_err().contains("missing Cell union work"));
+    union_report["stage_spine"].as_object_mut().unwrap().remove("union_completion");
+    assert_eq!(Work::read(&union_report).unwrap().0["stage_spine/stats/ripsat_union_result_reads"],0);
+    union_report["stage_spine"]["union_completion"]="unknown".into();
+    assert!(Work::read(&union_report).is_err());
     assert!(work.0["query_workers/stats/frame_allocations"] > 0);
     assert!(work.0["query_workers/stats/chunks"] > 0);
     report["query_workers"]["stats"]["answers"] = u64::MAX.into();
@@ -488,6 +595,8 @@ mod tests {
             "/free_join/reverse_keys", "/free_join/reverse_refs", "/free_join/reverse_epoch_bins", "/free_join/disjoint_key_reads",
             "/sieve/stats/rule_uses", "/sieve/stats/build_rows", "/sieve/stats/update_rows",
             "/sieve/stats/dependency_rows", "/sieve/stats/probes",
+            "/sieve/stats/column_checks",
+            "/sieve/stats/publication_dispatches",
         ];
         let mut costs = report.clone();
         for key in charged { bump(&mut costs, key); }
@@ -512,8 +621,25 @@ mod tests {
             "/free_join/membership_only", "/free_join/shared_column_reads", "/free_join/entry_rejections",
             "/free_join/disjoint_rule_skips", "/sieve/stats/reused_summaries", "/sieve/stats/rejected",
             "/sieve/stats/empty_join_skips",
+            "/sieve/stats/unchanged_column_rows",
+            "/sieve/stats/inactive_publications",
         ] { bump(&mut outcomes, key); }
         assert_eq!(Work::read(&outcomes).unwrap(), baseline);
+        let mut legacy_columns = report.clone();
+        legacy_columns["sieve"].as_object_mut().unwrap().remove("column_influence");
+        assert_eq!(Work::read(&legacy_columns).unwrap().0["sieve/stats/column_checks"], 0);
+        assert_eq!(Work::read(&legacy_columns).unwrap().0["sieve/stats/publication_dispatches"], 0);
+        let mut v1 = report.clone();
+        v1["sieve"]["column_influence"] = "cell-fields/v1".into();
+        v1["sieve"]["stats"].as_object_mut().unwrap().remove("publication_dispatches");
+        assert_eq!(Work::read(&v1).unwrap().0["sieve/stats/publication_dispatches"], 0);
+        v1["sieve"]["column_influence"] = "cell-fields/v2".into();
+        assert!(Work::read(&v1).unwrap_err().contains("publication_dispatches"));
+        let mut missing_columns = report.clone();
+        missing_columns["sieve"]["stats"].as_object_mut().unwrap().remove("column_checks");
+        assert!(Work::read(&missing_columns).unwrap_err().contains("column_checks"));
+        missing_columns["sieve"]["column_influence"] = "unknown".into();
+        assert!(Work::read(&missing_columns).unwrap_err().contains("unknown Sieve"));
         // Historical reports used one registration per captured output. Keep
         // those costs, while rejecting new reports missing their actual work.
         let mut legacy = report.clone();

@@ -322,7 +322,9 @@
         "engine/cell-runtime/src/cell_query.rs",
         "engine/cell-runtime/src/row_kernel.rs",
         "engine/cell-runtime/src/execute_kernel.rs",
-        "engine/cell-runtime/src/cell_binding.rs"
+        "engine/cell-runtime/src/cell_binding.rs",
+        "engine/cell-runtime/src/point_ports.rs",
+        "engine/cell-runtime/src/neighbor.rs"
       ],
       "metrics": {
         "benefit": [
@@ -362,6 +364,16 @@
             "source": "report",
             "pointer": "/stats/register_result_writes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_point_transport/point_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_point_transport/row_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -374,16 +386,24 @@
             "source": "report",
             "pointer": "/stats/register_expansion_rows",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stats/function_point_reads",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled.",
+      "gaps": "register_answers 是逻辑匹配；point 命中率须同时看维护和实际 lookup。 Residual matching now reads the shared Cell Query operands: Entry/candidate fields are borrowed; only computed outputs are stored. register_result_writes includes register_prefix.field_writes, so do not sum them. register_expansion_rows counts visited live candidate rows, including rows rejected by constraints; it is not a saved-operation count. Register scratch now uses the largest compiled Cell Query result width across rule pivots. Width is derived once per query; the per-frame maximum scan and initialization savings are not separately instrumented. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Complete-key Cell reads now carry only the result, witness, epoch and hidden flag through existing PointPorts and neighbor caches. Ordinary function point reads borrow the authoritative result without retaining or decoding the full row; constructor selection and cache lifecycle remain unchanged. function_point_reads is coverage, not saved lookups or allocations; Work does not reward it again. Value ownership replaces full-row ownership, with payload sizes reported separately. No new cache or subscriber is added. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign.",
       "evidence": [
         "README.md",
         "benchmarks/cell-unification/residual.md",
         "benchmarks/cell-unification/query-storage-results.json",
         "benchmarks/cell-unification/context-root-check.json",
-        "benchmarks/cell-unification/projection-binding-check.json"
+        "benchmarks/cell-unification/projection-binding-check.json",
+        "benchmarks/cell-point-results/README.md",
+        "benchmarks/cell-point-results/results.json",
+        "benchmarks/cell-query-transport-checkpoint/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -602,6 +622,36 @@
             "source": "report",
             "pointer": "/sieve/parallel/stats/compact_seconds",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/column_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/influence_payload_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/publication_dispatches",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/projection_shape_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_domain_transport/candidate_bytes",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/query_domain_transport/subtrie_bytes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -669,10 +719,35 @@
             "source": "report",
             "pointer": "/sieve/parallel/stats/probes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/influence_groups",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/unchanged_column_rows",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/sieve/stats/inactive_publications",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/inline_projection_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/free_join/inline_domain_deliveries",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Optional parallel-entry-filters transfers the same ordered necessary guards to the query-worker pool and removes their coordinator evaluation; total guard counts stay equal. Full Raytrace transfers 5,606,010 probes with four workers but establishes no speedup; sampled workers still wait 97-98% of the window. Candidate preparation/compaction, buffer capacities and pool time are charged. Per-worker task seconds measure wall residence, not CPU utilization; parallel probe counts are coverage, not saved work.",
+      "gaps": "不同过滤器的拒绝集合会重叠，不能把各自 skip 直接相加成全局收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Bake now charges these pre-decode filter operations. membership_only/shared_column_reads and reused_summaries are subsets, not additional costs; rejection counts do not earn separate credit. Equal operation weights are not a speed model. Narrow fixed-width support now omits unused Bloom maintenance: final full-Raytrace Bloom payload is 3,263,648 -> 50,184 bytes, with unchanged support/probe/effect counts. This is not peak RSS or a speed result. Optional entry-admission-audit observes full raw-delta batches only: identical condition reuse is 26,759 probes; offline same-Run whole-batch rejection implications cover 2,791 probes. Neither observation grants Bake credit or proves global sparsity. Different watermarks, partial conditions and cross-Run reuse remain outside that census. Opt-in cell-entry-reverse selects current Entry witnesses from existing one-column joined support without constructing another index. Short sum-bits/Raytrace-prefix probes drop about 15%, with unchanged downstream Free Join work; no full-Raytrace or speed conclusion. Guard selection, key probes, copied references, ordering and budget failures are charged separately; capacity bytes are not allocation totals. Optional parallel-entry-filters transfers the same ordered necessary guards to the query-worker pool and removes their coordinator evaluation; total guard counts stay equal. Full Raytrace transfers 5,606,010 probes with four workers but establishes no speedup; sampled workers still wait 97-98% of the window. Candidate preparation/compaction, buffer capacities and pool time are charged. Per-worker task seconds measure wall residence, not CPU utilization; parallel probe counts are coverage, not saved work. Cell field influence now compiles 1,163 summaries into 374 shared read scopes: complete-Raytrace summary updates drop 8,380,801 -> 6,983,829, with 2,185,417 new group checks charged to Bake. The equal-weight subtotal grows by 788,445, so this is not a net work-credit or speed claim. New rows and child-support propagation retain complete publication; masks and group headers add 24,264 live payload bytes plus eight bytes per change record, excluding spare capacity. The v2 follow-up uses a flat complete-publication route and shared range groups: field checks drop to 1,318,220, 404,105 inactive-consumer index reads are omitted, and 2,147,286 row dispatches are separately charged. Its logical influence metadata payload is 34,104 bytes. Remaining support operations are unchanged; normal timing is still required. Single-column singleton candidates now travel inline through Cell admission and residual execution without a heap view. Larger domains retain their shared identity. Header growth and shape checks are explicit costs; research projection/frontier observers retain the old host. Inline reads are not avoided-allocation counts, and no speed gain is established by materialized-row reductions. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign.",
       "evidence": [
         "docs/SEMIJOIN.md",
         "benchmarks/cell-unification/steps.md",
@@ -685,7 +760,13 @@
         "benchmarks/parallel-entry-filters/README.md",
         "benchmarks/parallel-entry-filters/results.json",
         "benchmarks/parallel-residuals/README.md",
-        "benchmarks/parallel-residuals/results.json"
+        "benchmarks/parallel-residuals/results.json",
+        "benchmarks/cell-column-influence/README.md",
+        "benchmarks/cell-column-influence/results.json",
+        "benchmarks/cell-column-influence/dispatch.json",
+        "benchmarks/cell-inline-domains/README.md",
+        "benchmarks/cell-inline-domains/results.json",
+        "benchmarks/cell-query-transport-checkpoint/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -695,7 +776,7 @@
       "title": "邻居、局部 context 与 view 消费",
       "activation": "窄 context 默认；通用 cut 需 admission；view-ports 为 feature；cell-absorption feature + 显式运行时启用，默认关闭",
       "compile_fact": "受需求约束的 sibling/parent 投影与完整 residual；实验性纯单写 min 吸收由现有 Cell query、write 与类型/删除约束推导；吸收资格附着于通过验证的 Cell Kernel 方向，Context 不再持有另一份规则计划表",
-      "replaces": "重复解码父节点及重复局部连接；已证明整个构造子域被吸收时，免除逐行绑定、单写与该次应用的完成/发布",
+      "replaces": "重复解码父节点及重复局部连接；已证明整个构造子域被吸收时，免除逐行绑定、单写与该次应用的完成/发布；整组未通过吸收时，对已满足同一 min 条件的成员也删除绑定、单写及对应完成",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。 吸收守卫要求旧构造子、精确域与输入、不可删除输出和全局 completion；原 Entry 来源、结构失效、残余匹配及 Run 可见性继续有效。",
       "sources": [
         "engine/cell-runtime/src/neighbor.rs",
@@ -837,6 +918,21 @@
             "source": "report",
             "pointer": "/neighbor_context/absorption/removed_context_plan_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_candidates",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_output_probes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -904,10 +1000,25 @@
             "source": "report",
             "pointer": "/neighbor_context/absorption/capability_entries",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_absorbed",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_missing_outputs",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/neighbor_context/absorption/stats/mixed_fresh_fallbacks",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Context now directly returns requested Cell facts, removing its outgoing full witness array and executor conversion. Required prefix witnesses remain. Fact projection now precedes context deduplication; no allocation savings are inferred from output binding counts. The f1c69507 short checkpoint does not establish a speedup or resolve speed preservation. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts. Retained witnesses now contain only completed prefix table reads in Cell instruction order. A static witness width replaces branching metadata and bounds construction capacity; no dynamic source map is added. Existing copied-slot credit observes sum-bits 14→13 and short fixtures 77→56 / 51→36 / 77→56. Root leases and cross-Run validity remain; stack length maintenance and projection traversal are not exhaustive instruction counts. Cell prefix candidates and exact-value leases now come from one index selection; ordinary enumeration shares the same refinement implementation. Over-budget fallback, absent-bucket evidence and base-bucket exact-value invalidation remain distinct. Removed preparation/selection calls are not separately operation-counted; unchanged metrics do not establish speedup. Cross-Run scope/version storage and remaining index lifecycle remain. Context validity now belongs to its actual shared Cell plan: compiled instructions supply endpoints and prefix read scope, removing separate orientation identity and source-Rule access. Existing snapshot storage is refreshed only when needed; no temporary version vector is built for validation. Exact leases, literal-union resets and scope changes remain guarded. Neighbor/view, admission/Bake, wider index lifecycle and speed acceptance remain incomplete. View pair predicates, bound guard results and output fields now execute Cell Query. Separate view Port/Test/Comparison runtime representations are removed. Three-way comparison dispatch remains a derived specialization; candidate directories and publication lifetimes remain. Shared query metadata and generic guard binding overhead require timing; unchanged work counts do not imply a speedup. The cc472d0f five-implementation sum-bits checkpoint has paired inference/process intervals crossing 1 against immediate, last-timed and historical controls; neither speedup nor strict speed preservation is established. Neighbor/range read caches now share the query-column table-publication lifecycle: resolve each selected table once, update from common rows, finish only delivered tables. The neighbor subscription list/global version sweep and range per-row table lookups/version stores are removed. Necessary old-key identity and candidate storage remain. Maintenance timers cover cache updates; common version completion has no separate clock. No numeric savings or speedup are inferred from unchanged work counters. Opt-in min absorption removes 207,182 complete-Raytrace binding/write/completion paths with 389,878 output probes in the initial version. Reusing the actual rejecting result reduces those probes to 43,058, plus 100,816 direct result reads; the 207,182 takeovers and allocation counts/bytes are unchanged. The condition remains 32 bytes. Direct RHS-derived positive bounds remain incomplete. These probes are outside key_lookup_calls; checks exclude early eligibility dispatch. Each existing Neighborhood gains 32 bytes. The original group path has no sum-bits/early-Raytrace takeovers. Singleton admission now covers 41 / 2,794 / 302,114 additional sum-bits/early/full-Raytrace executions, with 41 / 2,829 / 302,269 target probes. Singleton introduction used 962,906 eligibility helper entries and 155 net target lookups after charging replaced RHS reads. Typed Cell-kernel capabilities now reduce those helper entries to 302,599; empty-capability tests remain. The 142,008 cached-domain condition checks reuse the original lookup, without a second table/domain lookup. The source proof and 509,296 takeovers are unchanged. Static capability payload is 6,168 B in shared Kernels versus 23,280 B of former per-Context plan elements, not allocator/RSS or timing evidence. No new per-instance storage/cache is allocated; six Context counters add 48 bytes. Total full-Raytrace takeover is 509,296 executions, not committed mutations. Source-window singleton premises and sum-bits native acceptance pass; no new timing claim. Publication provenance can change; selected source-Run checks and full relative state pass, not an independent native Raytrace proof. No automatic Bake credit or general sparsity claim. Scheduled-rule accounting now reuses the existing pending read and removes the later all-rule sum without persistent state. The subsequent 2af82c27 five-implementation checkpoint finds Raytrace inference ratio 0.973 [0.968,0.991] against the last timed build; same-binary on/off inference still crosses parity, process ratio is 0.986 [0.978,0.997]. Sum-bits has no incremental on/off gain; four workers regress Raytrace inference in these samples. Historical Raytrace inference throughput is about 1.17x, not 2x. See timing.json for all costs, raw timings, comparisons and limits.",
+      "gaps": "每规则统计为可选结构；缺失必须显示未采集。通用 cut 与专用 view 不能合并宣称同一收益。 Static shared-column wiring now comes from the same Cell query; runtime filtering and index lifetime remain distinct obligations. Removing repeated preparation does not establish a speedup. Query binding now shares the Cell binder with ordinary search and Entries; cached context storage, root binding and index lifecycle remain to integrate. Prefix scopes now remove intermediate candidate copies; copied slot counts and new clears are charged. They do not measure allocator calls or nanoseconds. Terminal projection/post-guards now use the common Cell Query with borrowed fields; scratch/result costs are charged. Old artifact field names are serialization-only views. Retained prefixes now share Cell instruction lowering, reads and scalar evaluation; static writes also define rollback. Legacy port/post atom order is projected only at serialization. Removed Arg decoding/scalar Vec construction is not counted as measured savings. Context borrows the result width from Query instead of retaining a separate copy. Context shape selection and full artifact validation now precede executable Cell lowering. Only admitted general cuts allocate instructions; Bake refitting and compiler emission need only source-order certificates. The 1481→17 plan count is inferred from validated sum-bits admission and code paths, not timed or allocator evidence. Context roots now compile to ScopedStep and share internal row checks/writes. Context and register candidate columns share Expansion binding; all context runtime Arg interpretation is removed. Static root instructions add metadata; this is not an allocation or speed result. Prefix frames now use dense static Cell addresses instead of full RHS-template slot width. Existing copied-slot credit observes sum-bits 21→14, with copy/clear counts unchanged; each scoped instruction gains a static base word. No runtime translation map, allocation count or speed claim is introduced. Context now directly returns requested Cell facts, removing its outgoing full witness array and executor conversion. Required prefix witnesses remain. Fact projection now precedes context deduplication; no allocation savings are inferred from output binding counts. The f1c69507 short checkpoint does not establish a speedup or resolve speed preservation. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts. Retained witnesses now contain only completed prefix table reads in Cell instruction order. A static witness width replaces branching metadata and bounds construction capacity; no dynamic source map is added. Existing copied-slot credit observes sum-bits 14→13 and short fixtures 77→56 / 51→36 / 77→56. Root leases and cross-Run validity remain; stack length maintenance and projection traversal are not exhaustive instruction counts. Cell prefix candidates and exact-value leases now come from one index selection; ordinary enumeration shares the same refinement implementation. Over-budget fallback, absent-bucket evidence and base-bucket exact-value invalidation remain distinct. Removed preparation/selection calls are not separately operation-counted; unchanged metrics do not establish speedup. Cross-Run scope/version storage and remaining index lifecycle remain. Context validity now belongs to its actual shared Cell plan: compiled instructions supply endpoints and prefix read scope, removing separate orientation identity and source-Rule access. Existing snapshot storage is refreshed only when needed; no temporary version vector is built for validation. Exact leases, literal-union resets and scope changes remain guarded. Neighbor/view, admission/Bake, wider index lifecycle and speed acceptance remain incomplete. View pair predicates, bound guard results and output fields now execute Cell Query. Separate view Port/Test/Comparison runtime representations are removed. Three-way comparison dispatch remains a derived specialization; candidate directories and publication lifetimes remain. Shared query metadata and generic guard binding overhead require timing; unchanged work counts do not imply a speedup. The cc472d0f five-implementation sum-bits checkpoint has paired inference/process intervals crossing 1 against immediate, last-timed and historical controls; neither speedup nor strict speed preservation is established. Neighbor/range read caches now share the query-column table-publication lifecycle: resolve each selected table once, update from common rows, finish only delivered tables. The neighbor subscription list/global version sweep and range per-row table lookups/version stores are removed. Necessary old-key identity and candidate storage remain. Maintenance timers cover cache updates; common version completion has no separate clock. No numeric savings or speedup are inferred from unchanged work counters. Opt-in min absorption removes 207,182 complete-Raytrace binding/write/completion paths with 389,878 output probes in the initial version. Reusing the actual rejecting result reduces those probes to 43,058, plus 100,816 direct result reads; the 207,182 takeovers and allocation counts/bytes are unchanged. The condition remains 32 bytes. Direct RHS-derived positive bounds remain incomplete. These probes are outside key_lookup_calls; checks exclude early eligibility dispatch. Each existing Neighborhood gains 32 bytes. The original group path has no sum-bits/early-Raytrace takeovers. Singleton admission now covers 41 / 2,794 / 302,114 additional sum-bits/early/full-Raytrace executions, with 41 / 2,829 / 302,269 target probes. Singleton introduction used 962,906 eligibility helper entries and 155 net target lookups after charging replaced RHS reads. Typed Cell-kernel capabilities now reduce those helper entries to 302,599; empty-capability tests remain. The 142,008 cached-domain condition checks reuse the original lookup, without a second table/domain lookup. The source proof and 509,296 takeovers are unchanged. Static capability payload is 6,168 B in shared Kernels versus 23,280 B of former per-Context plan elements, not allocator/RSS or timing evidence. No new per-instance storage/cache is allocated; six Context counters add 48 bytes. Total full-Raytrace takeover is 509,296 executions, not committed mutations. Source-window singleton premises and sum-bits native acceptance pass; no new timing claim. Publication provenance can change; selected source-Run checks and full relative state pass, not an independent native Raytrace proof. No automatic Bake credit or general sparsity claim. Scheduled-rule accounting now reuses the existing pending read and removes the later all-rule sum without persistent state. The subsequent 2af82c27 five-implementation checkpoint finds Raytrace inference ratio 0.973 [0.968,0.991] against the last timed build; same-binary on/off inference still crosses parity, process ratio is 0.986 [0.978,0.997]. Sum-bits has no incremental on/off gain; four workers regress Raytrace inference in these samples. Historical Raytrace inference throughput is about 1.17x, not 2x. See timing.json for all costs, raw timings, comparisons and limits. Mixed-domain members now reuse the same compiled min capability after ordinary row/ownership checks. Each attempted member adds dispatch, eligibility and possibly an output hash probe; failed proofs retain the ordinary write and can duplicate its lookup. Work charges the new attempts/checks/probes and gives no second credit for coverage. No new instance storage or subscribers are added; no current full-workload throughput evidence is claimed. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign.",
       "evidence": [
         "docs/VIEW_CONSUMER_BLOCKS.md",
         "benchmarks/cell-unification/steps.md",
@@ -933,7 +1044,10 @@
         "benchmarks/cell-absorption-guard/singletons.json",
         "benchmarks/cell-absorption-guard/kernels.json",
         "benchmarks/cell-absorption-guard/timing.json",
-        "benchmarks/cell-absorption-guard/profile.json"
+        "benchmarks/cell-absorption-guard/profile.json",
+        "benchmarks/cell-mixed-absorption/README.md",
+        "benchmarks/cell-mixed-absorption/results.json",
+        "benchmarks/cell-query-transport-checkpoint/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1034,12 +1148,13 @@
           }
         ]
       },
-      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。 Complete Entry stores results only through the last new output, omitting trailing bound-result writes. Internal holes keep instruction-position addresses. sum-bits writes fell 2604 to 2455; the five-commit timing checkpoint did not establish a speedup. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts.",
+      "gaps": "完整接管与部分前缀必须分开；matched binding 不等于实际 mutation。 所有完整 Entry 共用 Cell query 指令；cell_query_entries/steps/result_writes 是执行覆盖和成本，不能算作新增节省。block 指标仍只计算 Bake 选中的组合。残余枚举现在共用 Cell Query 指令与字段表示；shared_query_plans 统计两个入口持有同一计划的数量。残余枚举和完整入口的覆盖/增量归属策略仍分别执行。 Complete Entry stores results only through the last new output, omitting trailing bound-result writes. Internal holes keep instruction-position addresses. sum-bits writes fell 2604 to 2455; the five-commit timing checkpoint did not establish a speedup. Complete stage Entries now directly produce Cell Matched with requested facts and the existing move-only origin; full witness packets and the duplicate executor adapter are removed. Winner ordering and source lifetime remain. Projection occurs before deduplication; no allocation or speed claim follows from unchanged output counts. The 48782309 five-implementation checkpoint measures a cumulative Raytrace inference ratio of 0.974 [0.960,0.979] against d7b2b9ac; this does not isolate this optimization. Historical-fast ratios of medians imply about 1.21x Raytrace and 1.23x sum-bits inference, not 2x. Four query workers do not improve inference in that campaign.",
       "evidence": [
         "benchmarks/leaf-completion/README.md",
         "benchmarks/cell-unification/query.md",
         "benchmarks/cell-unification/query-storage-results.json",
-        "benchmarks/cell-unification/match-entry-check.json"
+        "benchmarks/cell-unification/match-entry-check.json",
+        "benchmarks/cell-query-transport-checkpoint/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },
@@ -1047,7 +1162,7 @@
       "id": "C2",
       "category": "C",
       "title": "RHS handoff 与 query receipt",
-      "activation": "iterative Bake 的 typed handoff 证书；result-switch v4 可执行 ripsat 直接补全",
+      "activation": "iterative Bake 的 typed handoff 证书；result-switch v4 可执行 ripsat 直接补全；显式 --lazy-unions true 选择 v5 参数化 union 接续",
       "compile_fact": "前序事实、完整 key 与源边界 congruence；禁止未来查询倒证先前读取",
       "replaces": "后继 RHS 构造子查找、部分完整 Cell frame",
       "live_obligations": "当前存活、完整等价/标量约束、源 Run 与提交顺序仍需满足；专项限制见证据文档。",
@@ -1186,6 +1301,31 @@
             "source": "report",
             "pointer": "/stage_spine/stats/effect_slots_initialized",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_union_input_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_union_result_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_seal_checks",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_seal_reads",
+            "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/history_seal_writes",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -1228,10 +1368,15 @@
             "source": "report",
             "pointer": "/stage_spine/stats/ripsat_boundary_fallbacks",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/ripsat_union_cells",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations. 闭合 miss 现继续同一 Cell 前缀，已验证收据和计算结果不再重做；失败检查也计入 handoff_attempts。实际不同的结构性替代见证仍须验证，live/key/Run 约束保留。 组合中间阶段不导出新结果时，沿用已有 history 容器，只推进阶段位置；保留编译期生命周期边界与逐次存活性验证。短链和删除样例的 history 容器分配 6→2、槽写 8→4，读取与查询不变；sum-bits 不覆盖这类深链，工作量不变。句柄新增一个阶段偏移，从 8 增至 16 字节，深层数组元素仍为指针大小；未测速。非空结果转存和通用 Entry 发布仍未消除。 cell-results/v1 在完整导出覆盖的 Cell 中让 RHS、Entry 与已有 History owner 共用实际结果数组；sum-bits 捕获读/写各 1508→129。查询捕获提前、共享数组分配和发布 owner 读取仍收费；slot inheritance、审计与不完整状态继续原路径。历史最终存储规模不变；未完整测速。 ripsat 补全按精确静态转换继承实际结果槽，跳过结果输入重装、RHS 遍历与 receipt 转存；投影包装与边界维护仍收费。completed/projected_slots 是覆盖，不能重复计收益。静态布局组合最多 256 种，未知组合与非空效果回退。结构等价只覆盖有限正构造子闭包，非全程序 saturation；实测与覆盖见 ripsat-cell-completion。",
+      "gaps": "实际 lookup 差值已经计入 key_lookup_calls；hit 不能再给第二份 credit。 Cell result ports use compiled slots; history_empty_slots_written charges padding. history_result_reads includes local-witness reads; do not sum it again with C3 local_witness_slot_reads. Source marker publication, typed local projection and runtime query/Entry frames now share Cell Operand and Bindings. Arg is the typed alias, with unchanged wire shape. Equality evidence stays at each source boundary; rollback remains with the caller. Marker fields are lowered before candidate enumeration and variable names are borrowed. Candidate policies and materialization boundaries remain separate; temporary patterns and generic binding costs have not been timing/allocation-profiled. Local source/typed candidate projection and uniqueness now execute shared Cell code. Typed donors are compared by source row, source publication candidates by binding; the first equivalent candidate is preserved. Separate uniqueness collections are removed and ambiguity stops enumeration. Operator filtering precedes typed frame copies. Source-root deduplication, donor admission and iterative materialization remain necessary. Removed static work is not separately operation/allocation-counted. The acab2911 five-implementation checkpoint used four frozen normal-release sum-bits lanes. Paired inference/process intervals cross 1 against immediate, last-timed and historical controls. No speedup or strict speed preservation is established; this does not measure native compiler time or allocations. 闭合 miss 现继续同一 Cell 前缀，已验证收据和计算结果不再重做；失败检查也计入 handoff_attempts。实际不同的结构性替代见证仍须验证，live/key/Run 约束保留。 组合中间阶段不导出新结果时，沿用已有 history 容器，只推进阶段位置；保留编译期生命周期边界与逐次存活性验证。短链和删除样例的 history 容器分配 6→2、槽写 8→4，读取与查询不变；sum-bits 不覆盖这类深链，工作量不变。句柄新增一个阶段偏移，从 8 增至 16 字节，深层数组元素仍为指针大小；未测速。非空结果转存和通用 Entry 发布仍未消除。 cell-results/v1 在完整导出覆盖的 Cell 中让 RHS、Entry 与已有 History owner 共用实际结果数组；sum-bits 捕获读/写各 1508→129。查询捕获提前、共享数组分配和发布 owner 读取仍收费；slot inheritance、审计与不完整状态继续原路径。历史最终存储规模不变；未完整测速。 ripsat 补全按精确静态转换继承实际结果槽，跳过结果输入重装、RHS 遍历与 receipt 转存；投影包装与边界维护仍收费。completed/projected_slots 是覆盖，不能重复计收益。静态布局组合最多 256 种，未知组合与非空效果回退。结构等价只覆盖有限正构造子闭包，非全程序 saturation；实测与覆盖见 ripsat-cell-completion。 v5 将已见证构造子的剩余 Union/Set 等式编为共享端口程序，省去覆盖实例的逐操作重装；仍由原 union 队列和 Run 边界提交。输入/结果读取额外收费，覆盖和 union_requests 不重复计分。短 fixture 有实际接管；现有 sum-bits 和 Raytrace 128-Run 前缀均零 union 接管，sum-bits 增加失败校验，未建立整程序收益。非末尾 union 的结构归一化和未知外部 repair 仍未接管。 首次获胜发布前用当轮同 key forwarding 原地封存当前独占结果槽；不扫描或复制旧共享历史，不延长 forwarding 表寿命。后续直接补全因此可避开部分旧引用回退；封存检查、槽读取和写入都收费。更晚 Run 的退役仍可能失效，短样例工作变化不能证明 2x 或时延收益。",
       "evidence": [
         "benchmarks/query-receipts/README.md",
         "benchmarks/compiler-congruence/README.md",
@@ -1242,7 +1387,9 @@
         "benchmarks/cell-joint-results/README.md",
         "benchmarks/cell-joint-results/results.json",
         "benchmarks/ripsat-cell-completion/README.md",
-        "docs/RIPSAT_CELL_COMPLETION.md"
+        "docs/RIPSAT_CELL_COMPLETION.md",
+        "benchmarks/lazy-union-ports/README.md",
+        "benchmarks/cell-result-sealing/README.md"
       ],
       "status": "已实现；性能结论仅适用于链接中的具体版本和配置"
     },

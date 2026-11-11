@@ -24,7 +24,9 @@ pub(crate) use results::{Capture, ResultFrame, ResultPort, Results, ResultView, 
 #[path = "cell_specialization.rs"]
 mod specialization;
 #[cfg(feature = "iterative-bake")]
-pub(crate) use specialization::{CompletedPlan, compile_projections};
+pub(crate) use specialization::{CompletedPlan, compile_projections, compile_unions};
+#[cfg(feature = "sparse-cells")]
+pub(crate) use specialization::{LazyUnions, UnionPort, UnionEffect};
 #[cfg(feature = "sparse-cells")]
 pub(crate) use effects::ProjectedEffects;
 

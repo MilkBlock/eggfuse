@@ -46,7 +46,7 @@ mod joint_tests {
         use crate::cell::{CompletedPlan,compile_projections};
         let make=|rule,source| {
             let layout=SlotLayout::compile(rule,vec![Some(ResultPort::new(source,1)),Some(ResultPort::new(source,0))]).unwrap();
-            Some(Rc::new(CompletedPlan {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![]}))
+            Some(Rc::new(CompletedPlan {rule,back:1,layout,outputs:vec![],required_sources:3,projections:vec![],unions:None}))
         };
         let mut plans=[make(1,0),make(2,1),make(1,2)];
         compile_projections(&mut plans,std::iter::empty());
@@ -251,6 +251,18 @@ impl Results {
     pub fn parent_owner(&self) -> Option<&Rc<Trail>> { self.parent.as_ref() }
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
+    /// Seal fresh local receipts at the publication boundary. The caller owns
+    /// this result frame exclusively; inherited slots remain with their owner.
+    /// Only same-key storage forwarding is allowed, never an Eq-class lookup.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn seal_local(&mut self, mut forward: impl FnMut(Dependency) -> Dependency) -> (usize, usize) {
+        let mut writes = 0;
+        for witness in self.slots.iter_mut().flatten() {
+            let next = forward(*witness);
+            if next != *witness { *witness = next; writes += 1; }
+        }
+        (self.slots.len(), writes)
+    }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
     pub(crate) fn project_complete(plan:&crate::cell::CompletedPlan,frame:ResultFrame,probes:&mut u64) -> Option<Self> {
         let (rule,layout)=(plan.rule,&plan.layout);

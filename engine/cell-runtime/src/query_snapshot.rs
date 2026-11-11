@@ -100,12 +100,22 @@ mod tests {
         index.restore_publication(task);
         assert_eq!(index.publication_buffer_bytes(),bytes);
         assert!(index.tables[&0].values[0].get().is_some());
-        assert_eq!(index.changes,[(row.witness,0)]);
+        assert_eq!(index.changes,[(row.witness,0,u64::MAX)]);
         let task=index.take_publication(0,graph.query_versions[0]).unwrap();
         assert_eq!(task.buffer_growths(),0);
         assert_eq!(task.buffer_bytes(),bytes);
         index.restore_publication(task);
         assert_eq!(index.changes.len(),1,"scratch retains capacity, never notifications");
+        // A selective update must carry its field mask through the worker's
+        // moved buffer; Sieve uses it to skip unrelated Cell projections.
+        index.changes.clear();
+        graph.set_function(0,vec![Value::Int(1),Value::Int(2)],Value::Int(4)).unwrap();
+        let row=graph.row(row.witness).unwrap().unwrap();
+        let mut task=index.take_publication(0,graph.query_versions[0]).unwrap();
+        task.update(row.witness,Some(&row));
+        task.finish(graph.query_versions[0]);
+        index.restore_publication(task);
+        assert_eq!(index.changes,[(row.witness,0,super::super::column_bit(2))]);
         index.clear();assert_eq!(index.publication_buffer_bytes(),0);
     }
 

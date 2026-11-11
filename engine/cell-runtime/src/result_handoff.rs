@@ -131,6 +131,7 @@ fn derive_stage(
     path: &[(Option<usize>, Entry)],
     congruence: bool,
     query_ports: bool,
+    lazy_unions: bool,
 ) -> Terminal {
     if path.len() < 2 {
         return Terminal::default();
@@ -264,24 +265,33 @@ fn derive_stage(
                 }
                 continue;
             }
+            let mut actual_result=value;
             if let Some(i) = index.find(&mut symbols, &facts, table, &key) {
                 let f = &facts[i];
-                if f.stage != stage
+                let inherited = (lazy_unions && f.stage==stage).then(|| match f.source {
+                    Site::Effect(op) => program.iter().find(|r: &&Reuse|r.op==op).cloned(),
+                    _ => None,
+                }).flatten();
+                if (f.stage != stage || inherited.is_some())
                     && stage + 1 == path.len()
                     && !p.known_results.static_skip.get(rid).is_some_and(|s| s[op])
                 {
+                    let (back,rule,donor) = inherited.map_or((stage-f.stage,f.rule,f.source),
+                        |r|(r.back,r.rule,r.donor));
                     program.push(Reuse {
                         equal_output: matches!(ins, Op::Set(..))
                             && symbols.root(value) == symbols.root(f.result),
                         op,
-                        back: stage - f.stage,
-                        rule: f.rule,
-                        donor: f.source,
+                        back, rule, donor,
                         port: None,
                     });
                 }
                 if matches!(ins, Op::Set(..)) {
                     unions.push((value, f.result));
+                    // A Set on an existing constructor queues equality. Its
+                    // current result does not become the requested value until
+                    // the Run boundary; later RHS keys must retain that fact.
+                    if lazy_unions {actual_result=f.result;}
                 } else {
                     symbols.equal(value, f.result);
                 }
@@ -294,7 +304,7 @@ fn derive_stage(
                 source,
                 table,
                 key,
-                result: value,
+                result: actual_result,
                 constructor: true,
             });
         }
@@ -427,6 +437,26 @@ impl History {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn is_empty(&self) -> bool { self.frames.is_none() }
     pub(crate) fn current(&self) -> Option<ResultView<'_>> { self.frame(1) }
+    /// A newly completed Cell has not published its current frame yet. Repair
+    /// may already have coalesced its receipts; update the unique local storage
+    /// before Entry/Cursor sharing outlives this Run's forwarding map. Previously
+    /// shared owners are deliberately left untouched and never copied or scanned.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn seal_current(&mut self, forward: impl FnMut(Dependency) -> Dependency) -> Option<(usize, usize)> {
+        if self.empty != 0 { return Some((0, 0)); }
+        let Some(frame) = self.frames.as_mut() else { return Some((0, 0)); };
+        if frame.projection.is_some() { return None; }
+        let results = match Rc::get_mut(&mut frame.owner)? {
+            Trail::One(results) => results,
+            Trail::Many(frames) => {
+                let Some(frame) = frames.last_mut().and_then(Option::as_mut) else { return Some((0, 0)); };
+                if frame.projection.is_some() { return None; }
+                let Trail::One(results) = Rc::get_mut(&mut frame.owner)? else { unreachable!("flat Cell history"); };
+                results
+            },
+        };
+        Some(results.seal_local(forward))
+    }
     pub(crate) fn project_complete(&self,plan:&crate::cell::CompletedPlan,probes:&mut u64) -> Option<Results> {
         Results::project_complete(plan,self.snapshot(plan.back)?,probes)
     }
@@ -552,7 +582,7 @@ pub(crate) fn terminal(
     congruence: bool,
     query_ports: bool,
 ) -> Terminal {
-    derive_stage(p, path, congruence, query_ports)
+    derive_stage(p, path, congruence, query_ports, false)
 }
 
 #[derive(Clone, Debug, Default)]
@@ -566,6 +596,7 @@ pub(crate) struct Switch {
     initial: Vec<usize>,
     exports: Rows<Site>,
     completion: bool,
+    lazy_unions: bool,
     direct: Box<[Option<Rc<crate::cell::CompletedPlan>>]>,
     pub depth: usize,
 }
@@ -674,6 +705,10 @@ impl Switch {
             .map(|p| std::mem::size_of::<crate::cell::CompletedPlan>()+2*std::mem::size_of::<usize>()
                 +p.outputs.capacity()*std::mem::size_of::<(Site,usize,usize)>()
                 +p.projections.capacity()*std::mem::size_of::<(Rc<SlotLayout>,Rc<SlotLayout>)>()).sum::<usize>();
+        let mut union_seen = BTreeSet::new();
+        let union_bytes = self.direct.iter().flatten().filter_map(|p|p.unions.as_ref())
+            .filter(|p|union_seen.insert(Rc::as_ptr(p) as *const () as usize))
+            .map(|p|std::mem::size_of_val(p.as_ref())+2*std::mem::size_of::<usize>()).sum::<usize>();
         serde_json::json!({
             "states":self.nodes.len(),
             "lowered_reads":self.nodes.iter().map(|n| (
@@ -686,6 +721,9 @@ impl Switch {
             "direct_array_bytes":std::mem::size_of_val(self.direct.as_ref()),
             "direct_programs":direct_seen.len(),
             "direct_program_bytes":direct_bytes,
+            "lazy_union_states":self.direct.iter().flatten().filter(|p|p.unions.is_some()).count(),
+            "lazy_union_programs":union_seen.len(),
+            "lazy_union_program_bytes":union_bytes,
             "read_payload_bytes":payload})
     }
     pub(crate) fn transition_storage(&self) -> serde_json::Value {
@@ -768,6 +806,7 @@ impl Switch {
         congruence: bool,
         query_ports: bool,
         completion: bool,
+        lazy_unions: bool,
     ) -> Self {
         let mut prefixes = BTreeMap::new();
         let mut units = BTreeMap::new();
@@ -776,7 +815,7 @@ impl Switch {
             for i in 1..=path.len() {
                 prefixes.entry(path[..i].to_vec()).or_insert_with(|| {
                     if reuse_results {
-                        terminal(p, &path[..i], congruence, query_ports)
+                        derive_stage(p, &path[..i], congruence, query_ports, lazy_unions)
                     } else {
                         Terminal::default()
                     }
@@ -875,25 +914,39 @@ impl Switch {
         let mut direct_sources = vec![None;nodes.len()];
         if completion {
             for (path,&id) in &ids {
-                if path.len()<2 || !nodes[id].program.complete { continue; }
+                if path.len()<2 { continue; }
                 let rid=path.last().unwrap().1.0;
                 let cell=Definition::new(p,rid).unwrap();
+                let program=&nodes[id].program;
+                let complete = if lazy_unions {
+                    !program.reuse.is_empty() && cell.closes_with(&p.known_results.static_skip[rid],true,
+                        |op|program.reuse.iter().any(|r|r.op==op))
+                } else { program.complete };
+                if !complete {continue;}
                 // Prior stages may have ordered unions or other effects.
                 // Their completed typed receipts prove this inclusion; only
                 // positive paths additionally share a normalized structure.
-                if cell.template.ops.iter().any(|i|!matches!(i,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Set(..))) {continue;}
+                if cell.template.ops.iter().any(|i|!matches!(i,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Set(..))
+                    && !(lazy_unions && matches!(i,Op::Union(..)))) {continue;}
                 let ops=cell.template.ops.iter().enumerate().filter_map(|(op,i)|
-                    matches!(i,Op::Let(..)|Op::Set(..)).then_some(op)).collect::<Vec<_>>();
+                    (matches!(i,Op::Let(..)|Op::Set(..))
+                        && (!lazy_unions || !p.known_results.static_skip[rid][op])).then_some(op)).collect::<Vec<_>>();
                 if ops.is_empty() || ops.len()>32 { continue; }
-                let reads=ops.iter().map(|op|nodes[id].program.reuse.iter().find(|r|r.op==*op)).collect::<Option<Vec<_>>>();
+                let reads=ops.iter().filter(|&&op|!lazy_unions || !p.known_results.static_skip[rid][op])
+                    .map(|op|nodes[id].program.reuse.iter().find(|r|r.op==*op)).collect::<Option<Vec<_>>>();
                 let Some(reads)=reads else { continue; };
-                if reads.iter().any(|r|matches!(cell.template.ops[r.op],Op::Set(..)) && !r.equal_output) {continue;}
+                if reads.is_empty() {continue;}
+                if !lazy_unions && reads.iter().any(|r|matches!(cell.template.ops[r.op],Op::Set(..)) && !r.equal_output) {continue;}
                 let first=reads[0];
                 if reads.iter().any(|r|(r.back,r.rule)!=(first.back,first.rule)) { continue; }
                 let (back,donor_rule)=(first.back,first.rule);
                 let wanted=exports[rid].iter().copied().chain(ops.iter().map(|&op|Site::Effect(op))).collect::<BTreeSet<_>>();
                 let sources=wanted.iter().map(|&site| {
-                    let source=match site {
+                    let actual = if lazy_unions { match site {
+                        Site::Effect(op) => p.known_results.static_sources[rid][op].unwrap_or(site),
+                        Site::Query(_) => site,
+                    }} else {site};
+                    let source=match actual {
                         Site::Effect(op)=>nodes[id].program.reuse.iter().find(|r|r.op==op).map(|r|(r.back,r.rule,r.donor)),
                         Site::Query(atom) if path.last().unwrap().1.1==Some(atom) && back==1 => {
                             let previous=path[path.len()-2].1.0;
@@ -982,7 +1035,9 @@ impl Switch {
             let cell=Definition::new(p,rule).unwrap();
             let outputs=exports[rule].iter().enumerate().map(|(slot,&site)|(site,cell.relation(site).unwrap().table,slot)).collect();
             let required_sources=layout.sources.iter().flatten().fold(0,|mask,p|mask | (1u64<<p.slot()));
-            direct[id]=Some(Rc::new(crate::cell::CompletedPlan{rule,back,layout,outputs,required_sources,projections:vec![]}));
+            let Some(unions) = crate::cell::compile_unions(p,rule,&exports[rule],
+                |op|p.known_results.static_skip[rule][op] || nodes[id].program.reuse.iter().any(|r|r.op==op && r.equal_output)) else {continue};
+            direct[id]=Some(Rc::new(crate::cell::CompletedPlan{rule,back,layout,outputs,required_sources,projections:vec![],unions}));
         }
         if completion {crate::cell::compile_projections(&mut direct,layouts.values().flatten().cloned());}
         // Freeze only after every ResultPort has its final rule/slot identity.
@@ -1031,6 +1086,7 @@ impl Switch {
             initial,
             exports,
             completion,
+            lazy_unions,
             direct:if completion {direct.into_boxed_slice()}else{Box::new([])},
             depth,
         }
@@ -1104,7 +1160,7 @@ impl Switch {
     }
     pub(crate) fn completion_enabled(&self) -> bool { self.completion }
     pub(crate) fn artifact(&self) -> serde_json::Value {
-        let mut artifact=serde_json::json!({"schema":if self.completion {"eggfuse-result-switch/v4"} else if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth});
+        let mut artifact=serde_json::json!({"schema":if self.lazy_unions {"eggfuse-result-switch/v5"} else if self.completion {"eggfuse-result-switch/v4"} else if self.query_ports {"eggfuse-result-switch/v3"} else if self.congruence {"eggfuse-result-switch/v2"} else {"eggfuse-result-switch/v1"},"reuse_results":self.reuse_results,"initial_entries":self.initial,"states":self.nodes,"max_back":self.depth});
         if self.completion { artifact["completion_states"]=serde_json::json!(self.direct.iter().map(|p|p.as_ref().map(|p|p.artifact())).collect::<Vec<_>>()); }
         artifact
     }
@@ -1131,6 +1187,35 @@ fn is_complete(p: &Program, r: usize, reuse: &[Reuse], congruence: bool) -> bool
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    #[cfg(feature = "sparse-cells")]
+    fn publication_seals_only_unique_current_results_without_copying_history() {
+        let wanted = [Capture { site: Site::Effect(0), port: ResultPort::new(4, 0) },
+            Capture { site: Site::Effect(1), port: ResultPort::new(4, 1) }];
+        let mut h = History::default();
+        h.capture(2, 4, &wanted, |_| None, |i| Some(Dependency::Function(i)));
+        let address = Rc::as_ptr(&h.frames.as_ref().unwrap().owner);
+        assert_eq!(h.seal_current(|w| if w == Dependency::Function(0) {
+            Dependency::Function(8)
+        } else { w }), Some((2, 1)));
+        assert_eq!(Rc::as_ptr(&h.frames.as_ref().unwrap().owner), address);
+        assert_eq!(h.get(1, wanted[0].port), Some(Dependency::Function(8)));
+        let published = h.clone();
+        assert_eq!(h.seal_current(|_| panic!("shared history must not be scanned")), None);
+        assert_eq!(Rc::as_ptr(&h.frames.as_ref().unwrap().owner), address);
+        h.capture(2, 4, &wanted, |_| None, |i| Some(Dependency::Function(i + 10)));
+        assert_eq!(h.seal_current(|w| {
+            let Dependency::Function(i) = w else { unreachable!() };
+            assert!(i >= 10, "do not traverse preceding frames");
+            Dependency::Function(i + 10)
+        }), Some((2, 2)));
+        assert_eq!(h.get(1, wanted[0].port), Some(Dependency::Function(20)));
+        assert_eq!(h.get(2, wanted[0].port), Some(Dependency::Function(8)));
+        assert_eq!(published.get(1, wanted[0].port), Some(Dependency::Function(8)));
+        h.capture(2, 5, &[], |_| None, |_| None);
+        assert_eq!(h.seal_current(|_| panic!("empty stage has no new results")), Some((0, 0)));
+    }
+
     #[test]
     fn dispatch_rows_preserve_empty_rows_and_extreme_missing_indices() {
         let rows = DispatchRows::compile(vec![vec![], vec![NonZeroUsize::new(1), None], vec![], vec![]]);

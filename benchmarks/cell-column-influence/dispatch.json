@@ -1,0 +1,74 @@
+{
+  "baseline_commit": "4abd900b",
+  "scope": "standalone Cell CPU; saved work and relative state checks, no timing",
+  "binary_sha256": "89b57e58b442cc4e59a69a7fe36ffea6250f3e85239aae18a9def199a54e1dab",
+  "cases": {
+    "sum": {
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "ordered_run_sha256": "e8b57f3bccff1de59a3bf313680765fa66a1f56fa39123476d471920a42a6d08",
+      "reports_sha256": [
+        "800b09b5d3726405357ee934ff3c6f770c7250c697a04c2b19e85fba939f5f13",
+        "47824429b589ad8ee1c782ae278343c101f4fee15019dfcef99b89b4df0c7fd2"
+      ],
+      "column_checks": [
+        6026,
+        1358
+      ],
+      "publication_dispatches": 4096,
+      "inactive_publications": 826,
+      "influence_payload_bytes": [
+        24264,
+        34104
+      ],
+      "summary_update_rows": 29067,
+      "unchanged_column_rows": 1766,
+      "equal_weight_dispatch_and_check_delta": -572,
+      "exact_state_ordered_runs_and_remaining_work": true
+    },
+    "ray1280": {
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "ordered_run_sha256": "93d9b2cc833bff2a06bf3971d126d55000870a125a938cb3376ecece0c4600c0",
+      "reports_sha256": [
+        "b877a0f194db8bdb0bdc092c15ad1b5c720ee111fada170705d2a2e87b9fb8bb",
+        "c7238c88f0e9b258427a134f517ace1cd24bf1435af7917399b2e03ae49d519d"
+      ],
+      "column_checks": [
+        255996,
+        24354
+      ],
+      "publication_dispatches": 178346,
+      "inactive_publications": 24826,
+      "influence_payload_bytes": [
+        24264,
+        34104
+      ],
+      "summary_update_rows": 1802443,
+      "unchanged_column_rows": 20077,
+      "equal_weight_dispatch_and_check_delta": -53296,
+      "exact_state_ordered_runs_and_remaining_work": true
+    },
+    "ray-full": {
+      "state_sha256": "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7",
+      "ordered_run_sha256": "53871e3ced85b0e79c7f4542948f9f8b29df067ce2742f949cd181a1d23a85f6",
+      "reports_sha256": [
+        "e99a89f44303af5b1a92c3f042d0a08f536ee71182042e60ee651a084b18a865",
+        "d25fd3d0f5993128e1175fc7fec51bc84e25313b049c65e31501755e3b53eb91"
+      ],
+      "column_checks": [
+        2185417,
+        1318220
+      ],
+      "publication_dispatches": 2147286,
+      "inactive_publications": 404105,
+      "influence_payload_bytes": [
+        24264,
+        34104
+      ],
+      "summary_update_rows": 6983829,
+      "unchanged_column_rows": 1396972,
+      "equal_weight_dispatch_and_check_delta": 1280089,
+      "exact_state_ordered_runs_and_remaining_work": true
+    }
+  },
+  "sum_native_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a"
+}

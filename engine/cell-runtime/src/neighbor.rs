@@ -1,7 +1,7 @@
 //! Demand-driven context for attributes read on a constructor's children.
 //! Only uncovered delta entries reach these caches, inside the ordinary kernel.
 use crate::{
-    graph::{Dependency, Graph, Row},
+    graph::{Dependency, Graph, Point, Row},
     program::*,
     value::Value,
 };
@@ -100,7 +100,7 @@ pub(crate) struct Stats {
 #[derive(Default)]
 struct Ports {
     version: u64,
-    rows: FxHashMap<u64, Option<Row>>,
+    rows: FxHashMap<u64, Option<Point>>,
     keys: FxHashMap<usize, u64>,
 }
 #[derive(Default, Serialize)]
@@ -213,6 +213,12 @@ struct AbsorptionStats {
     single_absorbed: u64,
     single_missing_outputs: u64,
     single_fresh_fallbacks: u64,
+    mixed_candidates: u64,
+    mixed_checks: u64,
+    mixed_output_probes: u64,
+    mixed_absorbed: u64,
+    mixed_missing_outputs: u64,
+    mixed_fresh_fallbacks: u64,
     pending: Vec<usize>,
 }
 #[derive(Default)]
@@ -279,6 +285,7 @@ impl Context {
           let entries = kernels.clone().count();
           let plans = kernels.filter(|k| k.absorption.is_some()).count();
           report["absorption"] = serde_json::json!({"enabled":self.absorption_enabled,
+            "row_completion":"cell-min-row/v1",
             "plans":plans, "capability_entries":entries,
             "compiled_capability_bytes":entries*std::mem::size_of::<Option<Box<Absorption>>>() + plans*std::mem::size_of::<Absorption>(),
             "removed_context_plan_bytes":p.rules.len()*std::mem::size_of::<Option<(usize,usize,usize,usize)>>(),
@@ -351,27 +358,36 @@ impl Context {
         stats.pending[rid] += group.rows.len();
         true
     }
-    /// The matcher has one actual constructor candidate and has checked all of
-    /// its fields. It need not allocate a cached Neighborhood or a binding to
-    /// prove this single permanent min write is already absorbed at Run start.
+    /// A whole-domain failure does not revoke the proof for its individual
+    /// members. After the original row/owner checks, finish an absorbed Cell
+    /// here without constructing its binding, RHS frame or publication. The
+    /// same typed capability serves singleton and mixed domains; no row-level
+    /// subscription, cached binding or extra instance state is introduced.
     #[cfg(feature = "cell-absorption")]
-    pub(crate) fn absorbs_single(&mut self, g: &Graph, rid: usize, active: Activated<'_>, row: &Row) -> bool {
+    pub(crate) fn absorbs_row(&mut self, g: &Graph, rid: usize, active: Activated<'_>, row: &Row, single: bool) -> bool {
         let Activated { plan, key, value:candidate, watermark } = active;
-        self.absorption_stats.single_candidates += 1;
-        if row.hidden || row.values.get(plan.input_column) != Some(&Value::Eq(key)) { return false; }
         let stats = &mut self.absorption_stats;
-        stats.single_checks += 1;
+        let (candidates, checks, fresh, probes, missing, absorbed) = if single {
+            (&mut stats.single_candidates, &mut stats.single_checks, &mut stats.single_fresh_fallbacks,
+                &mut stats.single_output_probes, &mut stats.single_missing_outputs, &mut stats.single_absorbed)
+        } else {
+            (&mut stats.mixed_candidates, &mut stats.mixed_checks, &mut stats.mixed_fresh_fallbacks,
+                &mut stats.mixed_output_probes, &mut stats.mixed_missing_outputs, &mut stats.mixed_absorbed)
+        };
+        *candidates += 1;
+        if row.hidden || row.values.get(plan.input_column) != Some(&Value::Eq(key)) { return false; }
+        *checks += 1;
         if row.epoch >= watermark {
-            stats.single_fresh_fallbacks += 1;
+            *fresh += 1;
             return false;
         }
-        stats.single_output_probes += 1;
+        *probes += 1;
         let Some((_, value)) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
-            stats.single_missing_outputs += 1;
+            *missing += 1;
             return false;
         };
         if value > candidate { return false; }
-        stats.single_absorbed += 1;
+        *absorbed += 1;
         stats.matches_absorbed += 1;
         stats.pending[rid] += 1;
         true
@@ -386,7 +402,7 @@ impl Context {
         rid: usize,
         t: usize,
         key: &[Value],
-    ) -> Result<Option<Row>> {
+    ) -> Result<Option<Point>> {
         #[cfg(feature = "family-overlap")]
         let point_clock = crate::family_overlap::clock();
         let [Value::Eq(id)] = key else {
@@ -418,8 +434,8 @@ impl Context {
         }
         stats.point_probes += 1;
         g.stats.residual_candidates += 1;
-        let row = g.lookup_canonical(t, key)?;
-        if let Some(Row {
+        let row = g.lookup_point(t, key)?;
+        if let Some(Point {
             witness: Dependency::Function(i),
             ..
         }) = &row
@@ -574,7 +590,7 @@ impl PortWriter<'_> {
         if let Some((k, row)) = current
             && let Some(slot) = cache.rows.get_mut(&k)
         {
-            *slot = Some(row.clone());
+            *slot = Some(Point::from(row));
             cache.keys.insert(i, k);
             self.published.refreshed += 1;
         }
@@ -684,7 +700,7 @@ mod tests {
         };
         for insert_first in [false, true] {
             let mut cache = Ports::default();
-            cache.rows.insert(7, Some(original.clone()));
+            cache.rows.insert(7, Some(Point::from(&original)));
             cache.keys.insert(3, 7);
             let mut ctx = Context {
                 #[cfg(feature = "cell-absorption")]
@@ -762,7 +778,7 @@ mod tests {
         assert_eq!(ctx.ports[0].as_ref().unwrap().version, g.query_versions[0]);
         assert_eq!(ctx.ports[1].as_ref().unwrap().version, old[1]);
         assert_ne!(old[1], g.query_versions[1]);
-        assert_eq!(ctx.ports[1].as_ref().unwrap().rows[&7].as_ref().unwrap().values[1], Value::Int(1));
+        assert_eq!(ctx.ports[1].as_ref().unwrap().rows[&7].as_ref().unwrap().value, Value::Int(1));
         g.changes.clear();
         std::mem::swap(&mut g.changes, &mut deferred);
         publication.publish(
@@ -770,7 +786,7 @@ mod tests {
             &g, &mut columns, Some(&mut ranges), &mut ctx,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         for table in 0..2 {
-            assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().values[1], Value::Int(2));
+            assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().value, Value::Int(2));
             let selected = ranges.select(&g, table, (0, key[0].clone()), 1, Bound::Lt, 2,
                 &crate::query::DomainRc::new(g.witnesses(table))).unwrap();
             assert!(selected.is_empty());
@@ -791,7 +807,7 @@ mod tests {
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
-        assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().values[1], Value::Int(3));
+        assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().value, Value::Int(3));
         assert_eq!(ctx.stats[0].point_probes, 2, "updates preserve positive and negative reads");
     }
 }

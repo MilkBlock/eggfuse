@@ -66,6 +66,7 @@ python3 docs/optimization-catalog/catalog.py check
 
 ## 当前度量缺口
 
+- [d7b2b9ac 维护优化检查点](../../benchmarks/cell-maintenance-checkpoint/README.md)：最近五项实现未建立相对 `2af82c27` 的净推理收益，普通串行查询量仍为 12,139 / 2,584,660。维护操作减少、分配减少和覆盖扩大不得单独记为速度收益；后续组合须指明实际删除的查询、效果或交接，并收费取得证明和边界检查。
 - 前端/Bake 的分阶段编译时间、峰值内存、前后 IR 大小还没有统一字段。已有产物规模只是覆盖/成本代理。
 - 部分旧优化没有独立的启停对照与净耗时归因，只能结合专项实验和共同 counters。不能把总 lookup 下降全部分配给其中一项。
 - `known_stats` 原来存在于 Graph 内但未统一导出，本轮补入 `report.known_results`。旧报告缺失该字段，不补零。

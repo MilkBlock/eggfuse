@@ -1,0 +1,80 @@
+{
+  "baseline_commit": "50316626",
+  "scope": "standalone Cell CPU work and relative correctness; no throughput result",
+  "binary_sha256": [
+    "86726ac54c6eb1ad6d86c9e4baf4ad92ee4d51ebdc072b5d5eb649e5de6b67d6",
+    "a116edad4ef1e765c7f08ce0de6cf36c365e822824de1d7e65a800fbd91c36b2"
+  ],
+  "cases": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "ordered_run_sha256": "e8b57f3bccff1de59a3bf313680765fa66a1f56fa39123476d471920a42a6d08",
+      "report_sha256": [
+        "3fef115c1aec4c3334bb44c4a804fa1f4f6fbee4930f32829d8bbbc6f9b77f5a",
+        "800b09b5d3726405357ee934ff3c6f770c7250c697a04c2b19e85fba939f5f13"
+      ],
+      "summary_update_rows": [
+        30833,
+        29067
+      ],
+      "unchanged_column_rows": 1766,
+      "column_checks": 6026,
+      "equal_weight_update_and_check_delta": 4260,
+      "added_keys": 7102,
+      "dependency_rows": 2494,
+      "compiled_mask_and_group_payload_bytes": 24264,
+      "compiled_influence_groups": 374,
+      "graph_effects_and_ordered_runs_equal": true,
+      "all_other_sieve_work_equal": true
+    },
+    "ray1280": {
+      "runs": 1280,
+      "state_sha256": "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+      "ordered_run_sha256": "93d9b2cc833bff2a06bf3971d126d55000870a125a938cb3376ecece0c4600c0",
+      "report_sha256": [
+        "869145550e060cb0e9bed9f5209164994be99f6c129350733baccc9ae95bd1ef",
+        "b877a0f194db8bdb0bdc092c15ad1b5c720ee111fada170705d2a2e87b9fb8bb"
+      ],
+      "summary_update_rows": [
+        1822520,
+        1802443
+      ],
+      "unchanged_column_rows": 20077,
+      "column_checks": 255996,
+      "equal_weight_update_and_check_delta": 235919,
+      "added_keys": 277322,
+      "dependency_rows": 132104,
+      "compiled_mask_and_group_payload_bytes": 24264,
+      "compiled_influence_groups": 374,
+      "graph_effects_and_ordered_runs_equal": true,
+      "all_other_sieve_work_equal": true
+    },
+    "ray-full": {
+      "runs": 16883,
+      "state_sha256": "faaa7e91ac7ad2039a60aa9ea4cadb476be26d864f4aed6b8bb78389fa5bdce7",
+      "ordered_run_sha256": "53871e3ced85b0e79c7f4542948f9f8b29df067ce2742f949cd181a1d23a85f6",
+      "report_sha256": [
+        "99333360e8496d914376c488db66f549410d9b0948e573ce531e1bf41b66dddb",
+        "e99a89f44303af5b1a92c3f042d0a08f536ee71182042e60ee651a084b18a865"
+      ],
+      "summary_update_rows": [
+        8380801,
+        6983829
+      ],
+      "unchanged_column_rows": 1396972,
+      "column_checks": 2185417,
+      "equal_weight_update_and_check_delta": 788445,
+      "added_keys": 1100851,
+      "dependency_rows": 365850,
+      "compiled_mask_and_group_payload_bytes": 24264,
+      "compiled_influence_groups": 374,
+      "graph_effects_and_ordered_runs_equal": true,
+      "all_other_sieve_work_equal": true
+    }
+  },
+  "sum_native_acceptance": {
+    "status": "pass",
+    "sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a"
+  }
+}

@@ -1,6 +1,10 @@
 #![cfg(feature = "sparse-cells")]
 use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
 
+fn zero_fingerprints() -> bool {
+    std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()==Some("0")
+}
+
 fn run(source: &str, workers: Option<(usize, usize)>) -> Executor {
     run_mode(source, workers, true)
 }
@@ -24,6 +28,27 @@ fn same(a: &Executor, b: &Executor) {
     for (a,b) in a.steps.iter().zip(&b.steps) {
         for k in ["ordinal","ruleset","path","iterations","epoch","logical_matches","executed_bindings","changed"] {
             assert_eq!(a[k], b[k], "{k}");
+        }
+    }
+}
+#[test]
+fn inline_candidate_domains_keep_late_rows_union_and_visibility() {
+    let source = include_str!("fixtures/inline-domains.egg");
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    for stable in [false, true] {
+        let before = run_mode(source, None, stable);
+        for workers in [1, 4] {
+            let after = run_mode(source, Some((workers, 1)), stable);
+            same(&before, &after);
+            let report = after.report();
+            // Research observers retain their original shared-domain host.
+            if report["projection_survey"].is_null() && report["semijoin"]["mode"] == "off"
+                && report["entry_schedule"]["consumer_transport"] == "partitioned-cell-entries/v1" {
+                assert_eq!(report["free_join"]["inline_domain_deliveries"].as_u64().unwrap() > 0,
+                    !zero_fingerprints(),"colliding buckets in this fixture retain multiple candidates");
+                assert!(report["free_join"]["entry_bucket_rows_materialized"].as_u64().unwrap() > 0,
+                    "larger domains retain their shared views");
+            }
         }
     }
 }
@@ -59,7 +84,8 @@ fn constructor_support_keeps_late_keys_unions_and_recreated_rows() {
         for workers in [1, 4] {
             let after = run_mode(&source, Some((workers, 1)), stable);
             same(&before, &after);
-            assert!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0);
+            assert_eq!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0,
+                !zero_fingerprints(),"nonempty all-colliding support must defer rejection to exact queries");
         }
     }
 }
@@ -141,8 +167,8 @@ fn mutable_point_support_observes_late_values_deletion_and_recreation() {
         for workers in [1, 4] {
             let after = run_mode(&source, Some((workers, 1)), stable);
             same(&before, &after);
-            assert!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0,
-                "the missing mutable read must reject Entries");
+            assert_eq!(after.report()["free_join"]["point_support_rejected"].as_u64().unwrap() > 0,
+                !zero_fingerprints(),"colliding support cannot prove a missing mutable read");
         }
     }
 }

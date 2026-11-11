@@ -258,7 +258,7 @@ impl Catalog {
                 Some("eggfuse-result-switch/v1") => (false, false, false),
                 Some("eggfuse-result-switch/v2") => (true, false, false),
                 Some("eggfuse-result-switch/v3") => (true, true, false),
-                Some("eggfuse-result-switch/v4") => (true, true, true),
+                Some("eggfuse-result-switch/v4" | "eggfuse-result-switch/v5") => (true, true, true),
                 _ => return Err("unsupported cross-Run RHS proof policy".into()),
             };
             let reuse = raw["reuse_results"]
@@ -272,6 +272,7 @@ impl Catalog {
                 congruence,
                 query_ports,
                 completion,
+                raw["schema"] == "eggfuse-result-switch/v5",
             );
             if *raw != s.switch.artifact() {
                 return Err("invalid cross-Run RHS plan".into());
@@ -408,24 +409,31 @@ impl Catalog {
         Self::emit_switch(p, plan, true)
     }
     pub fn emit_switch(p: &Program, plan: &mut J, reuse: bool) -> Result<()> {
-        Self::emit_policy(p, plan, reuse, false, false, false, false, None)
+        Self::emit_policy(p, plan, reuse, false, false, false, false, false, None)
     }
     pub fn emit_congruence_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, false, false, false, None)
+        Self::emit_policy(p, plan, true, true, false, false, false, false, None)
     }
     pub fn emit_query_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, false, false, None)
+        Self::emit_policy(p, plan, true, true, true, false, false, false, None)
     }
     pub fn emit_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true, true, None)
+        Self::emit_policy(p, plan, true, true, true, true, false, true, None)
+    }
+    /// Share deferred equality operand programs while retaining exact source
+    /// entry proofs. This does not identify different constructor structures.
+    pub fn emit_lazy_union_handoffs(p: &Program, plan: &mut J) -> Result<()> {
+        Self::emit_policy(p, plan, true, true, true, true, true, true, None)
     }
     /// Lower exactly this catalog without silently admitting equivalent routes.
     pub fn emit_existing_ripsat_handoffs(p: &Program, plan: &mut J) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true, false, None)
+        let lazy = p.artifact["iterative_bake"]["rhs_handoffs"]["schema"] == "eggfuse-result-switch/v5";
+        Self::emit_policy(p, plan, true, true, true, true, lazy, false, None)
     }
     /// Inferred routes must connect implementations seen in completed runtime history.
     pub fn emit_observed_ripsat_handoffs(p: &Program, plan: &mut J, observed: &ObservedCompletions) -> Result<()> {
-        Self::emit_policy(p, plan, true, true, true, true, true, Some(observed))
+        let lazy = p.artifact["iterative_bake"]["rhs_handoffs"]["schema"] == "eggfuse-result-switch/v5";
+        Self::emit_policy(p, plan, true, true, true, true, lazy, true, Some(observed))
     }
     /// Transfer a known local application to another implementation of the
     /// exact same completed Cell. Positions are matched by constructor
@@ -523,6 +531,7 @@ impl Catalog {
         congruence: bool,
         query_ports: bool,
         completion: bool,
+        lazy_unions: bool,
         expand: bool,
         observed: Option<&ObservedCompletions>,
     ) -> Result<()> {
@@ -545,6 +554,7 @@ impl Catalog {
             congruence,
             query_ports,
             completion,
+            lazy_unions,
         )
         .artifact();
         Ok(())

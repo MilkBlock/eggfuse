@@ -22,7 +22,7 @@ struct Costs {
 }
 struct Saved {
     rid: usize,
-    rows: Vec<(Dependency, Vec<(usize, crate::query::DomainRc<Vec<Dependency>>)>)>,
+    rows: Vec<(Dependency, Vec<(usize, crate::query::Candidates)>)>,
 }
 #[derive(Default)]
 struct State {

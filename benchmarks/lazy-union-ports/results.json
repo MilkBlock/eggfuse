@@ -1,0 +1,313 @@
+{
+  "scope": "standalone Cell CPU; fixture, complete sum-bits, 128-Run Raytrace prefix; no speed evidence",
+  "binaries": {
+    "compiler": "7f4eb4c926fb15a2df93d7cb909b5aaec86b839e8c3ede765cbffe742b5dce13",
+    "runtime": "7edaaf3db9d61d5abd24c342e32d3dbbbb8eb15e17571a320aa8cdf95eea6ef2"
+  },
+  "cases": {
+    "fixture": {
+      "source_sha256": "757332b586b5fe263f887ed6452556cdc375d8da913b45994fcf602367741caf",
+      "lanes": {
+        "v4": {
+          "program_sha256": "a329bfe5a402cab1be91c998a8cb337245b7227c439b447a0c76be115d77c97f",
+          "report_sha256": "78a88cb5c59fb0f3efc632b9d30823d549b2d7e3d60e483051ef297d6a3d5d5f",
+          "state_sha256": "80f969ad6fccc63ba185cd6b731bba08897cab0bdb99df6491ef5481b7a6130c",
+          "runs": 5,
+          "effects": {
+            "constructor_requests": 20,
+            "function_updates": 0,
+            "unions": 12,
+            "union_requests": 14,
+            "logical_facts_created": 26
+          },
+          "direct_states": 0,
+          "union_states": 0,
+          "union_programs": 0,
+          "queries": 38,
+          "graph_work": {
+            "handoff_attempts": 8,
+            "rhs_frames_avoided": 4,
+            "register_result_writes": 1,
+            "decoded_rows": 12
+          },
+          "spine": {
+            "cell_output_deliveries": 20,
+            "cell_output_slot_reads": 20,
+            "effect_output_copies": 0,
+            "effect_slot_probes": 32,
+            "effect_slots_initialized": 32,
+            "history_allocations": 4,
+            "history_capture_reads": 8,
+            "history_inherited_reads": 0,
+            "history_slots_written": 8,
+            "output_registrations": 16,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 0,
+            "ripsat_completed": 0,
+            "ripsat_layout_checks": 0,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 12,
+            "ripsat_projected_slots": 0,
+            "ripsat_projection_checks": 0,
+            "ripsat_union_cells": 0,
+            "ripsat_union_input_reads": 0,
+            "ripsat_union_result_reads": 0,
+            "ripsat_witness_checks": 0,
+            "ripsat_witness_fallbacks": 0
+          }
+        },
+        "v5": {
+          "program_sha256": "e1b3ca789b482f41bb9bd0095c31ad7417c8851dd748e6bb6a65094774656364",
+          "report_sha256": "cf542432420710ae11167b445d832aeb0fff30701ae3b13d036490fccb090e4e",
+          "state_sha256": "80f969ad6fccc63ba185cd6b731bba08897cab0bdb99df6491ef5481b7a6130c",
+          "runs": 5,
+          "effects": {
+            "constructor_requests": 20,
+            "function_updates": 0,
+            "unions": 12,
+            "union_requests": 14,
+            "logical_facts_created": 26
+          },
+          "direct_states": 1,
+          "union_states": 1,
+          "union_programs": 1,
+          "queries": 33,
+          "graph_work": {
+            "handoff_attempts": 0,
+            "rhs_frames_avoided": 4,
+            "register_result_writes": 1,
+            "decoded_rows": 13
+          },
+          "spine": {
+            "cell_output_deliveries": 20,
+            "cell_output_slot_reads": 20,
+            "effect_output_copies": 0,
+            "effect_slot_probes": 20,
+            "effect_slots_initialized": 20,
+            "history_allocations": 4,
+            "history_capture_reads": 8,
+            "history_inherited_reads": 1,
+            "history_slots_written": 8,
+            "output_registrations": 16,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 12,
+            "ripsat_completed": 4,
+            "ripsat_layout_checks": 4,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 12,
+            "ripsat_projected_slots": 12,
+            "ripsat_projection_checks": 0,
+            "ripsat_union_cells": 4,
+            "ripsat_union_input_reads": 4,
+            "ripsat_union_result_reads": 12,
+            "ripsat_witness_checks": 12,
+            "ripsat_witness_fallbacks": 0
+          }
+        }
+      }
+    },
+    "sum": {
+      "source_sha256": "a174bd8845043ec5f8c5611e0cd9f36486ba15219c3e08aca9fff3ac5c1de6df",
+      "lanes": {
+        "v4": {
+          "program_sha256": "e7e69b89198fea63d584e9564237c9b1c5c8f6a08ce160cba2903e08c0c60be1",
+          "report_sha256": "039970f791b511c08a76e570a9b9ceda75db4c89997c4af2d56d28dac90a0a25",
+          "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+          "runs": 1428,
+          "effects": {
+            "constructor_requests": 8033,
+            "function_updates": 1450,
+            "unions": 1039,
+            "union_requests": 2439,
+            "logical_facts_created": 3739
+          },
+          "direct_states": 3,
+          "union_states": 0,
+          "union_programs": 0,
+          "queries": 12085,
+          "graph_work": {
+            "handoff_attempts": 156,
+            "rhs_frames_avoided": 3809,
+            "register_result_writes": 1188,
+            "decoded_rows": 2499
+          },
+          "spine": {
+            "cell_output_deliveries": 5599,
+            "cell_output_slot_reads": 5228,
+            "effect_output_copies": 358,
+            "effect_slot_probes": 8760,
+            "effect_slots_initialized": 7591,
+            "history_allocations": 330,
+            "history_capture_reads": 70,
+            "history_inherited_reads": 18,
+            "history_slots_written": 70,
+            "output_registrations": 3768,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 155,
+            "ripsat_completed": 155,
+            "ripsat_layout_checks": 195,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 1950,
+            "ripsat_projected_slots": 465,
+            "ripsat_projection_checks": 0,
+            "ripsat_union_cells": 0,
+            "ripsat_union_input_reads": 0,
+            "ripsat_union_result_reads": 0,
+            "ripsat_witness_checks": 585,
+            "ripsat_witness_fallbacks": 40
+          }
+        },
+        "v5": {
+          "program_sha256": "4db25b2f79bd6a47331eeb0d3a8430a68ddc6cd6b83ceaa6ad3944a9cdafbfba",
+          "report_sha256": "e2b3e7f47d28412c4a946618c8d1ec0af9a122530c00cbcfe85336fc5e56e1e3",
+          "state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+          "runs": 1428,
+          "effects": {
+            "constructor_requests": 8033,
+            "function_updates": 1450,
+            "unions": 1039,
+            "union_requests": 2439,
+            "logical_facts_created": 3739
+          },
+          "direct_states": 7,
+          "union_states": 3,
+          "union_programs": 1,
+          "queries": 12085,
+          "graph_work": {
+            "handoff_attempts": 156,
+            "rhs_frames_avoided": 3809,
+            "register_result_writes": 1188,
+            "decoded_rows": 2499
+          },
+          "spine": {
+            "cell_output_deliveries": 5599,
+            "cell_output_slot_reads": 5228,
+            "effect_output_copies": 358,
+            "effect_slot_probes": 8760,
+            "effect_slots_initialized": 7591,
+            "history_allocations": 330,
+            "history_capture_reads": 70,
+            "history_inherited_reads": 18,
+            "history_slots_written": 70,
+            "output_registrations": 3768,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 155,
+            "ripsat_completed": 155,
+            "ripsat_layout_checks": 209,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 1950,
+            "ripsat_projected_slots": 465,
+            "ripsat_projection_checks": 18,
+            "ripsat_union_cells": 0,
+            "ripsat_union_input_reads": 0,
+            "ripsat_union_result_reads": 0,
+            "ripsat_witness_checks": 613,
+            "ripsat_witness_fallbacks": 54
+          }
+        }
+      }
+    },
+    "ray128": {
+      "source_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "lanes": {
+        "v4": {
+          "program_sha256": "afcf8a61f4ac675dc4c18efd14820007a36b19a7f6d0788b9a327005c49469c5",
+          "report_sha256": "ba8cfd983742e74abf40afad499e9003f70ac683ffd1e7e64bad23a908d686c1",
+          "state_sha256": "cb129186e0ed140e4f6cac32652811f26c9e83677ee6f5a35e727d60d1e1e784",
+          "runs": 128,
+          "effects": {
+            "constructor_requests": 48858,
+            "function_updates": 3659,
+            "unions": 1805,
+            "union_requests": 7021,
+            "logical_facts_created": 38187
+          },
+          "direct_states": 3,
+          "union_states": 0,
+          "union_programs": 0,
+          "queries": 74265,
+          "graph_work": {
+            "handoff_attempts": 0,
+            "rhs_frames_avoided": 11572,
+            "register_result_writes": 9780,
+            "decoded_rows": 10503
+          },
+          "spine": {
+            "cell_output_deliveries": 34062,
+            "cell_output_slot_reads": 33616,
+            "effect_output_copies": 1174,
+            "effect_slot_probes": 57186,
+            "effect_slots_initialized": 51237,
+            "history_allocations": 0,
+            "history_capture_reads": 0,
+            "history_inherited_reads": 0,
+            "history_slots_written": 0,
+            "output_registrations": 19241,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 0,
+            "ripsat_completed": 0,
+            "ripsat_layout_checks": 0,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 2750,
+            "ripsat_projected_slots": 0,
+            "ripsat_projection_checks": 0,
+            "ripsat_union_cells": 0,
+            "ripsat_union_input_reads": 0,
+            "ripsat_union_result_reads": 0,
+            "ripsat_witness_checks": 0,
+            "ripsat_witness_fallbacks": 0
+          }
+        },
+        "v5": {
+          "program_sha256": "2d8d60460f3f92624276dee93d9313fa794311c4c578b0f17c23fe48a4974019",
+          "report_sha256": "f5a667555bca6ff5ed4f266d9767223df9a8fc8ed3c12925cd49b68774ee5ebd",
+          "state_sha256": "cb129186e0ed140e4f6cac32652811f26c9e83677ee6f5a35e727d60d1e1e784",
+          "runs": 128,
+          "effects": {
+            "constructor_requests": 48858,
+            "function_updates": 3659,
+            "unions": 1805,
+            "union_requests": 7021,
+            "logical_facts_created": 38187
+          },
+          "direct_states": 7,
+          "union_states": 3,
+          "union_programs": 1,
+          "queries": 74265,
+          "graph_work": {
+            "handoff_attempts": 0,
+            "rhs_frames_avoided": 11572,
+            "register_result_writes": 9780,
+            "decoded_rows": 10503
+          },
+          "spine": {
+            "cell_output_deliveries": 34062,
+            "cell_output_slot_reads": 33616,
+            "effect_output_copies": 1174,
+            "effect_slot_probes": 57186,
+            "effect_slots_initialized": 51237,
+            "history_allocations": 0,
+            "history_capture_reads": 0,
+            "history_inherited_reads": 0,
+            "history_slots_written": 0,
+            "output_registrations": 19241,
+            "ripsat_boundary_fallbacks": 0,
+            "ripsat_boundary_reads": 0,
+            "ripsat_completed": 0,
+            "ripsat_layout_checks": 0,
+            "ripsat_layout_fallbacks": 0,
+            "ripsat_plan_probes": 2750,
+            "ripsat_projected_slots": 0,
+            "ripsat_projection_checks": 0,
+            "ripsat_union_cells": 0,
+            "ripsat_union_input_reads": 0,
+            "ripsat_union_result_reads": 0,
+            "ripsat_witness_checks": 0,
+            "ripsat_witness_fallbacks": 0
+          }
+        }
+      }
+    }
+  },
+  "sum_native_acceptance_sha256": "1291e35ee65a56ae25e9f62ac4d6f25812a37acaef152598345f8cb9d718365b"
+}

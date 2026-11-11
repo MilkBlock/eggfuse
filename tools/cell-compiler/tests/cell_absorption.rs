@@ -35,7 +35,13 @@ fn run(source: &str, enabled: bool, workers: usize) -> Executor {
     let mut e = Executor::new(Graph::new_with_repair_ports(p).unwrap(), true);
     e.use_entry_publications().unwrap();
     if enabled { e.use_cell_absorption().unwrap(); }
-    if workers != 0 { e.use_query_workers(workers, 1).unwrap(); }
+    if workers != 0 {
+        e.use_query_workers(workers, 1).unwrap();
+        #[cfg(feature="parallel-residuals")]
+        e.use_parallel_residuals().unwrap();
+        #[cfg(feature="parallel-publication")]
+        e.use_parallel_publication().unwrap();
+    }
     e.execute().unwrap();
     e
 }
@@ -56,7 +62,16 @@ fn completed_min_domains_survive_scalar_changes_and_reopen_on_structure_changes(
         let r = after.report();
         let stats = &r["neighbor_context"]["absorption"]["stats"];
         assert!(stats["matches_absorbed"].as_u64().unwrap() >= 4, "{stats}");
-        assert!(stats["reused_bounds"].as_u64().unwrap() > 0, "{stats}");
+        if std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()==Some("0") {
+            // All input keys share this candidate bucket. Exact per-row checks
+            // may absorb members, but this fixture cannot certify one bound
+            // for the whole mixed-key domain merely from its fingerprint.
+            assert_eq!(stats["bound_builds"],0,"{stats}");
+            assert_eq!(stats["reused_bounds"],0,"{stats}");
+            assert!(stats["mixed_absorbed"].as_u64().unwrap()>0,"{stats}");
+        } else {
+            assert!(stats["reused_bounds"].as_u64().unwrap() > 0, "{stats}");
+        }
         assert!(after.graph.stats.bindings < before.graph.stats.bindings);
         assert_eq!(after.graph.stats.function_updates, before.graph.stats.function_updates);
         assert_eq!(after.graph.stats.unions, before.graph.stats.unions);
@@ -97,6 +112,33 @@ fn singleton_absorption_keeps_later_scalar_updates_and_consumers() {
         assert_eq!(stats["groups_absorbed"],0,"singletons must not create a domain cache");
         assert_eq!(before.graph.stats.bindings-after.graph.stats.bindings,1);
         assert_eq!(before.graph.stats.function_updates,after.graph.stats.function_updates);
+    }
+}
+
+#[test]
+fn mixed_domains_complete_absorbed_members_and_keep_required_updates() {
+    let source = include_str!("fixtures/mixed-absorption.egg");
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    let before = run(source, false, 0);
+    for workers in [0, 4] {
+        let after = run(source, true, workers);
+        assert_eq!(before.snapshots, after.snapshots, "late constructors, retirement, union and later readers");
+        assert_eq!(before.steps.len(), after.steps.len());
+        for (a, b) in before.steps.iter().zip(&after.steps) {
+            for key in ["ordinal", "ruleset", "path", "iterations", "epoch", "changed", "logical_matches"] {
+                assert_eq!(a[key], b[key], "{key}");
+            }
+        }
+        let report = after.report();
+        let stats = &report["neighbor_context"]["absorption"]["stats"];
+        assert!(stats["mixed_absorbed"].as_u64().unwrap() >= 2, "{stats}");
+        assert!(stats["mixed_output_probes"].as_u64().unwrap() > stats["mixed_absorbed"].as_u64().unwrap(),
+            "failed member proofs must still update their outputs");
+        assert_eq!(before.graph.stats.bindings - after.graph.stats.bindings,
+            stats["matches_absorbed"].as_u64().unwrap());
+        for key in ["function_updates", "unions", "logical_facts_created"] {
+            assert_eq!(before.report()["stats"][key], report["stats"][key], "{key}");
+        }
     }
 }
 

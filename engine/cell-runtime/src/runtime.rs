@@ -215,7 +215,7 @@ impl QueryEnv {
             domains: Domains::new(),
         }
     }
-    fn domain(&self, atom: usize) -> Option<&crate::query::DomainRc<Vec<Dependency>>> {
+    fn domain(&self, atom: usize) -> Option<&crate::query::Candidates> {
         self.domains
             .iter()
             .rev()
@@ -570,7 +570,7 @@ impl Executor {
                             self.free_join.stats.subtrie_uses += 1;
                             domain.rows.clone()
                         } else {
-                            self.query_indexes.candidates(&self.graph, *t, &bound)?
+                            self.query_indexes.candidates(&self.graph, *t, &bound)?.into()
                         }
                     }
                 };
@@ -601,8 +601,8 @@ impl Executor {
                                 guard.column,
                                 guard.bound,
                                 limit,
-                                &witnesses,
-                            )?;
+                                witnesses.shared().expect("range-sized candidate domain"),
+                            )?.into();
                             break;
                         }
                     }
@@ -2157,8 +2157,11 @@ impl Executor {
         }
         #[cfg(feature = "sparse-cells")]
         if !full_effects && let Some(step)=stage_cursor.as_ref()
-            && let Some(results)=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
+            && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
             let cell=self.graph.reserve_completed_cell()?;
+            if let Some(unions)=unions {
+                self.stage_spine.enqueue_direct_unions(&mut self.graph,rid,&b.values,&results,&unions)?;
+            }
             return self.stage_spine.complete_direct(&self.graph,rid,cell,stage_cursor.unwrap(),results,
                 |i| b.known.receipt(i));
         }
@@ -3166,7 +3169,10 @@ impl Executor {
         let repair_cells = self.graph.repair_cell_report();
         #[cfg(not(feature = "spine-blocks"))]
         let repair_cells = J::Null;
-        json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
+        let point_transport = json!({"schema":"cell-point-result/v1",
+            "point_bytes":std::mem::size_of::<crate::graph::Point>(),
+            "row_bytes":std::mem::size_of::<Row>()});
+        let mut report = json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "scoped_completion":self.graph.scoped_completion_report(),
             "scoped_executor":self.scoped_execution_report(),
@@ -3174,8 +3180,13 @@ impl Executor {
             "port_completion":self.graph.port_completion_report(),
             "indexed_columns":self.query_indexes.column_storage(),"stats":self.graph.stats,"live_cells":self.graph.cells.len(),"steps":self.steps,"program_sha256":self.graph.program.artifact["sha256"],
             "point_support_accounting":"current-column/v1","query_rule_profile":query_rule_profile,"view_rule_profile":view_rule_profile,"view_consumers":views,"view_storage":self.graph.unit_stats(),"publication":self.publication,
+            "query_domain_transport":{"schema":"cell-witness-domain/v1",
+                "candidate_bytes":std::mem::size_of::<crate::query::Candidates>(),
+                "subtrie_bytes":std::mem::size_of::<Subtrie>()},
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
-            "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}})
+            "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}});
+        report["query_point_transport"] = point_transport;
+        report
     }
 }

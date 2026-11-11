@@ -21,6 +21,42 @@ use DomainRc as Rc;
 pub(crate) mod snapshot;
 
 type Refinements = HashMap<Vec<(usize, u64)>, Rc<Vec<Dependency>>>;
+/// A sealed Cell candidate domain. A sole witness needs no independent heap
+/// owner; larger domains retain the existing shared column view and identity.
+/// This is a candidate, not a proof of exact fields, visibility or delta order.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) enum Candidates {
+    #[cfg(feature = "sparse-cells")]
+    One(Dependency),
+    Shared(Rc<Vec<Dependency>>),
+}
+impl From<Rc<Vec<Dependency>>> for Candidates {
+    fn from(rows: Rc<Vec<Dependency>>) -> Self { Self::Shared(rows) }
+}
+impl std::ops::Deref for Candidates {
+    type Target = [Dependency];
+    fn deref(&self) -> &Self::Target {
+        match self {
+            #[cfg(feature = "sparse-cells")]
+            Self::One(w) => std::slice::from_ref(w),
+            Self::Shared(rows) => rows,
+        }
+    }
+}
+impl Candidates {
+    pub(crate) fn shared(&self) -> Option<&Rc<Vec<Dependency>>> {
+        match self {
+            #[cfg(feature = "sparse-cells")]
+            Self::One(_) => None,
+            Self::Shared(rows) => Some(rows),
+        }
+    }
+}
+impl AsRef<[Dependency]> for Candidates {
+    fn as_ref(&self) -> &[Dependency] { self }
+}
+/// Wide columns share the last bit: collisions cause extra work, never omissions.
+pub(crate) const fn column_bit(column: usize) -> u64 { 1 << if column < 63 { column } else { 63 } }
 #[cfg(feature = "sparse-cells")]
 #[derive(Default)]
 struct SparseRefinements(Option<Box<Refinements>>);
@@ -55,9 +91,30 @@ struct Bucket {
     #[cfg(not(feature = "sparse-cells"))]
     refinements: Refinements,
 }
+impl Bucket {
+    fn projected(&mut self, materialized: &mut u64, shape_checks: &mut u64, inline_reads: &mut u64) -> Candidates {
+        #[cfg(all(feature = "sparse-cells", not(any(feature = "projection-survey",
+            feature = "projection-semijoin", feature = "family-overlap", feature = "family-frontiers"))))]
+        {
+            *shape_checks += 1;
+            if let crate::tiny_set::TinySet::One(w) = self.facts {
+                *inline_reads += 1;
+                return Candidates::One(w);
+            }
+        }
+        #[cfg(any(not(feature = "sparse-cells"), feature = "projection-survey",
+            feature = "projection-semijoin", feature = "family-overlap", feature = "family-frontiers"))]
+        let _ = (shape_checks, inline_reads);
+        Candidates::Shared(self.view.get_or_insert_with(|| {
+            *materialized += self.facts.len() as u64;
+            Rc::new(self.facts.iter().copied().collect())
+        }).clone())
+    }
+}
+
 struct Columns {
     #[cfg(feature = "parallel-publication")]
-    publication_buffer: Vec<(Dependency,usize)>,
+    publication_buffer: Vec<(Dependency,usize,u64)>,
     #[cfg(feature = "projection-stamps")]
     write_version: u64,
     values: Vec<std::cell::OnceCell<HashMap<u64, Bucket>>>,
@@ -101,9 +158,9 @@ impl Columns {
         }
         keys.len()
     }
-    fn put(&mut self, row: &Row, bits: u32, watch_reads: bool) -> (usize, usize) {
+    fn put(&mut self, row: &Row, bits: u32, watch_reads: bool) -> (usize, usize, u64) {
         if row.hidden {
-            return (self.remove(row.witness), 0);
+            return (self.remove(row.witness), 0, 0);
         }
         let keys = row
             .values
@@ -111,7 +168,8 @@ impl Columns {
             .map(|v| fingerprint(v, bits))
             .collect::<smallvec::SmallVec<[u64; 4]>>();
         use std::collections::hash_map::Entry;
-        let old = match self.keys.entry(row.witness) {
+        let entry = self.keys.entry(row.witness);
+        let old = match &entry {
             Entry::Occupied(entry) if entry.get() == &keys => {
                 // Equal fingerprints do not prove unchanged exact values (including
                 // forced collisions). Every changed witness invalidates read leases.
@@ -123,17 +181,18 @@ impl Columns {
                         bucket.refinements.clear();
                     }
                 }
-                return (0, 0);
+                return (0, 0, 0);
             }
-            Entry::Occupied(mut entry) => Some(entry.insert(keys.clone())),
-            Entry::Vacant(entry) => {
-                entry.insert(keys.clone());
-                None
-            }
+            Entry::Occupied(entry) => Some(entry.get()),
+            Entry::Vacant(_) => None,
         };
         let mut changed = 0;
+        let mut fields = 0;
         for (col, &key) in keys.iter().enumerate() {
-            changed += usize::from(old.as_ref().is_none_or(|prior|prior[col]!=key));
+            if old.as_ref().is_none_or(|prior|prior[col]!=key) {
+                changed += 1;
+                fields |= column_bit(col);
+            }
             let Some(column)=self.values[col].get_mut() else { continue };
             if let Some(prior) = old.as_ref() {
                 let before = prior[col];
@@ -171,7 +230,16 @@ impl Columns {
             bucket.refinements.clear();
 
         }
-        (if old.is_some() { changed } else { 0 }, changed)
+        // Preserve the old fields while updating reverse buckets, then transfer
+        // the new fingerprint array to its sole owner without cloning it.
+        let existed = old.is_some();
+        match entry {
+            Entry::Occupied(mut entry) => { entry.insert(keys); }
+            Entry::Vacant(entry) => { entry.insert(keys); }
+        }
+        // A new witness also affects empty projections, irrespective of width.
+        (if existed { changed } else { 0 }, changed,
+            if existed { fields } else { u64::MAX })
     }
     /// Consume a selection made against this current index. Both ordinary
     /// Cell enumeration and retained-prefix reads use this exact refinement.
@@ -292,7 +360,7 @@ pub struct QueryIndexes {
     bits: u32,
     intersection: bool,
     pub refinements: RefinementStats,
-    pub changes: Vec<(Dependency, usize)>,
+    pub changes: Vec<(Dependency, usize, u64)>,
     pub track_changes: bool,
     pub peak_references: usize,
     pub decoded_facts: u64,
@@ -305,7 +373,7 @@ pub(crate) struct ColumnWriter<'a> {
     bits: u32,
     references: &'a mut usize,
     updated: &'a mut u64,
-    changes: Option<&'a mut Vec<(Dependency, usize)>>,
+    changes: Option<&'a mut Vec<(Dependency, usize, u64)>>,
 }
 
 /// Exclusive ownership of one existing index during repaired publication.
@@ -313,7 +381,7 @@ pub(crate) struct ColumnWriter<'a> {
 #[cfg(feature = "parallel-publication")]
 pub(crate) struct PublicationTask {
     table: usize, index: Columns, bits: u32, before: usize, references: usize,
-    updated: u64, changes: Vec<(Dependency, usize)>, track_changes: bool, growths:u64, buffer_before:usize,
+    updated: u64, changes: Vec<(Dependency, usize, u64)>, track_changes: bool, growths:u64, buffer_before:usize,
 }
 #[cfg(feature = "parallel-publication")]
 impl PublicationTask {
@@ -325,7 +393,7 @@ impl PublicationTask {
         self.growths+=u64::from(self.changes.capacity()!=capacity);
     }
     pub fn finish(&mut self, version:u64) { self.index.version=version; }
-    pub fn buffer_bytes(&self)->usize { self.changes.capacity()*std::mem::size_of::<(Dependency,usize)>() }
+    pub fn buffer_bytes(&self)->usize { self.changes.capacity()*std::mem::size_of::<(Dependency,usize,u64)>() }
     pub fn buffer_growths(&self)->u64 {self.growths}
 }
 impl ColumnWriter<'_> {
@@ -334,16 +402,16 @@ impl ColumnWriter<'_> {
     }
 
     pub fn update(&mut self, witness: Dependency, row: Option<&Row>) {
-        let (removed, added) = if let Some(row) = row {
+        let (removed, added, fields) = if let Some(row) = row {
             *self.updated += 1;
             self.index.put(row, self.bits, self.index.leased_reads)
         } else {
-            (self.index.remove(witness), 0)
+            (self.index.remove(witness), 0, 0)
         };
         if added > 0
             && let Some(changes) = &mut self.changes
         {
-            changes.push((witness, self.table));
+            changes.push((witness, self.table, fields));
         }
         *self.references = *self.references - removed + added;
     }
@@ -588,7 +656,7 @@ impl QueryIndexes {
     }
     #[cfg(feature = "parallel-publication")]
     pub(crate) fn publication_buffer_bytes(&self)->usize {
-        self.publication_buffers*std::mem::size_of::<(Dependency,usize)>()
+        self.publication_buffers*std::mem::size_of::<(Dependency,usize,u64)>()
     }
 
     #[cfg(any(feature = "view-consumers",feature = "parallel-publication"))]
@@ -645,7 +713,7 @@ impl QueryIndexes {
             for fact in graph.witnesses(table) {
                 self.decoded_facts += 1;
                 if let Some(row) = graph.row(fact)? {
-                    let (_, added) = index.put(&row, self.bits, false);
+                    let (_, added, _) = index.put(&row, self.bits, false);
                     self.references += added;
                 }
             }
@@ -742,16 +810,13 @@ impl QueryIndexes {
     }
     pub(crate) fn single_projection(
         &mut self, graph: &Graph, table: usize, col: usize, hash: u64,
-        materialized: &mut u64,
-    ) -> Result<Option<Rc<Vec<Dependency>>>> {
+        materialized: &mut u64, shape_checks: &mut u64, inline_reads: &mut u64,
+    ) -> Result<Option<Candidates>> {
         self.ensure_selected(graph,table,[col])?;
         let columns = self.tables.get_mut(&table).unwrap();
         columns.column(col);
         Ok(columns.values[col].get_mut().expect("selected column").get_mut(&hash).map(|bucket| {
-            bucket.view.get_or_insert_with(|| {
-                *materialized += bucket.facts.len() as u64;
-                Rc::new(bucket.facts.iter().copied().collect())
-            }).clone()
+            bucket.projected(materialized, shape_checks, inline_reads)
         }))
     }
     /// Probe a subatom by its full projected prefix. Fingerprint collisions
@@ -966,6 +1031,46 @@ pub(crate) fn test_projection_graph() -> Graph {
 #[cfg(all(test, feature = "sparse-cells"))]
 mod support_tests {
     use super::*;
+    #[cfg(not(any(feature = "projection-survey", feature = "projection-semijoin",
+        feature = "family-overlap", feature = "family-frontiers")))]
+    #[test]
+    fn inline_domains_follow_membership_without_allocating_a_singleton_view() {
+        for bits in [64, 0] {
+            let mut g = test_projection_graph();
+            let mut ix = test_projection_indexes(bits);
+            let key = |b| vec![Value::Int(1), Value::Int(b)];
+            g.set_function(0, key(0), Value::Int(7)).unwrap();
+            let hash = ix.fingerprint(&Value::Int(1));
+            let (mut materialized, mut checks, mut inline) = (0, 0, 0);
+            let first = ix.single_projection(&g, 0, 0, hash, &mut materialized, &mut checks, &mut inline).unwrap().unwrap();
+            assert!(matches!(first, Candidates::One(_)));
+            assert!(ix.tables[&0].column(0)[&hash].view.is_none());
+            assert_eq!(materialized, 0);
+            g.changes.clear();
+            // A late member changes the same bucket into a shared domain. With
+            // zero-bit fingerprints the representation remains a superset.
+            g.set_function(0, key(1), Value::Int(8)).unwrap();
+            ix.update(&mut g).unwrap();
+            let many = ix.single_projection(&g, 0, 0, hash, &mut materialized, &mut checks, &mut inline).unwrap().unwrap();
+            assert_eq!(many.len(), 2);
+            assert!(many.shared().is_some());
+            assert_eq!(first.len(), 1, "earlier borrowed-phase domain was not mutated");
+            let again = ix.single_projection(&g, 0, 0, hash, &mut materialized, &mut checks, &mut inline).unwrap().unwrap();
+            assert!(Rc::ptr_eq(many.shared().unwrap(), again.shared().unwrap()));
+            g.changes.clear();
+            g.hide(0, &key(0), true).unwrap();
+            ix.update(&mut g).unwrap();
+            let last = ix.single_projection(&g, 0, 0, hash, &mut materialized, &mut checks, &mut inline).unwrap().unwrap();
+            assert!(matches!(last, Candidates::One(_)));
+            assert_ne!(&*first, &*last);
+            assert_eq!(many.len(), 2, "shared snapshots preserve their membership");
+            assert!(ix.tables[&0].column(0)[&hash].view.is_none());
+            g.changes.clear();
+            g.hide(0, &key(1), true).unwrap();
+            ix.update(&mut g).unwrap();
+            assert!(ix.single_projection(&g, 0, 0, hash, &mut materialized, &mut checks, &mut inline).unwrap().is_none());
+        }
+    }
     #[cfg(feature = "cell-entry-reverse")]
     #[test]
     fn reverse_support_is_bounded_current_and_never_builds_columns() {
