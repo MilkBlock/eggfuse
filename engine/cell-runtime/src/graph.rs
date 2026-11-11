@@ -654,9 +654,14 @@ impl Graph {
         Ok(())
     }
     #[cfg(feature = "cell-absorption")]
-    pub(crate) fn absorption_value(&self, table: usize, key: &Value) -> Option<i64> {
-        let f = self.functions.get(self.function_index(table, std::slice::from_ref(key))?)?;
-        match f.value { Value::Int(v) if f.live => Some(v), _ => None }
+    pub(crate) fn absorption_value(&self, table: usize, key: &Value) -> Option<(usize, i64)> {
+        let index = self.function_index(table, std::slice::from_ref(key))?;
+        self.absorption_rejection(table, index).map(|value| (index, value))
+    }
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn absorption_rejection(&self, table: usize, index: usize) -> Option<i64> {
+        let f = self.functions.get(index)?;
+        match f.value { Value::Int(v) if f.live && f.table == table => Some(v), _ => None }
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn reserve_completed_cell(&mut self) -> Result<u32> {

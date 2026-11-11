@@ -116,7 +116,17 @@ struct Neighborhood {
     _domain: Rc<Vec<Dependency>>,
     rows: Rc<Vec<Row>>,
     #[cfg(feature = "cell-absorption")]
-    absorption: Option<(usize, u64, i64)>,
+    absorption: Condition,
+}
+/// A positive bound proves the entire domain. A single actual output can only
+/// reject that proof attempt; it never authorizes skipping a source effect.
+#[cfg(feature = "cell-absorption")]
+#[derive(Clone, Copy, Default)]
+enum Condition {
+    #[default]
+    Empty,
+    Upper { rule: usize, key: u64, value: i64 },
+    Rejected { rule: usize, key: u64, output: usize },
 }
 /// This is a condition on one existing Cell query, not another consumer graph.
 /// The only effect copies the input attribute into a permanent min function.
@@ -166,6 +176,9 @@ struct AbsorptionStats {
     reused_bounds: u64,
     bound_builds: u64,
     output_probes: u64,
+    bound_rejections: u64,
+    rejection_reads: u64,
+    rejection_hits: u64,
     missing_outputs: u64,
     fresh_constructor_fallbacks: u64,
     groups_absorbed: u64,
@@ -237,7 +250,7 @@ impl Context {
         #[cfg(feature = "cell-absorption")]
         { report["absorption"] = serde_json::json!({"enabled":self.absorption_enabled,
             "plans":self.absorption_plans.iter().filter(|p| p.is_some()).count(),
-            "condition_bytes_per_neighborhood":std::mem::size_of::<Option<(usize,u64,i64)>>(),
+            "condition_bytes_per_neighborhood":std::mem::size_of::<Condition>(),
             "stats":self.absorption_stats}); }
         report
     }
@@ -264,30 +277,49 @@ impl Context {
             stats.fresh_constructor_fallbacks += 1;
             return false;
         }
-        let upper = if let Some((_, _, upper)) = group.absorption.filter(|(rule, id, _)| *rule == rid && *id == *key_id) {
+        let upper = if let Condition::Upper { rule, key, value } = group.absorption
+            && rule == rid && key == *key_id {
             stats.reused_bounds += 1;
-            upper
+            value
         } else {
+            if let Condition::Rejected { rule, key, output } = group.absorption
+                && rule == rid && key == *key_id {
+                stats.rejection_reads += 1;
+                // Borrow the actual prior lookup result, without rebuilding a
+                // key or finding its row again. Even a stale rejection merely
+                // retains ordinary matching; only the full scan below proves
+                // an absorption. Missing/retired results must allow a retry.
+                if g.absorption_rejection(plan.attribute, output)
+                    .is_some_and(|value| value > *candidate) {
+                    stats.rejection_hits += 1;
+                    return false;
+                }
+            }
             let mut upper = i64::MIN;
             for row in group.rows.iter() {
                 // Candidate domains can be supersets. Cache a bound only for
                 // an exact one-key domain, so its length is the match count.
                 if row.values.get(plan.input_column) != Some(key) { return false; }
                 stats.output_probes += 1;
-                let Some(value) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
+                let Some((output, value)) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
                     stats.missing_outputs += 1;
                     return false;
                 };
+                if value > *candidate {
+                    stats.bound_rejections += 1;
+                    group.absorption = Condition::Rejected { rule: rid, key: *key_id, output };
+                    return false;
+                }
                 upper = upper.max(value);
             }
             stats.bound_builds += 1;
-            group.absorption = Some((rid, *key_id, upper));
+            group.absorption = Condition::Upper { rule: rid, key: *key_id, value: upper };
             upper
         };
         if *candidate < upper {
             // A smaller old bound is still valid; refreshing is optional and
             // charged. Do it only on a later visit, not twice in this query.
-            group.absorption = None;
+            group.absorption = Condition::Empty;
             return false;
         }
         stats.groups_absorbed += 1;
@@ -415,7 +447,7 @@ impl Context {
                 _domain: domain,
                 rows: Rc::new(rows),
                 #[cfg(feature = "cell-absorption")]
-                absorption: None,
+                absorption: Condition::Empty,
             },
         );
         if let Some(clock) = clock {
@@ -511,7 +543,7 @@ mod tests {
         c.absorption_plans.push(Some(Absorption { pivot:1, structure:0, attribute:1,input_column:0 }));
         c.absorption_stats.pending.push(0);
         c.groups.insert(0, Groups { version:g.query_versions[0], rows:2,
-            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:Rc::new(rows),absorption:None })].into_iter().collect() });
+            by_domain: [(Rc::as_ptr(&domain) as usize,Neighborhood { _domain:domain.clone(),rows:Rc::new(rows),absorption:Condition::Empty })].into_iter().collect() });
         let mut seed = Row { table:1, values:crate::graph::row_fields(vec![Value::Eq(7),Value::Int(10)]),
             epoch:5,witness:Dependency::Function(20),hidden:false };
         assert!(c.absorbs(&g,0,1,&seed,3,0,&domain));
@@ -527,6 +559,28 @@ mod tests {
         g.query_versions[0] += 1;
         assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"old membership cannot close a new domain");
         assert_eq!(c.absorption_stats.matches_absorbed,4);
+
+        // A failed whole-domain condition only needs one current counterexample.
+        // It stops scanning immediately, then reads the actual output directly
+        // on the next attempt. Once that output improves, retry the full proof.
+        let groups = c.groups.get_mut(&0).unwrap();
+        groups.version = g.query_versions[0];
+        groups.by_domain.get_mut(&(Rc::as_ptr(&domain) as usize)).unwrap().absorption = Condition::Empty;
+        let probes = c.absorption_stats.output_probes;
+        seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(0)]);
+        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert_eq!(c.absorption_stats.output_probes-probes,1,"do not read the rest of a rejected group");
+        seed.values = crate::graph::row_fields(vec![Value::Eq(7),Value::Int(-1)]);
+        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain));
+        assert_eq!(c.absorption_stats.output_probes-probes,1,"reuse the actual output address");
+        assert_eq!(c.absorption_stats.rejection_hits,1);
+        g.set_function(1,vec![Value::Eq(8)],Value::Int(-2)).unwrap();
+        assert!(!c.absorbs(&g,0,1,&seed,3,0,&domain),"another output still rejects the proof");
+        g.set_function(1,vec![Value::Eq(9)],Value::Int(-3)).unwrap();
+        assert!(c.absorbs(&g,0,1,&seed,3,0,&domain),"a rejection must not become a permanent negative cache");
+        assert_eq!(c.absorption_stats.output_probes-probes,5);
+        assert_eq!(c.absorption_stats.rejection_reads,3);
+        assert_eq!(std::mem::size_of::<Condition>(),std::mem::size_of::<Option<(usize,u64,i64)>>());
     }
 
     #[test]

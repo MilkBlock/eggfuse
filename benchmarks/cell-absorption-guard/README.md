@@ -5,6 +5,9 @@ not a native egglog optimization. It is disabled by default, including when
 compiled with the `cell-absorption` feature. There is no timing result for this
 change, general sparsity proof, or 2× result.
 
+The [rejection-reuse follow-up](#reuse-the-actual-rejecting-output) below reduces
+the guard's acquisition cost without increasing its takeover scope or storage.
+
 ## Opportunity and completed takeover
 
 The [previous actual-execution census](../cell-change-locality/README.md)
@@ -153,3 +156,81 @@ used in the recorded results. Raw files stay under ignored `out/`.
 The next admission question is whether an actual completed Cell can supply this
 bound without rescanning outputs. Until that acquisition cost is reduced or a
 normal-binary timing comparison passes, this remains an opt-in experiment.
+
+## Reuse the actual rejecting output
+
+Follow-up control: `91cfda31`. The preceding implementation scanned the whole
+domain even after one output had already refuted absorption. It then discarded
+the maximum it had just computed. On later attempts, it often rediscovered the
+same counterexample through another key lookup.
+
+The guard now stops on the first rejecting output and retains its **actual
+function result index** in the existing condition slot. On a subsequent attempt,
+one direct live-result read suffices to reject the optimization if its value is
+still greater than the new input. If it has improved, retired, or is unavailable,
+the ordinary full proof is retried. This reference cannot authorize absorption:
+only the existing exact whole-domain proof can omit source work. A stale negative
+hint can at worst miss an optimization. Domain/rule/input checks still run first.
+
+The condition is an enum of empty, positive upper bound, or rejecting result.
+It remains **32 bytes**, with no extra allocation, binding field, consumer list,
+or write subscription. It does not maintain every output's current value.
+No statement that a matched rule has already committed an effect is introduced.
+
+| Complete Raytrace diagnostic | `91cfda31` | Follow-up |
+|---|---:|---:|
+| Output key/hash probes | 389,878 | 43,058 |
+| Direct rejecting-result reads | 0 | 100,816 |
+| All output observations, unweighted | 389,878 | 143,874 |
+| Whole-domain checks | 142,008 | 142,008 |
+| Absorbed groups | 32,831 | 32,831 |
+| Omitted bindings and corresponding writes/completions | 207,182 | 207,182 |
+| Allocation calls | 19,967,543 | 19,967,543 |
+| Cumulative requested bytes | 6,556,743,403 | 6,556,743,403 |
+
+All 100,816 rejecting-result reads still reject the proof attempt. A further
+2,047 scans stop at their first counterexample. `bound_builds` now counts only
+the 7,146 scans that finish successfully; in the prior implementation it also
+included complete scans that were immediately rejected. Compare output probes
+and direct reads, not that changed scan-completion count as independent savings.
+The 88.96% reduction is in output **hash probes**, not execution time; including
+direct reads gives 63.10% fewer output observations. These operations have
+different costs. Admission dispatch and the extra group lookup still remain.
+
+Why not obtain every bound from the previous write instead? For this min-copy
+Cell, knowing only that every output is at most the previous input is insufficient
+when the next input is smaller. A stronger positive bound would require the
+actual final outputs, full-domain completion, and cheap linkage back to the
+condition. Adding a token or a second binding map to every match has not been
+justified. Reusing a single counterexample addresses the measured repeated work
+without that new handoff. Direct RHS-derived positive bounds remain unfinished.
+
+sum-bits and the early Raytrace prefix still have no eligible cached-domain
+takeovers and no new output observations. sum-bits allocations are unchanged.
+The Raytrace prefix records one extra worker scratch growth: 14 → 15 frame
+growths, one extra reallocation and 192 requested bytes. Worker assignment and
+per-worker capacities differ; the recorded cost is retained, including in a
+short repeat. Full Raytrace has no allocation/reallocation/byte difference.
+For all three runs, complete graph exports,
+logical and executed Run signatures, graph counters, Entry work, and Spine work
+agree exactly with `91cfda31` (diagnostic clocks are not compared). All 14 selected
+source captures agree in full, including source ordinals and provenance; only
+their enclosing Run's elapsed/phase clocks are excluded from comparison.
+The unchanged sum-bits validator passes; Raytrace remains a relative proof.
+98 runtime unit tests and 49 selected integration tests pass, including a
+counterexample that becomes satisfied and must reopen the proof. The unit test
+also checks that the condition representation has not grown. README command
+smokes and the no-default-features compile pass.
+
+Use the same diagnostic commands above with fresh `ROOT` paths and the current
+binary, saving it as `ROOT/prefix` and the observer as `ROOT/observer`. The
+follow-up's saved files are under `out/cell-absorption-rejection`, next to the
+prior `out/cell-absorption-guard` control. Recheck without executing workloads:
+
+```sh
+python3 benchmarks/cell-absorption-guard/collect_rejections.py ROOT RESULTS.json
+```
+
+[rejections.json](rejections.json) records input/output hashes and both cost
+classes. This remains opt-in; there is no new timing campaign, automatic Bake
+credit, global sparsity claim, or 2× result.
