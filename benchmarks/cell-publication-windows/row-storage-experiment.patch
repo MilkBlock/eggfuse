@@ -1,0 +1,35 @@
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index 6511fa05..35ccbba1 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -150,6 +150,10 @@ pub struct Stats {
+     pub constructor_reused: u64,
+     pub logical_facts_created: u64,
+     pub function_updates: u64,
++    #[serde(default)]
++    pub function_row_reuse_checks: u64,
++    #[serde(default)]
++    pub function_row_reuses: u64,
+     pub merge_calls: u64,
+     #[serde(default)]
+     pub key_operations: u64,
+@@ -2094,7 +2098,18 @@ impl Graph {
+             let old = canon(&self.functions[i].value, &self.parents);
+             let next = self.merge_value(t, old.clone(), value)?;
+             if next != old {
+-                self.function_decoded[i] = Some(Self::shared_fields(key, &next));
++                // A published Entry or read snapshot owns its immutable fields.
++                // After its last reader releases them, a scalar update can
++                // retain that same row storage instead of allocating a new one.
++                // Rewrite the key too: this path also handles canonicalization.
++                self.stats.function_row_reuse_checks += 1;
++                if let Some(fields) = self.function_decoded[i].as_mut().and_then(RowFields::get_mut) {
++                    fields[..key.len()].clone_from_slice(key);
++                    fields[key.len()] = next.clone();
++                    self.stats.function_row_reuses += 1;
++                } else {
++                    self.function_decoded[i] = Some(Self::shared_fields(key, &next));
++                }
+                 #[cfg(feature = "slot-transfer-audit")]
+                 crate::transfer_audit::effective(self.epoch, t, i, key, Some(&old), &next)?;
+                 self.functions[i].value = next;
