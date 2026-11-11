@@ -165,6 +165,16 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_prepared_rejected: u64,
     #[serde(default)]
+    pub constructor_prepared_certificates: u64,
+    #[serde(default)]
+    pub constructor_prepared_liveness_checks: u64,
+    #[serde(default)]
+    pub constructor_prepared_result_reads: u64,
+    #[serde(default)]
+    pub constructor_prepared_sealed: u64,
+    #[serde(default)]
+    pub constructor_prepared_key_fields_avoided: u64,
+    #[serde(default)]
     pub rhs_context_resumes: u64,
     #[serde(default)]
     pub rhs_suspend_private: u64,
@@ -1782,6 +1792,46 @@ impl Graph {
         args: &[Arg], dst: usize, receipt: Option<&mut Option<Dependency>>, witness: FactRef) -> Result<Value> {
         self.construct_inner(cell, op, table, args, dst, None, receipt, Some(witness))
     }
+    /// The checked preparation plan uses immutable captured inputs and their
+    /// scalar descendants. An unchanged source-Run union certificate therefore
+    /// preserves its already checked key. Only the original live incarnation is
+    /// admitted here; forwarding, dirty tables and invalid certificates retain
+    /// the ordinary exact-key check. Callers must consume the prepared witness
+    /// at its selected source operation, never treat arbitrary receipts this way.
+    #[cfg(feature = "sparse-cells")]
+    fn sealed_constructor_result(&mut self, cell: u32, table: usize, witness: FactRef) -> Result<Option<Point>> {
+        self.stats.constructor_prepared_certificates += 1;
+        if self.sealed_input_cell != Some(cell)
+            || self.sealed_generation != Some(self.stats.unions)
+            || !self.dirty_facts[table].is_empty() {
+            return Ok(None);
+        }
+        self.stats.constructor_prepared_liveness_checks += 1;
+        if self.receipt_forwards.contains_key(&Dependency::Fact(witness)) { return Ok(None); }
+        let Some(frame) = self.cells.get(&witness.cell) else { return Ok(None); };
+        let Some(state) = frame.facts.get(&witness.op).filter(|s| !s.hidden) else { return Ok(None); };
+        let (actual, args, result) = match &self.program.templates[frame.template].ops[witness.op as usize] {
+            Op::Let(dst, Call::Table(t), args) => (*t, args, Arg::Slot(*dst)),
+            Op::Set(t, args, value) => (*t, args, value.clone()),
+            _ => return Ok(None),
+        };
+        if actual != table { return Ok(None); }
+        // Match fact()'s precedence without materializing its key columns.
+        let value = if let Some(stored) = self.stable_node(witness) {
+            self.read_stable_column(stored, args.len())?
+        } else if let Some((_, values)) = &state.decoded {
+            values.last().expect("constructor result").clone()
+        } else {
+            self.argument_in(witness.cell, frame, &result)?
+        };
+        let point = Point { value, hidden: false, epoch: state.epoch, witness: Dependency::Fact(witness) };
+        self.stats.constructor_prepared_checks += 1;
+        self.stats.constructor_prepared_accepted += 1;
+        self.stats.constructor_prepared_sealed += 1;
+        self.stats.constructor_prepared_result_reads += 1;
+        self.stats.constructor_prepared_key_fields_avoided += args.len() as u64;
+        Ok(Some(point))
+    }
     /// A prepared witness is evidence for this one source lookup, never an
     /// assigned Eq value. Invalid evidence uses the very same current key.
     pub(crate) fn lookup_prepared_constructor(&mut self, table: usize, key: &[Value],
@@ -1818,6 +1868,15 @@ impl Graph {
         witness: Option<FactRef>,
     ) -> Result<Value> {
         self.stats.constructor_requests += 1;
+        #[cfg(feature = "sparse-cells")]
+        if let Some(witness) = witness
+            && let Some(point) = self.sealed_constructor_result(cell, t, witness)? {
+            if let Some(receipt) = receipt { *receipt = Some(point.witness); }
+            if let Some(visible) = visible { *visible = true; }
+            self.stats.constructor_reused += 1;
+            self.rhs_frame_mut(cell).unwrap().values.insert(dst, point.value.clone());
+            return Ok(point.value);
+        }
         let key = self.inline_arguments(cell, aa)?;
         let row = self.lookup_prepared_constructor(t, &key, witness)?;
         if let Some(row) = row {

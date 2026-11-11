@@ -3204,11 +3204,11 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v1",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v2",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),
             "inline_evidence_bytes":std::mem::size_of::<crate::cell::constructor_prepare::Prepared>(),
-            "scope":"one input-ready actual witness; validated at the original constructor; no speculative Eq slot"}); }
+            "scope":"one input-ready actual witness; unchanged Run certificate plus live original result, otherwise exact source validation; no speculative Eq slot"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

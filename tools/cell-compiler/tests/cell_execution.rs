@@ -78,6 +78,9 @@ fn prepared_constructor_witnesses_replace_source_lookups_in_both_execution_paths
             assert_eq!(prep["hits"], 64);
             assert_eq!(candidate.graph.stats.constructor_prepared_accepted, 64);
             assert_eq!(candidate.graph.stats.constructor_prepared_rejected, 0);
+            assert_eq!(candidate.graph.stats.constructor_prepared_sealed, 64);
+            assert_eq!(candidate.graph.stats.constructor_prepared_fields, 0);
+            assert_eq!(candidate.graph.stats.constructor_prepared_key_fields_avoided, 128);
             assert_eq!(candidate.graph.key_lookup_calls.get() - 64,
                 control.graph.key_lookup_calls.get() - 64, "one source lookup removed per accepted witness");
             assert_eq!(candidate.graph.stats.rhs_frames_avoided, control.graph.stats.rhs_frames_avoided,

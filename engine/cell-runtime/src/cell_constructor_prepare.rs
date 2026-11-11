@@ -73,6 +73,42 @@ mod tests {
             else { assert_eq!(result,old,"{change}"); }
         }
     }
+
+    #[test]
+    fn run_certificate_removes_key_reads_but_cannot_survive_union_or_replace_liveness() {
+        for change in ["unchanged", "delete", "hide", "union"] {
+            let mut g = graph();
+            let producer = g.linked_frame(0,BTreeMap::from([(0,Value::Eq(9))]),None).unwrap();
+            let old = g.construct(producer,0,0,&[Arg::Slot(0)],1).unwrap();
+            g.repair().unwrap(); g.changes.clear();
+            let generation = g.stats.unions;
+            let mut values = Slots::with_capacity(2); values.insert(0,Value::Eq(9));
+            let mut instance = Instance::matched(values,QueryFacts::None,0);
+            Plan::derive(&g.program,0).unwrap().prepare(&mut instance,
+                g.query_reads(&[],&mut 0).as_ref(), &mut Default::default(),
+                &mut Default::default(), &mut Counts::default());
+            let witness = instance.constructor.take().unwrap();
+            g.epoch = 1;
+            match change {
+                "delete" => { assert!(g.hide(0,&[Value::Eq(9)],true).unwrap()); }
+                "hide" => { assert!(g.hide(0,&[Value::Eq(9)],false).unwrap()); }
+                "union" => { g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap(); g.repair().unwrap(); }
+                _ => (),
+            }
+            // Carry the original snapshot certificate, never reissue one using
+            // the current graph generation after earlier source effects.
+            g.sealed_generation = Some(generation);
+            let cell = g.begin_transient(0,instance.values,None).unwrap();
+            let reads = g.key_lookup_calls.get();
+            let result = g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness).unwrap();
+            assert_eq!(g.stats.constructor_prepared_certificates,1,"{change}");
+            assert_eq!(g.stats.constructor_prepared_sealed,u64::from(change == "unchanged"),"{change}");
+            assert_eq!(g.stats.constructor_prepared_key_fields_avoided,u64::from(change == "unchanged"));
+            assert_eq!(g.stats.constructor_prepared_fields,u64::from(change == "union"));
+            assert_eq!(g.key_lookup_calls.get()-reads,u64::from(matches!(change,"delete"|"hide")));
+            if change == "delete" { assert_ne!(result,old); } else { assert_eq!(result,old); }
+        }
+    }
 }
 #[derive(Debug, Default)]
 pub(crate) enum Prepared {

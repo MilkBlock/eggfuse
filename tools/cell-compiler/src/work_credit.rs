@@ -81,13 +81,14 @@ impl Work {
             };
             work.insert(format!("stats/{field}"), value);
         }
-        // Constructor preparation replaces a source lookup only after exact
-        // validation. All speculative lookups already enter key_lookup_calls;
+        // Constructor preparation replaces a source lookup only after checked
+        // evidence. All speculative lookups already enter key_lookup_calls;
         // any required decoding remains in fact_decode_calls. Cached-row
         // validation pays its check and field counters. Outcomes earn no credit.
         let constructor_preparation = match report["cell_execution"]["constructor_preparation"].get("schema") {
-            None => false,
-            Some(J::String(v)) if v == "cell-constructor-preparation/v1" => true,
+            None => 0,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v1" => 1,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v2" => 2,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -96,13 +97,22 @@ impl Work {
         ] {
             for field in fields {
                 let key = format!("{group}/{field}");
-                let enabled = constructor_preparation && (group == "stats" || report["query_workers"]["enabled"] == true);
+                let enabled = constructor_preparation > 0 && (group == "stats" || report["query_workers"]["enabled"] == true);
                 let value = if enabled {
                     report.pointer(&format!("/{key}")).and_then(J::as_u64)
                         .ok_or_else(||format!("missing constructor preparation work {key}"))?
                 } else { 0 };
                 work.insert(key, value);
             }
+        }
+        // Charge certificate and lifetime probes, and the new result-only read.
+        // Sealed hits and omitted key fields are outcomes, not extra credit.
+        for field in ["constructor_prepared_certificates", "constructor_prepared_liveness_checks", "constructor_prepared_result_reads"] {
+            let key = format!("stats/{field}");
+            let value = if constructor_preparation >= 2 {
+                report["stats"][field].as_u64().ok_or_else(||format!("missing constructor preparation work {key}"))?
+            } else { 0 };
+            work.insert(key, value);
         }
         // Union requests are already charged above. Charge only the new direct
         // operand acquisition here, including actual result-row access; neither
@@ -524,6 +534,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
     for key in ["stats/constructor_prepared_checks", "stats/constructor_prepared_fields",
+        "stats/constructor_prepared_certificates", "stats/constructor_prepared_liveness_checks", "stats/constructor_prepared_result_reads",
         "query_workers/stats/execution/constructor/attempts", "query_workers/stats/execution/constructor/key_fields",
         "query_workers/stats/execution/constructor/key_spills", "query_workers/stats/execution/constructor/result_writes"] {
         let mut changed = report.clone();

@@ -171,6 +171,16 @@ overall objective complete until all applicable items above are proven.
   uncalibrated work increase. This bounded takeover remains opt-in; compiler
   selection/validation, independent parked scheduling and useful throughput
   improvement remain necessary. It is not completion of the overall goal.
+- Prepared constructor results now use the existing source-Run union certificate
+  and original-witness lifecycle checks to bypass source key reconstruction and
+  comparison; see [certificate continuation](../benchmarks/cell-constructor-certificate/README.md).
+  The actual Raytrace run replaces 1,027,684 field comparisons with result-only
+  access for 556,868 witnesses; source lookup counts and all logical effects are
+  unchanged. Invalid certificates/receipts retain exact validation and fallback.
+  No instance or compiled-plan storage is added. New certificate/lifecycle work
+  is charged; the conservative equal-weight score does not improve, and no
+  speedup is established. This reduces the contents of an ordered boundary but
+  does not yet independently schedule parked Cells or parallelize shared effects.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

@@ -1,0 +1,82 @@
+{
+  "scope": "standalone Cell CPU; work and semantic evidence, not timing",
+  "control_commit": "bde30d99",
+  "runtime_sha256": "9213af540200f57b5cc2f79bd8b860db9a8dc28d8aba4e2cb2bbdfdd33b4a071",
+  "control_runtime_sha256": "555a97f04af410da223df333a60f95d76d9f087f62d35bcaa92b7760f702e943",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "unchanged_prior_graph_work_except_validation_fields": true,
+      "certificate_work": {
+        "constructor_prepared_certificates": 2874,
+        "constructor_prepared_liveness_checks": 2874,
+        "constructor_prepared_result_reads": 2874,
+        "constructor_prepared_sealed": 2874,
+        "constructor_prepared_key_fields_avoided": 5250
+      },
+      "validation_fields": [
+        5250,
+        0
+      ],
+      "speculative_lookups": 5117,
+      "total_key_lookups": 14478,
+      "source_witnesses_accepted": 2874,
+      "source_witnesses_rejected": 0,
+      "fact_decodes": [
+        1890,
+        1890
+      ],
+      "decoded_fields": [
+        5859,
+        5859
+      ],
+      "instance_header_bytes": 144,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": 433944,
+      "net_saved_uncalibrated_operations": -3372,
+      "work_ledger_sha256": "bbecd39a12cc2af416708f23382ebdfbbe95090a1d0d68ce7f0afba94b15619c"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "unchanged_prior_graph_work_except_validation_fields": true,
+      "certificate_work": {
+        "constructor_prepared_certificates": 557955,
+        "constructor_prepared_liveness_checks": 557955,
+        "constructor_prepared_result_reads": 556868,
+        "constructor_prepared_sealed": 556868,
+        "constructor_prepared_key_fields_avoided": 1027684
+      },
+      "validation_fields": [
+        1027684,
+        0
+      ],
+      "speculative_lookups": 913319,
+      "total_key_lookups": 4050662,
+      "source_witnesses_accepted": 556868,
+      "source_witnesses_rejected": 1087,
+      "fact_decodes": [
+        386247,
+        386247
+      ],
+      "decoded_fields": [
+        1179030,
+        1179030
+      ],
+      "instance_header_bytes": 144,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": 2360968,
+      "net_saved_uncalibrated_operations": -645094,
+      "work_ledger_sha256": "88b982c5edeb3aa8c21d76a1fda810f36ec98e47d0f2a0d144594e90c170abbe"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

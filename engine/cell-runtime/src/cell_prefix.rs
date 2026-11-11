@@ -104,15 +104,26 @@ impl Graph {
                 Op::Let(_, Call::Table(t), args) | Op::Set(t, args, _) => (*t, args),
                 _ => return Err("unexpected operation in Cell constructor prefix".into()),
             };
+            #[cfg(feature = "sparse-cells")]
+            let witness = prepared.as_mut().filter(|(position,_)| *position == op).and_then(|(_,fact)| fact.take());
+            #[cfg(not(feature = "sparse-cells"))]
+            let witness = None;
+            #[cfg(feature = "sparse-cells")]
+            if let Some(witness) = witness
+                && let Some(point) = self.sealed_constructor_result(cell, table, witness)? {
+                let Op::Let(dst, ..) = instruction else { unreachable!("checked prepared constructor") };
+                self.stats.constructor_requests += 1;
+                frame.values.insert(*dst, point.value);
+                self.stats.constructor_reused += 1;
+                prefix.reused();
+                if P::RECORD_RECEIPTS { receipts.record(op, point.witness); }
+                continue;
+            }
             let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, args)?;
             if matches!(instruction, Op::Let(..)) { self.stats.constructor_requests += 1; }
             let assigned = if let Op::Set(_, _, v) = instruction {
                 Some(self.argument_in(cell, &frame, v)?)
             } else { None };
-            #[cfg(feature = "sparse-cells")]
-            let witness = prepared.as_mut().filter(|(position,_)| *position == op).and_then(|(_,fact)| fact.take());
-            #[cfg(not(feature = "sparse-cells"))]
-            let witness = None;
             if let Some(row) = self.lookup_prepared_constructor(table, &key, witness)? {
                 let value = row.values.last().unwrap();
                 match instruction {
