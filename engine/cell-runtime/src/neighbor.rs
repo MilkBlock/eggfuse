@@ -183,6 +183,12 @@ struct AbsorptionStats {
     fresh_constructor_fallbacks: u64,
     groups_absorbed: u64,
     matches_absorbed: u64,
+    single_candidates: u64,
+    single_checks: u64,
+    single_output_probes: u64,
+    single_absorbed: u64,
+    single_missing_outputs: u64,
+    single_fresh_fallbacks: u64,
     pending: Vec<usize>,
 }
 #[derive(Default)]
@@ -260,13 +266,8 @@ impl Context {
     #[cfg(feature = "cell-absorption")]
     pub(crate) fn absorbs(&mut self, g: &Graph, rid: usize, pivot: usize, seed: &Row,
         watermark: u64, table: usize, domain: &Rc<Vec<Dependency>>) -> bool {
-        if !self.absorption_enabled { return false; }
-        let Some(plan) = self.absorption_plans[rid] else { return false; };
-        if pivot != plan.pivot || table != plan.structure || seed.table != plan.attribute
-            || seed.hidden || seed.epoch < watermark || g.has_visibility_changes(plan.attribute) {
-            return false;
-        }
-        let [key @ Value::Eq(key_id), Value::Int(candidate)] = seed.values.as_ref() else { return false; };
+        let Some((plan, key_id, candidate)) = self.absorption_seed(g, rid, pivot, seed, watermark, table) else { return false; };
+        let key = Value::Eq(key_id);
         let Some(groups) = self.groups.get_mut(&table).filter(|s| s.version == g.query_versions[table]) else { return false; };
         let Some(group) = groups.by_domain.get_mut(&(Rc::as_ptr(domain) as usize)) else { return false; };
         let stats = &mut self.absorption_stats;
@@ -278,19 +279,19 @@ impl Context {
             return false;
         }
         let upper = if let Condition::Upper { rule, key, value } = group.absorption
-            && rule == rid && key == *key_id {
+            && rule == rid && key == key_id {
             stats.reused_bounds += 1;
             value
         } else {
             if let Condition::Rejected { rule, key, output } = group.absorption
-                && rule == rid && key == *key_id {
+                && rule == rid && key == key_id {
                 stats.rejection_reads += 1;
                 // Borrow the actual prior lookup result, without rebuilding a
                 // key or finding its row again. Even a stale rejection merely
                 // retains ordinary matching; only the full scan below proves
                 // an absorption. Missing/retired results must allow a retry.
                 if g.absorption_rejection(plan.attribute, output)
-                    .is_some_and(|value| value > *candidate) {
+                    .is_some_and(|value| value > candidate) {
                     stats.rejection_hits += 1;
                     return false;
                 }
@@ -299,24 +300,24 @@ impl Context {
             for row in group.rows.iter() {
                 // Candidate domains can be supersets. Cache a bound only for
                 // an exact one-key domain, so its length is the match count.
-                if row.values.get(plan.input_column) != Some(key) { return false; }
+                if row.values.get(plan.input_column) != Some(&key) { return false; }
                 stats.output_probes += 1;
                 let Some((output, value)) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
                     stats.missing_outputs += 1;
                     return false;
                 };
-                if value > *candidate {
+                if value > candidate {
                     stats.bound_rejections += 1;
-                    group.absorption = Condition::Rejected { rule: rid, key: *key_id, output };
+                    group.absorption = Condition::Rejected { rule: rid, key: key_id, output };
                     return false;
                 }
                 upper = upper.max(value);
             }
             stats.bound_builds += 1;
-            group.absorption = Condition::Upper { rule: rid, key: *key_id, value: upper };
+            group.absorption = Condition::Upper { rule: rid, key: key_id, value: upper };
             upper
         };
-        if *candidate < upper {
+        if candidate < upper {
             // A smaller old bound is still valid; refreshing is optional and
             // charged. Do it only on a later visit, not twice in this query.
             group.absorption = Condition::Empty;
@@ -325,6 +326,45 @@ impl Context {
         stats.groups_absorbed += 1;
         stats.matches_absorbed += group.rows.len() as u64;
         stats.pending[rid] += group.rows.len();
+        true
+    }
+    #[cfg(feature = "cell-absorption")]
+    fn absorption_seed(&self, g: &Graph, rid: usize, pivot: usize, seed: &Row,
+        watermark: u64, table: usize) -> Option<(Absorption, u64, i64)> {
+        if !self.absorption_enabled { return None; }
+        let plan = self.absorption_plans[rid]?;
+        if pivot != plan.pivot || table != plan.structure || seed.table != plan.attribute
+            || seed.hidden || seed.epoch < watermark || g.has_visibility_changes(plan.attribute) {
+            return None;
+        }
+        let [Value::Eq(key), Value::Int(candidate)] = seed.values.as_ref() else { return None; };
+        Some((plan, *key, *candidate))
+    }
+    /// The matcher has one actual constructor candidate and has checked all of
+    /// its fields. It need not allocate a cached Neighborhood or a binding to
+    /// prove this single permanent min write is already absorbed at Run start.
+    #[cfg(feature = "cell-absorption")]
+    pub(crate) fn absorbs_single(&mut self, g: &Graph, rid: usize, pivot: usize,
+        seed: &Row, watermark: u64, row: &Row) -> bool {
+        if !self.absorption_enabled { return false; }
+        self.absorption_stats.single_candidates += 1;
+        let Some((plan, key, candidate)) = self.absorption_seed(g, rid, pivot, seed, watermark, row.table) else { return false; };
+        if row.hidden || row.values.get(plan.input_column) != Some(&Value::Eq(key)) { return false; }
+        let stats = &mut self.absorption_stats;
+        stats.single_checks += 1;
+        if row.epoch >= watermark {
+            stats.single_fresh_fallbacks += 1;
+            return false;
+        }
+        stats.single_output_probes += 1;
+        let Some((_, value)) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
+            stats.single_missing_outputs += 1;
+            return false;
+        };
+        if value > candidate { return false; }
+        stats.single_absorbed += 1;
+        stats.matches_absorbed += 1;
+        stats.pending[rid] += 1;
         true
     }
     #[cfg(feature = "cell-absorption")]

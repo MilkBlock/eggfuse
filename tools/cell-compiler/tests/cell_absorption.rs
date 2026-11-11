@@ -64,6 +64,42 @@ fn completed_min_domains_survive_scalar_changes_and_reopen_on_structure_changes(
 }
 
 #[test]
+fn singleton_absorption_keeps_later_scalar_updates_and_consumers() {
+    let source = r#"
+        (datatype E (N) (Get E i64) (Seen E i64))
+        (function Cost (E) i64 :merge (min old new))
+        (ruleset propagate) (ruleset twenty) (ruleset two) (ruleset read)
+        (rule ((= g (Get x i)) (= n (Cost x))) ((set (Cost g) n)) :ruleset propagate)
+        (rule ((= x (N))) ((set (Cost x) 20)) :ruleset twenty)
+        (rule ((= x (N))) ((set (Cost x) 2)) :ruleset two)
+        (rule ((= g (Get x i)) (= n (Cost g))) ((Seen g n)) :ruleset read)
+        (set (Cost (N)) 30) (set (Cost (Get (N) 0)) 7)
+        (run-schedule (seq (run propagate) (run twenty) (run propagate)
+            (run read) (run two) (run propagate) (run read)))
+        (check (= (Cost (Get (N) 0)) 2) (Seen (Get (N) 0) 7) (Seen (Get (N) 0) 2))
+    "#;
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    let before = run(source, false, 0);
+    for workers in [0,4] {
+        let after = run(source, true, workers);
+        assert_eq!(before.snapshots, after.snapshots);
+        assert_eq!(before.steps.len(), after.steps.len());
+        for (a,b) in before.steps.iter().zip(&after.steps) {
+            for key in ["ordinal", "ruleset", "path", "iterations", "epoch", "changed", "logical_matches"] {
+                assert_eq!(a[key],b[key],"{key}");
+            }
+        }
+        let report = after.report();
+        let stats = &report["neighbor_context"]["absorption"]["stats"];
+        assert_eq!(stats["single_absorbed"],1,"{stats}");
+        assert_eq!(stats["single_output_probes"],2,"the later lower input must still execute");
+        assert_eq!(stats["groups_absorbed"],0,"singletons must not create a domain cache");
+        assert_eq!(before.graph.stats.bindings-after.graph.stats.bindings,1);
+        assert_eq!(before.graph.stats.function_updates,after.graph.stats.function_updates);
+    }
+}
+
+#[test]
 fn deletable_outputs_and_ordered_merges_have_no_absorption_proof() {
     for source in [
         SOURCE.replace(":merge (min old new)", ":merge new").replace("(check (= (Cost (Get (N 0) 0)) 1)", "(check (= (Cost (Get (N 0) 0)) 2)"),

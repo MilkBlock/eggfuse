@@ -7,6 +7,8 @@ change, general sparsity proof, or 2× result.
 
 The [rejection-reuse follow-up](#reuse-the-actual-rejecting-output) below reduces
 the guard's acquisition cost without increasing its takeover scope or storage.
+The subsequent [singleton takeover](#single-constructor-domains) covers local
+queries that do not need a Neighborhood cache at all.
 
 ## Opportunity and completed takeover
 
@@ -234,3 +236,87 @@ python3 benchmarks/cell-absorption-guard/collect_rejections.py ROOT RESULTS.json
 [rejections.json](rejections.json) records input/output hashes and both cost
 classes. This remains opt-in; there is no new timing campaign, automatic Bake
 credit, global sparsity claim, or 2× result.
+
+## Single-constructor domains
+
+Control: `5102adda`. Existing Neighborhoods intentionally exclude one-candidate
+domains. The same Cell definition proves absorption for these queries, without
+creating a cache just to make them eligible. A shared admission helper now
+supplies both the cached-group and singleton paths from the existing typed
+query and pure min write.
+
+After the ordinary matcher has decoded the sole constructor candidate, checked
+its fields, visibility, and delta ownership, the new guard reads the current
+output. The constructor must precede the rule watermark; new constructors
+retain ordinary winner selection. If the permanent min output already absorbs
+the input, no binding, RHS, completion, or new producer publication is needed.
+Absent targets and values requiring an update retain the original execution.
+The proof remains valid if other RHSs lower the output later in the Run.
+
+There is no new per-instance state, Neighborhood, input copy, or subscription.
+Six scalar diagnostic counters add 48 bytes per Context, not per match.
+The old group lookup is also bypassed for domains of length zero or one.
+As before, logical matches include proven omitted instances, and unused Cell
+identity positions preserve later constructor numbering. Neither is a mutation.
+Fully bound constructor point queries and mixed multi-constructor domains remain
+outside this new path. Scoped completion is still excluded.
+
+| Additional work / saving relative to `5102adda` | sum-bits | Raytrace first 1,280 Runs | Complete Raytrace |
+|---|---:|---:|---:|
+| Singleton guard dispatches | 122 | 7,804 | 962,906 |
+| Eligible singleton checks | 45 | 2,957 | 302,599 |
+| Fresh-constructor fallbacks | 4 | 128 | 330 |
+| Output key probes | 41 | 2,829 | 302,269 |
+| Bindings and corresponding writes/completions omitted | 41 | 2,794 | 302,114 |
+| Absent-output fallbacks | 0 | 35 | 53 |
+| Existing outputs that require a write | 0 | 0 | 102 |
+| Net additional target lookups | 0 | 35 | 155 |
+| Allocation calls removed | 52 | 2,796 | 302,700 |
+| Cumulative requested bytes removed | 17,616 | 1,639,872 | 168,393,490 |
+
+The net lookup row subtracts one ordinary RHS target lookup per omitted write
+from the guard's new output probes. It does not subtract dispatch, comparison,
+or field-validation costs. The unchanged `key_lookup_calls` query counter does
+not include these RHS/guard target reads. The majority of singleton dispatches
+do not have the admitted min-copy Cell shape and still cost an eligibility test.
+
+Complete Raytrace now omits **509,296** executions relative to the original
+no-absorption control: 207,182 from closed groups plus 302,114 singletons. Existing
+group checks, probes, and rejections are unchanged. In total the guard performs
+345,327 output key probes and 100,816 direct rejecting-result reads. This does
+not prove an execution-time gain.
+
+Against `5102adda`, Entry publication writes fall 2,098,933 → 2,016,959 and slot
+probes 2,742,970 → 2,440,854. The latter includes two avoided forwarding probes;
+not every omitted application would have won publication. Resumed steps remain
+577,650. Count each removed application once, not once per affected counter.
+
+All three complete/prefix exported states, logical Run signatures and actual
+updates agree with their controls. The new sum-bits run actually exercises
+41 takeovers and passes the unchanged native semantic acceptance script.
+For the 14 Raytrace windows, states and ordered effective writes agree, and
+remaining matches are an ordered subsequence after removing source ordinal.
+Every one of the additional **16,823** omitted matches has exactly one visible
+Get neighbor and an already-absorbing output at Run start. Only reviewed rule
+153 can be omitted in this frozen workload check; the runtime has no such
+workload-specific rule number. Raytrace validation is relative, not an
+independent native contract.
+
+98 runtime unit tests and 50 selected compiler integration tests pass. The new
+fixture checks serial/four-worker source-Run states, a later lower input that
+must still update the singleton, and later consumers of both values. Existing
+tests cover structural changes, union, deletion/recreation, and rejected merge
+contracts. README compile/run/bench (repeat 1) and no-default-features checks
+are command smokes only.
+
+Reproduce with the same commands, fresh paths, and binaries above. Saved data
+resides in `out/cell-absorption-singletons`, alongside the preceding
+`out/cell-absorption-rejection` control. Recheck those saved artifacts with:
+
+```sh
+python3 benchmarks/cell-absorption-guard/collect_singletons.py ROOT RESULTS.json
+```
+
+[singletons.json](singletons.json) retains costs, actual publication differences,
+source-window proofs, and artifact hashes. The feature remains opt-in pending
+the normal-binary throughput checkpoint. No global sparsity or 2× claim follows.

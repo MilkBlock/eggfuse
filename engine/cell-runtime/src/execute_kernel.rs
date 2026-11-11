@@ -256,7 +256,7 @@ impl Frame {
                     crate::neighbor::Access::Direct
                 };
                 #[cfg(feature = "cell-absorption")]
-                if LOCAL && exec.completion.is_none()
+                if LOCAL && refs.len() > 1 && exec.completion.is_none()
                     && exec.neighbor.absorbs(&exec.graph, rid, k.pivot, seed,
                         exec.watermarks[rid], t, &refs) {
                     return Ok(());
@@ -273,6 +273,12 @@ impl Frame {
                     if !expansion.checks.iter().all(|(col, arg)| {
                         arg.agrees(&row.values[*col], &exec.graph, |col| &seed.values[col], &self.results, Some((position, row)))
                     }) { return Ok(()); }
+                    #[cfg(feature = "cell-absorption")]
+                    if LOCAL && refs.len() == 1 && exec.completion.is_none()
+                        && exec.neighbor.absorbs_single(&exec.graph, rid, k.pivot, seed,
+                            exec.watermarks[rid], row) {
+                        return Ok(());
+                    }
                     self.witnesses[ins.atom] = Some(w);
                     self.step::<LOCAL>(
                         exec,
