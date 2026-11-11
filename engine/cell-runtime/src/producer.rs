@@ -20,11 +20,17 @@ pub struct Context {
 }
 impl Graph {
     pub(super) fn retain_reference(&mut self, f: FactRef) {
-        *self.parent_users.entry(f.cell).or_default() += 1;
+        self.retain_cell(f.cell);
     }
     pub(super) fn release_reference(&mut self, f: FactRef) {
-        *self.parent_users.get_mut(&f.cell).expect("retained parent") -= 1;
-        self.garbage.insert(f.cell);
+        self.release_cell(f.cell);
+    }
+    pub(super) fn retain_cell(&mut self, cell: u32) {
+        *self.parent_users.entry(cell).or_default() += 1;
+    }
+    pub(super) fn release_cell(&mut self, cell: u32) {
+        *self.parent_users.get_mut(&cell).expect("retained Cell") -= 1;
+        self.garbage.insert(cell);
     }
     pub fn continuation_context(&self, w: Dependency) -> Option<Context> {
         let actual = self.origin(w)?;

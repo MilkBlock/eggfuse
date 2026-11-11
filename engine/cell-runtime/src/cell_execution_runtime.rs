@@ -160,23 +160,32 @@ impl Graph {
         pool: Option<&rayon::ThreadPool>,
         grain: usize,
     ) -> Yield {
-        let (plan, template, frame) = self.execution_parts(rule, cell);
-        if plan.remaining_local(frame.completed_prefix) >= grain
+        let position = self.rhs_frame(cell).expect("executing Cell").completed_prefix;
+        if self.program.executions[rule].remaining_local(position) >= grain
             && let Some(pool) = pool
         {
             // The source-ordered owner cannot commit the next effect until
             // this frontier returns. Charge that wait; this is not a claim of
             // concurrent graph writes or removed scheduling barriers.
             let clock = Instant::now();
+            let mut suspended = self.suspend_rhs(cell);
+            let plan = &self.program.executions[rule];
+            let template = &self.program.templates[self.program.rules[rule].template];
+            let frame = match &mut suspended.private {
+                Some(frame) => frame,
+                None => self.cells.get_mut(&cell).expect("retained public Cell"),
+            };
             let mut result = pool.install(|| {
                 debug_assert!(rayon::current_thread_index().is_some());
                 plan.resume(template, frame)
             });
+            self.restore_rhs(suspended);
             result.counts.worker_segments += 1;
             result.counts.worker_operations += result.counts.local_operations;
             result.counts.worker_wait_ns += clock.elapsed().as_nanos() as u64;
             result
         } else {
+            let (plan, template, frame) = self.execution_parts(rule, cell);
             plan.resume(template, frame)
         }
     }
@@ -265,6 +274,10 @@ mod tests {
         let next = g.resume_cell(0, cell, Some(&pool), 1);
         assert_eq!(next.stop, Stop::Boundary(BoundaryKind::Write));
         assert_eq!(next.counts.worker_operations, 2);
+        assert_eq!(g.stats.rhs_context_suspends, 1);
+        assert_eq!(g.stats.rhs_context_resumes, 1);
+        assert_eq!(g.stats.rhs_suspend_private, 1);
+        assert_eq!(g.stats.rhs_suspend_promotions, 0);
         assert_eq!(next.counts.prepared_operations_consumed, 1);
         assert_eq!(next.counts.slot_growths, 0);
         assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix, 4);

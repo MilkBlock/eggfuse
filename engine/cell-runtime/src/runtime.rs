@@ -2074,7 +2074,7 @@ impl Executor {
     ) -> Result<()> {
         if self.graph.needs_ownership_entry(rid) {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
-            self.graph.begin_owner_entry(rid,&anchors);
+            self.graph.begin_owner_entry(rid,anchors);
         }
         let result = (|| {
             let Some(mut execution) = self.start_cell_execution(rid, b,
@@ -3178,6 +3178,10 @@ impl Executor {
                 "rhs_owner_bytes":std::mem::size_of::<owned_cell::Execution>(),
                 "position_owner":"Cell.completed_prefix",
                 "worker_scope":"query and input-derived scalar results; original Run/effect/publication order"});
+        #[cfg(feature = "sparse-cells")]
+        { report["cell_execution"]["suspension"] = json!({"schema":"owned-rhs-context/v1",
+            "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
+            "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

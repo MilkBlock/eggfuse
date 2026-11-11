@@ -1,0 +1,226 @@
+{
+  "scope": "standalone Cell CPU; not native egglog performance",
+  "control_commit": "b2fb26f9",
+  "control_binary_commit": "9345194d",
+  "runtime_sha256": "f8e761908cff5d19f8f22cd0b5b48f955d7504999d7b46fa246602a2ba3f75ad",
+  "control_runtime_sha256": "b9408ec2daf2bf7705d3375a0ff32e6bb67f264665c3019365deea5aebb14ff4",
+  "limits": "Work and semantic regression only. These two workloads already have zero later scalar dispatches; targeted boundary-result tests exercise suspension. The production source-order driver still waits for a worker frontier.",
+  "workloads": {
+    "sum": {
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "before_report_sha256": "032f4c5af5496fc669f81090a9abc0636408f18d3732d2ccfe8ffa641cecf5f7",
+      "after_report_sha256": "bb11d2f35452e0a3facdaf5f7f7f28723ce3b2f11eca467fc0e3881a9dba9ddf",
+      "exact_final_state_ordered_run_summaries_and_checked_work": true,
+      "costs": {
+        "rhs_context_suspends": 0,
+        "rhs_context_resumes": 0,
+        "rhs_suspend_private": 0,
+        "rhs_suspend_public": 0,
+        "rhs_suspend_promotions": 0,
+        "rhs_suspend_holds": 0,
+        "rhs_suspend_releases": 0,
+        "rhs_suspend_invalidated": 0
+      },
+      "suspension": {
+        "context_bytes": 264,
+        "schema": "owned-rhs-context/v1",
+        "scope": "existing worker suffix dispatch; source-order driver still waits"
+      },
+      "ordinary_execution_header_bytes": 440,
+      "entry_applications": 0
+    },
+    "ray": {
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "before_report_sha256": "c76c65022d89fea08a712566b183a4e0630ac014860b8f7247efc5e424bf47ef",
+      "after_report_sha256": "5e17964aef34813b2b9e11c546fa79cf51594db22b12923b90a93bf42db75a8b",
+      "exact_final_state_ordered_run_summaries_and_checked_work": true,
+      "costs": {
+        "rhs_context_suspends": 0,
+        "rhs_context_resumes": 0,
+        "rhs_suspend_private": 0,
+        "rhs_suspend_public": 0,
+        "rhs_suspend_promotions": 0,
+        "rhs_suspend_holds": 0,
+        "rhs_suspend_releases": 0,
+        "rhs_suspend_invalidated": 0
+      },
+      "suspension": {
+        "context_bytes": 264,
+        "schema": "owned-rhs-context/v1",
+        "scope": "existing worker suffix dispatch; source-order driver still waits"
+      },
+      "ordinary_execution_header_bytes": 440,
+      "entry_applications": 0
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  },
+  "boundary_fixture": {
+    "log_sha256": "053ce5db6f26dd76d219ba86b0c4d1a3b79c9f411ad69e797b8118a180791b0a",
+    "samples": [
+      {
+        "prefix": "",
+        "workers": 2,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 64,
+        "public": 0,
+        "promotions": 0,
+        "holds": 0,
+        "releases": 0,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "",
+        "workers": 4,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 64,
+        "public": 0,
+        "promotions": 0,
+        "holds": 0,
+        "releases": 0,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "",
+        "workers": 2,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 64,
+        "public": 0,
+        "promotions": 0,
+        "holds": 0,
+        "releases": 0,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "",
+        "workers": 4,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 64,
+        "public": 0,
+        "promotions": 0,
+        "holds": 0,
+        "releases": 0,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(F x n)",
+        "workers": 2,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 0,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(F x n)",
+        "workers": 4,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 0,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(F x n)",
+        "workers": 2,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 0,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(F x n)",
+        "workers": 4,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 0,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(set (Input x) (+ n 100))",
+        "workers": 2,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 64,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(set (Input x) (+ n 100))",
+        "workers": 4,
+        "ownership": false,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 64,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(set (Input x) (+ n 100))",
+        "workers": 2,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 64,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      },
+      {
+        "prefix": "(set (Input x) (+ n 100))",
+        "workers": 4,
+        "ownership": true,
+        "suspends": 64,
+        "resumes": 64,
+        "private": 0,
+        "public": 64,
+        "promotions": 64,
+        "holds": 64,
+        "releases": 64,
+        "worker_operations": 64
+      }
+    ],
+    "scope": "native checks and disabled-runtime Run-state equality; not timing"
+  }
+}

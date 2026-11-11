@@ -153,6 +153,22 @@ mod point_results_test;
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Stats {
     #[serde(default)]
+    pub rhs_context_suspends: u64,
+    #[serde(default)]
+    pub rhs_context_resumes: u64,
+    #[serde(default)]
+    pub rhs_suspend_private: u64,
+    #[serde(default)]
+    pub rhs_suspend_public: u64,
+    #[serde(default)]
+    pub rhs_suspend_promotions: u64,
+    #[serde(default)]
+    pub rhs_suspend_holds: u64,
+    #[serde(default)]
+    pub rhs_suspend_releases: u64,
+    #[serde(default)]
+    pub rhs_suspend_invalidated: u64,
+    #[serde(default)]
     pub function_point_reads: u64,
     #[serde(default)]
     pub merge_program_calls: u64,
@@ -280,6 +296,9 @@ mod scalar_keys;
 #[cfg(feature = "sparse-cells")]
 #[path = "writer_frames.rs"]
 mod writer_frames;
+#[cfg(feature = "sparse-cells")]
+#[path = "rhs_ownership.rs"]
+pub(crate) mod rhs_ownership;
 pub struct Graph {
     #[cfg(feature = "sparse-cells")]
     pub(crate) sealed_generation: Option<u64>,

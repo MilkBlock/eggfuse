@@ -459,6 +459,13 @@ pub(super) struct Cursor {
     pub position: usize,
     pub fact: FactRef,
 }
+/// The evidence for the current source application. This moves with a suspended
+/// execution; it is not a second binding or a subscription to its producers.
+pub(crate) struct Entry {
+    pub rule: usize,
+    pub template: usize,
+    pub anchors: smallvec::SmallVec<[Option<Dependency>; 4]>,
+}
 pub(super) struct Runtime {
     pub components: crate::read_epoch::Slots<Option<Component>>,
     // Coordinator-only lifetime metadata. Guards never consult these counts.
@@ -467,9 +474,7 @@ pub(super) struct Runtime {
     pub shapes: Vec<Option<Arc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
-    pub entry_rule: Option<usize>,
-    pub anchors: smallvec::SmallVec<[Option<Dependency>; 4]>,
-    pub entry_template: Option<usize>,
+    pub entry: Option<Entry>,
     pub heap: Vec<Cursor>,
     pub columns: Vec<usize>,
 }
@@ -498,9 +503,7 @@ impl Runtime {
             shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),
             training: None,
-            entry_rule: None,
-            anchors: smallvec::SmallVec::new(),
-            entry_template: None,
+            entry: None,
             heap: vec![],
             columns: vec![],
         }
@@ -620,12 +623,11 @@ impl Graph {
             "records":records}),
         )
     }
-    pub(super) fn composition_entry(&mut self, rid: usize, anchors: &[Option<Dependency>]) {
+    pub(super) fn composition_entry(&mut self, rid: usize, anchors: smallvec::SmallVec<[Option<Dependency>; 4]>) {
         let Some(m) = &mut self.ownership else { return };
-        m.composition.entry_rule = Some(rid);
-        m.composition.anchors.clear();
-        m.composition.anchors.extend_from_slice(anchors);
-        m.composition.entry_template = Some(self.program.rules[rid].template);
+        debug_assert!(m.composition.entry.is_none());
+        m.composition.entry = Some(Entry { rule: rid,
+            template: self.program.rules[rid].template, anchors });
     }
     pub(super) fn ensure_composition_frame(&mut self, cell: u32) {
         let template = self.cells[&cell].template;
@@ -635,9 +637,10 @@ impl Graph {
             return;
         }
         let mut selected = None;
-        if m.composition.entry_template == Some(template) {
-            let rid = m.composition.entry_rule.unwrap();
-            for (entry, anchor) in m.composition.anchors.iter().copied().enumerate() {
+        if let Some(source) = &m.composition.entry
+            && source.template == template {
+            let rid = source.rule;
+            for (entry, anchor) in source.anchors.iter().copied().enumerate() {
                 m.stats.composition_entry_reads += 1;
                 let Some(Dependency::Fact(f)) = anchor else {
                     continue;

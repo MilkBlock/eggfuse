@@ -69,6 +69,18 @@ impl Work {
                 work.insert(key, value);
             }
         }
+        // Suspending is ownership work, not a saved source effect. Promotions
+        // already enter cells_created; private/public splits and invalidations
+        // are outcomes. Each lifecycle hold also pays for its later release.
+        for field in ["rhs_context_suspends", "rhs_context_resumes", "rhs_suspend_holds", "rhs_suspend_releases"] {
+            let value = match report["cell_execution"]["suspension"].get("schema") {
+                None => 0,
+                Some(J::String(v)) if v == "owned-rhs-context/v1" => report["stats"][field].as_u64()
+                    .ok_or_else(|| format!("missing Cell suspension work {field}"))?,
+                _ => return Err("unknown Cell suspension accounting".into()),
+            };
+            work.insert(format!("stats/{field}"), value);
+        }
         // Union requests are already charged above. Charge only the new direct
         // operand acquisition here, including actual result-row access; neither
         // covered Cells nor queued unions earn a second saved-operation credit.
@@ -488,6 +500,13 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
+    for field in ["rhs_context_suspends", "rhs_context_resumes", "rhs_suspend_holds", "rhs_suspend_releases"] {
+        let mut changed = report.clone();
+        changed["stats"][field] = json!(report["stats"][field].as_u64().unwrap() + 1);
+        assert_eq!(work.savings(&Work::read(&changed).unwrap()).0, -1);
+        changed["stats"].as_object_mut().unwrap().remove(field);
+        assert!(Work::read(&changed).unwrap_err().contains("suspension work"));
+    }
     for key in ["query_workers/matched/rule_checks", "query_workers/matched/header_growths",
         "query_workers/stats/execution/operations", "query_workers/stats/execution/slot_writes"] {
         let mut changed = report.clone();

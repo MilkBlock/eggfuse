@@ -145,11 +145,22 @@ overall objective complete until all applicable items above are proven.
   All samples and exact state/Run signatures are retained. Remaining scalar
   suffix dispatches are already zero in the observed work; extending useful
   worker computation and removing ordered RHS/boundary work remain necessary.
-- The graph's single `active_rhs`, writer-origin hint and sealed-input trust,
-  and the apply-scoped ownership Entry context still prevent independent parked
-  execution after shared effects. These owners must move together; changing
-  only the task queue is inadequate. Removing scalar dispatch and publication
-  arena borrowing does not establish concurrent shared effects or repair.
+- The graph-facing execution context now moves together across actual worker
+  suffix dispatch: private slots, writer hint, source epoch, input certificate
+  and ownership Entry; see [suspension checks](../benchmarks/cell-execution-suspension/README.md).
+  Already referenced frames remain graph-addressable with existing lifecycle
+  holds. Two private contexts can coexist, and parked public/parent frames
+  survive replacement, deletion and collection in targeted checks. The source
+  driver still waits; independently scheduling several executions is unfinished.
+  Public-frame worker borrows still exclude concurrent graph mutation. New
+  promotions/holds and context moves are charged, not claimed as saved work.
+- Native ordinary rule RHS prohibits mutable function lookups. A legal primitive
+  boundary fixture exercises the suspension protocol, while mutable-read
+  semantics are checked at the runtime instruction layer. Together with zero
+  scalar suffix dispatches on sum-bits/Raytrace, this points the next coverage
+  work toward constructor resolution and local completion. Removing scalar
+  dispatch, graph attachment and publication-arena borrowing alone does not
+  establish concurrent shared effects, repair or useful full-worker utilization.
 - The first [resumption timing checkpoint](../benchmarks/cell-execution-resume/README.md#timing-checkpoint)
   finds grain-1 worker dispatch regresses sum-bits / Raytrace inference medians
   by 21.9% / 12.9% against current four-worker execution with resumption disabled.

@@ -403,6 +403,45 @@ fn prepared_later_results_survive_union_and_publication_without_worker_round_tri
 }
 
 #[test]
+fn boundary_scalar_result_resumes_with_private_constructor_and_writer_owners() {
+    for prefix in ["", "(F x n)", "(set (Input x) (+ n 100))"] {
+        let source = format!(r#"{HEADER}
+(function Flag (E) bool :merge new)
+(rule ((Start x) (= n (Input x)))
+ ({prefix} (let a (bool-< n 1000)) (let b (and a true)) (F x (+ n 1)) (set (Flag x) b)) :ruleset step)
+{} (run-schedule (run step)) (check (= (Flag (N 2)) true))"#, initial());
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        for ownership in [false,true] {
+        let mut control = executor(&source,0);
+        if ownership { control.graph.use_cell_ownership().unwrap(); }
+        control.execute().unwrap();
+        for workers in [2,4] {
+            let mut candidate = executor(&source,workers);
+            if ownership { candidate.graph.use_cell_ownership().unwrap(); }
+            candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();
+            same(&control,&candidate);
+            let r = candidate.report();
+            let work = &r["cell_execution"]["runtime"]["stats"];
+            let s = &candidate.graph.stats;
+            assert!(s.rhs_context_suspends > 0, "fixture must exercise actual RHS dispatch: {prefix}");
+            assert_eq!(work["worker_segments"].as_u64().unwrap(),s.rhs_context_suspends);
+            assert_eq!(s.rhs_context_resumes,s.rhs_context_suspends);
+            assert_eq!(s.rhs_suspend_holds,s.rhs_suspend_releases);
+            if prefix.is_empty() { assert!(s.rhs_suspend_private > 0); }
+            else { assert!(s.rhs_suspend_public > 0); }
+            if prefix.starts_with("(set") { assert!(s.rhs_suspend_promotions > 0); }
+            println!("suspension {}",serde_json::json!({"prefix":prefix,"workers":workers,"ownership":ownership,
+                "suspends":s.rhs_context_suspends,"resumes":s.rhs_context_resumes,
+                "private":s.rhs_suspend_private,"public":s.rhs_suspend_public,
+                "promotions":s.rhs_suspend_promotions,"holds":s.rhs_suspend_holds,
+                "releases":s.rhs_suspend_releases,"worker_operations":work["worker_operations"]}));
+        }
+        }
+    }
+}
+
+#[test]
 fn a_worker_failure_after_a_shared_effect_preserves_the_exact_source_prefix() {
     for tail in [
         "(let b (/ a 0)) (set (Out x) b)",

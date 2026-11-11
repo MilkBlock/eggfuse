@@ -366,7 +366,7 @@ impl Graph {
         }
         Ok(())
     }
-    pub(crate) fn begin_owner_entry(&mut self, rid: usize, anchors: &[Option<Dependency>]) {
+    pub(crate) fn begin_owner_entry(&mut self, rid: usize, anchors: smallvec::SmallVec<[Option<Dependency>; 4]>) {
         if let Some(m) = &mut self.ownership {
             m.stats.marker_entries += 1;
         }
@@ -374,10 +374,19 @@ impl Graph {
     }
     pub(crate) fn end_owner_entry(&mut self) {
         if let Some(m) = &mut self.ownership {
-            m.composition.entry_rule = None;
-            m.composition.anchors.clear();
-            m.composition.entry_template = None;
+            m.composition.entry = None;
         }
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(super) fn take_owner_entry(&mut self) -> Option<composition::Entry> {
+        self.ownership.as_mut().and_then(|m| m.composition.entry.take())
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(super) fn restore_owner_entry(&mut self, entry: Option<composition::Entry>) {
+        if let Some(m) = &mut self.ownership {
+            assert!(m.composition.entry.is_none(), "finish or suspend the attached Entry first");
+            m.composition.entry = entry;
+        } else { assert!(entry.is_none(), "ownership runtime disappeared while an Entry was parked"); }
     }
     pub(super) fn owns_birth(&mut self, f: FactRef) -> bool {
         if self.ownership.is_none() {
