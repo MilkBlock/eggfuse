@@ -1732,9 +1732,9 @@
       "category": "E",
       "title": "Cell 输出 capture 与片段 publication",
       "activation": "非 audit_receipts；Cell 输出的 permanent、Entry-owned 前缀；成功 RHS 的非跳过关系结果直接封存，查询别名和可退役边界逐项处理",
-      "compile_fact": "共享 Cell Output 描述、源 Cell/内部 effect 顺序、permanent 与 Entry ownership 证明；原 static_sources/static_skip 证明实际 effect donor 必定被执行或有效 handoff 接管，保留槽位已是最终 Entry 发布来源；无需按实例记录消费者",
-      "replaces": "已覆盖输出的 direct-publication 哈希登记与边界转换、独立 FragmentPublication 包和表编号数组；Entry Pending 往返及重复 completion 存储已在上一轮删除；cell-span/v1 删除覆盖结果的逐输出来源读取和重复槽位登记，完成时只封存原 arena span；cell-results/v1 进一步删除完整覆盖输出的历史再次读取及存储，Entry 通过模板投影读取同一实际结果数组",
-      "live_obligations": "仅在合法发布边界投递；同一 Entry 必须选择源顺序最后的候选。收据 forwarding、存活与可见性、部分 scope 发布及世代仍需验证。 原始 RHS 历史须先捕获，查询别名补齐不得伪造已执行的 raw receipt。中止 RHS 不得封存；缺失见证保留原 key 回退。 共享路径只接管有全部导出的活跃状态、最多 32 个永久输出与 64 个历史端口；混合边界先读取原始收据，之后移动数组。发布掩码复用 arena 偏移，不清空历史槽；其余继续原路径。",
+      "compile_fact": "共享 Cell Output 描述、源 Cell/内部 effect 顺序、permanent 与 Entry ownership 证明；原 static_sources/static_skip 证明实际 effect donor 必定被执行或有效 handoff 接管，保留槽位已是最终 Entry 发布来源；无需按实例记录消费者 单个保留的函数输出可直接保存实际 Function receipt；生产者由同一 Completion 的状态给出，无需重复登记。",
+      "replaces": "已覆盖输出的 direct-publication 哈希登记与边界转换、独立 FragmentPublication 包和表编号数组；Entry Pending 往返及重复 completion 存储已在上一轮删除；cell-span/v1 删除覆盖结果的逐输出来源读取和重复槽位登记，完成时只封存原 arena span；cell-results/v1 进一步删除完整覆盖输出的历史再次读取及存储，Entry 通过模板投影读取同一实际结果数组 单个函数输出进一步省掉 arena 槽初始化、收据转存与读取/清空；实际发布保留。",
+      "live_obligations": "仅在合法发布边界投递；同一 Entry 必须选择源顺序最后的候选。收据 forwarding、存活与可见性、部分 scope 发布及世代仍需验证。 原始 RHS 历史须先捕获，查询别名补齐不得伪造已执行的 raw receipt。中止 RHS 不得封存；缺失见证保留原 key 回退。 共享路径只接管有全部导出的活跃状态、最多 32 个永久输出与 64 个历史端口；混合边界先读取原始收据，之后移动数组。输出来源区分 arena 偏移、history 掩码与 inline function index，不清空历史槽；其余继续原路径。",
       "sources": [
         "engine/cell-runtime/src/cell_effects.rs",
         "engine/cell-runtime/src/cell.rs",
@@ -1984,6 +1984,11 @@
             "source": "report",
             "pointer": "/stage_spine/completion_record_bytes",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/inline_function_reads",
+            "reduce": "value"
           }
         ],
         "coverage": [
@@ -2001,10 +2006,15 @@
             "source": "report",
             "pointer": "/stage_spine/stats/cell_output_sealed_receipts",
             "reduce": "value"
+          },
+          {
+            "source": "report",
+            "pointer": "/stage_spine/stats/inline_function_receipts",
+            "reduce": "value"
           }
         ]
       },
-      "gaps": "Cell effect 槽直接承担已覆盖输出；永久 Entry 由输出布局接管，删除/可见性及未知边界仍保留。Entry 先选择同批次胜者再验证；现在 Cell 布局还消除同一实际来源的较早发布，保留最后原 operation 及实际 donor。sum-bits 候选/Entry 探测 9027→8703，输出登记/读取/解析 8774→8450；实际发布、查询、历史与 Run 不变。仅 Eq 相等不能作为静态合并证明。当前等权账本本步节省 1666 项，相对混合输出前 3e622300 累计节省 746 项；这不是速度证据。未知边界、源 marker 物化、一般 Bake 组合及最终多线程验收仍未完成。 donor 槽直达再少 278 次补写，当前相对 3e622300 累计净少 1024 项。311a3ef8 五提交检查点推理相对直接前版配对快约 1.65%，但相对上次测速和历史配置的推理区间均跨持平，整体验收仍未建立。 闭合 miss 保留原效果帧，sum-bits effect_aborted_frames 58→0、槽初始化 12144→12028；RHS 真正中止仍会丢弃私有收据。没有新增实例历史或依赖列表。 808aadb3 按用户要求补测：sum-bits 推理中位数 24.646 ms，直接前版 311a3ef8 为 24.740 ms；配对比 0.991190 [0.979910,1.038960]，相对计数控制/历史配置的推理区间也跨 1。98 项等权工作节省没有建立速度收益或严格速度保持；这是 standalone Cell CPU，非 native egglog。 cell-span/v1 保留槽登记 8450→1484；最终槽读取/解析和历史数量不变。全量历史与结果槽尚未统一，跨 scope 依旧需要逐结果投递。登记覆盖不表示速度收益。 cell-results/v1 的查询捕获提前发生，新增资格检查、数组初始化和发布寻址必须收费；history_shared_slots 是覆盖，不是额外 credit。完成记录大小不变，发布后的历史 owner 与数组存储不变。Raytrace 128 Run 没有历史捕获，不能据此估计完整收益。 完成记录保持 184 字节；sum-bits 四线程 allocator 请求合计多 5 次、累计申请量多 1208 字节、峰值多 1434 字节。单次分配诊断不作速度结论。",
+      "gaps": "Cell effect 槽直接承担已覆盖输出；永久 Entry 由输出布局接管，删除/可见性及未知边界仍保留。Entry 先选择同批次胜者再验证；现在 Cell 布局还消除同一实际来源的较早发布，保留最后原 operation 及实际 donor。sum-bits 候选/Entry 探测 9027→8703，输出登记/读取/解析 8774→8450；实际发布、查询、历史与 Run 不变。仅 Eq 相等不能作为静态合并证明。当前等权账本本步节省 1666 项，相对混合输出前 3e622300 累计节省 746 项；这不是速度证据。未知边界、源 marker 物化、一般 Bake 组合及最终多线程验收仍未完成。 donor 槽直达再少 278 次补写，当前相对 3e622300 累计净少 1024 项。311a3ef8 五提交检查点推理相对直接前版配对快约 1.65%，但相对上次测速和历史配置的推理区间均跨持平，整体验收仍未建立。 闭合 miss 保留原效果帧，sum-bits effect_aborted_frames 58→0、槽初始化 12144→12028；RHS 真正中止仍会丢弃私有收据。没有新增实例历史或依赖列表。 808aadb3 按用户要求补测：sum-bits 推理中位数 24.646 ms，直接前版 311a3ef8 为 24.740 ms；配对比 0.991190 [0.979910,1.038960]，相对计数控制/历史配置的推理区间也跨 1。98 项等权工作节省没有建立速度收益或严格速度保持；这是 standalone Cell CPU，非 native egglog。 cell-span/v1 保留槽登记 8450→1484；最终槽读取/解析和历史数量不变。全量历史与结果槽尚未统一，跨 scope 依旧需要逐结果投递。登记覆盖不表示速度收益。 cell-results/v1 的查询捕获提前发生，新增资格检查、数组初始化和发布寻址必须收费；history_shared_slots 是覆盖，不是额外 credit。完成记录大小不变，发布后的历史 owner 与数组存储不变。Raytrace 128 Run 没有历史捕获，不能据此估计完整收益。 完成记录保持 184 字节；sum-bits 四线程 allocator 请求合计多 5 次、累计申请量多 1208 字节、峰值多 1434 字节。单次分配诊断不作速度结论。 b47330c8 后的单函数输出实验中，当前完成记录为 104 字节且未增加；sum-bits / Raytrace 1280 Run 分别免除 599 / 24332 次 arena 转存及对应读取，增加同数量的 inline 读取，所有发布、查询、history 与 Run 不变。此处多个数组指标对应同一批收据，不能重复算作免除发布；没有新测速结论。",
       "evidence": [
         "benchmarks/witness-prefix/design.md",
         "benchmarks/witness-prefix/normal/README.md",
@@ -2022,7 +2032,9 @@
         "benchmarks/cell-output-spans/README.md",
         "benchmarks/cell-output-spans/results.json",
         "benchmarks/cell-joint-results/README.md",
-        "benchmarks/cell-joint-results/results.json"
+        "benchmarks/cell-joint-results/results.json",
+        "benchmarks/cell-inline-function/README.md",
+        "benchmarks/cell-inline-function/results.json"
       ],
       "status": "已完成逐结果登记接管及合格 Cell 的 RHS/Entry/history 共享结果存储；sum-bits 共享 1379 个槽，等权相关工作净少 394 项，新增布局与分配另计；无完整速度结论",
       "introduced_in": "094fb2ed"

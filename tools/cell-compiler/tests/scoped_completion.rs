@@ -60,13 +60,16 @@ fn scoped_wait_leaves_unrelated_chain_pending_and_preserves_origin_epoch() {
     assert_eq!(scoped.witness_count(fa), 2);
     assert_eq!(scoped.witness_count(ga), 2);
     assert!(scoped.pending_completion_tasks() > 0);
-    // An independent source epoch can advance while A's facts retain their
-    // originating equality epoch. Completing A must not stamp it as new work.
+    // An independent source epoch can advance while A's unchanged survivors
+    // retain their original epoch. Absorbing a duplicate is not a new delta.
     scoped.epoch = 9;
     scoped.complete_scope(&a).unwrap();
     assert_eq!(scoped.epoch, 9);
     for w in scoped.witnesses(ga) {
-        assert_eq!(scoped.row(w).unwrap().unwrap().epoch, 1);
+        assert_eq!(scoped.row(w).unwrap().unwrap().epoch, 0);
+    }
+    for w in reference.witnesses(ga) {
+        assert_eq!(reference.row(w).unwrap().unwrap().epoch, 0);
     }
     assert_eq!(scoped.pending_completion_tasks(), 0);
     scoped.epoch = reference.epoch;
@@ -507,4 +510,49 @@ fn cell_completion_shares_one_continuation_across_partial_fragment_publication()
     assert_eq!(report["entry_schedule"]["stats"]["fragment_pending_writes"], 0);
     let mut native = egglog::EGraph::default();
     native.parse_and_run_program(None, &source).unwrap();
+}
+
+#[cfg(feature = "sparse-cells")]
+#[test]
+fn inline_function_completion_retires_beside_deferred_cell_outputs() {
+    use eggfuse_cell_runtime::executor::Executor;
+    let source = r#"
+(datatype A (Na i64) (Fa A) (Ga A) (SeenA A))
+(datatype B (Nb i64) (SeenB B))
+(function score (B) i64 :merge (min old new))
+(ruleset seed) (ruleset independent) (ruleset observe)
+(rule ((= x (Nb n))) ((set (score x) 1)) :ruleset seed)
+(rule ((= x (Na 0)) (= y (Na 1))) ((Ga (Fa x)) (Ga (Fa y)) (union x y)) :ruleset seed)
+(rule ((= n (score x))) ((SeenB x)) :ruleset independent)
+(rule ((= g (Ga f))) ((SeenA g)) :ruleset observe)
+(Na 0) (Na 1) (Nb 0)
+(run-schedule (seq (run seed) (run independent) (run observe)))
+"#;
+    let p = program(source);
+    let mut reference = Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(), false);
+    let mut scoped = Executor::new(Graph::new_with_scoped_completion(p).unwrap(), false);
+    reference.use_entry_publications().unwrap();
+    scoped.use_entry_publications().unwrap();
+    scoped.use_port_scopes().unwrap();
+    reference.execute().unwrap();
+    scoped.execute_until(Some(2)).unwrap();
+    let partial = scoped.report();
+    let before = &partial["stage_spine"]["stats"];
+    assert!(before["inline_function_receipts"].as_u64().unwrap() > 0, "{before}");
+    assert_eq!(scoped.graph.witness_count(table(&scoped.graph.program, "SeenB")), 1);
+    // Audit-mode features intentionally force a global visibility fence.
+    if scoped.scoped_execution_report()["global_observer"] == false {
+        assert!(scoped.scoped_execution_report()["pending_anchors"].as_u64().unwrap() > 0);
+    }
+    assert_eq!(before["inline_function_reads"], before["inline_function_receipts"]);
+    scoped.execute().unwrap();
+    assert_eq!(scoped.report()["stage_spine"]["stats"]["inline_function_reads"],
+        before["inline_function_reads"], "a delivered function cannot be published twice");
+    assert_eq!(scoped.graph.export().unwrap(), reference.graph.export().unwrap());
+    assert_eq!(scoped.scoped_execution_report()["retained_contexts"], 0);
+    for (a, b) in scoped.steps.iter().zip(&reference.steps) {
+        assert_eq!(a.executed_bindings, b.executed_bindings);
+        assert_eq!(a.changed, b.changed);
+    }
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
 }

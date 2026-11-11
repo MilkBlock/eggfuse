@@ -192,36 +192,33 @@ struct Completion {
     #[cfg(feature = "sparse-cells")]
     delivery: Option<Delivery>,
 }
-/// Address of this Cell's output slots in the pending arena. Port meanings and
-/// order come from the shared Cell definition, including for single outputs.
+/// Storage of this Cell's outputs. The producer already lives in Completion's
+/// phase; port meanings and order come from that shared Cell definition.
 #[cfg(feature = "sparse-cells")]
 #[derive(Clone, Copy)]
 struct Delivery {
-    // The high rule bit selects shared history. In that case `first` is the
-    // pending output mask, reusing the arena offset that this path never needs.
-    // Wider Cells retain the ordinary arena rather than widen every completion.
-    rule: std::num::NonZeroU32,
-    first: u32,
+    source: OutputSource,
     #[cfg(feature = "spine-shapes")]
     cell: u32,
 }
 #[cfg(feature = "sparse-cells")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum OutputSource {
+    Slots(u32),
+    History(u32),
+    Function(u32),
+}
+#[cfg(feature = "sparse-cells")]
 impl Delivery {
-    const HISTORY: u32 = 1 << 31;
-    fn new(rule: usize, first: usize, width: usize, joint: bool, _cell: u32) -> Self {
-        let rule = u32::try_from(rule).ok().and_then(|r| r.checked_add(1))
-            .filter(|&r| r < Self::HISTORY).expect("Cell rule index exhausted");
+    fn new(first: usize, width: usize, joint: bool, _cell: u32) -> Self {
         Self {
-            rule: std::num::NonZeroU32::new(rule | if joint { Self::HISTORY } else { 0 }).unwrap(),
-            first: if joint {
+            source: if joint {
                 assert!((1..=32).contains(&width));
-                u32::MAX >> (32 - width)
-            } else { u32::try_from(first).expect("Cell output arena exhausted") },
+                OutputSource::History(u32::MAX >> (32 - width))
+            } else { OutputSource::Slots(u32::try_from(first).expect("Cell output arena exhausted")) },
             #[cfg(feature = "spine-shapes")] cell: _cell,
         }
     }
-    fn rule(self) -> usize { (self.rule.get() & !Self::HISTORY) as usize - 1 }
-    fn joint(self) -> bool { self.rule.get() & Self::HISTORY != 0 }
 }
 #[cfg(feature = "sparse-cells")]
 enum CompletionPhase {
@@ -230,6 +227,17 @@ enum CompletionPhase {
     Moving,
 }
 impl Completion {
+    #[cfg(feature = "sparse-cells")]
+    fn producer(&self) -> usize {
+        match &self.phase {
+            CompletionPhase::Started(Started::Root { producer, .. }) => *producer,
+            CompletionPhase::Started(Started::Live(c)) => c.producer,
+            CompletionPhase::Published(PublishedBase::Root(_, producer))
+                | CompletionPhase::Published(PublishedBase::Solo { producer, .. }) => *producer,
+            CompletionPhase::Published(PublishedBase::Active(c)) => c.producer,
+            CompletionPhase::Moving => unreachable!("Cell completion promotion"),
+        }
+    }
     #[cfg(feature = "sparse-cells")]
     fn results(&self) -> crate::cell::ResultView<'_> {
         let history = match &self.phase {
@@ -479,20 +487,17 @@ mod set_counts_test {
     #[test]
     fn joint_delivery_retirement_cannot_turn_a_mask_into_an_arena_offset() {
         for width in [1, 32] {
-            let mut delivery = Delivery::new(7, 123, width, true, 9);
+            let mut delivery = Delivery::new(123, width, true, 9);
             for position in (0..width).rev() {
-                assert_eq!(delivery.rule(), 7);
-                assert!(delivery.joint());
-                assert_ne!(delivery.first & (1 << position), 0);
-                delivery.first &= !(1 << position);
+                let OutputSource::History(mask) = &mut delivery.source else { panic!("lost history") };
+                assert_ne!(*mask & (1 << position), 0);
+                *mask &= !(1 << position);
             }
-            assert_eq!(delivery.first, 0);
-            assert!(delivery.joint());
+            assert_eq!(delivery.source, OutputSource::History(0));
         }
-        let arena = Delivery::new(7, u32::MAX as usize, 64, false, 9);
-        assert!(!arena.joint());
-        assert_eq!(arena.rule(), 7);
-        assert_eq!(arena.first, u32::MAX);
+        let arena = Delivery::new(u32::MAX as usize, 64, false, 9);
+        assert_eq!(arena.source, OutputSource::Slots(u32::MAX));
+        assert_eq!(std::mem::size_of::<Option<OutputSource>>(), 8);
     }
     #[test]
     fn serialization_includes_current_set_and_prior_occurrences() {
@@ -640,6 +645,8 @@ pub struct Stats {
     cell_output_slots: u64,
     cell_output_receipts: u64,
     cell_output_slot_reads: u64,
+    inline_function_receipts: u64,
+    inline_function_reads: u64,
     cell_output_checks: u64,
     cell_output_deliveries: u64,
     peak_cell_output_slots: usize,
@@ -1586,6 +1593,24 @@ impl Programs {
             return;
         }
         self.stats.cell_output_registrations += 1;
+        // A lone actual function result needs no arena location. Its operation
+        // and table are already fixed by the Cell output, and the Completion
+        // retains its original producer, history and source order. Publication
+        // still forwards and validates the receipt after repair.
+        if width == 1 && effects.is_none()
+            && let Dependency::Function(index) = receipt
+            && let Ok(index) = u32::try_from(index)
+        {
+            debug_assert!(self.pending_steps[slot].delivery.is_none());
+            self.pending_steps[slot].delivery = Some(Delivery {
+                source: OutputSource::Function(index),
+                #[cfg(feature = "spine-shapes")] cell: _cell,
+            });
+            self.stats.cell_output_spans += 1;
+            self.stats.inline_function_receipts += 1;
+            self.count_output_receipts(rid, 1);
+            return;
+        }
         let delivery = if let Some(delivery) = self.pending_steps[slot].delivery { delivery } else {
             let first = if let Some(effects) = &effects { effects.output_first() } else {
                 let first = self.cell_outputs.len();
@@ -1598,8 +1623,8 @@ impl Programs {
             if effects.retain_output(position, receipt) { self.stats.effect_output_copies += 1; }
             else { self.stats.effect_outputs_reused += 1; }
         } else {
-            debug_assert!(!delivery.joint());
-            self.cell_outputs[delivery.first as usize + position] = Some(receipt);
+            let OutputSource::Slots(first) = delivery.source else { unreachable!("Cell output arena") };
+            self.cell_outputs[first as usize + position] = Some(receipt);
             self.stats.effect_output_copies += 1;
         }
         self.count_output_receipts(rid, 1);
@@ -1614,7 +1639,7 @@ impl Programs {
             self.stats.peak_cell_output_slots = self.stats.peak_cell_output_slots.max(first + width);
         }
         self.stats.joint_output_mask_writes += u64::from(joint);
-        let delivery = Delivery::new(rid, first, width, joint, _cell);
+        let delivery = Delivery::new(first, width, joint, _cell);
         self.pending_steps[slot].delivery = Some(delivery);
         delivery
     }
@@ -1922,21 +1947,29 @@ impl Programs {
                     self.stats.completion_cell_visits += 1;
                     if let Some(mut delivery) = self.pending_steps[slot].delivery {
                         let mut pending = false;
-                        let joint = delivery.joint();
-                        let mut mask = delivery.first;
-                        let rule = delivery.rule();
+                        let rule = self.pending_steps[slot].producer();
                         let width = self.cell_output_widths[rule];
                         let fragment = self.outputs[rule].len() >= 2;
                         for position in (0..width).rev() {
-                            self.stats.cell_output_slot_reads += 1;
-                            let index = delivery.first as usize + position;
-                            let old = if joint {
-                                self.stats.joint_output_mask_checks += 1;
-                                if mask & (1 << position) == 0 { continue; }
-                                self.stats.joint_output_reads += 1;
-                                let port = self.effect_plans[rule].get().unwrap().history_output(position);
-                                self.pending_steps[slot].results().output(port)
-                            } else { self.cell_outputs[index] };
+                            let old = match delivery.source {
+                                OutputSource::History(mask) => {
+                                    self.stats.cell_output_slot_reads += 1;
+                                    self.stats.joint_output_mask_checks += 1;
+                                    if mask & (1 << position) == 0 { continue; }
+                                    self.stats.joint_output_reads += 1;
+                                    let port = self.effect_plans[rule].get().unwrap().history_output(position);
+                                    self.pending_steps[slot].results().output(port)
+                                }
+                                OutputSource::Slots(first) => {
+                                    self.stats.cell_output_slot_reads += 1;
+                                    self.cell_outputs[first as usize + position]
+                                }
+                                OutputSource::Function(index) => {
+                                    debug_assert_eq!(width, 1);
+                                    self.stats.inline_function_reads += 1;
+                                    Some(Dependency::Function(index as usize))
+                                }
+                            };
                             let Some(old) = old else { continue };
                             let output = self.outputs[rule][position];
                             let table = output.table;
@@ -1966,13 +1999,16 @@ impl Programs {
                             // Resolution still runs for every delivered output,
                             // even when its final Entry already has a winner.
                             self.stats.receipt_redirects += u64::from(w != old);
-                            if joint {
-                                mask &= !(1 << position);
-                                self.stats.joint_output_mask_writes += 1;
-                            } else { self.cell_outputs[index] = None; }
+                            match &mut delivery.source {
+                                OutputSource::History(mask) => {
+                                    *mask &= !(1 << position);
+                                    self.stats.joint_output_mask_writes += 1;
+                                }
+                                OutputSource::Slots(first) => self.cell_outputs[*first as usize + position] = None,
+                                OutputSource::Function(_) => (),
+                            }
                             self.cell_outputs_pending -= 1;
                         }
-                        if joint { delivery.first = mask; }
                         self.pending_steps[slot].delivery = pending.then_some(delivery);
                     }
                     while self.pending_steps[slot].ready.is_some() { self.finish_boundary(slot, entries)?; }

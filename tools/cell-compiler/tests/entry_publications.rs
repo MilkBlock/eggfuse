@@ -149,6 +149,55 @@ fn repeated_publications_skip_batch_losers_but_revalidate_later_batches() {
 }
 
 #[test]
+fn inline_function_output_keeps_last_producer_forwarding_and_late_inputs() {
+    let source = r#"
+(datatype E (N i64) (Start E) (Ready E) (Seen E i64))
+(function Cost (E) i64 :merge (min old new))
+(ruleset make) (ruleset join) (ruleset later) (ruleset read)
+(rule ((Start x)) ((set (Cost x) 3)) :ruleset make)
+(rule ((Start x)) ((set (Cost x) (+ 1 2))) :ruleset make)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset make)
+(rule ((= x (N 2)) (= y (N 3))) ((union x y)) :ruleset join)
+(rule ((Start x)) ((Ready x)) :ruleset later)
+(rule ((Ready x) (= n (Cost x))) ((Seen x n)) :ruleset read)
+(Start (N 0)) (Start (N 1)) (Start (N 2)) (Start (N 3))
+(run-schedule (seq (run make) (run read) (run join) (run later) (run read)))
+(check (Seen (N 0) 3) (Seen (N 2) 3))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    compare(source);
+    let (old, nodes) = compare_mode(source, false);
+    let a = old.report();
+    let b = nodes.report();
+    let s = &b["stage_spine"]["stats"];
+    assert!(s["inline_function_receipts"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(s["inline_function_receipts"], s["inline_function_reads"]);
+    assert!(s["receipt_redirects"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(a["stage_spine"]["stats"]["inline_function_receipts"], 0);
+    assert!(b["entry_schedule"]["stats"]["publication_loser_skips"].as_u64().unwrap() > 0);
+}
+
+#[test]
+fn deletable_function_outputs_retain_boundary_publication() {
+    let source = r#"
+(datatype E (N i64) (Start E) (Seen E i64))
+(function Cost (E) i64 :merge new)
+(ruleset make) (ruleset remove) (ruleset remake) (ruleset read)
+(rule ((Start x)) ((set (Cost x) 1)) :ruleset make)
+(rule ((Start x)) ((delete (Cost x))) :ruleset remove)
+(rule ((Start x)) ((set (Cost x) 2)) :ruleset remake)
+(rule ((= n (Cost x))) ((Seen x n)) :ruleset read)
+(Start (N 0))
+(run-schedule (seq (run make) (run remove) (run read) (run remake) (run read)))
+(check (Seen (N 0) 2))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None, source).unwrap();
+    compare(source);
+    let (_, nodes) = compare_mode(source, false);
+    assert_eq!(nodes.report()["stage_spine"]["stats"]["inline_function_receipts"], 0);
+}
+
+#[test]
 fn single_output_cells_keep_last_source_without_receipt_hash_coalescing() {
     let source = r#"
 (datatype E (N i64) (Start E i64) (Gateway E) (Out E))

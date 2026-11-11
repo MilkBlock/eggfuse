@@ -1,0 +1,128 @@
+{
+  "baseline_commit": "b47330c8",
+  "scope": "standalone Cell CPU; bounded work counts, not throughput",
+  "limits": "Raytrace covers the first 1280 Runs only; exact relative states and Run records, not independent native Raytrace proof or sparsity theorem.",
+  "cases": {
+    "sum": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 2000,
+        "workers": 4
+      },
+      "runs": 1428,
+      "exact_final_graph_and_run_records": true,
+      "actual_effect_counts_unchanged": true,
+      "queries": 12085,
+      "entry_maintenance_unchanged": true,
+      "inline_function_receipts": 599,
+      "inline_function_reads": 599,
+      "removed_arena_work": {
+        "effect_output_copies": [
+          957,
+          358
+        ],
+        "cell_output_slots": [
+          5827,
+          5228
+        ],
+        "cell_output_slot_reads": [
+          5827,
+          5228
+        ]
+      },
+      "retained_work": {
+        "completed_steps": 5590,
+        "anchor_publications": 6588,
+        "history_capture_reads": 70,
+        "history_slots_written": 70,
+        "history_allocations": 485,
+        "cell_output_receipts": 5827,
+        "cell_output_checks": 5827,
+        "cell_output_deliveries": 5827,
+        "receipt_redirects": 470,
+        "resumed_steps": 2098,
+        "cell_output_spans": 4430,
+        "fragment_deliveries": 3980
+      },
+      "peak_output_slots": [
+        196,
+        196
+      ],
+      "completion_record_bytes": 104,
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "report_sha256": [
+        "6cecc52ae0045b005d79db121beb3c83d2f832b5a0da0cdb20adff1fb48328b5",
+        "281991231739b38b52c9214ebd8ba1023f25a3a66d4b9bea71ecff135c6154e7"
+      ],
+      "state_sha256": [
+        "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+        "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82"
+      ]
+    },
+    "ray1280": {
+      "configuration": {
+        "backend": "canonical",
+        "grain": 64,
+        "requested_entry_publications": true,
+        "requested_repair_ports": true,
+        "requested_runs": 1280,
+        "workers": 4
+      },
+      "runs": 1280,
+      "exact_final_graph_and_run_records": true,
+      "actual_effect_counts_unchanged": true,
+      "queries": 578591,
+      "entry_maintenance_unchanged": true,
+      "inline_function_receipts": 24332,
+      "inline_function_reads": 24332,
+      "removed_arena_work": {
+        "effect_output_copies": [
+          59311,
+          34979
+        ],
+        "cell_output_slots": [
+          296507,
+          272175
+        ],
+        "cell_output_slot_reads": [
+          296507,
+          272175
+        ]
+      },
+      "retained_work": {
+        "completed_steps": 280091,
+        "anchor_publications": 295161,
+        "history_capture_reads": 7729,
+        "history_slots_written": 7729,
+        "history_allocations": 40929,
+        "cell_output_receipts": 296507,
+        "cell_output_checks": 296507,
+        "cell_output_deliveries": 296507,
+        "receipt_redirects": 12288,
+        "resumed_steps": 103473,
+        "cell_output_spans": 238952,
+        "fragment_deliveries": 179027
+      },
+      "peak_output_slots": [
+        44177,
+        42909
+      ],
+      "completion_record_bytes": 104,
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "report_sha256": [
+        "deec165725b45cb00d256c6b89de7c1aa423347141c39711a85583cfb557700a",
+        "afa51995edda19f7a4bc5106db051c5807f67c9c9ed79aaa8bdbbbb2f31257f5"
+      ],
+      "state_sha256": [
+        "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce",
+        "a18fa7ffc704d697b68d6229d53cbf6929a83be6328ebeab3f9a41724d07b0ce"
+      ]
+    }
+  },
+  "sum_acceptance_sha256": "9ed36b7197b6873647b84fdc4ee1e0149c6ad46801d0e699d43c1135e4b1920a",
+  "runtime_sha256": "b7c32727b6b43aa9950dd67c9b18724de7e780c9df135fe580da758dd43ec13c",
+  "prefix_sha256": "15674ec4b7d7ef1f1fad684e004c1987fd6eb40e81931ae73cd70de22ac87055"
+}
