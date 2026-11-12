@@ -434,6 +434,9 @@ pub(crate) mod cell_prefix;
 #[cfg(feature = "sparse-cells")]
 #[path = "query_reads.rs"]
 pub(crate) mod query_reads;
+#[cfg(all(feature = "sparse-cells", feature = "storage-metrics"))]
+#[path = "graph_storage.rs"]
+mod storage;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {

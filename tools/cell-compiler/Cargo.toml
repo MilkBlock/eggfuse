@@ -17,6 +17,7 @@ name = "cell"
 harness = false
 
 [features]
+storage-metrics = ["eggfuse-cell-runtime/storage-metrics"]
 parallel-publication = ["parallel-residuals", "eggfuse-cell-runtime/parallel-publication"]
 parallel-residuals = ["sparse-cells", "eggfuse-cell-runtime/parallel-residuals"]
 completion-overlap-probes = ["eggfuse-cell-runtime/completion-overlap-probes"]
@@ -43,3 +44,7 @@ required-features = ["iterative-bake"]
 [[example]]
 name = "emit_lazy_union"
 required-features = ["iterative-bake"]
+
+[[example]]
+name = "runtime_storage_census"
+required-features = ["sparse-cells", "storage-metrics"]

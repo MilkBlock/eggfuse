@@ -8,6 +8,12 @@ pub struct Cells {
     outliers: rustc_hash::FxHashMap<u32, u32>,
 }
 impl Cells {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn storage_bytes(&self) -> (usize,usize,usize) {
+        (self.records.capacity()*std::mem::size_of::<(u32,Cell)>(),
+         self.positions.capacity()*std::mem::size_of::<u32>(),self.outliers.len())
+    }
+
     #[inline]
     fn position(&self, id: &u32) -> Option<usize> {
         {

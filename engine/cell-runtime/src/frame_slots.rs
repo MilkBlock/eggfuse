@@ -29,6 +29,19 @@ impl FromIterator<(usize, Value)> for FrameSlots {
     }
 }
 impl FrameSlots {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn storage_census(&self, seen: &mut BTreeSet<usize>) -> (usize,usize) {
+        let mut bytes=self.current.capacity_bytes();
+        let mut removals=self.removed.as_ref().map_or(0,|r|r.len());
+        if let Some(prefix)=&self.prefix {
+            if seen.insert(Arc::as_ptr(prefix) as usize) {
+                bytes+=Self::seal_bytes();
+                let (b,r)=prefix.storage_census(seen);bytes+=b;removals+=r;
+            }
+        }
+        (bytes,removals)
+    }
+
     pub(crate) fn seal_bytes() -> usize {
         std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>()
     }

@@ -1,0 +1,63 @@
+{
+  "scope": "actual runtime baseline census, not a compression result; working-tree runtime includes concurrent changes",
+  "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "runs": 1428,
+  "initial": {
+    "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
+    "excluded": "allocator padding, Value-owned payloads, graph indexes/union-find, removal BTree nodes, sparse ID outlier map, function writers, ownership backends, executor storage",
+    "cell_records_bytes": 15360,
+    "cell_positions_bytes": 1024,
+    "id_outliers": 0,
+    "cell_slot_bytes": 6552,
+    "shared_slot_owners": 0,
+    "removal_entries": 0,
+    "fact_record_capacity_bytes": 9216,
+    "fact_record_live_bytes": 9216,
+    "decoded_row_bytes": 32,
+    "decoded_row_owners": 1,
+    "function_records_bytes": 320,
+    "function_key_array_bytes": 0,
+    "function_decoded_directory_bytes": 64,
+    "cell_fact_arities": {
+      "1": 128
+    },
+    "counted_bytes": 32568
+  },
+  "final": {
+    "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
+    "excluded": "allocator padding, Value-owned payloads, graph indexes/union-find, removal BTree nodes, sparse ID outlier map, function writers, ownership backends, executor storage",
+    "cell_records_bytes": 491520,
+    "cell_positions_bytes": 32768,
+    "id_outliers": 0,
+    "cell_slot_bytes": 473472,
+    "shared_slot_owners": 0,
+    "removal_entries": 0,
+    "fact_record_capacity_bytes": 292752,
+    "fact_record_live_bytes": 208440,
+    "decoded_row_bytes": 102384,
+    "decoded_row_owners": 1150,
+    "function_records_bytes": 163840,
+    "function_key_array_bytes": 75056,
+    "function_decoded_directory_bytes": 32768,
+    "cell_fact_arities": {
+      "0": 211,
+      "1": 1747,
+      "2": 225,
+      "3": 194,
+      "4": 6,
+      "7": 1,
+      "85": 1
+    },
+    "counted_bytes": 1664560
+  },
+  "published_history_storage": {
+    "owners": 136,
+    "owner_payload_bytes": 8704,
+    "result_array_bytes": 6368,
+    "history_array_bytes": 0,
+    "layouts": 0,
+    "layout_bytes": 0,
+    "rc_header_bytes": 2176
+  },
+  "peak_counted_bytes": 1664560
+}
