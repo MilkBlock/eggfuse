@@ -1,0 +1,316 @@
+{
+  "scope": "offline compiler admission using saved actual lineage; no runtime speed measurement",
+  "runtime_artifact_equal_to_effective_directory": true,
+  "excluded_provenance_paths": [
+    "/sha256",
+    "/iterative_bake/closure_selection",
+    "/ownership_fragments/source"
+  ],
+  "internal_completion_events_by_consumer": {
+    "55": 41,
+    "58": 14,
+    "420": 2
+  },
+  "internal_completion_events": 57,
+  "old_added_units": 1,
+  "new_selection": {
+    "schema": "eggfuse-history-closure-selection/v1",
+    "history_program": "38495af23b4b8ab64b4bb362d4839d5df484d6edffa426db277fcb3cfb946f94",
+    "selected": [
+      {
+        "unit": 32,
+        "support": 162,
+        "kind": "saturated",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 36,
+        "support": 40,
+        "kind": "internal_completion",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              55,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 43,
+        "support": 17,
+        "kind": "saturated",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              55,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 48,
+        "support": 14,
+        "kind": "saturated",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              55,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 45,
+        "support": 9,
+        "kind": "internal_completion",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              58,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 46,
+        "support": 9,
+        "kind": "saturated",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              143,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 37,
+        "support": 5,
+        "kind": "internal_completion",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            0,
+            [
+              58,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 38,
+        "support": 5,
+        "kind": "saturated",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            0,
+            [
+              143,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "unit": 62,
+        "support": 2,
+        "kind": "internal_completion",
+        "added_prefixes": 0,
+        "source_path": [
+          [
+            null,
+            [
+              114,
+              0
+            ]
+          ],
+          [
+            0,
+            [
+              420,
+              0
+            ]
+          ]
+        ]
+      }
+    ],
+    "added_units": 0,
+    "redundant_terminal_transfers": [
+      {
+        "source_path": [
+          [
+            null,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ],
+          [
+            1,
+            [
+              143,
+              0
+            ]
+          ],
+          [
+            2,
+            [
+              137,
+              0
+            ]
+          ]
+        ],
+        "support": 2,
+        "avoided_units": 1,
+        "reason": "existing-suffix-has-same-terminal-transfer"
+      }
+    ],
+    "admission_lowerings": 2,
+    "boundary_rejections": 0,
+    "guarded_paths": 12,
+    "unsupported_paths": 10,
+    "budget_rejections": 0,
+    "scope": "history selects routes; existing typed result-switch rechecks executable lowering; not measured savings"
+  },
+  "direct_completion_states": [
+    7,
+    8,
+    7
+  ],
+  "limits_total": [
+    64,
+    72,
+    64
+  ],
+  "limitations": "Exact terminal-transfer admission is not whole-automaton equivalence or permanent domination. No existing state is removed. Introduced symbolic facts are obligations, not committed mutations. Runtime scope is unchanged.",
+  "inputs_sha256": {
+    "out/cell-structural-compression/closure-existing/program.json": "cb812b421fef8f66cd824ce1de677057c17ab7d5bd7a8fa2b5f6ce904c8bf723",
+    "out/cell-structural-compression/closure-admitted/program.json": "e7194c5e52cb3c33422360a58ef261e8d4832e2aab6578f4fe740f486d92d892",
+    "out/cell-structural-compression/closure-transfer-admission-final/program.json": "3934bd9c7506205ed6db6fb435455e407be6c3af7aeac33e74aabb69bb13d1e6",
+    "out/cell-structural-compression/closure-history-settled.json": "5f7eaa811faba8121abb63f61c1e42837c63e7e9ce3f800e60863df676dcbbbb"
+  }
+}

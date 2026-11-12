@@ -18,6 +18,7 @@ impl Catalog {
         if extra_units > catalog.limits.per_round {
             return Err("closure additions exceed per-round budget".into());
         }
+        let original_total=catalog.limits.total;
         let capacity = catalog
             .units
             .len()
@@ -65,6 +66,11 @@ impl Catalog {
             .filter(|(_, n)| *n >= catalog.limits.support)
             .collect::<Vec<_>>();
         ranked.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+        let lower=|catalog:&Catalog| crate::result_handoff::Switch::build(p,
+            catalog.units.iter().map(|u|u.path.as_ref()),&catalog.leaves,true,true,true,true,true);
+        let mut executable=None;
+        let mut lowered_catalogs=0;
+        let mut redundant=vec![];
         let mut selected = vec![];
         let mut added = 0;
         let mut guarded = 0;
@@ -129,6 +135,16 @@ impl Catalog {
                 budget_rejections += 1;
                 continue;
             }
+            let lowered=(!joins.is_empty()).then(|| {lowered_catalogs+=1;lower(&trial)});
+            if let Some(lowered)=&lowered {
+                let previous=executable.get_or_insert_with(|| {lowered_catalogs+=1;lower(&catalog)});
+                if previous.transfer_signature(&path)==lowered.transfer_signature(&path) {
+                    redundant.push(json!({"source_path":path,"support":visits,
+                        "avoided_units":joins.len(),"reason":"existing-suffix-has-same-terminal-transfer"}));
+                    continue;
+                }
+            }
+            if let Some(lowered)=lowered {executable=Some(lowered);}
             added += joins.len();
             plan["joins"]
                 .as_array_mut()
@@ -137,11 +153,13 @@ impl Catalog {
             selected.push(json!({"unit":left,"support":visits,"kind":proof["kind"],"added_prefixes":joins.len(),"source_path":path}));
             catalog = trial;
         }
+        catalog.limits.total=original_total.max(catalog.units.len());
         plan["limits"]["total"] = json!(catalog.limits.total);
         // Lower only this directory. No speculative structural expansion.
         Self::emit_policy(p, plan, true, true, true, true, true, false, None)?;
         plan["closure_selection"] = json!({"schema":"eggfuse-history-closure-selection/v1",
             "history_program":history["program_sha256"],"selected":selected,"added_units":added,
+            "redundant_terminal_transfers":redundant,"admission_lowerings":lowered_catalogs,
             "boundary_rejections":boundary_rejections,"guarded_paths":guarded,
             "unsupported_paths":unsupported,"budget_rejections":budget_rejections,
             "scope":"history selects routes; existing typed result-switch rechecks executable lowering; not measured savings"});

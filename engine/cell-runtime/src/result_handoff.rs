@@ -1172,6 +1172,21 @@ impl Switch {
     pub(crate) fn enabled(&self) -> bool {
         !self.nodes.is_empty()
     }
+    /// Admission compares the actual terminal transfer reached by a history,
+    /// including existing suffix fallback. This is not whole-automaton or
+    /// semantic Cell equivalence: different future routes remain possible.
+    pub(crate) fn transfer_signature(&self,path:&[(Option<usize>,Entry)]) -> serde_json::Value {
+        let id=self.replay(path);
+        let node=&self.nodes[id];
+        let port=|p:ResultPort|(p.rule(),p.slot());
+        serde_json::json!({"program":node.program,
+            "reuse_ports":node.program.reuse.iter().map(|r|(r.op,r.port.map(port))).collect::<Vec<_>>(),
+            "query_ports":node.program.queries.iter().map(|q|(q.atom,q.port.map(port))).collect::<Vec<_>>(),
+            "captures":node.supply.iter().map(|c|(c.site,port(c.port))).collect::<Vec<_>>(),
+            "keep_history":node.keep_history,
+            "layout":node.layout.as_ref().map(|l|(l.rule,l.sources.iter().map(|p|p.map(port)).collect::<Vec<_>>())),
+            "direct":self.direct(id).map(|p|p.artifact())})
+    }
     pub(crate) fn replay(&self, path: &[(Option<usize>, Entry)]) -> usize {
         path.iter().fold(0, |s, (op, e)| {
             let leaf = match *e {

@@ -132,6 +132,49 @@ fn completed_source_run_union_can_authorize_a_saturated_consumer() {
 
 #[test]
 #[cfg(feature = "sparse-cells")]
+fn repeated_saturated_suffix_does_not_spend_another_cell_budget() {
+    // Synthetic ancestry tests admission only; it is not runtime support data.
+    let source=r#"
+(datatype E (N i64) (A E) (B E))
+(ruleset a) (ruleset b)
+(rule ((A x)) ((B x)) :ruleset a :name "a")
+(rule ((B x)) ((A x)) :ruleset b :name "b")
+(A (N 0)) (run a 1) (run b 1)
+"#;
+    let core=eggfuse_bake::device_frontend::core("saturated-suffix",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let a=p.rules.iter().position(|r|p.templates[r.template].name=="a").unwrap();
+    let b=p.rules.iter().position(|r|p.templates[r.template].name=="b").unwrap();
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":([a,b].map(|r|json!({"edge":[0,0,r,0],"visits":2})))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,2).unwrap();
+    let entries=blocks["entries"].as_array().unwrap();
+    let leaf=|rid|entries.iter().position(|e|e["consumer"]==rid).unwrap();
+    let (left,right)=(leaf(a),leaf(b));
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
+    plan["joins"]=json!([{"left":left,"output":0,"right":right}]);
+    let mut events=vec![];
+    for base in [0,4] {
+        for (offset,rid) in [a,b,a,b].into_iter().enumerate() {
+            events.push(json!({"entry":[rid,0],"output":0,"run":base+offset+1,
+                "parent":(offset>0).then(||base+offset-1)}));
+        }
+    }
+    let history=json!({"schema":"eggfuse-cell-runtime-history/v1",
+        "program_sha256":p.artifact["sha256"],"events":events});
+    Catalog::emit_history_closures(&p,&mut plan,&history,8).unwrap();
+    let selection=&plan["closure_selection"];
+    let redundant=selection["redundant_terminal_transfers"].as_array().unwrap();
+    assert!(redundant.iter().any(|r|r["source_path"].as_array().unwrap().len()==4),"{selection}");
+    // The missing opposite-direction completion is still useful and admitted.
+    assert!(selection["selected"].as_array().unwrap().iter().any(|r|
+        r["added_prefixes"].as_u64().unwrap()>0 && r["source_path"].as_array().unwrap().len()==3),"{selection}");
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
 fn history_selected_closure_executes_without_replaying_constructor_rhs() {
     let source=include_str!("fixtures/history-retention.egg")
         .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
