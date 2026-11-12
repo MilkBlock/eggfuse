@@ -90,8 +90,7 @@ impl Executor {
                 let stop=execution.ops.len();
                 let before=Work::read(&self.graph);
                 let result=self.graph.complete_local_births(rid,cell,&mut execution.births,
-                    &mut execution.effects.writer(),stop,
-                    self.query_workers.as_ref().and_then(|w|w.execution_pool()),runtime.grain);
+                    &mut execution.effects.writer(),stop);
                 execution.work.add_since(&self.graph,before);
                 match result {
                     Ok(counts)=>runtime.counts.births.add(counts),

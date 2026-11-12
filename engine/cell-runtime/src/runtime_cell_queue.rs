@@ -35,7 +35,6 @@ impl Executor {
                 .births
                 .as_ref()
                 .is_some_and(|p| p.batch_rule())
-            && !self.stage_spine.has_pending_origins(rid)
             && !self.profile_queries
             && !cfg!(feature = "structural-depth")
             && !cfg!(feature = "family-survey")
@@ -74,7 +73,8 @@ impl Executor {
             stats.scheduler.batches += 1;
             stats.scheduler.jobs += count as u64;
             stats.scheduler.max_ready = stats.scheduler.max_ready.max(count);
-            let parallel = tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
+            let parallel = count > 1
+                && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
             let clock = Instant::now();
             let pool = self
                 .query_workers
@@ -146,8 +146,9 @@ impl Executor {
                     stats.worker_jobs[worker] += 1;
                 }
                 let worker = done.worker.is_some();
-                let mut counts = self.graph.commit_local_job(done)?;
+                let mut counts = self.graph.commit_local_job(done,&mut execution.effects.writer())?;
                 execution.work.facts += counts.committed_rows;
+                execution.work.updates += counts.unit_inserts;
                 execution.work.constructors += counts.local_births + counts.local_reuses;
                 if worker {
                     counts.worker_operations += counts.local_births + counts.local_reuses;
@@ -185,21 +186,9 @@ impl Executor {
         let mut pending = Vec::new();
         let result = (|| {
             for binding in rows {
-                // Existing inherited histories keep their direct source path. They
-                // are not replaced with speculative completion or a duplicate log.
-                if binding.direct.is_some() || binding.continuation.is_some() {
-                    self.drain_cell_queue(&mut queue, &mut pending)?;
-                    self.graph.sealed_generation = Some(generation);
-                    self.apply(
-                        rid,
-                        binding,
-                        #[cfg(feature = "structural-depth")]
-                        None,
-                    )?;
-                    self.graph.sealed_input_cell = None;
-                    self.graph.sealed_generation = None;
-                    continue;
-                }
+                // The same inherited Cursor travels with the execution. When
+                // older tails are pending, start_cell_execution leaves early
+                // completion to this queue's source-ordered drain.
                 self.graph.sealed_generation = Some(generation);
                 let started = self.start_cell_execution(
                     rid,
@@ -232,6 +221,14 @@ impl Executor {
                             self.park_cell(&mut queue, execution, None);
                         }
                         break;
+                    }
+                    if matches!(&execution.ops[position], Op::Let(_, Call::Primitive(..), _))
+                        && self.graph.program.executions[rid].prepared_at(position,
+                            &self.graph.program.templates[self.graph.program.rules[rid].template],
+                            &self.graph.rhs_frame(execution.cell).unwrap().values) {
+                        self.graph.stats.prepared_rhs_later_operations += 1;
+                        self.graph.rhs_frame_mut(execution.cell).unwrap().completed_prefix = position + 1;
+                        continue;
                     }
                     if execution.births.is_some() {
                         let stop = execution.transfers[execution.transfer..]
@@ -268,7 +265,7 @@ impl Executor {
                                     .scheduler
                                     .budget_checks += 1;
                                 if work > 256 {
-                                    let counts = self.graph.commit_local_job(job.unstarted())?;
+                                    let counts = self.graph.commit_local_job(job.unstarted(),&mut execution.effects.writer())?;
                                     self.cell_execution
                                         .as_mut()
                                         .unwrap()

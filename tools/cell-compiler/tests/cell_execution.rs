@@ -52,6 +52,62 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay() {
+    let seed=(0..128).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E i64) (G E) (Seen E))
+(function Stamp (i64) Unit :merge old)
+(function Ticket (E E) Unit :merge old)
+(ruleset step) (ruleset next) (ruleset change)
+(rule ((= x (N n))) ((let v (+ n 1)) (let a (F x v)) (let b (G a))
+ (set (Stamp 0) ()) (set (Ticket a b) ())) :ruleset step)
+(rule ((Ticket a b)) ((Seen b)) :ruleset next)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+{seed}
+(run-schedule (seq (run step) (run next) (run change) (run step) (run next)))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,4);
+    #[cfg(feature="iterative-bake")]
+    {eggfuse_cell_runtime::transfer_audit::set_active(true);eggfuse_cell_runtime::transfer_audit::enable_write_audit();}
+    control.execute().unwrap();
+    #[cfg(feature="iterative-bake")]
+    let writes=eggfuse_cell_runtime::transfer_audit::take_write_digests();
+    let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+    candidate.execute().unwrap();same(&control,&candidate);
+    #[cfg(feature="iterative-bake")]
+    {assert_eq!(writes,eggfuse_cell_runtime::transfer_audit::take_write_digests());
+     eggfuse_cell_runtime::transfer_audit::set_active(false);}
+    let r=candidate.report();let w=&r["cell_execution"]["runtime"]["stats"]["births"];
+    assert!(w["unit_worker_rows"].as_u64().unwrap()>0,"{w}");
+    assert!(w["unit_invalidated"].as_u64().unwrap()>0,"{w}");
+    assert_eq!(w["unit_candidates"].as_u64().unwrap(),w["unit_inserts"].as_u64().unwrap()+w["unit_invalidated"].as_u64().unwrap());
+    let q=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
+    assert!(q["batches"].as_u64().unwrap()<q["jobs"].as_u64().unwrap());
+    assert!(w["worker_batches"].as_u64().unwrap()<=q["batches"].as_u64().unwrap(),
+        "only ready batches dispatch; singleton batches remain attached");
+}
+
+#[test]
+fn scalar_failure_before_or_after_a_constructor_tail_keeps_the_source_prefix() {
+    for after in [false,true] {
+        let seed=(0..64).map(|n|format!("(N {})",if n==32 {i64::MAX}else{n})).collect::<Vec<_>>().join("\n");
+        let compute="(let fail (+ n 1))";
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(function Ticket (E) Unit :merge old)
+(ruleset step)
+(rule ((= x (N n))) ((F x) {} (let g (G (F x))) (let h (H g)) (set (Ticket h) ()) {}) :ruleset step)
+{seed} (run-schedule (run step))
+"#,if after {""}else{compute},if after {compute}else{""});
+        let mut control=executor(&source,4);let error=control.execute().unwrap_err();
+        let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+        assert_eq!(candidate.execute().unwrap_err(),error);
+        assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap(),"after={after}");
+    }
+}
+
+#[test]
 fn workers_write_actual_rows_and_invalidate_duplicate_cells_before_publication() {
     for merge in ["(min old new)", "(max old new)", "old"] {
         let seed = (0..96).flat_map(|key| (0..8).map(move |v|

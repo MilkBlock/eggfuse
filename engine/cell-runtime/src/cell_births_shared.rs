@@ -333,6 +333,7 @@ impl<'a> Batch<'a> {
         let mut piece = Piece {
             end: owner.frame.completed_prefix,
             rows: Rows::new(),
+            units: Vec::new(),
             aliases: 0,
             counts: Counts::default(),
         };
@@ -385,13 +386,17 @@ impl<'a> Batch<'a> {
         let growth = values.capacity_bytes().saturating_sub(capacity);
         piece.counts.slot_growths += u64::from(growth != 0);
         piece.counts.slot_bytes += growth as u64;
+        let mut frame=Local { values, facts:Default::default(), completed_prefix:piece.end };
+        if let Some(epoch)=owner.unit_epoch {
+            frame.facts=owner.frame.facts.clone();
+            piece.counts.prefix_handles+=frame.facts.len() as u64;
+            owner.plan.prepare_units(owner.cell,epoch,&frame,owner.first,self.parents,&mut piece);
+            frame.facts.clear();
+            frame.completed_prefix=piece.end;
+        }
         Done {
             cell: owner.cell,
-            frame: Local {
-                values,
-                facts: Default::default(),
-                completed_prefix: piece.end,
-            },
+            frame,
             piece,
             worker: rayon::current_thread_index(),
         }
@@ -489,6 +494,9 @@ impl Graph {
         }
         let plan = plan.clone();
         counts.plan_handles += 1;
+        let unit_epoch=plan.units.as_ref().is_some_and(|u|
+            u.sites.iter().all(|s|!self.units.owned[s.table] || self.pending_unions.is_empty()))
+            .then_some(self.epoch);
         let first = plan
             .steps
             .iter()
@@ -497,7 +505,8 @@ impl Graph {
             .operation;
         // Only external/preceding values are captured; internal dependencies
         // remain static slot references into this plan's shared result slots.
-        for arg in plan.steps[from..].iter().flat_map(|s| &s.keys) {
+        for arg in plan.steps[from..].iter().flat_map(|s| &s.keys).chain(
+            plan.units.iter().filter(|_|unit_epoch.is_some()).flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
             let Arg::Slot(slot) = arg else {
                 continue;
             };
@@ -548,6 +557,7 @@ impl Graph {
             counts,
             Some(Job {
                 cell,
+                unit_epoch,
                 plan,
                 frame: Local {
                     values,
@@ -606,7 +616,7 @@ mod tests {
         assert_eq!(done.piece.counts.local_reuses, 1);
         drop(batch);
         drop(jobs);
-        g.commit_local_job(done).unwrap();
+        g.commit_local_job(done,&mut crate::cell::Effects::default().writer()).unwrap();
         assert_eq!(g.slot(cell, 2).unwrap(), g.slot(cell, 3).unwrap());
         let mut control = super::super::tests::graph();
         let (c, _, _) = super::super::tests::start(&mut control);

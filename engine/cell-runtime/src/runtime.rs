@@ -2238,7 +2238,7 @@ impl Executor {
             return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
-        if !prefix_ready && !full_effects && let Some(step)=stage_cursor.as_ref()
+        if pending.is_empty() && !prefix_ready && !full_effects && let Some(step)=stage_cursor.as_ref()
             && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
             let cell=self.graph.reserve_completed_cell()?;
             if let Some(unions)=unions {
@@ -2285,7 +2285,10 @@ impl Executor {
                 else if iterative_closed { Some(available.as_slice()) } else { None };
             #[cfg(feature = "structural-depth")]
             let selected = selected.or_else(|| structural_closed.map(|_| ports.as_slice()));
-            if let Some(selected) = selected.filter(|_|!prefix_ready) {
+            // Completion can enqueue unions and publish a source receipt.
+            // With older Cell tails outstanding, retain the same transfer
+            // inputs in Execution and perform those effects at the drain.
+            if let Some(selected) = selected.filter(|_|!prefix_ready && pending.is_empty()) {
                 let mut receipts = self.stage_spine.begin_effects(&self.graph, rid, full_effects, !matched, stage_cursor.as_ref(), &b.known);
                 #[cfg(feature = "rhs-work-audit")]
                 let closed_inputs = (structural_closed.is_some()
@@ -3277,7 +3280,7 @@ impl Executor {
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
-            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v3",
+            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v4",
                 "frame_slot_header_bytes":std::mem::size_of::<crate::slots::FrameSlots>(),
                 "unsealed_slot_header_bytes":std::mem::size_of::<crate::slots::Slots>(),
                 "sealed_prefix_allocation_bytes":crate::slots::FrameSlots::seal_bytes(),
@@ -3288,10 +3291,10 @@ impl Executor {
                 "window_bytes":std::mem::size_of::<Option<crate::graph::cell_births::Window>>(),
                 "pending_row_bytes":crate::graph::cell_births::record_bytes(),
                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
-                "scope":"canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
-                "available_through_ready_queue":true});
-            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v2",
-                "scope":"fresh constructor cones share exact result slots; peers may repeat unfinished pure evaluations; uncovered dependencies and source Run publication remain ordered",
+                "scope":"workers materialize constructor and terminal Unit rows; source-order interning adopts winners and invalidates duplicate Unit candidates without replaying Set",
+                "synchronous_single_cell_dispatch":false,"available_through_ready_queue":true});
+            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v3",
+                "scope":"inherited and fresh Cell tails share ready batches; early completion waits for preceding source tails; uncovered effects and Run visibility retain source order",
                 "ready_limit":64,"independent_scheduling":true,
                 "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

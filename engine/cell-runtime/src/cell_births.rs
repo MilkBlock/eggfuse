@@ -3,11 +3,12 @@
 //! workers build actual row storage, not a second binding or operation log.
 use super::*;
 use crate::cell::{Definition, EffectWriter};
-use std::time::Instant;
 use crate::value::parent_epoch::Read;
 #[path = "cell_births_shared.rs"]
 mod shared;
 pub(crate) use shared::run as run_shared;
+#[path = "cell_birth_units.rs"]
+mod units;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -22,7 +23,7 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, units:Option<units::Tail> }
 impl Plan {
     pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
@@ -74,26 +75,32 @@ impl Plan {
                 continues[operation]=next;
             } else {next=false;}
         }
-        // Only total, non-allocating shared effects may follow a queued tail.
-        // They still execute at the source position. No mutable callback, Hide,
-        // failing primitive, or constructor-assignment is admitted here.
-        let batch_rule=cell.template.ops.iter().all(|op|match op {
+        // A queued tail is the final constructor region. Earlier primitives
+        // have already succeeded at admission; a primitive after that region
+        // could fail after later source Cells had mutated the graph, so reject
+        // it. Total scalar/Unit writes still run at their source positions.
+        let last_constructor=steps.last().unwrap().operation;
+        let batch_rule=cell.template.ops.iter().enumerate().all(|(i,op)| {
+          if p.known_results.static_skip[rule][i] {return true;}
+          match op {
             Op::Copy(..)=>true,
             Op::Let(_,Call::Table(t),_)=>p.tables[*t].virtual_fact && p.tables[*t].constructor,
+            Op::Let(_,Call::Primitive(..),_)=>i<last_constructor,
             Op::Union(a,b)=>[a,b].iter().all(|a|match cell.value(a) {
                 Arg::Literal(Value::Eq(_))=>true,
                 Arg::Slot(s)=>cell.template.sorts[s]["kind"]=="eq",_=>false,
             }),
             Op::Set(t,_,_)=> {
                 let table=&p.tables[*t];let e=&table.merge;
-                !table.virtual_fact && table.schema.last().is_some_and(|s|s["kind"]=="i64")
+                !table.virtual_fact && table.schema.last().is_some_and(|s|s["kind"]=="i64" || s["kind"]=="Unit")
                     && (matches!(e["var"].as_str(),Some("old"|"new"))
-                        || matches!(e["call"]["primitive"].as_str(),Some("min"|"max"))
+                        || table.schema.last().is_some_and(|s|s["kind"]=="i64")
+                            && matches!(e["call"]["primitive"].as_str(),Some("min"|"max"))
                             && e["args"].as_array().is_some_and(|a|a.len()==2
                                 && a.iter().all(|v|matches!(v["var"].as_str(),Some("old"|"new")))))
             }
             _=>false,
-        });
+        }});
         let mut isolated=vec![false;steps.len()];
         if batch_rule {
             for from in 1..steps.len() {
@@ -122,7 +129,8 @@ impl Plan {
                 }).then_some(*seed)
             }).collect::<BTreeSet<_>>().into_iter().collect()
         }).collect()} else {vec![]};
-        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated,lineage})
+        let units=units::Tail::derive(p,rule,last_constructor);
+        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated,lineage,units})
     }
     pub(crate) fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
@@ -135,6 +143,7 @@ impl Plan {
             + self.isolated.capacity()*std::mem::size_of::<bool>()
             + self.lineage.capacity()*std::mem::size_of::<Vec<usize>>()
             + self.lineage.iter().map(|s|s.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
+            + self.units.as_ref().map_or(0,units::Tail::storage_bytes)
     }
     fn start(&self,position:usize)->Option<usize> {
         let i=self.steps.binary_search_by_key(&position,|s|s.operation).ok()?;
@@ -187,6 +196,7 @@ pub(crate) struct Counts {
     pub pending_growths:u64, pub pending_bytes:u64, pub value_writes:u64,
     pub slot_growths:u64, pub slot_bytes:u64, pub committed_rows:u64,
     pub worker_batches:u64, pub worker_operations:u64, pub worker_wait_ns:u64,
+    pub unit_candidates:u64, pub unit_worker_rows:u64, pub unit_inserts:u64, pub unit_invalidated:u64, pub unit_bytes:u64,
     pub prefix_reads:u64, pub prefix_handles:u64, pub prefix_unavailable:u64,
     pub slot_seals:u64, pub slot_leases:u64, pub slot_reattachments:u64,
     pub root_snapshots:u64, pub root_writes:u64, pub root_growths:u64, pub root_merges:u64,
@@ -204,6 +214,7 @@ impl Counts {
             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
             worker_batches,worker_operations,worker_wait_ns,prefix_reads,prefix_handles,prefix_unavailable,
+            unit_candidates,unit_worker_rows,unit_inserts,unit_invalidated,unit_bytes,
             slot_seals,slot_leases,slot_reattachments,root_snapshots,root_writes,root_growths,root_merges,
             plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes,
             shared_slots,shared_bytes,shared_growths,result_reads,result_hits,evaluations,duplicate_evaluations,
@@ -214,7 +225,7 @@ struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
 pub(crate) fn record_bytes()->usize {std::mem::size_of::<Born>()}
 type Rows=smallvec::SmallVec<[Born;4]>;
 pub(crate) fn pending_bytes()->usize {std::mem::size_of::<Rows>()}
-struct Piece { end:usize, rows:Rows, aliases:u64, counts:Counts }
+struct Piece { end:usize, rows:Rows, units:Vec<units::Row>, aliases:u64, counts:Counts }
 struct Local {
     values:crate::slots::FrameSlots,
     facts:smallvec::SmallVec<[(u32,RowFields);4]>,
@@ -276,7 +287,7 @@ impl Plan {
     fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut impl Frame,
         parents:Read<'_>,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
         receipts:&mut EffectWriter<'_>)->Piece {
-        let mut out=Piece {end:frame.position(),rows:Rows::new(),aliases:0,counts:Counts::default()};
+        let mut out=Piece {end:frame.position(),rows:Rows::new(),units:Vec::new(),aliases:0,counts:Counts::default()};
         let capacity=frame.values().capacity_bytes();
         let mut first_key=Some(first_key);
         for (index,step) in self.steps[from..limit].iter().enumerate() {
@@ -342,22 +353,26 @@ pub(crate) struct Job {
     cell:u32, plan:std::sync::Arc<Plan>, frame:Local,
     from:usize,limit:usize,first:usize,anchor:usize,
     key:smallvec::SmallVec<[Value;4]>, isolated:bool, fresh_root:Option<usize>,
+    unit_epoch:Option<u64>,
 }
 pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
 impl Done {pub(crate) fn cell(&self)->u32 {self.cell}}
 impl Job {
     pub(crate) fn dependent(&self)->bool {!self.isolated}
     pub(crate) fn unstarted(self)->Done {
-        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),aliases:0,counts:Counts::default()},
+        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,counts:Counts::default()},
             frame:self.frame,worker:None}
     }
     pub(crate) fn operations(&self)->usize {self.limit-self.from}
     pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>)->Done {
-        let piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
+        let mut piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
             self.first,self.anchor,self.key,receipts);
         if self.isolated {
             assert_eq!(piece.end,self.plan.steps[self.limit-1].operation+1,
                 "compiled isolated Cell tail must reach its proven boundary");
+        }
+        if let Some(epoch)=self.unit_epoch {
+            self.plan.prepare_units(self.cell,epoch,&self.frame,self.first,parents,&mut piece);
         }
         Done{cell:self.cell,frame:self.frame,piece,worker:rayon::current_thread_index()}
     }
@@ -382,10 +397,14 @@ impl Graph {
         let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
         if queued && (!plan.batch_rule || limit!=plan.steps.len()) {return Ok((counts,None));}
         let plan=plan.clone();counts.plan_handles+=1;
+        let unit_epoch=(queued && limit==plan.steps.len() && plan.units.as_ref().is_some_and(|u|
+            u.sites.iter().all(|s|!self.units.owned[s.table] || self.pending_unions.is_empty())))
+            .then_some(self.epoch);
         // Capture only missing retained-parent operands, once, into this same
         // execution frame. Internal results remain implicit local row outputs.
         if queued {
-            for arg in plan.steps[from..limit].iter().flat_map(|s|&s.keys) {
+            for arg in plan.steps[from..limit].iter().flat_map(|s|&s.keys).chain(
+                plan.units.iter().filter(|_|unit_epoch.is_some()).flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
                 let Arg::Slot(slot)=arg else {continue;};
                 if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
                     && plan.definitions.binary_search_by_key(slot,|&(s,_)|s).ok()
@@ -423,14 +442,23 @@ impl Graph {
         let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
         counts.slot_seals+=u64::from(sealed);counts.slot_leases+=1;frame.values=values;
         counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
-        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root)})))
+        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch})))
     }
-    pub(crate) fn commit_local_job(&mut self,done:Done)->Result<Counts> {
+    pub(crate) fn commit_local_job(&mut self,done:Done,receipts:&mut EffectWriter<'_>)->Result<Counts> {
         let Done{cell,frame,mut piece,..}=done;
         self.rhs_frame_mut(cell).unwrap().values.reattach(frame.values)
             .map_err(|_|"Cell continuation lost its public prefix".to_string())?;
         piece.counts.slot_reattachments+=1;
-        self.register_local_piece(cell,piece)
+        let units=std::mem::take(&mut piece.units);
+        let mut counts=self.register_local_piece(cell,piece)?;
+        for unit in units {
+            let operation=unit.function.origin.unwrap().op as usize;
+            let (index,inserted)=self.commit_unit_row(unit)?;
+            receipts.record(operation,Dependency::Function(index));
+            counts.unit_inserts+=u64::from(inserted);
+            counts.unit_invalidated+=u64::from(!inserted);
+        }
+        Ok(counts)
     }
     fn register_local_piece(&mut self,cell:u32,mut piece:Piece)->Result<Counts> {
         for row in piece.rows {
@@ -444,8 +472,10 @@ impl Graph {
         self.rhs_frame_mut(cell).unwrap().completed_prefix=piece.end;
         Ok(piece.counts)
     }
+    /// A source-attached piece has no concurrent peer work. Execute it here;
+    /// only the ready queue dispatches constructor jobs to the worker pool.
     pub(crate) fn complete_local_births(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
-        receipts:&mut EffectWriter<'_>,stop:usize,pool:Option<&rayon::ThreadPool>,grain:usize)->Result<Counts> {
+        receipts:&mut EffectWriter<'_>,stop:usize)->Result<Counts> {
         let mut counts=Counts{resume_checks:1,..Counts::default()};
         if !self.local_jobs_supported() {return Ok(counts);}
         let Some(cert)=*window else {return Ok(counts);};
@@ -462,17 +492,10 @@ impl Graph {
             cert.first,cell,self.parents.reader(),&mut counts) else {return Ok(counts);};
         let key=self.inline_arguments(cell,&plan.steps[from].keys)?;
         counts.source_operand_reads+=key.len() as u64;
-        let run_worker=pool.is_some() && limit-from>=grain;
-        let clock=run_worker.then(Instant::now);
         let frame=self.cells.get_mut(&cell).expect("fresh constructor has a public Cell");
         let parents=self.parents.reader();
-        let work=move || plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts);
-        let piece=if run_worker {pool.unwrap().install(work)} else {work()};
-        let mut piece=self.register_local_piece(cell,piece)?;
-        if let Some(clock)=clock {
-            piece.worker_batches+=1;piece.worker_operations+=piece.local_births+piece.local_reuses;
-            piece.worker_wait_ns+=clock.elapsed().as_nanos() as u64;
-        }
+        let piece=plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts);
+        let piece=self.register_local_piece(cell,piece)?;
         if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
         counts.add(piece);Ok(counts)
     }
@@ -517,9 +540,17 @@ mod tests {
             let mut g=graph();let (cell,_,mut window)=start(&mut g);
             let pool=(workers!=0).then(||rayon::ThreadPoolBuilder::new().num_threads(workers).build().unwrap());
             let mut receipts=Effects::default();let reads=g.key_lookup_calls.get();
-            let counts=g.complete_local_births(0,cell,&mut window,&mut receipts.writer(),4,pool.as_ref(),1).unwrap();
+            let counts=if let Some(pool)=pool {
+                let (_,job)=g.take_local_job(0,cell,&mut window,4,false).unwrap();
+                let parents=g.parents.reader();
+                let mut writer=receipts.writer();
+                let done=pool.install(||job.unwrap().run(parents,&mut writer));
+                assert!(done.worker.is_some());
+                g.commit_local_job(done,&mut receipts.writer()).unwrap()
+            } else {
+                g.complete_local_births(0,cell,&mut window,&mut receipts.writer(),4).unwrap()
+            };
             assert_eq!((counts.local_births,counts.local_reuses,counts.committed_rows),(2,1,2));
-            assert_eq!(counts.worker_operations,if workers==0 {0}else{3});
             assert_eq!(counts.pending_growths,0,"small local pieces use inline row handles");
             assert_eq!(g.key_lookup_calls.get(),reads);
             assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix,4);
@@ -538,7 +569,7 @@ mod tests {
             let v=g.construct(foreign,0,0,&[Arg::Slot(0)],1).unwrap();
             if union {g.enqueue_union(u,Value::Eq(100)).unwrap();g.repair().unwrap();}
             let reads=g.key_lookup_calls.get();let facts=g.stats.logical_facts_created;
-            let counts=g.complete_local_births(0,cell,&mut window,&mut Effects::default().writer(),4,None,1).unwrap();
+            let counts=g.complete_local_births(0,cell,&mut window,&mut Effects::default().writer(),4).unwrap();
             assert_eq!(counts.invalidated,1);assert!(window.is_none());
             assert_eq!(g.key_lookup_calls.get(),reads);assert_eq!(g.stats.logical_facts_created,facts);
             assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix,1);
