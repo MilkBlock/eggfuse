@@ -1183,6 +1183,16 @@ impl Switch {
         let path=if let Some((_,(rule,None)))=path.first()
             && self.roots.get(*rule).copied().flatten().is_none() {&path[1..]} else {path};
         let id=self.replay(path);
+        self.signature_at(id)
+    }
+    pub(crate) fn observe_advance(&self, state:usize, output:usize, entry:Entry) -> usize {
+        let leaf=match entry {
+            (rule,Some(pivot))=>self.leaf(rule,pivot),
+            (rule,None)=>self.roots.get(rule).copied().flatten().map(|id|id.get()-1),
+        };
+        leaf.map_or(0, |leaf|self.advance(state,output,leaf))
+    }
+    pub(crate) fn signature_at(&self,id:usize) -> serde_json::Value {
         let node=&self.nodes[id];
         let port=|p:ResultPort|(p.rule(),p.slot());
         serde_json::json!({"program":node.program,

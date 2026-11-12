@@ -3,6 +3,17 @@
 use super::*;
 
 impl Catalog {
+    /// Offline replay of recorded successful ancestry through the installed
+    /// switch. This describes dispatch, not execution or witness validity.
+    /// Missing producer roots start at zero, exactly as diagnostic collection.
+    pub fn describe_history_dispatch(&self, history: &J) -> Result<J> {
+        let events=array(&history["events"])?;
+        let states=observed_states(&self.switch,events)?;
+        let rows=events.iter().zip(states).enumerate().map(|(index,(event,pc))|
+            json!({"event":index,"entry":event["entry"],"unit":(pc!=0).then(||self.switch.active(pc)),
+                "transfer":self.switch.signature_at(pc)})).collect::<Vec<_>>();
+        Ok(json!(rows))
+    }
     pub fn emit_history_closures(
         p: &Program,
         plan: &mut J,
@@ -27,7 +38,7 @@ impl Catalog {
         catalog.limits.total = catalog.limits.total.max(capacity);
         let events = array(&history["events"])?;
         let mut paths = Vec::<Vec<(Option<usize>, Entry)>>::new();
-        let mut support = BTreeMap::<Vec<(Option<usize>, Entry)>, u64>::new();
+        let mut support = BTreeMap::<Vec<(Option<usize>, Entry)>, Vec<usize>>::new();
         let mut boundary_rejections = 0;
         for (index, event) in events.iter().enumerate() {
             let entry: Entry =
@@ -65,15 +76,15 @@ impl Catalog {
             for start in 0..path.len().saturating_sub(1) {
                 let mut suffix=path[start..].to_vec();
                 suffix[0].0=None;
-                *support.entry(suffix).or_default()+=1;
+                support.entry(suffix).or_default().push(index);
             }
             paths.push(path);
         }
         let mut ranked = support
             .into_iter()
-            .filter(|(_, n)| *n >= catalog.limits.support)
+            .filter(|(_, events)| events.len() as u64 >= catalog.limits.support)
             .collect::<Vec<_>>();
-        ranked.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+        ranked.sort_by(|a, b| b.1.len().cmp(&a.1.len()).then(a.0.cmp(&b.0)));
         let lower=|catalog:&Catalog| crate::result_handoff::Switch::build(p,
             catalog.units.iter().map(|u|u.path.as_ref()),&catalog.leaves,true,true,true,true,true);
         let mut executable=None;
@@ -84,7 +95,8 @@ impl Catalog {
         let mut guarded = 0;
         let mut unsupported = 0;
         let mut budget_rejections = 0;
-        for (path, visits) in ranked {
+        for (path, supporting_events) in ranked {
+            let visits=supporting_events.len();
             let proof = crate::cell_completion::cross_run_closure_transfer(p, &path);
             match proof["kind"].as_str() {
                 Some("saturated" | "internal_completion") => (),
@@ -158,6 +170,19 @@ impl Catalog {
                         "avoided_units":new_units,"reason":"existing-suffix-has-same-terminal-transfer"}));
                     continue;
                 }
+                // A suffix can differ in isolation yet never win at its actual
+                // observed entries: a longer compiled prefix may already own
+                // all of these transitions. Do not charge its marginal support
+                // as new dispatch coverage. This is profile-guided admission,
+                // not a proof of permanent semantic domination.
+                let old_states=observed_states(previous,events)?;
+                let new_states=observed_states(lowered,events)?;
+                if supporting_events.iter().all(|&event|
+                    previous.signature_at(old_states[event])==lowered.signature_at(new_states[event])) {
+                    redundant.push(json!({"source_path":path,"support":visits,
+                        "avoided_units":new_units,"reason":"actual-ancestry-already-has-same-terminal-transfer"}));
+                    continue;
+                }
             }
             if let Some(lowered)=lowered {executable=Some(lowered);}
             added += new_units;
@@ -221,4 +246,20 @@ fn encode_catalog(p:&Program,plan:&mut J,catalog:&Catalog)->Result<BTreeMap<Id,I
     }
     *plan=raw;
     Ok(remap)
+}
+
+fn observed_states(switch:&crate::result_handoff::Switch, events:&[J])->Result<Vec<usize>> {
+    if !switch.enabled() {return Err("history dispatch requires an installed switch".into());}
+    let mut states=Vec::with_capacity(events.len());
+    for (index,event) in events.iter().enumerate() {
+        let entry:Entry=serde_json::from_value(event["entry"].clone()).map_err(|e|e.to_string())?;
+        let parent:Option<usize>=serde_json::from_value(event["parent"].clone()).map_err(|e|e.to_string())?;
+        let before=if let Some(parent)=parent {
+            if parent>=index {return Err("history ancestry must point backwards".into());}
+            states[parent]
+        } else {0};
+        let output=event["output"].as_u64().ok_or("history output missing")? as usize;
+        states.push(switch.observe_advance(before,output,entry));
+    }
+    Ok(states)
 }

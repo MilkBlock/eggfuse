@@ -151,6 +151,7 @@ fn repeated_saturated_suffix_does_not_spend_another_cell_budget() {
     let entries=blocks["entries"].as_array().unwrap();
     let leaf=|rid|entries.iter().position(|e|e["consumer"]==rid).unwrap();
     let (left,right)=(leaf(a),leaf(b));
+    let leaf_count=entries.len();
     let mut raw=p.artifact;raw["spine_blocks"]=blocks;
     let p=Program::parse(seal(raw)).unwrap();
     let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
@@ -164,6 +165,12 @@ fn repeated_saturated_suffix_does_not_spend_another_cell_budget() {
     }
     let history=json!({"schema":"eggfuse-cell-runtime-history/v1",
         "program_sha256":p.artifact["sha256"],"events":events});
+    let mut already_covered=plan.clone();
+    let joined=leaf_count;
+    already_covered["joins"].as_array_mut().unwrap().push(json!({"left":joined,"output":0,"right":left}));
+    Catalog::emit_history_closures(&p,&mut already_covered,&history,8).unwrap();
+    assert!(already_covered["closure_selection"]["redundant_terminal_transfers"].as_array().unwrap().iter().any(|r|
+        r["reason"]=="actual-ancestry-already-has-same-terminal-transfer"), "{}",already_covered["closure_selection"]);
     Catalog::emit_history_closures(&p,&mut plan,&history,8).unwrap();
     let selection=&plan["closure_selection"];
     let redundant=selection["redundant_terminal_transfers"].as_array().unwrap();
