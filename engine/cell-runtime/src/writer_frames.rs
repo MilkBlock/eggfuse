@@ -178,3 +178,11 @@ mod tests {
         assert_eq!(g.writer_dir.live, 1);
     }
 }
+
+#[cfg(feature="storage-metrics")]
+impl Directory {
+    pub(super) fn storage_bytes(&self)->usize {
+        self.pages.capacity()*std::mem::size_of::<Option<Box<Page>>>()
+        +self.pages.iter().flatten().count()*std::mem::size_of::<Page>()
+    }
+}

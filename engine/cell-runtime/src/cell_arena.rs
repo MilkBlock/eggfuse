@@ -8,6 +8,14 @@ pub struct Cells {
     outliers: rustc_hash::FxHashMap<u32, u32>,
 }
 impl Cells {
+    #[cfg(feature="storage-metrics")]
+    pub(crate) fn compact_capacity(&mut self) {
+        for (_,cell) in &mut self.records {
+            cell.values.compact_capacity();cell.facts.compact_capacity();
+        }
+        self.records.shrink_to_fit();self.positions.shrink_to_fit();
+    }
+
     #[cfg(feature = "storage-metrics")]
     pub(crate) fn storage_bytes(&self) -> (usize,usize,usize) {
         (self.records.capacity()*std::mem::size_of::<(u32,Cell)>(),

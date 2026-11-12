@@ -29,6 +29,14 @@ impl FromIterator<(usize, Value)> for FrameSlots {
     }
 }
 impl FrameSlots {
+    #[cfg(feature="storage-metrics")]
+    pub(crate) fn compact_capacity(&mut self) {
+        self.current.compact_capacity();
+        if let Some(prefix)=self.prefix.as_mut().and_then(Arc::get_mut) {
+            prefix.compact_capacity();
+        }
+    }
+
     #[cfg(feature = "storage-metrics")]
     pub(crate) fn storage_census(&self, seen: &mut BTreeSet<usize>) -> (usize,usize) {
         let mut bytes=self.current.capacity_bytes();
@@ -178,6 +186,22 @@ impl<'de> Deserialize<'de> for FrameSlots {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    #[cfg(feature="storage-metrics")]
+    fn compaction_preserves_shared_prefix_and_mutable_suffix() {
+        let mut public:FrameSlots=[(0,Value::Int(7)),(3,Value::Int(8))].into_iter().collect();
+        let pointer=public.get(&0).unwrap() as *const Value;
+        let (mut owner,_)=public.lease();
+        owner.insert(9,Value::Int(10));owner.remove(&3);
+        public.compact_capacity();owner.compact_capacity();
+        assert_eq!(public.get(&0).unwrap() as *const Value,pointer);
+        assert_eq!(owner.get(&0).unwrap() as *const Value,pointer);
+        assert_eq!(public.get(&3),Some(&Value::Int(8)));
+        assert_eq!(owner.get(&3),None);
+        public.reattach(owner).unwrap();public.compact_capacity();
+        assert_eq!(public.get(&9),Some(&Value::Int(10)));
+        assert_eq!(public.get(&3),None);
+    }
     #[test]
     fn unique_suffixes_keep_the_original_allocation_and_published_prefix_readable() {
         let mut public: FrameSlots = [(0, Value::Int(7)), (3, Value::Int(8))]

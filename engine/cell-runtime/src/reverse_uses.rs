@@ -59,3 +59,13 @@ impl UseSet {
         }
     }
 }
+
+#[cfg(feature="storage-metrics")]
+impl UseSet {
+    pub(super) fn heap_payload(&self)->usize {
+        match self {
+            Self::Many(rows)=>std::mem::size_of_val(rows.as_ref())+rows.capacity()*std::mem::size_of::<Dependency>(),
+            _=>0,
+        }
+    }
+}

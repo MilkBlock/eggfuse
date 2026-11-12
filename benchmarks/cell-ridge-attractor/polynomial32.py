@@ -1,0 +1,57 @@
+"""Continuous radial denoising after frozen ridge transition; no lookup/repair."""
+import sys,argparse,json,hashlib
+from pathlib import Path
+import numpy as np
+ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'benchmarks/cell-ridge-enhanced'))
+import anchored as base
+import importlib.util
+spec=importlib.util.spec_from_file_location("kernel_base", ROOT/"benchmarks/cell-ridge-kernel/compact.py")
+kernel=importlib.util.module_from_spec(spec)
+sys.path.insert(0,str(ROOT/"benchmarks/cell-ridge-kernel"));sys.modules.pop("study",None);spec.loader.exec_module(kernel)
+
+def ridge32(x,y,reg):
+ x,y=x.astype(np.float64),y.astype(np.float64);mx,my=x.mean(0),y.mean(0)
+ xc,yc=x-mx,y-my
+ w=np.linalg.solve(xc.T@xc+reg*np.eye(x.shape[1]),xc.T@yc)
+ return w.astype(np.float32),(my-mx@w).astype(np.float32)
+def features(z,c,width):
+ return np.concatenate([z,(1+z@c.T/z.shape[1])**int(width)],1)
+class Adapter:
+ def __init__(self,path):
+  p=dict(np.load(path));self.p=p;self.original=kernel.Adapter(Path(str(p['base_path'])))
+ def encode(self,f):return self.original.encode(f)
+ def step(self,z,a):
+  z=self.original.step(z,a);p=self.p
+  for _ in range(int(p['passes'])):
+   z=z+float(p['strength'])*(features(z,p['centers'],float(p['width']))@p['w']+p['b'])
+   z=np.clip(z,-self.original.model.bound,self.original.model.bound) .astype(np.float32)
+  return z
+ def decode(self,z):return self.original.decode(z)
+def load_adapter(path):return Adapter(path)
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);args=ap.parse_args();args.output.mkdir(parents=True,exist_ok=False)
+ path=ROOT/'out/cell-ridge-kernel/compact/model.npz';original=kernel.Adapter(path)
+ _,facts,target,train,valid,test=base.t.dataset();z=original.encode(facts);decoder=(original.p['decoder_w'],original.p['decoder_b']);vary=np.ptp(facts[train],axis=0)>0
+ src,act=np.where(train[:,None]&train[target]);dst=target[src,act]
+ predicted=original.step(z[src],act)
+ rng=np.random.default_rng(994);centers=z[train];logs=[];best=None
+ for noise in (.01,.05,.15):
+  clean=np.repeat(z[train],64,axis=0);noisy=clean+rng.normal(0,noise,clean.shape)
+  x=np.concatenate([z[train],predicted,noisy]);y=np.concatenate([z[train],z[dst],clean])
+  for width in (3.,4.):
+   f=features(x,centers,width)
+   for reg in (.1,10.):
+    scale=np.maximum(f.std(0),.05);w,b=ridge32(f/scale,y-x,reg);w=(w/scale[:,None]).astype(np.float32)
+    for strength in (.25,.5):
+     for passes in (1,2):
+      pars=dict(base_path=str(path),centers=centers,width=width,w=w,b=b,strength=strength,passes=passes)
+      np.savez(args.output/'candidate.npz',**pars);m=Adapter(args.output/'candidate.npz')
+      sc=kernel.score(m,z,facts,target,valid);val={'exact_state_rate':sc['single']};trace={'all_steps_exact_rate':sc['trace']}
+      row=dict(noise=noise,width=width,reg=reg,strength=strength,passes=passes,one=val['exact_state_rate'],trace=trace['all_steps_exact_rate']);logs.append(row);print(row,flush=True)
+      quality=(row['trace'],row['one'])
+      if best is None or quality>best[0]:best=(quality,row);np.savez(args.output/'model.npz',**pars)
+ m=Adapter(args.output/'model.npz');sc=kernel.score(m,z,facts,target,test);held={'exact_state_rate':sc['single']};trace={'all_steps_exact_rate':sc['trace']}
+ result=dict(selection=best[1],validation=logs,test=held,autonomous=trace,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),scope='standalone finite teacher; no GPU/native claim')
+ (args.output/'results.json').write_text(json.dumps(result,indent=2)+'\n');print('RESULT',best[1],held['exact_state_rate'],trace['all_steps_exact_rate'])
+if __name__=='__main__':main()

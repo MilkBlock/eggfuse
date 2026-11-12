@@ -1,0 +1,431 @@
+{
+  "selection": {
+    "noise": 0.05,
+    "width": 32.0,
+    "reg": 1.0,
+    "strength": 1.0,
+    "passes": 2,
+    "one": 0.8162719633307869,
+    "trace": 0.5551948051948052
+  },
+  "validation": [
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7639419404125286,
+      "trace": 0.38961038961038963
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.7647058823529411,
+      "trace": 0.3717532467532468
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7490450725744844,
+      "trace": 0.28733766233766234
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.6772345301757067,
+      "trace": 0.22077922077922077
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7643239113827349,
+      "trace": 0.38636363636363635
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.7647058823529411,
+      "trace": 0.37337662337662336
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7505729564553094,
+      "trace": 0.29383116883116883
+    },
+    {
+      "noise": 0.05,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.680672268907563,
+      "trace": 0.22402597402597402
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7841864018334607,
+      "trace": 0.46915584415584416
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.8013750954927426,
+      "trace": 0.5064935064935064
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7975553857906799,
+      "trace": 0.5113636363636364
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.8143621084797555,
+      "trace": 0.5487012987012987
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7845683728036669,
+      "trace": 0.4675324675324675
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.80061115355233,
+      "trace": 0.5081168831168831
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7975553857906799,
+      "trace": 0.512987012987013
+    },
+    {
+      "noise": 0.05,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.8162719633307869,
+      "trace": 0.5551948051948052
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7643239113827349,
+      "trace": 0.35714285714285715
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.767379679144385,
+      "trace": 0.336038961038961
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7494270435446906,
+      "trace": 0.25162337662337664
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.693659281894576,
+      "trace": 0.18993506493506493
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7639419404125286,
+      "trace": 0.3555194805194805
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.7669977081741788,
+      "trace": 0.336038961038961
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7509549274255156,
+      "trace": 0.25162337662337664
+    },
+    {
+      "noise": 0.2,
+      "width": 8.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.6955691367456074,
+      "trace": 0.19318181818181818
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.7864782276546982,
+      "trace": 0.4659090909090909
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.7994652406417112,
+      "trace": 0.49188311688311687
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7799847211611918,
+      "trace": 0.48863636363636365
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 0.01,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.7941176470588235,
+      "trace": 0.4772727272727273
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 1,
+      "one": 0.786096256684492,
+      "trace": 0.4707792207792208
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 0.25,
+      "passes": 2,
+      "one": 0.799083269671505,
+      "trace": 0.4967532467532468
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 1,
+      "one": 0.7822765469824293,
+      "trace": 0.49512987012987014
+    },
+    {
+      "noise": 0.2,
+      "width": 32.0,
+      "reg": 1.0,
+      "strength": 1.0,
+      "passes": 2,
+      "one": 0.7948815889992361,
+      "trace": 0.4935064935064935
+    }
+  ],
+  "test": {
+    "exact_state_rate": 0.8333333333333334,
+    "wrong_bits": 3183,
+    "rows": 2652,
+    "variable_bit_error": 0.03158490116694451,
+    "false_positive": 1023,
+    "false_negative": 2160,
+    "latent_rmse": 0.53785240650177,
+    "changed": {
+      "exact_state_rate": 0.7926577042399172,
+      "wrong_bits": 3051,
+      "rows": 1934,
+      "variable_bit_error": 0.041514722690905136,
+      "false_positive": 954,
+      "false_negative": 2097
+    },
+    "no_op": {
+      "exact_state_rate": 0.9428969359331476,
+      "wrong_bits": 132,
+      "rows": 718,
+      "variable_bit_error": 0.004838000293212139,
+      "false_positive": 69,
+      "false_negative": 63
+    }
+  },
+  "autonomous": {
+    "steps": [
+      {
+        "exact_state_rate": 0.8397435897435898,
+        "wrong_bits": 696,
+        "rows": 624,
+        "variable_bit_error": 0.029352226720647773,
+        "false_positive": 235,
+        "false_negative": 461
+      },
+      {
+        "exact_state_rate": 0.7996794871794872,
+        "wrong_bits": 1029,
+        "rows": 624,
+        "variable_bit_error": 0.04339574898785425,
+        "false_positive": 398,
+        "false_negative": 631
+      },
+      {
+        "exact_state_rate": 0.8301282051282052,
+        "wrong_bits": 1097,
+        "rows": 624,
+        "variable_bit_error": 0.046263495276653174,
+        "false_positive": 453,
+        "false_negative": 644
+      },
+      {
+        "exact_state_rate": 0.8141025641025641,
+        "wrong_bits": 1350,
+        "rows": 624,
+        "variable_bit_error": 0.056933198380566805,
+        "false_positive": 670,
+        "false_negative": 680
+      },
+      {
+        "exact_state_rate": 0.8381410256410257,
+        "wrong_bits": 1236,
+        "rows": 624,
+        "variable_bit_error": 0.05212550607287449,
+        "false_positive": 598,
+        "false_negative": 638
+      },
+      {
+        "exact_state_rate": 0.8525641025641025,
+        "wrong_bits": 990,
+        "rows": 624,
+        "variable_bit_error": 0.041751012145748986,
+        "false_positive": 385,
+        "false_negative": 605
+      },
+      {
+        "exact_state_rate": 0.8958333333333334,
+        "wrong_bits": 971,
+        "rows": 624,
+        "variable_bit_error": 0.04094973009446694,
+        "false_positive": 366,
+        "false_negative": 605
+      },
+      {
+        "exact_state_rate": 0.9246794871794872,
+        "wrong_bits": 676,
+        "rows": 624,
+        "variable_bit_error": 0.02850877192982456,
+        "false_positive": 324,
+        "false_negative": 352
+      },
+      {
+        "exact_state_rate": 0.9294871794871795,
+        "wrong_bits": 680,
+        "rows": 624,
+        "variable_bit_error": 0.028677462887989204,
+        "false_positive": 355,
+        "false_negative": 325
+      },
+      {
+        "exact_state_rate": 0.9551282051282052,
+        "wrong_bits": 440,
+        "rows": 624,
+        "variable_bit_error": 0.018556005398110663,
+        "false_positive": 226,
+        "false_negative": 214
+      },
+      {
+        "exact_state_rate": 0.969551282051282,
+        "wrong_bits": 331,
+        "rows": 624,
+        "variable_bit_error": 0.013959176788124156,
+        "false_positive": 143,
+        "false_negative": 188
+      },
+      {
+        "exact_state_rate": 0.9759615384615384,
+        "wrong_bits": 239,
+        "rows": 624,
+        "variable_bit_error": 0.010079284750337382,
+        "false_positive": 79,
+        "false_negative": 160
+      }
+    ],
+    "all_steps_exact_rate": 0.530448717948718,
+    "latent_max_abs": 6.21484375,
+    "trajectories": 624
+  },
+  "source_sha256": "b804903c662c87bca94b00939b881f48f1c66c2e1d781f9ae0b2cc2ab9339cd8",
+  "scope": "standalone finite teacher; no GPU/native claim"
+}

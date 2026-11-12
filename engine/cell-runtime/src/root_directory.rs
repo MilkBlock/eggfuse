@@ -51,3 +51,10 @@ impl Parents {
         self.map.is_empty()
     }
 }
+
+#[cfg(feature="storage-metrics")]
+impl Parents {
+    pub(crate) fn storage_payload(&self)->(usize,usize) {
+        (self.map.capacity()*std::mem::size_of::<(u64,u64)>(),self.cells.capacity()*8)
+    }
+}

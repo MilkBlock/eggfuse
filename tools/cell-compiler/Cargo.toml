@@ -48,3 +48,7 @@ required-features = ["iterative-bake"]
 [[example]]
 name = "runtime_storage_census"
 required-features = ["sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "runtime_storage_comparison"
+required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]

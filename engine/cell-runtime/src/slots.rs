@@ -53,6 +53,8 @@ impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
     pub fn len(&self) -> usize {
         self.0.len()
     }
+    #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+    pub(crate) fn compact_capacity(&mut self) { self.0.shrink_to_fit(); }
     pub(crate) fn capacity_bytes(&self) -> usize {
         self.0.capacity() * std::mem::size_of::<(K, V)>()
     }

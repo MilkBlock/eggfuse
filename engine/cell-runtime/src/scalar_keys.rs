@@ -68,3 +68,12 @@ impl FunctionKeys {
         }
     }
 }
+
+#[cfg(feature="storage-metrics")]
+impl FunctionKeys {
+    pub(super) fn storage_payload(&self)->usize {
+        self.words.capacity()*std::mem::size_of::<(u64,usize)>()
+        +self.other.capacity()*std::mem::size_of::<(Vec<Value>,usize)>()
+        +self.other.keys().map(|k|k.capacity()*std::mem::size_of::<Value>()).sum::<usize>()
+    }
+}

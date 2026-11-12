@@ -1,0 +1,100 @@
+{
+  "selection": {
+    "scale": 1.5799659729003908,
+    "power": 3.0,
+    "passes": 3,
+    "strength": 1.0,
+    "validation": {
+      "single": 0.935064935064935,
+      "trace": 0.8717532467532467
+    }
+  },
+  "validation": [
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 2,
+      "strength": 0.5,
+      "validation": {
+        "single": 0.9339190221543163,
+        "trace": 0.8701298701298701
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 2,
+      "strength": 1.0,
+      "validation": {
+        "single": 0.9343009931245225,
+        "trace": 0.8717532467532467
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 3,
+      "strength": 0.5,
+      "validation": {
+        "single": 0.9339190221543163,
+        "trace": 0.8701298701298701
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 3,
+      "strength": 1.0,
+      "validation": {
+        "single": 0.935064935064935,
+        "trace": 0.8717532467532467
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 4,
+      "strength": 0.5,
+      "validation": {
+        "single": 0.9339190221543163,
+        "trace": 0.8701298701298701
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 4,
+      "strength": 1.0,
+      "validation": {
+        "single": 0.9354469060351414,
+        "trace": 0.8685064935064936
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 6,
+      "strength": 0.5,
+      "validation": {
+        "single": 0.9331550802139037,
+        "trace": 0.8701298701298701
+      }
+    },
+    {
+      "scale": 1.5799659729003908,
+      "power": 3.0,
+      "passes": 6,
+      "strength": 1.0,
+      "validation": {
+        "single": 0.9369747899159664,
+        "trace": 0.8409090909090909
+      }
+    }
+  ],
+  "training_change_median": 3.9499149322509766,
+  "test": {
+    "single": 0.9536199095022625,
+    "trace": 0.8910256410256411
+  },
+  "source_sha256": "b78af0ff725440d427908f2e5768a88dc80ae52920038381be76da33828dde76"
+}

@@ -142,3 +142,13 @@ mod tests {
         assert_eq!(parents.reader().root(30), 10);
     }
 }
+
+#[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+impl Parents {
+    pub(crate) fn storage_payload(&self)->serde_json::Value {
+        let (local_map,local_bits)=self.local.storage_payload();
+        let (base_map,base_bits)=self.base.as_ref().map_or((0,0),|b|b.storage_payload());
+        serde_json::json!({"map_capacity_payload":local_map+base_map+self.delta.capacity()*std::mem::size_of::<(u64,u64)>(),
+            "directory_bytes":local_bits+base_bits,"shared_base":self.base.is_some()})
+    }
+}

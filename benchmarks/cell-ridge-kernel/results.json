@@ -1,0 +1,915 @@
+{
+  "scope": "Standalone finite-teacher research, not native runtime acceptance or GPU performance",
+  "artifacts": {
+    "compact/evaluation.json": {
+      "evaluation_status": "complete",
+      "finite_checks_pass": false,
+      "native_semantic_acceptance": false,
+      "runtime_takeover": false,
+      "held_initial_states": 156,
+      "initial_reconstruction": {
+        "rows": 156,
+        "exact_rows": 154,
+        "wrong_bits": 2,
+        "nonfinite_rows": 0
+      },
+      "one_step": {
+        "rows": 2652,
+        "exact_rows": 2470,
+        "wrong_bits": 1536,
+        "nonfinite_rows": 0
+      },
+      "two_step": {
+        "rows": 45084,
+        "exact_rows": 40778,
+        "wrong_bits": 33834,
+        "nonfinite_rows": 0
+      },
+      "reverse_two_step": {
+        "rows": 45084,
+        "exact_rows": 40778,
+        "wrong_bits": 33834,
+        "nonfinite_rows": 0
+      },
+      "one_step_target_train": {
+        "rows": 1231,
+        "exact_rows": 1162,
+        "wrong_bits": 874,
+        "nonfinite_rows": 0
+      },
+      "one_step_target_held": {
+        "rows": 1421,
+        "exact_rows": 1308,
+        "wrong_bits": 662,
+        "nonfinite_rows": 0
+      },
+      "rule_enabled_boundary_feedback": {
+        "rows": 1,
+        "exact_rows": 0,
+        "wrong_bits": 24,
+        "nonfinite_rows": 0
+      },
+      "repeated_event": {
+        "rows": 2652,
+        "exact_rows": 2464,
+        "wrong_bits": 1491,
+        "nonfinite_rows": 0
+      },
+      "idempotent_observation_pairs": 2478,
+      "commuting_observation_pairs": 41458,
+      "ordered_event_pairs": 45084,
+      "sequences": [
+        {
+          "seed": 20261112,
+          "steps": 12,
+          "trajectories": 624,
+          "all_steps_exact": 466,
+          "teacher_forced_all_steps_exact": 492,
+          "checkpoints": [
+            {
+              "exact_rows": 582,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 562,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 576,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 569,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 591,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 610,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 612,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 611,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 606,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 612,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 616,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 617,
+              "nonfinite_rows": 0
+            }
+          ]
+        },
+        {
+          "seed": 104729,
+          "steps": 12,
+          "trajectories": 624,
+          "all_steps_exact": 485,
+          "teacher_forced_all_steps_exact": 504,
+          "checkpoints": [
+            {
+              "exact_rows": 574,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 556,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 570,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 570,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 587,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 605,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 611,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 614,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 613,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 615,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 619,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 619,
+              "nonfinite_rows": 0
+            }
+          ]
+        },
+        {
+          "seed": 65537,
+          "steps": 48,
+          "trajectories": 624,
+          "all_steps_exact": 483,
+          "teacher_forced_all_steps_exact": 508,
+          "checkpoints": [
+            {
+              "exact_rows": 584,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 565,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 570,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 579,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 588,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 608,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 617,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 618,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 617,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 620,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 621,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 621,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 623,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 620,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 619,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 621,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 621,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 620,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 622,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 622,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            },
+            {
+              "exact_rows": 624,
+              "nonfinite_rows": 0
+            }
+          ]
+        }
+      ],
+      "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+      "adapter_sha256": "553bcb54823a5577d61d507cfd43172292207d28f3c16042cbd94adddf660818",
+      "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+      "weights_sha256": "c2f0012cc03bec86c1becd77fe8c2e5b5a4a24f3706167afd24ca1b5a1f4cd87",
+      "implementation_sha256": {
+        "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+        "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+        "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+      },
+      "precision_option": null
+    },
+    "compact/results.json": {
+      "scope": "finite teacher; 17 real coordinates; nonlinear readout never feeds execution",
+      "selection": {
+        "degree": 5,
+        "reg": 10.0,
+        "iteration": 0,
+        "validation": {
+          "single": 0.9071810542398777,
+          "trace": 0.7597402597402597
+        }
+      },
+      "readout_selection": {
+        "degree": 4,
+        "reg": 1.0,
+        "validation_initial": 0.974025974025974
+      },
+      "readout_validation": [
+        {
+          "degree": 2,
+          "reg": 0.001,
+          "validation_initial": 0.961038961038961
+        },
+        {
+          "degree": 2,
+          "reg": 1.0,
+          "validation_initial": 0.961038961038961
+        },
+        {
+          "degree": 3,
+          "reg": 0.001,
+          "validation_initial": 0.948051948051948
+        },
+        {
+          "degree": 3,
+          "reg": 1.0,
+          "validation_initial": 0.9675324675324676
+        },
+        {
+          "degree": 4,
+          "reg": 0.001,
+          "validation_initial": 0.961038961038961
+        },
+        {
+          "degree": 4,
+          "reg": 1.0,
+          "validation_initial": 0.974025974025974
+        }
+      ],
+      "validation": [
+        {
+          "degree": 2,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9106187929717342,
+            "trace": 0.6801948051948052
+          }
+        },
+        {
+          "degree": 2,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9106187929717342,
+            "trace": 0.6834415584415584
+          }
+        },
+        {
+          "degree": 2,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9117647058823529,
+            "trace": 0.6883116883116883
+          }
+        },
+        {
+          "degree": 3,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.8185637891520244,
+            "trace": 0.04383116883116883
+          }
+        },
+        {
+          "degree": 3,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9006875477463713,
+            "trace": 0.6574675324675324
+          }
+        },
+        {
+          "degree": 3,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9087089381207029,
+            "trace": 0.7207792207792207
+          }
+        },
+        {
+          "degree": 4,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.8475935828877005,
+            "trace": 0.2922077922077922
+          }
+        },
+        {
+          "degree": 4,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.8896103896103896,
+            "trace": 0.6266233766233766
+          }
+        },
+        {
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9067990832696715,
+            "trace": 0.7548701298701299
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.878533231474408,
+            "trace": 0.5925324675324676
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.8888464476699771,
+            "trace": 0.6412337662337663
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.9071810542398777,
+            "trace": 0.7597402597402597
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 1,
+          "validation": {
+            "single": 0.9025974025974026,
+            "trace": 0.737012987012987
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 2,
+          "validation": {
+            "single": 0.9037433155080213,
+            "trace": 0.75
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 3,
+          "validation": {
+            "single": 0.9022154316271963,
+            "trace": 0.7548701298701299
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 4,
+          "validation": {
+            "single": 0.9018334606569901,
+            "trace": 0.7532467532467533
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 5,
+          "validation": {
+            "single": 0.9018334606569901,
+            "trace": 0.7548701298701299
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 6,
+          "validation": {
+            "single": 0.9018334606569901,
+            "trace": 0.7532467532467533
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 7,
+          "validation": {
+            "single": 0.9018334606569901,
+            "trace": 0.7548701298701299
+          }
+        },
+        {
+          "degree": 5,
+          "reg": 10.0,
+          "iteration": 8,
+          "validation": {
+            "single": 0.9018334606569901,
+            "trace": 0.7532467532467533
+          }
+        }
+      ],
+      "test": {
+        "single": 0.9313725490196079,
+        "trace": 0.7580128205128205
+      },
+      "test_initial": 0.9871794871794872,
+      "source_sha256": {
+        "compact.py": "553bcb54823a5577d61d507cfd43172292207d28f3c16042cbd94adddf660818",
+        "study.py": "d57f5c4fd53e9254269993c28e1d6e2fc0fcc594e14e64a75ac170c9c47d3007"
+      }
+    },
+    "first/results.json": {
+      "scope": "finite teacher, FP32 numerical ridge; no runtime takeover",
+      "selection": {
+        "dimension": 35,
+        "degree": 4,
+        "reg": 10.0,
+        "iteration": 2,
+        "validation": {
+          "single": 0.7910618792971734,
+          "trace": 0.4512987012987013
+        }
+      },
+      "validation": [
+        {
+          "dimension": 32,
+          "degree": 2,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7158135981665393,
+            "trace": 0.0
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 2,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.774637127578304,
+            "trace": 0.10227272727272728
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 2,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7559205500381971,
+            "trace": 0.3133116883116883
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 3,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7081741787624141,
+            "trace": 0.030844155844155844
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 3,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7841864018334607,
+            "trace": 0.2418831168831169
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 3,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7922077922077922,
+            "trace": 0.3961038961038961
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 4,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.721161191749427,
+            "trace": 0.15584415584415584
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 4,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.778838808250573,
+            "trace": 0.2922077922077922
+          }
+        },
+        {
+          "dimension": 32,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.799083269671505,
+            "trace": 0.40584415584415584
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 2,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7169595110771582,
+            "trace": 0.0016233766233766235
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 2,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7754010695187166,
+            "trace": 0.21266233766233766
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 2,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7490450725744844,
+            "trace": 0.336038961038961
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 3,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7119938884644768,
+            "trace": 0.05032467532467533
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 3,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7734912146676852,
+            "trace": 0.29707792207792205
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 3,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7902979373567609,
+            "trace": 0.4074675324675325
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 0.001,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7249809014514896,
+            "trace": 0.17532467532467533
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 0.1,
+          "iteration": 0,
+          "validation": {
+            "single": 0.7776928953399541,
+            "trace": 0.31493506493506496
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 0,
+          "validation": {
+            "single": 0.799083269671505,
+            "trace": 0.41233766233766234
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 1,
+          "validation": {
+            "single": 0.7948815889992361,
+            "trace": 0.43506493506493504
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 2,
+          "validation": {
+            "single": 0.7910618792971734,
+            "trace": 0.4512987012987013
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 3,
+          "validation": {
+            "single": 0.7941176470588235,
+            "trace": 0.4383116883116883
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 4,
+          "validation": {
+            "single": 0.7925897631779985,
+            "trace": 0.44642857142857145
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 5,
+          "validation": {
+            "single": 0.7937356760886173,
+            "trace": 0.43993506493506496
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 6,
+          "validation": {
+            "single": 0.7937356760886173,
+            "trace": 0.44155844155844154
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 7,
+          "validation": {
+            "single": 0.7937356760886173,
+            "trace": 0.4383116883116883
+          }
+        },
+        {
+          "dimension": 35,
+          "degree": 4,
+          "reg": 10.0,
+          "iteration": 8,
+          "validation": {
+            "single": 0.7937356760886173,
+            "trace": 0.43993506493506496
+          }
+        }
+      ],
+      "test": {
+        "single": 0.7941176470588235,
+        "trace": 0.44871794871794873
+      },
+      "source_sha256": "d57f5c4fd53e9254269993c28e1d6e2fc0fcc594e14e64a75ac170c9c47d3007"
+    }
+  },
+  "current_source_sha256": {
+    "compact.py": "553bcb54823a5577d61d507cfd43172292207d28f3c16042cbd94adddf660818",
+    "study.py": "d57f5c4fd53e9254269993c28e1d6e2fc0fcc594e14e64a75ac170c9c47d3007"
+  }
+}
