@@ -139,3 +139,59 @@ The first timing campaign used `4bc89976`; its `event_early_rules` counted
 unprocessed callbacks, not unfinished worker queries, and is invalid as an
 overlap metric. Its timings remain retained. The corrected campaign checks
 actual unfinished work and separates early receipt from completed continuation.
+
+
+## Measured checkpoint
+
+The implementation is `4bc89976`; corrected overlap accounting is `2ae7b97e`.
+The final campaign uses the latter runtime. Results include every warmup and
+sample in [results.json](results.json); [preceding-results.json](preceding-results.json)
+retains the first campaign, with its invalid overlap counter explicitly marked.
+
+| Inference median | Control 1 | Candidate 1 | Control 4 | Candidate 4 |
+| --- | ---: | ---: | ---: | ---: |
+| sum-bits, 5 samples | 19.378 ms | 21.258 ms | 25.641 ms | 26.224 ms |
+| Raytrace, 3 samples | 7.321 s | 7.222 s | 6.331 s | 6.505 s |
+
+Four-worker medians regress by 2.28% and 2.75%. At one worker, sum-bits regresses
+9.70%, while Raytrace improves 1.36%. The preceding campaign showed roughly 1%
+four-worker improvements. The change has **not established a performance win**.
+Background activity was visible in a spot sample during the final campaign;
+that observation does not isolate the cause of the variation. No samples are
+removed and no further favorable timing run replaces these results.
+
+Final Raytrace work-count execution:
+
+| Measure | Observed work |
+| --- | ---: |
+| Query rules sealed while query jobs remain unfinished | 12,037 / 33,296 |
+| RHS candidates received in a prefix before all jobs return | 34,890 / 81,258 |
+| RHS Cells actually completed while jobs remain unfinished | 9,359 / 81,258 |
+| Separate residual-sort pool invocations | 834 → 0 |
+| Sieve pool scopes | 1,806 → 719 |
+| Sieve affected / empty nodes | 66,124 / 31,560 |
+| Empty successors completed without another dispatch | 19,083 |
+| Unit candidate rows / duplicates invalidated | 129,123 / 43,783 |
+| Total key lookups | 4,027,718 → 4,027,718 |
+
+Event payload capacities charged approximately 223 MB for queries, 138 MB for
+RHS delivery, and 50 MB for condition task headers over the full execution;
+these are cumulative, not peak live memory. Query event storage was reduced
+from about 1.07 GB in the intermediate implementation, but the surviving cost
+is still material. The work-count execution waited about 431 ms in query event
+receives and 30 ms in RHS receives. Those figures do not measure worker idle
+residence. Whole-process CPU/wall averages in the final four-worker Raytrace
+campaign are about 1.25 cores for control and 1.31 for candidate, including load
+and export: this is not four-core saturation or an inference-only utilization
+measurement.
+
+Final states and the 1,428/16,883 source Run summaries remain exact; logical
+mutation counters are unchanged. The native sum-bits acceptance is `pass`.
+
+The next unresolved boundary is ownership of shared adoption, not merely more
+producer threads. Source-prefix ID/duplicate selection and mutable effects
+still constrain RHS retirement, and Cell queries still have source preparation
+and Cursor processing. Later work must narrow these obligations to actual
+conflicts and table/result owners, while charging the additional scheduling
+cost. This checkpoint is an implemented event pipeline, not completion of the
+larger goal of removing all global execution stalls.
