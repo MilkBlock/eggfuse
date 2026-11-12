@@ -13,6 +13,11 @@ pub fn compile_lazy_unions(p:Program) -> Result<Value,Box<dyn std::error::Error>
     Catalog::emit_lazy_union_handoffs(&p,&mut plan)?;
     apply_plan(&p,plan)
 }
+pub fn compile_history_closures(p:Program, history:&Value, extra_units:usize) -> Result<Value,Box<dyn std::error::Error>> {
+    let mut plan=p.artifact["iterative_bake"].clone();
+    Catalog::emit_history_closures(&p,&mut plan,history,extra_units)?;
+    apply_plan(&p,plan)
+}
 pub(crate) fn apply_plan(p:&Program,plan:Value) -> Result<Value,Box<dyn std::error::Error>> {
     let original=&p.artifact;
     let mut raw=p.artifact.clone();
@@ -66,15 +71,24 @@ fn restore_ownership(original:&Value,raw:&mut Value) -> Result<(),Box<dyn std::e
     Ok(())
 }
 pub(crate) fn run(args:Vec<String>) -> Result<(),Box<dyn std::error::Error>> {
-    let opts=crate::options(args.into_iter(),&["--program","--output","--lazy-unions"])?;
+    let opts=crate::options(args.into_iter(),&["--program","--output","--lazy-unions","--history","--extra-units"])?;
+    if opts.contains_key("--extra-units") && !opts.contains_key("--history") {
+        return Err("--extra-units requires --history".into());
+    }
     let input=opts.get("--program").ok_or("--program required")?;
     let out=std::path::Path::new(opts.get("--output").ok_or("--output required")?);
     let p=Program::parse(serde_json::from_slice(&std::fs::read(input)?)?)?;
-    let raw=match opts.get("--lazy-unions").map(String::as_str) {
+    let raw=if let Some(path)=opts.get("--history") {
+        if opts.contains_key("--lazy-unions") {return Err("history closure lowering selects its checked union policy".into());}
+        let history:Value=serde_json::from_slice(&std::fs::read(path)?)?;
+        let history=history.get("completed_history").unwrap_or(&history);
+        let extra=opts.get("--extra-units").map(|s|s.parse::<usize>()).transpose()?.unwrap_or(p.iterative.limits.per_round);
+        compile_history_closures(p,history,extra)?
+    } else { match opts.get("--lazy-unions").map(String::as_str) {
         None | Some("false") => compile(p)?,
         Some("true") => compile_lazy_unions(p)?,
         _ => return Err("--lazy-unions must be true or false".into()),
-    };
+    }};
     std::fs::create_dir(out)?;
     std::fs::write(out.join("program.json"),serde_json::to_vec_pretty(&raw)?)?;
     std::fs::write(out.join("cell-egraph.json"),serde_json::to_vec_pretty(&raw["iterative_bake"]["completion"])?)?;

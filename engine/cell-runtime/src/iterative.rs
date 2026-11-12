@@ -11,6 +11,8 @@ pub type Id = usize;
 // None denotes a completed producer, which is never a matching entry. Some
 // serializes as the old pivot number, preserving existing catalog artifacts.
 pub(crate) type Entry = (usize, Option<usize>);
+#[path = "iterative_closure.rs"]
+mod closure;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct Join {
     pub left: Id,
