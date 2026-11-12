@@ -1,0 +1,72 @@
+{
+  "scope": "Standalone Metal GPU shared-layout encoding and fitted ridge completion recognition; no runtime effects",
+  "execution": "compiled-per-layout",
+  "gpu": "Device(gpu, 0)",
+  "mlx_version": "0.32.4",
+  "test_rows": 102,
+  "layouts": 43,
+  "dynamic_scalar_values": 642,
+  "input_bytes": 2568,
+  "correct": 89,
+  "cpu_gpu_argmax_equal": true,
+  "max_score_abs_error": 8.588656783103943e-06,
+  "max_feature_abs_error": 9.5367431640625e-07,
+  "backpropagation": false,
+  "incorrect_passing_containment": 5,
+  "costs_ms": {
+    "layout_compilation": 1.4765000087209046,
+    "dynamic_gather": 0.1579160161782056,
+    "input_materialization": 0.0697089999448508,
+    "cold_gpu_encoding_and_ridge": 66.52608400327154,
+    "output_materialization": 0.19604197586886585,
+    "cpu_original_encoding_and_ridge": 7.002832979196683,
+    "necessary_containment_only": 5.3717919799964875
+  },
+  "batches": [
+    {
+      "rows": 102,
+      "repeat_of_same_examples": 1,
+      "median_gpu_encoding_and_ridge_ms": 15.730667015304789,
+      "samples_ms": [
+        14.832708984613419,
+        15.730667015304789,
+        16.46291700308211
+      ]
+    },
+    {
+      "rows": 1632,
+      "repeat_of_same_examples": 16,
+      "median_gpu_encoding_and_ridge_ms": 16.268999985186383,
+      "samples_ms": [
+        16.268999985186383,
+        16.977084014797583,
+        15.441749972524121
+      ]
+    },
+    {
+      "rows": 13056,
+      "repeat_of_same_examples": 128,
+      "median_gpu_encoding_and_ridge_ms": 17.24983300664462,
+      "samples_ms": [
+        17.29362498736009,
+        16.279333009151742,
+        17.24983300664462
+      ]
+    }
+  ],
+  "lifecycle_cost": null,
+  "derivability_validation_cost": null,
+  "runtime_takeover": false,
+  "limitations": [
+    "export adapter, not direct Rust slot-reader integration",
+    "GPU input layouts derive from initial DAG only",
+    "known completion catalog classification, not arbitrary generated saturation",
+    "repeated batch rows measure throughput only; no additional test samples",
+    "containment cannot authorize effects; lifecycle and derivability not implemented"
+  ],
+  "hashes": {
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "model": "7dd61cd22db2a374f04f65820c31c52fa86d60f26b0e227aeadc7edb48c6659d",
+    "catalog": "8e22da359853dd7a920908d14303ce24f45de881ffaeb622c852e0af125ee17e"
+  }
+}
