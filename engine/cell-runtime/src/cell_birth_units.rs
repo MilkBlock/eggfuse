@@ -20,11 +20,12 @@ pub(super) struct Tail {
 pub(crate) struct Row {
     pub function: Function,
     pub fields: RowFields,
+    pub(super) registered: Option<(usize, bool, bool)>,
 }
 impl Row {
     pub(crate) fn prepared(table: usize, key: Vec<Value>) -> Self {
         let fields = Graph::shared_fields(&key, &Value::Int(0));
-        Self { fields, function: Function { writer: None,
+        Self { fields, registered: None, function: Function { writer: None,
             #[cfg(feature="receipt-slots")] port_slot: 0,
             table, key, value: Value::Int(0), epoch: 0, live: true, origin: None } }
     }
@@ -121,6 +122,7 @@ impl Plan {
             };
             let fields = Graph::shared_fields(&key, &Value::Int(0));
             rows.push(Row {
+                registered: None,
                 function: Function {
                     writer: None,
                     #[cfg(feature = "receipt-slots")]
@@ -156,23 +158,29 @@ impl Plan {
     }
 }
 impl Graph {
-    pub(crate) fn accept_prepared_unit(&self, table: usize) -> bool {
-        self.sealed_generation == Some(self.stats.unions)
-            && self.pending_unions.is_empty() && !self.units.owned[table]
+    pub(crate) fn prepares_unit_storage(&self, table: usize) -> bool { !self.units.owned[table] }
+    pub(crate) fn accept_prepared_unit(&mut self, table: usize) -> bool {
+        if self.units.owned[table] { self.stats.unit_prepared_storage_fallback += 1; return false; }
+        let valid = self.sealed_generation == Some(self.stats.unions) && self.pending_unions.is_empty();
+        self.stats.unit_prepared_generation_fallback += u64::from(!valid);
+        valid
     }
     pub(crate) fn commit_unit_row(&mut self, row: Row) -> Result<(usize, bool)> {
         let Row {
             mut function,
             fields,
+            registered,
         } = row;
         let table = function.table;
-        if let Some(index) = self.function_index(table, &function.key) {
+        if let Some(index) = registered.filter(|(_,new,_)|!*new).map(|(i,_,_)|i)
+            .or_else(||registered.is_none().then(||self.function_index(table, &function.key)).flatten()) {
             // The typed old/new Unit merge preserves the first source witness.
             // The losing candidate is invalidated by dropping its actual row.
             self.merge_value(table, Value::Int(0), Value::Int(0))?;
             return Ok((index, false));
         }
         let index = self.functions.len();
+        if let Some((expected, true, _)) = registered { assert_eq!(index, expected, "source-ordered Unit identity"); }
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::effective(
             self.epoch,
@@ -182,7 +190,7 @@ impl Graph {
             None,
             &function.value,
         )?;
-        self.function_keys[table].insert(&function.key, index);
+        if registered.is_none() { self.function_keys[table].insert(&function.key, index); }
         let origin = function.origin.take();
         self.functions.push(function);
         self.function_decoded.push(Some(fields.clone()));
@@ -190,11 +198,19 @@ impl Graph {
             self.active_origin = Some(index);
         }
         self.function_origin(index, origin);
-        self.members[table].insert(index as u64);
+        if registered.is_none() { self.members[table].insert(index as u64); }
         self.changed = true;
         self.stats.function_updates += 1;
-        self.changes.touch(table, Dependency::Function(index));
-        self.subscribe(table, Dependency::Function(index), &fields);
+        if registered.is_none() {
+            self.changes.touch(table, Dependency::Function(index));
+            self.subscribe(table, Dependency::Function(index), &fields);
+        } else {
+            if registered.unwrap().2 { self.changes.activate_new_table(table); }
+            // Eq-root dependency ownership is still a genuine shared boundary.
+            // Table version, membership and publication are installed by its
+            // worker after the bounded source append finishes.
+            self.subscribe_edges(Dependency::Function(index), &fields);
+        }
         Ok((index, true))
     }
 }

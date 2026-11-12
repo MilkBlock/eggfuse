@@ -187,6 +187,13 @@ pub struct Stats {
     pub unit_prepared_consumed: u64,
     pub unit_prepared_invalidated: u64,
     pub unit_prepared_stale: u64,
+    pub unit_prepared_storage_fallback: u64,
+    pub unit_prepared_generation_fallback: u64,
+    pub unit_registry_batches: u64,
+    pub unit_registry_candidates: u64,
+    pub unit_registry_installs: u64,
+    pub unit_registry_tables: u64,
+    pub unit_registry_bytes: u64,
     #[serde(default)]
     pub constructor_prepared_checks: u64,
     #[serde(default)]

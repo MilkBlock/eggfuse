@@ -262,7 +262,7 @@ impl Plan {
     pub fn needs_preparation(&self, instance: &super::Instance) -> bool {
         (self.has_scalar_preparation() && !instance.preparation_attempted)
             || (self.constructor.is_some() && instance.constructor.pending())
-            || (self.units.is_some() && instance.units.pending())
+            || (self.units.is_some() && instance.constructor.pending())
     }
     #[cfg(feature = "sparse-cells")]
     pub fn prepare(

@@ -130,6 +130,9 @@ pub(crate) enum Prepared {
     // Demanded actual results already occupy the source Effects layout.
     // Progress uses Instance.prepared; no temporary per-constructor receipt log.
     Prefix(Vec<Option<Dependency>>),
+    // Input-only Unit cells have no constructor preparation. Reuse this
+    // mutually exclusive state instead of widening every matched Instance.
+    Units(super::unit_prepare::Prepared),
 }
 impl Prepared {
     pub fn pending(&self) -> bool { matches!(self, Self::Untried) }

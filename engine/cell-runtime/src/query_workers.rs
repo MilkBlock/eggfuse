@@ -207,7 +207,8 @@ impl Executor {
             grain, counts: Default::default(), writes: Default::default(),
         });
         for rule in 0..self.graph.program.rules.len() {
-            self.graph.program.executions[rule].units = crate::cell::unit_prepare::Plan::derive(&self.graph.program, rule);
+            self.graph.program.executions[rule].units = crate::cell::unit_prepare::Plan::derive(
+                &self.graph.program, rule, |table|self.graph.prepares_unit_storage(table));
             let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
             if let Some(plan) = &mut constructor {
                 plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables());
@@ -330,7 +331,6 @@ impl Executor {
                 )? else { continue };
                 if answers.len() == answers.capacity() { counts.answer_buffer_allocations += 1; }
                 let mut answer=Binding {
-                    #[cfg(feature="sparse-cells")] units: Default::default(),
                     #[cfg(feature="sparse-cells")]
                     prepared: 0,
                     #[cfg(feature="sparse-cells")]
@@ -920,7 +920,9 @@ impl Workers {
         { self.stats.entry_range_chunks += range_jobs.len() as u64;
           self.stats.entry_range_capacity_bytes += (range_jobs.capacity()*std::mem::size_of::<entry_ranges::Chunk<'_>>()) as u64; }
         let key_nodes = g.program.key_nodes();
-        let pooled = self.pool.is_some() && (range_pending || headers.len() + ready::instances(&ready) >= self.grain);
+        // A range replaces many row headers; it does not by itself justify a
+        // pool invocation. Keep genuinely small Runs on their existing host.
+        let pooled = self.pool.is_some() && self.next_source + ready::instances(&ready) >= self.grain;
         let local=&g.program.executions;
         let templates=&g.program.templates;
         let rule_facts = &self.rule_facts;

@@ -225,7 +225,10 @@ impl Workers {
         rid:usize,batch:crate::entry_schedule::Batch<'_>,inverted:Option<&[Dependency]>,
         watermark:u64,known:&QueryFacts)->Result<()> {
         let clock=Instant::now();
-        if inverted.is_none() && batch.range_len() != 0 {
+        // A tiny range otherwise creates its own scratch/answer chunk while
+        // the old queue can combine it with neighbouring Cell entries. Keep
+        // that locality until this range contains a useful worker-sized block.
+        if inverted.is_none() && batch.range_len() >= self.grain {
             let code = self.activate_expansion(g,index,rid,batch.atom())?;
             self.enqueue_entry_range(code, batch, watermark, known);
             self.expansion.work.direct_batches += 1;

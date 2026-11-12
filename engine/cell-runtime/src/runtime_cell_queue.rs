@@ -121,10 +121,20 @@ impl Executor {
             stats.births.root_writes += work.writes;
             stats.births.root_growths += work.growths;
             stats.births.root_merges += work.merged_entries;
-            done.into_iter().peekable()
+            done
         } else {
-            Vec::new().into_iter().peekable()
+            Vec::new()
         };
+        // All remaining effects must already be represented by these terminal
+        // rows. A partial tail or scalar suffix retains ordinary source lookup.
+        let registry_start = self.graph.functions.len();
+        let registered = completed.len() == queue.owners.len()
+            && completed.iter().zip(&queue.owners).all(|(done, owner)|
+                done.cell() == owner.execution.cell && done.complete_at(owner.execution.ops.len()))
+            && self.graph.plan_unit_registration(&mut completed,
+                self.query_workers.as_ref().unwrap().execution_pool().unwrap());
+        let mut completed = completed.into_iter().peekable();
+        let result = (|| {
         for parked in queue.owners.drain(..) {
             let mut execution = parked.execution;
             self.graph.restore_rhs(parked.context);
@@ -165,10 +175,16 @@ impl Executor {
             self.graph.sealed_generation = None;
         }
         debug_assert!(completed.next().is_none());
+        Ok(())
+        })();
+        if registered {
+            self.graph.finish_unit_registration(registry_start,
+                self.query_workers.as_ref().unwrap().execution_pool().unwrap());
+        }
         pending.clear();
         queue.operations = 0;
         queue.shared = false;
-        Ok(())
+        result
     }
     pub(super) fn apply_cell_batch(
         &mut self,

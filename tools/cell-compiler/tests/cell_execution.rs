@@ -70,6 +70,10 @@ fn query_instances_continue_into_unit_rows_without_exposing_same_run_writes() {
         let mut after = executor(&source, workers); after.use_cell_execution(1).unwrap();
         after.execute().unwrap(); same(&before, &after);
         let r = after.report();
+        if workers == 1 {
+            assert_eq!(r["query_workers"]["stats"]["execution"]["units"]["rows"], 0, "inline writes avoid speculative row allocation");
+            continue;
+        }
         assert!(r["query_workers"]["stats"]["execution"]["units"]["rows"].as_u64().unwrap() > 0, "{r}");
         assert!(r["stats"]["unit_prepared_consumed"].as_u64().unwrap() > 0, "{r}");
         assert!(r["stats"]["unit_prepared_invalidated"].as_u64().unwrap() > 0, "{r}");
@@ -104,8 +108,9 @@ fn earlier_union_invalidates_query_prepared_unit_keys_before_source_write() {
 (N 0) (N 1)
 (run-schedule (run step))
 "#;
-    let mut before = executor(source, 0); before.execute().unwrap();
-    let mut after = executor(source, 4); after.use_cell_execution(1).unwrap();
+    let source = source.replace("(N 0) (N 1)", &(0..64).map(|n|format!("(N {n}) ")).collect::<String>());
+    let mut before = executor(&source, 0); before.execute().unwrap();
+    let mut after = executor(&source, 4); after.use_cell_execution(1).unwrap();
     after.execute().unwrap(); same(&before, &after);
     assert!(after.report()["stats"]["unit_prepared_stale"].as_u64().unwrap() > 0);
 }
@@ -139,6 +144,7 @@ fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay(
      eggfuse_cell_runtime::transfer_audit::set_active(false);}
     let r=candidate.report();let w=&r["cell_execution"]["runtime"]["stats"]["births"];
     assert!(w["unit_worker_rows"].as_u64().unwrap()>0,"{w}");
+    assert!(r["stats"]["unit_registry_installs"].as_u64().unwrap()>0,"table owner must install actual index and publication entries: {}",r["stats"]);
     assert!(w["unit_invalidated"].as_u64().unwrap()>0,"{w}");
     assert_eq!(w["unit_candidates"].as_u64().unwrap(),w["unit_inserts"].as_u64().unwrap()+w["unit_invalidated"].as_u64().unwrap());
     let q=&r["cell_execution"]["runtime"]["stats"]["scheduler"];

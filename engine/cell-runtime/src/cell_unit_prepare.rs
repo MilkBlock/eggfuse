@@ -10,15 +10,10 @@ struct Site { operation: usize, table: usize, keys: Vec<Arg> }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct Plan { sites: Vec<Site>, required: Vec<usize> }
 #[derive(Default, Debug)]
-pub(crate) enum Prepared {
-    #[default] Pending,
-    Absent,
-    Rows(Box<Vec<(usize, Row)>>),
-}
+pub(crate) struct Prepared(Vec<(usize, Row)>);
 impl Prepared {
-    pub fn pending(&self) -> bool { matches!(self, Self::Pending) }
     pub fn take(&mut self, operation: usize) -> Option<Row> {
-        let Self::Rows(rows) = self else { return None; };
+        let rows = &mut self.0;
         // Stored in reverse source order. An earlier operation can have been
         // supplied by a proven Cursor; discard its unused candidate here.
         while rows.last().is_some_and(|(op,_)| *op < operation) { rows.pop(); }
@@ -34,7 +29,7 @@ impl Counts {
     }
 }
 impl Plan {
-    pub fn derive(p: &Program, rule: usize) -> Option<Self> {
+    pub fn derive(p: &Program, rule: usize, storage: impl Fn(usize)->bool) -> Option<Self> {
         if cfg!(feature="structural-depth") || cfg!(feature="family-survey") { return None; }
         let cell = Definition::new(p, rule).ok()?;
         let execution = &p.executions[rule];
@@ -48,7 +43,7 @@ impl Plan {
                     || execution.input_ready.binary_search(&operation).is_ok() => { ready.insert(*dst); required.push(*dst); }
                 Op::Set(table, keys, value) => {
                     let t = &p.tables[*table];
-                    if t.virtual_fact || t.schema.last()?["kind"] != "Unit"
+                    if !storage(*table) || t.virtual_fact || t.schema.last()?["kind"] != "Unit"
                         || !matches!(t.merge["var"].as_str(), Some("old"|"new"))
                         || cell.value(value) != Arg::Literal(Value::Int(0)) { return None; }
                     let keys: Vec<_> = keys.iter().map(|a|cell.value(a)).collect();
@@ -69,8 +64,12 @@ impl Plan {
             + self.sites.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>()
     }
     pub fn prepare(&self, instance: &mut Instance, counts: &mut Counts) {
-        if !instance.units.pending() { return; }
-        instance.units = Prepared::Absent;
+        if !instance.constructor.pending() { return; }
+        instance.constructor = super::constructor_prepare::Prepared::Absent;
+        // Inline small Runs already have the final source executor on their
+        // host. Materializing another candidate there adds allocation without
+        // increasing parallel work; leave their ordinary write path intact.
+        if rayon::current_thread_index().is_none() { return; }
         // An unrelated failed scalar still prevents the later Set. A prepared
         // key alone is not evidence that the source prefix completed.
         if self.required.iter().any(|s|!instance.values.contains_key(s)) {
@@ -86,9 +85,9 @@ impl Plan {
                 + row.fields.len()*std::mem::size_of::<Value>()) as u64;
             rows.push((site.operation, row));
         }
-        counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Row)>() + std::mem::size_of_val(&rows)) as u64;
+        counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Row)>()) as u64;
         counts.instances += 1; counts.rows += rows.len() as u64;
         rows.reverse();
-        if !rows.is_empty() { instance.units = Prepared::Rows(Box::new(rows)); }
+        if !rows.is_empty() { instance.constructor = super::constructor_prepare::Prepared::Units(Prepared(rows)); }
     }
 }

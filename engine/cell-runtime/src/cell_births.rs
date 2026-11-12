@@ -9,6 +9,8 @@ mod shared;
 pub(crate) use shared::run as run_shared;
 #[path = "cell_birth_units.rs"]
 pub(crate) mod units;
+#[path = "cell_unit_registration.rs"]
+mod unit_registration;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -356,7 +358,10 @@ pub(crate) struct Job {
     unit_epoch:Option<u64>,
 }
 pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
-impl Done {pub(crate) fn cell(&self)->u32 {self.cell}}
+impl Done {
+    pub(crate) fn cell(&self)->u32 {self.cell}
+    pub(crate) fn complete_at(&self, end: usize)->bool {self.piece.end == end}
+}
 impl Job {
     pub(crate) fn dependent(&self)->bool {!self.isolated}
     pub(crate) fn unstarted(self)->Done {
