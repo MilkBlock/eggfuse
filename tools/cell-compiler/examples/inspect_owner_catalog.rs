@@ -11,6 +11,7 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
     let report=json!({"scope":"checked compile-time owner coordinates; no workload execution",
         "program_sha256":p.artifact["sha256"],"entries":p.cell_ownership.entries,
         "active_rules":plan.active_rules,"max_frames":plan.max_frames,
+        "sources":plan.sources,"program_fields":p.cell_ownership.programs.iter().map(|p|&p.fields).collect::<Vec<_>>(),
         "fragments":plan.fragments,"transitions":plan.transitions,
         "shapes":plan.shapes.iter().map(|s|json!({"programs":s.programs,"ports":s.ports})).collect::<Vec<_>>()});
     fs::write(&args[1],serde_json::to_vec_pretty(&report)?)?;
