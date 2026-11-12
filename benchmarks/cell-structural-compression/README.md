@@ -5,6 +5,29 @@ The target is at most 30% of the original 3,979,373-byte Graph-exclusive heap
 that target. It is an actual standalone Cell runtime experiment, not a native
 egglog runtime change or standalone simulated compression model.
 
+**Complete retained-cost correction:** the current Graph uses 2,781,877 B,
+but retained Program/shared compiled data adds 1,917,003 B versus the fixed
+original. The charged total is **4,698,880 B (118.08% of baseline)**. This
+configuration has not achieved net compression. The 69.91% Graph-only fraction
+below must not be read as whole-scheme progress toward the 30% target.
+
+The observer now drops the executor and Graph, then measures the final retained
+Program teardown. Original/current Program ownership is 115,462,476 / 117,379,479 B.
+Only the positive increment is charged; the original common Program is excluded.
+Shared allocations are released once, avoiding double-counting compiled layouts.
+All measurements are taken after the recorded execution peaks. This does not
+measure a Graph-exclusive within-Run peak; full process peaks are separate.
+
+Reproduce complete retained accounting from the saved traces:
+
+```sh
+python3 benchmarks/cell-structural-compression/analyze.py out/cell-structural-compression/original-baseline.json out/cell-structural-compression/row-footprints-trace.json benchmarks/cell-structural-compression/results.json out/cell-structural-compression/original-whole-storage.json out/cell-structural-compression/footprints-whole-storage.json
+```
+
+Both teardown runs use the same observer source; the original build omits only
+`ownership_storage_trace`, which its API does not expose. `results.json` records
+input hashes and verifies the matching Run count, final hash and Graph teardown.
+
 The source program has 2,174 live ownership components, no baked ownership
 transitions, and **zero retained Cell parent links**. Therefore parent chains
 are not the dominant storage explanation for this workload. Actual ownership
@@ -194,8 +217,8 @@ Measured against 1ab0270b on the same baked sum-bits program:
 
 This removes 182,304 bytes (5.92% of the prior Graph heap). The fixed original
 baseline is still 3,979,373 bytes: **72.84% remains**, so the 30% goal is not met.
-No new compiled layouts are introduced. `results.json` records this iteration;
-`function-row-results.json` records the prior/current comparison. The independent
+No new compiled layouts are introduced. `function-row-results.json` records
+this prior/current comparison; `results.json` follows the latest iteration. The independent
 process observer's initialization-relative peak growth falls from 6,147,585 to
 5,967,009 bytes; takeover extra peak stays 16,548 bytes. This net growth remains
 a process metric, not a Graph-only peak. No speedup is claimed.
@@ -286,3 +309,63 @@ not saved bytes or new semantic proofs.
 ```sh
 python3 benchmarks/cell-structural-compression/analyze_ownership.py out/cell-structural-compression/ownership-storage-trace.json out/cell-structural-compression/function-row-trace.json out/ownership-opportunity.json
 ```
+
+## Delete the duplicate forward dependency owner
+
+The actual prior run retained 1,150 forward dependency records, using 116,648
+allocator bytes. These duplicated Eq operands already held by the authoritative
+rows. In sparse runtime the `dependencies` directory is now removed entirely;
+the non-sparse reference keeps its original implementation.
+
+Registration and removal receive the existing old/new row versions at explicit
+lifecycle boundaries. Mutable function updates compare their canonical Eq
+footprints, including nested Sets. Old published rows remain immutable. Ordinary
+fact operands can change only through union canonicalization: `union()` already
+moves and coalesces their reverse incidences. Canonical repair therefore needs
+no repeated forward-set replacement or reverse-edge update. Local ownership
+handoff explicitly installs edges from an empty footprint; retirement and Cell
+adoption remove edges from the actual old row. Query-version changes, source
+Run order and the necessary reverse wake index remain intact.
+
+This does not remove the 663 reverse buckets or their 2,885 live incidences;
+both counts match the prior run. It removes the redundant forward owner and its
+maintenance. No new persistent layout or binding table replaces it.
+
+| Measure | Prior dc63f8f0 | Current |
+| --- | ---: | ---: |
+| Complete Graph-exclusive heap | 2,898,525 B | 2,781,877 B |
+| Forward dependency records | 1,150 | 0 |
+| Forward directory teardown bytes | 116,648 B | 0 B |
+| In-place forward-set replacements | 436 | 0 |
+| Subscription value visits | 8,408 | 7,829 |
+| Reverse removal attempts | 859 | 751 |
+| Repairs reusing the same row footprint | 0 | 449 |
+
+The saved operation counters do not establish a speedup: the old typed shortcut
+omitted 245 root reads and skipped 28 scalar fields, while the new transient
+footprint path scans the old/new row operands directly. No timing claim is made.
+The independent process observer's initialization-relative peak growth falls
+from 5,967,009 to 5,862,977 bytes; takeover extra peak stays 16,548 bytes. Its
+maintenance report and complete owner trace are emitted after observation.
+
+The Graph-only comparison to 3,979,373 bytes has **69.91% remaining** (30.09% removed),
+not 30% remaining. The target is still **not met**. The full heap falls by
+116,648 bytes while the partial boundary array subtotal is unchanged, another
+reason that subtotal cannot be used for acceptance. Instance and fact storage
+are unchanged by this iteration.
+
+All 1,428 original Run graph and ordered RHS/write/resume digests match, and
+the specified native semantic acceptance returns pass / exit 0. Runtime tests:
+138 sparse and 84 default pass; all-feature compilation passes. Integration:
+28 ownership, 14 stable-port, 5 local-union and 4 parallel-residual tests pass.
+The two previously documented view-ports union-digest failures remain the same,
+with identical assertion bodies. The new exact reverse-index test covers Eq
+result replacement, scalar updates, nested Set references, key/result unions,
+merge retirement and deletion without a forward directory.
+
+`row-footprints-results.json` includes the prior/current allocator and operation
+comparison. Raw inputs are `row-footprints-trace.json`, `peak-row-footprints.json`,
+`footprints-control-metrics.json` and `footprints-current-metrics.json` in the
+ignored experiment output directory. The control is dc63f8f0 with only the same
+post-observation maintenance export added to the example. Both lanes use their
+own worktree-local Cargo target directories.

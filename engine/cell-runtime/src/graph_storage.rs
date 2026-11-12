@@ -99,14 +99,7 @@ impl Graph {
         }
         let uses_header = self.uses.capacity() * std::mem::size_of::<(u64, UseSet)>();
         let uses_heap = self.uses.values().map(UseSet::heap_payload).sum::<usize>();
-        let forward = self.dependencies.capacity()
-            * std::mem::size_of::<(Dependency, smallvec::SmallVec<[u64; 3]>)>()
-            + self
-                .dependencies
-                .values()
-                .filter(|v| v.spilled())
-                .map(|v| v.capacity() * 8)
-                .sum::<usize>();
+        let forward = 0; // sparse rows own operands; no forward dependency directory
         let functions_index = self
             .function_keys
             .iter()
@@ -183,7 +176,6 @@ impl Graph {
         release!(intern);
         release!(function_keys);
         release!(uses);
-        release!(dependencies);
         release!(changes);
         release!(anchors);
         release!(dirty);

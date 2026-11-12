@@ -366,7 +366,8 @@ impl Graph {
             if !self.program.cell_ownership.tables[row.table] {
                 continue;
             }
-            self.subscribe_edges(Dependency::Fact(f), &[]);
+            self.replace_row_edges(Dependency::Fact(f), &row.values, &[]);
+            #[cfg(not(feature = "sparse-cells"))]
             self.dependencies.remove(&Dependency::Fact(f));
             self.cells
                 .get_mut(&f.cell)
@@ -882,6 +883,7 @@ impl Graph {
             for (&cell, c) in self.cells.iter() {
                 for (&op, s) in c.facts.iter().filter(|(_, s)| s.owned) {
                     let f = FactRef { cell, op };
+                    #[cfg(not(feature = "sparse-cells"))]
                     assert!(!self.dependencies.contains_key(&Dependency::Fact(f)));
                     across += u64::from(s.born < self.epoch);
                     let program =

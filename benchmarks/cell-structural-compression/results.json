@@ -2,13 +2,13 @@
   "scope": "actual standalone Cell runtime, not native egglog; fixed original baseline",
   "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
   "original_graph_heap_bytes": 3979373,
-  "optimized_graph_heap_bytes": 2898525,
-  "remaining_fraction": 0.728387361526552,
+  "optimized_graph_heap_bytes": 2781877,
+  "remaining_fraction": 0.6990742008854158,
   "target_bytes": 1193811,
   "target_met_graph_heap": false,
   "added_shared_field_layout_bytes": 0,
-  "graph_plus_added_layout_fraction": 0.728387361526552,
-  "limitation": "shared layout is charged separately; within-Run peak and complete Program/Executor heap are not measured",
+  "graph_plus_added_layout_fraction": 0.6990742008854158,
+  "limitation": "retained Program delta includes new compiled layouts without charging them twice; complete process peaks are recorded separately; Graph-exclusive within-Run peak remains unmeasured",
   "runs": 1428,
   "all_original_run_graph_and_audit_digests_equal": true,
   "boundary_array_peak_before": 1759632,
@@ -16,7 +16,7 @@
   "source_counts": {
     "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
     "excluded": "allocator padding/control bytes, Value-owned payloads, BTree nodes, sparse ID outlier map, auxiliary caches, ownership backends, executor storage",
-    "index_payload_estimate_bytes": 316680,
+    "index_payload_estimate_bytes": 214376,
     "reverse_index_header_payload": 21456,
     "reverse_index_heap_payload": 75328,
     "reverse_degrees": {
@@ -51,7 +51,7 @@
       "66": 1,
       "100": 1
     },
-    "forward_index_payload": 102304,
+    "forward_index_payload": 0,
     "function_index_payload": 34264,
     "constructor_index_header_payload": 83328,
     "members_array_bytes": 83640,
@@ -142,10 +142,6 @@
     [
       "uses",
       119468
-    ],
-    [
-      "dependencies",
-      116648
     ],
     [
       "changes",
@@ -314,6 +310,15 @@
   ],
   "traces": {
     "original-baseline.json": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
-    "function-row-trace.json": "7bf3cb09696171e66f8df48e42f6cfa11998e6688c376031ac46df79533652a5"
-  }
+    "row-footprints-trace.json": "af5cdb02b2ca5485e3f7768349eb7477ed52a775b706da032863db3623c4aaf5",
+    "original-whole-storage.json": "0f2ad4a48947d57994f57d764700964eb8239e1f58d4a634afed0938a76595f7",
+    "footprints-whole-storage.json": "b2984ed6d5b4d9c15463e4f65ad1d077f87ef72aa6c70ee55ac20f73f4d03c46"
+  },
+  "retained_program_accounting_available": true,
+  "original_retained_program_bytes": 115462476,
+  "current_retained_program_bytes": 117379479,
+  "added_retained_program_bytes": 1917003,
+  "graph_plus_added_program_bytes": 4698880,
+  "graph_plus_added_program_fraction": 1.1808091375199057,
+  "target_met_with_added_program": false
 }

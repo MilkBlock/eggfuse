@@ -519,7 +519,7 @@ impl Graph {
                 }
                 self.function_origin(i, None);
                 self.members[table].remove(&(i as u64));
-                self.subscribe(table, Dependency::Function(i), &[]);
+                self.subscribe_function(table, i, &row.values, &[]);
                 self.query_versions[table] += 1;
                 self.changes.touch(table, Dependency::Function(j));
                 continue;

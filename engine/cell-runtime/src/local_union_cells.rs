@@ -357,7 +357,7 @@ impl Graph {
                     m.counts.unchanged += 1;
                 }
                 self.end_local_ownership(f, table, false);
-                self.subscribe_edges(Dependency::Fact(f), fields);
+                self.replace_row_edges(Dependency::Fact(f), &[], fields);
                 let s = self
                     .cells
                     .get_mut(&f.cell)

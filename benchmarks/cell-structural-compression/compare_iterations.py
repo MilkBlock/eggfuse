@@ -33,4 +33,6 @@ result = {
     'limitation': 'process peaks and initialization-relative net growth are not Graph-exclusive peaks; field teardown charges shared allocations to last owner',
     'input_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
 }
+if 'maintenance' in ap and 'maintenance' in bp:
+    result['maintenance'] = {'before': ap['maintenance'], 'after': bp['maintenance']}
 output.write_text(json.dumps(result, indent=2) + '\n')

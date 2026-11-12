@@ -419,8 +419,6 @@ pub struct Graph {
     uses: rustc_hash::FxHashMap<u64, UseSet>,
     #[cfg(not(feature = "sparse-cells"))]
     dependencies: HashMap<Dependency, BTreeSet<u64>>,
-    #[cfg(feature = "sparse-cells")]
-    dependencies: HashMap<Dependency, smallvec::SmallVec<[u64; 3]>>,
     dirty: BTreeSet<Dependency>,
     dirty_markers: BTreeSet<FactRef>,
     dirty_facts: Vec<BTreeSet<FactRef>>,
@@ -510,7 +508,7 @@ impl Graph {
         let writers = json!({"live":self.writer_dir.live,"peak":self.writer_dir.peak,"installed":self.writer_dir.installations,"promoted":self.writer_dir.promoted,"from_general_rhs":self.writer_dir.general});
         #[cfg(not(feature = "sparse-cells"))]
         let writers = J::Null;
-        json!({"sealed_slot_reads": self.sealed_read_count(), "embedded_writers":writers,"full_cells":self.cells.len(),"cell_fact_arity_0_1_2_3_4plus":arity,"intern_sizes_0_1_2_3plus":buckets,"intern_headers":self.intern.len(),"forward_dependency_headers":self.dependencies.len(),"reverse_dependency_headers":self.uses.len(),"dependency_edges":self.dependencies.values().map(|v|v.len()).sum::<usize>(),"live_functions":self.functions.iter().filter(|f|f.live).count(),"function_slots":self.functions.len(),"cell_id_high_water":self.next_cell})
+        json!({"sealed_slot_reads": self.sealed_read_count(), "embedded_writers":writers,"full_cells":self.cells.len(),"cell_fact_arity_0_1_2_3_4plus":arity,"intern_sizes_0_1_2_3plus":buckets,"intern_headers":self.intern.len(),"forward_dependency_headers":self.forward_dependency_size().0,"reverse_dependency_headers":self.uses.len(),"dependency_edges":self.forward_dependency_size().1,"live_functions":self.functions.iter().filter(|f|f.live).count(),"function_slots":self.functions.len(),"cell_id_high_water":self.next_cell})
     }
     /// Follow only storage relocation and proved same-key coalescence in this
     /// commit. Equal result classes alone never establish a row receipt.
@@ -654,6 +652,7 @@ impl Graph {
             #[cfg(feature = "sparse-cells")]
             function_keys: typed_keys,
             uses: Default::default(),
+            #[cfg(not(feature = "sparse-cells"))]
             dependencies: Default::default(),
             dirty: BTreeSet::new(),
             dirty_markers: BTreeSet::new(),
@@ -1470,32 +1469,45 @@ impl Graph {
             _ => {}
         }
     }
-    fn subscribe(&mut self, table: usize, d: Dependency, values: &[Value]) {
-        self.query_versions[table] += 1;
+    fn forward_dependency_size(&self) -> (usize, usize) {
         #[cfg(feature = "sparse-cells")]
-        if !values.is_empty()
-            && let Some(columns) = self.program.repair_ports.key_eq_columns.get(table).and_then(Option::as_ref)
+        { (0, 0) }
+        #[cfg(not(feature = "sparse-cells"))]
+        { (self.dependencies.len(), self.dependencies.values().map(|v| v.len()).sum()) }
+    }
+    /// Rows already own the Eq operands. Derive the old/new footprint at an
+    /// explicit lifecycle boundary, rather than storing another binding set.
+    fn subscribe_rows(&mut self, table: usize, d: Dependency, old: &[Value], new: &[Value]) {
+        self.query_versions[table] += 1;
+        self.replace_row_edges(d, old, new);
+    }
+    fn subscribe_function(&mut self, table: usize, index: usize, old: &[Value], new: &[Value]) {
+        self.subscribe_rows(table, Dependency::Function(index), old, new);
+    }
+    fn replace_row_edges(&mut self, d: Dependency, old: &[Value], new: &[Value]) {
+        #[cfg(not(feature = "sparse-cells"))]
+        { let _ = old; self.subscribe_edges(d, new); }
+        #[cfg(feature = "sparse-cells")]
         {
-            // This existing typed Cell footprint excludes containers and names
-            // every Eq input. The output is Eq too. Birth operands and repaired
-            // Row views are already canonical at this call; no graph effect
-            // occurs between obtaining those fields and installing their uses.
-            // Raw local-completion fields still use subscribe_edges below.
-            let refs = columns.iter().copied().chain(std::iter::once(values.len() - 1))
-                .map(|column| {
-                    let Value::Eq(id) = values[column] else { panic!("typed constructor Eq port") };
-                    debug_assert_eq!(id, root(&self.parents, id), "unsealed constructor subscription");
-                    id
-                }).collect::<smallvec::SmallVec<[u64; 3]>>();
             self.maintenance.subscription_calls += 1;
-            self.maintenance.canonical_subscription_calls += 1;
-            self.maintenance.subscription_value_visits += refs.len() as u64;
-            self.maintenance.subscription_scalar_fields_skipped += (values.len() - refs.len()) as u64;
-            self.maintenance.subscription_root_reads_omitted += refs.len() as u64;
-            self.replace_subscriptions(d, refs);
-            return;
+            // Ordinary fact/function repair only canonicalizes an immutable
+            // row. union() has already moved all of its reverse incidences.
+            if std::ptr::eq(old, new) {
+                self.maintenance.subscription_rows_reused += 1;
+                return;
+            }
+            let old = self.subscription_refs(old);
+            let new = self.subscription_refs(new);
+            for id in &old {
+                if !new.contains(id) && let Some(bucket) = self.uses.get_mut(id) {
+                    maintenance::remove(bucket, &mut self.maintenance, d);
+                    if bucket.is_empty() { self.uses.remove(id); }
+                }
+            }
+            for id in new {
+                if !old.contains(&id) { maintenance::insert(&mut self.uses, &mut self.maintenance, id, d); }
+            }
         }
-        self.subscribe_edges(d, values);
     }
     #[cfg(not(feature = "sparse-cells"))]
     fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
@@ -1525,8 +1537,7 @@ impl Graph {
         self.dependencies.insert(d, refs);
     }
     #[cfg(feature = "sparse-cells")]
-    fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
-        self.maintenance.subscription_calls += 1;
+    fn subscription_refs(&mut self, values: &[Value]) -> smallvec::SmallVec<[u64; 3]> {
         type Refs = smallvec::SmallVec<[u64; 3]>;
         fn collect(v: &Value, p: &Parents, out: &mut Refs, visits: &mut u64) {
             *visits += 1;
@@ -1544,52 +1555,9 @@ impl Graph {
         for v in values {
             collect(v, &self.parents, &mut refs, &mut self.maintenance.subscription_value_visits);
         }
-        self.replace_subscriptions(d, refs);
-    }
-    #[cfg(feature = "sparse-cells")]
-    fn replace_subscriptions(&mut self, d: Dependency, mut refs: smallvec::SmallVec<[u64; 3]>) {
         refs.sort_unstable();
         refs.dedup();
-        use std::collections::hash_map::Entry;
-        let (mut old, refs) = match self.dependencies.entry(d) {
-            Entry::Vacant(slot) => {
-                for &id in &refs {
-                    maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
-                }
-                if !refs.is_empty() {
-                    slot.insert(refs);
-                }
-                return;
-            }
-            Entry::Occupied(slot) if *slot.get() == refs => return,
-            Entry::Occupied(slot) if refs.is_empty() => (slot.remove(), &[][..]),
-            Entry::Occupied(slot) => {
-                // Keep the witness's existing directory slot. Only its Eq
-                // footprint changes; removing/reinserting the same witness
-                // cannot affect the reverse-edge difference below.
-                self.maintenance.subscription_sets_replaced_in_place += 1;
-                let stored = slot.into_mut();
-                (std::mem::replace(stored, refs), stored.as_slice())
-            }
-        };
-        for id in &mut old {
-            *id = root(&self.parents, *id);
-        }
-        for id in &old {
-            if !refs.contains(id)
-                && let Some(bucket) = self.uses.get_mut(id)
-            {
-                maintenance::remove(bucket, &mut self.maintenance, d);
-                if bucket.is_empty() {
-                    self.uses.remove(id);
-                }
-            }
-        }
-        for &id in refs {
-            if !old.contains(&id) {
-                maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
-            }
-        }
+        refs
     }
     fn activate(
         &mut self,
@@ -1656,7 +1624,7 @@ impl Graph {
         self.intern.entry(h).or_default().insert(f);
         if owned { self.query_versions[t] += 1; self.publish_owned_birth(f,t,&vs); }
         else if local_union_owned { self.query_versions[t] += 1; }
-        else { self.subscribe(t, Dependency::Fact(f), &vs); }
+        else { self.subscribe_rows(t, Dependency::Fact(f), &[], &vs); }
         self.changes.touch(t, Dependency::Fact(f));
         self.stats.logical_facts_created += 1;
 
@@ -2395,6 +2363,9 @@ impl Graph {
             let old = canon(self.functions[i].value(), &self.parents);
             let next = self.merge_value(t, old.clone(), value)?;
             if next != old {
+                let changes_refs = matches!(old, Value::Eq(_) | Value::Set(_))
+                    || matches!(next, Value::Eq(_) | Value::Set(_));
+                let previous = changes_refs.then(|| self.function(i).unwrap().values);
                 self.functions[i].set_fields(Self::shared_fields(key, &next));
                 #[cfg(feature = "slot-transfer-audit")]
                 crate::transfer_audit::effective(self.epoch, t, i, key, Some(&old), &next)?;
@@ -2404,13 +2375,11 @@ impl Graph {
                 self.changes.touch(t, Dependency::Function(i));
                 // A scalar result change preserves every subscribed eclass.
                 // Publish the row version without rebuilding its reverse uses.
-                if !matches!(old, Value::Eq(_) | Value::Set(_))
-                    && !matches!(self.functions[i].value(), Value::Eq(_) | Value::Set(_))
-                {
+                if !changes_refs {
                     self.query_versions[t] += 1;
                 } else {
                     let row = self.function(i).unwrap();
-                    self.subscribe(row.table, row.witness, &row.values);
+                    self.subscribe_function(row.table, i, previous.as_deref().unwrap(), &row.values);
                 }
             }
             Ok(i)
@@ -2454,10 +2423,10 @@ impl Graph {
             self.changes.touch(t, Dependency::Function(i));
             if compact {
                 // Unit contributes no equality dependency.
-                self.subscribe(t, Dependency::Function(i), key);
+                self.subscribe_function(t, i, &[], key);
             } else {
                 let row = self.function(i).unwrap();
-                self.subscribe(row.table, row.witness, &row.values);
+                self.subscribe_function(row.table, i, &[], &row.values);
             }
             Ok(i)
         }
@@ -2494,7 +2463,7 @@ impl Graph {
                 }
             }
             if local || owned { self.query_versions[r.table] += 1; }
-            else { self.subscribe(r.table, Dependency::Fact(f), &[]); }
+            else { self.subscribe_rows(r.table, Dependency::Fact(f), &r.values, &[]); }
             self.garbage.insert(f.cell);
         }
         Ok(())
@@ -2582,7 +2551,7 @@ impl Graph {
                     #[cfg(not(feature = "sparse-cells"))]
                     self.function_keys[t].remove(key);
                 }
-                self.subscribe(row.table, row.witness, &[]);
+                self.subscribe_function(row.table, i, &row.values, &[]);
                 self.changed = true;
                 Ok(true)
             }
@@ -2680,6 +2649,7 @@ impl Graph {
             }
             self.retire(f)?;
         } else {
+            let was_local = self.cells[&f.cell].facts[&f.op].local_union_owned;
             self.end_local_ownership(f, r.table, false);
             if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
             let s = self
@@ -2695,7 +2665,7 @@ impl Graph {
             s.epoch = self.epoch;
             if self.cells[&f.cell].facts[&f.op].owned {
                 self.query_versions[r.table]+=1;
-            } else { self.subscribe(r.table, d, &r.values); }
+            } else { self.subscribe_rows(r.table, d, if was_local { &[] } else { &r.values }, &r.values); }
             self.changes.touch(r.table, d);
         }
         Ok(())
@@ -2785,6 +2755,7 @@ impl Graph {
                                 && *self.functions[j].value() == Value::Int(0)
                                 && (self.functions[j].key() == key
                                     || self.units.change_block(j, &row.values));
+                            let previous_target = (!shared_unit).then(|| self.function(j).unwrap().values);
                             let value_changed = if shared_unit {
                                 self.functions[j].set_fields(row.values.clone());
                                 self.units.stats.fast_merges += 1;
@@ -2837,12 +2808,12 @@ impl Graph {
                             }
                             self.function_origin(i, None);
                             self.members[row.table].remove(&(i as u64));
-                            self.subscribe(row.table, d, &[]);
+                            self.subscribe_function(row.table, i, &row.values, &[]);
                             if shared_unit {
                                 self.query_versions[row.table] += 1;
                             } else {
                                 let target = self.function(j).unwrap();
-                                self.subscribe(target.table, target.witness, &target.values);
+                                self.subscribe_function(target.table, j, previous_target.as_deref().unwrap(), &target.values);
                             }
                             continue;
                         }
@@ -2857,7 +2828,7 @@ impl Graph {
                     self.function_keys[row.table].insert(&key, i);
                     #[cfg(not(feature = "sparse-cells"))]
                     self.function_keys[row.table].insert(key, i);
-                    self.subscribe(row.table, d, &row.values);
+                    self.subscribe_function(row.table, i, &row.values, &row.values);
                     self.changes.touch(row.table, d);
                 }
             }

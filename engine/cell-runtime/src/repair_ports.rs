@@ -109,8 +109,8 @@ impl Graph {
         self.query_versions[*table] += 1;
         self.changes.touch(*table, Dependency::Fact(f));
         // union() redirects every reverse incidence from `from` to `to` after
-        // this callback. Keeping old IDs in dependencies is valid: subscribe/retire
-        // canonicalize them before removing incidences.
+        // this callback. Retirement reads the row's operands and canonicalizes
+        // them before removing incidences; no second forward footprint is needed.
         stats.result_events += 1;
         stats.by_table[*table] += 1;
         true

@@ -9,6 +9,7 @@ pub struct Metrics {
     pub subscription_scalar_fields_skipped: u64,
     pub subscription_root_reads_omitted: u64,
     pub subscription_sets_replaced_in_place: u64,
+    pub subscription_rows_reused: u64,
     pub reverse_insert_attempts: u64,
     pub reverse_remove_attempts: u64,
     pub reverse_edges_created: u64,
@@ -51,7 +52,7 @@ impl Graph {
             "reverse edge accounting"
         );
         json!({"stats":self.maintenance,"reverse_headers":self.uses.len(),
-            "dependency_headers":self.dependencies.len(),
+            "dependency_headers":self.forward_dependency_size().0,
             "unit":"actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"})
     }
 }

@@ -50,6 +50,9 @@ struct Sample {
 fn reset_peak() {
     PEAK.store(LIVE.load(Relaxed), Relaxed);
 }
+fn detach(exec: Executor) -> Graph {
+    exec.graph
+}
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     if args.len() != 3 || !matches!(args[2].as_str(), "baseline" | "takeover") {
@@ -114,8 +117,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
         }
     }
-    let result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+    let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
         "ownership_storage":e.graph.ownership_storage_trace(),
+        "maintenance":e.graph.maintenance_report(),
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
         "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
         "setup_peak_bytes":setup_peak,"setup_live_bytes":setup_live,
@@ -124,6 +128,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         "final_state_sha256":eggfuse_cell_runtime::checksum::artifact_digest(&state),"samples":samples.iter().map(|s|json!({"run":s.run,"before":s.before,
             "execution_peak":s.execution_peak,"before_takeover":s.before_takeover,
             "takeover_peak":s.takeover_peak,"after":s.after})).collect::<Vec<_>>()});
+    // Charge the retained compiled program separately, after dropping Executor
+    // caches and Graph. No other Program clone is kept alive in this lane.
+    let graph = detach(e);
+    let mut released = Vec::with_capacity(40);
+    let before = LIVE.load(Relaxed);
+    let program = graph.release_storage_by_field(|| LIVE.load(Relaxed), &mut released);
+    let graph_bytes = before - LIVE.load(Relaxed);
+    let before = LIVE.load(Relaxed);
+    drop(program);
+    let program_bytes = before - LIVE.load(Relaxed);
+    result["graph_owned_teardown_bytes"] = json!(graph_bytes);
+    result["retained_program_teardown_bytes"] = json!(program_bytes);
+    result["teardown_scope"] = json!(
+        "single-lane Graph then retained Program requested bytes; no Executor caches; shared allocations charged to their last owner"
+    );
     fs::write(&args[1], serde_json::to_vec_pretty(&result)?)?;
     println!(
         "{}",
