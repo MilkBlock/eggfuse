@@ -39,7 +39,7 @@ def analyze(audit):
         counts[prefix + ':query_witnesses'] += len(links['query'])
         counts[prefix + ':query_atoms'] += links['query_atoms']
         sources = [('receiver', None, links['receiver'])]
-        sources += [('entry', a['atom'], a['location']) for a in links['anchors']]
+        sources += [('entry', a.get('entry', a['atom']), a['location']) for a in links['anchors']]
         sources += [('query', a['atom'], a['location']) for a in links['query']]
         if links['parent']:
             sources.append(('parent', None, links['parent']['location']))
@@ -70,7 +70,7 @@ def analyze(audit):
     return dict(scope='actual standalone runtime pre-boundary component reachability; not key equality or saturation proof',
         program_sha256=audit['program_sha256'], counts=dict(counts),
         complete_cells=dict(complete), complete_rules=dict(complete_rules),
-        patterns=[dict(rule=k[0], operation=k[1], source_kind=k[2], atom=k[3], shape=k[4],
+        patterns=[dict(rule=k[0], operation=k[1], source_kind=k[2], source_index=k[3], shape=k[4],
                        source_ordinal=k[5], donor_ordinal=k[6], donor_operation=k[7], observations=n)
                   for k,n in patterns.most_common()],
         obligations=[

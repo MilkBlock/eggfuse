@@ -65,9 +65,10 @@ impl Graph {
             Dependency::Fact(f)=>locate(f.cell),Dependency::Function(_)=>J::Null,
         }};
         let entry=m.composition.entry.as_ref().filter(|entry|entry.rule==rule);
-        let anchors=entry.map(|entry|entry.anchors.iter().enumerate().filter_map(|(atom,receipt)| {
+        let anchors=entry.map(|entry|entry.anchors.iter().enumerate().filter_map(|(index,receipt)| {
             let receipt=(*receipt)?;
-            Some(json!({"atom":atom,"receipt":receipt,"location":dependency(receipt)}))
+            Some(json!({"entry":index,"atom":self.program.cell_ownership.entries[rule][index],
+                "receipt":receipt,"location":dependency(receipt)}))
         }).collect::<Vec<_>>()).unwrap_or_default();
         let parent=self.rhs_frame(cell).and_then(|frame|frame.parent);
         let query=self.program.rules[rule].query.iter().enumerate().filter_map(|(atom,_)| {
