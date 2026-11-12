@@ -30,6 +30,8 @@ pub fn take_digests() -> Vec<String> {
 
 // Keep event order including multiple improvements to the same key in one Run.
 thread_local! {
+    static LOGICAL_WRITES: std::cell::RefCell<Option<(u64,sha2::Sha256)>>=const{std::cell::RefCell::new(None)};
+    static LOGICAL_RUNS: std::cell::RefCell<Vec<(u64,String)>>=const{std::cell::RefCell::new(Vec::new())};
     static WRITE_ACTIVE:Cell<bool>=const{Cell::new(false)};
     static ORDINAL:Cell<u64>=const{Cell::new(0)};
     static SOURCE:Cell<Option<(u64,usize)>>=const{Cell::new(None)};
@@ -62,6 +64,7 @@ pub(crate) fn begin_writes() {
         use sha2::Digest;
         RESUMES.replace(Some((0, sha2::Sha256::new())));
         WRITES.replace(Some((0, sha2::Sha256::new())));
+        LOGICAL_WRITES.replace(Some((0, sha2::Sha256::new())));
     }
 }
 pub(crate) fn effective(
@@ -72,6 +75,7 @@ pub(crate) fn effective(
     old: Option<&crate::value::Value>,
     new: &crate::value::Value,
 ) -> Result<(), String> {
+    logical_write(epoch,table,key,old,new)?;
     observation::write(epoch, SOURCE.get(), table, index, key, old, new);
     WRITES.with_borrow_mut(|state| {
         if let Some((count, hash)) = state {
@@ -82,10 +86,27 @@ pub(crate) fn effective(
         Ok(())
     })
 }
+/// Storage-independent effective function/Unit-membership writes. Physical
+/// function indices cannot survive migration to Cell FactRef identities.
+pub(crate) fn logical_write(epoch:u64,table:usize,key:&[crate::value::Value],
+    old:Option<&crate::value::Value>,new:&crate::value::Value)->Result<(),String> {
+    LOGICAL_WRITES.with_borrow_mut(|state| {
+        if let Some((count,hash))=state {
+            serde_json::to_writer(hash,&(epoch,SOURCE.get(),table,key,old,new)).map_err(|e|e.to_string())?;
+            *count+=1;
+        }
+        Ok(())
+    })
+}
+pub fn take_logical_write_digests()->Vec<(u64,String)> { LOGICAL_RUNS.take() }
+
 pub(crate) fn end_writes() {
     use sha2::Digest;
     if let Some((n, h)) = RESUMES.take() {
         RESUME_RUNS.with_borrow_mut(|runs| runs.push((n, format!("{:x}", h.finalize()))));
+    }
+    if let Some((n,h))=LOGICAL_WRITES.take() {
+        LOGICAL_RUNS.with_borrow_mut(|runs|runs.push((n,format!("{:x}",h.finalize()))));
     }
     if let Some((n, h)) = WRITES.take() {
         WRITE_RUNS.with_borrow_mut(|rs| rs.push((n, format!("{:x}", h.finalize()))));

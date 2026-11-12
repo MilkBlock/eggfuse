@@ -563,7 +563,8 @@ impl Program {
                 .ok_or("unknown marker table")?;
             if p.tables[t].constructor
                 || p.tables[t].schema.last().unwrap()["kind"] != "Unit"
-                || p.tables[t].merge != serde_json::json!({"var":"old"})
+                || !(p.tables[t].merge == serde_json::json!({"var":"old"})
+                    || (p.tables[t].virtual_fact && p.tables[t].merge.is_null()))
             {
                 return Err("invalid marker relation".into());
             }

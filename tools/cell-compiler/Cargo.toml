@@ -60,3 +60,19 @@ required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
 [[example]]
 name = "runtime_catalog_trace"
 required-features = ["sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "audit_matched_handoffs"
+required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "train_unit_closures"
+required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "bake_unit_closures"
+required-features = ["iterative-bake", "sparse-cells"]
+
+[[example]]
+name = "relower_entry_values"
+required-features = ["iterative-bake", "sparse-cells"]

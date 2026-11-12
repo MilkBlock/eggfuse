@@ -1642,6 +1642,11 @@ impl Graph {
     /// Adopt the actual row allocation. Local Cell construction has already
     /// computed its canonical fields/hash; source registration remains ordered.
     fn activate_fields(&mut self, f:FactRef, t:usize, vs:RowFields, h:u64, hidden:bool) -> Result<()> {
+        #[cfg(feature="slot-transfer-audit")]
+        if !self.program.tables[t].constructor {
+            let (value,key)=vs.split_last().ok_or("membership result")?;
+            crate::transfer_audit::logical_write(self.epoch,t,key,None,value)?;
+        }
         let port_key = self.port_keys_enabled(t);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);

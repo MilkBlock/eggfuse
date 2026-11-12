@@ -28,7 +28,12 @@ impl PortProgram {
         let mut symbols = crate::cell::Symbols::with_slots(t.sorts.len());
         let mut bodies = vec![Vec::new(); t.ops.len()];
         let mut native = Vec::new();
-        let facts = symbols.source_constructors(t, |table| covered[table], |symbols, op, instruction| {
+        let facts = symbols.source_constructors(t, |table| covered[table] && p.tables[table].constructor, |symbols, op, instruction| {
+            if let Op::Let(dst,Call::Table(table),args)=instruction && covered[*table] && !p.tables[*table].constructor {
+                bodies[op]=args.iter().chain(std::iter::once(&Arg::Slot(*dst))).enumerate()
+                    .map(|(c,arg)|(p.tables[*table].schema[c]["kind"]=="eq").then(||symbols.arg(arg,|i|i)))
+                    .collect();
+            }
             if let Op::Set(table, args, result) = instruction && covered[*table] {
                 // A Set's result equality can still be pending. Record its
                 // incidences, but never use it as unconditional congruence.

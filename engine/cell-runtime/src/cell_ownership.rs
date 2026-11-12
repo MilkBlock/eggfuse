@@ -88,7 +88,12 @@ impl Plan {
             .repair_ports
             .key_eq_columns
             .iter()
-            .map(Option::is_some)
+            .enumerate()
+            .map(|(id,columns)| columns.is_some() || (p.artifact["unit_fact_ownership"]==true
+                && p.tables[id].virtual_fact && !p.tables[id].constructor
+                && p.tables[id].schema.last().is_some_and(|s|s["kind"]=="Unit")
+                && p.tables[id].schema.iter().all(|s|matches!(s["kind"].as_str(),
+                    Some("eq"|"i64"|"f64"|"String"|"bool"|"Unit"|"structural_key")))))
             .collect::<Vec<_>>();
         let format = wire::Format::program(p)?;
         let mut shared = BTreeMap::new();

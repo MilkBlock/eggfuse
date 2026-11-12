@@ -1,0 +1,147 @@
+{
+  "scope": "actual standalone Cell runtime; not native egglog; requested allocation bytes, not RSS",
+  "admission": "all candidates rejected for baseline replacement: Graph memory regresses",
+  "heap": {
+    "baseline": {
+      "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2617317,
+      "retained_program_teardown_bytes": 117318509,
+      "execution_and_takeover_peak_bytes": 125400997,
+      "max_takeover_extra_bytes": 50320,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_delta_from_baseline": 0
+    },
+    "unit_facts": {
+      "program_sha256": "b2db0013a6124dbba5cbe4efd486ee724b5a038fee77d8027f7a5dd0bc9d27f8",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2641476,
+      "retained_program_teardown_bytes": 119253135,
+      "execution_and_takeover_peak_bytes": 127364253,
+      "max_takeover_extra_bytes": 50320,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_delta_from_baseline": 24159
+    },
+    "unit_owned": {
+      "program_sha256": "3e16223cd4aa5b80adbb03fe1fde766a0d971ffba0f029645694c3c378430508",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2833236,
+      "retained_program_teardown_bytes": 119435706,
+      "execution_and_takeover_peak_bytes": 127771718,
+      "max_takeover_extra_bytes": 41448,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_delta_from_baseline": 215919
+    },
+    "unit_owned_bake4": {
+      "program_sha256": "df49f0d486eff920d32aa2c78e39cdd40aadde342926ac37958e0ab5a03f5416",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2756564,
+      "retained_program_teardown_bytes": 119315983,
+      "execution_and_takeover_peak_bytes": 127556375,
+      "max_takeover_extra_bytes": 82128,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_delta_from_baseline": 139247
+    }
+  },
+  "run_audits": {
+    "unit_facts": {
+      "runs": 1428,
+      "write_comparison": "ordered logical writes including Unit membership; no physical storage index",
+      "source_specialization_verified": true,
+      "baseline_saved_checks_equal": true,
+      "graph_rhs_writes_equal": true,
+      "resume_changed_runs": [],
+      "physical_write_changed_run_count": 265
+    },
+    "unit_owned": {
+      "runs": 1428,
+      "write_comparison": "ordered logical writes including Unit membership; no physical storage index",
+      "source_specialization_verified": true,
+      "baseline_saved_checks_equal": true,
+      "graph_rhs_writes_equal": true,
+      "resume_changed_runs": [],
+      "physical_write_changed_run_count": 265
+    }
+  },
+  "offline_bake": {
+    "source_program": "3e16223cd4aa5b80adbb03fe1fde766a0d971ffba0f029645694c3c378430508",
+    "records": 1787,
+    "records_with_unit_entry": 298,
+    "hop_lengths": {
+      "1": 369,
+      "2": 113,
+      "3": 127,
+      "4": 135,
+      "5": 126,
+      "6": 118,
+      "7": 111,
+      "8": 102,
+      "9": 96,
+      "10": 93,
+      "11": 85,
+      "12": 86,
+      "13": 80,
+      "14": 74,
+      "15": 72
+    },
+    "candidates": [
+      {
+        "max_frames": 4,
+        "program": "df49f0d486eff920d32aa2c78e39cdd40aadde342926ac37958e0ab5a03f5416",
+        "fragments": 256,
+        "shapes": 672,
+        "transitions": 262,
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 4296,
+          "sum_of_candidate_scores_not_global_savings": 5150,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_frames": 8,
+        "program": "9efd3d4b0ab207a0caa8eaf35e1b7ac64618e4c6fb31ef4329cb2e489ba6bcc0",
+        "fragments": 256,
+        "shapes": 678,
+        "transitions": 267,
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 4915,
+          "sum_of_candidate_scores_not_global_savings": 5246,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_frames": 16,
+        "program": "24d326112ae5ce35adeb1bafc4499a62e18ddd049fd93ce60a62b044b1e5bc7a",
+        "fragments": 256,
+        "shapes": 678,
+        "transitions": 267,
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 4915,
+          "sum_of_candidate_scores_not_global_savings": 5246,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      }
+    ],
+    "scope": "offline selections from one actual execution; candidates overlap; no runtime saving claimed"
+  },
+  "limits": [
+    "Bake4 has final-state equality only, no full Run audit",
+    "Bake8 and Bake16 have not executed",
+    "candidate ranking scores overlap and are not additive savings"
+  ]
+}
