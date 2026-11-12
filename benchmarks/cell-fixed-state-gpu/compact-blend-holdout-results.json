@@ -1,0 +1,675 @@
+{
+  "scope": "Frozen model, completion-derived additional entrances; not natural traffic or novel target classes",
+  "native_exact_cases": 120,
+  "unique_entries": 108,
+  "duplicates": 12,
+  "all_unique": {
+    "correct": 99,
+    "total": 108
+  },
+  "previously_unseen_entries": {
+    "correct": 81,
+    "total": 90
+  },
+  "previously_unseen_skeletons": {
+    "correct": 75,
+    "total": 82
+  },
+  "model_refitted": false,
+  "generation_uses_completion_graphs": true,
+  "details": [
+    {
+      "id": "fresh-fccf4ef751495d16",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-2e0b97dddc959bfd",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ca21a6058d01b906",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-5e2c3d3755522a61",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-a6b2ad026aff239d",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-c720b38b9ff6bafe",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-a93968d5b4ea578c",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-75dc0c881ce48e88",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-5a0e7f3a07bc76fa",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-589b538720cf7b5c",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f00316924e4fb162",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-c60398097492bec9",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-3bd467347c678195",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-79ad02cd1a52891e",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ad72485eaa0fcb78",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-e2bacb9e07102fa4",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-eec43d0c082c76ea",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-21004fd6474f7c9e",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-b0f82e12449f05a7",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-e619ea9d8244277d",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-c9252297bd32d876",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-733c7bb02cfb776a",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-935abc20d5a3a151",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f468e67d79f6e60a",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-1e0f1835e44fe1ae",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ab9cdf654341d04f",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-8221f420ea5fa996",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-017119d80ef0b1ed",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-13c352b583fb8503",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-94d14f60e9209b79",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f35d1b3035973cdf",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-52f28388846cd8a6",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-9a3198eacea20d67",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f27c64c4aa43ff9e",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-2403a2ba03b22127",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-d09820e68ae325f3",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-2ae2acb7b6a62f8f",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-00c8b142f2bf7025",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-49d29d7f297dbd0a",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-98bb11161116c223",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-bad5b88f1870918b",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-0ad24ef48b6da4af",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": false
+    },
+    {
+      "id": "fresh-82178daef8dd24eb",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-300e113b511d929f",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-4e5830a90b0802f4",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-2506ff3280e507aa",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-1a2f02abe4e86f06",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-716b870aa29c60b3",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-9f9ef42cc5aa3cbc",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-25581880f362ac6f",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-29ce707c9bb38685",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-6210f7a11cbd31b2",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f50d87e53fa8b288",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-d65d3c19b007daf4",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ea6655da99baba5b",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-5fea97890515a702",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-cae38ea09c7c9596",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-fcd73d1ece538b8f",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-df8eb5e8c1cbeb56",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-5fea9543fd3f47ab",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-cfe7c280b9403539",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-c880f09ea18d0b05",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-cb9bf21d88451f3c",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-766287f18b41dd63",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-ee367cf5df11af64",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-06c8a7674db76422",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-4ce78fb17126b8b9",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f90f4783ca314e60",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-7e44af67ec57fce8",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-0a84c8f7ba15df6c",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-1b0b2c732221afd4",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-eee08da923f92cba",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-e604b429f255198b",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-cd2fe1cb2b33fc9a",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-f0d6a8f85e308de3",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-6c45d98b1d5fc658",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-1f95aa433df5ded5",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-d651f84e5ad59329",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-b158cb15e464e66c",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-fbd6432ef303809a",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-779b6a484317371f",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ae094c0a87367ef2",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-6837ee9fac00544b",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-aeb67ff3ed9caf63",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-fbea5904c640b9da",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-9bceedd096d9c90a",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-be460de48d5cf4fe",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-6d5176e8486972d5",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-631bd01753a24acb",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-244ff4cc9a010a06",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-949be034ff9bb768",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-9228f6bc724bd1c8",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": false
+    },
+    {
+      "id": "fresh-738f5947c446f52c",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-2076a88fe2cd8515",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-748e76ae92886a51",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-9328ea6631794216",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-6b31b2513c1865f0",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-8d478e943f18de1d",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-2401512f3cf33bbe",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-8475d8161bb17d68",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-ffcce1cb110b55ab",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-bd7966e6b35968e4",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-0f8942e1b55d6c2c",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-cae760d07ce58a3c",
+      "new_entry": true,
+      "new_skeleton": false,
+      "correct": false
+    },
+    {
+      "id": "fresh-180b3613706f3337",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-05086f5332f721fd",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    },
+    {
+      "id": "fresh-b8ed0250897d557b",
+      "new_entry": true,
+      "new_skeleton": true,
+      "correct": true
+    },
+    {
+      "id": "fresh-d9c3a748c5334881",
+      "new_entry": false,
+      "new_skeleton": false,
+      "correct": true
+    }
+  ],
+  "hashes": {
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "runtime": "8c440a6d4fbb5bed539d18b35dd18b5126629664121207d4e5dc20747082f934",
+    "model": "cba56adb0123e7df0051d6846103005ea14f16d6a0c56f0ba5eb67b43c90a9c7"
+  }
+}

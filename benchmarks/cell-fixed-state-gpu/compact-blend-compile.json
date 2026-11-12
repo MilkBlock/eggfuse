@@ -1,0 +1,14 @@
+{
+  "scope": "Exact polynomial expansion of validation-selected blend; no fitting",
+  "alpha": 0.5,
+  "random_input_max_error": 4.1484832763671875e-05,
+  "state_width": 472,
+  "low_width": 16,
+  "device_bytes": 946692,
+  "fixed_matmuls": 4,
+  "source_hashes": {
+    "left": "73c28ac6576df34314ad103521ba843b708e5164d676a76aede79433d097218e",
+    "right": "37da25f48b972e4cf878b804a83bc1fae9462e1ec06effabd4b37aa707e199ea",
+    "selection": "dd251aeced6e396a4a4a290ff5b20826454bd4d5d149ff9ff281b14f1efcac1c"
+  }
+}

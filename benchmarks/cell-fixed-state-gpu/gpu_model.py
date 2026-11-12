@@ -14,6 +14,15 @@ def forward(model):
     if kind=='quadratic':
         if degree not in (2,3):raise ValueError('unsupported polynomial')
         return mx.compile(lambda x:x@l+(x@p+q)**degree@n+b)
+    if kind=='quadratic_bilinear':
+        width=int(model['low_width']);outer=np.asarray(model['bilinear'])
+        if width<=0 or width>=linear.shape[0] or outer.shape!=(width*width,linear.shape[1]) or not np.isfinite(outer).all():raise ValueError('bilinear shape')
+        h=mx.array(outer);mx.eval(h)
+        def execute(x):
+            u=x[:,-width:]
+            terms=(u[:,:,None]*u[:,None,:]).reshape(x.shape[0],width*width)
+            return x@l+(x@p+q)**2@n+terms@h+b
+        return mx.compile(execute)
     if kind=='radial':
         square=np.asarray(model['radial_square'])
         if square.shape!=(linear.shape[0],) or not np.isfinite(square).all() or np.any(square<=0):raise ValueError('radial norm weights')

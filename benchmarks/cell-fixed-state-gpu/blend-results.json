@@ -1,0 +1,76 @@
+{
+  "scope": "Validation-selected algebraic blend of frozen quadratic models; known completion catalog only",
+  "selection": {
+    "alpha": 0.5,
+    "validation_correct": 174,
+    "total": 175,
+    "balanced_accuracy": 0.99375,
+    "device_bytes": 1740840
+  },
+  "validation": [
+    {
+      "alpha": 0.0,
+      "validation_correct": 173,
+      "total": 175,
+      "balanced_accuracy": 0.9875,
+      "device_bytes": 892356
+    },
+    {
+      "alpha": 0.25,
+      "validation_correct": 173,
+      "total": 175,
+      "balanced_accuracy": 0.9875,
+      "device_bytes": 1740840
+    },
+    {
+      "alpha": 0.5,
+      "validation_correct": 174,
+      "total": 175,
+      "balanced_accuracy": 0.99375,
+      "device_bytes": 1740840
+    },
+    {
+      "alpha": 0.75,
+      "validation_correct": 173,
+      "total": 175,
+      "balanced_accuracy": 0.9875,
+      "device_bytes": 1740840
+    },
+    {
+      "alpha": 1.0,
+      "validation_correct": 172,
+      "total": 175,
+      "balanced_accuracy": 0.9822368421052632,
+      "device_bytes": 73956
+    }
+  ],
+  "original_test": {
+    "correct": 94,
+    "total": 102
+  },
+  "stress_all_unique": {
+    "correct": 99,
+    "total": 108
+  },
+  "stress_new_entries": {
+    "correct": 81,
+    "total": 90
+  },
+  "stress_new_skeletons": {
+    "correct": 75,
+    "total": 82
+  },
+  "fixed_matmuls": 3,
+  "gpu_median_ms": 0.43058398296125233,
+  "state_dimension": 456,
+  "backpropagation": false,
+  "runtime_takeover": false,
+  "hashes": {
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "validation_runtime": "99046ccd7ca258645b3854fa532d5ee10274d31af0324141c85f2194f6cec159",
+    "stress_runtime": "8c440a6d4fbb5bed539d18b35dd18b5126629664121207d4e5dc20747082f934",
+    "admission": "a59a398f274ab491a776e26afcc8511e62dc4095e345a33827af89e8f83f48c7",
+    "left": "73c28ac6576df34314ad103521ba843b708e5164d676a76aede79433d097218e",
+    "right": "37da25f48b972e4cf878b804a83bc1fae9462e1ec06effabd4b37aa707e199ea"
+  }
+}

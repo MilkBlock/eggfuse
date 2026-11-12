@@ -462,3 +462,100 @@ completion_project_slots and bench_native_states commands. `fold_plan` folds
 projection metadata automatically; old unprojected models remain supported.
 The expanded trial instead uses expanded runtime files and the original expanded
 admission artifact, whose fingerprint is recorded in its results.
+
+## Fixed blend reaches 90% on the additional-entrance benchmark
+
+A completion-structure target-code experiment first compared categorical targets
+with normalized vectors of training completion graphs. A fixed nearest-code
+readout was folded into the last weights. Validation selected zero structural
+weight, reproducing the 95/102 and 80/90 baseline; it was not an improvement.
+Logs are in `structured-target-results.json`. The experiment remains catalog
+classification, not arbitrary generation of completion graphs.
+
+The 456-D and 16-D models make partly different errors. `blend_models.py` freezes
+both models and selects a blend from {0, .25, .5, .75, 1} on validation only,
+with tied validation scores preferring fewer device bytes. It selects .5 and
+174/175 validation correct. No test/stress labels select the blend. The new
+entrance cohort is an already-examined development stress set, not a blind test.
+
+| Fixed cohort | Prior augmented model | Selected blend |
+|---|---:|---:|
+| Original development test | 95/102 | 94/102 (92.16%) |
+| Previously unseen additional entrances | 80/90 | **81/90 (90.00%)** |
+| Previously unseen skeletons | 75/82 | 75/82 (91.46%) |
+| All unique additional inputs | 97/108 | 99/108 |
+
+This is one extra correct new entrance, not a large or statistically established
+accuracy gain. The original set loses one correct prediction. Earlier model and
+failure reports remain intact; none of the failing samples was excluded.
+
+### Exact algebraic reduction, not another learned stage
+
+Directly concatenating both branches keeps three matmuls but needs 1,740,840
+weight bytes. `compile_blend.py` instead expands the 16-D branch's quadratic:
+
+```
+H[i,j,c] = sum_k P[i,k] P[j,k] N[k,c]
+l' = l + 2 P diag(q) N
+b' = b + square(q) N
+```
+
+Its 441 center activations become a fixed 16x16 outer-product feature. Both the
+original state and the 16-D projection are folded into the shared layout, so
+runtime directly generates a 472-D vector; it does not execute a separate state
+conversion. GPU evaluates the selected blend using **four fixed matmuls**, a
+square and an outer product. A constant slice selects the last 16 coordinates.
+There is no graph traversal, input-dependent branch, search, saturation loop or
+backpropagation. The fourth matmul trades a small fixed operation for less weight
+storage; it must not be described as the earlier three-matmul implementation.
+
+Device weights decrease to 946,692 bytes, approximately 6.1% above the original
+augmented model rather than nearly double. State width is 3.5% larger than that
+baseline. Host/layout/serialization storage is separate from this device figure.
+
+67 arbitrary real inputs check the algebra against independent branch evaluation.
+`check_blend.py` then checks 589 original and generated rows: all top-1 outputs
+agree, maximum score discrepancy 1.48e-5. The reduced model independently retains
+81/90 on the frozen stress cohort and 94/102 through the native slot runner.
+546 scalar perturbations pass the folded-layout test. Native projection totals
+0.080 ms for 102 instances, and synchronized GPU compute ~0.506 ms in the saved
+run. These are separate component timings, excluding compilation/transport and
+correctness authorization. No eggcc/egglog end-to-end speedup is established.
+
+Reproduce the selected blend and exact reduction:
+
+```sh
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/blend_models.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --validation-runtime out/cell-fixed-state-gpu/augment-validation-runtime.json \
+  --stress-runtime out/cell-fixed-state-gpu/fresh-runtime.json \
+  --admission benchmarks/cell-fixed-state-gpu/augmented-results.json \
+  --left out/cell-fixed-state-gpu/augmented/model.npz \
+  --right out/cell-fixed-state-gpu/invariant/model.npz \
+  --output out/cell-fixed-state-gpu/blended
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/compile_blend.py \
+  --left out/cell-fixed-state-gpu/augmented/model.npz \
+  --right out/cell-fixed-state-gpu/invariant/model.npz \
+  --selection out/cell-fixed-state-gpu/blended/results.json \
+  --output out/cell-fixed-state-gpu/compact-blend
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/check_blend.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --stress-runtime out/cell-fixed-state-gpu/fresh-runtime.json \
+  --left out/cell-fixed-state-gpu/augmented/model.npz \
+  --right out/cell-fixed-state-gpu/invariant/model.npz \
+  --compiled out/cell-fixed-state-gpu/compact-blend/model.npz \
+  --selection out/cell-fixed-state-gpu/blended/results.json
+```
+
+Run emit_native_plan, completion_project_slots and bench_native_states with the
+compact-blend model, regenerating model-bound artifacts. Run evaluate_holdout
+with that same model and the frozen fresh-runtime file. These are the sources
+of `compact-blend-native-results.json` and `compact-blend-holdout-results.json`.
+
+The benchmark now demonstrates the requested chain: offline numeric layout
+compilation, direct real-instance slot projection, one fixed GPU batch and
+measured improvement on multiple entrances. Its scope remains five actual
+rules and a catalog of 24 known completions, with initial-instance address
+binding. General cross-Run binding/lifecycle support, compiler-native layout
+discovery, novel-completion generation and authorized runtime effect takeover
+are not established by this benchmark.
