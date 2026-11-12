@@ -66,3 +66,28 @@ Final normalized graph size does not change: the old final projection already
 deduplicated it. No executable state or runtime history has yet been merged by
 this change. Intermediate nontrivial unions remain a structural-normalization
 boundary; the 196-edge workload route is not claimed to be fully absorbed.
+
+## Staged LazyUnion contracts
+
+Paths with intermediate nontrivial unions now attempt a stage-preserving
+structural contract before falling back to opaque rule paths. Each stage uses
+its own canonical constructor structure and ordered terminal union obligations.
+Links contain the publication table and canonical source/consumer port vectors.
+Stage order and source-boundary effect semantics remain explicit. Rule IDs and
+local operation offsets remain in each implementation, not in the shared key.
+
+Exact canonical serialization interns these compound structures. The two-route
+regression retains two executable implementations but shares one staged class
+(previously two opaque classes). The variant without the union stays distinct.
+Different local constructor order and publication operation positions still
+share when canonical ports and effects agree. Native registration and original
+Run snapshots/binding audits are checked on the actual Cell runtime fixture.
+
+This is structural compression of the Bake registry, not a new runtime takeover.
+No post-boundary Eq is inferred by this representation, no intermediate Run is
+removed, and no pending union is folded into same-RHS constructor congruence.
+The existing result handoff proof and ordinary ordered union queue remain
+responsible for execution. Staged contracts do not yet feed the flat-structure
+equivalent-route index or prefix-inclusion proof. These are remaining steps,
+not measured speedups. Sources unsupported by per-stage normalization remain
+opaque, including unsupported mutable reads and scalar conditions.

@@ -228,6 +228,32 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
     b.finish()
 }
 
+/// Structural sharing across pending Union boundaries. Each stage keeps its
+/// own pre-commit symbols; links identify actual publication/query ports.
+/// This is not a cross-boundary Eq proof or an executable completion plan.
+pub(crate) fn staged_contract(p: &Program, path: &[(Option<usize>, Entry)]) -> Option<Json> {
+    if path.len() < 2 { return None; }
+    let stages = path.iter().map(|&(_,entry)| normalize(p,&[(None,entry)]))
+        .collect::<Option<Vec<_>>>()?;
+    let mut links = vec![];
+    for stage in 1..path.len() {
+        let source = Site::Effect(path[stage].0?);
+        let target = Site::Query(path[stage].1.1?);
+        let left = Definition::new(p,path[stage-1].1.0).ok()?.relation(source)?;
+        let right = Definition::new(p,path[stage].1.0).ok()?.relation(target)?;
+        if left.table != right.table { return None; }
+        let ports = |n: &Normalized, site| n.ports.iter()
+            .find(|(_,s,_)|*s==site).map(|(_,_,cols)|cols.clone());
+        let from = ports(&stages[stage-1],source)?;
+        let to = ports(&stages[stage],target)?;
+        if from.len()!=to.len() { return None; }
+        links.push(json!({"table":left.table,"from":from,"to":to}));
+    }
+    Some(json!({"normalization":"staged-lazy-union/v1",
+        "stages":stages.iter().map(|n| &n.structure).collect::<Vec<_>>(),
+        "links":links,"effects":"ordered-at-original-source-boundary"}))
+}
+
 /// A checked inclusion map comes from the very same symbolic prefix, never
 /// from runtime numbering or probabilistic membership. New assumptions are
 /// explicit and must still be matched by the consumer.

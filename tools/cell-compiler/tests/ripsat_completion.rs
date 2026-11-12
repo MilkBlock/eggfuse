@@ -554,3 +554,50 @@ fn already_proven_union_does_not_hide_constructor_structure() {
     assert_eq!(before.graph.export().unwrap(),after.graph.export().unwrap());
     assert_eq!(before.snapshots,after.snapshots);
 }
+
+#[test]
+fn staged_lazy_union_contracts_share_renamed_routes_without_erasing_effects() {
+    let source = r#"
+(datatype E (N i64) (Start E) (F E) (G E) (Gate E) (End E))
+(ruleset a) (ruleset b)
+(rule ((Start x)) ((F x) (G x) (union (F x) (G x)) (Gate x)) :ruleset a :name "one")
+(rule ((Start y)) ((G y) (Gate y) (F y) (union (F y) (G y))) :ruleset a :name "two")
+(rule ((Start z)) ((F z) (G z) (Gate z)) :ruleset a :name "plain")
+(rule ((Gate x)) ((End x)) :ruleset b :name "end")
+(Start (N 1))
+(run-schedule (seq (run a) (run b)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("staged-union",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let ids=["one","two","plain","end"].map(|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap());
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":ids.map(|r|json!({"edge":[0,0,r,0],"visits":2}))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,4).unwrap();
+    let entries=blocks["entries"].as_array().unwrap();
+    let leaf=|r|entries.iter().position(|e|e["consumer"]==r).unwrap();
+    let joins=ids[..3].iter().map(|&r| {
+        let op=rules[r]["effects"].as_array().unwrap().iter().position(|e|e["call"]["table"]=="Gate").unwrap();
+        json!({"left":leaf(r),"output":op,"right":leaf(ids[3])})
+    }).collect::<Vec<_>>();
+    let mut raw=p.artifact; raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed(&p,Limits::default()).unwrap(); plan["joins"]=json!(joins);
+    let mut raw=p.artifact;raw["iterative_bake"]=plan;
+    let p=Program::parse(seal(raw)).unwrap();
+    let contracts=p.iterative.completion_contracts(&p);
+    let implementations=contracts["implementations"].as_array().unwrap();
+    let combined=|rid|implementations.iter().find(|i|i["source_path"].as_array().unwrap().len()==2 && i["source_path"][0][1][0]==rid).unwrap();
+    let a=combined(ids[0]); let b=combined(ids[1]);let plain=combined(ids[2]);
+    assert_eq!(a["normalization"],"staged-lazy-union/v1");
+    assert_eq!(a["class"],b["class"]);
+    assert_ne!(a["class"],plain["class"]);
+    let shape=&contracts["structures"][a["class"].as_u64().unwrap() as usize];
+    assert_eq!(shape["stages"][0]["terminal_unions"].as_array().unwrap().len(),1);
+    assert_eq!(shape["links"].as_array().unwrap().len(),1);
+    eggfuse_bake::native_analyze::register_cpu_completion_structures(&contracts).unwrap();
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(p.clone()).unwrap();
+    let (before,expected)=execute(p.artifact);let (after,actual)=execute(compiled);
+    assert_eq!(expected,actual);assert_eq!(before.snapshots,after.snapshots);
+    assert_eq!(before.binding_audit,after.binding_audit);
+}

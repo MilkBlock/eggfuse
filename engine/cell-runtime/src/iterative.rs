@@ -363,11 +363,24 @@ impl Catalog {
     pub fn completion_contracts(&self, p: &Program) -> J {
         use crate::cell_completion::{normalize, extension};
         let mut shapes = BTreeMap::new();
+        let mut staged_shapes = BTreeMap::new();
         let mut structures = vec![];
         let mut implementations = vec![];
         let normalized=self.units.iter().map(|u|normalize(p,&u.path)).collect::<Vec<_>>();
         for (unit,u) in self.units.iter().enumerate() {
             let Some(n) = &normalized[unit] else {
+                if let Some(contract) = crate::cell_completion::staged_contract(p,&u.path) {
+                    // Exact canonical serialization, not a digest-only equality.
+                    let key = crate::checksum::canonical(&contract,false);
+                    let next = structures.len();
+                    let class = *staged_shapes.entry(key).or_insert_with(|| {
+                        structures.push(contract); next
+                    });
+                    implementations.push(json!({"unit":unit,"class":class,"source_path":u.path,
+                        "normalization":"staged-lazy-union/v1","established":"successful-rhs",
+                        "visible":"original-run-after-completion"}));
+                    continue;
+                }
                 // Retain exact ordered source contracts for unsupported
                 // normalization. They may use independently checked result
                 // inclusion, but do not acquire structural equivalence merely
