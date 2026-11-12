@@ -4,6 +4,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
+[写入完成事件接管维护](benchmarks/cell-write-completion/README.md)：完成块在线程间移交同一个生命周期 owner，直接更新实际 writer、父引用、成员与通知，删除集中结果向量和源线程维护循环。Raytrace 接管 793,538 个目标行，4,746 个块的维护与未完成写块重叠；语义检查通过，完整性能对照单独记录。
+
 [标量写 owner 自行准备](benchmarks/cell-write-owner/README.md)：原有 Cell 输入槽直接进入 worker，接管端口投影、目标查询、分组和源顺序恢复，再写实际行。Raytrace 接管 840,367 个候选的准备，分派次数不变，新增 4,656 次新键复查；状态与语义验收通过，尚无整体加速结论。
 
 [Unit 表 owner 接管](benchmarks/cell-table-owner/README.md)：worker 在一次池调用中完成精确判重、编号前缀和索引准备，删除接管后的第二次分派与重新分组。Raytrace 覆盖 103,729 个候选；错误时撤销未接管前缀以外的预备项。状态与语义检查通过，新增存储成本已记录，尚无整体加速结论。

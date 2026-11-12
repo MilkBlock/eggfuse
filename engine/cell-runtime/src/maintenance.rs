@@ -55,3 +55,52 @@ impl Graph {
             "unit":"actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"})
     }
 }
+
+#[cfg(feature="sparse-cells")]
+pub(super) fn replace_subscriptions(
+    uses:&mut HashMap<u64,UseSet>, dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    metrics:&mut Metrics, parents:&Parents, d:Dependency, mut refs:smallvec::SmallVec<[u64;3]>,
+) {
+        refs.sort_unstable();
+        refs.dedup();
+        use std::collections::hash_map::Entry;
+        let (mut old, refs) = match dependencies.entry(d) {
+            Entry::Vacant(slot) => {
+                for &id in &refs {
+                    maintenance::insert(uses, metrics, id, d);
+                }
+                if !refs.is_empty() {
+                    slot.insert(refs);
+                }
+                return;
+            }
+            Entry::Occupied(slot) if *slot.get() == refs => return,
+            Entry::Occupied(slot) if refs.is_empty() => (slot.remove(), &[][..]),
+            Entry::Occupied(slot) => {
+                // Keep the witness's existing directory slot. Only its Eq
+                // footprint changes; removing/reinserting the same witness
+                // cannot affect the reverse-edge difference below.
+                metrics.subscription_sets_replaced_in_place += 1;
+                let stored = slot.into_mut();
+                (std::mem::replace(stored, refs), stored.as_slice())
+            }
+        };
+        for id in &mut old {
+            *id = root(parents, *id);
+        }
+        for id in &old {
+            if !refs.contains(id)
+                && let Some(bucket) = uses.get_mut(id)
+            {
+                maintenance::remove(bucket, metrics, d);
+                if bucket.is_empty() {
+                    uses.remove(id);
+                }
+            }
+        }
+        for &id in refs {
+            if !old.contains(&id) {
+                maintenance::insert(uses, metrics, id, d);
+            }
+        }
+}

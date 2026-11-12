@@ -1592,50 +1592,10 @@ impl Graph {
         self.replace_subscriptions(d, refs);
     }
     #[cfg(feature = "sparse-cells")]
-    fn replace_subscriptions(&mut self, d: Dependency, mut refs: smallvec::SmallVec<[u64; 3]>) {
-        refs.sort_unstable();
-        refs.dedup();
-        use std::collections::hash_map::Entry;
-        let (mut old, refs) = match self.dependencies.entry(d) {
-            Entry::Vacant(slot) => {
-                for &id in &refs {
-                    maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
-                }
-                if !refs.is_empty() {
-                    slot.insert(refs);
-                }
-                return;
-            }
-            Entry::Occupied(slot) if *slot.get() == refs => return,
-            Entry::Occupied(slot) if refs.is_empty() => (slot.remove(), &[][..]),
-            Entry::Occupied(slot) => {
-                // Keep the witness's existing directory slot. Only its Eq
-                // footprint changes; removing/reinserting the same witness
-                // cannot affect the reverse-edge difference below.
-                self.maintenance.subscription_sets_replaced_in_place += 1;
-                let stored = slot.into_mut();
-                (std::mem::replace(stored, refs), stored.as_slice())
-            }
-        };
-        for id in &mut old {
-            *id = root(&self.parents, *id);
-        }
-        for id in &old {
-            if !refs.contains(id)
-                && let Some(bucket) = self.uses.get_mut(id)
-            {
-                maintenance::remove(bucket, &mut self.maintenance, d);
-                if bucket.is_empty() {
-                    self.uses.remove(id);
-                }
-            }
-        }
-        for &id in refs {
-            if !old.contains(&id) {
-                maintenance::insert(&mut self.uses, &mut self.maintenance, id, d);
-            }
-        }
+    fn replace_subscriptions(&mut self, d: Dependency, refs: smallvec::SmallVec<[u64; 3]>) {
+        maintenance::replace_subscriptions(&mut self.uses,&mut self.dependencies,&mut self.maintenance,&self.parents,d,refs);
     }
+
     fn activate(
         &mut self,
         f: FactRef,

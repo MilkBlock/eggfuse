@@ -3329,7 +3329,8 @@ impl Executor {
                 "duplicate_computation_allowed":true,"coordinator_effect_replay":false,
                 "minimum_bindings":32,"publication":"original source Run boundary",
                 "admission":"existing slots enter one worker region for input projection, parallel exact target lookup, ordered missing-ID allocation, grouping and actual row writes",
-                "timers":"execution includes owner admission, work and join, not pure waiting; boundary counts source lifecycle/index completion and source completion counts ordered Cell publication"});
+                "retirement":"ready target blocks transfer one worker lifecycle owner; writer retirement, membership, subscriptions and change notifications complete before the whole write batch joins",
+                "timers":"execution includes owner admission, writes, event retirement and join, not pure waiting; boundary is source setup, source completion is ordered Cell publication"});
         }
         report["query_point_transport"] = point_transport;
         report

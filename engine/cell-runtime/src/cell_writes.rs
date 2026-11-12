@@ -35,13 +35,17 @@ pub(crate) struct Counts {
     pub admission_probes: u64,
     pub new_key_rechecks: u64,
     pub owner_sort_rows: u64,
+    pub owner_retired_rows: u64,
+    pub owner_completion_groups: u64,
+    pub owner_completion_early_groups: u64,
+    pub owner_completion_bytes: u64,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::rc::Rc;
-    fn graph() -> Graph {
+    fn graph_with_merge(merge: J) -> Graph {
         let eq = json!({"kind":"eq","name":"E"});
         let int = json!({"kind":"i64"});
         let template = Template {
@@ -63,12 +67,60 @@ mod tests {
             "multi_stage":crate::multistage::MultiStage::default(),
             "entry_schedule":crate::entry_schedule::Plan::default(),
             "tables":[{"name":"Score","schema":[eq,int],"constructor":false,"virtual_fact":false,
-                "internal":false,"merge":{"var":"old"}}],
+                "internal":false,"merge":merge}],
             "templates":[template],"rules":[rule],"sets":{},"control":[],"initial":[],"table_templates":[],"artifact":{}
         })).unwrap();
         p.physical = crate::physical_plan::Plan::derive(&p).into();
         p.writes = crate::row_kernel::writes(&p);
         Graph::new(p).unwrap()
+    }
+    fn graph() -> Graph {
+        graph_with_merge(json!({"var":"old"}))
+    }
+    #[test]
+    fn worker_completion_preserves_retained_writers_and_subscription_membership() {
+        for workers in [1, 4] {
+            let mut g = graph_with_merge(json!({"call":{"primitive":"max","sort":"i64"},
+                "args":[{"var":"old"},{"var":"new"}]}));
+            let pool = rayon::ThreadPoolBuilder::new()
+                .num_threads(workers)
+                .build()
+                .unwrap();
+            let tasks = |base: i64| {
+                (0..128)
+                    .map(|i| {
+                        Task::new(
+                            [(0, Value::Eq(i as u64)), (1, Value::Int(base + i as i64))]
+                                .into_iter()
+                                .collect(),
+                            Value::Int(0),
+                            0,
+                            None,
+                            i,
+                        )
+                    })
+                    .collect::<Vec<_>>()
+            };
+            let mut counts = Counts::default();
+            g.write_cells(0, &mut tasks(0), &pool, &mut counts, Some(false))
+                .unwrap();
+            let old = g.functions[17].origin.unwrap();
+            g.retain_reference(old);
+            g.write_cells(0, &mut tasks(1000), &pool, &mut counts, Some(false))
+                .unwrap();
+            assert_eq!(g.slot(old.cell, 1).unwrap(), Value::Int(17));
+            assert_eq!(g.functions[17].value, Value::Int(1017));
+            assert!(g.writer_dir.get(old.cell).is_none());
+            assert_eq!(g.writer_dir.promoted, 1);
+            assert_eq!(g.members[0].len(), 128);
+            assert_eq!(g.query_versions[0], 256);
+            assert_eq!(g.maintenance_report()["stats"]["live_reverse_edges"], 128);
+            assert_eq!(counts.owner_retired_rows, 256);
+            assert_eq!(counts.owner_completion_groups, 4);
+            g.release_reference(old);
+            g.collect_garbage();
+            assert!(g.slot(old.cell, 1).is_err());
+        }
     }
     #[test]
     fn invalid_parallel_input_never_reserves_ids_or_changes_any_directory() {
@@ -111,7 +163,10 @@ mod tests {
             assert_eq!(g.export().unwrap(), before);
             assert_eq!(counts.owner_candidates, 0);
             assert_eq!(counts.row_writes, 0);
-            assert_eq!(counts.admission_probes, 126, "charge valid probes even on failure");
+            assert_eq!(
+                counts.admission_probes, 126,
+                "charge valid probes even on failure"
+            );
             assert_eq!(counts.worker_key_rows, 126);
             for task in tasks {
                 assert!(g.function_index(0, &[task.key]).is_none());
@@ -173,7 +228,6 @@ impl Task {
     }
 }
 struct Finished {
-    index: usize,
     new: bool,
     updates: u64,
     merges: u64,
@@ -185,6 +239,106 @@ struct Finished {
 enum Previous {
     Retained(FactRef, Option<Box<writer_frames::Writer>>),
     Reused(FactRef, Option<FactRef>),
+}
+
+struct Target<'a> {
+    function: &'a mut Function,
+    decoded: &'a mut Option<RowFields>,
+    group: &'a mut [Task],
+    retained: bool,
+    finished: Option<Finished>,
+}
+struct Completion<'a> {
+    lifecycle: writer_frames::Owner<'a>,
+    uses: &'a mut HashMap<u64, UseSet>,
+    dependencies: &'a mut HashMap<Dependency, smallvec::SmallVec<[u64; 3]>>,
+    maintenance: &'a mut maintenance::Metrics,
+    members: &'a mut TableRows<u64>,
+    version: &'a mut u64,
+    changes: &'a mut crate::change_batch::ChangeBatch,
+    changed: &'a mut bool,
+    parents: &'a Parents,
+    counts: &'a mut Counts,
+    table: usize,
+    merges: u64,
+    unchanged: u64,
+    row_writes: u64,
+}
+impl Completion<'_> {
+    fn accept(&mut self, target: &mut Target<'_>) {
+        let result = target.finished.take().unwrap();
+        let index = target.group[0].index;
+        self.merges += result.merges;
+        self.unchanged += result.unchanged;
+        self.counts.worker_rows += u64::from(result.worker);
+        self.counts.owner_retired_rows += 1;
+        self.counts.new_rows += u64::from(result.new);
+        if result.updates == 0 {
+            return;
+        }
+        self.row_writes += 1;
+        self.counts.row_writes += 1;
+        self.counts.logical_improvements += result.updates;
+        self.counts.superseded_improvements += result.updates - 1;
+        self.counts.writer_reuses += u64::from(result.reused);
+        self.counts.writer_allocations += u64::from(!result.reused);
+        match result.prior {
+            Some(Previous::Retained(origin, writer)) => {
+                self.lifecycle.retire(origin, writer);
+            }
+            Some(Previous::Reused(origin, parent)) => {
+                self.lifecycle.retire_unretained(origin, parent)
+            }
+            None => (),
+        }
+        let f = &*target.function;
+        self.lifecycle
+            .install(index, f.origin.unwrap(), f.writer.as_ref().unwrap().parent);
+        *self.changed = true;
+        self.lifecycle.stats.function_updates += result.updates;
+        let witness = Dependency::Function(index);
+        self.changes.touch(self.table, witness);
+        if result.new {
+            self.members.insert(index as u64);
+            // The authoritative PortWrite proof is Eq -> i64. The input key
+            // was canonicalized in this same read epoch; no union can intervene.
+            // Reuse ordinary subscription replacement without scanning the
+            // scalar output or rereading this row through Graph::function.
+            let [Value::Eq(id)] = f.key.as_slice() else {
+                unreachable!("typed scalar key")
+            };
+            self.maintenance.subscription_calls += 1;
+            self.maintenance.canonical_subscription_calls += 1;
+            self.maintenance.subscription_value_visits += 1;
+            self.maintenance.subscription_scalar_fields_skipped += 1;
+            self.maintenance.subscription_root_reads_omitted += 1;
+            maintenance::replace_subscriptions(
+                self.uses,
+                self.dependencies,
+                self.maintenance,
+                self.parents,
+                witness,
+                smallvec::smallvec![*id],
+            );
+        }
+        *self.version += result.updates;
+    }
+    fn finish(&mut self, length: u64, merge: ScalarMerge, kind: Option<&str>) {
+        let stats = &mut self.lifecycle.stats;
+        stats.single_writes += length;
+        stats.merge_calls += self.merges;
+        stats.scalar_merge_calls += self.merges;
+        stats.scalar_unchanged += self.unchanged;
+        if merge == ScalarMerge::Old {
+            stats.scalar_old_projection += self.merges;
+        }
+        if let Some(kind) = kind {
+            *stats.merge_contract_calls.entry(kind.into()).or_default() += self.merges;
+        }
+        stats.transient_writes += self.unchanged;
+        stats.rhs_frames_avoided += self.unchanged;
+        self.counts.invalidated += length - self.row_writes;
+    }
 }
 
 impl Graph {
@@ -245,12 +399,25 @@ impl Graph {
         let keys = &mut self.function_keys[table];
         let functions = &mut self.functions;
         let decoded = &mut self.function_decoded;
-        let parent_users = &self.parent_users;
+        let parent_users = &mut self.parent_users;
+        let directory = &mut self.writer_dir;
+        let cells = &mut self.cells;
+        let garbage = &mut self.garbage;
+        let stats = &mut self.stats;
+        let uses = &mut self.uses;
+        let dependencies = &mut self.dependencies;
+        let maintenance = &mut self.maintenance;
+        let members = &mut self.members[table];
+        let version = &mut self.query_versions[table];
+        let changes = &mut self.changes;
+        let changed = &mut self.changed;
+        let parent_directory = &self.parents;
+        let merge_kind = self.merge_kinds[table].as_deref();
         let parents = self.parents.reader();
         counts.boundary_ns += boundary.elapsed().as_nanos() as u64;
         let clock = std::time::Instant::now();
         counts.owner_pool_calls += 1;
-        let done: Vec<_> = pool.install(|| -> Result<Vec<Finished>> {
+        pool.install(|| -> Result<()> {
             // No identity or shared row is changed until all input keys are valid.
             // If malformed inputs fail on different workers, retain the first
             // source error, independent of completion order.
@@ -274,10 +441,15 @@ impl Graph {
                 })
                 .reduce(
                     || (None, 0),
-                    |(a, left), (b, right)| (match (a, b) {
-                        (Some(a), Some(b)) => Some(if a.0 <= b.0 { a } else { b }),
-                        (a, b) => a.or(b),
-                    }, left + right),
+                    |(a, left), (b, right)| {
+                        (
+                            match (a, b) {
+                                (Some(a), Some(b)) => Some(if a.0 <= b.0 { a } else { b }),
+                                (a, b) => a.or(b),
+                            },
+                            left + right,
+                        )
+                    },
                 );
             counts.admission_probes += probes;
             counts.worker_key_rows += u64::from(evaluate.is_some()) * probes;
@@ -319,7 +491,7 @@ impl Graph {
             let mut functions = functions.as_mut_slice();
             let mut decoded = decoded.as_mut_slice();
             let mut offset = 0;
-            let mut targets = Vec::new();
+            let mut targets = Vec::with_capacity(tasks.len());
             for group in tasks.chunk_by_mut(|a, b| a.index == b.index) {
                 let skip = group[0].index - offset;
                 functions = &mut functions[skip..];
@@ -332,199 +504,205 @@ impl Graph {
                 let retained = f.origin.is_some_and(|origin| {
                     parent_users.get(&origin.cell).copied().unwrap_or(0) != 0
                 });
-                targets.push((f, d, group, retained));
+                targets.push(Target {
+                    function: f,
+                    decoded: d,
+                    group,
+                    retained,
+                    finished: None,
+                });
             }
             counts.rows += targets.len() as u64;
             counts.duplicate_targets += (length as usize - targets.len()) as u64;
-            counts.temporary_bytes += (targets.capacity()
-                * std::mem::size_of::<(&mut Function, &mut Option<RowFields>, &mut [Task], bool)>())
-                as u64;
-            let done = targets
-                .into_par_iter()
-                .with_min_len(16)
-                .map(|(f, decoded, group, retained)| {
-                    let new = !f.live;
-                    let mut current = if new {
-                        None
-                    } else {
-                        let Value::Int(v) = f.value else {
-                            unreachable!("typed scalar Cell row")
-                        };
-                        Some(v)
-                    };
-                    let mut winner = None;
-                    let mut updates = 0;
-                    let mut merges = 0;
-                    let mut unchanged = 0;
-                    // Compute each candidate independently and resolve the short
-                    // merge in source order, invalidating superseded private writers.
-                    // No worker waits for another Cell's computation or replays RHSs.
-                    for (position, task) in group.iter_mut().enumerate() {
-                        if let Some(prepared) = evaluate {
-                            // Either no arithmetic exists, or the query already
-                            // established its result. The typed input read is total.
-                            let (value, dst) = ports
-                                .project_value(&task.values, prepared)
-                                .expect("validated total scalar Cell input");
-                            task.value = value;
-                            task.destination = dst;
-                        }
-                        task.old = current;
-                        let next = if let Some(old) = current {
-                            merges += 1;
-                            match merge {
-                                ScalarMerge::Old => old,
-                                ScalarMerge::Min => old.min(task.value),
-                                ScalarMerge::Max => old.max(task.value),
-                            }
-                        } else {
-                            task.value
-                        };
-                        task.changed = current != Some(next);
-                        if task.changed {
-                            current = Some(next);
-                            winner = Some(position);
-                            updates += 1;
-                        } else {
-                            unchanged += 1;
-                        }
-                    }
-                    let mut reused = false;
-                    let prior = if let Some(winner) = winner {
-                        let mut old_box = None;
-                        let prior = f.origin.take().map(|origin| {
-                            let writer = f.writer.take();
-                            if !retained && let Some(writer) = writer {
-                                let parent = writer.parent;
-                                old_box = Some(writer);
-                                Previous::Reused(origin, parent)
-                            } else {
-                                Previous::Retained(origin, writer)
-                            }
-                        });
-                        let task = &mut group[winner];
-                        if let Some(dst) = task.destination {
-                            task.values.insert(dst, Value::Int(task.value));
-                        }
-                        let parent = task.parent.filter(|_| !parent_columns.is_empty());
-                        if parent.is_some() {
-                            for slot in parent_columns.keys() {
-                                task.values.remove(slot);
-                            }
-                        }
-                        // Adopt the actual successful query's slot allocation directly.
-                        let state = writer_frames::Writer::completed(
+            counts.temporary_bytes +=
+                (targets.capacity() * std::mem::size_of::<Target<'_>>()) as u64;
+            let chunks: Vec<_> = targets.chunks_mut(64).collect();
+            let completion = Completion {
+                lifecycle: writer_frames::Owner {
+                    directory,
+                    cells,
+                    users: parent_users,
+                    garbage,
+                    stats,
+                },
+                uses,
+                dependencies,
+                maintenance,
+                members,
+                version,
+                changes,
+                changed,
+                parents: parent_directory,
+                counts,
+                table,
+                merges: 0,
+                unchanged: 0,
+                row_writes: 0,
+            };
+            let (mut completion, events) = crate::completion_events::owned_prefix(
+                chunks,
+                completion,
+                |chunk| {
+                    for target in chunk.iter_mut() {
+                        target.write(
+                            ports,
+                            evaluate,
+                            merge,
+                            parent_columns,
                             template,
-                            std::mem::take(&mut task.values),
-                            parent,
                             epoch,
-                            operation + 1,
+                            operation,
                         );
-                        f.writer = Some(if let Some(mut writer) = old_box {
-                            *writer = state;
-                            reused = true;
-                            writer
-                        } else {
-                            Box::new(state)
-                        });
-                        f.origin = Some(FactRef {
-                            cell: task.cell,
-                            op: operation as u32,
-                        });
-                        f.value = Value::Int(current.unwrap());
-                        f.epoch = epoch;
-                        f.live = true;
-                        *decoded = Some(Self::shared_fields(&f.key, &f.value));
-                        prior
-                    } else {
-                        None
-                    };
-                    for task in group.iter_mut() {
-                        drop(std::mem::take(&mut task.values));
                     }
-                    Finished {
-                        index: group[0].index,
-                        new,
-                        updates,
-                        merges,
-                        unchanged,
-                        prior,
-                        reused,
-                        worker: rayon::current_thread_index().is_some(),
+                    chunk
+                },
+                |owner, chunk| {
+                    for target in chunk {
+                        owner.accept(target);
                     }
-                })
-                .collect();
+                },
+            );
+            completion.counts.owner_completion_groups += events.waves;
+            completion.counts.owner_completion_early_groups += events.early;
+            completion.counts.owner_completion_bytes += events.bytes;
+            completion.counts.temporary_bytes += events.bytes;
+            completion.finish(length as u64, merge, merge_kind);
+            drop(completion);
+            drop(targets);
             // Source publication consumes original ordinals. Restore that order
             // here without a second pool call or a source sorting pass.
             tasks.par_sort_unstable_by_key(|task| task.ordinal);
             counts.owner_sort_rows += length as u64;
-            Ok(done)
+            Ok(())
         })?;
         counts.execution_ns += clock.elapsed().as_nanos() as u64;
-        counts.temporary_bytes += (done.capacity() * std::mem::size_of::<Finished>()) as u64;
-        let boundary = std::time::Instant::now();
+        Ok(())
+    }
+}
+
+impl Target<'_> {
+    fn write(
+        &mut self,
+        ports: &crate::row_kernel::PortWrite,
+        evaluate: Option<bool>,
+        merge: ScalarMerge,
+        parent_columns: &BTreeMap<usize, usize>,
+        template: usize,
+        epoch: u64,
+        operation: usize,
+    ) {
+        let f = &mut *self.function;
+        let decoded = &mut *self.decoded;
+        let group = &mut *self.group;
+        let retained = self.retained;
+
+        let new = !f.live;
+        let mut current = if new {
+            None
+        } else {
+            let Value::Int(v) = f.value else {
+                unreachable!("typed scalar Cell row")
+            };
+            Some(v)
+        };
+        let mut winner = None;
+        let mut updates = 0;
         let mut merges = 0;
         let mut unchanged = 0;
-        let mut row_writes = 0;
-        for result in done {
-            merges += result.merges;
-            unchanged += result.unchanged;
-            counts.worker_rows += u64::from(result.worker);
-            counts.new_rows += u64::from(result.new);
-            if result.updates == 0 {
-                continue;
+        // Compute each candidate independently and resolve the short
+        // merge in source order, invalidating superseded private writers.
+        // No worker waits for another Cell's computation or replays RHSs.
+        for (position, task) in group.iter_mut().enumerate() {
+            if let Some(prepared) = evaluate {
+                // Either no arithmetic exists, or the query already
+                // established its result. The typed input read is total.
+                let (value, dst) = ports
+                    .project_value(&task.values, prepared)
+                    .expect("validated total scalar Cell input");
+                task.value = value;
+                task.destination = dst;
             }
-            row_writes += 1;
-            counts.row_writes += 1;
-            counts.logical_improvements += result.updates;
-            counts.superseded_improvements += result.updates - 1;
-            counts.writer_reuses += u64::from(result.reused);
-            counts.writer_allocations += u64::from(!result.reused);
-            match result.prior {
-                Some(Previous::Retained(origin, writer)) => {
-                    self.retire_writer(origin, writer);
+            task.old = current;
+            let next = if let Some(old) = current {
+                merges += 1;
+                match merge {
+                    ScalarMerge::Old => old,
+                    ScalarMerge::Min => old.min(task.value),
+                    ScalarMerge::Max => old.max(task.value),
                 }
-                Some(Previous::Reused(origin, parent)) => {
-                    self.retire_unretained_writer(origin, parent);
-                }
-                None => (),
-            }
-            if let Some(parent) = self.functions[result.index].writer.as_ref().unwrap().parent {
-                self.retain_reference(parent);
-            }
-            self.writer_dir
-                .register(result.index, self.functions[result.index].origin.unwrap());
-            self.changed = true;
-            self.stats.function_updates += result.updates;
-            self.changes
-                .touch(table, Dependency::Function(result.index));
-            if result.new {
-                self.members[table].insert(result.index as u64);
-                let row = self.function(result.index).unwrap();
-                self.subscribe(table, row.witness, &row.values);
-                self.query_versions[table] += result.updates - 1;
             } else {
-                self.query_versions[table] += result.updates;
+                task.value
+            };
+            task.changed = current != Some(next);
+            if task.changed {
+                current = Some(next);
+                winner = Some(position);
+                updates += 1;
+            } else {
+                unchanged += 1;
             }
         }
-        self.stats.single_writes += length as u64;
-        self.stats.merge_calls += merges;
-        self.stats.scalar_merge_calls += merges;
-        self.stats.scalar_unchanged += unchanged;
-        if merge == ScalarMerge::Old {
-            self.stats.scalar_old_projection += merges;
+        let mut reused = false;
+        let prior = if let Some(winner) = winner {
+            let mut old_box = None;
+            let prior = f.origin.take().map(|origin| {
+                let writer = f.writer.take();
+                if !retained && let Some(writer) = writer {
+                    let parent = writer.parent;
+                    old_box = Some(writer);
+                    Previous::Reused(origin, parent)
+                } else {
+                    Previous::Retained(origin, writer)
+                }
+            });
+            let task = &mut group[winner];
+            if let Some(dst) = task.destination {
+                task.values.insert(dst, Value::Int(task.value));
+            }
+            let parent = task.parent.filter(|_| !parent_columns.is_empty());
+            if parent.is_some() {
+                for slot in parent_columns.keys() {
+                    task.values.remove(slot);
+                }
+            }
+            // Adopt the actual successful query's slot allocation directly.
+            let state = writer_frames::Writer::completed(
+                template,
+                std::mem::take(&mut task.values),
+                parent,
+                epoch,
+                operation + 1,
+            );
+            f.writer = Some(if let Some(mut writer) = old_box {
+                *writer = state;
+                reused = true;
+                writer
+            } else {
+                Box::new(state)
+            });
+            f.origin = Some(FactRef {
+                cell: task.cell,
+                op: operation as u32,
+            });
+            f.value = Value::Int(current.unwrap());
+            f.epoch = epoch;
+            f.live = true;
+            *decoded = Some(Graph::shared_fields(&f.key, &f.value));
+            prior
+        } else {
+            None
+        };
+        for task in group.iter_mut() {
+            drop(std::mem::take(&mut task.values));
         }
-        if let Some(kind) = &self.merge_kinds[table] {
-            *self
-                .stats
-                .merge_contract_calls
-                .entry(kind.clone())
-                .or_default() += merges;
-        }
-        self.stats.transient_writes += unchanged;
-        self.stats.rhs_frames_avoided += unchanged;
-        counts.invalidated += length as u64 - row_writes;
-        counts.boundary_ns += boundary.elapsed().as_nanos() as u64;
-        Ok(())
+        self.finished = Some(Finished {
+            new,
+            updates,
+            merges,
+            unchanged,
+            prior,
+            reused,
+            worker: rayon::current_thread_index().is_some(),
+        });
     }
 }

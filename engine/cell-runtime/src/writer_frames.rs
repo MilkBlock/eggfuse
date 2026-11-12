@@ -25,6 +25,60 @@ struct Page {
     row: [u32; 512],
     count: usize,
 }
+/// Borrow the existing lifecycle stores, without borrowing the program or
+/// copying any producer state. A completed row can transfer this owner to the
+/// next ready row on a worker; ordinary Graph retirement uses the same code.
+pub(super) struct Owner<'a> {
+    pub directory: &'a mut Directory,
+    pub cells: &'a mut arena::Cells,
+    pub users: &'a mut HashMap<u32, usize>,
+    pub garbage: &'a mut BTreeSet<u32>,
+    pub stats: &'a mut Stats,
+}
+impl Owner<'_> {
+    pub fn retire_unretained(&mut self, origin: FactRef, parent: Option<FactRef>) {
+        debug_assert_eq!(self.users.get(&origin.cell).copied().unwrap_or(0), 0);
+        self.directory.remove(origin.cell);
+        if let Some(parent) = parent {
+            producer::release(self.users, self.garbage, parent.cell);
+        }
+    }
+    pub fn retire(
+        &mut self,
+        previous: FactRef,
+        writer: Option<Box<Writer>>,
+    ) -> Option<Box<Writer>> {
+        let Some(mut writer) = writer else {
+            producer::release(self.users, self.garbage, previous.cell);
+            return None;
+        };
+        self.directory.remove(previous.cell);
+        if self.users.get(&previous.cell).copied().unwrap_or(0) > 0 {
+            let c = Cell {
+                template: writer.template,
+                parent: writer.parent.take(),
+                values: std::mem::take(&mut writer.values),
+                facts: Default::default(),
+                completed: writer.completed,
+                completed_prefix: writer.prefix,
+                recipe_depth: writer.depth,
+                started_epoch: writer.epoch,
+            };
+            self.cells.insert(previous.cell, c);
+            self.stats.cells_created += 1;
+            self.directory.promoted += 1;
+        } else if let Some(parent) = writer.parent {
+            producer::release(self.users, self.garbage, parent.cell);
+        }
+        Some(writer)
+    }
+    pub fn install(&mut self, index: usize, origin: FactRef, parent: Option<FactRef>) {
+        if let Some(parent) = parent {
+            producer::retain(self.users, parent.cell);
+        }
+        self.directory.register(index, origin);
+    }
+}
 impl Directory {
     pub(super) fn register(&mut self, index: usize, origin: FactRef) {
         self.insert(origin.cell, index as u32);
@@ -66,13 +120,6 @@ impl Directory {
     }
 }
 impl Graph {
-    pub(super) fn retire_unretained_writer(&mut self, origin: FactRef, parent: Option<FactRef>) {
-        // Worker admission excludes inline writers as new parents, so an
-        // unretained old writer cannot acquire readers during the batch.
-        debug_assert_eq!(self.parent_users.get(&origin.cell).copied().unwrap_or(0), 0);
-        self.writer_dir.remove(origin.cell);
-        if let Some(parent) = parent { self.release_reference(parent); }
-    }
     pub(super) fn writer(&self, id: u32) -> Option<&Writer> {
         self.functions
             .get(self.writer_dir.get(id)?)?
@@ -84,32 +131,19 @@ impl Graph {
         let writer = self.functions[index].writer.take();
         self.retire_writer(previous, writer)
     }
-    pub(super) fn retire_writer(&mut self, previous: FactRef, writer: Option<Box<Writer>>) -> Option<Box<Writer>> {
-        let Some(mut writer) = writer else {
-            self.release_reference(previous);
-            return None;
-        };
-        self.writer_dir.remove(previous.cell);
-        if self.parent_users.get(&previous.cell).copied().unwrap_or(0) > 0 {
-            // A client explicitly retained this producer as a parent. Its
-            // original parent is already retained; transfer that hold.
-            let c = Cell {
-                template: writer.template,
-                parent: writer.parent.take(),
-                values: std::mem::take(&mut writer.values),
-                facts: Default::default(),
-                completed: writer.completed,
-                completed_prefix: writer.prefix,
-                recipe_depth: writer.depth,
-                started_epoch: writer.epoch,
-            };
-            self.cells.insert(previous.cell, c);
-            self.stats.cells_created += 1;
-            self.writer_dir.promoted += 1;
-        } else if let Some(p) = writer.parent {
-            self.release_reference(p);
+    pub(super) fn retire_writer(
+        &mut self,
+        previous: FactRef,
+        writer: Option<Box<Writer>>,
+    ) -> Option<Box<Writer>> {
+        Owner {
+            directory: &mut self.writer_dir,
+            cells: &mut self.cells,
+            users: &mut self.parent_users,
+            garbage: &mut self.garbage,
+            stats: &mut self.stats,
         }
-        Some(writer)
+        .retire(previous, writer)
     }
     pub(super) fn inline_writer(&mut self, index: usize, cell: u32, op: usize, frame: Cell) {
         let prior = self.detach_origin(index);
@@ -155,8 +189,22 @@ impl Graph {
     }
 }
 impl Writer {
-    pub(super) fn completed(template: usize, values: crate::slots::Slots, parent: Option<FactRef>, epoch: u64, prefix: usize) -> Self {
-        Self { template, parent, values: values.into(), epoch, completed: true, depth: 0, prefix }
+    pub(super) fn completed(
+        template: usize,
+        values: crate::slots::Slots,
+        parent: Option<FactRef>,
+        epoch: u64,
+        prefix: usize,
+    ) -> Self {
+        Self {
+            template,
+            parent,
+            values: values.into(),
+            epoch,
+            completed: true,
+            depth: 0,
+            prefix,
+        }
     }
 }
 #[cfg(test)]
@@ -198,10 +246,10 @@ mod tests {
     }
 }
 
-#[cfg(feature="storage-metrics")]
+#[cfg(feature = "storage-metrics")]
 impl Directory {
-    pub(super) fn storage_bytes(&self)->usize {
-        self.pages.capacity()*std::mem::size_of::<Option<Box<Page>>>()
-        +self.pages.iter().flatten().count()*std::mem::size_of::<Page>()
+    pub(super) fn storage_bytes(&self) -> usize {
+        self.pages.capacity() * std::mem::size_of::<Option<Box<Page>>>()
+            + self.pages.iter().flatten().count() * std::mem::size_of::<Page>()
     }
 }

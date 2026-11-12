@@ -18,6 +18,13 @@ pub struct Context {
     pub depth: u32,
     pub op: usize,
 }
+pub(super) fn retain(users:&mut HashMap<u32,usize>,cell:u32) {
+    *users.entry(cell).or_default()+=1;
+}
+pub(super) fn release(users:&mut HashMap<u32,usize>,garbage:&mut BTreeSet<u32>,cell:u32) {
+    *users.get_mut(&cell).expect("retained Cell")-=1;
+    garbage.insert(cell);
+}
 impl Graph {
     pub(super) fn retain_reference(&mut self, f: FactRef) {
         self.retain_cell(f.cell);
@@ -26,11 +33,10 @@ impl Graph {
         self.release_cell(f.cell);
     }
     pub(super) fn retain_cell(&mut self, cell: u32) {
-        *self.parent_users.entry(cell).or_default() += 1;
+        retain(&mut self.parent_users,cell);
     }
     pub(super) fn release_cell(&mut self, cell: u32) {
-        *self.parent_users.get_mut(&cell).expect("retained Cell") -= 1;
-        self.garbage.insert(cell);
+        release(&mut self.parent_users,&mut self.garbage,cell);
     }
     pub fn continuation_context(&self, w: Dependency) -> Option<Context> {
         let actual = self.origin(w)?;
