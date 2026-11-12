@@ -225,6 +225,13 @@ impl Workers {
         rid:usize,batch:crate::entry_schedule::Batch<'_>,inverted:Option<&[Dependency]>,
         watermark:u64,known:&QueryFacts)->Result<()> {
         let clock=Instant::now();
+        if inverted.is_none() && batch.range_len() != 0 {
+            let code = self.activate_expansion(g,index,rid,batch.atom())?;
+            self.enqueue_entry_range(code, batch, watermark, known);
+            self.expansion.work.direct_batches += 1;
+            self.expansion.work.prepare_seconds += clock.elapsed().as_secs_f64();
+            return Ok(());
+        }
         let before=self.cell_queries.len();
         // Keep the old preparation order: another rule may consult the same
         // columns while choosing its reverse candidate traversal in this Run.

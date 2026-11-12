@@ -20,6 +20,10 @@ impl<T> Default for OrderedRun<T> {
     }
 }
 impl<T: Ord + Copy> OrderedRun<T> {
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn span_len(&self) -> usize {
+        match self { Self::Run { rows, .. } => rows.len(), Self::Tree(t) => t.len() }
+    }
     pub fn len(&self) -> usize {
         match self {
             Self::Run { live, .. } => *live,

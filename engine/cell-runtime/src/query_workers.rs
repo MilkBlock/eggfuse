@@ -7,6 +7,9 @@ use serde::Serialize;
 #[cfg(feature = "parallel-residuals")]
 #[path = "query_expansion_workers.rs"]
 mod expansion;
+#[cfg(feature = "parallel-residuals")]
+#[path = "query_entry_ranges.rs"]
+mod entry_ranges;
 #[cfg(feature = "cell-query-sharing-audit")]
 #[path = "query_sharing_audit.rs"]
 mod sharing_audit;
@@ -90,6 +93,10 @@ pub(crate) struct Counts {
     pub admission_table_checks: u64,
     pub seed_selection_visits: u64,
     pub entry_headers: u64,
+    pub entry_range_descriptors: u64,
+    pub entry_range_chunks: u64,
+    pub entry_range_rows: u64,
+    pub entry_range_capacity_bytes: u64,
     pub output_buffer_capacity: u64,
     pub batch_buffers: u64,
     pub answer_buffer_allocations: u64,
@@ -108,6 +115,9 @@ pub(crate) struct Workers {
     first_reads: FirstReads,
     tasks: CellTasks,
     cell_queries: Vec<CellQuery>,
+    next_source: usize,
+    #[cfg(feature = "parallel-residuals")]
+    entry_ranges: Vec<entry_ranges::Range>,
     rule_facts: Vec<Option<RuleRun>>,
     inline_frame: Frame,
 }
@@ -249,7 +259,8 @@ impl Executor {
         self.query_workers = Some(Workers { pool, grain, matched: Default::default(),
             #[cfg(feature = "parallel-residuals")]
             expansion: Default::default(),
-            cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(),
+            cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(), next_source: 0,
+            #[cfg(feature = "parallel-residuals")] entry_ranges: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
             stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_constructor_lookups:vec![0;workers], worker_steps: vec![0; workers],
@@ -580,6 +591,7 @@ impl CellPlan {
     }
 }
 struct CellQuery {
+    order: usize,
     #[cfg(feature = "parallel-residuals")]
     filter: bool,
     code: usize,
@@ -589,6 +601,7 @@ struct CellQuery {
     cursor: Option<crate::stage_spine::Cursor>,
 }
 struct QueryRead<'a> {
+    order: usize,
     #[cfg(feature = "parallel-residuals")]
     expansion: usize,
     #[cfg(feature = "parallel-residuals")]
@@ -601,7 +614,7 @@ struct QueryRead<'a> {
 }
 fn query_error_order(q:&QueryRead<'_>,known:&RuleRun)->(usize,bool,usize) {
     #[cfg(feature="parallel-residuals")]
-    { (known.first_source,q.code.expansion,q.source) }
+    { (known.first_source,q.code.expansion,q.order) }
     #[cfg(not(feature="parallel-residuals"))]
     { let _=known;(q.source,false,0) }
 }
@@ -619,7 +632,7 @@ fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCod
     counts.cell_code_reads += 1;
     chunk.slots = chunk.slots.max(code.slots);
     chunk.reads = chunk.reads.max(code.reads);
-    headers.push(QueryRead { source, code,
+    headers.push(QueryRead { source, order: q.order, code,
         #[cfg(feature = "parallel-residuals")] expansion:if code.expansion {positions[q.code]} else {0},
         #[cfg(feature = "parallel-residuals")] filter:q.filter,
         #[cfg(feature = "cell-query-sharing-audit")]
@@ -755,11 +768,12 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] filter:bool) {
         let rid = self.cell_codes[code].rule;
         if self.rule_facts[rid].is_none() { self.rule_facts[rid] = Some(RuleRun { facts: known.clone(), watermark,
-            #[cfg(feature="parallel-residuals")] first_source:self.cell_queries.len(), }); }
+            #[cfg(feature="parallel-residuals")] first_source:self.next_source, }); }
         debug_assert_eq!(self.rule_facts[rid].as_ref().unwrap().watermark, watermark);
         if self.cell_queries.len() == self.cell_queries.capacity() { self.stats.cell_queue_growths += 1; }
-        self.cell_queries.push(CellQuery { code, next: usize::MAX, ordinal, row, cursor,
+        self.cell_queries.push(CellQuery { order: self.next_source, code, next: usize::MAX, ordinal, row, cursor,
             #[cfg(feature="parallel-residuals")] filter, });
+        self.next_source += 1;
         // A small Run is one inline task: all of its Cells already stay on one
         // host, so it needs no grouping index. If it grows, activate the queued
         // prefix once, then append each later Entry directly to its Cell task.
@@ -792,18 +806,21 @@ impl Workers {
         self.tasks.clear(&mut self.stats);
         for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
         #[cfg(feature="parallel-residuals")]
-        self.expansion.discard();
+        { self.expansion.discard(); self.clear_entry_ranges(); }
+        self.next_source = 0;
         self.finish_read_accounting(g, spine);
     }
     pub(crate) fn finish_run(&mut self, g: &mut Graph, spine: &mut crate::stage_spine::Programs,
         matches: &mut [(usize, Vec<Binding>)],
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
-        #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan) -> Result<()> {
+        #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan,
+        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
         let outcome = self.finish_queries(g, spine, matches,
             #[cfg(feature="parallel-residuals")] indexes,
             #[cfg(feature="parallel-residuals")] sieve,
-            #[cfg(feature="parallel-residuals")] entries);
+            #[cfg(feature="parallel-residuals")] entries,
+            #[cfg(feature="parallel-residuals")] schedule);
         if outcome.is_err() {
             self.discard_queries(g, spine);
             spine.discard_query_candidates();
@@ -828,19 +845,24 @@ impl Workers {
         matches: &mut [(usize, Vec<Binding>)],
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
-        #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan) -> Result<()> {
+        #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan,
+        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
         let constructor_groups = self.matched.constructor_groups;
         let mut ready = ready::borrow(g, matches, spine, &mut self.matched);
-        if self.cell_queries.is_empty() && ready.is_empty() { return Ok(()); }
+        let range_pending = {
+            #[cfg(feature="parallel-residuals")] { !self.entry_ranges.is_empty() }
+            #[cfg(not(feature="parallel-residuals"))] { false }
+        };
+        if self.cell_queries.is_empty() && ready.is_empty() && !range_pending { return Ok(()); }
         #[cfg(feature="parallel-residuals")]
         let prepared=self.expansion.prepare(indexes,sieve,entries);
         #[cfg(feature="parallel-residuals")]
         let residual_active=!prepared.is_empty();
         #[cfg(not(feature="parallel-residuals"))]
         let residual_active=false;
-        let reads = if self.cell_queries.is_empty() && constructor_groups == self.matched.constructor_groups { None }
+        let reads = if self.cell_queries.is_empty() && !range_pending && constructor_groups == self.matched.constructor_groups { None }
             else { g.query_reads(&[], &mut self.stats.admission_table_checks) };
-        if !self.cell_queries.is_empty() && reads.is_none() {
+        if (!self.cell_queries.is_empty() || range_pending) && reads.is_none() {
             return Err("Cell query Run snapshot changed before completion".into());
         }
         // The move-only coordinator records retain the original Entry and
@@ -890,8 +912,13 @@ impl Workers {
         self.stats.borrowed_job_headers += headers.len() as u64;
         self.stats.entry_buffer_bytes += (headers.capacity() * std::mem::size_of::<QueryRead<'_>>()) as u64;
         self.stats.peak_cell_task_bytes = self.stats.peak_cell_task_bytes.max(self.tasks.bytes());
+        #[cfg(feature="parallel-residuals")]
+        let range_jobs = entry_ranges::borrow(&self.entry_ranges, schedule, self.grain);
+        #[cfg(feature="parallel-residuals")]
+        { self.stats.entry_range_chunks += range_jobs.len() as u64;
+          self.stats.entry_range_capacity_bytes += (range_jobs.capacity()*std::mem::size_of::<entry_ranges::Chunk<'_>>()) as u64; }
         let key_nodes = g.program.key_nodes();
-        let pooled = self.pool.is_some() && headers.len() + ready::instances(&ready) >= self.grain;
+        let pooled = self.pool.is_some() && (range_pending || headers.len() + ready::instances(&ready) >= self.grain);
         let local=&g.program.executions;
         let templates=&g.program.templates;
         let rule_facts = &self.rule_facts;
@@ -968,7 +995,8 @@ impl Workers {
             { counts.sharing_audit = probe.finish(); }
             (answers, first_error, counts, if pooled { rayon::current_thread_index() } else { None },
                 #[cfg(feature="parallel-residuals")] residual,
-                clock.map_or(0.0,|clock|clock.elapsed().as_secs_f64()))
+                clock.map_or(0.0,|clock|clock.elapsed().as_secs_f64()),
+                #[cfg(feature="parallel-residuals")] None::<usize>)
         };
         let execution=residual_active.then(Instant::now);
         let grain = self.grain;
@@ -978,13 +1006,24 @@ impl Workers {
         }
         let (mut chunks, completed): (Vec<_>, _) = if pooled {
             self.pool.as_ref().unwrap().install(|| {
-                let queries = || ranges.par_iter().map(|range| with_worker_frame(|frame| run(range, frame))).collect();
+                let queries = || {
+                    let ordinary = ranges.par_iter().map(|range| with_worker_frame(|frame| run(range, frame)));
+                    #[cfg(feature="parallel-residuals")]
+                    { ordinary.chain(range_jobs.par_iter().map(|job| entry_ranges::run(job, &self.cell_codes, &self.expansion.ready, &prepared, reads.as_ref().unwrap(), rule_facts, local, templates, key_nodes, pooled))).collect() }
+                    #[cfg(not(feature="parallel-residuals"))]
+                    { ordinary.collect() }
+                };
                 if ready.is_empty() { (queries(), ready::Work::default()) }
-                else if ranges.is_empty() { (Vec::new(), ready::parallel(&mut ready, grain, reads.as_ref())) }
+                else if ranges.is_empty() && !range_pending { (Vec::new(), ready::parallel(&mut ready, grain, reads.as_ref())) }
                 else { rayon::join(queries, || ready::parallel(&mut ready, grain, reads.as_ref())) }
             })
         } else {
-            (ranges.iter().map(|range| self.inline_frame.with(|frame| run(range, frame))).collect(),
+            ({
+                let mut chunks: Vec<_> = ranges.iter().map(|range| self.inline_frame.with(|frame| run(range, frame))).collect();
+                #[cfg(feature="parallel-residuals")]
+                chunks.extend(range_jobs.iter().map(|job| entry_ranges::run(job, &self.cell_codes, &self.expansion.ready, &prepared, reads.as_ref().unwrap(), rule_facts, local, templates, key_nodes, pooled)));
+                chunks
+            },
                 ready::inline(&mut ready, grain, reads.as_ref()))
         };
         drop(ready);
@@ -1032,10 +1071,11 @@ impl Workers {
         }
         for chunk in chunks {
             #[cfg(feature="parallel-residuals")]
-            let (answers,_,counts,worker,residual,_seconds)=chunk;
+            let (answers,_,counts,worker,residual,_seconds,range_code)=chunk;
             #[cfg(not(feature="parallel-residuals"))]
             let (answers,_,counts,worker,_seconds)=chunk;
             g.record_constructor_query_work(&counts.constructors);
+            self.stats.entry_range_rows += counts.entry_range_rows;
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
             spine.stats.record_query_worker(&counts);
@@ -1047,10 +1087,15 @@ impl Workers {
             self.record_expansion_chunk(g,sieve,residual,worker,_seconds,answers.capacity());
             for (source, answer) in answers {
                 #[cfg(feature="parallel-residuals")]
+                if let Some(code) = range_code {
+                    self.record_expansion_answer(self.cell_codes[code].rule, 0, source, answer);
+                    continue;
+                }
+                #[cfg(feature="parallel-residuals")]
                 if self.cell_codes[self.cell_queries[source].code].expansion {
                     let q=&self.cell_queries[source];let code=&self.cell_codes[q.code];
                     let (rid,position)=(code.rule,self.expansion_position(code.rule,code.pivot,q.ordinal));
-                    self.record_expansion_answer(rid,position,source,answer);
+                    self.record_expansion_answer(rid,position,q.order,answer);
                     continue;
                 }
                 let q = &mut self.cell_queries[source];
@@ -1058,7 +1103,8 @@ impl Workers {
                     q.cursor.take().expect("one positive completion per Cell query"));
             }
         }
-        #[cfg(feature="parallel-residuals")] self.expansion.finished();
+        #[cfg(feature="parallel-residuals")] { self.expansion.finished(); self.clear_entry_ranges(); }
+        self.next_source = 0;
         // finish_worker_rule selects by input, depth and original ordinal in
         // one pass. Completion order need not be restored separately.
         // Drop negative cursors and clear even rules with no positive answers.

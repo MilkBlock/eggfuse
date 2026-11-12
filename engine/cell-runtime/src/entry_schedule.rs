@@ -549,6 +549,10 @@ impl Entry<'_> {
 }
 impl<'a> Batch<'a> {
     #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn range_node(&self) -> usize { self.consumer.node }
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn range_len(&self) -> usize { self.state.epochs.runs(self.watermark).map(|r|r.span_len()).sum() }
+    #[cfg(feature = "parallel-residuals")]
     pub(crate) fn shared_row(&self, witness: Dependency) -> Option<Rc<Row>> {
         self.entry(witness).map(|entry| entry.packet.row.clone())
     }
@@ -653,6 +657,13 @@ impl<'a> Batch<'a> {
     }
 }
 impl Scheduler {
+    // Only the existing delta membership crosses threads. Workers read actual
+    // rows through QueryReads; neither Rc packets nor Cursor ownership crosses.
+    #[cfg(feature = "parallel-residuals")]
+    pub(crate) fn read_ranges(&self, node: usize, watermark: u64)
+        -> impl Iterator<Item = &crate::ordered_run::OrderedRun<(u64, Dependency)>> {
+        self.states[node].epochs.runs(watermark)
+    }
     pub fn new(p: &Program, enabled: bool) -> Self {
         Self::with_epoch_counts(p, enabled, false)
     }

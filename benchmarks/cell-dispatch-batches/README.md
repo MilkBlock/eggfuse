@@ -109,3 +109,28 @@ python3 benchmarks/cell-dispatch-batches/check.py OUTPUT benchmarks/cell-dispatc
 `cell-absorption,view-ports,parallel-publication` and run the frozen Raytrace program
 with the arguments in `results.json`. Its stderr is a work diagnostic only.
 Do not use that instrumented executable for performance comparison.
+
+## Follow-up: worker-owned Entry ranges
+
+The saved four-worker sample at `11056467` has only 13.3% worker samples outside
+condition waits; 98.5% of worker waits are idle pool waits. The next takeover
+removes coordinator enumeration for unowned residual Entry ranges. A descriptor
+contains the checked Cell query, scheduler node, watermark and source order.
+Workers enumerate the existing epoch runs, skip retired positions, read actual
+rows from the sealed Run, filter and execute the query. Successful instances
+continue through the existing scalar/constructor preparation in the same task.
+No per-entry Rc owner, Cell grouping record or borrowed query header is created
+for these ranges. Tree epochs keep their ordered traversal; contiguous epochs
+are split without walking rows on the coordinator.
+
+Cursor-owned Entries, reverse-selected candidates, residual enumeration, delta
+ownership, source error order and original publication boundaries remain live.
+Range results participate in the existing Run pool and winner selection. No new
+Run barrier, binding copy or maintained fact index is introduced.
+
+`query_workers.stats.entry_range_rows` counts removed per-entry queue ownership
+and header preparation; `entry_range_descriptors`, `entry_range_chunks` and
+`entry_range_capacity_bytes` charge the new dispatch. These are work counters,
+not a claim of speedup. The 4 residual and 14 query integration tests pass with
+exact per-Run snapshots and ordered match comparisons, including deletion,
+recreation, unions, late inputs and mixed point/residual queries.

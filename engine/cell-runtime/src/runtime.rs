@@ -2689,7 +2689,8 @@ impl Executor {
             workers.finish_run(&mut self.graph, &mut self.stage_spine, &mut work,
                 #[cfg(feature="parallel-residuals")] &self.query_indexes,
                 #[cfg(feature="parallel-residuals")] &mut self.sieve,
-                #[cfg(feature="parallel-residuals")] self.free_join.entry_plan())?;
+                #[cfg(feature="parallel-residuals")] self.free_join.entry_plan(),
+                #[cfg(feature="parallel-residuals")] &self.entry_schedule)?;
             #[cfg(feature="parallel-residuals")]
             workers.finish_expansion_rules(&mut work,&self.graph.program.rules);
             let (mut order_comparisons, mut binding_moves) = (0, 0);

@@ -120,8 +120,9 @@ fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
         let r=after.report(); let work=&r["query_workers"]["residual_expansion"]["stats"];
         assert!(work["mixed_runs"].as_u64().unwrap()>0,"{r}");
         assert!(work["direct_batches"].as_u64().unwrap()>work["merged_runs"].as_u64().unwrap(),"{work}");
-        assert!(r["query_workers"]["stats"]["cross_rule_cells"].as_u64().unwrap()>0);
-        assert_eq!(work["queued_row_owners"],work["input_rows"]);
+        assert!(r["query_workers"]["stats"]["entry_range_descriptors"].as_u64().unwrap()>0, "residuals share the Run pool without per-entry Cell grouping");
+        assert_eq!(work["queued_row_owners"].as_u64().unwrap() + r["query_workers"]["stats"]["entry_range_rows"].as_u64().unwrap(), work["input_rows"].as_u64().unwrap());
+        assert!(r["query_workers"]["stats"]["entry_range_rows"].as_u64().unwrap() > 0, "worker must enumerate the existing Entry range");
         assert!(work["merge_tasks"].as_u64().unwrap()>0);
         if workers>1 {
             assert!(work["merge_pool_calls"].as_u64().unwrap()>0,"winner sorting must actually reach the pool: {work}");

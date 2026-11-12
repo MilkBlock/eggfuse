@@ -32,6 +32,10 @@ impl Epochs {
     pub fn counts(&self, epoch: u64) -> impl Iterator<Item = usize> + '_ {
         self.bins.range(epoch..).map(|(_, b)| b.len())
     }
+    #[cfg(feature = "parallel-residuals")]
+    pub fn runs(&self, epoch: u64) -> impl Iterator<Item = &OrderedRun<Item>> {
+        self.bins.range(epoch..).map(|(_, b)| b)
+    }
 }
 #[cfg(test)]
 mod tests {
