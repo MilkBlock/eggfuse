@@ -255,7 +255,7 @@ fn delta(
     rid: usize,
     atom: usize,
     watermark: u64,
-) -> Result<Vec<Rc<Row>>> {
+) -> Result<Vec<crate::graph::SharedRow>> {
     let batch = entries.terminal_batch(g, rid, atom, watermark)?;
     Ok(batch
         .delta()

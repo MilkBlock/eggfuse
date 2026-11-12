@@ -28,6 +28,12 @@ use crate::ordered_run::OrderedRun as TableRows;
 type TableRows<T> = BTreeSet<T>;
 #[cfg(not(feature = "sparse-cells"))]
 pub type RowFields = std::rc::Rc<Vec<Value>>;
+// Shared Entry snapshots can be borrowed by table/query owners. Cursor roots
+// remain coordinator-local; this changes ownership of the existing row only.
+#[cfg(feature = "sparse-cells")]
+pub type SharedRow = std::sync::Arc<Row>;
+#[cfg(not(feature = "sparse-cells"))]
+pub type SharedRow = std::rc::Rc<Row>;
 pub(crate) fn row_fields(v: Vec<Value>) -> RowFields {
     #[cfg(feature = "sparse-cells")]
     {

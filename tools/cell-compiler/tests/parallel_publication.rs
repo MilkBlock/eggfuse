@@ -47,7 +47,14 @@ fn repaired_publication_keeps_late_values_aliases_and_retirements() {
         let (mut a,mut b)=(before.report(),after.report());
         a["publication"].as_object_mut().unwrap().remove("parallel");
         let counts=b["publication"].as_object_mut().unwrap().remove("parallel").unwrap();
-        assert_eq!(a["publication"],b["publication"],"one read per published row");
+        for field in ["headers", "column_rows", "range_rows", "neighbor_rows", "view_column_rows"] {
+            assert_eq!(a["publication"][field],b["publication"][field],"same original index coverage: {field}");
+        }
+        assert!(b["entry_schedule"]["stats"]["owner_entry_updates"].as_u64().unwrap() > 0,
+            "table owner must update actual Entry storage");
+        assert!(b["entry_schedule"]["stats"]["row_decodes"].as_u64().unwrap()
+            < a["entry_schedule"]["stats"]["row_decodes"].as_u64().unwrap(),
+            "owned publication removes later coordinator Entry decoding");
         assert_eq!(a["sieve"]["stats"],b["sieve"]["stats"],"ordered changes and collision invalidation");
         let conditions=&b["sieve"]["publication"];
         assert!(conditions["stats"]["batches"].as_u64().unwrap()>0,"{conditions}");

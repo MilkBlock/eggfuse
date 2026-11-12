@@ -2,6 +2,16 @@
 //! No row/index clone or lazy cache mutation is performed on worker threads.
 use super::*;
 use smallvec::SmallVec;
+// A filter-only Entry range needs no table/column SmallVec in every task.
+// This is a borrow of the authoritative fingerprint map, not another index.
+pub(crate) struct EntryHashes<'a> { keys:Option<&'a HashMap<Dependency,SmallVec<[u64;4]>>> }
+impl EntryHashes<'_> {
+    pub fn get(&self,w:Dependency)->Option<&[u64]> {self.keys?.get(&w).map(|v|v.as_slice())}
+}
+pub(crate) struct KeySupport<'a> { keys:&'a HashMap<u64,Bucket>, bits:u32, source:usize }
+impl KeySupport<'_> {
+    pub fn present(&self,row:&Row)->bool {self.keys.contains_key(&fingerprint(&row.values[self.source],self.bits))}
+}
 pub(crate) struct Read<'a> {
     tables: SmallVec<[(usize, TableRead<'a>); 4]>,
     entry_keys: Option<&'a HashMap<Dependency, SmallVec<[u64; 4]>>>,
@@ -51,6 +61,16 @@ impl<'a> TableRead<'a> {
     }
 }
 impl QueryIndexes {
+    pub(crate) fn read_key_support(&self,versions:&[u64],(table,column,source):(usize,usize,usize))->Option<KeySupport<'_>> {
+        let index=self.tables.get(&table)?;
+        if index.version!=versions[table] {return None;}
+        Some(KeySupport {keys:index.values.get(column)?.get()?,bits:self.bits,source})
+    }
+
+    pub(crate) fn read_entry_hashes(&self,table:usize)->EntryHashes<'_> {
+        EntryHashes {keys:self.tables.get(&table).map(|t|&t.keys)}
+    }
+
     /// Called on the coordinator before borrowing only the finished columns.
     /// The Summary already owns a built table; no new table or row is created.
     #[cfg(feature = "parallel-publication")]

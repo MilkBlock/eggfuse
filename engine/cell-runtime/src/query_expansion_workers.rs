@@ -80,7 +80,7 @@ fn residual_winners_preserve_source_and_stable_expansion_ties() {
 }
 #[derive(Default)]
 pub(super) struct Plans {
-    enabled:bool, rules:Vec<Vec<Option<Plan>>>, work:Work,
+    pub(super) enabled:bool, rules:Vec<Vec<Option<Plan>>>, work:Work,
     active:Vec<(usize,usize)>, pub ready:Vec<usize>, outputs:Vec<Output>,
 }
 impl Plans {
@@ -181,7 +181,7 @@ impl Workers {
     /// The Entry already passed Sieve and has no published Cursor. Its rule
     /// may still have other, independently owned Spine continuations.
     pub(crate) fn uncovered_expansion_entry(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,
-        rid:usize,pivot:usize,watermark:u64,row:Rc<Row>,known:&QueryFacts)->Result<()> {
+        rid:usize,pivot:usize,watermark:u64,row:crate::graph::SharedRow,known:&QueryFacts)->Result<()> {
         let code=self.activate_expansion(g,index,rid,pivot)?;
         let plan=self.expansion.rules[rid][pivot].as_mut().unwrap();
         self.expansion.work.partitioned_pivots+=u64::from(!plan.partitioned);
@@ -332,7 +332,8 @@ impl Workers {
     pub(super) fn record_expansion_run(&mut self,seconds:f64,pooled:bool,header_capacity:usize) {
         if self.expansion.active.is_empty() {return;}
         let t=&mut self.expansion.work;t.batches+=1;t.merged_runs+=1;t.run_pool_calls+=u64::from(pooled);
-        t.mixed_runs+=u64::from(self.cell_queries.iter().any(|q|!self.cell_codes[q.code].expansion));
+        t.mixed_runs+=u64::from(!self.owned_ranges.is_empty()
+            || self.cell_queries.iter().any(|q|!self.cell_codes[q.code].expansion));
         t.execute_seconds+=seconds;
         t.entry_header_capacity_bytes+=(header_capacity*std::mem::size_of::<QueryRead<'_>>()) as u64;
     }

@@ -12,6 +12,7 @@ pub(super) struct Stats {
     worker_rows:Vec<u64>, worker_tables:Vec<u64>, worker_task_seconds:Vec<f64>,
     prepare_seconds:f64, execute_seconds:f64, restore_seconds:f64,
     task_capacity_bytes:u64, change_capacity_bytes:u64, max_table_rows:u64,
+    entry_order_headers:u64,
     change_buffer_growths:u64, peak_retained_change_bytes:u64,
     table_rows:Vec<u64>, table_task_seconds:Vec<f64>,
 }
@@ -20,19 +21,31 @@ struct Task<'a> {
     columns:Option<crate::query::PublicationTask>,
     ranges:Option<crate::range_index::PublicationTask>,
     neighbor:Option<crate::neighbor::PublicationTask>,
-    worker:Option<usize>, seconds:f64, row_reads:u64, error:Option<String>,
+    entries:Option<crate::entry_schedule::PublicationTask>,
+    worker:Option<usize>, seconds:f64, row_reads:u64, order_headers:u64, error:Option<String>,
 }
 impl Task<'_> {
     fn run(&mut self,reads:&crate::graph::query_reads::QueryReads<'_>,pooled:bool) {
         self.worker=pooled.then(rayon::current_thread_index).flatten();
         let clock=Instant::now();
         let result=(|| {
-            for (&w,change) in self.changes {
+            let mut ordered = Vec::new();
+            if self.entries.is_some() {
+                ordered.extend(self.changes.iter());
+                ordered.sort_unstable_by_key(|(w,_)| **w);
+                self.order_headers = ordered.len() as u64;
+            }
+            let mut update = |w: Dependency, change: &Change| -> Result<()> {
                 let row=if *change==Change::Wake {self.row_reads+=1;reads.row(w)?} else {None};
                 if let Some(columns)=&mut self.columns {columns.update(w,row.as_ref());}
                 if let Some(ranges)=&mut self.ranges {ranges.update(w,row.as_ref())?;}
                 if let Some(neighbor)=&mut self.neighbor {neighbor.update(w,row.as_ref());}
-            }
+                if let Some(entries)=&mut self.entries {entries.update(w,row.as_ref(),reads);}
+                Ok(())
+            };
+            if ordered.is_empty() { for (&w,change) in self.changes {update(w,change)?;} }
+            else { for (&w,change) in ordered {update(w,change)?;} }
+            if let Some(entries)=&mut self.entries {entries.finish(self.changes,reads)?;self.row_reads+=entries.row_reads;}
             if let Some(columns)=&mut self.columns {columns.finish(self.version);}
             if let Some(ranges)=&mut self.ranges {ranges.finish(self.version);}
             if let Some(neighbor)=&mut self.neighbor {neighbor.finish(self.version);}
@@ -47,8 +60,9 @@ impl Publication {
     pub(crate) fn parallel_enabled(&self)->bool {self.parallel.enabled}
     pub(super) fn publish_parallel(&mut self,g:&Graph,columns:&mut QueryIndexes,
         mut ranges:Option<&mut RangeIndex>,neighbor:&mut Context,pool:Option<&rayon::ThreadPool>,grain:usize,
+        mut entries:Option<&mut crate::entry_schedule::Scheduler>,
         publish_ports:&mut impl FnMut(usize,&FxHashMap<Dependency,Change>,bool))->Result<bool> {
-        let needed=|t|columns.has_columns(t) || ranges.as_ref().is_some_and(|r|r.has_publication(t)) || neighbor.has_publication(t);
+        let needed=|t|columns.has_columns(t) || ranges.as_ref().is_some_and(|r|r.has_publication(t)) || neighbor.has_publication(t) || entries.as_ref().is_some_and(|e|e.has_publication_work(t));
         let (count,total)=g.changes.tables().filter(|(t,_)|needed(*t))
             .fold((0,0),|(n,rows),(_,c)|(n+1,rows+c.len()));
         if total<grain.max(256) {self.parallel.small_batches+=1;return Ok(false);}
@@ -71,7 +85,8 @@ impl Publication {
             if column.is_some() && g.has_view_plan(t) {self.view_column_rows+=count;}
             let range=ranges.as_deref_mut().and_then(|r|r.take_publication(t));
             let ports=neighbor.take_publication(t);
-            if column.is_none() && range.is_none() && ports.is_none() {
+            let entry=entries.as_deref_mut().and_then(|e|e.take_publication_work(t));
+            if column.is_none() && range.is_none() && ports.is_none() && entry.is_none() {
                 self.header_only+=count;continue;
             }
             self.column_rows+=count*u64::from(column.is_some());
@@ -80,8 +95,8 @@ impl Publication {
             self.parallel.column_rows+=count*u64::from(column.is_some());
             self.parallel.range_rows+=count*u64::from(range.is_some());
             self.parallel.neighbor_rows+=count*u64::from(ports.is_some());
-            tasks.push(Task {table:t,changes,version,columns:column,ranges:range,neighbor:ports,
-                worker:None,seconds:0.0,row_reads:0,error:None});
+            tasks.push(Task {table:t,changes,version,columns:column,ranges:range,neighbor:ports,entries:entry,
+                worker:None,seconds:0.0,row_reads:0,order_headers:0,error:None});
         }
         let pooled=pool.is_some() && tasks.len()>1;
         self.parallel.batches+=1;
@@ -105,6 +120,7 @@ impl Publication {
         for task in tasks {
             if error.is_none() {error=task.error;}
             let rows=task.changes.len() as u64;
+            self.parallel.entry_order_headers+=task.order_headers;
             self.parallel.tables+=1;self.parallel.rows+=rows;
             self.parallel.table_rows[task.table]+=rows;
             self.parallel.table_task_seconds[task.table]+=task.seconds;
@@ -121,6 +137,7 @@ impl Publication {
             }
             if let Some(r)=task.ranges {ranges.as_deref_mut().unwrap().restore_publication(r);}
             if let Some(p)=task.neighbor {neighbor.restore_publication(p);}
+            if let Some(e)=task.entries {entries.as_deref_mut().unwrap().restore_publication_work(e,task.worker);}
         }
         columns.finish_publication();
         self.parallel.peak_retained_change_bytes=self.parallel.peak_retained_change_bytes.max(columns.publication_buffer_bytes() as u64);

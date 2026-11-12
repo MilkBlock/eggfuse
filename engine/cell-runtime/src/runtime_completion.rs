@@ -562,6 +562,8 @@ impl Executor {
             &mut self.neighbor,
             #[cfg(feature = "parallel-publication")]
             self.query_workers.as_ref().filter(|_|self.publication.parallel_enabled()).map(|w|w.publication_pool()),
+            #[cfg(feature = "parallel-publication")]
+            Some(&mut self.entry_schedule),
             |_table, _changes, _indexed| {
                 #[cfg(feature = "view-consumers")]
                 self.blocks

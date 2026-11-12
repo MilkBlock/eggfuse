@@ -188,7 +188,7 @@ pub struct Executor {
 // introduce reference-counted heap allocations when the feature is disabled.
 enum SeedRow {
     Owned(Row),
-    Shared(Rc<Row>),
+    Shared(crate::graph::SharedRow),
 }
 impl std::ops::Deref for SeedRow {
     type Target = Row;
@@ -1197,6 +1197,8 @@ impl Executor {
         let mut node_cursor_reads = 0;
         let mut entry_domains = Vec::new();
         let mut uncovered_worker_entries = 0usize;
+        #[cfg(feature="parallel-residuals")]
+        let mut owned_range_count=0usize;
         let mut found = vec![];
         let scheduled = if scheduled_entry {
             let watermark = self.watermarks[rid];
@@ -1303,6 +1305,19 @@ impl Executor {
                             self.query_workers.as_mut().unwrap().expansion_entries(
                                 &self.graph, &mut self.query_indexes, rid, batch,
                                 inverted.as_deref(), watermark, &query_facts)?;
+                            return Ok(());
+                        }
+                        #[cfg(feature="parallel-residuals")]
+                        if node_owns && detach_spine && self.completion.is_none() && inverted.is_none()
+                            && !cfg!(feature="entry-admission-audit") && !cfg!(feature="cell-query-sharing-audit")
+                            && !cfg!(feature="spine-shapes") && !cfg!(feature="cell-entry-reverse")
+                            && batch.fully_published()
+                            && self.query_workers.as_ref().is_some_and(|w|batch.range_len()>=w.grain())
+                            && self.query_workers.as_mut().is_some_and(|w|w.admit_owned_pivot(&self.graph,rid,atom)) {
+                            let count=batch.range_len();
+                            self.query_workers.as_mut().unwrap().enqueue_owned_range(&self.graph,rid,atom,batch.range_node(),count,
+                                watermark,&query_facts,point_support);
+                            owned_range_count+=count;
                             return Ok(());
                         }
                         #[cfg(feature = "parallel-entry-filters")]
@@ -1515,6 +1530,7 @@ impl Executor {
                     // Until it runs, none can prove complete Spine coverage.
                     seeds.len()+uncovered_worker_entries,
                     spine_routes,
+                    #[cfg(feature="parallel-residuals")] owned_range_count,
                     watermark,
                     &query_facts,
                     #[cfg(feature = "sparse-cells")] self.query_workers.as_mut(),

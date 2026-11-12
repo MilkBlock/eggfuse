@@ -183,11 +183,12 @@ impl Publication {
         mut ranges: Option<&mut RangeIndex>,
         neighbor: &mut Context,
         #[cfg(feature = "parallel-publication")] workers:Option<(Option<&rayon::ThreadPool>,usize)>,
+        #[cfg(feature = "parallel-publication")] entries: Option<&mut crate::entry_schedule::Scheduler>,
         mut publish_ports: impl FnMut(usize, &FxHashMap<Dependency, Change>, bool),
     ) -> Result<()> {
         #[cfg(feature = "parallel-publication")]
         if let Some((pool,grain))=workers
-            && self.publish_parallel(g,columns,ranges.as_deref_mut(),neighbor,pool,grain,&mut publish_ports)? {
+            && self.publish_parallel(g,columns,ranges.as_deref_mut(),neighbor,pool,grain,entries,&mut publish_ports)? {
             return Ok(());
         }
         columns.begin_publication(g);

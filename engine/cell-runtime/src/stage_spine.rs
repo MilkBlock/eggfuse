@@ -496,7 +496,7 @@ mod set_counts_test {
                 cursor.depth = depth;
                 let mut answer = Matched::matched([(1, Value::Int(key))].into_iter().collect(), QueryFacts::None, 1);
                 if ordinal % 2 == 0 { answer.values.insert(15, Value::Int(ordinal as i64)); }
-                Winner::new(answer, cursor, ordinal, &mut cursors, &mut stats)
+                Winner::new(answer, cursor, (Dependency::Function(ordinal),0), &mut cursors, &mut stats)
             }).collect::<Vec<_>>();
             // Only the owned candidates cross threads. Their original Cursor
             // owners, including Rc roots, stay in this source Run's arena.
@@ -508,8 +508,9 @@ mod set_counts_test {
             let actual = rows.iter().map(|winner| {
                 let Value::Int(key) = winner.answer.values[&1] else { unreachable!() };
                 let cursor = cursors[winner.answer.direct.as_ref().unwrap().0].as_ref().unwrap();
-                assert_eq!(cursor.root.id, winner.ordinal as u64);
-                (winner.ordinal, key, winner.depth)
+                let (Dependency::Function(ordinal),_) = winner.ordinal else {unreachable!()};
+                assert_eq!(cursor.root.id, ordinal as u64);
+                (ordinal, key, winner.depth)
             }).collect::<Vec<_>>();
             assert_eq!(actual, expected);
             assert!(comparisons > 0);
@@ -533,7 +534,7 @@ mod set_counts_test {
             let root = Rc::new(Root { id: rule as u64, epoch: 1, set: 0, context: OnceCell::new() });
             roots.push(Rc::downgrade(&root));
             let answer = Matched::matched([(0, Value::Int(rule as i64))].into_iter().collect(), QueryFacts::None, 1);
-            let winner = Winner::new(answer, Cursor::fresh(root, 0), 0,
+            let winner = Winner::new(answer, Cursor::fresh(root, 0), (Dependency::Function(0),0),
                 &mut spine.sealed_cursors, &mut spine.stats);
             spine.deferred_slots[rule] = spine.deferred_queries.len();
             spine.deferred_queries.push(DeferredQuery { rule, complete: true, covered: 1, rows: vec![winner] });
@@ -888,7 +889,7 @@ pub struct Programs {
     cache_epoch: u64,
     anchor_shapes: BTreeMap<(usize, usize), (usize, Vec<(usize, usize)>)>,
     entry_cache: HashMap<(usize, Dependency), (bool, usize)>,
-    row_cache: HashMap<Dependency, Option<Rc<Row>>>,
+    row_cache: HashMap<Dependency, Option<crate::graph::SharedRow>>,
     table_readers: Vec<Vec<usize>>,
     // Number of distinct planned input tables with at least one live anchor.
     live_inputs: Vec<usize>,
@@ -958,14 +959,14 @@ struct Winner { answer: Matched, cursor: Cursor }
 #[cfg(feature = "sparse-cells")]
 pub(crate) struct Winner {
     pub(crate) answer: Matched,
-    ordinal: usize,
+    ordinal: (Dependency,usize),
     depth: u32,
 }
 #[cfg(feature = "sparse-cells")]
 struct DeferredQuery { rule: usize, complete: bool, covered: usize, rows: Vec<Winner> }
 #[cfg(feature = "sparse-cells")]
 impl Winner {
-    fn new(mut answer: Matched, cursor: Cursor, ordinal: usize,
+    fn new(mut answer: Matched, cursor: Cursor, ordinal: (Dependency,usize),
         cursors: &mut Vec<Option<Cursor>>, stats: &mut Stats) -> Self {
         debug_assert!(answer.direct.is_none());
         let depth = cursor.depth;
@@ -989,8 +990,8 @@ fn take_origin(cursors: &mut Vec<Option<Cursor>>, token: DirectOrigin) -> Cursor
 #[cfg(feature = "sparse-cells")]
 fn select_worker_winners(results: &mut Vec<Winner>, inputs: &[usize], comparisons: &mut u64,
     cursors: &mut Vec<Option<Cursor>>) -> usize {
-    // A total source ordinal preserves the old stable key/depth selection
-    // without restoring source order first or stripping a temporary vector.
+    // Source witness/pivot is the old routed ordinal order. Its explicit key
+    // also orders range answers without enumerating negative entries first.
     results.sort_unstable_by(|a, b| {
         *comparisons += 1;
         a.answer.compare_inputs(&b.answer, inputs)
@@ -2536,7 +2537,7 @@ impl Programs {
             } else {
                 self.stats.delta_rows_examined += 1;
                 g.stats.decoded_rows += 1;
-                g.row(w)?.map(Rc::new)
+                g.row(w)?.map(crate::graph::SharedRow::new)
             };
             let Some(row) = row else { continue };
             if row.hidden || row.epoch < watermark {
@@ -2650,16 +2651,37 @@ impl Programs {
         .then_some(&self.entries)
     }
 
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn finish_owned_answers(&mut self,g:&Graph,entries:&crate::entry_schedule::Scheduler,
+        rid:usize,answers:impl IntoIterator<Item=(Dependency,usize,Matched)>)->Result<()> {
+        let complete=self.deferred_queries[self.deferred_slots[rid]].complete;
+        for (w,pivot,mut answer) in answers {
+            let mut cursor=entries.range_cursor(rid,pivot,w).ok_or("owned Entry lost its source Cursor")?;
+            cursor.state.collect_pairs=self.training.collect_pairs;
+            let selected=if g.program.iterative.enabled() {
+                g.program.iterative.dispatch(&mut cursor.state,rid,pivot,complete,w).0
+            } else {g.program.spine_blocks.contains(rid,pivot)};
+            cursor.via_block=selected;self.stats.block_entries+=u64::from(selected);
+            if let Some(plan)=g.program.executions[rid].constructor.as_ref().filter(|p|p.handoff) {
+                cursor.retain_constructor_handoff(&g.program.iterative,plan.operation,&mut answer,&mut self.stats);
+            }
+            self.record_worker_answer(rid,(w,pivot),answer,cursor);
+        }
+        Ok(())
+    }
+
     pub(crate) fn answers_routed(
         &mut self,
         g: &mut Graph,
         rid: usize,
         scheduled_count: usize,
-        mut routes: Vec<(usize, Rc<Row>, Cursor)>,
+        mut routes: Vec<(usize, crate::graph::SharedRow, Cursor)>,
+        #[cfg(feature="parallel-residuals")] range_count:usize,
         watermark: u64,
         facts: &QueryFacts,
         #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
+        #[cfg(not(feature="parallel-residuals"))] let range_count=0;
         let detached = crate::entry_schedule::DETACH_CELL_ENTRIES;
         let residual_count = if detached { scheduled_count } else { scheduled_count - routes.len() };
         self.stats.routed_spine_seeds += routes.len() as u64;
@@ -2669,7 +2691,7 @@ impl Programs {
             return Ok(None);
         }
         self.stats.query_attempts += 1;
-        if routes.is_empty() {
+        if routes.is_empty() && range_count==0 {
             self.stats.uncovered_queries += u64::from(residual_count != 0);
             return Ok(None);
         }
@@ -2687,7 +2709,7 @@ impl Programs {
         if !complete && !detached {
             covered.extend(routes.iter().map(|(pivot, row, _)| (*pivot, row.witness)));
         }
-        let covered_count = routes.len();
+        let covered_count = routes.len()+range_count;
         let result = self.finish_answers(g, rid, routes.into_iter(), covered, covered_count, complete, watermark, facts,
             #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
@@ -2697,7 +2719,7 @@ impl Programs {
         &mut self,
         g: &mut Graph,
         rid: usize,
-        ready: impl ExactSizeIterator<Item = (usize, Rc<Row>, Cursor)>,
+        ready: impl ExactSizeIterator<Item = (usize, crate::graph::SharedRow, Cursor)>,
         covered: BTreeSet<(usize, Dependency)>,
         covered_count: usize,
         complete: bool,
@@ -2842,7 +2864,7 @@ impl Programs {
                     if let Some(operation) = preparation_operation {
                         cursor.retain_constructor_handoff(&g.program.iterative, operation, &mut answer, &mut self.stats);
                     }
-                    results.push(Winner::new(answer, cursor, _ordinal,
+                    results.push(Winner::new(answer, cursor, (row.witness,pivot),
                         &mut self.sealed_cursors, &mut self.stats));
                 }
                 #[cfg(not(feature = "sparse-cells"))]
@@ -2951,7 +2973,7 @@ impl Programs {
         for rid in self.origin_rules.drain(..) { self.origins[rid].clear(); }
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn record_worker_answer(&mut self, rid: usize, ordinal: usize,
+    pub(crate) fn record_worker_answer(&mut self, rid: usize, ordinal: (Dependency,usize),
         answer: Matched, cursor: Cursor) {
         if cursor.via_block && cursor.state.direct {
             self.training.seal_moves += answer.values.len() as u64;
@@ -2984,7 +3006,7 @@ impl Programs {
         }
     }
     /// All source queries share one immutable LHS snapshot within this Run.
-    pub fn seed_row(&mut self, g: &mut Graph, w: Dependency) -> Result<Option<Rc<Row>>> {
+    pub fn seed_row(&mut self, g: &mut Graph, w: Dependency) -> Result<Option<crate::graph::SharedRow>> {
         self.prepare_epoch(g.epoch);
         if let Some(row) = self.row_cache.get(&w) {
             self.stats.shared_row_hits += 1;
@@ -2992,7 +3014,7 @@ impl Programs {
         }
         self.stats.delta_rows_examined += 1;
         g.stats.decoded_rows += 1;
-        let row = g.row(w)?.map(Rc::new);
+        let row = g.row(w)?.map(crate::graph::SharedRow::new);
         self.row_cache.insert(w, row.clone());
         Ok(row)
     }
@@ -3091,7 +3113,9 @@ impl Programs {
         let effect_plan_cache_bytes = effect_plan_cache_bytes
             + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
         #[cfg(feature = "sparse-cells")]
-        let candidate_storage = json!({"layout":"owned-origin/v2",
+        let candidate_storage = json!({"layout":"owned-origin/v3",
+            "winner_record_bytes":std::mem::size_of::<Winner>(),
+            "order":"input/depth/(witness,pivot)",
             "rule_slot_bytes":self.deferred_slots.capacity()*std::mem::size_of::<usize>(),
             "deferred_group_bytes":self.deferred_queries.capacity()*std::mem::size_of::<DeferredQuery>(),
             "cursor_capacity_bytes":self.sealed_cursors.capacity()*std::mem::size_of::<Option<Cursor>>(),

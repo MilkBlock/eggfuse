@@ -774,6 +774,7 @@ mod tests {
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert_eq!(ctx.ports[0].as_ref().unwrap().version, g.query_versions[0]);
         assert_eq!(ctx.ports[1].as_ref().unwrap().version, old[1]);
@@ -784,6 +785,7 @@ mod tests {
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         for table in 0..2 {
             assert_eq!(ctx.point(&mut g, 0, table, &key).unwrap().unwrap().value, Value::Int(2));
@@ -799,6 +801,7 @@ mod tests {
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert!(ctx.point(&mut g, 0, 0, &key).unwrap().is_none());
         g.changes.clear();
@@ -806,6 +809,7 @@ mod tests {
         publication.publish(
             #[cfg(feature = "family-survey")] (&mut survey, false),
             &g, &mut columns, Some(&mut ranges), &mut ctx,
+            #[cfg(feature = "parallel-publication")] None,
             #[cfg(feature = "parallel-publication")] None, |_, _, _| {}).unwrap();
         assert_eq!(ctx.point(&mut g, 0, 0, &key).unwrap().unwrap().value, Value::Int(3));
         assert_eq!(ctx.stats[0].point_probes, 2, "updates preserve positive and negative reads");

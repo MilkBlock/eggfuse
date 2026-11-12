@@ -1,5 +1,10 @@
 //! Compiler-owned shared entry nodes. Current parameter packets are maintained
 //! once per changed input; consumers borrow them at their original source Run.
+#[cfg(feature = "parallel-publication")]
+#[path = "entry_publication_workers.rs"]
+mod publication_workers;
+#[cfg(feature = "parallel-publication")]
+pub(crate) use publication_workers::PublicationTask;
 use crate::{
     graph::{Dependency, Graph, Row},
     program::*,
@@ -18,7 +23,7 @@ use {crate::graph::FactRef, std::collections::BTreeSet};
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Plan {
-    nodes: Vec<Node>,
+    nodes: Vec<std::sync::Arc<Node>>,
     rules: Vec<Vec<Rc<Consumer>>>,
     tables: Vec<Vec<usize>>,
 }
@@ -125,7 +130,7 @@ impl Plan {
                                 }
                             })
                             .collect();
-                        s.nodes.push(Node {
+                        s.nodes.push(std::sync::Arc::new(Node {
                             #[cfg(feature = "sparse-cells")]
                             checks,
                             table: t,
@@ -135,7 +140,7 @@ impl Plan {
                                 .args
                                 .iter()
                                 .any(|a| matches!(a,Arg::Literal(v) if identity(v))),
-                        });
+                        }));
                         expected.push(json!({"id":id,"table":p.tables[t].name,"args":args,"ports":slots.len(),"consumers":[]}));
                     }
                     expected[id]["consumers"]
@@ -165,7 +170,7 @@ type SharedPacket = Packet;
 type SharedPacket = Rc<Packet>;
 #[derive(Clone)]
 pub struct Packet {
-    pub row: Rc<Row>,
+    pub row: crate::graph::SharedRow,
     #[cfg(not(feature = "sparse-cells"))]
     values: Rc<Vec<Option<Value>>>,
 }
@@ -174,16 +179,16 @@ impl Packet {
     /// Refresh a private Entry's existing row allocation after readers have
     /// released it. Live seeds keep their immutable snapshot through the
     /// shared fallback; the graph's decoded fields retain their own lifetime.
-    fn refresh_row(previous: &mut Option<Self>, row: Row, stats: &mut Stats) -> Rc<Row> {
-        let Some(mut packet) = previous.take() else { return Rc::new(row) };
+    fn refresh_row(previous: &mut Option<Self>, row: Row, stats: &mut Stats) -> crate::graph::SharedRow {
+        let Some(mut packet) = previous.take() else { return crate::graph::SharedRow::new(row) };
         stats.row_reuse_checks += 1;
-        if let Some(owned) = Rc::get_mut(&mut packet.row) {
+        if let Some(owned) = crate::graph::SharedRow::get_mut(&mut packet.row) {
             *owned = row;
             stats.row_reuses += 1;
             packet.row
         } else {
             stats.row_reuse_shared += 1;
-            Rc::new(row)
+            crate::graph::SharedRow::new(row)
         }
     }
 }
@@ -440,6 +445,13 @@ impl State {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    owner_entry_tasks: u64,
+    owner_entry_updates: u64,
+    owner_entry_nodes: u64,
+    owner_entry_state_bytes: u64,
+    owner_entry_prior_reads: u64,
+    worker_entry_tasks: u64,
+    worker_entry_updates: u64,
     entry_publication_writes: u64,
     staged_root_records: u64,
     staged_root_checks: u64,
@@ -482,7 +494,7 @@ pub struct Scheduler {
     pub enabled: bool,
     plan: Plan,
     states: Vec<State>,
-    rows: HashMap<Dependency, Option<Rc<Row>>>,
+    rows: HashMap<Dependency, Option<crate::graph::SharedRow>>,
     unions: u64,
     #[cfg(feature = "sparse-cells")]
     publication_nodes: Vec<Option<usize>>,
@@ -548,12 +560,15 @@ impl Entry<'_> {
     }
 }
 impl<'a> Batch<'a> {
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn fully_published(&self)->bool {self.state.publications==self.state.rows.len()}
+
     #[cfg(feature = "parallel-residuals")]
     pub(crate) fn range_node(&self) -> usize { self.consumer.node }
     #[cfg(feature = "parallel-residuals")]
     pub(crate) fn range_len(&self) -> usize { self.state.epochs.runs(self.watermark).map(|r|r.span_len()).sum() }
     #[cfg(feature = "parallel-residuals")]
-    pub(crate) fn shared_row(&self, witness: Dependency) -> Option<Rc<Row>> {
+    pub(crate) fn shared_row(&self, witness: Dependency) -> Option<crate::graph::SharedRow> {
         self.entry(witness).map(|entry| entry.packet.row.clone())
     }
     #[cfg(any(
@@ -656,13 +671,36 @@ impl<'a> Batch<'a> {
         })
     }
 }
+#[cfg(feature="parallel-residuals")]
+#[derive(Clone,Copy)]
+pub(crate) struct ReadEntries<'a> { rows:&'a Entries }
+#[cfg(feature="parallel-residuals")]
+impl ReadEntries<'_> {
+    pub(crate) fn row(&self,w:Dependency)->Option<&Row> {
+        match self.rows {
+            Entries::Plain(rows)=>rows.get(&w).map(|p|p.row.as_ref()),
+            Entries::Owned(rows)=>rows.get(&w)?.packet.as_ref().map(|p|p.row.as_ref()),
+        }
+    }
+}
 impl Scheduler {
-    // Only the existing delta membership crosses threads. Workers read actual
-    // rows through QueryReads; neither Rc packets nor Cursor ownership crosses.
+    // Borrow existing delta membership. Residual tasks use QueryReads;
+    // owned ranges borrow published immutable rows. Cursors stay at source.
     #[cfg(feature = "parallel-residuals")]
     pub(crate) fn read_ranges(&self, node: usize, watermark: u64)
         -> impl Iterator<Item = &crate::ordered_run::OrderedRun<(u64, Dependency)>> {
         self.states[node].epochs.runs(watermark)
+    }
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn read_entries(&self,node:usize)->ReadEntries<'_> { ReadEntries {rows:&self.states[node].rows} }
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn range_table(&self,node:usize)->usize {self.plan.nodes[node].table}
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn range_cursor(&self,rid:usize,pivot:usize,w:Dependency)->Option<crate::stage_spine::Cursor> {
+        let node=self.plan.rules[rid].iter().find(|c|c.atom==pivot)?.node;
+        let Entries::Owned(rows)=&self.states[node].rows else {return None;};
+        let id=rows.get(&w)?.publication?;
+        Some(self.publications[id.get()-1].as_ref()?.published.expand())
     }
     pub fn new(p: &Program, enabled: bool) -> Self {
         Self::with_epoch_counts(p, enabled, false)
@@ -1059,12 +1097,12 @@ impl Scheduler {
                 #[cfg(feature = "sparse-cells")]
                 { g.row(w)?.map(|row| Packet::refresh_row(&mut previous, row, &mut self.stats)) }
                 #[cfg(not(feature = "sparse-cells"))]
-                { g.row(w)?.map(Rc::new) }
+                { g.row(w)?.map(crate::graph::SharedRow::new) }
             } else if let Some(row) = self.rows.get(&w) {
                 row.clone()
             } else {
                 self.stats.row_decodes += 1;
-                let row = g.row(w)?.map(Rc::new);
+                let row = g.row(w)?.map(crate::graph::SharedRow::new);
                 self.rows.insert(w, row.clone());
                 row
             };
@@ -1158,7 +1196,7 @@ impl Scheduler {
         json!({"enabled":self.enabled,"nodes":self.plan.nodes.len(),"stats":stats,
             "consumer_transport":if DETACH_CELL_ENTRIES { "partitioned-cell-entries/v1" } else { "survey-seeds/v1" },
             "seed_bytes":std::mem::size_of::<Seed>(),
-            "cell_entry_bytes":std::mem::size_of::<(usize, Rc<Row>, crate::stage_spine::Cursor)>(),
+            "cell_entry_bytes":std::mem::size_of::<(usize, crate::graph::SharedRow, crate::stage_spine::Cursor)>(),
             "legacy_route_bytes":std::mem::size_of::<(usize, crate::stage_spine::Cursor)>(),
             "live_packets":self.states.iter().map(|s|s.rows.len()).sum::<usize>(),
             "scope":"compiled Cell Entry projection, current row and publication location; consumer watermarks and residual/RHS remain source scheduled"})
@@ -1174,25 +1212,25 @@ mod pending_tests {
             values: crate::graph::row_fields(vec![Value::Eq(9), Value::Int(value)]),
             epoch, hidden: false };
         let mut stats = Stats::default();
-        let mut packet = Some(Packet { row: Rc::new(row(1, 10)) });
+        let mut packet = Some(Packet { row: crate::graph::SharedRow::new(row(1, 10)) });
         let reader = packet.as_ref().unwrap().row.clone();
         let next = Packet::refresh_row(&mut packet, row(2, 20), &mut stats);
-        assert!(!Rc::ptr_eq(&reader, &next));
+        assert!(!crate::graph::SharedRow::ptr_eq(&reader, &next));
         assert_eq!(reader.values[1], Value::Int(10));
         assert_eq!(reader.epoch, 1);
-        let address = Rc::as_ptr(&next);
+        let address = crate::graph::SharedRow::as_ptr(&next);
         let decoded_snapshot = next.values.clone();
         packet = Some(Packet { row: next });
         let next = Packet::refresh_row(&mut packet, row(3, 30), &mut stats);
-        assert_eq!(Rc::as_ptr(&next), address);
+        assert_eq!(crate::graph::SharedRow::as_ptr(&next), address);
         assert_eq!(next.epoch, 3);
         assert_eq!(next.values[1], Value::Int(30));
         assert_eq!(decoded_snapshot[1], Value::Int(20));
         // A weak observer must never upgrade to the replacement snapshot.
-        let weak = Rc::downgrade(&next);
+        let weak = crate::graph::SharedRow::downgrade(&next);
         packet = Some(Packet { row: next });
         let next = Packet::refresh_row(&mut packet, row(4, 40), &mut stats);
-        assert_ne!(Rc::as_ptr(&next), address);
+        assert_ne!(crate::graph::SharedRow::as_ptr(&next), address);
         assert!(weak.upgrade().is_none(), "unowned prior snapshot is retired");
         assert_eq!(stats.row_reuse_checks, 3);
         assert_eq!(stats.row_reuses, 1);

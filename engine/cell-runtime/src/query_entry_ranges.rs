@@ -55,7 +55,7 @@ pub(super) fn borrow<'a>(ranges: &'a [Range], scheduler: &'a crate::entry_schedu
     }
     out
 }
-type Completed = (Vec<(usize, Binding)>, Option<((usize, bool, usize), String)>, Counts,
+type Completed = (Vec<(usize, Binding)>, Option<((usize, bool, Dependency, usize), String)>, Counts,
     Option<usize>, expansion::ChunkWork, f64, Option<usize>);
 pub(super) fn run(job: &Chunk<'_>, codes: &[CellCode], positions: &[usize],
     prepared: &[expansion::Prepared<'_>], reads: &crate::graph::query_reads::QueryReads<'_>,
@@ -87,7 +87,7 @@ pub(super) fn run(job: &Chunk<'_>, codes: &[CellCode], positions: &[usize],
                     &mut residual, &mut answers, &local[code.rule], &templates[code.template])
             })();
             if let Err(e) = result {
-                if error.is_none() { error = Some(((known.first_source, true, source), e)); }
+                if error.is_none() { error = Some(((known.first_source, true, Dependency::Function(source),0), e)); }
             }
         };
         match &job.members {
