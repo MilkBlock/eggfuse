@@ -1,0 +1,1253 @@
+{
+  "scope": "Validation-selected fixed whole-Cell GPU state; previously examined development test set",
+  "selection": {
+    "pool_ops": true,
+    "dimension": 64,
+    "edge_scale": 0.35,
+    "degree": 2,
+    "regularization": 0.01,
+    "validation_correct": 95,
+    "validation_macro": 1.0,
+    "validation_mse": 0.005563631188124418
+  },
+  "validation": [
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006573108024895191
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00838868785649538
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.011556829325854778
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9812500000000001,
+      "validation_mse": 0.01619129627943039
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 89,
+      "validation_macro": 0.8944444444444445,
+      "validation_mse": 0.02132817730307579
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.008538993075489998
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.007505878806114197
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 92,
+      "validation_macro": 0.9604166666666667,
+      "validation_mse": 0.010002929717302322
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9604166666666667,
+      "validation_mse": 0.014215601608157158
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 88,
+      "validation_macro": 0.8736111111111112,
+      "validation_mse": 0.01946788839995861
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.007046764716506004
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.00798602495342493
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.011451290920376778
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.01580490730702877
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 89,
+      "validation_macro": 0.9069444444444444,
+      "validation_mse": 0.02066762186586857
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 93,
+      "validation_macro": 0.9777777777777779,
+      "validation_mse": 0.012317941524088383
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.008373003453016281
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.009785197675228119
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9708333333333333,
+      "validation_mse": 0.013664157129824162
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9465277777777779,
+      "validation_mse": 0.018770888447761536
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.011505254544317722
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.009889069013297558
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 93,
+      "validation_macro": 0.9833333333333334,
+      "validation_mse": 0.01222945749759674
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9645833333333332,
+      "validation_mse": 0.01633901707828045
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9590277777777777,
+      "validation_mse": 0.020521793514490128
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 87,
+      "validation_macro": 0.9416666666666668,
+      "validation_mse": 0.02774166315793991
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 93,
+      "validation_macro": 0.9777777777777779,
+      "validation_mse": 0.013585908338427544
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 93,
+      "validation_macro": 0.9833333333333334,
+      "validation_mse": 0.011827094480395317
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9833333333333334,
+      "validation_mse": 0.014310799539089203
+    },
+    {
+      "pool_ops": false,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9729166666666668,
+      "validation_mse": 0.019013769924640656
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00587978633120656
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00590940285474062
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.008702162653207779
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9500000000000001,
+      "validation_mse": 0.013344109989702702
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9500000000000001,
+      "validation_mse": 0.018563376739621162
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.011103715747594833
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006747175008058548
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.007579912431538105
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9500000000000001,
+      "validation_mse": 0.01174492109566927
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9291666666666667,
+      "validation_mse": 0.01692924089729786
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.007278189063072205
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006358021404594183
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.008357302285730839
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.012642724439501762
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9500000000000001,
+      "validation_mse": 0.017972344532608986
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 90,
+      "validation_macro": 0.9708333333333333,
+      "validation_mse": 0.026799296960234642
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.009221074171364307
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.0080725634470582
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9500000000000001,
+      "validation_mse": 0.011267163790762424
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9291666666666667,
+      "validation_mse": 0.01640321873128414
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 93,
+      "validation_macro": 0.9812500000000001,
+      "validation_mse": 0.015247070230543613
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.009085304103791714
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 93,
+      "validation_macro": 0.9812500000000001,
+      "validation_mse": 0.009900369681417942
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9604166666666667,
+      "validation_mse": 0.012747754342854023
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9083333333333333,
+      "validation_mse": 0.017427518963813782
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 72,
+      "validation_macro": 0.8197916666666667,
+      "validation_mse": 0.08526787906885147
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 90,
+      "validation_macro": 0.9381944444444444,
+      "validation_mse": 0.020435001701116562
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 92,
+      "validation_macro": 0.9673611111111112,
+      "validation_mse": 0.012183976359665394
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9812500000000001,
+      "validation_mse": 0.01230412907898426
+    },
+    {
+      "pool_ops": false,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9187500000000001,
+      "validation_mse": 0.016258394345641136
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006208473816514015
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00735153304412961
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.010091183707118034
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.014482305385172367
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 90,
+      "validation_macro": 0.9208333333333334,
+      "validation_mse": 0.01933065801858902
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.010380880907177925
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.007265853229910135
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.009450286626815796
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.013327602297067642
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 90,
+      "validation_macro": 0.9486111111111111,
+      "validation_mse": 0.018002212047576904
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006513936910778284
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006851790472865105
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.009424733929336071
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.013789612799882889
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 90,
+      "validation_macro": 0.9486111111111111,
+      "validation_mse": 0.018460001796483994
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.014406990259885788
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.007462853100150824
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.008778378367424011
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.01245091948658228
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9729166666666668,
+      "validation_mse": 0.017057163640856743
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.007715248037129641
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006860432680696249
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00907876342535019
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.013332399539649487
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9729166666666668,
+      "validation_mse": 0.017918027937412262
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 91,
+      "validation_macro": 0.9760416666666667,
+      "validation_mse": 0.024747367948293686
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.009781178086996078
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.008887953124940395
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.012065705843269825
+    },
+    {
+      "pool_ops": true,
+      "dimension": 32,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9729166666666668,
+      "validation_mse": 0.016519173979759216
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00594537565484643
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.005563631188124418
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00747967604547739
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9777777777777779,
+      "validation_mse": 0.011387646198272705
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9694444444444444,
+      "validation_mse": 0.01640273630619049
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 93,
+      "validation_macro": 0.9583333333333334,
+      "validation_mse": 0.012572849169373512
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006045173853635788
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006804340053349733
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9777777777777779,
+      "validation_mse": 0.010402994230389595
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.35,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9694444444444444,
+      "validation_mse": 0.015242887660861015
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006597478874027729
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9791666666666666,
+      "validation_mse": 0.005702723283320665
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.0068991719745099545
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.010588858276605606
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 91,
+      "validation_macro": 0.9486111111111111,
+      "validation_mse": 0.015479562804102898
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 91,
+      "validation_macro": 0.9479166666666666,
+      "validation_mse": 0.023963313549757004
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.00699037266895175
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.006579930428415537
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.009728118777275085
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.5,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9694444444444444,
+      "validation_mse": 0.014416052028536797
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.001,
+      "validation_correct": 94,
+      "validation_macro": 0.9791666666666666,
+      "validation_mse": 0.008885037153959274
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.01,
+      "validation_correct": 94,
+      "validation_macro": 0.9791666666666666,
+      "validation_mse": 0.006499954033643007
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9791666666666666,
+      "validation_mse": 0.007049530278891325
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 1.0,
+      "validation_correct": 93,
+      "validation_macro": 0.9708333333333333,
+      "validation_mse": 0.009955051355063915
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 2,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9569444444444445,
+      "validation_mse": 0.014424601569771767
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.001,
+      "validation_correct": 83,
+      "validation_macro": 0.8663194444444443,
+      "validation_mse": 0.05337688326835632
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.01,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.012277969159185886
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 0.1,
+      "validation_correct": 95,
+      "validation_macro": 1.0,
+      "validation_mse": 0.008169217966496944
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 1.0,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667,
+      "validation_mse": 0.009562715888023376
+    },
+    {
+      "pool_ops": true,
+      "dimension": 64,
+      "edge_scale": 0.8,
+      "degree": 3,
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9569444444444445,
+      "validation_mse": 0.013547654263675213
+    }
+  ],
+  "test": {
+    "correct": 97,
+    "total": 102,
+    "wrong_passing_containment": 0
+  },
+  "baseline_test": {
+    "correct": 92,
+    "total": 102
+  },
+  "cpu_gpu_top1_equal": true,
+  "max_score_abs_error": 3.731250762939453e-05,
+  "costs": {
+    "first_gpu_ms": 94.48545798659325,
+    "prototype_request_median_ms": 0.9922710014507174
+  },
+  "batches": [
+    {
+      "rows": 102,
+      "repeated": 1,
+      "median_gpu_ms": 0.32900000223889947
+    },
+    {
+      "rows": 1632,
+      "repeated": 16,
+      "median_gpu_ms": 0.633791511063464
+    },
+    {
+      "rows": 13056,
+      "repeated": 128,
+      "median_gpu_ms": 0.7664165023015812
+    }
+  ],
+  "state_dimension": 456,
+  "device_weight_bytes": 567200,
+  "backpropagation": false,
+  "gpu_data_dependent_control": false,
+  "runtime_takeover": false,
+  "corpus_sha256": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881"
+}

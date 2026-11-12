@@ -11,6 +11,7 @@ from train import fit, OPS
 from dataset import digest, extension
 
 D=32
+POOL_OPS=False
 RNG=np.random.default_rng(7419)
 OP=RNG.normal(0,.4,(5,D)).astype(np.float32)
 EDGE=RNG.normal(0,.5/np.sqrt(D),(3,D,D)).astype(np.float32)
@@ -41,8 +42,11 @@ class Plan:
             const.append(c);coef.append(w)
         roots=[i for i in range(len(entry)) if i not in used]
         # All structure propagation happens here, once per shared layout.
-        self.bias=np.concatenate([np.sum(const,axis=0),np.sum([const[i] for i in roots],axis=0)])
-        self.weight=np.concatenate([np.sum(coef,axis=0),np.sum([coef[i] for i in roots],axis=0)],axis=1)
+        groups=[list(range(len(entry))),roots]
+        if POOL_OPS:
+            groups += [[i for i,facts in enumerate(entry) for op,_ in facts if op==name] for name in OPS]
+        self.bias=np.concatenate([sum((const[i] for i in ids),np.zeros(D,np.float32)) for ids in groups])
+        self.weight=np.concatenate([sum((coef[i] for i in ids),np.zeros((len(self.reads)*4,D),np.float32)) for ids in groups],axis=1)
         self.metadata=np.concatenate([counts,[len(entry),len(roots),len(self.reads)]]).astype(np.float32)
 
     def gather(self,entry):
@@ -66,7 +70,9 @@ def reference(entry):
                     s=np.float32(v);h+=np.array([s/4,(s/4)**2,np.sin(s),np.cos(s)-1],np.float32)@LITERAL[p];scalars+=1
         hidden.append(h)
     roots=[i for i in range(len(hidden)) if i not in used]
-    return np.concatenate([np.sum(hidden,axis=0),np.sum([hidden[i] for i in roots],axis=0),counts,[len(hidden),len(roots),scalars]])
+    groups=[list(range(len(hidden))),roots]
+    if POOL_OPS:groups += [[i for i,facts in enumerate(entry) for op,_ in facts if op==name] for name in OPS]
+    return np.concatenate([sum((hidden[i] for i in ids),np.zeros(D,np.float32)) for ids in groups]+[counts,[len(hidden),len(roots),scalars]])
 
 
 def main():

@@ -1,0 +1,35 @@
+{
+  "scope": "Real Graph.argument exports replayed through compiled scalar indices; standalone GPU bench, not live runtime integration",
+  "cases_verified": 469,
+  "operand_reads": 3028,
+  "actual_slot_reads": 3028,
+  "layouts": 182,
+  "test": {
+    "correct": 97,
+    "total": 102
+  },
+  "costs": {
+    "one_time_adapter_preparation_ms": 100.07379099261016,
+    "test_pack_projection_median_ms": 0.772833009250462,
+    "test_pack_gpu_return_median_ms": 1.3584590051323175,
+    "mean_warm_native_gather_ns_per_case": 746.1947334754798
+  },
+  "storage": {
+    "layout_matrices_bytes": 8876224,
+    "test_state_bytes": 186048,
+    "test_scalar_bytes": 2568,
+    "test_address_bytes": 2568
+  },
+  "input_protocol": "existing Cell slot values -> compiled field indices -> affine Cell state; no graph traversal in replay",
+  "caveats": [
+    "one-time canonical adapter still uses full exports, not compiler-native layout discovery",
+    "native gather is measured separately; replay timings exclude Rust-Python transport and live lifecycle checks",
+    "frozen initial topology; no dynamic unions/deletion in model input",
+    "classification only; no authorized mutation or saturation proof"
+  ],
+  "hashes": {
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "slots": "1654c1f2403299a27fc8e8abcd172a603b7921aba0b113fb5fd0dafc703cb326",
+    "model": "2c99e1e528324746a85974b3f46087f98803fc1e7de6d97e136d6c0572cc08d2"
+  }
+}

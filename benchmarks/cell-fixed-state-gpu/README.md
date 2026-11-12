@@ -94,3 +94,75 @@ The command trains, checks CPU/GPU equivalence, runs synchronized benchmarks and
 writes model weights and results under untracked `out/`. Only source and text
 results are committed. The saved report fingerprints the corpus. No performance
 campaign or semantic changes to the CPU runtime were made.
+
+## Typed projection and actual-slot benchmark (next iteration)
+
+The original all-node/root sum loses operator-local information. Optional typed
+pooling retains an additional affine sum for each of the five constructor types.
+These sums are computed symbolically into the layout matrix; they add no GPU
+traversal or dynamic routing. The selected model uses 64-dimensional structural
+projections, giving `(2 + 5) * 64 + 8 = 456` state coordinates. All layouts still
+share the same fixed GPU formula.
+
+`tune.py` evaluates a declared grid on train/validation only: two structural
+widths, three edge scales, typed pooling on/off, polynomial degrees 2/3 and five
+ridge regularizers. Projection randomness uses one fixed seed, not a seed sweep.
+Selection maximizes validation macro then micro accuracy, then minimizes validation
+MSE, then prefers smaller state/degree. Only the frozen winner is evaluated on
+test. Labels, validation selection and fit remain entirely CPU-side; no backprop.
+
+A first grid without typed pooling reached 95/95 validation but remained 92/102
+on test (`validation-only-results.json`). The expanded grid's winner reached
+**97/102 (95.10%)**, versus 92/102 for the previous fixed-state baseline, with
+95/95 validation (`tuned-results.json`). This is a previously examined development
+test, not an untouched blind test. The type-pooling experiment was motivated by
+the representation, but the procedure has now been iterated on this dataset.
+A fresh fixed evaluation set is still needed for stronger generalization claims.
+None of the five incorrect predictions pass necessary containment in this run;
+that finite observation still does not make containment a proof of derivability.
+
+### Read actual slots, then replay without graph traversal
+
+The new Rust example `completion_slot_inputs` compiles each original input and
+reads its constructor operands **before any rewrite Run**. It resolves scalar
+fields through `Graph.argument`, which calls `Graph.slot` for slot operands.
+It checks those values against ordinary row reads, exports source fingerprints,
+and measures a warm precompiled operand-read list independently of compilation
+and JSON export. This is a diagnostic example; it adds no runtime registry or
+second maintained binding graph.
+
+`bench_slots.py` verifies source hashes and exact initial graphs against the
+labelled corpus. At setup it maps exported operands into each plan's scalar
+positions. During timed replay it only reads scalar buffers through compiled
+indices, performs the affine projection, and executes the single GPU function.
+It does not reconstruct or traverse nodes in that timed path. This is **real
+slot input captured and replayed**, not a live Rust-to-GPU completion callback.
+The one-time graph adapter is still needed and is separately charged; moving
+that mapping into compiler-native layouts remains outstanding.
+
+All 469 admitted examples agree with their old corpus inputs and projection
+reference; all 3,028 operand reads are actual slot reads, not literal constants.
+The tuned projection also passes 546 independent scalar perturbation checks.
+`slot-results.json` records timings and source artifact hashes. Layout matrices
+now occupy 8,876,224 bytes across 182 layouts (versus 1,273,024 previously), and
+the 102-row GPU input grows from 29,376 to 186,048 bytes. Accuracy has a storage
+and projection cost, not a free improvement. Device model weights use 567,200
+bytes. Timings vary with concurrent activity; these short diagnostics are not
+an actual eggcc speedup or a controlled runtime performance campaign.
+
+```sh
+cargo build --locked -p eggfuse-cell-compiler --example completion_slot_inputs
+./target/debug/examples/completion_slot_inputs \
+  out/cell-multi-entry-ridge/inputs.json out/cell-fixed-state-gpu/slot-inputs.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/tune.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --output out/cell-fixed-state-gpu/typed-pooling
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/check_projection.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/bench_slots.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --slots out/cell-fixed-state-gpu/slot-inputs.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --output out/cell-fixed-state-gpu/slot-results.json
+```

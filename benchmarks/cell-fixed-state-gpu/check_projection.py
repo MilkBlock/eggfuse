@@ -3,11 +3,17 @@ import argparse
 import copy
 import json
 import numpy as np
+import run as base
 from run import Plan, structure, digest, reference
 
 p=argparse.ArgumentParser()
 p.add_argument('--corpus',required=True)
+p.add_argument('--model')
 a=p.parse_args()
+if a.model:
+    model=dict(np.load(a.model))
+    base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops'])
+    base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal']
 rows=json.load(open(a.corpus))['records']
 seen=set();rng=np.random.default_rng(72);checks=0
 for row in rows:
