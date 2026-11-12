@@ -217,6 +217,9 @@ impl Executor {
         };
         let (rid, cell) = (execution.rule, execution.cell);
         self.graph.rhs_frame_mut(cell).unwrap().completed = completed;
+        #[cfg(feature="storage-metrics")]
+        if completed {crate::rhs_projection_trace::completed(&self.graph,rid,cell,
+            execution.work.facts,execution.work.updates,execution.work.unions,execution.work.constructors);}
         if execution.continuation {
             self.continuation_stats.published_facts += execution.work.facts;
             self.continuation_stats.function_updates += execution.work.updates;

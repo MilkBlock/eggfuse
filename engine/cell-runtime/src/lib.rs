@@ -75,3 +75,6 @@ pub(crate) mod table_mask;
 
 #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
 pub mod receipt_trace;
+
+#[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+pub mod rhs_projection_trace;

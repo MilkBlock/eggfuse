@@ -1,0 +1,938 @@
+{
+  "scope": "actual standalone runtime, offline RHS reuse candidates, not executable completion proofs",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "unsupported_completions": 2563,
+  "dropped": 0,
+  "counts": {
+    "observations": 2587,
+    "first": 2449,
+    "within_run": 138,
+    "repeated_constructor_requests": 138,
+    "mutation_free_repeats": 138
+  },
+  "changed_revision_candidates": {
+    "cross_run": 197,
+    "new_facts": 0,
+    "function_updates": 0,
+    "union_requests": 0,
+    "constructor_requests": 235,
+    "union_revision_changed": 169,
+    "table_version_changed": 205,
+    "within_run": 9
+  },
+  "changed_revision_examples": [
+    {
+      "previous_index": 191,
+      "index": 291,
+      "rule": 58,
+      "prior_run": 98,
+      "run": 106,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 193,
+      "index": 292,
+      "rule": 58,
+      "prior_run": 98,
+      "run": 106,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 288,
+      "index": 350,
+      "rule": 58,
+      "prior_run": 106,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 188,
+      "index": 351,
+      "rule": 58,
+      "prior_run": 98,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 190,
+      "index": 352,
+      "rule": 58,
+      "prior_run": 98,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 289,
+      "index": 354,
+      "rule": 58,
+      "prior_run": 106,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 290,
+      "index": 355,
+      "rule": 58,
+      "prior_run": 106,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    },
+    {
+      "previous_index": 291,
+      "index": 356,
+      "rule": 58,
+      "prior_run": 106,
+      "run": 110,
+      "union_changed": true,
+      "table_changed": true,
+      "new_facts": 0
+    }
+  ],
+  "rules": [
+    {
+      "rule": 58,
+      "observations": 220,
+      "first": 136,
+      "within_run": 84,
+      "repeated_constructor_requests": 84
+    },
+    {
+      "rule": 518,
+      "observations": 175,
+      "first": 124,
+      "within_run": 51,
+      "repeated_constructor_requests": 51
+    },
+    {
+      "rule": 65,
+      "observations": 32,
+      "first": 29,
+      "within_run": 3,
+      "repeated_constructor_requests": 3
+    },
+    {
+      "rule": 532,
+      "observations": 16,
+      "first": 16
+    },
+    {
+      "rule": 534,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 541,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 544,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 546,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 548,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 551,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 553,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 513,
+      "observations": 31,
+      "first": 31
+    },
+    {
+      "rule": 521,
+      "observations": 43,
+      "first": 43
+    },
+    {
+      "rule": 538,
+      "observations": 148,
+      "first": 148
+    },
+    {
+      "rule": 539,
+      "observations": 42,
+      "first": 42
+    },
+    {
+      "rule": 554,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 514,
+      "observations": 32,
+      "first": 32
+    },
+    {
+      "rule": 522,
+      "observations": 59,
+      "first": 59
+    },
+    {
+      "rule": 523,
+      "observations": 61,
+      "first": 61
+    },
+    {
+      "rule": 531,
+      "observations": 14,
+      "first": 14
+    },
+    {
+      "rule": 533,
+      "observations": 4,
+      "first": 4
+    },
+    {
+      "rule": 540,
+      "observations": 54,
+      "first": 54
+    },
+    {
+      "rule": 552,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 512,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 524,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 525,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 545,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 542,
+      "observations": 3,
+      "first": 3
+    },
+    {
+      "rule": 547,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 528,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 50,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 51,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 54,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 63,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 67,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 69,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 70,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 84,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 85,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 86,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 100,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 113,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 114,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 56,
+      "observations": 17,
+      "first": 17
+    },
+    {
+      "rule": 61,
+      "observations": 17,
+      "first": 17
+    },
+    {
+      "rule": 91,
+      "observations": 89,
+      "first": 89
+    },
+    {
+      "rule": 92,
+      "observations": 58,
+      "first": 58
+    },
+    {
+      "rule": 102,
+      "observations": 27,
+      "first": 27
+    },
+    {
+      "rule": 105,
+      "observations": 31,
+      "first": 31
+    },
+    {
+      "rule": 119,
+      "observations": 30,
+      "first": 30
+    },
+    {
+      "rule": 122,
+      "observations": 204,
+      "first": 204
+    },
+    {
+      "rule": 125,
+      "observations": 60,
+      "first": 60
+    },
+    {
+      "rule": 128,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 88,
+      "observations": 24,
+      "first": 24
+    },
+    {
+      "rule": 94,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 103,
+      "observations": 54,
+      "first": 54
+    },
+    {
+      "rule": 104,
+      "observations": 23,
+      "first": 23
+    },
+    {
+      "rule": 120,
+      "observations": 29,
+      "first": 29
+    },
+    {
+      "rule": 123,
+      "observations": 60,
+      "first": 60
+    },
+    {
+      "rule": 124,
+      "observations": 67,
+      "first": 67
+    },
+    {
+      "rule": 90,
+      "observations": 53,
+      "first": 53
+    },
+    {
+      "rule": 121,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 127,
+      "observations": 6,
+      "first": 6
+    },
+    {
+      "rule": 95,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 129,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 249,
+      "observations": 4,
+      "first": 4
+    },
+    {
+      "rule": 237,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 420,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 430,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 424,
+      "observations": 115,
+      "first": 115
+    },
+    {
+      "rule": 426,
+      "observations": 38,
+      "first": 38
+    },
+    {
+      "rule": 422,
+      "observations": 27,
+      "first": 27
+    },
+    {
+      "rule": 425,
+      "observations": 44,
+      "first": 44
+    },
+    {
+      "rule": 423,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 419,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 428,
+      "observations": 5,
+      "first": 5
+    },
+    {
+      "rule": 429,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 312,
+      "observations": 101,
+      "first": 101
+    },
+    {
+      "rule": 243,
+      "observations": 3,
+      "first": 3
+    },
+    {
+      "rule": 110,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 115,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 241,
+      "observations": 3,
+      "first": 3
+    },
+    {
+      "rule": 242,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 248,
+      "observations": 1,
+      "first": 1
+    },
+    {
+      "rule": 527,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 432,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 344,
+      "observations": 34,
+      "first": 34
+    },
+    {
+      "rule": 336,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 343,
+      "observations": 22,
+      "first": 22
+    },
+    {
+      "rule": 338,
+      "observations": 16,
+      "first": 16
+    },
+    {
+      "rule": 340,
+      "observations": 90,
+      "first": 90
+    },
+    {
+      "rule": 335,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 346,
+      "observations": 4,
+      "first": 4
+    },
+    {
+      "rule": 339,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 107,
+      "observations": 2,
+      "first": 2
+    },
+    {
+      "rule": 515,
+      "observations": 16,
+      "first": 16
+    },
+    {
+      "rule": 64,
+      "observations": 16,
+      "first": 16
+    },
+    {
+      "rule": 87,
+      "observations": 20,
+      "first": 20
+    },
+    {
+      "rule": 116,
+      "observations": 16,
+      "first": 16
+    },
+    {
+      "rule": 486,
+      "observations": 40,
+      "first": 40
+    },
+    {
+      "rule": 516,
+      "observations": 8,
+      "first": 8
+    },
+    {
+      "rule": 517,
+      "observations": 8,
+      "first": 8
+    },
+    {
+      "rule": 421,
+      "observations": 8,
+      "first": 8
+    },
+    {
+      "rule": 101,
+      "observations": 8,
+      "first": 8
+    },
+    {
+      "rule": 117,
+      "observations": 8,
+      "first": 8
+    },
+    {
+      "rule": 118,
+      "observations": 8,
+      "first": 8
+    }
+  ],
+  "examples": [
+    {
+      "index": 180,
+      "previous_index": 179,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 481,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781203
+        }
+      ],
+      "output_versions": [
+        1
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 182,
+      "previous_index": 181,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 483,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781249
+        }
+      ],
+      "output_versions": [
+        2
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 183,
+      "previous_index": 182,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 484,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781249
+        }
+      ],
+      "output_versions": [
+        2
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 184,
+      "previous_index": 183,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 485,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781249
+        }
+      ],
+      "output_versions": [
+        2
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 185,
+      "previous_index": 184,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 486,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781249
+        }
+      ],
+      "output_versions": [
+        2
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 187,
+      "previous_index": 186,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 488,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781275
+        }
+      ],
+      "output_versions": [
+        3
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 188,
+      "previous_index": 187,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 489,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781275
+        }
+      ],
+      "output_versions": [
+        3
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 190,
+      "previous_index": 189,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 491,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781299
+        }
+      ],
+      "output_versions": [
+        4
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 193,
+      "previous_index": 192,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 494,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781333
+        }
+      ],
+      "output_versions": [
+        6
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 195,
+      "previous_index": 194,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 496,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781349
+        }
+      ],
+      "output_versions": [
+        7
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 196,
+      "previous_index": 195,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 98,
+      "rule": 58,
+      "cell": 497,
+      "union_revision": 37,
+      "values": [
+        {
+          "Eq": 554050781349
+        }
+      ],
+      "output_versions": [
+        7
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    },
+    {
+      "index": 353,
+      "previous_index": 352,
+      "kind": "within_run",
+      "mutation_free": true,
+      "run": 110,
+      "rule": 58,
+      "cell": 893,
+      "union_revision": 109,
+      "values": [
+        {
+          "Eq": 554050781299
+        }
+      ],
+      "output_versions": [
+        56
+      ],
+      "facts": 0,
+      "updates": 0,
+      "union_requests": 0,
+      "constructor_requests": 1
+    }
+  ],
+  "limitations": [
+    "records are sampled after completion, not matching inputs before execution",
+    "whole-table query versions split groups conservatively; changed-revision candidates need local proof, not global cache reuse",
+    "single-write fast paths and already-direct completions are outside this pure-constructor observer",
+    "publication, result ownership, delta ownership and history obligations are not discharged",
+    "constructor requests are work attempts, not committed mutations",
+    "no new reverse index or duplicate binding store is proposed for execution"
+  ],
+  "baseline_state_and_graph_work_equal": true,
+  "observation_work_changes": {
+    "stable_ports/stats/node_lookups": [
+      3671605,
+      3671974
+    ],
+    "stable_ports/stats/port_reads": [
+      7466888,
+      7467255
+    ],
+    "stable_ports/stats/root_parent_probes": [
+      8181397,
+      8181802
+    ],
+    "stable_ports/stats/root_resolutions": [
+      7466888,
+      7467255
+    ]
+  }
+}

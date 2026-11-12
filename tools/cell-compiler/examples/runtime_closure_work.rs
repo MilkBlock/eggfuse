@@ -10,8 +10,8 @@ use serde_json::{Value, json};
 use std::{error::Error, fs};
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len()<3 || args[3..].iter().any(|s|s!="--port-domains-only" && s!="--natural" && s!="--parent-takeover" && s!="--shared-owners" && s!="--receipt-trace") {
-        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners] [--receipt-trace] [--port-domains-only]".into());
+    if args.len()<3 || args[3..].iter().any(|s|s!="--rhs-projection-trace" && s!="--port-domains-only" && s!="--natural" && s!="--parent-takeover" && s!="--shared-owners" && s!="--receipt-trace") {
+        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners] [--receipt-trace] [--port-domains-only] [--rhs-projection-trace]".into());
     }
     let saved: Value = serde_json::from_slice(&fs::read(&args[1])?)?;
     let checks = saved["run_checks"]
@@ -27,10 +27,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     let natural=args.iter().any(|s|s=="--natural");
     let parent_takeover=args.iter().any(|s|s=="--parent-takeover");
     if parent_takeover {e.use_completed_parent_takeover()?;}
+    let rhs_trace=args.iter().any(|s|s=="--rhs-projection-trace");
+    if rhs_trace {eggfuse_cell_runtime::rhs_projection_trace::start(32768,&e.graph.program);}
     let shared_owners=args.iter().any(|s|s=="--shared-owners");
     let mut transferred_frames=0;
     let mut runs = 0;
     loop {
+        if rhs_trace {eggfuse_cell_runtime::rhs_projection_trace::set_run(runs+1);}
         if receipt_trace {eggfuse_cell_runtime::receipt_trace::set_run(runs+1);}
         audit::take_digests();
         audit::take_write_digests();
@@ -68,7 +71,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "history_storage":report["stage_spine"]["published_history_storage"],
         "query_work":report["free_join"],"key_lookup_calls":report["key_lookup_calls"],
         "entry_work":report["entry_schedule"],"publication_work":report["publication"],
-        "final_state":e.graph.export()?,"receipt_trace":eggfuse_cell_runtime::receipt_trace::finish()});
+        "final_state":e.graph.export()?,"receipt_trace":eggfuse_cell_runtime::receipt_trace::finish(),"rhs_projection_trace":eggfuse_cell_runtime::rhs_projection_trace::finish()});
     fs::write(&args[2], serde_json::to_vec_pretty(&result)?)?;
     println!("{}", json!({"runs":runs,"all_saved_run_checks_equal":true}));
     Ok(())
