@@ -310,15 +310,15 @@
   ],
   "traces": {
     "original-baseline.json": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
-    "shared-code-trace.json": "05612e37e7abe723f65681bb4fbbf361202aa8705d7065b15d6436d4350b8ede",
+    "static-wiring-trace.json": "acc72e341cbc342265b746d6952c0893aa96dd5cd11e7b211c552f39dadb348f",
     "original-whole-storage.json": "0f2ad4a48947d57994f57d764700964eb8239e1f58d4a634afed0938a76595f7",
-    "shared-code-peak.json": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd"
+    "static-wiring-peak.json": "213a5362e451f72eede4c28571be35c7e4e1702e2e9d03c01d00ee3d0ea27418"
   },
   "retained_program_accounting_available": true,
   "original_retained_program_bytes": 115462476,
-  "current_retained_program_bytes": 116483791,
-  "added_retained_program_bytes": 1021315,
-  "graph_plus_added_program_bytes": 3803192,
-  "graph_plus_added_program_fraction": 0.955726442331493,
+  "current_retained_program_bytes": 116171431,
+  "added_retained_program_bytes": 708955,
+  "graph_plus_added_program_bytes": 3490832,
+  "graph_plus_added_program_fraction": 0.877231664385319,
   "target_met_with_added_program": false
 }

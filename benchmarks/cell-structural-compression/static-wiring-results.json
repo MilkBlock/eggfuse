@@ -1,0 +1,83 @@
+{
+  "scope": "actual standalone Cell runtime; Graph teardown and separate single-lane process requested-heap observer",
+  "runs": 1428,
+  "all_run_graph_and_ordered_audits_equal": true,
+  "graph_heap_before": 2781877,
+  "graph_heap_after": 2781877,
+  "graph_heap_saved": 0,
+  "changed_field_release_bytes": {},
+  "process_peak_before": 124867975,
+  "process_peak_after": 124555617,
+  "initialization_relative_peak_growth_before": 5862977,
+  "initialization_relative_peak_growth_after": 5862977,
+  "takeover_extra_peak_before": 16548,
+  "takeover_extra_peak_after": 16548,
+  "limitation": "process peaks and initialization-relative net growth are not Graph-exclusive peaks; field teardown charges shared allocations to last owner",
+  "input_sha256": {
+    "shared-code-trace.json": "05612e37e7abe723f65681bb4fbbf361202aa8705d7065b15d6436d4350b8ede",
+    "static-wiring-trace.json": "acc72e341cbc342265b746d6952c0893aa96dd5cd11e7b211c552f39dadb348f",
+    "shared-code-peak.json": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd",
+    "static-wiring-peak.json": "213a5362e451f72eede4c28571be35c7e4e1702e2e9d03c01d00ee3d0ea27418"
+  },
+  "maintenance": {
+    "before": {
+      "stats": {
+        "subscription_calls": 2291,
+        "subscription_value_visits": 7829,
+        "canonical_subscription_calls": 0,
+        "subscription_scalar_fields_skipped": 0,
+        "subscription_root_reads_omitted": 0,
+        "subscription_sets_replaced_in_place": 0,
+        "subscription_rows_reused": 449,
+        "reverse_insert_attempts": 3748,
+        "reverse_remove_attempts": 751,
+        "reverse_edges_created": 3748,
+        "reverse_edges_removed": 751,
+        "union_frontier_probes": 1039,
+        "union_wake_visits": 453,
+        "union_redirected_edges": 453,
+        "reverse_merge_inserts": 403,
+        "reverse_edges_coalesced": 112,
+        "live_reverse_edges": 2885,
+        "peak_reverse_edges": 2885,
+        "repair_key_probes": 0,
+        "repair_candidate_checks": 0
+      },
+      "reverse_headers": 663,
+      "dependency_headers": 0,
+      "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "after": {
+      "stats": {
+        "subscription_calls": 2291,
+        "subscription_value_visits": 7829,
+        "canonical_subscription_calls": 0,
+        "subscription_scalar_fields_skipped": 0,
+        "subscription_root_reads_omitted": 0,
+        "subscription_sets_replaced_in_place": 0,
+        "subscription_rows_reused": 449,
+        "reverse_insert_attempts": 3748,
+        "reverse_remove_attempts": 751,
+        "reverse_edges_created": 3748,
+        "reverse_edges_removed": 751,
+        "union_frontier_probes": 1039,
+        "union_wake_visits": 453,
+        "union_redirected_edges": 453,
+        "reverse_merge_inserts": 403,
+        "reverse_edges_coalesced": 112,
+        "live_reverse_edges": 2885,
+        "peak_reverse_edges": 2885,
+        "repair_key_probes": 0,
+        "repair_candidate_checks": 0
+      },
+      "reverse_headers": 663,
+      "dependency_headers": 0,
+      "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    }
+  },
+  "dispatch_static_field_tests": {
+    "before": 0,
+    "after": 6695,
+    "scope": "new reconstruction scans; does not count prior cached-column copies or compile-time projection"
+  }
+}

@@ -6,15 +6,15 @@ that target. It is an actual standalone Cell runtime experiment, not a native
 egglog runtime change or standalone simulated compression model.
 
 **Latest complete retained cost:** the Graph uses 2,781,877 B and retained
-Program/shared compiled data adds 1,021,315 B versus the fixed original.
-The charged total is **3,803,192 B (95.57% of baseline)**, still far above the
-1,193,811-byte target. This is a 4.43% net reduction, not 70% compression.
-Before shared query/condition code, the total was 4,698,880 B (118.08%).
+Program/shared compiled data adds 708,955 B versus the fixed original.
+The charged total is **3,490,832 B (87.72% of baseline)**, still far above the
+1,193,811-byte target. This is a 12.28% net reduction, not 70% compression.
+The preceding shared query/condition configuration used 3,803,192 B (95.57%).
 The Graph-only fraction remains 69.91% and must not be used as the whole-scheme
 acceptance result.
 
 The observer now drops the executor and Graph, then measures the final retained
-Program teardown. Original/latest Program ownership is 115,462,476 / 116,483,791 B.
+Program teardown. Original/latest Program ownership is 115,462,476 / 116,171,431 B.
 Only the positive increment is charged; the original common Program is excluded.
 Shared allocations are released once, avoiding double-counting compiled layouts.
 All measurements are taken after the recorded execution peaks. This does not
@@ -23,7 +23,7 @@ measure a Graph-exclusive within-Run peak; full process peaks are separate.
 Reproduce complete retained accounting from the saved traces:
 
 ```sh
-python3 benchmarks/cell-structural-compression/analyze.py out/cell-structural-compression/original-baseline.json out/cell-structural-compression/shared-code-trace.json benchmarks/cell-structural-compression/results.json out/cell-structural-compression/original-whole-storage.json out/cell-structural-compression/shared-code-peak.json
+python3 benchmarks/cell-structural-compression/analyze.py out/cell-structural-compression/original-baseline.json out/cell-structural-compression/static-wiring-trace.json benchmarks/cell-structural-compression/results.json out/cell-structural-compression/original-whole-storage.json out/cell-structural-compression/static-wiring-peak.json
 ```
 
 Both teardown runs use the same observer source; the original build omits only
@@ -401,7 +401,7 @@ checks; observed equality alone cannot justify deleting conditions. This is an
 opportunity identified by measurement, not an implemented takeover or saving.
 
 ```sh
-python3 benchmarks/cell-structural-compression/analyze_program.py out/cell-structural-compression/program-fields-original.json out/cell-structural-compression/shared-code-peak.json benchmarks/cell-structural-compression/program-storage-results.json
+python3 benchmarks/cell-structural-compression/analyze_program.py out/cell-structural-compression/program-fields-original.json out/cell-structural-compression/static-wiring-peak.json benchmarks/cell-structural-compression/program-storage-results.json
 ```
 
 Both lanes use the same destructive observer on their respective actual runtime;
@@ -569,3 +569,48 @@ mutual exclusion with exploratory training and rejection by the old selector
 are also checked. All 29 ownership integration tests and 138 sparse runtime
 unit tests pass; all-feature runtime compilation passes. The standalone observer's final export is checked
 using the specified `choice_diagnosis.py` entrypoint.
+
+## Remove the second copy of composed field wiring
+
+A composed signal instruction previously owned another shared column vector,
+even though the authoritative PortProgram field symbols and inherited frame
+port map already determine those columns exactly. Instructions now retain only
+(frame, operation). Query-plan compilation, effect-plan compilation, uncovered
+query fallback and union propagation read the same static wiring projection.
+No field-layout directory or runtime consumer list replaces the deleted vectors.
+
+When several checked inputs substitute to one symbol, the composed instruction
+is kept once. Its columns enumerate in original field order, preserving scalar
+exclusions, repeated input positions and output-only uses. Existing prefix port
+maps and unchanged instruction slices still share their allocations. This is a
+representation simplification, not a new equality assumption or a new source
+Cell retirement mechanism.
+
+| Retained owner | Before | After |
+| --- | ---: | ---: |
+| Composition shapes | 933,024 B | 620,664 B |
+| Complete Program | 116,483,791 B | 116,171,431 B |
+| Graph | 2,781,877 B | 2,781,877 B |
+| Graph + added Program vs original | 3,803,192 B | 3,490,832 B |
+
+The actual saved allocation is 312,360 B. Source instances, facts and field
+counts are unchanged. New runtime reconstruction costs are explicit:
+`dispatch_static_field_tests` records 6,695 static field tests on this workload.
+This does not include compile-time projection or prior cached-column copying;
+no speedup is claimed. Runtime query plans remain indexed as before; only the
+unindexed fallback projects columns while checking a candidate.
+
+Process execution/takeover peak falls from 124,867,975 to 124,555,617 B; the small
+path-length difference accounts for two bytes of the process delta. Setup peak
+is 118,695,256 B. Initialization-relative growth stays 5,862,977 B and transient
+takeover extra peak stays 16,548 B. No Graph-exclusive within-Run peak is inferred
+from these process totals.
+
+All 1,428 fixed-original Run graph and ordered RHS/write/resume digests match;
+native semantic choice acceptance passes / exit 0. Tests: 139 sparse runtime,
+85 default runtime, 29 ownership, 14 stable-port and 5 local-union pass, with
+all-feature compilation passing. A new regression specifically checks two
+aliased input columns coalescing into one site while a scalar column and the
+output-only alias retain their distinct roles. `static-wiring-results.json`
+records the comparison and new scan counter; raw inputs are the matching
+`static-wiring-trace.json` and `static-wiring-peak.json` artifacts.

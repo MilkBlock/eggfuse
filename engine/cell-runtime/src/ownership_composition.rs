@@ -28,9 +28,17 @@ pub struct Shape {
 pub struct Instruction {
     pub frame: usize,
     pub op: u32,
-    pub columns: Arc<Vec<usize>>,
 }
 impl Shape {
+    /// Project the authoritative static wiring instead of owning another copy
+    /// of every instruction's field incidences. Enumeration preserves order.
+    pub fn columns<'a>(&'a self, programs: &'a [Arc<PortProgram>], symbol: usize, step: &Instruction)
+        -> impl Iterator<Item = usize> + 'a
+    {
+        let ports = &self.ports[step.frame];
+        programs[self.programs[step.frame]].fields[step.op as usize].iter().enumerate()
+            .filter_map(move |(column, local)| local.is_some_and(|local| ports[local] == symbol).then_some(column))
+    }
     fn initial(id: usize, p: &PortProgram) -> Self {
         Self::default().append(id, p, &[]).0
     }
@@ -67,28 +75,17 @@ impl Shape {
             Arc::make_mut(&mut shape.signals[symbol]).extend(steps.iter().map(|s| Instruction {
                 frame,
                 op: s.op,
-                columns: Arc::new(s.columns.clone()),
             }));
         }
-        // Several checked query inputs may substitute to the same symbol.
-        // Coalesce their columns once in the shape, not on every equality.
-        // The old prefix is already ordered and its column arrays are shared.
-        // Only modified slices copy instruction handles; untouched slices and
-        // all previous frame port maps retain their existing allocations.
+        // Several checked inputs may substitute to one symbol. Keep one site;
+        // its columns are already encoded by the program fields and port map.
+        // Only modified slices copy handles; untouched slices and all previous
+        // frame port maps retain their existing allocations.
         for symbol in touched {
             let steps = Arc::make_mut(&mut shape.signals[symbol]);
             let prefix = steps.partition_point(|s| s.frame < frame);
             steps[prefix..].sort_unstable_by_key(|s| s.op);
-            steps.dedup_by(|next, prev| {
-                if (next.frame, next.op) != (prev.frame, prev.op) {
-                    return false;
-                }
-                let columns = Arc::make_mut(&mut prev.columns);
-                columns.extend_from_slice(&next.columns);
-                columns.sort_unstable();
-                columns.dedup();
-                true
-            });
+            steps.dedup_by_key(|step| (step.frame, step.op));
         }
         shape.ports.push(Arc::new(ports));
         (shape, copied_steps)
@@ -1045,4 +1042,33 @@ mod tests {
             assert!(Arc::ptr_eq(&parent.signals[symbol], &child.signals[symbol]));
         }
     }
+    #[test]
+    fn inherited_wiring_coalesces_alias_columns_without_a_second_column_list() {
+        let producer = Arc::new(PortProgram {
+            fields: vec![vec![Some(0)]],
+            signals: vec![vec![slices::Step { op: 0, columns: vec![0] }]],
+            ..PortProgram::default()
+        });
+        let receiver = Arc::new(PortProgram {
+            fields: vec![vec![Some(0), Some(1), None, Some(2)]],
+            signals: vec![
+                vec![slices::Step { op: 0, columns: vec![0] }],
+                vec![slices::Step { op: 0, columns: vec![1] }],
+                vec![slices::Step { op: 0, columns: vec![3] }],
+            ],
+            ..PortProgram::default()
+        });
+        let parent = Shape::initial(0, &producer);
+        let child = parent.append(1, &receiver, &[(0, 0), (1, 0)]).0;
+        let programs = [producer, receiver];
+        assert_eq!(child.signals[0].len(), 2, "aliased inputs name one receiver site");
+        assert_eq!(child.columns(&programs, 0, &child.signals[0][1]).collect::<Vec<_>>(), vec![0, 1]);
+        let output = child.ports[1][2];
+        assert_eq!(child.columns(&programs, output, &child.signals[output][0]).collect::<Vec<_>>(), vec![3]);
+        assert_eq!(parent.columns(&programs, 0, &parent.signals[0][0]).collect::<Vec<_>>(), vec![0]);
+        let effects = effects::Plan::derive(&child, &programs);
+        assert_eq!(effects.signals[0][1].output, Some(output));
+        assert_eq!(effects.signals[output][0].output, None, "output-only alias is not an input guard");
+    }
+
 }

@@ -22,11 +22,12 @@ impl Plan {
         let columns = shape
             .signals
             .iter()
-            .map(|steps| {
+            .enumerate()
+            .map(|(symbol, steps)| {
                 let mut columns = Vec::<Vec<Position>>::new();
                 for (position, step) in steps.iter().enumerate() {
                     let width = programs[shape.programs[step.frame]].fields[step.op as usize].len();
-                    for &column in step.columns.iter() {
+                    for column in shape.columns(programs, symbol, step) {
                         columns.resize_with(columns.len().max(column + 1), Vec::new);
                         columns[column].push(Position::new(position, column + 1 < width));
                     }
@@ -62,6 +63,7 @@ pub(in crate::graph::cell_ownership) struct FieldUses<'a> {
     positions: Option<&'a [Position]>,
     programs: &'a [Arc<PortProgram>],
     column: usize,
+    symbol: usize,
 }
 impl FieldUses<'_> {
     pub fn indexed(&self) -> bool {
@@ -82,7 +84,7 @@ impl FieldUses<'_> {
             &self.steps[encoded >> 1]
         } else {
             let step = &self.steps[position];
-            if !step.columns.contains(&self.column) {
+            if !self.shape.columns(self.programs, self.symbol, step).any(|column|column == self.column) {
                 return None;
             }
             if inputs_only {
@@ -105,7 +107,7 @@ impl<'a> FieldUses<'a> {
         symbol: usize, column: usize) -> Self {
         Self { component, shape, steps: &shape.signals[symbol],
             positions: plan.composition.queries.get(component.shape).map(|p| p.positions(symbol, column)),
-            programs: &plan.programs, column }
+            programs: &plan.programs, column, symbol }
     }
 }
 impl Graph {

@@ -19,12 +19,13 @@ impl Plan {
             signals: shape
                 .signals
                 .iter()
-                .map(|uses| {
+                .enumerate()
+                .map(|(symbol, uses)| {
                     uses.iter()
                         .map(|site| {
                             let fields =
                                 &programs[shape.programs[site.frame]].fields[site.op as usize];
-                            let key = site.columns.iter().any(|&column| column + 1 < fields.len());
+                            let key = shape.columns(programs, symbol, site).any(|column| column + 1 < fields.len());
                             let output = key
                                 .then(|| *fields.last().unwrap())
                                 .flatten()

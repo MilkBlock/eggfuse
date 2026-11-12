@@ -240,6 +240,7 @@ struct Stats {
     dispatch_heap_pops: u64,
     dispatch_comparisons: u64,
     dispatch_scratch_growths: u64,
+    dispatch_static_field_tests: u64,
     dispatch_scratch_bytes: usize,
     signal_binding_reads: u64,
     signal_root_queries: Counter<u64>,
@@ -675,10 +676,12 @@ impl Graph {
                 let c = m.composition.components[cursor.signal.component as usize]
                     .as_ref()
                     .unwrap();
-                let step = &m.composition.shapes[c.shape].as_ref().unwrap().signals
-                    [cursor.signal.symbol][cursor.position];
+                let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                let step = &shape.signals[cursor.signal.symbol][cursor.position];
                 let old = columns.capacity();
-                columns.extend_from_slice(&step.columns);
+                m.stats.dispatch_static_field_tests += self.program.cell_ownership.programs[shape.programs[step.frame]]
+                    .fields[step.op as usize].len() as u64;
+                columns.extend(shape.columns(&self.program.cell_ownership.programs, cursor.signal.symbol, step));
                 m.stats.dispatch_scratch_growths += u64::from(old != columns.capacity());
                 pieces += 1;
                 if let Some(next) = self.next_composed_step(cursor.signal, cursor.position + 1) {

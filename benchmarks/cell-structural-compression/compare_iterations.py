@@ -35,4 +35,10 @@ result = {
 }
 if 'maintenance' in ap and 'maintenance' in bp:
     result['maintenance'] = {'before': ap['maintenance'], 'after': bp['maintenance']}
+if 'dispatch_static_field_tests' in b.get('ownership', {}).get('stats', {}):
+    result['dispatch_static_field_tests'] = {
+        'before': a['ownership']['stats'].get('dispatch_static_field_tests', 0),
+        'after': b['ownership']['stats']['dispatch_static_field_tests'],
+        'scope': 'new reconstruction scans; does not count prior cached-column copies or compile-time projection',
+    }
 output.write_text(json.dumps(result, indent=2) + '\n')

@@ -3,10 +3,10 @@
   "runs": 1428,
   "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
   "original_program_bytes": 115462476,
-  "current_program_bytes": 116483791,
-  "program_delta_bytes": 1021315,
+  "current_program_bytes": 116171431,
+  "program_delta_bytes": 708955,
   "current_graph_bytes": 2781877,
-  "charged_graph_plus_positive_program_delta_bytes": 3803192,
+  "charged_graph_plus_positive_program_delta_bytes": 3490832,
   "changed_owners": [
     {
       "owner": "artifact",
@@ -35,8 +35,8 @@
     {
       "owner": "composition.shapes",
       "original": 519768,
-      "current": 933024,
-      "delta": 413256
+      "current": 620664,
+      "delta": 100896
     },
     {
       "owner": "composition.transitions",
@@ -115,8 +115,8 @@
     {
       "owner": "composition.shapes",
       "original": 519768,
-      "current": 933024,
-      "delta": 413256
+      "current": 620664,
+      "delta": 100896
     },
     {
       "owner": "composition.sources",
@@ -349,7 +349,7 @@
   ],
   "inputs_sha256": {
     "original": "675f18d5ea6fdbaf9374a9d57142908cf753b5fd10becfff91d3d043273d704a",
-    "current": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd"
+    "current": "213a5362e451f72eede4c28571be35c7e4e1702e2e9d03c01d00ee3d0ea27418"
   },
   "limitation": "matching final state is only a diagnostic; use the full per-Run audit and semantic acceptance for correctness"
 }
