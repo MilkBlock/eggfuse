@@ -1,0 +1,130 @@
+{
+  "scope": "Warm float32 fixed blend; same native-produced states, weights and four matmuls; standalone backend comparison",
+  "repeats": 30,
+  "records": [
+    {
+      "rows": 102,
+      "repeated_examples": 1,
+      "numpy_cpu": {
+        "median_ms": 0.0853335,
+        "p10_ms": 0.08219620000000001,
+        "p90_ms": 0.08793369999999999
+      },
+      "mlx_cpu": {
+        "resident_numeric": {
+          "median_ms": 0.0998335,
+          "p10_ms": 0.09756250000000001,
+          "p90_ms": 0.10652110000000002
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 0.107521,
+          "p10_ms": 0.10278309999999999,
+          "p90_ms": 0.13608390000000004
+        },
+        "max_abs_error": 0.0,
+        "top1_equal": true
+      },
+      "metal_gpu": {
+        "resident_numeric": {
+          "median_ms": 0.43102050000000003,
+          "p10_ms": 0.3588461,
+          "p90_ms": 0.5720292
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 0.4524585,
+          "p10_ms": 0.4279913,
+          "p90_ms": 0.5635786000000003
+        },
+        "max_abs_error": 2.0503997802734375e-05,
+        "top1_equal": true
+      }
+    },
+    {
+      "rows": 1632,
+      "repeated_examples": 16,
+      "numpy_cpu": {
+        "median_ms": 1.052208,
+        "p10_ms": 0.9855961000000001,
+        "p90_ms": 1.1717416
+      },
+      "mlx_cpu": {
+        "resident_numeric": {
+          "median_ms": 1.0057085,
+          "p10_ms": 0.8893959,
+          "p90_ms": 1.1254416999999999
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 1.157375,
+          "p10_ms": 1.0175417,
+          "p90_ms": 1.2692086
+        },
+        "max_abs_error": 0.0,
+        "top1_equal": true
+      },
+      "metal_gpu": {
+        "resident_numeric": {
+          "median_ms": 0.588438,
+          "p10_ms": 0.49335890000000004,
+          "p90_ms": 0.9477122000000007
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 0.5104795,
+          "p10_ms": 0.46599619999999997,
+          "p90_ms": 0.7194753000000004
+        },
+        "max_abs_error": 1.621246337890625e-05,
+        "top1_equal": true
+      }
+    },
+    {
+      "rows": 13056,
+      "repeated_examples": 128,
+      "numpy_cpu": {
+        "median_ms": 8.129937,
+        "p10_ms": 7.9077003,
+        "p90_ms": 8.43095
+      },
+      "mlx_cpu": {
+        "resident_numeric": {
+          "median_ms": 8.411271500000002,
+          "p10_ms": 8.0725295,
+          "p90_ms": 8.761342299999999
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 8.627979,
+          "p10_ms": 8.0599375,
+          "p90_ms": 8.9802956
+        },
+        "max_abs_error": 0.0,
+        "top1_equal": true
+      },
+      "metal_gpu": {
+        "resident_numeric": {
+          "median_ms": 1.283979,
+          "p10_ms": 1.1319535,
+          "p90_ms": 1.6636956000000003
+        },
+        "host_input_to_host_scores": {
+          "median_ms": 1.6608749999999999,
+          "p10_ms": 1.5701292,
+          "p90_ms": 1.9634878
+        },
+        "max_abs_error": 1.621246337890625e-05,
+        "top1_equal": true
+      }
+    }
+  ],
+  "numpy_configuration": "{\n  \"Compilers\": {\n    \"c\": {\n      \"name\": \"clang\",\n      \"linker\": \"ld64\",\n      \"version\": \"15.0.0\",\n      \"commands\": \"cc\"\n    },\n    \"cython\": {\n      \"name\": \"cython\",\n      \"linker\": \"cython\",\n      \"version\": \"3.3.0\",\n      \"commands\": \"cython\"\n    },\n    \"c++\": {\n      \"name\": \"clang\",\n      \"linker\": \"ld64\",\n      \"version\": \"15.0.0\",\n      \"commands\": \"c++\"\n    }\n  },\n  \"Machine Information\": {\n    \"host\": {\n      \"cpu\": \"aarch64\",\n      \"family\": \"aarch64\",\n      \"endian\": \"little\",\n      \"system\": \"darwin\"\n    },\n    \"build\": {\n      \"cpu\": \"aarch64\",\n      \"family\": \"aarch64\",\n      \"endian\": \"little\",\n      \"system\": \"darwin\"\n    }\n  },\n  \"Build Dependencies\": {\n    \"blas\": {\n      \"name\": \"accelerate\",\n      \"found\": true,\n      \"version\": \"unknown\",\n      \"detection method\": \"system\",\n      \"include directory\": \"unknown\",\n      \"lib directory\": \"unknown\",\n      \"openblas configuration\": \"unknown\",\n      \"pc file directory\": \"unknown\"\n    },\n    \"lapack\": {\n      \"name\": \"accelerate\",\n      \"found\": true,\n      \"version\": \"unknown\",\n      \"detection method\": \"system\",\n      \"include directory\": \"unknown\",\n      \"lib directory\": \"unknown\",\n      \"openblas configuration\": \"unknown\",\n      \"pc file directory\": \"unknown\"\n    }\n  },\n  \"Python Information\": {\n    \"path\": \"/private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/build-env-buaiw__1/bin/python\",\n    \"version\": \"3.14\"\n  },\n  \"SIMD Extensions\": {\n    \"baseline\": [\n      \"NEON\",\n      \"NEON_FP16\",\n      \"NEON_VFPV4\",\n      \"ASIMD\"\n    ],\n    \"found\": [\n      \"ASIMDHP\",\n      \"ASIMDDP\"\n    ],\n    \"not found\": [\n      \"ASIMDFHM\"\n    ]\n  }\n}\n",
+  "mlx_version": "0.32.4",
+  "caveats": [
+    "No Graph.slot extraction, layout compilation, proof checks or publication in timings",
+    "host boundary means already-available dense states to returned scores, not live runtime end-to-end",
+    "Metal shared memory materialization is not discrete PCIe transfer",
+    "larger batches repeat examples for throughput, not new accuracy evidence",
+    "CPU BLAS uses library defaults; this is not a controlled single-thread CPU test"
+  ],
+  "hashes": {
+    "model": "cba56adb0123e7df0051d6846103005ea14f16d6a0c56f0ba5eb67b43c90a9c7",
+    "states": "5f6c5ba46e6c754bd6de843593b84ba561a9dc547719531f74a18f04dfd3134d"
+  }
+}

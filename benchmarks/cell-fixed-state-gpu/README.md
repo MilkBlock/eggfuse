@@ -559,3 +559,41 @@ rules and a catalog of 24 known completions, with initial-instance address
 binding. General cross-Run binding/lifecycle support, compiler-native layout
 discovery, novel-completion generation and authorized runtime effect takeover
 are not established by this benchmark.
+
+## Same computation on CPU versus GPU
+
+`compare_cpu_gpu.py` runs the compact blend's identical float32 equations and
+native-produced vectors on NumPy CPU, MLX CPU and Metal GPU. Each measurement
+uses three warmups and 30 timed repetitions; MLX results are explicitly evaluated
+before stopping the clock. CPU library threading defaults are retained (not a
+single-thread comparison); NumPy build configuration is saved in the report.
+
+Warm numeric medians in milliseconds:
+
+| Batch rows | NumPy CPU | MLX CPU | Metal GPU |
+|---:|---:|---:|---:|
+| 102 | 0.085 | 0.100 | 0.431 |
+| 1,632 | 1.052 | 1.006 | 0.588 |
+| 13,056 | 8.130 | 8.411 | 1.284 |
+
+At the natural 102-row batch CPU is about 5x faster than GPU. At 13,056 repeated
+rows GPU is about 6.3x faster than NumPy for resident numeric execution. Using
+already-available host states and returning host scores, MLX CPU/GPU medians are
+0.108/0.452 ms at 102 rows and 8.628/1.661 ms at 13,056 rows. Timings are separate
+runs, so do not subtract medians to infer transfer cost (noise can even make the
+host-boundary median lower than the resident median). Metal shared memory is not
+a discrete PCIe upload. Repeated rows are throughput probes, not new test data or
+proof that the runtime can form those batches.
+
+All CPU/GPU top-1 results agree. Maximum GPU score error versus NumPy is 2.06e-5;
+MLX CPU matches NumPy exactly on these inputs. These measurements exclude live
+slot extraction/projection, compilation, semantic verification and publication.
+They are not end-to-end egraph timings. Full medians and percentiles are retained
+in `cpu-gpu-results.json`.
+
+```sh
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/compare_cpu_gpu.py \
+  --model out/cell-fixed-state-gpu/compact-blend/model.npz \
+  --states out/cell-fixed-state-gpu/compact-blend/native-states.json \
+  --output out/cell-fixed-state-gpu/cpu-gpu-results.json
+```
