@@ -285,7 +285,7 @@ mod tests {
     fn completed(rows:Vec<units::Row>)->Completed {
         Completed {effects:Default::default(),done:Done {cell:0,worker:None,
             frame:Local {values:Default::default(),facts:Default::default(),completed_prefix:0},
-            piece:Piece {end:0,rows:Default::default(),units:rows,aliases:0,counts:Default::default()}}}
+            piece:Piece {end:0,rows:Default::default(),units:rows,aliases:0,births:0,reuses:0}}}
     }
     fn constructor_units()->(Graph,Vec<Completed>) {
         use std::sync::Arc;
@@ -310,7 +310,7 @@ mod tests {
             let mut window=Window::seed(&g,cell,1);
             let (_,job)=g.take_local_job(0,cell,&mut window,6,true).unwrap();
             let mut effects=crate::cell::Effects::default();
-            done.push(Completed {done:job.unwrap().run(g.parents.reader(),&mut effects.writer()),effects});
+            done.push(Completed {done:job.unwrap().run(g.parents.reader(),&mut effects.writer(),&mut Counts::default()),effects});
         }
         (g,done)
     }

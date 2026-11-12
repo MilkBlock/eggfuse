@@ -97,6 +97,7 @@ impl Plan {
         first: usize,
         parents: Read<'_>,
         piece: &mut Piece,
+        counts: &mut Counts,
     ) {
         let tail = self.units.as_ref().unwrap();
         if piece.end != tail.start {
@@ -142,11 +143,11 @@ impl Plan {
                 fields,
             });
         }
-        piece.counts.unit_candidates += rows.len() as u64;
+        counts.unit_candidates += rows.len() as u64;
         if rayon::current_thread_index().is_some() {
-            piece.counts.unit_worker_rows += rows.len() as u64;
+            counts.unit_worker_rows += rows.len() as u64;
         }
-        piece.counts.unit_bytes += (rows.capacity() * std::mem::size_of::<Row>()
+        counts.unit_bytes += (rows.capacity() * std::mem::size_of::<Row>()
             + rows
                 .iter()
                 .map(|r| {

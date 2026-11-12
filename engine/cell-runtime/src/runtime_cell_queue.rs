@@ -215,10 +215,12 @@ impl Executor {
                     tasks, read, parallel.then_some(pool.as_ref()), &unfinished, consume);
                 (result, events, Some(shared))
             } else {
-                let (result, events) = crate::completion_events::ordered(tasks, parallel.then_some(pool.as_ref()),
-                    |(job, mut effects)| { let done = job.run(read, &mut effects.writer());
-                        unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);Completed { done, effects } }, consume);
-                (result, events, None)
+                use crate::graph::cell_births::{execution_grain,execution_group,Counts};
+                let grain=execution_grain(&tasks,pool.current_num_threads());
+                let (result, events, counts) = crate::completion_events::ordered_fold(tasks,parallel.then_some(pool.as_ref()),grain,
+                    execution_group,|(job, mut effects),counts| { let done = job.run(read,&mut effects.writer(),counts);
+                        unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);Completed { done, effects } },Counts::add,consume);
+                (result, events, Some(counts))
             };
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
             let elapsed = clock.elapsed().as_nanos() as u64;

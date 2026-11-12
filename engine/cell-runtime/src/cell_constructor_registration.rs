@@ -228,7 +228,7 @@ mod tests {
             let mut window=Window::seed(&g,cell,1);
             let (_,job)=g.take_local_job(0,cell,&mut window,4,false).unwrap();
             let mut effects=crate::cell::Effects::default();
-            done.push(Completed {done:job.unwrap().run(g.parents.reader(),&mut effects.writer()),effects});
+            done.push(Completed {done:job.unwrap().run(g.parents.reader(),&mut effects.writer(),&mut Counts::default()),effects});
         }
         (g,done)
     }

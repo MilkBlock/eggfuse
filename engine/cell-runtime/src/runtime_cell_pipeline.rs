@@ -62,10 +62,11 @@ impl Executor {
             if shared {cell_births::produce_shared(tasks,read,|i,done|out.send(i,done))}
             else {
                 use rayon::prelude::*;
-                tasks.into_par_iter().enumerate().for_each(|(i,(job,mut effects))| {
-                    let done=job.run(read,&mut effects.writer());out.send(i,Completed {done,effects});
-                });
-                Default::default()
+                let grain=cell_births::execution_grain(&tasks,rayon::current_num_threads());
+                tasks.into_par_iter().enumerate()
+                    .fold_chunks(grain,cell_births::execution_group,|mut counts,(i,(job,mut effects))| {
+                        let done=job.run(read,&mut effects.writer(),&mut counts);out.send(i,Completed {done,effects});counts
+                    }).reduce(cell_births::Counts::default,|mut a,b| {a.add(b);a})
             }
         });
         let owners=std::mem::replace(&mut queue.owners,std::mem::take(&mut queue.spare));

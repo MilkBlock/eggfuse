@@ -41,12 +41,25 @@ pub(crate) fn ordered<T: Send, R: Send, E>(
     run: impl Fn(T) -> R + Sync,
     mut consume: impl FnMut(&mut Vec<R>) -> Result<(), E>,
 ) -> (Result<(), E>, Work) {
-    run_events(tasks, 0, pool, run, |ready,_|consume(ready), true)
+    let (result,work,())=run_events(tasks,0,pool,|task,_|run(task),|ready,_|consume(ready),true,1,||(),|_,_|{});
+    (result,work)
+}
+
+/// A worker keeps its accumulator across a bounded run of input owners. Each
+/// result is published immediately; metadata reduction never gates a Cell's
+/// completion or source error order. No per-result statistics packet is needed.
+pub(crate) fn ordered_fold<T:Send,R:Send,M:Default+Send,E>(tasks:Vec<T>,pool:Option<&rayon::ThreadPool>,grain:usize,
+    init:impl Fn()->M+Sync,run:impl Fn(T,&mut M)->R+Sync,merge:impl Fn(&mut M,M)+Sync,
+    mut consume:impl FnMut(&mut Vec<R>)->Result<(),E>)->(Result<(),E>,Work,M) {
+    run_events(tasks,0,pool,run,|ready,_|consume(ready),true,grain.max(1),init,merge)
 }
 
 pub(crate) fn followups<T: Send, R: Send, E>(tasks: Vec<T>, extra:usize, pool: Option<&rayon::ThreadPool>,
     run: impl Fn(T) -> R + Sync, consume: impl FnMut(&mut Vec<R>, &mut Vec<T>) -> Result<(), E>,
-) -> (Result<(), E>, Work) { run_events(tasks, extra, pool, run, consume, false) }
+) -> (Result<(), E>, Work) {
+    let (result,work,())=run_events(tasks,extra,pool,|task,_|run(task),consume,false,1,||(),|_,_|{});
+    (result,work)
+}
 
 /// A long-lived owner may release several completed fragments before returning
 /// its directory. The receiver drains every event, including after its own
@@ -164,17 +177,21 @@ pub(crate) fn owned_prefix<T: Send, R: Send, C: Send>(
     (state.owner.unwrap(),state.work)
 }
 
-fn run_events<T: Send, R: Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<&rayon::ThreadPool>,
-    run: impl Fn(T) -> R + Sync, mut consume: impl FnMut(&mut Vec<R>, &mut Vec<T>) -> Result<(), E>, ordered: bool,
-) -> (Result<(), E>, Work) {
+fn run_events<T: Send, R: Send, M:Default+Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<&rayon::ThreadPool>,
+    run: impl Fn(T,&mut M) -> R + Sync, mut consume: impl FnMut(&mut Vec<R>, &mut Vec<T>) -> Result<(), E>, ordered: bool,
+    grain:usize,init:impl Fn()->M+Sync,merge:impl Fn(&mut M,M)+Sync,
+) -> (Result<(), E>, Work, M) {
     let mut work = Work::default();
     if pool.is_none() {
+        let mut metadata=M::default();
         loop {
-            let mut results: Vec<_> = tasks.drain(..).map(&run).collect();
+            let mut local=if tasks.is_empty() {M::default()} else {init()};
+            let mut results: Vec<_> = tasks.drain(..).map(|task|run(task,&mut local)).collect();
+            merge(&mut metadata,local);
             work.bytes += (results.capacity() * std::mem::size_of::<R>()) as u64;
             work.waves += u64::from(!results.is_empty());
             let result=consume(&mut results,&mut tasks);
-            if result.is_err() || tasks.is_empty() {return (result,work);}
+            if result.is_err() || tasks.is_empty() {return (result,work,metadata);}
         }
     }
     let mut count = tasks.len();
@@ -186,23 +203,43 @@ fn run_events<T: Send, R: Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<
     let mut result = Ok(());
     let mut ready=Vec::new();
     let mut ready_bytes=0;
+    let metadata=Mutex::new(M::default());
+    let produce=|index,task,local:&mut M| {
+        let mut producer=Producer {events:&events,committed:false};
+        let value=run(task,local);
+        let mut pending=events.pending.lock().unwrap();
+        if ordered {pending.slots[index]=Some(value);}
+        else {
+            let before=pending.ready.capacity();pending.ready.push(value);
+            pending.bytes+=((pending.ready.capacity()-before)*std::mem::size_of::<R>()) as u64;
+        }
+        pending.completed+=1;producer.committed=true;
+        if !ordered || index==pending.next {events.wake.notify_one();}
+    };
     pool.unwrap().in_place_scope_fifo(|scope| {
         let spawn=|index,task| {
-            let (events,run)=(&events,&run);
+            let (produce,init,merge,metadata,events)=(&produce,&init,&merge,&metadata,&events);
             scope.spawn_fifo(move |_| {
                 let mut producer=Producer {events,committed:false};
-                let value=run(task);
-                let mut pending=events.pending.lock().unwrap();
-                if ordered {pending.slots[index]=Some(value);}
-                else {
-                    let before=pending.ready.capacity();pending.ready.push(value);
-                    pending.bytes+=((pending.ready.capacity()-before)*std::mem::size_of::<R>()) as u64;
-                }
-                pending.completed+=1;producer.committed=true;
-                if !ordered || index==pending.next {events.wake.notify_one();}
+                let mut local=init();produce(index,task,&mut local);
+                if std::mem::size_of::<M>()!=0 {merge(&mut metadata.lock().unwrap(),local);}
+                producer.committed=true;
             });
         };
-        for (index,task) in tasks.drain(..).enumerate() {spawn(index,task);}
+        if ordered && !tasks.is_empty() && (grain>1 || std::mem::size_of::<M>()!=0) {
+            use rayon::prelude::*;
+            let initial=std::mem::take(&mut tasks);
+            let (produce,init,merge,metadata,events)=(&produce,&init,&merge,&metadata,&events);
+            scope.spawn_fifo(move |_| {
+                // Reduction/initializer panics can abandon inputs before a
+                // per-Cell guard exists. Wake the receiver for those too.
+                let mut producer=Producer {events,committed:false};
+                let local=initial.into_par_iter().enumerate()
+                    .fold_chunks(grain,init,|mut local,(index,task)| {produce(index,task,&mut local);local})
+                    .reduce(M::default,|mut a,b| {merge(&mut a,b);a});
+                merge(&mut metadata.lock().unwrap(),local);producer.committed=true;
+            });
+        } else {for (index,task) in tasks.drain(..).enumerate() {spawn(index,task);}}
         loop {
             let mut pending = events.pending.lock().unwrap();
             if pending.next == count || pending.aborted { break; }
@@ -233,13 +270,59 @@ fn run_events<T: Send, R: Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<
         }
     });
     work.bytes+=ready_bytes+events.pending.into_inner().unwrap().bytes;
-    (result, work)
+    (result, work,metadata.into_inner().unwrap())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::{sync::mpsc, time::Duration};
+
+    #[test]
+    fn grouped_cell_event_precedes_the_next_cell_and_statistics_reduction() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
+        let (tx,rx)=mpsc::channel();let rx=Mutex::new(rx);let mut order=Vec::new();
+        // Both Cells execute in the same worker loop. The second needs the
+        // source to consume the first event, before the loop can return stats.
+        let (result,work,counts)=ordered_fold(vec![0,1],Some(&pool),2,||[1u64,0],|i,counts| {
+            if i==1 {rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
+            counts[1]+=1;i
+        },|a,b| {a[0]+=b[0];a[1]+=b[1];},|ready|->Result<(),()> {
+            for i in ready.drain(..) {order.push(i);if i==0 {tx.send(()).unwrap();}}Ok(())
+        });
+        result.unwrap();assert_eq!(order,[0,1]);assert_eq!(counts,[1,2]);assert_eq!(work.early,1);
+    }
+
+    #[test]
+    fn grouped_stats_cover_private_work_but_source_error_discards_its_effects() {
+        for threads in [0,1,4] {for count in [0usize,1,129] {
+            let pool=(threads!=0).then(||rayon::ThreadPoolBuilder::new().num_threads(threads).build().unwrap());
+            let mut effects=Vec::new();
+            let (result,_,counts)=ordered_fold((0..count).collect(),pool.as_ref(),8,||[1u64,0],|i,c| {
+                if i%3==0 {std::thread::yield_now();}c[1]+=1;i
+            },|a,b| {a[0]+=b[0];a[1]+=b[1];},|ready| {
+                for i in ready.drain(..) {if i==17 {return Err("source error");}effects.push(i);}Ok(())
+            });
+            assert_eq!(result,if count>17 {Err("source error")}else{Ok(())});
+            assert_eq!(effects,(0..count.min(17)).collect::<Vec<_>>());
+            assert_eq!(counts[1],count as u64);
+            assert_eq!(counts[0],if threads==0 {u64::from(count!=0)}else{count.div_ceil(8) as u64});
+        }}
+    }
+
+    #[test]
+    fn grouped_initializer_worker_reducer_and_consumer_panics_join_the_scope() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
+        for fail in 0..4 {
+            assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                let _=ordered_fold(vec![0,1,2],Some(&pool),2,
+                    || {assert_ne!(fail,0,"initializer panic");0u64},
+                    |i,c| {assert!(fail!=1 || i!=0,"worker panic");*c+=1;i},
+                    |a,b| {assert_ne!(fail,2,"reducer panic");*a+=b;},
+                    |_| {assert_ne!(fail,3,"consumer panic");Ok::<_,()>(())});
+            })).is_err());
+        }
+    }
 
     #[test]
     fn fragment_followups_reuse_the_scope_with_one_worker_or_inline() {

@@ -115,8 +115,9 @@ mod tests {
             assert!(tasks.iter().all(|(j,_)|j.dependent()==collide));
             if !collide {
                 for (job,mut effects) in tasks {
-                    let done=job.run(g.parents.reader(),&mut effects.writer());
-                    let counts=g.commit_local_job(done,&mut effects.writer()).unwrap();
+                    let mut counts=Counts::default();
+                    let done=job.run(g.parents.reader(),&mut effects.writer(),&mut counts);
+                    counts.add(g.commit_local_job(done,&mut effects.writer()).unwrap());
                     assert_eq!(counts.root_births,1);assert_eq!(counts.local_births,3);
                     assert_eq!(counts.shared_slots,0);
                 }

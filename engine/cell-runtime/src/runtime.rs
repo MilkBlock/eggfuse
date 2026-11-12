@@ -3325,6 +3325,8 @@ impl Executor {
                 "window_bytes":std::mem::size_of::<Option<crate::graph::cell_births::Window>>(),
                 "pending_row_bytes":crate::graph::cell_births::record_bytes(),
                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
+                "completed_cell_bytes":std::mem::size_of::<crate::graph::cell_births::Completed>(),
+                "worker_statistics_bytes":std::mem::size_of::<crate::graph::cell_births::Counts>(),
                 "scope":"workers materialize constructor and terminal Unit rows; source-order interning adopts winners and invalidates duplicate Unit candidates without replaying Set",
                 "synchronous_single_cell_dispatch":false,"available_through_ready_queue":true});
             report["cell_execution"]["scheduler"] = json!({"schema":"cell-completion-events/v4",

@@ -327,23 +327,23 @@ impl<'a> Batch<'a> {
         }
         slot.get().unwrap()
     }
-    fn finish(&self, job: usize, receipts: &mut EffectWriter<'_>) -> Done {
+    fn finish(&self, job: usize, receipts: &mut EffectWriter<'_>, counts:&mut Counts) -> Done {
         let owner = &self.jobs[job];
         let mut piece = Piece {
             end: owner.frame.completed_prefix,
             rows: Rows::new(),
             units: Vec::new(),
             aliases: 0,
-            counts: Counts::default(),
+            births:0,reuses:0,
         };
         // This is another handle to the same sealed inputs, not a bindings copy.
         // Peers may retain this immutable prefix after its source owner resumes.
         let mut values = owner.frame.values.shared_suffix();
-        piece.counts.frame_handles += 1;
+        counts.frame_handles += 1;
         let capacity = values.capacity_bytes();
         for index in owner.from..owner.limit {
             let step = &owner.plan.steps[index];
-            let value = self.resolve(job, index, &mut piece.counts);
+            let value = self.resolve(job, index, counts);
             if value.witness
                 == (FactRef {
                     cell: owner.cell,
@@ -361,22 +361,22 @@ impl<'a> Batch<'a> {
                     fields: value.fields.clone(),
                     hash: value.hash,
                 });
-                piece.counts.result_handles += 1;
+                counts.result_handles += 1;
                 let after = if piece.rows.spilled() {
                     piece.rows.capacity()
                 } else {
                     0
                 };
-                piece.counts.pending_growths += u64::from(after != before);
-                piece.counts.pending_bytes +=
+                counts.pending_growths += u64::from(after != before);
+                counts.pending_bytes +=
                     ((after - before) * std::mem::size_of::<Born>()) as u64;
-                piece.counts.local_births += 1;
-                piece.counts.root_births += u64::from(owner.starts_root() && index==owner.from);
+                piece.births += 1;
+                counts.root_births += u64::from(owner.starts_root() && index==owner.from);
             } else {
                 values.insert(step.destination, value.fields.last().unwrap().clone());
-                piece.counts.value_writes += 1;
-                piece.counts.local_reuses += 1;
-                piece.counts.root_reuses += u64::from(owner.starts_root() && index==owner.from);
+                counts.value_writes += 1;
+                piece.reuses += 1;
+                counts.root_reuses += u64::from(owner.starts_root() && index==owner.from);
             }
             receipts.record(step.operation, Dependency::Fact(value.witness));
             piece.end = step.operation + 1;
@@ -385,13 +385,13 @@ impl<'a> Batch<'a> {
             }
         }
         let growth = values.capacity_bytes().saturating_sub(capacity);
-        piece.counts.slot_growths += u64::from(growth != 0);
-        piece.counts.slot_bytes += growth as u64;
+        counts.slot_growths += u64::from(growth != 0);
+        counts.slot_bytes += growth as u64;
         let mut frame=Local { values, facts:Default::default(), completed_prefix:piece.end };
         if let Some(epoch)=owner.unit_epoch {
             frame.facts=owner.frame.facts.clone();
-            piece.counts.prefix_handles+=frame.facts.len() as u64;
-            owner.plan.prepare_units(owner.cell,epoch,&frame,owner.first,self.parents,&mut piece);
+            counts.prefix_handles+=frame.facts.len() as u64;
+            owner.plan.prepare_units(owner.cell,epoch,&frame,owner.first,self.parents,&mut piece,counts);
             frame.facts.clear();
             frame.completed_prefix=piece.end;
         }
@@ -408,6 +408,7 @@ pub(crate) fn stream<E>(
     tasks: Vec<(Job, crate::cell::Effects)>, parents: Read<'_>,
     pool: Option<&rayon::ThreadPool>, unfinished:&std::sync::atomic::AtomicUsize, consume: impl FnMut(&mut Vec<Completed>) -> std::result::Result<(), E>,
 ) -> ((std::result::Result<(), E>, crate::completion_events::Work), Counts) {
+    let grain=execution_grain(&tasks,pool.map_or(1,rayon::ThreadPool::current_num_threads));
     let (jobs, effects): (Vec<_>, Vec<_>) = tasks.into_iter().unzip();
     let mut counts = Counts::default();
     counts.shared_growths += 2;
@@ -419,12 +420,13 @@ pub(crate) fn stream<E>(
     let tasks: Vec<_> = effects.into_iter().enumerate().collect();
     counts.shared_growths += 1;
     counts.shared_bytes += (tasks.capacity() * std::mem::size_of::<(usize, crate::cell::Effects)>()) as u64;
-    let run = |(i, mut effects): (usize, crate::cell::Effects)| {
-        let done = batch.finish(i, &mut effects.writer());
+    let run = |(i, mut effects): (usize, crate::cell::Effects),counts:&mut Counts| {
+        let done = batch.finish(i, &mut effects.writer(),counts);
         unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);
         Completed { done, effects }
     };
-    (crate::completion_events::ordered(tasks, pool, run, consume), counts)
+    let (result,events,work)=crate::completion_events::ordered_fold(tasks,pool,grain,execution_group,run,Counts::add,consume);
+    counts.add(work);((result,events),counts)
 }
 
 /// The original finite peer directory stays with this owned wave. Source
@@ -433,14 +435,17 @@ pub(crate) fn stream<E>(
 pub(crate) fn produce(tasks:Vec<(Job,crate::cell::Effects)>,parents:Read<'_>,
     emit:impl Fn(usize,Completed)+Sync)->Counts {
     use rayon::prelude::*;
+    let grain=execution_grain(&tasks,rayon::current_num_threads());
     let (jobs,effects):(Vec<_>,Vec<_>)=tasks.into_iter().unzip();
     let mut counts=Counts::default();counts.shared_growths+=2;
     counts.shared_bytes+=(jobs.capacity()*std::mem::size_of::<Job>()
         +effects.capacity()*std::mem::size_of::<crate::cell::Effects>()) as u64;
     let batch=Batch::new(&jobs,parents,&mut counts);
-    effects.into_par_iter().enumerate().for_each(|(i,mut effects)| {
-        let done=batch.finish(i,&mut effects.writer());emit(i,Completed {done,effects});
-    });
+    let work=effects.into_par_iter().enumerate()
+        .fold_chunks(grain,execution_group,|mut counts,(i,mut effects)| {
+            let done=batch.finish(i,&mut effects.writer(),&mut counts);emit(i,Completed {done,effects});counts
+        }).reduce(Counts::default,|mut a,b| {a.add(b);a});
+    counts.add(work);
     counts
 }
 
@@ -624,9 +629,9 @@ mod tests {
         assert_eq!(totals.duplicate_evaluations, 1);
         assert_eq!(totals.row_fields, 4, "both private allocations are charged");
         assert_eq!(batch.results[0].complete.load(Ordering::Acquire), 1);
-        let done = batch.finish(0, &mut Effects::default().writer());
-        assert_eq!(done.piece.counts.local_births, 2);
-        assert_eq!(done.piece.counts.local_reuses, 1);
+        let done = batch.finish(0, &mut Effects::default().writer(), &mut Counts::default());
+        assert_eq!(done.piece.births, 2);
+        assert_eq!(done.piece.reuses, 1);
         drop(batch);
         drop(jobs);
         g.commit_local_job(done,&mut crate::cell::Effects::default().writer()).unwrap();

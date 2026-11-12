@@ -12,6 +12,14 @@ pub(crate) use roots::isolate as isolate_roots;
 pub(crate) use shared::stream as stream_shared;
 pub(crate) use shared::produce as produce_shared;
 pub(crate) struct Completed { pub done: Done, pub effects: crate::cell::Effects }
+pub(crate) fn execution_group()->Counts {Counts{execution_groups:1,..Counts::default()}}
+pub(crate) fn execution_grain(tasks:&[(Job,crate::cell::Effects)],workers:usize)->usize {
+    // Retain at least two groups per worker when possible. The compiler's
+    // constructor/Unit instruction count bounds each serial run of instances;
+    // it is a scheduling heuristic, not a measured time estimate.
+    let widest=tasks.iter().map(|(job,_)|job.work_units()).max().unwrap_or(1).max(1);
+    (tasks.len()/(2*workers.max(1))).clamp(1,8).min((32/widest).max(1))
+}
 #[path = "cell_birth_units.rs"]
 pub(crate) mod units;
 #[path = "cell_unit_registration.rs"]
@@ -207,6 +215,7 @@ impl Window {
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub execution_groups:u64,
     pub root_bucket_probes:u64, pub root_bucket_fallbacks:u64, pub root_jobs:u64,
     pub root_births:u64, pub root_reuses:u64, pub root_pending:u64, pub root_boundary_probes:u64,
     pub root_isolated:u64, pub root_hash_bytes:u64,
@@ -235,7 +244,7 @@ pub(crate) struct Counts {
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
         macro_rules! add {($($f:ident),*)=>{$(self.$f+=b.$f;)*};}
-        add!(root_bucket_probes,root_bucket_fallbacks,root_jobs,root_births,root_reuses,root_pending,root_boundary_probes,root_isolated,root_hash_bytes,
+        add!(execution_groups,root_bucket_probes,root_bucket_fallbacks,root_jobs,root_births,root_reuses,root_pending,root_boundary_probes,root_isolated,root_hash_bytes,
             plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
@@ -251,7 +260,9 @@ struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
 pub(crate) fn record_bytes()->usize {std::mem::size_of::<Born>()}
 type Rows=smallvec::SmallVec<[Born;4]>;
 pub(crate) fn pending_bytes()->usize {std::mem::size_of::<Rows>()}
-struct Piece { end:usize, rows:Rows, units:Vec<units::Row>, aliases:u64, counts:Counts }
+// Only committed logical work belongs to the Cell result. Diagnostic work is
+// accumulated by the worker loop, including private results later discarded.
+struct Piece { end:usize, rows:Rows, units:Vec<units::Row>, aliases:u64, births:u64, reuses:u64 }
 struct Local {
     values:crate::slots::FrameSlots,
     facts:smallvec::SmallVec<[(u32,RowFields);4]>,
@@ -312,56 +323,56 @@ fn operand(frame:&impl Frame,definitions:&[(usize,usize)],rows:&[Born],first:usi
 impl Plan {
     fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut impl Frame,
         parents:Read<'_>,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
-        receipts:&mut EffectWriter<'_>)->Piece {
-        let mut out=Piece {end:frame.position(),rows:Rows::new(),units:Vec::new(),aliases:0,counts:Counts::default()};
+        receipts:&mut EffectWriter<'_>,counts:&mut Counts)->Piece {
+        let mut out=Piece {end:frame.position(),rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0};
         let capacity=frame.values().capacity_bytes();
         let mut first_key=Some(first_key);
         for (index,step) in self.steps[from..limit].iter().enumerate() {
             let selected=if index==0 {Some(first_anchor)} else {
-                anchor(step,frame,&out.rows,first,cell,parents,&mut out.counts)
+                anchor(step,frame,&out.rows,first,cell,parents,counts)
             };
             let Some(anchor)=selected else {break;};
             let key=if let Some(key)=first_key.take() {key} else {
             let mut key=smallvec::SmallVec::<[Value;4]>::new();
             for arg in &step.keys {
-                out.counts.operand_reads+=1;
+                counts.operand_reads+=1;
                 let Some(value)=operand(frame,&self.definitions,&out.rows,first,step.operation,arg,parents)
-                    else {out.counts.missing_operands+=1;break;};
+                    else {counts.missing_operands+=1;break;};
                 key.push(value);
             }
             if key.len()!=step.keys.len() {break;}
             key
             };
-            out.counts.candidate_ranges+=1;
+            counts.candidate_ranges+=1;
             let candidates=&self.operators[step.candidates][..step.prior];
             let candidates=&candidates[candidates.partition_point(|&op|op<=anchor)..];
             let mut reused=None;
             for &prior in candidates {
-                out.counts.candidate_probes+=1;
+                counts.candidate_probes+=1;
                 let Some(old)=fields(frame,&out.rows,prior) else {continue;};
                 if old.len()!=key.len()+1 {continue;}
                 let equal=old[..key.len()].iter().zip(&key).all(|(a,b)| {
-                    out.counts.field_checks+=1;a==b
+                    counts.field_checks+=1;a==b
                 });
                 if equal {reused=Some((prior,old.last().unwrap().clone()));break;}
             }
             let witness=if let Some((prior,value))=reused {
                 frame.values_mut().insert(step.destination,value);
-                out.counts.value_writes+=1;out.counts.local_reuses+=1;
+                counts.value_writes+=1;out.reuses+=1;
                 FactRef{cell,op:prior as u32}
             } else {
                 let value=Value::Eq(((cell as u64)<<32)|(step.destination as u64+1));
-                out.counts.identity_checks+=1;
+                counts.identity_checks+=1;
                 if parents.canon(&value)!=value {break;}
                 let hash=hashkey(step.table,&key);
                 let fields=Graph::shared_fields(&key,&value);
-                out.counts.hashes+=1;out.counts.row_fields+=fields.len() as u64;
+                counts.hashes+=1;counts.row_fields+=fields.len() as u64;
                 let before=if out.rows.spilled() {out.rows.capacity()} else {0};
                 out.rows.push(Born{operation:step.operation,table:step.table,fields,hash});
                 let after=if out.rows.spilled() {out.rows.capacity()} else {0};
-                out.counts.pending_growths+=u64::from(before!=after);
-                out.counts.pending_bytes+=((after-before)*std::mem::size_of::<Born>()) as u64;
-                out.counts.local_births+=1;
+                counts.pending_growths+=u64::from(before!=after);
+                counts.pending_bytes+=((after-before)*std::mem::size_of::<Born>()) as u64;
+                out.births+=1;
                 FactRef{cell,op:step.operation as u32}
             };
             receipts.record(step.operation,Dependency::Fact(witness));
@@ -370,7 +381,7 @@ impl Plan {
             if step.operation!=self.steps[from].operation {out.aliases+=step.skipped as u64;}
         }
         let growth=frame.values().capacity_bytes().saturating_sub(capacity);
-        out.counts.slot_growths+=u64::from(growth!=0);out.counts.slot_bytes+=growth as u64;
+        counts.slot_growths+=u64::from(growth!=0);counts.slot_bytes+=growth as u64;
         out
     }
 }
@@ -400,20 +411,21 @@ impl Job {
             .is_some_and(|tail|tail.starts_at(stop) && tail.ends_at(end))
     }
     pub(crate) fn unstarted(self)->Done {
-        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,counts:Counts::default()},
+        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0},
             frame:self.frame,worker:None}
     }
     pub(crate) fn operations(&self)->usize {self.limit-self.from}
-    pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>)->Done {
+    pub(crate) fn work_units(&self)->usize {self.operations()+self.unit_epoch.map_or(0,|_|self.plan.units.as_ref().map_or(0,|u|u.sites.len()))}
+    pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>,counts:&mut Counts)->Done {
         let mut piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
-            self.first,self.anchor,self.key,receipts);
-        piece.counts.root_births+=u64::from(self.root.is_some() && piece.end>self.frame.completed_prefix);
+            self.first,self.anchor,self.key,receipts,counts);
+        counts.root_births+=u64::from(self.root.is_some() && piece.end>self.frame.completed_prefix);
         if self.isolated {
             assert_eq!(piece.end,self.plan.steps[self.limit-1].operation+1,
                 "compiled isolated Cell tail must reach its proven boundary");
         }
         if let Some(epoch)=self.unit_epoch {
-            self.plan.prepare_units(self.cell,epoch,&self.frame,self.first,parents,&mut piece);
+            self.plan.prepare_units(self.cell,epoch,&self.frame,self.first,parents,&mut piece,counts);
         }
         Done{cell:self.cell,frame:self.frame,piece,worker:rayon::current_thread_index()}
     }
@@ -493,9 +505,9 @@ impl Graph {
         let Done{cell,frame,mut piece,..}=done;
         self.rhs_frame_mut(cell).unwrap().values.reattach(frame.values)
             .map_err(|_|"Cell continuation lost its public prefix".to_string())?;
-        piece.counts.slot_reattachments+=1;
         let units=std::mem::take(&mut piece.units);
         let mut counts=self.register_local_piece(cell,piece,publication)?;
+        counts.slot_reattachments+=1;
         for unit in units {
             let operation=unit.function.origin.unwrap().op as usize;
             let (index,inserted)=self.commit_unit_row(unit)?;
@@ -505,22 +517,23 @@ impl Graph {
         }
         Ok(counts)
     }
-    fn register_local_piece(&mut self,cell:u32,mut piece:Piece,
+    fn register_local_piece(&mut self,cell:u32,piece:Piece,
         publication:Option<constructor_registration::Publication>)->Result<Counts> {
+        let mut counts=Counts{local_births:piece.births,local_reuses:piece.reuses,..Counts::default()};
         if let Some(publication)=publication {
             let rows=self.publish_registered_births(publication);
             debug_assert!(piece.rows.is_empty() || piece.rows.len()==rows);
-            piece.counts.committed_rows+=rows as u64;
+            counts.committed_rows+=rows as u64;
         } else { for row in piece.rows {
                 self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
-                piece.counts.committed_rows+=1;
+                counts.committed_rows+=1;
         }}
-        self.stats.constructor_requests+=piece.counts.local_births+piece.counts.local_reuses;
-        self.stats.constructor_reused+=piece.counts.local_reuses;
+        self.stats.constructor_requests+=piece.births+piece.reuses;
+        self.stats.constructor_reused+=piece.reuses;
         self.known_stats.static_eliminated+=piece.aliases;
         self.known_stats.avoided_lookups+=piece.aliases;
         self.rhs_frame_mut(cell).unwrap().completed_prefix=piece.end;
-        Ok(piece.counts)
+        Ok(counts)
     }
     /// A source-attached piece has no concurrent peer work. Execute it here;
     /// only the ready queue dispatches constructor jobs to the worker pool.
@@ -544,7 +557,7 @@ impl Graph {
         counts.source_operand_reads+=key.len() as u64;
         let frame=self.cells.get_mut(&cell).expect("fresh constructor has a public Cell");
         let parents=self.parents.reader();
-        let piece=plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts);
+        let piece=plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts,&mut counts);
         let piece=self.register_local_piece(cell,piece,None)?;
         if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
         counts.add(piece);Ok(counts)
@@ -594,9 +607,10 @@ mod tests {
                 let (_,job)=g.take_local_job(0,cell,&mut window,4,false).unwrap();
                 let parents=g.parents.reader();
                 let mut writer=receipts.writer();
-                let done=pool.install(||job.unwrap().run(parents,&mut writer));
+                let mut counts=Counts::default();
+                let done=pool.install(||job.unwrap().run(parents,&mut writer,&mut counts));
                 assert!(done.worker.is_some());
-                g.commit_local_job(done,&mut receipts.writer()).unwrap()
+                counts.add(g.commit_local_job(done,&mut receipts.writer()).unwrap());counts
             } else {
                 g.complete_local_births(0,cell,&mut window,&mut receipts.writer(),4).unwrap()
             };
