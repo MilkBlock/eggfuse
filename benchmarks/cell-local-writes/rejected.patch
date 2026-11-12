@@ -1,0 +1,463 @@
+diff --git a/engine/cell-runtime/src/cell_births.rs b/engine/cell-runtime/src/cell_births.rs
+index b6b128a4..f5c41294 100644
+--- a/engine/cell-runtime/src/cell_births.rs
++++ b/engine/cell-runtime/src/cell_births.rs
+@@ -1,8 +1,8 @@
+ //! A new Cell result excludes external constructor candidates until a shared
+-//! effect or another graph birth intervenes. Bake supplies exact local sites;
++//! interfering effect or another graph birth intervenes. Bake supplies exact local sites;
+ //! workers build actual row storage, not a second binding or operation log.
+ use super::*;
+-use crate::cell::{Definition, EffectWriter};
++use crate::cell::{Definition, Effects, EffectWriter, RhsFrame};
+ use std::time::Instant;
+
+ #[derive(Clone, Debug, PartialEq, Eq)]
+@@ -15,10 +15,19 @@ struct Step {
+     anchors: Vec<(usize,usize)>, // newest producer first: (operation, slot)
+     candidates: usize,
+     prior: usize,
+-    skipped: usize,
+ }
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool> }
++// These source effects can fail, but cannot create an Eq identity, change its
++// equivalence or read a pending constructor. They still execute in source order.
++fn scalar_write(p:&Program,op:&Op)->bool {
++    let Op::Set(t,..)=op else {return false;};
++    let table=&p.tables[*t];
++    if table.virtual_fact || table.constructor || !matches!(table.schema.last().and_then(|s|s["kind"].as_str()),
++        Some("i64"|"f64"|"bool"|"Unit"|"String")) {return false;}
++    table.merge.is_null() || p.merge_programs.merges.get(t).is_some_and(|m|
++        m.operations.iter().all(|op|matches!(op,Op::Let(_,Call::Primitive(..),_))))
++}
+ impl Plan {
+     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
+     pub(crate) fn continues_after(&self,operation:usize)->bool {self.continues.get(operation).copied().unwrap_or(false)}
+@@ -31,20 +40,19 @@ impl Plan {
+         let mut origins=BTreeMap::new();
+         let mut tables:BTreeMap<usize,usize>=BTreeMap::new();
+         let mut region=0;
+-        let mut skipped=0;
+         for (operation,op) in cell.template.ops.iter().enumerate() {
+-            if p.known_results.static_skip[rule][operation] { skipped+=1; continue; }
+-            if matches!(op,Op::Copy(..)) {continue;}
++            if p.known_results.static_skip[rule][operation] { continue; }
++            if matches!(op,Op::Copy(..)) || scalar_write(p,op) {continue;}
+             let ctor=match op {
+                 Op::Let(dst,Call::Table(t),args) if p.tables[*t].constructor && p.tables[*t].virtual_fact => Some((*dst,*t,args)),
+                 _ => None,
+             };
+             let Some((destination,table,args))=ctor else {
+-                region+=1;origins.clear();tables.clear();skipped=0;continue;
++                region+=1;origins.clear();tables.clear();continue;
+             };
+             if cell.value(&Arg::Slot(destination))!=Arg::Slot(destination)
+                 || cell.template.parent_columns.contains_key(&destination) {
+-                region+=1;origins.clear();tables.clear();skipped=0;continue;
++                region+=1;origins.clear();tables.clear();continue;
+             }
+             let keys:Vec<_>=args.iter().map(|a|cell.value(a)).collect();
+             let mut anchors:Vec<_>=keys.iter().filter_map(|a|match a {
+@@ -54,8 +62,8 @@ impl Plan {
+             let group=*tables.entry(table).or_insert_with(|| {operators.push(vec![]);operators.len()-1});
+             let candidates=&mut operators[group];
+             steps.push(Step {operation,region,table,destination,keys,anchors,
+-                candidates:group,prior:candidates.len(),skipped});
+-            skipped=0;candidates.push(operation);origins.insert(destination,operation);
++                candidates:group,prior:candidates.len()});
++            candidates.push(operation);origins.insert(destination,operation);
+         }
+         if !steps.iter().any(|s|!s.anchors.is_empty()) {return None;}
+         let mut continues=vec![false;cell.template.ops.len()];
+@@ -65,7 +73,7 @@ impl Plan {
+                 if steps.get(i+1).is_some_and(|s|s.region!=steps[i].region) {next=false;}
+                 continues[operation]=next;
+                 next|=!steps[i].anchors.is_empty();
+-            } else if matches!(op,Op::Copy(..)) || p.known_results.static_skip[rule][operation] {
++            } else if matches!(op,Op::Copy(..)) || scalar_write(p,op) || p.known_results.static_skip[rule][operation] {
+                 continues[operation]=next;
+             } else {next=false;}
+         }
+@@ -79,7 +87,11 @@ impl Plan {
+             + self.continues.capacity()*std::mem::size_of::<bool>()
+     }
+     fn start(&self,position:usize)->Option<usize> {
+-        let i=self.steps.binary_search_by_key(&position,|s|s.operation).ok()?;
++        let i=match self.steps.binary_search_by_key(&position,|s|s.operation) {
++            Ok(i)=>i,
++            Err(i) if i>0 && i<self.steps.len() && self.steps[i-1].region==self.steps[i].region=>i,
++            _=>return None,
++        };
+         (!self.steps[i].anchors.is_empty()).then_some(i)
+     }
+ }
+@@ -99,7 +111,11 @@ impl Window {
+     }
+     pub(crate) fn observes(g:&Graph,cell:u32,position:usize,old:Option<Self>)->Option<Self> {
+         let frame=g.rhs_frame(cell)?;
+-        if matches!(g.program.templates[frame.template].ops[position],Op::Copy(..)) {return old;}
++        // The caller's compiled continues_after mask admits only scalar writes
++        // here. Preserve the window only if the actual effect left it intact.
++        if matches!(g.program.templates[frame.template].ops[position],Op::Copy(..)|Op::Set(..)) {
++            return old.filter(|w|w.births==g.stats.logical_facts_created && w.unions==g.stats.unions);
++        }
+         if !matches!(g.program.templates[frame.template].ops[position],Op::Let(_,Call::Table(t),_)
+             if g.program.tables[t].constructor && g.program.tables[t].virtual_fact) {return None;}
+         if let Some(mut old)=old.filter(|w|w.unions==g.stats.unions
+@@ -123,6 +139,8 @@ pub(crate) struct Counts {
+     pub pending_growths:u64, pub pending_bytes:u64, pub value_writes:u64,
+     pub slot_growths:u64, pub slot_bytes:u64, pub committed_rows:u64,
+     pub worker_batches:u64, pub worker_operations:u64, pub worker_wait_ns:u64,
++    pub source_writes:u64, pub commit_steps:u64, pub code_references:u64,
++    pub committed_reuses:u64, pub discarded_rows:u64,
+ }
+ impl Counts {
+     pub(crate) fn add(&mut self,b:Self) {
+@@ -130,14 +148,15 @@ impl Counts {
+         add!(plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
+             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
+             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
+-            worker_batches,worker_operations,worker_wait_ns);
++            worker_batches,worker_operations,worker_wait_ns,source_writes,commit_steps,code_references,
++            committed_reuses,discarded_rows);
+     }
+ }
+ struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
+ pub(crate) fn record_bytes()->usize {std::mem::size_of::<Born>()}
+ type Rows=smallvec::SmallVec<[Born;4]>;
+ pub(crate) fn pending_bytes()->usize {std::mem::size_of::<Rows>()}
+-struct Piece { end:usize, rows:Rows, aliases:u64, counts:Counts }
++struct Piece { end:usize, rows:Rows, counts:Counts }
+
+ fn fields<'a>(frame:&'a Cell,rows:&'a [Born],operation:usize)->Option<&'a [Value]> {
+     if let Ok(i)=rows.binary_search_by_key(&operation,|r|r.operation) {return Some(&rows[i].fields);}
+@@ -168,7 +187,7 @@ impl Plan {
+     fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut Cell,template:&Template,
+         parents:&Parents,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
+         receipts:&mut EffectWriter<'_>)->Piece {
+-        let mut out=Piece {end:frame.completed_prefix,rows:Rows::new(),aliases:0,counts:Counts::default()};
++        let mut out=Piece {end:frame.completed_prefix,rows:Rows::new(),counts:Counts::default()};
+         let capacity=frame.values.capacity_bytes();
+         let mut first_key=Some(first_key);
+         for (index,step) in self.steps[from..limit].iter().enumerate() {
+@@ -221,8 +240,6 @@ impl Plan {
+             };
+             receipts.record(step.operation,Dependency::Fact(witness));
+             out.end=step.operation+1;
+-            // The first offered operation has no unexecuted gap before it.
+-            if step.operation!=self.steps[from].operation {out.aliases+=step.skipped as u64;}
+         }
+         let growth=frame.values.capacity_bytes().saturating_sub(capacity);
+         out.counts.slot_growths+=u64::from(growth!=0);out.counts.slot_bytes+=growth as u64;
+@@ -232,24 +249,25 @@ impl Plan {
+
+ impl Graph {
+     pub(crate) fn complete_local_births(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
+-        receipts:&mut EffectWriter<'_>,stop:usize,pool:Option<&rayon::ThreadPool>,grain:usize)->Result<Counts> {
+-        let mut counts=Counts {resume_checks:1,..Counts::default()};
++        receipts:&mut Effects,stop:usize,pool:Option<&rayon::ThreadPool>,grain:usize,
++        source:Option<usize>,counts:&mut Counts)->Result<()> {
++        counts.resume_checks+=1;
+         // These backends can have additional birth-time effects. Their source
+         // handler remains authoritative until those effects join the proof.
+         if self.stable_ports.is_some() || self.union_digest.is_some() || self.ownership.is_some()
+-            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok(counts);}
+-        let Some(cert)=*window else {return Ok(counts);};
++            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok(());}
++        let Some(cert)=*window else {return Ok(());};
+         let position=self.rhs_frame(cell).unwrap().completed_prefix;
+-        let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok(counts);};
+-        let Some(from)=plan.start(position).filter(|_|position<stop) else {return Ok(counts);};
++        let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok(());};
++        let Some(from)=plan.start(position).filter(|&i|plan.steps[i].operation<stop) else {return Ok(());};
+         counts.attempts+=1;
+         if cert.births!=self.stats.logical_facts_created || cert.unions!=self.stats.unions {
+-            counts.invalidated+=1;*window=None;return Ok(counts);
++            counts.invalidated+=1;*window=None;return Ok(());
+         }
+         let region=plan.steps[from].region;
+         let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
+         let Some(first_anchor)=anchor(&plan.steps[from],self.rhs_frame(cell).unwrap(),&[],cert.first,
+-            cell,&self.parents,&mut counts) else {return Ok(counts);};
++            cell,&self.parents,counts) else {return Ok(());};
+         // This first boundary may use retained parent projections. Acquire its
+         // ordinary operands once, then move the actual key into the worker.
+         // An unproven window never dispatches an empty worker job.
+@@ -262,25 +280,49 @@ impl Graph {
+         // New root activation has already made this owner graph-addressable.
+         // No worker borrows the mutable graph, index, Cursor or Rc plan owner.
+         let frame=self.cells.get_mut(&cell).expect("new constructor owns its source Cell");
+-        let work=||plan.prepare(from,limit,cell,frame,template,&self.parents,cert.first,first_anchor,first_key,receipts);
++        let mut writer=receipts.writer();
++        let work=||plan.prepare(from,limit,cell,frame,template,&self.parents,cert.first,first_anchor,first_key,&mut writer);
+         let mut piece=if run_worker {pool.unwrap().install(work)} else {work()};
+         if let Some(clock)=clock {
+             piece.counts.worker_batches+=1;
+             piece.counts.worker_operations+=piece.counts.local_births+piece.counts.local_reuses;
+             piece.counts.worker_wait_ns+=clock.elapsed().as_nanos() as u64;
+         }
+-        for row in piece.rows {
+-            self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
+-            piece.counts.committed_rows+=1;
+-        }
+-        self.stats.constructor_requests+=piece.counts.local_births+piece.counts.local_reuses;
+-        self.stats.constructor_reused+=piece.counts.local_reuses;
+-        self.known_stats.static_eliminated+=piece.aliases;
+-        self.known_stats.avoided_lookups+=piece.aliases;
+-        self.rhs_frame_mut(cell).unwrap().completed_prefix=piece.end;
+-        if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
+         counts.add(piece.counts);
+-        Ok(counts)
++        if piece.end==position {return Ok(());}
++        // Prepared rows are the final storage, not a source-operation log.
++        // Walk the original instructions solely to preserve registration/write
++        // order. No key, hash or constructor lookup is replayed here.
++        let ops=self.program.templates[self.program.rules[rule].template].ops.clone();
++        let aliases=self.program.known_results.static_skip[rule].clone();
++        counts.code_references+=2;
++        let mut rows=piece.rows.into_iter();
++        let outcome=(|| {
++            for operation in position..piece.end {
++                counts.commit_steps+=1;
++                if !self.known_stats.elide_static(Some(aliases.as_slice()),operation) {match &ops[operation] {
++                    Op::Copy(..)=>(),
++                    Op::Set(..)=> {
++                        counts.source_writes+=1;
++                        (RhsFrame{cell,receipts}).execute(self,operation,&ops[operation],source)?;
++                    },
++                    Op::Let(_,Call::Table(_),_)=> {
++                        self.stats.constructor_requests+=1;
++                        if rows.as_slice().first().is_some_and(|r|r.operation==operation) {
++                            let row=rows.next().unwrap();
++                            self.activate_fields(FactRef{cell,op:operation as u32},row.table,row.fields,row.hash,false)?;
++                            counts.committed_rows+=1;
++                        } else {self.stats.constructor_reused+=1;counts.committed_reuses+=1;}
++                    },
++                    _=>unreachable!("checked local construction region"),
++                }}
++                self.rhs_frame_mut(cell).unwrap().completed_prefix=operation+1;
++            }
++            Ok(())
++        })();
++        counts.discarded_rows+=rows.len() as u64;
++        if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
++        outcome
+     }
+ }
+
+@@ -323,7 +365,8 @@ mod tests {
+             let mut g=graph();let (cell,_,mut window)=start(&mut g);
+             let pool=(workers!=0).then(||rayon::ThreadPoolBuilder::new().num_threads(workers).build().unwrap());
+             let mut receipts=Effects::default();let reads=g.key_lookup_calls.get();
+-            let counts=g.complete_local_births(0,cell,&mut window,&mut receipts.writer(),4,pool.as_ref(),1).unwrap();
++            let mut counts=Counts::default();
++            g.complete_local_births(0,cell,&mut window,&mut receipts,4,pool.as_ref(),1,None,&mut counts).unwrap();
+             assert_eq!((counts.local_births,counts.local_reuses,counts.committed_rows),(2,1,2));
+             assert_eq!(counts.worker_operations,if workers==0 {0}else{3});
+             assert_eq!(counts.pending_growths,0,"small local pieces use inline row handles");
+@@ -344,7 +387,8 @@ mod tests {
+             let v=g.construct(foreign,0,0,&[Arg::Slot(0)],1).unwrap();
+             if union {g.enqueue_union(u,Value::Eq(100)).unwrap();g.repair().unwrap();}
+             let reads=g.key_lookup_calls.get();let facts=g.stats.logical_facts_created;
+-            let counts=g.complete_local_births(0,cell,&mut window,&mut Effects::default().writer(),4,None,1).unwrap();
++            let mut counts=Counts::default();
++            g.complete_local_births(0,cell,&mut window,&mut Effects::default(),4,None,1,None,&mut counts).unwrap();
+             assert_eq!(counts.invalidated,1);assert!(window.is_none());
+             assert_eq!(g.key_lookup_calls.get(),reads);assert_eq!(g.stats.logical_facts_created,facts);
+             assert_eq!(g.rhs_frame(cell).unwrap().completed_prefix,1);
+diff --git a/engine/cell-runtime/src/runtime.rs b/engine/cell-runtime/src/runtime.rs
+index 65268259..c4268b1c 100644
+--- a/engine/cell-runtime/src/runtime.rs
++++ b/engine/cell-runtime/src/runtime.rs
+@@ -3258,14 +3258,14 @@ impl Executor {
+             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
+         #[cfg(feature = "sparse-cells")]
+         if let Some(execution) = &self.cell_execution {
+-            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v1",
++            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v2",
+                 "rules":self.graph.program.executions.iter().filter(|p|p.births.is_some()).count(),
+                 "sites":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.sites()).sum::<usize>(),
+                 "compiled_payload_bytes":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.storage_bytes()).sum::<usize>(),
+                 "window_bytes":std::mem::size_of::<Option<crate::graph::cell_births::Window>>(),
+                 "pending_row_bytes":crate::graph::cell_births::record_bytes(),
+                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
+-                "scope":"canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
++                "scope":"fresh canonical construction across proven scalar writes; workers build actual rows and source commits original rows/writes in order",
+                 "independent_scheduling":false});
+             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
+                 "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
+diff --git a/engine/cell-runtime/src/runtime_cell.rs b/engine/cell-runtime/src/runtime_cell.rs
+index 8d4f0d57..a837e67d 100644
+--- a/engine/cell-runtime/src/runtime_cell.rs
++++ b/engine/cell-runtime/src/runtime_cell.rs
+@@ -89,14 +89,18 @@ impl Executor {
+                 #[cfg(not(feature = "iterative-bake"))]
+                 let stop=execution.ops.len();
+                 let before=Work::read(&self.graph);
++                let mut counts=crate::graph::cell_births::Counts::default();
++                #[cfg(feature = "view-consumers")]
++                let source=execution.view_source;
++                #[cfg(not(feature = "view-consumers"))]
++                let source=None;
+                 let result=self.graph.complete_local_births(rid,cell,&mut execution.births,
+-                    &mut execution.effects.writer(),stop,
+-                    self.query_workers.as_ref().and_then(|w|w.execution_pool()),runtime.grain);
++                    &mut execution.effects,stop,
++                    self.query_workers.as_ref().and_then(|w|w.execution_pool()),runtime.grain,source,&mut counts);
+                 execution.work.add_since(&self.graph,before);
+-                match result {
+-                    Ok(counts)=>runtime.counts.births.add(counts),
+-                    Err(error)=>{execution.phase=Phase::Failed;return Err(error);}
+-                }
++                runtime.counts.boundaries[2]+=counts.source_writes;
++                runtime.counts.births.add(counts);
++                if let Err(error)=result {execution.phase=Phase::Failed;return Err(error);}
+                 if self.graph.rhs_frame(cell).unwrap().completed_prefix!=position {continue;}
+             }
+             #[cfg(feature = "sparse-cells")]
+diff --git a/tools/cell-compiler/src/work_credit.rs b/tools/cell-compiler/src/work_credit.rs
+index 82e05b7c..e9e73c89 100644
+--- a/tools/cell-compiler/src/work_credit.rs
++++ b/tools/cell-compiler/src/work_credit.rs
+@@ -175,15 +175,24 @@ impl Work {
+         } else { 0 };
+         work.insert(key.into(),value);
+         let local_births=match report["cell_execution"].get("local_construction") {
+-            None=>false,
+-            Some(v) if v["schema"]=="cell-local-births/v1"=>true,
++            None=>0,
++            Some(v) if v["schema"]=="cell-local-births/v1"=>1,
++            Some(v) if v["schema"]=="cell-local-births/v2"=>2,
+             _=>return Err("unknown Cell local construction accounting".into()),
+         };
+         for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
+             "candidate_ranges","candidate_probes","field_checks","identity_checks","hashes","row_fields",
+             "pending_growths","value_writes","slot_growths","worker_batches"] {
+             let key=format!("cell_execution/runtime/stats/births/{field}");
+-            let value=if local_births {
++            let value=if local_births>0 {
++                report.pointer(&format!("/{key}")).and_then(J::as_u64)
++                    .ok_or_else(||format!("missing local construction work {key}"))?
++            } else {0};
++            work.insert(key,value);
++        }
++        for field in ["commit_steps","code_references"] {
++            let key=format!("cell_execution/runtime/stats/births/{field}");
++            let value=if local_births>=2 {
+                 report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                     .ok_or_else(||format!("missing local construction work {key}"))?
+             } else {0};
+@@ -637,6 +646,8 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
+         "cell_execution/runtime/stats/births/value_writes",
+         "cell_execution/runtime/stats/births/slot_growths",
+         "cell_execution/runtime/stats/births/worker_batches",
++        "cell_execution/runtime/stats/births/commit_steps",
++        "cell_execution/runtime/stats/births/code_references",
+         "stage_spine/stats/prepared_effect_buffer_moves",
+         "stage_spine/stats/prepared_effect_spares_released",
+         "stage_spine/stats/prepared_effect_joint_positions", "stage_spine/stats/prepared_effect_joint_reads",
+@@ -674,7 +685,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
+     coverage["query_workers"]["matched"]["execution"]["operations"] = u64::MAX.into();
+     coverage["query_workers"]["stats"]["execution"]["later_operations"] = u64::MAX.into();
+     assert_eq!(Work::read(&coverage).unwrap(), work, "subsets do not earn or charge work twice");
+-    for field in ["local_births", "local_reuses", "committed_rows", "worker_operations"] {
++    for field in ["local_births", "local_reuses", "committed_rows", "committed_reuses", "worker_operations", "source_writes"] {
+         coverage["cell_execution"]["runtime"]["stats"]["births"][field]=u64::MAX.into();
+     }
+     assert_eq!(Work::read(&coverage).unwrap(),work,"local outcomes do not earn credit twice");
+diff --git a/tools/cell-compiler/tests/cell_execution.rs b/tools/cell-compiler/tests/cell_execution.rs
+index 90a14f81..5736ecfd 100644
+--- a/tools/cell-compiler/tests/cell_execution.rs
++++ b/tools/cell-compiler/tests/cell_execution.rs
+@@ -87,7 +87,7 @@ fn new_constructor_roots_complete_local_cells_and_publish_actual_results() {
+ }
+
+ #[test]
+-fn shared_effects_cut_local_birth_proofs_and_later_failure_preserves_committed_rows() {
++fn scalar_writes_preserve_local_birth_proofs_and_later_failure_preserves_committed_rows() {
+     for fail in [false,true] {
+         let tail=if fail {"(panic \"after local construction\")"} else {"(set (Out (H b)) n)"};
+         let source=format!(r#"
+@@ -106,12 +106,80 @@ fn shared_effects_cut_local_birth_proofs_and_later_failure_preserves_committed_r
+             assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+             if !fail {same(&control,&candidate);}
+             let r=candidate.report();
+-            assert_eq!(r["cell_execution"]["runtime"]["stats"]["births"]["local_births"],if fail {1}else{2});
++            assert_eq!(r["cell_execution"]["runtime"]["stats"]["births"]["local_births"],if fail {2}else{4});
+             assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+         }
+     }
+ }
+
++#[test]
++fn local_rows_cross_scalar_writes_but_commit_at_the_original_failure_boundary() {
++    for fail in [false,true] {
++        let merge=if fail {":merge (/ new (- old old))"} else {":merge new"};
++        let source=format!(r#"
++(datatype E (N i64) (F E) (G E) (H E) (Seen E))
++(function Out (E) i64 {merge}) (ruleset step) (ruleset next)
++(rule ((= x (N n))) ((let a (F x)) (let b (G a))
++ (set (Out x) 1) (let c (H b)) (set (Out c) n)) :ruleset step)
++(rule ((= n (Out (H x)))) ((Seen x)) :ruleset next)
++(N 1) (set (Out (N 1)) 0)
++(run-schedule (seq (run step) (run next)))
++"#);
++        let mut control=executor(&source,4);let expected=control.execute();
++        assert_eq!(expected.is_err(),fail);
++        for workers in [1,4] {
++            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
++            assert_eq!(candidate.execute(),expected);
++            assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
++            let r=candidate.report();let counts=&r["cell_execution"]["runtime"]["stats"]["births"];
++            assert_eq!(counts["local_births"],2,"both rows computed in one local piece");
++            assert_eq!(counts["committed_rows"],if fail {1}else{2});
++            assert_eq!(counts["discarded_rows"],if fail {1}else{0});
++            assert_eq!(counts["source_writes"],1);
++            if workers>1 {assert_eq!(counts["worker_batches"],1);}
++            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
++            assert_eq!(candidate.graph.stats.function_updates,control.graph.stats.function_updates);
++            if !fail {same(&control,&candidate);}
++        }
++    }
++}
++
++#[test]
++fn graph_producing_merges_keep_their_local_construction_boundary() {
++    let source=r#"
++(datatype E (N i64) (F E) (G E) (H E))
++(function Out (E) E :merge (G new)) (ruleset step)
++(rule ((= x (N n))) ((let a (F x)) (set (Out x) a) (let b (G a)) (H b)) :ruleset step)
++(N 1) (set (Out (N 1)) (N 2))
++(run-schedule (run step))
++"#;
++    let mut control=executor(source,4);control.execute().unwrap();
++    let mut candidate=executor(source,4);candidate.use_cell_execution(1).unwrap();
++    candidate.execute().unwrap();same(&control,&candidate);
++    assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
++    assert_eq!(candidate.report()["cell_execution"]["runtime"]["stats"]["births"]["source_writes"],0);
++}
++
++#[test]
++fn scalar_output_does_not_hide_a_constructor_inside_the_merge() {
++    let source=r#"
++(datatype E (N i64) (F E) (G E) (H E))
++(sort ESet (Set E)) (constructor Bag (ESet) E)
++(function Out (E) i64 :merge (set-length (set-of (G (F (N new))))))
++(ruleset step)
++(rule ((= x (N n))) ((let a (F x)) (set (Out x) n) (let b (G a)) (H b)) :ruleset step)
++(N 1) (set (Out (N 1)) 0)
++(run-schedule (run step))
++"#;
++    egglog::EGraph::default().parse_and_run_program(None,source).unwrap();
++    let mut control=executor(source,4);control.execute().unwrap();
++    let mut candidate=executor(source,4);candidate.use_cell_execution(1).unwrap();
++    candidate.execute().unwrap();same(&control,&candidate);
++    assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
++    assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
++    assert_eq!(candidate.report()["cell_execution"]["runtime"]["stats"]["births"]["source_writes"],0);
++}
++
+ #[test]
+ fn local_constructor_candidates_compare_actual_bound_values_and_export_the_returned_witness() {
+     let seed=(0..16).map(|n|format!("(set (Left (N {n})) {n}) (set (Right (N {n})) {n})"))

@@ -86,6 +86,14 @@ overall objective complete until all applicable items above are proven.
 
 ## Current state
 
+- A tested extension across scalar writes was [rejected](../benchmarks/cell-local-writes/README.md):
+  both complete workloads have zero coverage, unchanged worker pieces/global
+  queries, and additional commit-loop costs. The patch and passing semantic
+  evidence are retained for reproduction; it is absent from runtime code.
+  The next required change is the public-prefix/unique-continuation ownership
+  contract. Retained parent reads still reconstruct producer slots through
+  `fact_column`, and workers still borrow graph state. A job wrapper or more
+  eligible instructions cannot substitute for removing those dependencies.
 - Workers now construct certified fresh local suffixes in the existing Cell,
   returning actual row allocations for source-ordered registration; see
   [local construction evidence](../benchmarks/cell-local-births/README.md).
