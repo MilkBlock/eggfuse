@@ -113,3 +113,104 @@ cargo cell-compile --case sum-bits --output out/cell-fact-lease/readme-program
 cargo cell-run --program out/cell-fact-lease/readme-program/program.json --output out/cell-fact-lease/readme-run
 cargo cell-bench --program out/cell-fact-lease/readme-program/program.json --repeat 1
 ```
+
+## Periodic timing checkpoint
+
+Runtime `916ebf7c` is frozen before this campaign. Four revisions are remeasured
+with the same programs, catalogs, normal release features and flags, using both
+one and four workers. Each lane has one warmup followed by five sum-bits or three
+Raytrace samples in a recorded shuffled order. All 80 executions have exact
+final hashes, ordered Run-summary hashes and logical effects; no sample is
+discarded or replaced. The separate stack profiles are not timing samples.
+
+| Inference median | Historical `8335929d`, 1 / 4 workers | Pre-regression `c27cbcf1`, 1 / 4 | Last checkpoint `7b13f259`, 1 / 4 | Current `916ebf7c`, 1 / 4 |
+| --- | ---: | ---: | ---: | ---: |
+| sum-bits, ms | 18.409 / 22.222 | 19.709 / 22.356 | 18.988 / 23.451 | 19.304 / 22.207 |
+| Raytrace, s | 5.705 / 5.153 | 5.745 / 5.092 | 5.884 / 4.933 | 5.870 / 4.888 |
+
+Current four-worker Raytrace is 4.01% faster than the pre-regression control in
+this campaign; all three iteration-paired comparisons improve (paired median
+-4.06%). Against the last five-change checkpoint its median improves only
+0.93%, while the paired median is **0.35% slower** and two of three pairs are
+slower. Thus this campaign does not establish a stable additional speedup from
+these five registration changes, or isolate the effect of the final fact lease.
+
+sum-bits has a 0.67% lower four-worker median than the pre-regression control,
+but its paired median is **2.66% slower**, with four of five pairs slower. Its
+current samples span 21.144–26.523 ms, versus 21.632–23.166 ms for that control.
+The apparent median advantage is below the variation. Against the historical
+configuration the medians differ by only 0.07%, while the paired median is 4.70%
+slower. **A stable two-workload speed improvement remains unproven.** Do not
+compare prior campaigns' quoted 24.77 ms / 5.389 s with this campaign's current
+numbers to claim a larger recovery.
+
+Current Raytrace scales only 1.201x from one to four workers, versus 1.128x for
+the pre-regression control and 1.193x at the last checkpoint. Current one-worker
+Raytrace is 2.19% slower than the pre-regression control. sum-bits remains slower
+with four workers than with one. Four-worker Raytrace process CPU/wall averages
+about 1.25 cores versus control 1.21; this includes load/export and is not an
+inference-only utilization measurement.
+
+| Four-worker Raytrace phase median, seconds | Pre-regression | Last checkpoint | Current |
+| --- | ---: | ---: | ---: |
+| Search | 1.818 | 1.704 | 1.709 |
+| Query-index update / publication | 1.039 | 0.994 | 0.996 |
+| RHS | 1.741 | 1.753 | 1.706 |
+| Repair | 0.471 | 0.461 | 0.471 |
+
+The RHS phase median decreases about 2.6% against the last checkpoint; other
+major phase medians do not improve. Phase medians need not sum to median total
+time and do not isolate synchronization overhead. This is limited evidence,
+not proof that event counts, buffer savings or more workers caused each change.
+
+## Remaining waits and next scope
+
+Separate three-second, two-millisecond-interval samples cover inference with
+progress logging disabled. The candidate has 901 main-thread inference samples;
+the control has 900. Inclusive stack counts overlap and the partial windows are
+not CPU-utilization measurements.
+
+| Sampled main-thread residence | Pre-regression | Current |
+| --- | ---: | ---: |
+| Condition waits | 18.4% | 22.2% |
+| Entry batch scheduling, including callbacks | 10.9% | 8.1% |
+| Query finishing, including waits | 14.0% | 14.1% |
+| Finished-table publication, including waits | 21.7% | 21.3% |
+| Repair | 12.7% | 12.3% |
+
+Worker condition-wait fractions remain 75.8%–82.2%, predominantly pool-idle
+contexts, versus control 78.8%–82.7%. Candidate source waits include 84 query,
+92 publication, 12 scalar-write and 12 other samples. The remaining waits and
+source work still leave most workers idle. More early-completion events have
+not demonstrated that this broad problem is solved.
+
+`start_cell_execution`, ordinary constructor insertion, subscription maintenance
+and collision repair remain visible on the source. The frozen work execution
+creates 820,439 logical facts, while this registration path installs 65,630 of
+them (about 8%). It covers only a minority of the remaining source graph writes.
+Making its fragment buffers smaller again is not a sufficient strategy for the
+1.706-second RHS phase.
+
+The next structural scope should move the first actual constructor-result
+decision and its continuation into a Cell owner where the compiled snapshot/
+effect proof permits it. A worker should keep using that Cell's actual slots,
+validate the winning result, invalidate duplicate private work, and continue
+without returning each constructor to `resolve_cell_boundary`. This requires
+explicit ownership of the relevant exact constructor index and proof of when
+its Eq inputs remain valid. Shared effects, source error order, actual aliases
+and original Run visibility remain mandatory. This checkpoint does not claim
+that takeover is implemented. Small Runs also still require dispatch costs to
+be matched to real compiled work.
+
+The campaign's 66 separate process snapshots found no compiler process. Other
+desktop activity and shorter unsampled work remain possible. Raw samples,
+execution order, comparisons, profile data and hashes are retained in
+[timing-results.json](timing-results.json). Profile state exports were losslessly
+gzipped only after their exact hashes were verified, to limit local disk usage.
+
+```sh
+python3 benchmarks/cell-fact-lease/campaign.py ARTIFACT_ROOT
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-fact-lease/ray-manifest.json out/cell-fact-lease/timing-ray/samples.json out/cell-fact-lease/profile-control4 --lane control4 --duration 3 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-fact-lease/ray-manifest.json out/cell-fact-lease/timing-ray/samples.json out/cell-fact-lease/profile-candidate4 --lane candidate4 --duration 3 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/cell-fact-lease/timing_check.py out/cell-fact-lease benchmarks/cell-fact-lease/timing-results.json
+```

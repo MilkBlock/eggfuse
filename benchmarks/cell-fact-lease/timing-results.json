@@ -1,0 +1,5279 @@
+{
+  "scope": "actual standalone Cell CPU, not native egglog performance",
+  "runtime_revisions": {
+    "historical": "8335929d",
+    "checkpoint": "7b13f259",
+    "control": "c27cbcf1",
+    "candidate": "916ebf7c"
+  },
+  "limits": "All samples and warmups retained. Ambient load and within-lane variation are material; median differences are not established causal speedups. CPU/wall includes load and export, not inference-only utilization. Profiles are separate diagnostic executions, not timing samples.",
+  "work_evidence_sha256": "a7a6b2c7df4cbc3b22eb2e50b11d183dccf3951498f15564bea6f77f14655789",
+  "workloads": {
+    "sum": {
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec",
+      "runs": 1428,
+      "samples_file_sha256": "c410134778d5f7e3d0cb49370e7db97ce1319a207b71281339938482d2569a0e",
+      "manifest": {
+        "lanes": {
+          "historical1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-events/control-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "historical4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-events/control-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "checkpoint1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-event-payload/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "checkpoint4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-event-payload/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "control1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-write-owner/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "control4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-write-owner/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "candidate1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "candidate4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/candidate-runtime",
+            "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          }
+        }
+      },
+      "repeat": 5,
+      "warmups": 1,
+      "seed": 20261109,
+      "started_at_utc": "2026-11-12T21:07:49.932300+00:00",
+      "finished_at_utc": "2026-11-12T21:07:58.795122+00:00",
+      "execution_order": [
+        {
+          "iteration": -1,
+          "lanes": [
+            "historical1",
+            "candidate1",
+            "control1",
+            "control4",
+            "historical4",
+            "candidate4",
+            "checkpoint4",
+            "checkpoint1"
+          ]
+        },
+        {
+          "iteration": 0,
+          "lanes": [
+            "candidate4",
+            "control1",
+            "control4",
+            "historical4",
+            "candidate1",
+            "checkpoint4",
+            "historical1",
+            "checkpoint1"
+          ]
+        },
+        {
+          "iteration": 1,
+          "lanes": [
+            "checkpoint4",
+            "candidate4",
+            "historical1",
+            "control1",
+            "checkpoint1",
+            "historical4",
+            "candidate1",
+            "control4"
+          ]
+        },
+        {
+          "iteration": 2,
+          "lanes": [
+            "control4",
+            "historical1",
+            "checkpoint1",
+            "candidate4",
+            "control1",
+            "historical4",
+            "checkpoint4",
+            "candidate1"
+          ]
+        },
+        {
+          "iteration": 3,
+          "lanes": [
+            "historical1",
+            "candidate4",
+            "control1",
+            "candidate1",
+            "checkpoint1",
+            "control4",
+            "historical4",
+            "checkpoint4"
+          ]
+        },
+        {
+          "iteration": 4,
+          "lanes": [
+            "control1",
+            "historical4",
+            "historical1",
+            "checkpoint4",
+            "control4",
+            "candidate1",
+            "candidate4",
+            "checkpoint1"
+          ]
+        }
+      ],
+      "lanes": {
+        "historical1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "a4f4552bafbde462b014477eff640050bb952799237b1b8a054f55a126753215",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.017735,
+              "process_wall_seconds": 0.11999949999153614,
+              "process_user_seconds": 0.10270200000000007,
+              "process_system_seconds": 0.014631000000000005,
+              "phases": {
+                "delivery_gc": 0.000145786,
+                "query_update": 0.002795123,
+                "repair": 0.001176989,
+                "rhs": 0.003959213,
+                "search": 0.009379161
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.019251709,
+              "process_wall_seconds": 0.12725587497698143,
+              "process_user_seconds": 0.10989599999999977,
+              "process_system_seconds": 0.014630000000000032,
+              "phases": {
+                "delivery_gc": 0.000157718,
+                "query_update": 0.00301729,
+                "repair": 0.001277415,
+                "rhs": 0.00436859,
+                "search": 0.010131981
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.0176875,
+              "process_wall_seconds": 0.323582167038694,
+              "process_user_seconds": 0.10252900000000009,
+              "process_system_seconds": 0.04823499999999992,
+              "phases": {
+                "delivery_gc": 0.000144799,
+                "query_update": 0.002775065,
+                "repair": 0.001171593,
+                "rhs": 0.003983922,
+                "search": 0.009337545
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.018904875,
+              "process_wall_seconds": 0.12797566602239385,
+              "process_user_seconds": 0.10924899999999971,
+              "process_system_seconds": 0.015480999999999967,
+              "phases": {
+                "delivery_gc": 0.000153322,
+                "query_update": 0.002959807,
+                "repair": 0.001244299,
+                "rhs": 0.004253193,
+                "search": 0.009999131
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.0184085,
+              "process_wall_seconds": 0.1275888750096783,
+              "process_user_seconds": 0.10790399999999956,
+              "process_system_seconds": 0.016589999999999883,
+              "phases": {
+                "delivery_gc": 0.000151141,
+                "query_update": 0.002883698,
+                "repair": 0.001209241,
+                "rhs": 0.004106773,
+                "search": 0.009770432
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.018314459,
+              "process_wall_seconds": 0.1281074169673957,
+              "process_user_seconds": 0.104901,
+              "process_system_seconds": 0.016749,
+              "phases": {
+                "delivery_gc": 0.0001493,
+                "query_update": 0.002867363,
+                "repair": 0.001235916,
+                "rhs": 0.004131923,
+                "search": 0.009657087
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "inference_median_seconds": 0.0184085,
+          "inference_range_seconds": [
+            0.0176875,
+            0.019251709
+          ],
+          "whole_process_cores_median": 0.9757433788059962
+        },
+        "historical4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "a4f4552bafbde462b014477eff640050bb952799237b1b8a054f55a126753215",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.020723917,
+              "process_wall_seconds": 0.12525350000942126,
+              "process_user_seconds": 0.10988799999999999,
+              "process_system_seconds": 0.02185300000000001,
+              "phases": {
+                "delivery_gc": 0.000174245,
+                "query_update": 0.003072795,
+                "repair": 0.001222465,
+                "rhs": 0.005606012,
+                "search": 0.010341257
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.02095675,
+              "process_wall_seconds": 0.1322678750148043,
+              "process_user_seconds": 0.11114900000000016,
+              "process_system_seconds": 0.024912000000000045,
+              "phases": {
+                "delivery_gc": 0.000177544,
+                "query_update": 0.00310161,
+                "repair": 0.00124572,
+                "rhs": 0.005669705,
+                "search": 0.01045234
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.022297916,
+              "process_wall_seconds": 0.12979949999134988,
+              "process_user_seconds": 0.11621499999999996,
+              "process_system_seconds": 0.020603000000000038,
+              "phases": {
+                "delivery_gc": 0.000195216,
+                "query_update": 0.003294987,
+                "repair": 0.001354087,
+                "rhs": 0.005828614,
+                "search": 0.011289607
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.022221916,
+              "process_wall_seconds": 0.12895595899317414,
+              "process_user_seconds": 0.11450799999999983,
+              "process_system_seconds": 0.021283000000000052,
+              "phases": {
+                "delivery_gc": 0.000187263,
+                "query_update": 0.003278415,
+                "repair": 0.00134063,
+                "rhs": 0.005849253,
+                "search": 0.011233061
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.022854792,
+              "process_wall_seconds": 0.13681479101069272,
+              "process_user_seconds": 0.11616800000000005,
+              "process_system_seconds": 0.023839000000000166,
+              "phases": {
+                "delivery_gc": 0.000189714,
+                "query_update": 0.003354129,
+                "repair": 0.001367755,
+                "rhs": 0.006018958,
+                "search": 0.011581513
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.022561334,
+              "process_wall_seconds": 0.12424670800101012,
+              "process_user_seconds": 0.11155000000000004,
+              "process_system_seconds": 0.02097099999999999,
+              "phases": {
+                "delivery_gc": 0.000191389,
+                "query_update": 0.003320621,
+                "repair": 0.0013294070000000001,
+                "rhs": 0.006018176,
+                "search": 0.011326038
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "inference_median_seconds": 0.022221916,
+          "inference_range_seconds": [
+            0.020723917,
+            0.022854792
+          ],
+          "whole_process_cores_median": 1.0517949597423686
+        },
+        "checkpoint1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "c58037ac5be660cdd62f9a5285a1ec5d2d0add3149a46aa179b9fe112d2f1ea9",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.018130375,
+              "process_wall_seconds": 0.13039454200770706,
+              "process_user_seconds": 0.10478100000000001,
+              "process_system_seconds": 0.018859999999999988,
+              "phases": {
+                "delivery_gc": 0.000146042,
+                "query_update": 0.002744126,
+                "repair": 0.001155126,
+                "rhs": 0.003944998,
+                "search": 0.009865857
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.018987917,
+              "process_wall_seconds": 0.35434850002638996,
+              "process_user_seconds": 0.1081129999999999,
+              "process_system_seconds": 0.057383999999999935,
+              "phases": {
+                "delivery_gc": 0.000155128,
+                "query_update": 0.002869256,
+                "repair": 0.001214572,
+                "rhs": 0.004153225,
+                "search": 0.010311299
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.018236625,
+              "process_wall_seconds": 0.14396374998614192,
+              "process_user_seconds": 0.10360399999999981,
+              "process_system_seconds": 0.017682000000000087,
+              "phases": {
+                "delivery_gc": 0.000148099,
+                "query_update": 0.002773832,
+                "repair": 0.001173637,
+                "rhs": 0.003965163,
+                "search": 0.009908568
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.019331208,
+              "process_wall_seconds": 0.1259595419978723,
+              "process_user_seconds": 0.10767299999999969,
+              "process_system_seconds": 0.015344999999999942,
+              "phases": {
+                "delivery_gc": 0.000154996,
+                "query_update": 0.002946423,
+                "repair": 0.00123899,
+                "rhs": 0.004199804,
+                "search": 0.010472213
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.020030875,
+              "process_wall_seconds": 0.12955154199153185,
+              "process_user_seconds": 0.11086899999999922,
+              "process_system_seconds": 0.015635000000000066,
+              "phases": {
+                "delivery_gc": 0.000158057,
+                "query_update": 0.003042366,
+                "repair": 0.001264496,
+                "rhs": 0.004332575,
+                "search": 0.010889871
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.018350541,
+              "process_wall_seconds": 0.12188475002767518,
+              "process_user_seconds": 0.10369499999999998,
+              "process_system_seconds": 0.015648999999999996,
+              "phases": {
+                "delivery_gc": 0.0001494,
+                "query_update": 0.002765931,
+                "repair": 0.0011709,
+                "rhs": 0.004000678,
+                "search": 0.009983904
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "inference_median_seconds": 0.018987917,
+          "inference_range_seconds": [
+            0.018130375,
+            0.020030875
+          ],
+          "whole_process_cores_median": 0.9482068658417628
+        },
+        "checkpoint4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "c58037ac5be660cdd62f9a5285a1ec5d2d0add3149a46aa179b9fe112d2f1ea9",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.021174667,
+              "process_wall_seconds": 0.12170716596301645,
+              "process_user_seconds": 0.10913899999999988,
+              "process_system_seconds": 0.021109000000000044,
+              "phases": {
+                "delivery_gc": 0.000176297,
+                "query_update": 0.003055622,
+                "repair": 0.0012274270000000001,
+                "rhs": 0.005655836,
+                "search": 0.010758485
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.022898542,
+              "process_wall_seconds": 0.33472858398454264,
+              "process_user_seconds": 0.115753,
+              "process_system_seconds": 0.05669399999999997,
+              "phases": {
+                "delivery_gc": 0.000185381,
+                "query_update": 0.003273746,
+                "repair": 0.001303292,
+                "rhs": 0.006066672,
+                "search": 0.011720117
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.0243615,
+              "process_wall_seconds": 0.13522312499117106,
+              "process_user_seconds": 0.1209340000000001,
+              "process_system_seconds": 0.022194000000000047,
+              "phases": {
+                "delivery_gc": 0.000199171,
+                "query_update": 0.003579661,
+                "repair": 0.001467064,
+                "rhs": 0.006273993,
+                "search": 0.012483524
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.024011167,
+              "process_wall_seconds": 0.1299353340291418,
+              "process_user_seconds": 0.11608399999999985,
+              "process_system_seconds": 0.023871999999999893,
+              "phases": {
+                "delivery_gc": 0.000199433,
+                "query_update": 0.003412948,
+                "repair": 0.001355752,
+                "rhs": 0.006090217,
+                "search": 0.012604558
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.02345125,
+              "process_wall_seconds": 0.13119708403246477,
+              "process_user_seconds": 0.11682000000000059,
+              "process_system_seconds": 0.024046000000000012,
+              "phases": {
+                "delivery_gc": 0.000191577,
+                "query_update": 0.003372705,
+                "repair": 0.001405447,
+                "rhs": 0.006214345,
+                "search": 0.01192652
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.022168542,
+              "process_wall_seconds": 0.13126175000797957,
+              "process_user_seconds": 0.11100399999999999,
+              "process_system_seconds": 0.025962999999999986,
+              "phases": {
+                "delivery_gc": 0.00018317,
+                "query_update": 0.003141476,
+                "repair": 0.001257875,
+                "rhs": 0.005923383,
+                "search": 0.011309902
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "inference_median_seconds": 0.02345125,
+          "inference_range_seconds": [
+            0.021174667,
+            0.0243615
+          ],
+          "whole_process_cores_median": 1.0701752766109007
+        },
+        "control1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "71b21ab9065d323c560af33f123fe26dfc6e4dca160f12a5099b362ac789ce9e",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.018657,
+              "process_wall_seconds": 0.12112024996895343,
+              "process_user_seconds": 0.10376800000000008,
+              "process_system_seconds": 0.014732999999999996,
+              "phases": {
+                "delivery_gc": 0.000146125,
+                "query_update": 0.002752506,
+                "repair": 0.00116265,
+                "rhs": 0.003941026,
+                "search": 0.010375135
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.020303375,
+              "process_wall_seconds": 0.12904304102994502,
+              "process_user_seconds": 0.10984900000000009,
+              "process_system_seconds": 0.014998999999999985,
+              "phases": {
+                "delivery_gc": 0.000159628,
+                "query_update": 0.003015672,
+                "repair": 0.001242268,
+                "rhs": 0.004281477,
+                "search": 0.011318788
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.019634625,
+              "process_wall_seconds": 0.12618587497854605,
+              "process_user_seconds": 0.10875999999999975,
+              "process_system_seconds": 0.014413999999999927,
+              "phases": {
+                "delivery_gc": 0.000154157,
+                "query_update": 0.002905851,
+                "repair": 0.001221908,
+                "rhs": 0.004153784,
+                "search": 0.010912411
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.019878917,
+              "process_wall_seconds": 0.13103024999145418,
+              "process_user_seconds": 0.10894000000000004,
+              "process_system_seconds": 0.015000000000000013,
+              "phases": {
+                "delivery_gc": 0.000155161,
+                "query_update": 0.002936914,
+                "repair": 0.00122738,
+                "rhs": 0.004191037,
+                "search": 0.011065068
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.019709291,
+              "process_wall_seconds": 0.12713974999496713,
+              "process_user_seconds": 0.10735600000000023,
+              "process_system_seconds": 0.016634000000000038,
+              "phases": {
+                "delivery_gc": 0.000151112,
+                "query_update": 0.002926723,
+                "repair": 0.001227541,
+                "rhs": 0.004163126,
+                "search": 0.010950339
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.0188655,
+              "process_wall_seconds": 0.12754058395512402,
+              "process_user_seconds": 0.103775,
+              "process_system_seconds": 0.017073000000000005,
+              "phases": {
+                "delivery_gc": 0.000145263,
+                "query_update": 0.002772446,
+                "repair": 0.001189519,
+                "rhs": 0.003992077,
+                "search": 0.010500342
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "inference_median_seconds": 0.019709291,
+          "inference_range_seconds": [
+            0.018657,
+            0.020303375
+          ],
+          "whole_process_cores_median": 0.9752260800017969
+        },
+        "control4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "71b21ab9065d323c560af33f123fe26dfc6e4dca160f12a5099b362ac789ce9e",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.022356417,
+              "process_wall_seconds": 0.13128041697200388,
+              "process_user_seconds": 0.114398,
+              "process_system_seconds": 0.026404999999999984,
+              "phases": {
+                "delivery_gc": 0.000181489,
+                "query_update": 0.003119639,
+                "repair": 0.001227354,
+                "rhs": 0.005808421,
+                "search": 0.011671524
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.0218675,
+              "process_wall_seconds": 0.14135145803447813,
+              "process_user_seconds": 0.11145199999999988,
+              "process_system_seconds": 0.025098000000000065,
+              "phases": {
+                "delivery_gc": 0.000177709,
+                "query_update": 0.003068463,
+                "repair": 0.0012713310000000001,
+                "rhs": 0.005697214,
+                "search": 0.011337213
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.02163175,
+              "process_wall_seconds": 0.3388974590343423,
+              "process_user_seconds": 0.11045000000000016,
+              "process_system_seconds": 0.05898199999999998,
+              "phases": {
+                "delivery_gc": 0.000174421,
+                "query_update": 0.003053457,
+                "repair": 0.001232219,
+                "rhs": 0.005648952,
+                "search": 0.011206271
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.023107,
+              "process_wall_seconds": 0.12758945900714025,
+              "process_user_seconds": 0.11471000000000053,
+              "process_system_seconds": 0.023092,
+              "phases": {
+                "delivery_gc": 0.000184083,
+                "query_update": 0.003246695,
+                "repair": 0.0013238009999999999,
+                "rhs": 0.006001454,
+                "search": 0.012026433
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.023165833,
+              "process_wall_seconds": 0.13455324998358265,
+              "process_user_seconds": 0.11667499999999986,
+              "process_system_seconds": 0.02714900000000009,
+              "phases": {
+                "delivery_gc": 0.000187391,
+                "query_update": 0.003241865,
+                "repair": 0.001327741,
+                "rhs": 0.005843333,
+                "search": 0.012237623
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.021644083,
+              "process_wall_seconds": 0.120622165966779,
+              "process_user_seconds": 0.109346,
+              "process_system_seconds": 0.021412,
+              "phases": {
+                "delivery_gc": 0.000176822,
+                "query_update": 0.003036996,
+                "repair": 0.00123341,
+                "rhs": 0.005627756,
+                "search": 0.011253827
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "inference_median_seconds": 0.022356417,
+          "inference_range_seconds": [
+            0.02163175,
+            0.023165833
+          ],
+          "whole_process_cores_median": 1.068900231079877
+        },
+        "candidate1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "cf78397f30230e4601a237e0a80392c0633abdc2a879c8d3c5155613583de11a",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.018242125,
+              "process_wall_seconds": 0.1194818330113776,
+              "process_user_seconds": 0.10290500000000002,
+              "process_system_seconds": 0.014092999999999967,
+              "phases": {
+                "delivery_gc": 0.000146678,
+                "query_update": 0.002752628,
+                "repair": 0.001184989,
+                "rhs": 0.003949638,
+                "search": 0.00993121
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.018373083,
+              "process_wall_seconds": 0.3440922080189921,
+              "process_user_seconds": 0.10370999999999997,
+              "process_system_seconds": 0.05893599999999999,
+              "phases": {
+                "delivery_gc": 0.000145952,
+                "query_update": 0.002760883,
+                "repair": 0.001171421,
+                "rhs": 0.003985881,
+                "search": 0.010028989
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.020341833,
+              "process_wall_seconds": 0.13014929101336747,
+              "process_user_seconds": 0.11216500000000007,
+              "process_system_seconds": 0.015191999999999983,
+              "phases": {
+                "delivery_gc": 0.000158588,
+                "query_update": 0.00303144,
+                "repair": 0.001260024,
+                "rhs": 0.004383453,
+                "search": 0.011175478
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.019535334,
+              "process_wall_seconds": 0.1277519580326043,
+              "process_user_seconds": 0.10855799999999993,
+              "process_system_seconds": 0.016032000000000046,
+              "phases": {
+                "delivery_gc": 0.00016513,
+                "query_update": 0.002962166,
+                "repair": 0.001204544,
+                "rhs": 0.004171541,
+                "search": 0.010714961
+              },
+              "key_lookup_calls": 14054
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.0193035,
+              "process_wall_seconds": 0.12990808399626985,
+              "process_user_seconds": 0.10966200000000015,
+              "process_system_seconds": 0.018237999999999976,
+              "phases": {
+                "delivery_gc": 0.00015337399999999999,
+                "query_update": 0.00292179,
+                "repair": 0.001228093,
+                "rhs": 0.004149949,
+                "search": 0.010547532
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.019837417,
+              "process_wall_seconds": 0.34756283403839916,
+              "process_user_seconds": 0.10833499999999999,
+              "process_system_seconds": 0.05441399999999999,
+              "phases": {
+                "delivery_gc": 0.000152078,
+                "query_update": 0.002970345,
+                "repair": 0.001269206,
+                "rhs": 0.00427959,
+                "search": 0.010846651
+              },
+              "key_lookup_calls": 14054
+            }
+          ],
+          "inference_median_seconds": 0.0193035,
+          "inference_range_seconds": [
+            0.018242125,
+            0.020341833
+          ],
+          "whole_process_cores_median": 0.9785454765705898
+        },
+        "candidate4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "cf78397f30230e4601a237e0a80392c0633abdc2a879c8d3c5155613583de11a",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "logical_effects": {
+            "constructor_requests": 8014,
+            "constructor_reused": 4910,
+            "logical_facts_created": 3739,
+            "function_updates": 1450,
+            "union_requests": 2434,
+            "unions": 1039,
+            "bindings": 7193
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.021143792,
+              "process_wall_seconds": 0.12540108297253028,
+              "process_user_seconds": 0.11125799999999997,
+              "process_system_seconds": 0.02227900000000002,
+              "phases": {
+                "delivery_gc": 0.000173992,
+                "query_update": 0.003042529,
+                "repair": 0.001220528,
+                "rhs": 0.005613252,
+                "search": 0.010779171
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.021941792,
+              "process_wall_seconds": 0.12559987499844283,
+              "process_user_seconds": 0.11253700000000011,
+              "process_system_seconds": 0.021432000000000007,
+              "phases": {
+                "delivery_gc": 0.000182253,
+                "query_update": 0.003150714,
+                "repair": 0.001299169,
+                "rhs": 0.005849218,
+                "search": 0.011155703
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.022206917,
+              "process_wall_seconds": 0.3213883750140667,
+              "process_user_seconds": 0.1150260000000003,
+              "process_system_seconds": 0.052064,
+              "phases": {
+                "delivery_gc": 0.000184554,
+                "query_update": 0.003255687,
+                "repair": 0.001368924,
+                "rhs": 0.005706189,
+                "search": 0.011371462
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.024622333,
+              "process_wall_seconds": 0.13635270798113197,
+              "process_user_seconds": 0.12162400000000018,
+              "process_system_seconds": 0.023650999999999978,
+              "phases": {
+                "delivery_gc": 0.000210339,
+                "query_update": 0.003516638,
+                "repair": 0.00146141,
+                "rhs": 0.006357873,
+                "search": 0.012721648
+              },
+              "key_lookup_calls": 14012
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.02652325,
+              "process_wall_seconds": 0.1338985410402529,
+              "process_user_seconds": 0.11987300000000012,
+              "process_system_seconds": 0.024915999999999938,
+              "phases": {
+                "delivery_gc": 0.000228343,
+                "query_update": 0.003739077,
+                "repair": 0.001576291,
+                "rhs": 0.006859033,
+                "search": 0.013730154999999999
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.021326,
+              "process_wall_seconds": 0.12058812502073124,
+              "process_user_seconds": 0.10860099999999995,
+              "process_system_seconds": 0.020525000000000015,
+              "phases": {
+                "delivery_gc": 0.000176983,
+                "query_update": 0.003042431,
+                "repair": 0.001248698,
+                "rhs": 0.005728668,
+                "search": 0.01081976
+              },
+              "key_lookup_calls": 14012
+            }
+          ],
+          "inference_median_seconds": 0.022206917,
+          "inference_range_seconds": [
+            0.021143792,
+            0.02652325
+          ],
+          "whole_process_cores_median": 1.0654353855598
+        }
+      },
+      "candidate_comparisons": {
+        "historical": {
+          "1": {
+            "median_change_percent": 4.861884455550425,
+            "iteration_paired_change_percent": [
+              2.8594586974908465,
+              -4.563885730871997,
+              15.006829681978818,
+              3.334901711860039,
+              4.861884455550425
+            ],
+            "paired_median_change_percent": 3.334901711860039
+          },
+          "4": {
+            "median_change_percent": -0.06749643010081074,
+            "iteration_paired_change_percent": [
+              2.026040733515777,
+              4.700356686986296,
+              -0.40810540321347677,
+              10.80202535190935,
+              16.05115461125177
+            ],
+            "paired_median_change_percent": 4.700356686986296
+          }
+        },
+        "checkpoint": {
+          "1": {
+            "median_change_percent": 1.6620201152132807,
+            "iteration_paired_change_percent": [
+              0.6163689388664073,
+              -3.238027636206764,
+              11.543846517653344,
+              1.0559402185316147,
+              -3.631269228129075
+            ],
+            "paired_median_change_percent": 0.6163689388664073
+          },
+          "4": {
+            "median_change_percent": -5.3060412557966,
+            "iteration_paired_change_percent": [
+              -0.14581102975550486,
+              -4.178213617268733,
+              -8.844213205262408,
+              2.545340674195473,
+              13.099514951228631
+            ],
+            "paired_median_change_percent": -0.14581102975550486
+          }
+        },
+        "control": {
+          "1": {
+            "median_change_percent": -2.058881773068344,
+            "iteration_paired_change_percent": [
+              -2.2236961998177596,
+              -9.50724694785966,
+              3.601841135239403,
+              -1.7283788649049558,
+              -2.058881773068344
+            ],
+            "paired_median_change_percent": -2.058881773068344
+          },
+          "4": {
+            "median_change_percent": -0.6687118065475395,
+            "iteration_paired_change_percent": [
+              -5.424057889061551,
+              0.3397370527037813,
+              2.6589018456666613,
+              6.5578958757086525,
+              14.492969020367209
+            ],
+            "paired_median_change_percent": 2.6589018456666613
+          }
+        }
+      },
+      "four_worker_speedup_over_one": {
+        "historical": 0.8283939152681524,
+        "checkpoint": 0.8096761153456639,
+        "control": 0.8815943538716423,
+        "candidate": 0.8692561871600638
+      }
+    },
+    "ray": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "samples_file_sha256": "d4762835c7caa1878c694fe73e0051ae71ec0a3c2cccf4ca141e6c159224a00c",
+      "manifest": {
+        "lanes": {
+          "historical1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-events/control-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "historical4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-events/control-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "checkpoint1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-event-payload/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "checkpoint4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-event-payload/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "control1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-write-owner/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "control4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-write-owner/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "candidate1": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "1",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          },
+          "candidate4": {
+            "runtime": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/candidate-runtime",
+            "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+            "args": [
+              "--repair-ports",
+              "--entry-publications",
+              "--cell-absorption",
+              "--query-workers",
+              "4",
+              "--parallel-residuals",
+              "--parallel-publication",
+              "--cell-execution-grain",
+              "1"
+            ]
+          }
+        }
+      },
+      "repeat": 3,
+      "warmups": 1,
+      "seed": 20261109,
+      "started_at_utc": "2026-11-12T21:07:58.856906+00:00",
+      "finished_at_utc": "2026-11-12T21:13:22.591526+00:00",
+      "execution_order": [
+        {
+          "iteration": -1,
+          "lanes": [
+            "historical1",
+            "candidate1",
+            "control1",
+            "control4",
+            "historical4",
+            "candidate4",
+            "checkpoint4",
+            "checkpoint1"
+          ]
+        },
+        {
+          "iteration": 0,
+          "lanes": [
+            "candidate4",
+            "control1",
+            "control4",
+            "historical4",
+            "candidate1",
+            "checkpoint4",
+            "historical1",
+            "checkpoint1"
+          ]
+        },
+        {
+          "iteration": 1,
+          "lanes": [
+            "checkpoint4",
+            "candidate4",
+            "historical1",
+            "control1",
+            "checkpoint1",
+            "historical4",
+            "candidate1",
+            "control4"
+          ]
+        },
+        {
+          "iteration": 2,
+          "lanes": [
+            "control4",
+            "historical1",
+            "checkpoint1",
+            "candidate4",
+            "control1",
+            "historical4",
+            "checkpoint4",
+            "candidate1"
+          ]
+        }
+      ],
+      "lanes": {
+        "historical1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "a4f4552bafbde462b014477eff640050bb952799237b1b8a054f55a126753215",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.704657167,
+              "process_wall_seconds": 10.887924458016641,
+              "process_user_seconds": 7.301866000000004,
+              "process_system_seconds": 1.078631999999999,
+              "phases": {
+                "delivery_gc": 0.015104176,
+                "query_update": 1.214710536,
+                "repair": 0.46244018600000003,
+                "rhs": 1.509817401,
+                "search": 2.499150569
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.715089125,
+              "process_wall_seconds": 9.344304458994884,
+              "process_user_seconds": 7.277123000000017,
+              "process_system_seconds": 1.1576169999999983,
+              "phases": {
+                "delivery_gc": 0.015584704,
+                "query_update": 1.223218662,
+                "repair": 0.468737251,
+                "rhs": 1.502403027,
+                "search": 2.501722035
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.660082375,
+              "process_wall_seconds": 9.176074624992907,
+              "process_user_seconds": 7.238911999999999,
+              "process_system_seconds": 1.1174979999999977,
+              "phases": {
+                "delivery_gc": 0.015068252,
+                "query_update": 1.218335963,
+                "repair": 0.462567832,
+                "rhs": 1.493631159,
+                "search": 2.466993867
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 7.032908333,
+              "process_wall_seconds": 21.115681209019385,
+              "process_user_seconds": 8.64017,
+              "process_system_seconds": 2.661784,
+              "phases": {
+                "delivery_gc": 0.018795166,
+                "query_update": 1.510198066,
+                "repair": 0.578675111,
+                "rhs": 1.841839749,
+                "search": 3.0791837
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "inference_median_seconds": 5.704657167,
+          "inference_range_seconds": [
+            5.660082375,
+            5.715089125
+          ],
+          "whole_process_cores_median": 0.902661084836623
+        },
+        "historical4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "a4f4552bafbde462b014477eff640050bb952799237b1b8a054f55a126753215",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.337874083,
+              "process_wall_seconds": 8.695223333954345,
+              "process_user_seconds": 8.543368999999998,
+              "process_system_seconds": 1.8307039999999972,
+              "phases": {
+                "delivery_gc": 0.020106693,
+                "query_update": 1.085193447,
+                "repair": 0.478687013,
+                "rhs": 1.812390859,
+                "search": 1.937369372
+              },
+              "key_lookup_calls": 4027718
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.152683708,
+              "process_wall_seconds": 8.931777582969517,
+              "process_user_seconds": 8.373381999999992,
+              "process_system_seconds": 1.898265000000002,
+              "phases": {
+                "delivery_gc": 0.019641736,
+                "query_update": 1.055930725,
+                "repair": 0.467002243,
+                "rhs": 1.721040125,
+                "search": 1.885206527
+              },
+              "key_lookup_calls": 4027718
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.084119458,
+              "process_wall_seconds": 8.69873116601957,
+              "process_user_seconds": 8.216543000000001,
+              "process_system_seconds": 1.8259369999999961,
+              "phases": {
+                "delivery_gc": 0.019085455,
+                "query_update": 1.03642383,
+                "repair": 0.454732965,
+                "rhs": 1.708902118,
+                "search": 1.860837648
+              },
+              "key_lookup_calls": 4027718
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.349467667,
+              "process_wall_seconds": 9.047415375011042,
+              "process_user_seconds": 8.557441000000004,
+              "process_system_seconds": 1.8650179999999992,
+              "phases": {
+                "delivery_gc": 0.020130311,
+                "query_update": 1.095987509,
+                "repair": 0.489291008,
+                "rhs": 1.806150329,
+                "search": 1.933745139
+              },
+              "key_lookup_calls": 4027718
+            }
+          ],
+          "inference_median_seconds": 5.152683708,
+          "inference_range_seconds": [
+            5.084119458,
+            5.337874083
+          ],
+          "whole_process_cores_median": 1.1544764182654135
+        },
+        "checkpoint1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "c58037ac5be660cdd62f9a5285a1ec5d2d0add3149a46aa179b9fe112d2f1ea9",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.847349708,
+              "process_wall_seconds": 9.277352083998267,
+              "process_user_seconds": 7.457945999999993,
+              "process_system_seconds": 1.1071589999999993,
+              "phases": {
+                "delivery_gc": 0.015747464,
+                "query_update": 1.232751375,
+                "repair": 0.46832054,
+                "rhs": 1.524459891,
+                "search": 2.602491729
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.8843837919999995,
+              "process_wall_seconds": 9.532669249980245,
+              "process_user_seconds": 7.469689000000017,
+              "process_system_seconds": 1.1663239999999995,
+              "phases": {
+                "delivery_gc": 0.015473535,
+                "query_update": 1.252310519,
+                "repair": 0.46601127,
+                "rhs": 1.529466152,
+                "search": 2.617513189
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.938482125,
+              "process_wall_seconds": 10.716045333014335,
+              "process_user_seconds": 7.531735999999995,
+              "process_system_seconds": 1.2006970000000052,
+              "phases": {
+                "delivery_gc": 0.015404615,
+                "query_update": 1.269389657,
+                "repair": 0.464536566,
+                "rhs": 1.544717295,
+                "search": 2.640923916
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 6.003145917,
+              "process_wall_seconds": 9.378456667007413,
+              "process_user_seconds": 7.621470000000002,
+              "process_system_seconds": 1.0718879999999995,
+              "phases": {
+                "delivery_gc": 0.015944571,
+                "query_update": 1.284693096,
+                "repair": 0.473485347,
+                "rhs": 1.538971335,
+                "search": 2.686422991
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "inference_median_seconds": 5.8843837919999995,
+          "inference_range_seconds": [
+            5.847349708,
+            5.938482125
+          ],
+          "whole_process_cores_median": 0.9059385963714112
+        },
+        "checkpoint4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "c58037ac5be660cdd62f9a5285a1ec5d2d0add3149a46aa179b9fe112d2f1ea9",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 4.933346083,
+              "process_wall_seconds": 8.386013833980542,
+              "process_user_seconds": 8.774546,
+              "process_system_seconds": 1.7851749999999988,
+              "phases": {
+                "delivery_gc": 0.019756379,
+                "query_update": 0.993953281,
+                "repair": 0.45895970199999997,
+                "rhs": 1.752510983,
+                "search": 1.7043807
+              },
+              "key_lookup_calls": 4027756
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.04111725,
+              "process_wall_seconds": 8.886096666974481,
+              "process_user_seconds": 8.870980000000003,
+              "process_system_seconds": 1.9404020000000024,
+              "phases": {
+                "delivery_gc": 0.020706317000000002,
+                "query_update": 1.010191752,
+                "repair": 0.473388537,
+                "rhs": 1.805954756,
+                "search": 1.726470677
+              },
+              "key_lookup_calls": 4027756
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 4.867877583,
+              "process_wall_seconds": 8.499836041999515,
+              "process_user_seconds": 8.705611000000005,
+              "process_system_seconds": 1.8580620000000039,
+              "phases": {
+                "delivery_gc": 0.019952549,
+                "query_update": 0.978502273,
+                "repair": 0.461147416,
+                "rhs": 1.720505597,
+                "search": 1.684212458
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.094955708,
+              "process_wall_seconds": 8.474696499994025,
+              "process_user_seconds": 8.875322000000004,
+              "process_system_seconds": 1.8088599999999992,
+              "phases": {
+                "delivery_gc": 0.02072507,
+                "query_update": 1.022674185,
+                "repair": 0.48067225199999997,
+                "rhs": 1.839602158,
+                "search": 1.72729362
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "inference_median_seconds": 4.933346083,
+          "inference_range_seconds": [
+            4.867877583,
+            5.04111725
+          ],
+          "whole_process_cores_median": 1.2428090315863307
+        },
+        "control1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "71b21ab9065d323c560af33f123fe26dfc6e4dca160f12a5099b362ac789ce9e",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.9227064590000005,
+              "process_wall_seconds": 9.288481999945361,
+              "process_user_seconds": 7.550873999999993,
+              "process_system_seconds": 1.0603469999999984,
+              "phases": {
+                "delivery_gc": 0.015760291,
+                "query_update": 1.279714665,
+                "repair": 0.473607287,
+                "rhs": 1.545574228,
+                "search": 2.604622714
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.73748875,
+              "process_wall_seconds": 9.356106958002783,
+              "process_user_seconds": 7.34379899999999,
+              "process_system_seconds": 1.1271260000000005,
+              "phases": {
+                "delivery_gc": 0.015429971,
+                "query_update": 1.240200342,
+                "repair": 0.469544385,
+                "rhs": 1.497114901,
+                "search": 2.511782338
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.744546291,
+              "process_wall_seconds": 9.359970499994233,
+              "process_user_seconds": 7.353905999999995,
+              "process_system_seconds": 1.1677099999999996,
+              "phases": {
+                "delivery_gc": 0.014956386,
+                "query_update": 1.237809372,
+                "repair": 0.457798903,
+                "rhs": 1.499839763,
+                "search": 2.53104303
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 6.4406625,
+              "process_wall_seconds": 10.087431958003435,
+              "process_user_seconds": 8.053270000000001,
+              "process_system_seconds": 1.1399809999999997,
+              "phases": {
+                "delivery_gc": 0.018256021,
+                "query_update": 1.383831437,
+                "repair": 0.523405852,
+                "rhs": 1.652438906,
+                "search": 2.858693169
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "inference_median_seconds": 5.744546291,
+          "inference_range_seconds": [
+            5.73748875,
+            5.9227064590000005
+          ],
+          "whole_process_cores_median": 0.9104319292464912
+        },
+        "control4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "71b21ab9065d323c560af33f123fe26dfc6e4dca160f12a5099b362ac789ce9e",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.348894208,
+              "process_wall_seconds": 8.609062541043386,
+              "process_user_seconds": 8.870688000000001,
+              "process_system_seconds": 1.8113420000000033,
+              "phases": {
+                "delivery_gc": 0.021722237000000002,
+                "query_update": 1.102986261,
+                "repair": 0.5137255629999999,
+                "rhs": 1.835732373,
+                "search": 1.87031163
+              },
+              "key_lookup_calls": 4027756
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.020602875,
+              "process_wall_seconds": 8.777320542023517,
+              "process_user_seconds": 8.534917000000007,
+              "process_system_seconds": 1.9475470000000001,
+              "phases": {
+                "delivery_gc": 0.01952872,
+                "query_update": 1.032080615,
+                "repair": 0.458427623,
+                "rhs": 1.692642898,
+                "search": 1.814446957
+              },
+              "key_lookup_calls": 4027756
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.091596125,
+              "process_wall_seconds": 8.767592208983842,
+              "process_user_seconds": 8.643259999999998,
+              "process_system_seconds": 1.9324650000000005,
+              "phases": {
+                "delivery_gc": 0.01974862,
+                "query_update": 1.038523997,
+                "repair": 0.47100103,
+                "rhs": 1.740528989,
+                "search": 1.81768401
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.279236083,
+              "process_wall_seconds": 8.822741083975416,
+              "process_user_seconds": 8.771574999999995,
+              "process_system_seconds": 1.8879170000000007,
+              "phases": {
+                "delivery_gc": 0.02026145,
+                "query_update": 1.106857435,
+                "repair": 0.47904451600000003,
+                "rhs": 1.797482066,
+                "search": 1.871416664
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "inference_median_seconds": 5.091596125,
+          "inference_range_seconds": [
+            5.020602875,
+            5.348894208
+          ],
+          "whole_process_cores_median": 1.2062291160352356
+        },
+        "candidate1": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "cf78397f30230e4601a237e0a80392c0633abdc2a879c8d3c5155613583de11a",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 6.076875959,
+              "process_wall_seconds": 9.246958625037223,
+              "process_user_seconds": 7.668970999999999,
+              "process_system_seconds": 1.0419800000000023,
+              "phases": {
+                "delivery_gc": 0.015946651,
+                "query_update": 1.286969704,
+                "repair": 0.479550316,
+                "rhs": 1.583639065,
+                "search": 2.706847172
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.84236525,
+              "process_wall_seconds": 9.430804750008974,
+              "process_user_seconds": 7.419705999999991,
+              "process_system_seconds": 1.1755479999999991,
+              "phases": {
+                "delivery_gc": 0.015101528,
+                "query_update": 1.242831675,
+                "repair": 0.459369497,
+                "rhs": 1.503224906,
+                "search": 2.618471406
+              },
+              "key_lookup_calls": 4043707
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.870396417,
+              "process_wall_seconds": 9.456745833042078,
+              "process_user_seconds": 7.445607000000024,
+              "process_system_seconds": 1.1222840000000005,
+              "phases": {
+                "delivery_gc": 0.015182967,
+                "query_update": 1.248743513,
+                "repair": 0.462892026,
+                "rhs": 1.515453646,
+                "search": 2.624488956
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 6.11514125,
+              "process_wall_seconds": 9.888900082965847,
+              "process_user_seconds": 7.734858000000001,
+              "process_system_seconds": 1.131678,
+              "phases": {
+                "delivery_gc": 0.015647041,
+                "query_update": 1.295784235,
+                "repair": 0.47380074,
+                "rhs": 1.582852737,
+                "search": 2.743205376
+              },
+              "key_lookup_calls": 4043707
+            }
+          ],
+          "inference_median_seconds": 5.870396417,
+          "inference_range_seconds": [
+            5.84236525,
+            6.076875959
+          ],
+          "whole_process_cores_median": 0.9114019670475959
+        },
+        "candidate4": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "environment": {},
+          "runtime_sha256": "cf78397f30230e4601a237e0a80392c0633abdc2a879c8d3c5155613583de11a",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "logical_effects": {
+            "constructor_requests": 1618848,
+            "constructor_reused": 867798,
+            "logical_facts_created": 820439,
+            "function_updates": 1675916,
+            "union_requests": 508209,
+            "unions": 226523,
+            "bindings": 2743465
+          },
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.042092708,
+              "process_wall_seconds": 8.423168000008445,
+              "process_user_seconds": 8.876818999999998,
+              "process_system_seconds": 1.8418550000000007,
+              "phases": {
+                "delivery_gc": 0.020161194,
+                "query_update": 1.033776905,
+                "repair": 0.478101433,
+                "rhs": 1.775063722,
+                "search": 1.730780486
+              },
+              "key_lookup_calls": 4027756
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 4.887590333,
+              "process_wall_seconds": 8.571881625044625,
+              "process_user_seconds": 8.789323999999993,
+              "process_system_seconds": 1.9034119999999994,
+              "phases": {
+                "delivery_gc": 0.019598741,
+                "query_update": 0.995628916,
+                "repair": 0.463140247,
+                "rhs": 1.696891982,
+                "search": 1.708659227
+              },
+              "key_lookup_calls": 4027762
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 4.884713708,
+              "process_wall_seconds": 8.495596916007344,
+              "process_user_seconds": 8.786608000000001,
+              "process_system_seconds": 1.8274439999999998,
+              "phases": {
+                "delivery_gc": 0.019721559,
+                "query_update": 0.980196246,
+                "repair": 0.470871095,
+                "rhs": 1.706364614,
+                "search": 1.703760532
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "warmup_samples": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.130124041,
+              "process_wall_seconds": 8.823609249957372,
+              "process_user_seconds": 8.934258999999997,
+              "process_system_seconds": 1.906524000000001,
+              "phases": {
+                "delivery_gc": 0.020412425,
+                "query_update": 1.029311296,
+                "repair": 0.492485612,
+                "rhs": 1.856350408,
+                "search": 1.72717678
+              },
+              "key_lookup_calls": 4027756
+            }
+          ],
+          "inference_median_seconds": 4.887590333,
+          "inference_range_seconds": [
+            4.884713708,
+            5.042092708
+          ],
+          "whole_process_cores_median": 1.2493591804009767
+        }
+      },
+      "candidate_comparisons": {
+        "historical": {
+          "1": {
+            "median_change_percent": 2.9053323477309156,
+            "iteration_paired_change_percent": [
+              6.5248231594563055,
+              2.2270190755774077,
+              3.7157417165682105
+            ],
+            "paired_median_change_percent": 3.7157417165682105
+          },
+          "4": {
+            "median_change_percent": -5.144763195699708,
+            "iteration_paired_change_percent": [
+              -5.541183070278876,
+              -5.144763195699708,
+              -3.9221295181455673
+            ],
+            "paired_median_change_percent": -5.144763195699708
+          }
+        },
+        "checkpoint": {
+          "1": {
+            "median_change_percent": -0.23770330920657168,
+            "iteration_paired_change_percent": [
+              3.9253039832041425,
+              -0.7140686856136891,
+              -1.1465170150697368
+            ],
+            "paired_median_change_percent": -0.7140686856136891
+          },
+          "4": {
+            "median_change_percent": -0.9274790219496509,
+            "iteration_paired_change_percent": [
+              2.204317782908727,
+              -3.045493873406724,
+              0.34586171720496495
+            ],
+            "paired_median_change_percent": 0.34586171720496495
+          }
+        },
+        "control": {
+          "1": {
+            "median_change_percent": 2.1907757310123843,
+            "iteration_paired_change_percent": [
+              2.603024496777606,
+              1.827916438180388,
+              2.1907757310123843
+            ],
+            "paired_median_change_percent": 2.1907757310123843
+          },
+          "4": {
+            "median_change_percent": -4.006715909738412,
+            "iteration_paired_change_percent": [
+              -5.73579300822844,
+              -2.6493340603044535,
+              -4.063213419151546
+            ],
+            "paired_median_change_percent": -4.063213419151546
+          }
+        }
+      },
+      "four_worker_speedup_over_one": {
+        "historical": 1.107123489482386,
+        "checkpoint": 1.192777415774096,
+        "control": 1.1282407618298673,
+        "candidate": 1.2010819272974447
+      }
+    }
+  },
+  "profiles": {
+    "control4": {
+      "runtime_sha256": "71b21ab9065d323c560af33f123fe26dfc6e4dca160f12a5099b362ac789ce9e",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "42683",
+          "3",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/profile-control4/stacks.txt"
+        ],
+        "trigger": "fixed launch delay, progress disabled",
+        "start_delay_seconds": 0.5,
+        "progress_logging": false,
+        "trigger_seconds_since_launch": 0.5029128330061212,
+        "command_end_seconds_since_launch": 3.7375888329697773,
+        "stacks_sha256": "877f05b0da087696c6d5e507d71bbdb547d54e06492b5ec906e3ffe0d8614507",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled."
+      },
+      "threads": [
+        {
+          "samples": 900,
+          "condition_wait_samples": 166,
+          "condition_wait_fraction": 0.18444444444444444,
+          "contexts": {
+            "publication": 72,
+            "query": 69,
+            "scalar_rhs_writes": 23,
+            "other": 2
+          }
+        },
+        {
+          "samples": 900,
+          "condition_wait_samples": 711,
+          "condition_wait_fraction": 0.79,
+          "contexts": {
+            "pool_idle": 679,
+            "inside_job": 32
+          }
+        },
+        {
+          "samples": 900,
+          "condition_wait_samples": 709,
+          "condition_wait_fraction": 0.7877777777777778,
+          "contexts": {
+            "pool_idle": 703,
+            "inside_job": 6
+          }
+        },
+        {
+          "samples": 900,
+          "condition_wait_samples": 737,
+          "condition_wait_fraction": 0.8188888888888889,
+          "contexts": {
+            "pool_idle": 727,
+            "inside_job": 10
+          }
+        },
+        {
+          "samples": 900,
+          "condition_wait_samples": 744,
+          "condition_wait_fraction": 0.8266666666666667,
+          "contexts": {
+            "pool_idle": 737,
+            "inside_job": 7
+          }
+        }
+      ],
+      "main_inference_samples": 900,
+      "main_selected_inclusive": {
+        "Executor::matches": 196,
+        "Scheduler::batches": 98,
+        "finish_queries": 126,
+        "publish_finished_tables": 195,
+        "repair_selected": 114,
+        "write_cells": 26,
+        "__psynch_cvwait": 166
+      },
+      "selected_limits": "Inclusive frames overlap and include callees and waits; do not sum. Worker condition waits include both pool idle and inside-job waits. Context classification is heuristic. These windows are partial, sampled wall residence, not CPU percentages or isolated synchronization costs.",
+      "thread_top_inclusive": [
+        [
+          [
+            "Thread_21798767   DispatchQueue_1: com.apple.main-thread  (serial)",
+            900
+          ],
+          [
+            "start",
+            900
+          ],
+          [
+            "main",
+            900
+          ],
+          [
+            "std::rt::lang_start_internal",
+            900
+          ],
+          [
+            "std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$",
+            900
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            900
+          ],
+          [
+            "eggfuse_cell_runtime::main",
+            900
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::execute_until",
+            900
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::run",
+            895
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches",
+            196
+          ],
+          [
+            "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+            195
+          ],
+          [
+            "_pthread_cond_wait",
+            168
+          ],
+          [
+            "__psynch_cvwait",
+            166
+          ],
+          [
+            "rayon_core::scope::do_in_place_scope_fifo",
+            131
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+            126
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::repair_selected",
+            114
+          ],
+          [
+            "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+            104
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+            98
+          ],
+          [
+            "rayon_core::registry::Registry::in_worker_cold",
+            96
+          ],
+          [
+            "rayon_core::latch::LockLatch::wait_and_reset",
+            96
+          ],
+          [
+            "eggfuse_cell_runtime::cell::eval::RhsFrame::execute",
+            89
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::Publication::publish",
+            78
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            73
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+            71
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::construct_inner",
+            67
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::activate",
+            66
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+            63
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+            61
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::activate_fields",
+            59
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+            54
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::subscribe",
+            54
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+            53
+          ],
+          [
+            "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+            52
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+            50
+          ],
+          [
+            "_platform_memmove",
+            49
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+            46
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$",
+            44
+          ],
+          [
+            "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+            39
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::retire",
+            37
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::union",
+            36
+          ],
+          [
+            "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch",
+            35
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::fact",
+            30
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::solve",
+            30
+          ],
+          [
+            "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+            29
+          ],
+          [
+            "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::finish_cell",
+            29
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Sieve::allow",
+            28
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::_$LT$impl$u20$eggfuse_cell_runtime..sieve..Sieve$GT$::publish_staged",
+            26
+          ],
+          [
+            "eggfuse_cell_runtime::graph::cell_writes::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::write_cells",
+            26
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            25
+          ],
+          [
+            "alloc::raw_vec::RawVec$LT$T$C$A$GT$::grow_one",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::stage_spine::Programs::complete",
+            25
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+            24
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::set_inner",
+            22
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+            21
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::slot_fields",
+            21
+          ],
+          [
+            "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+            20
+          ],
+          [
+            "_mi_malloc_generic",
+            19
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::scan_domain",
+            19
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::Scheduler::publish_except",
+            19
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Summary::allows",
+            17
+          ]
+        ],
+        [
+          [
+            "Thread_21798770: cell-query-0",
+            900
+          ],
+          [
+            "thread_start",
+            900
+          ],
+          [
+            "_pthread_start",
+            900
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            900
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            900
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            900
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            900
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            900
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            712
+          ],
+          [
+            "_pthread_cond_wait",
+            711
+          ],
+          [
+            "__psynch_cvwait",
+            711
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            98
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            93
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            92
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            76
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            75
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            73
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            48
+          ],
+          [
+            "rayon_core::thread_pool::ThreadPool::install::_$u7b$$u7b$closure$u7d$$u7d$",
+            33
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            30
+          ],
+          [
+            "cthread_yield",
+            30
+          ],
+          [
+            "swtch_pri",
+            30
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            26
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            24
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            22
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            16
+          ],
+          [
+            "<deduplicated_symbol>",
+            13
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            12
+          ],
+          [
+            "rayon_core::scope::ScopeBase::complete",
+            12
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            10
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            10
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            10
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            10
+          ],
+          [
+            "__psynch_mutexwait",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            10
+          ],
+          [
+            "rayon::slice::sort::recurse",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Events::complete",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            9
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold",
+            9
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            8
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            8
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            8
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            8
+          ],
+          [
+            "rayon::slice::sort::insertion_sort_shift_left",
+            7
+          ],
+          [
+            "_$LT$rayon..vec..IntoIter$LT$T$GT$$u20$as$u20$rayon..iter..IndexedParallelIterator$GT$::with_producer",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Task::run::_$u7b$$u7b$closure$u7d$$u7d$",
+            7
+          ],
+          [
+            "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Work::run",
+            6
+          ],
+          [
+            "rayon::iter::extend::_$LT$impl$u20$rayon..iter..ParallelExtend$LT$T$GT$$u20$for$u20$alloc..vec..Vec$LT$T$GT$$GT$::par_extend",
+            6
+          ],
+          [
+            "rayon::iter::collect::collect_with_consumer",
+            6
+          ],
+          [
+            "rayon_core::registry::WorkerThread::find_work",
+            6
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            5
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            5
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::evaluate",
+            5
+          ]
+        ],
+        [
+          [
+            "Thread_21798771: cell-query-1",
+            900
+          ],
+          [
+            "thread_start",
+            900
+          ],
+          [
+            "_pthread_start",
+            900
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            900
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            900
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            900
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            900
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            900
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            709
+          ],
+          [
+            "_pthread_cond_wait",
+            709
+          ],
+          [
+            "__psynch_cvwait",
+            709
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            93
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            93
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            78
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            62
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            59
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            56
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            44
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            42
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            41
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            35
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            32
+          ],
+          [
+            "cthread_yield",
+            29
+          ],
+          [
+            "swtch_pri",
+            29
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            24
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            21
+          ],
+          [
+            "<deduplicated_symbol>",
+            16
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::publication_workers::PublicationTask::update_node",
+            15
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            13
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            11
+          ],
+          [
+            "_platform_memmove",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            10
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            9
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Events::complete",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            8
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            8
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            7
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Work::run",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::remove",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Task::run::_$u7b$$u7b$closure$u7d$$u7d$",
+            7
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::remove",
+            6
+          ],
+          [
+            "alloc::raw_vec::RawVec$LT$T$C$A$GT$::grow_one",
+            5
+          ],
+          [
+            "_mi_theap_realloc_zero",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::row",
+            5
+          ],
+          [
+            "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            5
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Group::execute",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::epoch_runs::Epochs::remove",
+            5
+          ],
+          [
+            "rayon_core::registry::WorkerThread::find_work",
+            5
+          ],
+          [
+            "_$LT$core..iter..adapters..chain..Chain$LT$A$C$B$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+            4
+          ],
+          [
+            "_mi_malloc_generic",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::evaluate",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::stage_spine::Selection::select",
+            4
+          ]
+        ],
+        [
+          [
+            "Thread_21798772: cell-query-2",
+            900
+          ],
+          [
+            "thread_start",
+            900
+          ],
+          [
+            "_pthread_start",
+            900
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            900
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            900
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            900
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            900
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            900
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            737
+          ],
+          [
+            "_pthread_cond_wait",
+            737
+          ],
+          [
+            "__psynch_cvwait",
+            737
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            88
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            88
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            71
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            48
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            41
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            38
+          ],
+          [
+            "cthread_yield",
+            35
+          ],
+          [
+            "swtch_pri",
+            35
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            34
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            34
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            24
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            19
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            17
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            14
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            10
+          ],
+          [
+            "<deduplicated_symbol>",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            9
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            9
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            9
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            9
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            9
+          ],
+          [
+            "__psynch_mutexwait",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            8
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Events::complete",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Work::run",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            6
+          ],
+          [
+            "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            6
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            6
+          ],
+          [
+            "_mi_malloc_generic",
+            5
+          ],
+          [
+            "mi_page_queue_find_free_ex",
+            5
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Group::execute",
+            5
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert",
+            5
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Task::run::_$u7b$$u7b$closure$u7d$$u7d$",
+            5
+          ],
+          [
+            "rayon_core::registry::WorkerThread::find_work",
+            5
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::row",
+            4
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next",
+            4
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            4
+          ],
+          [
+            "crossbeam_deque::deque::Stealer$LT$T$GT$::steal",
+            4
+          ],
+          [
+            "mi_page_thread_collect_to_local",
+            3
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            3
+          ]
+        ],
+        [
+          [
+            "Thread_21798773: cell-query-3",
+            900
+          ],
+          [
+            "thread_start",
+            900
+          ],
+          [
+            "_pthread_start",
+            900
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            900
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            900
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            900
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            900
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            899
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            745
+          ],
+          [
+            "_pthread_cond_wait",
+            745
+          ],
+          [
+            "__psynch_cvwait",
+            744
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            89
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            89
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            65
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            46
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            33
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            33
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            33
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            31
+          ],
+          [
+            "cthread_yield",
+            27
+          ],
+          [
+            "swtch_pri",
+            27
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            17
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            15
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            12
+          ],
+          [
+            "<deduplicated_symbol>",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            8
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            8
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Events::complete",
+            7
+          ],
+          [
+            "_platform_memmove",
+            6
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            6
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            6
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Work::run",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::Task::run::_$u7b$$u7b$closure$u7d$$u7d$",
+            6
+          ],
+          [
+            "rayon_core::registry::WorkerThread::find_work",
+            6
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            5
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            5
+          ],
+          [
+            "__psynch_mutexwait",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::ready::Group::execute",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert",
+            5
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+            5
+          ],
+          [
+            "_$LT$core..iter..adapters..chain..Chain$LT$A$C$B$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            5
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            4
+          ],
+          [
+            "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+            4
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            4
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            4
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::Field::operand_in",
+            3
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::row",
+            3
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next",
+            3
+          ]
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          166
+        ],
+        [
+          "_platform_memmove",
+          49
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          31
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          25
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          17
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          16
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          13
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          12
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          12
+        ],
+        [
+          "<deduplicated_symbol>",
+          11
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::fact",
+          11
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::slot_fields",
+          11
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::query::QueryIndexes::hashes",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::union",
+          10
+        ],
+        [
+          "mach_absolute_time",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          9
+        ],
+        [
+          "eggfuse_cell_runtime::query::QueryIndexes::hash_candidates",
+          9
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Sieve::allow",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::materialize_publication",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::publish_except",
+          7
+        ],
+        [
+          "rayon_core::scope::do_in_place_scope_fifo",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          6
+        ]
+      ]
+    },
+    "candidate4": {
+      "runtime_sha256": "cf78397f30230e4601a237e0a80392c0633abdc2a879c8d3c5155613583de11a",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "43039",
+          "3",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-fact-lease/profile-candidate4/stacks.txt"
+        ],
+        "trigger": "fixed launch delay, progress disabled",
+        "start_delay_seconds": 0.5,
+        "progress_logging": false,
+        "trigger_seconds_since_launch": 0.5026041669771075,
+        "command_end_seconds_since_launch": 3.6824079169891775,
+        "stacks_sha256": "39611311ea29899c8b8a52335fcb575b3a67a33cb3a5b3d514586fb3d5da2b68",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled."
+      },
+      "threads": [
+        {
+          "samples": 902,
+          "condition_wait_samples": 200,
+          "condition_wait_fraction": 0.22172949002217296,
+          "contexts": {
+            "publication": 92,
+            "query": 84,
+            "scalar_rhs_writes": 12,
+            "other": 12
+          }
+        },
+        {
+          "samples": 902,
+          "condition_wait_samples": 684,
+          "condition_wait_fraction": 0.7583148558758315,
+          "contexts": {
+            "pool_idle": 667,
+            "inside_job": 17
+          }
+        },
+        {
+          "samples": 902,
+          "condition_wait_samples": 725,
+          "condition_wait_fraction": 0.8037694013303769,
+          "contexts": {
+            "pool_idle": 725
+          }
+        },
+        {
+          "samples": 902,
+          "condition_wait_samples": 737,
+          "condition_wait_fraction": 0.8170731707317073,
+          "contexts": {
+            "pool_idle": 737
+          }
+        },
+        {
+          "samples": 902,
+          "condition_wait_samples": 741,
+          "condition_wait_fraction": 0.8215077605321508,
+          "contexts": {
+            "pool_idle": 741
+          }
+        }
+      ],
+      "main_inference_samples": 901,
+      "main_selected_inclusive": {
+        "Executor::matches": 182,
+        "Scheduler::batches": 73,
+        "finish_queries": 127,
+        "publish_finished_tables": 192,
+        "repair_selected": 111,
+        "write_cells": 14,
+        "__psynch_cvwait": 200
+      },
+      "selected_limits": "Inclusive frames overlap and include callees and waits; do not sum. Worker condition waits include both pool idle and inside-job waits. Context classification is heuristic. These windows are partial, sampled wall residence, not CPU percentages or isolated synchronization costs.",
+      "thread_top_inclusive": [
+        [
+          [
+            "Thread_21800154   DispatchQueue_1: com.apple.main-thread  (serial)",
+            902
+          ],
+          [
+            "start",
+            901
+          ],
+          [
+            "main",
+            901
+          ],
+          [
+            "std::rt::lang_start_internal",
+            901
+          ],
+          [
+            "std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$",
+            901
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            901
+          ],
+          [
+            "eggfuse_cell_runtime::main",
+            901
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::execute_until",
+            901
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::run",
+            896
+          ],
+          [
+            "_pthread_cond_wait",
+            200
+          ],
+          [
+            "__psynch_cvwait",
+            200
+          ],
+          [
+            "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+            192
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches",
+            182
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+            127
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::repair_selected",
+            111
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::Publication::publish",
+            108
+          ],
+          [
+            "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+            108
+          ],
+          [
+            "rayon_core::registry::Registry::in_worker",
+            106
+          ],
+          [
+            "std::thread::local::LocalKey$LT$T$GT$::with",
+            105
+          ],
+          [
+            "rayon_core::latch::LockLatch::wait_and_reset",
+            104
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::table_events::_$LT$impl$u20$eggfuse_cell_runtime..sieve..Sieve$GT$::publish_table_events",
+            99
+          ],
+          [
+            "eggfuse_cell_runtime::cell::eval::RhsFrame::execute",
+            95
+          ],
+          [
+            "std::sync::poison::condvar::Condvar::wait_while",
+            84
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+            73
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+            73
+          ],
+          [
+            "eggfuse_cell_runtime::graph::maintenance::replace_subscriptions",
+            67
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::activate",
+            61
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::activate_fields",
+            61
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::subscribe",
+            59
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+            59
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+            55
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::construct_inner",
+            54
+          ],
+          [
+            "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+            51
+          ],
+          [
+            "eggfuse_cell_runtime::graph::maintenance::subscribe_canonical_constructor",
+            50
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+            49
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            46
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+            45
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+            42
+          ],
+          [
+            "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch",
+            37
+          ],
+          [
+            "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+            36
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::union",
+            35
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$",
+            33
+          ],
+          [
+            "eggfuse_cell_runtime::graph::maintenance::insert",
+            33
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::set_inner",
+            33
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+            32
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::fact",
+            29
+          ],
+          [
+            "_platform_memmove",
+            28
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::retire",
+            27
+          ],
+          [
+            "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+            26
+          ],
+          [
+            "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::finish_cell",
+            26
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::stage_spine::Programs::complete",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::slot_fields",
+            24
+          ],
+          [
+            "<deduplicated_symbol>",
+            23
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+            22
+          ],
+          [
+            "eggfuse_cell_runtime::executor::Executor::solve",
+            22
+          ],
+          [
+            "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+            21
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::set_function_from",
+            21
+          ],
+          [
+            "eggfuse_cell_runtime::graph::Graph::apply_write",
+            20
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            19
+          ]
+        ],
+        [
+          [
+            "Thread_21800167: cell-query-0",
+            902
+          ],
+          [
+            "thread_start",
+            902
+          ],
+          [
+            "_pthread_start",
+            902
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            902
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            902
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            902
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            902
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            901
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            684
+          ],
+          [
+            "_pthread_cond_wait",
+            684
+          ],
+          [
+            "__psynch_cvwait",
+            684
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            183
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            165
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            101
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+            90
+          ],
+          [
+            "rayon_core::registry::in_worker",
+            90
+          ],
+          [
+            "rayon_core::scope::ScopeBase::complete",
+            90
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            77
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run",
+            63
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            60
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            58
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            58
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            57
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            34
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            24
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::publication_workers::PublicationTask::update_node",
+            23
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            22
+          ],
+          [
+            "cthread_yield",
+            19
+          ],
+          [
+            "swtch_pri",
+            19
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::table_events::Events::complete",
+            12
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            9
+          ],
+          [
+            "core::ops::function::impls::_$LT$impl$u20$core..ops..function..FnMut$LT$A$GT$$u20$for$u20$$RF$F$GT$::call_mut",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::row",
+            8
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            8
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::remove",
+            8
+          ],
+          [
+            "_$LT$rayon..vec..IntoIter$LT$T$GT$$u20$as$u20$rayon..iter..IndexedParallelIterator$GT$::with_producer",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            7
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            7
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            7
+          ],
+          [
+            "__psynch_mutexwait",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::remove",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::epoch_runs::Epochs::remove",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            6
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Summary::allows",
+            6
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            6
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            6
+          ],
+          [
+            "pthread_cond_signal",
+            6
+          ],
+          [
+            "__psynch_cvsignal",
+            6
+          ],
+          [
+            "rayon_core::thread_pool::ThreadPool::install::_$u7b$$u7b$closure$u7d$$u7d$",
+            6
+          ]
+        ],
+        [
+          [
+            "Thread_21800168: cell-query-1",
+            902
+          ],
+          [
+            "thread_start",
+            902
+          ],
+          [
+            "_pthread_start",
+            902
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            902
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            902
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            902
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            902
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            902
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            725
+          ],
+          [
+            "_pthread_cond_wait",
+            725
+          ],
+          [
+            "__psynch_cvwait",
+            725
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            145
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            126
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+            91
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            80
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run",
+            68
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            67
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            62
+          ],
+          [
+            "cthread_yield",
+            25
+          ],
+          [
+            "swtch_pri",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            23
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            23
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            21
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::table_events::Events::complete",
+            18
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            14
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Summary::allows",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run",
+            11
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            10
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            9
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            9
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            9
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            8
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            8
+          ],
+          [
+            "core::ops::function::impls::_$LT$impl$u20$core..ops..function..FnMut$LT$A$GT$$u20$for$u20$$RF$F$GT$::call_mut",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            7
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            7
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            7
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            7
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            7
+          ],
+          [
+            "__psynch_mutexwait",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::publication_workers::PublicationTask::update_node",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            5
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            5
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            5
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            5
+          ],
+          [
+            "<deduplicated_symbol>",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::evaluate",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::Field::operand_in",
+            3
+          ],
+          [
+            "alloc::raw_vec::RawVecInner$LT$A$GT$::finish_grow",
+            3
+          ],
+          [
+            "_mi_theap_realloc_zero",
+            3
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::Step::bind",
+            3
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::Canonical::candidate",
+            3
+          ]
+        ],
+        [
+          [
+            "Thread_21800169: cell-query-2",
+            902
+          ],
+          [
+            "thread_start",
+            902
+          ],
+          [
+            "_pthread_start",
+            902
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            902
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            902
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            902
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            902
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            902
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            737
+          ],
+          [
+            "_pthread_cond_wait",
+            737
+          ],
+          [
+            "__psynch_cvwait",
+            737
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            136
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            115
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+            88
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            77
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run",
+            69
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            67
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            64
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            29
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::table_events::Events::complete",
+            21
+          ],
+          [
+            "cthread_yield",
+            16
+          ],
+          [
+            "swtch_pri",
+            16
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            15
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            14
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            13
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            12
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            10
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            10
+          ],
+          [
+            "core::ops::function::impls::_$LT$impl$u20$core..ops..function..FnMut$LT$A$GT$$u20$for$u20$$RF$F$GT$::call_mut",
+            9
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            9
+          ],
+          [
+            "<deduplicated_symbol>",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            7
+          ],
+          [
+            "_platform_memmove",
+            7
+          ],
+          [
+            "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold",
+            7
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            7
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            7
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            7
+          ],
+          [
+            "__psynch_mutexwait",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::publication_workers::PublicationTask::update_node",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::Canonical::candidate",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::row",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            5
+          ],
+          [
+            "_$LT$rayon..iter..map..MapFolder$LT$C$C$F$GT$$u20$as$u20$rayon..iter..plumbing..Folder$LT$T$GT$$GT$::consume_iter",
+            5
+          ],
+          [
+            "rayon_core::registry::WorkerThread::find_work",
+            5
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Summary::allows",
+            4
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            4
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            4
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::remove",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::epoch_runs::Epochs::remove",
+            4
+          ],
+          [
+            "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::hashes",
+            4
+          ]
+        ],
+        [
+          [
+            "Thread_21800170: cell-query-3",
+            902
+          ],
+          [
+            "thread_start",
+            902
+          ],
+          [
+            "_pthread_start",
+            902
+          ],
+          [
+            "std::sys::thread::unix::Thread::new::thread_start",
+            902
+          ],
+          [
+            "core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$",
+            902
+          ],
+          [
+            "std::sys::backtrace::__rust_begin_short_backtrace",
+            902
+          ],
+          [
+            "rayon_core::registry::ThreadBuilder::run",
+            902
+          ],
+          [
+            "rayon_core::registry::WorkerThread::wait_until_cold",
+            902
+          ],
+          [
+            "rayon_core::sleep::Sleep::sleep",
+            741
+          ],
+          [
+            "_pthread_cond_wait",
+            741
+          ],
+          [
+            "__psynch_cvwait",
+            741
+          ],
+          [
+            "_$LT$rayon_core..job..HeapJob$LT$BODY$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            134
+          ],
+          [
+            "rayon_core::scope::ScopeBase::execute_job_closure",
+            123
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+            89
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::Frame::with",
+            74
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run",
+            64
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            63
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate",
+            56
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step",
+            28
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run",
+            25
+          ],
+          [
+            "eggfuse_cell_runtime::change_batch::parallel::Task::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            22
+          ],
+          [
+            "cthread_yield",
+            19
+          ],
+          [
+            "swtch_pri",
+            19
+          ],
+          [
+            "eggfuse_cell_runtime::cell::execution::Plan::slots",
+            14
+          ],
+          [
+            "eggfuse_cell_runtime::query::PublicationTask::update",
+            13
+          ],
+          [
+            "eggfuse_cell_runtime::cell::constructor_prepare::Plan::prepare",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::owned_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+            12
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::Summary::allows",
+            11
+          ],
+          [
+            "eggfuse_cell_runtime::sieve::publication::table_events::Events::complete",
+            11
+          ],
+          [
+            "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::QueryReads::point",
+            9
+          ],
+          [
+            "rayon::iter::plumbing::bridge_producer_consumer::helper",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::query::Columns::put",
+            9
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::completion::Finish::run",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::expansion::PendingMerge::run",
+            8
+          ],
+          [
+            "core::ops::function::impls::_$LT$impl$u20$core..ops..function..FnMut$LT$A$GT$$u20$for$u20$$RF$F$GT$::call_mut",
+            8
+          ],
+          [
+            "rayon_core::join::join_context::_$u7b$$u7b$closure$u7d$$u7d$",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::entry_schedule::publication_workers::PublicationTask::update_node",
+            8
+          ],
+          [
+            "eggfuse_cell_runtime::query::snapshot::TableRead::domain",
+            7
+          ],
+          [
+            "core::slice::sort::stable::driftsort_main",
+            7
+          ],
+          [
+            "core::slice::sort::stable::drift::sort",
+            7
+          ],
+          [
+            "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::graph::query_reads::Canonical::candidate",
+            6
+          ],
+          [
+            "_$LT$rayon_core..job..StackJob$LT$L$C$F$C$R$GT$$u20$as$u20$rayon_core..job..Job$GT$::execute",
+            6
+          ],
+          [
+            "std::sys::pal::unix::sync::mutex::Mutex::lock",
+            6
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_slow",
+            6
+          ],
+          [
+            "_pthread_mutex_firstfit_lock_wait",
+            6
+          ],
+          [
+            "__psynch_mutexwait",
+            6
+          ],
+          [
+            "eggfuse_cell_runtime::tiny_set::TinySet$LT$T$GT$::insert",
+            6
+          ],
+          [
+            "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+            6
+          ],
+          [
+            "_platform_memmove",
+            5
+          ],
+          [
+            "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold",
+            5
+          ],
+          [
+            "eggfuse_cell_runtime::executor::query_workers::evaluate",
+            5
+          ],
+          [
+            "core::slice::sort::stable::quicksort::quicksort",
+            5
+          ],
+          [
+            "_$LT$rayon..iter..map..MapFolder$LT$C$C$F$GT$$u20$as$u20$rayon..iter..plumbing..Folder$LT$T$GT$$GT$::consume_iter",
+            5
+          ],
+          [
+            "mi_theap_malloc_zero_aligned_at_generic",
+            4
+          ],
+          [
+            "_mi_malloc_generic",
+            4
+          ],
+          [
+            "mi_page_queue_find_free_ex",
+            4
+          ],
+          [
+            "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate",
+            4
+          ]
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          200
+        ],
+        [
+          "_platform_memmove",
+          28
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          25
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          23
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::slot_fields",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries::_$u7b$$u7b$closure$u7d$$u7d$",
+          17
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          17
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          16
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          15
+        ],
+        [
+          "mach_absolute_time",
+          15
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          15
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::union",
+          13
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell",
+          13
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          11
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::fact",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::cell::binding::bind_operand",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::graph::maintenance::replace_subscriptions",
+          10
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          9
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+          9
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::materialize_publication",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          8
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          7
+        ],
+        [
+          "mi_malloc_aligned",
+          7
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::remove_entry",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          7
+        ],
+        [
+          "<deduplicated_symbol>",
+          7
+        ],
+        [
+          "core::slice::sort::stable::quicksort::quicksort",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::complete",
+          7
+        ],
+        [
+          "eggfuse_cell_runtime::query::Columns::put",
+          6
+        ]
+      ]
+    }
+  },
+  "background_observation": {
+    "utc": "2026-11-12T21:07:49.829936+00:00",
+    "compiler_processes": [],
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "nonzero_cpu_processes": [
+      "    1 /sbin/launchd      0.7",
+      "  102 /usr/libexec/log   0.6",
+      "  105 /usr/libexec/Use   0.1",
+      "  118 /System/Library/   0.1",
+      "  144 /usr/libexec/ope   0.5",
+      "  151 /usr/libexec/loc   1.2",
+      "  167 /usr/sbin/blueto   0.9",
+      "  168 /usr/sbin/notify   0.9",
+      "  170 /usr/libexec/cor   0.1",
+      "  173 /System/Library/  33.8",
+      "  188 /usr/libexec/run   0.6",
+      "  249 /usr/libexec/sym   0.3",
+      "  250 /usr/libexec/clo   0.1",
+      "  311 /Library/Applica   0.1",
+      "  328 /usr/local/bin/n   0.1",
+      "  329 /Applications/To   2.8",
+      "  376 /System/Library/   2.0",
+      "  460 /usr/sbin/distno   0.4",
+      "  492 /usr/libexec/rap   0.1",
+      "  518 /System/Library/   9.5",
+      "  524 /Applications/QS   0.6",
+      "  529 /Applications/We  17.5",
+      "  535 /System/Library/   2.1",
+      "  550 /Applications/Mi   8.5",
+      "  555 /usr/libexec/sha   0.1",
+      "  571 /usr/libexec/nea   0.1",
+      "  573 /Applications/Di   6.9",
+      "  583 /Applications/QQ   1.0",
+      "  612 /System/Library/   0.1",
+      "  749 /Applications/To  10.5",
+      "  849 /Applications/Ga   2.0",
+      "  955 /Applications/Mi   0.2",
+      " 1129 /Applications/Mi   0.1",
+      " 2493 /Applications/Vi   0.1",
+      " 2514 /Applications/La   1.2",
+      " 2584 /Applications/Vi   0.4",
+      " 2780 /Users/mineralst   1.9",
+      " 3161 /Users/mineralst   0.1",
+      " 3428 /Applications/La   0.3",
+      " 4482 /Applications/Ga   0.5",
+      " 4588 /opt/homebrew/op   0.3",
+      "10877 /System/Library/   0.9",
+      "12155 /Applications/wp   0.1",
+      "12401 /Applications/wp   1.8",
+      "12700 /System/Library/   0.5",
+      "12701 /System/Library/  81.3",
+      "12784 /System/Library/  84.6",
+      "21085 /System/Library/   5.7",
+      "21449 /usr/libexec/tru   3.8",
+      "21712 /Users/mineralst   0.3",
+      "23966 /Applications/wp   1.5",
+      "30617 /Applications/Mi  13.4",
+      "34024 /Applications/Am   0.1",
+      "36108 /Library/Apple/S   0.6",
+      "39227 /Applications/Mi   0.1",
+      "43583 /Applications/Xc   0.5",
+      "52646 /Applications/Ch   0.9",
+      "52695 /Applications/Ch   0.1",
+      "52697 /Applications/Ch   0.4",
+      "53310 /Applications/Ch   0.4",
+      "53382 /Applications/Ch   0.1",
+      "59250 /Applications/Cl   0.4",
+      "59262 /System/Library/   0.2",
+      "59263 /System/Library/   3.8",
+      "59265 /Applications/Cl   1.9",
+      "71968 /Applications/Mi   0.1",
+      "72308 /usr/libexec/Per   0.3",
+      "73539 /Applications/QQ   0.4",
+      "86389 /Applications/Mi   0.3",
+      "95802 /Applications/Mi   0.3",
+      "98089 /Applications/Mi   0.1",
+      "98091 /Applications/Mi   0.1",
+      "29762 /Users/mineralst   6.1",
+      "19355 node               0.2"
+    ],
+    "full_snapshot_sha256": "a895672c695c37f193adc16d92d239833a5e69b3ee6a2d6bfbe403b58f941027"
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  },
+  "background_sampling": {
+    "sha256": "71364bb2848d2c722a174f06af67c95c92f1414c95d4aba82d179068d4a6b6a1",
+    "interval_seconds": 5,
+    "samples": 66,
+    "compiler_samples": [],
+    "limits": "Separate process snapshots; CPU values are OS lifetime averages, not inference-only utilization. They cannot exclude shorter unsampled background work."
+  },
+  "four_worker_direction_checks": {
+    "historical": {
+      "both_workload_medians_lower": true,
+      "both_workload_paired_medians_lower": false,
+      "direction": "mixed",
+      "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
+    },
+    "control": {
+      "both_workload_medians_lower": true,
+      "both_workload_paired_medians_lower": false,
+      "direction": "mixed",
+      "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
+    },
+    "checkpoint": {
+      "both_workload_medians_lower": true,
+      "both_workload_paired_medians_lower": false,
+      "direction": "mixed",
+      "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
+    }
+  }
+}
