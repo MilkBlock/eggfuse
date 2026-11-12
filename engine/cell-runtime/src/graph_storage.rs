@@ -132,6 +132,21 @@ impl Graph {
             writer_slots += bytes;
             removals += removed;
         }
+        // Offline attribution only: rows are not candidates for deletion merely
+        // because their producer is unread. Keep writer ownership separate from
+        // ordinary origins, which can share a source with other table rows.
+        let mut origin_tables = BTreeMap::<usize, (usize, usize, usize, BTreeSet<u32>)>::new();
+        for f in &self.functions {
+            let entry = origin_tables.entry(f.table).or_default();
+            entry.0 += usize::from(f.live);
+            entry.1 += usize::from(f.origin.is_some());
+            entry.2 += usize::from(f.writer.is_some());
+            if let Some(origin) = f.origin { entry.3.insert(origin.cell); }
+        }
+        let origin_tables = origin_tables.into_iter().map(|(table,(live,origins,writers,sources))|
+            json!({"table":self.program.tables[table].name,"live_function_rows":live,
+                "retained_origins":origins,"inline_writers":writers,
+                "source_cells":sources})).collect::<Vec<_>>();
         let writer_records = writer_count * std::mem::size_of::<writer_frames::Writer>();
         let writers = writer_records + writer_slots + self.writer_dir.storage_bytes();
         let index_payload = uses_header + uses_heap + forward + functions_index + intern;
@@ -141,7 +156,7 @@ impl Graph {
             "reverse_index_heap_payload":uses_heap,"reverse_degrees":degrees,
             "forward_index_payload":forward,"function_index_payload":functions_index,"constructor_index_header_payload":intern,
             "members_array_bytes":member_arrays,"members_tree_entries":member_tree_entries,
-            "union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
+            "origin_tables":origin_tables,"union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
             "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().0.len()).sum::<usize>(),
             "completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,

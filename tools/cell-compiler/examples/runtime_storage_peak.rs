@@ -126,6 +126,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
         "port_index":e.graph.stable_port_report(),
         "ownership_storage":e.graph.ownership_storage_trace(),
+        "source_storage":e.graph.retained_cell_storage(),
         "maintenance":e.graph.maintenance_report(),
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
         "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
