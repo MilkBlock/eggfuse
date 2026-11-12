@@ -350,6 +350,16 @@ pub fn describe_path(p: &Program, path: &[(Option<usize>, (usize, Option<usize>)
     } else { json!({"kind":"opaque"}) }
 }
 
+/// Offline state after every source Run has completed, including its unions.
+/// This is deliberately separate from the ordered, executable path contract:
+/// equal settled structures do not authorize dropping publications or cursors.
+pub fn describe_settled_path(p: &Program, path: &[(Option<usize>, (usize, Option<usize>))]) -> Json {
+    if let Some(n) = normalize_stages(p, path, true, true) {
+        json!({"kind":"settled", "structure":n.structure, "ports":n.ports,
+            "requires_completed_source_runs":path.len()})
+    } else { json!({"kind":"opaque"}) }
+}
+
 /// A checked inclusion map comes from the very same symbolic prefix, never
 /// from runtime numbering or probabilistic membership. New assumptions are
 /// explicit and must still be matched by the consumer.

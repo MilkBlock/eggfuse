@@ -925,6 +925,18 @@ fn constructor_set_keeps_actual_results_distinct_until_commit() {
     }
     assert_ne!(shapes[0]["structure"],shapes[1]["structure"],
         "pending Set cannot change the key of a later constructor");
+    let settled=["actual","requested","unknown"].map(|name| {
+        let rule=rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+        eggfuse_cell_runtime::cell_completion::describe_settled_path(&p,&[(None,(rule,Some(0)))])
+    });
+    for state in &settled {
+        assert_eq!(state["kind"],"settled");
+        assert_eq!(state["requires_completed_source_runs"],1);
+    }
+    assert_eq!(settled[0]["structure"],settled[1]["structure"],
+        "after commit the two G keys become congruent");
+    assert_ne!(settled[0]["structure"],settled[2]["structure"],
+        "settlement cannot invent a missing G fact");
 }
 
 #[test]
