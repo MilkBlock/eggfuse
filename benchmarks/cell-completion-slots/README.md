@@ -118,3 +118,105 @@ python3 benchmarks/raytrace-thread-bottlenecks/profile.py ARTIFACT_ROOT/ray-mani
 python3 benchmarks/raytrace-thread-bottlenecks/profile.py ARTIFACT_ROOT/ray-manifest.json ARTIFACT_ROOT/timing-ray/samples.json ARTIFACT_ROOT/profile-candidate4 --lane candidate4 --duration 3 --interval-ms 2 --start-delay 0.6
 python3 benchmarks/cell-completion-slots/timing_check.py ARTIFACT_ROOT TIMING_RESULTS.json
 ```
+
+## Fifth-change timing gate: failed
+
+Runtime `8df9de2a` is frozen before the campaign. All four revisions are
+remeasured with the same programs/catalogs and release flags, with one and four
+workers. Each lane has one warmup followed by five sum-bits or three Raytrace
+samples, in a recorded shuffled order. All 80 executions, including 16 warmups,
+have exact final states, ordered Run-summary hashes and logical effects. No
+timing sample is discarded or rerun. Background observations record no compiler
+activity; ambient desktop load is still possible.
+
+| Inference median | Historical `8335929d`, 1 / 4 workers | Last checkpoint `916ebf7c`, 1 / 4 | Immediate control `076a923a`, 1 / 4 | Current `8df9de2a`, 1 / 4 |
+| --- | ---: | ---: | ---: | ---: |
+| sum-bits, ms | 17.705 / 20.887 | 18.158 / 21.804 | 18.762 / 24.939 | 18.445 / 25.283 |
+| Raytrace, s | 5.815 / 5.108 | 5.924 / 5.034 | 5.971 / 5.142 | 5.961 / 5.178 |
+
+Against the immediate control, four-worker medians regress **1.38% / 0.69%**;
+iteration-paired medians regress 1.30% / 0.49%. All five sum-bits pairs are
+slower, while one of three Raytrace pairs is faster. The Raytrace difference
+is small relative to the control's 5.031–5.273 s variation. This change has
+removed storage but has not passed the two-workload speed criterion.
+
+Against the five-change checkpoint, four-worker medians regress **15.95% /
+2.87%**, with paired median regressions of 20.02% / 2.90%; every paired comparison
+is slower. The cumulative work also fails the performance gate. The historical
+four-worker runtime is faster on both workloads. Earlier campaigns' quoted
+24.77 ms / 5.389 s must not be substituted for this campaign's controls.
+
+Raytrace scales only 1.151x from one to four workers, versus checkpoint 1.177x;
+sum-bits gets slower with four workers. Current four-worker process CPU/wall
+averages about 1.42 cores, including load/export, not inference-only utilization.
+
+## Where the cumulative extra work appears
+
+| Four-worker phase median | Last checkpoint | Immediate control | Current |
+| --- | ---: | ---: | ---: |
+| sum-bits RHS, ms | 5.759 | 8.972 | 9.124 |
+| sum-bits search, ms | 11.102 | 11.008 | 11.232 |
+| Raytrace RHS, s | 1.762 | 1.923 | 1.934 |
+| Raytrace search, s | 1.732 | 1.726 | 1.736 |
+| Raytrace publication/query update, s | 1.011 | 0.993 | 1.010 |
+| Raytrace repair, s | 0.484 | 0.470 | 0.467 |
+
+RHS is the main phase showing growth. Phase medians do not add to the median
+total and do not isolate lock or dispatch time. The recorded actual executions
+show the structural change behind the next investigation:
+
+| Work since `916ebf7c` | sum-bits checkpoint / current | Raytrace checkpoint / current |
+| --- | ---: | ---: |
+| Local jobs | 255 / 984 | 81,223 / 210,835 |
+| RHS dispatch regions | 72 / 247 | 3,406 / 9,062 |
+| Constructor operations on workers, including reuse | 386 / 1,335 | 127,059 / 324,431 |
+| Ordinary key lookups | 14,012 / 13,028 | 4,027,756 / 3,830,073 |
+| Source execution frames | 5,173 / 5,176 | 1,020,508 / 1,020,600 |
+
+The new root path avoids ordinary lookups but adds 1,912 / 278,896 root bucket
+probes, including 928 / 80,760 fallbacks. More worker work now travels through
+many more regions; source instance setup/adoption has not disappeared. This is
+not an isolated causal decomposition of all elapsed time, but it rules out
+treating increased worker coverage as a speedup. The checker links this work to
+the saved root-birth control evidence and verifies matching programs, states,
+Run summaries and logical effects.
+
+Code inspection finds a concrete remaining artificial boundary:
+`apply_cell_batch` creates a fresh `Ready` queue for each rule and unconditionally
+drains it at the end; `Executor::run` calls it separately for each patch group.
+That rule-local lifetime is not itself a compiler proof of a necessary fence.
+The next takeover should retain compatible Cell continuations across rule groups
+within the same sealed source Run, draining at real dependency/effect/visibility
+boundaries. Existing scalar-write ownership, absorbed Cells, fallback effects,
+source errors and the original Run end must be audited explicitly. Do not just
+raise queue capacity or weaken those obligations. Query/ordinary RHS paths still
+need later integration; this is not full worker ownership or thread saturation.
+
+## Separate waiting diagnostics
+
+Successful three-second, two-millisecond-interval profiles cover 885 main-thread
+inference samples in each lane, with progress logging disabled. Inclusive counts
+overlap; they are neither additive phase time nor CPU utilization.
+
+| Main-thread sampled residence | Immediate control | Current |
+| --- | ---: | ---: |
+| Condition waits | 21.92% | 23.84% |
+| Query finishing, including waits | 15.59% | 16.05% |
+| Finished-table publication, including waits | 20.00% | 20.34% |
+| Repair | 11.98% | 11.41% |
+
+Worker wait fractions range 73.2%–81.2% in control and 70.2%–78.4% in current,
+predominantly pool idle. Current source wait contexts include 97 query, 78
+publication, 12 scalar-write and 24 other samples. Fewer worker wait samples
+have not translated to a throughput gain. Neither these short windows nor the
+small immediate-control timing delta isolates the new shared mutex's cost.
+
+Two candidate diagnostic exports failed with ENOSPC after their state export;
+their failed logs and losslessly archived artifacts remain under
+`profile-candidate4-disk-failure` and `profile-candidate4-disk-retry-failure`.
+They are excluded diagnostics, not timing samples or semantic passes. After
+removing the already-validated generated debug runtime/compiler libraries, the
+diagnostic completed and passed exact state/Run checks. No performance sample
+was repeated. Library paths/sizes and failed-log hashes are recorded locally
+and in the timing evidence respectively. The validated native sum proof is
+unchanged; native Raytrace equivalence is still outside its scope.
