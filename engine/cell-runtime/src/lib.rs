@@ -29,6 +29,7 @@ pub mod executor;
 pub mod extract;
 pub mod graph;
 pub mod known_results;
+pub mod cell_entry_invariants;
 pub mod merge_programs;
 pub mod multistage;
 pub mod program;
