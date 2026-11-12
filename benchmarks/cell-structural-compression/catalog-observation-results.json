@@ -1,0 +1,45 @@
+{
+  "scope": "actual standalone Cell runtime; passive observation, not an admitted optimization",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "retained_source_census_unchanged": true,
+  "component_inventory_unchanged": true,
+  "catalog": {
+    "catalog_sha256": "38495af23b4b8ab64b4bb362d4839d5df484d6edffa426db277fcb3cfb946f94",
+    "executed_max_frames": 4,
+    "max_frames": 16,
+    "seed_shapes": 617,
+    "seed_transitions": 259,
+    "uncovered_births": 1491
+  },
+  "proposal_count": 1309,
+  "proposal_frame_lengths": {
+    "2": 564,
+    "3": 250,
+    "4": 195,
+    "5": 300
+  },
+  "candidate_classes": {
+    "existing_local_pair": {
+      "candidates": 365,
+      "repeated_candidates": 208,
+      "birth_observations_overlapping": 881
+    },
+    "new_local_pair": {
+      "candidates": 944,
+      "repeated_candidates": 262,
+      "birth_observations_overlapping": 1614
+    }
+  },
+  "production_compositions_before_after": [
+    1066,
+    1066
+  ],
+  "runtime_shape_builds": 0,
+  "limitation": "Candidates overlap; available inputs are proposed reuse, not saved fields or bytes. Tracing visits formerly inactive Entries, so probe/capacity counters can increase without altering choices. No new compression result is claimed.",
+  "inputs_sha256": {
+    "shared-code-trace.json": "05612e37e7abe723f65681bb4fbbf361202aa8705d7065b15d6436d4350b8ede",
+    "shared-code-peak.json": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd",
+    "catalog-passive-audited.json": "640f5eb12f11988f61fe15dcf0a9fa50bf7b46990bb9c4c2b9a683d7d9c2104a"
+  }
+}

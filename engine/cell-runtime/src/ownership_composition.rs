@@ -442,6 +442,12 @@ pub struct Observation {
     pub transition_probes: u64,
 }
 #[derive(Default)]
+pub(super) struct CatalogTrace {
+    max_frames: usize,
+    records: BTreeMap<Key, (Fragment, u64, u64, usize)>,
+    uncovered_births: u64,
+}
+#[derive(Default)]
 pub(super) struct Training {
     fragments: Vec<Fragment>,
     observations: BTreeMap<usize, Observation>,
@@ -536,6 +542,7 @@ pub(super) struct Runtime {
     pub shapes: Vec<Option<Arc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
+    pub catalog_trace: Option<Box<CatalogTrace>>,
     pub entry: Option<Entry>,
     pub heap: Vec<Cursor>,
     pub columns: Vec<usize>,
@@ -565,6 +572,7 @@ impl Runtime {
             shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),
             training: None,
+            catalog_trace: None,
             entry: None,
             heap: vec![],
             columns: vec![],
@@ -592,6 +600,33 @@ impl Runtime {
     }
 }
 impl Graph {
+    /// Observe extensions without installing speculative shapes or changing
+    /// production's frame bound. The trace is not an admitted Bake profile.
+    pub fn trace_ownership_catalog(&mut self, max_frames: usize) -> Result<()> {
+        let max_frames = checked_frame_limit(Some(&json!(max_frames)))?;
+        let m = self.ownership.as_mut().ok_or("enable ownership before tracing")?;
+        if m.stats.marker_entries != 0 || m.composition.training.is_some() || m.composition.catalog_trace.is_some() {
+            return Err("start catalog tracing once, before execution and without exploratory training".into());
+        }
+        m.composition.catalog_trace = Some(Box::new(CatalogTrace { max_frames, ..Default::default() }));
+        Ok(())
+    }
+    pub fn ownership_catalog_trace(&self) -> Result<J> {
+        let m = self.ownership.as_ref().ok_or("ownership is disabled")?;
+        let trace = m.composition.catalog_trace.as_ref().ok_or("catalog tracing is disabled")?;
+        let records = trace.records.iter().map(|(key, (fragment, births, inputs, handles))| json!({
+            "source_shape":key.shape,"fragment":fragment,"matched_births":births,
+            "available_shared_inputs":inputs,"static_instruction_handles":handles,
+        })).collect::<Vec<_>>();
+        Ok(json!({"schema":"eggfuse-ownership-catalog-trace/v1", "source":source_digest(&self.program.artifact),
+            "catalog_sha256":self.program.artifact["sha256"], "max_frames":trace.max_frames,
+            "executed_max_frames":self.program.cell_ownership.composition.max_frames,
+            "seed_shapes":self.program.cell_ownership.composition.shapes.len(),
+            "seed_transitions":self.program.cell_ownership.composition.transitions.len(),
+            "uncovered_births":trace.uncovered_births,"alternatives_overlap":true,
+            "scope":"observed unmatched owned births in installed catalog execution; proposed reuse is not saved work or committed mutations",
+            "records":records}))
+    }
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
         self.train_ownership_fragments_with_limit(4)
     }
@@ -609,8 +644,8 @@ impl Graph {
             .ownership
             .as_mut()
             .ok_or("enable ownership before profiling fragments")?;
-        if m.stats.marker_entries != 0 {
-            return Err("start fragment profiling before execution".into());
+        if m.stats.marker_entries != 0 || m.composition.catalog_trace.is_some() {
+            return Err("start fragment profiling before execution and without catalog tracing".into());
         }
         if !extend && !self.program.cell_ownership.composition.transitions.is_empty() {
             return Err("profile fragments from the unbaked source catalog".into());
@@ -712,6 +747,7 @@ impl Graph {
             return;
         }
         let mut selected = None;
+        let mut proposals = Vec::new(); // Allocates only in explicit trace mode.
         if let Some(source) = &m.composition.entry
             && source.template == template {
             let rid = source.rule;
@@ -740,6 +776,11 @@ impl Graph {
                     let c = m.composition.components[frame.component as usize]
                         .as_ref()
                         .unwrap();
+                    if let Some(trace) = &m.composition.catalog_trace {
+                        if c.frames.len() < trace.max_frames && c.frames.last().is_none_or(|&last| last < cell) {
+                            proposals.push(Key { shape: c.shape, hop: Hop { source_frame: frame.ordinal, rule: rid, entry, op: f.op } });
+                        }
+                    }
                     if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
                         m.stats.composition_capacity_cuts += 1;
                         continue;
@@ -803,6 +844,22 @@ impl Graph {
                     ));
                     break 'candidate;
                 }
+            }
+        }
+        if selected.is_none() && let Some(trace) = &mut m.composition.catalog_trace {
+            trace.uncovered_births += 1;
+            let plan = &self.program.cell_ownership.composition;
+            for key in proposals {
+                let Some(subst) = plan.substitutions(&self.program.cell_ownership.programs, key.shape, &key.hop) else { continue; };
+                let entry = trace.records.entry(key.clone()).or_insert_with(|| {
+                    let mut fragment = plan.fragments[key.shape].clone();
+                    fragment.hops.push(key.hop.clone());
+                    let code = plan.shapes[key.shape].append(program, &self.program.cell_ownership.programs[program], &subst).0;
+                    let handles = code.signals.iter().map(|s|s.len()).sum();
+                    (fragment, 0, 0, handles)
+                });
+                entry.1 += 1;
+                entry.2 += subst.len() as u64;
             }
         }
         let (component, ordinal) = if let Some((component, shape, cross_stage)) = selected {

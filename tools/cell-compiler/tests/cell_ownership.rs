@@ -937,6 +937,32 @@ fn bounded_longer_catalog_preserves_cross_run_execution() {
     let prefix_catalog = Program::parse(raw).unwrap();
     let seed_transitions = prefix_catalog.cell_ownership.composition.transitions.len();
     assert!(seed_transitions > 0);
+    let mut observed_graph = Graph::new_with_cell_ownership(prefix_catalog.clone()).unwrap();
+    observed_graph.trace_ownership_catalog(16).unwrap();
+    assert!(observed_graph.continue_ownership_fragment_training(16).is_err());
+    let mut observed = Executor::new(observed_graph, false);
+    let mut unchanged = Executor::new(Graph::new_with_cell_ownership(prefix_catalog.clone()).unwrap(), false);
+    let audit_run = |e: &mut Executor, run| {
+        use eggfuse_cell_runtime::transfer_audit as audit;
+        audit::take_digests(); audit::take_write_digests(); audit::take_resume_digests();
+        audit::set_active(true); audit::enable_write_audit();
+        e.execute_until(Some(run)).unwrap();
+        audit::set_active(false);
+        json!({"rhs":audit::take_digests(),"writes":audit::take_write_digests(),"resumes":audit::take_resume_digests()})
+    };
+    for run in 1..=6 {
+        assert_eq!(audit_run(&mut unchanged, run), audit_run(&mut observed, run));
+        assert_eq!(unchanged.graph.export().unwrap(), observed.graph.export().unwrap());
+        assert_eq!(unchanged.graph.ownership_report()["inventory"], observed.graph.ownership_report()["inventory"]);
+        assert_eq!(serde_json::to_value(unchanged.graph.cells.iter().collect::<Vec<_>>()).unwrap(),
+            serde_json::to_value(observed.graph.cells.iter().collect::<Vec<_>>()).unwrap());
+    }
+    let trace = observed.graph.ownership_catalog_trace().unwrap();
+    assert_eq!(trace["executed_max_frames"], 4);
+    assert_eq!(trace["seed_transitions"], seed_transitions);
+    assert!(!trace["records"].as_array().unwrap().is_empty());
+    assert_eq!(observed.graph.ownership_report()["stats"]["composition_shape_builds"], 0);
+    assert!(composition::select_profile(&trace).is_err(), "proposals must not masquerade as saved work");
     let mut graph = Graph::new_with_cell_ownership(prefix_catalog).unwrap();
     assert!(graph.train_ownership_fragments().is_err(), "fresh training must stay explicit");
     assert!(graph.continue_ownership_fragment_training(2).is_err());

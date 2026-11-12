@@ -337,7 +337,7 @@ impl Graph {
     pub(crate) fn needs_ownership_entry(&self, rid: usize) -> bool {
         self.ownership.as_ref().is_some_and(|m| {
             self.program.cell_ownership.markers[self.program.rules[rid].template].program.active()
-                && (m.composition.training.is_some()
+                && (m.composition.catalog_trace.is_some() || m.composition.training.is_some()
                     || self.program.cell_ownership.composition.active_rules[rid])
         })
     }

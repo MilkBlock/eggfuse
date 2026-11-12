@@ -56,3 +56,7 @@ required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
 [[example]]
 name = "runtime_storage_peak"
 required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "runtime_catalog_trace"
+required-features = ["sparse-cells", "storage-metrics"]

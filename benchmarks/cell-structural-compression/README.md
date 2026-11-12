@@ -517,3 +517,55 @@ that exceeds four frames, rejection of invalid limits, rejection of a catalog
 whose paths exceed its limit, and seeded discovery from a shorter installed
 catalog. All-feature runtime compilation passes. The new test verifies that
 seeded training both hits existing code and discovers longer checked paths.
+
+## Passive iteration over the installed catalog
+
+Exploratory extension immediately changes component shapes and therefore later
+ownership contexts. It cannot supply the exact execution distribution of the
+installed catalog. A separate `--observe-catalog true` mode now records only
+proposed extensions at actually unmatched owned births. It does not raise the
+executed frame limit, register a new runtime shape, or install a transition.
+Successful installed transitions keep their original choice. The temporary
+observation state contains proposal keys and aggregate counts, not a copy of
+runtime facts, bindings or producer/consumer lists. Tracing is disabled by default.
+
+The trace uses `eggfuse-ownership-catalog-trace/v1`, deliberately distinct from
+an exploratory training profile. Existing `select_profile` rejects it: proposed
+input reuse cannot be relabeled as saved binding operations. Candidate scoring
+and admission still have to charge compiled code and surviving runtime state.
+
+The production-path observer below uses local congruence and the same per-Run
+compaction policy as the accepted experiment. It compares every Run with the
+saved original graph and ordered RHS/write/resume digests, avoiding a second
+reference execution. This run passed all 1,428 checks; final native semantic
+acceptance also passed. The source-storage census and component inventory are
+identical to the accepted four-frame run. Successful compositions remain 1,066,
+and registered runtime shape builds remain zero.
+
+```sh
+cargo run --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics --example runtime_catalog_trace -- out/cell-structural-compression/baked-lean/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/catalog-passive-audited.json
+python3 benchmarks/cell-structural-compression/analyze_catalog_trace.py out/cell-structural-compression/shared-code-trace.json out/cell-structural-compression/shared-code-peak.json out/cell-structural-compression/catalog-passive-audited.json benchmarks/cell-structural-compression/catalog-observation-results.json
+```
+
+Offline analysis finds 1,309 proposed paths (564 two-frame, 250 three-frame,
+195 four-frame, 300 five-frame), of which 470 repeat. Of these, **365 paths /
+208 repeated paths already have their local producer/consumer pair compiled**;
+what is missing is applying that pair within the current larger state. The
+remaining 944 paths / 262 repeated paths have a new local pair. Observations
+across alternative anchors overlap and must not be added as distinct mutations.
+This supports investigating reuse of established local completion within larger
+states, instead of blindly materializing every observed history.
+
+Tracing visits Entries that normal dispatch can omit, so diagnostic capacity-cut
+counts rise from 771 to 857 even though actual choices and storage are unchanged.
+Those counters cannot be used as proof of compression. This iteration claims
+**no additional compression**; accepted complete retained cost remains the
+previously measured 3,803,192 B, far above the target. The trace is a prerequisite
+for selecting an actual state-removing takeover, not such a takeover itself.
+
+Tests extend the six-Run fixture to compare passive versus ordinary execution,
+ordered effects, source Cell contents and component inventory at every Run;
+mutual exclusion with exploratory training and rejection by the old selector
+are also checked. All 29 ownership integration tests and 138 sparse runtime
+unit tests pass; all-feature runtime compilation passes. The standalone observer's final export is checked
+using the specified `choice_diagnosis.py` entrypoint.
