@@ -1,0 +1,102 @@
+{
+  "scope": "actual standalone Cell runtime, sum-bits; no timing claim",
+  "base_program": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "program_sha256": "ae2c145f8ad2f8cefe10b5643a110f3dc0d7b770a407b773c583073edf09de8a",
+  "runs": 1428,
+  "graph_rhs_writes_equal": true,
+  "resume_changed_runs": 138,
+  "metrics": {
+    "key_lookup_calls": {
+      "before": 12106,
+      "after": 12004,
+      "delta": -102
+    },
+    "graph_work.constructor_requests": {
+      "before": 8014,
+      "after": 7912,
+      "delta": -102
+    },
+    "graph_work.handoff_lets": {
+      "before": 74,
+      "after": 176,
+      "delta": 102
+    },
+    "graph_work.cells_created": {
+      "before": 2893,
+      "after": 2893,
+      "delta": 0
+    },
+    "graph_work.logical_facts_created": {
+      "before": 3739,
+      "after": 3739,
+      "delta": 0
+    },
+    "stage.stats.matched_entry_resumptions": {
+      "before": 0,
+      "after": 102,
+      "delta": 102
+    },
+    "stage.stats.matched_entry_fields": {
+      "before": 0,
+      "after": 612,
+      "delta": 612
+    },
+    "stage.stats.history_allocations": {
+      "before": 302,
+      "after": 644,
+      "delta": 342
+    },
+    "stage.stats.history_capture_reads": {
+      "before": 70,
+      "after": 412,
+      "delta": 342
+    },
+    "stage.stats.cell_output_registrations": {
+      "before": 729,
+      "after": 857,
+      "delta": 128
+    },
+    "stage.stats.absorbed_root_completions": {
+      "before": 228,
+      "after": 100,
+      "delta": -128
+    },
+    "stage.published_history_storage.owners": {
+      "before": 133,
+      "after": 341,
+      "delta": 208
+    },
+    "stage.published_history_storage.owner_payload_bytes": {
+      "before": 8512,
+      "after": 21824,
+      "delta": 13312
+    },
+    "stage.published_history_storage.rc_header_bytes": {
+      "before": 2160,
+      "after": 5488,
+      "delta": 3328
+    },
+    "graph_owned_teardown_bytes": {
+      "before": 2617317,
+      "after": 2617317,
+      "delta": 0
+    },
+    "retained_program_teardown_bytes": {
+      "before": 117318509,
+      "after": 116454158,
+      "delta": -864351
+    },
+    "net_growth_over_setup_bytes": {
+      "before": 5570091,
+      "after": 5624235,
+      "delta": 54144
+    },
+    "execution_and_takeover_peak_bytes": {
+      "before": 125400997,
+      "after": 124590845,
+      "delta": -810152
+    }
+  },
+  "compression_accepted": false,
+  "reason": "Graph unchanged; additional retained history and execution growth. Program shrinkage is not egraph compression."
+}

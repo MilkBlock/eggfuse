@@ -2160,6 +2160,10 @@ impl Executor {
         { self.graph.stats.constructor_prepared_inputs += u64::from(constructor.is_some()); }
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
+        #[cfg(all(feature="sparse-cells",feature="iterative-bake"))]
+        if b.direct.is_none() {
+            b.direct=self.stage_spine.resume_matched(&self.graph,&self.entry_schedule,rid,&b);
+        }
         let stage_cursor = self.stage_spine.begin_step(
             &self.graph.program,
             rid,

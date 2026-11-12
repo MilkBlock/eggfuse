@@ -662,6 +662,11 @@ mod set_counts_test {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    pub matched_entry_probes:u64,
+    pub matched_entry_rows:u64,
+    pub matched_entry_fields:u64,
+    pub matched_entry_resumptions:u64,
+
     candidate_cursor_stores: u64,
     candidate_cursor_growths: u64,
     candidate_cursor_peak_bytes: u64,
@@ -1402,6 +1407,10 @@ impl Programs {
                     }
                 }
             }
+            #[cfg(feature="iterative-bake")]
+            if p.iterative.matched_entries.contains_key(&rid) {
+                query_facts=QueryFacts::Ports(vec![None;r.query.len()]);
+            }
             s.alias_query_facts.push(query_facts);
         }
         #[cfg(feature = "spine-shapes")]
@@ -1445,6 +1454,34 @@ impl Programs {
         self.enabled && !self.origins[rid].is_empty()
     }
 
+    #[cfg(all(feature="sparse-cells",feature="iterative-bake"))]
+    pub(crate) fn resume_matched(&mut self,g:&Graph,entries:&crate::entry_schedule::Scheduler,
+        rid:usize,answer:&Matched)->Option<DirectOrigin> {
+        if !self.enabled {return None;}
+        for &pivot in g.program.iterative.matched_entries.get(&rid)? {
+            self.stats.matched_entry_probes+=1;
+            let Some(witness)=answer.known.receipt(pivot) else {continue;};
+            let Call::Table(table)=g.program.rules[rid].query[pivot].call else {continue;};
+            self.stats.matched_entry_rows+=1;
+            let Some(row)=g.row(witness).ok().flatten() else {continue;};
+            if row.hidden || row.table!=table {continue;}
+            if !g.program.rules[rid].query[pivot].args.iter().zip(row.values.iter()).all(|(a,v)| {
+                self.stats.matched_entry_fields+=1;
+                match a {Arg::Literal(x)=>canon(x,&g.parents)==*v,
+                    Arg::Slot(s)=>answer.values.get(s).is_some_and(|x|canon(x,&g.parents)==*v)}
+            }) {continue;}
+            let Some(published)=entries.matched_publication(table,witness).or_else(||self.entries.get(&witness)) else {continue;};
+            let mut cursor=published.expand();
+            let (selected,_)=g.program.iterative.dispatch(&mut cursor.state,rid,pivot,true,witness);
+            if !selected || !cursor.state.direct {continue;}
+            cursor.via_block=true;
+            self.stats.matched_entry_resumptions+=1;
+            let token=DirectOrigin(self.sealed_cursors.len());
+            self.sealed_cursors.push(Some(cursor));
+            return Some(token);
+        }
+        None
+    }
     pub(crate) fn begin_step(
         &mut self,
         p: &Program,

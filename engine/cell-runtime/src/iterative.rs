@@ -72,6 +72,7 @@ pub struct Catalog {
     pub limits: Limits,
     units: Vec<Unit>,
     leaves: BTreeMap<Entry, Id>,
+    pub(crate) matched_entries: BTreeMap<usize, Vec<usize>>,
     jumps: BTreeMap<Join, Id>,
     switch: crate::result_handoff::Switch,
     inherited: Option<Vec<bool>>,
@@ -234,6 +235,21 @@ impl Catalog {
                 path: path.into_boxed_slice(),
             });
         }
+        if let Some(entries)=raw.get("matched_entries") {
+            for entry in array(entries)? {
+                let (rid,pivot):(usize,usize)=serde_json::from_value(entry.clone()).map_err(|e|e.to_string())?;
+                let rule=p.rules.get(rid).ok_or("matched entry rule")?;
+                if !rule.seminaive || !matches!(rule.query.get(pivot).map(|a|&a.call),Some(Call::Table(_))) {
+                    return Err("matched entry requires a seminaive table atom".into());
+                }
+                let entry=(rid,Some(pivot));
+                if s.leaves.contains_key(&entry) {return Err("duplicate matched entry".into());}
+                s.matched_entries.entry(rid).or_default().push(pivot);
+                let path=vec![(None,entry)];
+                s.leaves.insert(entry,s.units.len());paths.insert(path.clone());
+                s.units.push(Unit {path:path.into_boxed_slice()});
+            }
+        }
         for rule in roots {
             let entry = (rule, None);
             let path = vec![(None, entry)];
@@ -243,6 +259,7 @@ impl Catalog {
                 path: path.into_boxed_slice(),
             });
         }
+        if s.units.len()>limits.total {return Err("matched leaves exceed catalog budget".into());}
         for j in array(&raw["joins"])? {
             let join: Join = serde_json::from_value(j.clone()).map_err(|e| e.to_string())?;
             let u = s

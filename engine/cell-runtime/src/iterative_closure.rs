@@ -14,6 +14,51 @@ impl Catalog {
                 "transfer":self.switch.signature_at(pc)})).collect::<Vec<_>>();
         Ok(json!(rows))
     }
+    /// A matched entry is entered only AFTER the ordinary query has succeeded.
+    /// It may retain partial RHS reuse; it never bypasses residual enumeration,
+    /// primitives or mutable reads. Source coordinates are checked by combine.
+    pub fn emit_matched_routes(p:&Program,plan:&mut J,routes:&[(usize,usize,usize,usize)]) -> Result<()> {
+        let mut catalog=Self::parse(p,plan)?;
+        let mut selected=vec![];
+        let lower=|c:&Catalog|crate::result_handoff::Switch::build(p,
+            c.units.iter().map(|u|u.path.as_ref()),&c.leaves,true,true,true,true,true);
+        for &(producer,output,consumer,pivot) in routes {
+            if producer>=p.rules.len() || consumer>=p.rules.len() {return Err("matched route rule".into());}
+            let mut trial=catalog.clone();
+            for entry in [(producer,None),(consumer,Some(pivot))] {
+                if trial.leaves.contains_key(&entry) {continue;}
+                if let Some(pivot)=entry.1 {
+                    let rule=&p.rules[entry.0];
+                    if !rule.seminaive || !matches!(rule.query.get(pivot).map(|a|&a.call),Some(Call::Table(_))) {
+                        return Err("matched route anchor".into());
+                    }
+                    trial.matched_entries.entry(entry.0).or_default().push(pivot);
+                }
+                trial.leaves.insert(entry,trial.units.len());
+                trial.units.push(Unit {path:vec![(None,entry)].into_boxed_slice()});
+            }
+            let join=Join {left:trial.leaves[&(producer,None)],output,right:trial.leaves[&(consumer,Some(pivot))]};
+            if trial.jumps.contains_key(&join) {continue;}
+            let unit=trial.combine(p,join).ok_or("invalid matched route")?;
+            let path=unit.path.clone();
+            trial.jumps.insert(join,trial.units.len());trial.units.push(unit);
+            // Reject metadata-only additions that cannot change terminal reuse.
+            let before=lower(&catalog);
+            let pc=path.iter().fold(0,|pc,(op,entry)|before.observe_advance(pc,op.unwrap_or(0),*entry));
+            let after=lower(&trial).transfer_signature(&path);
+            if after["program"]["reuse"].as_array().is_none_or(Vec::is_empty)
+                || before.signature_at(pc)==after {continue;}
+            if trial.units.len()-catalog.units.len()>trial.limits.per_round {return Err("matched route budget".into());}
+            trial.limits.total=trial.limits.total.max(trial.units.len());
+            selected.push(json!({"producer":producer,"output":output,"consumer":consumer,"pivot":pivot}));
+            catalog=trial;
+        }
+        encode_catalog(p,plan,&catalog)?;
+        Self::emit_policy(p,plan,true,true,true,true,true,false,None)?;
+        plan["matched_route_selection"]=json!({"routes":selected,
+            "contract":"ordinary matcher completes all conditions before dispatch; existing receipts validate RHS reuse"});
+        Ok(())
+    }
     pub fn emit_history_closures(
         p: &Program,
         plan: &mut J,
@@ -219,6 +264,9 @@ fn encode_catalog(p:&Program,plan:&mut J,catalog:&Catalog)->Result<BTreeMap<Id,I
     if roots.is_empty() {raw.as_object_mut().unwrap().remove("producer_roots");}
     else {raw["producer_roots"]=json!(roots);}
     for field in ["rhs_handoffs","state_plan","completion"] {raw.as_object_mut().unwrap().remove(field);}
+    let matched=catalog.matched_entries.iter().flat_map(|(&r,atoms)|atoms.iter().map(move |&a|(r,a))).collect::<Vec<_>>();
+    if matched.is_empty() {raw.as_object_mut().unwrap().remove("matched_entries");}
+    else {raw["matched_entries"]=json!(matched);}
     let seeded=Catalog::parse(p,&raw)?;
     let mut remap=catalog.leaves.iter().map(|(entry,&old)|(old,seeded.leaves[entry])).collect::<BTreeMap<_,_>>();
     let mut joins=catalog.jumps.iter().map(|(join,&target)|(target,*join)).collect::<Vec<_>>();
