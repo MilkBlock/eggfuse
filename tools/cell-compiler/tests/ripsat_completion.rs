@@ -949,3 +949,85 @@ fn shared_entry_parent_inheritance_preserves_worker_run_boundaries() {
     };
     assert_eq!(execute(0),execute(2),"inheritance must preserve visibility through the retirement Run");
 }
+
+#[test]
+fn iterative_completion_preserves_longer_owner_layouts() {
+    let source=r#"
+(datatype E (N i64) (A E) (B E) (C E) (D E) (F E) (G E))
+(ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset f) (ruleset g)
+(rule ((= x (N n))) ((A x)) :ruleset a)
+(rule ((= x (A y))) ((B x)) :ruleset b)
+(rule ((= x (B y))) ((C x)) :ruleset c)
+(rule ((= x (C y))) ((D x)) :ruleset d)
+(rule ((= x (D y))) ((F x)) :ruleset f)
+(rule ((= x (F y))) ((G x)) :ruleset g)
+(N 0)
+(run-schedule (seq (run a) (run b) (run c) (run d) (run f) (run g)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("rebake-long-owner",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":(0..p.rules.len()).map(|r|json!({"edge":[0,0,r,0],"visits":2})).collect::<Vec<_>>()});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,p.rules.len()).unwrap();
+    let mut raw=p.artifact.clone();raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut raw=p.artifact.clone();
+    raw["iterative_bake"]=Catalog::seed(&p,Limits::default()).unwrap();
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut graph=Graph::new_with_cell_ownership(p.clone()).unwrap();
+    graph.train_ownership_fragments_with_limit(8).unwrap();
+    let mut train=Executor::new(graph,false);train.execute().unwrap();
+    let profile=train.graph.ownership_fragment_profile().unwrap();
+    let fragments=profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>();
+    assert!(fragments.iter().any(|f|f["hops"].as_array().unwrap().len()>=4));
+    let mut raw=p.artifact;
+    raw["ownership_fragments"]=json!({"schema":"eggfuse-ownership-fragments/v2",
+        "source":profile["source"],"max_frames":8,"fragments":fragments,"query_classes":true});
+    let baseline=Program::parse(seal(raw)).unwrap();
+    let mut current=baseline.clone();
+    for round in 0..3 {
+        let raw=if round==1 {eggfuse_cell_compiler::completion_bake::compile_lazy_unions(current).unwrap()}
+            else {eggfuse_cell_compiler::completion_bake::compile(current).unwrap()};
+        assert_eq!(raw["ownership_fragments"]["max_frames"],8,"round {round}");
+        assert_eq!(raw["ownership_fragments"]["query_classes"],true);
+        assert_eq!(raw["ownership_fragments"]["fragments"],baseline.artifact["ownership_fragments"]["fragments"]);
+        current=Program::parse(raw).unwrap();
+        assert_eq!(current.cell_ownership.composition.max_frames,8);
+    }
+    let mut a=Executor::new(Graph::new_with_cell_ownership(baseline).unwrap(),false);
+    let mut b=Executor::new(Graph::new_with_cell_ownership(current).unwrap(),false);
+    for run in 1..=6 {
+        a.execute_until(Some(run)).unwrap();b.execute_until(Some(run)).unwrap();
+        assert_eq!(a.graph.export().unwrap(),b.graph.export().unwrap(),"Run {run}");
+        assert_eq!(a.steps.len(),b.steps.len());
+        for (x,y) in a.steps.iter().zip(&b.steps) {
+            for key in ["ordinal","ruleset","path","iterations","epoch","logical_matches","executed_bindings","changed"] {
+                assert_eq!(x[key],y[key],"Run {run}: {key}");
+            }
+        }
+    }
+    assert!(b.graph.ownership_report()["inventory"]["largest_component_frames"].as_u64().unwrap()>4);
+}
+
+#[test]
+fn successful_zero_birth_rhs_already_advances_completion_history() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(N 1) (N 2)","(N 1) (N 2) (Mid (N 1)) (Mid (N 2))")
+        .replace("(run retire)", "");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw).unwrap();
+    let bridge=p.rules.iter().position(|r|p.templates[r.template].name=="bridge").unwrap();
+    let mut e=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    e.collect_iterative_pairs();
+    e.execute_until(Some(2)).unwrap();
+    let facts=e.graph.stats.logical_facts_created;
+    let requests=e.graph.stats.constructor_requests;
+    e.execute_until(Some(3)).unwrap();
+    assert_eq!(e.graph.stats.logical_facts_created,facts,"bridge only returns existing Mid constructors");
+    assert!(e.graph.stats.constructor_requests>requests,"bridge actually executed");
+    let history=e.iterative_training().completion_history(&e.graph.program);
+    let completed=history["events"].as_array().unwrap().iter().filter(|event|event["entry"][0]==bridge).count();
+    assert_eq!(completed,2,"zero births must not suppress either successful completion");
+}

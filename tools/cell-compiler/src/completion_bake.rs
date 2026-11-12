@@ -63,6 +63,12 @@ fn restore_ownership(original:&Value,raw:&mut Value) -> Result<(),Box<dyn std::e
     raw["ownership_fragments"]=serde_json::json!({"schema":old["schema"],
         "source":composition::source_digest(raw),"fragments":old["fragments"],
         "selection_provenance":{"previous_source":old["source"],"new_observations":false}});
+    // Ownership extent is part of the checked layout contract. Omitting an
+    // explicit bound silently restores the four-frame default (or rejects a
+    // previously valid longer fragment) on the next completion iteration.
+    if let Some(limit)=old.get("max_frames") {
+        raw["ownership_fragments"]["max_frames"]=limit.clone();
+    }
     raw.as_object_mut().unwrap().remove("sha256");
     let mut checked=Program::parse(raw.clone())?;
     checked.prepare_cell_ownership()?;

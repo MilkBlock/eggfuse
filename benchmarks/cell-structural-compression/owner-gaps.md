@@ -39,15 +39,21 @@ available source capacity. This is evidence against treating more birth-driven
 catalog entries as the complete fix; it does not prove every one of the 690
 would be eligible for a new transition.
 
-The next mechanism should compile a completion transition whose outputs are
-actual returned results, including foreign constructor owners. It must run at
-the original completion boundary even when no fact was born, project inputs from
-existing instance/Entry slots, and describe the resulting completed state without
-allocating another ordinary producer frame just to remember success. Subsequent
-stage switches may use that state only after full-key, liveness, visibility and
-residual/delta obligations are satisfied. The design must charge retained result
-references against source state and maintenance actually removed. A runtime
-cache of all successful applications would not meet the compression goal.
+This finding concerns physical ownership composition, not absence of a logical
+completion path. `stage_spine::complete` already records successful applications,
+seeds admitted roots and captures actual results without requiring births. The
+regression `successful_zero_birth_rhs_already_advances_completion_history` confirms
+two executed zero-birth applications still enter that existing history. Do not
+introduce a second completion log to fix an ownership connectivity problem.
+
+The next mechanism must use that existing completion/result state to drive
+physical takeover, including results owned by other Cells. It must project
+inputs from existing instance/Entry slots and describe the resulting completed
+state without allocating another ordinary producer frame just to remember
+success. Subsequent stage switches still need full-key, liveness, visibility and
+residual/delta proofs. Charge retained result references against source state
+and maintenance actually removed; a cache of all successful applications would
+not meet the compression goal.
 
 ## Coordinate correction
 
