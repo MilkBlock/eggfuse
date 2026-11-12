@@ -57,6 +57,8 @@ impl Executor {
         }
         let count = queue.owners.iter().filter(|p| p.job.is_some()).count();
         let mut completed = if count != 0 {
+            #[cfg(feature="cell-sync-diagnostics")]
+            let mut diagnostic = crate::sync_diagnostics::Clock::new();
             let parents = self.graph.parents.freeze();
             let tasks: Vec<_> = queue
                 .owners
@@ -91,6 +93,7 @@ impl Executor {
                     &mut effects,
                 )
             };
+            #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
             let done: Vec<Done> = if tasks.iter().any(|(job, _)| job.dependent()) {
                 let (done, counts) = crate::graph::cell_births::run_shared(
                     tasks,
@@ -108,6 +111,7 @@ impl Executor {
             } else {
                 tasks.into_iter().map(run).collect()
             };
+            #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
             let elapsed = clock.elapsed().as_nanos() as u64;
             stats.scheduler.wait_ns += elapsed;
             if parallel {
@@ -121,6 +125,8 @@ impl Executor {
             stats.births.root_writes += work.writes;
             stats.births.root_growths += work.growths;
             stats.births.root_merges += work.merged_entries;
+            #[cfg(feature="cell-sync-diagnostics")]
+            self.graph.stats.sync_diagnostics.constructors.record(diagnostic,None,parallel,pool.current_num_threads());
             done
         } else {
             Vec::new()
@@ -134,6 +140,7 @@ impl Executor {
             && self.graph.plan_unit_registration(&mut completed,
                 self.query_workers.as_ref().unwrap().execution_pool().unwrap());
         let mut completed = completed.into_iter().peekable();
+        #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
         let result = (|| {
         for parked in queue.owners.drain(..) {
             let mut execution = parked.execution;
@@ -177,6 +184,11 @@ impl Executor {
         debug_assert!(completed.next().is_none());
         Ok(())
         })();
+        #[cfg(feature="cell-sync-diagnostics")]
+        { let elapsed = adoption.elapsed().as_nanos() as u64;
+          let stats = &mut self.graph.stats.sync_diagnostics;
+          stats.source_batches += 1; stats.source_adoption_ns += elapsed;
+          if registered { stats.registered_source_batches += 1; stats.registered_source_adoption_ns += elapsed; } }
         if registered {
             self.graph.finish_unit_registration(registry_start,
                 self.query_workers.as_ref().unwrap().execution_pool().unwrap());

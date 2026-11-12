@@ -1,0 +1,2436 @@
+{
+  "scope": "actual standalone Cell CPU, frozen Raytrace, four workers; not native egglog",
+  "limits": "Task residence includes OS descheduling. Pool calls include useful work. No-task gaps include dispatch, wakeup, scheduler and diagnostic overhead; they are not isolated lock time. Inline ablation removes dispatch AND parallelism, so its net delta is not a pure synchronization percentage.",
+  "normal_runtime_commit": "3dc84223",
+  "diagnostic_source_base": "de03e3d5",
+  "reference": {
+    "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+    "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+  },
+  "execution_order": [
+    {
+      "iteration": -1,
+      "lanes": [
+        "normal",
+        "pool",
+        "inline"
+      ]
+    },
+    {
+      "iteration": 0,
+      "lanes": [
+        "normal",
+        "inline",
+        "pool"
+      ]
+    },
+    {
+      "iteration": 1,
+      "lanes": [
+        "pool",
+        "normal",
+        "inline"
+      ]
+    },
+    {
+      "iteration": 2,
+      "lanes": [
+        "normal",
+        "inline",
+        "pool"
+      ]
+    }
+  ],
+  "lanes": {
+    "normal": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--parallel-residuals",
+        "--parallel-publication",
+        "--cell-execution-grain",
+        "1"
+      ],
+      "environment": {},
+      "runtime_sha256": "f45cc9fbbb6d2b8aa8ccc8fc42cff9a31fa1425e5663791bb664e0653010eb06",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 6.182536625,
+          "process_wall_seconds": 8.79903233400546,
+          "process_user_seconds": 9.379853,
+          "process_system_seconds": 1.522436,
+          "phases": {
+            "delivery_gc": 0.02364708,
+            "query_update": 1.10483213,
+            "repair": 0.542399291,
+            "rhs": 2.047681827,
+            "search": 2.459101181
+          },
+          "diagnostic": null
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.304940542,
+          "process_wall_seconds": 7.738004458980868,
+          "process_user_seconds": 8.273816999999994,
+          "process_system_seconds": 1.3428140000000006,
+          "phases": {
+            "delivery_gc": 0.018847088,
+            "query_update": 0.913785957,
+            "repair": 0.469630078,
+            "rhs": 1.766287209,
+            "search": 2.132771042
+          },
+          "diagnostic": null
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 6.2772278329999995,
+          "process_wall_seconds": 8.92575687498902,
+          "process_user_seconds": 9.354542999999993,
+          "process_system_seconds": 1.5731169999999999,
+          "phases": {
+            "delivery_gc": 0.023812093,
+            "query_update": 1.104521171,
+            "repair": 0.566428896,
+            "rhs": 2.143399002,
+            "search": 2.434074572
+          },
+          "diagnostic": null
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.487421917,
+          "process_wall_seconds": 8.442672292003408,
+          "process_user_seconds": 8.426181,
+          "process_system_seconds": 1.506005,
+          "phases": {
+            "delivery_gc": 0.019912060999999998,
+            "query_update": 0.951520135,
+            "repair": 0.487295247,
+            "rhs": 1.820667305,
+            "search": 2.203824397
+          },
+          "diagnostic": null
+        }
+      ],
+      "inference_median_seconds": 6.182536625
+    },
+    "pool": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--parallel-residuals",
+        "--parallel-publication",
+        "--cell-execution-grain",
+        "1"
+      ],
+      "environment": {
+        "CELL_SYNC_REGISTRY_INLINE": "0"
+      },
+      "runtime_sha256": "acf4716d9aeebebd29ac2e7a64e14c06a7f387bd5a653ae8a735d6c2f15914d8",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 6.09072325,
+          "process_wall_seconds": 8.63479162499425,
+          "process_user_seconds": 9.211701000000005,
+          "process_system_seconds": 1.5015419999999988,
+          "phases": {
+            "delivery_gc": 0.022475091,
+            "query_update": 1.094227305,
+            "repair": 0.529520319,
+            "rhs": 2.033830167,
+            "search": 2.406134376
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 1116823,
+              "calls": 818,
+              "concurrency_ns": [
+                5353920,
+                4100209,
+                5618886
+              ],
+              "launch_ns": 1706676,
+              "no_task_ns": 5353920,
+              "pool_ns": 15073015,
+              "pooled_calls": 818,
+              "prepare_ns": 2196856,
+              "return_ns": 3620580,
+              "task_elapsed_ns": 15337981,
+              "task_span_ns": 9745759,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                3952965,
+                4506009,
+                3519839,
+                3359168,
+                0
+              ],
+              "worker_tasks": [
+                435,
+                493,
+                364,
+                344,
+                0
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 585700,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 65169086,
+              "pooled_calls": 2919,
+              "prepare_ns": 4266119,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": false,
+            "install": {
+              "after_join_ns": 203378,
+              "calls": 818,
+              "concurrency_ns": [
+                9073664,
+                9261793,
+                516467
+              ],
+              "launch_ns": 4427927,
+              "no_task_ns": 9073664,
+              "pool_ns": 18851924,
+              "pooled_calls": 818,
+              "prepare_ns": 943086,
+              "return_ns": 4317146,
+              "task_elapsed_ns": 10294727,
+              "task_span_ns": 10106851,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                4523648,
+                5670664,
+                92040,
+                8375,
+                0
+              ],
+              "worker_tasks": [
+                1104,
+                521,
+                10,
+                1,
+                0
+              ]
+            },
+            "queries": {
+              "after_join_ns": 84183865,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 444484487,
+              "pooled_calls": 3210,
+              "prepare_ns": 17863434,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 101759047,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 166818993,
+            "source_batches": 3388
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.489681875,
+          "process_wall_seconds": 8.194403333007358,
+          "process_user_seconds": 8.528120000000001,
+          "process_system_seconds": 1.432443000000001,
+          "phases": {
+            "delivery_gc": 0.01994686,
+            "query_update": 0.972225882,
+            "repair": 0.477649582,
+            "rhs": 1.823632746,
+            "search": 2.191892637
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 965508,
+              "calls": 818,
+              "concurrency_ns": [
+                3745633,
+                2865816,
+                5161962
+              ],
+              "launch_ns": 770468,
+              "no_task_ns": 3745633,
+              "pool_ns": 11773411,
+              "pooled_calls": 818,
+              "prepare_ns": 1598677,
+              "return_ns": 2975039,
+              "task_elapsed_ns": 13189740,
+              "task_span_ns": 8027904,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                2518417,
+                3486965,
+                3678243,
+                3506115,
+                0
+              ],
+              "worker_tasks": [
+                349,
+                435,
+                432,
+                420,
+                0
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 521133,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 54253015,
+              "pooled_calls": 2919,
+              "prepare_ns": 3832230,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": false,
+            "install": {
+              "after_join_ns": 181647,
+              "calls": 818,
+              "concurrency_ns": [
+                7371365,
+                8255653,
+                282592
+              ],
+              "launch_ns": 3588654,
+              "no_task_ns": 7371365,
+              "pool_ns": 15909610,
+              "pooled_calls": 818,
+              "prepare_ns": 679273,
+              "return_ns": 3439044,
+              "task_elapsed_ns": 8820837,
+              "task_span_ns": 8881912,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                4053256,
+                4741164,
+                20917,
+                5500,
+                0
+              ],
+              "worker_tasks": [
+                1128,
+                500,
+                7,
+                1,
+                0
+              ]
+            },
+            "queries": {
+              "after_join_ns": 80167394,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 412048520,
+              "pooled_calls": 3210,
+              "prepare_ns": 16318522,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 84304036,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 143824985,
+            "source_batches": 3388
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 6.19920125,
+          "process_wall_seconds": 8.70616470897221,
+          "process_user_seconds": 9.350995000000012,
+          "process_system_seconds": 1.4612610000000004,
+          "phases": {
+            "delivery_gc": 0.023502493,
+            "query_update": 1.08813963,
+            "repair": 0.553332959,
+            "rhs": 2.096209374,
+            "search": 2.432882207
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 1143478,
+              "calls": 818,
+              "concurrency_ns": [
+                5348135,
+                4114305,
+                5873245
+              ],
+              "launch_ns": 1672960,
+              "no_task_ns": 5348135,
+              "pool_ns": 15335685,
+              "pooled_calls": 818,
+              "prepare_ns": 2183625,
+              "return_ns": 3671466,
+              "task_elapsed_ns": 15860795,
+              "task_span_ns": 9991259,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                4444491,
+                4740098,
+                3306080,
+                3370126,
+                0
+              ],
+              "worker_tasks": [
+                441,
+                484,
+                361,
+                350,
+                0
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 580563,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 61263983,
+              "pooled_calls": 2919,
+              "prepare_ns": 4331230,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": false,
+            "install": {
+              "after_join_ns": 211908,
+              "calls": 818,
+              "concurrency_ns": [
+                9438351,
+                8697817,
+                937883
+              ],
+              "launch_ns": 4704517,
+              "no_task_ns": 9438351,
+              "pool_ns": 19074051,
+              "pooled_calls": 818,
+              "prepare_ns": 988531,
+              "return_ns": 4448543,
+              "task_elapsed_ns": 10573583,
+              "task_span_ns": 9920991,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                5571536,
+                4889213,
+                92167,
+                20667,
+                0
+              ],
+              "worker_tasks": [
+                1083,
+                538,
+                14,
+                1,
+                0
+              ]
+            },
+            "queries": {
+              "after_join_ns": 84645592,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 450980901,
+              "pooled_calls": 3210,
+              "prepare_ns": 17840545,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 109157569,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 173887003,
+            "source_batches": 3388
+          }
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.432211958,
+          "process_wall_seconds": 8.350515625003027,
+          "process_user_seconds": 8.444908999999999,
+          "process_system_seconds": 1.367887,
+          "phases": {
+            "delivery_gc": 0.019657283,
+            "query_update": 0.953355453,
+            "repair": 0.478340691,
+            "rhs": 1.793439286,
+            "search": 2.182994272
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 956701,
+              "calls": 818,
+              "concurrency_ns": [
+                4310007,
+                2913322,
+                5249795
+              ],
+              "launch_ns": 938000,
+              "no_task_ns": 4310007,
+              "pool_ns": 12473124,
+              "pooled_calls": 818,
+              "prepare_ns": 1630421,
+              "return_ns": 3368965,
+              "task_elapsed_ns": 13412912,
+              "task_span_ns": 8166159,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                2808121,
+                4102584,
+                3347916,
+                3154291,
+                0
+              ],
+              "worker_tasks": [
+                364,
+                489,
+                409,
+                374,
+                0
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 524315,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 55585685,
+              "pooled_calls": 2919,
+              "prepare_ns": 3623462,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": false,
+            "install": {
+              "after_join_ns": 190161,
+              "calls": 818,
+              "concurrency_ns": [
+                8546634,
+                8222240,
+                356546
+              ],
+              "launch_ns": 4333003,
+              "no_task_ns": 8546634,
+              "pool_ns": 17125420,
+              "pooled_calls": 818,
+              "prepare_ns": 707257,
+              "return_ns": 3867674,
+              "task_elapsed_ns": 8935332,
+              "task_span_ns": 8924743,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                5278533,
+                3583258,
+                50875,
+                22666,
+                0
+              ],
+              "worker_tasks": [
+                1123,
+                503,
+                9,
+                1,
+                0
+              ]
+            },
+            "queries": {
+              "after_join_ns": 78435723,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 399798697,
+              "pooled_calls": 3210,
+              "prepare_ns": 16216985,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 86109054,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 144750457,
+            "source_batches": 3388
+          }
+        }
+      ],
+      "inference_median_seconds": 6.09072325,
+      "phase_medians_ms": {
+        "classify": {
+          "prepare": 2.183625,
+          "pool": 15.073015,
+          "after_join": 1.116823,
+          "launch": 1.67296,
+          "task_span": 9.745759,
+          "return": 3.62058,
+          "no_task": 5.348135,
+          "task_elapsed": 15.337981
+        },
+        "install": {
+          "prepare": 0.943086,
+          "pool": 18.851924,
+          "after_join": 0.203378,
+          "launch": 4.427927,
+          "task_span": 9.920991,
+          "return": 4.317146,
+          "no_task": 9.073664,
+          "task_elapsed": 10.294727
+        },
+        "constructors": {
+          "prepare": 4.266119,
+          "pool": 61.263983,
+          "after_join": 0.580563,
+          "launch": 0.0,
+          "task_span": 0.0,
+          "return": 0.0,
+          "no_task": 0.0,
+          "task_elapsed": 0.0
+        },
+        "queries": {
+          "prepare": 17.840545,
+          "pool": 444.484487,
+          "after_join": 84.183865,
+          "launch": 0.0,
+          "task_span": 0.0,
+          "return": 0.0,
+          "no_task": 0.0,
+          "task_elapsed": 0.0
+        }
+      },
+      "registry_total_median_ms": 38.385082,
+      "source_adoption_median_ms": 166.818993,
+      "registered_source_adoption_median_ms": 101.759047
+    },
+    "inline": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--parallel-residuals",
+        "--parallel-publication",
+        "--cell-execution-grain",
+        "1"
+      ],
+      "environment": {
+        "CELL_SYNC_REGISTRY_INLINE": "1"
+      },
+      "runtime_sha256": "acf4716d9aeebebd29ac2e7a64e14c06a7f387bd5a653ae8a735d6c2f15914d8",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 6.043648834,
+          "process_wall_seconds": 8.595512708008755,
+          "process_user_seconds": 9.200967999999996,
+          "process_system_seconds": 1.4252510000000003,
+          "phases": {
+            "delivery_gc": 0.022982458,
+            "query_update": 1.064985206,
+            "repair": 0.532386665,
+            "rhs": 2.030328115,
+            "search": 2.388279605
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 839285,
+              "calls": 818,
+              "concurrency_ns": [
+                55787,
+                14340952,
+                0
+              ],
+              "launch_ns": 17483,
+              "no_task_ns": 55787,
+              "pool_ns": 14396739,
+              "pooled_calls": 0,
+              "prepare_ns": 2436752,
+              "return_ns": 14750,
+              "task_elapsed_ns": 14340952,
+              "task_span_ns": 14364506,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                14340952
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 613863,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 61188143,
+              "pooled_calls": 2919,
+              "prepare_ns": 4281914,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": true,
+            "install": {
+              "after_join_ns": 96182,
+              "calls": 818,
+              "concurrency_ns": [
+                48309,
+                8657269,
+                0
+              ],
+              "launch_ns": 20297,
+              "no_task_ns": 48309,
+              "pool_ns": 8705578,
+              "pooled_calls": 0,
+              "prepare_ns": 909399,
+              "return_ns": 13512,
+              "task_elapsed_ns": 8657269,
+              "task_span_ns": 8671769,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                8657269
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "queries": {
+              "after_join_ns": 82766891,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 444062233,
+              "pooled_calls": 3210,
+              "prepare_ns": 17839950,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 102243924,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 168800624,
+            "source_batches": 3388
+          }
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.440867625,
+          "process_wall_seconds": 9.12537316599628,
+          "process_user_seconds": 8.436434000000006,
+          "process_system_seconds": 1.3007989999999996,
+          "phases": {
+            "delivery_gc": 0.019632423,
+            "query_update": 0.954823825,
+            "repair": 0.473974983,
+            "rhs": 1.79583568,
+            "search": 2.192029935
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 741492,
+              "calls": 818,
+              "concurrency_ns": [
+                53707,
+                12498913,
+                0
+              ],
+              "launch_ns": 18282,
+              "no_task_ns": 53707,
+              "pool_ns": 12552620,
+              "pooled_calls": 0,
+              "prepare_ns": 2040300,
+              "return_ns": 15350,
+              "task_elapsed_ns": 12498913,
+              "task_span_ns": 12518988,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                12498913
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 528101,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 52683177,
+              "pooled_calls": 2919,
+              "prepare_ns": 3665821,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": true,
+            "install": {
+              "after_join_ns": 68336,
+              "calls": 818,
+              "concurrency_ns": [
+                46500,
+                7824011,
+                0
+              ],
+              "launch_ns": 17288,
+              "no_task_ns": 46500,
+              "pool_ns": 7870511,
+              "pooled_calls": 0,
+              "prepare_ns": 692959,
+              "return_ns": 15505,
+              "task_elapsed_ns": 7824011,
+              "task_span_ns": 7837718,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                7824011
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "queries": {
+              "after_join_ns": 78163450,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 405290302,
+              "pooled_calls": 3210,
+              "prepare_ns": 16837415,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 86626166,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 146466835,
+            "source_batches": 3388
+          }
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 6.081178875,
+          "process_wall_seconds": 8.646986582985846,
+          "process_user_seconds": 9.202202,
+          "process_system_seconds": 1.4234270000000002,
+          "phases": {
+            "delivery_gc": 0.023547283,
+            "query_update": 1.083126095,
+            "repair": 0.551263489,
+            "rhs": 2.009341116,
+            "search": 2.409120247
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 838777,
+              "calls": 818,
+              "concurrency_ns": [
+                56876,
+                14512130,
+                0
+              ],
+              "launch_ns": 18454,
+              "no_task_ns": 56876,
+              "pool_ns": 14569006,
+              "pooled_calls": 0,
+              "prepare_ns": 2275054,
+              "return_ns": 14369,
+              "task_elapsed_ns": 14512130,
+              "task_span_ns": 14536183,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                14512130
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 637387,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 62934750,
+              "pooled_calls": 2919,
+              "prepare_ns": 4158151,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": true,
+            "install": {
+              "after_join_ns": 89945,
+              "calls": 818,
+              "concurrency_ns": [
+                55376,
+                8265452,
+                0
+              ],
+              "launch_ns": 25691,
+              "no_task_ns": 55376,
+              "pool_ns": 8320828,
+              "pooled_calls": 0,
+              "prepare_ns": 883352,
+              "return_ns": 16151,
+              "task_elapsed_ns": 8265452,
+              "task_span_ns": 8278986,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                8265452
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "queries": {
+              "after_join_ns": 83880261,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 454963936,
+              "pooled_calls": 3210,
+              "prepare_ns": 17226751,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 97821383,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 162481387,
+            "source_batches": 3388
+          }
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.5995655,
+          "process_wall_seconds": 7.962756916007493,
+          "process_user_seconds": 8.586421000000001,
+          "process_system_seconds": 1.251637,
+          "phases": {
+            "delivery_gc": 0.020962483,
+            "query_update": 1.002208399,
+            "repair": 0.487957134,
+            "rhs": 1.847994802,
+            "search": 2.236161031
+          },
+          "diagnostic": {
+            "classify": {
+              "after_join_ns": 741992,
+              "calls": 818,
+              "concurrency_ns": [
+                57169,
+                12990436,
+                0
+              ],
+              "launch_ns": 18422,
+              "no_task_ns": 57169,
+              "pool_ns": 13047605,
+              "pooled_calls": 0,
+              "prepare_ns": 1789268,
+              "return_ns": 17077,
+              "task_elapsed_ns": 12990436,
+              "task_span_ns": 13012106,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                12990436
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "constructors": {
+              "after_join_ns": 516108,
+              "calls": 3388,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 54317105,
+              "pooled_calls": 2919,
+              "prepare_ns": 3686213,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "inline_registry": true,
+            "install": {
+              "after_join_ns": 65965,
+              "calls": 818,
+              "concurrency_ns": [
+                45631,
+                8266820,
+                0
+              ],
+              "launch_ns": 16040,
+              "no_task_ns": 45631,
+              "pool_ns": 8312451,
+              "pooled_calls": 0,
+              "prepare_ns": 676504,
+              "return_ns": 14671,
+              "task_elapsed_ns": 8266820,
+              "task_span_ns": 8281740,
+              "tasks": 1636,
+              "traced_calls": 818,
+              "worker_elapsed_ns": [
+                0,
+                0,
+                0,
+                0,
+                8266820
+              ],
+              "worker_tasks": [
+                0,
+                0,
+                0,
+                0,
+                1636
+              ]
+            },
+            "queries": {
+              "after_join_ns": 79517089,
+              "calls": 5737,
+              "concurrency_ns": [],
+              "launch_ns": 0,
+              "no_task_ns": 0,
+              "pool_ns": 420352887,
+              "pooled_calls": 3210,
+              "prepare_ns": 16587568,
+              "return_ns": 0,
+              "task_elapsed_ns": 0,
+              "task_span_ns": 0,
+              "tasks": 0,
+              "traced_calls": 0,
+              "worker_elapsed_ns": [],
+              "worker_tasks": []
+            },
+            "registered_source_adoption_ns": 86981122,
+            "registered_source_batches": 818,
+            "source_adoption_ns": 147594915,
+            "source_batches": 3388
+          }
+        }
+      ],
+      "inference_median_seconds": 6.043648834,
+      "phase_medians_ms": {
+        "classify": {
+          "prepare": 2.275054,
+          "pool": 14.396739,
+          "after_join": 0.838777,
+          "launch": 0.018282,
+          "task_span": 14.364506,
+          "return": 0.01475,
+          "no_task": 0.055787,
+          "task_elapsed": 14.340952
+        },
+        "install": {
+          "prepare": 0.883352,
+          "pool": 8.320828,
+          "after_join": 0.089945,
+          "launch": 0.020297,
+          "task_span": 8.278986,
+          "return": 0.015505,
+          "no_task": 0.048309,
+          "task_elapsed": 8.265452
+        },
+        "constructors": {
+          "prepare": 4.158151,
+          "pool": 61.188143,
+          "after_join": 0.613863,
+          "launch": 0.0,
+          "task_span": 0.0,
+          "return": 0.0,
+          "no_task": 0.0,
+          "task_elapsed": 0.0
+        },
+        "queries": {
+          "prepare": 17.226751,
+          "pool": 444.062233,
+          "after_join": 82.766891,
+          "launch": 0.0,
+          "task_span": 0.0,
+          "return": 0.0,
+          "no_task": 0.0,
+          "task_elapsed": 0.0
+        }
+      },
+      "registry_total_median_ms": 26.976962,
+      "source_adoption_median_ms": 162.481387,
+      "registered_source_adoption_median_ms": 97.821383
+    }
+  },
+  "profiles": [
+    {
+      "runtime_sha256": "f45cc9fbbb6d2b8aa8ccc8fc42cff9a31fa1425e5663791bb664e0653010eb06",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "37373",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-sync-diagnosis/profile-1/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.41755624997313134,
+        "command_end_seconds_since_launch": 5.654900082998211,
+        "stacks_sha256": "67f9d295b836d39bf323747f01fb63b6afed077c6920a61641569f36dbf39b1a",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1538,
+          "condition_wait_samples": 274,
+          "condition_wait_fraction": 0.17815344603381014,
+          "contexts": {
+            "publication": 103,
+            "query": 142,
+            "scalar_rhs_writes": 21,
+            "ready_queue": 8
+          }
+        },
+        {
+          "samples": 1538,
+          "condition_wait_samples": 1316,
+          "condition_wait_fraction": 0.8556566970091027,
+          "contexts": {
+            "pool_idle": 1253,
+            "inside_job": 63
+          }
+        },
+        {
+          "samples": 1538,
+          "condition_wait_samples": 1312,
+          "condition_wait_fraction": 0.8530559167750326,
+          "contexts": {
+            "pool_idle": 1291,
+            "inside_job": 21
+          }
+        },
+        {
+          "samples": 1538,
+          "condition_wait_samples": 1326,
+          "condition_wait_fraction": 0.8621586475942783,
+          "contexts": {
+            "pool_idle": 1318,
+            "inside_job": 8
+          }
+        },
+        {
+          "samples": 1538,
+          "condition_wait_samples": 1356,
+          "condition_wait_fraction": 0.881664499349805,
+          "contexts": {
+            "pool_idle": 1340,
+            "inside_job": 16
+          }
+        }
+      ],
+      "name": "profile-1",
+      "main_inference_samples": 1538,
+      "main_top_inference_inclusive": [
+        [
+          "eggfuse_cell_runtime::executor::Executor::execute_until",
+          1538
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          1534
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches",
+          405
+        ],
+        [
+          "rayon_core::registry::Registry::in_worker_cold",
+          282
+        ],
+        [
+          "rayon_core::latch::LockLatch::wait_and_reset",
+          276
+        ],
+        [
+          "_pthread_cond_wait",
+          276
+        ],
+        [
+          "__psynch_cvwait",
+          274
+        ],
+        [
+          "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+          247
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+          240
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::repair_selected",
+          158
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          152
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          149
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+          144
+        ],
+        [
+          "std::io::stdio::_eprint",
+          131
+        ],
+        [
+          "_$LT$$RF$std..io..stdio..Stderr$u20$as$u20$std..io..Write$GT$::write_fmt",
+          131
+        ],
+        [
+          "core::fmt::write",
+          131
+        ],
+        [
+          "_$LT$std..io..default_write_fmt..Adapter$LT$T$GT$$u20$as$u20$core..fmt..Write$GT$::write_str",
+          131
+        ],
+        [
+          "_$LT$std..io..stdio..StderrLock$u20$as$u20$std..io..Write$GT$::write_all",
+          131
+        ],
+        [
+          "write",
+          131
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          102
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate_fields",
+          91
+        ],
+        [
+          "eggfuse_cell_runtime::change_batch::Publication::publish",
+          90
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          89
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::construct_inner",
+          85
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+          83
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate",
+          83
+        ],
+        [
+          "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+          82
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::subscribe",
+          77
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+          75
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+          70
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          68
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          67
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+          65
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$",
+          56
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::retire",
+          55
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          274
+        ],
+        [
+          "write",
+          131
+        ],
+        [
+          "_platform_memmove",
+          37
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          34
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          29
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          29
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          28
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          26
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          23
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          22
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          21
+        ],
+        [
+          "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::remove",
+          21
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Sieve::allow",
+          20
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          20
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell",
+          17
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::union",
+          16
+        ],
+        [
+          "mach_absolute_time",
+          15
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          15
+        ]
+      ]
+    },
+    {
+      "runtime_sha256": "f45cc9fbbb6d2b8aa8ccc8fc42cff9a31fa1425e5663791bb664e0653010eb06",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "37713",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-sync-diagnosis/profile-2/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.45245954202255234,
+        "command_end_seconds_since_launch": 5.636026666994439,
+        "stacks_sha256": "81dc93588e3f27bdbb6936f5f419140b75d37c8ff49080cf48fd10829ca4b49a",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1531,
+          "condition_wait_samples": 278,
+          "condition_wait_fraction": 0.18158066623122143,
+          "contexts": {
+            "publication": 94,
+            "query": 135,
+            "scalar_rhs_writes": 37,
+            "ready_queue": 12
+          }
+        },
+        {
+          "samples": 1531,
+          "condition_wait_samples": 1287,
+          "condition_wait_fraction": 0.8406270411495754,
+          "contexts": {
+            "pool_idle": 1240,
+            "inside_job": 47
+          }
+        },
+        {
+          "samples": 1531,
+          "condition_wait_samples": 1283,
+          "condition_wait_fraction": 0.8380143696930111,
+          "contexts": {
+            "pool_idle": 1267,
+            "inside_job": 16
+          }
+        },
+        {
+          "samples": 1531,
+          "condition_wait_samples": 1321,
+          "condition_wait_fraction": 0.8628347485303723,
+          "contexts": {
+            "pool_idle": 1315,
+            "inside_job": 6
+          }
+        },
+        {
+          "samples": 1531,
+          "condition_wait_samples": 1324,
+          "condition_wait_fraction": 0.8647942521227956,
+          "contexts": {
+            "pool_idle": 1319,
+            "inside_job": 5
+          }
+        }
+      ],
+      "name": "profile-2",
+      "main_inference_samples": 1531,
+      "main_top_inference_inclusive": [
+        [
+          "eggfuse_cell_runtime::executor::Executor::execute_until",
+          1531
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          1525
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches",
+          371
+        ],
+        [
+          "rayon_core::registry::Registry::in_worker_cold",
+          283
+        ],
+        [
+          "rayon_core::latch::LockLatch::wait_and_reset",
+          279
+        ],
+        [
+          "_pthread_cond_wait",
+          279
+        ],
+        [
+          "__psynch_cvwait",
+          278
+        ],
+        [
+          "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+          277
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+          218
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+          148
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::repair_selected",
+          147
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          142
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          134
+        ],
+        [
+          "std::io::stdio::_eprint",
+          109
+        ],
+        [
+          "_$LT$$RF$std..io..stdio..Stderr$u20$as$u20$std..io..Write$GT$::write_fmt",
+          109
+        ],
+        [
+          "core::fmt::write",
+          109
+        ],
+        [
+          "_$LT$std..io..default_write_fmt..Adapter$LT$T$GT$$u20$as$u20$core..fmt..Write$GT$::write_str",
+          108
+        ],
+        [
+          "_$LT$std..io..stdio..StderrLock$u20$as$u20$std..io..Write$GT$::write_all",
+          108
+        ],
+        [
+          "write",
+          108
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          100
+        ],
+        [
+          "eggfuse_cell_runtime::change_batch::Publication::publish",
+          92
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          86
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          81
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::construct_inner",
+          79
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate_fields",
+          76
+        ],
+        [
+          "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+          74
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+          71
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate",
+          69
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+          64
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::subscribe",
+          62
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+          61
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+          61
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          54
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$",
+          52
+        ],
+        [
+          "_platform_memmove",
+          51
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          278
+        ],
+        [
+          "write",
+          108
+        ],
+        [
+          "_platform_memmove",
+          51
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          33
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          31
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          28
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          26
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          25
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          23
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          22
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          22
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          21
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          20
+        ],
+        [
+          "mach_absolute_time",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::fact",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::slot_fields",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          18
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell",
+          18
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::complete",
+          17
+        ]
+      ]
+    },
+    {
+      "runtime_sha256": "f45cc9fbbb6d2b8aa8ccc8fc42cff9a31fa1425e5663791bb664e0653010eb06",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "40391",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-sync-diagnosis/quiet-profile-1/stacks.txt"
+        ],
+        "trigger": "fixed launch delay, progress disabled",
+        "start_delay_seconds": 0.5,
+        "progress_logging": false,
+        "trigger_seconds_since_launch": 0.5066526670125313,
+        "command_end_seconds_since_launch": 5.704648333019577,
+        "stacks_sha256": "a2ad17435c2a6bdff60a4c385b22ef7e45b0893fea9e7db7a03f585ea994d5b8",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled."
+      },
+      "threads": [
+        {
+          "samples": 1569,
+          "condition_wait_samples": 272,
+          "condition_wait_fraction": 0.17335882727852134,
+          "contexts": {
+            "publication": 80,
+            "query": 159,
+            "scalar_rhs_writes": 21,
+            "ready_queue": 12
+          }
+        },
+        {
+          "samples": 1569,
+          "condition_wait_samples": 1324,
+          "condition_wait_fraction": 0.8438495857233907,
+          "contexts": {
+            "pool_idle": 1264,
+            "inside_job": 60
+          }
+        },
+        {
+          "samples": 1569,
+          "condition_wait_samples": 1324,
+          "condition_wait_fraction": 0.8438495857233907,
+          "contexts": {
+            "pool_idle": 1300,
+            "inside_job": 24
+          }
+        },
+        {
+          "samples": 1569,
+          "condition_wait_samples": 1342,
+          "condition_wait_fraction": 0.8553218610579987,
+          "contexts": {
+            "pool_idle": 1331,
+            "inside_job": 11
+          }
+        },
+        {
+          "samples": 1569,
+          "condition_wait_samples": 1363,
+          "condition_wait_fraction": 0.868706182281708,
+          "contexts": {
+            "pool_idle": 1351,
+            "inside_job": 12
+          }
+        }
+      ],
+      "name": "quiet-profile-1",
+      "main_inference_samples": 1564,
+      "main_top_inference_inclusive": [
+        [
+          "eggfuse_cell_runtime::executor::Executor::execute_until",
+          1564
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          1560
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches",
+          458
+        ],
+        [
+          "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+          301
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+          281
+        ],
+        [
+          "rayon_core::registry::Registry::in_worker_cold",
+          277
+        ],
+        [
+          "rayon_core::latch::LockLatch::wait_and_reset",
+          273
+        ],
+        [
+          "_pthread_cond_wait",
+          273
+        ],
+        [
+          "__psynch_cvwait",
+          272
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          183
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::repair_selected",
+          160
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+          143
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          135
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          116
+        ],
+        [
+          "eggfuse_cell_runtime::change_batch::Publication::publish",
+          113
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          98
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          82
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+          76
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::subscribe",
+          76
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::construct_inner",
+          72
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Sieve::allow",
+          71
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate_fields",
+          70
+        ],
+        [
+          "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+          68
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          64
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+          64
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+          61
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate",
+          61
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+          59
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          54
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          53
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          52
+        ],
+        [
+          "_platform_memmove",
+          51
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+          51
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          49
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$",
+          48
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          272
+        ],
+        [
+          "_platform_memmove",
+          51
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          49
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          37
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          34
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          30
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          27
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          25
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          25
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          22
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          22
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          21
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          21
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          21
+        ],
+        [
+          "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::remove",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Sieve::allow",
+          19
+        ],
+        [
+          "<deduplicated_symbol>",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+          17
+        ],
+        [
+          "mi_free",
+          16
+        ]
+      ]
+    },
+    {
+      "runtime_sha256": "f45cc9fbbb6d2b8aa8ccc8fc42cff9a31fa1425e5663791bb664e0653010eb06",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "40747",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-sync-diagnosis/quiet-profile-2/stacks.txt"
+        ],
+        "trigger": "fixed launch delay, progress disabled",
+        "start_delay_seconds": 0.5,
+        "progress_logging": false,
+        "trigger_seconds_since_launch": 0.5069437909987755,
+        "command_end_seconds_since_launch": 5.694977750012185,
+        "stacks_sha256": "a927e3bc9f6632537e59589346d3481f4443a584d81a08fb9d31cf503f87d0ed",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled."
+      },
+      "threads": [
+        {
+          "samples": 1576,
+          "condition_wait_samples": 286,
+          "condition_wait_fraction": 0.1814720812182741,
+          "contexts": {
+            "publication": 92,
+            "query": 154,
+            "scalar_rhs_writes": 26,
+            "ready_queue": 14
+          }
+        },
+        {
+          "samples": 1576,
+          "condition_wait_samples": 1303,
+          "condition_wait_fraction": 0.8267766497461929,
+          "contexts": {
+            "pool_idle": 1257,
+            "inside_job": 46
+          }
+        },
+        {
+          "samples": 1576,
+          "condition_wait_samples": 1315,
+          "condition_wait_fraction": 0.8343908629441624,
+          "contexts": {
+            "pool_idle": 1300,
+            "inside_job": 15
+          }
+        },
+        {
+          "samples": 1576,
+          "condition_wait_samples": 1346,
+          "condition_wait_fraction": 0.8540609137055838,
+          "contexts": {
+            "pool_idle": 1339,
+            "inside_job": 7
+          }
+        },
+        {
+          "samples": 1576,
+          "condition_wait_samples": 1345,
+          "condition_wait_fraction": 0.8534263959390863,
+          "contexts": {
+            "pool_idle": 1344,
+            "inside_job": 1
+          }
+        }
+      ],
+      "name": "quiet-profile-2",
+      "main_inference_samples": 1575,
+      "main_top_inference_inclusive": [
+        [
+          "eggfuse_cell_runtime::executor::Executor::execute_until",
+          1575
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          1571
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches",
+          428
+        ],
+        [
+          "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables",
+          334
+        ],
+        [
+          "rayon_core::registry::Registry::in_worker_cold",
+          290
+        ],
+        [
+          "rayon_core::latch::LockLatch::wait_and_reset",
+          287
+        ],
+        [
+          "_pthread_cond_wait",
+          287
+        ],
+        [
+          "__psynch_cvwait",
+          286
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::batches",
+          244
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+          192
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::repair_selected",
+          160
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          152
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary",
+          141
+        ],
+        [
+          "eggfuse_cell_runtime::change_batch::Publication::publish",
+          114
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          100
+        ],
+        [
+          "eggfuse_cell_runtime::stage_spine::Programs::publish_impl",
+          96
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          95
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::subscribe",
+          76
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate_fields",
+          70
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::publication::_$LT$impl$u20$eggfuse_cell_runtime..sieve..Sieve$GT$::publish_staged",
+          68
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          66
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_canonical_cell",
+          66
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          65
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::activate",
+          65
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+          63
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::construct_inner",
+          61
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::install_publication",
+          59
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::set_inner",
+          58
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+          56
+        ],
+        [
+          "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch",
+          56
+        ],
+        [
+          "_$LT$eggfuse_cell_runtime..cell..eval..RhsFrame$u20$as$u20$eggfuse_cell_runtime..cell..eval..CallFrame$GT$::construct",
+          56
+        ],
+        [
+          "_platform_memmove",
+          55
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::union",
+          55
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          53
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          53
+        ]
+      ],
+      "main_top_self": [
+        [
+          "__psynch_cvwait",
+          286
+        ],
+        [
+          "_platform_memmove",
+          55
+        ],
+        [
+          "core::slice::sort::unstable::quicksort::quicksort",
+          38
+        ],
+        [
+          "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+          37
+        ],
+        [
+          "eggfuse_cell_runtime::sieve::Summary::allows",
+          36
+        ],
+        [
+          "eggfuse_cell_runtime::executor::query_workers::Workers::finish_queries",
+          30
+        ],
+        [
+          "eggfuse_cell_runtime::value::parent_epoch::Parents::get",
+          30
+        ],
+        [
+          "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry",
+          26
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::replace_subscriptions",
+          26
+        ],
+        [
+          "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+          24
+        ],
+        [
+          "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh",
+          23
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::run",
+          22
+        ],
+        [
+          "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::remove",
+          21
+        ],
+        [
+          "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::start_cell_execution",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell",
+          20
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::fact",
+          19
+        ],
+        [
+          "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$",
+          18
+        ],
+        [
+          "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit",
+          17
+        ],
+        [
+          "eggfuse_cell_runtime::graph::Graph::union",
+          17
+        ]
+      ]
+    }
+  ],
+  "sum_validation": {
+    "exact_final_state_and_ordered_runs": true,
+    "runs": 1428,
+    "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "native_contract": "pass",
+    "proof_sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  }
+}

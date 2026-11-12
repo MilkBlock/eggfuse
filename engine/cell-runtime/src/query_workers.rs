@@ -849,6 +849,8 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
         #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan,
         #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
+        #[cfg(feature="cell-sync-diagnostics")]
+        let mut diagnostic = crate::sync_diagnostics::Clock::new();
         let constructor_groups = self.matched.constructor_groups;
         let mut ready = ready::borrow(g, matches, spine, &mut self.matched);
         let range_pending = {
@@ -1008,6 +1010,7 @@ impl Workers {
             if headers.is_empty() { self.matched.matched_only_invocations += 1; }
             else { self.matched.mixed_invocations += 1; }
         }
+        #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
         let (mut chunks, completed): (Vec<_>, _) = if pooled {
             self.pool.as_ref().unwrap().install(|| {
                 let queries = || {
@@ -1030,6 +1033,7 @@ impl Workers {
             },
                 ready::inline(&mut ready, grain, reads.as_ref()))
         };
+        #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
         drop(ready);
         drop(reads);
         g.record_constructor_query_work(&completed.constructors);
@@ -1113,6 +1117,8 @@ impl Workers {
         // one pass. Completion order need not be restored separately.
         // Drop negative cursors and clear even rules with no positive answers.
         for q in self.cell_queries.drain(..) { self.rule_facts[self.cell_codes[q.code].rule] = None; }
+        #[cfg(feature="cell-sync-diagnostics")]
+        g.stats.sync_diagnostics.queries.record(diagnostic,None,pooled,self.pool.as_ref().map_or(0,|p|p.current_num_threads()));
         Ok(())
     }
 }

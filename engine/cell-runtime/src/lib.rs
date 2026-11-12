@@ -1,5 +1,7 @@
 mod change_batch;
 mod read_epoch;
+#[cfg(feature="sparse-cells")]
+mod sync_diagnostics;
 pub mod checksum;
 pub mod cell;
 pub mod completion_plan;

@@ -158,6 +158,9 @@ impl From<&Row> for Point {
 mod point_results_test;
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Stats {
+    #[cfg(feature="cell-sync-diagnostics")]
+    #[serde(default)]
+    pub sync_diagnostics: crate::sync_diagnostics::Report,
     #[serde(default)]
     pub rhs_pending_probes:u64,
     #[serde(default)]

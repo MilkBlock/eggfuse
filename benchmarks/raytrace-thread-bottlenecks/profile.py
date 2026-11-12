@@ -19,7 +19,10 @@ def main():
     parser.add_argument('--lane', default='overlap4')
     parser.add_argument('--duration', type=int, default=10)
     parser.add_argument('--interval-ms', type=int, default=5)
+    parser.add_argument('--start-delay', type=float, help='Sample after this launch delay with progress logging disabled; validate inference coverage from the resulting stack tree')
     args = parser.parse_args()
+    if args.start_delay is not None and args.start_delay < 0:
+        parser.error('--start-delay must be nonnegative')
     base = runpy.run_path(str(Path(__file__).parents[1] / 'raytrace-parallel/measure.py'))
     config = json.loads(args.manifest.read_text())['lanes'][args.lane]
     reference = json.loads(args.reference.read_text())
@@ -33,18 +36,29 @@ def main():
     command = [str(Path(config['runtime']).resolve()), '--program',
                str(Path(config['program']).resolve()), '--output', str(runtime_output.resolve()),
                *config.get('args', [])]
-    env = dict(os.environ, **config.get('environment', {}), CELL_CPU_PROGRESS='1')
+    env = dict(os.environ, **config.get('environment', {}))
+    if args.start_delay is None:
+        env['CELL_CPU_PROGRESS'] = '1'
+    else:
+        env.pop('CELL_CPU_PROGRESS', None)
     start = time.monotonic()
     with log_path.open('w') as log:
         process = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
         watchdog = threading.Timer(90, process.kill)
         watchdog.start()
         try:
-            # Trigger on inference, rather than guessing how long input validation takes.
-            while '[cell-cpu] Run ' not in log_path.read_text():
+            if args.start_delay is None:
+                # Exact inference trigger; each Run's logging perturbs this lane.
+                while '[cell-cpu] Run ' not in log_path.read_text():
+                    if process.poll() is not None:
+                        raise RuntimeError(f'Exited before inference: {process.returncode}; {log_path}')
+                    time.sleep(0.02)
+            else:
+                # The caller calibrates this delay from saved startup measurements.
+                # Stacks must establish actual inference coverage; this is no proof.
+                time.sleep(args.start_delay)
                 if process.poll() is not None:
-                    raise RuntimeError(f'Exited before inference: {process.returncode}; {log_path}')
-                time.sleep(0.02)
+                    raise RuntimeError('Process exited before delayed sample')
             trigger_seconds = time.monotonic() - start
             command_sample = ['/usr/bin/sample', str(process.pid), str(args.duration),
                               str(args.interval_ms), '-mayDie', '-file',
@@ -73,11 +87,12 @@ def main():
         'scope': 'Standalone Cell CPU, separate instrumented diagnostic; not a timing sample or native egglog',
         'lane': args.lane, 'args': config['args'], 'runs': len(schedule), **stamp,
         'runtime_sha256': lane['runtime_sha256'], 'program_file_sha256': lane['program_file_sha256'],
-        'sample': {'command': command_sample, 'trigger': 'first source Run in progress log',
+        'sample': {'command': command_sample, 'trigger': ('first source Run in progress log' if args.start_delay is None else 'fixed launch delay, progress disabled'),
+                   'start_delay_seconds': args.start_delay, 'progress_logging': args.start_delay is None,
                    'trigger_seconds_since_launch': trigger_seconds,
                    'command_end_seconds_since_launch': sample_end_seconds,
                    'stacks_sha256': base['sha'](args.output / 'stacks.txt'),
-                   'limits': 'Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic.'},
+                   'limits': 'Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled.'},
         'inference_seconds_diagnostic_only': report['inference_seconds'], 'phases': phases,
         'stats': report['stats'], 'stable_ports': report.get('stable_ports'),
         'cell_ownership': report.get('cell_ownership'), 'key_lookup_calls': report.get('key_lookup_calls')}
