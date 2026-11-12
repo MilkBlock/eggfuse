@@ -260,6 +260,12 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_registry_batches:u64,
     #[serde(default)]
+    pub constructor_registry_independent_batches:u64,
+    #[serde(default)]
+    pub constructor_registry_independent_rows:u64,
+    #[serde(default)]
+    pub constructor_registry_functionless_batches:u64,
+    #[serde(default)]
     pub constructor_registry_rows:u64,
     #[serde(default)]
     pub constructor_registry_adopted:u64,

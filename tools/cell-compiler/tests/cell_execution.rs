@@ -52,6 +52,37 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn constructor_owners_do_not_require_multiple_unit_tables() {
+    let seed=(0..192).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for unit in [false,true] {
+        let tail=if unit {"(set (Stamp d) ())"}else{""};
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E) (I E) (Seen E))
+(function Stamp (E) Unit :merge old)
+(ruleset step) (ruleset observe) (ruleset remove) (ruleset join)
+(rule ((= x (N n))) ((let a (F x)) (let b (G a)) (let c (H b)) (let d (I c)) {tail}) :ruleset step)
+(rule ((= x (I c))) ((Seen x)) :ruleset step)
+(rule ((= x (I c))) ((Seen x)) :ruleset observe)
+(rule ((= x (N n)) (< n 16) (= a (F x))) ((delete (F x))) :ruleset remove)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset join)
+{seed}
+(run-schedule (seq (run step) (run observe) (run remove) (run step) (run join) (run step) (run observe)))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,0);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();same(&control,&candidate);
+            let stats=&candidate.report()["stats"];
+            if workers>1 {
+                assert!(stats["constructor_registry_independent_rows"].as_u64().unwrap()>0,"{stats}");
+                if !unit {assert!(stats["constructor_registry_functionless_batches"].as_u64().unwrap()>0,"{stats}");}
+            }
+        }
+    }
+}
+
+#[test]
 fn query_instances_continue_into_unit_rows_without_exposing_same_run_writes() {
     let mut source = String::from(r#"
 (datatype E (N i64))

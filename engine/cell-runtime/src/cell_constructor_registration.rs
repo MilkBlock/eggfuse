@@ -154,11 +154,15 @@ impl Registration {
         if chunk.len()==0 {self.ready.pop_front();}
         assert_eq!(installed.cell,cell,"source-ordered constructor acceptance");
         let publication=std::mem::take(&mut installed.publication);
-        self.offered=Some(installed);
+        // An all-reuse Cell owns no new facts to revoke. Source completion
+        // may immediately release its empty frame; keep no retirement hold
+        // or later arena lookup for it.
+        self.offered=(!publication.tables.is_empty()).then_some(installed);
         publication
     }
     pub fn finish(self, graph: &mut Graph) {
-        for installed in self.offered.into_iter().chain(self.ready.into_iter().flatten().map(|c|c.installed)) {
+        for installed in self.offered.into_iter().chain(self.ready.into_iter().flatten()
+            .filter(|c|!c.installed.publication.tables.is_empty()).map(|c|c.installed)) {
             graph.stats.constructor_registry_retirement_checks+=1;
             if graph.cells[&installed.cell].completed_prefix >= installed.end {continue;}
             // Only a failed source prefix reaches here. Earlier adopted rows

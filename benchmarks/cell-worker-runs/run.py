@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 
-def run(control, output, runtime):
+def run(control, output, runtime, *, control_commit='c0dd0034'):
     output.mkdir(parents=True, exist_ok=True)
     binary = output / 'candidate-runtime'
     assert not binary.exists(), 'use a fresh artifact root'
@@ -17,7 +17,7 @@ def run(control, output, runtime):
         digest = hashlib.file_digest(stream, 'sha256').hexdigest()
     original = json.loads((control / 'manifest.json').read_text())
     manifest = {'scope': 'actual standalone Cell CPU work and semantics; not timing',
-                'control_commit': 'c0dd0034', 'runtime_sha256': digest, 'lanes': {}}
+                'control_commit': control_commit, 'runtime_sha256': digest, 'lanes': {}}
     for case in ('sum', 'ray'):
         config = original['lanes'][case]
         destination = output / f'candidate-{case}'

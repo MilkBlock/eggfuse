@@ -31,7 +31,7 @@ impl Executor {
         mut consume:impl FnMut(&mut Self,std::vec::Drain<'_,Completed>,
             Option<&mut crate::graph::cell_births::Registration>)->Result<()>)->Result<()> {
         let mut diagnostic=crate::sync_diagnostics::Clock::new();
-        let Some(mut pending)=eligible.then(||self.graph.prepare_unit_registration(completed)).flatten() else {
+        let Some(mut pending)=eligible.then(||self.graph.prepare_cell_registration(completed)).flatten() else {
             #[cfg(feature="cell-sync-diagnostics")] let start=Instant::now();
             let result=consume(self,completed.drain(..),None);
             #[cfg(feature="cell-sync-diagnostics")] {
@@ -88,7 +88,7 @@ impl Executor {
         self.graph.stats.unit_registry_event_bytes+=events.bytes;
         self.graph.stats.unit_registry_event_wait_ns+=events.wait_ns;
         pending.restore_subscriptions(&mut self.graph);
-        self.graph.finish_unit_registration(pending.registration);
+        self.graph.finish_cell_registration(pending.registration);
         #[cfg(feature="cell-sync-diagnostics")]
         self.graph.stats.sync_diagnostics.registration.record(diagnostic,None,!inline,pool.current_num_threads());
         debug_assert!(result.is_err() || completed.is_empty(),"every ready Cell must be adopted");
