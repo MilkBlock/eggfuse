@@ -194,7 +194,7 @@ impl Executor {
             return Err("configure Cell execution once before the first Run".into());
         }
         self.cell_execution = Some(crate::cell::execution::runtime::State {
-            grain, counts: Default::default(),
+            grain, counts: Default::default(), writes: Default::default(),
         });
         for rule in 0..self.graph.program.rules.len() {
             let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);

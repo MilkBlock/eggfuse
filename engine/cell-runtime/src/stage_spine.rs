@@ -1397,6 +1397,15 @@ impl Programs {
         self.enabled && !self.origins[rid].is_empty()
     }
 
+    /// The admitted Cell has no inherited cursor. Root creation reads no
+    /// bindings, so it can remain adjacent to source-ordered publication rather
+    /// than occupy a saved Cursor container for every worker candidate.
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn begin_root(&mut self, p: &Program, rid: usize, set: &str, epoch: u64) -> Option<Started> {
+        assert!(!self.has_pending_origins(rid), "Cell root still has inherited origins");
+        self.begin_step(p, rid, &Default::default(), set, epoch, None)
+    }
+
     pub(crate) fn begin_step(
         &mut self,
         p: &Program,

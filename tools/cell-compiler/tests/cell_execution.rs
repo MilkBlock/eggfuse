@@ -52,6 +52,68 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn workers_write_actual_rows_and_invalidate_duplicate_cells_before_publication() {
+    for merge in ["(min old new)", "(max old new)", "old"] {
+        let seed = (0..96).flat_map(|key| (0..8).map(move |v|
+            format!("(Offer (N {key}) {v})"))).collect::<Vec<_>>().join("\n");
+        let source = format!(r#"
+(datatype E (N i64) (Offer E i64) (Seen E i64))
+(function Score (E) i64 :merge {merge})
+(ruleset step) (ruleset next) (ruleset change) (ruleset improve)
+(rule ((= q (Offer x v))) ((set (Score x) v)) :ruleset step)
+(rule ((= v (Score x))) ((Seen x v)) :ruleset next)
+(rule ((= x (N n))) ((Offer x 100)) :ruleset improve)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+{seed}
+(run-schedule (seq (run step) (run next) (run improve) (run step) (run next) (run change) (run step) (run next)))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+        let mut control = executor(&source, 4);
+        #[cfg(feature="iterative-bake")]
+        { eggfuse_cell_runtime::transfer_audit::set_active(true);
+          eggfuse_cell_runtime::transfer_audit::enable_write_audit(); }
+        control.execute().unwrap();
+        #[cfg(feature="iterative-bake")]
+        let writes = eggfuse_cell_runtime::transfer_audit::take_write_digests();
+        let mut candidate = executor(&source, 4);
+        candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();
+        same(&control, &candidate);
+        #[cfg(feature="iterative-bake")]
+        { assert_eq!(writes, eggfuse_cell_runtime::transfer_audit::take_write_digests(),
+            "logical source improvements keep exact effect order");
+          eggfuse_cell_runtime::transfer_audit::set_active(false); }
+        let report = candidate.report();
+        let work = &report["cell_execution"]["runtime"]["stats"]["writes"];
+        assert!(work["worker_rows"].as_u64().unwrap() > 0, "{merge}: {work}");
+        assert!(work["duplicate_targets"].as_u64().unwrap() > 0, "{work}");
+        assert!(work["invalidated"].as_u64().unwrap() > 0, "{work}");
+        assert!(work["row_writes"].as_u64().unwrap() < work["candidates"].as_u64().unwrap(), "{work}");
+        assert_eq!(candidate.graph.stats.function_updates, control.graph.stats.function_updates);
+    }
+}
+
+#[test]
+fn speculative_scalar_failure_preserves_the_original_partial_effects() {
+    let seed = (0..64).map(|i| format!("(Offer (N {i}) {})", if i == 32 { i64::MAX } else { i }))
+        .collect::<Vec<_>>().join("\n");
+    let source = format!(r#"
+(datatype E (N i64) (Offer E i64))
+(function Score (E) i64 :merge (min old new))
+(ruleset step)
+(rule ((= q (Offer x v))) ((set (Score x) (+ v 1))) :ruleset step)
+{seed}
+(run-schedule (run step))
+"#);
+    let mut control = executor(&source, 4);
+    let mut candidate = executor(&source, 4);
+    candidate.use_cell_execution(1).unwrap();
+    assert_eq!(control.execute().unwrap_err(), candidate.execute().unwrap_err());
+    assert_eq!(control.graph.export().unwrap(), candidate.graph.export().unwrap());
+    assert_eq!(candidate.report()["cell_execution"]["runtime"]["stats"]["writes"]["fallback_batches"], 1);
+}
+
+#[test]
 fn ready_cells_share_results_without_draining_or_replaying_their_prefix() {
     for shared in [false,true] {
       for ordered in [false,true] {

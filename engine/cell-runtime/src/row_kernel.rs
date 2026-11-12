@@ -181,11 +181,23 @@ impl PortWrite {
         Some(Self{key:*key,value:value.clone(),add})
     }
     pub(crate) fn project(&self,slots:&crate::slots::Slots,parents:&crate::value::Parents,prepared:bool)->Result<(crate::value::Value,i64,Option<usize>)>{
+        self.project_read(slots, parents.reader(), prepared)
+    }
+    pub(crate) fn project_read(&self,slots:&crate::slots::Slots,parents:crate::value::parent_epoch::Read<'_>,prepared:bool)->Result<(crate::value::Value,i64,Option<usize>)>{
+        let key=self.project_key(slots,parents)?;
+        let (v,dst)=self.project_value(slots,prepared)?;
+        Ok((key,v,dst))
+    }
+    pub(crate) fn project_key(&self,slots:&crate::slots::Slots,parents:crate::value::parent_epoch::Read<'_>)->Result<crate::value::Value>{
         use crate::value::Value;
         let Value::Eq(key)=slots[&self.key] else{return Err("invalid producer expression port".into())};
+        Ok(Value::Eq(parents.root_counted(key).0))
+    }
+    pub(crate) fn project_value(&self,slots:&crate::slots::Slots,prepared:bool)->Result<(i64,Option<usize>)>{
+        use crate::value::Value;
         let int=|a:&Arg|match a {Arg::Literal(Value::Int(v))=>Ok(*v),Arg::Slot(s)=>match &slots[s]{Value::Int(v)=>Ok(*v),_=>Err("invalid integer port".to_string())},_=>Err("invalid integer operand".to_string())};
         let (v,dst)=if prepared { (int(&self.value)?,None) } else if let Some((dst,a,b))=&self.add{(int(a)?.checked_add(int(b)?).ok_or("RHS primitive failed: +")?,Some(*dst))}else{(int(&self.value)?,None)};
-        Ok((Value::Eq(crate::value::root(parents,key)),v,dst))
+        Ok((v,dst))
     }
 }
 pub(crate) fn writes(p: &Program) -> Vec<Option<Rc<Write>>> {

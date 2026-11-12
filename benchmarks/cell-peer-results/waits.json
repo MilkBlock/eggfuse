@@ -1,0 +1,206 @@
+{
+  "scope": "standalone Cell CPU; wall-stack residence, not CPU utilization",
+  "limits": "Five-second partial windows, logging and sampling perturb execution. Inclusive frames overlap. Pool call timers include work and are not pure wait time.",
+  "profiles": [
+    {
+      "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "58452",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-peer-results/wait-profile-1/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.39649645797908306,
+        "command_end_seconds_since_launch": 5.63329662499018,
+        "stacks_sha256": "19058a96e4c49b4c60baff66a12bc6557f6cfa1b35896f605191863466a82ee6",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1535,
+          "condition_wait_samples": 299,
+          "condition_wait_fraction": 0.19478827361563517,
+          "contexts": {
+            "synchronous_local_rhs": 57,
+            "publication": 92,
+            "query": 148,
+            "ready_queue": 2
+          }
+        },
+        {
+          "samples": 1535,
+          "condition_wait_samples": 1242,
+          "condition_wait_fraction": 0.8091205211726384,
+          "contexts": {
+            "pool_idle": 1191,
+            "inside_job": 51
+          }
+        },
+        {
+          "samples": 1535,
+          "condition_wait_samples": 1259,
+          "condition_wait_fraction": 0.8201954397394137,
+          "contexts": {
+            "pool_idle": 1236,
+            "inside_job": 23
+          }
+        },
+        {
+          "samples": 1535,
+          "condition_wait_samples": 1279,
+          "condition_wait_fraction": 0.8332247557003257,
+          "contexts": {
+            "pool_idle": 1268,
+            "inside_job": 11
+          }
+        },
+        {
+          "samples": 1535,
+          "condition_wait_samples": 1292,
+          "condition_wait_fraction": 0.8416938110749186,
+          "contexts": {
+            "pool_idle": 1287,
+            "inside_job": 5
+          }
+        }
+      ]
+    },
+    {
+      "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "60842",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-peer-results/wait-profile-2/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.41811779100680724,
+        "command_end_seconds_since_launch": 5.774490375013556,
+        "stacks_sha256": "b371512e5c7532c8810aa662d248e3c28bd15ab6b48e36f82cabb06b9a66c279",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1488,
+          "condition_wait_samples": 305,
+          "condition_wait_fraction": 0.2049731182795699,
+          "contexts": {
+            "synchronous_local_rhs": 59,
+            "publication": 99,
+            "query": 144,
+            "ready_queue": 3
+          }
+        },
+        {
+          "samples": 1488,
+          "condition_wait_samples": 1217,
+          "condition_wait_fraction": 0.8178763440860215,
+          "contexts": {
+            "pool_idle": 1162,
+            "inside_job": 55
+          }
+        },
+        {
+          "samples": 1488,
+          "condition_wait_samples": 1228,
+          "condition_wait_fraction": 0.8252688172043011,
+          "contexts": {
+            "pool_idle": 1203,
+            "inside_job": 25
+          }
+        },
+        {
+          "samples": 1488,
+          "condition_wait_samples": 1250,
+          "condition_wait_fraction": 0.8400537634408602,
+          "contexts": {
+            "pool_idle": 1239,
+            "inside_job": 11
+          }
+        },
+        {
+          "samples": 1488,
+          "condition_wait_samples": 1268,
+          "condition_wait_fraction": 0.8521505376344086,
+          "contexts": {
+            "pool_idle": 1258,
+            "inside_job": 10
+          }
+        }
+      ]
+    }
+  ],
+  "dispatch_ablation": {
+    "grain1": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--parallel-residuals",
+        "--parallel-publication",
+        "--cell-execution-grain",
+        "1"
+      ],
+      "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "inference_samples_seconds": [
+        6.564302917,
+        6.610371959,
+        6.724058167
+      ],
+      "inference_median_seconds": 6.610371959,
+      "state_hashes": [
+        "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      ],
+      "schedule_hashes": [
+        "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+      ]
+    },
+    "grain8": {
+      "args": [
+        "--repair-ports",
+        "--entry-publications",
+        "--cell-absorption",
+        "--query-workers",
+        "4",
+        "--parallel-residuals",
+        "--parallel-publication",
+        "--cell-execution-grain",
+        "8"
+      ],
+      "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "inference_samples_seconds": [
+        6.2552636249999995,
+        5.955379125,
+        6.347933167
+      ],
+      "inference_median_seconds": 6.2552636249999995,
+      "state_hashes": [
+        "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      ],
+      "schedule_hashes": [
+        "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+      ]
+    }
+  }
+}

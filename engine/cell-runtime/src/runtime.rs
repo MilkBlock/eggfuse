@@ -28,6 +28,9 @@ mod owned_cell;
 #[cfg(feature="sparse-cells")]
 #[path="runtime_cell_queue.rs"]
 mod cell_queue;
+#[cfg(feature="sparse-cells")]
+#[path="runtime_cell_writes.rs"]
+mod cell_writes;
 #[path = "runtime_pure_epochs.rs"]
 mod pure_epochs;
 #[cfg(feature="sparse-cells")]
@@ -2790,6 +2793,13 @@ impl Executor {
         for (rid, rows) in groups {
             #[cfg(feature = "cell-absorption")]
             self.graph.reserve_absorbed_cells(self.neighbor.take_absorbed(rid))?;
+            #[cfg(feature="sparse-cells")]
+            let rows = if self.batch_write_rule(rid, &rows) {
+                match self.apply_worker_writes(rid, rows)? {
+                    Some(rows) => rows,
+                    None => continue,
+                }
+            } else { rows };
             let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
                 rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
             #[cfg(feature="sparse-cells")]
@@ -3286,8 +3296,14 @@ impl Executor {
                 "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
                 "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
-                "scope":"same Cell resumes between ordered effects; coordinator waits for its frontier",
+                "scope":"workers own covered scalar row writes; other Cells resume between source-ordered boundaries",
                 "stats":execution.counts});
+            report["cell_execution"]["runtime"]["stats"]["writes"] = json!(execution.writes);
+            report["cell_execution"]["scalar_writes"] = json!({
+                "scope":"typed Eq-to-i64 single writes with old/min/max merge; workers mutate authoritative rows and invalidate superseded private Cell slots",
+                "duplicate_computation_allowed":true,"coordinator_effect_replay":false,
+                "minimum_bindings":32,"publication":"original source Run boundary",
+                "timers":"preparation and execution include dispatch/work/join, not pure waiting; boundary and source completion remain on the coordinator"});
         }
         report["query_point_transport"] = point_transport;
         report

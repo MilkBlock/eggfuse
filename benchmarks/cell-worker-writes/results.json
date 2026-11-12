@@ -1,0 +1,547 @@
+{
+  "scope": "actual standalone Cell CPU; not native egglog runtime performance",
+  "control_commit": "b47cb0fa",
+  "runtime_sha256": "4815e7735f9aa3d9c19f5298dd6a4c46ac582576dcbedab4629f60f3451ce054",
+  "control_runtime_sha256": "f9cd9ffeecc09ac6dce44c0dcf9f04acf9f3e2b97a2cfff6247fbece7ea55259",
+  "workloads": {
+    "sum": {
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "runs": 1428,
+      "exact_final_state_and_run_summaries": true,
+      "logical_effects_equal": true,
+      "writes": {
+        "batches": 0,
+        "boundary_ns": 0,
+        "candidates": 0,
+        "direct_batches": 0,
+        "duplicate_targets": 0,
+        "execution_ns": 0,
+        "fallback_batches": 0,
+        "invalidated": 0,
+        "logical_improvements": 0,
+        "new_rows": 0,
+        "preparation_ns": 0,
+        "row_writes": 0,
+        "rows": 0,
+        "source_completion_ns": 0,
+        "superseded_improvements": 0,
+        "temporary_bytes": 0,
+        "worker_candidates": 0,
+        "worker_rows": 0,
+        "writer_allocations": 0,
+        "writer_reuses": 0
+      },
+      "single_write_total": 1049,
+      "timing": {
+        "control": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.02687175,
+              "process_wall_seconds": 0.14029874998959713,
+              "phases": {
+                "delivery_gc": 0.000219265,
+                "query_update": 0.003762208,
+                "repair": 0.001446289,
+                "rhs": 0.00850392,
+                "search": 0.012566522
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.026502584,
+              "process_wall_seconds": 0.14086533401859924,
+              "phases": {
+                "delivery_gc": 0.000230738,
+                "query_update": 0.003831021,
+                "repair": 0.001539575,
+                "rhs": 0.008093055,
+                "search": 0.012391472
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.0258215,
+              "process_wall_seconds": 0.13743249999242835,
+              "phases": {
+                "delivery_gc": 0.000220206,
+                "query_update": 0.003751002,
+                "repair": 0.001483981,
+                "rhs": 0.007885422,
+                "search": 0.012107242
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.025150834,
+              "process_wall_seconds": 0.13737629100796767,
+              "phases": {
+                "delivery_gc": 0.000220329,
+                "query_update": 0.003656171,
+                "repair": 0.00140072,
+                "rhs": 0.007541374,
+                "search": 0.011938498
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.028145,
+              "process_wall_seconds": 0.14446554199093953,
+              "phases": {
+                "delivery_gc": 0.000247859,
+                "query_update": 0.004018092,
+                "repair": 0.001606379,
+                "rhs": 0.0087787,
+                "search": 0.013101174
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            }
+          ],
+          "inference_median_seconds": 0.026502584,
+          "phase_medians_seconds": {
+            "delivery_gc": 0.000220329,
+            "query_update": 0.003762208,
+            "repair": 0.001483981,
+            "rhs": 0.008093055,
+            "search": 0.012391472
+          }
+        },
+        "candidate": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.025598333,
+              "process_wall_seconds": 0.13384066699654795,
+              "phases": {
+                "delivery_gc": 0.000209974,
+                "query_update": 0.003625488,
+                "repair": 0.001446917,
+                "rhs": 0.007851367,
+                "search": 0.012063334
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.025253792,
+              "process_wall_seconds": 0.13847620898741297,
+              "phases": {
+                "delivery_gc": 0.000209505,
+                "query_update": 0.003567218,
+                "repair": 0.001409372,
+                "rhs": 0.007716612,
+                "search": 0.011970299
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.026335875,
+              "process_wall_seconds": 0.13974595800391398,
+              "phases": {
+                "delivery_gc": 0.000218586,
+                "query_update": 0.003870906,
+                "repair": 0.001546552,
+                "rhs": 0.007841334,
+                "search": 0.012465189
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.026125834,
+              "process_wall_seconds": 0.13422933398396708,
+              "phases": {
+                "delivery_gc": 0.000210499,
+                "query_update": 0.003772084,
+                "repair": 0.001441705,
+                "rhs": 0.007838072,
+                "search": 0.012468263
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.028180833,
+              "process_wall_seconds": 0.14327795899589546,
+              "phases": {
+                "delivery_gc": 0.000241444,
+                "query_update": 0.003978882,
+                "repair": 0.001523272,
+                "rhs": 0.008482832000000001,
+                "search": 0.013569721
+              },
+              "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+              "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+            }
+          ],
+          "inference_median_seconds": 0.026125834,
+          "phase_medians_seconds": {
+            "delivery_gc": 0.000210499,
+            "query_update": 0.003772084,
+            "repair": 0.001446917,
+            "rhs": 0.007841334,
+            "search": 0.012465189
+          }
+        }
+      }
+    },
+    "ray": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "runs": 16883,
+      "exact_final_state_and_run_summaries": true,
+      "logical_effects_equal": true,
+      "writes": {
+        "batches": 3660,
+        "boundary_ns": 90289318,
+        "candidates": 840367,
+        "direct_batches": 3660,
+        "duplicate_targets": 46829,
+        "execution_ns": 104279942,
+        "fallback_batches": 0,
+        "invalidated": 84978,
+        "logical_improvements": 763097,
+        "new_rows": 4385,
+        "preparation_ns": 200864,
+        "row_writes": 755389,
+        "rows": 793538,
+        "source_completion_ns": 71158424,
+        "superseded_improvements": 7708,
+        "temporary_bytes": 197995912,
+        "worker_candidates": 840367,
+        "worker_rows": 793538,
+        "writer_allocations": 4385,
+        "writer_reuses": 751004
+      },
+      "single_write_total": 1569156,
+      "timing": {
+        "control": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 6.814559,
+              "process_wall_seconds": 8.894532583013643,
+              "phases": {
+                "delivery_gc": 0.021671418,
+                "query_update": 1.0960195719999999,
+                "repair": 0.552029232,
+                "rhs": 2.505824882,
+                "search": 2.63360522
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 7.280156458,
+              "process_wall_seconds": 9.396684167004423,
+              "phases": {
+                "delivery_gc": 0.02165235,
+                "query_update": 1.167153125,
+                "repair": 0.572824198,
+                "rhs": 2.716252824,
+                "search": 2.796512866
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 7.131417042,
+              "process_wall_seconds": 9.291154457983794,
+              "phases": {
+                "delivery_gc": 0.022775642,
+                "query_update": 1.148755826,
+                "repair": 0.590383331,
+                "rhs": 2.700679792,
+                "search": 2.663234862
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            }
+          ],
+          "inference_median_seconds": 7.131417042,
+          "phase_medians_seconds": {
+            "delivery_gc": 0.021671418,
+            "query_update": 1.148755826,
+            "repair": 0.572824198,
+            "rhs": 2.700679792,
+            "search": 2.663234862
+          }
+        },
+        "candidate": {
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 6.812919,
+              "process_wall_seconds": 8.961243083991576,
+              "phases": {
+                "delivery_gc": 0.021476828,
+                "query_update": 1.092768397,
+                "repair": 0.548288338,
+                "rhs": 2.584885134,
+                "search": 2.56041453
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 7.023441334,
+              "process_wall_seconds": 9.199408874992514,
+              "phases": {
+                "delivery_gc": 0.022088982,
+                "query_update": 1.148767939,
+                "repair": 0.574013574,
+                "rhs": 2.626033091,
+                "search": 2.647386852
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 7.235588,
+              "process_wall_seconds": 9.330557374982163,
+              "phases": {
+                "delivery_gc": 0.02302565,
+                "query_update": 1.191994485,
+                "repair": 0.571762344,
+                "rhs": 2.758431209,
+                "search": 2.684656467
+              },
+              "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+              "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+            }
+          ],
+          "inference_median_seconds": 7.023441334,
+          "phase_medians_seconds": {
+            "delivery_gc": 0.022088982,
+            "query_update": 1.148767939,
+            "repair": 0.571762344,
+            "rhs": 2.626033091,
+            "search": 2.647386852
+          }
+        }
+      }
+    }
+  },
+  "semantic_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  },
+  "wall_profiles": [
+    {
+      "runtime_sha256": "4815e7735f9aa3d9c19f5298dd6a4c46ac582576dcbedab4629f60f3451ce054",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "44682",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-worker-writes/root/profile/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.40982337499735877,
+        "command_end_seconds_since_launch": 7.803528958000243,
+        "stacks_sha256": "70721950d3b9541d1f67b6d4c9bfc246d542dbcbb5780c9eee4b6f390b7020b5",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1509,
+          "condition_wait_samples": 321,
+          "condition_wait_fraction": 0.21272365805168986,
+          "contexts": {
+            "synchronous_local_rhs": 102,
+            "publication": 72,
+            "query": 119,
+            "scalar_rhs_writes": 26,
+            "ready_queue": 2
+          }
+        },
+        {
+          "samples": 1509,
+          "condition_wait_samples": 1143,
+          "condition_wait_fraction": 0.757455268389662,
+          "contexts": {
+            "pool_idle": 1098,
+            "inside_job": 45
+          }
+        },
+        {
+          "samples": 1509,
+          "condition_wait_samples": 1160,
+          "condition_wait_fraction": 0.7687210072895958,
+          "contexts": {
+            "pool_idle": 1134,
+            "inside_job": 26
+          }
+        },
+        {
+          "samples": 1509,
+          "condition_wait_samples": 1188,
+          "condition_wait_fraction": 0.7872763419483101,
+          "contexts": {
+            "pool_idle": 1179,
+            "inside_job": 9
+          }
+        },
+        {
+          "samples": 1509,
+          "condition_wait_samples": 1217,
+          "condition_wait_fraction": 0.80649436713055,
+          "contexts": {
+            "pool_idle": 1211,
+            "inside_job": 6
+          }
+        }
+      ],
+      "limits": "Partial wall-stack sample, not CPU utilization; logging and sampling perturb execution. The first profile overlapped briefly with the Python semantic validator; profile-clean ran after that validator completed. These windows do not prove a utilization improvement.",
+      "name": "profile"
+    },
+    {
+      "runtime_sha256": "4815e7735f9aa3d9c19f5298dd6a4c46ac582576dcbedab4629f60f3451ce054",
+      "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "runs": 16883,
+      "sample": {
+        "command": [
+          "/usr/bin/sample",
+          "53334",
+          "5",
+          "2",
+          "-mayDie",
+          "-file",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-worker-writes/root/profile-clean/stacks.txt"
+        ],
+        "trigger": "first source Run in progress log",
+        "trigger_seconds_since_launch": 0.4136911249952391,
+        "command_end_seconds_since_launch": 5.59006837499328,
+        "stacks_sha256": "9effe1194fe6be3030014a748e4265099be7bd599cbcb3aabb65a16cc0ebefbe",
+        "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Logging and sampling perturb this diagnostic."
+      },
+      "threads": [
+        {
+          "samples": 1532,
+          "condition_wait_samples": 272,
+          "condition_wait_fraction": 0.17754569190600522,
+          "contexts": {
+            "synchronous_local_rhs": 43,
+            "publication": 88,
+            "query": 120,
+            "scalar_rhs_writes": 21
+          }
+        },
+        {
+          "samples": 1532,
+          "condition_wait_samples": 1244,
+          "condition_wait_fraction": 0.8120104438642297,
+          "contexts": {
+            "pool_idle": 1202,
+            "inside_job": 42
+          }
+        },
+        {
+          "samples": 1532,
+          "condition_wait_samples": 1254,
+          "condition_wait_fraction": 0.8185378590078329,
+          "contexts": {
+            "pool_idle": 1239,
+            "inside_job": 15
+          }
+        },
+        {
+          "samples": 1532,
+          "condition_wait_samples": 1273,
+          "condition_wait_fraction": 0.8309399477806788,
+          "contexts": {
+            "pool_idle": 1265,
+            "inside_job": 8
+          }
+        },
+        {
+          "samples": 1532,
+          "condition_wait_samples": 1299,
+          "condition_wait_fraction": 0.847911227154047,
+          "contexts": {
+            "pool_idle": 1288,
+            "inside_job": 11
+          }
+        }
+      ],
+      "limits": "Partial wall-stack sample, not CPU utilization; logging and sampling perturb execution. The first profile overlapped briefly with the Python semantic validator; profile-clean ran after that validator completed. These windows do not prove a utilization improvement.",
+      "name": "profile-clean"
+    }
+  ]
+}

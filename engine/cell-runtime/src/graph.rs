@@ -98,6 +98,9 @@ pub struct Cell {
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_births.rs"]
 pub(crate) mod cell_births;
+#[cfg(feature = "sparse-cells")]
+#[path = "cell_writes.rs"]
+pub(crate) mod cell_writes;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Function {
     #[cfg(feature = "sparse-cells")]

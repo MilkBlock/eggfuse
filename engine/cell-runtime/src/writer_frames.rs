@@ -26,6 +26,9 @@ struct Page {
     count: usize,
 }
 impl Directory {
+    pub(super) fn register(&mut self, index: usize, origin: FactRef) {
+        self.insert(origin.cell, index as u32);
+    }
     pub fn get(&self, id: u32) -> Option<usize> {
         let page = self.pages.get(id as usize / 512)?.as_ref()?;
         page.row[id as usize % 512]
@@ -63,6 +66,13 @@ impl Directory {
     }
 }
 impl Graph {
+    pub(super) fn retire_unretained_writer(&mut self, origin: FactRef, parent: Option<FactRef>) {
+        // Worker admission excludes inline writers as new parents, so an
+        // unretained old writer cannot acquire readers during the batch.
+        debug_assert_eq!(self.parent_users.get(&origin.cell).copied().unwrap_or(0), 0);
+        self.writer_dir.remove(origin.cell);
+        if let Some(parent) = parent { self.release_reference(parent); }
+    }
     pub(super) fn writer(&self, id: u32) -> Option<&Writer> {
         self.functions
             .get(self.writer_dir.get(id)?)?
@@ -71,7 +81,11 @@ impl Graph {
     }
     pub(super) fn detach_origin(&mut self, index: usize) -> Option<Box<Writer>> {
         let previous = self.functions[index].origin.take()?;
-        let Some(mut writer) = self.functions[index].writer.take() else {
+        let writer = self.functions[index].writer.take();
+        self.retire_writer(previous, writer)
+    }
+    pub(super) fn retire_writer(&mut self, previous: FactRef, writer: Option<Box<Writer>>) -> Option<Box<Writer>> {
+        let Some(mut writer) = writer else {
             self.release_reference(previous);
             return None;
         };
@@ -138,6 +152,11 @@ impl Graph {
         let f = &mut self.functions[index];
         f.writer = Some(writer);
         f.origin = Some(origin);
+    }
+}
+impl Writer {
+    pub(super) fn completed(template: usize, values: crate::slots::Slots, parent: Option<FactRef>, epoch: u64, prefix: usize) -> Self {
+        Self { template, parent, values: values.into(), epoch, completed: true, depth: 0, prefix }
     }
 }
 #[cfg(test)]

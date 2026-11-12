@@ -1,0 +1,246 @@
+{
+  "scope": "actual standalone Cell CPU; fresh processes, interleaved controls; not native egglog",
+  "limits": "Sequential development sessions with varying machine load. Compare lanes within each session; do not combine control medians across drafts.",
+  "drafts": [
+    {
+      "directory": ".",
+      "layout": "two phases, extra Instance array, fresh writer boxes",
+      "lanes": {
+        "control": {
+          "runtime_sha256": "f9cd9ffeecc09ac6dce44c0dcf9f04acf9f3e2b97a2cfff6247fbece7ea55259",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.718700291,
+            6.7773515,
+            8.460606291
+          ],
+          "median_seconds": 6.7773515,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        },
+        "candidate": {
+          "runtime_sha256": "74c033459a7c3d50b8183e98fa9e40eed379ac9c2caa7bad1ad838731ae20cbf",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.864046709,
+            6.73947,
+            6.735857041
+          ],
+          "median_seconds": 6.73947,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        }
+      }
+    },
+    {
+      "directory": "accepted",
+      "layout": "borrowed Instance array, reused writer boxes, two phases",
+      "lanes": {
+        "control": {
+          "runtime_sha256": "f9cd9ffeecc09ac6dce44c0dcf9f04acf9f3e2b97a2cfff6247fbece7ea55259",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.757652333,
+            6.844906959,
+            7.380859292
+          ],
+          "median_seconds": 6.844906959,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        },
+        "candidate": {
+          "runtime_sha256": "2f1829d089e48a7f2f62f469627510faea0c9d6f9f483143d4b6eb1325e36033",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            7.026728209,
+            7.326869709,
+            7.71290925
+          ],
+          "median_seconds": 7.326869709,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        }
+      }
+    },
+    {
+      "directory": "direct",
+      "layout": "one pool call, saved Root Cursor container",
+      "lanes": {
+        "control": {
+          "runtime_sha256": "f9cd9ffeecc09ac6dce44c0dcf9f04acf9f3e2b97a2cfff6247fbece7ea55259",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.716879625,
+            6.797733833,
+            7.135121125
+          ],
+          "median_seconds": 6.797733833,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        },
+        "candidate": {
+          "runtime_sha256": "7379e58d637afb66d937cc20afbfbdf6b9112e6baa2ca56c968022990fc7594f",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            7.100446583,
+            7.033955875,
+            7.099580208
+          ],
+          "median_seconds": 7.099580208,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        }
+      }
+    },
+    {
+      "directory": "root",
+      "layout": "one pool call, deferred Root creation, boxed batch counters",
+      "lanes": {
+        "control": {
+          "runtime_sha256": "f9cd9ffeecc09ac6dce44c0dcf9f04acf9f3e2b97a2cfff6247fbece7ea55259",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.814559,
+            7.280156458,
+            7.131417042
+          ],
+          "median_seconds": 7.131417042,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        },
+        "candidate": {
+          "runtime_sha256": "4815e7735f9aa3d9c19f5298dd6a4c46ac582576dcbedab4629f60f3451ce054",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "inference_seconds": [
+            6.812919,
+            7.023441334,
+            7.235588
+          ],
+          "median_seconds": 7.023441334,
+          "state_hashes": [
+            "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+          ],
+          "schedule_hashes": [
+            "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+          ]
+        }
+      }
+    }
+  ]
+}
