@@ -324,8 +324,8 @@ impl Graph {
             if let Some(selected) = selected {
                 let candidate = selected?;
                 let target = candidate.fact;
-                let cross_stage = self.cells[&source.cell].started_epoch
-                    != self.cells[&target.cell].started_epoch;
+                let cross_stage = self.cells.cell_metadata(source.cell).unwrap().started_epoch
+                    != self.cells.cell_metadata(target.cell).unwrap().started_epoch;
                 let local = self.local_condition_stats();
                 if candidate.condition.is_some() {
                     local.completed_conditions += 1;

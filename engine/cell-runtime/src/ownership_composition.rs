@@ -740,7 +740,7 @@ impl Graph {
             template: self.program.rules[rid].template, anchors });
     }
     pub(super) fn ensure_composition_frame(&mut self, cell: u32) {
-        let template = self.cells[&cell].template;
+        let template = self.cells.cell_metadata(cell).unwrap().template;
         let program = self.program.cell_ownership.markers[template].program_id;
         let m = self.ownership.as_mut().unwrap();
         if m.composition.frames.contains_key(&cell) {
@@ -838,7 +838,7 @@ impl Graph {
                     selected = Some((
                         frame.component,
                         shape,
-                        self.cells[&f.cell].started_epoch != self.epoch,
+                        self.cells.cell_metadata(f.cell).unwrap().started_epoch != self.epoch,
                     ));
                     break 'candidate;
                 }
@@ -959,6 +959,13 @@ impl Graph {
             // A component may die before a source frame's external users do.
             // Restore its delegated slots before invalidating the shared owner.
             for id in &c.frames {
+                #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+                if self.parent_users.get(id).copied().unwrap_or(0)>0
+                    && self.cells.completed_meta(*id).is_some_and(|meta|meta.symbolic_slots) {
+                    let restored=self.cells.unseal_completed(*id).unwrap();
+                    self.cells.insert(*id,restored);
+                    self.stats.shared_owner_frames_restored+=1;
+                }
                 if let Some(cell) = self.cells.get_mut(id) {
                     if cell.symbolic_slots {
                         let frame = m.composition.frames[id];

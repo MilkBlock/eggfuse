@@ -66,6 +66,7 @@ impl Graph {
 
     pub fn retained_cell_storage(&self) -> J {
         let (records, positions, outliers) = self.cells.storage_bytes();
+        let (completed_records,completed_slots,completed_facts,completed_frames)=self.cells.completed_storage();
         let mut frames = BTreeSet::new();
         let mut decoded = BTreeSet::new();
         let (mut slots, mut facts, mut rows, mut removals) = (0, 0, 0, 0);
@@ -87,6 +88,12 @@ impl Graph {
                 }
             }
         }
+        for id in self.cells.completed_ids() {
+            let count=self.cells.fact_count(id).unwrap();
+            fact_count+=count;
+            *arities.entry(count).or_default()+=1;
+        }
+        slots+=completed_slots;facts+=completed_facts;
         let function_records = self.functions.capacity() * std::mem::size_of::<Function>();
         let function_rows = self.functions.iter().map(|f| {
             if decoded.insert(f.fields.as_ptr() as usize) {
@@ -136,14 +143,14 @@ impl Graph {
             "members_array_bytes":member_arrays,"members_tree_entries":member_tree_entries,
             "union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
-            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>(),
-            "cell_records_bytes":records,"cell_positions_bytes":positions,"id_outliers":outliers,
+            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().0.len()).sum::<usize>(),
+            "completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":fact_count*std::mem::size_of::<(u32,FactState)>(),
             "decoded_row_bytes":rows,"decoded_row_owners":decoded.len(),
             "function_records_bytes":function_records,"function_row_bytes":function_rows,
             "cell_fact_arities":arities,
-            "counted_bytes":records+positions+slots+facts+rows+function_records+function_rows+writers+member_arrays})
+            "counted_bytes":records+completed_records+positions+slots+facts+rows+function_records+function_rows+writers+member_arrays})
     }
 }
 

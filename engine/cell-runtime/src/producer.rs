@@ -54,7 +54,7 @@ impl Graph {
         } else {
             actual
         };
-        let c = self.cells.get(&f.cell)?;
+        let c = self.cells.cell_metadata(f.cell)?;
         Some(Context {
             completed: c.completed,
             cell: f.cell,

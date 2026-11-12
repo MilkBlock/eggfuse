@@ -370,9 +370,9 @@ impl Graph {
         };
         let mut nodes = 0;
         let mut ports = 0;
-        for (&cell_id, cell) in self.cells.iter() {
-            for (&op, fact) in cell.facts.iter() {
-                if let Some(row) = stats.nodes.get(&FactRef { cell: cell_id, op }) {
+        for cell_id in self.cells.cell_ids() {
+            for (id, fact) in self.cells.fact_states(cell_id) {
+                if let Some(row) = stats.nodes.get(&id) {
                     assert!(fact.owned && fact.decoded.is_none());
                     nodes += 1;
                     ports += row

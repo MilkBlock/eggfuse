@@ -507,7 +507,7 @@ impl Graph {
             }
             answer.result.as_ref().map_err(Clone::clone)?;
             let row = self.read_stable_fact(f, state, stored)?;
-            let cross = self.cells[&fact.cell].started_epoch != self.cells[&f.cell].started_epoch;
+            let cross = self.cells.cell_metadata(fact.cell).unwrap().started_epoch != self.cells.cell_metadata(f.cell).unwrap().started_epoch;
             let local = self.local_condition_stats();
             if answer.candidate.condition.is_some() {
                 local.completed_conditions += 1;

@@ -233,10 +233,10 @@ impl Graph {
             }
             self.local_condition_stats().completed_conditions += 1;
             self.local_condition_stats().cross_stage_conditions +=
-                u64::from(self.cells[&f.cell].started_epoch != self.cells[&cell].started_epoch);
+                u64::from(self.cells.cell_metadata(f.cell).unwrap().started_epoch != self.cells.cell_metadata(cell).unwrap().started_epoch);
             // The logical commit consumes the result ports through the row
             // interface, preserving visibility, receipts and ordered retirement.
-            let state = &self.cells[&cell].facts[&op];
+            let state = self.cells.fact_state(FactRef{cell,op}).unwrap();
             return self
                 .read_stable_fact(target, state, self.stable_node(target).unwrap())
                 .map(|r| Some(Some(r)));

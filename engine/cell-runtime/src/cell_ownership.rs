@@ -439,7 +439,7 @@ impl Graph {
         if self.ownership.is_none() {
             return false;
         }
-        let template = self.cells[&f.cell].template;
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
         if !self.program.cell_ownership.markers[template].program.covers(f.op as usize) {
             self.ownership.as_mut().unwrap().stats.uncovered_births += 1;
             return false;
@@ -900,14 +900,13 @@ impl Graph {
                     assert!(!self.signal_is_native(signal, id));
                 }
             }
-            for (&cell, c) in self.cells.iter() {
-                for (&op, s) in c.facts.iter().filter(|(_, s)| s.owned) {
-                    let f = FactRef { cell, op };
+            for cell in self.cells.cell_ids() {
+                for (f, s) in self.cells.fact_states(cell).filter(|(_, s)| s.owned) {
                     #[cfg(not(feature = "sparse-cells"))]
                     assert!(!self.dependencies.contains_key(&Dependency::Fact(f)));
                     across += u64::from(s.born < self.epoch);
                     let program =
-                        &self.program.cell_ownership.markers[self.cells[&f.cell].template].program;
+                        &self.program.cell_ownership.markers[self.cells.cell_metadata(f.cell).unwrap().template].program;
                     let values = if let Some(stored) = self.stable_ports.as_ref().and_then(|p| p.nodes.get(&f)) {
                         self.stable_values(stored, false).expect("read owned stable body")
                     } else { s.decoded.as_ref().expect("settled owned body").1.clone() };
@@ -1031,3 +1030,7 @@ impl Graph {
     }
 
 }
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[path="shared_owner_transfer.rs"]
+mod shared_owner_transfer;

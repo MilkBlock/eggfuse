@@ -231,7 +231,7 @@ impl Graph {
             return false;
         };
         m.counts.birth_attempts += 1;
-        let template = self.cells[&f.cell].template;
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
         if !self
             .program
             .local_union_cells
@@ -302,7 +302,7 @@ impl Graph {
                 }
             }
             if !changed {
-                let template = self.cells[&f.cell].template;
+                let template = self.cells.cell_metadata(f.cell).unwrap().template;
                 let proof = &self.program.local_union_cells.templates[template]
                     .as_ref()
                     .unwrap()
@@ -380,7 +380,7 @@ impl Graph {
         }
     }
     pub(super) fn end_local_ownership(&mut self, f: FactRef, table: usize, retired: bool) {
-        let template = self.cells.get(&f.cell).unwrap().template;
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
         let state = self.cells.fact_state_mut(f).unwrap();
         if !std::mem::take(&mut state.local_union_owned) {
             return;

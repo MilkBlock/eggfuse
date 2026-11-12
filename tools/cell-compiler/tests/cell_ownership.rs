@@ -1071,3 +1071,60 @@ fn completed_layout_distinguishes_dead_inputs_from_scalar_and_result_readers() {
         }
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn shared_completed_owners_survive_later_reads_and_deletion() {
+    let src="(datatype E (N i64) (Start E) (Pair E E) (Seen E)) (relation Flag ())
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d)
+        (rule ((= x (N n)) (Flag)) ((Start x)) :ruleset a)
+        (rule ((= s (Start x)) (Flag)) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Seen x)) :ruleset c)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset d)
+        (N 1) (N 2) (Flag) (run a 1) (run b 1) (run c 1) (run d 1) (run c 1)";
+    let p=program(src);
+    for workers in [0,2] {
+    let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+    let mut moved=0;
+    loop {
+        let n=reference.steps.len();
+        reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+        if reference.steps.len()==n {break;}
+        moved+=actual.graph.transfer_completed_owners().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {}",n+1);
+        actual.graph.ownership_report();actual.graph.stable_port_report();
+    }
+    assert!(moved>0,"exercise physical source-frame removal");
+    let table=actual.graph.program.tables.iter().position(|t|t.name=="Pair").unwrap();
+    let witness=actual.graph.witnesses(table)[0];
+    let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor fact")};
+    assert!(actual.graph.cells.get(&parent.cell).is_none(),"Pair must have physically transferred");
+    let template=actual.graph.program.templates.iter().position(|t|
+        !t.parent_columns.is_empty() && t.name.contains("Seen")).unwrap();
+    let slot=*actual.graph.program.templates[template].parent_columns.keys().next().unwrap();
+    let child=actual.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
+    let expected=actual.graph.slot(child,slot).unwrap();
+    let storage=actual.graph.ownership_storage_trace();
+    let frames=storage["components"].as_array().unwrap().iter()
+        .find(|c|c["frames"].as_array().unwrap().iter().any(|id|*id==parent.cell)).unwrap()["frames"].clone();
+    let mut deletions=Vec::new();
+    for t in 0..actual.graph.program.tables.len() {
+        for witness in actual.graph.witnesses(t) {
+            if let eggfuse_cell_runtime::graph::Dependency::Fact(f)=witness
+                && frames.as_array().unwrap().iter().any(|id|*id==f.cell) {
+                deletions.push(actual.graph.row(witness).unwrap().unwrap());
+            }
+        }
+    }
+    for row in deletions {
+        let key=&row.values[..row.values.len()-1];
+        actual.graph.hide(row.table,key,true).unwrap();reference.graph.hide(row.table,key,true).unwrap();
+    }
+    actual.graph.collect_garbage();reference.graph.collect_garbage();
+    assert_eq!(actual.graph.slot(child,slot).unwrap(),expected,"parent projection survives component death");
+    assert!(actual.graph.stats.shared_owner_frames_restored>0);
+    assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+    }
+}

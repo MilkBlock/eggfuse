@@ -632,7 +632,7 @@ fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCod
 fn physical_cell(g: &Graph, row: &Row) -> (usize, Dependency) {
     // Use the actual result's Cell, including foreign constructor reuse.
     let actual = g.origin(row.witness).and_then(|f| {
-        g.cells.get(&f.cell).map(|c| (c.template, f.cell))
+        g.cells.cell_metadata(f.cell).map(|c| (c.template, f.cell))
             .or_else(|| g.continuation_context(row.witness)
                 .filter(|c| c.cell == f.cell).map(|c| (c.template, c.cell)))
     });

@@ -101,6 +101,19 @@ pub struct Cell {
     #[serde(default)]
     pub recipe_depth: u32,
 }
+#[derive(Clone,Copy)]
+pub(crate) struct CellMetadata {
+    pub template:usize,
+    pub started_epoch:u64,
+    pub completed_prefix:usize,
+    pub recipe_depth:u32,
+    pub completed:bool,
+    pub symbolic_slots:bool,
+}
+impl From<&Cell> for CellMetadata {
+    fn from(c:&Cell)->Self {Self{template:c.template,started_epoch:c.started_epoch,
+        completed_prefix:c.completed_prefix,recipe_depth:c.recipe_depth,completed:c.completed,symbolic_slots:c.symbolic_slots}}
+}
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_births.rs"]
 pub(crate) mod cell_births;
@@ -319,6 +332,10 @@ pub struct Stats {
     #[serde(default)]
     pub rhs_frames_avoided: u64,
     pub empty_frames_released: u64,
+    #[serde(default)]
+    pub shared_owner_slots_delegated:u64,
+    #[serde(default)]
+    pub shared_owner_frames_restored:u64,
     #[serde(default)]
     pub completed_parent_candidates: u64,
     #[serde(default)]
@@ -911,6 +928,10 @@ impl Graph {
         if let Some(w) = self.writer(cell) {
             return self.slot_fields(cell, w.template, w.parent, &w.values, i);
         }
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        if let Some(meta)=self.cells.completed_meta(cell) {
+            return self.slot_fields(cell,meta.template,None,&self.cells.completed_slots(cell).unwrap(),i);
+        }
         Err("expired Cell reference".into())
     }
     #[inline]
@@ -1003,7 +1024,7 @@ impl Graph {
             }
             return Ok(canon(v, &self.parents));
         }
-        if self.cells.get(&cell).is_some_and(|c| c.symbolic_slots) {
+        if self.cells.cell_metadata(cell).is_some_and(|c| c.symbolic_slots) {
             if let Some(value) = self.inherited_cell_slot(cell, template, i) {
                 return Ok(value);
             }
@@ -1045,7 +1066,7 @@ impl Graph {
         }
         // Recipe parameters are immutable even after this fact is hidden/deleted.
         // Derived Cells can keep their binding without copying the parent's fields.
-        let template = self.cells.get(&f.cell).map(|c| c.template);
+        let template = self.cells.cell_metadata(f.cell).map(|c| c.template);
         #[cfg(feature = "sparse-cells")]
         let template = template.or_else(|| self.writer(f.cell).map(|w| w.template));
         match self.program.templates[template.ok_or("expired parent Cell")?]
@@ -1109,14 +1130,14 @@ impl Graph {
 
         // Stable fields and cached rows need only the fact's logical identity.
         // The ordinary recipe fallback still requires the original frame.
-        let c = self.cells.get(&f.cell).ok_or("live fact lacks recipe owner")?;
-        self.decode_fact(f, c, s).map(Some)
+        let c = self.cells.cell_metadata(f.cell).ok_or("live fact lacks recipe owner")?;
+        self.decode_fact(f, c.template, s).map(Some)
     }
 
     #[inline(never)]
-    fn decode_fact(&self, f: FactRef, c: &Cell, s: &FactState) -> Result<Row> {
+    fn decode_fact(&self, f: FactRef, template:usize, s: &FactState) -> Result<Row> {
         self.fact_decode_calls.set(self.fact_decode_calls.get() + 1);
-        let op = self.program.templates[c.template]
+        let op = self.program.templates[template]
             .ops
             .get(f.op as usize)
             .ok_or("invalid live fact position")?;
@@ -1128,9 +1149,9 @@ impl Graph {
         self.fact_decode_ports.set(self.fact_decode_ports.get() + args.len() as u64 + 1);
         let mut values = Vec::with_capacity(args.len() + 1);
         for arg in args {
-            values.push(self.argument_in(f.cell, c, arg)?);
+            values.push(self.argument(f.cell, arg)?);
         }
-        values.push(self.argument_in(f.cell, c, &result)?);
+        values.push(self.argument(f.cell, &result)?);
         Ok(Row {
             table,
             values: row_fields(values),
@@ -1236,7 +1257,7 @@ impl Graph {
         match w {
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.table),
             Dependency::Fact(f) => {
-                let c = self.cells.get(&f.cell)?;
+                let c = self.cells.cell_metadata(f.cell)?;
                 self.cells.fact_state(f)?;
 
                 match self.program.templates[c.template].ops.get(f.op as usize)? {
@@ -1281,7 +1302,7 @@ impl Graph {
         match w {
             Dependency::Function(i) => self.functions.get(i).map(|f| f.table),
             Dependency::Fact(f) => {
-                let c = self.cells.get(&f.cell)?;
+                let c = self.cells.cell_metadata(f.cell)?;
 
                 match self.program.templates[c.template].ops.get(f.op as usize)? {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => Some(*t),
@@ -1340,7 +1361,7 @@ impl Graph {
                     .copied()
                     .filter(|w| match w {
                         Dependency::Fact(f) => {
-                            self.cells.get(&f.cell).is_some_and(|c| {
+                            self.cells.cell_metadata(f.cell).is_some_and(|c| {
                                 match &self.program.templates[c.template].ops[f.op as usize] {
                                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t == table,
                                     _ => false,
@@ -1815,7 +1836,7 @@ impl Graph {
         }
         self.stats.constructor_prepared_liveness_checks += 1;
         if self.receipt_forwards.contains_key(&Dependency::Fact(witness)) { return Ok(None); }
-        let Some(frame) = self.cells.get(&witness.cell) else { return Ok(None); };
+        let Some(frame) = self.cells.cell_metadata(witness.cell) else { return Ok(None); };
         let Some(state) = self.cells.fact_state(witness).filter(|s| !s.hidden) else { return Ok(None); };
         let (actual, args, result) = match &self.program.templates[frame.template].ops[witness.op as usize] {
             Op::Let(dst, Call::Table(t), args) => (*t, args, Arg::Slot(*dst)),
@@ -1829,7 +1850,7 @@ impl Graph {
         } else if let Some((_, values)) = &state.decoded {
             values.last().expect("constructor result").clone()
         } else {
-            self.argument_in(witness.cell, frame, &result)?
+            self.argument(witness.cell, &result)?
         };
         let point = Point { value, hidden: false, epoch: state.epoch, witness: Dependency::Fact(witness) };
         self.stats.constructor_prepared_checks += 1;
@@ -2864,6 +2885,8 @@ impl Graph {
                     self.release_reference(p);
                 }
             }
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            self.cells.retire_completed(cell);
             self.parent_users.remove(&cell);
             self.stats.empty_frames_released += 1;
         }
