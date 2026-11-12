@@ -1,0 +1,916 @@
+{
+  "scope": "Read-only actual-runtime snapshot audit, not new performance or training accuracy",
+  "source_program": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "baked_program": "04062bbaf7384927dbbe80bd1b68259405da0d2cf66b7cca729ad284cdbb82a4",
+  "runs": 1428,
+  "run_checks_equal": true,
+  "saved_measurement": {
+    "original_graph_bytes": 3979373,
+    "compressed_graph_bytes": 3015293,
+    "added_shared_layout_bytes": 237912,
+    "combined_fraction": 0.8175169806901741,
+    "excludes": "complete Program/Executor heap and within-Run peaks"
+  },
+  "retained": {
+    "instances": 2385,
+    "templates": 194,
+    "active_port_programs": 123,
+    "inactive_marker_instances": 0,
+    "delegated_frames": 1863,
+    "explicit_slots": 10742,
+    "slot_kinds": {
+      "Eq": 7336,
+      "Text": 48,
+      "Int": 3358
+    },
+    "factless_frames": 211
+  },
+  "compiled": {
+    "port_programs": 363,
+    "fragment_recipes": 256,
+    "checked_transitions": 259,
+    "observed_profile_candidates": 646
+  },
+  "static_field_work_proxy": {
+    "per_instance": 18734,
+    "once_per_used_program": 1239,
+    "meaning": "static field visits only; not inference speedup, bytes, or all dynamic equality checks"
+  },
+  "used_programs": [
+    {
+      "program": 0,
+      "retained_instances": 8,
+      "field_positions": 40,
+      "equality_field_positions": 39,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 19,
+      "retained_instances": 2,
+      "field_positions": 10,
+      "equality_field_positions": 10,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 32,
+      "retained_instances": 7,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 35,
+      "retained_instances": 1,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 36,
+      "retained_instances": 4,
+      "field_positions": 8,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 39,
+      "retained_instances": 14,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 40,
+      "retained_instances": 23,
+      "field_positions": 5,
+      "equality_field_positions": 4,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 41,
+      "retained_instances": 6,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 42,
+      "retained_instances": 29,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 43,
+      "retained_instances": 62,
+      "field_positions": 4,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 44,
+      "retained_instances": 83,
+      "field_positions": 8,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 46,
+      "retained_instances": 16,
+      "field_positions": 5,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 47,
+      "retained_instances": 67,
+      "field_positions": 11,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 4
+    },
+    {
+      "program": 48,
+      "retained_instances": 12,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 49,
+      "retained_instances": 21,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 59,
+      "retained_instances": 2,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 60,
+      "retained_instances": 2,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 61,
+      "retained_instances": 1,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 63,
+      "retained_instances": 24,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 65,
+      "retained_instances": 53,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 66,
+      "retained_instances": 78,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 67,
+      "retained_instances": 53,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 69,
+      "retained_instances": 5,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 72,
+      "retained_instances": 5,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 73,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 74,
+      "retained_instances": 15,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 75,
+      "retained_instances": 4,
+      "field_positions": 5,
+      "equality_field_positions": 4,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 76,
+      "retained_instances": 20,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 77,
+      "retained_instances": 34,
+      "field_positions": 4,
+      "equality_field_positions": 4,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 79,
+      "retained_instances": 2,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 80,
+      "retained_instances": 1,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 81,
+      "retained_instances": 5,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 82,
+      "retained_instances": 5,
+      "field_positions": 7,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 83,
+      "retained_instances": 1,
+      "field_positions": 8,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 84,
+      "retained_instances": 16,
+      "field_positions": 7,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 85,
+      "retained_instances": 44,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 86,
+      "retained_instances": 23,
+      "field_positions": 6,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 87,
+      "retained_instances": 35,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 90,
+      "retained_instances": 1,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 92,
+      "retained_instances": 18,
+      "field_positions": 12,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 3
+    },
+    {
+      "program": 93,
+      "retained_instances": 5,
+      "field_positions": 4,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 94,
+      "retained_instances": 4,
+      "field_positions": 4,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 96,
+      "retained_instances": 146,
+      "field_positions": 9,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 3
+    },
+    {
+      "program": 97,
+      "retained_instances": 64,
+      "field_positions": 4,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 99,
+      "retained_instances": 5,
+      "field_positions": 11,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 4
+    },
+    {
+      "program": 128,
+      "retained_instances": 20,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 130,
+      "retained_instances": 33,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 133,
+      "retained_instances": 27,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 135,
+      "retained_instances": 23,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 139,
+      "retained_instances": 1,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 140,
+      "retained_instances": 2,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 143,
+      "retained_instances": 4,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 144,
+      "retained_instances": 4,
+      "field_positions": 8,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 145,
+      "retained_instances": 2,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 146,
+      "retained_instances": 11,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 154,
+      "retained_instances": 3,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 158,
+      "retained_instances": 6,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 165,
+      "retained_instances": 98,
+      "field_positions": 4,
+      "equality_field_positions": 4,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 171,
+      "retained_instances": 4,
+      "field_positions": 14,
+      "equality_field_positions": 14,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 172,
+      "retained_instances": 7,
+      "field_positions": 10,
+      "equality_field_positions": 10,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 174,
+      "retained_instances": 42,
+      "field_positions": 6,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 177,
+      "retained_instances": 30,
+      "field_positions": 9,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 181,
+      "retained_instances": 2,
+      "field_positions": 10,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 182,
+      "retained_instances": 1,
+      "field_positions": 7,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 183,
+      "retained_instances": 1,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 185,
+      "retained_instances": 8,
+      "field_positions": 17,
+      "equality_field_positions": 15,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 186,
+      "retained_instances": 1,
+      "field_positions": 11,
+      "equality_field_positions": 10,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 187,
+      "retained_instances": 45,
+      "field_positions": 11,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 190,
+      "retained_instances": 11,
+      "field_positions": 10,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 191,
+      "retained_instances": 17,
+      "field_positions": 16,
+      "equality_field_positions": 14,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 193,
+      "retained_instances": 2,
+      "field_positions": 18,
+      "equality_field_positions": 16,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 197,
+      "retained_instances": 4,
+      "field_positions": 9,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 205,
+      "retained_instances": 1,
+      "field_positions": 310,
+      "equality_field_positions": 286,
+      "scalar_field_positions": 24
+    },
+    {
+      "program": 213,
+      "retained_instances": 5,
+      "field_positions": 4,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 219,
+      "retained_instances": 2,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 221,
+      "retained_instances": 16,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 223,
+      "retained_instances": 2,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 250,
+      "retained_instances": 2,
+      "field_positions": 36,
+      "equality_field_positions": 28,
+      "scalar_field_positions": 8
+    },
+    {
+      "program": 251,
+      "retained_instances": 16,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 268,
+      "retained_instances": 2,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 272,
+      "retained_instances": 6,
+      "field_positions": 12,
+      "equality_field_positions": 12,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 274,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 279,
+      "retained_instances": 26,
+      "field_positions": 10,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 280,
+      "retained_instances": 8,
+      "field_positions": 11,
+      "equality_field_positions": 10,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 281,
+      "retained_instances": 2,
+      "field_positions": 9,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 282,
+      "retained_instances": 29,
+      "field_positions": 9,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 283,
+      "retained_instances": 5,
+      "field_positions": 35,
+      "equality_field_positions": 30,
+      "scalar_field_positions": 5
+    },
+    {
+      "program": 284,
+      "retained_instances": 4,
+      "field_positions": 28,
+      "equality_field_positions": 23,
+      "scalar_field_positions": 5
+    },
+    {
+      "program": 285,
+      "retained_instances": 89,
+      "field_positions": 48,
+      "equality_field_positions": 34,
+      "scalar_field_positions": 14
+    },
+    {
+      "program": 286,
+      "retained_instances": 29,
+      "field_positions": 41,
+      "equality_field_positions": 34,
+      "scalar_field_positions": 7
+    },
+    {
+      "program": 287,
+      "retained_instances": 1,
+      "field_positions": 13,
+      "equality_field_positions": 10,
+      "scalar_field_positions": 3
+    },
+    {
+      "program": 288,
+      "retained_instances": 102,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 289,
+      "retained_instances": 24,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 290,
+      "retained_instances": 76,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 291,
+      "retained_instances": 3,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 292,
+      "retained_instances": 66,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 293,
+      "retained_instances": 1,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 294,
+      "retained_instances": 34,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 296,
+      "retained_instances": 2,
+      "field_positions": 9,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 297,
+      "retained_instances": 1,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 298,
+      "retained_instances": 2,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 300,
+      "retained_instances": 13,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 301,
+      "retained_instances": 17,
+      "field_positions": 8,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 305,
+      "retained_instances": 29,
+      "field_positions": 8,
+      "equality_field_positions": 7,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 306,
+      "retained_instances": 34,
+      "field_positions": 9,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 307,
+      "retained_instances": 33,
+      "field_positions": 8,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 308,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 309,
+      "retained_instances": 2,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 311,
+      "retained_instances": 3,
+      "field_positions": 12,
+      "equality_field_positions": 12,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 313,
+      "retained_instances": 1,
+      "field_positions": 10,
+      "equality_field_positions": 8,
+      "scalar_field_positions": 2
+    },
+    {
+      "program": 314,
+      "retained_instances": 1,
+      "field_positions": 5,
+      "equality_field_positions": 5,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 315,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 320,
+      "retained_instances": 5,
+      "field_positions": 9,
+      "equality_field_positions": 9,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 321,
+      "retained_instances": 2,
+      "field_positions": 6,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 322,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 323,
+      "retained_instances": 2,
+      "field_positions": 7,
+      "equality_field_positions": 6,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 330,
+      "retained_instances": 11,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 332,
+      "retained_instances": 38,
+      "field_positions": 1,
+      "equality_field_positions": 1,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 333,
+      "retained_instances": 3,
+      "field_positions": 4,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 335,
+      "retained_instances": 128,
+      "field_positions": 3,
+      "equality_field_positions": 3,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 336,
+      "retained_instances": 37,
+      "field_positions": 2,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 0
+    },
+    {
+      "program": 339,
+      "retained_instances": 1,
+      "field_positions": 2,
+      "equality_field_positions": 1,
+      "scalar_field_positions": 1
+    },
+    {
+      "program": 352,
+      "retained_instances": 24,
+      "field_positions": 3,
+      "equality_field_positions": 2,
+      "scalar_field_positions": 1
+    }
+  ],
+  "missing_for_learning": [
+    "time-aligned component/frame-to-symbol maps and bound signal values",
+    "available boundary conditions and observations before completion",
+    "exact complete-target equivalence and derivation certificate",
+    "retirement/visibility metadata aligned with each example"
+  ],
+  "warning": "Final delegated slots are intentionally absent: never treat missing slots as zero or unknown input labels. Aggregate profile counts are not completion labels.",
+  "provenance_limit": "Source hashes and plan dimensions agree; saved trace does not record the optimized Program hash, so exact optimized-artifact identity is not independently established.",
+  "fingerprints": {
+    "baseline": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
+    "trace": "d3a27e4950996a5070dc88d487bec7fe5eb5c83ccb9b5f05593147b31aac1891",
+    "program": "807e74104f407e8ff4abd2a3de16c6bfa1b4f59b9f93906ab8348da74f745c8c",
+    "profile": "f97eec62351c5ff3ef1e28b2c1a0896de76f9808fd5f45735349175d8bd8980a"
+  }
+}
