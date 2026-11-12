@@ -440,6 +440,7 @@ pub struct Graph {
     #[cfg(feature = "receipt-slots")]
     pub(crate) retired_port_slots: HashMap<Dependency, u32>,
     pub receipt_tracking: bool,
+    pub(crate) port_birth_hints: bool,
     pub receipt_forwards: HashMap<Dependency, Dependency>,
 
     // A table's kind supplies the witness tag for every member.
@@ -684,6 +685,7 @@ impl Graph {
             #[cfg(feature = "receipt-slots")]
             retired_port_slots: HashMap::default(),
             receipt_forwards: HashMap::default(),
+            port_birth_hints: true,
 
             members: vec![TableRows::default(); n],
             intern: HashMap::default(),
@@ -1659,7 +1661,7 @@ impl Graph {
             },
         );
         self.members[t].insert(f.ordered_id());
-        self.intern.entry(h).or_default().insert(f);
+        if self.constructor_hint_enabled(t) {self.intern.entry(h).or_default().insert(f);}
         if owned { self.query_versions[t] += 1; self.publish_owned_birth(f,t,&vs); }
         else if local_union_owned { self.query_versions[t] += 1; }
         else { self.subscribe_rows(t, Dependency::Fact(f), &[], &vs); }
@@ -2491,7 +2493,7 @@ impl Graph {
                     .insert(Dependency::Fact(f), s.port_slot);
             }
             self.members[r.table].remove(&f.ordered_id());
-            if let Some(b) = self.intern.get_mut(&s.hash) {
+            if self.constructor_hint_enabled(r.table) && let Some(b) = self.intern.get_mut(&s.hash) {
                 b.remove(&f);
                 #[cfg(feature = "sparse-cells")]
                 if b.is_empty() {

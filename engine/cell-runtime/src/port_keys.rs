@@ -8,6 +8,30 @@
 use super::*;
 
 impl Graph {
+    /// Drop only optional birth hints where complete Cell port domains already
+    /// prove enumeration. Configure before executing; uncovered keys keep intern.
+    pub fn use_port_domains_only(&mut self)->Result<()> {
+        self.use_port_constructor_matching()?;
+        if !self.ownership_settled() || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
+            return Err("port-domain takeover requires a settled boundary".into());
+        }
+        let retired=self.cells.cell_ids().flat_map(|cell|self.cells.fact_states(cell))
+            .filter_map(|(fact,state)|self.live_table(Dependency::Fact(fact))
+                .filter(|&t|self.port_keys_enabled(t)).map(|_|(fact,state.hash))).collect::<Vec<_>>();
+        for (fact,hash) in retired {
+            if let Some(bucket)=self.intern.get_mut(&hash) {
+                bucket.remove(&fact);
+                if bucket.is_empty() {self.intern.remove(&hash);}
+            }
+        }
+        self.intern.shrink_to_fit();
+        self.port_birth_hints=false;
+        Ok(())
+    }
+    pub(in crate::graph) fn constructor_hint_enabled(&self,table:usize)->bool {
+        self.port_birth_hints || !self.port_keys_enabled(table)
+    }
+
     #[cfg(feature = "sparse-cells")]
     pub(in crate::graph) fn port_constructor_keys_active(&self) -> bool {
         self.stable_ports.as_ref().is_some_and(|p| p.keys)
@@ -18,7 +42,7 @@ impl Graph {
         macro_rules! add { ($f:ident, $v:expr) => { s.$f.set(s.$f.get() + $v); }; }
         // Ordinary canonical constructor reads are also measured here, but
         // key_lookups remains the original port-key subset.
-        add!(key_lookups, w.hint_probes); add!(key_candidates, w.candidates);
+        add!(key_lookups, w.port_lookups); add!(key_candidates, w.candidates);
         add!(birth_hint_probes, w.hint_probes); add!(birth_hint_hits, w.hint_hits);
         add!(port_domain_probes, w.domains);
         self.record_guard_reads(&w.reads);
@@ -77,7 +101,7 @@ impl Graph {
             !columns.is_empty(),
             "port candidate lookup requires an equality input"
         );
-        if completing.is_none() && self.dirty_facts[table].is_empty() {
+        if self.port_birth_hints && completing.is_none() && self.dirty_facts[table].is_empty() {
             stats
                 .birth_hint_probes
                 .set(stats.birth_hint_probes.get() + 1);

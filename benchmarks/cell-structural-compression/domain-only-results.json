@@ -1,0 +1,116 @@
+{
+  "scope": "actual standalone Cell runtime; optional compression mode, no speedup claim",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "final_state_equal": true,
+  "graph_heap_before": 2784981,
+  "graph_heap_after": 2684181,
+  "graph_heap_saved": 100800,
+  "program_heap_before": 117230752,
+  "program_heap_after": 117230752,
+  "process_peak_before": 125480739,
+  "process_peak_after": 125379947,
+  "field_changes": {
+    "intern": [
+      102408,
+      1608
+    ]
+  },
+  "indexed_port_keys_before": 2847,
+  "indexed_port_keys_after": 0,
+  "port_query_work": {
+    "key_lookups": [
+      11063,
+      11063
+    ],
+    "key_candidates": [
+      12174,
+      16972
+    ],
+    "birth_hint_probes": [
+      11053,
+      0
+    ],
+    "birth_hint_hits": [
+      6343,
+      0
+    ],
+    "port_domain_probes": [
+      4720,
+      11063
+    ]
+  },
+  "measured_work_changes": {
+    "cell_ownership/stats/domain_legacy_visits": [
+      12015,
+      50851
+    ],
+    "cell_ownership/stats/domain_planning_calls": [
+      4720,
+      11063
+    ],
+    "cell_ownership/stats/domain_queries": [
+      4720,
+      11063
+    ],
+    "cell_ownership/stats/domain_results": [
+      4744,
+      20930
+    ],
+    "cell_ownership/stats/domain_route_probes": [
+      38228,
+      147071
+    ],
+    "cell_ownership/stats/domain_signal_visits": [
+      38228,
+      147071
+    ],
+    "cell_ownership/stats/domain_slice_steps": [
+      38022,
+      156012
+    ],
+    "cell_ownership/stats/domain_type_guards": [
+      38022,
+      156012
+    ],
+    "stable_ports/stats/birth_hint_probes": [
+      11053,
+      0
+    ],
+    "stable_ports/stats/key_candidates": [
+      12174,
+      16972
+    ],
+    "stable_ports/stats/key_field_comparisons": [
+      25191,
+      36005
+    ],
+    "stable_ports/stats/node_lookups": [
+      3642977,
+      3678022
+    ],
+    "stable_ports/stats/port_domain_probes": [
+      4720,
+      11063
+    ],
+    "stable_ports/stats/port_reads": [
+      7457202,
+      7464916
+    ],
+    "stable_ports/stats/root_parent_probes": [
+      8170850,
+      8178669
+    ],
+    "stable_ports/stats/root_resolutions": [
+      7457202,
+      7464916
+    ]
+  },
+  "limitations": [
+    "complete port coverage is required; uncovered canonical indexes remain",
+    "facts and RHS mutations are unchanged",
+    "extra candidate/domain work is real; no timing improvement established",
+    "birth hash computation itself has not been eliminated"
+  ]
+}

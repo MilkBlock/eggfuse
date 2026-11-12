@@ -409,7 +409,7 @@ impl Graph {
             .map(|(t, _)| self.witness_count(t))
             .sum::<usize>();
         assert_eq!(
-            indexed_port_keys, port_key_facts,
+            indexed_port_keys, if self.port_birth_hints {port_key_facts} else {0},
             "immutable birth hints follow fact lifetime only"
         );
         let pending_canonical_keys = self
@@ -425,7 +425,7 @@ impl Graph {
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
             "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
-            "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
+            "birth_hints_enabled":self.port_birth_hints,"birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})
     }

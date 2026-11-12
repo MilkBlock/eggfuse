@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len() != 3 || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners".into());
+    if !(args.len()==3 || (args.len()==4 && args[3]=="--port-domains-only")) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners [--port-domains-only]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -68,6 +68,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     reset_peak();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
     if args[2] == "inherited-owners" {e.use_completed_parent_takeover()?;}
+    if args.len()==4 {e.graph.use_port_domains_only()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
     loop {
@@ -123,6 +124,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+        "port_index":e.graph.stable_port_report(),
         "ownership_storage":e.graph.ownership_storage_trace(),
         "maintenance":e.graph.maintenance_report(),
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",

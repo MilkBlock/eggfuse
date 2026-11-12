@@ -10,8 +10,8 @@ use serde_json::{Value, json};
 use std::{error::Error, fs};
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len()<3 || args[3..].iter().any(|s|s!="--natural" && s!="--parent-takeover" && s!="--shared-owners" && s!="--receipt-trace") {
-        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners] [--receipt-trace]".into());
+    if args.len()<3 || args[3..].iter().any(|s|s!="--port-domains-only" && s!="--natural" && s!="--parent-takeover" && s!="--shared-owners" && s!="--receipt-trace") {
+        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners] [--receipt-trace] [--port-domains-only]".into());
     }
     let saved: Value = serde_json::from_slice(&fs::read(&args[1])?)?;
     let checks = saved["run_checks"]
@@ -23,6 +23,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let receipt_trace=args.iter().any(|s|s=="--receipt-trace");
     if receipt_trace {eggfuse_cell_runtime::receipt_trace::start(32768);}
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
+    if args.iter().any(|s|s=="--port-domains-only") {e.graph.use_port_domains_only()?;}
     let natural=args.iter().any(|s|s=="--natural");
     let parent_takeover=args.iter().any(|s|s=="--parent-takeover");
     if parent_takeover {e.use_completed_parent_takeover()?;}

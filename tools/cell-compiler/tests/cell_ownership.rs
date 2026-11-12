@@ -1188,3 +1188,31 @@ fn completed_writer_retires_unused_inputs_before_storage_handoff() {
         assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn port_domains_replace_birth_hints_across_union_and_deletion() {
+    let p=program("(datatype E (N i64) (F E) (G E E))
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset b)
+        (rule ((= u (F x))) ((G x u)) :ruleset c)
+        (rule ((= u (F x))) ((delete (F x))) :ruleset d)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)
+        (run d 1) (run a 1) (run c 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.graph.use_port_domains_only().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        loop {
+            let n=reference.steps.len();
+            reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+            let report=actual.graph.stable_port_report();
+            assert_eq!(report["birth_indexed_port_keys"],0);
+            assert_eq!(report["birth_hints_enabled"],false);
+            if reference.steps.len()==n {break;}
+        }
+    }
+}
