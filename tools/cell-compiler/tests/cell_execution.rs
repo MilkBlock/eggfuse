@@ -52,7 +52,7 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
-fn ready_cells_run_together_and_shared_roots_park_without_replaying_their_prefix() {
+fn ready_cells_share_results_without_draining_or_replaying_their_prefix() {
     for shared in [false,true] {
       for ordered in [false,true] {
         let seed=(0..128).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
@@ -85,7 +85,13 @@ fn ready_cells_run_together_and_shared_roots_park_without_replaying_their_prefix
         }
         let r=candidate.report();let queue=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
         assert!(queue["jobs"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
-        if shared {assert!(queue["dependency_flushes"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");}
+        if shared {
+            assert!(queue["dependency_admissions"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
+            assert_eq!(queue["dependency_flushes"],0,"shared={shared}, ordered={ordered}: {queue}");
+            let work=&r["cell_execution"]["runtime"]["stats"]["births"];
+            assert!(work["result_hits"].as_u64().unwrap()>0,"{work}");
+            assert!(work["local_reuses"].as_u64().unwrap()>0,"{work}");
+        }
         else {assert!(queue["max_ready"].as_u64().unwrap()>1,"shared={shared}, ordered={ordered}: {queue}");
             assert!(queue["batches"].as_u64().unwrap()<queue["jobs"].as_u64().unwrap(),"shared={shared}, ordered={ordered}: {queue}");}
         assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
@@ -943,5 +949,36 @@ fn a_single_write_consumes_prepared_slots_between_unprepared_primitives() {
         assert_eq!(candidate.graph.stats.prepared_rhs_operations, 0);
         assert_eq!(candidate.graph.stats.prepared_rhs_later_operations, 64);
         assert_eq!(candidate.report()["query_workers"]["stats"]["execution"]["later_operations"], 64);
+    }
+}
+
+#[test]
+fn peer_results_resolve_dynamic_aliases_and_all_arguments_before_downstream_keys() {
+    let seed=(0..96).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E) (G E i64) (Pair E E) (Seen E))
+(ruleset build) (ruleset read) (ruleset change)
+(rule ((= x (N n))) ((let a (F (N 0))) (let p (G a n)) (let q (G a 0))
+                    (let r (Pair p q))) :ruleset build)
+(rule ((= r (Pair p q))) ((Seen r)) :ruleset read)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+{seed}
+(run-schedule (seq (run build) (run read) (run change) (run build) (run read)))
+(check (Seen (Pair (G (F (N 0)) 0) (G (F (N 0)) 0))))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,4);control.execute().unwrap();
+    for workers in [2,4] {
+        let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();same(&control,&candidate);
+        let r=candidate.report();let stats=&r["cell_execution"]["runtime"]["stats"];
+        assert!(stats["scheduler"]["dependency_admissions"].as_u64().unwrap()>0,"{stats}");
+        assert_eq!(stats["scheduler"]["dependency_flushes"],0,"{stats}");
+        assert!(stats["births"]["result_hits"].as_u64().unwrap()>0,"{stats}");
+        assert_eq!(stats["births"]["evaluations"].as_u64().unwrap(),
+            stats["births"]["shared_slots"].as_u64().unwrap()+stats["births"]["duplicate_evaluations"].as_u64().unwrap());
+        assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+        assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+        assert_eq!(candidate.graph.stats.logical_facts_created,control.graph.stats.logical_facts_created);
     }
 }

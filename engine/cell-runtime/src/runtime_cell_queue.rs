@@ -1,6 +1,6 @@
-//! Bounded ready batches for proven independent constructor tails. Source seeds
-//! retain their original Cell IDs. A key referring to an unfinished Cell parks
-//! the consumer until that earlier tail is registered. No worker waits on it.
+//! Bounded ready batches for fresh constructor cones. A dependent Cell can use
+//! peer result slots or compute their pure nodes itself. Unproved dependencies
+//! retain source completion; shared effects and publication remain ordered.
 use super::*;
 use crate::graph::{
     cell_births::{Done, Job},
@@ -14,6 +14,12 @@ struct Parked {
     job: Option<Job>,
 }
 const READY_LIMIT: usize = 64;
+#[derive(Default)]
+struct Ready {
+    owners: Vec<Parked>,
+    operations: usize,
+    shared: bool,
+}
 
 impl Executor {
     pub(super) fn batch_cell_rule(&self, rid: usize, rows: usize) -> bool {
@@ -46,14 +52,15 @@ impl Executor {
             }
         }
     }
-    fn drain_cell_queue(&mut self, queue: &mut Vec<Parked>, pending: &mut Vec<u32>) -> Result<()> {
-        if queue.is_empty() {
+    fn drain_cell_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
+        if queue.owners.is_empty() {
             return Ok(());
         }
-        let count = queue.iter().filter(|p| p.job.is_some()).count();
+        let count = queue.owners.iter().filter(|p| p.job.is_some()).count();
         let mut completed = if count != 0 {
             let parents = self.graph.parents.freeze();
             let tasks: Vec<_> = queue
+                .owners
                 .iter_mut()
                 .filter_map(|p| p.job.take().map(|job| (job, p.execution.effects.writer())))
                 .collect();
@@ -84,7 +91,19 @@ impl Executor {
                     &mut effects,
                 )
             };
-            let done: Vec<Done> = if parallel {
+            let done: Vec<Done> = if tasks.iter().any(|(job, _)| job.dependent()) {
+                let (done, counts) = crate::graph::cell_births::run_shared(
+                    tasks,
+                    crate::value::parent_epoch::Read {
+                        base: &parents,
+                        delta: None,
+                    },
+                    pool,
+                    parallel,
+                );
+                stats.births.add(counts);
+                done
+            } else if parallel {
                 pool.install(|| tasks.into_par_iter().with_min_len(4).map(run).collect())
             } else {
                 tasks.into_iter().map(run).collect()
@@ -106,7 +125,7 @@ impl Executor {
         } else {
             Vec::new().into_iter().peekable()
         };
-        for parked in queue.drain(..) {
+        for parked in queue.owners.drain(..) {
             let mut execution = parked.execution;
             self.graph.restore_rhs(parked.context);
             if completed
@@ -146,6 +165,8 @@ impl Executor {
         }
         debug_assert!(completed.next().is_none());
         pending.clear();
+        queue.operations = 0;
+        queue.shared = false;
         Ok(())
     }
     pub(super) fn apply_cell_batch(
@@ -160,7 +181,7 @@ impl Executor {
             .counts
             .scheduler
             .rule_groups += 1;
-        let mut queue: Vec<Parked> = Vec::new();
+        let mut queue = Ready::default();
         let mut pending = Vec::new();
         let result = (|| {
             for binding in rows {
@@ -205,7 +226,7 @@ impl Executor {
                         .unwrap()
                         .completed_prefix;
                     if position == execution.ops.len() {
-                        if queue.is_empty() {
+                        if queue.owners.is_empty() {
                             self.finish_attached_cell(execution)?;
                         } else {
                             self.park_cell(&mut queue, execution, None);
@@ -231,6 +252,51 @@ impl Executor {
                             .births
                             .add(counts);
                         if let Some(job) = job {
+                            let shared = job.dependent() || queue.shared;
+                            self.cell_execution
+                                .as_mut()
+                                .unwrap()
+                                .counts
+                                .scheduler
+                                .budget_checks += 1;
+                            if shared {
+                                let work = job.operations() + queue.operations;
+                                self.cell_execution
+                                    .as_mut()
+                                    .unwrap()
+                                    .counts
+                                    .scheduler
+                                    .budget_checks += 1;
+                                if work > 256 {
+                                    let counts = self.graph.commit_local_job(job.unstarted())?;
+                                    self.cell_execution
+                                        .as_mut()
+                                        .unwrap()
+                                        .counts
+                                        .births
+                                        .add(counts);
+                                    self.cell_execution
+                                        .as_mut()
+                                        .unwrap()
+                                        .counts
+                                        .scheduler
+                                        .budget_flushes += 1;
+                                    let state = self.graph.suspend_rhs(execution.cell);
+                                    self.drain_cell_queue(&mut queue, &mut pending)?;
+                                    self.graph.restore_rhs(state);
+                                    if let Some(window) = &mut execution.births {
+                                        window.after_ready_batch(&self.graph);
+                                        self.cell_execution
+                                            .as_mut()
+                                            .unwrap()
+                                            .counts
+                                            .scheduler
+                                            .revalidations += 1;
+                                    }
+                                    self.finish_attached_cell(execution)?;
+                                    break;
+                                }
+                            }
                             let before = pending.capacity();
                             pending.push(execution.cell);
                             let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
@@ -246,12 +312,12 @@ impl Executor {
                             // Retain the ordinary local-dedup path when isolation is
                             // unproved. It can still reuse equal dynamic keys inside
                             // this one Cell; the queue must not replace it with replays.
-                            if !queue.is_empty() {
+                            if !queue.owners.is_empty() {
                                 let state = self.graph.suspend_rhs(execution.cell);
                                 self.drain_cell_queue(&mut queue, &mut pending)?;
                                 self.graph.restore_rhs(state);
                                 if let Some(window) = &mut execution.births {
-                                    window.after_isolated_batch(&self.graph);
+                                    window.after_ready_batch(&self.graph);
                                     self.cell_execution
                                         .as_mut()
                                         .unwrap()
@@ -284,6 +350,47 @@ impl Executor {
                         self.graph.stats.rhs_pending_probes += probes;
                         if blocked {
                             self.graph.stats.rhs_pending_stops += 1;
+                            let stop = execution.transfers[execution.transfer..]
+                                .iter()
+                                .find(|t| t.op >= position)
+                                .map_or(execution.ops.len(), |t| t.op);
+                            let (counts, job) = self.graph.take_dependent_job(
+                                rid,
+                                execution.cell,
+                                stop,
+                                key,
+                                queue.operations,
+                                |id| {
+                                    let mut probes = 0;
+                                    let at = queue
+                                        .owners
+                                        .binary_search_by(|p| {
+                                            probes += 1;
+                                            p.execution.cell.cmp(&id)
+                                        })
+                                        .ok();
+                                    (probes, at.and_then(|at| queue.owners[at].job.as_ref()))
+                                },
+                            )?;
+                            self.cell_execution
+                                .as_mut()
+                                .unwrap()
+                                .counts
+                                .births
+                                .add(counts);
+                            if let Some(job) = job {
+                                let before = pending.capacity();
+                                pending.push(execution.cell);
+                                let stats =
+                                    &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
+                                stats.dependency_admissions += 1;
+                                stats.queue_growths += u64::from(before != pending.capacity());
+                                stats.queue_bytes += ((pending.capacity() - before)
+                                    * std::mem::size_of::<u32>())
+                                    as u64;
+                                self.park_cell(&mut queue, execution, Some(job));
+                                break;
+                            }
                             self.cell_execution
                                 .as_mut()
                                 .unwrap()
@@ -311,7 +418,7 @@ impl Executor {
                     execution.phase = owned_cell::Phase::Boundary;
                     self.resolve_cell_boundary(&mut execution, position)?;
                 }
-                if queue.len() >= READY_LIMIT {
+                if queue.owners.len() >= READY_LIMIT {
                     self.drain_cell_queue(&mut queue, &mut pending)?;
                 }
                 self.graph.sealed_input_cell = None;
@@ -327,21 +434,21 @@ impl Executor {
         self.drain_cell_queue(&mut queue, &mut pending)?;
         result
     }
-    fn park_cell(
-        &mut self,
-        queue: &mut Vec<Parked>,
-        execution: owned_cell::Execution,
-        job: Option<Job>,
-    ) {
+    fn park_cell(&mut self, queue: &mut Ready, execution: owned_cell::Execution, job: Option<Job>) {
         let context = self.graph.suspend_rhs(execution.cell);
-        let before = queue.capacity();
-        queue.push(Parked {
+        let before = queue.owners.capacity();
+        if let Some(job) = &job {
+            queue.operations += job.operations();
+            queue.shared |= job.dependent();
+        }
+        queue.owners.push(Parked {
             execution,
             context,
             job,
         });
         let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
-        stats.queue_growths += u64::from(before != queue.capacity());
-        stats.queue_bytes += ((queue.capacity() - before) * std::mem::size_of::<Parked>()) as u64;
+        stats.queue_growths += u64::from(before != queue.owners.capacity());
+        stats.queue_bytes +=
+            ((queue.owners.capacity() - before) * std::mem::size_of::<Parked>()) as u64;
     }
 }

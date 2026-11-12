@@ -108,6 +108,12 @@ impl FrameSlots {
         }
         Ok(())
     }
+    /// Result-slot evaluators share immutable inputs; no existing binding is
+    /// cloned and only the returned owner may append explicit result aliases.
+    pub(crate) fn shared_suffix(&self) -> Self {
+        assert!(self.current.is_empty() && self.removed.is_none() && self.prefix.is_some());
+        Self { prefix:self.prefix.clone(), ..Self::default() }
+    }
     // Checkpointing gathers references only. Normal operand reads never flatten
     // a frame, and source execution never reconstitutes its input vector.
     fn visible(&self) -> BTreeMap<&usize, &Value> {

@@ -5,6 +5,9 @@ use super::*;
 use crate::cell::{Definition, EffectWriter};
 use std::time::Instant;
 use crate::value::parent_epoch::Read;
+#[path = "cell_births_shared.rs"]
+mod shared;
+pub(crate) use shared::run as run_shared;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -19,7 +22,7 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>> }
 impl Plan {
     pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
@@ -105,7 +108,21 @@ impl Plan {
                 });
             }
         }
-        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated})
+        // A dependent tail may reuse a peer's result. Prove only that every key
+        // stays in the fresh cone, not that each operation creates a new node.
+        // These are input slots, not runtime producer/consumer subscriptions.
+        let lineage=if batch_rule {steps.iter().enumerate().map(|(from,first)| {
+            first.keys.iter().filter_map(|arg| {
+                let Arg::Slot(seed)=arg else {return None;};
+                let mut derived=vec![*seed];
+                steps[from..].iter().all(|step| {
+                    if step.region!=first.region || !step.keys.iter().any(|a|
+                        matches!(a,Arg::Slot(s) if derived.contains(s))) {return false;}
+                    derived.push(step.destination);true
+                }).then_some(*seed)
+            }).collect::<BTreeSet<_>>().into_iter().collect()
+        }).collect()} else {vec![]};
+        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated,lineage})
     }
     pub(crate) fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
@@ -116,6 +133,8 @@ impl Plan {
             + self.continues.capacity()*std::mem::size_of::<bool>()
             + self.definitions.capacity()*std::mem::size_of::<(usize,usize)>()
             + self.isolated.capacity()*std::mem::size_of::<bool>()
+            + self.lineage.capacity()*std::mem::size_of::<Vec<usize>>()
+            + self.lineage.iter().map(|s|s.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
     }
     fn start(&self,position:usize)->Option<usize> {
         let i=self.steps.binary_search_by_key(&position,|s|s.operation).ok()?;
@@ -126,9 +145,9 @@ impl Plan {
 #[derive(Clone, Copy)]
 pub(crate) struct Window { first:usize, births:u64, unions:u64 }
 impl Window {
-    /// The scheduler only drained earlier isolated tails and total, non-birthing
+    /// The scheduler only drained earlier fresh-cone tails and total, non-birthing
     /// ordered effects. Those earlier inputs cannot name this Cell's fresh IDs.
-    pub(crate) fn after_isolated_batch(&mut self,g:&Graph) {
+    pub(crate) fn after_ready_batch(&mut self,g:&Graph) {
         if self.unions==g.stats.unions {self.births=g.stats.logical_facts_created;}
     }
 
@@ -173,6 +192,10 @@ pub(crate) struct Counts {
     pub root_snapshots:u64, pub root_writes:u64, pub root_growths:u64, pub root_merges:u64,
     pub plan_handles:u64, pub prefix_growths:u64, pub prefix_bytes:u64,
     pub sealed_bytes:u64, pub captured_reads:u64, pub captured_writes:u64,
+    pub shared_slots:u64, pub shared_bytes:u64, pub shared_growths:u64,
+    pub result_reads:u64, pub result_hits:u64, pub evaluations:u64, pub duplicate_evaluations:u64,
+    pub bloom_checks:u64, pub bloom_skips:u64, pub bloom_writes:u64,
+    pub result_handles:u64, pub frame_handles:u64, pub dependency_proofs:u64, pub key_screens:u64, pub directory_checks:u64,
 }
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
@@ -182,7 +205,9 @@ impl Counts {
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
             worker_batches,worker_operations,worker_wait_ns,prefix_reads,prefix_handles,prefix_unavailable,
             slot_seals,slot_leases,slot_reattachments,root_snapshots,root_writes,root_growths,root_merges,
-            plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes);
+            plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes,
+            shared_slots,shared_bytes,shared_growths,result_reads,result_hits,evaluations,duplicate_evaluations,
+            bloom_checks,bloom_skips,bloom_writes,result_handles,frame_handles,dependency_proofs,key_screens,directory_checks);
     }
 }
 struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
@@ -316,11 +341,16 @@ impl Plan {
 pub(crate) struct Job {
     cell:u32, plan:std::sync::Arc<Plan>, frame:Local,
     from:usize,limit:usize,first:usize,anchor:usize,
-    key:smallvec::SmallVec<[Value;4]>, isolated:bool,
+    key:smallvec::SmallVec<[Value;4]>, isolated:bool, fresh_root:Option<usize>,
 }
 pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
 impl Done {pub(crate) fn cell(&self)->u32 {self.cell}}
 impl Job {
+    pub(crate) fn dependent(&self)->bool {!self.isolated}
+    pub(crate) fn unstarted(self)->Done {
+        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),aliases:0,counts:Counts::default()},
+            frame:self.frame,worker:None}
+    }
     pub(crate) fn operations(&self)->usize {self.limit-self.from}
     pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>)->Done {
         let piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
@@ -334,7 +364,7 @@ impl Job {
 }
 impl Graph {
     pub(crate) fn take_local_job(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
-        stop:usize,isolated:bool)->Result<(Counts,Option<Job>)> {
+        stop:usize,queued:bool)->Result<(Counts,Option<Job>)> {
         let mut counts=Counts {resume_checks:1,..Counts::default()};
         // These backends can have additional birth-time effects. Their source
         // handler remains authoritative until those effects join the proof.
@@ -350,11 +380,11 @@ impl Graph {
         }
         let region=plan.steps[from].region;
         let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
-        if isolated && (!plan.batch_rule || !plan.isolated[from] || limit!=plan.steps.len()) {return Ok((counts,None));}
+        if queued && (!plan.batch_rule || limit!=plan.steps.len()) {return Ok((counts,None));}
         let plan=plan.clone();counts.plan_handles+=1;
         // Capture only missing retained-parent operands, once, into this same
         // execution frame. Internal results remain implicit local row outputs.
-        if isolated {
+        if queued {
             for arg in plan.steps[from..limit].iter().flat_map(|s|&s.keys) {
                 let Arg::Slot(slot)=arg else {continue;};
                 if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
@@ -382,7 +412,9 @@ impl Graph {
         let mut frame=Local{values:Default::default(),facts:prefix,completed_prefix:position};
         let Some(first_anchor)=anchor(&plan.steps[from],&frame,&[],cert.first,
             cell,self.parents.reader(),&mut counts) else {return Ok((counts,None));};
-        if isolated && first_anchor!=plan.steps[from-1].operation {return Ok((counts,None));}
+        let root=plan.steps.binary_search_by_key(&first_anchor,|s|s.operation).unwrap();
+        let isolated=queued && plan.isolated[from] && from>0 && first_anchor==plan.steps[from-1].operation;
+        if queued && !isolated && !plan.lineage[from].contains(&plan.steps[root].destination) {return Ok((counts,None));}
         // This first boundary may use retained parent projections. Acquire its
         // ordinary operands once, then move the actual key into the worker.
         // An unproven window never dispatches an empty worker job.
@@ -391,7 +423,7 @@ impl Graph {
         let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
         counts.slot_seals+=u64::from(sealed);counts.slot_leases+=1;frame.values=values;
         counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
-        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated})))
+        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root)})))
     }
     pub(crate) fn commit_local_job(&mut self,done:Done)->Result<Counts> {
         let Done{cell,frame,mut piece,..}=done;
@@ -451,7 +483,7 @@ mod tests {
     use super::*;
     use crate::cell::Effects;
     use std::{rc::Rc,sync::Arc};
-    fn graph()->Graph {
+    pub(super) fn graph()->Graph {
         let eq=json!({"kind":"eq","name":"E"});
         let template=Template{name:"local-birth".into(),sorts:vec![eq.clone();5],
             defs:[(1,0),(2,1),(3,2),(4,3)].into_iter().collect(),parent_columns:Default::default(),
@@ -471,7 +503,7 @@ mod tests {
         p.executions[0].births=Plan::derive(&p,0).map(Arc::new);
         Graph::new(p).unwrap()
     }
-    fn start(g:&mut Graph)->(u32,Value,Option<Window>) {
+    pub(super) fn start(g:&mut Graph)->(u32,Value,Option<Window>) {
         let c=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
         let u=g.construct(c,0,0,&[Arg::Slot(0)],1).unwrap();
         g.rhs_frame_mut(c).unwrap().completed_prefix=1;

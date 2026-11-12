@@ -178,6 +178,7 @@ impl Work {
             None=>0,
             Some(v) if v["schema"]=="cell-local-births/v1"=>1,
             Some(v) if v["schema"]=="cell-local-births/v2"=>2,
+            Some(v) if v["schema"]=="cell-local-births/v3"=>3,
             _=>return Err("unknown Cell local construction accounting".into()),
         };
         for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
@@ -198,9 +199,17 @@ impl Work {
             } else {0};
             work.insert(key,value);
         }
+        for field in ["shared_growths","result_reads","evaluations","bloom_checks","bloom_writes","result_handles","frame_handles","dependency_proofs","key_screens","directory_checks"] {
+            let key=format!("cell_execution/runtime/stats/births/{field}");
+            let value=if local_births>=3 {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing local construction work {key}"))?
+            } else {0};
+            work.insert(key,value);
+        }
         let scheduler=match report["cell_execution"].get("scheduler") {
             None=>false,
-            Some(v) if v["schema"]=="cell-ready-batches/v1"=>true,
+            Some(v) if v["schema"]=="cell-ready-batches/v1" || v["schema"]=="cell-ready-batches/v2"=>true,
             _=>return Err("unknown Cell scheduler accounting".into()),
         };
         for key in ["stats/rhs_pending_probes", "stats/rhs_pending_key_spills", "cell_execution/runtime/stats/scheduler/rule_groups",
@@ -211,6 +220,11 @@ impl Work {
                 .ok_or_else(||format!("missing Cell scheduler work {key}"))?} else {0};
             work.insert(key.into(),value);
         }
+        let budget="cell_execution/runtime/stats/scheduler/budget_checks";
+        work.insert(budget.into(),if report["cell_execution"]["scheduler"]["schema"]=="cell-ready-batches/v2" {
+            report.pointer(&format!("/{budget}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing Cell scheduler work {budget}"))?
+        } else {0});
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
                 None => 0,
@@ -670,6 +684,10 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "cell_execution/runtime/stats/births/root_growths",
         "cell_execution/runtime/stats/births/root_merges",
         "cell_execution/runtime/stats/births/plan_handles",
+        "cell_execution/runtime/stats/births/result_reads",
+        "cell_execution/runtime/stats/births/evaluations",
+        "cell_execution/runtime/stats/births/bloom_checks",
+        "cell_execution/runtime/stats/births/result_handles",
 
         "stage_spine/stats/prepared_effect_buffer_moves",
         "stage_spine/stats/prepared_effect_spares_released",
@@ -708,7 +726,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     coverage["query_workers"]["matched"]["execution"]["operations"] = u64::MAX.into();
     coverage["query_workers"]["stats"]["execution"]["later_operations"] = u64::MAX.into();
     assert_eq!(Work::read(&coverage).unwrap(), work, "subsets do not earn or charge work twice");
-    for field in ["local_births", "local_reuses", "committed_rows", "worker_operations"] {
+    for field in ["local_births", "local_reuses", "committed_rows", "worker_operations", "shared_slots", "result_hits", "duplicate_evaluations", "bloom_skips"] {
         coverage["cell_execution"]["runtime"]["stats"]["births"][field]=u64::MAX.into();
     }
     assert_eq!(Work::read(&coverage).unwrap(),work,"local outcomes do not earn credit twice");

@@ -86,6 +86,19 @@ overall objective complete until all applicable items above are proven.
 
 ## Current state
 
+- Proven fresh constructor cones now share exact result slots across workers.
+  A peer can recompute an unfinished pure operation; only its deterministically
+  selected source result is registered. Known keys dispatch through a batch
+  locator directory and complete-suffix Bloom filters exclude remaining groups.
+  No provisional duplicate IDs enter the graph. Raytrace dependency drains fall
+  from 1,277 to zero, but most source work and 74,510 local pool invocations remain.
+  Source effects/repair/publication keep their ordering. See
+  [coverage, storage and semantic evidence](../benchmarks/cell-peer-results/README.md).
+  This replaces the conservative dependency flush within proved cones; it does
+  not establish full utilization or eliminate arbitrary shared conflicts. The
+  timing checkpoint shows no acceleration: four-worker Raytrace is 6.289 s versus
+  6.221 s for the frozen queue control and 5.427 s for current serial execution.
+
 - A bounded ready scheduler now batches independently proved constructor tails
   from multiple owned instances. Published prefixes remain readable, consumers
   of unfinished ports park on the source side, and one parent read epoch covers

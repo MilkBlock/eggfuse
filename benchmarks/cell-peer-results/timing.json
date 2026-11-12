@@ -1,0 +1,566 @@
+{
+  "scope": "standalone Cell CPU, not native egglog",
+  "limits": "Small interleaved fresh-process sample. Counts are work, not utilization. All samples retained.",
+  "workloads": {
+    "sum": {
+      "repeat": 5,
+      "warmups": 1,
+      "execution_order": [
+        {
+          "iteration": -1,
+          "lanes": [
+            "control4",
+            "peer_serial",
+            "historical4",
+            "peer4"
+          ]
+        },
+        {
+          "iteration": 0,
+          "lanes": [
+            "peer4",
+            "control4",
+            "historical4",
+            "peer_serial"
+          ]
+        },
+        {
+          "iteration": 1,
+          "lanes": [
+            "peer_serial",
+            "control4",
+            "peer4",
+            "historical4"
+          ]
+        },
+        {
+          "iteration": 2,
+          "lanes": [
+            "peer_serial",
+            "historical4",
+            "peer4",
+            "control4"
+          ]
+        },
+        {
+          "iteration": 3,
+          "lanes": [
+            "peer_serial",
+            "control4",
+            "historical4",
+            "peer4"
+          ]
+        },
+        {
+          "iteration": 4,
+          "lanes": [
+            "historical4",
+            "peer4",
+            "control4",
+            "peer_serial"
+          ]
+        }
+      ],
+      "semantics": {
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+      },
+      "lanes": {
+        "control4": {
+          "runtime_sha256": "6e0d22b0b55ccd513a5b56216141e2c5d449793a3baa6b612dd11bf51c34aff7",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.023709334,
+              "process_wall_seconds": 0.1348785420123022,
+              "process_user_seconds": 0.116019,
+              "process_system_seconds": 0.026941999999999997
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.024511792,
+              "process_wall_seconds": 0.1326495000103023,
+              "process_user_seconds": 0.11769699999999994,
+              "process_system_seconds": 0.025677999999999992
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.024556291,
+              "process_wall_seconds": 0.13113975001033396,
+              "process_user_seconds": 0.11700099999999991,
+              "process_system_seconds": 0.025909000000000015
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.022743375,
+              "process_wall_seconds": 0.1312306250038091,
+              "process_user_seconds": 0.11662899999999987,
+              "process_system_seconds": 0.023716000000000015
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.031856542,
+              "process_wall_seconds": 0.13957666701753624,
+              "process_user_seconds": 0.12290900000000016,
+              "process_system_seconds": 0.026781
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.023919417,
+              "process_wall_seconds": 0.13116550000268035,
+              "process_user_seconds": 0.11591500000000021,
+              "process_system_seconds": 0.026254
+            }
+          ],
+          "inference_median": 0.024511792,
+          "wall_median": 0.1312306250038091
+        },
+        "peer4": {
+          "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.023649708,
+              "process_wall_seconds": 0.12819637500797398,
+              "process_user_seconds": 0.11511500000000002,
+              "process_system_seconds": 0.025260999999999992
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.025154791,
+              "process_wall_seconds": 0.1300350840028841,
+              "process_user_seconds": 0.11683300000000002,
+              "process_system_seconds": 0.024580000000000005
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.028171125,
+              "process_wall_seconds": 0.13751133301411755,
+              "process_user_seconds": 0.12274600000000002,
+              "process_system_seconds": 0.02972999999999998
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.024866584,
+              "process_wall_seconds": 0.13168362498981878,
+              "process_user_seconds": 0.11722200000000016,
+              "process_system_seconds": 0.025739000000000012
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.023484792,
+              "process_wall_seconds": 0.12885895901126787,
+              "process_user_seconds": 0.11578299999999997,
+              "process_system_seconds": 0.024105000000000043
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.023400042,
+              "process_wall_seconds": 0.12991795802372508,
+              "process_user_seconds": 0.115761,
+              "process_system_seconds": 0.024787999999999977
+            }
+          ],
+          "inference_median": 0.024866584,
+          "wall_median": 0.1300350840028841
+        },
+        "peer_serial": {
+          "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.017184666,
+              "process_wall_seconds": 0.12791008298518136,
+              "process_user_seconds": 0.105591,
+              "process_system_seconds": 0.016658000000000003
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.016932083,
+              "process_wall_seconds": 0.12498641698039137,
+              "process_user_seconds": 0.10731999999999997,
+              "process_system_seconds": 0.014548999999999979
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.016824,
+              "process_wall_seconds": 0.12300654099090025,
+              "process_user_seconds": 0.10534900000000014,
+              "process_system_seconds": 0.014269000000000004
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.017489959,
+              "process_wall_seconds": 0.1289404159761034,
+              "process_user_seconds": 0.11079399999999984,
+              "process_system_seconds": 0.014919000000000016
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.017584375,
+              "process_wall_seconds": 0.1264918340020813,
+              "process_user_seconds": 0.10839100000000013,
+              "process_system_seconds": 0.014691999999999983
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.016852583,
+              "process_wall_seconds": 0.12504395900759846,
+              "process_user_seconds": 0.10590499999999992,
+              "process_system_seconds": 0.015661000000000036
+            }
+          ],
+          "inference_median": 0.016932083,
+          "wall_median": 0.12504395900759846
+        },
+        "historical4": {
+          "runtime_sha256": "b26226bdebecc564c3852f9e20891aba620d8e2c55ee493ab9c2dbc06d137354",
+          "program_file_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 0.018248042,
+              "process_wall_seconds": 0.13079533298150636,
+              "process_user_seconds": 0.10757999999999998,
+              "process_system_seconds": 0.019107
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 0.018994041,
+              "process_wall_seconds": 0.1253750830073841,
+              "process_user_seconds": 0.11034699999999997,
+              "process_system_seconds": 0.018028000000000016
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 0.021606792,
+              "process_wall_seconds": 0.13682991702808067,
+              "process_user_seconds": 0.1163050000000001,
+              "process_system_seconds": 0.019439000000000012
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 0.019521417,
+              "process_wall_seconds": 0.1265748750010971,
+              "process_user_seconds": 0.11113799999999996,
+              "process_system_seconds": 0.01825899999999997
+            },
+            {
+              "iteration": 3,
+              "inference_seconds": 0.019033292,
+              "process_wall_seconds": 0.12399333401117474,
+              "process_user_seconds": 0.10785,
+              "process_system_seconds": 0.018816999999999973
+            },
+            {
+              "iteration": 4,
+              "inference_seconds": 0.019020583,
+              "process_wall_seconds": 0.12142854201374575,
+              "process_user_seconds": 0.10699999999999976,
+              "process_system_seconds": 0.01749299999999998
+            }
+          ],
+          "inference_median": 0.019033292,
+          "wall_median": 0.1253750830073841
+        }
+      },
+      "peer_over_control": 1.0144743395342128,
+      "peer_over_serial": 1.468607495014051,
+      "peer_over_historical": 1.3064783538233953
+    },
+    "ray": {
+      "repeat": 3,
+      "warmups": 1,
+      "execution_order": [
+        {
+          "iteration": -1,
+          "lanes": [
+            "control4",
+            "peer_serial",
+            "historical4",
+            "peer4"
+          ]
+        },
+        {
+          "iteration": 0,
+          "lanes": [
+            "peer4",
+            "control4",
+            "historical4",
+            "peer_serial"
+          ]
+        },
+        {
+          "iteration": 1,
+          "lanes": [
+            "peer_serial",
+            "control4",
+            "peer4",
+            "historical4"
+          ]
+        },
+        {
+          "iteration": 2,
+          "lanes": [
+            "peer_serial",
+            "historical4",
+            "peer4",
+            "control4"
+          ]
+        }
+      ],
+      "semantics": {
+        "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+        "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+      },
+      "lanes": {
+        "control4": {
+          "runtime_sha256": "6e0d22b0b55ccd513a5b56216141e2c5d449793a3baa6b612dd11bf51c34aff7",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 6.339869958,
+              "process_wall_seconds": 8.355240083008539,
+              "process_user_seconds": 9.412409,
+              "process_system_seconds": 2.531675
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.732891583,
+              "process_wall_seconds": 7.647540000005392,
+              "process_user_seconds": 8.628112999999999,
+              "process_system_seconds": 2.4020379999999992
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 6.35227275,
+              "process_wall_seconds": 8.401654707995476,
+              "process_user_seconds": 9.430499999999995,
+              "process_system_seconds": 2.594900000000001
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 6.22131525,
+              "process_wall_seconds": 8.223778999992646,
+              "process_user_seconds": 9.26837500000002,
+              "process_system_seconds": 2.5076199999999993
+            }
+          ],
+          "inference_median": 6.22131525,
+          "wall_median": 8.223778999992646
+        },
+        "peer4": {
+          "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 6.139455416,
+              "process_wall_seconds": 8.20337237502099,
+              "process_user_seconds": 9.171267000000004,
+              "process_system_seconds": 2.503026
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 6.195294709,
+              "process_wall_seconds": 8.226435958000366,
+              "process_user_seconds": 9.246932999999999,
+              "process_system_seconds": 2.4910450000000006
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 6.565287667,
+              "process_wall_seconds": 8.558249125024304,
+              "process_user_seconds": 9.631382000000002,
+              "process_system_seconds": 2.568658000000001
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 6.289378125,
+              "process_wall_seconds": 8.263561041996581,
+              "process_user_seconds": 9.310688999999996,
+              "process_system_seconds": 2.537732000000002
+            }
+          ],
+          "inference_median": 6.289378125,
+          "wall_median": 8.263561041996581
+        },
+        "peer_serial": {
+          "runtime_sha256": "19a5144e1d8a76f8c2c30e0dbf2bb359565e3a63d500a0fe9bbdb42d53d6a5b1",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "1",
+            "--cell-execution-grain",
+            "1"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.8982895,
+              "process_wall_seconds": 7.9455934159923345,
+              "process_user_seconds": 7.455780000000001,
+              "process_system_seconds": 0.452032
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.42699325,
+              "process_wall_seconds": 7.361293042020407,
+              "process_user_seconds": 6.9589539999999985,
+              "process_system_seconds": 0.38541899999999885
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.357841,
+              "process_wall_seconds": 7.385645625006873,
+              "process_user_seconds": 6.959781000000007,
+              "process_system_seconds": 0.40205100000000016
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.959536709,
+              "process_wall_seconds": 7.927253208006732,
+              "process_user_seconds": 7.517337999999995,
+              "process_system_seconds": 0.402234
+            }
+          ],
+          "inference_median": 5.42699325,
+          "wall_median": 7.385645625006873
+        },
+        "historical4": {
+          "runtime_sha256": "b26226bdebecc564c3852f9e20891aba620d8e2c55ee493ab9c2dbc06d137354",
+          "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "args": [
+            "--repair-ports",
+            "--entry-publications",
+            "--cell-absorption",
+            "--query-workers",
+            "4",
+            "--parallel-residuals",
+            "--parallel-publication"
+          ],
+          "warmups": [
+            {
+              "iteration": -1,
+              "inference_seconds": 5.322985542,
+              "process_wall_seconds": 7.289472541975556,
+              "process_user_seconds": 7.805187999999998,
+              "process_system_seconds": 0.6780629999999999
+            }
+          ],
+          "samples": [
+            {
+              "iteration": 0,
+              "inference_seconds": 5.026732958,
+              "process_wall_seconds": 6.963240124983713,
+              "process_user_seconds": 7.458120000000001,
+              "process_system_seconds": 0.6233280000000008
+            },
+            {
+              "iteration": 1,
+              "inference_seconds": 5.706678708,
+              "process_wall_seconds": 7.728436875011539,
+              "process_user_seconds": 8.268061000000003,
+              "process_system_seconds": 0.7100349999999978
+            },
+            {
+              "iteration": 2,
+              "inference_seconds": 5.685739625,
+              "process_wall_seconds": 7.691711958002998,
+              "process_user_seconds": 8.224842999999993,
+              "process_system_seconds": 0.7025830000000006
+            }
+          ],
+          "inference_median": 5.685739625,
+          "wall_median": 7.691711958002998
+        }
+      },
+      "peer_over_control": 1.01094027103031,
+      "peer_over_serial": 1.1589065685681477,
+      "peer_over_historical": 1.106167102226388
+    }
+  }
+}

@@ -3267,7 +3267,7 @@ impl Executor {
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
-            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v2",
+            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v3",
                 "frame_slot_header_bytes":std::mem::size_of::<crate::slots::FrameSlots>(),
                 "unsealed_slot_header_bytes":std::mem::size_of::<crate::slots::Slots>(),
                 "sealed_prefix_allocation_bytes":crate::slots::FrameSlots::seal_bytes(),
@@ -3280,8 +3280,8 @@ impl Executor {
                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
                 "scope":"canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
                 "available_through_ready_queue":true});
-            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v1",
-                "scope":"independent pure constructor tails; dependent instances drain earlier tails before resuming; source Run publication remains ordered",
+            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v2",
+                "scope":"fresh constructor cones share exact result slots; peers may repeat unfinished pure evaluations; uncovered dependencies and source Run publication remain ordered",
                 "ready_limit":64,"independent_scheduling":true,
                 "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
