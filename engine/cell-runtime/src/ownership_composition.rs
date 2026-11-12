@@ -406,46 +406,46 @@ pub(super) struct Frame {
 /// imported IDs without paying a hash lookup on every local port access.
 #[derive(Default)]
 pub(super) struct Frames {
-    dense: Vec<Option<Frame>>,
-    outliers: HashMap<u32, Frame>,
-    live: usize,
+    // Logical Cell IDs never move. Only live frame records occupy the arena;
+    // the directory keeps a four-byte position instead of an entire Option.
+    dense: Vec<u32>,
+    records: Vec<(u32, Frame)>,
+    outliers: HashMap<u32, u32>,
 }
 impl Frames {
+    fn position(&self, id: &u32) -> Option<usize> {
+        let n = self.dense.get(*id as usize).copied().unwrap_or(0);
+        let n = if n != 0 { n } else { *self.outliers.get(id)? };
+        Some(n as usize - 1)
+    }
     pub fn get(&self, id: &u32) -> Option<&Frame> {
-        self.dense
-            .get(*id as usize)
-            .and_then(Option::as_ref)
-            .or_else(|| self.outliers.get(id))
+        Some(&self.records[self.position(id)?].1)
     }
-    pub fn contains_key(&self, id: &u32) -> bool {
-        self.get(id).is_some()
-    }
-    pub fn insert(&mut self, id: u32, frame: Frame) {
-        if let Some(old) = self.outliers.get_mut(&id) {
-            *old = frame;
-            return;
-        }
+    pub fn contains_key(&self, id: &u32) -> bool { self.position(id).is_some() }
+    fn address(&mut self, id: u32, position: u32) {
         let n = id as usize;
         if n <= self.dense.len().saturating_add(65536) {
-            if n >= self.dense.len() {
-                self.dense.resize(n + 1, None);
-            }
-            self.live += usize::from(self.dense[n].replace(frame).is_none());
+            if n >= self.dense.len() { self.dense.resize(n+1,0); }
+            self.dense[n] = position;
+            self.outliers.remove(&id);
         } else {
-            self.live += usize::from(self.outliers.insert(id, frame).is_none());
+            self.outliers.insert(id,position);
         }
     }
+    pub fn insert(&mut self, id: u32, frame: Frame) {
+        if let Some(i) = self.position(&id) { self.records[i].1 = frame; return; }
+        let position = u32::try_from(self.records.len()+1).expect("too many live composition frames");
+        self.records.push((id,frame));
+        self.address(id,position);
+    }
     pub fn remove(&mut self, id: &u32) {
-        let old = self
-            .dense
-            .get_mut(*id as usize)
-            .and_then(Option::take)
-            .or_else(|| self.outliers.remove(id));
-        self.live -= usize::from(old.is_some());
+        let Some(i) = self.position(id) else { return; };
+        if let Some(position) = self.dense.get_mut(*id as usize) { *position = 0; }
+        self.outliers.remove(id);
+        self.records.swap_remove(i);
+        if let Some(&(moved,_)) = self.records.get(i) { self.address(moved, i as u32+1); }
     }
-    pub fn len(&self) -> usize {
-        self.live
-    }
+    pub fn len(&self) -> usize { self.records.len() }
 }
 impl std::ops::Index<&u32> for Frames {
     type Output = Frame;
@@ -815,7 +815,25 @@ impl Graph {
                     }
                 }
             }
+            // A component may die before a source frame's external users do.
+            // Restore its delegated slots before invalidating the shared owner.
             for id in &c.frames {
+                if let Some(cell) = self.cells.get_mut(id) {
+                    if cell.symbolic_slots {
+                        let frame = m.composition.frames[id];
+                        let ports = &m.composition.shapes[c.shape].as_ref().unwrap().ports[frame.ordinal];
+                        let program = &self.program.cell_ownership.markers[cell.template].program;
+                        for (slot, local) in program.slots.iter().enumerate() {
+                            if cell.values.contains_key(&slot) { continue; }
+                            if let Some(local) = local {
+                                if let Some(id) = c.signals[ports[*local]] {
+                                    cell.values.insert(slot, Value::Eq(id));
+                                }
+                            }
+                        }
+                        cell.symbolic_slots = false;
+                    }
+                }
                 m.composition.frames.remove(id);
             }
             m.composition.components.retire(f.component as usize);
@@ -855,6 +873,7 @@ mod tests {
     #[test]
     fn appending_a_receiver_preserves_unrelated_program_storage() {
         let producer = PortProgram {
+            fields: (0..200).map(|symbol| vec![Some(symbol)]).collect(),
             signals: (0..200)
                 .map(|op| {
                     vec![slices::Step {
@@ -866,6 +885,7 @@ mod tests {
             ..PortProgram::default()
         };
         let receiver = PortProgram {
+            fields: vec![vec![Some(0)]],
             signals: vec![vec![slices::Step {
                 op: 0,
                 columns: vec![0],

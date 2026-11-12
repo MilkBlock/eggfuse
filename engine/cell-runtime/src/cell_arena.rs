@@ -106,6 +106,7 @@ mod tests {
     use super::*;
     fn cell(t: usize) -> Cell {
         Cell {
+            symbolic_slots: false,
             template: t,
             started_epoch: 0,
             parent: None,

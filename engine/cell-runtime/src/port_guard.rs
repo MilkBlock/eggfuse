@@ -156,7 +156,7 @@ impl ReadView<'_> {
         }
         for (field, value) in target.fields.iter().zip(key) {
             work.key_fields += 1;
-            if !self.field_matches(field, value, work)? {
+            if !self.field_matches(&field, value, work)? {
                 return Ok(false);
             }
         }
@@ -165,7 +165,7 @@ impl ReadView<'_> {
 
     #[cfg(feature = "sparse-cells")]
     pub(in crate::graph::cell_ownership) fn result(&self, node: &Stored, work: &mut Work) -> Result<Value> {
-        self.field_value(node.fields.last().ok_or("constructor without result")?, true, work)
+        self.field_value(&node.fields.last().ok_or("constructor without result")?, true, work)
     }
 
     pub(super) fn condition_matches(
@@ -178,7 +178,7 @@ impl ReadView<'_> {
     ) -> Result<bool> {
         for &column in &condition.scalar_columns {
             work.scalar_guards += 1;
-            if !self.field_matches(&target.fields[column], &source[column], work)? {
+            if !self.field_matches(&target.fields.get(column).ok_or("condition field column")?, &source[column], work)? {
                 return Ok(false);
             }
         }
@@ -317,7 +317,7 @@ mod tests {
         };
         let target = Stored {
             table: 0,
-            fields: vec![Field::Scalar(Value::Int(7))],
+            fields: Fields { component: 0, program: Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() }), ports: Arc::new(vec![]), operation: 0, scalars: vec![Value::Int(7)].into_boxed_slice() },
         };
         let mut work = Work::default();
         assert!(
@@ -421,7 +421,7 @@ mod tests {
         };
         let target = Stored {
             table: 0,
-            fields: vec![],
+            fields: Fields { component: 0, program: Arc::new(PortProgram { fields: vec![vec![]], ..Default::default() }), ports: Arc::new(vec![]), operation: 0, scalars: Box::new([]) },
         };
         let barrier = std::sync::Barrier::new(3);
         let answers = std::thread::scope(|scope| {

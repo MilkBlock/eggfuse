@@ -911,9 +911,77 @@ impl Graph {
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
-            "inventory":{"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})
     }
+}
+
+impl Graph {
+    pub(super) fn inherited_cell_slot(&self, cell: u32, template: usize, slot: usize) -> Option<Value> {
+        let m = self.ownership.as_ref()?;
+        let frame = m.composition.frames.get(&cell)?;
+        let component = m.composition.components.get(frame.component as usize)?.as_ref()?;
+        let local = self.program.cell_ownership.markers[template].program.slots.get(slot).copied().flatten()?;
+        let symbol = m.composition.shapes[component.shape].as_ref()?.ports[frame.ordinal][local];
+        Some(Value::Eq(root(&self.parents, component.signals[symbol]?)))
+    }
+    /// Transfer only completed, proven-equal slots to existing shared symbols.
+    /// It does not introduce a binding table or retire externally visible facts.
+    #[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+    pub(super) fn take_over_instance_slots(&mut self) -> usize {
+        let Some(m) = self.ownership.as_ref() else { return 0; };
+        let mut saved = 0;
+        let ids = self.cells.iter().map(|(&id,_)|id).collect::<Vec<_>>();
+        for id in ids {
+            let c = self.cells.get_mut(&id).unwrap();
+            if !c.completed { continue; }
+            let Some(frame) = m.composition.frames.get(&id) else { continue; };
+            let component = m.composition.components[frame.component as usize].as_ref().unwrap();
+            let ports = &m.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+            let slots = &self.program.cell_ownership.markers[c.template].program.slots;
+            let removed = c.values.retain_owned(|slot, value| {
+                let Value::Eq(value) = value else { return true; };
+                let Some(local) = slots.get(*slot).copied().flatten() else { return true; };
+                let Some(bound) = component.signals[ports[local]] else { return true; };
+                root(&self.parents, *value) != root(&self.parents, bound)
+            });
+            if removed != 0 { c.symbolic_slots = true; }
+            saved += removed;
+        }
+        saved
+    }
+    #[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+    pub(super) fn take_over_parent_links(&mut self) -> Result<usize> {
+        let ids = self.cells.iter().filter(|(_,c)| c.completed && c.parent.is_some())
+            .map(|(&id,_)|id).collect::<Vec<_>>();
+        let mut detached = 0;
+        for id in ids {
+            let c = &self.cells[&id];
+            let template = c.template;
+            let parent = c.parent.unwrap();
+            // Compute the whole handoff before changing ownership. Failed or
+            // uncovered projections keep the source frame's normal lifetime.
+            let mut owned = Vec::new();
+            let mut delegated = false;
+            for &slot in self.program.templates[template].parent_columns.keys() {
+                let value = self.slot(id, slot)?;
+                if self.inherited_cell_slot(id, template, slot).as_ref() == Some(&value) {
+                    delegated = true;
+                } else {
+                    owned.push((slot, value));
+                }
+            }
+            let c = self.cells.get_mut(&id).unwrap();
+            for (slot,value) in owned { c.values.insert(slot,value); }
+            c.symbolic_slots |= delegated;
+            c.parent = None;
+            self.release_reference(parent);
+            detached += 1;
+        }
+        self.collect_garbage();
+        Ok(detached)
+    }
+
 }

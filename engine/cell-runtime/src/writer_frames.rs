@@ -80,6 +80,7 @@ impl Graph {
             // A client explicitly retained this producer as a parent. Its
             // original parent is already retained; transfer that hold.
             let c = Cell {
+                symbolic_slots: false,
                 template: writer.template,
                 parent: writer.parent.take(),
                 values: std::mem::take(&mut writer.values),
@@ -151,6 +152,7 @@ mod tests {
         let key = [Value::Int(3)];
         let i = g.set_function_canonical(0, &key, Value::Int(1)).unwrap();
         let frame = |n| Cell {
+            symbolic_slots: false,
             values: [(0, Value::Int(n))].into_iter().collect(),
             parent: None,
             template: 0,

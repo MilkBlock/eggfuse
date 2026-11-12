@@ -81,6 +81,9 @@ pub struct FactState {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Cell {
+    /// Equality slots delegated to this instance's existing composed symbols.
+    #[serde(default)]
+    pub symbolic_slots: bool,
     #[serde(default)]
     pub completed_prefix: usize,
     #[serde(default)]
@@ -787,6 +790,7 @@ impl Graph {
         }
 
         Cell {
+            symbolic_slots: false,
             template,
             values:values.into(),
             parent,
@@ -999,6 +1003,11 @@ impl Graph {
                 return Ok(v.clone());
             }
             return Ok(canon(v, &self.parents));
+        }
+        if self.cells.get(&cell).is_some_and(|c| c.symbolic_slots) {
+            if let Some(value) = self.inherited_cell_slot(cell, template, i) {
+                return Ok(value);
+            }
         }
         let arg = |a: &Arg| match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),

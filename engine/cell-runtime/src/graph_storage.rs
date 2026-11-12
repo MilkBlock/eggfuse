@@ -2,11 +2,15 @@
 use super::*;
 impl Graph {
     /// Diagnostic memory-pressure operation at an idle source Run boundary.
-    /// Logical IDs, facts, slots, index entries and shared owners are unchanged.
+    /// Logical IDs, facts and reads are preserved. Completed bindings may
+    /// delegate to checked component symbols or existing recipe definitions.
     pub fn compact_retained_capacity(&mut self) -> Result<()> {
         if self.active_rhs.is_some() {
             return Err("cannot compact an active RHS".into());
         }
+        self.take_over_parent_links()?;
+        self.take_over_instance_slots();
+        self.elide_reconstructible_slots();
         self.cells.compact_capacity();
         for function in &mut self.functions {
             function.key.shrink_to_fit();
@@ -17,6 +21,49 @@ impl Graph {
         self.functions.shrink_to_fit();
         self.function_decoded.shrink_to_fit();
         Ok(())
+    }
+
+    /// Remove completed bindings only when the existing typed recipe can
+    /// reconstruct the same value without that binding. No new alias map.
+    fn elide_reconstructible_slots(&mut self) {
+        struct Without<'a> {
+            values: &'a crate::slots::FrameSlots,
+            slot: usize,
+        }
+        impl crate::slots::ReadSlots for Without<'_> {
+            fn get(&self, slot: &usize) -> Option<&Value> {
+                if *slot == self.slot {
+                    None
+                } else {
+                    self.values.get(slot)
+                }
+            }
+        }
+        let ids = self
+            .cells
+            .iter()
+            .filter(|(_, c)| c.completed)
+            .map(|(&id, _)| id)
+            .collect::<Vec<_>>();
+        for id in ids {
+            let slots = self.cells[&id].values.owned_slots();
+            for slot in slots {
+                let c = &self.cells[&id];
+                let old = canon(c.values.get(&slot).unwrap(), &self.parents);
+                let values = Without {
+                    values: &c.values,
+                    slot,
+                };
+                if self
+                    .slot_fields(id, c.template, c.parent, &values, slot)
+                    .ok()
+                    .as_ref()
+                    == Some(&old)
+                {
+                    self.cells.get_mut(&id).unwrap().values.remove(&slot);
+                }
+            }
+        }
     }
 
     pub fn retained_cell_storage(&self) -> J {
@@ -105,6 +152,7 @@ impl Graph {
             "members_array_bytes":member_arrays,"members_tree_entries":member_tree_entries,
             "union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
+            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>(),
             "cell_records_bytes":records,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":fact_count*std::mem::size_of::<(u32,FactState)>(),

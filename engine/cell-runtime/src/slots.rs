@@ -84,6 +84,10 @@ impl<K: Ord + Copy + TryInto<usize>, V> FrameMap<K, V> {
             }
         }
     }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn retain(&mut self, mut keep: impl FnMut(&K, &V) -> bool) {
+        self.0.retain(|(k,v)| keep(k,v));
+    }
     pub fn remove(&mut self, k: &K) -> Option<V> {
         self.position(k).map(|i| self.0.remove(i).1)
     }

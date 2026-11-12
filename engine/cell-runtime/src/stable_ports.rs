@@ -40,10 +40,37 @@ impl Field {
         }
     }
 }
+/// Only dynamic scalar values belong to an instance. Equality field locations
+/// are shared Bake wiring; composition preserves its old prefix without copying.
+#[derive(Clone, Debug)]
+struct Fields {
+    component: u32,
+    program: Arc<PortProgram>,
+    ports: Arc<Vec<usize>>,
+    operation: usize,
+    scalars: Box<[Value]>,
+}
+impl Fields {
+    fn len(&self) -> usize { self.program.fields[self.operation].len() }
+    fn get(&self, column: usize) -> Option<Field> {
+        let fields = &self.program.fields[self.operation];
+        Some(match *fields.get(column)? {
+            Some(local) => Field::Port(PortRef { component: self.component, symbol: self.ports[local] }),
+            None => {
+                let index = fields[..column].iter().filter(|s|s.is_none()).count();
+                Field::Scalar(self.scalars[index].clone())
+            }
+        })
+    }
+    fn iter(&self) -> impl Iterator<Item = Field> + '_ {
+        (0..self.len()).map(|i| self.get(i).unwrap())
+    }
+    fn last(&self) -> Option<Field> { self.get(self.len().checked_sub(1)?) }
+}
 #[derive(Clone, Debug)]
 pub struct Stored {
     pub(super) table: usize,
-    fields: Vec<Field>,
+    fields: Fields,
 }
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
@@ -143,8 +170,7 @@ impl Graph {
         let program = self.program.cell_ownership.code_programs[frame.code].clone();
         let symbols = &program.fields[f.op as usize];
         assert_eq!(symbols.len(), values.len());
-        let mut fields = self.stable_ports.as_ref()
-            .map(|_| Vec::with_capacity(values.len()));
+        let mut scalars = self.stable_ports.as_ref().map(|_| Vec::new());
         let mut count = 0;
         for (value, symbol) in values.iter().zip(symbols) {
             if let Some(&local) = symbol.as_ref() {
@@ -153,19 +179,17 @@ impl Graph {
                 if BIND {
                     self.bind_cell_port(f, local, port, *id);
                 }
-                if let Some(fields) = &mut fields {
-                    count += 1;
-                    fields.push(Field::Port(port));
-                }
-            } else if let Some(fields) = &mut fields {
+                if scalars.is_some() { count += 1; }
+            } else if let Some(scalars) = &mut scalars {
                 assert!(
                     !matches!(value, Value::Eq(_) | Value::Set(_)),
                     "scalar ownership field"
                 );
-                fields.push(Field::Scalar(value.clone()));
+                scalars.push(value.clone());
             }
         }
-        let Some(fields) = fields else { return; };
+        let Some(scalars) = scalars else { return; };
+        let fields = Fields { component: frame.component, program, ports, operation: f.op as usize, scalars: scalars.into_boxed_slice() };
         let state = self
             .cells
             .get_mut(&f.cell)
@@ -201,7 +225,7 @@ impl Graph {
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
         let fields = &self.stable_node(f)?.fields;
         match fields.get(column)? {
-            Field::Port(p) => Some(*p),
+            Field::Port(p) => Some(p),
             Field::Scalar(_) => None,
         }
     }
@@ -233,7 +257,7 @@ impl Graph {
         let result = stored
             .fields
             .iter()
-            .map(|field| view.field_value(field, meter, &mut work))
+            .map(|field| view.field_value(&field, meter, &mut work))
             .collect::<Result<Vec<_>>>();
         // Preserve successful-prefix work even when a later port has expired.
         if meter && work.port_reads != 0 {
