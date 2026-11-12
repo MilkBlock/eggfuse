@@ -468,9 +468,25 @@ impl Catalog {
                 "indexed_outputs":0,"route_probes":0,"candidate_visits":0,"proof_checks":0,"admitted":0});
             return Ok(());
         }
+        struct Recognition {
+            structure: String,
+            ports: Vec<(usize,Site,Vec<usize>)>,
+        }
         let normalized=catalog.units.iter().enumerate().map(|(id,u)| {
             if observed.is_some_and(|seen| !seen.units.contains(&id)) { return None; }
-            crate::cell_completion::normalize(p,&u.path)
+            if let Some(n) = crate::cell_completion::normalize(p,&u.path) {
+                return Some(Recognition {
+                    structure:crate::checksum::canonical(&serde_json::to_value(n.structure).unwrap(),false),
+                    ports:n.ports,
+                });
+            }
+            let contract=crate::cell_completion::staged_contract(p,&u.path)?;
+            let last=u.path.len()-1;
+            let terminal=crate::cell_completion::normalize(p,&[(None,u.last())])?;
+            Some(Recognition {
+                structure:crate::checksum::canonical(&contract,false),
+                ports:terminal.ports.into_iter().map(|(_,site,cols)|(last,site,cols)).collect(),
+            })
         }).collect::<Vec<_>>();
         // Build the final-stage output incidence index once. Borrow canonical
         // structures/ports; no graph clones or runtime producer subscriptions.

@@ -44,3 +44,53 @@ Keep diagnostics opt-in and avoid duplicating runtime bindings.
 The unfinished staged-route index change and its not-yet-compiling regression
 remain uncommitted pending this analysis. They are not accepted results. No
 speedup or runtime takeover is claimed by this review.
+
+## Implemented batch: constructor Set and staged route transfer
+
+The trace-wide review found that 117/141 paths contain Set (38 also read mutable
+functions). The hot 143->137 rewrite lowers to constructor Set; the earlier
+normalizer rejected it outright. Constructor Set now keeps the actual constructor
+result distinct from its requested value until commit. If the local proof has
+no existing result, it introduces an opaque actual result rather than assuming
+runtime table absence. An ordered `constructor_unions` obligation records the
+required equality separately from explicit source unions. Neither kind feeds
+same-RHS constructor closure. Mutable table reads/updates remain unsupported.
+
+The equivalent-route index now accepts stage-preserving keys and final-stage
+canonical output ports as well as flat structures. Exact full keys, not hashes,
+select candidates; the existing terminal result proof still authorizes the
+specific execution route. It does not skip source union effects or Run boundaries.
+
+One offline pass over all 141 saved path shapes gives:
+
+| Representation | Previous Set rejection | Batch |
+|---|---:|---:|
+| Flat | 10 | 11 |
+| Staged | 12 | 87 |
+| Opaque | 119 | 43 |
+
+This is 22 -> 98 supported paths, not an execution-hit rate. The prior column
+applies the exact old unconditional Set rejection to the same typed paths; no
+workload replay is used. All 98 supported full structures are distinct, so this
+is expanded recognition, NOT measured final eclass compression. The corpus and
+round-0 limitations above still apply. `batch-coverage.json` records the summary.
+
+Reproduce using `cargo run --locked -p eggfuse-cell-compiler --features
+iterative-bake,sparse-cells --example review_completion_paths -- PROGRAM
+REVIEW_JSON OUTPUT`. The tool explicitly removes the archived derived completion
+certificate, reseals and validates the source, then reruns current structural
+analysis; it does not accept that old certificate as a current executable proof.
+Older compiled completion certificates whose structures change need regeneration.
+
+The actual runtime staged-route fixture transfers an admitted completion across
+an intermediate nontrivial union: completed RHS 0 -> 1, constructor requests
+10 -> 8, unions 2 -> 2, plan probes 4 -> 4. History allocations increase 1 -> 2
+and history slots written 2 -> 4. Run graphs, ordered bindings/writes/resumes
+remain identical. This establishes a real takeover, but not net acceleration.
+It also points to the next compression target: shared stage/suffix structure and
+retained result interfaces, without counting recognition coverage as speed.
+
+The previously uncompiled route regression is now fixed and validated. Focused
+negative coverage ensures pending constructor Set cannot make the requested
+value the key of a later constructor, even when no existing result is known
+locally. Full ripsat completion and query-receipt integration tests pass.

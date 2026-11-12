@@ -1,0 +1,206 @@
+{
+  "scope": "saved trace structural analysis, no workload execution or speed claim",
+  "counts": {
+    "flat": 11,
+    "opaque": 43,
+    "staged": 87
+  },
+  "prior_set_rejection_counts": {
+    "flat": 10,
+    "opaque": 119,
+    "staged": 12
+  },
+  "supported_classes": 98,
+  "sample": "historical sum-bits round 0; 2048 retained events; no composed joins",
+  "baseline_method": "previous exact admission restriction rejects every path containing Set; unchanged proofs for paths without Set",
+  "top_paths": [
+    {
+      "path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 196,
+      "kind": "staged"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 52,
+      "kind": "staged"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 33,
+      "kind": "staged"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            55,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 64,
+      "kind": "staged"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            145,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 38,
+      "kind": "opaque"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            145,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 53,
+      "kind": "opaque"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 51,
+      "kind": "staged"
+    },
+    {
+      "path": [
+        [
+          null,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "occurrences": 51,
+      "kind": "staged"
+    }
+  ]
+}

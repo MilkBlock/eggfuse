@@ -20,6 +20,8 @@ pub struct Structure {
     completed: Vec<Fact>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     terminal_unions: Vec<Fact>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    constructor_unions: Vec<Fact>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -37,6 +39,7 @@ struct Builder {
     literals: BTreeMap<Value, usize>,
     facts: Vec<Fact>,
     terminal_unions: Vec<Fact>,
+    constructor_unions: Vec<Fact>,
     assumptions: Vec<Fact>,
     ports: Vec<(usize, Site, Vec<usize>)>,
 }
@@ -80,7 +83,7 @@ impl Builder {
         self.facts.push(Fact { table, columns });
     }
     fn finish(self) -> Option<Normalized> {
-        let used = self.facts.iter().chain(&self.terminal_unions).flat_map(|f| &f.columns)
+        let used = self.facts.iter().chain(&self.terminal_unions).chain(&self.constructor_unions).flat_map(|f| &f.columns)
             .map(|&s| self.eq.root(s)).collect::<BTreeSet<_>>();
         let roots = used.iter().copied().collect::<Vec<_>>();
         let ids = roots.iter().enumerate().map(|(i,&s)|(s,i)).collect::<BTreeMap<_,_>>();
@@ -94,7 +97,7 @@ impl Builder {
             if let Some(&id)=ids.get(&self.eq.root(s)) { colors[id].insert(color.clone()); }
         }
         let colors = colors.into_iter().map(|c|serde_json::to_string(&c).unwrap()).collect();
-        let raw = Structure { colors, assumptions:project(&self.assumptions), completed:project(&self.facts), terminal_unions:project(&self.terminal_unions) };
+        let raw = Structure { colors, assumptions:project(&self.assumptions), completed:project(&self.facts), terminal_unions:project(&self.terminal_unions), constructor_unions:project(&self.constructor_unions) };
         let (structure, mapping) = canonical(raw)?;
         let map = |s|mapping[ids[&self.eq.root(s)]];
         Some(Normalized { structure,
@@ -118,7 +121,7 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
     let mut labels=colors(raw.colors.clone());
     loop {
         let mut incidence=vec![vec![];n];
-        for (role,facts) in [(0,&raw.assumptions),(1,&raw.completed),(2,&raw.terminal_unions)] {
+        for (role,facts) in [(0,&raw.assumptions),(1,&raw.completed),(2,&raw.terminal_unions),(3,&raw.constructor_unions)] {
             for f in facts {
                 let adjacent=f.columns.iter().map(|&s|labels[s]).collect::<Vec<_>>();
                 for (column,&s) in f.columns.iter().enumerate() {
@@ -150,7 +153,7 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
             let project=|facts:&[Fact]| facts.iter().map(|f|Fact{table:f.table,columns:f.columns.iter().map(|&s|map[s]).collect()})
                 .collect::<BTreeSet<_>>().into_iter().collect();
             let candidate=Structure { colors:order.iter().map(|&s|raw.colors[s].clone()).collect(),
-                assumptions:project(&raw.assumptions),completed:project(&raw.completed), terminal_unions:project(&raw.terminal_unions) };
+                assumptions:project(&raw.assumptions),completed:project(&raw.completed), terminal_unions:project(&raw.terminal_unions), constructor_unions:project(&raw.constructor_unions) };
             if best.as_ref().is_none_or(|(b,_)|candidate<*b) { *best=Some((candidate,map)); }
             return;
         }
@@ -178,7 +181,7 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
     for (stage,&(_, (rid,pivot))) in path.iter().enumerate() {
         let cell=Definition::new(p,rid).ok()?;
         if cell.rule.query.iter().any(|a|!matches!(a.call,Call::Table(t) if p.tables[t].constructor && p.tables[t].virtual_fact))
-            || cell.template.ops.iter().any(|op|!matches!(op,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Union(..))) { return None; }
+            || cell.template.ops.iter().any(|op|!matches!(op,Op::Copy(..)|Op::Let(_,Call::Table(_),_)|Op::Union(..)|Op::Set(..))) { return None; }
         // Type identity must not depend on serde_json's object iteration
         // order. The native compiler enables preserve_order transitively,
         // whereas the standalone runtime can deserialize the same schema
@@ -212,13 +215,39 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
                 b.close();
                 if b.eq.root(a)!=b.eq.root(c) {
                     if stage+1!=path.len() { return None; }
-                    b.terminal_unions.push(Fact {table:b.terminal_unions.len(),columns:vec![a,c]});
+                    b.terminal_unions.push(Fact {table:b.terminal_unions.len()+b.constructor_unions.len(),columns:vec![a,c]});
                 }
                 continue;
             }
             let relation=cell.relation(Site::Effect(op))?;
             if !p.tables[relation.table].constructor || !p.tables[relation.table].virtual_fact { return None; }
-            let columns=relation.columns().map(|a|b.arg(a,&slots)).collect::<Vec<_>>();
+            let mut columns=relation.columns().map(|a|b.arg(a,&slots)).collect::<Vec<_>>();
+            if matches!(ins,Op::Set(..)) {
+                // Existing constructor Set queues equality with its actual
+                // result. It cannot make the requested value an RHS key yet.
+                b.close();
+                let key=&columns[..columns.len()-1];
+                let existing=b.facts.iter().find(|f|f.table==relation.table
+                    && f.columns.len()==columns.len()
+                    && f.columns[..key.len()].iter().zip(key)
+                        .all(|(&a,&c)|b.eq.root(a)==b.eq.root(c)))
+                    .and_then(|f|f.columns.last()).copied();
+                // Absence from this local proof is not proof of absence from
+                // the runtime table. Keep an opaque actual result in that case.
+                let actual=existing.unwrap_or_else(|| b.fresh(format!("sort:{}",
+                    crate::checksum::canonical(p.tables[relation.table].schema.last().unwrap(),false))));
+                {
+                    let requested=*columns.last().unwrap();
+                    if b.eq.root(actual)!=b.eq.root(requested) {
+                        if stage+1!=path.len() {return None;}
+                        b.constructor_unions.push(Fact {
+                            table:b.terminal_unions.len()+b.constructor_unions.len(),
+                            columns:vec![actual,requested],
+                        });
+                    }
+                    *columns.last_mut().unwrap()=actual;
+                }
+            }
             if path.get(stage+1).is_some_and(|s|s.0==Some(op)) { published=columns.clone(); }
             b.ports.push((stage,Site::Effect(op),columns.clone()));
             b.relation(relation.table,columns,false);
@@ -254,11 +283,20 @@ pub(crate) fn staged_contract(p: &Program, path: &[(Option<usize>, Entry)]) -> O
         "links":links,"effects":"ordered-at-original-source-boundary"}))
 }
 
+/// Offline trace analysis using the same structural proofs as Bake.
+pub fn describe_path(p: &Program, path: &[(Option<usize>, (usize, Option<usize>))]) -> Json {
+    if let Some(n)=normalize(p,path) {
+        json!({"kind":"flat","structure":n.structure,"ports":n.ports})
+    } else if let Some(contract)=staged_contract(p,path) {
+        json!({"kind":"staged","structure":contract})
+    } else { json!({"kind":"opaque"}) }
+}
+
 /// A checked inclusion map comes from the very same symbolic prefix, never
 /// from runtime numbering or probabilistic membership. New assumptions are
 /// explicit and must still be matched by the consumer.
 pub(crate) fn extension(before:&Normalized,after:&Normalized) -> Option<Json> {
-    if !before.structure.terminal_unions.is_empty() { return None; }
+    if !before.structure.terminal_unions.is_empty() || !before.structure.constructor_unions.is_empty() { return None; }
     let mut mapping=BTreeMap::new();
     for (&symbol,&source) in &before.symbols {
         let target=*after.symbols.get(&symbol)?;
@@ -335,7 +373,7 @@ mod tests {
 
     #[test]
     fn symmetric_ports_are_exact_and_bounded() {
-        let raw=Structure{colors:vec!["E".into();9],assumptions:vec![],completed:vec![],terminal_unions:vec![]};
+        let raw=Structure{colors:vec!["E".into();9],assumptions:vec![],completed:vec![],terminal_unions:vec![],constructor_unions:vec![]};
         assert!(canonical(raw).is_none(),"decline rather than silently identify a symmetric cell");
         let mut a=Builder::default();
         let x=a.fresh("E".into()); let y=a.fresh("E".into());

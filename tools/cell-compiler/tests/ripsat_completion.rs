@@ -601,3 +601,98 @@ fn staged_lazy_union_contracts_share_renamed_routes_without_erasing_effects() {
     assert_eq!(expected,actual);assert_eq!(before.snapshots,after.snapshots);
     assert_eq!(before.binding_audit,after.binding_audit);
 }
+
+#[test]
+fn staged_union_routes_transfer_a_real_cross_run_completion() {
+    let source=r#"
+(datatype E (N i64) (Start E) (F E) (G E) (Gate E) (Mid E))
+(ruleset init) (ruleset first) (ruleset second) (ruleset bridge) (ruleset end)
+(rule ((N i)) ((Start (N i))) :ruleset init)
+(rule ((Start x)) ((F x) (G x) (union (F x) (G x)) (Gate x)) :ruleset first :name "one")
+(rule ((Start y)) ((G y) (Gate y) (F y) (union (F y) (G y))) :ruleset second :name "two")
+(rule ((Gate x)) ((Mid x)) :ruleset bridge :name "bridge")
+(rule ((Mid x)) ((F x) (G x)) :ruleset end :name "end")
+(N 1)
+(run-schedule (seq (run init) (run second) (run bridge) (run end) (run first)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("staged-route",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let ids=["one","two","bridge","end"].map(|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap());
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":ids.map(|r|json!({"edge":[0,0,r,0],"visits":2}))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,4).unwrap();
+    let entries=blocks["entries"].as_array().unwrap();
+    let leaf=|r|entries.iter().position(|e|e["consumer"]==r).unwrap();
+    let op=|r:usize,table:&str|rules[r]["effects"].as_array().unwrap().iter().position(|e|e["call"]["table"]==table).unwrap();
+    let (a,b,c,d)=(leaf(ids[0]),leaf(ids[1]),leaf(ids[2]),leaf(ids[3]));
+    let mid=op(ids[2],"Mid");
+    let joins=json!([
+        {"left":a,"output":op(ids[0],"Gate"),"right":c},
+        {"left":b,"output":op(ids[1],"Gate"),"right":c},
+        {"left":4,"output":mid,"right":d}]);
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed(&p,Limits::default()).unwrap();plan["joins"]=joins;
+    Catalog::emit_existing_ripsat_handoffs(&p,&mut plan).unwrap();
+    let mut raw=p.artifact;raw["iterative_bake"]=plan;
+    let baseline=Program::parse(seal(raw)).unwrap();
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(baseline.clone()).unwrap();
+    let inferred=json!({"left":5,"output":mid,"right":d});
+    assert!(compiled["iterative_bake"]["joins"].as_array().unwrap().contains(&inferred),
+        "staged producer must transfer the terminal route");
+    let (before,expected)=execute(baseline.artifact);let (after,actual)=execute(compiled);
+    assert_eq!(expected,actual);assert_eq!(before.snapshots,after.snapshots);
+    assert_eq!(before.binding_audit,after.binding_audit);
+    let b=before.report();let a=after.report();
+    for key in ["constructor_requests","union_requests"] {
+        eprintln!("staged cost {key}: {} -> {}",b["stats"][key],a["stats"][key]);
+    }
+    for key in ["history_allocations","history_slots_written","ripsat_plan_probes","ripsat_boundary_reads"] {
+        eprintln!("staged cost {key}: {} -> {}",b["stage_spine"]["stats"][key],a["stage_spine"]["stats"][key]);
+    }
+    eprintln!("staged completion before={} after={}",b["stage_spine"]["stats"]["ripsat_completed"],a["stage_spine"]["stats"]["ripsat_completed"]);
+    assert!(a["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap() > b["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap());
+}
+
+#[test]
+fn constructor_set_keeps_actual_results_distinct_until_commit() {
+    let source=r#"
+(datatype E (N i64) (Start E) (F E) (G E))
+(ruleset a)
+(rule ((Start x)) ((let old (F x)) (union (F x) x) (G old)) :ruleset a :name "actual")
+(rule ((Start x)) ((let old (F x)) (union (F x) x) (G x)) :ruleset a :name "requested")
+(rule ((Start x)) ((union (F x) x)) :ruleset a :name "unknown")
+(Start (N 1))
+(run-schedule (run a))
+"#;
+    let core=eggfuse_bake::device_frontend::core("set-boundary",source).unwrap();
+    let mut raw=compiler::compile(core,&Default::default()).unwrap();
+    // Source constructor Set is internal-only. Exercise its validated lowering
+    // by substituting the equivalent constructor Set for the source union.
+    for rule in raw["recipe"]["rules"].as_array_mut().unwrap() {
+        let effects=rule["effects"].as_array_mut().unwrap();
+        let construct=effects.iter().find(|e|e["call"]["table"]=="F").unwrap().clone();
+        for effect in effects.iter_mut().filter(|e|e["op"]=="union") {
+            *effect=json!({"op":"set","kind":"set","call":{"table":"F"},
+                "args":construct["args"],"value":effect["args"][1]});
+        }
+        if rule["metadata"]["name"]=="unknown" {
+            rule["effects"].as_array_mut().unwrap().retain(|e|e["op"]!="let");
+        }
+    }
+    let p=Program::parse(seal(raw)).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let shapes=["actual","requested","unknown"].map(|name| {
+        let rule=rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+        eggfuse_cell_runtime::cell_completion::describe_path(&p,&[(None,(rule,Some(0)))])
+    });
+    for shape in &shapes {
+        assert_eq!(shape["kind"],"flat");
+        let unions=shape["structure"]["constructor_unions"].as_array().unwrap();
+        assert_eq!(unions.len(),1);
+        assert_ne!(unions[0]["columns"][0],unions[0]["columns"][1]);
+    }
+    assert_ne!(shapes[0]["structure"],shapes[1]["structure"],
+        "pending Set cannot change the key of a later constructor");
+}
