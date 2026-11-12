@@ -235,6 +235,18 @@ impl Work {
             };
             work.insert(format!("stage_spine/stats/{field}"),value);
         }
+        // Only failed visible-receipt checks do the extra live-table lookup
+        // for diagnosis. Each failure belongs to exactly one category.
+        for field in ["ripsat_witness_retired", "ripsat_witness_wrong_table", "ripsat_witness_hidden"] {
+            let value=match report["stage_spine"].get("completion_witness_diagnosis") {
+                None=>0,
+                Some(J::String(v)) if v=="receipt-lifetime/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell witness diagnosis work {field}"))?,
+                _=>return Err("unknown Cell witness diagnosis".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
         // Sealing uses the existing Run forwarding map; every visited slot and
         // actual update is new work. A repaired receipt itself earns no credit.
         for field in ["history_seal_checks", "history_seal_reads", "history_seal_writes"] {
@@ -762,6 +774,15 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         member_report["neighbor_context"]["absorption"]["row_completion"] = "unknown".into();
         assert!(Work::read(&member_report).is_err());
     }
+    let mut diagnosis=report.clone();
+    diagnosis["stage_spine"]["stats"]["ripsat_witness_retired"]=7.into();
+    assert_eq!(Work::read(&diagnosis).unwrap().0["stage_spine/stats/ripsat_witness_retired"],7);
+    diagnosis["stage_spine"]["stats"].as_object_mut().unwrap().remove("ripsat_witness_hidden");
+    assert!(Work::read(&diagnosis).unwrap_err().contains("missing Cell witness diagnosis"));
+    diagnosis["stage_spine"].as_object_mut().unwrap().remove("completion_witness_diagnosis");
+    assert_eq!(Work::read(&diagnosis).unwrap().0["stage_spine/stats/ripsat_witness_retired"],0);
+    diagnosis["stage_spine"]["completion_witness_diagnosis"]="unknown".into();
+    assert!(Work::read(&diagnosis).is_err());
     let mut sealed_report = report.clone();
     sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
     assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);

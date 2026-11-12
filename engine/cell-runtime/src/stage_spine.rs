@@ -680,6 +680,10 @@ pub struct Stats {
     ripsat_layout_fallbacks: u64,
     ripsat_boundary_fallbacks: u64,
     ripsat_witness_fallbacks: u64,
+    ripsat_witness_missing: u64,
+    ripsat_witness_retired: u64,
+    ripsat_witness_wrong_table: u64,
+    ripsat_witness_hidden: u64,
     history_slots_written: u64,
     history_seal_checks: u64,
     history_seal_reads: u64,
@@ -1704,9 +1708,20 @@ impl Programs {
         for &(_,table,slot) in &plan.outputs {
             self.stats.ripsat_witness_checks+=1;
             let port=crate::cell::ResultPort::new(rid,slot);
-            let Some(w)=results.get(port) else {self.stats.ripsat_witness_fallbacks+=1;return None};
-            if !g.receipt_visible(g.resolve_receipt(w),table) {
-                self.stats.ripsat_witness_fallbacks+=1; return None;
+            let Some(w)=results.get(port) else {
+                self.stats.ripsat_witness_fallbacks+=1;
+                self.stats.ripsat_witness_missing+=1;
+                return None;
+            };
+            let resolved=g.resolve_receipt(w);
+            if !g.receipt_visible(resolved,table) {
+                self.stats.ripsat_witness_fallbacks+=1;
+                match g.live_table(resolved) {
+                    None => self.stats.ripsat_witness_retired+=1,
+                    Some(actual) if actual!=table => self.stats.ripsat_witness_wrong_table+=1,
+                    Some(_) => self.stats.ripsat_witness_hidden+=1,
+                }
+                return None;
             }
         }
         Some((results,plan.unions.clone()))
@@ -3108,6 +3123,7 @@ impl Programs {
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",
             "history_sealing":"unique-cell-results/v1",
+            "completion_witness_diagnosis":"receipt-lifetime/v1",
             "completion_record_bytes":std::mem::size_of::<Completion>(),
             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),
