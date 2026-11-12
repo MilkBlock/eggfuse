@@ -43,3 +43,9 @@ binaries, generated caches and large graph exports. Running those benchmark
 drivers requires the repository, whereas building the manuscript requires only
 the source archive and a TeX installation. Historical evidence remains at the
 pinned locations above. No arXiv upload is performed by this task.
+
+`semantics.tex` gives a restricted logical model, three local preservation
+lemmas and a Run-boundary simulation proof. It explicitly separates these
+results from the unproved compiler/runtime obligations and from mutable,
+deleting, ordered or aborting execution. It is not a full egglog equivalence
+certificate.

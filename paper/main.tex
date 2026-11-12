@@ -100,6 +100,8 @@ Partial information also has value. Suppose a consumer needs \(P(x,y)\) and \(Q(
 \paragraph{What the checks establish.}
 For a fixed recipe, consider replacing an ordinary access inside an otherwise unchanged Run. If the supplied fact has the required table, key, visibility, and epoch, and passes the same output constraints, it can stand in for that access. If the specialized and residual paths together present the same ordered bindings, applying the same ordered effects to the same input state gives the reference Run's logical result. This is a local substitution argument. Establishing whole-program equivalence also requires complete pivot coverage, consistent repair, and a semantics-preserving source transformation. Section~\ref{sec:eval} separates current semantic contracts from execution measurements, and the appendix retains the historical strict native/Cell choice diagnostic.
 
+\input{semantics}
+
 \section{Iterative Bake}\label{sec:bake}
 One rule pair can be compiled from its typed entry and effect. A catalog for an entire workload must choose among many possible paths. EggFuse starts with a finite set of admitted consumer/pivot leaves. In one training round it executes the schedule with a frozen catalog, observes adjacent units on the winning applied lineage, and proposes a bounded batch of additions. A binary addition has the form
 \[

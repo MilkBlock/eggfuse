@@ -1,0 +1,171 @@
+\section{Semantic preservation: model, proof and implementation obligations}\label{sec:semantics}
+We give a preservation argument for a restricted logical model, then identify
+what is additionally required of the implemented compiler and runtime. This
+separates a mathematical property of Cell reuse from a claim that the current
+Rust implementation implements all of egglog correctly. The latter is not
+established by this paper or by its timing experiments.
+
+\subsection{Reference model and observations}
+Fix a typed program with constructor declarations, positive conjunctive queries,
+equality tests, and deterministic partial scalar primitives. RHS instructions
+construct terms or request equality. Primitive failure has the same meaning in
+both interpreters. Partial failures are admitted as query rejection; RHS primitive
+evaluations must succeed for every admitted binding. Aborting execution with
+partially committed effects is outside the theorem. The fragment excludes deletion, subsumption, mutable function
+updates, identity-dependent operations, observable extraction tie choices and
+external effects. A primitive whose result depends on interning history is not
+pure in this model. Initial facts and the original source schedule are fixed.
+Each Run reads its boundary snapshot, obtains all distinct rule/input bindings,
+and applies their RHS instructions; new matches become available at the next
+source-scheduled activation. This is the reference model used in the theorem,
+not a definition asserted to cover every native egglog scheduler or command.
+
+A logical state is a finite typed presentation of constructor facts and explicit
+equalities. Its completed state uses the least equivalence relation containing
+the explicit equalities and closed under constructor congruence. Concrete IDs
+are names, not observations. Two completed states are related, written
+$S\simeq T$, when a sort-preserving bijection of their equality classes preserves
+all constructor rows and distinguished initial values, while scalar values
+have the same primitive-observable meaning. Thus equality of row counts or
+extraction costs alone does not establish $\simeq$.
+
+Let $\alpha(C)$ interpret a Cell runtime state: decode each live fact through its
+template and actual instance slots, resolve ports through the current equality
+relation, and project away compiler-private Entry and cursor data. At an
+observation boundary, no unresolved repair may affect the projected relations.
+For the restricted fragment, $\alpha$ contains every logical fact; retained
+private storage is not itself a logical addition.
+
+\subsection{Three local preservation lemmas}
+\paragraph{Lemma 1 (query-prefix reuse).}
+Let a query be $Q=A_1\land\cdots\land A_k$. Suppose an Entry supplies a partial
+binding $\theta$ and valid witnesses proving $A_1,\ldots,A_j$ in the same snapshot
+used by the remaining query. Evaluating the remaining atoms with $\theta$ yields
+exactly those full bindings of $Q$ extending $\theta$.
+
+\emph{Proof.} A returned extension satisfies the remaining atoms by evaluation
+and the prefix by its witnesses, so it satisfies $Q$. Conversely, restrict any
+full satisfying binding extending $\theta$ to the operands of each remaining
+atom. The ordinary exhaustive evaluator admits that extension at every step.
+This proves equality for this entry, not completeness of the collection of
+entries. To replace enumeration, the union of specialized and residual routes
+must cover every reference binding, with the prescribed duplicate ownership.
+In particular, a binding enabled by a late input or a new equality cannot be
+omitted merely because no historical cursor reaches it. $\square$
+
+\paragraph{Lemma 2 (instruction and witness reuse).}
+Suppose corresponding operand slots denote the same logical values. A constructor
+instruction $F(a_1,\ldots,a_n)$ may reuse an actual result witness $u$ if the
+current state proves $F(a_1,\ldots,a_n)=u$. Replacing the instruction by this
+witness leaves the completed logical state and its result unchanged. Copying an
+existing operand and evaluating an identical pure scalar primitive also preserve
+the relation.
+
+\emph{Proof.} Inserting a constructor row already represented at that key adds
+no new logical fact after congruence closure; its result is the same equality
+class. A physical allocation or producer identity is not observable in this
+fragment. Copies preserve their operands and pure primitives have identical
+partial interpretations. These arguments apply instruction by instruction.
+The witness must name the actual result, which may belong to another Cell;
+a producer/op address without that evidence does not satisfy the premise.
+An explicit union can be omitted only if its operands are already provably
+equal. Constructing a previously absent term is not justified by changing a
+Cell's state label. $\square$
+
+\paragraph{Lemma 3 (local congruence completion).}
+For a finite set of constructor rows, canonical-key rebuilding and a complete
+fair evaluation of the implications
+\[
+ F(\mathbf a)=u\;\land\;F(\mathbf b)=v\;\land\;
+ \bigwedge_{i=1}^{n} a_i\equiv b_i\quad\Longrightarrow\quad u\equiv v
+\]
+produce the same least congruence extending the explicit unions.
+
+\emph{Proof.} Every implication adds an equality required by congruence, so
+no step exceeds the least closed relation. Both procedures monotonically merge
+classes in a finite carrier. At their fixed points all applicable implications
+hold; any such closed relation contains the least one. Soundness and closure
+therefore give equality of the results. Fairness means every persistently
+applicable implication is eventually examined. A template may execute a static
+subset of these implications, provided the residual mechanism covers all other
+pairs, including pairs newly enabled across Cell boundaries. Equality of only
+one argument of a multi-argument constructor is insufficient. A digest or Bloom
+filter is not a proof of the conjunctive premise. $\square$
+
+\subsection{Boundary simulation theorem}
+\paragraph{Theorem (restricted-fragment preservation).}
+Consider the reference interpreter above and a Cell interpreter for the same
+program. Assume (i) their initial projections are related; (ii) the typed lowering
+preserves each query atom, RHS instruction and source control boundary;
+(iii) specialized entries plus residual enumeration yield exactly the reference
+rule/input bindings; (iv) reuse satisfies Lemmas 1 and 2; and (v) completion
+satisfies Lemma 3 before each observation. Then the two interpreters have related
+completed states at every corresponding scheduled boundary. Source checks over
+the modeled relations have identical outcomes.
+
+\emph{Proof.} Induct on source-scheduled activations. Initially (i) establishes
+the relation. At an induction boundary, the class bijection maps each query
+binding to a corresponding binding; positive atoms and pure guards agree.
+Conditions (ii)--(iii) and Lemma 1 supply the same distinct rule/input pairs.
+Apply corresponding RHS instructions to these pairs. Fresh constructor results
+extend the correspondence with their logical constructor terms, already existing
+results preserve it, and union requests add the same logical equalities.
+Lemma 2 permits justified reuse steps to stutter. In this fragment the resulting
+set of facts and unions is independent of the enumeration order. Lemma 3 gives
+the same least completed presentation, extending the class correspondence through
+any merges. Publication exposes exactly that presentation at the next boundary,
+so the induction hypothesis is restored. A check is a query over related states
+and therefore agrees. $\square$
+
+For a fixed sequence or fixed repeat count this argument supplies the complete
+finite trace. For conditionals, until, or saturation it additionally requires
+agreement of the source control predicate, including any change/progress flag
+used for stopping. Physical allocation counts, cursor advancement and the
+number of cached hits cannot substitute for that predicate. No termination claim
+is made for unbounded programs; if matching control choices hold, every finite
+prefix has the same observations.
+
+\subsection{Composition and the obligations beyond the fragment}
+A compiled dominated-to-dominator transition is a finite sequence of the local
+steps above. Induction on that sequence proves preservation when each step's
+premises hold and original Run boundaries remain in place. Compatible slot
+layouts change representation rather than logical values. Multiple derivations
+can share a destination only with their own entry premises and result mapping
+preserved. Structural inclusion alone does not establish those premises or
+justify additional effects. Likewise, query workers may reorder evaluation of
+a fixed snapshot without changing its complete answer set; moving writes into
+workers requires a separate commutation or serialization argument.
+
+For the full supported executable language, use a stronger simulation relation
+that also preserves visible versus subsumed rows, mutable function contents,
+primitive-observable representation state, and future query/delta eligibility.
+In that setting, equality of answer sets is insufficient. For example, two writes
+with a last-writer merge can yield different results under a different binding
+order. Deleting a witnessed row invalidates reuse even if its old slot remains
+allocated. A cached mutable read can become wrong without any input equality
+changing. The required extension preserves the ordered observable effect stream,
+including merge evaluation, failure behavior and extraction choices, or proves
+that each reordered pair commutes. The monotone theorem does not provide that
+extension automatically.
+
+\begin{table}[ht]\centering\small
+\begin{tabularx}{\linewidth}{lXX}\toprule
+Proof boundary & Required implementation obligation & Current evidence and limit\\\midrule
+Source lowering & Every admitted source command has matching reference semantics; private marker views expand to the source query & Typed admission and differential tests; no complete compiler-correctness proof\\
+Entry coverage & All reference bindings, including union-enabled and late-input matches, survive partition and deduplication & Residual routes and Run audits; not a proof for every compiled plan\\
+Effects and repair & Actual witnesses, complete congruence and correct mutable/deletion behavior & Runtime checks and selected tests; Lemma 3 proves the abstract complete closure, not all repair code\\
+Source control & Matching visibility, delta ownership, stopping and effect order & Selected boundary audits; final-state tests alone do not discharge this obligation\\
+Bake composition & Check each inherited premise, result mapping and boundary & Typed catalog checks and observed replay; no blanket soundness claim for all generated catalogs\\\bottomrule
+\end{tabularx}
+\caption{The abstract preservation argument exposes obligations that must be
+proved or validated in the implementation; their statement is not their discharge.}
+\end{table}
+
+The current upstream final-state passes and the source-specific sum-bits
+acceptance contract provide evidence at particular inputs. They neither prove
+all five theorem premises for the implementation nor establish equivalence to
+every native version. Conversely, a different physical representative or a
+separately validated extraction tie is not by itself a semantic counterexample.
+A future unconditional compiler-correctness claim needs a formal native reference
+semantics for the admitted fragment and proofs connecting the actual lowering,
+matching, effects, completion and source control to it.
