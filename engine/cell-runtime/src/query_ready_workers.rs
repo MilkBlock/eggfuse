@@ -63,6 +63,7 @@ pub(super) fn take<'a>(g: &'a Graph, matches: &mut [(usize, Vec<Instance>)],
         let code = &g.program.executions[*rule];
         stats.rule_checks += 1;
         if !code.has_preparation() || !rows.iter().any(|r| { stats.admission_instances += 1; code.needs_preparation(r) }) { continue; }
+        stats.header_growths += u64::from(groups.len()==groups.capacity());
         groups.push(Group { code, template: &g.program.templates[g.program.rules[*rule].template],
             rows: Rows::Matched(std::mem::take(rows)), rule: *rule, target });
         stats.constructor_groups += u64::from(code.constructor.is_some());
@@ -71,13 +72,13 @@ pub(super) fn take<'a>(g: &'a Graph, matches: &mut [(usize, Vec<Instance>)],
         let code = &g.program.executions[rule];
         stats.rule_checks += 1;
         if !code.has_preparation() || !rows.iter().any(|r| { stats.admission_instances += 1; code.needs_preparation(&r.answer) }) { continue; }
+        stats.header_growths += u64::from(groups.len()==groups.capacity());
         groups.push(Group { code, template: &g.program.templates[g.program.rules[rule].template],
             rows: Rows::Deferred(std::mem::take(rows)), rule, target: usize::MAX });
         stats.constructor_groups += u64::from(code.constructor.is_some());
         stats.deferred_groups += 1;
     }
     stats.groups += groups.len() as u64;
-    stats.header_growths += u64::from(!groups.is_empty());
     stats.header_capacity_bytes += (groups.capacity() * std::mem::size_of::<Group<'_>>()) as u64;
     groups
 }

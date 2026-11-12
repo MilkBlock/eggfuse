@@ -292,7 +292,7 @@ impl Executor {
     pub(super) fn query_worker_report(&self) -> J {
         self.query_workers.as_ref().map_or(json!({"enabled":false}), |w|
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
-                "organization":"cell-run-events/v6","winner_ordering":"input-depth-ordinal/v1",
+                "organization":"cell-run-events/v6","overlap_measurement":"unfinished-jobs-after-seal/v1","winner_ordering":"input-depth-ordinal/v1",
                 "instance_header_bytes":std::mem::size_of::<Binding>(),
                 "matched":w.matched,
                 "constructor_access":"canonical-or-stable/v1", "first_read_sharing":"literal-run/v1",
@@ -1072,7 +1072,7 @@ impl Workers {
             let rid=group.rule;remaining[rid]+=1;
             tasks.push((completion::Task::Ready(group),smallvec::smallvec![rid]));
         }
-        let mut left=tasks.len();
+        let unfinished=std::sync::atomic::AtomicUsize::new(tasks.len());
         self.stats.event_bytes+=(tasks.capacity()*std::mem::size_of::<(completion::Task<'_>,smallvec::SmallVec<[usize;4]>)>()
             +(remaining.capacity()+positions.capacity())*std::mem::size_of::<usize>()) as u64;
         #[cfg(feature="parallel-residuals")]
@@ -1113,7 +1113,9 @@ impl Workers {
                     completion::Task::Ready(mut group)=>{
                         let work=group.execute(grain,reads.as_ref(),pooled);completion::Event::Ready(group,work)
                     }
-                };(event,rules)
+                };
+                if !rules.is_empty() {unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);}
+                (event,rules)
             }, |events,next| -> Result<()> {
                 for (event,rules) in events.drain(..) {
                     match event {
@@ -1121,7 +1123,7 @@ impl Workers {
                             let rid=finish.rule;let at=positions[rid];
                             match finish.seal(&mut matches[at].1,spine,
                                 #[cfg(feature="parallel-residuals")] outputs.get_mut(rid)) {
-                                Ok(done)=>{early_rules+=u64::from(left!=0);finished.push(done);}
+                                Ok(done)=>{early_rules+=u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);finished.push(done);}
                                 Err(e)=>{if finish_error.as_ref().is_none_or(|(old,_)|at<*old) {finish_error=Some((at,e));}}
                             }
                             continue;
@@ -1160,7 +1162,6 @@ impl Workers {
                             owned_done.push(done);
                         }
                     }
-                    left-=1;
                     for rid in rules {
                         remaining[rid]-=1;
                         if remaining[rid]!=0 {continue;}
@@ -1177,7 +1178,7 @@ impl Workers {
                             finish.run(false);
                             match finish.seal(&mut matches[at].1,spine,
                                 #[cfg(feature="parallel-residuals")] outputs.get_mut(rid)) {
-                                Ok(done)=>{early_rules+=u64::from(left!=0);finished.push(done);}
+                                Ok(done)=>{early_rules+=u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);finished.push(done);}
                                 Err(e)=>{if finish_error.as_ref().is_none_or(|(old,_)|at<*old) {finish_error=Some((at,e));}}
                             }
                         }

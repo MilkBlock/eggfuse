@@ -79,8 +79,13 @@ of bindings, facts or producer subscriptions.
 
 `query_workers.stats.event_*` reports finalized rules before unrelated query
 tasks return, source receive waits, event waves and payload capacity.
-`cell_execution.runtime.stats.scheduler.event_*` does the same for RHS
-prefix adoption. These waits time condition-variable waiting, not worker idle
+`cell_execution.runtime.stats.scheduler.event_early_cells` counts cells in
+prefixes received while producer results remain outstanding. It does not prove
+that source continuation finished before those producers.
+`event_completed_early` checks outstanding worker jobs **after** each Cell
+actually completes. Query `event_early_rules` similarly checks the unfinished
+query-job counter after sealing a rule, not the number of callbacks still queued.
+Both actual-overlap counters must be zero without a worker pool. These waits time condition-variable waiting, not worker idle
 time or whole-process CPU utilization. The old scheduler `wait_ns` now spans
 worker execution **and overlapped source adoption**; it is not comparable to
 an isolated old pool wait.
@@ -130,3 +135,7 @@ All samples and warmups are kept. Timing starts only after compilation stops.
 Intermediate work-count runs are retained separately and do not establish a
 performance result. New event headers were reduced before the final comparison;
 the earlier implementation's costs remain visible in the result artifact.
+The first timing campaign used `4bc89976`; its `event_early_rules` counted
+unprocessed callbacks, not unfinished worker queries, and is invalid as an
+overlap metric. Its timings remain retained. The corrected campaign checks
+actual unfinished work and separates early receipt from completed continuation.

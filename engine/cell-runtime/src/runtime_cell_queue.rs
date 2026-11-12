@@ -102,6 +102,7 @@ impl Executor {
             stats.scheduler.max_ready = stats.scheduler.max_ready.max(count);
             let parallel = count > 1 && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
             let read = crate::value::parent_epoch::Read { base: &parents, delta: None };
+            let unfinished=std::sync::atomic::AtomicUsize::new(count);
             let consume = |completed: &mut Vec<Completed>| {
                 // A ready prefix may retain table ownership. No wait for a
                 // larger batch: small prefixes use ordinary exact validation.
@@ -117,6 +118,8 @@ impl Executor {
                             let parked = owners.next().expect("one owner per completion");
                             if parked.execution.cell == done.done.cell() {
                                 self.adopt_cell_event(parked, Some(done))?;
+                                self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
+                                    u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);
                                 break;
                             }
                             // Already-complete Cells parked behind this source
@@ -138,11 +141,12 @@ impl Executor {
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
             let (result, events, shared) = if tasks.iter().any(|(job, _)| job.dependent()) {
                 let ((result, events), shared) = crate::graph::cell_births::stream_shared(
-                    tasks, read, parallel.then_some(pool.as_ref()), consume);
+                    tasks, read, parallel.then_some(pool.as_ref()), &unfinished, consume);
                 (result, events, Some(shared))
             } else {
                 let (result, events) = crate::completion_events::ordered(tasks, parallel.then_some(pool.as_ref()),
-                    |(job, mut effects)| { let done = job.run(read, &mut effects.writer()); Completed { done, effects } }, consume);
+                    |(job, mut effects)| { let done = job.run(read, &mut effects.writer());
+                        unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);Completed { done, effects } }, consume);
                 (result, events, None)
             };
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();

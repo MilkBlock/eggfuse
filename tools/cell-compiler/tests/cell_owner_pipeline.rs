@@ -69,6 +69,12 @@ fn owned_entries_continue_through_rhs_and_publication_with_late_inputs_and_union
         );
         assert!(queries["owned_range_answers"].as_u64().unwrap() > 0);
         assert!(queries["owned_support_checks"].as_u64().unwrap() > 0);
+        if workers == 1 {
+            assert_eq!(queries["event_early_rules"], 0,
+                "pending source callbacks are not unfinished worker queries");
+            assert_eq!(report["cell_execution"]["runtime"]["stats"]["scheduler"]["event_completed_early"], 0,
+                "serial result delivery cannot prove overlapped RHS completion");
+        }
         if workers > 1 {
             assert!(
                 queries["execution"]["units"]["rows"].as_u64().unwrap() > 0,

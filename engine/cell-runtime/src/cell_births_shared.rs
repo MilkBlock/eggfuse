@@ -404,7 +404,7 @@ impl<'a> Batch<'a> {
 
 pub(crate) fn stream<E>(
     tasks: Vec<(Job, crate::cell::Effects)>, parents: Read<'_>,
-    pool: Option<&rayon::ThreadPool>, consume: impl FnMut(&mut Vec<Completed>) -> std::result::Result<(), E>,
+    pool: Option<&rayon::ThreadPool>, unfinished:&std::sync::atomic::AtomicUsize, consume: impl FnMut(&mut Vec<Completed>) -> std::result::Result<(), E>,
 ) -> ((std::result::Result<(), E>, crate::completion_events::Work), Counts) {
     let (jobs, effects): (Vec<_>, Vec<_>) = tasks.into_iter().unzip();
     let mut counts = Counts::default();
@@ -419,6 +419,7 @@ pub(crate) fn stream<E>(
     counts.shared_bytes += (tasks.capacity() * std::mem::size_of::<(usize, crate::cell::Effects)>()) as u64;
     let run = |(i, mut effects): (usize, crate::cell::Effects)| {
         let done = batch.finish(i, &mut effects.writer());
+        unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);
         Completed { done, effects }
     };
     (crate::completion_events::ordered(tasks, pool, run, consume), counts)

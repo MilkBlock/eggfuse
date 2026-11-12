@@ -3315,6 +3315,7 @@ impl Executor {
                 "scope":"workers materialize constructor and terminal Unit rows; source-order interning adopts winners and invalidates duplicate Unit candidates without replaying Set",
                 "synchronous_single_cell_dispatch":false,"available_through_ready_queue":true});
             report["cell_execution"]["scheduler"] = json!({"schema":"cell-completion-events/v4",
+                "overlap_measurement":"ready-prefix-receipt-and-unfinished-jobs-after-completion/v1",
                 "scope":"inherited and fresh Cell tails return completion events; each ready source prefix validates and resumes immediately; effect order and Run visibility remain live",
                 "ready_limit":64,"independent_scheduling":true,
                 "global_shared_effects_parallel":false});
