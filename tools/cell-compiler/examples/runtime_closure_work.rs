@@ -1,4 +1,7 @@
 //! Single audited execution with actual work counters, not a timing benchmark.
+#[path = "../src/work_credit.rs"]
+#[allow(dead_code)]
+mod work_credit;
 use eggfuse_cell_runtime::{
     checksum::artifact_digest, executor::Executor, graph::Graph, program::Program,
     transfer_audit as audit,
@@ -48,9 +51,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         return Err("Run count differs".into());
     }
     let report = e.report();
+    let measured_work=work_credit::Work::read(&report)?;
     let result = json!({"scope":"actual standalone runtime work; no timing or memory speedup claim",
         "program_sha256":sha,"selection":selection,"runs":runs,"all_saved_run_checks_equal":true,
-        "graph_work":e.graph.stats,"stage_work":report["stage_spine"]["stats"],
+        "measured_work":measured_work.0,"graph_work":e.graph.stats,"stage_work":report["stage_spine"]["stats"],
         "history_storage":report["stage_spine"]["published_history_storage"],
         "query_work":report["free_join"],"key_lookup_calls":report["key_lookup_calls"],
         "entry_work":report["entry_schedule"],"publication_work":report["publication"],

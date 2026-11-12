@@ -1,11 +1,13 @@
 //! Actual results retained by a Cell for its compiled consumers. The template
 //! owns the source-to-slot mapping; instances store only the returned references.
 //! A reference is a location to revalidate, not a cached value or liveness proof.
+//! Shared slots permit same-key forwarding in this serial Rc history. This is
+//! not a concurrent mutation interface; consuming Runs still check validity.
 use super::Site;
 use crate::graph::Dependency;
 use serde::{Serialize, Serializer};
 use smallvec::SmallVec;
-use std::{num::NonZeroU32, rc::Rc};
+use std::{cell::Cell, num::NonZeroU32, rc::Rc};
 use crate::result_handoff::Trail;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
@@ -22,7 +24,7 @@ mod joint_tests {
     #[test]
     fn completed_outputs_keep_the_original_allocation_and_actual_foreign_witness() {
         let foreign = Dependency::Fact(FactRef { cell: 91, op: 4 });
-        let outputs = vec![None, Some(foreign), Some(Dependency::Function(17))];
+        let outputs = vec![Cell::new(None), Cell::new(Some(foreign)), Cell::new(Some(Dependency::Function(17)))];
         let allocation = outputs.as_ptr();
         let results = Results::from_outputs(3, outputs);
         assert_eq!(results.slots.as_ptr(), allocation);
@@ -30,6 +32,30 @@ mod joint_tests {
         assert_eq!(results.get(ResultPort::new(3, 1)), Some(foreign));
         assert_eq!(results.get(ResultPort::new(3, 0)), None);
         assert_eq!(results.get(ResultPort::new(91, 1)), None);
+    }
+
+    #[test]
+    fn projected_forwarding_updates_shared_slots_without_copying_or_rewriting_layout() {
+        let old=Dependency::Fact(FactRef {cell:7,op:1});
+        let other=Dependency::Fact(FactRef {cell:8,op:2});
+        let target=Dependency::Fact(FactRef {cell:99,op:3});
+        let original=Rc::new(Trail::One(Results::from_outputs(0,vec![Cell::new(Some(old)),Cell::new(Some(other))])));
+        let layout=SlotLayout::compile(1,vec![Some(ResultPort::new(0,0)),Some(ResultPort::new(0,0)),Some(ResultPort::new(0,1))]).unwrap();
+        let projected=ResultFrame {owner:original.clone(),projection:Some(layout.clone())};
+        let sibling=ResultFrame {owner:original.clone(),projection:None};
+        let Trail::One(base)=original.as_ref() else {unreachable!()};
+        let address=base.slots.as_ptr();
+        assert!(projected.view().unwrap().forward_output(0,target));
+        assert_eq!(projected.view().unwrap().output(0),Some(target));
+        assert_eq!(projected.view().unwrap().output(1),Some(target));
+        assert_eq!(projected.view().unwrap().output(2),Some(other));
+        assert_eq!(sibling.view().unwrap().output(0),Some(target));
+        assert!(Rc::ptr_eq(&projected.owner,&original));
+        assert!(Rc::ptr_eq(projected.projection.as_ref().unwrap(),&layout));
+        assert_eq!(base.slots.as_ptr(),address);
+        // The Run forwarding map can now expire; no later lookup is needed.
+        assert_eq!(sibling.view().unwrap().output(0),Some(target));
+        assert!(!projected.view().unwrap().forward_output(99,other));
     }
 
     #[test]
@@ -52,7 +78,7 @@ mod joint_tests {
         compile_projections(&mut plans,std::iter::empty());
         let a=Dependency::Fact(FactRef{cell:19,op:4});
         let b=Dependency::Fact(FactRef{cell:71,op:8});
-        let slots=vec![Some(a),Some(b)]; let address=slots.as_ptr();
+        let slots=vec![Cell::new(Some(a)),Cell::new(Some(b))]; let address=slots.as_ptr();
         let original=Rc::new(Trail::One(Results::from_outputs(0,slots)));
         let mut owner=ResultFrame { owner:original.clone(), projection:None }; let mut probes=0;
         for i in 0..101 {
@@ -178,6 +204,19 @@ impl ResultView<'_> {
             self.get(port)
         } else { self.results.get_counted(port, extra) }
     }
+    /// Publication already resolved this logical output through the Run's
+    /// same-key forwarding map. Update its physical slot through the compiled
+    /// projection; all aliases observe the replacement without another scan.
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn forward_output(self, slot:usize, result:Dependency) -> bool {
+        let port=if let Some(projection)=self.projection {
+            let Some(port)=projection.sources.get(slot).copied().flatten() else {return false};
+            port
+        } else {ResultPort::new(self.results.rule,slot)};
+        let Some(target)=self.results.slot(port) else {return false};
+        target.set(Some(result));
+        true
+    }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn output(self, slot: usize) -> Option<Dependency> {
         self.get(ResultPort::new(self.rule(), slot))
@@ -186,7 +225,7 @@ impl ResultView<'_> {
 #[derive(Clone, Debug)]
 pub(crate) struct Results {
     rule: usize,
-    slots: SmallVec<[Option<Dependency>; 1]>,
+    slots: SmallVec<[Cell<Option<Dependency>>; 1]>,
     projection: Option<Rc<SlotLayout>>,
     parent: Option<Rc<Trail>>,
     forwarded: u64,
@@ -196,7 +235,7 @@ impl Results {
         Self { rule, slots: SmallVec::new(), projection:None, parent:None, forwarded:0 }
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn from_outputs(rule: usize, slots: Vec<Option<Dependency>>) -> Self {
+    pub(crate) fn from_outputs(rule: usize, slots: Vec<Cell<Option<Dependency>>>) -> Self {
         Self { slots: SmallVec::from_vec(slots), ..Self::new(rule) }
     }
     #[cfg(feature = "sparse-cells")]
@@ -218,8 +257,8 @@ impl Results {
         let slot = self.local_slot(port.slot());
         debug_assert!(slot >= self.slots.len(), "ordered, distinct Cell captures");
         let padding = slot - self.slots.len();
-        self.slots.resize(slot, None);
-        self.slots.push(Some(result));
+        self.slots.resize_with(slot, ||Cell::new(None));
+        self.slots.push(Cell::new(Some(result)));
         padding
     }
     pub fn get_counted(&self, port:ResultPort, extra:&mut u64) -> Option<Dependency> {
@@ -227,16 +266,19 @@ impl Results {
         self.get(port)
     }
     pub fn get(&self, port: ResultPort) -> Option<Dependency> {
+        self.slot(port)?.get()
+    }
+    fn slot(&self, port: ResultPort) -> Option<&Cell<Option<Dependency>>> {
         if self.rule != port.rule() { return None; }
         if self.projection.is_some() {
             let bit = 1u64.checked_shl(port.slot() as u32)?;
             if self.forwarded & bit != 0 {
                 let Trail::One(parent) = self.parent.as_deref()? else { unreachable!() };
-                return parent.get(self.projection.as_ref()?.sources[port.slot()]?);
+                return parent.slot(self.projection.as_ref()?.sources[port.slot()]?);
             }
-            return self.slots.get(self.local_slot(port.slot())).copied().flatten();
+            return self.slots.get(self.local_slot(port.slot()));
         }
-        self.slots.get(port.slot()).copied().flatten()
+        self.slots.get(port.slot())
     }
     fn local_slot(&self, slot: usize) -> usize {
         let preceding = if slot >= 64 { u64::MAX } else { (1u64 << slot) - 1 };
@@ -251,17 +293,18 @@ impl Results {
     pub fn parent_owner(&self) -> Option<&Rc<Trail>> { self.parent.as_ref() }
     pub fn spilled(&self) -> bool { self.slots.spilled() }
     pub fn stored_len(&self) -> usize { self.slots.len() }
-    /// Seal fresh local receipts at the publication boundary. The caller owns
-    /// this result frame exclusively; inherited slots remain with their owner.
-    /// Only same-key storage forwarding is allowed, never an Eq-class lookup.
+    /// Fresh nonprojected owners still seal unpublished/query result slots at
+    /// their existing boundary. Shared output slots are forwarded by delivery.
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn seal_local(&mut self, mut forward: impl FnMut(Dependency) -> Dependency) -> (usize, usize) {
-        let mut writes = 0;
-        for witness in self.slots.iter_mut().flatten() {
-            let next = forward(*witness);
-            if next != *witness { *witness = next; writes += 1; }
+    pub(crate) fn seal_local(&mut self, mut forward:impl FnMut(Dependency)->Dependency)->(usize,usize) {
+        let mut writes=0;
+        for slot in &self.slots {
+            if let Some(old)=slot.get() {
+                let new=forward(old);
+                if new!=old {slot.set(Some(new));writes+=1;}
+            }
         }
-        (self.slots.len(), writes)
+        (self.slots.len(),writes)
     }
     pub fn inherited_count(&self) -> usize { self.forwarded.count_ones() as usize }
     pub(crate) fn project_complete(plan:&crate::cell::CompletedPlan,frame:ResultFrame,probes:&mut u64) -> Option<Self> {

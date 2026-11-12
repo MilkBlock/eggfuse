@@ -689,6 +689,8 @@ pub struct Stats {
     history_seal_reads: u64,
     history_seal_writes: u64,
     history_seal_shared: u64,
+    history_publication_slot_probes: u64,
+    history_publication_slot_writes: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
     history_carried_steps: u64,
@@ -2394,6 +2396,14 @@ impl Programs {
                                 self.finish_boundary(g, slot, entries)?;
                             }
                             let w = g.resolve_receipt(old);
+                            if w!=old && matches!(&delivery.source,OutputSource::History(_)) {
+                                let port=self.effect_plans[rule].get().unwrap().history_output(position);
+                                self.stats.history_publication_slot_probes+=1;
+                                if !self.pending_steps[slot].results().forward_output(port,w) {
+                                    return Err("published Cell output lost its result slot".into());
+                                }
+                                self.stats.history_publication_slot_writes+=1;
+                            }
                             let publication = Publication {
                                 slot, receipt: Some(old), output: output.operation,
                                 #[cfg(feature = "spine-shapes")]
@@ -3123,6 +3133,7 @@ impl Programs {
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",
             "history_sealing":"unique-cell-results/v1",
+            "history_publication_forwarding":"shared-result-slots/v1",
             "completion_witness_diagnosis":"receipt-lifetime/v1",
             "completion_record_bytes":std::mem::size_of::<Completion>(),
             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),

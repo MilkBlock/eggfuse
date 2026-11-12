@@ -247,6 +247,18 @@ impl Work {
             };
             work.insert(format!("stage_spine/stats/{field}"),value);
         }
+        // Output delivery already resolves forwarding. Charge only the added
+        // shared-slot address and write, not a second receipt lookup.
+        for field in ["history_publication_slot_probes", "history_publication_slot_writes"] {
+            let value=match report["stage_spine"].get("history_publication_forwarding") {
+                None=>0,
+                Some(J::String(v)) if v=="shared-result-slots/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell publication forwarding work {field}"))?,
+                _=>return Err("unknown Cell publication forwarding".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
         // Sealing uses the existing Run forwarding map; every visited slot and
         // actual update is new work. A repaired receipt itself earns no credit.
         for field in ["history_seal_checks", "history_seal_reads", "history_seal_writes"] {
@@ -783,6 +795,15 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     assert_eq!(Work::read(&diagnosis).unwrap().0["stage_spine/stats/ripsat_witness_retired"],0);
     diagnosis["stage_spine"]["completion_witness_diagnosis"]="unknown".into();
     assert!(Work::read(&diagnosis).is_err());
+    let mut forwarding=report.clone();
+    forwarding["stage_spine"]["stats"]["history_publication_slot_writes"]=5.into();
+    assert_eq!(Work::read(&forwarding).unwrap().0["stage_spine/stats/history_publication_slot_writes"],5);
+    forwarding["stage_spine"]["stats"].as_object_mut().unwrap().remove("history_publication_slot_probes");
+    assert!(Work::read(&forwarding).unwrap_err().contains("missing Cell publication forwarding"));
+    forwarding["stage_spine"].as_object_mut().unwrap().remove("history_publication_forwarding");
+    assert_eq!(Work::read(&forwarding).unwrap().0["stage_spine/stats/history_publication_slot_writes"],0);
+    forwarding["stage_spine"]["history_publication_forwarding"]="unknown".into();
+    assert!(Work::read(&forwarding).is_err());
     let mut sealed_report = report.clone();
     sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
     assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);

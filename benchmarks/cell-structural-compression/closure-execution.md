@@ -74,3 +74,7 @@ budgets. The full ripsat integration suite passes 17 tests.
 Measurements use the actual standalone Cell runtime, not native egglog or a
 simulation. The working tree's earlier uncommitted borrowed-layout change is
 common to all three lanes and excluded from this commit and benefit claims.
+
+The subsequent [publication forwarding change](publication-forwarding.md)
+retains shared actual results through the existing delivery path, reducing
+retired-witness fallbacks without the rejected shared-history sweep.

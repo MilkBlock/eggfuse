@@ -403,7 +403,7 @@ impl History {
         if let Some(frame) = &self.frames { census.frame(frame); }
     }
     /// Advance across a Cell with no actual exported results. The existing
-    /// immutable frames stay shared; trim only when the compiled lifetime ends.
+    /// result owners stay shared; trim only when the compiled lifetime ends.
     fn carry(&mut self, limit: usize, work: &mut CaptureWork) {
         if self.frames.is_none() { return; }
         self.empty += 1;
