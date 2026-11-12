@@ -1,0 +1,2060 @@
+{
+  "scope": "actual standalone Cell runtime; before constructor boundary execution",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "counts": {
+    "observations": 4068,
+    "first": 1744,
+    "first:unobserved": 1744,
+    "actual_new_facts": 1300,
+    "missing_returned_receipts": 1252,
+    "same_run": 909,
+    "same_run:receipt_not_retained": 165,
+    "same_run:visible": 698,
+    "visible_prior_new_facts": 0,
+    "visible_prior_failed": 0,
+    "visible_prior_forwarded": 0,
+    "cross_run": 1415,
+    "cross_run:receipt_not_retained": 341,
+    "cross_run:visible": 1074,
+    "same_run:hidden": 46
+  },
+  "all_constructor_boundaries_previously_visible": {
+    "cells": 632,
+    "cross_run_cells": 406,
+    "constructor_requests": 632,
+    "cross_run_constructor_requests": 406,
+    "new_facts": 0,
+    "updates": 0,
+    "union_requests": 0
+  },
+  "complete_rules": {
+    "54": {
+      "cells": 2,
+      "cross_run_cells": 1,
+      "constructor_requests": 2,
+      "cross_run_constructor_requests": 1,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "56": {
+      "cells": 5,
+      "cross_run_cells": 5,
+      "constructor_requests": 5,
+      "cross_run_constructor_requests": 5,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "58": {
+      "cells": 132,
+      "cross_run_cells": 48,
+      "constructor_requests": 132,
+      "cross_run_constructor_requests": 48,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "102": {
+      "cells": 1,
+      "cross_run_cells": 1,
+      "constructor_requests": 1,
+      "cross_run_constructor_requests": 1,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "103": {
+      "cells": 1,
+      "cross_run_cells": 1,
+      "constructor_requests": 1,
+      "cross_run_constructor_requests": 1,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "120": {
+      "cells": 2,
+      "cross_run_cells": 2,
+      "constructor_requests": 2,
+      "cross_run_constructor_requests": 2,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "122": {
+      "cells": 38,
+      "cross_run_cells": 38,
+      "constructor_requests": 38,
+      "cross_run_constructor_requests": 38,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "123": {
+      "cells": 3,
+      "cross_run_cells": 3,
+      "constructor_requests": 3,
+      "cross_run_constructor_requests": 3,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "127": {
+      "cells": 1,
+      "cross_run_cells": 1,
+      "constructor_requests": 1,
+      "cross_run_constructor_requests": 1,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "128": {
+      "cells": 1,
+      "cross_run_cells": 1,
+      "constructor_requests": 1,
+      "cross_run_constructor_requests": 1,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "421": {
+      "cells": 8,
+      "cross_run_cells": 8,
+      "constructor_requests": 8,
+      "cross_run_constructor_requests": 8,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "422": {
+      "cells": 11,
+      "cross_run_cells": 8,
+      "constructor_requests": 11,
+      "cross_run_constructor_requests": 8,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "424": {
+      "cells": 89,
+      "cross_run_cells": 79,
+      "constructor_requests": 89,
+      "cross_run_constructor_requests": 79,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "425": {
+      "cells": 16,
+      "cross_run_cells": 16,
+      "constructor_requests": 16,
+      "cross_run_constructor_requests": 16,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "428": {
+      "cells": 3,
+      "cross_run_cells": 3,
+      "constructor_requests": 3,
+      "cross_run_constructor_requests": 3,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "430": {
+      "cells": 1,
+      "cross_run_cells": 0,
+      "constructor_requests": 1,
+      "cross_run_constructor_requests": 0,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "486": {
+      "cells": 18,
+      "cross_run_cells": 18,
+      "constructor_requests": 18,
+      "cross_run_constructor_requests": 18,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "513": {
+      "cells": 15,
+      "cross_run_cells": 14,
+      "constructor_requests": 15,
+      "cross_run_constructor_requests": 14,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "514": {
+      "cells": 31,
+      "cross_run_cells": 6,
+      "constructor_requests": 31,
+      "cross_run_constructor_requests": 6,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "515": {
+      "cells": 16,
+      "cross_run_cells": 16,
+      "constructor_requests": 16,
+      "cross_run_constructor_requests": 16,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "516": {
+      "cells": 8,
+      "cross_run_cells": 0,
+      "constructor_requests": 8,
+      "cross_run_constructor_requests": 0,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "517": {
+      "cells": 8,
+      "cross_run_cells": 0,
+      "constructor_requests": 8,
+      "cross_run_constructor_requests": 0,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "518": {
+      "cells": 139,
+      "cross_run_cells": 75,
+      "constructor_requests": 139,
+      "cross_run_constructor_requests": 75,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "521": {
+      "cells": 2,
+      "cross_run_cells": 2,
+      "constructor_requests": 2,
+      "cross_run_constructor_requests": 2,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "522": {
+      "cells": 27,
+      "cross_run_cells": 27,
+      "constructor_requests": 27,
+      "cross_run_constructor_requests": 27,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "523": {
+      "cells": 51,
+      "cross_run_cells": 31,
+      "constructor_requests": 51,
+      "cross_run_constructor_requests": 31,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    },
+    "524": {
+      "cells": 3,
+      "cross_run_cells": 2,
+      "constructor_requests": 3,
+      "cross_run_constructor_requests": 2,
+      "new_facts": 0,
+      "updates": 0,
+      "union_requests": 0
+    }
+  },
+  "cross_run_visible_routes": [
+    {
+      "producer": 538,
+      "consumer": 538,
+      "boundaries": 105
+    },
+    {
+      "producer": 122,
+      "consumer": 122,
+      "boundaries": 88
+    },
+    {
+      "producer": 424,
+      "consumer": 424,
+      "boundaries": 67
+    },
+    {
+      "producer": 518,
+      "consumer": 518,
+      "boundaries": 64
+    },
+    {
+      "producer": 340,
+      "consumer": 340,
+      "boundaries": 61
+    },
+    {
+      "producer": 540,
+      "consumer": 540,
+      "boundaries": 60
+    },
+    {
+      "producer": 58,
+      "consumer": 58,
+      "boundaries": 48
+    },
+    {
+      "producer": 539,
+      "consumer": 539,
+      "boundaries": 47
+    },
+    {
+      "producer": 340,
+      "consumer": 122,
+      "boundaries": 35
+    },
+    {
+      "producer": 123,
+      "consumer": 124,
+      "boundaries": 28
+    },
+    {
+      "producer": 522,
+      "consumer": 523,
+      "boundaries": 26
+    },
+    {
+      "producer": 103,
+      "consumer": 103,
+      "boundaries": 23
+    },
+    {
+      "producer": 344,
+      "consumer": 344,
+      "boundaries": 21
+    },
+    {
+      "producer": 523,
+      "consumer": 522,
+      "boundaries": 18
+    },
+    {
+      "producer": 124,
+      "consumer": 123,
+      "boundaries": 15
+    },
+    {
+      "producer": 344,
+      "consumer": 340,
+      "boundaries": 14
+    },
+    {
+      "producer": 56,
+      "consumer": 122,
+      "boundaries": 11
+    },
+    {
+      "producer": 343,
+      "consumer": 343,
+      "boundaries": 11
+    },
+    {
+      "producer": 518,
+      "consumer": 486,
+      "boundaries": 11
+    },
+    {
+      "producer": 425,
+      "consumer": 425,
+      "boundaries": 10
+    },
+    {
+      "producer": 344,
+      "consumer": 123,
+      "boundaries": 10
+    },
+    {
+      "producer": 514,
+      "consumer": 513,
+      "boundaries": 9
+    },
+    {
+      "producer": 338,
+      "consumer": 338,
+      "boundaries": 9
+    },
+    {
+      "producer": 120,
+      "consumer": 119,
+      "boundaries": 8
+    },
+    {
+      "producer": 422,
+      "consumer": 424,
+      "boundaries": 8
+    },
+    {
+      "producer": 518,
+      "consumer": 515,
+      "boundaries": 8
+    },
+    {
+      "producer": 122,
+      "consumer": 116,
+      "boundaries": 8
+    },
+    {
+      "producer": 515,
+      "consumer": 515,
+      "boundaries": 8
+    },
+    {
+      "producer": 424,
+      "consumer": 421,
+      "boundaries": 8
+    },
+    {
+      "producer": 103,
+      "consumer": 101,
+      "boundaries": 8
+    },
+    {
+      "producer": 116,
+      "consumer": 116,
+      "boundaries": 8
+    },
+    {
+      "producer": 102,
+      "consumer": 103,
+      "boundaries": 7
+    },
+    {
+      "producer": 120,
+      "consumer": 122,
+      "boundaries": 7
+    },
+    {
+      "producer": 102,
+      "consumer": 102,
+      "boundaries": 6
+    },
+    {
+      "producer": 51,
+      "consumer": 51,
+      "boundaries": 6
+    },
+    {
+      "producer": 104,
+      "consumer": 104,
+      "boundaries": 6
+    },
+    {
+      "producer": 422,
+      "consumer": 422,
+      "boundaries": 6
+    },
+    {
+      "producer": 343,
+      "consumer": 105,
+      "boundaries": 6
+    },
+    {
+      "producer": 340,
+      "consumer": 103,
+      "boundaries": 6
+    },
+    {
+      "producer": 513,
+      "consumer": 514,
+      "boundaries": 5
+    },
+    {
+      "producer": 514,
+      "consumer": 518,
+      "boundaries": 5
+    },
+    {
+      "producer": 343,
+      "consumer": 125,
+      "boundaries": 5
+    },
+    {
+      "producer": 119,
+      "consumer": 120,
+      "boundaries": 4
+    },
+    {
+      "producer": 524,
+      "consumer": 522,
+      "boundaries": 4
+    },
+    {
+      "producer": 124,
+      "consumer": 124,
+      "boundaries": 4
+    },
+    {
+      "producer": 523,
+      "consumer": 523,
+      "boundaries": 4
+    },
+    {
+      "producer": 343,
+      "consumer": 338,
+      "boundaries": 4
+    },
+    {
+      "producer": 340,
+      "consumer": 344,
+      "boundaries": 4
+    },
+    {
+      "producer": 340,
+      "consumer": 56,
+      "boundaries": 4
+    },
+    {
+      "producer": 344,
+      "consumer": 124,
+      "boundaries": 4
+    },
+    {
+      "producer": 517,
+      "consumer": 518,
+      "boundaries": 4
+    },
+    {
+      "producer": 118,
+      "consumer": 122,
+      "boundaries": 4
+    },
+    {
+      "producer": 113,
+      "consumer": 123,
+      "boundaries": 3
+    },
+    {
+      "producer": 544,
+      "consumer": 522,
+      "boundaries": 3
+    },
+    {
+      "producer": 430,
+      "consumer": 425,
+      "boundaries": 3
+    },
+    {
+      "producer": 122,
+      "consumer": 119,
+      "boundaries": 3
+    },
+    {
+      "producer": 128,
+      "consumer": 123,
+      "boundaries": 3
+    },
+    {
+      "producer": 338,
+      "consumer": 102,
+      "boundaries": 3
+    },
+    {
+      "producer": 338,
+      "consumer": 119,
+      "boundaries": 3
+    },
+    {
+      "producer": 344,
+      "consumer": 104,
+      "boundaries": 3
+    },
+    {
+      "producer": 514,
+      "consumer": 486,
+      "boundaries": 3
+    },
+    {
+      "producer": 100,
+      "consumer": 103,
+      "boundaries": 2
+    },
+    {
+      "producer": 114,
+      "consumer": 122,
+      "boundaries": 2
+    },
+    {
+      "producer": 119,
+      "consumer": 119,
+      "boundaries": 2
+    },
+    {
+      "producer": 128,
+      "consumer": 127,
+      "boundaries": 2
+    },
+    {
+      "producer": 512,
+      "consumer": 518,
+      "boundaries": 2
+    },
+    {
+      "producer": 533,
+      "consumer": 538,
+      "boundaries": 2
+    },
+    {
+      "producer": 420,
+      "consumer": 424,
+      "boundaries": 2
+    },
+    {
+      "producer": 423,
+      "consumer": 424,
+      "boundaries": 2
+    },
+    {
+      "producer": 428,
+      "consumer": 425,
+      "boundaries": 2
+    },
+    {
+      "producer": 518,
+      "consumer": 513,
+      "boundaries": 2
+    },
+    {
+      "producer": 103,
+      "consumer": 102,
+      "boundaries": 2
+    },
+    {
+      "producer": 127,
+      "consumer": 124,
+      "boundaries": 2
+    },
+    {
+      "producer": 541,
+      "consumer": 541,
+      "boundaries": 2
+    },
+    {
+      "producer": 424,
+      "consumer": 422,
+      "boundaries": 2
+    },
+    {
+      "producer": 523,
+      "consumer": 524,
+      "boundaries": 2
+    },
+    {
+      "producer": 425,
+      "consumer": 428,
+      "boundaries": 2
+    },
+    {
+      "producer": 346,
+      "consumer": 346,
+      "boundaries": 2
+    },
+    {
+      "producer": 54,
+      "consumer": 51,
+      "boundaries": 2
+    },
+    {
+      "producer": 338,
+      "consumer": 120,
+      "boundaries": 2
+    },
+    {
+      "producer": 107,
+      "consumer": 104,
+      "boundaries": 2
+    },
+    {
+      "producer": 517,
+      "consumer": 486,
+      "boundaries": 2
+    },
+    {
+      "producer": 486,
+      "consumer": 513,
+      "boundaries": 2
+    },
+    {
+      "producer": 548,
+      "consumer": 523,
+      "boundaries": 1
+    },
+    {
+      "producer": 539,
+      "consumer": 554,
+      "boundaries": 1
+    },
+    {
+      "producer": 522,
+      "consumer": 545,
+      "boundaries": 1
+    },
+    {
+      "producer": 539,
+      "consumer": 552,
+      "boundaries": 1
+    },
+    {
+      "producer": 548,
+      "consumer": 521,
+      "boundaries": 1
+    },
+    {
+      "producer": 540,
+      "consumer": 547,
+      "boundaries": 1
+    },
+    {
+      "producer": 538,
+      "consumer": 528,
+      "boundaries": 1
+    },
+    {
+      "producer": 546,
+      "consumer": 56,
+      "boundaries": 1
+    },
+    {
+      "producer": 105,
+      "consumer": 105,
+      "boundaries": 1
+    },
+    {
+      "producer": 127,
+      "consumer": 123,
+      "boundaries": 1
+    },
+    {
+      "producer": 125,
+      "consumer": 125,
+      "boundaries": 1
+    },
+    {
+      "producer": 129,
+      "consumer": 123,
+      "boundaries": 1
+    },
+    {
+      "producer": 513,
+      "consumer": 513,
+      "boundaries": 1
+    },
+    {
+      "producer": 514,
+      "consumer": 514,
+      "boundaries": 1
+    },
+    {
+      "producer": 521,
+      "consumer": 521,
+      "boundaries": 1
+    },
+    {
+      "producer": 522,
+      "consumer": 522,
+      "boundaries": 1
+    },
+    {
+      "producer": 528,
+      "consumer": 538,
+      "boundaries": 1
+    },
+    {
+      "producer": 525,
+      "consumer": 522,
+      "boundaries": 1
+    },
+    {
+      "producer": 429,
+      "consumer": 425,
+      "boundaries": 1
+    },
+    {
+      "producer": 538,
+      "consumer": 533,
+      "boundaries": 1
+    },
+    {
+      "producer": 56,
+      "consumer": 103,
+      "boundaries": 1
+    },
+    {
+      "producer": 539,
+      "consumer": 527,
+      "boundaries": 1
+    },
+    {
+      "producer": 527,
+      "consumer": 552,
+      "boundaries": 1
+    },
+    {
+      "producer": 338,
+      "consumer": 343,
+      "boundaries": 1
+    },
+    {
+      "producer": 340,
+      "consumer": 346,
+      "boundaries": 1
+    },
+    {
+      "producer": 346,
+      "consumer": 339,
+      "boundaries": 1
+    },
+    {
+      "producer": 527,
+      "consumer": 527,
+      "boundaries": 1
+    },
+    {
+      "producer": 541,
+      "consumer": 533,
+      "boundaries": 1
+    },
+    {
+      "producer": 527,
+      "consumer": 539,
+      "boundaries": 1
+    },
+    {
+      "producer": 339,
+      "consumer": 339,
+      "boundaries": 1
+    },
+    {
+      "producer": 335,
+      "consumer": 100,
+      "boundaries": 1
+    },
+    {
+      "producer": 336,
+      "consumer": 110,
+      "boundaries": 1
+    },
+    {
+      "producer": 346,
+      "consumer": 128,
+      "boundaries": 1
+    },
+    {
+      "producer": 51,
+      "consumer": 54,
+      "boundaries": 1
+    },
+    {
+      "producer": 124,
+      "consumer": 113,
+      "boundaries": 1
+    },
+    {
+      "producer": 339,
+      "consumer": 121,
+      "boundaries": 1
+    },
+    {
+      "producer": 346,
+      "consumer": 127,
+      "boundaries": 1
+    },
+    {
+      "producer": 124,
+      "consumer": 127,
+      "boundaries": 1
+    },
+    {
+      "producer": 121,
+      "consumer": 122,
+      "boundaries": 1
+    },
+    {
+      "producer": 538,
+      "consumer": 541,
+      "boundaries": 1
+    },
+    {
+      "producer": 428,
+      "consumer": 428,
+      "boundaries": 1
+    },
+    {
+      "producer": 544,
+      "consumer": 486,
+      "boundaries": 1
+    },
+    {
+      "producer": 522,
+      "consumer": 486,
+      "boundaries": 1
+    }
+  ],
+  "rules": {
+    "50": {
+      "observations": 3,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 3,
+      "missing_returned_receipts": 0
+    },
+    "51": {
+      "observations": 24,
+      "first": 14,
+      "first:unobserved": 14,
+      "actual_new_facts": 12,
+      "missing_returned_receipts": 0,
+      "same_run": 2,
+      "same_run:visible": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 8,
+      "cross_run:visible": 8
+    },
+    "54": {
+      "observations": 5,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 3,
+      "missing_returned_receipts": 0,
+      "same_run": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 1,
+      "cross_run:visible": 1
+    },
+    "56": {
+      "observations": 17,
+      "first": 12,
+      "first:unobserved": 12,
+      "actual_new_facts": 7,
+      "missing_returned_receipts": 0,
+      "cross_run": 5,
+      "cross_run:visible": 5,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "58": {
+      "observations": 220,
+      "first": 88,
+      "first:unobserved": 88,
+      "actual_new_facts": 88,
+      "missing_returned_receipts": 0,
+      "same_run": 84,
+      "same_run:visible": 84,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 48,
+      "cross_run:visible": 48
+    },
+    "61": {
+      "observations": 17,
+      "first": 17,
+      "first:unobserved": 17,
+      "actual_new_facts": 16,
+      "missing_returned_receipts": 0
+    },
+    "63": {
+      "observations": 5,
+      "first": 5,
+      "first:unobserved": 5,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 5
+    },
+    "64": {
+      "observations": 16,
+      "first": 8,
+      "first:unobserved": 8,
+      "actual_new_facts": 8,
+      "missing_returned_receipts": 16,
+      "cross_run": 8,
+      "cross_run:receipt_not_retained": 8
+    },
+    "65": {
+      "observations": 32,
+      "first": 17,
+      "first:unobserved": 17,
+      "actual_new_facts": 17,
+      "missing_returned_receipts": 32,
+      "cross_run": 12,
+      "cross_run:receipt_not_retained": 12,
+      "same_run": 3,
+      "same_run:receipt_not_retained": 3
+    },
+    "67": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2
+    },
+    "69": {
+      "observations": 6,
+      "first": 6,
+      "first:unobserved": 6,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 6
+    },
+    "70": {
+      "observations": 1,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 1
+    },
+    "84": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2
+    },
+    "85": {
+      "observations": 12,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 12,
+      "cross_run": 8,
+      "cross_run:receipt_not_retained": 8
+    },
+    "86": {
+      "observations": 1,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 1
+    },
+    "87": {
+      "observations": 20,
+      "first": 20,
+      "first:unobserved": 20,
+      "actual_new_facts": 10,
+      "missing_returned_receipts": 20
+    },
+    "88": {
+      "observations": 11,
+      "first": 11,
+      "first:unobserved": 11,
+      "actual_new_facts": 10,
+      "missing_returned_receipts": 11
+    },
+    "91": {
+      "observations": 60,
+      "first": 47,
+      "first:unobserved": 47,
+      "actual_new_facts": 35,
+      "missing_returned_receipts": 60,
+      "cross_run": 10,
+      "cross_run:receipt_not_retained": 10,
+      "same_run": 3,
+      "same_run:receipt_not_retained": 3
+    },
+    "94": {
+      "observations": 5,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 5,
+      "cross_run": 2,
+      "cross_run:receipt_not_retained": 2
+    },
+    "100": {
+      "observations": 10,
+      "first": 9,
+      "first:unobserved": 9,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 5,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "101": {
+      "observations": 16,
+      "first": 8,
+      "first:unobserved": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 8,
+      "cross_run": 8,
+      "cross_run:visible": 8,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "102": {
+      "observations": 54,
+      "first": 27,
+      "first:unobserved": 27,
+      "actual_new_facts": 15,
+      "missing_returned_receipts": 27,
+      "cross_run": 24,
+      "cross_run:receipt_not_retained": 13,
+      "cross_run:visible": 11,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 3,
+      "same_run:visible": 3
+    },
+    "103": {
+      "observations": 108,
+      "first": 38,
+      "first:unobserved": 38,
+      "actual_new_facts": 8,
+      "missing_returned_receipts": 54,
+      "cross_run": 69,
+      "cross_run:visible": 39,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:receipt_not_retained": 30,
+      "same_run": 1,
+      "same_run:visible": 1
+    },
+    "104": {
+      "observations": 46,
+      "first": 20,
+      "first:unobserved": 20,
+      "actual_new_facts": 15,
+      "missing_returned_receipts": 23,
+      "cross_run": 26,
+      "cross_run:receipt_not_retained": 15,
+      "cross_run:visible": 11,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "105": {
+      "observations": 62,
+      "first": 46,
+      "first:unobserved": 46,
+      "actual_new_facts": 30,
+      "missing_returned_receipts": 31,
+      "cross_run": 16,
+      "cross_run:visible": 7,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:receipt_not_retained": 9
+    },
+    "107": {
+      "observations": 4,
+      "cross_run": 2,
+      "cross_run:receipt_not_retained": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2,
+      "first": 2,
+      "first:unobserved": 2
+    },
+    "110": {
+      "observations": 4,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "113": {
+      "observations": 10,
+      "cross_run": 6,
+      "cross_run:receipt_not_retained": 5,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 5,
+      "first": 4,
+      "first:unobserved": 4,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "114": {
+      "observations": 10,
+      "same_run": 5,
+      "same_run:receipt_not_retained": 5,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 5,
+      "first": 5,
+      "first:unobserved": 5
+    },
+    "115": {
+      "observations": 4,
+      "same_run": 2,
+      "same_run:receipt_not_retained": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2,
+      "first": 2,
+      "first:unobserved": 2
+    },
+    "116": {
+      "observations": 32,
+      "first": 8,
+      "first:unobserved": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 16,
+      "cross_run": 16,
+      "cross_run:visible": 16,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 8,
+      "same_run:receipt_not_retained": 8
+    },
+    "117": {
+      "observations": 16,
+      "same_run": 16,
+      "same_run:receipt_not_retained": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 8,
+      "same_run:visible": 8,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "118": {
+      "observations": 16,
+      "same_run": 16,
+      "same_run:receipt_not_retained": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 8,
+      "same_run:visible": 8,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "119": {
+      "observations": 60,
+      "first": 26,
+      "first:unobserved": 26,
+      "actual_new_facts": 16,
+      "missing_returned_receipts": 30,
+      "cross_run": 24,
+      "cross_run:receipt_not_retained": 8,
+      "cross_run:visible": 16,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 10,
+      "same_run:receipt_not_retained": 9,
+      "same_run:visible": 1
+    },
+    "120": {
+      "observations": 58,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 29,
+      "same_run": 47,
+      "same_run:receipt_not_retained": 23,
+      "same_run:visible": 24,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 9,
+      "cross_run:receipt_not_retained": 3,
+      "cross_run:visible": 6
+    },
+    "121": {
+      "observations": 4,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "122": {
+      "observations": 408,
+      "same_run": 68,
+      "same_run:visible": 52,
+      "actual_new_facts": 54,
+      "missing_returned_receipts": 204,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 146,
+      "first:unobserved": 146,
+      "same_run:receipt_not_retained": 16,
+      "cross_run": 194,
+      "cross_run:visible": 148,
+      "cross_run:receipt_not_retained": 46
+    },
+    "123": {
+      "observations": 120,
+      "first": 66,
+      "first:unobserved": 66,
+      "actual_new_facts": 36,
+      "missing_returned_receipts": 60,
+      "same_run": 7,
+      "same_run:receipt_not_retained": 6,
+      "cross_run": 47,
+      "cross_run:visible": 33,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:receipt_not_retained": 14,
+      "same_run:visible": 1
+    },
+    "124": {
+      "observations": 134,
+      "same_run": 44,
+      "same_run:receipt_not_retained": 23,
+      "actual_new_facts": 12,
+      "missing_returned_receipts": 67,
+      "same_run:visible": 21,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 24,
+      "first:unobserved": 24,
+      "cross_run": 66,
+      "cross_run:visible": 38,
+      "cross_run:receipt_not_retained": 28
+    },
+    "125": {
+      "observations": 120,
+      "same_run": 7,
+      "same_run:receipt_not_retained": 7,
+      "actual_new_facts": 59,
+      "missing_returned_receipts": 60,
+      "first": 92,
+      "first:unobserved": 92,
+      "cross_run": 21,
+      "cross_run:receipt_not_retained": 15,
+      "cross_run:visible": 6,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "127": {
+      "observations": 12,
+      "cross_run": 6,
+      "cross_run:receipt_not_retained": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 6,
+      "cross_run:visible": 4,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 5,
+      "first:unobserved": 5,
+      "same_run": 1,
+      "same_run:visible": 1
+    },
+    "128": {
+      "observations": 12,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 6,
+      "cross_run": 2,
+      "cross_run:receipt_not_retained": 1,
+      "same_run": 8,
+      "same_run:visible": 5,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run:receipt_not_retained": 3,
+      "cross_run:visible": 1
+    },
+    "129": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 1
+    },
+    "241": {
+      "observations": 3,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 3
+    },
+    "242": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2
+    },
+    "249": {
+      "observations": 8,
+      "cross_run": 2,
+      "cross_run:receipt_not_retained": 2,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 4,
+      "first": 4,
+      "first:unobserved": 4,
+      "same_run": 2,
+      "same_run:visible": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "312": {
+      "observations": 78,
+      "first": 75,
+      "first:unobserved": 75,
+      "actual_new_facts": 75,
+      "missing_returned_receipts": 78,
+      "cross_run": 3,
+      "cross_run:receipt_not_retained": 3
+    },
+    "335": {
+      "observations": 4,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "336": {
+      "observations": 4,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "338": {
+      "observations": 64,
+      "first": 33,
+      "first:unobserved": 33,
+      "actual_new_facts": 20,
+      "missing_returned_receipts": 0,
+      "cross_run": 13,
+      "cross_run:visible": 13,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 18,
+      "same_run:visible": 15,
+      "same_run:hidden": 3
+    },
+    "339": {
+      "observations": 6,
+      "cross_run": 2,
+      "cross_run:visible": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 4,
+      "first:unobserved": 4
+    },
+    "340": {
+      "observations": 270,
+      "first": 124,
+      "first:unobserved": 124,
+      "actual_new_facts": 98,
+      "missing_returned_receipts": 0,
+      "cross_run": 75,
+      "cross_run:visible": 75,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 71,
+      "same_run:visible": 33,
+      "same_run:hidden": 38
+    },
+    "343": {
+      "observations": 66,
+      "first": 47,
+      "first:unobserved": 47,
+      "actual_new_facts": 31,
+      "missing_returned_receipts": 0,
+      "same_run": 7,
+      "same_run:visible": 7,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 12,
+      "cross_run:visible": 12
+    },
+    "344": {
+      "observations": 136,
+      "first": 73,
+      "first:unobserved": 73,
+      "actual_new_facts": 50,
+      "missing_returned_receipts": 0,
+      "same_run": 38,
+      "same_run:visible": 35,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 25,
+      "cross_run:visible": 25,
+      "same_run:hidden": 3
+    },
+    "346": {
+      "observations": 16,
+      "first": 5,
+      "first:unobserved": 5,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 0,
+      "same_run": 8,
+      "same_run:visible": 6,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 3,
+      "cross_run:visible": 3,
+      "same_run:hidden": 2
+    },
+    "419": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "420": {
+      "observations": 5,
+      "first": 5,
+      "first:unobserved": 5,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 0
+    },
+    "421": {
+      "observations": 8,
+      "cross_run": 8,
+      "cross_run:visible": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "422": {
+      "observations": 27,
+      "first": 16,
+      "first:unobserved": 16,
+      "actual_new_facts": 16,
+      "missing_returned_receipts": 0,
+      "cross_run": 8,
+      "cross_run:visible": 8,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 3,
+      "same_run:visible": 3
+    },
+    "423": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "424": {
+      "observations": 115,
+      "first": 26,
+      "first:unobserved": 26,
+      "actual_new_facts": 26,
+      "missing_returned_receipts": 0,
+      "cross_run": 79,
+      "cross_run:visible": 79,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 10,
+      "same_run:visible": 10
+    },
+    "425": {
+      "observations": 44,
+      "first": 28,
+      "first:unobserved": 28,
+      "actual_new_facts": 28,
+      "missing_returned_receipts": 0,
+      "cross_run": 16,
+      "cross_run:visible": 16,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "426": {
+      "observations": 38,
+      "first": 38,
+      "first:unobserved": 38,
+      "actual_new_facts": 38,
+      "missing_returned_receipts": 0
+    },
+    "428": {
+      "observations": 5,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0,
+      "cross_run": 3,
+      "cross_run:visible": 3,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "429": {
+      "observations": 1,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 0
+    },
+    "430": {
+      "observations": 5,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 0,
+      "same_run": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "432": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "486": {
+      "observations": 40,
+      "first": 22,
+      "first:unobserved": 22,
+      "actual_new_facts": 20,
+      "missing_returned_receipts": 0,
+      "cross_run": 18,
+      "cross_run:visible": 18,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "512": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 0
+    },
+    "513": {
+      "observations": 31,
+      "first": 16,
+      "first:unobserved": 16,
+      "actual_new_facts": 16,
+      "missing_returned_receipts": 0,
+      "cross_run": 14,
+      "cross_run:visible": 14,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 1,
+      "same_run:visible": 1
+    },
+    "514": {
+      "observations": 32,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 0,
+      "same_run": 25,
+      "same_run:visible": 25,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 6,
+      "cross_run:visible": 6
+    },
+    "515": {
+      "observations": 16,
+      "cross_run": 16,
+      "cross_run:visible": 16,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "516": {
+      "observations": 8,
+      "same_run": 8,
+      "same_run:visible": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "517": {
+      "observations": 8,
+      "same_run": 8,
+      "same_run:visible": 8,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "518": {
+      "observations": 175,
+      "first": 36,
+      "first:unobserved": 36,
+      "actual_new_facts": 34,
+      "missing_returned_receipts": 0,
+      "cross_run": 75,
+      "cross_run:visible": 75,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 64,
+      "same_run:visible": 64
+    },
+    "521": {
+      "observations": 43,
+      "first": 41,
+      "first:unobserved": 41,
+      "actual_new_facts": 41,
+      "missing_returned_receipts": 0,
+      "cross_run": 2,
+      "cross_run:visible": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "522": {
+      "observations": 59,
+      "first": 32,
+      "first:unobserved": 32,
+      "actual_new_facts": 32,
+      "missing_returned_receipts": 0,
+      "cross_run": 27,
+      "cross_run:visible": 27,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "523": {
+      "observations": 61,
+      "same_run": 20,
+      "same_run:visible": 20,
+      "actual_new_facts": 10,
+      "missing_returned_receipts": 0,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 31,
+      "cross_run:visible": 31,
+      "first": 10,
+      "first:unobserved": 10
+    },
+    "524": {
+      "observations": 6,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 3,
+      "missing_returned_receipts": 0,
+      "same_run": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 2,
+      "cross_run:visible": 2
+    },
+    "525": {
+      "observations": 1,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 0
+    },
+    "527": {
+      "observations": 8,
+      "cross_run": 3,
+      "cross_run:visible": 2,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 5,
+      "first:unobserved": 5,
+      "cross_run:receipt_not_retained": 1
+    },
+    "528": {
+      "observations": 3,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 2,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "532": {
+      "observations": 16,
+      "first": 14,
+      "first:unobserved": 14,
+      "actual_new_facts": 14,
+      "missing_returned_receipts": 16,
+      "cross_run": 2,
+      "cross_run:receipt_not_retained": 2
+    },
+    "533": {
+      "observations": 12,
+      "cross_run": 7,
+      "cross_run:receipt_not_retained": 5,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 8,
+      "first": 2,
+      "first:unobserved": 2,
+      "cross_run:visible": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "same_run": 3,
+      "same_run:receipt_not_retained": 2,
+      "same_run:visible": 1
+    },
+    "534": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2
+    },
+    "538": {
+      "observations": 444,
+      "first": 100,
+      "first:unobserved": 100,
+      "actual_new_facts": 73,
+      "missing_returned_receipts": 148,
+      "cross_run": 169,
+      "cross_run:visible": 108,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:receipt_not_retained": 61,
+      "same_run": 175,
+      "same_run:visible": 146,
+      "same_run:receipt_not_retained": 29
+    },
+    "539": {
+      "observations": 168,
+      "cross_run": 54,
+      "cross_run:receipt_not_retained": 6,
+      "actual_new_facts": 44,
+      "missing_returned_receipts": 42,
+      "first": 47,
+      "first:unobserved": 47,
+      "same_run": 67,
+      "same_run:visible": 67,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:visible": 48
+    },
+    "540": {
+      "observations": 162,
+      "first": 55,
+      "first:unobserved": 55,
+      "actual_new_facts": 49,
+      "missing_returned_receipts": 54,
+      "cross_run": 83,
+      "cross_run:visible": 60,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run:receipt_not_retained": 23,
+      "same_run": 24,
+      "same_run:visible": 24
+    },
+    "541": {
+      "observations": 18,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 12,
+      "same_run": 5,
+      "same_run:receipt_not_retained": 3,
+      "same_run:visible": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "cross_run": 9,
+      "cross_run:receipt_not_retained": 6,
+      "cross_run:visible": 3
+    },
+    "542": {
+      "observations": 1,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 1
+    },
+    "544": {
+      "observations": 20,
+      "first": 12,
+      "first:unobserved": 12,
+      "actual_new_facts": 8,
+      "missing_returned_receipts": 15,
+      "same_run": 7,
+      "same_run:receipt_not_retained": 6,
+      "cross_run": 1,
+      "cross_run:receipt_not_retained": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "545": {
+      "observations": 2,
+      "first": 1,
+      "first:unobserved": 1,
+      "actual_new_facts": 0,
+      "missing_returned_receipts": 1,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "546": {
+      "observations": 4,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 2,
+      "same_run": 2,
+      "same_run:receipt_not_retained": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "547": {
+      "observations": 2,
+      "cross_run": 1,
+      "cross_run:visible": 1,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 2,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 1,
+      "first:unobserved": 1
+    },
+    "548": {
+      "observations": 4,
+      "first": 4,
+      "first:unobserved": 4,
+      "actual_new_facts": 4,
+      "missing_returned_receipts": 2
+    },
+    "551": {
+      "observations": 4,
+      "first": 3,
+      "first:unobserved": 3,
+      "actual_new_facts": 2,
+      "missing_returned_receipts": 4,
+      "same_run": 1,
+      "same_run:visible": 1,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0
+    },
+    "552": {
+      "observations": 12,
+      "same_run": 3,
+      "same_run:visible": 3,
+      "actual_new_facts": 6,
+      "missing_returned_receipts": 12,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 7,
+      "first:unobserved": 7,
+      "cross_run": 2,
+      "cross_run:visible": 2
+    },
+    "553": {
+      "observations": 2,
+      "first": 2,
+      "first:unobserved": 2,
+      "actual_new_facts": 1,
+      "missing_returned_receipts": 1
+    },
+    "554": {
+      "observations": 10,
+      "same_run": 1,
+      "same_run:visible": 1,
+      "actual_new_facts": 5,
+      "missing_returned_receipts": 5,
+      "visible_prior_new_facts": 0,
+      "visible_prior_failed": 0,
+      "visible_prior_forwarded": 0,
+      "first": 8,
+      "first:unobserved": 8,
+      "cross_run": 1,
+      "cross_run:visible": 1
+    }
+  },
+  "limitations": [
+    "Only generic constructor boundaries of pure constructor templates are sampled.",
+    "Prepared/local-birth operations and direct completions are not covered.",
+    "Diagnostic map is bounded, owns no Cells, and is never used by execution.",
+    "Keys are not re-canonicalized after unions; this undercounts candidates.",
+    "Visibility is checked before execution using actual returned receipts, not producer addresses.",
+    "Each site is checked when reached, not simultaneously at Cell entry.",
+    "This does not discharge publication, delta ownership, query matching or retained history.",
+    "No memory or latency reduction is established by this observer."
+  ],
+  "baseline_state_graph_work_storage_equal": true,
+  "observation_read_changes": {
+    "stable_ports/stats/node_lookups": [
+      3671605,
+      3672599
+    ],
+    "stable_ports/stats/port_reads": [
+      7466888,
+      7467880
+    ],
+    "stable_ports/stats/root_parent_probes": [
+      8181397,
+      8182473
+    ],
+    "stable_ports/stats/root_resolutions": [
+      7466888,
+      7467880
+    ]
+  }
+}
