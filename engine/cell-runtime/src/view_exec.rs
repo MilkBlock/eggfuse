@@ -322,6 +322,7 @@ impl Group {
         known.record(m.driver_atom, Some(d.witness));
         known.record(m.peer_atom, Some(p.witness));
         self.streams[ordinal].as_mut().unwrap().push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
             #[cfg(feature="sparse-cells")]
             prepared: 0,
             #[cfg(feature="sparse-cells")]

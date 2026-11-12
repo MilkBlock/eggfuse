@@ -10,6 +10,8 @@ use crate::{
 #[derive(Debug)]
 pub(crate) struct Instance {
     #[cfg(feature = "sparse-cells")]
+    pub units: super::unit_prepare::Prepared,
+    #[cfg(feature = "sparse-cells")]
     pub constructor: super::constructor_prepare::Prepared,
     #[cfg(feature = "view-consumers")]
     pub view_source: Option<usize>,
@@ -62,6 +64,8 @@ impl Instance {
     }
     pub fn matched(values: Slots, known: QueryFacts, epoch: u64) -> Self {
         Self {
+            #[cfg(feature = "sparse-cells")]
+            units: Default::default(),
             #[cfg(feature = "sparse-cells")]
             constructor: Default::default(),
             #[cfg(feature = "view-consumers")]

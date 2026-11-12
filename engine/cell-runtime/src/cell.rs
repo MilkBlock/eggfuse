@@ -37,6 +37,9 @@ pub(crate) mod execution;
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_constructor_prepare.rs"]
 pub(crate) mod constructor_prepare;
+#[cfg(feature = "sparse-cells")]
+#[path = "cell_unit_prepare.rs"]
+pub(crate) mod unit_prepare;
 #[path = "cell_match.rs"]
 mod matched;
 pub(crate) use matched::{Instance, Instance as Matched, QueryFacts};

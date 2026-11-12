@@ -207,6 +207,7 @@ impl Executor {
             grain, counts: Default::default(), writes: Default::default(),
         });
         for rule in 0..self.graph.program.rules.len() {
+            self.graph.program.executions[rule].units = crate::cell::unit_prepare::Plan::derive(&self.graph.program, rule);
             let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
             if let Some(plan) = &mut constructor {
                 plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables());
@@ -329,6 +330,7 @@ impl Executor {
                 )? else { continue };
                 if answers.len() == answers.capacity() { counts.answer_buffer_allocations += 1; }
                 let mut answer=Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                     #[cfg(feature="sparse-cells")]
                     prepared: 0,
                     #[cfg(feature="sparse-cells")]

@@ -134,3 +134,26 @@ and header preparation; `entry_range_descriptors`, `entry_range_chunks` and
 not a claim of speedup. The 4 residual and 14 query integration tests pass with
 exact per-Run snapshots and ordered match comparisons, including deletion,
 recreation, unions, late inputs and mixed point/residual queries.
+
+## Follow-up: query-to-Unit continuation
+
+Typed input-only Unit writers now continue on their existing query Instance.
+The worker evaluates the scalar prefix and allocates the actual Function/key/row
+for total old/new Unit writes. The source winner adopts that allocation and
+records its actual receipt, rather than reinterpreting Set or reconstructing
+operands. Single-write and general Cell completion both consume these rows.
+
+The compiler declines mutable reads, constructors, union, visibility operations
+and unsupported effects for this new input-only path; constructor tails retain
+the existing local-birth path. Missing scalar outputs prevent speculative rows
+from bypassing an earlier failure. A changed union generation, pending unions
+or compact Unit ownership invalidates the candidate before source execution.
+Cursor-supplied effects can discard an unused candidate. Original Run visibility
+and winner selection remain authoritative.
+
+Preparation is charged in `query_workers.stats.execution.units` (rows, bytes,
+instances, missing); source adoption, duplicate invalidation and stale fallback
+are `stats.unit_prepared_consumed`, `unit_prepared_invalidated` and
+`unit_prepared_stale`. The 35 Cell execution integration tests pass, including
+new tests for same-Run visibility, duplicate rows, independent scalar failure
+and an earlier union invalidating prepared keys. No new speed claim yet.

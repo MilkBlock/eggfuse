@@ -16,9 +16,18 @@ pub(super) struct Tail {
     end: usize,
     skipped: u64,
 }
-pub(super) struct Row {
+#[derive(Debug)]
+pub(crate) struct Row {
     pub function: Function,
-    fields: RowFields,
+    pub fields: RowFields,
+}
+impl Row {
+    pub(crate) fn prepared(table: usize, key: Vec<Value>) -> Self {
+        let fields = Graph::shared_fields(&key, &Value::Int(0));
+        Self { fields, function: Function { writer: None,
+            #[cfg(feature="receipt-slots")] port_slot: 0,
+            table, key, value: Value::Int(0), epoch: 0, live: true, origin: None } }
+    }
 }
 impl Tail {
     pub fn derive(p: &Program, rule: usize, last: usize) -> Option<Self> {
@@ -147,7 +156,11 @@ impl Plan {
     }
 }
 impl Graph {
-    pub(super) fn commit_unit_row(&mut self, row: Row) -> Result<(usize, bool)> {
+    pub(crate) fn accept_prepared_unit(&self, table: usize) -> bool {
+        self.sealed_generation == Some(self.stats.unions)
+            && self.pending_unions.is_empty() && !self.units.owned[table]
+    }
+    pub(crate) fn commit_unit_row(&mut self, row: Row) -> Result<(usize, bool)> {
         let Row {
             mut function,
             fields,

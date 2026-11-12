@@ -184,6 +184,9 @@ pub struct Stats {
     pub rhs_context_suspends: u64,
     #[serde(default)]
     pub constructor_prepared_inputs: u64,
+    pub unit_prepared_consumed: u64,
+    pub unit_prepared_invalidated: u64,
+    pub unit_prepared_stale: u64,
     #[serde(default)]
     pub constructor_prepared_checks: u64,
     #[serde(default)]
@@ -839,6 +842,7 @@ impl Graph {
         write: &crate::row_kernel::Write,
         keep_key: bool,
         #[cfg(feature="sparse-cells")] prepared:usize,
+        #[cfg(feature="sparse-cells")] unit: Option<cell_births::units::Row>,
     ) -> Result<(u32, usize, Option<Vec<Value>>, bool)> {
         let template = self.program.rules[rule].template;
         let id = self.reserve_cell_id()?;
@@ -846,6 +850,25 @@ impl Graph {
         self.trust_sealed_frame(id);
         self.stats.single_writes += 1;
         let before = self.stats.function_updates;
+        #[cfg(feature="sparse-cells")]
+        if let Some(mut row) = unit {
+            if self.accept_prepared_unit(write.table) {
+                row.function.epoch = self.epoch;
+                let key = keep_key.then(||row.function.key.clone());
+                let (index, changed) = self.commit_unit_row(row)?;
+                if changed {
+                    let frame = self.new_cell(template, values, parent);
+                    self.keep_writer(index, id, write.op, frame);
+                } else {
+                    self.stats.rhs_frames_avoided += 1;
+                    self.stats.transient_writes += 1;
+                }
+                self.stats.unit_prepared_consumed += 1;
+                self.stats.unit_prepared_invalidated += u64::from(!changed);
+                return Ok((id, index, key, changed));
+            }
+            self.stats.unit_prepared_stale += 1;
+        }
         #[cfg(feature="sparse-cells")]
         if parent.is_none() && let Some(ports)=&write.ports {
             let (key,value,dst)=ports.project(&values,&self.parents,write.prefix.last().is_some_and(|&op|op<prepared))?;

@@ -461,6 +461,7 @@ impl Executor {
     ) -> Result<()> {
         if !remaining.iter().any(|pending| *pending) {
             out.push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
                 #[cfg(feature="sparse-cells")]
@@ -985,6 +986,7 @@ impl Executor {
     ) -> Result<()> {
         let Some((&i, tail)) = order.split_first() else {
             out.push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                 #[cfg(feature="sparse-cells")]
                 prepared: 0,
                 #[cfg(feature="sparse-cells")]
@@ -1639,6 +1641,7 @@ impl Executor {
                     }
                     if !remaining.iter().any(|v| *v) {
                         found.push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                             #[cfg(feature="sparse-cells")]
                             prepared: 0,
                             #[cfg(feature="sparse-cells")]
@@ -1801,6 +1804,7 @@ impl Executor {
                             }
                             known.mark(sol.depth);
                             found.push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                                 #[cfg(feature="sparse-cells")]
                                 prepared: 0,
                                 #[cfg(feature="sparse-cells")]
@@ -1984,6 +1988,7 @@ impl Executor {
                             }
                             if !remaining.iter().any(|v| *v) {
                                 found.push(Binding {
+                    #[cfg(feature="sparse-cells")] units: Default::default(),
                                     #[cfg(feature="sparse-cells")]
                                     prepared: 0,
                                     #[cfg(feature="sparse-cells")]
@@ -2206,7 +2211,8 @@ impl Executor {
             let (cell, index, mut key, changed) = self
                 .graph
                 .apply_write(rid, b.values, b.parent, &write, keep_key,
-                    #[cfg(feature="sparse-cells")] b.prepared)?;
+                    #[cfg(feature="sparse-cells")] b.prepared,
+                    #[cfg(feature="sparse-cells")] b.units.take(write.op))?;
             #[cfg(feature="sparse-cells")]
             { self.graph.stats.prepared_rhs_operations+=self.graph.program.executions[rid]
                 .prepared_operations(&self.graph.program.templates[template],b.prepared) as u64; }
@@ -2485,6 +2491,8 @@ impl Executor {
             } else {None}
         } else {None};
         Ok(Some(owned_cell::Execution {
+            #[cfg(feature="sparse-cells")]
+            units: b.units,
             rule: rid, cell, phase: owned_cell::Phase::Ready,
             ops: self.graph.program.templates[template].ops.clone(),
             aliases: static_skip, known: b.known, cursor: stage_cursor,

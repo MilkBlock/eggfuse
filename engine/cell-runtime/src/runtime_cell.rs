@@ -37,6 +37,8 @@ impl Work {
 }
 
 pub(super) struct Execution {
+    #[cfg(feature="sparse-cells")]
+    pub units: crate::cell::unit_prepare::Prepared,
     pub rule: usize,
     pub cell: u32,
     pub phase: Phase,
@@ -202,6 +204,19 @@ impl Executor {
         let source = execution.view_source;
         #[cfg(not(feature = "view-consumers"))]
         let source = None;
+        #[cfg(feature="sparse-cells")]
+        if let Some(mut row) = execution.units.take(position) {
+            if self.graph.accept_prepared_unit(row.function.table) {
+                row.function.origin = Some(FactRef { cell: execution.cell, op: position as u32 });
+                row.function.epoch = self.graph.epoch;
+                let (index, inserted) = self.graph.commit_unit_row(row)?;
+                execution.effects.writer().record(position, Dependency::Function(index));
+                self.graph.stats.unit_prepared_consumed += 1;
+                self.graph.stats.unit_prepared_invalidated += u64::from(!inserted);
+                return Ok(true);
+            }
+            self.graph.stats.unit_prepared_stale += 1;
+        }
         (crate::cell::RhsFrame { cell: execution.cell, receipts: &mut execution.effects })
             .execute(&mut self.graph, position, op, source)
     }
@@ -277,6 +292,7 @@ mod tests {
         let cell = host.graph.begin_transient(0, values, None).unwrap();
         host.cell_execution = Some(crate::cell::execution::runtime::State { grain: 64, counts: Default::default(), writes: Default::default() });
         let execution = Execution {
+            units: Default::default(),
             rule: 0, cell, phase: Phase::Ready, ops, aliases: None, known: QueryFacts::None,
             cursor: None, effects: Effects::begin(plan, vec![], false), continuation: true, work: Work::default(),
             constructor: None,

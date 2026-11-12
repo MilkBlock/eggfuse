@@ -8,7 +8,7 @@ use crate::value::parent_epoch::Read;
 mod shared;
 pub(crate) use shared::run as run_shared;
 #[path = "cell_birth_units.rs"]
-mod units;
+pub(crate) mod units;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {

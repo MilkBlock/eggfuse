@@ -39,6 +39,9 @@ pub(crate) struct Segment {
 }
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub(crate) struct Plan {
+    #[cfg(feature = "sparse-cells")]
+    #[serde(skip)]
+    pub units: Option<super::unit_prepare::Plan>,
     /// Selected from validated aliases when experimental Cell execution is
     /// enabled. It is reconstructed, never trusted from an artifact hint.
     #[cfg(feature = "sparse-cells")]
@@ -186,6 +189,7 @@ impl Plan {
             }
         }
         Self { segments, input_ready,
+            #[cfg(feature = "sparse-cells")] units: None,
             #[cfg(feature = "sparse-cells")] constructor: None,
             #[cfg(feature = "sparse-cells")] births: None }
     }
@@ -197,7 +201,10 @@ impl Plan {
             #[cfg(not(feature = "sparse-cells"))]
             { 0 }
         };
-        constructor + self.input_ready.capacity() * std::mem::size_of::<usize>()
+        constructor + {
+            #[cfg(feature="sparse-cells")] { self.units.as_ref().map_or(0, |p|p.storage_bytes()) }
+            #[cfg(not(feature="sparse-cells"))] { 0 }
+        } + self.input_ready.capacity() * std::mem::size_of::<usize>()
             + self.segments.capacity() * std::mem::size_of::<Segment>()
             + self
                 .segments
@@ -245,7 +252,7 @@ impl Plan {
     }
     #[cfg(feature = "sparse-cells")]
     pub fn has_preparation(&self) -> bool {
-        self.has_scalar_preparation() || self.constructor.is_some()
+        self.has_scalar_preparation() || self.constructor.is_some() || self.units.is_some()
     }
     #[cfg(feature = "sparse-cells")]
     fn has_scalar_preparation(&self) -> bool {
@@ -255,9 +262,17 @@ impl Plan {
     pub fn needs_preparation(&self, instance: &super::Instance) -> bool {
         (self.has_scalar_preparation() && !instance.preparation_attempted)
             || (self.constructor.is_some() && instance.constructor.pending())
+            || (self.units.is_some() && instance.units.pending())
     }
     #[cfg(feature = "sparse-cells")]
     pub fn prepare(
+        &self, template: &Template, instance: &mut super::Instance, counts: &mut Counts,
+    ) {
+        self.prepare_scalars(template, instance, counts);
+        if let Some(plan) = &self.units { plan.prepare(instance, &mut counts.units); }
+    }
+    #[cfg(feature = "sparse-cells")]
+    fn prepare_scalars(
         &self,
         template: &Template,
         instance: &mut super::Instance,
@@ -333,6 +348,7 @@ impl Plan {
 #[cfg(feature = "sparse-cells")]
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub units: super::unit_prepare::Counts,
     pub constructor: super::constructor_prepare::Counts,
     pub instances: u64,
     pub operations: u64,
@@ -347,6 +363,7 @@ pub(crate) struct Counts {
 #[cfg(feature = "sparse-cells")]
 impl Counts {
     pub fn add(&mut self, other: &Self) {
+        self.units.add(&other.units);
         self.constructor.add(&other.constructor);
         self.instances += other.instances;
         self.operations += other.operations;

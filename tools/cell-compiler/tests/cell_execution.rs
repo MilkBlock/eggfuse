@@ -52,6 +52,65 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn query_instances_continue_into_unit_rows_without_exposing_same_run_writes() {
+    let mut source = String::from(r#"
+(datatype E (N i64))
+(function Stamp (i64) Unit :merge old)
+(function Pair (i64 i64) Unit :merge new)
+(function Seen (i64) Unit :merge old)
+(ruleset step) (ruleset observe)
+(rule ((N n)) ((set (Stamp 0) ()) (set (Pair n (+ n 1)) ())) :ruleset step)
+(rule ((Pair n m)) ((set (Seen m) ())) :ruleset step)
+(rule ((N n)) ((set (Stamp (+ n 2)) ())) :ruleset observe)
+"#);
+    for n in 0..128 { source += &format!("(N {n})\n"); }
+    source += "(run-schedule (seq (run step) (run observe) (run step)))";
+    let mut before = executor(&source, 0); before.execute().unwrap();
+    for workers in [1, 4] {
+        let mut after = executor(&source, workers); after.use_cell_execution(1).unwrap();
+        after.execute().unwrap(); same(&before, &after);
+        let r = after.report();
+        assert!(r["query_workers"]["stats"]["execution"]["units"]["rows"].as_u64().unwrap() > 0, "{r}");
+        assert!(r["stats"]["unit_prepared_consumed"].as_u64().unwrap() > 0, "{r}");
+        assert!(r["stats"]["unit_prepared_invalidated"].as_u64().unwrap() > 0, "{r}");
+    }
+}
+
+#[test]
+fn prepared_unit_keys_never_bypass_an_unrelated_scalar_failure() {
+    let source = r#"
+(datatype E (N i64))
+(function Stamp (i64) Unit :merge old)
+(ruleset step)
+(rule ((N n)) ((let unused (/ 1 n)) (set (Stamp 7) ())) :ruleset step)
+(N 0)
+(run-schedule (run step))
+"#;
+    let mut before = executor(source, 0);
+    let expected = before.execute().unwrap_err();
+    let mut after = executor(source, 4); after.use_cell_execution(1).unwrap();
+    assert_eq!(after.execute().unwrap_err(), expected);
+    assert_eq!(before.graph.export().unwrap(), after.graph.export().unwrap());
+}
+
+#[test]
+fn earlier_union_invalidates_query_prepared_unit_keys_before_source_write() {
+    let source = r#"
+(datatype E (N i64))
+(function Stamp (E) Unit :merge old)
+(ruleset step)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset step)
+(rule ((= x (N n))) ((set (Stamp x) ())) :ruleset step)
+(N 0) (N 1)
+(run-schedule (run step))
+"#;
+    let mut before = executor(source, 0); before.execute().unwrap();
+    let mut after = executor(source, 4); after.use_cell_execution(1).unwrap();
+    after.execute().unwrap(); same(&before, &after);
+    assert!(after.report()["stats"]["unit_prepared_stale"].as_u64().unwrap() > 0);
+}
+
+#[test]
 fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay() {
     let seed=(0..128).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
     let source=format!(r#"
