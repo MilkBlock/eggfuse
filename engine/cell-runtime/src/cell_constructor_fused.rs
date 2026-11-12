@@ -2,14 +2,14 @@
 //! constructor directory through registration. Completion events carry the
 //! original fact slots alongside the completed Cell, not a second row log.
 use super::*;
-use crate::completion_events::{Background,Prefix,Work};
+use crate::completion_events::Continued;
 
 pub(crate) struct Owner {
     directory:Owned,subscriptions:Subscriptions,
     frames:std::vec::IntoIter<CellReady>,rows:u64,
 }
 pub(crate) struct Ready {pub completed:Completed,frame:CellReady}
-pub(crate) type Wave=Background<Ready,(Owner,Counts,Work)>;
+pub(crate) type Wave=Continued<Completed,Ready,Owner,Counts>;
 
 impl Graph {
     pub(crate) fn prepare_fused_constructors(&mut self,tasks:&[(Job,crate::cell::Effects)])->Option<Owner> {
@@ -81,21 +81,18 @@ impl Owner {
         completed.done.piece.rows.clear();Ready {completed,frame}
     }
     pub(crate) fn start(self,tasks:Vec<(Job,crate::cell::Effects)>,parents:std::sync::Arc<crate::value::parent_epoch::Base>,pool:&rayon::ThreadPool)->Wave {
-        Background::start(tasks.len(),pool,move |out| {
-            self.produce(tasks,Read {base:&parents,delta:None},|index,ready|out.send(index,ready))
+        Wave::start_continued(tasks.len(),pool,self,move |out| {
+            Self::produce(tasks,Read {base:&parents,delta:None},|index,done|out.complete(index,done,Self::complete))
         })
     }
-    fn produce(self,tasks:Vec<(Job,crate::cell::Effects)>,read:Read<'_>,publish:impl Fn(usize,Ready)+Sync)->(Self,Counts,Work) {
-        let prefix=Prefix::new(tasks.len(),self);
-        let emit=|index,done|prefix.push(index,done,|owner,index,done|publish(index,owner.complete(done)));
-        let counts=if tasks.iter().any(|(j,_)|j.dependent()) {produce_shared(tasks,read,emit)} else {
+    fn produce(tasks:Vec<(Job,crate::cell::Effects)>,read:Read<'_>,emit:impl Fn(usize,Completed)+Sync)->Counts {
+        if tasks.iter().any(|(j,_)|j.dependent()) {produce_shared(tasks,read,emit)} else {
             use rayon::prelude::*;
             let grain=execution_grain(&tasks,rayon::current_num_threads());
             tasks.into_par_iter().enumerate().fold_chunks(grain,execution_group,|mut counts,(i,(job,mut effects))| {
                 let done=job.run(read,&mut effects.writer(),&mut counts);emit(i,Completed {done,effects});counts
             }).reduce(Counts::default,|mut a,b| {a.add(b);a})
-        };
-        let (owner,work)=prefix.finish();(owner,counts,work)
+        }
     }
     pub(crate) fn restore(self,graph:&mut Graph) {
         assert_eq!(self.frames.len(),0,"return every original fact owner");
@@ -202,8 +199,8 @@ mod tests {
         let (mut g,tasks)=fixture();let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
         let owner=g.prepare_fused_constructors(&tasks).unwrap();let parents=g.parents.freeze();let read=parents.clone();
         let (tx,rx)=mpsc::channel();let rx=Mutex::new(rx);
-        let mut wave=Background::start(tasks.len(),&pool,move |out|owner.produce(tasks,Read {base:&read,delta:None},|index,ready| {
-            out.send(index,ready);
+        let mut wave=Wave::start_continued(tasks.len(),&pool,owner,move |out|Owner::produce(tasks,Read {base:&read,delta:None},|index,done| {
+            out.complete(index,done,Owner::complete);
             if index==0 {rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
         }));
         let mut accept=Acceptance::default();let mut ready=Vec::new();wave.poll(true,&mut ready);

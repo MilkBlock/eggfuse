@@ -5,7 +5,7 @@ use std::sync::{Condvar, Mutex};
 use std::time::Instant;
 #[path="completion_background.rs"]
 mod background;
-pub(crate) use background::Background;
+pub(crate) use background::{Background,Continued};
 
 #[derive(Default)]
 pub(crate) struct Work {

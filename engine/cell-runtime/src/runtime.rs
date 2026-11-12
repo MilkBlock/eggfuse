@@ -3328,6 +3328,7 @@ impl Executor {
                 "completed_cell_bytes":std::mem::size_of::<crate::graph::cell_births::Completed>(),
                 "worker_statistics_bytes":std::mem::size_of::<crate::graph::cell_births::Counts>(),
                 "fused_completion_bytes":std::mem::size_of::<crate::graph::cell_births::fused::Ready>(),
+                "fused_completion_slot_bytes":crate::graph::cell_births::fused::Wave::slot_bytes(),
                 "fused_registration_scope":"closed admission and proven pure constructor tails; worker prefix owns existing indexes and subscriptions; source effect order and Run visibility remain authoritative",
                 "scope":"workers materialize constructor and terminal Unit rows; source-order interning adopts winners and invalidates duplicate Unit candidates without replaying Set",
                 "synchronous_single_cell_dispatch":false,"available_through_ready_queue":true});

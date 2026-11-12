@@ -1,0 +1,912 @@
+{
+  "scope": "actual standalone Cell CPU work; no timing claim or native Raytrace proof",
+  "control_commit": "076a923a",
+  "control_runtime_sha256": "4dfd052faeb11925d516d0e0133f63886e0c01fd9c9cb807c4f9b00a6bb50173",
+  "candidate_runtime_sha256": "803ac324686f7ba6cb0d9b7a2eaf816caab4624693e271ac2dabab961e6de4d2",
+  "validation": [
+    {
+      "name": "runtime",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-parallel_residuals",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "parallel_residuals"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-query_workers",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "query_workers"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-scoped_completion",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "scoped_completion"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-entry_publications",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "entry_publications"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-parallel_publication",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "parallel_publication"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-cell_execution",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_execution"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-joint_results",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "joint_results"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-cell_owner_pipeline",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_owner_pipeline"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collisions",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_execution",
+        "--test",
+        "cell_owner_pipeline"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-registration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "cell_births::unit_registration"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--all-features"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "sparse",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features",
+        "--features",
+        "sparse-cells"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "legacy",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-roots",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "graph::cell_births::roots"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-fused",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "constructor_registration::fused"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "readme-compile",
+      "command": [
+        "cargo",
+        "cell-compile",
+        "--case",
+        "sum-bits",
+        "--output",
+        "out/cell-completion-slots/readme-program"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "readme-run",
+      "command": [
+        "cargo",
+        "cell-run",
+        "--program",
+        "out/cell-completion-slots/readme-program/program.json",
+        "--output",
+        "out/cell-completion-slots/readme-run"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "readme-bench",
+      "command": [
+        "cargo",
+        "cell-bench",
+        "--program",
+        "out/cell-completion-slots/readme-program/program.json",
+        "--repeat",
+        "1"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "release-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    }
+  ],
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec",
+      "exact_final_state_run_summaries_and_effects": true,
+      "logical_effects": {
+        "constructor_requests": 8014,
+        "constructor_reused": 4910,
+        "logical_facts_created": 3739,
+        "function_updates": 1450,
+        "union_requests": 2434,
+        "unions": 1039,
+        "bindings": 7193
+      },
+      "work": {
+        "control": {
+          "key_lookup_calls": 13028,
+          "frames": 5176,
+          "source_boundaries": [
+            5756,
+            0,
+            3403,
+            310,
+            75,
+            0,
+            0
+          ],
+          "births": {
+            "root_bucket_probes": 1912,
+            "root_bucket_fallbacks": 928,
+            "root_pending": 0,
+            "root_boundary_probes": 143,
+            "root_isolated": 890,
+            "root_hash_bytes": 11936,
+            "directory_checks": 8853,
+            "root_jobs": 984,
+            "root_births": 926,
+            "root_reuses": 58,
+            "local_births": 1474,
+            "local_reuses": 77,
+            "worker_operations": 1335,
+            "committed_rows": 1474,
+            "source_operand_reads": 4695,
+            "operand_reads": 997,
+            "candidate_probes": 160,
+            "field_checks": 242,
+            "shared_slots": 215,
+            "shared_bytes": 84632,
+            "slot_leases": 984,
+            "slot_reattachments": 984,
+            "slot_bytes": 8832,
+            "sealed_bytes": 55104,
+            "unit_candidates": 371,
+            "unit_inserts": 217,
+            "unit_invalidated": 154,
+            "pending_bytes": 4480,
+            "execution_groups": 910,
+            "evaluations": 226,
+            "duplicate_evaluations": 11,
+            "hashes": 1560,
+            "unit_worker_rows": 353,
+            "unit_bytes": 123088,
+            "frame_handles": 118,
+            "result_handles": 217,
+            "slot_growths": 66,
+            "shared_growths": 214,
+            "pending_growths": 10,
+            "value_writes": 77
+          },
+          "scheduler": {
+            "jobs": 984,
+            "batches": 247,
+            "queue_bytes": 2252384,
+            "event_bytes": 1024328,
+            "admission_waves": 0,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 76,
+            "event_early_cells": 201
+          },
+          "registration": {
+            "constructor_registry_adopted": 152,
+            "constructor_registry_batches": 6,
+            "constructor_registry_bytes": 8160,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 152,
+            "constructor_registry_frame_bytes": 10400,
+            "constructor_registry_frame_events": 4,
+            "constructor_registry_frame_transfers": 100,
+            "constructor_registry_functionless_batches": 2,
+            "constructor_registry_independent_batches": 6,
+            "constructor_registry_independent_rows": 152,
+            "constructor_registry_pre_return_cells": 0,
+            "constructor_registry_retirement_checks": 6,
+            "constructor_registry_rows": 152,
+            "constructor_registry_worker_rows": 152,
+            "unit_registry_accepted_cells": 27,
+            "unit_registry_batches": 4,
+            "unit_registry_bytes": 11584,
+            "unit_registry_candidates": 81,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 2592,
+            "unit_registry_decision_fragments": 8,
+            "unit_registry_deferred_subscriptions": 44,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 15,
+            "unit_registry_event_bytes": 8320,
+            "unit_registry_field_handles": 81,
+            "unit_registry_identity_rows": 81,
+            "unit_registry_installs": 44,
+            "unit_registry_owner_tables": 8,
+            "unit_registry_pool_calls": 4,
+            "unit_registry_ready_prefixes": 4,
+            "unit_registry_reserved_bytes": 7776,
+            "unit_registry_reserved_slots": 81,
+            "unit_registry_retained_holes": 33,
+            "unit_registry_subscription_queue_bytes": 5824,
+            "unit_registry_subscription_tasks": 7,
+            "unit_registry_tables": 8,
+            "unit_registry_trimmed_slots": 4,
+            "unit_registry_worker_identity_rows": 81,
+            "unit_registry_worker_subscriptions": 44
+          },
+          "source_installs_of_local_rows": 1322,
+          "fused": {
+            "constructor_fused_cells": 73,
+            "constructor_fused_early_cells": 13,
+            "constructor_fused_planned_operations": 94,
+            "constructor_fused_regions": 2,
+            "constructor_fused_rows": 91,
+            "constructor_fused_staging_bytes": 36208
+          }
+        },
+        "candidate": {
+          "key_lookup_calls": 13028,
+          "frames": 5176,
+          "source_boundaries": [
+            5756,
+            0,
+            3403,
+            310,
+            75,
+            0,
+            0
+          ],
+          "births": {
+            "root_bucket_probes": 1912,
+            "root_bucket_fallbacks": 928,
+            "root_pending": 0,
+            "root_boundary_probes": 143,
+            "root_isolated": 890,
+            "root_hash_bytes": 11936,
+            "directory_checks": 8854,
+            "root_jobs": 984,
+            "root_births": 926,
+            "root_reuses": 58,
+            "local_births": 1474,
+            "local_reuses": 77,
+            "worker_operations": 1335,
+            "committed_rows": 1474,
+            "source_operand_reads": 4695,
+            "operand_reads": 993,
+            "candidate_probes": 166,
+            "field_checks": 242,
+            "shared_slots": 215,
+            "shared_bytes": 84632,
+            "slot_leases": 984,
+            "slot_reattachments": 984,
+            "slot_bytes": 8832,
+            "sealed_bytes": 55104,
+            "unit_candidates": 371,
+            "unit_inserts": 217,
+            "unit_invalidated": 154,
+            "pending_bytes": 4480,
+            "execution_groups": 910,
+            "evaluations": 224,
+            "duplicate_evaluations": 9,
+            "hashes": 1558,
+            "unit_worker_rows": 353,
+            "unit_bytes": 123088,
+            "frame_handles": 118,
+            "result_handles": 217,
+            "slot_growths": 66,
+            "shared_growths": 214,
+            "pending_growths": 10,
+            "value_writes": 77
+          },
+          "scheduler": {
+            "jobs": 984,
+            "batches": 247,
+            "queue_bytes": 2252384,
+            "event_bytes": 1024040,
+            "admission_waves": 0,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 76,
+            "event_early_cells": 167
+          },
+          "registration": {
+            "constructor_registry_adopted": 181,
+            "constructor_registry_batches": 7,
+            "constructor_registry_bytes": 11072,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 181,
+            "constructor_registry_frame_bytes": 11336,
+            "constructor_registry_frame_events": 5,
+            "constructor_registry_frame_transfers": 109,
+            "constructor_registry_functionless_batches": 2,
+            "constructor_registry_independent_batches": 7,
+            "constructor_registry_independent_rows": 181,
+            "constructor_registry_pre_return_cells": 0,
+            "constructor_registry_retirement_checks": 7,
+            "constructor_registry_rows": 181,
+            "constructor_registry_worker_rows": 181,
+            "unit_registry_accepted_cells": 36,
+            "unit_registry_batches": 5,
+            "unit_registry_bytes": 14528,
+            "unit_registry_candidates": 108,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 3456,
+            "unit_registry_decision_fragments": 10,
+            "unit_registry_deferred_subscriptions": 63,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 13,
+            "unit_registry_event_bytes": 9984,
+            "unit_registry_field_handles": 108,
+            "unit_registry_identity_rows": 108,
+            "unit_registry_installs": 63,
+            "unit_registry_owner_tables": 10,
+            "unit_registry_pool_calls": 5,
+            "unit_registry_ready_prefixes": 5,
+            "unit_registry_reserved_bytes": 10368,
+            "unit_registry_reserved_slots": 108,
+            "unit_registry_retained_holes": 41,
+            "unit_registry_subscription_queue_bytes": 6656,
+            "unit_registry_subscription_tasks": 8,
+            "unit_registry_tables": 10,
+            "unit_registry_trimmed_slots": 4,
+            "unit_registry_worker_identity_rows": 108,
+            "unit_registry_worker_subscriptions": 63
+          },
+          "source_installs_of_local_rows": 1293,
+          "fused": {
+            "constructor_fused_cells": 73,
+            "constructor_fused_early_cells": 20,
+            "constructor_fused_planned_operations": 94,
+            "constructor_fused_regions": 2,
+            "constructor_fused_rows": 91,
+            "constructor_fused_staging_bytes": 0
+          }
+        }
+      },
+      "combined_event_and_prefix_capacity": {
+        "control": 1060536,
+        "candidate": 1024040
+      },
+      "completion_layout_bytes": {
+        "completed_cell_bytes": 496,
+        "fused_completion_bytes": 600,
+        "fused_completion_slot_bytes": 600
+      }
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "exact_final_state_run_summaries_and_effects": true,
+      "logical_effects": {
+        "constructor_requests": 1618848,
+        "constructor_reused": 867798,
+        "logical_facts_created": 820439,
+        "function_updates": 1675916,
+        "union_requests": 508209,
+        "unions": 226523,
+        "bindings": 2743465
+      },
+      "work": {
+        "control": {
+          "key_lookup_calls": 3830073,
+          "frames": 1020600,
+          "source_boundaries": [
+            1055178,
+            0,
+            1288131,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "births": {
+            "root_bucket_probes": 278895,
+            "root_bucket_fallbacks": 80758,
+            "root_pending": 112,
+            "root_boundary_probes": 32797,
+            "root_isolated": 192861,
+            "root_hash_bytes": 1850624,
+            "directory_checks": 2992921,
+            "root_jobs": 198025,
+            "root_births": 194448,
+            "root_reuses": 3577,
+            "local_births": 347655,
+            "local_reuses": 5427,
+            "worker_operations": 324431,
+            "committed_rows": 347655,
+            "source_operand_reads": 669380,
+            "operand_reads": 268226,
+            "candidate_probes": 116267,
+            "field_checks": 124822,
+            "shared_slots": 36868,
+            "shared_bytes": 16450008,
+            "slot_leases": 210835,
+            "slot_reattachments": 210835,
+            "slot_bytes": 1849320,
+            "sealed_bytes": 11806760,
+            "unit_candidates": 140332,
+            "unit_inserts": 90459,
+            "unit_invalidated": 49873,
+            "pending_bytes": 780160,
+            "execution_groups": 61650,
+            "evaluations": 38973,
+            "duplicate_evaluations": 2105,
+            "hashes": 355889,
+            "unit_worker_rows": 139353,
+            "unit_bytes": 46884704,
+            "frame_handles": 27024,
+            "result_handles": 37673,
+            "slot_growths": 7268,
+            "shared_growths": 29957,
+            "pending_growths": 166,
+            "value_writes": 5427
+          },
+          "scheduler": {
+            "jobs": 210835,
+            "batches": 9064,
+            "queue_bytes": 247564016,
+            "event_bytes": 186984168,
+            "admission_waves": 2388,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 36247,
+            "event_early_cells": 74287
+          },
+          "registration": {
+            "constructor_registry_adopted": 188028,
+            "constructor_registry_batches": 2986,
+            "constructor_registry_bytes": 14519288,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 188028,
+            "constructor_registry_frame_bytes": 10801752,
+            "constructor_registry_frame_events": 7157,
+            "constructor_registry_frame_transfers": 103863,
+            "constructor_registry_functionless_batches": 1424,
+            "constructor_registry_independent_batches": 1985,
+            "constructor_registry_independent_rows": 83835,
+            "constructor_registry_pre_return_cells": 37461,
+            "constructor_registry_retirement_checks": 2983,
+            "constructor_registry_rows": 188028,
+            "constructor_registry_worker_rows": 188028,
+            "unit_registry_accepted_cells": 91659,
+            "unit_registry_batches": 2683,
+            "unit_registry_bytes": 12757128,
+            "unit_registry_candidates": 123248,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 3943936,
+            "unit_registry_decision_fragments": 5505,
+            "unit_registry_deferred_subscriptions": 79403,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 35724,
+            "unit_registry_event_bytes": 5655104,
+            "unit_registry_field_handles": 123248,
+            "unit_registry_identity_rows": 123248,
+            "unit_registry_installs": 79403,
+            "unit_registry_owner_tables": 3095,
+            "unit_registry_pool_calls": 2683,
+            "unit_registry_ready_prefixes": 4526,
+            "unit_registry_reserved_bytes": 11831808,
+            "unit_registry_reserved_slots": 123248,
+            "unit_registry_retained_holes": 43576,
+            "unit_registry_subscription_queue_bytes": 1458496,
+            "unit_registry_subscription_tasks": 1753,
+            "unit_registry_tables": 3025,
+            "unit_registry_trimmed_slots": 269,
+            "unit_registry_worker_identity_rows": 123248,
+            "unit_registry_worker_subscriptions": 79403
+          },
+          "source_installs_of_local_rows": 159627,
+          "fused": {
+            "constructor_fused_cells": 12204,
+            "constructor_fused_early_cells": 1695,
+            "constructor_fused_planned_operations": 17217,
+            "constructor_fused_regions": 303,
+            "constructor_fused_rows": 17011,
+            "constructor_fused_staging_bytes": 6053184
+          }
+        },
+        "candidate": {
+          "key_lookup_calls": 3830073,
+          "frames": 1020600,
+          "source_boundaries": [
+            1055180,
+            0,
+            1288131,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "births": {
+            "root_bucket_probes": 278896,
+            "root_bucket_fallbacks": 80760,
+            "root_pending": 111,
+            "root_boundary_probes": 32797,
+            "root_isolated": 192861,
+            "root_hash_bytes": 1850464,
+            "directory_checks": 3016314,
+            "root_jobs": 198025,
+            "root_births": 194448,
+            "root_reuses": 3577,
+            "local_births": 347655,
+            "local_reuses": 5427,
+            "worker_operations": 324431,
+            "committed_rows": 347655,
+            "source_operand_reads": 669380,
+            "operand_reads": 269512,
+            "candidate_probes": 117714,
+            "field_checks": 125625,
+            "shared_slots": 36868,
+            "shared_bytes": 16450008,
+            "slot_leases": 210835,
+            "slot_reattachments": 210835,
+            "slot_bytes": 1849320,
+            "sealed_bytes": 11806760,
+            "unit_candidates": 140332,
+            "unit_inserts": 90459,
+            "unit_invalidated": 49873,
+            "pending_bytes": 780160,
+            "execution_groups": 61615,
+            "evaluations": 39860,
+            "duplicate_evaluations": 2992,
+            "hashes": 356513,
+            "unit_worker_rows": 139353,
+            "unit_bytes": 46884704,
+            "frame_handles": 27024,
+            "result_handles": 38156,
+            "slot_growths": 7268,
+            "shared_growths": 29957,
+            "pending_growths": 166,
+            "value_writes": 5427
+          },
+          "scheduler": {
+            "jobs": 210835,
+            "batches": 9062,
+            "queue_bytes": 247557680,
+            "event_bytes": 189394560,
+            "admission_waves": 2388,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 32881,
+            "event_early_cells": 69484
+          },
+          "registration": {
+            "constructor_registry_adopted": 193676,
+            "constructor_registry_batches": 3078,
+            "constructor_registry_bytes": 14965264,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 193676,
+            "constructor_registry_frame_bytes": 11286184,
+            "constructor_registry_frame_events": 7520,
+            "constructor_registry_frame_transfers": 108521,
+            "constructor_registry_functionless_batches": 1489,
+            "constructor_registry_independent_batches": 2132,
+            "constructor_registry_independent_rows": 88673,
+            "constructor_registry_pre_return_cells": 39676,
+            "constructor_registry_retirement_checks": 3072,
+            "constructor_registry_rows": 193676,
+            "constructor_registry_worker_rows": 193676,
+            "unit_registry_accepted_cells": 96305,
+            "unit_registry_batches": 2775,
+            "unit_registry_bytes": 12826784,
+            "unit_registry_candidates": 125443,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 4014176,
+            "unit_registry_decision_fragments": 5613,
+            "unit_registry_deferred_subscriptions": 80769,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 32513,
+            "unit_registry_event_bytes": 5966272,
+            "unit_registry_field_handles": 125443,
+            "unit_registry_identity_rows": 125443,
+            "unit_registry_installs": 80769,
+            "unit_registry_owner_tables": 3139,
+            "unit_registry_pool_calls": 2775,
+            "unit_registry_ready_prefixes": 4624,
+            "unit_registry_reserved_bytes": 12042528,
+            "unit_registry_reserved_slots": 125443,
+            "unit_registry_retained_holes": 44375,
+            "unit_registry_subscription_queue_bytes": 1468480,
+            "unit_registry_subscription_tasks": 1765,
+            "unit_registry_tables": 3069,
+            "unit_registry_trimmed_slots": 299,
+            "unit_registry_worker_identity_rows": 125443,
+            "unit_registry_worker_subscriptions": 80769
+          },
+          "source_installs_of_local_rows": 153979,
+          "fused": {
+            "constructor_fused_cells": 12216,
+            "constructor_fused_early_cells": 2990,
+            "constructor_fused_planned_operations": 17241,
+            "constructor_fused_regions": 303,
+            "constructor_fused_rows": 17035,
+            "constructor_fused_staging_bytes": 0
+          }
+        }
+      },
+      "combined_event_and_prefix_capacity": {
+        "control": 193037352,
+        "candidate": 189394560
+      },
+      "completion_layout_bytes": {
+        "completed_cell_bytes": 496,
+        "fused_completion_bytes": 600,
+        "fused_completion_slot_bytes": 600
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  }
+}
