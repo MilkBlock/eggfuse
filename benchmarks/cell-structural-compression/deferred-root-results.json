@@ -1,0 +1,66 @@
+{
+  "scope": "actual standalone Cell runtime; same artifact, deferred root capture; not whole egraph compression or time",
+  "program_sha256": "67e91a1612d32579b53f71de881619d411886bcdcbe100aea6c6dea0cc5f98e4",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "introduced_counters_with_zero_baseline": [
+    "stage_spine/stats/history_deferred_root_captures",
+    "stage_spine/stats/history_deferred_root_probes",
+    "stage_spine/stats/history_deferred_root_promotions"
+  ],
+  "changed_work": {
+    "stage_spine/stats/history_allocations": {
+      "before": 452,
+      "after": 371,
+      "delta": -81
+    },
+    "stage_spine/stats/history_capture_reads": {
+      "before": 216,
+      "after": 135,
+      "delta": -81
+    },
+    "stage_spine/stats/history_deferred_root_captures": {
+      "before": 0,
+      "after": 146,
+      "delta": 146
+    },
+    "stage_spine/stats/history_deferred_root_probes": {
+      "before": 0,
+      "after": 146,
+      "delta": 146
+    },
+    "stage_spine/stats/history_deferred_root_promotions": {
+      "before": 0,
+      "after": 65,
+      "delta": 65
+    },
+    "stage_spine/stats/history_slots_written": {
+      "before": 216,
+      "after": 135,
+      "delta": -81
+    },
+    "stage_spine/stats/root_handles_created": {
+      "before": 1787,
+      "after": 1706,
+      "delta": -81
+    }
+  },
+  "history_storage_before": {
+    "owners": 147,
+    "owner_payload_bytes": 9408,
+    "result_array_bytes": 6336,
+    "history_array_bytes": 0,
+    "layouts": 2,
+    "layout_bytes": 256,
+    "rc_header_bytes": 2384
+  },
+  "history_storage_after": {
+    "owners": 147,
+    "owner_payload_bytes": 9408,
+    "result_array_bytes": 6336,
+    "history_array_bytes": 0,
+    "layouts": 2,
+    "layout_bytes": 256,
+    "rc_header_bytes": 2384
+  }
+}

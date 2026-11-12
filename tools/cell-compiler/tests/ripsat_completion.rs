@@ -251,6 +251,43 @@ fn history_admits_a_missing_root_only_with_new_result_reuse() {
     assert!(after.graph.stats.constructor_requests < before.graph.stats.constructor_requests,"{old}\n{new}");
 }
 
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn query_only_root_capture_waits_until_an_entry_wins() {
+    let source=r#"
+(datatype E (N i64) (Single E) (Get E i64) (Tag i64))
+(ruleset make) (ruleset use)
+(rule ((Single x) (Tag t)) ((union (Get x 0) x)) :ruleset make :name "producer")
+(rule ((Get x i)) ((Single (Get x i))) :ruleset use :name "consumer")
+(Single (N 1)) (Single (N 2)) (Tag 0) (Tag 1) (Tag 2)
+(run-schedule (seq (run make) (run use)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("pending-root",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rid=|name|p.artifact["recipe"]["rules"].as_array().unwrap().iter()
+        .position(|r|r["metadata"]["name"]==name).unwrap();
+    let (producer,consumer)=(rid("producer"),rid("consumer"));
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":[{"edge":[producer,0,consumer,0],"visits":2}]});
+    let blocks=compiler::bake_stage_blocks(&p,&profile,&p,1).unwrap();
+    assert_eq!(blocks["entries"].as_array().unwrap().len(),1);
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed_with_roots(&p,Limits::default(),&[producer]).unwrap();
+    plan["joins"]=json!([{"left":1,"output":0,"right":0}]);
+    Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
+    let mut raw=p.artifact;raw["iterative_bake"]=plan;
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(seal(raw)).unwrap()).unwrap();
+    let (actual,checks)=execute(compiled.clone());
+    let mut observed=Executor::new(Graph::new_with_local_congruence(Program::parse(compiled).unwrap()).unwrap(),false);
+    observed.collect_iterative_pairs();observed.execute().unwrap();
+    assert_eq!(actual.graph.export().unwrap(),observed.graph.export().unwrap());
+    let stats=&actual.report()["stage_spine"]["stats"];
+    assert!(stats["history_deferred_root_captures"].as_u64().unwrap()>stats["history_deferred_root_promotions"].as_u64().unwrap(),"{stats}");
+    assert!(stats["history_deferred_root_promotions"].as_u64().unwrap()>0,"{stats}");
+    assert!(checks["states"].as_array().unwrap().len()>1);
+}
+
 #[cfg(feature = "sparse-cells")]
 fn execute(raw:Value) -> (Executor,Value) {
     let p=Program::parse(raw).unwrap();
