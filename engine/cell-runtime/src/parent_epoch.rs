@@ -81,6 +81,19 @@ pub(crate) struct Read<'a> {
     pub delta: Option<&'a FxHashMap<u64, u64>>,
 }
 impl Read<'_> {
+    pub(crate) fn canon(&self, value: &crate::value::Value) -> crate::value::Value {
+        use crate::value::Value;
+        match value {
+            Value::Eq(id) => Value::Eq(self.root_counted(*id).0),
+            Value::Set(values) => {
+                let mut values = values.iter().map(|v| self.canon(v)).collect::<Vec<_>>();
+                values.sort();
+                values.dedup();
+                Value::Set(values.into())
+            }
+            _ => value.clone(),
+        }
+    }
     #[cfg(test)]
     pub fn root(&self, id: u64) -> u64 {
         self.root_counted(id).0

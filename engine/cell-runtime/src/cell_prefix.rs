@@ -13,6 +13,7 @@ pub(crate) trait Prefix {
     const SEALED_INPUTS: bool;
     const RECORD_RECEIPTS: bool;
     fn next(&mut self, known: &mut crate::known_results::Stats) -> Option<usize>;
+    fn pending_cells(&self)->&[u32] {&[]}
     fn enter(&mut self) {}
     fn reused(&mut self) {}
     fn union(&mut self, _changed: bool) {}
@@ -22,11 +23,13 @@ pub(crate) trait Prefix {
 pub(crate) struct SourcePrefix<'a> {
     positions: std::ops::Range<usize>,
     aliases: Option<&'a [bool]>,
+    pending:&'a [u32],
 }
 impl<'a> SourcePrefix<'a> {
     pub fn new(width: usize, aliases: Option<&'a [bool]>) -> Self {
-        Self { positions: 0..width, aliases }
+        Self { positions: 0..width, aliases, pending:&[] }
     }
+    pub fn pending(mut self,cells:&'a [u32])->Self {self.pending=cells;self}
     pub fn starting_at(mut self, position: usize) -> Self {
         self.positions.start = position;
         self
@@ -36,6 +39,7 @@ impl Prefix for SourcePrefix<'_> {
     #[cfg(feature = "sparse-cells")]
     const SEALED_INPUTS: bool = true;
     const RECORD_RECEIPTS: bool = cfg!(feature = "structural-depth");
+    fn pending_cells(&self)->&[u32] {self.pending}
     fn next(&mut self, known: &mut crate::known_results::Stats) -> Option<usize> {
         for op in self.positions.by_ref() {
             if known.elide_static(self.aliases, op) { known.lazy_prefix_eliminated += 1; }
@@ -124,6 +128,21 @@ impl Graph {
                 continue;
             }
             let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, args)?;
+            #[cfg(feature="sparse-cells")]
+            if !prefix.pending_cells().is_empty() {
+                let (probes,blocked)=super::cell_births::blocked(&key,prefix.pending_cells());
+                self.stats.rhs_pending_probes+=probes;
+                if blocked {
+                    self.stats.rhs_pending_stops+=1;
+                    if key.spilled() {
+                        self.stats.rhs_pending_key_spills+=1;
+                        self.stats.rhs_pending_key_bytes+=(key.capacity()*std::mem::size_of::<Value>()) as u64;
+                    }
+                    self.store_cell(cell,frame);
+                    return Ok(Start::Resume{cell,next_op:op});
+                }
+            }
+
             if matches!(instruction, Op::Let(..)) { self.stats.constructor_requests += 1; }
             let assigned = if let Op::Set(_, _, v) = instruction {
                 Some(self.argument_in(cell, &frame, v)?)

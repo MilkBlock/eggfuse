@@ -4,6 +4,7 @@
 use super::*;
 use crate::cell::{Definition, EffectWriter};
 use std::time::Instant;
+use crate::value::parent_epoch::Read;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -18,8 +19,9 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool> }
 impl Plan {
+    pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
     pub(crate) fn continues_after(&self,operation:usize)->bool {self.continues.get(operation).copied().unwrap_or(false)}
     pub(crate) fn derive(p:&Program, rule:usize) -> Option<Self> {
@@ -69,14 +71,51 @@ impl Plan {
                 continues[operation]=next;
             } else {next=false;}
         }
-        Some(Self{steps,operators,continues})
+        // Only total, non-allocating shared effects may follow a queued tail.
+        // They still execute at the source position. No mutable callback, Hide,
+        // failing primitive, or constructor-assignment is admitted here.
+        let batch_rule=cell.template.ops.iter().all(|op|match op {
+            Op::Copy(..)=>true,
+            Op::Let(_,Call::Table(t),_)=>p.tables[*t].virtual_fact && p.tables[*t].constructor,
+            Op::Union(a,b)=>[a,b].iter().all(|a|match cell.value(a) {
+                Arg::Literal(Value::Eq(_))=>true,
+                Arg::Slot(s)=>cell.template.sorts[s]["kind"]=="eq",_=>false,
+            }),
+            Op::Set(t,_,_)=> {
+                let table=&p.tables[*t];let e=&table.merge;
+                !table.virtual_fact && table.schema.last().is_some_and(|s|s["kind"]=="i64")
+                    && (matches!(e["var"].as_str(),Some("old"|"new"))
+                        || matches!(e["call"]["primitive"].as_str(),Some("min"|"max"))
+                            && e["args"].as_array().is_some_and(|a|a.len()==2
+                                && a.iter().all(|v|matches!(v["var"].as_str(),Some("old"|"new")))))
+            }
+            _=>false,
+        });
+        let mut isolated=vec![false;steps.len()];
+        if batch_rule {
+            for from in 1..steps.len() {
+                let seed=&steps[from-1];
+                let mut fresh=vec![seed.operation];
+                isolated[from]=steps[from..].iter().all(|step| {
+                    if step.region!=seed.region {return false;}
+                    let anchor=step.anchors.iter().find(|(op,_)|fresh.contains(op)
+                        && operators[step.candidates][..step.prior].last().is_none_or(|prior|prior<=op));
+                    if anchor.is_none() {return false;}
+                    fresh.push(step.operation);true
+                });
+            }
+        }
+        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated})
     }
     pub(crate) fn storage_bytes(&self)->usize {
-        self.steps.capacity()*std::mem::size_of::<Step>() + self.steps.iter().map(|s|
+        std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
+            + self.steps.capacity()*std::mem::size_of::<Step>() + self.steps.iter().map(|s|
             s.keys.capacity()*std::mem::size_of::<Arg>() + s.anchors.capacity()*std::mem::size_of::<(usize,usize)>()).sum::<usize>()
             + self.operators.capacity()*std::mem::size_of::<Vec<usize>>()
             + self.operators.iter().map(|v|v.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
             + self.continues.capacity()*std::mem::size_of::<bool>()
+            + self.definitions.capacity()*std::mem::size_of::<(usize,usize)>()
+            + self.isolated.capacity()*std::mem::size_of::<bool>()
     }
     fn start(&self,position:usize)->Option<usize> {
         let i=self.steps.binary_search_by_key(&position,|s|s.operation).ok()?;
@@ -87,13 +126,19 @@ impl Plan {
 #[derive(Clone, Copy)]
 pub(crate) struct Window { first:usize, births:u64, unions:u64 }
 impl Window {
+    /// The scheduler only drained earlier isolated tails and total, non-birthing
+    /// ordered effects. Those earlier inputs cannot name this Cell's fresh IDs.
+    pub(crate) fn after_isolated_batch(&mut self,g:&Graph) {
+        if self.unions==g.stats.unions {self.births=g.stats.logical_facts_created;}
+    }
+
     pub(crate) fn seed(g:&Graph,cell:u32,next:usize)->Option<Self> {
         let previous=next.checked_sub(1)?;
         let frame=g.rhs_frame(cell)?;
         let Some(Op::Let(dst,Call::Table(table),_))=g.program.templates[frame.template].ops.get(previous) else {return None;};
         let expected=Value::Eq(((cell as u64)<<32)|(*dst as u64+1));
         if !g.program.tables[*table].constructor || !g.program.tables[*table].virtual_fact
-            || fields(frame,&[],previous)?.last()!=Some(&expected)
+            || frame.facts.get(&(previous as u32))?.decoded.as_ref()?.1.last()!=Some(&expected)
             || canon(&expected,&g.parents)!=expected {return None;}
         Some(Self {first:previous,births:g.stats.logical_facts_created,unions:g.stats.unions})
     }
@@ -123,6 +168,11 @@ pub(crate) struct Counts {
     pub pending_growths:u64, pub pending_bytes:u64, pub value_writes:u64,
     pub slot_growths:u64, pub slot_bytes:u64, pub committed_rows:u64,
     pub worker_batches:u64, pub worker_operations:u64, pub worker_wait_ns:u64,
+    pub prefix_reads:u64, pub prefix_handles:u64, pub prefix_unavailable:u64,
+    pub slot_seals:u64, pub slot_leases:u64, pub slot_reattachments:u64,
+    pub root_snapshots:u64, pub root_writes:u64, pub root_growths:u64, pub root_merges:u64,
+    pub plan_handles:u64, pub prefix_growths:u64, pub prefix_bytes:u64,
+    pub sealed_bytes:u64, pub captured_reads:u64, pub captured_writes:u64,
 }
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
@@ -130,7 +180,9 @@ impl Counts {
         add!(plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
-            worker_batches,worker_operations,worker_wait_ns);
+            worker_batches,worker_operations,worker_wait_ns,prefix_reads,prefix_handles,prefix_unavailable,
+            slot_seals,slot_leases,slot_reattachments,root_snapshots,root_writes,root_growths,root_merges,
+            plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes);
     }
 }
 struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
@@ -138,38 +190,69 @@ pub(crate) fn record_bytes()->usize {std::mem::size_of::<Born>()}
 type Rows=smallvec::SmallVec<[Born;4]>;
 pub(crate) fn pending_bytes()->usize {std::mem::size_of::<Rows>()}
 struct Piece { end:usize, rows:Rows, aliases:u64, counts:Counts }
-
-fn fields<'a>(frame:&'a Cell,rows:&'a [Born],operation:usize)->Option<&'a [Value]> {
-    if let Ok(i)=rows.binary_search_by_key(&operation,|r|r.operation) {return Some(&rows[i].fields);}
-    frame.facts.get(&(operation as u32))?.decoded.as_ref().map(|(_,v)|v.as_ref())
+struct Local {
+    values:crate::slots::FrameSlots,
+    facts:smallvec::SmallVec<[(u32,RowFields);4]>,
+    completed_prefix:usize,
 }
-fn anchor(step:&Step,frame:&Cell,rows:&[Born],first:usize,cell:u32,parents:&Parents,counts:&mut Counts)->Option<usize> {
+
+// Both transports execute the same typed plan. An uncovered synchronous
+// piece borrows its existing Cell; only a queued job needs a sealed prefix.
+trait Frame {
+    fn values(&self)->&crate::slots::FrameSlots;
+    fn values_mut(&mut self)->&mut crate::slots::FrameSlots;
+    fn fields(&self,operation:usize)->Option<&[Value]>;
+    fn position(&self)->usize;
+}
+impl Frame for Local {
+    fn values(&self)->&crate::slots::FrameSlots {&self.values}
+    fn values_mut(&mut self)->&mut crate::slots::FrameSlots {&mut self.values}
+    fn fields(&self,operation:usize)->Option<&[Value]> {
+        let i=self.facts.binary_search_by_key(&(operation as u32),|r|r.0).ok()?;
+        Some(self.facts[i].1.as_ref())
+    }
+    fn position(&self)->usize {self.completed_prefix}
+}
+impl Frame for Cell {
+    fn values(&self)->&crate::slots::FrameSlots {&self.values}
+    fn values_mut(&mut self)->&mut crate::slots::FrameSlots {&mut self.values}
+    fn fields(&self,operation:usize)->Option<&[Value]> {
+        Some(self.facts.get(&(operation as u32))?.decoded.as_ref()?.1.as_ref())
+    }
+    fn position(&self)->usize {self.completed_prefix}
+}
+
+fn fields<'a>(frame:&'a impl Frame,rows:&'a [Born],operation:usize)->Option<&'a [Value]> {
+    if let Ok(i)=rows.binary_search_by_key(&operation,|r|r.operation) {return Some(&rows[i].fields);}
+    frame.fields(operation)
+}
+fn anchor(step:&Step,frame:&impl Frame,rows:&[Born],first:usize,cell:u32,parents:Read<'_>,counts:&mut Counts)->Option<usize> {
     for &(op,slot) in &step.anchors {
         counts.anchor_checks+=1;
         let expected=Value::Eq(((cell as u64)<<32)|(slot as u64+1));
         if op>=first && fields(frame,rows,op).and_then(|v|v.last())==Some(&expected)
-            && canon(&expected,parents)==expected {return Some(op);}
+            && parents.canon(&expected)==expected {return Some(op);}
     }
     None
 }
-fn operand(frame:&Cell,template:&Template,rows:&[Born],first:usize,position:usize,
-    arg:&Arg,parents:&Parents)->Option<Value> {
+fn operand(frame:&impl Frame,definitions:&[(usize,usize)],rows:&[Born],first:usize,position:usize,
+    arg:&Arg,parents:Read<'_>)->Option<Value> {
     match arg {
-        Arg::Literal(v)=>Some(canon(v,parents)),
+        Arg::Literal(v)=>Some(parents.canon(v)),
         Arg::Slot(s)=> {
-            if let Some(v)=frame.values.get(s) {return Some(canon(v,parents));}
-            let op=*template.defs.get(s)?;
+            if let Some(v)=frame.values().get(s) {return Some(parents.canon(v));}
+            let op=definitions.get(definitions.binary_search_by_key(s,|&(slot,_)|slot).ok()?)?.1;
             if op<first || op>=position {return None;}
-            Some(canon(fields(frame,rows,op)?.last()?,parents))
+            Some(parents.canon(fields(frame,rows,op)?.last()?))
         }
     }
 }
 impl Plan {
-    fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut Cell,template:&Template,
-        parents:&Parents,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
+    fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut impl Frame,
+        parents:Read<'_>,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
         receipts:&mut EffectWriter<'_>)->Piece {
-        let mut out=Piece {end:frame.completed_prefix,rows:Rows::new(),aliases:0,counts:Counts::default()};
-        let capacity=frame.values.capacity_bytes();
+        let mut out=Piece {end:frame.position(),rows:Rows::new(),aliases:0,counts:Counts::default()};
+        let capacity=frame.values().capacity_bytes();
         let mut first_key=Some(first_key);
         for (index,step) in self.steps[from..limit].iter().enumerate() {
             let selected=if index==0 {Some(first_anchor)} else {
@@ -180,7 +263,7 @@ impl Plan {
             let mut key=smallvec::SmallVec::<[Value;4]>::new();
             for arg in &step.keys {
                 out.counts.operand_reads+=1;
-                let Some(value)=operand(frame,template,&out.rows,first,step.operation,arg,parents)
+                let Some(value)=operand(frame,&self.definitions,&out.rows,first,step.operation,arg,parents)
                     else {out.counts.missing_operands+=1;break;};
                 key.push(value);
             }
@@ -201,13 +284,13 @@ impl Plan {
                 if equal {reused=Some((prior,old.last().unwrap().clone()));break;}
             }
             let witness=if let Some((prior,value))=reused {
-                frame.values.insert(step.destination,value);
+                frame.values_mut().insert(step.destination,value);
                 out.counts.value_writes+=1;out.counts.local_reuses+=1;
                 FactRef{cell,op:prior as u32}
             } else {
                 let value=Value::Eq(((cell as u64)<<32)|(step.destination as u64+1));
                 out.counts.identity_checks+=1;
-                if canon(&value,parents)!=value {break;}
+                if parents.canon(&value)!=value {break;}
                 let hash=hashkey(step.table,&key);
                 let fields=Graph::shared_fields(&key,&value);
                 out.counts.hashes+=1;out.counts.row_fields+=fields.len() as u64;
@@ -224,51 +307,100 @@ impl Plan {
             // The first offered operation has no unexecuted gap before it.
             if step.operation!=self.steps[from].operation {out.aliases+=step.skipped as u64;}
         }
-        let growth=frame.values.capacity_bytes().saturating_sub(capacity);
+        let growth=frame.values().capacity_bytes().saturating_sub(capacity);
         out.counts.slot_growths+=u64::from(growth!=0);out.counts.slot_bytes+=growth as u64;
         out
     }
 }
 
+pub(crate) struct Job {
+    cell:u32, plan:std::sync::Arc<Plan>, frame:Local,
+    from:usize,limit:usize,first:usize,anchor:usize,
+    key:smallvec::SmallVec<[Value;4]>, isolated:bool,
+}
+pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
+impl Done {pub(crate) fn cell(&self)->u32 {self.cell}}
+impl Job {
+    pub(crate) fn operations(&self)->usize {self.limit-self.from}
+    pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>)->Done {
+        let piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
+            self.first,self.anchor,self.key,receipts);
+        if self.isolated {
+            assert_eq!(piece.end,self.plan.steps[self.limit-1].operation+1,
+                "compiled isolated Cell tail must reach its proven boundary");
+        }
+        Done{cell:self.cell,frame:self.frame,piece,worker:rayon::current_thread_index()}
+    }
+}
 impl Graph {
-    pub(crate) fn complete_local_births(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
-        receipts:&mut EffectWriter<'_>,stop:usize,pool:Option<&rayon::ThreadPool>,grain:usize)->Result<Counts> {
+    pub(crate) fn take_local_job(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
+        stop:usize,isolated:bool)->Result<(Counts,Option<Job>)> {
         let mut counts=Counts {resume_checks:1,..Counts::default()};
         // These backends can have additional birth-time effects. Their source
         // handler remains authoritative until those effects join the proof.
         if self.stable_ports.is_some() || self.union_digest.is_some() || self.ownership.is_some()
-            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok(counts);}
-        let Some(cert)=*window else {return Ok(counts);};
+            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok((counts,None));}
+        let Some(cert)=*window else {return Ok((counts,None));};
         let position=self.rhs_frame(cell).unwrap().completed_prefix;
-        let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok(counts);};
-        let Some(from)=plan.start(position).filter(|_|position<stop) else {return Ok(counts);};
+        let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok((counts,None));};
+        let Some(from)=plan.start(position).filter(|_|position<stop) else {return Ok((counts,None));};
         counts.attempts+=1;
         if cert.births!=self.stats.logical_facts_created || cert.unions!=self.stats.unions {
-            counts.invalidated+=1;*window=None;return Ok(counts);
+            counts.invalidated+=1;*window=None;return Ok((counts,None));
         }
         let region=plan.steps[from].region;
         let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
-        let Some(first_anchor)=anchor(&plan.steps[from],self.rhs_frame(cell).unwrap(),&[],cert.first,
-            cell,&self.parents,&mut counts) else {return Ok(counts);};
+        if isolated && (!plan.batch_rule || !plan.isolated[from] || limit!=plan.steps.len()) {return Ok((counts,None));}
+        let plan=plan.clone();counts.plan_handles+=1;
+        // Capture only missing retained-parent operands, once, into this same
+        // execution frame. Internal results remain implicit local row outputs.
+        if isolated {
+            for arg in plan.steps[from..limit].iter().flat_map(|s|&s.keys) {
+                let Arg::Slot(slot)=arg else {continue;};
+                if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
+                    && plan.definitions.binary_search_by_key(slot,|&(s,_)|s).ok()
+                        .is_none_or(|i|plan.definitions[i].1<cert.first) {
+                    let value=self.slot(cell,*slot)?;
+                    counts.captured_reads+=1;counts.captured_writes+=1;
+                    let values=&mut self.rhs_frame_mut(cell).unwrap().values;
+                    let before=values.capacity_bytes();values.insert(*slot,value);
+                    let growth=values.capacity_bytes()-before;
+                    counts.slot_growths+=u64::from(growth!=0);counts.slot_bytes+=growth as u64;
+                }
+            }
+        }
+        let mut prefix=smallvec::SmallVec::new();
+        for (&op,fact) in self.rhs_frame(cell).unwrap().facts.iter().filter(|(op,_)|**op as usize>=cert.first) {
+            counts.prefix_reads+=1;
+            let Some((_,fields))=&fact.decoded else {counts.prefix_unavailable+=1;return Ok((counts,None));};
+            let before=if prefix.spilled() {prefix.capacity()} else {0};
+            prefix.push((op,fields.clone()));counts.prefix_handles+=1;
+            let after=if prefix.spilled() {prefix.capacity()} else {0};
+            counts.prefix_growths+=u64::from(after!=before);
+            counts.prefix_bytes+=((after-before)*std::mem::size_of::<(u32,RowFields)>()) as u64;
+        }
+        let mut frame=Local{values:Default::default(),facts:prefix,completed_prefix:position};
+        let Some(first_anchor)=anchor(&plan.steps[from],&frame,&[],cert.first,
+            cell,self.parents.reader(),&mut counts) else {return Ok((counts,None));};
+        if isolated && first_anchor!=plan.steps[from-1].operation {return Ok((counts,None));}
         // This first boundary may use retained parent projections. Acquire its
         // ordinary operands once, then move the actual key into the worker.
         // An unproven window never dispatches an empty worker job.
         let first_key=self.inline_arguments(cell,&plan.steps[from].keys)?;
         counts.source_operand_reads+=first_key.len() as u64;
-        let run_worker=pool.is_some() && limit-from>=grain;
-        let clock=run_worker.then(Instant::now);
-        let plan=&self.program.executions[rule].births.as_ref().unwrap();
-        let template=&self.program.templates[self.program.rules[rule].template];
-        // New root activation has already made this owner graph-addressable.
-        // No worker borrows the mutable graph, index, Cursor or Rc plan owner.
-        let frame=self.cells.get_mut(&cell).expect("new constructor owns its source Cell");
-        let work=||plan.prepare(from,limit,cell,frame,template,&self.parents,cert.first,first_anchor,first_key,receipts);
-        let mut piece=if run_worker {pool.unwrap().install(work)} else {work()};
-        if let Some(clock)=clock {
-            piece.counts.worker_batches+=1;
-            piece.counts.worker_operations+=piece.counts.local_births+piece.counts.local_reuses;
-            piece.counts.worker_wait_ns+=clock.elapsed().as_nanos() as u64;
-        }
+        let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
+        counts.slot_seals+=u64::from(sealed);counts.slot_leases+=1;frame.values=values;
+        counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
+        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated})))
+    }
+    pub(crate) fn commit_local_job(&mut self,done:Done)->Result<Counts> {
+        let Done{cell,frame,mut piece,..}=done;
+        self.rhs_frame_mut(cell).unwrap().values.reattach(frame.values)
+            .map_err(|_|"Cell continuation lost its public prefix".to_string())?;
+        piece.counts.slot_reattachments+=1;
+        self.register_local_piece(cell,piece)
+    }
+    fn register_local_piece(&mut self,cell:u32,mut piece:Piece)->Result<Counts> {
         for row in piece.rows {
             self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
             piece.counts.committed_rows+=1;
@@ -278,9 +410,39 @@ impl Graph {
         self.known_stats.static_eliminated+=piece.aliases;
         self.known_stats.avoided_lookups+=piece.aliases;
         self.rhs_frame_mut(cell).unwrap().completed_prefix=piece.end;
+        Ok(piece.counts)
+    }
+    pub(crate) fn complete_local_births(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
+        receipts:&mut EffectWriter<'_>,stop:usize,pool:Option<&rayon::ThreadPool>,grain:usize)->Result<Counts> {
+        let mut counts=Counts{resume_checks:1,..Counts::default()};
+        if !self.local_jobs_supported() {return Ok(counts);}
+        let Some(cert)=*window else {return Ok(counts);};
+        let position=self.rhs_frame(cell).unwrap().completed_prefix;
+        let Some(plan)=self.program.executions[rule].births.as_deref() else {return Ok(counts);};
+        let Some(from)=plan.start(position).filter(|_|position<stop) else {return Ok(counts);};
+        counts.attempts+=1;
+        if cert.births!=self.stats.logical_facts_created || cert.unions!=self.stats.unions {
+            counts.invalidated+=1;*window=None;return Ok(counts);
+        }
+        let region=plan.steps[from].region;
+        let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
+        let Some(first_anchor)=anchor(&plan.steps[from],self.rhs_frame(cell).unwrap(),&[],
+            cert.first,cell,self.parents.reader(),&mut counts) else {return Ok(counts);};
+        let key=self.inline_arguments(cell,&plan.steps[from].keys)?;
+        counts.source_operand_reads+=key.len() as u64;
+        let run_worker=pool.is_some() && limit-from>=grain;
+        let clock=run_worker.then(Instant::now);
+        let frame=self.cells.get_mut(&cell).expect("fresh constructor has a public Cell");
+        let parents=self.parents.reader();
+        let work=move || plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts);
+        let piece=if run_worker {pool.unwrap().install(work)} else {work()};
+        let mut piece=self.register_local_piece(cell,piece)?;
+        if let Some(clock)=clock {
+            piece.worker_batches+=1;piece.worker_operations+=piece.local_births+piece.local_reuses;
+            piece.worker_wait_ns+=clock.elapsed().as_nanos() as u64;
+        }
         if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
-        counts.add(piece.counts);
-        Ok(counts)
+        counts.add(piece);Ok(counts)
     }
 }
 
@@ -306,7 +468,7 @@ mod tests {
         })).unwrap();
         p.known_results.static_skip=vec![Rc::new(vec![false;4])];
         p.executions=vec![crate::cell::execution::Plan::derive(&p.tables,&p.templates[0],&[0])];
-        p.executions[0].births=Plan::derive(&p,0);
+        p.executions[0].births=Plan::derive(&p,0).map(Arc::new);
         Graph::new(p).unwrap()
     }
     fn start(g:&mut Graph)->(u32,Value,Option<Window>) {
@@ -370,5 +532,58 @@ mod tests {
         g.activate_fields(FactRef{cell,op:1},0,row,hash,false).unwrap();
         assert_eq!(g.cells[&cell].facts[&1].decoded.as_ref().unwrap().1.as_ptr(),allocation);
         assert_eq!(g.fact(FactRef{cell,op:1}).unwrap().unwrap().values.as_ptr(),allocation);
+    }
+    #[test]
+    fn two_worker_slot_owners_leave_public_parent_projections_readable_during_graph_mutation() {
+        let mut g=graph();let (a,_,_)=start(&mut g);
+        let b=g.begin_transient(0,[(0,Value::Eq(200))].into_iter().collect(),None).unwrap();
+        g.construct(b,0,0,&[Arg::Slot(0)],1).unwrap();
+        let pointer=g.cells[&a].values.get(&0).unwrap() as *const Value;
+        let (mut av,_)=g.cells.get_mut(&a).unwrap().values.lease();
+        let (mut bv,_)=g.cells.get_mut(&b).unwrap().values.lease();
+        let ar=g.parents.freeze();let br=ar.clone();
+        let gate=std::sync::Barrier::new(3);
+        let (av,bv,reads)=std::thread::scope(|scope| {
+            let first=scope.spawn(|| {av.insert(3,Read{base:&ar,delta:None}.canon(&Value::Eq(200)));gate.wait();gate.wait();av});
+            let second=scope.spawn(|| {bv.insert(4,Read{base:&br,delta:None}.canon(&Value::Eq(200)));gate.wait();gate.wait();bv});
+            gate.wait();
+            let before=g.fact_column(FactRef{cell:a,op:0},0);
+            let pending=g.cells[&a].values.get(&3).is_none() && g.cells[&b].values.get(&4).is_none();
+            let changed=g.enqueue_union(Value::Eq(200),Value::Eq(100)).and_then(|()|g.repair());
+            let after=g.fact_column(FactRef{cell:b,op:0},0);
+            gate.wait();
+            (first.join().unwrap(),second.join().unwrap(),(before,pending,changed,after))
+        });
+        assert_eq!(reads.0.unwrap(),Value::Eq(100));assert!(reads.1);reads.2.unwrap();
+        assert_eq!(reads.3.unwrap(),Value::Eq(100));
+        assert_eq!(av.get(&3),Some(&Value::Eq(200)),"worker retains its original root read version");
+        g.cells.get_mut(&a).unwrap().values.reattach(av).unwrap();
+        g.cells.get_mut(&b).unwrap().values.reattach(bv).unwrap();
+        assert_eq!(g.slot(a,3).unwrap(),Value::Eq(100));
+        assert_eq!(g.cells[&a].values.get(&0).unwrap() as *const Value,pointer);
+        drop(ar);drop(br);
+        let work=g.parents.thaw();
+        assert_eq!(work.copied_units,0);assert!(work.merged_entries>0);
+    }
+}
+
+/// Pending IDs name parked instances, not per-producer consumer lists. Eq ports
+/// into their unfinished tails are real scheduling dependencies.
+pub(crate) fn blocked(values:&[Value],pending:&[u32])->(u64,bool) {
+    let mut probes=0;
+    for value in values {
+        probes+=1;
+        match value {
+            Value::Eq(id) if pending.binary_search(&((*id>>32) as u32)).is_ok()=>return (probes,true),
+            Value::Set(values)=> {let (n,found)=blocked(values,pending);probes+=n;if found {return (probes,true);}},
+            _=>(),
+        }
+    }
+    (probes,false)
+}
+impl Graph {
+    pub(crate) fn local_jobs_supported(&self)->bool {
+        self.stable_ports.is_none() && self.union_digest.is_none() && self.ownership.is_none()
+            && self.local_unions.is_none() && !cfg!(feature="keeper-proof")
     }
 }

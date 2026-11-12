@@ -5,6 +5,21 @@ use std::{collections::BTreeMap, ops::Index};
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FrameMap<K, V>(Vec<(K, V)>);
 pub type Slots = FrameMap<usize, crate::value::Value>;
+#[cfg(feature="sparse-cells")]
+#[path="frame_slots.rs"]
+mod frame;
+#[cfg(feature="sparse-cells")]
+pub use frame::FrameSlots;
+#[cfg(not(feature="sparse-cells"))]
+pub type FrameSlots=Slots;
+
+pub(crate) trait ReadSlots {
+    fn get(&self, slot:&usize)->Option<&crate::value::Value>;
+    fn contains_key(&self,slot:&usize)->bool {self.get(slot).is_some()}
+}
+impl ReadSlots for Slots {
+    fn get(&self,slot:&usize)->Option<&crate::value::Value> {Slots::get(self,slot)}
+}
 impl<K, V> IntoIterator for FrameMap<K, V> {
     type Item = (K, V);
     type IntoIter = std::vec::IntoIter<Self::Item>;

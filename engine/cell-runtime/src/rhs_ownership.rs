@@ -5,6 +5,8 @@ use super::*;
 
 #[must_use = "a suspended RHS must be resumed before its lifecycle hold is released"]
 pub(crate) struct Suspended {
+    #[cfg(feature = "slot-transfer-audit")]
+    source: Option<(u64, usize)>,
     cell: u32,
     pub(crate) private: Option<Cell>,
     origin: Option<usize>,
@@ -167,12 +169,17 @@ impl Graph {
         }
         let sealed = (self.sealed_input_cell == Some(cell)).then_some(self.stats.unions);
         self.sealed_input_cell = None;
-        Suspended { cell, private, hold, sealed, generation: self.sealed_generation.take(), epoch:self.epoch,
+        Suspended {
+            #[cfg(feature = "slot-transfer-audit")]
+            source:crate::transfer_audit::suspend_source(),
+            cell, private, hold, sealed, generation: self.sealed_generation.take(), epoch:self.epoch,
             origin: self.active_origin.take(),
             entry: self.take_owner_entry() }
     }
 
     pub(crate) fn restore_rhs(&mut self, suspended: Suspended) {
+        #[cfg(feature = "slot-transfer-audit")]
+        crate::transfer_audit::restore_source(suspended.source);
         assert_eq!(self.epoch, suspended.epoch, "a suspended source RHS cannot cross its Run boundary");
         assert!(self.active_rhs.is_none(), "finish or suspend the attached RHS before restoring another");
         let Suspended { cell, private, origin, sealed, generation, entry, hold, .. } = suspended;

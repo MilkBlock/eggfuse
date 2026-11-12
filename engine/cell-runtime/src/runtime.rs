@@ -25,6 +25,9 @@ mod ready_sets;
 mod completion;
 #[path = "runtime_cell.rs"]
 mod owned_cell;
+#[cfg(feature="sparse-cells")]
+#[path="runtime_cell_queue.rs"]
+mod cell_queue;
 #[path = "runtime_pure_epochs.rs"]
 mod pure_epochs;
 #[cfg(feature="sparse-cells")]
@@ -2088,7 +2091,7 @@ impl Executor {
             self.graph.begin_owner_entry(rid,anchors);
         }
         let result = (|| {
-            let Some(mut execution) = self.start_cell_execution(rid, b,
+            let Some(mut execution) = self.start_cell_execution(rid, b, &[],
                 #[cfg(feature="structural-depth")] evidence)? else { return Ok(()) };
             loop {
                 match self.advance_cell(&mut execution)? {
@@ -2104,6 +2107,7 @@ impl Executor {
         &mut self,
         rid: usize,
         b: Binding,
+        pending: &[u32],
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<Option<owned_cell::Execution>> {
         #[cfg(feature = "iterative-bake")]
@@ -2403,7 +2407,7 @@ impl Executor {
                 && stage_cursor.is_none() && origin.is_none()
             {
                 let width = me.graph.program.templates[template].ops.len();
-                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases).starting_at(prefix_end),
+                me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases).starting_at(prefix_end).pending(pending),
                     #[cfg(feature = "sparse-cells")]
                     me.graph.program.executions[rid].constructor.as_ref().map(|p|(p.operation,&mut constructor)))
             } else {
@@ -2788,6 +2792,11 @@ impl Executor {
             self.graph.reserve_absorbed_cells(self.neighbor.take_absorbed(rid))?;
             let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
                 rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
+            #[cfg(feature="sparse-cells")]
+            if self.batch_cell_rule(rid,rows.len()) {
+                self.apply_cell_batch(rid,rows,binding_generation)?;
+                continue;
+            }
             for binding in rows {
                 #[cfg(feature = "family-survey")]
                 let before = {
@@ -3258,7 +3267,11 @@ impl Executor {
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
-            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v1",
+            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v2",
+                "frame_slot_header_bytes":std::mem::size_of::<crate::slots::FrameSlots>(),
+                "unsealed_slot_header_bytes":std::mem::size_of::<crate::slots::Slots>(),
+                "sealed_prefix_allocation_bytes":crate::slots::FrameSlots::seal_bytes(),
+                "frame_header_bytes":std::mem::size_of::<crate::graph::Cell>(),
                 "rules":self.graph.program.executions.iter().filter(|p|p.births.is_some()).count(),
                 "sites":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.sites()).sum::<usize>(),
                 "compiled_payload_bytes":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.storage_bytes()).sum::<usize>(),
@@ -3266,7 +3279,11 @@ impl Executor {
                 "pending_row_bytes":crate::graph::cell_births::record_bytes(),
                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
                 "scope":"canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
-                "independent_scheduling":false});
+                "available_through_ready_queue":true});
+            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v1",
+                "scope":"independent pure constructor tails; dependent instances drain earlier tails before resuming; source Run publication remains ordered",
+                "ready_limit":64,"independent_scheduling":true,
+                "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
                 "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
                 "scope":"same Cell resumes between ordered effects; coordinator waits for its frontier",

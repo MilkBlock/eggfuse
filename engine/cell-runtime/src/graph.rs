@@ -90,7 +90,7 @@ pub struct Cell {
 
     pub template: usize,
     pub parent: Option<FactRef>,
-    pub values: crate::slots::Slots,
+    pub values: crate::slots::FrameSlots,
     pub facts: crate::slots::FrameMap<u32, FactState>,
     #[serde(default)]
     pub recipe_depth: u32,
@@ -155,6 +155,14 @@ impl From<&Row> for Point {
 mod point_results_test;
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Stats {
+    #[serde(default)]
+    pub rhs_pending_probes:u64,
+    #[serde(default)]
+    pub rhs_pending_stops:u64,
+    #[serde(default)]
+    pub rhs_pending_key_spills:u64,
+    #[serde(default)]
+    pub rhs_pending_key_bytes:u64,
     #[serde(default)]
     pub constructor_prefix_checks: u64,
     #[serde(default)]
@@ -777,7 +785,7 @@ impl Graph {
 
         Cell {
             template,
-            values,
+            values:values.into(),
             parent,
 
             completed_prefix: 0,
@@ -978,7 +986,7 @@ impl Graph {
         cell: u32,
         template: usize,
         parent: Option<FactRef>,
-        values: &crate::slots::Slots,
+        values: &impl crate::slots::ReadSlots,
         i: usize,
     ) -> Result<Value> {
         if let Some(v) = values.get(&i) {

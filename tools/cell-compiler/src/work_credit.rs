@@ -175,19 +175,41 @@ impl Work {
         } else { 0 };
         work.insert(key.into(),value);
         let local_births=match report["cell_execution"].get("local_construction") {
-            None=>false,
-            Some(v) if v["schema"]=="cell-local-births/v1"=>true,
+            None=>0,
+            Some(v) if v["schema"]=="cell-local-births/v1"=>1,
+            Some(v) if v["schema"]=="cell-local-births/v2"=>2,
             _=>return Err("unknown Cell local construction accounting".into()),
         };
         for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
             "candidate_ranges","candidate_probes","field_checks","identity_checks","hashes","row_fields",
             "pending_growths","value_writes","slot_growths","worker_batches"] {
             let key=format!("cell_execution/runtime/stats/births/{field}");
-            let value=if local_births {
+            let value=if local_births>0 {
                 report.pointer(&format!("/{key}")).and_then(J::as_u64)
                     .ok_or_else(||format!("missing local construction work {key}"))?
             } else {0};
             work.insert(key,value);
+        }
+        for field in ["prefix_reads","prefix_handles","prefix_growths","slot_seals","slot_leases","slot_reattachments","root_snapshots","root_writes","root_growths","root_merges","plan_handles","captured_reads","captured_writes"] {
+            let key=format!("cell_execution/runtime/stats/births/{field}");
+            let value=if local_births>=2 {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing local construction work {key}"))?
+            } else {0};
+            work.insert(key,value);
+        }
+        let scheduler=match report["cell_execution"].get("scheduler") {
+            None=>false,
+            Some(v) if v["schema"]=="cell-ready-batches/v1"=>true,
+            _=>return Err("unknown Cell scheduler accounting".into()),
+        };
+        for key in ["stats/rhs_pending_probes", "stats/rhs_pending_key_spills", "cell_execution/runtime/stats/scheduler/rule_groups",
+            "cell_execution/runtime/stats/scheduler/instances", "cell_execution/runtime/stats/scheduler/jobs",
+            "cell_execution/runtime/stats/scheduler/batches", "cell_execution/runtime/stats/scheduler/queue_growths",
+            "cell_execution/runtime/stats/scheduler/operand_reads", "cell_execution/runtime/stats/scheduler/revalidations"] {
+            let value=if scheduler {report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing Cell scheduler work {key}"))?} else {0};
+            work.insert(key.into(),value);
         }
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
@@ -637,6 +659,18 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "cell_execution/runtime/stats/births/value_writes",
         "cell_execution/runtime/stats/births/slot_growths",
         "cell_execution/runtime/stats/births/worker_batches",
+        "cell_execution/runtime/stats/births/prefix_reads",
+        "cell_execution/runtime/stats/births/prefix_handles",
+        "cell_execution/runtime/stats/births/prefix_growths",
+        "cell_execution/runtime/stats/births/slot_seals",
+        "cell_execution/runtime/stats/births/slot_leases",
+        "cell_execution/runtime/stats/births/slot_reattachments",
+        "cell_execution/runtime/stats/births/root_snapshots",
+        "cell_execution/runtime/stats/births/root_writes",
+        "cell_execution/runtime/stats/births/root_growths",
+        "cell_execution/runtime/stats/births/root_merges",
+        "cell_execution/runtime/stats/births/plan_handles",
+
         "stage_spine/stats/prepared_effect_buffer_moves",
         "stage_spine/stats/prepared_effect_spares_released",
         "stage_spine/stats/prepared_effect_joint_positions", "stage_spine/stats/prepared_effect_joint_reads",
@@ -678,6 +712,12 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         coverage["cell_execution"]["runtime"]["stats"]["births"][field]=u64::MAX.into();
     }
     assert_eq!(Work::read(&coverage).unwrap(),work,"local outcomes do not earn credit twice");
+    let mut missing_scheduler=report.clone();
+    missing_scheduler["cell_execution"]["runtime"]["stats"]["scheduler"]["jobs"]=J::Null;
+    assert!(Work::read(&missing_scheduler).unwrap_err().contains("Cell scheduler work"));
+    let mut unknown_scheduler=report.clone();
+    unknown_scheduler["cell_execution"]["scheduler"]["schema"]="unknown".into();
+    assert!(Work::read(&unknown_scheduler).unwrap_err().contains("unknown Cell scheduler"));
     coverage["cell_execution"]["local_construction"]["schema"]="unknown".into();
     assert!(Work::read(&coverage).unwrap_err().contains("unknown Cell local construction"));
     let mut domains = report.clone();

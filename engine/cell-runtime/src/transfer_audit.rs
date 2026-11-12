@@ -48,6 +48,10 @@ pub(crate) fn rhs(rid: usize) {
         ORDINAL.set(n + 1);
     }
 }
+// Source ordinals belong to the executing Cell, not whichever Cell the
+// coordinator most recently admitted. The global admission counter stays put.
+pub(crate) fn suspend_source() -> Option<(u64, usize)> { SOURCE.take() }
+pub(crate) fn restore_source(source: Option<(u64, usize)>) { SOURCE.set(source); }
 pub(crate) fn repaired() {
     SOURCE.set(None);
 }

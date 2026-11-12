@@ -86,14 +86,23 @@ overall objective complete until all applicable items above are proven.
 
 ## Current state
 
+- A bounded ready scheduler now batches independently proved constructor tails
+  from multiple owned instances. Published prefixes remain readable, consumers
+  of unfinished ports park on the source side, and one parent read epoch covers
+  the batch. Total ordered effects retain source order; unsupported effects and
+  dynamic local-dedup cases retain the ordinary executor. See
+  [proof, scope and actual coverage](../benchmarks/cell-ready-scheduler/README.md).
+  This replaces per-piece waits within its coverage. Arbitrary shared-effect
+  parallelism and a demonstrated useful throughput improvement remain unfinished.
+
 - A tested extension across scalar writes was [rejected](../benchmarks/cell-local-writes/README.md):
   both complete workloads have zero coverage, unchanged worker pieces/global
   queries, and additional commit-loop costs. The patch and passing semantic
   evidence are retained for reproduction; it is absent from runtime code.
-  The next required change is the public-prefix/unique-continuation ownership
-  contract. Retained parent reads still reconstruct producer slots through
-  `fact_column`, and workers still borrow graph state. A job wrapper or more
-  eligible instructions cannot substitute for removing those dependencies.
+  This motivated the public-prefix/unique-continuation ownership contract now
+  used by queued jobs. Retained parent reads still reconstruct producer slots
+  through `fact_column`; uncovered synchronous work keeps the inexpensive
+  borrowed executor. A job wrapper alone does not remove those dependencies.
 - Workers now construct certified fresh local suffixes in the existing Cell,
   returning actual row allocations for source-ordered registration; see
   [local construction evidence](../benchmarks/cell-local-births/README.md).

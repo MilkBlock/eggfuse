@@ -1,7 +1,7 @@
 //! A single functional write has no constructor positions. Its committed
 //! function row owns the immutable producer slots until it is superseded.
 use super::*;
-use crate::slots::Slots;
+use crate::slots::FrameSlots as Slots;
 #[derive(Clone, Debug)]
 pub(super) struct Writer {
     pub template: usize,

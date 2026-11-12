@@ -22,6 +22,7 @@ pub(crate) enum Stop {
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub scheduler:QueueCounts,
     pub births: crate::graph::cell_births::Counts,
     pub frames: u64,
     pub segments: u64,
@@ -66,6 +67,13 @@ impl Counts {
             *a += b;
         }
     }
+}
+#[derive(Default,serde::Serialize)]
+pub(crate) struct QueueCounts {
+    pub rule_groups:u64,pub instances:u64,pub jobs:u64,pub batches:u64,
+    pub queue_growths:u64,pub queue_bytes:u64,pub operand_reads:u64,
+    pub dependency_flushes:u64,pub effect_flushes:u64,pub revalidations:u64,pub max_ready:usize,pub wait_ns:u64,
+    pub worker_jobs:Vec<u64>,
 }
 pub(crate) struct State {
     pub grain: usize,

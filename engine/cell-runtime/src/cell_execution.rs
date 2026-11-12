@@ -46,7 +46,7 @@ pub(crate) struct Plan {
     pub constructor: Option<super::constructor_prepare::Plan>,
     #[cfg(feature = "sparse-cells")]
     #[serde(skip)]
-    pub births: Option<crate::graph::cell_births::Plan>,
+    pub births: Option<std::sync::Arc<crate::graph::cell_births::Plan>>,
     pub segments: Vec<Segment>,
     /// Source positions after the first boundary whose scalar operands are
     /// derived entirely from matched inputs. Outputs have unique SSA slots;
@@ -239,7 +239,7 @@ impl Plan {
             .count()
     }
     #[cfg(feature = "sparse-cells")]
-    pub fn prepared_at(&self, position: usize, template: &Template, values: &crate::slots::Slots) -> bool {
+    pub fn prepared_at(&self, position: usize, template: &Template, values: &impl crate::slots::ReadSlots) -> bool {
         self.input_ready.binary_search(&position).is_ok()
             && matches!(&template.ops[position], Op::Let(dst,..) if values.contains_key(dst))
     }

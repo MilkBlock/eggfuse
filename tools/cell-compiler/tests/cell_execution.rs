@@ -52,6 +52,50 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn ready_cells_run_together_and_shared_roots_park_without_replaying_their_prefix() {
+    for shared in [false,true] {
+      for ordered in [false,true] {
+        let seed=(0..128).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+        let root=if shared {"(N 0)"} else {"x"};
+        let tail=if ordered {"(set (Count c) n) (union c x)"} else {""};
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E i64) (Seen E))
+(function Count (E) i64 :merge (min old new))
+(ruleset step) (ruleset next) (ruleset change)
+(rule ((= x (N n))) ((let a (F {root})) (let b (G a)) (let c (H b n)) {tail}) :ruleset step)
+(rule ((= x (H y n))) ((Seen x)) :ruleset next)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+{seed}
+(run-schedule (seq (run step) (run next) (run change) (run step) (run next)))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,4);
+        #[cfg(feature="iterative-bake")]
+        {eggfuse_cell_runtime::transfer_audit::set_active(true);eggfuse_cell_runtime::transfer_audit::enable_write_audit();}
+        control.execute().unwrap();
+        #[cfg(feature="iterative-bake")]
+        let writes=eggfuse_cell_runtime::transfer_audit::take_write_digests();
+        let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();same(&control,&candidate);
+        #[cfg(feature="iterative-bake")]
+        {
+            assert_eq!(writes,eggfuse_cell_runtime::transfer_audit::take_write_digests(),
+                "source ordinals and ordered effective writes survive suspension");
+            eggfuse_cell_runtime::transfer_audit::set_active(false);
+        }
+        let r=candidate.report();let queue=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
+        assert!(queue["jobs"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
+        if shared {assert!(queue["dependency_flushes"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");}
+        else {assert!(queue["max_ready"].as_u64().unwrap()>1,"shared={shared}, ordered={ordered}: {queue}");
+            assert!(queue["batches"].as_u64().unwrap()<queue["jobs"].as_u64().unwrap(),"shared={shared}, ordered={ordered}: {queue}");}
+        assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+        assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+        assert_eq!(candidate.graph.stats.rhs_suspend_holds,candidate.graph.stats.rhs_suspend_releases);
+    }
+  }
+}
+
+#[test]
 fn new_constructor_roots_complete_local_cells_and_publish_actual_results() {
     for existing in 0..=3 {
         let seed=(0..16).map(|n| {

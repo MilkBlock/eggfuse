@@ -1392,6 +1392,11 @@ impl Programs {
             .and_then(|n| n.checked_add(u64::from(!between))).expect("Cell publication order exhausted")
     }
 
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn has_pending_origins(&self,rid:usize)->bool {
+        self.enabled && !self.origins[rid].is_empty()
+    }
+
     pub(crate) fn begin_step(
         &mut self,
         p: &Program,
