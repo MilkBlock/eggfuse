@@ -1,0 +1,12 @@
+{
+  "canonical_renaming_checks": 1653,
+  "cases": 551,
+  "containment_negative": {
+    "old_facts_retained": true,
+    "exact_completion_equal": false,
+    "reason": "unjustified extra Input fact"
+  },
+  "native_cases_with_anchors": 0,
+  "dataset_source_sha256": "8f3f1b76abe6392dbe0fb699c0c391dfb0529b1575ef186be2cdfb28f876dcc6",
+  "runtime_sha256": "d7cbf05cbf4e7739fda8cf05683d3b2266eef12f6572c3f5d841548b00427308"
+}

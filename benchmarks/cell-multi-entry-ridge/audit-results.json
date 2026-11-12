@@ -1,0 +1,419 @@
+{
+  "scope": "exact exported contracts; not whole-program saturation or logical mutation labels",
+  "history_sha256": "d14d5da86ef3edd99e670f5f728d41a38a0257cb4dc90e97271ad7421ca2583b",
+  "structures_sha256": "2cc88221b641d20b5e819ad2018e3659ef91bc1a50888845ab4fb0a46e662bae",
+  "history": {
+    "events": 2048,
+    "dropped_events": 380,
+    "direct_truncated_parents": 134,
+    "parent_edges": 723,
+    "implementations": 121,
+    "classes": 119,
+    "typed_implementations": 23,
+    "exact_extensions": 9,
+    "transitions": 77,
+    "multi_groups": [
+      {
+        "completion_class": 25,
+        "structure": {
+          "colors": [
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"Expr\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"Expr\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"___ExprIsPureSort\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"___ExprIsPureSort\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"i64\\\",\\\"name\\\":\\\"i64\\\"}\"]"
+          ],
+          "assumptions": [
+            {
+              "table": 198,
+              "columns": [
+                0,
+                2
+              ]
+            },
+            {
+              "table": 223,
+              "columns": [
+                0,
+                4,
+                1
+              ]
+            }
+          ],
+          "completed": [
+            {
+              "table": 198,
+              "columns": [
+                0,
+                2
+              ]
+            },
+            {
+              "table": 198,
+              "columns": [
+                1,
+                3
+              ]
+            },
+            {
+              "table": 223,
+              "columns": [
+                0,
+                4,
+                1
+              ]
+            }
+          ]
+        },
+        "implementations": [
+          {
+            "unit": 25,
+            "class": 25,
+            "ports": [
+              [
+                0,
+                {
+                  "Query": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Query": 1
+                },
+                [
+                  0,
+                  2
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 1
+                },
+                [
+                  1,
+                  3
+                ]
+              ]
+            ],
+            "source_path": [
+              [
+                null,
+                [
+                  103,
+                  0
+                ]
+              ]
+            ],
+            "extension": null,
+            "established": "successful-rhs",
+            "visible": "original-run-after-completion"
+          },
+          {
+            "unit": 52,
+            "class": 25,
+            "ports": [
+              [
+                0,
+                {
+                  "Query": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Query": 1
+                },
+                [
+                  0,
+                  2
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 1
+                },
+                [
+                  1,
+                  3
+                ]
+              ],
+              [
+                1,
+                {
+                  "Query": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                1,
+                {
+                  "Query": 1
+                },
+                [
+                  0,
+                  2
+                ]
+              ],
+              [
+                1,
+                {
+                  "Effect": 0
+                },
+                [
+                  0,
+                  4,
+                  1
+                ]
+              ],
+              [
+                1,
+                {
+                  "Effect": 1
+                },
+                [
+                  1,
+                  3
+                ]
+              ]
+            ],
+            "source_path": [
+              [
+                null,
+                [
+                  103,
+                  0
+                ]
+              ],
+              [
+                0,
+                [
+                  103,
+                  0
+                ]
+              ]
+            ],
+            "extension": {
+              "ports": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "completed_inclusion": true,
+              "entry_assumptions": "consumer-match-required"
+            },
+            "established": "successful-rhs",
+            "visible": "original-run-after-completion"
+          }
+        ],
+        "event_counts": {
+          "25": 47,
+          "52": 1
+        }
+      },
+      {
+        "completion_class": 75,
+        "structure": {
+          "colors": [
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"Expr\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"Expr\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"___ExprIsResolvedSort\\\"}\"]",
+            "[\"sort:{\\\"kind\\\":\\\"eq\\\",\\\"name\\\":\\\"___ExprIsResolvedSort\\\"}\"]"
+          ],
+          "assumptions": [
+            {
+              "table": 199,
+              "columns": [
+                0,
+                2
+              ]
+            },
+            {
+              "table": 323,
+              "columns": [
+                0,
+                1
+              ]
+            }
+          ],
+          "completed": [
+            {
+              "table": 199,
+              "columns": [
+                0,
+                2
+              ]
+            },
+            {
+              "table": 199,
+              "columns": [
+                1,
+                3
+              ]
+            },
+            {
+              "table": 323,
+              "columns": [
+                0,
+                1
+              ]
+            }
+          ]
+        },
+        "implementations": [
+          {
+            "unit": 76,
+            "class": 75,
+            "ports": [
+              [
+                0,
+                {
+                  "Query": 0
+                },
+                [
+                  0,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Query": 1
+                },
+                [
+                  0,
+                  2
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 1
+                },
+                [
+                  1,
+                  3
+                ]
+              ]
+            ],
+            "source_path": [
+              [
+                null,
+                [
+                  426,
+                  1
+                ]
+              ]
+            ],
+            "extension": null,
+            "established": "successful-rhs",
+            "visible": "original-run-after-completion"
+          },
+          {
+            "unit": 100,
+            "class": 75,
+            "ports": [
+              [
+                0,
+                {
+                  "Query": 0
+                },
+                [
+                  0,
+                  1
+                ]
+              ],
+              [
+                0,
+                {
+                  "Query": 1
+                },
+                [
+                  0,
+                  2
+                ]
+              ],
+              [
+                0,
+                {
+                  "Effect": 1
+                },
+                [
+                  1,
+                  3
+                ]
+              ]
+            ],
+            "source_path": [
+              [
+                null,
+                [
+                  426,
+                  0
+                ]
+              ]
+            ],
+            "extension": null,
+            "established": "successful-rhs",
+            "visible": "original-run-after-completion"
+          }
+        ],
+        "event_counts": {
+          "76": 10,
+          "100": 28
+        }
+      }
+    ]
+  },
+  "new_analysis": {
+    "paths": 141,
+    "counts": {
+      "flat": 11,
+      "opaque": 43,
+      "staged": 87
+    },
+    "supported_paths": 98,
+    "distinct_structures": 98,
+    "multi_groups": []
+  }
+}
