@@ -64,6 +64,25 @@ impl Graph {
         }
     }
 
+    /// Snapshot only: correlate existing fact lifecycle state with composed owners
+    /// offline. No execution-time fact graph or additional retained bindings.
+    fn fact_lifecycle_trace(&self) -> J {
+        let frames=self.cells.cell_ids().map(|id| {
+            let meta=self.cells.cell_metadata(id).unwrap();
+            let facts=self.cells.fact_states(id).map(|(fact,state)| {
+                json!({"op":fact.op,"epoch":state.epoch,"born":state.born,
+                    "hidden":state.hidden,"owned":state.owned,
+                    "local_union_owned":state.local_union_owned,
+                    "entry":state.entry,"decoded":state.decoded.is_some()})
+            }).collect::<Vec<_>>();
+            json!({"cell":id,"template":meta.template,"completed":meta.completed,
+                "started_epoch":meta.started_epoch,"facts":facts})
+        }).collect::<Vec<_>>();
+        json!({"scope":"post-execution live fact lifecycle; equal values are observations, not static proof",
+            "fact_state_bytes":std::mem::size_of::<FactState>(),
+            "epoch_pair_bytes":2*std::mem::size_of::<u64>(),"frames":frames})
+    }
+
     pub fn retained_cell_storage(&self) -> J {
         let (records, positions, outliers) = self.cells.storage_bytes();
         let (completed_records,completed_slots,completed_facts,completed_frames)=self.cells.completed_storage();
@@ -159,7 +178,7 @@ impl Graph {
             "origin_tables":origin_tables,"union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
             "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().0.len()).sum::<usize>(),
-            "completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
+            "fact_lifecycle":self.fact_lifecycle_trace(),"completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":fact_count*std::mem::size_of::<(u32,FactState)>(),
             "decoded_row_bytes":rows,"decoded_row_owners":decoded.len(),

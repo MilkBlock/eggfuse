@@ -1,0 +1,621 @@
+{
+  "program_sha256": "df49f0d486eff920d32aa2c78e39cdd40aadde342926ac37958e0ab5a03f5416",
+  "runs": 1428,
+  "scope": "live standalone Cell runtime snapshot, not a proof of transition invariance",
+  "graph_owned_teardown_bytes": 2756564,
+  "totals": {
+    "facts": 3734,
+    "facts_with_epoch_different_from_birth": 628,
+    "frames_with_mixed_fact_epochs": 86,
+    "frames_with_mixed_fact_births": 0,
+    "cohorts": 2644,
+    "epoch_pair_gross_upper_bound_bytes": 17440,
+    "cross_frame_extra_gross_upper_bound_bytes": 1792,
+    "multi_frame_owners": 671,
+    "completed_epoch_pair_gross_upper_bound_bytes": 15792
+  },
+  "epoch_pair_gross_upper_bound_fraction_of_graph": 0.006326716883772697,
+  "largest_groups": [
+    {
+      "owner": [
+        "component",
+        128
+      ],
+      "frames": 1,
+      "facts": 91,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 1392,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        375
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        951
+      ],
+      "frames": 2,
+      "facts": 12,
+      "cohorts": 5,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 112,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        51,
+        466
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        773
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        769
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        755
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        756
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        770
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        771
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        807
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        838
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        863
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        864
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        883
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1303
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1267
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1823
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1824
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1825
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1826
+      ],
+      "frames": 4,
+      "facts": 10,
+      "cohorts": 4,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 96,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        286,
+        501,
+        505,
+        507
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        727
+      ],
+      "frames": 2,
+      "facts": 7,
+      "cohorts": 2,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 80,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        502,
+        509
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        728
+      ],
+      "frames": 2,
+      "facts": 7,
+      "cohorts": 2,
+      "all_completed": true,
+      "cross_stage": true,
+      "epoch_pair_gross_upper_bound_bytes": 80,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        502,
+        509
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1242
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        731
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        503
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        799
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        797
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        1867
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        798
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        800
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        802
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    },
+    {
+      "owner": [
+        "component",
+        767
+      ],
+      "frames": 1,
+      "facts": 5,
+      "cohorts": 1,
+      "all_completed": true,
+      "cross_stage": false,
+      "epoch_pair_gross_upper_bound_bytes": 64,
+      "cross_frame_extra_gross_upper_bound_bytes": 0,
+      "entry_facts": 0,
+      "decoded_facts": 0,
+      "templates": [
+        504
+      ]
+    }
+  ],
+  "obligations": [
+    "No net savings claimed: cohort IDs, exceptions, split/update costs are uncharged.",
+    "Later union, hide, refresh and retirement can split a cohort; final equality is not a proof.",
+    "Fact identities, hashes, Entry witnesses, residual enumeration and Run visibility remain live.",
+    "Cross-frame savings are a subset of total savings, never additive.",
+    "Missing or incomplete frames cannot establish saturated closure."
+  ]
+}
