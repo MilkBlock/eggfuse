@@ -918,3 +918,26 @@ fn constructor_set_keeps_actual_results_distinct_until_commit() {
     assert_ne!(shapes[0]["structure"],shapes[1]["structure"],
         "pending Set cannot change the key of a later constructor");
 }
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn shared_entry_parent_inheritance_preserves_worker_run_boundaries() {
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
+    let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let execute=|workers| {
+        let p=Program::parse(raw.clone()).unwrap();
+        let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
+        if workers>0 {e.use_query_workers(workers,1).unwrap();}
+        let mut states=Vec::new();
+        loop {
+            let n=e.steps.len();e.execute_until(Some(n+1)).unwrap();
+            if e.steps.len()==n {break;}
+            states.push(e.graph.export().unwrap());
+        }
+        let handoffs=e.report()["stage_spine"]["stats"]["entry_parent_handoffs"].as_u64().unwrap();
+        assert!(handoffs>0,"exercise actual Entry inheritance");
+        states
+    };
+    assert_eq!(execute(0),execute(2),"inheritance must preserve visibility through the retirement Run");
+}

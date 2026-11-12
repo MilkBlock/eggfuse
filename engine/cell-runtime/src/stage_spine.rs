@@ -675,6 +675,7 @@ pub struct Stats {
     origin_map_writes: u64,
     origin_map_probes: u64,
     history_capture_reads: u64,
+    entry_parent_handoffs: u64,
     history_deferred_root_probes: u64,
     history_deferred_root_captures: u64,
     history_deferred_root_promotions: u64,
@@ -2789,6 +2790,8 @@ impl Programs {
             g.program.executions[rid].constructor.as_ref()
                 .filter(|plan| plan.handoff).map(|plan| plan.operation)
         };
+        #[cfg(feature="sparse-cells")]
+        let inherited_pivot=g.program.rules[rid].direct.filter(|&pivot|crate::cell::inherits_entry(&g.program,rid,pivot,&self.permanent));
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
@@ -2908,6 +2911,11 @@ impl Programs {
                 #[cfg(feature = "sparse-cells")]
                 {
                     let mut answer = Matched::matched(inputs, facts, epoch);
+                    if inherited_pivot==Some(pivot) && !g.has_visibility_changes(row.table)
+                        && let Dependency::Fact(parent)=row.witness {
+                        answer.parent=Some(parent);
+                        self.stats.entry_parent_handoffs+=1;
+                    }
                     if let Some(operation) = preparation_operation {
                         cursor.retain_constructor_handoff(&g.program.iterative, operation, &mut answer, &mut self.stats);
                     }
@@ -3232,6 +3240,7 @@ impl Programs {
 
 #[cfg(feature = "sparse-cells")]
 impl Stats {
+    pub(crate) fn record_entry_parent(&mut self) { self.entry_parent_handoffs += 1; }
     pub(crate) fn record_query_worker(&mut self, counts: &crate::executor::query_workers::Counts) {
         self.cell_query_entries += counts.entries;
         self.cell_query_steps += counts.steps;

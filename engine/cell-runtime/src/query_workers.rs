@@ -21,6 +21,7 @@ pub(crate) struct Counts {
     #[cfg(feature = "cell-query-sharing-audit")]
     pub sharing_audit: sharing_audit::Counts,
     pub fixed_read_probes: u64,
+    pub entry_parent_handoffs: u64,
     pub fixed_read_fills: u64,
     pub fixed_read_hits: u64,
     pub fixed_read_clears: u64,
@@ -233,7 +234,7 @@ impl Executor {
             Some(rayon::ThreadPoolBuilder::new().num_threads(workers)
                 .thread_name(|i| format!("cell-query-{i}")).build().map_err(|e| e.to_string())?)
         };
-        let (cell_plans, mut cell_codes) = CellPlan::compile(&self.graph.program);
+        let (cell_plans, mut cell_codes) = CellPlan::compile(&self.graph.program,self.stage_spine.permanent_tables());
         let first_reads = FirstReads::compile(&mut cell_codes);
         let fixed_read_storage_bytes = first_reads.bytes();
         #[cfg(feature = "cell-query-sharing-audit")]
@@ -500,6 +501,7 @@ struct CellCode {
     rule: usize,
     template: usize,
     pivot: usize,
+    inherits_entry: bool,
     slots: usize,
     reads: usize,
     #[cfg(feature = "cell-query-sharing-audit")]
@@ -550,7 +552,7 @@ struct RuleRun {
     first_source:usize,
 }
 impl CellPlan {
-    fn compile(p: &Program) -> (Vec<Option<Self>>, Vec<CellCode>) {
+    fn compile(p: &Program, permanent:&[bool]) -> (Vec<Option<Self>>, Vec<CellCode>) {
         let mut local = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
         for route in p.multi_stage.routes.values() {
             local[route.consumer][route.anchor] |= route.reads.iter().any(|r| r.witness.is_some());
@@ -568,7 +570,7 @@ impl CellPlan {
                 let code = codes.len();
                 codes.push(CellCode {
                     #[cfg(feature = "parallel-residuals")] expansion:false,
-                    first_read: None, rule: rid, template:r.template, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
+                    first_read: None, rule: rid, template:r.template, pivot, inherits_entry:crate::cell::inherits_entry(p,rid,pivot,permanent), slots: query.result_slots(), reads: query.steps.len() + 1,
                     #[cfg(feature = "cell-query-sharing-audit")]
                     audit_prefixes: prefixes.compile(&query),
                     inputs: r.inputs.clone(), query });
@@ -1045,7 +1047,7 @@ impl Workers {
             self.stats.completion_headers += counts.completion_headers;
             #[cfg(feature="parallel-residuals")]
             self.record_expansion_chunk(g,sieve,residual,worker,_seconds,answers.capacity());
-            for (source, answer) in answers {
+            for (source, mut answer) in answers {
                 #[cfg(feature="parallel-residuals")]
                 if self.cell_codes[self.cell_queries[source].code].expansion {
                     let q=&self.cell_queries[source];let code=&self.cell_codes[q.code];
@@ -1054,6 +1056,12 @@ impl Workers {
                     continue;
                 }
                 let q = &mut self.cell_queries[source];
+                if self.cell_codes[q.code].inherits_entry && !g.has_visibility_changes(q.row.table)
+                    && let Dependency::Fact(parent)=q.row.witness {
+                    answer.parent=Some(parent);
+                    self.stats.entry_parent_handoffs+=1;
+                    spine.stats.record_entry_parent();
+                }
                 spine.record_worker_answer(self.cell_codes[q.code].rule, q.ordinal, answer,
                     q.cursor.take().expect("one positive completion per Cell query"));
             }
