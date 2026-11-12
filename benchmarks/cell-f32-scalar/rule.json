@@ -1,0 +1,362 @@
+{
+  "rule": {
+    "metadata": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)"
+    },
+    "slots": [
+      {
+        "name": "expr",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "a",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "b",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@SubTuple4",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@>1",
+        "sort": {
+          "name": "Unit",
+          "kind": "Unit"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@rewrite_var__2",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": 0
+      },
+      {
+        "name": "@Get3",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": 1
+      },
+      {
+        "name": "@Single3",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": 2
+      },
+      {
+        "name": "@+1",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": 3
+      },
+      {
+        "name": "@-1",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": 4
+      },
+      {
+        "name": "@SubTuple5",
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "definition": 5
+      }
+    ],
+    "query": [
+      {
+        "call": {
+          "table": "SubTuple"
+        },
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 2
+          },
+          {
+            "slot": 3
+          }
+        ]
+      },
+      {
+        "call": {
+          "primitive": ">",
+          "inputs": [
+            "i64",
+            "i64"
+          ],
+          "output": "Unit"
+        },
+        "args": [
+          {
+            "slot": 2
+          },
+          {
+            "literal": 1,
+            "sort": {
+              "name": "i64",
+              "kind": "i64"
+            }
+          },
+          {
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "effects": [
+      {
+        "op": "copy",
+        "dst": 5,
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "arg": {
+          "slot": 3
+        },
+        "kind": "copy"
+      },
+      {
+        "op": "let",
+        "dst": 6,
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "call": {
+          "table": "Get"
+        },
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          }
+        ],
+        "kind": "construct"
+      },
+      {
+        "op": "let",
+        "dst": 7,
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "call": {
+          "table": "Single"
+        },
+        "args": [
+          {
+            "slot": 6
+          }
+        ],
+        "kind": "construct"
+      },
+      {
+        "op": "let",
+        "dst": 8,
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "call": {
+          "primitive": "+",
+          "inputs": [
+            "i64",
+            "i64"
+          ],
+          "output": "i64"
+        },
+        "args": [
+          {
+            "slot": 1
+          },
+          {
+            "literal": 1,
+            "sort": {
+              "name": "i64",
+              "kind": "i64"
+            }
+          }
+        ],
+        "kind": "compute"
+      },
+      {
+        "op": "let",
+        "dst": 9,
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "call": {
+          "primitive": "-",
+          "inputs": [
+            "i64",
+            "i64"
+          ],
+          "output": "i64"
+        },
+        "args": [
+          {
+            "slot": 2
+          },
+          {
+            "literal": 1,
+            "sort": {
+              "name": "i64",
+              "kind": "i64"
+            }
+          }
+        ],
+        "kind": "compute"
+      },
+      {
+        "op": "let",
+        "dst": 10,
+        "sort": {
+          "name": "Expr",
+          "kind": "eq"
+        },
+        "call": {
+          "table": "SubTuple"
+        },
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 8
+          },
+          {
+            "slot": 9
+          }
+        ],
+        "kind": "construct"
+      },
+      {
+        "op": "set",
+        "call": {
+          "table": "Concat"
+        },
+        "args": [
+          {
+            "slot": 7
+          },
+          {
+            "slot": 10
+          }
+        ],
+        "value": {
+          "slot": 5
+        },
+        "kind": "set"
+      }
+    ],
+    "interface": {
+      "rows": [
+        {
+          "atom": 0,
+          "table": "SubTuple",
+          "columns": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ],
+          "key_columns": [
+            0,
+            1,
+            2
+          ],
+          "witness": "complete visible row"
+        }
+      ],
+      "primitive_atoms": [
+        1
+      ],
+      "guaranteed_atoms": [],
+      "residual_atoms": [
+        0,
+        1
+      ],
+      "correlation": "one complete binding row; slot equality and literals remain constraints"
+    },
+    "footprint": {
+      "read_tables": [
+        "SubTuple"
+      ],
+      "write_tables": [
+        "Concat",
+        "Get",
+        "Single",
+        "SubTuple"
+      ],
+      "union_sorts": [
+        "Expr"
+      ],
+      "equality_invalidates": [
+        "Concat",
+        "Get",
+        "Input",
+        "Single",
+        "SubTuple"
+      ],
+      "operations": [
+        "compute",
+        "construct",
+        "copy",
+        "set"
+      ],
+      "precision": "conservative direct/merge footprint; global rebuild may have further effects"
+    }
+  },
+  "source_program_sha256": "e3cc96d6be2a552c6125f5cb26ede7287f7b62e15961d3d32962f0755078244e",
+  "recipe_sha256": "b460d9006131c0db309a6a63df59bbebb2e7625aa21a6b8cde491a0ed7446e7a"
+}

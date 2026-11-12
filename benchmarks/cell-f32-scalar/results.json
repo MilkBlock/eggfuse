@@ -1,0 +1,77 @@
+{
+  "scope": "Standalone exact f32 scalar + ridge fusion from actual Cell recipe and native slot snapshots; no engine takeover",
+  "recipe_sha256": "b460d9006131c0db309a6a63df59bbebb2e7625aa21a6b8cde491a0ed7446e7a",
+  "rule_name": "(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)",
+  "destinations": [
+    8,
+    9
+  ],
+  "proof": [
+    {
+      "operation": 3,
+      "destination": 8,
+      "absolute_accumulation_bound": 1048577
+    },
+    {
+      "operation": 4,
+      "destination": 9,
+      "absolute_accumulation_bound": 1048577
+    }
+  ],
+  "input_bound": 1048576,
+  "layout": "6fb9fa399b0dc6421f830e727990a21714b5cb38054eee30c3b3a9cfe382484a",
+  "available_instances": 8,
+  "eligible_instances": 5,
+  "state_width": 472,
+  "exact_scalar_outputs_verified": 992,
+  "oracle_cases": 1014,
+  "cpu_fallback_cases": 4,
+  "guard_rejections": 514,
+  "ridge_top1_unchanged": true,
+  "backpropagation": false,
+  "gpu_data_dependent_control": false,
+  "weights_added_bytes": 168,
+  "timings": [
+    {
+      "rows": 5,
+      "repeat": 1,
+      "gpu_state_and_ridge_ms": 0.4965625,
+      "gpu_joint_ms": 0.483521,
+      "cpu_rhs_plus_gpu_ridge_request_ms": 0.5278750000000001,
+      "joint_request_ms": 0.531687,
+      "cpu_rhs_operations_removed_in_bench": 10
+    },
+    {
+      "rows": 640,
+      "repeat": 128,
+      "gpu_state_and_ridge_ms": 0.807417,
+      "gpu_joint_ms": 0.5625005000000001,
+      "cpu_rhs_plus_gpu_ridge_request_ms": 0.6140005,
+      "joint_request_ms": 0.618042,
+      "cpu_rhs_operations_removed_in_bench": 1280
+    },
+    {
+      "rows": 5120,
+      "repeat": 1024,
+      "gpu_state_and_ridge_ms": 0.910625,
+      "gpu_joint_ms": 0.826104,
+      "cpu_rhs_plus_gpu_ridge_request_ms": 0.8204795,
+      "joint_request_ms": 0.875229,
+      "cpu_rhs_operations_removed_in_bench": 10240
+    }
+  ],
+  "engine_primitive_executions_removed": 0,
+  "caveats": [
+    "input-ready scalar values only; original effect order and commit remain authoritative",
+    "joint request includes range/guard checks and f32 packing; native slot extraction and publication excluded",
+    "large batches repeat one compatible layout, not observed production occupancy",
+    "matrix exactness applies to certified integer columns, not learned scores",
+    "division, variable multiplication and unbounded i64 are not certified"
+  ],
+  "hashes": {
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "slots": "69afaada0bf370037d6d3e0f5576da710addc9051cafa9d80f1fbe933add8713",
+    "model": "cba56adb0123e7df0051d6846103005ea14f16d6a0c56f0ba5eb67b43c90a9c7",
+    "oracle": "e9c9814f7abe7946be49bdc03ec43b51a91b83d5d19bc255dbdde5c7e9dfcc35"
+  }
+}
