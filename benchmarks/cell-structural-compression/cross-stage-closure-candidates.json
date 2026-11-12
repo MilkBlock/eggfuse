@@ -1,0 +1,1507 @@
+{
+  "scope": "saved standalone Cell runtime ancestry + typed local closure proofs; no new execution or timing",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "trace_file_sha256": "5c5799c56ac5a8b519c1a0f575b752c8f776bb8baadcc913452a27f8abf4697a",
+  "events": 4920,
+  "missing_parent_events": 117,
+  "rule_sources": {
+    "58": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )"
+    },
+    "60": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rule ((Add-Gets orig (Single e) n))\n      ((union (Get orig n) e))\n        :ruleset always-run )"
+    },
+    "61": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rule ((Add-Gets orig something n)\n       (Not-Just-Concat something))\n      ((Add-All-Gets orig something n 0))\n        :ruleset always-run )"
+    },
+    "137": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)"
+    },
+    "143": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    },
+    "145": {
+      "seminaive": true,
+      "source_set": "always-run",
+      "name": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)"
+    },
+    "317": {
+      "seminaive": true,
+      "source_set": "context",
+      "name": "(rule ((= lhs (AddContext ctx inner))\n       (= inner (AddContext ctx expr)))\n      ((union lhs inner))\n        :ruleset context )"
+    },
+    "324": {
+      "seminaive": true,
+      "source_set": "context",
+      "name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+    },
+    "340": {
+      "seminaive": true,
+      "source_set": "drop",
+      "name": "(rule ((= lhs (DropAtInternal newty newctx idx (Get c1 index)))\n       (ExprIsResolved (Get c1 index)))\n      ((DelayedDropUnion lhs (Get (DropAtInternal newty newctx idx c1) index)))\n        :ruleset drop )"
+    }
+  },
+  "families": [
+    {
+      "producer_rule": 340,
+      "producer_ruleset": "drop",
+      "completion_ruleset": "always-run",
+      "cross_ruleset": true,
+      "producer_events": 90,
+      "witnessed_bundles": 45,
+      "candidate_consumer_applications": 135,
+      "local_saturated_tail_applications": 45,
+      "forks_in_same_source_run": 45,
+      "existing_direct_plan_events": {
+        "rule58_event": 0,
+        "rule143_event": 0,
+        "rule137_event": 45
+      },
+      "source_run_gaps": [
+        {
+          "producer_to_143": 178,
+          "143_to_137": 3,
+          "bundles": 45
+        }
+      ],
+      "external_consumers": {
+        "61": 2,
+        "145": 11
+      },
+      "proofs": {
+        "58": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            5,
+            4,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            2,
+            3
+          ],
+          "inherited_facts": 6,
+          "introduced_facts": [
+            {
+              "table": 4,
+              "columns": [
+                10,
+                10,
+                0,
+                12
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "143": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            6,
+            5,
+            7,
+            8,
+            9,
+            10,
+            11,
+            2,
+            3,
+            4
+          ],
+          "inherited_facts": 6,
+          "introduced_facts": [
+            {
+              "table": 323,
+              "columns": [
+                9,
+                12
+              ]
+            },
+            {
+              "table": 329,
+              "columns": [
+                11,
+                5,
+                0,
+                13
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 1,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "137": {
+          "kind": "saturated",
+          "ports": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "inherited_facts": 8,
+          "introduced_facts": [],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 2
+        }
+      },
+      "instances": [
+        {
+          "producer_event": 2621,
+          "rule58_event": 2928,
+          "rule143_event": 2987,
+          "rule137_event": 3094,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2622,
+          "rule58_event": 2929,
+          "rule143_event": 2988,
+          "rule137_event": 3095,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2623,
+          "rule58_event": 2930,
+          "rule143_event": 2989,
+          "rule137_event": 3096,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2624,
+          "rule58_event": 2931,
+          "rule143_event": 2990,
+          "rule137_event": 3097,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2625,
+          "rule58_event": 2932,
+          "rule143_event": 2991,
+          "rule137_event": 3098,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2626,
+          "rule58_event": 2966,
+          "rule143_event": 3025,
+          "rule137_event": 3132,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3155
+          ]
+        },
+        {
+          "producer_event": 2627,
+          "rule58_event": 2926,
+          "rule143_event": 2985,
+          "rule137_event": 3092,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3149
+          ]
+        },
+        {
+          "producer_event": 2628,
+          "rule58_event": 2938,
+          "rule143_event": 2997,
+          "rule137_event": 3104,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3151
+          ]
+        },
+        {
+          "producer_event": 2629,
+          "rule58_event": 2950,
+          "rule143_event": 3009,
+          "rule137_event": 3116,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3154
+          ]
+        },
+        {
+          "producer_event": 2630,
+          "rule58_event": 2944,
+          "rule143_event": 3003,
+          "rule137_event": 3110,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2631,
+          "rule58_event": 2945,
+          "rule143_event": 3004,
+          "rule137_event": 3111,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2632,
+          "rule58_event": 2946,
+          "rule143_event": 3005,
+          "rule137_event": 3112,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2633,
+          "rule58_event": 2947,
+          "rule143_event": 3006,
+          "rule137_event": 3113,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3153
+          ]
+        },
+        {
+          "producer_event": 2634,
+          "rule58_event": 2948,
+          "rule143_event": 3007,
+          "rule137_event": 3114,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2635,
+          "rule58_event": 2949,
+          "rule143_event": 3008,
+          "rule137_event": 3115,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2636,
+          "rule58_event": 2924,
+          "rule143_event": 2983,
+          "rule137_event": 3090,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3147
+          ]
+        },
+        {
+          "producer_event": 2637,
+          "rule58_event": 2927,
+          "rule143_event": 2986,
+          "rule137_event": 3093,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3150
+          ]
+        },
+        {
+          "producer_event": 2638,
+          "rule58_event": 2939,
+          "rule143_event": 2998,
+          "rule137_event": 3105,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3152
+          ]
+        },
+        {
+          "producer_event": 2639,
+          "rule58_event": 2933,
+          "rule143_event": 2992,
+          "rule137_event": 3099,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2640,
+          "rule58_event": 2934,
+          "rule143_event": 2993,
+          "rule137_event": 3100,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2641,
+          "rule58_event": 2935,
+          "rule143_event": 2994,
+          "rule137_event": 3101,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2642,
+          "rule58_event": 2936,
+          "rule143_event": 2995,
+          "rule137_event": 3102,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2643,
+          "rule58_event": 2937,
+          "rule143_event": 2996,
+          "rule137_event": 3103,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2644,
+          "rule58_event": 2951,
+          "rule143_event": 3010,
+          "rule137_event": 3117,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2645,
+          "rule58_event": 2952,
+          "rule143_event": 3011,
+          "rule137_event": 3118,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2646,
+          "rule58_event": 2953,
+          "rule143_event": 3012,
+          "rule137_event": 3119,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2647,
+          "rule58_event": 2954,
+          "rule143_event": 3013,
+          "rule137_event": 3120,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2648,
+          "rule58_event": 2955,
+          "rule143_event": 3014,
+          "rule137_event": 3121,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3072
+          ]
+        },
+        {
+          "producer_event": 2649,
+          "rule58_event": 2956,
+          "rule143_event": 3015,
+          "rule137_event": 3122,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2650,
+          "rule58_event": 2957,
+          "rule143_event": 3016,
+          "rule137_event": 3123,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2651,
+          "rule58_event": 2958,
+          "rule143_event": 3017,
+          "rule137_event": 3124,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2652,
+          "rule58_event": 2959,
+          "rule143_event": 3018,
+          "rule137_event": 3125,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2653,
+          "rule58_event": 2960,
+          "rule143_event": 3019,
+          "rule137_event": 3126,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2654,
+          "rule58_event": 2961,
+          "rule143_event": 3020,
+          "rule137_event": 3127,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2655,
+          "rule58_event": 2925,
+          "rule143_event": 2984,
+          "rule137_event": 3091,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3148
+          ]
+        },
+        {
+          "producer_event": 2656,
+          "rule58_event": 2920,
+          "rule143_event": 2979,
+          "rule137_event": 3086,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2657,
+          "rule58_event": 2921,
+          "rule143_event": 2980,
+          "rule137_event": 3087,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2658,
+          "rule58_event": 2922,
+          "rule143_event": 2981,
+          "rule137_event": 3088,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2659,
+          "rule58_event": 2923,
+          "rule143_event": 2982,
+          "rule137_event": 3089,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2660,
+          "rule58_event": 2962,
+          "rule143_event": 3021,
+          "rule137_event": 3128,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2661,
+          "rule58_event": 2963,
+          "rule143_event": 3022,
+          "rule137_event": 3129,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2662,
+          "rule58_event": 2964,
+          "rule143_event": 3023,
+          "rule137_event": 3130,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 2663,
+          "rule58_event": 2965,
+          "rule143_event": 3024,
+          "rule137_event": 3131,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3073
+          ]
+        },
+        {
+          "producer_event": 2664,
+          "rule58_event": 2967,
+          "rule143_event": 3026,
+          "rule137_event": 3133,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3156
+          ]
+        },
+        {
+          "producer_event": 2665,
+          "rule58_event": 2968,
+          "rule143_event": 3027,
+          "rule137_event": 3134,
+          "runs": [
+            632,
+            810,
+            810,
+            813
+          ],
+          "boundary_events": [
+            3157
+          ]
+        }
+      ]
+    },
+    {
+      "producer_rule": 324,
+      "producer_ruleset": "context",
+      "completion_ruleset": "always-run",
+      "cross_ruleset": true,
+      "producer_events": 274,
+      "witnessed_bundles": 27,
+      "candidate_consumer_applications": 81,
+      "local_saturated_tail_applications": 27,
+      "forks_in_same_source_run": 27,
+      "existing_direct_plan_events": {
+        "rule58_event": 0,
+        "rule143_event": 0,
+        "rule137_event": 27
+      },
+      "source_run_gaps": [
+        {
+          "producer_to_143": 165,
+          "143_to_137": 3,
+          "bundles": 2
+        },
+        {
+          "producer_to_143": 167,
+          "143_to_137": 3,
+          "bundles": 3
+        },
+        {
+          "producer_to_143": 168,
+          "143_to_137": 3,
+          "bundles": 3
+        },
+        {
+          "producer_to_143": 169,
+          "143_to_137": 3,
+          "bundles": 7
+        },
+        {
+          "producer_to_143": 170,
+          "143_to_137": 3,
+          "bundles": 6
+        },
+        {
+          "producer_to_143": 171,
+          "143_to_137": 3,
+          "bundles": 4
+        },
+        {
+          "producer_to_143": 172,
+          "143_to_137": 3,
+          "bundles": 2
+        }
+      ],
+      "external_consumers": {
+        "317": 5
+      },
+      "proofs": {
+        "58": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            7
+          ],
+          "inherited_facts": 4,
+          "introduced_facts": [
+            {
+              "table": 4,
+              "columns": [
+                5,
+                5,
+                0,
+                6
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "143": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            2,
+            3,
+            4,
+            7,
+            8
+          ],
+          "inherited_facts": 4,
+          "introduced_facts": [
+            {
+              "table": 323,
+              "columns": [
+                4,
+                5
+              ]
+            },
+            {
+              "table": 329,
+              "columns": [
+                7,
+                8,
+                0,
+                6
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 1,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "137": {
+          "kind": "saturated",
+          "ports": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "inherited_facts": 6,
+          "introduced_facts": [],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 2
+        }
+      },
+      "instances": [
+        {
+          "producer_event": 3866,
+          "rule58_event": 4698,
+          "rule143_event": 4764,
+          "rule137_event": 4823,
+          "runs": [
+            1048,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 3869,
+          "rule58_event": 4697,
+          "rule143_event": 4763,
+          "rule137_event": 4822,
+          "runs": [
+            1048,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": [
+            3891
+          ]
+        },
+        {
+          "producer_event": 3957,
+          "rule58_event": 4699,
+          "rule143_event": 4765,
+          "rule137_event": 4824,
+          "runs": [
+            1049,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 3958,
+          "rule58_event": 4700,
+          "rule143_event": 4766,
+          "rule137_event": 4825,
+          "runs": [
+            1049,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 3960,
+          "rule58_event": 4702,
+          "rule143_event": 4768,
+          "rule137_event": 4827,
+          "runs": [
+            1049,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 3980,
+          "rule58_event": 4701,
+          "rule143_event": 4767,
+          "rule137_event": 4826,
+          "runs": [
+            1049,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": [
+            4017
+          ]
+        },
+        {
+          "producer_event": 4053,
+          "rule58_event": 4708,
+          "rule143_event": 4774,
+          "rule137_event": 4833,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4054,
+          "rule58_event": 4709,
+          "rule143_event": 4775,
+          "rule137_event": 4834,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": [
+            4096
+          ]
+        },
+        {
+          "producer_event": 4055,
+          "rule58_event": 4713,
+          "rule143_event": 4779,
+          "rule137_event": 4838,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4056,
+          "rule58_event": 4714,
+          "rule143_event": 4780,
+          "rule137_event": 4839,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4057,
+          "rule58_event": 4719,
+          "rule143_event": 4785,
+          "rule137_event": 4844,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4058,
+          "rule58_event": 4720,
+          "rule143_event": 4786,
+          "rule137_event": 4845,
+          "runs": [
+            1050,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": [
+            4098
+          ]
+        },
+        {
+          "producer_event": 4125,
+          "rule58_event": 4696,
+          "rule143_event": 4762,
+          "rule137_event": 4821,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4126,
+          "rule58_event": 4703,
+          "rule143_event": 4769,
+          "rule137_event": 4828,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4127,
+          "rule58_event": 4704,
+          "rule143_event": 4770,
+          "rule137_event": 4829,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4128,
+          "rule58_event": 4705,
+          "rule143_event": 4771,
+          "rule137_event": 4830,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4129,
+          "rule58_event": 4710,
+          "rule143_event": 4776,
+          "rule137_event": 4835,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4130,
+          "rule58_event": 4716,
+          "rule143_event": 4782,
+          "rule137_event": 4841,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4133,
+          "rule58_event": 4722,
+          "rule143_event": 4788,
+          "rule137_event": 4847,
+          "runs": [
+            1051,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": [
+            4171
+          ]
+        },
+        {
+          "producer_event": 4232,
+          "rule58_event": 4711,
+          "rule143_event": 4777,
+          "rule137_event": 4836,
+          "runs": [
+            1052,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4233,
+          "rule58_event": 4715,
+          "rule143_event": 4781,
+          "rule137_event": 4840,
+          "runs": [
+            1052,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4234,
+          "rule58_event": 4717,
+          "rule143_event": 4783,
+          "rule137_event": 4842,
+          "runs": [
+            1052,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4321,
+          "rule58_event": 4707,
+          "rule143_event": 4773,
+          "rule137_event": 4832,
+          "runs": [
+            1053,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4322,
+          "rule58_event": 4712,
+          "rule143_event": 4778,
+          "rule137_event": 4837,
+          "runs": [
+            1053,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4323,
+          "rule58_event": 4718,
+          "rule143_event": 4784,
+          "rule137_event": 4843,
+          "runs": [
+            1053,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4426,
+          "rule58_event": 4706,
+          "rule143_event": 4772,
+          "rule137_event": 4831,
+          "runs": [
+            1055,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        },
+        {
+          "producer_event": 4427,
+          "rule58_event": 4721,
+          "rule143_event": 4787,
+          "rule137_event": 4846,
+          "runs": [
+            1055,
+            1220,
+            1220,
+            1223
+          ],
+          "boundary_events": []
+        }
+      ]
+    },
+    {
+      "producer_rule": 60,
+      "producer_ruleset": "always-run",
+      "completion_ruleset": "always-run",
+      "cross_ruleset": false,
+      "producer_events": 146,
+      "witnessed_bundles": 1,
+      "candidate_consumer_applications": 3,
+      "local_saturated_tail_applications": 1,
+      "forks_in_same_source_run": 1,
+      "existing_direct_plan_events": {
+        "rule58_event": 0,
+        "rule143_event": 0,
+        "rule137_event": 1
+      },
+      "source_run_gaps": [
+        {
+          "producer_to_143": 4,
+          "143_to_137": 4,
+          "bundles": 1
+        }
+      ],
+      "external_consumers": {
+        "58": 1,
+        "143": 1
+      },
+      "proofs": {
+        "58": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            2,
+            3,
+            4,
+            6
+          ],
+          "inherited_facts": 3,
+          "introduced_facts": [
+            {
+              "table": 4,
+              "columns": [
+                2,
+                2,
+                0,
+                5
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "143": {
+          "kind": "internal_completion",
+          "ports": [
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "inherited_facts": 3,
+          "introduced_facts": [
+            {
+              "table": 329,
+              "columns": [
+                2,
+                6,
+                0,
+                4
+              ]
+            }
+          ],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 1,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 1
+        },
+        "137": {
+          "kind": "saturated",
+          "ports": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "inherited_facts": 4,
+          "introduced_facts": [],
+          "required_entry_facts": [],
+          "prefix_ports_injective": true,
+          "strengthened_prefix_ports": [],
+          "ordered_union_obligations": 0,
+          "publication": "original-source-run",
+          "authorization": "typed-source-proof-not-history-frequency",
+          "runtime_obligations": [
+            "actual-result-inheritance",
+            "witness-liveness",
+            "stage-visibility",
+            "delta-ownership"
+          ],
+          "requires_completed_source_runs": true,
+          "prefix_stages": 2
+        }
+      },
+      "instances": [
+        {
+          "producer_event": 468,
+          "rule58_event": 593,
+          "rule143_event": 678,
+          "rule137_event": 781,
+          "runs": [
+            106,
+            110,
+            110,
+            114
+          ],
+          "boundary_events": [
+            715,
+            790
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "The selected rule region is locally closed only under the checked transfers, not all source rules.",
+    "No observed child does not prove no future consumer; retain boundary exports and residual matching.",
+    "Run ordinal gaps are observations, not executable scheduling constants.",
+    "Candidate applications are logical executions; counts are not allocations, committed mutations or measured savings.",
+    "Cross-stage liveness, delta ownership, competing derivations and publication ordering still require runtime lowering."
+  ]
+}
