@@ -17,6 +17,7 @@ def main():
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu)
     corpus=json.loads(a.corpus.read_text());exports=json.loads(a.slots.read_text());model=dict(np.load(a.model))
+    base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
     base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops']);base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal']
     cases={r['id']:r for r in exports['cases']};plans={};instances=[];checked=0;slot_reads=0;operands=0;ns=[]
     start=time.perf_counter()
@@ -40,9 +41,8 @@ def main():
         checked+=1;slot_reads+=case['slot_reads'];operands+=case['operand_reads'];ns.append(case['gather_nanoseconds'])
         if r['split']=='test':instances.append((plan,buffer,addresses,r['completion_key']))
     prepare_ms=(time.perf_counter()-start)*1000
-    gl,gp,gq,gn,gb=[mx.array(model[k]) for k in ('linear','first','first_bias','nonlinear','bias')];degree=int(model['degree']);mx.eval(gl,gp,gq,gn,gb)
-    def forward(x):return x@gl+(x@gp+gq)**degree@gn+gb
-    fn=mx.compile(forward)
+    from gpu_model import forward
+    fn=forward(model)
     def pack():return np.array([p.project(buf[idx]) for p,buf,idx,_ in instances])
     raw=pack();mx.eval(fn(mx.array(raw)));times=[];packing=[]
     for _ in range(15):

@@ -7,6 +7,7 @@ p=argparse.ArgumentParser()
 for k in ('states','corpus','model','output'):p.add_argument('--'+k,type=Path,required=True)
 a=p.parse_args();export=json.loads(a.states.read_text());model=dict(np.load(a.model));corpus=json.loads(a.corpus.read_text())
 if export['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('model identity mismatch')
+base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
 base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops']);base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal']
 rows={r['id']:r for r in corpus['records'] if r['split']=='test'};cases=export['cases']
 if len(cases)!=len(rows) or {c['id'] for c in cases}!=set(rows):raise ValueError('incomplete test instances')
@@ -18,9 +19,8 @@ np.testing.assert_allclose(x,reference,atol=1e-4,rtol=1e-4)
 import mlx.core as mx
 if not mx.metal.is_available():raise RuntimeError('GPU required')
 mx.set_default_device(mx.gpu)
-l,pj,q,n,b=[mx.array(model[k]) for k in ('linear','first','first_bias','nonlinear','bias')];degree=int(model['degree'])
-def forward(x):return x@l+(x@pj+q)**degree@n+b
-fn=mx.compile(forward);v=mx.array(x);mx.eval(fn(v));samples=[]
+from gpu_model import forward
+fn=forward(model);v=mx.array(x);mx.eval(fn(v));samples=[]
 for _ in range(15):
     start=time.perf_counter();out=fn(v);mx.eval(out);samples.append((time.perf_counter()-start)*1000)
 scores=np.array(out);ref=np.array(fn(mx.array(reference)));assert np.array_equal(scores.argmax(1),ref.argmax(1))

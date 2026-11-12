@@ -12,6 +12,7 @@ from dataset import digest, extension
 
 D=32
 POOL_OPS=False
+POOL_NORMALIZATION="sum"
 RNG=np.random.default_rng(7419)
 OP=RNG.normal(0,.4,(5,D)).astype(np.float32)
 EDGE=RNG.normal(0,.5/np.sqrt(D),(3,D,D)).astype(np.float32)
@@ -45,8 +46,9 @@ class Plan:
         groups=[list(range(len(entry))),roots]
         if POOL_OPS:
             groups += [[i for i,facts in enumerate(entry) for op,_ in facts if op==name] for name in OPS]
-        self.bias=np.concatenate([sum((const[i] for i in ids),np.zeros(D,np.float32)) for ids in groups])
-        self.weight=np.concatenate([sum((coef[i] for i in ids),np.zeros((len(self.reads)*4,D),np.float32)) for ids in groups],axis=1)
+        factors=[1. if POOL_NORMALIZATION=="sum" else 1/max(len(ids),1)**(1. if POOL_NORMALIZATION=="mean" else .5) for ids in groups]
+        self.bias=np.concatenate([factor*sum((const[i] for i in ids),np.zeros(D,np.float32)) for ids,factor in zip(groups,factors)])
+        self.weight=np.concatenate([factor*sum((coef[i] for i in ids),np.zeros((len(self.reads)*4,D),np.float32)) for ids,factor in zip(groups,factors)],axis=1)
         self.metadata=np.concatenate([counts,[len(entry),len(roots),len(self.reads)]]).astype(np.float32)
 
     def gather(self,entry):
@@ -72,7 +74,8 @@ def reference(entry):
     roots=[i for i in range(len(hidden)) if i not in used]
     groups=[list(range(len(hidden))),roots]
     if POOL_OPS:groups += [[i for i,facts in enumerate(entry) for op,_ in facts if op==name] for name in OPS]
-    return np.concatenate([sum((hidden[i] for i in ids),np.zeros(D,np.float32)) for ids in groups]+[counts,[len(hidden),len(roots),scalars]])
+    factors=[1. if POOL_NORMALIZATION=="sum" else 1/max(len(ids),1)**(1. if POOL_NORMALIZATION=="mean" else .5) for ids in groups]
+    return np.concatenate([factor*sum((hidden[i] for i in ids),np.zeros(D,np.float32)) for ids,factor in zip(groups,factors)]+[counts,[len(hidden),len(roots),scalars]])
 
 
 def main():

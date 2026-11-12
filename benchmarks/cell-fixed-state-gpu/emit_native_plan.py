@@ -7,6 +7,7 @@ from dataset import canonical
 p=argparse.ArgumentParser()
 for key in ('corpus','slots','inputs','model','output'):p.add_argument('--'+key,type=Path,required=True)
 a=p.parse_args();corpus=json.loads(a.corpus.read_text());slots={r['id']:r for r in json.loads(a.slots.read_text())['cases']};sources={r['id']:r for r in json.loads(a.inputs.read_text())['cases']};model=dict(np.load(a.model))
+base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
 base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops']);base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal']
 plans={};cases=[]
 for r in corpus['records']:

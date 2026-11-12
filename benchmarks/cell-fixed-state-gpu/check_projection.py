@@ -12,6 +12,7 @@ p.add_argument('--model')
 a=p.parse_args()
 if a.model:
     model=dict(np.load(a.model))
+    base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
     base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops'])
     base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal']
 rows=json.load(open(a.corpus))['records']

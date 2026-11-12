@@ -321,3 +321,68 @@ out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/train_augmen
 The previous native-plan/projection commands work with `augmented/model.npz` too;
 regenerate the native plan because it binds the model hash. The new model should
 not be tested against old model-bound native-state files.
+
+## Coverage and bounded-center experiments: regressions retained
+
+The next run expanded generated sources to 720 training-parent and 240
+validation-parent cases. Previously collected cases were reused; only 480 new
+training and 120 new validation cases were executed, each with the existing
+one-second limit. `merge_collection.py` rejects duplicate IDs and retains source
+chunk fingerprints/collector provenance. After the same overlap/duplicate
+exclusions, 472 additional training and 129 additional validation entries were
+admitted (744 training and 224 validation rows total).
+
+This was **not an improvement**. Validation selected all 744 centers with ridge
+0.001; original test fell to 93/102, new entrances to 76/90, new skeletons to
+72/82. Weights grew to roughly 1.48 MB. The previous 441-center model remains the
+retained baseline, with 95/102 and 80/90 respectively. The larger validation set
+is harder, so its accuracy must not be compared directly with the old 175-row
+validation accuracy.
+
+`--center-budgets` adds a training-input-only greedy coverage selector. It starts
+at the point nearest the training mean and repeatedly chooses the point farthest
+from selected centers; labels, validation and test do not choose center positions.
+Validation chooses budget/regularization, with tied accuracy preferring fewer
+centers then lower MSE. Budgets 128/272/all did not beat the full-center validation
+score. This is an offline training cost, not GPU control flow.
+
+A second search compared quadratic and radial ridge features at 272/all centers
+and radial widths 0.25/1/4. Radial features did not win validation. Radial GPU
+execution, when selected at model load time, is the fixed expression
+`XL + exp(min(XP+q - sum(X²*s), 0))N+b`: three matmuls and fixed reductions and
+pointwise operations, with no input-dependent dispatch. Normalization constants
+are folded into weights, including the center/mean cross-term. Independent
+random-input CPU/GPU folding checks cover both feature kinds and three widths;
+unknown model kinds are rejected.
+
+Two further representation candidates divide each static pooling group by its
+size or square root of size. Factors are folded into layout coefficients at
+compile time. They scored only 205/224 and 211/224 validation correct versus
+215/224 for sums; neither was evaluated on test. All three projection modes
+match their reference on all 469 original inputs (1,407 checks). New modes are
+optional; the default sum preserves the old representation. Model loaders now
+read this metadata and reject unsupported GPU feature kinds instead of silently
+running a quadratic function for a radial artifact.
+
+`feature-search-results.json` preserves the failed searches, source hashes,
+admitted IDs, validation logs and measured costs. These results narrow the next
+work: more examples, smaller centers or simple normalization alone have not
+solved completion invariance. No stronger accuracy claim is made this round.
+
+To reproduce expanded collections, run `generate_holdout.py` with `--split train
+--limit 720` and `--split validation --limit 240`, then use the existing collector.
+To reuse saved prefixes instead, collect only IDs absent from the old files and
+merge the two disjoint chunks:
+
+```sh
+python3 benchmarks/cell-fixed-state-gpu/merge_collection.py \
+  --inputs out/cell-fixed-state-gpu/augment-train-runtime.json \
+           out/cell-fixed-state-gpu/extra-train-runtime.json \
+  --output out/cell-fixed-state-gpu/expanded-train-runtime.json
+```
+
+Apply the same merge to validation. Run `train_augmented.py` with the expanded
+runtime files and `--center-budgets 272,all --feature-kinds quadratic,radial`.
+For validation-only representation comparisons add `--pool-normalization mean`
+or `sqrt` and `--validation-only`; this writes no model and never evaluates test
+scores. `check_gpu_model.py` checks folded GPU arithmetic independently of data.

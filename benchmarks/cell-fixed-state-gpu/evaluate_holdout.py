@@ -7,6 +7,7 @@ from dataset import canonical,skeleton
 p=argparse.ArgumentParser()
 for k in ('corpus','runtime','model','output'):p.add_argument('--'+k,type=Path,required=True)
 a=p.parse_args();corpus=json.loads(a.corpus.read_text());runtime=json.loads(a.runtime.read_text());model=dict(np.load(a.model))
+base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
 base.D=int(model['dimension']);base.POOL_OPS=bool(model['pool_ops']);base.OP=model['op'];base.EDGE=model['edge'];base.LITERAL=model['literal'];labels=list(model['labels'])
 old_entries={r['entry_key'] for r in corpus['records']};old_shapes={r['skeleton_key'] for r in corpus['records']};seen=set();rows=[];duplicates=0
 for c in runtime['cases']:
@@ -22,8 +23,8 @@ for c in runtime['cases']:
 import mlx.core as mx
 if not mx.metal.is_available():raise RuntimeError('GPU required')
 mx.set_default_device(mx.gpu)
-l,pj,q,n,b=[mx.array(model[k]) for k in ('linear','first','first_bias','nonlinear','bias')];degree=int(model['degree'])
-x=mx.array(np.array([r[4] for r in rows]));scores=x@l+(x@pj+q)**degree@n+b;mx.eval(scores);guess=np.array(scores).argmax(1)
+from gpu_model import forward
+fn=forward(model);x=mx.array(np.array([r[4] for r in rows]));scores=fn(x);mx.eval(scores);guess=np.array(scores).argmax(1)
 details=[]
 for (case,key,shape,target,_),g in zip(rows,guess):
     details.append(dict(id=case['id'],new_entry=key not in old_entries,new_skeleton=shape not in old_shapes,correct=labels[g]==target))
