@@ -97,6 +97,14 @@ impl QueryIndexes {
     }
 }
 
+#[cfg(feature = "parallel-publication")]
+impl PublicationTask {
+    /// Borrow the original completed table while unrelated owners still write.
+    pub(crate) fn publication_support(&self, columns:&[usize])->TableRead<'_> {
+        TableRead {keys:&self.index.keys,columns:columns.iter().map(|&c|(c,self.index.column(c))).collect()}
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

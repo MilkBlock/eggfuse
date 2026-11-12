@@ -13,6 +13,7 @@ pub(super) struct Stats {
     prepare_seconds:f64, execute_seconds:f64, restore_seconds:f64,
     task_capacity_bytes:u64, change_capacity_bytes:u64, max_table_rows:u64,
     entry_order_headers:u64,
+    condition_batches:u64, condition_table_header_bytes:u64,
     change_buffer_growths:u64, peak_retained_change_bytes:u64,
     table_rows:Vec<u64>, table_task_seconds:Vec<f64>,
 }
@@ -61,15 +62,16 @@ impl Publication {
     pub(super) fn publish_parallel(&mut self,g:&Graph,columns:&mut QueryIndexes,
         mut ranges:Option<&mut RangeIndex>,neighbor:&mut Context,pool:Option<&rayon::ThreadPool>,grain:usize,
         mut entries:Option<&mut crate::entry_schedule::Scheduler>,
-        publish_ports:&mut impl FnMut(usize,&FxHashMap<Dependency,Change>,bool))->Result<bool> {
+        sieve:Option<&mut crate::sieve::Sieve>,
+        publish_ports:&mut impl FnMut(usize,&FxHashMap<Dependency,Change>,bool))->Result<Option<bool>> {
         let needed=|t|columns.has_columns(t) || ranges.as_ref().is_some_and(|r|r.has_publication(t)) || neighbor.has_publication(t) || entries.as_ref().is_some_and(|e|e.has_publication_work(t));
         let (count,total)=g.changes.tables().filter(|(t,_)|needed(*t))
             .fold((0,0),|(n,rows),(_,c)|(n+1,rows+c.len()));
-        if total<grain.max(256) {self.parallel.small_batches+=1;return Ok(false);}
+        if total<grain.max(256) {self.parallel.small_batches+=1;return Ok(None);}
         let clock=Instant::now();
         let Some(reads)=g.publication_reads(g.changes.tables().filter(|(t,_)|needed(*t)).map(|(t,_)|t))
             .filter(|r|r.canonical_rows()) else {
-            self.parallel.readiness_fallbacks+=1;return Ok(false);
+            self.parallel.readiness_fallbacks+=1;return Ok(None);
         };
         columns.begin_publication(g);
         let mut tasks=Vec::with_capacity(count);
@@ -104,8 +106,18 @@ impl Publication {
         self.parallel.task_capacity_bytes+=(tasks.capacity()*std::mem::size_of::<Task<'_>>()) as u64;
         self.parallel.prepare_seconds+=clock.elapsed().as_secs_f64();
         let clock=Instant::now();
-        if pooled {pool.unwrap().install(||tasks.par_iter_mut().for_each(|t|t.run(&reads,true)));}
-        else {for t in &mut tasks {t.run(&reads,false);}}
+        let conditions=sieve.is_some_and(|sieve| {
+            let ids:Vec<_>=tasks.iter().map(|t|(t.table,t.columns.is_some())).collect();
+            self.parallel.condition_table_header_bytes+=(ids.capacity()*std::mem::size_of::<(usize,bool)>()) as u64;
+            sieve.publish_table_events(columns,&ids,&mut tasks,pool.filter(|_|pooled),
+                |task| {task.run(&reads,pooled);(task.columns.take(),task.error.is_none())},
+                |task,column|task.columns=column)
+        });
+        self.parallel.condition_batches+=u64::from(conditions);
+        if !conditions {
+            if pooled {pool.unwrap().install(||tasks.par_iter_mut().for_each(|t|t.run(&reads,true)));}
+            else {for t in &mut tasks {t.run(&reads,false);}}
+        }
         self.parallel.execute_seconds+=clock.elapsed().as_secs_f64();
         let clock=Instant::now();
         let n=pool.map_or(1,|p|p.current_num_threads());
@@ -143,6 +155,6 @@ impl Publication {
         self.parallel.peak_retained_change_bytes=self.parallel.peak_retained_change_bytes.max(columns.publication_buffer_bytes() as u64);
         self.parallel.restore_seconds+=clock.elapsed().as_secs_f64();
         if let Some(error)=error {return Err(error);}
-        Ok(true)
+        Ok(Some(conditions))
     }
 }

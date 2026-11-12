@@ -5,6 +5,8 @@ use super::*;
 use crate::query::snapshot::TableRead;
 use std::sync::{Mutex, OnceLock, atomic::{AtomicUsize, Ordering}};
 use std::time::Instant;
+#[path = "sieve_table_events.rs"]
+mod table_events;
 
 #[derive(Default, serde::Serialize)]
 struct Work {
@@ -16,6 +18,7 @@ struct Work {
     task_capacity_bytes:u64, row_header_capacity_bytes:u64, peak_scratch_bytes:u64,
     prepare_seconds:f64, execute_seconds:f64, restore_seconds:f64,
     worker_tasks:Vec<u64>, worker_rows:Vec<u64>, worker_seconds:Vec<f64>,
+    table_events:table_events::Work,
 }
 #[derive(Default)]
 pub(super) struct State {
@@ -31,7 +34,10 @@ impl State {
         // Interning creates children first. Unknown/reconfigured graphs keep
         // the original queue instead of claiming an unproved execution layer.
         for (id,spec) in specs.iter().enumerate() {
-            if spec.guards.iter().any(|g|g.child>=id) {return Self {compiled:true,..Self::default()};}
+            // Guards come from nonempty shared columns of connected Cell
+            // atoms. A synthetic disconnected edge has no indexed wakeup
+            // proof and must retain the ordinary path.
+            if spec.guards.iter().any(|g|g.child>=id || g.cols.is_empty()) {return Self {compiled:true,..Self::default()};}
         }
         s.valid=true;
         s.group=vec![0;specs.len()];
@@ -53,7 +59,9 @@ impl State {
         + (self.pending.capacity()+self.touched_groups.capacity())*std::mem::size_of::<usize>()
     }
     pub fn report(&self)->serde_json::Value {
-        serde_json::json!({"organization":"cell-condition-events/v2", "compiled":self.compiled, "valid":self.valid,
+        serde_json::json!({"organization":"cell-table-condition-events/v3", "compiled":self.compiled, "valid":self.valid,
+            "execute_seconds_scope":"includes overlapped table publication in fused batches; do not add to publication.parallel.execute_seconds",
+            "early_nodes_scope":"condition completed while a different table task was still computing; not worker utilization",
             "plan_payload_bytes":(self.group.capacity()+self.table_groups.capacity())*std::mem::size_of::<usize>()
                 + self.active.capacity()*std::mem::size_of::<bool>()
                 + self.inputs.capacity()*std::mem::size_of::<Vec<usize>>(),
@@ -72,27 +80,38 @@ impl Task<'_> {
     fn run<'a>(&mut self, rows:&[&[u64]], child:impl Fn(usize)->(&'a Summary,&'a [Projection]), collide:bool, pooled:bool) {
         self.worker=pooled.then(rayon::current_thread_index).flatten();
         let clock=Instant::now();
-        let spec=self.spec;
+        let (dependency_rows,candidate_visits)=complete_condition(
+            self.spec,&mut self.state,&mut self.added,self.direct.iter().map(|&p|rows[p]),
+            self.read.as_ref(),child,collide);
+        self.dependency_rows+=dependency_rows;self.candidate_visits+=candidate_visits;
+        self.seconds=clock.elapsed().as_secs_f64();
+    }
+}
+
+// Both table-ready and already-published paths execute the same condition.
+fn complete_condition<'a,'b>(spec:&Spec,state:&mut Summary,added:&mut Vec<Projection>,
+    direct:impl Iterator<Item=&'b [u64]>,read:Option<&TableRead<'_>>,
+    child:impl Fn(usize)->(&'a Summary,&'a [Projection]),collide:bool)->(u64,u64) {
+        let (mut dependency_rows,mut candidate_visits)=(0,0);
         let mut admit=|keys:&[u64]| {
             if spec.guards.iter().all(|g| child(g.child).0.allows(keys,&g.cols)) {
                 // Multiple child routes may produce the same candidate. The
                 // original exact support insertion adopts it only once.
-                if let Some(key)=self.state.insert::<false>(spec,keys,collide) {self.added.push(key);}
+                if let Some(key)=state.insert::<false>(spec,keys,collide) {added.push(key);}
             }
         };
-        for &position in self.direct {admit(rows[position]);}
-        if let Some(read)=&self.read {
+        for keys in direct {admit(keys);}
+        if let Some(read)=read {
             for guard in &spec.guards {
                 if guard.cols.is_empty() {continue;}
                 for key in child(guard.child).1 {
                     let domain=read.domain(guard.cols.iter().copied().zip(key.iter().copied()).collect());
-                    for witness in domain.iter() {self.dependency_rows+=1;admit(read.hashes(witness));}
-                    self.candidate_visits+=domain.take_examined();
+                    for witness in domain.iter() {dependency_rows+=1;admit(read.hashes(witness));}
+                    candidate_visits+=domain.take_examined();
                 }
             }
         }
-        self.seconds=clock.elapsed().as_secs_f64();
-    }
+        (dependency_rows,candidate_visits)
 }
 
 struct Events<'a,'b> {

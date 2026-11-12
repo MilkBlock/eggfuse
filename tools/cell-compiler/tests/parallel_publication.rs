@@ -58,6 +58,11 @@ fn repaired_publication_keeps_late_values_aliases_and_retirements() {
         assert_eq!(a["sieve"]["stats"],b["sieve"]["stats"],"ordered changes and collision invalidation");
         let conditions=&b["sieve"]["publication"];
         assert!(conditions["stats"]["batches"].as_u64().unwrap()>0,"{conditions}");
+        let fused=&conditions["stats"]["table_events"];
+        assert!(fused["batches"].as_u64().unwrap()>0,"table completion must drive conditions: {fused}");
+        assert!(fused["change_handoff_rows_avoided"].as_u64().unwrap()>0,"source change handoff is removed");
+        assert_eq!(fused["failed_batches"],0);
+        assert_eq!(fused["potential_nodes"],fused["completed_nodes"]);
         for key in ["pending_group_rows","pending_support_keys","pending_tasks"] {
             assert_eq!(conditions[key],0,"publication owns no facts after join");
         }

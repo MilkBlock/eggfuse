@@ -16,6 +16,13 @@ pub(crate) use std::sync::Arc as DomainRc;
 #[cfg(not(feature = "parallel-residuals"))]
 pub(crate) use std::rc::Rc as DomainRc;
 use DomainRc as Rc;
+// Published table owners can feed immutable condition readers before other
+// tables finish. Lazy columns remain part of the same index; initialization is
+// synchronized only in this build, with no cloned row or membership map.
+#[cfg(feature = "parallel-publication")]
+use std::sync::OnceLock as ColumnCell;
+#[cfg(not(feature = "parallel-publication"))]
+use std::cell::OnceCell as ColumnCell;
 #[cfg(feature = "parallel-residuals")]
 #[path = "query_snapshot.rs"]
 pub(crate) mod snapshot;
@@ -117,7 +124,7 @@ struct Columns {
     publication_buffer: Vec<(Dependency,usize,u64)>,
     #[cfg(feature = "projection-stamps")]
     write_version: u64,
-    values: Vec<std::cell::OnceCell<HashMap<u64, Bucket>>>,
+    values: Vec<ColumnCell<HashMap<u64, Bucket>>>,
     keys: HashMap<Dependency, smallvec::SmallVec<[u64; 4]>>,
     version: u64,
     leased_reads: bool,
@@ -395,6 +402,10 @@ impl PublicationTask {
     pub fn finish(&mut self, version:u64) { self.index.version=version; }
     pub fn buffer_bytes(&self)->usize { self.changes.capacity()*std::mem::size_of::<(Dependency,usize,u64)>() }
     pub fn buffer_growths(&self)->u64 {self.growths}
+    pub(crate) fn changes(&self)->&[(Dependency,usize,u64)] {&self.changes}
+    pub(crate) fn sort_changes(&mut self) {self.changes.sort_unstable();}
+    pub(crate) fn clear_changes(&mut self) {self.changes.clear();}
+    pub(crate) fn hashes(&self,w:Dependency)->Option<&[u64]> {self.index.keys.get(&w).map(|k|k.as_slice())}
 }
 impl ColumnWriter<'_> {
     pub fn finish(self, version: u64) {
@@ -703,7 +714,7 @@ impl QueryIndexes {
                 #[cfg(feature = "projection-stamps")]
                 write_version: graph.query_versions[table],
                 values: (0..graph.program.tables[table].schema.len())
-                    .map(|_| std::cell::OnceCell::new())
+                    .map(|_| ColumnCell::new())
                     .collect(),
                 keys: HashMap::default(),
                 version: graph.query_versions[table],
@@ -940,7 +951,7 @@ impl QueryIndexes {
     pub fn refinement_storage(&self) -> (usize, usize) {
         self.tables
             .values()
-            .flat_map(|t| t.values.iter().filter_map(std::cell::OnceCell::get))
+            .flat_map(|t| t.values.iter().filter_map(ColumnCell::get))
             .flat_map(|v| v.values())
             .flat_map(|b| b.refinements.values())
             .fold((0, 0), |(n, r), v| (n + 1, r + v.len()))

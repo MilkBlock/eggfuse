@@ -170,6 +170,7 @@ impl Publication {
     }
     /// Resolve each requested witness once, after repair. Column and range indexes
     /// retain their own previous keys so a removal needs only the witness.
+    /// True means the same table scope also completed Sieve publication.
     pub fn publish(
         &mut self,
         #[cfg(feature = "family-survey")] sample: (&mut crate::family_survey::Survey, bool),
@@ -179,12 +180,13 @@ impl Publication {
         neighbor: &mut Context,
         #[cfg(feature = "parallel-publication")] workers:Option<(Option<&rayon::ThreadPool>,usize)>,
         #[cfg(feature = "parallel-publication")] entries: Option<&mut crate::entry_schedule::Scheduler>,
+        #[cfg(feature = "parallel-publication")] sieve: Option<&mut crate::sieve::Sieve>,
         mut publish_ports: impl FnMut(usize, &FxHashMap<Dependency, Change>, bool),
-    ) -> Result<()> {
+    ) -> Result<bool> {
         #[cfg(feature = "parallel-publication")]
         if let Some((pool,grain))=workers
-            && self.publish_parallel(g,columns,ranges.as_deref_mut(),neighbor,pool,grain,entries,&mut publish_ports)? {
-            return Ok(());
+            && let Some(conditions)=self.publish_parallel(g,columns,ranges.as_deref_mut(),neighbor,pool,grain,entries,sieve,&mut publish_ports)? {
+            return Ok(conditions);
         }
         columns.begin_publication(g);
         for (t, changes) in g.changes.tables() {
@@ -259,7 +261,7 @@ impl Publication {
             );
         }
         columns.finish_publication();
-        Ok(())
+        Ok(false)
     }
 }
 #[cfg(test)]

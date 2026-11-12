@@ -553,7 +553,7 @@ impl Executor {
         if !matched && self.stage_spine.pending_publication_counts().0 == 0 {
             self.graph.receipt_forwards.clear();
         }
-        self.publication.publish(
+        let conditions_published=self.publication.publish(
             #[cfg(feature = "family-survey")]
             (&mut self.survey, _unions_before != self.graph.stats.unions),
             &self.graph,
@@ -564,6 +564,8 @@ impl Executor {
             self.query_workers.as_ref().filter(|_|self.publication.parallel_enabled()).map(|w|w.publication_pool()),
             #[cfg(feature = "parallel-publication")]
             Some(&mut self.entry_schedule),
+            #[cfg(feature = "parallel-publication")]
+            Some(&mut self.sieve),
             |_table, _changes, _indexed| {
                 #[cfg(feature = "view-consumers")]
                 self.blocks
@@ -575,13 +577,13 @@ impl Executor {
             .gates
             .publish(&self.graph, &self.query_indexes);
         #[cfg(feature = "parallel-publication")]
-        let staged = self.query_workers.as_ref().filter(|_| self.publication.parallel_enabled())
+        let staged = conditions_published || self.query_workers.as_ref().filter(|_| self.publication.parallel_enabled())
             .is_some_and(|workers| {
                 let (pool, grain) = workers.publication_pool();
                 self.sieve.publish_staged(&mut self.query_indexes, pool, grain)
             });
         #[cfg(not(feature = "parallel-publication"))]
-        let staged = false;
+        let staged = conditions_published;
         if !staged { self.sieve.publish(&mut self.query_indexes); }
         let publication_end = Instant::now();
         let query_update_seconds = publication_end.duration_since(phase).as_secs_f64();
