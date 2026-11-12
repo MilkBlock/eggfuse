@@ -1,23 +1,29 @@
 //! Completion events return the actual registration owners. A source Cell
-//! waits for its own Unit tables and the constructor/slot owner, not all tables.
+//! waits for its own Unit decisions, Cell frame and slot reservation. Shared
+//! directories and subscriptions return before the Run fence, not per Cell.
 use super::*;
 
 struct Item {cell:usize,row:usize,source:usize,fields:RowFields}
 struct NewRow {index:usize,fields:RowFields}
 pub(crate) struct Owner {
     table:usize,keys:scalar_keys::FunctionKeys,members:TableRows<u64>,version:u64,
-    changes:rustc_hash::FxHashMap<Dependency,crate::change_batch::Change>,added:Vec<NewRow>,
+    changes:rustc_hash::FxHashMap<Dependency,crate::change_batch::Change>,added:Vec<NewRow>,subscribed:bool,
 }
-pub(crate) struct TableJob {owner:Owner,items:Vec<Item>,start:usize}
+pub(crate) struct TableJob {owner:Owner,items:Vec<Item>,start:usize,deferred:bool}
 pub(crate) struct Structure {
     functions:Vec<Function>,decoded:Vec<Option<RowFields>>,end:usize,first_table:usize,
-    constructors:Option<constructor_registration::Owned>,growth:usize,births:usize,
+    constructors:Option<constructor_registration::Owned>,growth:usize,
 }
-pub(crate) enum RegistrationTask {Table(TableJob),Structure(Box<Structure>),Subscriptions(Box<constructor_registration::Subscriptions>)}
-pub(crate) struct Decision {cell:usize,row:usize,value:(usize,bool,bool)}
-pub(crate) enum RegistrationEvent {Decisions(Vec<Decision>),Table(Owner),Structure(Box<Structure>),Subscriptions(Box<constructor_registration::Subscriptions>)}
+pub(crate) enum RegistrationTask {Table(TableJob),Structure(Box<Structure>),Subscriptions(Box<constructor_registration::Subscriptions>),UnitSubscriptions(Box<constructor_registration::Subscriptions>,Vec<Owner>)}
+pub(crate) struct Decision {cell:usize,row:usize,value:(usize,bool,bool,bool)}
+pub(crate) enum RegistrationEvent {
+    Decisions(Vec<Decision>),Table(Owner),Structure(Box<Structure>,bool),
+    Cells(Vec<constructor_registration::CellReady>),Constructors(constructor_registration::Owned),
+    Subscriptions(Box<constructor_registration::Subscriptions>),
+    UnitSubscriptions(Box<constructor_registration::Subscriptions>,Vec<Owner>,u64),
+}
 impl RegistrationEvent {
-    pub(crate) fn completes_owner(&self)->bool { !matches!(self,Self::Decisions(_)) }
+    pub(crate) fn completes_owner(&self)->bool { !matches!(self,Self::Decisions(_)|Self::Cells(_)|Self::Structure(_,false)) }
 }
 impl RegistrationTask {
     pub(crate) fn run(self,emit:&(dyn Fn(RegistrationEvent)+Sync)) {
@@ -35,7 +41,7 @@ impl RegistrationTask {
                         assert!(owner.changes.insert(Dependency::Function(index),crate::change_batch::Change::Wake).is_none());
                         owner.added.push(NewRow {index,fields:item.fields});
                     }
-                    decisions.push(Decision {cell:item.cell,row:item.row,value:(index,new,activate)});
+                    decisions.push(Decision {cell:item.cell,row:item.row,value:(index,new,activate,job.deferred)});
                     if decisions.len()==32 || items.len()==0 {
                         emit(RegistrationEvent::Decisions(decisions));
                         decisions=Vec::with_capacity(items.len().min(32));
@@ -51,10 +57,22 @@ impl RegistrationTask {
                 state.decoded.resize_with(state.end,||None);
                 state.growth=(state.functions.capacity()-before.0)*std::mem::size_of::<Function>()
                     +(state.decoded.capacity()-before.1)*std::mem::size_of::<Option<RowFields>>();
-                if let Some(owner)=&mut state.constructors {owner.install();}
-                emit(RegistrationEvent::Structure(state));
+                let constructors=state.constructors.take();
+                emit(RegistrationEvent::Structure(state,constructors.is_none()));
+                if let Some(mut owner)=constructors {
+                    owner.install(&|cells|emit(RegistrationEvent::Cells(cells)));
+                    emit(RegistrationEvent::Constructors(owner));
+                }
             }
             Self::Subscriptions(mut owner)=> {owner.install();emit(RegistrationEvent::Subscriptions(owner));}
+            Self::UnitSubscriptions(mut owner,mut tables)=> {
+                let mut rows=0;
+                for table in &mut tables {
+                    for row in &table.added {owner.unit(row.index,&row.fields);rows+=1;}
+                    table.subscribed=true;
+                }
+                emit(RegistrationEvent::UnitSubscriptions(owner,tables,rows));
+            }
         }
     }
     #[cfg(test)]
@@ -70,7 +88,9 @@ impl Registration {
 }
 pub(crate) struct PendingRegistration {
     pub tasks:Vec<RegistrationTask>,pub registration:Registration,
-    structure_ready:bool,subscriptions_ready:bool,accepted:usize,
+    structure_ready:bool,subscriptions_expected:bool,accepted:usize,
+    subscriptions:Option<Box<constructor_registration::Subscriptions>>,waiting:Vec<Owner>,
+    constructor_finished:bool,
 }
 impl PendingRegistration {
     /// Restore all returned owners even after a source error. The source error
@@ -78,19 +98,19 @@ impl PendingRegistration {
     /// its original index so finish_unit_registration can invalidate its suffix.
     pub fn accept(&mut self,graph:&mut Graph,done:&mut [Completed],event:RegistrationEvent) {
         match event {
-            RegistrationEvent::Subscriptions(owner)=> {owner.restore(graph);self.subscriptions_ready=true;}
-            RegistrationEvent::Structure(state)=> {
+            RegistrationEvent::Subscriptions(owner)=> {assert!(self.subscriptions.replace(owner).is_none());}
+            RegistrationEvent::UnitSubscriptions(owner,tables,rows)=> {
+                assert!(self.subscriptions.replace(owner).is_none());
+                self.registration.owners.extend(tables);
+                graph.stats.unit_registry_worker_subscriptions+=rows;
+            }
+            RegistrationEvent::Cells(ready)=>self.registration.constructors.as_mut().unwrap().receive(graph,ready),
+            RegistrationEvent::Constructors(owner)=> {owner.restore(graph);self.constructor_finished=true;}
+            RegistrationEvent::Structure(state,_)=> {
                 assert!(graph.functions.is_empty() && graph.function_decoded.is_empty());
-                let Structure {functions,decoded,constructors,growth,births,..}=*state;
+                let Structure {functions,decoded,growth,..}=*state;
                 graph.functions=functions;graph.function_decoded=decoded;
                 graph.stats.unit_registry_capacity_growth_bytes+=growth as u64;
-                if let Some(owner)=constructors {
-                    graph.stats.constructor_registry_bytes+=owner.storage_bytes() as u64;
-                    graph.stats.constructor_registry_rows+=births as u64;
-                    graph.stats.constructor_registry_worker_rows+=if crate::sync_diagnostics::registry_inline() {0}else{births as u64};
-                    graph.stats.constructor_registry_batches+=1;
-                    self.registration.constructors=Some(owner.restore(graph));
-                }
                 self.structure_ready=true;
             }
             RegistrationEvent::Decisions(items)=> {
@@ -103,15 +123,30 @@ impl PendingRegistration {
             }
             RegistrationEvent::Table(owner)=> {
                 graph.stats.unit_registry_bytes+=(owner.added.capacity()*std::mem::size_of::<NewRow>()) as u64;
-                self.registration.owners.push(owner);
+                if self.subscriptions_expected {
+                    let before=self.waiting.capacity();self.waiting.push(owner);
+                    graph.stats.unit_registry_subscription_queue_bytes+=((self.waiting.capacity()-before)*std::mem::size_of::<Owner>()) as u64;
+                } else {self.registration.owners.push(owner);}
             }
         }
     }
     pub fn ready(&self,done:&[Completed])->usize {
-        if !self.structure_ready || !self.subscriptions_ready {return 0;}
-        done.iter().take_while(|d|d.done.piece.units.iter().all(|r|r.registered.is_some())).count()
+        if !self.structure_ready {return 0;}
+        let constructors=self.registration.constructors.as_ref().map_or(done.len(),|r|r.ready()-self.accepted);
+        done.iter().take(constructors).take_while(|d|d.done.piece.units.iter().all(|r|r.registered.is_some())).count()
     }
     pub fn advance(&mut self,count:usize) {self.accepted+=count;}
+    pub fn constructor_directories_pending(&self)->bool {!self.constructor_finished}
+    pub fn dispatch(&mut self,graph:&mut Graph,tasks:&mut Vec<RegistrationTask>) {
+        if !self.waiting.is_empty() && let Some(owner)=self.subscriptions.take() {
+            graph.stats.unit_registry_subscription_tasks+=1;
+            tasks.push(RegistrationTask::UnitSubscriptions(owner,std::mem::take(&mut self.waiting)));
+        }
+    }
+    pub fn restore_subscriptions(&mut self,graph:&mut Graph) {
+        assert!(self.waiting.is_empty() && self.constructor_finished);
+        if self.subscriptions_expected {self.subscriptions.take().expect("all subscription owners must return").restore(graph);}
+    }
 }
 
 impl Graph {
@@ -131,8 +166,11 @@ impl Graph {
         let start=self.functions.len();
         let end=start.checked_add(count).filter(|&end|end<u32::MAX as usize)?;
         let birth_count=done.iter().map(|d|d.done.piece.rows.len()).sum::<usize>();
-        let births=birth_count!=0 && self.local_jobs_supported() && done.iter().all(|d| {
-            self.cells.get(&d.done.cell).is_some_and(|c|d.done.piece.rows.iter().all(|r|
+        let ordered=done.windows(2).all(|w|w[0].done.cell<w[1].done.cell);
+        let births=birth_count!=0 && self.local_jobs_supported() && ordered && done.iter().enumerate().all(|(i,d)| {
+            self.cells.get(&d.done.cell).is_some_and(|c|
+                c.parent.is_none_or(|parent|done.binary_search_by_key(&parent.cell,|d|d.done.cell).map_or(true,|p|p<i))
+                && d.done.piece.rows.iter().all(|r|
                 r.operation>=c.completed_prefix && !c.facts.contains_key(&(r.operation as u32))
                 && self.program.repair_ports.key_eq_columns[r.table].is_some()))
         });
@@ -141,18 +179,23 @@ impl Graph {
             tables.entry(r.function.table).or_default().push(Item {cell,row,source,fields:r.fields.clone()});source+=1;
         }}
         self.stats.unit_registry_bytes+=tables.values().map(|v|v.capacity()*std::mem::size_of::<Item>()).sum::<usize>() as u64;
-        let mut tasks:Vec<_>=tables.into_iter().map(|(table,items)|RegistrationTask::Table(TableJob {items,start,owner:Owner {
+        let mut tasks:Vec<_>=tables.into_iter().map(|(table,items)|RegistrationTask::Table(TableJob {items,start,deferred:births,owner:Owner {
             table,keys:self.function_keys[table].take_owner(),members:self.members[table].take_owner(),
-            version:self.query_versions[table],changes:self.changes.take_new_row_table(table),added:Vec::new(),
+            version:self.query_versions[table],changes:self.changes.take_new_row_table(table),added:Vec::new(),subscribed:false,
         }})).collect();
         let table_count=tasks.len();
+        let mut constructor_registration=None;
         let constructors=births.then(|| {
-            let (rows,subscriptions)=constructor_registration::Owned::take(self,done);
+            let (rows,subscriptions,registration)=constructor_registration::Owned::take(self,done);
+            constructor_registration=Some(registration);
+            self.stats.constructor_registry_rows+=birth_count as u64;
+            self.stats.constructor_registry_worker_rows+=if crate::sync_diagnostics::registry_inline() {0}else{birth_count as u64};
+            self.stats.constructor_registry_batches+=1;
             tasks.insert(0,RegistrationTask::Subscriptions(Box::new(subscriptions)));rows
         });
         tasks.push(RegistrationTask::Structure(Box::new(Structure {
             functions:std::mem::take(&mut self.functions),decoded:std::mem::take(&mut self.function_decoded),
-            end,first_table:first_table.unwrap(),constructors,growth:0,births:birth_count,
+            end,first_table:first_table.unwrap(),constructors,growth:0,
         })));
         // The structure owner gates every Cell; submit it first. Table owners
         // still run independently and may return in any order.
@@ -168,15 +211,16 @@ impl Graph {
         self.stats.unit_registry_owner_tables+=table_count as u64;
         self.stats.unit_registry_reserved_slots+=count as u64;
         self.stats.unit_registry_reserved_bytes+=(count*(std::mem::size_of::<Function>()+std::mem::size_of::<Option<RowFields>>())) as u64;
-        Some(PendingRegistration {tasks,registration:Registration {owners,start,end,constructors:None},structure_ready:false,subscriptions_ready:!births,accepted:0})
+        Some(PendingRegistration {tasks,registration:Registration {owners,start,end,constructors:constructor_registration},structure_ready:false,subscriptions_expected:births,accepted:0,subscriptions:None,waiting:Vec::new(),constructor_finished:!births})
     }
 
     #[cfg(test)]
     pub(crate) fn plan_unit_registration(&mut self,done:&mut [Completed],pool:&rayon::ThreadPool)->Option<Registration> {
         let mut pending=self.prepare_unit_registration(done)?;
         let tasks=std::mem::take(&mut pending.tasks);
-        crate::completion_events::fragments(tasks,(!crate::sync_diagnostics::registry_inline()).then_some(pool),RegistrationTask::run,
-            |ready| {for event in ready.drain(..) {pending.accept(self,done,event);}});
+        crate::completion_events::fragments_with_followups(tasks,(!crate::sync_diagnostics::registry_inline()).then_some(pool),RegistrationTask::run,
+            |ready,tasks| {for event in ready.drain(..) {pending.accept(self,done,event);}pending.dispatch(self,tasks);});
+        pending.restore_subscriptions(self);
         Some(pending.registration)
     }
 
@@ -205,6 +249,7 @@ impl Graph {
                 owner.keys.remove(&row.fields[..row.fields.len()-1]);
                 assert!(owner.members.remove(&(row.index as u64)));
                 assert!(owner.changes.remove(&Dependency::Function(row.index)).is_some());
+                if owner.subscribed {self.replace_subscriptions(Dependency::Function(row.index),Default::default());}
             }
             assert_eq!(self.query_versions[owner.table],owner.version-total as u64,"no intervening table effects");
             self.function_keys[owner.table]=owner.keys;self.members[owner.table]=owner.members;
@@ -241,6 +286,88 @@ mod tests {
         Completed {effects:Default::default(),done:Done {cell:0,worker:None,
             frame:Local {values:Default::default(),facts:Default::default(),completed_prefix:0},
             piece:Piece {end:0,rows:Default::default(),units:rows,aliases:0,counts:Default::default()}}}
+    }
+    fn constructor_units()->(Graph,Vec<Completed>) {
+        use std::sync::Arc;
+        let mut p=super::super::tests::graph().program;
+        for i in 0..2 {
+            let mut table=p.tables[0].clone();table.name=format!("unit-{i}");
+            table.constructor=false;table.virtual_fact=false;table.schema[1]=json!({"kind":"Unit"});
+            table.merge=json!({"var":if i==0 {"old"}else{"new"}});p.tables.push(table);p.table_templates.push(0);
+            p.merge_programs.merges.insert(1+i,std::rc::Rc::new(crate::merge_programs::Merge {
+                operations:vec![],result:Arg::Slot(i)}));
+        }
+        let mut ops=p.templates[0].ops.to_vec();
+        ops.push(Op::Set(1,vec![Arg::Slot(4)],Arg::Literal(Value::Int(0))));
+        ops.push(Op::Set(2,vec![Arg::Literal(Value::Eq(900))],Arg::Literal(Value::Int(0))));
+        p.templates[0].ops=Arc::new(ops);p.known_results.static_skip[0]=std::rc::Rc::new(vec![false;6]);
+        p.executions[0]=crate::cell::execution::Plan::derive(&p.tables,&p.templates[0],&[0]);
+        p.executions[0].births=Plan::derive(&p,0).map(Arc::new);p.repair_ports=repair_ports::Plan::derive(&p);
+        let mut g=Graph::new(p).unwrap();let mut done=Vec::new();
+        for i in 0..64 {
+            let cell=g.begin_transient(0,[(0,Value::Eq(100+i))].into_iter().collect(),None).unwrap();
+            g.construct(cell,0,0,&[Arg::Slot(0)],1).unwrap();g.rhs_frame_mut(cell).unwrap().completed_prefix=1;
+            let mut window=Window::seed(&g,cell,1);
+            let (_,job)=g.take_local_job(0,cell,&mut window,6,true).unwrap();
+            let mut effects=crate::cell::Effects::default();
+            done.push(Completed {done:job.unwrap().run(g.parents.reader(),&mut effects.writer()),effects});
+        }
+        (g,done)
+    }
+    #[test]
+    fn cell_completion_does_not_wait_for_constructor_directories_or_subscriptions() {
+        use std::{sync::{Mutex,mpsc},time::Duration};
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(4).build().unwrap();
+        for stop in [0,1,15,16,33,64] {
+            let (mut g,mut done)=constructor_units();let (mut expected,reference)=constructor_units();
+            let mut pending=g.prepare_unit_registration(&mut done).unwrap();
+            assert!(pending.registration.constructors.is_some());
+            let tasks=std::mem::take(&mut pending.tasks);
+            let (row_tx,row_rx)=mpsc::channel();let row_rx=Mutex::new(row_rx);
+            let (sub_tx,sub_rx)=mpsc::channel();let sub_rx=Mutex::new(sub_rx);
+            let mut adopted=0;let mut failed=false;let mut released=false;
+            crate::completion_events::fragments_with_followups(tasks,Some(&pool),|task,emit| {
+                if matches!(&task,RegistrationTask::Subscriptions(_)) {
+                    sub_rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();
+                }
+                let first=std::sync::atomic::AtomicBool::new(true);
+                task.run(&|event| {
+                    let pause=matches!(&event,RegistrationEvent::Cells(_))
+                        && first.swap(false,std::sync::atomic::Ordering::AcqRel);
+                    emit(event);
+                    if pause {row_rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
+                });
+            },|events,tasks| {
+                for event in events.drain(..) {pending.accept(&mut g,&mut done,event);}
+                pending.dispatch(&mut g,tasks);
+                if !failed {
+                    let n=pending.ready(&done);
+                    if n!=0 {
+                        pending.advance(n);
+                        for mut d in done.drain(..n) {
+                            if adopted==stop {failed=true;break;}
+                            let publication=pending.registration.take_births(d.done.cell);
+                            g.commit_registered_local_job(d.done,&mut d.effects.writer(),publication).unwrap();adopted+=1;
+                        }
+                        if !released {
+                            assert_eq!(n,16);assert!(pending.constructor_directories_pending());
+                            assert!(g.members.is_empty() && g.uses.is_empty(),"source completion cannot borrow the leased directories");
+                            row_tx.send(()).unwrap();sub_tx.send(()).unwrap();released=true;
+                        }
+                    }
+                }
+            });
+            assert!(released);assert_eq!(adopted,stop);
+            pending.restore_subscriptions(&mut g);g.finish_unit_registration(pending.registration);
+            for mut d in reference.into_iter().take(stop) {expected.commit_local_job(d.done,&mut d.effects.writer()).unwrap();}
+            assert_eq!(g.export().unwrap(),expected.export().unwrap());
+            assert_eq!(g.query_versions,expected.query_versions);
+            assert_eq!((g.changes.events,g.changes.distinct_events),(expected.changes.events,expected.changes.distinct_events));
+            assert_eq!(g.maintenance.live_reverse_edges,expected.maintenance.live_reverse_edges);
+            assert!(g.stats.unit_registry_worker_subscriptions>0);
+            for graph in [&mut g,&mut expected] {graph.union(100,101).unwrap();graph.repair().unwrap();}
+            assert_eq!(g.export().unwrap(),expected.export().unwrap(),"later repair sees only the adopted facts and Unit rows");
+        }
     }
     #[test]
     fn source_cells_finish_before_their_table_owner_finishes_and_errors_restore_late_owners() {

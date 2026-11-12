@@ -74,6 +74,39 @@ pub(super) fn subscribe_canonical_constructor(
     replace_subscriptions(uses,dependencies,metrics,parents,d,refs);
 }
 
+/// A new Cell operation / reserved Function address has no old incidences.
+/// Its fields were canonicalized in the same sealed, union-free epoch. The
+/// ordinary replacement path remains authoritative for every existing row.
+#[cfg(feature="sparse-cells")]
+pub(super) fn subscribe_fresh(
+    uses:&mut HashMap<u64,UseSet>,dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    metrics:&mut Metrics,d:Dependency,values:&[Value],columns:Option<&[usize]>,
+) {
+    let mut refs=smallvec::SmallVec::<[u64;3]>::new();
+    metrics.subscription_calls+=1;
+    if let Some(columns)=columns {
+        for column in columns.iter().copied().chain(std::iter::once(values.len()-1)) {
+            let Value::Eq(id)=values[column] else {panic!("typed constructor Eq port")};refs.push(id);
+        }
+        metrics.canonical_subscription_calls+=1;
+        metrics.subscription_value_visits+=refs.len() as u64;
+        metrics.subscription_scalar_fields_skipped+=(values.len()-refs.len()) as u64;
+    } else {
+        fn collect(v:&Value,refs:&mut smallvec::SmallVec<[u64;3]>,visits:&mut u64) {
+            *visits+=1;
+            match v {Value::Eq(id)=>refs.push(*id),Value::Set(xs)=>for x in xs.iter() {collect(x,refs,visits);},_=>()}
+        }
+        for v in values {collect(v,&mut refs,&mut metrics.subscription_value_visits);}
+    }
+    metrics.subscription_root_reads_omitted+=refs.len() as u64;
+    refs.sort_unstable();refs.dedup();
+    let std::collections::hash_map::Entry::Vacant(slot)=dependencies.entry(d) else {
+        panic!("fresh witness must have no previous incidences");
+    };
+    for &id in &refs {insert(uses,metrics,id,d);}
+    if !refs.is_empty() {slot.insert(refs);}
+}
+
 #[cfg(feature="sparse-cells")]
 pub(super) fn replace_subscriptions(
     uses:&mut HashMap<u64,UseSet>, dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,

@@ -32,15 +32,21 @@ pub(crate) struct ChangeBatch {
 }
 
 impl ChangeBatch {
-    #[cfg(feature="sparse-cells")]
+    #[cfg(all(test,feature="sparse-cells"))]
     pub(crate) fn prepare_new_row(&mut self,table:usize,witness:Dependency)->bool {
         let rows=&mut self.tables[table];let activate=rows.is_empty();
         assert!(rows.insert(witness,Change::Wake).is_none(),"fresh row publication");
         activate
     }
-    #[cfg(feature="sparse-cells")]
+    #[cfg(all(test,feature="sparse-cells"))]
     pub(crate) fn activate_prepared_table(&mut self,table:usize) {
         assert!(!self.tables[table].is_empty());
+        self.activate_registered_table(table);
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn activate_registered_table(&mut self,table:usize) {
+        // The exact first-row certificate may arrive before its leased map.
+        // Source order, not directory return order, determines activation.
         self.active.push(table);
     }
     #[cfg(feature="sparse-cells")]

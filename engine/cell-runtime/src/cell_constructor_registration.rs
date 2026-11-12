@@ -8,6 +8,7 @@ use super::*;
 pub(crate) struct Publication {
     tables: smallvec::SmallVec<[(usize, u64, bool); 2]>,
 }
+#[cfg(test)]
 #[derive(Clone,Copy)]
 pub(super) struct Group<'a> {
     pub cell: u32,
@@ -23,101 +24,129 @@ struct Installed {
 }
 pub(super) struct Registration { installed: Vec<Installed>, next:usize }
 
-/// Transfer the existing directories, not a copy of the graph. No source Cell
-/// may advance until this owner has returned. Unit table owners are disjoint
-/// and may still be running when it returns.
-pub(super) struct Owned {
-    cells:arena::Cells,intern:HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
-    members:Vec<TableRows<u64>>,changes:crate::change_batch::ChangeBatch,
-    epoch:u64,input:std::sync::Arc<Input>,installed:Option<Registration>,
+/// Only the named executing instances leave the arena. Existing parents and
+/// unrelated Cells remain readable; constructor directories may return later.
+pub(crate) struct Owned {
+    frames:Vec<Vec<CellReady>>,intern:HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
+    members:Vec<TableRows<u64>>,changes:BTreeMap<usize,HashMap<Dependency,crate::change_batch::Change>>,
+    epoch:u64,input:std::sync::Arc<Input>,
 }
 pub(crate) struct Subscriptions {
     uses:HashMap<u64,UseSet>,dependencies:HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
-    metrics:maintenance::Metrics,parents:Parents,columns:std::sync::Arc<[Option<Vec<usize>>]>,
+    metrics:maintenance::Metrics,columns:std::sync::Arc<[Option<Vec<usize>>]>,
     input:std::sync::Arc<Input>,
 }
+pub(crate) struct CellReady {cell:u32,frame:Cell,installed:Installed}
 struct Input {groups:Vec<OwnedGroup>,rows:Vec<Born>}
-struct OwnedGroup {cell:u32,first:usize,end:usize,rows:std::ops::Range<usize>}
-impl Input {
-    fn groups(&self)->impl Iterator<Item=Group<'_>>+Clone {
-        self.groups.iter().map(|g|Group {cell:g.cell,first:g.first,end:g.end,rows:&self.rows[g.rows.clone()]})
-    }
-}
+struct OwnedGroup {cell:u32,rows:std::ops::Range<usize>}
 impl Owned {
-    pub fn take(graph:&mut Graph,done:&mut [Completed])->(Self,Subscriptions) {
+    pub(super) fn take(graph:&mut Graph,done:&mut [Completed])->(Self,Subscriptions,Registration) {
         let mut rows=Vec::with_capacity(done.iter().map(|d|d.done.piece.rows.len()).sum());
         let groups=done.iter_mut().map(|d| {
             let first=rows.len();rows.extend(d.done.piece.rows.drain(..));
-            OwnedGroup {cell:d.done.cell,first:graph.cells[&d.done.cell].completed_prefix,
-                end:d.done.piece.end,rows:first..rows.len()}
+            OwnedGroup {cell:d.done.cell,rows:first..rows.len()}
         }).collect();
         let input=std::sync::Arc::new(Input {groups,rows});
+        let changes=input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter()
+            .map(|table|(table,graph.changes.take_new_row_table(table))).collect();
+        // Move the original instance straight into its eventual event buffer.
+        // The worker fills publication certificates in place; no second frame
+        // vector or per-instance transfer allocation is needed on completion.
+        let frames=input.groups.chunks(16).enumerate().map(|(chunk,groups)|groups.iter().enumerate().map(|(i,g)| {
+            let frame=graph.cells.remove(&g.cell).unwrap();
+            let installed=Installed {cell:g.cell,first:frame.completed_prefix,
+                end:done[chunk*16+i].done.piece.end,publication:Publication::default()};
+            CellReady {cell:g.cell,frame,installed}
+        }).collect()).collect();
         let subscriptions=Subscriptions {uses:std::mem::take(&mut graph.uses),
             dependencies:std::mem::take(&mut graph.dependencies),metrics:std::mem::take(&mut graph.maintenance),
-            parents:std::mem::take(&mut graph.parents),columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
-        let rows=Self {cells:std::mem::take(&mut graph.cells),intern:std::mem::take(&mut graph.intern),
-            members:std::mem::take(&mut graph.members),
-            changes:std::mem::replace(&mut graph.changes,crate::change_batch::ChangeBatch::new(0)),
-            epoch:graph.epoch,input,installed:None};
-        (rows,subscriptions)
+            columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
+        let rows=Self {frames,intern:std::mem::take(&mut graph.intern),members:std::mem::take(&mut graph.members),
+            changes,epoch:graph.epoch,input};
+        let registration=Registration {installed:Vec::with_capacity(done.len()),next:0};
+        graph.stats.constructor_registry_bytes+=(rows.storage_bytes()+registration.storage_bytes()) as u64;
+        (rows,subscriptions,registration)
     }
-    pub fn install(&mut self) {
-        self.installed=Some(RowOwner {cells:&mut self.cells,intern:&mut self.intern,members:&mut self.members,
-            changes:&mut self.changes,epoch:self.epoch}.install(self.input.groups()));
+    pub fn install(&mut self,emit:&(dyn Fn(Vec<CellReady>)+Sync)) {
+        let mut i=0;
+        for mut ready in std::mem::take(&mut self.frames) {
+            for cell in &mut ready {
+                let group=&self.input.groups[i];i+=1;assert_eq!(cell.cell,group.cell);
+                let changes=&mut self.changes;
+                cell.installed.publication=install_cell(cell.cell,&mut cell.frame,
+                    &self.input.rows[group.rows.clone()],self.epoch,&mut self.intern,&mut self.members,
+                    |table,witness| {
+                        let rows=changes.get_mut(&table).unwrap();let activate=rows.is_empty();
+                        assert!(rows.insert(witness,crate::change_batch::Change::Wake).is_none());activate
+                    });
+            }
+            emit(ready);
+        }
     }
-    pub fn storage_bytes(&self)->usize {
-        // Two tasks share the moved row headers; no binding or fields are copied.
-        // Arc counters and both owner boxes are included once for this region.
+    fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>()+std::mem::size_of::<Subscriptions>()+std::mem::size_of::<Input>()
             +2*std::mem::size_of::<usize>()+self.input.groups.capacity()*std::mem::size_of::<OwnedGroup>()
             +self.input.rows.capacity()*std::mem::size_of::<Born>()
-            +self.installed.as_ref().map_or(0,Registration::storage_bytes)
+            +self.frames.capacity()*std::mem::size_of::<Vec<CellReady>>()
     }
-    pub fn restore(self,graph:&mut Graph)->Registration {
-        assert!(graph.cells.is_empty() && graph.members.is_empty(),"no source access before structure completion");
-        graph.cells=self.cells;graph.intern=self.intern;graph.members=self.members;graph.changes=self.changes;
-        self.installed.expect("completed constructor owner")
+    pub fn restore(self,graph:&mut Graph) {
+        assert!(graph.members.is_empty() && graph.intern.is_empty(),"no constructor lookup inside terminal registration");
+        graph.intern=self.intern;graph.members=self.members;
+        for (table,rows) in self.changes {graph.changes.restore_new_row_table(table,rows);}
     }
 }
 impl Subscriptions {
     pub fn install(&mut self) {
-        subscribe_rows(&mut self.uses,&mut self.dependencies,&mut self.metrics,&self.parents,&self.columns,self.input.groups());
+        for group in &self.input.groups {for row in &self.input.rows[group.rows.clone()] {
+            maintenance::subscribe_fresh(&mut self.uses,&mut self.dependencies,&mut self.metrics,
+                Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,
+                Some(self.columns[row.table].as_ref().unwrap()));
+        }}
+    }
+    pub fn unit(&mut self,index:usize,fields:&[Value]) {
+        maintenance::subscribe_fresh(&mut self.uses,&mut self.dependencies,&mut self.metrics,
+            Dependency::Function(index),fields,None);
     }
     pub fn restore(self,graph:&mut Graph) {
         assert!(graph.uses.is_empty() && graph.dependencies.is_empty());
-        graph.uses=self.uses;graph.dependencies=self.dependencies;graph.maintenance=self.metrics;graph.parents=self.parents;
+        graph.uses=self.uses;graph.dependencies=self.dependencies;graph.maintenance=self.metrics;
     }
 }
+fn install_cell(cell:u32,frame:&mut Cell,rows:&[Born],epoch:u64,
+    intern:&mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,members:&mut [TableRows<u64>],
+    mut prepare:impl FnMut(usize,Dependency)->bool)->Publication {
+    let mut publication=Publication::default();
+    for row in rows {
+        let f=FactRef {cell,op:row.operation as u32};
+        assert!(frame.facts.insert(f.op,FactState {owned:false,local_union_owned:false,
+            #[cfg(feature="receipt-slots")] port_slot:0,
+            decoded:Some((row.table,row.fields.clone())),entry:None,hidden:false,epoch,born:epoch,hash:row.hash,
+        }).is_none(),"fresh constructor operation");
+        intern.entry(row.hash).or_default().insert(f);members[row.table].insert(f.ordered_id());
+        let activate=prepare(row.table,Dependency::Fact(f));
+        if let Some((_,count,_))=publication.tables.iter_mut().find(|r|r.0==row.table) {*count+=1;}
+        else {publication.tables.push((row.table,1,activate));}
+    }
+    publication
+}
+#[cfg(test)]
 struct RowOwner<'a> {
     cells:&'a mut arena::Cells,intern:&'a mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
     members:&'a mut [TableRows<u64>],changes:&'a mut crate::change_batch::ChangeBatch,epoch:u64,
 }
+#[cfg(test)]
 impl RowOwner<'_> {
     fn install<'a>(self,groups:impl Iterator<Item=Group<'a>>)->Registration {
         let Self {cells,intern,members,changes,epoch}=self;
-        let installed = groups.map(|group| {
-            let mut publication = Publication::default();
-            let facts = &mut cells.get_mut(&group.cell).expect("public constructor prefix").facts;
-            for row in group.rows {
-                let f = FactRef {cell:group.cell, op:row.operation as u32};
-                assert!(facts.insert(f.op, FactState {
-                    owned:false, local_union_owned:false,
-                    #[cfg(feature="receipt-slots")] port_slot:0,
-                    decoded:Some((row.table,row.fields.clone())), entry:None,
-                    hidden:false, epoch, born:epoch, hash:row.hash,
-                }).is_none(), "fresh constructor operation");
-                intern.entry(row.hash).or_default().insert(f);
-                members[row.table].insert(f.ordered_id());
-                let activate = changes.prepare_new_row(row.table, Dependency::Fact(f));
-                if let Some((_,count,_)) = publication.tables.iter_mut().find(|r|r.0==row.table) {
-                    *count += 1;
-                } else { publication.tables.push((row.table,1,activate)); }
-            }
+        let installed=groups.map(|group| {
+            let publication=install_cell(group.cell,cells.get_mut(&group.cell).unwrap(),group.rows,epoch,intern,members,
+                |table,witness|changes.prepare_new_row(table,witness));
             Installed {cell:group.cell,first:group.first,end:group.end,publication}
         }).collect();
         Registration {installed,next:0}
     }
 }
+#[cfg(test)]
 fn subscribe_rows<'a>(uses:&mut HashMap<u64,UseSet>,
     dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
     metrics:&mut maintenance::Metrics,parents:&Parents,columns:&[Option<Vec<usize>>],
@@ -130,6 +159,19 @@ fn subscribe_rows<'a>(uses:&mut HashMap<u64,UseSet>,
     }}
 }
 impl Registration {
+    pub fn receive(&mut self,graph:&mut Graph,ready:Vec<CellReady>) {
+        graph.stats.constructor_registry_frame_bytes+=(ready.capacity()*std::mem::size_of::<CellReady>()) as u64;
+        graph.stats.constructor_registry_frame_events+=1;
+        graph.stats.constructor_registry_frame_transfers+=ready.len() as u64;
+        for CellReady {cell,frame,installed} in ready {
+            if installed.publication.tables.spilled() {
+                graph.stats.constructor_registry_bytes+=(installed.publication.tables.capacity()*std::mem::size_of::<(usize,u64,bool)>()) as u64;
+            }
+            assert!(graph.cells.insert(cell,frame).is_none(),"return original instance once");
+            self.installed.push(installed);
+        }
+    }
+    pub fn ready(&self)->usize {self.installed.len()}
     pub fn storage_bytes(&self) -> usize {
         let mut bytes=self.installed.capacity()*std::mem::size_of::<Installed>();
         for installed in &self.installed {
@@ -171,7 +213,7 @@ impl Graph {
         let count=publication.tables.iter().map(|(_,n,_)|*n as usize).sum::<usize>();
         self.stats.constructor_registry_fragments+=publication.tables.len() as u64;
         for (table,rows,activate) in publication.tables {
-            if activate {self.changes.activate_prepared_table(table);}
+            if activate {self.changes.activate_registered_table(table);}
             self.changes.finish_new_rows(table,rows);
             self.query_versions[table]+=rows;
         }

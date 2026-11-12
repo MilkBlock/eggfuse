@@ -240,6 +240,22 @@ pub struct Stats {
     #[serde(default)]
     pub unit_registry_accepted_cells:u64,
     #[serde(default)]
+    pub unit_registry_deferred_subscriptions:u64,
+    #[serde(default)]
+    pub unit_registry_worker_subscriptions:u64,
+    #[serde(default)]
+    pub unit_registry_subscription_tasks:u64,
+    #[serde(default)]
+    pub unit_registry_subscription_queue_bytes:u64,
+    #[serde(default)]
+    pub constructor_registry_frame_bytes:u64,
+    #[serde(default)]
+    pub constructor_registry_frame_events:u64,
+    #[serde(default)]
+    pub constructor_registry_frame_transfers:u64,
+    #[serde(default)]
+    pub constructor_registry_pre_return_cells:u64,
+    #[serde(default)]
     pub constructor_registry_batches:u64,
     #[serde(default)]
     pub constructor_registry_rows:u64,

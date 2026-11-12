@@ -51,8 +51,16 @@ pub(crate) fn followups<T: Send, R: Send, E>(tasks: Vec<T>, extra:usize, pool: O
 /// A long-lived owner may release several completed fragments before returning
 /// its directory. The receiver drains every event, including after its own
 /// source error, so leased owners are never discarded by an early return.
+#[cfg(test)]
 pub(crate) fn fragments<T:Send,R:Send>(tasks:Vec<T>,pool:Option<&rayon::ThreadPool>,
     run:impl Fn(T,&(dyn Fn(R)+Sync))+Sync,mut consume:impl FnMut(&mut Vec<R>))->Work {
+    fragments_with_followups(tasks,pool,run,|ready,_|consume(ready))
+}
+
+/// Followups reuse this same pool scope. A returned directory can therefore
+/// continue maintenance without waiting for unrelated initial owners.
+pub(crate) fn fragments_with_followups<T:Send,R:Send>(mut tasks:Vec<T>,pool:Option<&rayon::ThreadPool>,
+    run:impl Fn(T,&(dyn Fn(R)+Sync))+Sync,mut consume:impl FnMut(&mut Vec<R>,&mut Vec<T>))->Work {
     struct State<R> {ready:Vec<R>,remaining:usize,aborted:bool,bytes:u64}
     struct Guard<'a,R> {state:&'a Mutex<State<R>>,wake:&'a Condvar,done:bool}
     impl<R> Drop for Guard<'_,R> {
@@ -65,11 +73,13 @@ pub(crate) fn fragments<T:Send,R:Send>(tasks:Vec<T>,pool:Option<&rayon::ThreadPo
     // Use the same event semantics inline, without borrowing the source from
     // a worker callback. This mode is a diagnostic, not the parallel runtime.
     let Some(pool)=pool else {
-        for task in tasks {
+        while !tasks.is_empty() {for task in std::mem::take(&mut tasks) {
             let ready=Mutex::new(Vec::new());run(task,&|event|ready.lock().unwrap().push(event));
             let mut ready=ready.into_inner().unwrap();work.bytes+=(ready.capacity()*std::mem::size_of::<R>()) as u64;
-            work.waves+=u64::from(!ready.is_empty());consume(&mut ready);
-        }
+            let before=tasks.capacity();
+            work.waves+=u64::from(!ready.is_empty());consume(&mut ready,&mut tasks);
+            work.bytes+=((tasks.capacity()-before)*std::mem::size_of::<T>()) as u64;
+        }}
         return work;
     };
     let state=Mutex::new(State {ready:Vec::new(),remaining:tasks.len(),aborted:false,bytes:0});
@@ -80,12 +90,13 @@ pub(crate) fn fragments<T:Send,R:Send>(tasks:Vec<T>,pool:Option<&rayon::ThreadPo
             wake.notify_one();
         };
     pool.in_place_scope_fifo(|scope| {
-        for task in tasks {
+        let spawn=|task| {
             let (state,wake,run,send)=(&state,&wake,&run,&send);
             scope.spawn_fifo(move |_| {
                 let mut guard=Guard {state,wake,done:false};run(task,send);guard.done=true;
             });
-        }
+        };
+        for task in tasks.drain(..) {spawn(task);}
         loop {
             let mut pending=state.lock().unwrap();
             if pending.aborted {break;}
@@ -96,7 +107,13 @@ pub(crate) fn fragments<T:Send,R:Send>(tasks:Vec<T>,pool:Option<&rayon::ThreadPo
             if pending.aborted || (pending.ready.is_empty() && pending.remaining==0) {break;}
             std::mem::swap(&mut ready,&mut pending.ready);
             work.early+=if pending.remaining!=0 {ready.len() as u64}else{0};drop(pending);
-            work.waves+=1;consume(&mut ready);ready.clear();
+            let before=tasks.capacity();
+            work.waves+=1;consume(&mut ready,&mut tasks);ready.clear();
+            work.bytes+=((tasks.capacity()-before)*std::mem::size_of::<T>()) as u64;
+            if !tasks.is_empty() {
+                state.lock().unwrap().remaining+=tasks.len();
+                for task in tasks.drain(..) {spawn(task);}
+            }
         }
     });
     // Growth is counted where each vector grows, not again when it swaps hands.
@@ -223,6 +240,35 @@ fn run_events<T: Send, R: Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<
 mod tests {
     use super::*;
     use std::{sync::mpsc, time::Duration};
+
+    #[test]
+    fn fragment_followups_reuse_the_scope_with_one_worker_or_inline() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
+        for executor in [None,Some(&pool)] {
+            let mut values=Vec::new();
+            fragments_with_followups(vec![0],executor,|i,emit|emit(i),|ready,next| {
+                for i in ready.drain(..) {values.push(i);if i<5 {next.push(i+1);}}
+            });
+            assert_eq!(values,[0,1,2,3,4,5]);
+        }
+        assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            fragments_with_followups(vec![0],Some(&pool),|i,emit| {
+                assert_ne!(i,1,"followup owner failed");emit(i);
+            },|ready,next| {for _ in ready.drain(..) {next.push(1);}});
+        })).is_err());
+    }
+
+    #[test]
+    fn fragment_followup_can_release_an_unrelated_initial_owner() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
+        let (tx,rx)=mpsc::channel();let rx=Mutex::new(rx);let mut values=Vec::new();
+        fragments_with_followups(vec![0,1],Some(&pool),|i,emit| {
+            if i==1 {rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
+            if i==2 {tx.send(()).unwrap();}
+            emit(i);
+        },|ready,next| {for i in ready.drain(..) {values.push(i);if i==0 {next.push(2);}}});
+        values.sort_unstable();assert_eq!(values,[0,1,2]);
+    }
 
     #[test]
     fn fragment_stream_handles_one_worker_empty_work_and_worker_panics() {

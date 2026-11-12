@@ -44,7 +44,7 @@ impl Executor {
         let inline=crate::sync_diagnostics::registry_inline();
         let mut result=Ok(());
         diagnostic.enter();
-        let events=crate::completion_events::fragments(tasks,(!inline).then_some(pool),|task,emit| {
+        let events=crate::completion_events::fragments_with_followups(tasks,(!inline).then_some(pool),|task,emit| {
             task.run(&|event| {
                 // Registration has already finished before its final owner
                 // event is queued. Do not count a delayed task epilogue as
@@ -52,8 +52,10 @@ impl Executor {
                 if event.completes_owner() {unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);}
                 emit(event);
             });
-        },|ready| {
+        },|ready,tasks| {
             for event in ready.drain(..) {pending.accept(&mut self.graph,completed,event);}
+            pending.dispatch(&mut self.graph,tasks);
+            unfinished.fetch_add(tasks.len(),std::sync::atomic::Ordering::AcqRel);
             if result.is_ok() {
                 let count=pending.ready(completed);
                 if count!=0 {
@@ -64,6 +66,11 @@ impl Executor {
                     if result.is_ok() {self.graph.stats.unit_registry_accepted_cells+=count as u64;}
                     if result.is_ok() && unfinished.load(std::sync::atomic::Ordering::Acquire)!=0 {
                         self.graph.stats.unit_registry_early_cells+=count as u64;
+                    }
+                    if result.is_ok() && pending.constructor_directories_pending() {
+                        // The owner may already have emitted its final event.
+                        // This measures return independence, not worker CPU use.
+                        self.graph.stats.constructor_registry_pre_return_cells+=count as u64;
                     }
                     #[cfg(feature="cell-sync-diagnostics")] {
                         let elapsed=start.elapsed().as_nanos() as u64;
@@ -79,6 +86,7 @@ impl Executor {
         diagnostic.join();
         self.graph.stats.unit_registry_event_bytes+=events.bytes;
         self.graph.stats.unit_registry_event_wait_ns+=events.wait_ns;
+        pending.restore_subscriptions(&mut self.graph);
         self.graph.finish_unit_registration(pending.registration);
         #[cfg(feature="cell-sync-diagnostics")]
         self.graph.stats.sync_diagnostics.registration.record(diagnostic,None,!inline,pool.current_num_threads());
