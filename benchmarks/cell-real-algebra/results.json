@@ -1,0 +1,228 @@
+{
+  "scope": "standalone finite teacher; real quadratic dynamics; no symbolic repair",
+  "gpu_execution": false,
+  "semantic_takeover_accepted": false,
+  "selection": {
+    "regularization": 10.0,
+    "iteration": 3,
+    "validation_one_step": 0.7620320855614974,
+    "validation_whole_trace": 0.3198051948051948
+  },
+  "validation": [
+    {
+      "regularization": 1.0,
+      "iteration": 0,
+      "validation_one_step": 0.7303284950343774,
+      "validation_whole_trace": 0.003246753246753247
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 1,
+      "validation_one_step": 0.7394957983193278,
+      "validation_whole_trace": 0.15422077922077923
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 2,
+      "validation_one_step": 0.7368220015278839,
+      "validation_whole_trace": 0.1672077922077922
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 3,
+      "validation_one_step": 0.7391138273491215,
+      "validation_whole_trace": 0.18019480519480519
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 4,
+      "validation_one_step": 0.7383498854087089,
+      "validation_whole_trace": 0.18668831168831168
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 5,
+      "validation_one_step": 0.7375859434682964,
+      "validation_whole_trace": 0.18344155844155843
+    },
+    {
+      "regularization": 1.0,
+      "iteration": 6,
+      "validation_one_step": 0.7383498854087089,
+      "validation_whole_trace": 0.17694805194805194
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 0,
+      "validation_one_step": 0.7627960275019099,
+      "validation_whole_trace": 0.003246753246753247
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 1,
+      "validation_one_step": 0.7635599694423224,
+      "validation_whole_trace": 0.29545454545454547
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 2,
+      "validation_one_step": 0.7620320855614974,
+      "validation_whole_trace": 0.30194805194805197
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 3,
+      "validation_one_step": 0.7620320855614974,
+      "validation_whole_trace": 0.3198051948051948
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 4,
+      "validation_one_step": 0.7616501145912911,
+      "validation_whole_trace": 0.3133116883116883
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 5,
+      "validation_one_step": 0.7612681436210847,
+      "validation_whole_trace": 0.3181818181818182
+    },
+    {
+      "regularization": 10.0,
+      "iteration": 6,
+      "validation_one_step": 0.7616501145912911,
+      "validation_whole_trace": 0.31655844155844154
+    }
+  ],
+  "test": {
+    "exact_state_rate": 0.7692307692307693,
+    "wrong_bits": 3165,
+    "rows": 2652,
+    "variable_bit_error": 0.03140628721124077,
+    "false_positive": 1556,
+    "false_negative": 1609,
+    "latent_rmse": 0.7105698585510254,
+    "changed": {
+      "exact_state_rate": 0.7016546018614271,
+      "wrong_bits": 3048,
+      "rows": 1934,
+      "variable_bit_error": 0.04147390192129756,
+      "false_positive": 1456,
+      "false_negative": 1592
+    },
+    "no_op": {
+      "exact_state_rate": 0.9512534818941504,
+      "wrong_bits": 117,
+      "rows": 718,
+      "variable_bit_error": 0.0042882275326198505,
+      "false_positive": 100,
+      "false_negative": 17
+    }
+  },
+  "autonomous": {
+    "steps": [
+      {
+        "exact_state_rate": 0.7676282051282052,
+        "wrong_bits": 698,
+        "rows": 624,
+        "variable_bit_error": 0.029436572199730095,
+        "false_positive": 344,
+        "false_negative": 354
+      },
+      {
+        "exact_state_rate": 0.6506410256410257,
+        "wrong_bits": 1115,
+        "rows": 624,
+        "variable_bit_error": 0.047022604588394065,
+        "false_positive": 497,
+        "false_negative": 618
+      },
+      {
+        "exact_state_rate": 0.7259615384615384,
+        "wrong_bits": 1272,
+        "rows": 624,
+        "variable_bit_error": 0.053643724696356275,
+        "false_positive": 453,
+        "false_negative": 819
+      },
+      {
+        "exact_state_rate": 0.6826923076923077,
+        "wrong_bits": 1511,
+        "rows": 624,
+        "variable_bit_error": 0.06372300944669365,
+        "false_positive": 616,
+        "false_negative": 895
+      },
+      {
+        "exact_state_rate": 0.6442307692307693,
+        "wrong_bits": 1682,
+        "rows": 624,
+        "variable_bit_error": 0.07093454790823212,
+        "false_positive": 570,
+        "false_negative": 1112
+      },
+      {
+        "exact_state_rate": 0.6778846153846154,
+        "wrong_bits": 1259,
+        "rows": 624,
+        "variable_bit_error": 0.053095479082321186,
+        "false_positive": 316,
+        "false_negative": 943
+      },
+      {
+        "exact_state_rate": 0.7131410256410257,
+        "wrong_bits": 1112,
+        "rows": 624,
+        "variable_bit_error": 0.04689608636977058,
+        "false_positive": 202,
+        "false_negative": 910
+      },
+      {
+        "exact_state_rate": 0.7131410256410257,
+        "wrong_bits": 1417,
+        "rows": 624,
+        "variable_bit_error": 0.05975877192982456,
+        "false_positive": 185,
+        "false_negative": 1232
+      },
+      {
+        "exact_state_rate": 0.6778846153846154,
+        "wrong_bits": 1582,
+        "rows": 624,
+        "variable_bit_error": 0.06671727395411606,
+        "false_positive": 211,
+        "false_negative": 1371
+      },
+      {
+        "exact_state_rate": 0.7035256410256411,
+        "wrong_bits": 1688,
+        "rows": 624,
+        "variable_bit_error": 0.07118758434547909,
+        "false_positive": 142,
+        "false_negative": 1546
+      },
+      {
+        "exact_state_rate": 0.7131410256410257,
+        "wrong_bits": 1788,
+        "rows": 624,
+        "variable_bit_error": 0.07540485829959515,
+        "false_positive": 92,
+        "false_negative": 1696
+      },
+      {
+        "exact_state_rate": 0.7291666666666666,
+        "wrong_bits": 1864,
+        "rows": 624,
+        "variable_bit_error": 0.07860998650472335,
+        "false_positive": 93,
+        "false_negative": 1771
+      }
+    ],
+    "all_steps_exact_rate": 0.28846153846153844,
+    "latent_max_abs": 7.6953125,
+    "trajectories": 624
+  },
+  "training_edges": 6224,
+  "training_composition_pairs": 5679,
+  "source_sha256": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a"
+}

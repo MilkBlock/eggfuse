@@ -1,0 +1,1932 @@
+{
+  "algebra-fp32": {
+    "evaluation_status": "complete",
+    "finite_checks_pass": false,
+    "native_semantic_acceptance": false,
+    "runtime_takeover": false,
+    "held_initial_states": 156,
+    "initial_reconstruction": {
+      "rows": 156,
+      "exact_rows": 156,
+      "wrong_bits": 0,
+      "nonfinite_rows": 0
+    },
+    "one_step": {
+      "rows": 2652,
+      "exact_rows": 2040,
+      "wrong_bits": 3167,
+      "nonfinite_rows": 0
+    },
+    "two_step": {
+      "rows": 45084,
+      "exact_rows": 29775,
+      "wrong_bits": 84096,
+      "nonfinite_rows": 0
+    },
+    "reverse_two_step": {
+      "rows": 45084,
+      "exact_rows": 29775,
+      "wrong_bits": 84096,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_train": {
+      "rows": 1231,
+      "exact_rows": 880,
+      "wrong_bits": 1942,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_held": {
+      "rows": 1421,
+      "exact_rows": 1160,
+      "wrong_bits": 1225,
+      "nonfinite_rows": 0
+    },
+    "rule_enabled_boundary_feedback": {
+      "rows": 1,
+      "exact_rows": 0,
+      "wrong_bits": 24,
+      "nonfinite_rows": 0
+    },
+    "repeated_event": {
+      "rows": 2652,
+      "exact_rows": 2135,
+      "wrong_bits": 3066,
+      "nonfinite_rows": 0
+    },
+    "idempotent_observation_pairs": 1985,
+    "commuting_observation_pairs": 26268,
+    "ordered_event_pairs": 45084,
+    "sequences": [
+      {
+        "seed": 20261112,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 173,
+        "teacher_forced_all_steps_exact": 293,
+        "checkpoints": [
+          {
+            "exact_rows": 484,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 431,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 413,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 415,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 447,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 448,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 421,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 443,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 457,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 444,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 104729,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 183,
+        "teacher_forced_all_steps_exact": 309,
+        "checkpoints": [
+          {
+            "exact_rows": 465,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 395,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 444,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 427,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 422,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 452,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 436,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 424,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 428,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 434,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 440,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 65537,
+        "steps": 48,
+        "trajectories": 624,
+        "all_steps_exact": 154,
+        "teacher_forced_all_steps_exact": 309,
+        "checkpoints": [
+          {
+            "exact_rows": 484,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 417,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 409,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 464,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 457,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 459,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 435,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 425,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 439,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 442,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 441,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 435,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 432,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 433,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 431,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 427,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 424,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 419,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 413,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 408,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 413,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 402,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 402,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 401,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 405,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 398,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 398,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 398,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 396,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 395,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 394,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 395,
+            "nonfinite_rows": 0
+          }
+        ]
+      }
+    ],
+    "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+    "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+    "adapter_sha256": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+    "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+    "weights_sha256": "5cac5a03adc026e5d6e5f42216983d5e815989bf58139bdadfbb18173fc260ad",
+    "implementation_sha256": {
+      "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+      "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+    },
+    "precision_option": "fp32"
+  },
+  "algebra-half": {
+    "evaluation_status": "complete",
+    "finite_checks_pass": false,
+    "native_semantic_acceptance": false,
+    "runtime_takeover": false,
+    "held_initial_states": 156,
+    "initial_reconstruction": {
+      "rows": 156,
+      "exact_rows": 156,
+      "wrong_bits": 0,
+      "nonfinite_rows": 0
+    },
+    "one_step": {
+      "rows": 2652,
+      "exact_rows": 2040,
+      "wrong_bits": 3165,
+      "nonfinite_rows": 0
+    },
+    "two_step": {
+      "rows": 45084,
+      "exact_rows": 29775,
+      "wrong_bits": 84095,
+      "nonfinite_rows": 0
+    },
+    "reverse_two_step": {
+      "rows": 45084,
+      "exact_rows": 29775,
+      "wrong_bits": 84095,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_train": {
+      "rows": 1231,
+      "exact_rows": 880,
+      "wrong_bits": 1940,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_held": {
+      "rows": 1421,
+      "exact_rows": 1160,
+      "wrong_bits": 1225,
+      "nonfinite_rows": 0
+    },
+    "rule_enabled_boundary_feedback": {
+      "rows": 1,
+      "exact_rows": 0,
+      "wrong_bits": 24,
+      "nonfinite_rows": 0
+    },
+    "repeated_event": {
+      "rows": 2652,
+      "exact_rows": 2135,
+      "wrong_bits": 3065,
+      "nonfinite_rows": 0
+    },
+    "idempotent_observation_pairs": 1985,
+    "commuting_observation_pairs": 26262,
+    "ordered_event_pairs": 45084,
+    "sequences": [
+      {
+        "seed": 20261112,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 173,
+        "teacher_forced_all_steps_exact": 293,
+        "checkpoints": [
+          {
+            "exact_rows": 484,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 432,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 412,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 416,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 447,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 447,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 421,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 442,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 456,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 445,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 104729,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 183,
+        "teacher_forced_all_steps_exact": 309,
+        "checkpoints": [
+          {
+            "exact_rows": 465,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 395,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 444,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 427,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 422,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 452,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 436,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 424,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 430,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 434,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 440,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 65537,
+        "steps": 48,
+        "trajectories": 624,
+        "all_steps_exact": 155,
+        "teacher_forced_all_steps_exact": 309,
+        "checkpoints": [
+          {
+            "exact_rows": 484,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 417,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 409,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 464,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 457,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 459,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 435,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 425,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 439,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 442,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 440,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 436,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 433,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 432,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 438,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 437,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 431,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 427,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 424,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 419,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 412,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 409,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 412,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 406,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 403,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 406,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 402,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 403,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 398,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 396,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 394,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 396,
+            "nonfinite_rows": 0
+          }
+        ]
+      }
+    ],
+    "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+    "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+    "adapter_sha256": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+    "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+    "weights_sha256": "5cac5a03adc026e5d6e5f42216983d5e815989bf58139bdadfbb18173fc260ad",
+    "implementation_sha256": {
+      "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+      "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+    },
+    "precision_option": "fp16"
+  },
+  "joint-fp32": {
+    "evaluation_status": "complete",
+    "finite_checks_pass": false,
+    "native_semantic_acceptance": false,
+    "runtime_takeover": false,
+    "held_initial_states": 156,
+    "initial_reconstruction": {
+      "rows": 156,
+      "exact_rows": 155,
+      "wrong_bits": 1,
+      "nonfinite_rows": 0
+    },
+    "one_step": {
+      "rows": 2652,
+      "exact_rows": 1694,
+      "wrong_bits": 3937,
+      "nonfinite_rows": 0
+    },
+    "two_step": {
+      "rows": 45084,
+      "exact_rows": 24293,
+      "wrong_bits": 117504,
+      "nonfinite_rows": 0
+    },
+    "reverse_two_step": {
+      "rows": 45084,
+      "exact_rows": 24293,
+      "wrong_bits": 117504,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_train": {
+      "rows": 1231,
+      "exact_rows": 770,
+      "wrong_bits": 1626,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_held": {
+      "rows": 1421,
+      "exact_rows": 924,
+      "wrong_bits": 2311,
+      "nonfinite_rows": 0
+    },
+    "rule_enabled_boundary_feedback": {
+      "rows": 1,
+      "exact_rows": 0,
+      "wrong_bits": 19,
+      "nonfinite_rows": 0
+    },
+    "repeated_event": {
+      "rows": 2652,
+      "exact_rows": 1576,
+      "wrong_bits": 5158,
+      "nonfinite_rows": 0
+    },
+    "idempotent_observation_pairs": 1417,
+    "commuting_observation_pairs": 21708,
+    "ordered_event_pairs": 45084,
+    "sequences": [
+      {
+        "seed": 20261112,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 54,
+        "teacher_forced_all_steps_exact": 172,
+        "checkpoints": [
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 331,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 299,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 367,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 434,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 473,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 526,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 539,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 493,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 479,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 458,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 400,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 104729,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 50,
+        "teacher_forced_all_steps_exact": 209,
+        "checkpoints": [
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 345,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 301,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 384,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 476,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 502,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 534,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 480,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 468,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 445,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 414,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 65537,
+        "steps": 48,
+        "trajectories": 624,
+        "all_steps_exact": 0,
+        "teacher_forced_all_steps_exact": 185,
+        "checkpoints": [
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 327,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 297,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 372,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 442,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 476,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 515,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 534,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 496,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 492,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 449,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 388,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 351,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 301,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 264,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 238,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 203,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 193,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 194,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 201,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 222,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 235,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 265,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 279,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 309,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 315,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 321,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 297,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 296,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 296,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 274,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 268,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 251,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 266,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 276,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 276,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 282,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 281,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 277,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 273,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 275,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 252,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 261,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 265,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 274,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 269,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 269,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 270,
+            "nonfinite_rows": 0
+          }
+        ]
+      }
+    ],
+    "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+    "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+    "adapter_sha256": "d3cc9482903b8d1f12e7cb4e7d46b06772f9b6ea9b686652d48ca7e012c6e641",
+    "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+    "weights_sha256": "478bac5083e5854f7a498c3afcfffe5d04484e3fb8ab82f93c606293f749f8b9",
+    "implementation_sha256": {
+      "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+      "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+    },
+    "precision_option": "fp32"
+  },
+  "joint-half": {
+    "evaluation_status": "complete",
+    "finite_checks_pass": false,
+    "native_semantic_acceptance": false,
+    "runtime_takeover": false,
+    "held_initial_states": 156,
+    "initial_reconstruction": {
+      "rows": 156,
+      "exact_rows": 155,
+      "wrong_bits": 1,
+      "nonfinite_rows": 0
+    },
+    "one_step": {
+      "rows": 2652,
+      "exact_rows": 1694,
+      "wrong_bits": 3937,
+      "nonfinite_rows": 0
+    },
+    "two_step": {
+      "rows": 45084,
+      "exact_rows": 24288,
+      "wrong_bits": 117513,
+      "nonfinite_rows": 0
+    },
+    "reverse_two_step": {
+      "rows": 45084,
+      "exact_rows": 24288,
+      "wrong_bits": 117513,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_train": {
+      "rows": 1231,
+      "exact_rows": 770,
+      "wrong_bits": 1626,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_held": {
+      "rows": 1421,
+      "exact_rows": 924,
+      "wrong_bits": 2311,
+      "nonfinite_rows": 0
+    },
+    "rule_enabled_boundary_feedback": {
+      "rows": 1,
+      "exact_rows": 0,
+      "wrong_bits": 19,
+      "nonfinite_rows": 0
+    },
+    "repeated_event": {
+      "rows": 2652,
+      "exact_rows": 1577,
+      "wrong_bits": 5154,
+      "nonfinite_rows": 0
+    },
+    "idempotent_observation_pairs": 1417,
+    "commuting_observation_pairs": 21698,
+    "ordered_event_pairs": 45084,
+    "sequences": [
+      {
+        "seed": 20261112,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 54,
+        "teacher_forced_all_steps_exact": 172,
+        "checkpoints": [
+          {
+            "exact_rows": 399,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 329,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 299,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 367,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 434,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 474,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 526,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 539,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 493,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 478,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 458,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 401,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 104729,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 50,
+        "teacher_forced_all_steps_exact": 209,
+        "checkpoints": [
+          {
+            "exact_rows": 397,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 345,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 301,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 384,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 451,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 476,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 502,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 534,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 479,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 468,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 445,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 415,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 65537,
+        "steps": 48,
+        "trajectories": 624,
+        "all_steps_exact": 0,
+        "teacher_forced_all_steps_exact": 185,
+        "checkpoints": [
+          {
+            "exact_rows": 407,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 327,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 297,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 372,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 441,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 476,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 514,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 534,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 496,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 492,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 450,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 388,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 350,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 301,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 265,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 238,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 203,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 192,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 193,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 199,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 223,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 234,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 267,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 280,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 309,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 315,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 319,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 300,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 293,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 292,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 275,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 267,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 249,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 267,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 278,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 279,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 282,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 283,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 281,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 276,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 277,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 254,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 264,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 268,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 277,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 269,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 264,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 267,
+            "nonfinite_rows": 0
+          }
+        ]
+      }
+    ],
+    "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+    "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+    "adapter_sha256": "d3cc9482903b8d1f12e7cb4e7d46b06772f9b6ea9b686652d48ca7e012c6e641",
+    "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+    "weights_sha256": "478bac5083e5854f7a498c3afcfffe5d04484e3fb8ab82f93c606293f749f8b9",
+    "implementation_sha256": {
+      "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+      "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+    },
+    "precision_option": "fp16activations"
+  },
+  "prior": {
+    "evaluation_status": "complete",
+    "finite_checks_pass": false,
+    "native_semantic_acceptance": false,
+    "runtime_takeover": false,
+    "held_initial_states": 156,
+    "initial_reconstruction": {
+      "rows": 156,
+      "exact_rows": 156,
+      "wrong_bits": 0,
+      "nonfinite_rows": 0
+    },
+    "one_step": {
+      "rows": 2652,
+      "exact_rows": 643,
+      "wrong_bits": 12652,
+      "nonfinite_rows": 0
+    },
+    "two_step": {
+      "rows": 45084,
+      "exact_rows": 2953,
+      "wrong_bits": 380605,
+      "nonfinite_rows": 0
+    },
+    "reverse_two_step": {
+      "rows": 45084,
+      "exact_rows": 2953,
+      "wrong_bits": 380605,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_train": {
+      "rows": 1231,
+      "exact_rows": 53,
+      "wrong_bits": 8021,
+      "nonfinite_rows": 0
+    },
+    "one_step_target_held": {
+      "rows": 1421,
+      "exact_rows": 590,
+      "wrong_bits": 4631,
+      "nonfinite_rows": 0
+    },
+    "rule_enabled_boundary_feedback": {
+      "rows": 1,
+      "exact_rows": 0,
+      "wrong_bits": 29,
+      "nonfinite_rows": 0
+    },
+    "repeated_event": {
+      "rows": 2652,
+      "exact_rows": 464,
+      "wrong_bits": 15317,
+      "nonfinite_rows": 0
+    },
+    "idempotent_observation_pairs": 493,
+    "commuting_observation_pairs": 16134,
+    "ordered_event_pairs": 45084,
+    "sequences": [
+      {
+        "seed": 20261112,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 0,
+        "teacher_forced_all_steps_exact": 0,
+        "checkpoints": [
+          {
+            "exact_rows": 159,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 31,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 26,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 73,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 126,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 108,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 145,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 186,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 180,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 168,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 175,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 165,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 104729,
+        "steps": 12,
+        "trajectories": 624,
+        "all_steps_exact": 0,
+        "teacher_forced_all_steps_exact": 0,
+        "checkpoints": [
+          {
+            "exact_rows": 131,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 36,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 17,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 71,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 138,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 122,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 153,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 166,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 143,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 141,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 158,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 152,
+            "nonfinite_rows": 0
+          }
+        ]
+      },
+      {
+        "seed": 65537,
+        "steps": 48,
+        "trajectories": 624,
+        "all_steps_exact": 0,
+        "teacher_forced_all_steps_exact": 0,
+        "checkpoints": [
+          {
+            "exact_rows": 180,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 41,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 25,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 66,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 130,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 110,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 145,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 174,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 159,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 175,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 178,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 170,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 165,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 157,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 140,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 130,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 130,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 119,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 116,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 102,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 112,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 90,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 95,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 96,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 94,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 79,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 81,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 89,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 83,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 78,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 77,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 89,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 76,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 85,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 89,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 86,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 89,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 93,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 84,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 80,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 82,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 79,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 73,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 74,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 81,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 74,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 75,
+            "nonfinite_rows": 0
+          },
+          {
+            "exact_rows": 77,
+            "nonfinite_rows": 0
+          }
+        ]
+      }
+    ],
+    "teacher_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+    "corpus_sha256": "bfd415ed2593fde5eefb62652adb39b6b5ec1bc16d92f4d738d7a83c536ae0a2",
+    "adapter_sha256": "26ba61854a020817c6ee7aec2d469ebc920a6fd73e1dd76d19f043479d985a01",
+    "evaluator_sha256": "3772de4783b80c7bfdd7969305ac8c61841618ddcd31f40d33569505c280e647",
+    "weights_sha256": "4924b6553ba7a790646b806240c155cc772390d6b739976b3c198e5312894599",
+    "implementation_sha256": {
+      "cell-real-state": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+      "cell-real-algebra": "68143f2113755b20b9b05b08bc818bcd83afc0605c10525750df9ebdd90c907a",
+      "cell-real-joint": "28a9996c9aabd6b3faab55167bb7315b8a883fbc6746bd89ab662f861a53174a"
+    },
+    "precision_option": null
+  }
+}

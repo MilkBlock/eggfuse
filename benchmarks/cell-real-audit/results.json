@@ -1,0 +1,236 @@
+{
+  "source_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b",
+  "gradient": {
+    "checked_parameters": 83,
+    "maximum_absolute_error": 6.501420513060907e-10,
+    "scope": "float64 finite differences of the copied BPTT equations; excludes FP16 quantization and optimizer quality"
+  },
+  "actions": [
+    {
+      "action": 0,
+      "training_edges": 358,
+      "training_changes": 237,
+      "testing_changes": 120,
+      "testing_unseen_targets": 81,
+      "distinct_training_targets": 121
+    },
+    {
+      "action": 1,
+      "training_edges": 371,
+      "training_changes": 238,
+      "testing_changes": 114,
+      "testing_unseen_targets": 77,
+      "distinct_training_targets": 133
+    },
+    {
+      "action": 2,
+      "training_edges": 352,
+      "training_changes": 228,
+      "testing_changes": 122,
+      "testing_unseen_targets": 74,
+      "distinct_training_targets": 124
+    },
+    {
+      "action": 3,
+      "training_edges": 370,
+      "training_changes": 240,
+      "testing_changes": 119,
+      "testing_unseen_targets": 80,
+      "distinct_training_targets": 130
+    },
+    {
+      "action": 4,
+      "training_edges": 355,
+      "training_changes": 231,
+      "testing_changes": 123,
+      "testing_unseen_targets": 82,
+      "distinct_training_targets": 124
+    },
+    {
+      "action": 5,
+      "training_edges": 377,
+      "training_changes": 242,
+      "testing_changes": 121,
+      "testing_unseen_targets": 80,
+      "distinct_training_targets": 135
+    },
+    {
+      "action": 6,
+      "training_edges": 351,
+      "training_changes": 228,
+      "testing_changes": 117,
+      "testing_unseen_targets": 82,
+      "distinct_training_targets": 123
+    },
+    {
+      "action": 7,
+      "training_edges": 379,
+      "training_changes": 242,
+      "testing_changes": 122,
+      "testing_unseen_targets": 68,
+      "distinct_training_targets": 137
+    },
+    {
+      "action": 8,
+      "training_edges": 349,
+      "training_changes": 229,
+      "testing_changes": 109,
+      "testing_unseen_targets": 95,
+      "distinct_training_targets": 120
+    },
+    {
+      "action": 9,
+      "training_edges": 369,
+      "training_changes": 236,
+      "testing_changes": 117,
+      "testing_unseen_targets": 83,
+      "distinct_training_targets": 133
+    },
+    {
+      "action": 10,
+      "training_edges": 385,
+      "training_changes": 248,
+      "testing_changes": 120,
+      "testing_unseen_targets": 77,
+      "distinct_training_targets": 137
+    },
+    {
+      "action": 11,
+      "training_edges": 342,
+      "training_changes": 229,
+      "testing_changes": 112,
+      "testing_unseen_targets": 92,
+      "distinct_training_targets": 113
+    },
+    {
+      "action": 12,
+      "training_edges": 349,
+      "training_changes": 231,
+      "testing_changes": 116,
+      "testing_unseen_targets": 80,
+      "distinct_training_targets": 118
+    },
+    {
+      "action": 13,
+      "training_edges": 353,
+      "training_changes": 230,
+      "testing_changes": 119,
+      "testing_unseen_targets": 86,
+      "distinct_training_targets": 123
+    },
+    {
+      "action": 14,
+      "training_edges": 377,
+      "training_changes": 240,
+      "testing_changes": 123,
+      "testing_unseen_targets": 80,
+      "distinct_training_targets": 137
+    },
+    {
+      "action": 15,
+      "training_edges": 392,
+      "training_changes": 149,
+      "testing_changes": 79,
+      "testing_unseen_targets": 102,
+      "distinct_training_targets": 243
+    },
+    {
+      "action": 16,
+      "training_edges": 395,
+      "training_changes": 146,
+      "testing_changes": 81,
+      "testing_unseen_targets": 102,
+      "distinct_training_targets": 249
+    }
+  ],
+  "popular_targets": [
+    {
+      "index": 1,
+      "flags": 3,
+      "base_classes": 1,
+      "split": "train",
+      "incoming": 486
+    },
+    {
+      "index": 3,
+      "flags": 2,
+      "base_classes": 1,
+      "split": "validation",
+      "incoming": 333
+    },
+    {
+      "index": 0,
+      "flags": 1,
+      "base_classes": 1,
+      "split": "train",
+      "incoming": 257
+    },
+    {
+      "index": 2,
+      "flags": 0,
+      "base_classes": 1,
+      "split": "train",
+      "incoming": 255
+    },
+    {
+      "index": 407,
+      "flags": 3,
+      "base_classes": 2,
+      "split": "train",
+      "incoming": 94
+    },
+    {
+      "index": 205,
+      "flags": 3,
+      "base_classes": 2,
+      "split": "train",
+      "incoming": 94
+    },
+    {
+      "index": 18,
+      "flags": 3,
+      "base_classes": 2,
+      "split": "validation",
+      "incoming": 94
+    },
+    {
+      "index": 207,
+      "flags": 2,
+      "base_classes": 2,
+      "split": "test",
+      "incoming": 92
+    },
+    {
+      "index": 406,
+      "flags": 1,
+      "base_classes": 2,
+      "split": "train",
+      "incoming": 92
+    },
+    {
+      "index": 20,
+      "flags": 2,
+      "base_classes": 2,
+      "split": "train",
+      "incoming": 92
+    },
+    {
+      "index": 17,
+      "flags": 1,
+      "base_classes": 2,
+      "split": "train",
+      "incoming": 92
+    },
+    {
+      "index": 409,
+      "flags": 2,
+      "base_classes": 2,
+      "split": "test",
+      "incoming": 92
+    }
+  ],
+  "excluded_train_to_held_edges": 2208,
+  "base_partitions": 203,
+  "partitions_with_rule_effect": 116,
+  "partitions_with_boundary_feedback": 5
+}
