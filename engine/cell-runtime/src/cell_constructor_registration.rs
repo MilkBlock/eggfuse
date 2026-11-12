@@ -3,18 +3,11 @@
 //! owners. Source order opens only the prepared publication fragments; it does
 //! not repeat row installation. An unadopted suffix is invalidated on error.
 use super::*;
+use std::collections::VecDeque;
 
 #[derive(Default)]
 pub(crate) struct Publication {
     tables: smallvec::SmallVec<[(usize, u64, bool); 2]>,
-}
-#[cfg(test)]
-#[derive(Clone,Copy)]
-pub(super) struct Group<'a> {
-    pub cell: u32,
-    pub first: usize,
-    pub end: usize,
-    pub rows: &'a [Born],
 }
 struct Installed {
     cell: u32,
@@ -22,10 +15,16 @@ struct Installed {
     end: usize,
     publication: Publication,
 }
-pub(super) struct Registration { installed: Vec<Installed>, next:usize }
+#[derive(Default)]
+pub(super) struct Registration {
+    ready:VecDeque<std::vec::IntoIter<CellReady>>,received:usize,
+    // A source error stops adoption before the next take. Earlier certificates
+    // can retire; this last offered Cell and the untouched suffix remain live.
+    offered:Option<Installed>,
+}
 
-/// Only the named executing instances leave the arena. Existing parents and
-/// unrelated Cells remain readable; constructor directories may return later.
+/// Only the original fact slots leave the instance. Its values, parent and
+/// physical arena position stay in place while registration fills those slots.
 pub(crate) struct Owned {
     frames:Vec<Vec<CellReady>>,intern:HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
     members:Vec<TableRows<u64>>,changes:BTreeMap<usize,HashMap<Dependency,crate::change_batch::Change>>,
@@ -36,7 +35,7 @@ pub(crate) struct Subscriptions {
     metrics:maintenance::Metrics,columns:std::sync::Arc<[Option<Vec<usize>>]>,
     input:std::sync::Arc<Input>,
 }
-pub(crate) struct CellReady {cell:u32,frame:Cell,installed:Installed}
+pub(crate) struct CellReady {facts:crate::slots::FrameMap<u32,FactState>,installed:Installed}
 struct Input {groups:Vec<OwnedGroup>,rows:Vec<Born>}
 struct OwnedGroup {cell:u32,rows:std::ops::Range<usize>}
 impl Owned {
@@ -49,31 +48,29 @@ impl Owned {
         let input=std::sync::Arc::new(Input {groups,rows});
         let changes=input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter()
             .map(|table|(table,graph.changes.take_new_row_table(table))).collect();
-        // Move the original instance straight into its eventual event buffer.
-        // The worker fills publication certificates in place; no second frame
-        // vector or per-instance transfer allocation is needed on completion.
+        // Lease only the slots this worker writes. The original arena layout
+        // and all Cell input/continuation state stay in place.
         let frames=input.groups.chunks(16).enumerate().map(|(chunk,groups)|groups.iter().enumerate().map(|(i,g)| {
-            let frame=graph.cells.remove(&g.cell).unwrap();
+            let frame=graph.cells.get_mut(&g.cell).unwrap();
             let installed=Installed {cell:g.cell,first:frame.completed_prefix,
                 end:done[chunk*16+i].done.piece.end,publication:Publication::default()};
-            CellReady {cell:g.cell,frame,installed}
+            CellReady {facts:std::mem::take(&mut frame.facts),installed}
         }).collect()).collect();
         let subscriptions=Subscriptions {uses:std::mem::take(&mut graph.uses),
             dependencies:std::mem::take(&mut graph.dependencies),metrics:std::mem::take(&mut graph.maintenance),
             columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
         let rows=Self {frames,intern:std::mem::take(&mut graph.intern),members:std::mem::take(&mut graph.members),
             changes,epoch:graph.epoch,input};
-        let registration=Registration {installed:Vec::with_capacity(done.len()),next:0};
-        graph.stats.constructor_registry_bytes+=(rows.storage_bytes()+registration.storage_bytes()) as u64;
-        (rows,subscriptions,registration)
+        graph.stats.constructor_registry_bytes+=rows.storage_bytes() as u64;
+        (rows,subscriptions,Registration::default())
     }
     pub fn install(&mut self,emit:&(dyn Fn(Vec<CellReady>)+Sync)) {
         let mut i=0;
         for mut ready in std::mem::take(&mut self.frames) {
             for cell in &mut ready {
-                let group=&self.input.groups[i];i+=1;assert_eq!(cell.cell,group.cell);
+                let group=&self.input.groups[i];i+=1;assert_eq!(cell.installed.cell,group.cell);
                 let changes=&mut self.changes;
-                cell.installed.publication=install_cell(cell.cell,&mut cell.frame,
+                cell.installed.publication=install_cell(cell.installed.cell,&mut cell.facts,
                     &self.input.rows[group.rows.clone()],self.epoch,&mut self.intern,&mut self.members,
                     |table,witness| {
                         let rows=changes.get_mut(&table).unwrap();let activate=rows.is_empty();
@@ -112,13 +109,13 @@ impl Subscriptions {
         graph.uses=self.uses;graph.dependencies=self.dependencies;graph.maintenance=self.metrics;
     }
 }
-fn install_cell(cell:u32,frame:&mut Cell,rows:&[Born],epoch:u64,
+fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&[Born],epoch:u64,
     intern:&mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,members:&mut [TableRows<u64>],
     mut prepare:impl FnMut(usize,Dependency)->bool)->Publication {
     let mut publication=Publication::default();
     for row in rows {
         let f=FactRef {cell,op:row.operation as u32};
-        assert!(frame.facts.insert(f.op,FactState {owned:false,local_union_owned:false,
+        assert!(facts.insert(f.op,FactState {owned:false,local_union_owned:false,
             #[cfg(feature="receipt-slots")] port_slot:0,
             decoded:Some((row.table,row.fields.clone())),entry:None,hidden:false,epoch,born:epoch,hash:row.hash,
         }).is_none(),"fresh constructor operation");
@@ -129,65 +126,40 @@ fn install_cell(cell:u32,frame:&mut Cell,rows:&[Born],epoch:u64,
     }
     publication
 }
-#[cfg(test)]
-struct RowOwner<'a> {
-    cells:&'a mut arena::Cells,intern:&'a mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
-    members:&'a mut [TableRows<u64>],changes:&'a mut crate::change_batch::ChangeBatch,epoch:u64,
-}
-#[cfg(test)]
-impl RowOwner<'_> {
-    fn install<'a>(self,groups:impl Iterator<Item=Group<'a>>)->Registration {
-        let Self {cells,intern,members,changes,epoch}=self;
-        let installed=groups.map(|group| {
-            let publication=install_cell(group.cell,cells.get_mut(&group.cell).unwrap(),group.rows,epoch,intern,members,
-                |table,witness|changes.prepare_new_row(table,witness));
-            Installed {cell:group.cell,first:group.first,end:group.end,publication}
-        }).collect();
-        Registration {installed,next:0}
-    }
-}
-#[cfg(test)]
-fn subscribe_rows<'a>(uses:&mut HashMap<u64,UseSet>,
-    dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
-    metrics:&mut maintenance::Metrics,parents:&Parents,columns:&[Option<Vec<usize>>],
-    groups:impl Iterator<Item=Group<'a>>) {
-    for group in groups {for row in group.rows {
-        // The same typed footprint and sealed canonical fields used by Graph.
-        let columns=columns[row.table].as_ref().expect("typed constructor footprint");
-        maintenance::subscribe_canonical_constructor(uses,dependencies,metrics,parents,
-            Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,columns);
-    }}
-}
 impl Registration {
-    pub fn receive(&mut self,graph:&mut Graph,ready:Vec<CellReady>) {
+    pub fn receive(&mut self,graph:&mut Graph,mut ready:Vec<CellReady>) {
         graph.stats.constructor_registry_frame_bytes+=(ready.capacity()*std::mem::size_of::<CellReady>()) as u64;
         graph.stats.constructor_registry_frame_events+=1;
         graph.stats.constructor_registry_frame_transfers+=ready.len() as u64;
-        for CellReady {cell,frame,installed} in ready {
+        self.received+=ready.len();
+        for CellReady {facts,installed} in &mut ready {
             if installed.publication.tables.spilled() {
                 graph.stats.constructor_registry_bytes+=(installed.publication.tables.capacity()*std::mem::size_of::<(usize,u64,bool)>()) as u64;
             }
-            assert!(graph.cells.insert(cell,frame).is_none(),"return original instance once");
-            self.installed.push(installed);
+            let frame=graph.cells.get_mut(&installed.cell).expect("the original instance stays in place");
+            assert!(frame.facts.is_empty(),"return original fact slots once");
+            frame.facts=std::mem::take(facts);
         }
+        // Keep the original completion buffer until its certificates are used;
+        // there is no second all-Cell Installed vector or successful-prefix log.
+        let before=self.ready.capacity();self.ready.push_back(ready.into_iter());
+        graph.stats.constructor_registry_bytes+=((self.ready.capacity()-before)*std::mem::size_of::<std::vec::IntoIter<CellReady>>()) as u64;
     }
-    pub fn ready(&self)->usize {self.installed.len()}
-    pub fn storage_bytes(&self) -> usize {
-        let mut bytes=self.installed.capacity()*std::mem::size_of::<Installed>();
-        for installed in &self.installed {
-            if installed.publication.tables.spilled() {
-                bytes+=installed.publication.tables.capacity()*std::mem::size_of::<(usize,u64,bool)>();
-            }
-        }
-        bytes
-    }
+    pub fn ready(&self)->usize {self.received}
+    /// The caller completes each offered Cell before taking the next one, or
+    /// stops on its source error and drains owners without further adoption.
     pub fn take(&mut self,cell:u32)->Publication {
-        let installed=&mut self.installed[self.next];self.next+=1;
+        let chunk=self.ready.front_mut().expect("ready constructor fragment");
+        let mut installed=chunk.next().expect("nonempty fragment").installed;
+        if chunk.len()==0 {self.ready.pop_front();}
         assert_eq!(installed.cell,cell,"source-ordered constructor acceptance");
-        std::mem::take(&mut installed.publication)
+        let publication=std::mem::take(&mut installed.publication);
+        self.offered=Some(installed);
+        publication
     }
     pub fn finish(self, graph: &mut Graph) {
-        for installed in self.installed {
+        for installed in self.offered.into_iter().chain(self.ready.into_iter().flatten().map(|c|c.installed)) {
+            graph.stats.constructor_registry_retirement_checks+=1;
             if graph.cells[&installed.cell].completed_prefix >= installed.end {continue;}
             // Only a failed source prefix reaches here. Earlier adopted rows
             // and their original publication order are left intact.
@@ -263,17 +235,21 @@ mod tests {
     #[test]
     fn actual_indexes_and_subscriptions_keep_only_the_source_adopted_prefix() {
         let pool=rayon::ThreadPoolBuilder::new().num_threads(4).build().unwrap();
-        for stop in [0,1,3,8] {
-            let (mut g,done)=prepared();let (mut expected,reference)=prepared();
-            let groups:Vec<_>=done.iter().map(|d|Group {cell:d.done.cell,
-                first:g.cells[&d.done.cell].completed_prefix,end:d.done.piece.end,rows:&d.done.piece.rows}).collect();
-            let pointers:Vec<_>=groups.iter().flat_map(|group|group.rows.iter().map(move |r|
-                (FactRef {cell:group.cell,op:r.operation as u32},r.fields.as_ptr()))).collect();
-            let row_owner=RowOwner {cells:&mut g.cells,intern:&mut g.intern,members:&mut g.members,
-                changes:&mut g.changes,epoch:g.epoch};
-            let mut registration=pool.install(||rayon::join(||row_owner.install(groups.iter().copied()),
-                ||subscribe_rows(&mut g.uses,&mut g.dependencies,&mut g.maintenance,&g.parents,
-                    &g.program.repair_ports.key_eq_columns,groups.iter().copied())).0);drop(groups);
+        for stop in [0,1,3,8] {for fail_after_offer in [false,true] {
+            let (mut g,mut done)=prepared();let (mut expected,reference)=prepared();
+            let cells:Vec<_>=done.iter().map(|d|d.done.cell).collect();
+            let pointers:Vec<_>=done.iter().flat_map(|d|d.done.piece.rows.iter().map(move |r|
+                (FactRef {cell:d.done.cell,op:r.operation as u32},r.fields.as_ptr()))).collect();
+            let layout=|g:&Graph|g.cells.iter().map(|(id,c)|(*id,c as *const Cell as usize)).collect::<Vec<_>>();
+            let before=layout(&g);
+            let (mut owner,mut subscriptions,mut registration)=Owned::take(&mut g,&mut done);
+            assert_eq!(layout(&g),before,"leasing fact slots must not relocate the arena");
+            let returned=std::sync::Mutex::new(Vec::new());
+            pool.install(||rayon::join(||owner.install(&|ready|returned.lock().unwrap().push(ready)),
+                ||subscriptions.install()));
+            for ready in returned.into_inner().unwrap() {registration.receive(&mut g,ready);}
+            owner.restore(&mut g);subscriptions.restore(&mut g);
+            assert_eq!(layout(&g),before,"fact return must preserve instance identity and position");
             for (f,pointer) in pointers {assert_eq!(g.cells[&f.cell].facts[&f.op].decoded.as_ref().unwrap().1.as_ptr(),pointer);}
             // Prepared rows do not count as source-applied mutations or open
             // a Run publication. Only source acceptance advances those counts.
@@ -284,6 +260,11 @@ mod tests {
                 g.commit_registered_local_job(a.done,&mut a.effects.writer(),Some(publication)).unwrap();
                 expected.commit_local_job(b.done,&mut b.effects.writer()).unwrap();
             }
+            if fail_after_offer && stop<cells.len() {
+                // A source error may occur after the certificate was taken but
+                // before its Cell's prefix was committed. It must not be lost.
+                drop(registration.take(cells[stop]));
+            }
             registration.finish(&mut g);
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
             assert_eq!(g.query_versions,expected.query_versions);
@@ -293,9 +274,10 @@ mod tests {
             assert_eq!(uses(&g),uses(&expected));
             assert_eq!(g.stats.constructor_registry_adopted,2*stop as u64);
             assert_eq!(g.stats.constructor_registry_discarded,2*(8-stop) as u64);
+            if stop==8 {assert_eq!(g.stats.constructor_registry_retirement_checks,1,"no successful-prefix rescan");}
             assert_eq!(g.maintenance_report()["stats"]["live_reverse_edges"],expected.maintenance_report()["stats"]["live_reverse_edges"]);
             for graph in [&mut g,&mut expected] {graph.union(100,101).unwrap();graph.repair().unwrap();}
             assert_eq!(g.export().unwrap(),expected.export().unwrap(),"later repair must not see invalidated rows");
-        }
+        }}
     }
 }

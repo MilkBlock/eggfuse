@@ -256,6 +256,8 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_registry_pre_return_cells:u64,
     #[serde(default)]
+    pub constructor_registry_retirement_checks:u64,
+    #[serde(default)]
     pub constructor_registry_batches:u64,
     #[serde(default)]
     pub constructor_registry_rows:u64,

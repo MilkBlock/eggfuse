@@ -320,8 +320,11 @@ mod tests {
         let pool=rayon::ThreadPoolBuilder::new().num_threads(4).build().unwrap();
         for stop in [0,1,15,16,33,64] {
             let (mut g,mut done)=constructor_units();let (mut expected,reference)=constructor_units();
+            let layout=|g:&Graph|g.cells.iter().map(|(id,c)|(*id,c as *const Cell as usize)).collect::<Vec<_>>();
+            let before=layout(&g);
             let mut pending=g.prepare_unit_registration(&mut done).unwrap();
             assert!(pending.registration.constructors.is_some());
+            assert_eq!(layout(&g),before);
             let tasks=std::mem::take(&mut pending.tasks);
             let (row_tx,row_rx)=mpsc::channel();let row_rx=Mutex::new(row_rx);
             let (sub_tx,sub_rx)=mpsc::channel();let sub_rx=Mutex::new(sub_rx);
@@ -351,6 +354,7 @@ mod tests {
                         }
                         if !released {
                             assert_eq!(n,16);assert!(pending.constructor_directories_pending());
+                            assert_eq!(layout(&g),before,"partial acceptance never relocates sibling instances");
                             assert!(g.members.is_empty() && g.uses.is_empty(),"source completion cannot borrow the leased directories");
                             row_tx.send(()).unwrap();sub_tx.send(()).unwrap();released=true;
                         }
