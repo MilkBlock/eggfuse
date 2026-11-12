@@ -124,7 +124,7 @@ impl Executor {
         }
     }
     fn adopt_cell_event(&mut self, parked: Parked, completed: Option<Completed>,
-        registration:Option<&mut crate::graph::cell_births::Registration>) -> Result<()> {
+        publication:Option<crate::graph::cell_births::Publication>) -> Result<()> {
         let mut execution = parked.execution;
         self.graph.restore_rhs(parked.context);
         if let Some(Completed { done, effects }) = completed {
@@ -141,7 +141,6 @@ impl Executor {
                 stats.worker_jobs[worker] += 1;
             }
             let worker = done.worker.is_some();
-            let publication=registration.and_then(|r|r.take_births(done.cell()));
             let mut counts = self.graph.commit_registered_local_job(done, &mut execution.effects.writer(),publication)?;
             execution.work.facts += counts.committed_rows;
             execution.work.updates += counts.unit_inserts;
@@ -153,6 +152,48 @@ impl Executor {
         self.graph.sealed_input_cell = None;
         self.graph.sealed_generation = None;
         Ok(())
+    }
+    fn consume_fused_constructors(&mut self,owner:crate::graph::cell_births::fused::Owner,
+        tasks:Vec<(Job,crate::cell::Effects)>,parents:std::sync::Arc<crate::value::parent_epoch::Base>,
+        pool:&rayon::ThreadPool,owners:&mut std::vec::Drain<'_,Parked>)
+        ->(Result<()>,crate::completion_events::Work,Option<crate::graph::cell_births::Counts>) {
+        let mut wave=owner.start(tasks,parents,pool);
+        let mut acceptance=crate::graph::cell_births::fused::Acceptance::default();
+        let mut ready=Vec::new();let mut result=Ok(());
+        loop {
+            wave.poll(true,&mut ready);
+            for event in ready.drain(..) {
+                let (done,publication)=acceptance.accept(&mut self.graph,event,result.is_ok());
+                if result.is_ok() {
+                    #[cfg(feature="cell-sync-diagnostics")] let start=Instant::now();
+                    result=(|| {
+                        loop {
+                            let parked=owners.next().expect("one source owner per registered Cell");
+                            if parked.execution.cell==done.done.cell() {
+                                self.adopt_cell_event(parked,Some(done),publication)?;
+                                self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=u64::from(wave.unfinished()!=0);
+                                break;
+                            }
+                            self.adopt_cell_event(parked,None,None)?;
+                        }
+                        Ok(())
+                    })();
+                    #[cfg(feature="cell-sync-diagnostics")] {
+                        let elapsed=start.elapsed().as_nanos() as u64;let stats=&mut self.graph.stats.sync_diagnostics;
+                        stats.source_batches+=1;stats.source_adoption_ns+=elapsed;
+                        stats.registered_source_batches+=1;stats.registered_source_adoption_ns+=elapsed;
+                    }
+                }
+            }
+            // Even a source error must drain the original fact slots before
+            // the directories return and invalidate the unadopted suffix.
+            if wave.finished() {break;}
+        }
+        let ((owner,counts,prefix),events)=wave.finish();
+        self.graph.stats.constructor_fused_staging_bytes+=prefix.bytes;
+        self.graph.stats.constructor_fused_early_cells+=prefix.early;
+        owner.restore(&mut self.graph);acceptance.finish(&mut self.graph);
+        (result,events,Some(counts))
     }
     fn drain_cell_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
         while queue.flying.is_some() {self.poll_cell_queue(queue,pending,true)?;}
@@ -184,43 +225,55 @@ impl Executor {
             let parallel = count > 1 && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
             let read = crate::value::parent_epoch::Read { base: &parents, delta: None };
             let unfinished=std::sync::atomic::AtomicUsize::new(count);
-            let consume = |completed: &mut Vec<Completed>| {
-                // A ready prefix may retain table ownership. No wait for a
-                // larger batch: small prefixes use ordinary exact validation.
-                let eligible = completed.len() <= owners.len()
-                    && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
-                        done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-                self.consume_cell_events(completed,eligible,&pool,|host,completed,mut registration| {
-                    for done in completed {
-                        loop {
-                            let parked = owners.next().expect("one owner per completion");
-                            if parked.execution.cell == done.done.cell() {
-                                host.adopt_cell_event(parked, Some(done),registration.as_deref_mut())?;
-                                host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
-                                    u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);
-                                break;
-                            }
-                            // Already-complete Cells parked behind this source
-                            // prefix carry no worker result, but keep effect order.
-                            host.adopt_cell_event(parked, None,None)?;
-                        }
-                    }
-                    Ok(())
-                })
-            };
+            let fused=if parallel && owners.as_slice().iter().all(|p|
+                match tasks.binary_search_by_key(&p.execution.cell,|t|t.0.cell()) {
+                    Ok(i)=>tasks[i].0.terminal_at(p.execution.ops.len()),
+                    Err(_)=>matches!(p.execution.phase,owned_cell::Phase::Complete|owned_cell::Phase::Stopped),
+                }) {
+                self.graph.prepare_fused_constructors(&tasks)
+            } else {None};
             let clock = Instant::now();
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
-            let (result, events, shared) = if tasks.iter().any(|(job, _)| job.dependent()) {
-                let ((result, events), shared) = crate::graph::cell_births::stream_shared(
-                    tasks, read, parallel.then_some(pool.as_ref()), &unfinished, consume);
-                (result, events, Some(shared))
+            let (result,events,shared)=if let Some(owner)=fused {
+                self.consume_fused_constructors(owner,tasks,parents.clone(),&pool,&mut owners)
             } else {
-                use crate::graph::cell_births::{execution_grain,execution_group,Counts};
-                let grain=execution_grain(&tasks,pool.current_num_threads());
-                let (result, events, counts) = crate::completion_events::ordered_fold(tasks,parallel.then_some(pool.as_ref()),grain,
-                    execution_group,|(job, mut effects),counts| { let done = job.run(read,&mut effects.writer(),counts);
-                        unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);Completed { done, effects } },Counts::add,consume);
-                (result, events, Some(counts))
+                let consume = |completed: &mut Vec<Completed>| {
+                    // A ready prefix may retain table ownership. No wait for a
+                    // larger batch: small prefixes use ordinary exact validation.
+                    let eligible = completed.len() <= owners.len()
+                        && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
+                            done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
+                    self.consume_cell_events(completed,eligible,&pool,|host,completed,mut registration| {
+                        for done in completed {
+                            loop {
+                                let parked = owners.next().expect("one owner per completion");
+                                if parked.execution.cell == done.done.cell() {
+                                    let publication=registration.as_deref_mut().and_then(|r|r.take_births(done.done.cell()));
+                                    host.adopt_cell_event(parked, Some(done),publication)?;
+                                    host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
+                                        u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);
+                                    break;
+                                }
+                                // Already-complete Cells parked behind this source
+                                // prefix carry no worker result, but keep effect order.
+                                host.adopt_cell_event(parked, None,None)?;
+                            }
+                        }
+                        Ok(())
+                    })
+                };
+                if tasks.iter().any(|(job, _)| job.dependent()) {
+                    let ((result, events), shared) = crate::graph::cell_births::stream_shared(
+                        tasks, read, parallel.then_some(pool.as_ref()), &unfinished, consume);
+                    (result, events, Some(shared))
+                } else {
+                    use crate::graph::cell_births::{execution_grain,execution_group,Counts};
+                    let grain=execution_grain(&tasks,pool.current_num_threads());
+                    let (result, events, counts) = crate::completion_events::ordered_fold(tasks,parallel.then_some(pool.as_ref()),grain,
+                        execution_group,|(job, mut effects),counts| { let done = job.run(read,&mut effects.writer(),counts);
+                            unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);Completed { done, effects } },Counts::add,consume);
+                    (result, events, Some(counts))
+                }
             };
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
             let elapsed = clock.elapsed().as_nanos() as u64;

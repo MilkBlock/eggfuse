@@ -27,6 +27,7 @@ mod unit_registration;
 #[path = "cell_constructor_registration.rs"]
 mod constructor_registration;
 pub(crate) use unit_registration::Registration;
+pub(crate) use constructor_registration::{Publication,fused};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -399,6 +400,7 @@ impl Done {
     pub(crate) fn complete_at(&self, end: usize)->bool {self.piece.end == end}
 }
 impl Job {
+    pub(crate) fn cell(&self)->u32 {self.cell}
     pub(crate) fn starts_root(&self)->bool {self.root.is_some()}
     pub(crate) fn root_hash(&self)->Option<u64> {self.root}
     pub(crate) fn dependent(&self)->bool {!self.isolated}

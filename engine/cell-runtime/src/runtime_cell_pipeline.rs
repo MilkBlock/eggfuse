@@ -89,7 +89,8 @@ impl Executor {
                 loop {
                     let parked=wave.owners.pop_front().expect("source owner for completed job");
                     if parked.execution.cell==done.done.cell() {
-                        host.adopt_cell_event(parked,Some(done),registration.as_deref_mut())?;
+                        let publication=registration.as_deref_mut().and_then(|r|r.take_births(done.done.cell()));
+                        host.adopt_cell_event(parked,Some(done),publication)?;
                         host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=
                             u64::from(wave.producer.unfinished()!=0);
                         break;

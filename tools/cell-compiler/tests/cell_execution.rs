@@ -53,7 +53,10 @@ const HEADER: &str = r#"
 
 #[test]
 fn constructor_owners_do_not_require_multiple_unit_tables() {
-    let seed=(0..192).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    // Keep the background-admission case as well as the closed foreground
+    // region: leasing directories must not stop ongoing source queries.
+    for size in [48,192] {
+    let seed=(0..size).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
     for unit in [false,true] {
         let tail=if unit {"(set (Stamp d) ())"}else{""};
         let source=format!(r#"
@@ -76,9 +79,13 @@ fn constructor_owners_do_not_require_multiple_unit_tables() {
             let stats=&candidate.report()["stats"];
             if workers>1 {
                 assert!(stats["constructor_registry_independent_rows"].as_u64().unwrap()>0,"{stats}");
-                if !unit {assert!(stats["constructor_registry_functionless_batches"].as_u64().unwrap()>0,"{stats}");}
+                if !unit {
+                    assert!(stats["constructor_registry_functionless_batches"].as_u64().unwrap()>0,"{stats}");
+                    if size==48 {assert!(stats["constructor_fused_cells"].as_u64().unwrap()>0,"producer must register without a second dispatch: {stats}");}
+                }
             }
         }
+    }
     }
 }
 

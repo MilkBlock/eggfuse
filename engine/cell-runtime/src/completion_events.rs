@@ -143,17 +143,33 @@ pub(crate) fn owned_prefix<T: Send, R: Send, C: Send>(
     consume: impl Fn(&mut C, R) + Sync,
 ) -> (C, Work) {
     use rayon::prelude::*;
-    use std::sync::atomic::{AtomicUsize, Ordering};
-    struct State<R,C> { slots:Vec<Option<R>>, next:usize, owner:Option<C>, work:Work }
-    let count=tasks.len();
-    let slots:Vec<_>=(0..count).map(|_|None).collect();
-    let bytes=(tasks.capacity()*std::mem::size_of::<T>()+slots.capacity()*std::mem::size_of::<Option<R>>()) as u64;
-    let state=Mutex::new(State {slots,next:0,owner:Some(owner),work:Work {bytes,..Work::default()}});
-    let unfinished=AtomicUsize::new(count);
+    let bytes=(tasks.capacity()*std::mem::size_of::<T>()) as u64;
+    let prefix=Prefix::new(tasks.len(),owner);
     tasks.into_par_iter().enumerate().for_each(|(index,task)| {
-        let result=run(task);
-        unfinished.fetch_sub(1,Ordering::AcqRel);
-        let mut pending=state.lock().unwrap();
+        prefix.push(index,run(task),|owner,_,result|consume(owner,result));
+    });
+    let (owner,mut work)=prefix.finish();work.bytes+=bytes;(owner,work)
+}
+
+struct PrefixState<R,C> { slots:Vec<Option<R>>, next:usize, owner:Option<C>, work:Work }
+/// Existing producers hand a mutable directory to the next ready worker.
+/// Registration runs outside the lock; a later producer records its result
+/// and continues computing rather than waiting for the directory owner.
+pub(crate) struct Prefix<R,C> {
+    state:Mutex<PrefixState<R,C>>,unfinished:std::sync::atomic::AtomicUsize,
+}
+impl<R,C> Prefix<R,C> {
+    pub(crate) fn new(count:usize,owner:C)->Self {
+        let slots:Vec<_>=(0..count).map(|_|None).collect();
+        let bytes=(slots.capacity()*std::mem::size_of::<Option<R>>()) as u64;
+        Self {state:Mutex::new(PrefixState {slots,next:0,owner:Some(owner),work:Work {bytes,..Work::default()}}),
+            unfinished:std::sync::atomic::AtomicUsize::new(count)}
+    }
+    pub(crate) fn push(&self,index:usize,result:R,consume:impl Fn(&mut C,usize,R)) {
+        use std::sync::atomic::Ordering;
+        self.unfinished.fetch_sub(1,Ordering::AcqRel);
+        let mut pending=self.state.lock().unwrap();
+        assert!(index>=pending.next && pending.slots[index].is_none(),"one completion per input owner");
         pending.slots[index]=Some(result);
         if pending.owner.is_none() || pending.slots[pending.next].is_none() {return;}
         let mut owner=pending.owner.take().unwrap();
@@ -161,20 +177,22 @@ pub(crate) fn owned_prefix<T: Send, R: Send, C: Send>(
             let next=pending.next;
             let result=pending.slots[next].take().unwrap();pending.next+=1;
             drop(pending);
-            consume(&mut owner,result);
-            let early=unfinished.load(Ordering::Acquire)!=0;
-            pending=state.lock().unwrap();
+            consume(&mut owner,next,result);
+            let early=self.unfinished.load(Ordering::Acquire)!=0;
+            pending=self.state.lock().unwrap();
             pending.work.waves+=1;pending.work.early+=u64::from(early);
-            if pending.next==count || pending.slots[pending.next].is_none() {
+            if pending.next==pending.slots.len() || pending.slots[pending.next].is_none() {
                 // Restoring the owner and testing readiness under one lock
                 // prevents a last producer from losing the wakeup/ownership.
                 pending.owner=Some(owner);return;
             }
         }
-    });
-    let state=state.into_inner().unwrap();
-    assert_eq!(state.next,count,"every completed owner must retire");
-    (state.owner.unwrap(),state.work)
+    }
+    pub(crate) fn finish(self)->(C,Work) {
+        let state=self.state.into_inner().unwrap();
+        assert_eq!(state.next,state.slots.len(),"every completed owner must retire");
+        (state.owner.unwrap(),state.work)
+    }
 }
 
 fn run_events<T: Send, R: Send, M:Default+Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<&rayon::ThreadPool>,

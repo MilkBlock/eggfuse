@@ -266,6 +266,18 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_registry_functionless_batches:u64,
     #[serde(default)]
+    pub constructor_fused_regions:u64,
+    #[serde(default)]
+    pub constructor_fused_cells:u64,
+    #[serde(default)]
+    pub constructor_fused_planned_operations:u64,
+    #[serde(default)]
+    pub constructor_fused_rows:u64,
+    #[serde(default)]
+    pub constructor_fused_staging_bytes:u64,
+    #[serde(default)]
+    pub constructor_fused_early_cells:u64,
+    #[serde(default)]
     pub constructor_registry_rows:u64,
     #[serde(default)]
     pub constructor_registry_adopted:u64,

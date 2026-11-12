@@ -4,6 +4,8 @@
 //! not repeat row installation. An unadopted suffix is invalidated on error.
 use super::*;
 use std::collections::VecDeque;
+#[path="cell_constructor_fused.rs"]
+pub(crate) mod fused;
 
 #[derive(Default)]
 pub(crate) struct Publication {
@@ -127,19 +129,26 @@ fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&
     publication
 }
 impl Registration {
+    fn restore_cell(&mut self,graph:&mut Graph,ready:&mut CellReady) {
+        let CellReady {facts,installed}=ready;
+        if installed.publication.tables.spilled() {
+            graph.stats.constructor_registry_bytes+=(installed.publication.tables.capacity()*std::mem::size_of::<(usize,u64,bool)>()) as u64;
+        }
+        let frame=graph.cells.get_mut(&installed.cell).expect("the original instance stays in place");
+        assert!(frame.facts.is_empty(),"return original fact slots once");
+        frame.facts=std::mem::take(facts);
+    }
+    fn offer(&mut self,mut installed:Installed)->Publication {
+        let publication=std::mem::take(&mut installed.publication);
+        // All-reuse Cells can retire immediately; they have nothing to revoke.
+        self.offered=(!publication.tables.is_empty()).then_some(installed);publication
+    }
     pub fn receive(&mut self,graph:&mut Graph,mut ready:Vec<CellReady>) {
         graph.stats.constructor_registry_frame_bytes+=(ready.capacity()*std::mem::size_of::<CellReady>()) as u64;
         graph.stats.constructor_registry_frame_events+=1;
         graph.stats.constructor_registry_frame_transfers+=ready.len() as u64;
         self.received+=ready.len();
-        for CellReady {facts,installed} in &mut ready {
-            if installed.publication.tables.spilled() {
-                graph.stats.constructor_registry_bytes+=(installed.publication.tables.capacity()*std::mem::size_of::<(usize,u64,bool)>()) as u64;
-            }
-            let frame=graph.cells.get_mut(&installed.cell).expect("the original instance stays in place");
-            assert!(frame.facts.is_empty(),"return original fact slots once");
-            frame.facts=std::mem::take(facts);
-        }
+        for cell in &mut ready {self.restore_cell(graph,cell);}
         // Keep the original completion buffer until its certificates are used;
         // there is no second all-Cell Installed vector or successful-prefix log.
         let before=self.ready.capacity();self.ready.push_back(ready.into_iter());
@@ -150,15 +159,10 @@ impl Registration {
     /// stops on its source error and drains owners without further adoption.
     pub fn take(&mut self,cell:u32)->Publication {
         let chunk=self.ready.front_mut().expect("ready constructor fragment");
-        let mut installed=chunk.next().expect("nonempty fragment").installed;
+        let installed=chunk.next().expect("nonempty fragment").installed;
         if chunk.len()==0 {self.ready.pop_front();}
         assert_eq!(installed.cell,cell,"source-ordered constructor acceptance");
-        let publication=std::mem::take(&mut installed.publication);
-        // An all-reuse Cell owns no new facts to revoke. Source completion
-        // may immediately release its empty frame; keep no retirement hold
-        // or later arena lookup for it.
-        self.offered=(!publication.tables.is_empty()).then_some(installed);
-        publication
+        self.offer(installed)
     }
     pub fn finish(self, graph: &mut Graph) {
         for installed in self.offered.into_iter().chain(self.ready.into_iter().flatten()
