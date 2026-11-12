@@ -34,6 +34,7 @@ def analyze(run):
         raise ValueError('incomplete archive cannot establish a forwarding chain')
     historical, current, captures, refreshes, retires = {}, {}, collections.defaultdict(list), collections.defaultdict(list), {}
     counts, failures, clears = collections.Counter(), [], []
+    parent_candidates, parent_scans = [], []
     previous_run = 0
     for index, row in enumerate(trace['events']):
         source_run, event = row['run'], row['event']
@@ -51,6 +52,13 @@ def analyze(run):
                 raise ValueError('unobserved forwarding-map mutation')
             clears.append({'index': index, 'run': source_run, 'edges': len(current)})
             current.clear()
+        elif kind == 'parent_scan':
+            parent_scans.append(event)
+        elif kind == 'parent_forward':
+            target, path = follow(event['from'], current)
+            if not path or target != event['to']:
+                raise ValueError('parent candidate lacks current forwarding evidence')
+            parent_candidates.append({'run': source_run, **event})
         elif kind == 'capture':
             captures[identity(event['witness'])].append({'index': index, 'run': source_run, 'rule': event['rule'], 'slot': event['slot']})
         elif kind == 'refresh':
@@ -77,6 +85,10 @@ def analyze(run):
     expected = run['stage_work']['ripsat_witness_fallbacks'] - run['stage_work']['ripsat_witness_missing']
     if len(failures) != expected:
         raise ValueError('failure archive does not match runtime counters')
+    factless_sources = {}
+    for c in parent_candidates:
+        if c['source_facts'] == 0:
+            factless_sources[c['from']['Fact']['cell']] = c
     return {
         'scope': 'actual standalone Cell runtime; offline causal observation, not executable closure proof or speedup',
         'program_sha256': run['program_sha256'], 'runs': run['runs'],
@@ -90,6 +102,21 @@ def analyze(run):
         'failures_with_prior_refresh_of_same_receipt': sum(bool(f['refreshes_of_original']) for f in failures),
         'failures_with_capture_after_prior_refresh': sum(any(c['index'] > r['index'] for c in f['captures_of_original'] for r in f['refreshes_of_original']) for f in failures),
         'failure_sites': dict(collections.Counter(f"{f['rule']}:{identity(f['site'])}:{f['table']}" for f in failures)),
+        'parent_forwarding': {
+            'scan_boundaries': len(parent_scans),
+            'frames_visited': sum(s['frames'] for s in parent_scans),
+            'parents_visited': sum(s['parents'] for s in parent_scans),
+            'candidates': len(parent_candidates),
+            'unique_factless_source_frames': len(factless_sources),
+            'factless_source_slots_at_last_observation': sum(c['source_slots'] for c in factless_sources.values()),
+            'unique_children': len({c['child'] for c in parent_candidates}),
+            'visible_targets': sum(c['target_visible'] for c in parent_candidates),
+            'parent_cycles': sum(c['parent_cycle'] for c in parent_candidates),
+            'factless_sources': sum(c['source_facts'] == 0 for c in parent_candidates),
+            'single_holder_factless_sources': sum(c['source_users'] == 1 and c['source_facts'] == 0 for c in parent_candidates),
+            'details': parent_candidates,
+            'limitations': 'Candidates are observations, not safe reparenting proofs. Counts can repeat across boundaries; other holders and non-parent dependencies remain live.',
+        },
         'details': failures,
         'limitations': ['capture/refresh events identify receipts and logical sites, not unique shared storage owners',
                         'only forwarding created while ordinary receipt tracking is enabled is archived',

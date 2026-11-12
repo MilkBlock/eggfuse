@@ -564,7 +564,7 @@ impl Graph {
     }
     pub(crate) fn clear_receipt_forwards(&mut self) {
         #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
-        crate::receipt_trace::clear(self.epoch,self.receipt_forwards.len());
+        { self.trace_forwarded_parents(); crate::receipt_trace::clear(self.epoch,self.receipt_forwards.len()); }
         self.receipt_forwards.clear();
     }
     pub fn resolve_receipt(&self, w: Dependency) -> Dependency { self.resolve_receipt_origin(w).0 }

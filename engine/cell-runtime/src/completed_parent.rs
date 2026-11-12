@@ -27,3 +27,36 @@ impl Graph {
         Ok(())
     }
 }
+
+// Diagnostic only: expose whether transient same-key forwarding can discharge
+// parent storage. A visible replacement is not sufficient: it can depend on the
+// child itself, and other holders can keep the old frame alive.
+#[cfg(feature="storage-metrics")]
+impl Graph {
+    pub(crate) fn trace_forwarded_parents(&self) {
+        if !crate::receipt_trace::enabled() || self.receipt_forwards.is_empty() {return;}
+        let mut frames=0;let mut parents=0;
+        for (&child,c) in self.cells.iter() {
+            frames+=1;
+            let Some(parent)=c.parent else {continue;};parents+=1;
+            let from=Dependency::Fact(parent);
+            let to=self.resolve_receipt(from);
+            if from==to {continue;}
+            let Some(source)=self.cells.get(&parent.cell) else {continue;};
+            let visible=self.live_table(to).is_some_and(|table|self.receipt_visible(to,table));
+            let mut cycle=false;
+            if let Dependency::Fact(target)=to {
+                let mut cursor=Some(target.cell);let mut hops=0;
+                while let Some(id)=cursor {
+                    if id==child || hops>self.next_cell as usize {cycle=true;break;}
+                    cursor=self.cells.get(&id).and_then(|c|c.parent).map(|p|p.cell);
+                    hops+=1;
+                }
+            }
+            crate::receipt_trace::parent_forward(child,from,to,
+                self.parent_users.get(&parent.cell).copied().unwrap_or(0),
+                source.facts.len(),source.values.len(),visible,cycle);
+        }
+        crate::receipt_trace::parent_scan(frames,parents);
+    }
+}

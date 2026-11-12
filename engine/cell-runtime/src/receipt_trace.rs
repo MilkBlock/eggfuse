@@ -8,6 +8,9 @@ use std::cell::RefCell;
 enum Kind {
     Forward { from:Dependency,to:Dependency,epoch:u64 },
     Clear { epoch:u64,edges:usize },
+    ParentForward { child:u32,from:Dependency,to:Dependency,source_users:usize,
+        source_facts:usize,source_slots:usize,target_visible:bool,parent_cycle:bool },
+    ParentScan { frames:usize,parents:usize },
     Retire { fact:Dependency,table:usize,template:Option<usize>,tracking:bool },
     Capture { rule:usize,slot:usize,witness:Dependency },
     Refresh { path:&'static str,rule:usize,slot:usize,from:Option<Dependency>,to:Dependency },
@@ -30,6 +33,11 @@ fn record(event:impl FnOnce()->Kind) {
 }
 pub(crate) fn forward(from:Dependency,to:Dependency,epoch:u64){record(||Kind::Forward{from,to,epoch});}
 pub(crate) fn clear(epoch:u64,edges:usize){record(||Kind::Clear{epoch,edges});}
+pub(crate) fn parent_scan(frames:usize,parents:usize){record(||Kind::ParentScan{frames,parents});}
+pub(crate) fn parent_forward(child:u32,from:Dependency,to:Dependency,source_users:usize,
+    source_facts:usize,source_slots:usize,target_visible:bool,parent_cycle:bool) {
+    record(||Kind::ParentForward{child,from,to,source_users,source_facts,source_slots,target_visible,parent_cycle});
+}
 pub(crate) fn retire(fact:Dependency,table:usize,template:Option<usize>,tracking:bool){record(||Kind::Retire{fact,table,template,tracking});}
 pub(crate) fn capture(rule:usize,slot:usize,witness:Dependency){record(||Kind::Capture{rule,slot,witness});}
 pub(crate) fn refresh(path:&'static str,rule:usize,slot:usize,from:Option<Dependency>,to:Dependency){record(||Kind::Refresh{path,rule,slot,from,to});}

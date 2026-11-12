@@ -42,6 +42,21 @@ class ReceiptLifetimeTests(unittest.TestCase):
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 analyze(run)
 
+    def test_parent_candidates_require_current_not_archived_proof(self):
+        run = fixture()
+        events = run['receipt_trace']['trace']['events']
+        edge = events[1]['event']
+        candidate = {'run': 2, 'event': {'kind': 'parent_forward', 'child': 3,
+            'from': edge['from'], 'to': edge['to'], 'source_users': 1,
+            'source_facts': 0, 'source_slots': 5, 'target_visible': True, 'parent_cycle': True}}
+        events.insert(2, candidate)
+        result = analyze(run)['parent_forwarding']
+        self.assertEqual(result['single_holder_factless_sources'], 1)
+        self.assertEqual(result['parent_cycles'], 1)
+        events[2], events[3] = events[3], events[2]
+        with self.assertRaisesRegex(ValueError, 'current forwarding'):
+            analyze(run)
+
     def test_refuses_forwarding_cycles(self):
         run = fixture()
         edge = copy.deepcopy(run['receipt_trace']['trace']['events'][1])

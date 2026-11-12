@@ -367,3 +367,44 @@ CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-c
 python3 benchmarks/cell-structural-compression/analyze_receipt_lifetime.py out/cell-structural-compression/receipt-lifetime-audit.json benchmarks/cell-structural-compression/receipt-lifetime-results.json
 python3 benchmarks/cell-structural-compression/test_receipt_lifetime.py
 ```
+
+### Parent-reference forwarding is a small opportunity, not the compression path
+
+The next iteration checked whether the last catalog's actual same-key coalescences
+could discharge inherited parent references before transient forwarding clears.
+The observer now samples ordinary Cell parents at precisely these boundaries.
+It records source holders/facts/slots and target visibility, plus obvious cycles
+through ordinary parent chains. This is diagnostic evidence only: mutable writer
+origins, symbolic dependencies and pending execution obligations are not certified
+by this observation. No parent links are changed and no persistent forwarding
+index is introduced.
+
+Actual standalone runtime: all 1,428 saved Run graph and ordered RHS/write/resume
+hashes match; 4,938 events, zero drops. Graph/query work, integer stage counters,
+source storage and final export exactly match the prior receipt-lifetime audit.
+The semantic validator passes using the saved export, which was checked equal to
+this execution. No timing or compression improvement is claimed.
+
+83 nonempty forwarding-clear boundaries visited 82,488 ordinary frames and
+11,371 parent references. Only 63 children had forwarded parents; all replacements
+were visible and none had an observed ordinary parent-chain cycle. Of these,
+29 distinct source frames had zero facts, with only 40 logical slots combined at
+their last observations (25 had zero slots, three had 13, one had one). Only 26
+candidate references were sole holders of factless sources. Slots may themselves
+be shared; these are not reclaimable heap byte measurements. Other holders and
+non-parent dependencies remain live obligations.
+
+This rules out **scan-and-reparent at every forwarding boundary** as our main
+whole-egraph compression strategy on this workload. Keep the observation opt-in;
+do not introduce an execution scan or reverse dependency index for these small
+savings. The larger remaining target is duplicate instance/ownership/index state
+of fact-bearing composed Cells, with stable fact identity and boundary reads
+preserved. Cross-stage completion must replace that state, not merely redirect
+these few retired receipts.
+
+Reproduce with the receipt-lifetime command above, changing the output to
+`out/cell-structural-compression/parent-forward-audit.json`; analyze with the same
+script to `benchmarks/cell-structural-compression/parent-forward-results.json`.
+Tests: four offline causal-analysis tests, bounded trace unit test, default runtime
+Cargo check. The offline analyzer refuses parent candidates justified only by an
+archived forwarding edge after the current map has been cleared.
