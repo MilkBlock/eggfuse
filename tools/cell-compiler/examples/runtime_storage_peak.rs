@@ -115,6 +115,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     let result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+        "ownership_storage":e.graph.ownership_storage_trace(),
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
         "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
         "setup_peak_bytes":setup_peak,"setup_live_bytes":setup_live,

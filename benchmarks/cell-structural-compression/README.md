@@ -229,3 +229,60 @@ Their consolidation still requires preserving stable identities, old source
 reads, visibility, retained query versions and worker epochs. This iteration
 removes an independently duplicated row/index owner; it does not claim complete
 dominated-instance retirement.
+
+## Rejected independent input-projection layout
+
+The next experiment compiled Eq inputs proven by the matched Entry even when
+the receiver's RHS does not use them. It introduced no runtime binding or
+reverse edge. It computed projections after shape normalization, intersecting
+all incoming routes by increasing frame depth so a normalized shape did not
+inherit a fact true only on one history. Source slots assigned by an operation
+were excluded. This was an opportunity census, not an enabled takeover.
+
+On the actual same final state there are 956 candidate slots. Each current
+`(usize, Value::Eq)` record occupies 24 bytes: even deleting all candidates
+saves only 22,944 bytes of final slot payload. The shared layout costs 29,816
+bytes, including its added Shape handles, unique vectors and Arc headers.
+Thus this isolated design adds at least 6,872 bytes before any runtime handoff
+cost. It is **rejected**, and the production representation is unchanged.
+`input-slot-opportunity.json` records the bound. The reproducible experimental
+source diff is `input-slot-experiment.patch`, applied only to a disposable
+worktree at 5290c39c. Run the peak example with the same baked lean program to
+regenerate `ownership_inventory`; the experiment does not claim that slots were
+deleted. Do not apply this patch as an optimization to the current branch.
+
+## Whole-owner trace for the next structural change
+
+`runtime_storage_peak` now exports existing composition owners **after** peak
+observation, together with canonical source Eq bindings. It adds no maintained
+runtime history, indexes or cached fields. Its execution final hash matches the
+audited 1,428-Run result; initialization-relative peak growth remains 5,967,009
+bytes. The complete raw file is ignored at
+`out/cell-structural-compression/ownership-storage-trace.json`.
+
+`ownership-opportunity.json` records offline analysis:
+
+- 1,392 live components: 892 single-frame, 199 two-frame, 126 three-frame,
+  and 175 four-frame.
+- 2,368 composition frame addresses include 191 whose physical source Cell
+  is already gone. Do not count those frames as another full retained Cell.
+- 6,785 bound symbols represent 6,053 distinct roots summed per component.
+  Observed equality alone is not permission to merge static template symbols.
+- Completed source frames retain 2,930 unmapped Eq slots whose roots are outside
+  their component, and 1,463 unmapped slots whose roots occur inside it.
+- 1,062 mapped slots have roots outside the component; another 186 have a root
+  somewhere in the component, but not necessarily at their mapped symbol.
+  Actual returned values cannot be replaced by an assumed native result.
+- 451 mapped slots are in initial, non-completed source frames. Another 1,244
+  stored Eq slots lie outside live composition frames altogether.
+
+This rules out treating remaining storage as one long retained parent chain.
+The next takeover must account for the other matched inputs and externally
+retained source/writer state, not just append more receivers to the chosen
+producer. It must preserve actual results, branch users, visibility, generations
+and source reads after component retirement. These counts are planning evidence,
+not saved bytes or new semantic proofs.
+
+```sh
+python3 benchmarks/cell-structural-compression/analyze_ownership.py out/cell-structural-compression/ownership-storage-trace.json out/cell-structural-compression/function-row-trace.json out/ownership-opportunity.json
+```

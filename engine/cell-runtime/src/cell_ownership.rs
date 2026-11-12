@@ -278,6 +278,30 @@ pub(super) struct Runtime {
     barriers: Vec<Barrier>,
 }
 impl Graph {
+    /// Saved after execution for offline storage analysis. These are the
+    /// existing owners, not an additional maintained fact/history graph.
+    #[cfg(feature = "storage-metrics")]
+    pub fn ownership_storage_trace(&self) -> J {
+        let Some(m) = &self.ownership else { return J::Null; };
+        let c = &m.composition;
+        let components = c.components.iter().enumerate().filter_map(|(id,component)| {
+            let component = component.as_ref()?;
+            Some(json!({"id":id,"shape":component.shape,"frames":component.frames.as_slice(),
+                "signals":component.signals,"live_facts":c.live_facts[id],
+                "roots":component.signals.iter().map(|v|v.map(|id|root(&self.parents,id))).collect::<Vec<_>>(),
+                "frame_codes":component.frames.iter().map(|id| c.frames[id].code).collect::<Vec<_>>()}))
+        }).collect::<Vec<_>>();
+        json!({"scope":"final live composition owners; diagnostic export after observation, not retained runtime state",
+            "source_eq_bindings":self.cells.iter().map(|(&id,cell)| json!({
+                "cell":id,"template":cell.template,"completed":cell.completed,
+                "slots":(0..self.program.templates[cell.template].sorts.len()).filter_map(|slot|
+                    match cell.values.get(&slot) { Some(Value::Eq(id))=>Some((slot,*id,root(&self.parents,*id))),_=>None }).collect::<Vec<_>>()
+            })).collect::<Vec<_>>(),
+            "components":components,"shapes":c.shapes,"programs":self.program.cell_ownership.programs,
+            "operators":self.program.cell_ownership.code_operators,
+            "fragments":self.program.cell_ownership.composition.fragments,
+            "transitions":self.program.cell_ownership.composition.transitions})
+    }
     pub fn ownership_enabled(&self) -> bool {
         self.ownership.is_some()
     }
