@@ -557,6 +557,16 @@ impl Graph {
                 .is_some_and(|f| f.live && f.table == table),
         }
     }
+    fn forward_receipt(&mut self,from:Dependency,to:Dependency) {
+        #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+        crate::receipt_trace::forward(from,to,self.epoch);
+        self.receipt_forwards.insert(from,to);
+    }
+    pub(crate) fn clear_receipt_forwards(&mut self) {
+        #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+        crate::receipt_trace::clear(self.epoch,self.receipt_forwards.len());
+        self.receipt_forwards.clear();
+    }
     pub fn resolve_receipt(&self, w: Dependency) -> Dependency { self.resolve_receipt_origin(w).0 }
     #[inline(always)]
     fn resolve_receipt_origin(&self, mut w: Dependency) -> (Dependency,bool) {
@@ -2455,6 +2465,10 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+            if crate::receipt_trace::enabled() {
+                crate::receipt_trace::retire(Dependency::Fact(f),r.table,self.cells.cell_metadata(f.cell).map(|c|c.template),self.receipt_tracking);
+            }
             let owned=self.retire_owned(f,r.table);
             let local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, true);
@@ -2654,8 +2668,7 @@ impl Graph {
                 }
             }
             if self.receipt_tracking {
-                self.receipt_forwards
-                    .insert(Dependency::Fact(f), other.witness);
+                self.forward_receipt(Dependency::Fact(f), other.witness);
             }
             self.retire(f)?;
         } else {
@@ -2809,8 +2822,7 @@ impl Graph {
                             self.functions[i].live = false;
                             self.changes.retire(row.table, d);
                             if self.receipt_tracking {
-                                self.receipt_forwards
-                                    .insert(Dependency::Function(i), Dependency::Function(j));
+                                self.forward_receipt(Dependency::Function(i), Dependency::Function(j));
                             }
                             self.function_origin(i, None);
                             self.members[row.table].remove(&(i as u64));

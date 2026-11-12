@@ -10,8 +10,8 @@ use serde_json::{Value, json};
 use std::{error::Error, fs};
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len()<3 || args[3..].iter().any(|s|s!="--natural" && s!="--parent-takeover" && s!="--shared-owners") {
-        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners]".into());
+    if args.len()<3 || args[3..].iter().any(|s|s!="--natural" && s!="--parent-takeover" && s!="--shared-owners" && s!="--receipt-trace") {
+        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover] [--shared-owners] [--receipt-trace]".into());
     }
     let saved: Value = serde_json::from_slice(&fs::read(&args[1])?)?;
     let checks = saved["run_checks"]
@@ -20,6 +20,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let sha = p.artifact["sha256"].clone();
     let selection = p.artifact["iterative_bake"]["closure_selection"].clone();
+    let receipt_trace=args.iter().any(|s|s=="--receipt-trace");
+    if receipt_trace {eggfuse_cell_runtime::receipt_trace::start(32768);}
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
     let natural=args.iter().any(|s|s=="--natural");
     let parent_takeover=args.iter().any(|s|s=="--parent-takeover");
@@ -28,6 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut transferred_frames=0;
     let mut runs = 0;
     loop {
+        if receipt_trace {eggfuse_cell_runtime::receipt_trace::set_run(runs+1);}
         audit::take_digests();
         audit::take_write_digests();
         audit::take_resume_digests();
@@ -64,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "history_storage":report["stage_spine"]["published_history_storage"],
         "query_work":report["free_join"],"key_lookup_calls":report["key_lookup_calls"],
         "entry_work":report["entry_schedule"],"publication_work":report["publication"],
-        "final_state":e.graph.export()?});
+        "final_state":e.graph.export()?,"receipt_trace":eggfuse_cell_runtime::receipt_trace::finish()});
     fs::write(&args[2], serde_json::to_vec_pretty(&result)?)?;
     println!("{}", json!({"runs":runs,"all_saved_run_checks_equal":true}));
     Ok(())

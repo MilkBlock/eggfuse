@@ -1749,7 +1749,7 @@ impl Programs {
         let Some(results)=cursor.state.history.project_complete(plan,&mut self.stats.ripsat_projection_checks) else {
             self.stats.ripsat_layout_fallbacks+=1; return None;
         };
-        for &(_,table,slot) in &plan.outputs {
+        for &(site,table,slot) in &plan.outputs {
             self.stats.ripsat_witness_checks+=1;
             let port=crate::cell::ResultPort::new(rid,slot);
             let Some(w)=results.get(port) else {
@@ -1759,6 +1759,10 @@ impl Programs {
             };
             let resolved=g.resolve_receipt(w);
             if !g.receipt_visible(resolved,table) {
+                #[cfg(feature="storage-metrics")]
+                crate::receipt_trace::failure(g,rid,site,slot,table,w,resolved);
+                #[cfg(not(feature="storage-metrics"))]
+                let _=site;
                 self.stats.ripsat_witness_fallbacks+=1;
                 match g.live_table(resolved) {
                     None => self.stats.ripsat_witness_retired+=1,

@@ -307,3 +307,63 @@ run the preceding audited command with output `matched-witness-audit.json`.
 Keep the `--natural --shared-owners --parent-takeover` options. Compare to
 `completed-dead-inputs-audit.json`, excluding timing fields; do not install the
 trial merely because its semantic audit passes.
+
+## Trace the actual retired-result lifetime
+
+The rejected current-query recovery left 26 failures. A bounded, opt-in coordinator
+archive now records captures, same-key forwarding, fact retirement, map clearing,
+local/publication result refreshes, and the failed result's location. On a failure,
+the observer replays its archive and samples the historical target's current table
+and visibility. The archive never participates in execution or receipt resolution;
+there is no new maintained forwarding index. Without explicit tracing, no events
+or archive arrays are allocated. This observation is not a heap/speed benchmark.
+
+The 32,768-event budget captured **4,792 events with zero drops**: 994 forwards,
+844 fact retirements, 766 captures, 77 refreshes, 2,085 map clears, and 26 failures.
+Multiple publication clears can occur within one source Run. Offline replay
+checks each clear's map cardinality, chronological order, absence of cycles,
+and agreement with both the current and archived targets sampled at failure.
+Incomplete archives and inconsistent replays are rejected.
+
+The result is specific:
+
+- All 26 failures are rule 137, Effect 2: the `Single` result of
+  `SubTuple(expr,x,1) -> Single(Get(expr,x))`.
+- Every failed physical receipt had exactly one previously observed same-key
+  forwarding edge. Its target was **visible in Single at the moment of failure**.
+- All 26 forwarding edges had crossed a map clear and a source Run boundary.
+  Run gaps were 3 (2 cases), 4 (18), 10 (2), 12 (1), and 13 (3).
+- For 20 failures, a result slot holding the same old receipt had already been
+  refreshed, yet the consumer still held the old reference. No capture of that
+  old receipt occurred after the earlier refresh and before failure. Six had no
+  observed refresh. Thus refreshing one retained occurrence does not cover every
+  use. The archive does not identify unique shared-storage allocations, so it
+  does not yet locate the exact pair of retained owners.
+
+For example, receipt `(cell=536,op=1)` was captured at Runs 98, 102 and 106,
+coalesced at Run 106 to `(129,78)`, and locally refreshed in a rule-143 result
+slot. At Run 110 rule 137 still read `(536,1)` after the forwarding map had been
+cleared; `(129,78)` remained visible. No new constructor query was needed to
+establish that the previously recorded replacement still existed. This is
+historical evidence, not authorization to retain the archive as a runtime map.
+
+This rules out "the result no longer exists" for these 26 cases. It strengthens
+the structural target: completed Cell state must keep the necessary result
+identity shared through coalescence and downstream retention. Simply extending
+the global forwarding map or scanning every history would add the duplicate
+maintenance that the takeover is meant to eliminate. These 26 cases alone also
+do not establish large whole-egraph compression.
+
+All 1,428 saved Run graph and ordered RHS/write/resume hashes pass. Graph counters,
+query counters and existing integer stage counters exactly match the previous
+execution; final export matches and semantic acceptance passes. Runtime tests:
+150; offline causal-analysis tests: 3; default runtime cargo check passes.
+Tracked evidence: `receipt-lifetime-results.json` and
+`receipt-lifetime-semantic.json`; the full raw archive remains in ignored `out/`.
+This is actual standalone Cell runtime observation, not native egglog execution.
+
+```sh
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_closure_work -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/receipt-lifetime-audit.json --natural --shared-owners --parent-takeover --receipt-trace
+python3 benchmarks/cell-structural-compression/analyze_receipt_lifetime.py out/cell-structural-compression/receipt-lifetime-audit.json benchmarks/cell-structural-compression/receipt-lifetime-results.json
+python3 benchmarks/cell-structural-compression/test_receipt_lifetime.py
+```

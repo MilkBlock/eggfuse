@@ -72,3 +72,6 @@ pub mod context_admission;
 mod local_context;
 
 pub(crate) mod table_mask;
+
+#[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+pub mod receipt_trace;

@@ -214,6 +214,8 @@ impl ResultView<'_> {
             port
         } else {ResultPort::new(self.results.rule,slot)};
         let Some(target)=self.results.slot(port) else {return false};
+        #[cfg(feature="storage-metrics")]
+        crate::receipt_trace::refresh("publication",self.rule(),slot,target.get(),result);
         target.set(Some(result));
         true
     }
@@ -236,6 +238,10 @@ impl Results {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn from_outputs(rule: usize, slots: Vec<Cell<Option<Dependency>>>) -> Self {
+        #[cfg(feature="storage-metrics")]
+        if crate::receipt_trace::enabled() {for (slot,value) in slots.iter().enumerate() {
+            if let Some(w)=value.get() {crate::receipt_trace::capture(rule,slot,w);}
+        }}
         Self { slots: SmallVec::from_vec(slots), ..Self::new(rule) }
     }
     #[cfg(feature = "sparse-cells")]
@@ -252,6 +258,8 @@ impl Results {
     /// are sorted by the shared layout; a present result is written once.
     pub fn insert(&mut self, port: ResultPort, result: Dependency) -> usize {
         debug_assert_eq!(self.rule, port.rule(), "Cell result belongs to another definition");
+        #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+        crate::receipt_trace::capture(port.rule(),port.slot(),result);
         // Inherited slots consume no local storage. Missing local results
         // retain None padding, so no second per-instance presence bitmap is needed.
         let slot = self.local_slot(port.slot());
@@ -298,10 +306,14 @@ impl Results {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn seal_local(&mut self, mut forward:impl FnMut(Dependency)->Dependency)->(usize,usize) {
         let mut writes=0;
-        for slot in &self.slots {
+        for (_index,slot) in self.slots.iter().enumerate() {
             if let Some(old)=slot.get() {
                 let new=forward(old);
-                if new!=old {slot.set(Some(new));writes+=1;}
+                if new!=old {
+                    #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+                    crate::receipt_trace::refresh("seal_local",self.rule,_index,Some(old),new);
+                    slot.set(Some(new));writes+=1;
+                }
             }
         }
         (self.slots.len(),writes)

@@ -2550,7 +2550,7 @@ impl Executor {
         {
             self.stage_spine.training.run = self.steps.len() + 1;
         }
-        if self.completion.is_none() { self.graph.receipt_forwards.clear(); }
+        if self.completion.is_none() { self.graph.clear_receipt_forwards(); }
         self.graph.epoch = self.graph.epoch.checked_add(1).ok_or("epoch exhausted")?;
         self.graph.changed = false;
         #[cfg(feature = "family-survey")]

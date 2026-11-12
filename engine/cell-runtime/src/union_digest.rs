@@ -368,8 +368,7 @@ impl Graph {
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(keep));
             if self.receipt_tracking {
-                self.receipt_forwards
-                    .insert(Dependency::Fact(f), Dependency::Fact(keep));
+                self.forward_receipt(Dependency::Fact(f), Dependency::Fact(keep));
             }
             self.retire(f)?;
         }
@@ -506,8 +505,7 @@ impl Graph {
                 self.functions[i].live = false;
                 self.changes.retire(table, Dependency::Function(i));
                 if self.receipt_tracking {
-                    self.receipt_forwards
-                        .insert(Dependency::Function(i), Dependency::Function(j));
+                    self.forward_receipt(Dependency::Function(i), Dependency::Function(j));
                 }
                 self.function_origin(i, None);
                 self.members[table].remove(&(i as u64));
