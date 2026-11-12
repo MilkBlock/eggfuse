@@ -87,6 +87,99 @@ cargo cell-bench --program out/cell-event-payload/readme-program/program.json --
 
 ## Periodic timing gate
 
-The following measurements are recorded separately after freezing this runtime.
-Work-count reductions above do not by themselves pass the earlier performance
-regression gate.
+The runtime is frozen at `7b13f259`. All four revisions are remeasured in this
+campaign with the same programs, catalogs, release features and flags. Each
+revision uses one and four workers: one warmup followed by five sum-bits or three
+Raytrace samples, interleaved in a recorded shuffled order. All 80 executions,
+including warmups, have exact final hashes, ordered Run-summary hashes and
+logical effects. No timing sample is discarded or replaced.
+
+| Inference median | Historical `8335929d`, 1 / 4 | Pre-regression `c27cbcf1`, 1 / 4 | Prior checkpoint `79e6fe0f`, 1 / 4 | Current `7b13f259`, 1 / 4 |
+| --- | ---: | ---: | ---: | ---: |
+| sum-bits, ms | 18.268 / 21.739 | 19.519 / 22.566 | 18.742 / 22.435 | 18.171 / 23.185 |
+| Raytrace, s | 5.668 / 5.105 | 5.789 / 5.119 | 5.762 / 5.079 | 5.910 / 4.862 |
+
+The current four-worker Raytrace median improves 5.03% against the pre-regression
+control and 4.27% against the preceding five-change checkpoint. All three paired
+Raytrace comparisons improve against both; the respective paired median changes
+are -5.57% and -4.27%. This is a modest observed improvement, not evidence of
+saturated workers or an isolated effect of the last accounting-layout change.
+
+sum-bits four-worker medians regress 2.74% / 3.34% against those same controls,
+with paired median changes +3.35% / +0.95%. Its samples vary materially and its
+current single-worker median is lower. **The two-workload speed criterion still
+fails.** The historical four-worker configuration also remains faster on sum-bits.
+The prior campaign's 24.771 ms / 5.389 s values are not the control measurements
+in this campaign; comparing across those campaigns would overstate recovery.
+
+Current Raytrace scales 1.216x from one to four workers, versus 1.131x for the
+pre-regression control. Current single-worker Raytrace is 2.09% slower than that
+control, so the parallel path still carries additional total work. Four-worker
+process CPU/wall averages about 1.31 cores (control 1.24), including load and
+export. It is not inference-only CPU utilization.
+
+Phase medians localize the observed improvement; medians need not sum to the
+median total and they do not isolate mutex or handoff time:
+
+| Four-worker Raytrace phase, seconds | Pre-regression | Current |
+| --- | ---: | ---: |
+| Search | 1.840 | 1.692 |
+| Query-index update / publication | 1.055 | 0.977 |
+| RHS | 1.726 | 1.719 |
+| Repair | 0.458 | 0.459 |
+
+Thus the query/publication changes improved those phases, while the broader RHS
+and repair paths barely changed. The measurements do not establish which of the
+five changes produced each saving. Smaller tasks and migrated work counts alone
+remain insufficient to accept a speedup.
+
+## Remaining waiting and next ownership boundary
+
+Separate three-second, two-millisecond-interval macOS stack samples cover only
+inference with progress logging disabled. They are not timing samples, and they
+cover a partial execution window. Inclusive stack counts overlap; neither the
+main entries nor worker waits are additive CPU utilization measurements.
+
+| Main-thread sampled residence | Pre-regression | Current |
+| --- | ---: | ---: |
+| Condition waits | 20.07% | 23.16% |
+| Entry `Scheduler::batches`, including callbacks | 10.26% | 9.58% |
+| Query finishing, including waits | 14.94% | 16.82% |
+| Finished-table publication, including waits | 21.85% | 21.94% |
+| Repair | 11.71% | 11.80% |
+
+Worker condition-wait fractions remain 75.3%–81.1% in the current sample, mostly
+pool-idle contexts, versus 76.5%–81.2% in the control. The current main-thread
+sample has 106 query-wait samples, 85 publication-wait samples, 16 scalar-write
+wait samples and one other wait out of 898 inference samples. These observations
+show that the remaining barriers and source work still leave workers idle.
+
+Source-side `start_cell_execution`, constructor adoption/collision and ordinary
+subscription/retirement maintenance remain visible. `adopt_cell_event` still
+restores an RHS owner and calls `commit_local_job` / `finish_attached_cell` on the
+source. The next structural investigation should identify which of these actual
+constructor-result, index and lifetime obligations a compiled Cell owner can
+finish directly. Private duplicate rows can still be computed and invalidated;
+actual returned aliases, ordered effects/errors and visibility must remain exact.
+Expanding an already-small Unit registration path alone would not address the
+unchanged 1.719-second RHS phase.
+
+For small Runs, the sum-bits result also requires addressing dispatch and join
+costs using real Cell work, rather than forcing more pool calls. The existing
+eight-row filter weight is a heuristic, not a demonstrated optimum. This report
+does not claim either follow-up has been implemented.
+
+Fifty-six separate background snapshots recorded no compiler process during the
+campaign. Other desktop activity remains possible; these OS snapshots cannot
+prove isolated hardware or exclude shorter background work. The normal measurement
+harness, sample order, raw samples, profiles, binary/program hashes, native proof
+and background checks are retained in [timing-results.json](timing-results.json).
+
+Reproduce with the recorded manifests and fresh timing/profile output locations:
+
+```sh
+python3 benchmarks/cell-event-payload/campaign.py ARTIFACT_ROOT
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-event-payload/ray-manifest.json out/cell-event-payload/timing-ray/samples.json out/cell-event-payload/profile-control4 --lane control4 --duration 3 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-event-payload/ray-manifest.json out/cell-event-payload/timing-ray/samples.json out/cell-event-payload/profile-candidate4 --lane candidate4 --duration 3 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/cell-event-payload/timing_check.py out/cell-event-payload benchmarks/cell-event-payload/timing-results.json
+```
