@@ -245,3 +245,79 @@ out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/evaluate_hol
   --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
   --output out/cell-fixed-state-gpu/holdout-results.json
 ```
+
+## Learning tolerance to redundant established facts
+
+The next iteration keeps the typed affine representation and fixed quadratic GPU
+formula unchanged. It augments only train/validation **source parents** with
+already-derived constructor facts, then obtains labels from actual Cell and
+native executions. There is no closure or extra graph interpretation at inference.
+240 training-parent and 120 validation-parent cases were collected independently,
+with the same one-second per-case timeout and native/fixed-point checks.
+
+`train_augmented.py` rejects duplicate entries and any augmented skeleton that
+collides with another original split or the frozen stress cohort. Training
+augmentation is admitted first; validation augmentation also excludes those
+training skeletons. Parent identity/split and expected completion are checked.
+The stress set's structure is used only to protect against overlap, never to fit
+weights or choose regularization. An intentionally wrong completion label is
+rejected. Original train/validation/test assignment remains unchanged.
+
+169 train and 80 validation augmentations survive (441 train, 175 validation
+rows total). Five regularizers are selected by equally weighting original and
+augmented validation accuracy, then validation MSE. No new projection seed,
+representation or test-dependent branch is selected. Validation is 173/175
+(95/95 original plus 78/80 augmented). Full logs and accepted IDs are preserved
+in `augmented-results.json`.
+
+| Frozen evaluation cohort | Before | After augmentation |
+|---|---:|---:|
+| Original development test | 97/102 | 95/102 |
+| Additional previously unseen entries | 20/90 | **80/90** |
+| Additional previously unseen skeletons | 18/82 | **75/82** |
+| All unique additional inputs | 38/108 | 97/108 |
+
+The original test loses two correct cases; the stronger entrance test improves
+substantially. This establishes learned tolerance on these finite cases, not
+mathematical invariance to arbitrary redundant facts. The stress set has already
+influenced the decision to augment training, so it remains a development stress
+test even though its labels do not select parameters. Targets are still the same
+24 known completion classes.
+
+State width remains 456. Ridge center count grows from 272 to 441, model weights
+from 567,200 to 892,356 bytes. GPU remains three matmuls plus a square; there is
+no gradient training or runtime graph traversal. Warm numeric GPU inference for
+102 states measured ~0.257 ms in the training run; native-produced states were
+also checked with the new model, giving identical top-1 predictions and 95/102.
+The separate native run measured ~0.170 ms total projection plus ~0.365 ms GPU;
+short-run variation and excluded transport prohibit an end-to-end speed claim.
+
+```sh
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/generate_holdout.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --inputs out/cell-multi-entry-ridge/inputs.json \
+  --split train --limit 240 --output out/cell-fixed-state-gpu/augment-train-inputs.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/generate_holdout.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --inputs out/cell-multi-entry-ridge/inputs.json \
+  --split validation --limit 120 --output out/cell-fixed-state-gpu/augment-validation-inputs.json
+python3 benchmarks/cell-multi-entry-ridge/collect.py \
+  --inputs out/cell-fixed-state-gpu/augment-train-inputs.json \
+  --runner target/debug/examples/real_completion_dataset \
+  --output out/cell-fixed-state-gpu/augment-train-runtime.json
+python3 benchmarks/cell-multi-entry-ridge/collect.py \
+  --inputs out/cell-fixed-state-gpu/augment-validation-inputs.json \
+  --runner target/debug/examples/real_completion_dataset \
+  --output out/cell-fixed-state-gpu/augment-validation-runtime.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/train_augmented.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --train-runtime out/cell-fixed-state-gpu/augment-train-runtime.json \
+  --validation-runtime out/cell-fixed-state-gpu/augment-validation-runtime.json \
+  --stress-runtime out/cell-fixed-state-gpu/fresh-runtime.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --output out/cell-fixed-state-gpu/augmented
+```
+
+The previous native-plan/projection commands work with `augmented/model.npz` too;
+regenerate the native plan because it binds the model hash. The new model should
+not be tested against old model-bound native-state files.
