@@ -2,6 +2,29 @@
 //! the same already checked composed component can share a backing owner.
 use super::*;
 impl Graph {
+    /// A completed source need not join a multi-frame storage owner to stop
+    /// copying bindings already held by its checked component. The component
+    /// teardown path restores symbolic slots before retiring their provider.
+    pub(in crate::graph) fn delegate_completed_slots(&mut self, cell:u32) {
+        let Some(owner)=self.ownership.as_ref() else {return;};
+        let Some(frame)=owner.composition.frames.get(&cell) else {return;};
+        let component=owner.composition.components[frame.component as usize].as_ref().unwrap();
+        let ports=&owner.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+        let Some(c)=self.cells.get_mut(&cell).filter(|c|c.completed) else {return;};
+        let slots=&self.program.cell_ownership.markers[c.template].program.slots;
+        let mut checks=0;
+        let removed=c.values.retain_owned(|slot,value| {
+            let Value::Eq(value)=value else {return true;};
+            let Some(local)=slots.get(*slot).copied().flatten() else {return true;};
+            let Some(bound)=component.signals[ports[local]] else {return true;};
+            checks+=1;
+            root(&self.parents,*value)!=root(&self.parents,bound)
+        });
+        if removed>0 {c.symbolic_slots=true;c.values.compact_capacity();}
+        self.stats.completed_symbolic_slot_checks+=checks;
+        self.stats.completed_symbolic_slots_elided+=removed as u64;
+    }
+
     /// Matched diagnostic control: reclaim only the source record arena's spare
     /// capacity, without removing fields, facts, or parent links.
     pub fn compact_source_record_capacity(&mut self) {self.cells.release_source_capacity();}

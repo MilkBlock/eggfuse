@@ -1245,3 +1245,27 @@ fn completed_scalar_chain_releases_operands_but_preserves_later_fact_reads() {
             "a scalar operand needed only during execution must not pin the parent");
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_singleton_uses_existing_ports_without_physical_owner_transfer() {
+    let p=program("(datatype E (N i64) (F E) (H E) (Pair E E) (Seen E E))
+        (ruleset a) (ruleset b) (ruleset retire)
+        (rule ((F x) (H y)) ((Pair x y)) :ruleset a)
+        (rule ((Pair x y)) ((Seen x y)) :ruleset b)
+        (rule ((Pair x y)) ((delete (Pair x y))) :ruleset retire)
+        (F (N 1)) (H (N 2)) (run a 1) (run b 1) (run retire 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        for run in 1..=3 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}");
+        }
+        assert!(actual.graph.stats.completed_symbolic_slots_elided>0,
+            "completed bindings must use existing ports before any storage transfer");
+        assert_eq!(actual.graph.retained_cell_storage()["completed_owner_frames"],0);
+    }
+}

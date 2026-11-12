@@ -30,6 +30,7 @@ impl Graph {
             self.stats.completed_dead_slots_elided+=removed as u64;
             self.stats.completed_dead_frames_compacted+=1;
         }
+        self.delegate_completed_slots(cell);
     }
     pub(crate) fn complete_parent_handoff(&mut self, cell: u32, rid: usize) -> Result<()> {
         let Some(layout)=self.program.executions[rid].parent_completion.as_ref() else {return Ok(());};
