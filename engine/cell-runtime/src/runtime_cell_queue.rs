@@ -115,11 +115,11 @@ impl Executor {
             let consume = |completed: &mut Vec<Completed>| {
                 // A ready prefix may retain table ownership. No wait for a
                 // larger batch: small prefixes use ordinary exact validation.
-                let registry_start = self.graph.functions.len();
-                let registered = completed.len() <= owners.len()
+                let eligible = completed.len() <= owners.len()
                     && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
-                        done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()))
-                    && self.graph.plan_unit_registration(completed, &pool);
+                        done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
+                let registration=eligible.then(||self.graph.plan_unit_registration(completed,&pool)).flatten();
+                #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
                 #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
                 let result = (|| {
                     for done in completed.drain(..) {
@@ -143,7 +143,7 @@ impl Executor {
                   let stats = &mut self.graph.stats.sync_diagnostics;
                   stats.source_batches += 1; stats.source_adoption_ns += elapsed;
                   if registered { stats.registered_source_batches += 1; stats.registered_source_adoption_ns += elapsed; } }
-                if registered { self.graph.finish_unit_registration(registry_start, &pool); }
+                if let Some(registration)=registration {self.graph.finish_unit_registration(registration);}
                 result
             };
             let clock = Instant::now();

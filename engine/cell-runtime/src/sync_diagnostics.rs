@@ -7,30 +7,6 @@ use {
     std::time::Instant,
 };
 
-pub(crate) struct Timed<T> {
-    pub value: T,
-    #[cfg(feature = "cell-sync-diagnostics")]
-    pub span: Option<Span>,
-}
-impl<T> Timed<T> {
-    pub fn new(value: T) -> Self {
-        Self {
-            value,
-            #[cfg(feature = "cell-sync-diagnostics")]
-            span: None,
-        }
-    }
-    pub fn run<R>(&mut self, run: impl FnOnce(&mut T) -> R) -> R {
-        #[cfg(feature = "cell-sync-diagnostics")]
-        let start = Instant::now();
-        let result = run(&mut self.value);
-        #[cfg(feature = "cell-sync-diagnostics")]
-        {
-            self.span = Some(Span::finish(start));
-        }
-        result
-    }
-}
 pub(crate) struct Clock {
     #[cfg(feature = "cell-sync-diagnostics")]
     start: Instant,
@@ -80,16 +56,6 @@ pub(crate) struct Span {
     start: Instant,
     end: Instant,
     worker: Option<usize>,
-}
-#[cfg(feature = "cell-sync-diagnostics")]
-impl Span {
-    pub fn finish(start: Instant) -> Self {
-        Self {
-            start,
-            end: Instant::now(),
-            worker: rayon::current_thread_index(),
-        }
-    }
 }
 #[cfg(feature = "cell-sync-diagnostics")]
 #[derive(Default, Clone, Debug, Serialize, Deserialize)]
@@ -174,6 +140,8 @@ pub struct Report {
     pub inline_registry: bool,
     pub classify: Phase,
     pub install: Phase,
+    #[serde(default)]
+    pub registration:Phase,
     pub constructors: Phase,
     pub queries: Phase,
     pub source_batches: u64,
@@ -188,6 +156,7 @@ impl Default for Report {
             inline_registry: registry_inline(),
             classify: Phase::default(),
             install: Phase::default(),
+            registration:Phase::default(),
             constructors: Phase::default(),
             queries: Phase::default(),
             source_batches: 0,

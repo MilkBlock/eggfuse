@@ -84,6 +84,7 @@ impl Graph {
                     member_arrays += rows.capacity() * 8 + dead.capacity() * 8
                 }
                 TableRows::Tree(t) => member_tree_entries += t.len(),
+                TableRows::Held=>panic!("storage snapshot during terminal table adoption"),
             }
         }
         let mut writer_slots = 0;

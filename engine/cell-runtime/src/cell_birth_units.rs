@@ -209,8 +209,8 @@ impl Graph {
         } else {
             if registered.unwrap().2 { self.changes.activate_new_table(table); }
             // Eq-root dependency ownership is still a genuine shared boundary.
-            // Table version, membership and publication are installed by its
-            // worker after the bounded source append finishes.
+            // Table version, membership and publication are prepared by the
+            // table owner and opened only after the source append finishes.
             self.subscribe_edges(Dependency::Function(index), &fields);
         }
         Ok((index, true))

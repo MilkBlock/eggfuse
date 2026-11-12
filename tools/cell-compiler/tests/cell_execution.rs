@@ -145,6 +145,12 @@ fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay(
     let r=candidate.report();let w=&r["cell_execution"]["runtime"]["stats"]["births"];
     assert!(w["unit_worker_rows"].as_u64().unwrap()>0,"{w}");
     assert!(r["stats"]["unit_registry_installs"].as_u64().unwrap()>0,"table owner must install actual index and publication entries: {}",r["stats"]);
+    assert_eq!(r["stats"]["unit_registry_identity_rows"],r["stats"]["unit_registry_candidates"]);
+    if !r["stats"]["sync_diagnostics"]["inline_registry"].as_bool().unwrap_or(false) {
+        assert_eq!(r["stats"]["unit_registry_worker_identity_rows"],r["stats"]["unit_registry_candidates"]);
+        assert_eq!(r["stats"]["unit_registry_pool_calls"],r["stats"]["unit_registry_batches"],
+            "one worker region; source adoption must not dispatch a second installation phase");
+    }
     assert!(w["unit_invalidated"].as_u64().unwrap()>0,"{w}");
     assert_eq!(w["unit_candidates"].as_u64().unwrap(),w["unit_inserts"].as_u64().unwrap()+w["unit_invalidated"].as_u64().unwrap());
     let q=&r["cell_execution"]["runtime"]["stats"]["scheduler"];

@@ -11,8 +11,15 @@ enum Kind {
     Eq,
     Int,
     Float,
+    Held,
 }
 impl FunctionKeys {
+    /// Move the actual directory into a terminal Cell owner. Any unproved
+    /// keyed access during adoption must fail, rather than see an empty table.
+    pub fn take_owner(&mut self)->Self {
+        assert!(!matches!(self.scalar,Some(Kind::Held)),"nested Unit table owner");
+        std::mem::replace(self,Self {scalar:Some(Kind::Held),words:Default::default(),other:Default::default()})
+    }
     pub fn new(t: &Table) -> Self {
         let scalar = if t.schema.len() == 2 {
             match t.schema[0]["kind"].as_str() {
@@ -33,6 +40,7 @@ impl FunctionKeys {
     #[inline]
     fn word(&self, key: &[Value]) -> Option<u64> {
         match (self.scalar, key) {
+            (Some(Kind::Held),_)=>panic!("Unit directory is held by its terminal Cell owner"),
             (Some(Kind::Eq), [Value::Eq(x)]) => Some(*x),
             (Some(Kind::Int), [Value::Int(x)]) | (Some(Kind::Float), [Value::Float(x)]) => {
                 Some(*x as u64)

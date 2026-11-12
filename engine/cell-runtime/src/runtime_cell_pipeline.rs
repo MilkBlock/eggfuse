@@ -74,10 +74,10 @@ impl Executor {
         self.cell_execution.as_mut().unwrap().counts.scheduler.admission_empty_polls+=u64::from(wave.ready.is_empty());
         let count=wave.ready.len();
         let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
-        let registry_start=self.graph.functions.len();
-        let registered=!wave.ready.is_empty() && wave.ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
-            done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()))
-            && self.graph.plan_unit_registration(&mut wave.ready,&pool);
+        let eligible=!wave.ready.is_empty() && wave.ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
+            done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
+        let registration=eligible.then(||self.graph.plan_unit_registration(&mut wave.ready,&pool)).flatten();
+        #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
         #[cfg(feature="cell-sync-diagnostics")] let adoption=Instant::now();
         let result=(|| {
             for done in wave.ready.drain(..) {
@@ -103,7 +103,7 @@ impl Executor {
             let stats=&mut self.graph.stats.sync_diagnostics;stats.source_batches+=1;stats.source_adoption_ns+=elapsed;
             if registered {stats.registered_source_batches+=1;stats.registered_source_adoption_ns+=elapsed;}
         }
-        if registered {self.graph.finish_unit_registration(registry_start,&pool);}
+        if let Some(registration)=registration {self.graph.finish_unit_registration(registration);}
         if result.is_ok() && !wave.producer.finished() {queue.flying=Some(wave);return Ok(());}
         // Completion of the producer also joins its peer readers. A source
         // error waits for those private readers but never adopts later rows.

@@ -9,6 +9,7 @@ pub(crate) enum OrderedRun<T> {
         live: usize,
     },
     Tree(BTreeSet<T>),
+    Held,
 }
 impl<T> Default for OrderedRun<T> {
     fn default() -> Self {
@@ -20,14 +21,19 @@ impl<T> Default for OrderedRun<T> {
     }
 }
 impl<T: Ord + Copy> OrderedRun<T> {
+    pub(crate) fn take_owner(&mut self)->Self {
+        assert!(!matches!(self,Self::Held),"nested table membership owner");
+        std::mem::replace(self,Self::Held)
+    }
     #[cfg(feature = "parallel-residuals")]
     pub(crate) fn span_len(&self) -> usize {
-        match self { Self::Run { rows, .. } => rows.len(), Self::Tree(t) => t.len() }
+        match self { Self::Run { rows, .. } => rows.len(), Self::Tree(t) => t.len(), Self::Held=>panic!("table membership is held") }
     }
     pub fn len(&self) -> usize {
         match self {
             Self::Run { live, .. } => *live,
             Self::Tree(t) => t.len(),
+            Self::Held=>panic!("table membership is held"),
         }
     }
     fn alive(dead: &[u64], i: usize) -> bool {
@@ -64,6 +70,7 @@ impl<T: Ord + Copy> OrderedRun<T> {
     }
     pub fn remove(&mut self, v: &T) -> bool {
         match self {
+            Self::Held=>panic!("table membership is held"),
             Self::Tree(t) => t.remove(v),
             Self::Run { rows, dead, live } => {
                 let Ok(i) = rows.binary_search(v) else {
@@ -92,6 +99,7 @@ impl<T: Ord + Copy> OrderedRun<T> {
     }
     pub fn iter(&self) -> Cursor<'_, T> {
         match self {
+            Self::Held=>panic!("table membership is held"),
             Self::Tree(t) => Cursor::Tree(t.iter()),
             Self::Run { rows, dead, .. } => Cursor::Run {
                 rows: rows.iter().enumerate(),

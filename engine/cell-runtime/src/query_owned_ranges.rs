@@ -123,6 +123,7 @@ pub(super) fn borrow<'a>(
                     }
                 }
                 OrderedRun::Tree(rows) => tasks.push(make(Members::Tree(rows))),
+                OrderedRun::Held=>panic!("query cannot observe held Unit membership"),
             }
         }
     }

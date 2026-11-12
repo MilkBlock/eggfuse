@@ -204,6 +204,16 @@ pub struct Stats {
     pub unit_registry_tables: u64,
     pub unit_registry_bytes: u64,
     #[serde(default)]
+    pub unit_registry_pool_calls:u64,
+    #[serde(default)]
+    pub unit_registry_identity_rows:u64,
+    #[serde(default)]
+    pub unit_registry_worker_identity_rows:u64,
+    #[serde(default)]
+    pub unit_registry_owner_tables:u64,
+    #[serde(default)]
+    pub unit_registry_discarded:u64,
+    #[serde(default)]
     pub constructor_prepared_checks: u64,
     #[serde(default)]
     pub constructor_prepared_fields: u64,

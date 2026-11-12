@@ -50,6 +50,7 @@ pub(super) fn borrow<'a>(ranges: &'a [Range], scheduler: &'a crate::entry_schedu
                     }
                 }
                 OrderedRun::Tree(rows) => out.push(Chunk { range, source, members: Members::Tree(rows) }),
+                OrderedRun::Held=>panic!("query cannot observe held Unit membership"),
             }
             source += run.span_len();
         }

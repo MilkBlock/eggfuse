@@ -32,19 +32,14 @@ pub(crate) struct ChangeBatch {
 }
 
 impl ChangeBatch {
-    /// Exclusive table maps for a checked append-only Cell batch. New Function
-    /// identities have no previous change event; first source adoption retains
-    /// table activation order before the worker borrow begins.
     #[cfg(feature="sparse-cells")]
-    pub(crate) fn new_row_tables(&mut self, tables: &[usize])
-        -> Vec<&mut FxHashMap<Dependency, Change>> {
-        let mut remaining = self.tables.as_mut_slice();
-        let mut start = 0;
-        tables.iter().map(|&table| {
-            let (_, tail) = std::mem::take(&mut remaining).split_at_mut(table-start);
-            let (head, tail) = tail.split_first_mut().unwrap();
-            remaining = tail; start = table+1; head
-        }).collect()
+    pub(crate) fn take_new_row_table(&mut self,table:usize)->FxHashMap<Dependency,Change> {
+        std::mem::take(&mut self.tables[table])
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn restore_new_row_table(&mut self,table:usize,rows:FxHashMap<Dependency,Change>) {
+        assert!(self.tables[table].is_empty(),"no unproved writes during table ownership");
+        self.tables[table]=rows;
     }
     #[cfg(feature="sparse-cells")]
     pub(crate) fn activate_new_table(&mut self, table: usize) {
