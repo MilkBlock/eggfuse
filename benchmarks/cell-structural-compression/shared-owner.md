@@ -408,3 +408,45 @@ script to `benchmarks/cell-structural-compression/parent-forward-results.json`.
 Tests: four offline causal-analysis tests, bounded trace unit test, default runtime
 Cargo check. The offline analyzer refuses parent candidates justified only by an
 archived forwarding edge after the current map has been cleared.
+
+### Retire dead bindings at completion, not only at owner transfer
+
+The catalog already proves dead matched inputs from authoritative Cell operations,
+known-result aliases and cross-stage route reads. Previously, physical removal
+only ran for frames eligible for multi-frame shared-owner transfer; ordinary
+completed instances retained those same proven-dead bindings indefinitely.
+Move removal to the existing completion handoff, after RHS/result capture. Shared
+prefix storage is not modified. Remove the duplicate filter from owner transfer.
+There is no new plan, runtime fact table, reverse index or boundary-wide scan.
+The earlier parent-forwarding experiment therefore does not enter execution.
+
+Actual standalone Cell runtime, same opt-in parent-takeover configuration:
+
+| Metric | Previous | Completion retirement |
+| --- | ---: | ---: |
+| Cumulative dead input slots removed | 1,482 | 4,027 |
+| Final explicit Cell slots | 10,537 | 8,354 |
+| Graph-owned requested heap | 2,930,613 | 2,802,597 |
+| Retained compiled Program heap | 117,230,752 | 117,230,752 |
+| Process execution/transfer peak | 125,625,097 | 125,496,909 |
+| Largest transfer extra heap | 48,752 | 49,576 |
+
+Graph saves another 128,016 bytes; the full reduction relative to the original
+3,068,093-byte Graph baseline is 265,496 bytes (8.65%). All the additional Graph
+savings are attributed to Cell storage. Removal plus shrinking affected 1,987
+completed frames: this can reallocate and is explicitly charged as a new counter.
+No timing benefit is established. Facts, indexes, RHS work and the shared owner
+representation are unchanged; the whole-egraph compression goal remains unmet.
+
+All 1,428 Run graph and ordered RHS/write/resume checks pass. Selected execution
+work counters exactly match, as does the final export. Semantic acceptance passes
+using that equal saved export. All 35 ownership tests and 21 ripsat completion
+tests pass; default runtime Cargo check passes. The dead-binding fixture now
+requires actual retirement without calling owner transfer, in serial and with
+two query workers. Existing tests retain cross-stage reads and deletion coverage.
+
+```sh
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_closure_work -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/completion-input-audit.json --natural --shared-owners --parent-takeover
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_storage_peak -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/completion-input-heap.json inherited-owners
+python3 benchmarks/cell-structural-compression/analyze_completed_inputs.py out/cell-structural-compression/parent-forward-audit.json out/cell-structural-compression/completion-input-audit.json out/cell-structural-compression/dead-inputs-heap-inherited-owners.json out/cell-structural-compression/completion-input-heap.json benchmarks/cell-structural-compression/completion-input-results.json
+```

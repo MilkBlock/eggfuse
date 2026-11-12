@@ -3,6 +3,18 @@
 use super::*;
 impl Graph {
     pub(crate) fn complete_parent_handoff(&mut self, cell: u32, rid: usize) -> Result<()> {
+        // All completed result capture is finished before this hook. Retire
+        // proven dead bindings even when this frame never joins a shared owner.
+        if let Some(dead)=self.program.executions[rid].completed_dead_inputs.as_ref()
+            && let Some(c)=self.cells.get_mut(&cell).filter(|c|c.completed)
+        {
+            let removed=c.values.retain_owned(|slot,_|dead.binary_search(slot).is_err());
+            if removed>0 {
+                c.values.compact_capacity();
+                self.stats.completed_dead_slots_elided+=removed as u64;
+                self.stats.completed_dead_frames_compacted+=1;
+            }
+        }
         let Some(layout)=self.program.executions[rid].parent_completion.as_ref() else {return Ok(());};
         let Some(c) = self.cells.get(&cell).filter(|c| c.completed) else { return Ok(()); };
         let Some(parent) = c.parent else { return Ok(()); };

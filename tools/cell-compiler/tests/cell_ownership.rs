@@ -1139,7 +1139,7 @@ fn shared_completed_owners_survive_later_reads_and_deletion() {
 
 #[test]
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
-fn completed_owner_retires_unused_match_inputs() {
+fn completed_instance_retires_unused_match_inputs_without_owner_transfer() {
     let p=program("(datatype E (N i64) (Start E) (Pair E E) (Seen E))
         (relation Unused (i64))
         (ruleset a) (ruleset b) (ruleset c)
@@ -1156,10 +1156,9 @@ fn completed_owner_retires_unused_match_inputs() {
             let n=reference.steps.len();
             reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
             if reference.steps.len()==n {break;}
-            actual.graph.transfer_completed_owners().unwrap();
             assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
         }
-        assert!(actual.graph.stats.shared_owner_dead_slots_elided>0,
-            "unused match inputs must leave the transferred arrays");
+        assert!(actual.graph.stats.completed_dead_slots_elided>0,
+            "unused match inputs must retire without shared-owner transfer");
     }
 }

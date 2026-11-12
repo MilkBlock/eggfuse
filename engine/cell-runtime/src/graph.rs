@@ -341,6 +341,10 @@ pub struct Stats {
     #[serde(default)]
     pub shared_owner_dead_slots_elided:u64,
     #[serde(default)]
+    pub completed_dead_slots_elided:u64,
+    #[serde(default)]
+    pub completed_dead_frames_compacted:u64,
+    #[serde(default)]
     pub completed_parent_candidates: u64,
     #[serde(default)]
     pub completed_parent_slot_checks: u64,
