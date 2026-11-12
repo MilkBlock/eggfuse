@@ -181,8 +181,9 @@ impl Graph {
             self.merge_value(table, Value::Int(0), Value::Int(0))?;
             return Ok((index, false));
         }
-        let index = self.functions.len();
-        if let Some((expected, true, _)) = registered { assert_eq!(index, expected, "source-ordered Unit identity"); }
+        let index = registered.map_or_else(||self.functions.len(),|(index,new,_)| {
+            assert!(new && !self.functions[index].live && self.function_decoded[index].is_none(),"unpublished Unit reservation");index
+        });
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::effective(
             self.epoch,
@@ -194,8 +195,11 @@ impl Graph {
         )?;
         if registered.is_none() { self.function_keys[table].insert(&function.key, index); }
         let origin = function.origin.take();
-        self.functions.push(function);
-        self.function_decoded.push(Some(fields.clone()));
+        if registered.is_some() {
+            self.functions[index]=function;self.function_decoded[index]=Some(fields.clone());
+        } else {
+            self.functions.push(function);self.function_decoded.push(Some(fields.clone()));
+        }
         if origin.is_some_and(|o| self.active_rhs.as_ref().is_some_and(|(id, _)| *id == o.cell)) {
             self.active_origin = Some(index);
         }
@@ -210,7 +214,7 @@ impl Graph {
             if registered.unwrap().2 { self.changes.activate_new_table(table); }
             // Eq-root dependency ownership is still a genuine shared boundary.
             // Table version, membership and publication are prepared by the
-            // table owner and opened only after the source append finishes.
+            // table owner and opened only after source acceptance finishes.
             self.subscribe_edges(Dependency::Function(index), &fields);
         }
         Ok((index, true))

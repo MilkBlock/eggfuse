@@ -214,6 +214,16 @@ pub struct Stats {
     #[serde(default)]
     pub unit_registry_discarded:u64,
     #[serde(default)]
+    pub unit_registry_reserved_slots:u64,
+    #[serde(default)]
+    pub unit_registry_reserved_bytes:u64,
+    #[serde(default)]
+    pub unit_registry_capacity_growth_bytes:u64,
+    #[serde(default)]
+    pub unit_registry_trimmed_slots:u64,
+    #[serde(default)]
+    pub unit_registry_retained_holes:u64,
+    #[serde(default)]
     pub constructor_registry_batches:u64,
     #[serde(default)]
     pub constructor_registry_rows:u64,

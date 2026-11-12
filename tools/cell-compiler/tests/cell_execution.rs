@@ -133,14 +133,15 @@ fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay(
     egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
     let mut control=executor(&source,4);
     #[cfg(feature="iterative-bake")]
-    {eggfuse_cell_runtime::transfer_audit::set_active(true);eggfuse_cell_runtime::transfer_audit::enable_write_audit();}
+    {eggfuse_cell_runtime::transfer_audit::set_active(true);eggfuse_cell_runtime::transfer_audit::enable_logical_write_audit();}
     control.execute().unwrap();
     #[cfg(feature="iterative-bake")]
-    let writes=eggfuse_cell_runtime::transfer_audit::take_write_digests();
+    let writes=eggfuse_cell_runtime::transfer_audit::take_logical_write_digests();
     let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
     candidate.execute().unwrap();same(&control,&candidate);
     #[cfg(feature="iterative-bake")]
-    {assert_eq!(writes,eggfuse_cell_runtime::transfer_audit::take_write_digests());
+    {assert_eq!(writes,eggfuse_cell_runtime::transfer_audit::take_logical_write_digests());
+     eggfuse_cell_runtime::transfer_audit::take_write_digests();
      eggfuse_cell_runtime::transfer_audit::set_active(false);}
     let r=candidate.report();let w=&r["cell_execution"]["runtime"]["stats"]["births"];
     assert!(w["unit_worker_rows"].as_u64().unwrap()>0,"{w}");
@@ -149,6 +150,9 @@ fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay(
         "constructor indexes and subscriptions must enter the existing owner region");
     assert_eq!(r["stats"]["constructor_registry_adopted"],r["stats"]["constructor_registry_rows"]);
     assert_eq!(r["stats"]["constructor_registry_discarded"],0);
+    assert!(r["stats"]["unit_registry_reserved_slots"].as_u64().unwrap()>0);
+    assert!(r["stats"]["unit_registry_retained_holes"].as_u64().unwrap()>0,
+        "duplicate Unit candidates must leave invalid stable slots between live winners");
     assert_eq!(r["stats"]["unit_registry_identity_rows"],r["stats"]["unit_registry_candidates"]);
     if !r["stats"]["sync_diagnostics"]["inline_registry"].as_bool().unwrap_or(false) {
         assert_eq!(r["stats"]["unit_registry_worker_identity_rows"],r["stats"]["unit_registry_candidates"]);
