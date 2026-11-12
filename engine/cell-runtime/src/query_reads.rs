@@ -6,8 +6,6 @@ pub(crate) use cell_ownership::query_read::{Scratch, Work};
 pub(crate) struct QueryReads<'a> {
     keys: &'a [scalar_keys::FunctionKeys],
     functions: &'a [Function],
-    #[cfg(feature = "parallel-residuals")]
-    decoded: &'a [Option<RowFields>],
     constructors: Option<Constructors<'a>>,
     tables: &'a [Table],
     pub parents: &'a Parents,
@@ -52,8 +50,6 @@ impl Graph {
                 members: &self.members, hash_mask: self.constructor_hash_mask() }))
         } else { self.constructor_query_reader().map(Constructors::Ports) };
         Some(QueryReads { keys: &self.function_keys, functions: &self.functions, parents: &self.parents,
-            #[cfg(feature = "parallel-residuals")]
-            decoded: &self.function_decoded,
             constructors, tables: &self.program.tables })
     }
 }
@@ -78,8 +74,8 @@ impl QueryReads<'_> {
             }
             Dependency::Function(index) => {
                 let Some(f) = self.functions.get(index).filter(|f| f.live) else { return Ok(None) };
-                let values = self.decoded[index].clone().unwrap_or_else(|| row_fields(
-                    f.key.iter().chain(std::iter::once(&f.value)).map(|v| canon(v,self.parents)).collect()));
+                let values = if f.canonical { f.fields.clone() } else { row_fields(
+                    f.fields.iter().map(|v| canon(v,self.parents)).collect()) };
                 Ok(Some(Row { table:f.table, values, hidden:false, epoch:f.epoch, witness }))
             }
         }
@@ -102,9 +98,9 @@ impl QueryReads<'_> {
                 Constructors::Ports(read) => read.point(table, keys, scratch, work),
             };
         }
-        let Some(&index) = self.keys[table].get(keys) else { return Ok(None) };
+        let Some(&index) = self.keys[table].get(keys, self.functions) else { return Ok(None) };
         let Some(f) = self.functions.get(index).filter(|f| f.live && f.table == table) else { return Ok(None) };
-        Ok(Some((canon(&f.value, self.parents), f.epoch, Dependency::Function(index))))
+        Ok(Some((canon(f.value(), self.parents), f.epoch, Dependency::Function(index))))
     }
 }
 impl Canonical<'_> {

@@ -71,10 +71,10 @@ with a combined Cell owner. Use `instance_trace` and `function_trace` to derive
 future slot demands and explain remaining fact-free frame retention before
 adding more Bake shapes or another runtime registry.
 
-## Verified checkpoint
+## Instance takeover checkpoint (b238d5d3)
 
-`results.json` records the final representation, with zero added field-layout
-storage. Original Graph-exclusive heap: 3,979,373 B. Final: 3,080,829 B
+This checkpoint adds zero field-layout storage.
+Original Graph-exclusive heap: 3,979,373 B. Final: 3,080,829 B
 (**77.42% remaining**, 22.58% reduction). The 30% target is **not met**.
 The source has 1,863 delegated frames and 10,742 explicit slots (down from
 14,755); physical source Cells and the remaining fact/index representation
@@ -129,7 +129,7 @@ The isolated lean-program validation also reproduces the 3,080,829-byte
 Graph-exclusive result, 1,863 delegated frames and 10,742 stored source slots.
 All 1,428 graph and ordered RHS/write/resume hashes match the fixed original
 trace. `choice_diagnosis.py` returns `pass` / exit 0 on that exported state.
-`results.json` now references `lean-isolated-trace.json`; raw traces remain
+The checkpoint used `lean-isolated-trace.json`; raw traces remain
 under the ignored experiment output directory.
 
 ```sh
@@ -163,3 +163,69 @@ visibility and worker read epochs while consolidating these owners. Merely
 moving source bindings into an additional composition object cannot meet the
 target. Field teardown charges shared allocations to their last owner; these
 numbers are an optimistic bound, not achievable independent savings.
+
+## One owner for functional rows and keys
+
+Actual prior execution retained 416,448 bytes across `functions` and
+`function_decoded`, plus 140,236 bytes in `function_keys`. Each ordinary
+function owned key/value fields, another complete decoded row, and (for
+multi-field keys) another key vector in its index. These are repeated runtime
+values, not facts a larger Bake catalog can independently prove away. Removing
+them also removes repeated field installation at source writes and repair.
+
+Function now owns one immutable shared row. Queries borrow or share that row;
+updates replace it so already returned rows retain their old version. Existing
+union notifications invalidate canonicality; existing repair restores it.
+Projected Unit rows retain their own owner and ordinary fallback. The separate
+`function_decoded` directory is gone. Scalar-key indexes keep direct word
+lookup; other indexes contain hashes and candidate IDs, then compare the exact
+key against the authoritative row. They never own another key vector. Hashes
+are candidate filters, not equivalence evidence. Removal identifies the exact
+candidate, preserving other colliding keys.
+
+Measured against 1ab0270b on the same baked sum-bits program:
+
+| Allocation owner | Before | After |
+| --- | ---: | ---: |
+| Function records, rows and writers | 293,264 B | 303,664 B |
+| Separate decoded function rows/directory | 123,184 B | 0 B |
+| Function key indexes | 140,236 B | 70,716 B |
+| **Complete Graph-exclusive heap** | **3,080,829 B** | **2,898,525 B** |
+
+This removes 182,304 bytes (5.92% of the prior Graph heap). The fixed original
+baseline is still 3,979,373 bytes: **72.84% remains**, so the 30% goal is not met.
+No new compiled layouts are introduced. `results.json` records this iteration;
+`function-row-results.json` records the prior/current comparison. The independent
+process observer's initialization-relative peak growth falls from 6,147,585 to
+5,967,009 bytes; takeover extra peak stays 16,548 bytes. This net growth remains
+a process metric, not a Graph-only peak. No speedup is claimed.
+
+Validation: all 1,428 graph and ordered RHS/write/resume hashes match both the
+fixed original and prior iteration. Native `choice_diagnosis.py` returns pass
+/ exit 0. Runtime tests pass: 137 sparse and 84 default; all-feature compilation
+passes. All 28 ownership and 14 stable-port integration tests pass. Four parallel
+residual tests and the projected producer/consumer schedule test pass. New tests
+force index hash collisions and retain old rows through mutation/checkpoint
+round-trips.
+
+The extended `view-ports,parallel-residuals` union-digest suite has two existing
+failures: `staged_congruence_matches_native_at_each_source_boundary` and
+`bake_markers_and_compact_unit_ports_survive_union_digests`. An independent
+worktree at 1ab0270b reproduces the same 9 passes / 2 failures and byte-identical
+left/right assertion bodies. They are binding-audit discrepancies after unions;
+the preceding graph comparisons pass. Tests were not weakened. This documents
+the unresolved mode-specific diagnostic, not a blanket semantic waiver.
+
+Raw audited trace: `out/cell-structural-compression/function-row-trace.json`;
+raw peak: `out/cell-structural-compression/peak-function-row.json`.
+Use the earlier reproduction commands with those output paths, then:
+
+```sh
+python3 benchmarks/cell-structural-compression/compare_iterations.py PRIOR_AUDITED_TRACE CURRENT_AUDITED_TRACE PRIOR_PEAK CURRENT_PEAK out/iteration-results.json
+```
+
+The remaining source instance/fact and composed-owner allocations are unchanged.
+Their consolidation still requires preserving stable identities, old source
+reads, visibility, retained query versions and worker epochs. This iteration
+removes an independently duplicated row/index owner; it does not claim complete
+dominated-instance retirement.

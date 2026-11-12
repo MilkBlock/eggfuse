@@ -248,7 +248,7 @@ impl Graph {
                         matcher.publication.insert(f);
                     }
                     Dependency::Function(i) => {
-                        self.function_decoded[i] = None;
+                        self.functions[i].canonical = false;
                         matcher.unit_pending.insert(i);
                         matcher.stats.unit_notifications += 1;
                     }
@@ -264,7 +264,7 @@ impl Graph {
                 Dependency::Function(i) => {
                     // Unit cannot cause another equality. Coalesce notifications
                     // across the constructor closure before joining these keys.
-                    self.function_decoded[i] = None;
+                    self.functions[i].canonical = false;
                     matcher.unit_pending.insert(i);
                     matcher.stats.unit_notifications += 1;
                     continue;
@@ -478,8 +478,11 @@ impl Graph {
             }
             let alias = self.units.detach_key(i);
             if alias.is_none() {
-                let old = &self.functions[i].key;
-                if self.function_keys[row.table].get(old) == Some(&i) {
+                let old = self.functions[i].key();
+                if self.indexed_function(row.table, old) == Some(i) {
+                    #[cfg(feature = "sparse-cells")]
+                    self.function_keys[row.table].remove(old, i);
+                    #[cfg(not(feature = "sparse-cells"))]
                     self.function_keys[row.table].remove(old);
                 }
             }
@@ -490,7 +493,7 @@ impl Graph {
             let key = &row.values[..row.values.len() - 1];
             self.union_digest.as_mut().unwrap().stats.unit_rows_rekeyed += 1;
             if let Some(j) = self.function_index(table, key) {
-                if self.functions[j].value != Value::Int(0) {
+                if *self.functions[j].value() != Value::Int(0) {
                     return Err("Unit presence keeper has a non-Unit value".into());
                 }
                 let stats = &mut self.union_digest.as_mut().unwrap().stats;
@@ -523,7 +526,7 @@ impl Graph {
             }
             let f = &mut self.functions[i];
             f.epoch = self.epoch;
-            self.function_decoded[i] = Some(row.values.clone());
+            f.set_fields(row.values.clone());
             if let Some(alias) = alias {
                 self.units.restore_key(i, alias, row.values);
                 self.union_digest
@@ -532,7 +535,7 @@ impl Graph {
                     .stats
                     .unit_compact_rekeys += 1;
             } else {
-                f.key = key.to_vec();
+                f.projected = false;
                 #[cfg(feature = "sparse-cells")]
                 self.function_keys[table].insert(key, i);
                 #[cfg(not(feature = "sparse-cells"))]

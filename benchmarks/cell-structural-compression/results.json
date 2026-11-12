@@ -2,21 +2,21 @@
   "scope": "actual standalone Cell runtime, not native egglog; fixed original baseline",
   "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
   "original_graph_heap_bytes": 3979373,
-  "optimized_graph_heap_bytes": 3080829,
-  "remaining_fraction": 0.7741996038069314,
+  "optimized_graph_heap_bytes": 2898525,
+  "remaining_fraction": 0.728387361526552,
   "target_bytes": 1193811,
   "target_met_graph_heap": false,
   "added_shared_field_layout_bytes": 0,
-  "graph_plus_added_layout_fraction": 0.7741996038069314,
+  "graph_plus_added_layout_fraction": 0.728387361526552,
   "limitation": "shared layout is charged separately; within-Run peak and complete Program/Executor heap are not measured",
   "runs": 1428,
   "all_original_run_graph_and_audit_digests_equal": true,
-  "boundary_array_peak_before": 1902336,
-  "boundary_array_peak_after": 1311416,
+  "boundary_array_peak_before": 1759632,
+  "boundary_array_peak_after": 1198632,
   "source_counts": {
     "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
     "excluded": "allocator padding/control bytes, Value-owned payloads, BTree nodes, sparse ID outlier map, auxiliary caches, ownership backends, executor storage",
-    "index_payload_estimate_bytes": 384800,
+    "index_payload_estimate_bytes": 316680,
     "reverse_index_header_payload": 21456,
     "reverse_index_heap_payload": 75328,
     "reverse_degrees": {
@@ -52,7 +52,7 @@
       "100": 1
     },
     "forward_index_payload": 102304,
-    "function_index_payload": 102384,
+    "function_index_payload": 34264,
     "constructor_index_header_payload": 83328,
     "members_array_bytes": 83640,
     "members_tree_entries": 0,
@@ -75,11 +75,10 @@
     "removal_entries": 0,
     "fact_record_capacity_bytes": 208440,
     "fact_record_live_bytes": 208440,
-    "decoded_row_bytes": 102384,
-    "decoded_row_owners": 1150,
-    "function_records_bytes": 104000,
-    "function_key_array_bytes": 75056,
-    "function_decoded_directory_bytes": 20800,
+    "decoded_row_bytes": 0,
+    "decoded_row_owners": 1300,
+    "function_records_bytes": 72800,
+    "function_row_bytes": 116656,
     "cell_fact_arities": {
       "0": 211,
       "1": 1747,
@@ -89,7 +88,7 @@
       "7": 1,
       "85": 1
     },
-    "counted_bytes": 1311416
+    "counted_bytes": 1198632
   },
   "ordered_field_releases": [
     [
@@ -98,11 +97,7 @@
     ],
     [
       "functions",
-      293264
-    ],
-    [
-      "function_decoded",
-      123184
+      303664
     ],
     [
       "parents",
@@ -142,7 +137,7 @@
     ],
     [
       "function_keys",
-      140236
+      70716
     ],
     [
       "uses",
@@ -319,6 +314,6 @@
   ],
   "traces": {
     "original-baseline.json": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
-    "lean-isolated-trace.json": "56ab8d40b89543a811853d795ffe6660bae14bbbe4301a5f5a615434697e0578"
+    "function-row-trace.json": "7bf3cb09696171e66f8df48e42f6cfa11998e6688c376031ac46df79533652a5"
   }
 }

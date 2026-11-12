@@ -1,0 +1,35 @@
+{
+  "scope": "actual standalone Cell runtime; Graph teardown and separate single-lane process requested-heap observer",
+  "runs": 1428,
+  "all_run_graph_and_ordered_audits_equal": true,
+  "graph_heap_before": 3080829,
+  "graph_heap_after": 2898525,
+  "graph_heap_saved": 182304,
+  "changed_field_release_bytes": {
+    "function_decoded": {
+      "before": 123184,
+      "after": 0
+    },
+    "function_keys": {
+      "before": 140236,
+      "after": 70716
+    },
+    "functions": {
+      "before": 293264,
+      "after": 303664
+    }
+  },
+  "process_peak_before": 126061017,
+  "process_peak_after": 125880248,
+  "initialization_relative_peak_growth_before": 6147585,
+  "initialization_relative_peak_growth_after": 5967009,
+  "takeover_extra_peak_before": 16548,
+  "takeover_extra_peak_after": 16548,
+  "limitation": "process peaks and initialization-relative net growth are not Graph-exclusive peaks; field teardown charges shared allocations to last owner",
+  "input_sha256": {
+    "lean-isolated-trace.json": "56ab8d40b89543a811853d795ffe6660bae14bbbe4301a5f5a615434697e0578",
+    "function-row-trace.json": "7bf3cb09696171e66f8df48e42f6cfa11998e6688c376031ac46df79533652a5",
+    "peak-lean-isolated.json": "f82dc5ff00d9bb37edad19509ec526590003fa64288ed6dc10c8f055e2b7614f",
+    "peak-function-row.json": "bc2dfa5dd48b6aa7069420080da40b6a86b33aacf2dddb974de24c63eefd3937"
+  }
+}

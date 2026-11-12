@@ -13,13 +13,11 @@ impl Graph {
         self.elide_reconstructible_slots();
         self.cells.compact_capacity();
         for function in &mut self.functions {
-            function.key.shrink_to_fit();
             if let Some(writer) = function.writer.as_deref_mut() {
                 writer.values.compact_capacity();
             }
         }
         self.functions.shrink_to_fit();
-        self.function_decoded.shrink_to_fit();
         Ok(())
     }
 
@@ -89,19 +87,12 @@ impl Graph {
                 }
             }
         }
-        for fields in self.function_decoded.iter().flatten() {
-            if decoded.insert(fields.as_ptr() as usize) {
-                rows += std::mem::size_of_val(fields.as_ref()) + 2 * std::mem::size_of::<usize>();
-            }
-        }
         let function_records = self.functions.capacity() * std::mem::size_of::<Function>();
-        let function_keys = self
-            .functions
-            .iter()
-            .map(|f| f.key.capacity() * std::mem::size_of::<Value>())
-            .sum::<usize>();
-        let decoded_directory =
-            self.function_decoded.capacity() * std::mem::size_of::<Option<RowFields>>();
+        let function_rows = self.functions.iter().map(|f| {
+            if decoded.insert(f.fields.as_ptr() as usize) {
+                std::mem::size_of_val(f.fields.as_ref()) + 2 * std::mem::size_of::<usize>()
+            } else { 0 }
+        }).sum::<usize>();
         let mut degrees = BTreeMap::<usize, usize>::new();
         for uses in self.uses.values() {
             *degrees.entry(uses.len()).or_default() += 1;
@@ -157,9 +148,9 @@ impl Graph {
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":fact_count*std::mem::size_of::<(u32,FactState)>(),
             "decoded_row_bytes":rows,"decoded_row_owners":decoded.len(),
-            "function_records_bytes":function_records,"function_key_array_bytes":function_keys,
-            "function_decoded_directory_bytes":decoded_directory,"cell_fact_arities":arities,
-            "counted_bytes":records+positions+slots+facts+rows+function_records+function_keys+decoded_directory+writers+member_arrays})
+            "function_records_bytes":function_records,"function_row_bytes":function_rows,
+            "cell_fact_arities":arities,
+            "counted_bytes":records+positions+slots+facts+rows+function_records+function_rows+writers+member_arrays})
     }
 }
 
@@ -181,7 +172,6 @@ impl Graph {
         }
         release!(cells);
         release!(functions);
-        release!(function_decoded);
         release!(parents);
         release!(writer_dir);
         release!(local_unions);
