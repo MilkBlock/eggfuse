@@ -31,8 +31,11 @@ struct Work {
 #[derive(Default)]
 pub(super) struct Output {
     pub pending:bool, direct:u64, candidates:u64, pub rows:Vec<((usize,usize),Binding)>,
+    pub coverage:Option<PendingCoverage>,
     merged:Option<(usize,usize)>, // (candidates before dedup, prior serial answers)
 }
+#[derive(Default)]
+pub(super) struct PendingCoverage { pub residual:usize, pub owned:bool }
 /// Each rule owns its existing answer vector and final RHS input vector. The
 /// input layout is borrowed from the Cell, not copied into every candidate.
 struct Merge<'a> {
@@ -61,7 +64,24 @@ impl Merge<'_> {
 pub(super) struct MergeWork { pub comparisons:u64, pub bytes:u64, pub seconds:f64, pub worker:Option<usize>, pub count:usize }
 pub(super) struct PendingMerge { rows:Vec<((usize,usize),Binding)> }
 impl Output {
-    pub fn take_merge(&mut self)->Option<PendingMerge> {self.pending.then(||PendingMerge {rows:std::mem::take(&mut self.rows)})}
+    pub fn resolve_coverage(&mut self,g:&Graph,spine:&mut crate::stage_spine::Programs,rid:usize,stats:&mut Counts) {
+        if let Some(coverage)=self.coverage.take() {
+            if coverage.residual==0 {
+                assert!(self.rows.is_empty(),"no residual Entry implies no residual answer");
+                // No residual owner was delivered. The ordinary matcher and
+                // the Cell selection already own any remaining answers.
+                self.pending=false;
+            }
+            stats.coverage_rules+=1;
+            stats.coverage_complete_rules+=u64::from(coverage.residual==0);
+            stats.coverage_cursor_resolutions+=spine.resolve_query_coverage(g,rid,
+                coverage.residual,coverage.owned) as u64;
+        }
+    }
+    pub fn take_merge(&mut self)->Option<PendingMerge> {
+        assert!(self.coverage.is_none(),"Entry coverage precedes residual winner selection");
+        self.pending.then(||PendingMerge {rows:std::mem::take(&mut self.rows)})
+    }
     pub fn record_merge(&mut self,n:usize,previous:usize) {self.merged=Some((n,previous));}
 }
 impl PendingMerge {
@@ -210,6 +230,26 @@ impl Executor {
     }
 }
 impl Workers {
+    pub(crate) fn pending_coverage(&self,rid:usize)->bool {
+        self.expansion.outputs.get(rid).is_some_and(|o|o.coverage.is_some())
+    }
+    pub(crate) fn set_coverage_base(&mut self,rid:usize,residual:usize,owned:bool) {
+        let c=self.expansion.outputs[rid].coverage.as_mut().expect("pending Entry coverage");
+        c.residual=residual;c.owned=owned;
+    }
+    /// The current Entry has no possible published Cursor, even though other
+    /// pivots of this rule do. Exact filters and residual queries share a task.
+    pub(crate) fn uncovered_expansion_range(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,
+        rid:usize,batch:crate::entry_schedule::Batch<'_>,watermark:u64,known:&QueryFacts)->Result<()> {
+        let code=self.activate_expansion(g,index,rid,batch.atom())?;
+        let plan=self.expansion.rules[rid][batch.atom()].as_mut().unwrap();
+        self.expansion.work.partitioned_pivots+=u64::from(!plan.partitioned);
+        plan.partitioned=true;
+        self.expansion.outputs[rid].coverage.get_or_insert_with(Default::default);
+        self.enqueue_entry_range(code,batch,watermark,known);
+        self.mark_coverage_range();
+        Ok(())
+    }
     /// The Entry already passed Sieve and has no published Cursor. Its rule
     /// may still have other, independently owned Spine continuations.
     pub(crate) fn uncovered_expansion_entry(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,
@@ -222,7 +262,6 @@ impl Workers {
         self.expansion.work.partitioned_pivots+=u64::from(!plan.partitioned);
         plan.partitioned=true;
         self.enqueue_selected_entry(code,node,watermark,witness,known);
-        self.expansion.work.partitioned_entries+=1;
         Ok(())
     }
     /// Record the original matcher's insertion point once per Cell query,
@@ -297,6 +336,7 @@ impl Workers {
         let ChunkWork {counts:c,work:w,filters}=chunk;
         if w.input_rows==0 {return;}
         let t=&mut self.expansion.work;
+        t.partitioned_entries+=w.partitioned_entries;
         t.chunks+=1;t.entries+=c.entries;t.answers+=c.answers;t.point_reads+=c.point_reads;
         t.input_rows+=w.input_rows;t.filter_probes+=w.filter_probes;t.filter_rejected+=w.filter_rejected;t.direct_entries+=w.direct_entries;
         t.admission_probes+=w.admission_probes;t.admission_rejected+=w.admission_rejected;t.admission_rows+=w.admission_rows;
@@ -344,6 +384,7 @@ pub(super) struct ChunkWork {
     pub counts:Counts,work:Work,
     filters:SmallVec<[(usize,u64,u64,u64,u64);4]>,
 }
+impl ChunkWork { pub(super) fn admitted_entries(&self)->u64 {self.counts.entries} }
 impl Prepared<'_> {
     pub fn evaluate(&self,q:&QueryRead<'_>,reads:&crate::graph::query_reads::QueryReads<'_>,
         key_nodes:&J,known:&RuleRun,frame:&mut Frame,chunk:&mut ChunkWork,answers:&mut Vec<(usize,Binding)>,local:&crate::cell::execution::Plan,template:&Template)->Result<()> {
@@ -355,11 +396,11 @@ impl Prepared<'_> {
             w.input_rows+=1;
             if q.filter {
                 if !self.filter.allow(self.index.entry_hashes(entry.witness),&mut w.filter_probes,&mut w.filter_rejected) {return Ok(());}
-                w.direct_entries+=1;
             }
-            // Partitioned Entries passed their necessary filter on the host;
-            // account their direct delivery without evaluating it again.
-            if self.partitioned {w.direct_entries+=1;w.partitioned_entries+=1;}
+            // Selected Entries already passed on the host; a whole mixed
+            // range just passed here. Count either delivery exactly once.
+            if q.filter || self.partitioned {w.direct_entries+=1;}
+            if self.partitioned {w.partitioned_entries+=1;}
             c.entries+=1;
             let owner=(entry.epoch,entry.witness);
             let mut domain=None;

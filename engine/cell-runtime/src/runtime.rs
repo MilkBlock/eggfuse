@@ -1290,6 +1290,17 @@ impl Executor {
                         } else { None };
                         #[cfg(feature = "cell-entry-reverse")]
                         let selected_guard = selected.as_ref().map(|s| s.guard);
+                        #[cfg(feature="parallel-residuals")]
+                        if worker_expansion && active_spine && detach_spine && !node_owns && cursors.is_none()
+                            && inverted.is_none() && !cfg!(feature="entry-admission-audit")
+                            && !cfg!(feature="cell-query-sharing-audit") && !cfg!(feature="spine-shapes")
+                            && !cfg!(feature="cell-entry-reverse") && !cfg!(feature="projection-shared")
+                            && !cfg!(feature="projection-semijoin") && !cfg!(feature="family-frontiers")
+                            && !cfg!(feature="family-scan") {
+                            self.query_workers.as_mut().unwrap().uncovered_expansion_range(
+                                &self.graph,&mut self.query_indexes,rid,batch,watermark,&query_facts)?;
+                            return Ok(());
+                        }
                         #[cfg(feature = "parallel-residuals")]
                         if worker_expansion && !active_spine && !cfg!(feature = "entry-admission-audit") && {
                             #[cfg(feature = "cell-entry-reverse")]

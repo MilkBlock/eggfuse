@@ -689,6 +689,14 @@ impl Catalog {
     pub(crate) fn enabled(&self) -> bool {
         !self.units.is_empty()
     }
+    // Coverage changes origin/merge policy, never the selected instruction
+    // block, history or query receipts. A rule may resolve this after its
+    // Entry filters finish, before selecting winners or applying any effect.
+    pub(crate) fn resolve_coverage(&self, state: &mut State, complete: bool) {
+        if state.active(self).is_none() { return; }
+        state.complete = complete;
+        state.direct = complete && (self.switch.enabled() || state.fused(self));
+    }
     // Executed only on an originally scheduled and checked anchor. Reductions
     // consume adjacent, non-overlapping segments of this particular cursor.
     // A reset transfers the previous history to the current query. It may use
@@ -708,8 +716,7 @@ impl Catalog {
             };
             state.pc = self.switch.advance(state.pc, state.output, leaf);
             let unit = self.switch.active(state.pc);
-            state.direct = complete;
-            state.complete = complete;
+            self.resolve_coverage(state, complete);
             let collect_pairs = state.collect_pairs;
             let output = state.output;
             if collect_pairs || state.discovery.is_some() {
@@ -771,7 +778,6 @@ impl Catalog {
             unit: id,
             incoming: state.output,
         };
-        state.complete = complete;
         let discovery = state.discover();
         discovery.pending = None;
         discovery.capped = false;
@@ -812,7 +818,7 @@ impl Catalog {
             })
             .count();
         discovery.stack.drain(..discovery.stack.len() - keep);
-        state.direct = complete && right.unit >= self.leaves.len();
+        self.resolve_coverage(state, complete);
         (self.units[right.unit].terminal(), Default::default())
     }
     pub fn entries(&self) -> Vec<J> {
@@ -1195,7 +1201,12 @@ mod tests {
         }
         let mut state = State::default();
         for i in 0..4 {
+            let mut pending = state.clone();
             assert!(c.dispatch(&mut state, i, 0, true, Dependency::Function(0)).0);
+            assert!(c.dispatch(&mut pending, i, 0, false, Dependency::Function(0)).0);
+            c.resolve_coverage(&mut pending, true);
+            assert_eq!(format!("{state:?}"),format!("{pending:?}"),
+                "late coverage preserves the selected block and its history");
         }
         assert_eq!(state.discovery.as_ref().unwrap().stack.len(), 1);
         assert_eq!(state.discovery.as_ref().unwrap().stack[0].unit, 6);

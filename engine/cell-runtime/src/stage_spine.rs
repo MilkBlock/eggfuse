@@ -621,7 +621,7 @@ mod set_counts_test {
             let winner = Winner::new(answer, Cursor::fresh(root, 0), (Dependency::Function(0),0),
                 &mut spine.sealed_cursors, &mut spine.stats);
             spine.deferred_slots[rule] = spine.deferred_queries.len();
-            spine.deferred_queries.push(DeferredQuery { rule, complete: true, covered: 1, rows: vec![winner] });
+            spine.deferred_queries.push(DeferredQuery { rule, complete: true, coverage_pending:false, covered: 1, rows: vec![winner] });
         }
         let allocations = spine.deferred_frames().map(|(r, rows)| (r, rows.as_ptr() as usize)).collect::<Vec<_>>();
         let (_, mut first) = spine.finish_worker_rule(3, &[0], &mut 0).unwrap();
@@ -1047,7 +1047,7 @@ pub(crate) struct Winner {
     depth: u32,
 }
 #[cfg(feature = "sparse-cells")]
-struct DeferredQuery { rule: usize, complete: bool, covered: usize, rows: Vec<Winner> }
+struct DeferredQuery { rule: usize, complete: bool, coverage_pending:bool, covered: usize, rows: Vec<Winner> }
 #[cfg(feature = "sparse-cells")]
 impl Winner {
     fn new(mut answer: Matched, cursor: Cursor, ordinal: (Dependency,usize),
@@ -2822,11 +2822,18 @@ impl Programs {
         #[cfg(feature="parallel-residuals")] range_count:usize,
         watermark: u64,
         facts: &QueryFacts,
-        #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
+        #[cfg(feature = "sparse-cells")] mut workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         #[cfg(not(feature="parallel-residuals"))] let range_count=0;
         let detached = crate::entry_schedule::DETACH_CELL_ENTRIES;
         let residual_count = if detached { scheduled_count } else { scheduled_count - routes.len() };
+        #[cfg(feature="parallel-residuals")]
+        let coverage_pending=workers.as_ref().is_some_and(|w|w.pending_coverage(rid));
+        #[cfg(not(feature="parallel-residuals"))]
+        let coverage_pending=false;
+        #[cfg(feature="parallel-residuals")]
+        if coverage_pending {workers.as_deref_mut().unwrap().set_coverage_base(rid,residual_count,
+            !routes.is_empty() || range_count!=0);}
         self.stats.routed_spine_seeds += routes.len() as u64;
         self.stats.routed_matcher_seeds += residual_count as u64;
         if !self.active_for_rule(rid) {
@@ -2835,12 +2842,12 @@ impl Programs {
         }
         self.stats.query_attempts += 1;
         if routes.is_empty() && range_count==0 {
-            self.stats.uncovered_queries += u64::from(residual_count != 0);
+            if !coverage_pending {self.stats.uncovered_queries += u64::from(residual_count != 0);}
             return Ok(None);
         }
         let clock = Instant::now();
-        let complete = residual_count == 0;
-        if !complete {
+        let complete = residual_count == 0 && !coverage_pending;
+        if !complete && !coverage_pending {
             self.stats.mixed_routed_queries += 1;
             self.stats.uncovered_queries += 1;
         }
@@ -2873,6 +2880,10 @@ impl Programs {
         if !complete && covered_count == 0 {
             return Ok(None);
         }
+        #[cfg(feature="parallel-residuals")]
+        let coverage_pending=workers.as_ref().is_some_and(|w|w.pending_coverage(rid));
+        #[cfg(all(feature="sparse-cells",not(feature="parallel-residuals")))]
+        let coverage_pending=false;
         #[cfg(feature = "sparse-cells")]
         let mut results = std::mem::take(&mut self.answer_scratch);
         #[cfg(not(feature = "sparse-cells"))]
@@ -3015,13 +3026,13 @@ impl Programs {
             }
         }
         #[cfg(feature = "sparse-cells")]
-        if workers.as_ref().is_some_and(|w| w.pending_rule(rid)) {
+        if coverage_pending || workers.as_ref().is_some_and(|w| w.pending_rule(rid)) {
             // Keep each original winner/cursor once until every Cell in this
             // read-only Run has completed. No intermediate binding is sealed.
             debug_assert_eq!(self.deferred_slots[rid], usize::MAX);
             self.deferred_slots[rid] = self.deferred_queries.len();
             self.stats.deferred_group_growths += u64::from(self.deferred_queries.len() == self.deferred_queries.capacity());
-            self.deferred_queries.push(DeferredQuery { rule: rid, complete, covered: covered_count, rows: results });
+            self.deferred_queries.push(DeferredQuery { rule: rid, complete, coverage_pending, covered: covered_count, rows: results });
             self.stats.deferred_group_peak_bytes = self.stats.deferred_group_peak_bytes.max(
                 (self.deferred_queries.capacity() * std::mem::size_of::<DeferredQuery>()) as u64);
             return Ok(Some(Coverage { complete, covered, claimed: covered_count, answers: Vec::new() }));
@@ -3138,11 +3149,27 @@ impl Programs {
         let winner = Winner::new(answer, cursor, ordinal, &mut self.sealed_cursors, &mut self.stats);
         self.deferred_queries[self.deferred_slots[rid]].rows.push(winner);
     }
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn resolve_query_coverage(&mut self,g:&Graph,rid:usize,residual:usize,owned:bool)->usize {
+        self.stats.uncovered_queries+=u64::from(residual!=0);
+        self.stats.mixed_routed_queries+=u64::from(owned && residual!=0);
+        if !owned {return 0;}
+        let q=&mut self.deferred_queries[self.deferred_slots[rid]];
+        assert!(q.coverage_pending,"coverage resolves once, before winner selection");
+        q.coverage_pending=false;q.complete=residual==0;
+        for winner in &q.rows {
+            let cursor=self.sealed_cursors[winner.answer.direct.as_ref().unwrap().0].as_mut().unwrap();
+            g.program.iterative.resolve_coverage(&mut cursor.state,q.complete);
+            if cursor.via_block && cursor.state.direct {self.training.seal_moves+=winner.answer.values.len() as u64;}
+        }
+        q.rows.len()
+    }
     #[cfg(feature="sparse-cells")]
     pub(crate) fn take_worker_selection(&mut self, rid:usize)->Option<Selection> {
         let slot=std::mem::replace(&mut self.deferred_slots[rid],usize::MAX);
         if slot==usize::MAX {return None;}
-        let DeferredQuery {rule,complete,covered,rows}=self.deferred_queries.swap_remove(slot);
+        let DeferredQuery {rule,complete,coverage_pending,covered,rows}=self.deferred_queries.swap_remove(slot);
+        assert!(!coverage_pending,"rule coverage precedes winner selection");
         if let Some(moved)=self.deferred_queries.get(slot) {self.deferred_slots[moved.rule]=slot;}
         Some(Selection {rule,complete,covered,rows,retained:0,comparisons:0})
     }
@@ -3260,6 +3287,11 @@ impl Programs {
         } else {
             self.stats.unsupported_key_pivots += count;
         }
+    }
+    #[cfg(feature="parallel-residuals")]
+    pub(crate) fn record_worker_fallbacks(&mut self, rid:usize, pivot:usize, count:u64) {
+        self.record_fallbacks(rid,pivot,count);
+        self.stats.routed_matcher_seeds+=count;
     }
     pub fn effects(&mut self, constructors: u64, updates: u64, unions: u64) {
         self.stats.constructor_requests += constructors;

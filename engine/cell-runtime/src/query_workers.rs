@@ -123,6 +123,15 @@ pub(crate) struct Counts {
     pub entry_range_batches: u64,
     pub range_answer_span_bytes: u64,
     pub range_answer_span_heap_bytes: u64,
+    pub coverage_range_descriptors:u64,
+    pub coverage_range_rows:u64,
+    pub coverage_admitted_entries:u64,
+    pub coverage_events:u64,
+    pub coverage_event_heap_bytes:u64,
+    pub coverage_rules:u64,
+    pub coverage_complete_rules:u64,
+    pub coverage_cursor_resolutions:u64,
+    pub coverage_empty_rules:u64,
     pub entry_range_capacity_bytes: u64,
     pub output_buffer_capacity: u64,
     pub batch_buffers: u64,
@@ -978,7 +987,11 @@ impl Workers {
         let key_nodes = g.program.key_nodes();
         // A range replaces many row headers; it does not by itself justify a
         // pool invocation. Keep genuinely small Runs on their existing host.
-        let pooled = self.pool.is_some() && self.next_source + ready::instances(&ready) >= self.grain;
+        #[cfg(feature="parallel-residuals")]
+        let query_weight=self.next_source-range_jobs.iter().map(|j|j.len()-j.weight()).sum::<usize>();
+        #[cfg(not(feature="parallel-residuals"))]
+        let query_weight=self.next_source;
+        let pooled = self.pool.is_some() && query_weight + ready::instances(&ready) >= self.grain;
         let local=&g.program.executions;
         let templates=&g.program.templates;
         let rule_facts = &self.rule_facts;
@@ -1088,7 +1101,7 @@ impl Workers {
                 while end<range_jobs.len() && rows<self.grain {
                     let job=&range_jobs[end];let rid=self.cell_codes[job.code()].rule;
                     if !rules.contains(&rid) {rules.push(rid);remaining[rid]+=1;}
-                    rows+=job.len();end+=1;
+                    rows+=job.weight();end+=1;
                 }
                 tasks.push((completion::Task::Range(&range_jobs[start..end]),rules));
                 self.stats.entry_range_batches+=1;
@@ -1118,6 +1131,11 @@ impl Workers {
         let mut completed=ready::Work::default();
         // Already matched rules are also independent ready continuations.
         for (rid,rows) in matches.iter_mut().filter(|(rid,_)|remaining[*rid]==0) {
+            #[cfg(feature="parallel-residuals")]
+            if let Some(output)=outputs.get_mut(*rid) {
+                self.stats.coverage_empty_rules+=u64::from(output.coverage.is_some());
+                output.resolve_coverage(g,spine,*rid,&mut self.stats);
+            }
             if !spine.deferred(*rid) && !{
                 #[cfg(feature="parallel-residuals")] {outputs.get(*rid).is_some_and(|o|o.pending)}
                 #[cfg(not(feature="parallel-residuals"))] {false}
@@ -1179,6 +1197,12 @@ impl Workers {
                         }
                         #[cfg(feature="parallel-residuals")]
                         completion::Event::Range(mut done)=>{
+                            for (rid,pivot,count) in done.coverage.drain(..) {
+                                outputs[rid].coverage.as_mut().expect("pending rule coverage").residual+=count as usize;
+                                spine.record_worker_fallbacks(rid,pivot,count);
+                                self.stats.coverage_admitted_entries+=count;
+                                self.stats.coverage_events+=1;
+                            }
                             let mut origins=done.origins.iter();
                             let mut origin=origins.next();
                             for (at,(source,answer)) in done.answers.drain(..).enumerate() {
@@ -1205,6 +1229,10 @@ impl Workers {
                         remaining[rid]-=1;
                         if remaining[rid]!=0 {continue;}
                         let at=positions[rid];assert_ne!(at,usize::MAX,"scheduled rule has an output owner");
+                        #[cfg(feature="parallel-residuals")]
+                        if let Some(output)=outputs.get_mut(rid) {
+                            output.resolve_coverage(g,spine,rid,&mut self.stats);
+                        }
                         if !spine.deferred(rid) && !{
                             #[cfg(feature="parallel-residuals")] {outputs.get(rid).is_some_and(|o|o.pending)}
                             #[cfg(not(feature="parallel-residuals"))] {false}
@@ -1305,6 +1333,8 @@ impl Workers {
             self.stats.entry_range_row_borrows += counts.entry_range_row_borrows;
             self.stats.range_answer_span_bytes += counts.range_answer_span_bytes;
             self.stats.range_answer_span_heap_bytes += counts.range_answer_span_heap_bytes;
+            self.stats.coverage_range_rows+=counts.coverage_range_rows;
+            self.stats.coverage_event_heap_bytes+=counts.coverage_event_heap_bytes;
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
             spine.stats.record_query_worker(&counts);

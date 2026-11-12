@@ -4,6 +4,12 @@
 use super::*;
 use crate::ordered_run::OrderedRun;
 
+// A raw mixed range includes cheap Sieve rejects that the selected range did
+// not enqueue at all. The preceding execution admits about one in eight rows.
+// Bound their extra scanning within a task; successful queries still execute
+// normally, and this changes scheduling only, never coverage or acceptance.
+const FILTER_ROWS_PER_QUERY: usize = 8;
+
 pub(super) struct Range {
     node: usize,
     code: usize,
@@ -12,6 +18,7 @@ pub(super) struct Range {
     // Only addresses accepted by source routing. The original Entry rows and
     // bindings are not copied. None means the entire epoch membership range.
     selected: Option<std::ops::Range<usize>>,
+    coverage: bool,
 }
 enum Members<'a> {
     Slice {
@@ -39,10 +46,14 @@ impl Chunk<'_> {
             Members::Selected(rows) => rows.len(),
         }
     }
+    pub(super) fn weight(&self) -> usize {
+        if self.range.coverage { self.len().div_ceil(FILTER_ROWS_PER_QUERY) }
+        else { self.len() }
+    }
 }
 impl Workers {
     pub(super) fn active_partitioned_ranges(&self) -> bool {
-        self.entry_ranges.iter().any(|r| r.selected.is_some())
+        self.entry_ranges.iter().any(|r| r.selected.is_some() || r.coverage)
     }
     pub(super) fn enqueue_entry_range(
         &mut self,
@@ -63,9 +74,14 @@ impl Workers {
             watermark,
             source: self.next_source,
             selected: None,
+            coverage: false,
         });
         self.next_source += batch.range_len();
         self.stats.entry_range_descriptors += 1;
+    }
+    pub(super) fn mark_coverage_range(&mut self) {
+        self.entry_ranges.last_mut().unwrap().coverage=true;
+        self.stats.coverage_range_descriptors+=1;
     }
     pub(super) fn enqueue_selected_entry(
         &mut self,
@@ -101,6 +117,7 @@ impl Workers {
                 watermark,
                 source: self.next_source,
                 selected: Some(start..start),
+                coverage: false,
             });
             self.stats.entry_range_descriptors += 1;
             self.stats.selected_range_descriptors += 1;
@@ -148,6 +165,7 @@ pub(super) fn borrow<'a>(
             }
             continue;
         }
+        let grain=if range.coverage {grain.saturating_mul(FILTER_ROWS_PER_QUERY)} else {grain};
         let mut source = range.source;
         for run in scheduler.read_ranges(range.node, range.watermark) {
             match run {
@@ -180,6 +198,7 @@ pub(super) struct Completed {
     // End position and compiled code for each nonempty answer span. No extra
     // code/source wrapper is copied into each successful instance.
     pub origins: smallvec::SmallVec<[(usize, usize); 4]>,
+    pub coverage: smallvec::SmallVec<[(usize,usize,u64);4]>,
     pub error: Option<((usize, bool, Dependency, usize), String)>,
     pub counts: Counts,
     pub worker: Option<usize>,
@@ -213,12 +232,15 @@ pub(super) fn run(
         let mut answers = Vec::new();
         let mut error = None;
         let mut origins = smallvec::SmallVec::<[(usize, usize); 4]>::new();
+        let mut coverage = smallvec::SmallVec::<[(usize,usize,u64);4]>::new();
         for job in jobs {
             let code = &codes[job.range.code];
             let known = facts[code.rule].as_ref().expect("active range");
             let first = answers.len();
+            let admitted = residual.admitted_entries();
             let mut visit = |i, witness| {
                 counts.entry_range_rows += 1;
+                counts.coverage_range_rows += u64::from(job.range.coverage);
                 let source = job.source + i;
                 let result = (|| {
                     // Refresh sealed this Entry before admission. Read that same
@@ -284,6 +306,12 @@ pub(super) fn run(
                     }
                 }
             }
+            if job.range.coverage {
+                let n=residual.admitted_entries()-admitted;
+                if let Some((_,_,count))=coverage.last_mut().filter(|(rid,pivot,_)|
+                    *rid==code.rule && *pivot==code.pivot) {*count+=n;}
+                else {coverage.push((code.rule,code.pivot,n));}
+            }
             if first != answers.len() {
                 if let Some((end, _)) = origins
                     .last_mut()
@@ -302,6 +330,9 @@ pub(super) fn run(
         } else {
             0
         };
+        counts.coverage_event_heap_bytes=if coverage.spilled() {
+            (coverage.capacity()*std::mem::size_of::<(usize,usize,u64)>()) as u64
+        } else {0};
         counts.completion_headers = answers.len() as u64;
         counts.output_buffer_capacity = answers.capacity() as u64;
         counts.frame_capacity_bytes = frame.bytes();
@@ -309,6 +340,7 @@ pub(super) fn run(
         Completed {
             answers,
             origins,
+            coverage,
             error,
             counts,
             worker: pooled.then(rayon::current_thread_index).flatten(),

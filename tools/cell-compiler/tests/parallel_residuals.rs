@@ -187,11 +187,12 @@ fn active_spine_keeps_owned_entries_and_transfers_uncovered_queries() {
         assert!(work["partitioned_answers"].as_u64().unwrap()>0,"{work}");
         assert!(work["column_prepares"].as_u64().unwrap()>0,"first activation prepares the layout");
         let ranges=&report["query_workers"]["stats"];
-        assert_eq!(ranges["selected_range_entries"],work["partitioned_entries"],
-            "every uncovered Entry uses its original address, with no queued row owner");
-        assert!(ranges["selected_range_descriptors"].as_u64().unwrap()>0);
-        assert!(ranges["selected_range_descriptors"].as_u64().unwrap()
-            < ranges["selected_range_entries"].as_u64().unwrap(), "one descriptor covers multiple accepted Entries");
+        assert_eq!(ranges["selected_range_entries"].as_u64().unwrap()
+            +ranges["coverage_admitted_entries"].as_u64().unwrap(),work["partitioned_entries"].as_u64().unwrap(),
+            "whole and selected ranges cover every accepted residual exactly once");
+        assert!(ranges["coverage_range_descriptors"].as_u64().unwrap()>0);
+        assert!(ranges["coverage_range_rows"].as_u64().unwrap()>ranges["coverage_range_descriptors"].as_u64().unwrap());
+        assert!(ranges["coverage_rules"].as_u64().unwrap()>0);
         assert_eq!(work["queued_row_owners"].as_u64().unwrap()+ranges["entry_range_rows"].as_u64().unwrap(),
             work["input_rows"].as_u64().unwrap(), "every residual input is counted once");
         assert!(report["stage_spine"]["stats"]["routed_spine_seeds"].as_u64().unwrap()>0,"must retain actual owned continuations");
@@ -230,8 +231,56 @@ fn small_selected_ranges_share_a_task_without_sharing_rule_results() {
         assert_eq!(before.snapshots,after.snapshots,"Run snapshots and updated values");
         assert_eq!(before.binding_audit,after.binding_audit,"distinct source/rule winners");
         let report=after.report();let stats=&report["query_workers"]["stats"];
-        assert!(stats["selected_range_entries"].as_u64().unwrap()>0,"{stats}");
+        assert!(stats["selected_range_entries"].as_u64().unwrap()+stats["coverage_admitted_entries"].as_u64().unwrap()>0,"{stats}");
         assert!(stats["entry_range_batches"].as_u64().unwrap()<stats["entry_range_chunks"].as_u64().unwrap(),
             "small ranges must actually share completion events: {stats}");
+    }
+}
+
+#[test]
+fn late_coverage_counts_filter_acceptance_even_when_the_query_has_no_answer() {
+    for case in ["sieve", "guard", "retired"] {
+        let has_pair=case=="guard";
+        let mut source=String::from(r#"
+(datatype E (N i64) (Gate E) (Start E E) (Pair E E) (Touch E))
+(function Cost (E) i64 :merge new)
+(function Out (E E) i64 :merge new)
+(ruleset make) (ruleset read) (ruleset remove) (ruleset touch)
+(rule ((Start x y)) ((Pair x y)) :ruleset make)
+(rule () ((Gate (N 99))) :ruleset make)
+(rule () ((delete (Gate (N 99)))) :ruleset remove)
+(rule ((Gate x)) ((Touch x)) :ruleset touch)
+(rule ((Gate x) (Pair x y) (= c (Cost y)) (> c 0)) ((set (Out x y) c)) :ruleset read)
+(Gate (N 0)) (Start (N 0) (N 10)) (set (Cost (N 10)) 1)
+(set (Cost (N 199)) -1)
+"#);
+        if has_pair {source+="(Pair (N 99) (N 199))\n";}
+        // Advance the read watermark before publishing the owned Pair and
+        // the raw Gate range. Its only new Entry either fails Sieve, or passes
+        // Sieve but fails the scalar guard. Both produce zero residual answers.
+        source+="(run-schedule (seq (run read) (run make) ";
+        if case=="retired" {source+="(run touch) (run remove) ";}
+        source+="(run read)))\n(check (= (Out (N 0) (N 10)) 1))\n";
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let before=run(&source,0,false);
+        for workers in [1,4] {
+            let after=run(&source,workers,true);
+            assert_eq!(before.snapshots,after.snapshots,"coverage must not change Run visibility");
+            assert_eq!(before.binding_audit,after.binding_audit,"retain the owned winner");
+            let report=after.report();let q=&report["query_workers"]["stats"];
+            assert!(q["coverage_rules"].as_u64().unwrap()>0,"{q}");
+            assert!(q["coverage_cursor_resolutions"].as_u64().unwrap()>0,"{q}");
+            if case=="retired" {
+                assert_eq!(q["coverage_range_rows"],0,"retired epoch leaves no range task");
+                assert_eq!(q["coverage_events"],0,"coverage must finish without a range event");
+                assert_eq!(q["coverage_admitted_entries"],0,"no phantom Entry after retirement");
+            } else if has_pair {
+                assert!(q["coverage_admitted_entries"].as_u64().unwrap()>0,"{q}");
+                assert_eq!(q["coverage_complete_rules"],0,"no answers does not prove complete coverage");
+            } else if std::env::var_os("CELL_CPU_SIEVE_COLLISIONS").is_none() {
+                assert_eq!(q["coverage_admitted_entries"],0,"{q}");
+                assert_eq!(q["coverage_complete_rules"],q["coverage_rules"],"all rejected Entries release complete coverage");
+            }
+        }
     }
 }
