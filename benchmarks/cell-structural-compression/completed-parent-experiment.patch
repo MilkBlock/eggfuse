@@ -1,0 +1,100 @@
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index c930f452..6e9bee4a 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -316,6 +316,10 @@ pub struct Stats {
+     #[serde(default)]
+     pub rhs_frames_avoided: u64,
+     pub empty_frames_released: u64,
++    pub completed_parent_candidates: u64,
++    pub completed_parent_slot_checks: u64,
++    pub completed_parent_detachments: u64,
++    pub completed_parent_slots_delegated: u64,
+     pub native_table_reads: u64,
+     pub native_table_writes: u64,
+     pub native_free_join_calls: u64,
+@@ -434,6 +438,9 @@ pub(crate) mod query_reads;
+ #[cfg(all(feature = "sparse-cells", feature = "storage-metrics"))]
+ #[path = "graph_storage.rs"]
+ mod storage;
++#[cfg(feature = "sparse-cells")]
++#[path = "completed_parent.rs"]
++mod completed_parent;
+ #[path = "unit_ports.rs"]
+ mod unit_ports;
+ fn hashkey(table: usize, key: &[Value]) -> u64 {
+diff --git a/engine/cell-runtime/src/runtime_cell.rs b/engine/cell-runtime/src/runtime_cell.rs
+index 8d4f0d57..b22b5455 100644
+--- a/engine/cell-runtime/src/runtime_cell.rs
++++ b/engine/cell-runtime/src/runtime_cell.rs
+@@ -247,6 +247,7 @@ impl Executor {
+             }
+         }
+         self.graph.release_empty(cell);
++        if completed { self.graph.complete_parent_handoff(cell)?; }
+         Ok(())
+     }
+ }
+diff --git a/tools/cell-compiler/tests/cell_ownership.rs b/tools/cell-compiler/tests/cell_ownership.rs
+index efd45040..931abf96 100644
+--- a/tools/cell-compiler/tests/cell_ownership.rs
++++ b/tools/cell-compiler/tests/cell_ownership.rs
+@@ -1022,3 +1022,24 @@ fn bounded_longer_catalog_preserves_cross_run_execution() {
+     assert!(report["stats"]["composition_baked_hits"].as_u64().unwrap() > 0);
+     assert!(report["stats"]["composition_shape_builds"].as_u64().unwrap() > 0);
+ }
++
++#[test]
++#[cfg(feature="sparse-cells")]
++fn completed_component_discharges_parent_without_advancing_run_gc() {
++    let src="(datatype E (N i64) (Start E) (Pair E E))
++        (ruleset a) (ruleset b)
++        (rule ((= x (N n))) ((Start x)) :ruleset a)
++        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
++        (N 1) (N 2) (run a 1) (run b 1)";
++    let p=program(src);
++    let mut reference=Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(),true);
++    reference.execute().unwrap();
++    for workers in [0,2] {
++        let mut e=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
++        if workers>0 { e.use_query_workers(workers,1).unwrap(); }
++        e.execute().unwrap();
++        assert_eq!(reference.graph.export().unwrap(),e.graph.export().unwrap());
++        assert_eq!(reference.snapshots,e.snapshots);
++        assert!(e.graph.stats.completed_parent_detachments>0,"{}",e.report());
++    }
++}
+diff --git a/engine/cell-runtime/src/completed_parent.rs b/engine/cell-runtime/src/completed_parent.rs
+new file mode 100644
+index 00000000..c00b4aac
+--- /dev/null
++++ b/engine/cell-runtime/src/completed_parent.rs
+@@ -0,0 +1,28 @@
++//! Discharge a completed instance's parent dependency through its existing
++//! composed symbols. Unknown/scalar projections retain the ordinary parent.
++use super::*;
++impl Graph {
++    pub(crate) fn complete_parent_handoff(&mut self, cell: u32) -> Result<()> {
++        let Some(c) = self.cells.get(&cell).filter(|c| c.completed) else { return Ok(()); };
++        let Some(parent) = c.parent else { return Ok(()); };
++        if self.ownership.is_none() { return Ok(()); }
++        let template = c.template;
++        self.stats.completed_parent_candidates += 1;
++        // No partially copied bindings and no second ownership table. All
++        // parent projections must already be represented by this component.
++        for &slot in self.program.templates[template].parent_columns.keys() {
++            self.stats.completed_parent_slot_checks += 1;
++            let Some(value) = self.inherited_cell_slot(cell, template, slot) else { return Ok(()); };
++            if self.slot(cell, slot)? != value { return Ok(()); }
++        }
++        let c = self.cells.get_mut(&cell).unwrap();
++        c.symbolic_slots = true;
++        c.parent = None;
++        self.stats.completed_parent_detachments += 1;
++        self.stats.completed_parent_slots_delegated += self.program.templates[template].parent_columns.len() as u64;
++        self.release_reference(parent);
++        // Existing source-Run GC retires unused ancestors after pending matches
++        // have consumed their bindings. Never collect ancestors mid-Run.
++        Ok(())
++    }
++}
