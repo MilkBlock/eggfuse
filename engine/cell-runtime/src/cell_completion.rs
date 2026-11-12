@@ -176,6 +176,10 @@ fn canonical(raw: Structure) -> Option<(Structure,Vec<usize>)> {
 /// scheduler still owns rule/Run order. A finite constructor fixed point is not
 /// a claim that every rule in the source program has saturated.
 pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Normalized> {
+    normalize_stages(p, path, false, false)
+}
+// Only the explicit cross-Run certificate may settle earlier stage unions.
+fn normalize_stages(p:&Program,path:&[(Option<usize>,Entry)], cross_runs:bool, settle_last:bool) -> Option<Normalized> {
     let mut b=Builder::default();
     let mut published=Vec::new();
     for (stage,&(_, (rid,pivot))) in path.iter().enumerate() {
@@ -214,7 +218,7 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
                 let a=b.arg(a,&slots); let c=b.arg(c,&slots);
                 b.close();
                 if b.eq.root(a)!=b.eq.root(c) {
-                    if stage+1!=path.len() { return None; }
+                    if stage+1!=path.len() && !cross_runs { return None; }
                     b.terminal_unions.push(Fact {table:b.terminal_unions.len()+b.constructor_unions.len(),columns:vec![a,c]});
                 }
                 continue;
@@ -239,7 +243,7 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
                 {
                     let requested=*columns.last().unwrap();
                     if b.eq.root(actual)!=b.eq.root(requested) {
-                        if stage+1!=path.len() {return None;}
+                        if stage+1!=path.len() && !cross_runs {return None;}
                         b.constructor_unions.push(Fact {
                             table:b.terminal_unions.len()+b.constructor_unions.len(),
                             columns:vec![actual,requested],
@@ -253,8 +257,30 @@ pub(crate) fn normalize(p:&Program,path:&[(Option<usize>,Entry)]) -> Option<Norm
             b.relation(relation.table,columns,false);
         }
         b.close();
+        if cross_runs && (stage+1 < path.len() || settle_last) {
+            for equality in std::mem::take(&mut b.terminal_unions).into_iter()
+                .chain(std::mem::take(&mut b.constructor_unions)) {
+                b.eq.equal(equality.columns[0], equality.columns[1]);
+            }
+            b.close();
+        }
     }
     b.finish()
+}
+
+/// Conditional compiler certificate, never a license to advance publication.
+/// Every prefix stage must have completed its source Run and repair before use.
+pub fn cross_run_closure_transfer(p:&Program,path:&[(Option<usize>,Entry)]) -> Json {
+    if path.len()<2 { return json!({"kind":"root"}); }
+    let before=normalize_stages(p,&path[..path.len()-1],true,true);
+    let after=normalize_stages(p,path,true,false);
+    let mut proof=match (before,after) {
+        (Some(a),Some(b)) => closure_transfer(&a,&b),
+        _ => json!({"kind":"unsupported","reason":"typed_normalization_unavailable"}),
+    };
+    proof["requires_completed_source_runs"]=json!(true);
+    proof["prefix_stages"]=json!(path.len()-1);
+    proof
 }
 
 /// Structural sharing across pending Union boundaries. Each stage keeps its
@@ -340,8 +366,80 @@ pub(crate) fn extension(before:&Normalized,after:&Normalized) -> Option<Json> {
     Some(json!({"ports":map,"completed_inclusion":true,"entry_assumptions":"consumer-match-required"}))
 }
 
+/// A stronger, compile-only contract than completed-fact inclusion. Historical
+/// selection does not discharge a consumer's additional entry assumptions.
+/// Runtime lowering must still use actual result receipts and source stages.
+pub(crate) fn closure_transfer(before: &Normalized, after: &Normalized) -> Json {
+    let Some(inclusion) = extension(before, after) else {
+        return json!({"kind":"boundary","reason":"prefix_inclusion_or_ordered_union"});
+    };
+    let map = inclusion["ports"].as_array().unwrap().iter()
+        .map(|n|n.as_u64().unwrap() as usize).collect::<Vec<_>>();
+    let project = |f: &Fact| Fact { table:f.table,
+        columns:f.columns.iter().map(|&s|map[s]).collect() };
+    let inherited = before.structure.completed.iter().map(project).collect::<BTreeSet<_>>();
+    let required = after.structure.assumptions.iter()
+        .filter(|f|!inherited.contains(*f)).collect::<Vec<_>>();
+    let introduced = after.structure.completed.iter()
+        .filter(|f|!inherited.contains(*f)).collect::<Vec<_>>();
+    // A new query may identify two old ports or constrain an old input to a
+    // literal. Such a restriction is a guard, not evidence supplied by history.
+    let injective = map.iter().copied().collect::<BTreeSet<_>>().len() == map.len();
+    let strengthened = map.iter().enumerate().filter_map(|(source,&target)|
+        (before.structure.colors[source] != after.structure.colors[target])
+            .then_some(source)).collect::<Vec<_>>();
+    let input_closed = injective && strengthened.is_empty() && required.is_empty();
+    let unions = after.structure.terminal_unions.len() + after.structure.constructor_unions.len();
+    let saturated = input_closed && introduced.is_empty() && unions == 0;
+    json!({"kind":if saturated {"saturated"} else if input_closed {"internal_completion"} else {"guarded"},
+        "ports":map,"inherited_facts":inherited.len(),"introduced_facts":introduced,
+        "required_entry_facts":required,"prefix_ports_injective":injective,
+        "strengthened_prefix_ports":strengthened,"ordered_union_obligations":unions,
+        "publication":"original-source-run","authorization":"typed-source-proof-not-history-frequency",
+        "runtime_obligations":["actual-result-inheritance","witness-liveness","stage-visibility","delta-ownership"]})
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn closure_transfer_distinguishes_saturation_internal_work_and_external_guards() {
+        fn build(mode: &str) -> Normalized {
+            let mut b = Builder::default();
+            let x = b.fresh("E".into());
+            let y = b.fresh("E".into());
+            b.relation(0, vec![x,y], true);
+            match mode {
+                "repeat" => b.relation(0, vec![x,y], true),
+                "internal" | "external" => {
+                    let z = b.fresh("E".into());
+                    b.relation(1, vec![y,z], mode == "external");
+                }
+                "equality" => { b.eq.equal(x,y); }
+                "literal" => {
+                    let lit = b.fresh("literal:fixed".into());
+                    b.eq.equal(x,lit);
+                }
+                "union" => b.terminal_unions.push(Fact {table:0,columns:vec![x,y]}),
+                _ => (),
+            }
+            b.close(); b.finish().unwrap()
+        }
+        let before = build("base");
+        assert_eq!(closure_transfer(&before,&build("repeat"))["kind"], "saturated");
+        let internal = closure_transfer(&before,&build("internal"));
+        assert_eq!(internal["kind"], "internal_completion");
+        assert_eq!(internal["introduced_facts"].as_array().unwrap().len(), 1);
+        let external = closure_transfer(&before,&build("external"));
+        assert_eq!(external["kind"], "guarded");
+        assert_eq!(external["required_entry_facts"].as_array().unwrap().len(), 1);
+        assert_eq!(closure_transfer(&before,&build("equality"))["kind"], "guarded");
+        assert_eq!(closure_transfer(&before,&build("literal"))["kind"], "guarded");
+        let union = closure_transfer(&before,&build("union"));
+        assert_eq!(union["kind"], "internal_completion");
+        assert_eq!(union["ordered_union_obligations"], 1);
+        assert_eq!(closure_transfer(&build("union"),&build("union"))["kind"], "boundary");
+    }
+
     #[test]
     fn repeated_completed_relations_share_one_fact_but_keep_stage_ports() {
         let mut compact = Builder::default();

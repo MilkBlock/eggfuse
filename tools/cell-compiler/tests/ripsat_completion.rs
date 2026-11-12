@@ -83,6 +83,53 @@ fn failed_rhs_does_not_train_a_completed_transition() {
     }
 }
 
+#[test]
+fn actual_completed_history_distinguishes_internal_completion_from_saturation() {
+    let source=include_str!("fixtures/history-retention.egg").replace("(run retire)", "");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw).unwrap();
+    let mut e=Executor::new(Graph::new(p).unwrap(),true);
+    e.collect_iterative_pairs();
+    e.execute().unwrap();
+    let history=e.iterative_training().completion_history(&e.graph.program);
+    let transfers=history["closure_transfers"]["transfers"].as_array().unwrap();
+    let named=|row:&Value,name:&str| {
+        let rule=row["consumer_rule"].as_u64().unwrap() as usize;
+        e.graph.program.templates[e.graph.program.rules[rule].template].name == name
+    };
+    assert!(transfers.iter().any(|r|named(r,"bridge") && r["proof"]["kind"]=="internal_completion"), "{history}");
+    assert!(transfers.iter().any(|r|named(r,"consume") && r["proof"]["kind"]=="saturated"), "{history}");
+    assert!(transfers.iter().all(|r|r["proof"]["publication"].is_null() || r["proof"]["publication"]=="original-source-run"));
+}
+
+#[test]
+fn completed_source_run_union_can_authorize_a_saturated_consumer() {
+    use eggfuse_cell_runtime::program::{Call,Op};
+    let source=r#"
+    (datatype E (N i64) (F E) (G E))
+    (ruleset a) (ruleset b)
+    (rule ((= x (N i))) ((union (F x) (G x))) :ruleset a :name "producer")
+    (rule ((= g (G x))) ((union g (F x))) :ruleset b :name "consumer")
+    (N 0) (run a 1) (run b 1)
+    "#;
+    let core=eggfuse_bake::device_frontend::core("settled-prefix",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rule=|name:&str|p.rules.iter().position(|r|p.templates[r.template].name==name).unwrap();
+    let a=rule("producer"); let b=rule("consumer");
+    let output=p.templates[p.rules[a].template].ops.iter().position(|op| match op {
+        Op::Let(_,Call::Table(t),_) | Op::Set(t,_,_) => p.tables[*t].name=="G",
+        _=>false,
+    }).unwrap();
+    let proof=eggfuse_cell_runtime::cell_completion::cross_run_closure_transfer(
+        &p,&[(None,(a,Some(0))),(Some(output),(b,Some(0)))]);
+    assert_eq!(proof["kind"],"saturated","{proof}");
+    assert_eq!(proof["requires_completed_source_runs"],true);
+    assert_eq!(proof["ordered_union_obligations"],0);
+    assert!(proof["introduced_facts"].as_array().unwrap().is_empty());
+}
+
 #[cfg(feature = "sparse-cells")]
 fn execute(raw:Value) -> (Executor,Value) {
     let p=Program::parse(raw).unwrap();

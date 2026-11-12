@@ -342,6 +342,23 @@ impl Catalog {
     pub fn state_contracts(&self, p: &Program) -> J {
         self.switch.state_contracts(p, |u| self.units[u].last())
     }
+    /// Classify selected historical extensions with source-derived closure
+    /// proofs. This does not install a speculative runtime transition.
+    pub fn closure_transfers(&self, p: &Program) -> J {
+        let rows = self.units.iter().enumerate().filter(|(_,u)|u.path.len() > 1)
+            .map(|(unit,u)| {
+                let before = crate::cell_completion::normalize(p,&u.path[..u.path.len()-1]);
+                let after = crate::cell_completion::normalize(p,&u.path);
+                let proof = match (before,after) {
+                    (Some(a),Some(b)) => crate::cell_completion::closure_transfer(&a,&b),
+                    _ => json!({"kind":"unsupported","reason":"typed_normalization_unavailable"}),
+                };
+                json!({"unit":unit,"consumer_rule":u.last().0,"proof":proof,
+                    "after_source_runs":crate::cell_completion::cross_run_closure_transfer(p,&u.path)})
+            }).collect::<Vec<_>>();
+        json!({"schema":"eggfuse-cell-closure-transfers/v1","transfers":rows,
+            "scope":"compile-only finite selected Cell paths; no skipped execution or whole-program saturation claim"})
+    }
     /// Compile-only routing information. Program IDs are existing switch PCs,
     /// not a second completion graph or an instance-side binding registry.
     pub fn completion_entries(&self, p: &Program) -> J {
@@ -1155,6 +1172,7 @@ impl Training {
             "program_sha256":p.artifact["sha256"],"events":self.trace,
             "event_units":event_units,"dropped_events":self.trace_dropped,
             "contracts":catalog.completion_contracts(p),
+            "closure_transfers":catalog.closure_transfers(p),
             "scope":"bounded completed cursor lineage; not all matches or committed mutations"})
     }
     pub fn report(&self) -> J {

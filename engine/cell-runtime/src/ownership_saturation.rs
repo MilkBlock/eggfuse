@@ -7,6 +7,9 @@ struct Counts {
     covered_prefix_ops: u64,
     rhs_ops: u64,
     query_atoms: u64,
+    prefix_copy_ops: u64,
+    prefix_static_alias_ops: u64,
+    prefix_remaining_effect_ops: u64,
 }
 #[derive(Default)]
 pub(super) struct Trace {
@@ -126,6 +129,16 @@ impl Graph {
         counts.covered_prefix_ops += best.3 as u64;
         counts.rhs_ops += ops.len() as u64;
         counts.query_atoms += rule.query.len() as u64;
+        for (op, instruction) in ops.iter().enumerate().take(best.3) {
+            if matches!(instruction, Op::Copy(..)) {
+                counts.prefix_copy_ops += 1;
+            } else if self.program.known_results.static_skip.get(rid)
+                .and_then(|s|s.get(op)) == Some(&true) {
+                counts.prefix_static_alias_ops += 1;
+            } else {
+                counts.prefix_remaining_effect_ops += 1;
+            }
+        }
     }
     fn covered_rhs(
         &self,
