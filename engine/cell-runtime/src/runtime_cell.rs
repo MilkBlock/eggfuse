@@ -247,6 +247,8 @@ impl Executor {
             }
         }
         self.graph.release_empty(cell);
+        #[cfg(feature="storage-metrics")]
+        if completed { self.graph.complete_parent_handoff(cell, rid)?; }
         Ok(())
     }
 }

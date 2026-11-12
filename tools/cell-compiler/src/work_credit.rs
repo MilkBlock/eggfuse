@@ -82,6 +82,15 @@ impl Work {
             };
             work.insert(format!("stats/{field}"), value);
         }
+        // Older executions had no completed-parent takeover. Charge probing
+        // and field proof work, never count detachments as saved operations.
+        for field in ["completed_parent_candidates", "completed_parent_slot_checks"] {
+            let count=match report["stats"].get(field) {
+                None=>0,
+                Some(value)=>value.as_u64().ok_or_else(||format!("invalid parent takeover counter {field}"))?,
+            };
+            work.insert(format!("stats/{field}"),count);
+        }
         // Constructor preparation replaces a source lookup only after checked
         // evidence. All speculative lookups already enter key_lookup_calls;
         // any required decoding remains in fact_decode_calls. Cached-row

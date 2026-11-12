@@ -10,8 +10,8 @@ use serde_json::{Value, json};
 use std::{error::Error, fs};
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len() != 3 {
-        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT".into());
+    if args.len()<3 || args[3..].iter().any(|s|s!="--natural" && s!="--parent-takeover") {
+        return Err("usage: runtime_closure_work PROGRAM SAVED_RUN_TRACE OUTPUT [--natural] [--parent-takeover]".into());
     }
     let saved: Value = serde_json::from_slice(&fs::read(&args[1])?)?;
     let checks = saved["run_checks"]
@@ -21,6 +21,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let sha = p.artifact["sha256"].clone();
     let selection = p.artifact["iterative_bake"]["closure_selection"].clone();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
+    let natural=args.iter().any(|s|s=="--natural");
+    let parent_takeover=args.iter().any(|s|s=="--parent-takeover");
+    if parent_takeover {e.use_completed_parent_takeover()?;}
     let mut runs = 0;
     loop {
         audit::take_digests();
@@ -34,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if e.steps.len() == runs {
             break;
         }
-        e.graph.compact_retained_capacity()?;
+        if !natural {e.graph.compact_retained_capacity()?;}
         let observed =
             json!({"graph":artifact_digest(&e.graph.export()?),"audit":artifact_digest(&effects)});
         if checks.get(runs) != Some(&observed) {
@@ -53,7 +56,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let report = e.report();
     let measured_work=work_credit::Work::read(&report)?;
     let result = json!({"scope":"actual standalone runtime work; no timing or memory speedup claim",
-        "program_sha256":sha,"selection":selection,"runs":runs,"all_saved_run_checks_equal":true,
+        "program_sha256":sha,"selection":selection,"diagnostic_compaction":!natural,"parent_takeover":parent_takeover,"source_storage":e.graph.retained_cell_storage(),"runs":runs,"all_saved_run_checks_equal":true,
         "measured_work":measured_work.0,"graph_work":e.graph.stats,"stage_work":report["stage_spine"]["stats"],
         "history_storage":report["stage_spine"]["published_history_storage"],
         "query_work":report["free_join"],"key_lookup_calls":report["key_lookup_calls"],

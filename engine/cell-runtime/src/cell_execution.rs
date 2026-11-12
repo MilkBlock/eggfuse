@@ -47,6 +47,11 @@ pub(crate) struct Plan {
     #[cfg(feature = "sparse-cells")]
     #[serde(skip)]
     pub births: Option<std::sync::Arc<crate::graph::cell_births::Plan>>,
+    /// Parent columns still reachable after completion, only when every one
+    /// has a composed symbol. None rejects the template before runtime probing.
+    #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
+    #[serde(skip)]
+    pub parent_completion: Option<Box<[usize]>>,
     pub segments: Vec<Segment>,
     /// Source positions after the first boundary whose scalar operands are
     /// derived entirely from matched inputs. Outputs have unique SSA slots;
@@ -186,6 +191,7 @@ impl Plan {
             }
         }
         Self { segments, input_ready,
+            #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))] parent_completion: None,
             #[cfg(feature = "sparse-cells")] constructor: None,
             #[cfg(feature = "sparse-cells")] births: None }
     }
@@ -197,7 +203,10 @@ impl Plan {
             #[cfg(not(feature = "sparse-cells"))]
             { 0 }
         };
-        constructor + self.input_ready.capacity() * std::mem::size_of::<usize>()
+        constructor
+            + { #[cfg(all(feature="sparse-cells",feature="storage-metrics"))] {self.parent_completion.as_ref().map_or(0,|p|p.len()*std::mem::size_of::<usize>())}
+                #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))] {0} }
+            + self.input_ready.capacity() * std::mem::size_of::<usize>()
             + self.segments.capacity() * std::mem::size_of::<Segment>()
             + self
                 .segments

@@ -449,3 +449,7 @@ pub(crate) fn inherits_entry(p:&Program, rule:usize, pivot:usize, permanent:&[bo
     let source=&p.tables[table];
     source.constructor && source.virtual_fact && permanent[table]
 }
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[path="cell_completion_lifetime.rs"]
+pub(crate) mod completion_lifetime;

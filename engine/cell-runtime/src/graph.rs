@@ -316,6 +316,14 @@ pub struct Stats {
     #[serde(default)]
     pub rhs_frames_avoided: u64,
     pub empty_frames_released: u64,
+    #[serde(default)]
+    pub completed_parent_candidates: u64,
+    #[serde(default)]
+    pub completed_parent_slot_checks: u64,
+    #[serde(default)]
+    pub completed_parent_detachments: u64,
+    #[serde(default)]
+    pub completed_parent_slots_delegated: u64,
     pub native_table_reads: u64,
     pub native_table_writes: u64,
     pub native_free_join_calls: u64,
@@ -434,6 +442,9 @@ pub(crate) mod query_reads;
 #[cfg(all(feature = "sparse-cells", feature = "storage-metrics"))]
 #[path = "graph_storage.rs"]
 mod storage;
+#[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
+#[path = "completed_parent.rs"]
+mod completed_parent;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {

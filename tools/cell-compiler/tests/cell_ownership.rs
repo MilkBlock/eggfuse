@@ -1022,3 +1022,52 @@ fn bounded_longer_catalog_preserves_cross_run_execution() {
     assert!(report["stats"]["composition_baked_hits"].as_u64().unwrap() > 0);
     assert!(report["stats"]["composition_shape_builds"].as_u64().unwrap() > 0);
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_component_discharges_parent_without_advancing_run_gc() {
+    let src="(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (N 1) (N 2) (run a 1) (run b 1)";
+    let p=program(src);
+    let mut reference=Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(),true);
+    reference.execute().unwrap();
+    for workers in [0,2] {
+        let mut e=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        e.use_completed_parent_takeover().unwrap();
+        if workers>0 { e.use_query_workers(workers,1).unwrap(); }
+        e.execute().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),e.graph.export().unwrap());
+        assert_eq!(reference.snapshots,e.snapshots);
+        assert!(e.graph.stats.completed_parent_detachments>0,"{}",e.report());
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_layout_distinguishes_dead_inputs_from_scalar_and_result_readers() {
+    for body in ["(Pair x x)","(Indexed x i)","(Pair (Get x i) x)"] {
+        let src=format!("(datatype E (N i64) (Get E i64) (Pair E E) (Indexed E i64))
+            (ruleset init) (ruleset a) (ruleset b)
+            (rule ((= x (N n))) ((Get x 7)) :ruleset init)
+            (rule ((= g (Get x i))) ({body}) :ruleset a)
+            (rule ((= q (Pair x y))) ((Indexed y 9)) :ruleset b)
+            (N 1) (N 2) (run init 1) (run a 1) (run b 1)");
+        let p=program(&src);
+        let mut reference=Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(),true);
+        reference.execute().unwrap();
+        for workers in [0,2] {
+            let mut e=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+            e.use_completed_parent_takeover().unwrap();
+            if workers>0 {e.use_query_workers(workers,1).unwrap();}
+            e.execute().unwrap();
+            assert_eq!(reference.graph.export().unwrap(),e.graph.export().unwrap(),"{body}");
+            assert_eq!(reference.snapshots,e.snapshots,"{body}");
+            if body=="(Pair x x)" {
+                assert!(e.graph.stats.completed_parent_detachments>0,"unused i and g must not retain the full parent");
+            }
+        }
+    }
+}

@@ -403,6 +403,17 @@ impl Executor {
         e.graph.changes.clear();
         e
     }
+    /// Opt-in lifetime experiment. No whole-graph compression has been shown;
+    /// ordinary execution keeps this disabled until fact owners can retire.
+    #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+    pub fn use_completed_parent_takeover(&mut self) -> Result<()> {
+        if !self.steps.is_empty() {return Err("configure parent takeover before execution".into());}
+        if !self.graph.ownership_enabled() {return Err("parent takeover requires composed Cell symbols".into());}
+        for rid in 0..self.graph.program.rules.len() {
+            self.graph.program.executions[rid].parent_completion=crate::cell::completion_lifetime::parent_layout(&self.graph.program,rid);
+        }
+        Ok(())
+    }
     #[cfg(feature = "sparse-cells")]
     pub fn use_entry_publications(&mut self) -> Result<()> {
         if !self.steps.is_empty() { return Err("configure entry ownership before execution".into()); }
