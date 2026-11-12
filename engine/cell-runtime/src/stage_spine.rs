@@ -529,6 +529,85 @@ mod set_counts_test {
     }
     #[cfg(feature = "sparse-cells")]
     #[test]
+    fn worker_assembly_preserves_partial_winners_slots_and_source_local_origins() {
+        let spec=[(5,9,1),(0,7,2),(4,7,5),(2,9,3),(3,7,5),(1,8,1)];
+        for direct in [false,true] {for complete in [false,true] {for seed in 0..32 {
+            let g=crate::query::test_projection_graph();let mut spine=Programs::new(&g.program);
+            spine.direct_sealed_answers=direct;spine.origins.resize_with(1,Default::default);
+            let mut order=spec.to_vec();order.rotate_left(seed%spec.len());
+            if seed%2==0 {order.reverse();}
+            let mut roots=Vec::new();let mut pointers=BTreeMap::new();
+            let make=|key,epoch| {
+                let mut row=Matched::matched([(1,Value::Int(key)),(101,Value::Eq(99))].into_iter().collect(),
+                    QueryFacts::None,epoch);
+                row.values.insert(50,Value::Int(epoch as i64));row
+            };
+            let rows=order.into_iter().map(|(ordinal,key,depth)| {
+                let root=Rc::new(Root{id:ordinal as u64,epoch:1,set:0,context:OnceCell::new()});
+                roots.push((ordinal,Rc::downgrade(&root)));
+                let mut cursor=Cursor::fresh(root,0);cursor.depth=depth;
+                let answer=make(key,ordinal as u64);
+                pointers.insert(ordinal,std::ptr::from_ref(answer.values.get(&50).unwrap()) as usize);
+                Winner::new(answer,cursor,(Dependency::Function(ordinal),0),&mut spine.sealed_cursors,&mut spine.stats)
+            }).collect();
+            let mut residual=vec![(7,1000),(6,1001),(10,1002),(6,1003),(8,1004)];
+            let len=residual.len();residual.rotate_left(seed%len);
+            let mut expected=spec.to_vec();
+            expected.sort_by_key(|&(ordinal,key,depth)|(key,std::cmp::Reverse(depth),ordinal));
+            expected.dedup_by_key(|r|r.1);
+            let retained:Vec<_>=expected.iter().map(|r|r.0).collect();
+            let mut expected:Vec<_>=expected.into_iter().map(|(ordinal,key,_)|(key,ordinal as u64)).collect();
+            expected.extend(residual.iter().copied());
+            if !complete {expected.sort_by_key(|r|r.0);expected.dedup_by_key(|r|r.0);}
+            let residual:Vec<_>=residual.into_iter().map(|(key,epoch)|make(key,epoch)).collect();
+            let (selected,mut answers)=std::thread::spawn(move || {
+                let mut selected=Selection{rule:0,complete,covered:1,rows,retained:0,comparisons:0};
+                selected.select(&[1,101]);let mut answers=residual;
+                let (count,duplicates)=selected.assemble(&mut answers,&[1,101],&mut 0).unwrap();
+                assert_eq!(count,if complete {0} else {8});
+                assert_eq!(duplicates,if complete {0} else {3});
+                (selected,answers)
+            }).join().unwrap();
+            let allocation=answers.as_ptr();
+            let actual:Vec<_>=answers.iter().map(|a| {
+                let Value::Int(key)=a.values[&1] else {unreachable!()};
+                if a.direct.is_some() {
+                    assert_eq!(std::ptr::from_ref(a.values.get(&50).unwrap()) as usize,pointers[&(a.epoch as usize)]);
+                }
+                (key,a.epoch)
+            }).collect();
+            assert_eq!(actual,expected);
+            spine.seal_assembled_selection(selected,&[1,101],&mut answers);
+            assert_eq!(answers.as_ptr(),allocation,"source sealing must not rebuild the result array");
+            assert_eq!(spine.stats.losing_cursor_releases,3);
+            assert_eq!(spine.stats.bindings,3);
+            for (ordinal,root) in &roots {assert_eq!(root.upgrade().is_some(),retained.contains(ordinal));}
+            assert_eq!(spine.origins[0].len(),if direct {0} else {3});
+            assert_eq!(answers.iter().filter(|a|a.direct.is_some()).count(),if direct {3} else {0});
+            spine.discard_query_candidates();
+            assert!(roots.iter().all(|(_,r)|r.upgrade().is_none()));
+        }}}
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn incomplete_residual_is_rejected_before_worker_consumes_cursor_owners() {
+        let g=crate::query::test_projection_graph();let mut spine=Programs::new(&g.program);
+        let root=Rc::new(Root{id:0,epoch:1,set:0,context:OnceCell::new()});let weak=Rc::downgrade(&root);
+        let answer=Matched::matched([(0,Value::Int(7))].into_iter().collect(),QueryFacts::None,1);
+        let row=Winner::new(answer,Cursor::fresh(root,0),(Dependency::Function(0),0),
+            &mut spine.sealed_cursors,&mut spine.stats);
+        let selected=std::thread::spawn(move || {
+            let mut selected=Selection{rule:0,complete:false,covered:1,rows:vec![row],retained:0,comparisons:0};
+            selected.select(&[0]);
+            let mut residual=vec![Matched::matched(Default::default(),QueryFacts::None,2)];
+            assert_eq!(selected.assemble(&mut residual,&[0],&mut 0),Err("incomplete binding".into()));
+            assert_eq!(selected.rows.len(),1);selected
+        }).join().unwrap();
+        drop(selected);assert!(weak.upgrade().is_some());
+        spine.discard_query_candidates();assert!(weak.upgrade().is_none());
+    }
+    #[cfg(feature = "sparse-cells")]
+    #[test]
     fn deferred_group_removal_and_abort_preserve_live_origin_handles() {
         let g = crate::query::test_projection_graph();
         let mut spine = Programs::new(&g.program);
@@ -1029,6 +1108,46 @@ impl Selection {
                 self.rows.swap(self.retained,i);self.retained+=1;
             }
         }
+    }
+    /// Finish the actual RHS array on the rule owner. Numeric Cursor handles
+    /// travel with winners; Rc roots never cross the worker boundary. Leave
+    /// losing candidates here for source-local lifetime release only.
+    pub fn assemble(&mut self, residual:&mut Vec<Matched>, inputs:&[usize], comparisons:&mut u64)
+        -> Result<(usize,usize)> {
+        debug_assert!(residual.iter().all(|a|a.direct.is_none()),"residuals do not own a deferred Cell Cursor");
+        if !self.complete && residual.iter().any(|a|inputs.iter().any(|s|!a.values.contains_key(s))) {
+            return Err("incomplete binding".into());
+        }
+        let mut answers=Vec::with_capacity(self.retained+residual.len());
+        let n=if self.complete {0} else {self.retained+residual.len()};
+        if self.complete {
+            answers.extend(self.rows.drain(..self.retained).map(|w|w.answer));
+            answers.append(residual);
+        } else {
+            // Residual expansion normally already supplies input order. Check
+            // that contract locally; unusual residual routes still use stable
+            // sorting. No second full sort of the selected Cell instances.
+            if !residual.is_sorted_by(|a,b| {*comparisons+=1;a.compare_inputs(b,inputs).is_le()}) {
+                residual.sort_by(|a,b| {*comparisons+=1;a.compare_inputs(b,inputs)});
+            }
+            let mut cells=self.rows.drain(..self.retained).map(|w|w.answer).peekable();
+            let mut others=std::mem::take(residual).into_iter().peekable();
+            while cells.peek().is_some() || others.peek().is_some() {
+                let cell=match (cells.peek(),others.peek()) {
+                    (Some(a),Some(b))=>{*comparisons+=1;a.compare_inputs(b,inputs).is_le()},
+                    (Some(_),None)=>true,_=>false,
+                };
+                let answer=if cell {cells.next().unwrap()} else {others.next().unwrap()};
+                // On an equal key the Cell was chosen first, so invalidating
+                // this duplicate never discards its Cursor or prepared result.
+                if answers.last().is_none_or(|last| {*comparisons+=1;answer.compare_inputs(last,inputs).is_ne()}) {
+                    answers.push(answer);
+                }
+            }
+        }
+        let duplicates=if self.complete {0} else {n-answers.len()};
+        *residual=answers;
+        Ok((n,duplicates))
     }
 }
 #[cfg(feature = "sparse-cells")]
@@ -2936,49 +3055,52 @@ impl Programs {
     }
     fn seal_winners(&mut self, rid: usize, inputs: &[usize], complete: bool, covered_count: usize,
         rows: impl ExactSizeIterator<Item = Winner>) -> Vec<Matched> {
-        if complete { self.stats.query_takeovers += 1; }
-        else { self.stats.partial_queries += 1; }
-        self.stats.pivots_skipped += covered_count as u64;
-        *self.stats.covered_by_rule.entry(rid).or_default() += covered_count as u64;
-        self.stats.bindings += rows.len() as u64;
-        *self.stats.bindings_by_rule.entry(rid).or_default() += rows.len() as u64;
+        self.record_sealed_coverage(rid,complete,covered_count,rows.len());
         rows
             .map(|winner| {
                 let mut answer = winner.answer;
                 #[cfg(feature = "sparse-cells")]
-                let cursor = self.sealed_cursors[answer.direct.as_ref().expect("candidate origin").0]
-                    .as_ref().expect("retained candidate cursor");
+                { self.seal_answer(rid,inputs,complete,&mut answer); }
                 #[cfg(not(feature = "sparse-cells"))]
-                let cursor = winner.cursor;
-                self.stats.query_fragment_sealed_slots += answer.values.len() as u64;
-                self.stats.query_fragment_sealed_capacity_bytes += answer.values.capacity_bytes() as u64;
-                #[cfg(feature = "iterative-bake")]
-                if cursor.state.direct || {
-                    #[cfg(feature = "sparse-cells")]
-                    { self.direct_sealed_answers }
-                    #[cfg(not(feature = "sparse-cells"))]
-                    { false }
-                } {
-                    // The executor appends residual matches after these winners.
-                    // Stable sealing keeps the Spine binding on an equal RHS key.
-                    // Unsealed continuations still resolve by key.
-                    self.stats.sealed_partial_origins += u64::from(!complete);
-                    #[cfg(not(feature = "sparse-cells"))]
-                    { answer.direct = Some(DirectOrigin(Box::new(cursor))); }
-                    return answer;
+                {
+                    let cursor = winner.cursor;
+                    self.stats.query_fragment_sealed_slots += answer.values.len() as u64;
+                    self.stats.query_fragment_sealed_capacity_bytes += answer.values.capacity_bytes() as u64;
+                    #[cfg(feature = "iterative-bake")]
+                    if cursor.state.direct {
+                        self.stats.sealed_partial_origins += u64::from(!complete);
+                        answer.direct = Some(DirectOrigin(Box::new(cursor)));
+                        return answer;
+                    }
+                    if self.origins[rid].is_empty() { self.origin_rules.push(rid); }
+                    self.stats.origin_map_writes += 1;
+                    self.origins[rid].insert(answer.input_values(inputs).cloned().collect(), cursor);
                 }
-                #[cfg(feature = "sparse-cells")]
-                let cursor = take_origin(&mut self.sealed_cursors, answer.direct.take().unwrap());
-                if self.origins[rid].is_empty() {
-                    self.origin_rules.push(rid);
-                }
-                self.stats.origin_map_writes += 1;
-                // Unsealed legacy origins still need an independently owned
-                // lookup key. It does not replace the fragment's slot storage.
-                self.origins[rid].insert(answer.input_values(inputs).cloned().collect(), cursor);
                 answer
             })
             .collect()
+    }
+    fn record_sealed_coverage(&mut self,rid:usize,complete:bool,covered_count:usize,count:usize) {
+        if complete { self.stats.query_takeovers += 1; }
+        else { self.stats.partial_queries += 1; }
+        self.stats.pivots_skipped += covered_count as u64;
+        *self.stats.covered_by_rule.entry(rid).or_default() += covered_count as u64;
+        self.stats.bindings += count as u64;
+        *self.stats.bindings_by_rule.entry(rid).or_default() += count as u64;
+    }
+    #[cfg(feature="sparse-cells")]
+    fn seal_answer(&mut self,rid:usize,inputs:&[usize],complete:bool,answer:&mut Matched) {
+        let cursor=self.sealed_cursors[answer.direct.as_ref().expect("candidate origin").0]
+            .as_ref().expect("retained candidate cursor");
+        self.stats.query_fragment_sealed_slots+=answer.values.len() as u64;
+        self.stats.query_fragment_sealed_capacity_bytes+=answer.values.capacity_bytes() as u64;
+        if cursor.state.direct || self.direct_sealed_answers {
+            self.stats.sealed_partial_origins+=u64::from(!complete);return;
+        }
+        let cursor=take_origin(&mut self.sealed_cursors,answer.direct.take().unwrap());
+        if self.origins[rid].is_empty() {self.origin_rules.push(rid);}
+        self.stats.origin_map_writes+=1;
+        self.origins[rid].insert(answer.input_values(inputs).cloned().collect(),cursor);
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_slots[rid] != usize::MAX }
@@ -3024,13 +3146,26 @@ impl Programs {
         if let Some(moved)=self.deferred_queries.get(slot) {self.deferred_slots[moved.rule]=slot;}
         Some(Selection {rule,complete,covered,rows,retained:0,comparisons:0})
     }
-    #[cfg(feature="sparse-cells")]
+    #[cfg(all(test,feature="sparse-cells"))]
     pub(crate) fn seal_worker_selection(&mut self, mut selected:Selection, inputs:&[usize])->(bool,Vec<Matched>) {
         self.stats.losing_cursor_releases+=(selected.rows.len()-selected.retained) as u64;
         for mut loser in selected.rows.drain(selected.retained..) {
             drop(take_origin(&mut self.sealed_cursors,loser.answer.direct.take().expect("losing candidate origin")));
         }
         (selected.complete,self.seal_winners(selected.rule,inputs,selected.complete,selected.covered,selected.rows.into_iter()))
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn seal_assembled_selection(&mut self,selected:Selection,inputs:&[usize],answers:&mut [Matched]) {
+        self.stats.losing_cursor_releases+=selected.rows.len() as u64;
+        for mut loser in selected.rows {
+            drop(take_origin(&mut self.sealed_cursors,loser.answer.direct.take().expect("losing candidate origin")));
+        }
+        self.record_sealed_coverage(selected.rule,selected.complete,selected.covered,selected.retained);
+        let mut count=0;
+        for answer in answers.iter_mut().filter(|a|a.direct.is_some()) {
+            self.seal_answer(selected.rule,inputs,selected.complete,answer);count+=1;
+        }
+        debug_assert_eq!(count,selected.retained,"each selected Cell keeps its original Cursor");
     }
     #[cfg(all(test,feature = "sparse-cells"))]
     pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64) -> Option<(bool, Vec<Matched>)> {

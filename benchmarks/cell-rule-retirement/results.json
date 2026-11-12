@@ -1,0 +1,54 @@
+{
+  "scope": "actual standalone Cell CPU; work counts, not native runtime timing",
+  "control_commit": "b8fbf090",
+  "control_runtime_commit": "2ae7b97e",
+  "control_runtime_sha256": "f8b602d23513089070f0c6de6f17a8c8300c3816304ec036dea12516d9d07f7e",
+  "candidate_runtime_sha256": "7205498547513d3b734b16ac8abf849cff5d0a4bbcf8f609f0f8d159f08fce0c",
+  "new_performance_measurement": false,
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "exact_final_state_and_run_summaries": true,
+      "runs": 1428,
+      "logical_effects_equal": true,
+      "key_lookup_calls": 14012,
+      "final_merge": {
+        "final_merge_comparisons": 1155,
+        "final_merge_inline_rows": 538,
+        "final_merge_worker_rows": 0
+      },
+      "worker_fraction_of_final_merge_rows": 0.0,
+      "cursor_and_slot_counts": {
+        "candidate_cursor_stores": 2140,
+        "losing_cursor_releases": 42,
+        "query_fragment_sealed_slots": 7977,
+        "query_fragment_sealed_capacity_bytes": 191448
+      }
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "exact_final_state_and_run_summaries": true,
+      "runs": 16883,
+      "logical_effects_equal": true,
+      "key_lookup_calls": 4027718,
+      "final_merge": {
+        "final_merge_comparisons": 321619,
+        "final_merge_inline_rows": 7145,
+        "final_merge_worker_rows": 106597
+      },
+      "worker_fraction_of_final_merge_rows": 0.9371823952453799,
+      "cursor_and_slot_counts": {
+        "candidate_cursor_stores": 579582,
+        "losing_cursor_releases": 1932,
+        "query_fragment_sealed_slots": 1920825,
+        "query_fragment_sealed_capacity_bytes": 46101624
+      }
+    }
+  },
+  "native_sum_semantic_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  }
+}

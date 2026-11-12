@@ -32,6 +32,9 @@ pub(crate) struct RuleDone {
     pub dedup_duplicates: usize,
     pub final_len: usize,
     pub comparisons: u64,
+    pub final_merge_comparisons:u64,
+    pub final_merge_worker_rows:usize,
+    pub final_merge_inline_rows:usize,
     #[cfg(feature="parallel-residuals")]
     pub(super) merge: Option<expansion::MergeWork>,
 }
@@ -43,13 +46,14 @@ pub(super) struct Finish<'a> {
     selection:Option<crate::stage_spine::Selection>,
     #[cfg(feature="parallel-residuals")] merge:Option<expansion::PendingMerge>,
     done:RuleDone,
+    error:Option<String>,
 }
 impl<'a> Finish<'a> {
     pub fn take(rule:usize,inputs:&'a [usize],rows:&mut Vec<Binding>,spine:&mut crate::stage_spine::Programs,
         #[cfg(feature="parallel-residuals")] output:Option<&mut expansion::Output>) -> Self {
         Self {rule,inputs,rows:std::mem::take(rows),selection:spine.take_worker_selection(rule),
             #[cfg(feature="parallel-residuals")] merge:output.and_then(expansion::Output::take_merge),
-            done:RuleDone {rule,..Default::default()}}
+            done:RuleDone {rule,..Default::default()},error:None}
     }
     pub fn size(&self)->usize {
         let n=self.rows.len()+self.selection.as_ref().map_or(0,|s|s.len());
@@ -63,23 +67,25 @@ impl<'a> Finish<'a> {
             let (n,previous,selected,work)=merge.run(&mut self.rows,self.inputs,pooled);
             self.done.residual=Some((n,previous,selected));self.done.merge=Some(work);
         }
-        #[cfg(not(feature="parallel-residuals"))] let _=pooled;
+        if let Some(selection)=&mut self.selection {
+            self.done.spine_previous=Some(self.rows.len());
+            match selection.assemble(&mut self.rows,self.inputs,&mut self.done.final_merge_comparisons) {
+                Ok((rows,duplicates))=>{
+                    self.done.dedup_rows=rows;self.done.dedup_duplicates=duplicates;
+                    if pooled {self.done.final_merge_worker_rows=rows;}
+                    else {self.done.final_merge_inline_rows=rows;}
+                }
+                Err(e)=>self.error=Some(e),
+            }
+        }
     }
     pub fn seal(mut self, rows:&mut Vec<Binding>,spine:&mut crate::stage_spine::Programs,
         #[cfg(feature="parallel-residuals")] output:Option<&mut expansion::Output>) -> Result<RuleDone> {
+        if let Some(e)=self.error {return Err(e);}
         #[cfg(feature="parallel-residuals")]
         if let Some((n,previous,_))=self.done.residual {output.unwrap().record_merge(n,previous);}
         if let Some(selection)=self.selection {
-            let (complete,mut answers)=spine.seal_worker_selection(selection,self.inputs);
-            self.done.spine_previous=Some(self.rows.len());answers.append(&mut self.rows);
-            if !complete {
-                if answers.iter().any(|a|self.inputs.iter().any(|s|!a.values.contains_key(s))) {return Err("incomplete binding".into());}
-                self.done.dedup_rows=answers.len();
-                answers.sort_by(|a,b|a.compare_inputs(b,self.inputs));
-                answers.dedup_by(|a,b|a.compare_inputs(b,self.inputs).is_eq());
-                self.done.dedup_duplicates=self.done.dedup_rows-answers.len();
-            }
-            self.rows=answers;
+            spine.seal_assembled_selection(selection,self.inputs,&mut self.rows);
         }
         self.done.final_len=self.rows.len();*rows=self.rows;Ok(self.done)
     }

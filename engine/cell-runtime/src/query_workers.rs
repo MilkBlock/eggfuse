@@ -62,6 +62,9 @@ pub(crate) struct Counts {
     // only the preliminary ordinal sort, omitting their second key sort.
     pub event_waves: u64, pub event_early_rules: u64, pub event_rules: u64,
     pub event_wait_ns: u64, pub event_bytes: u64,
+    pub final_merge_comparisons:u64,
+    pub final_merge_worker_rows:u64,
+    pub final_merge_inline_rows:u64,
     pub winner_order_comparisons: u64,
     pub deferred_winner_moves: u64,
     pub completion_binding_moves: u64,
@@ -1191,6 +1194,11 @@ impl Workers {
         self.stats.event_waves+=event_work.waves;self.stats.event_wait_ns+=event_work.wait_ns;
         self.stats.event_bytes+=event_work.bytes;self.stats.event_early_rules+=early_rules;
         self.stats.event_rules+=finished.len() as u64;
+        for done in &finished {
+            self.stats.final_merge_comparisons+=done.final_merge_comparisons;
+            self.stats.final_merge_worker_rows+=done.final_merge_worker_rows as u64;
+            self.stats.final_merge_inline_rows+=done.final_merge_inline_rows as u64;
+        }
         self.completed_rules=finished;
         #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
         drop(ready);
