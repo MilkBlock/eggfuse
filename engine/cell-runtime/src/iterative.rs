@@ -639,14 +639,13 @@ impl Catalog {
     /// Training also observes unspecialized roots, so their first continuation
     /// can enter the candidate set before any catalog demands those receipts.
     pub(crate) fn root_state(&self, rule: usize, run: usize, collect_pairs: bool) -> Option<State> {
-        if !self.switch.congruence {
-            return None;
-        }
-        let pc = self.switch.unique_root(rule, !collect_pairs)?;
+        let pc=if self.switch.congruence {self.switch.unique_root(rule,!collect_pairs)} else {None};
+        let pc=match pc {Some(pc)=>pc,None if collect_pairs=>0,None=>return None};
         Some(State {
             pc,
             discovery: collect_pairs.then(|| Rc::new(Discovery {
-                stack: vec![Segment { unit: self.switch.active(pc), incoming: 0 }], ..Default::default()
+                stack: if pc!=0 {vec![Segment {unit:self.switch.active(pc),incoming:0}]} else {vec![]},
+                ..Default::default()
             })),
             last_run: run,
             collect_pairs,
@@ -655,7 +654,7 @@ impl Catalog {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn root_has_state(&self, rule: usize, collect_pairs: bool) -> bool {
-        self.switch.congruence && self.switch.unique_root(rule, !collect_pairs).is_some()
+        collect_pairs || (self.switch.congruence && self.switch.unique_root(rule, true).is_some())
     }
     pub(crate) fn program(&self, s: &State) -> &[crate::result_handoff::Reuse] {
         self.switch
@@ -986,7 +985,8 @@ pub struct ObservedCompletions {
 #[derive(Clone, Serialize)]
 struct TraceEvent {
     parent: Option<usize>,
-    unit: Id,
+    // An executed producer can precede every currently compiled root.
+    unit: Option<Id>,
     entry: Entry,
     output: usize,
     run: usize,
@@ -1041,7 +1041,9 @@ impl Training {
         }
         // In training only, retain a bounded witness window. With a multi-step
         // right operand its *first* Run identifies the sampled join boundary.
-        self.trace_completed(c, s, id, parent_run);
+        if s.collect_pairs {
+            self.trace_completed(c, s, Some(id), c.units[id].last(), parent_run);
+        }
         let Some(discovery) = &s.discovery else { return };
         let Some(j) = discovery.pending else { return };
         // Once a right operand already takes the direct origin, extending its
@@ -1083,17 +1085,19 @@ impl Training {
         e.witness = sample.2;
         if saves_key { e.avoidable_origin_slots += inputs as u64; }
     }
-    pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State) {
-        if let Some(id) = s.compiled_unit(c) { self.trace_completed(c, s, id, 0); }
+    pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State, rule:usize) {
+        let id=s.compiled_unit(c);
+        let entry=id.map_or((rule,None),|id|c.units[id].last());
+        self.trace_completed(c,s,id,entry,0);
     }
-    fn trace_completed(&mut self, c: &Catalog, s: &mut State, id: Id, parent_run: usize) {
+    fn trace_completed(&mut self, c:&Catalog, s:&mut State, id:Option<Id>, entry:Entry, parent_run:usize) {
         if s.collect_pairs {
             let output = s.output;
             let discovery = s.discover();
             let parent = discovery.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
             let trace = if self.trace.len() < c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes)) {
                 let index = self.trace.len();
-                self.trace.push(TraceEvent { parent, unit:id, entry:c.units[id].last(),
+                self.trace.push(TraceEvent { parent, unit:id, entry,
                     output, run:self.run, producer_run:parent_run, witness:discovery.witness,
                     truncated_parent:parent.is_none() && parent_run!=0 });
                 Some(index)
@@ -1112,9 +1116,9 @@ impl Training {
             let Some(parent) = event.parent.map(|i| &self.trace[i]) else { continue };
             if parent.run >= event.run { continue; }
             let Some(&right) = catalog.leaves.get(&event.entry) else { continue };
-            joins.insert(Join {left:parent.unit, output:event.output, right});
+            if let Some(left)=parent.unit {joins.insert(Join {left,output:event.output,right});}
         }
-        let mut units = self.trace.iter().map(|e|e.unit).collect::<BTreeSet<_>>();
+        let mut units = self.trace.iter().filter_map(|e|e.unit).collect::<BTreeSet<_>>();
         // Existing bounded pair samples survive raw-event truncation. They are
         // successful applications, not synthetic event ancestry.
         for (join, evidence) in &self.pairs {
@@ -1169,7 +1173,8 @@ impl Training {
                 "consumer_run":evidence.consumer_run,"witness":evidence.witness,
                 "origin":"bounded-completed-pair-sample","sample_policy":"latest-retained-application"}));
         }
-        json!({"schema":"eggfuse-cell-runtime-history/v1",
+        json!({"schema":"eggfuse-cell-runtime-history/v2",
+            "uncompiled_root_events":self.trace.iter().filter(|e|e.unit.is_none()).count(),
             "sampled_applications":applications,"pair_counter_prunes":self.evictions,
             "program_sha256":p.artifact["sha256"],"events":self.trace,
             "event_units":event_units,"dropped_events":self.trace_dropped,
@@ -1178,7 +1183,7 @@ impl Training {
             "scope":"bounded completed cursor lineage; not all matches or committed mutations"})
     }
     pub fn report(&self) -> J {
-        json!({"applied_units":self.hits,"trace_events":self.trace.len(),"trace_dropped":self.trace_dropped,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
+        json!({"applied_units":self.hits,"trace_events":self.trace.len(),"uncompiled_root_events":self.trace.iter().filter(|e|e.unit.is_none()).count(),"trace_dropped":self.trace_dropped,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
     }
 }
 
@@ -1232,7 +1237,7 @@ mod tests {
     #[test]
     fn bridge_support_requires_one_completed_cross_stage_ancestry() {
         let event = |rule, parent, run| TraceEvent {
-            parent, unit:rule, entry:(rule,Some(0)), output:0, run,
+            parent, unit:Some(rule), entry:(rule,Some(0)), output:0, run,
             producer_run:0, witness:None, truncated_parent:false,
         };
         let mut training = Training::default();
@@ -1249,6 +1254,32 @@ mod tests {
         let mut wrong = event(2,Some(1),7); wrong.output=1;
         training.trace.extend([wrong,event(2,None,8),event(2,Some(1),2)]);
         assert_eq!(training.completed_path_support(&path),2);
+    }
+
+    #[test]
+    fn uncompiled_root_keeps_ancestry_without_claiming_an_executable_unit() {
+        let mut catalog=Catalog::default();
+        catalog.leaves.insert((1,Some(0)),0);
+        catalog.units.push(Unit {path:vec![(None,(1,Some(0)))].into_boxed_slice()});
+        assert!(catalog.root_state(99,1,false).is_none());
+        let mut root=catalog.root_state(99,1,true).unwrap();
+        assert_eq!(root.compiled_unit(&catalog),None);
+        assert!(root.history.current().is_none());
+        let mut training=Training {run:1,..Default::default()};
+        training.trace_root(&catalog,&mut root,99);
+        assert_eq!(training.trace[0].unit,None);
+        assert_eq!(training.trace[0].entry,(99,None));
+        let mut child=root.clone();
+        catalog.dispatch(&mut child,1,0,true,Dependency::Function(0));
+        training.run=2;training.applied(&catalog,&mut child,1);
+        assert_eq!(training.trace[1].parent,Some(0));
+        assert_eq!(training.trace[1].producer_run,1);
+        assert_eq!(training.completed_path_support(&[(None,(99,None)),(Some(0),(1,Some(0)))]),1);
+        let observed=training.completion_observations(&catalog);
+        assert_eq!(observed.units,[0].into_iter().collect());
+        assert!(observed.joins.is_empty(),"unknown root is not an existing catalog index");
+        assert_eq!(root.compiled_unit(&catalog),None);
+        assert_eq!(root.discovery.as_ref().unwrap().samples.as_ref().unwrap().len(),1);
     }
 
     #[test]

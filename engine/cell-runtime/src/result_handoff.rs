@@ -834,7 +834,9 @@ impl Switch {
         };
         let mut nodes = vec![blank()];
         let mut ids = BTreeMap::new();
-        let mut initial = vec![0; leaves.len()];
+        // History admission may append a producer leaf after composed units.
+        // Leaf ids are catalog addresses, not a dense leaf-only index.
+        let mut initial = vec![0; leaves.values().copied().max().map_or(0, |id| id + 1)];
         let mut exports = vec![vec![]; p.rules.len()];
         let mut depth = 0;
         for (path, mut program) in paths {
@@ -1176,6 +1178,10 @@ impl Switch {
     /// including existing suffix fallback. This is not whole-automaton or
     /// semantic Cell equivalence: different future routes remain possible.
     pub(crate) fn transfer_signature(&self,path:&[(Option<usize>,Entry)]) -> serde_json::Value {
+        // An observed but uncompiled producer starts at PC zero. Its first
+        // recognized consumer still follows the ordinary suffix reset.
+        let path=if let Some((_,(rule,None)))=path.first()
+            && self.roots.get(*rule).copied().flatten().is_none() {&path[1..]} else {path};
         let id=self.replay(path);
         let node=&self.nodes[id];
         let port=|p:ResultPort|(p.rule(),p.slot());

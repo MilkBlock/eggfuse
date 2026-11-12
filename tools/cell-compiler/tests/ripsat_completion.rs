@@ -192,7 +192,9 @@ fn history_selected_closure_executes_without_replaying_constructor_rhs() {
     let mut training=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
     training.collect_iterative_pairs();training.execute().unwrap();
     let history=training.iterative_training().completion_history(&training.graph.program);
+    assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
     let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
+    assert!(compiled["iterative_bake"]["closure_selection"]["redundant_terminal_transfers"].as_array().unwrap().iter().any(|r| r["source_path"][0][1][1].is_null()), "uncompiled roots with no additional reuse must not spend the budget");
     assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
     let (before,a)=execute(raw);let (after,b)=execute(compiled.clone());
     assert_eq!(a,b,"Run graph and ordered execution remain authoritative");
@@ -209,6 +211,37 @@ fn history_selected_closure_executes_without_replaying_constructor_rhs() {
     assert!(rejected["iterative_bake"]["closure_selection"]["selected"].as_array().unwrap().is_empty(),
         "same-Run ancestry cannot authorize settled-union closure");
     assert!(eggfuse_cell_compiler::completion_bake::compile_history_closures(p,&history,9).is_err());
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn history_admits_a_missing_root_only_with_new_result_reuse() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(run retire)","")
+        .replace("((Start x)) :ruleset init", "((Left x) (Right x) (Start x)) :ruleset init");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let mut raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut plan=raw["iterative_bake"].clone();
+    plan["joins"].as_array_mut().unwrap().truncate(1);
+    Catalog::emit_switch(&p,&mut plan,true).unwrap();
+    raw["iterative_bake"]=plan;
+    let raw=seal(raw);
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut training=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    training.collect_iterative_pairs();training.execute().unwrap();
+    let history=training.iterative_training().completion_history(&training.graph.program);
+    assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
+    let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
+    assert!(compiled["iterative_bake"]["closure_selection"]["selected"].as_array().unwrap().iter().any(|r| r["added_roots"].as_u64()==Some(1)), "{}", compiled["iterative_bake"]["closure_selection"]);
+    assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
+    let (before,a)=execute(raw);let (after,b)=execute(compiled.clone());
+    assert_eq!(a,b,"Run graph and ordered execution remain authoritative");
+    let old=before.report();let new=after.report();
+    assert!(new["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,"{new}");
+    assert!(after.graph.stats.constructor_requests < before.graph.stats.constructor_requests,"{old}\n{new}");
 }
 
 #[cfg(feature = "sparse-cells")]

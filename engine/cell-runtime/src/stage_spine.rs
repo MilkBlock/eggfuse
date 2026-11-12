@@ -1831,7 +1831,7 @@ impl Programs {
                 &mut self.stats,
             );
             if root && let Started::Live(cursor) = &mut s {
-                self.training.trace_root(&g.program.iterative, &mut cursor.state);
+                self.training.trace_root(&g.program.iterative, &mut cursor.state, rid);
             }
             if !joint {
                 s.remember(&g.program.iterative, rid,
