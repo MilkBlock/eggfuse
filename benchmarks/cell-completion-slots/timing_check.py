@@ -27,10 +27,12 @@ if __name__ == '__main__':
                        for case in ('sum', 'ray')}
         medians = all(c['median_change_percent'] < 0 for c in comparisons.values())
         pairs = all(c['paired_median_change_percent'] < 0 for c in comparisons.values())
+        regressed = all(c['median_change_percent'] > 0 and c['paired_median_change_percent'] > 0
+                        for c in comparisons.values())
         result['four_worker_direction_checks'][prior] = {
             'both_workload_medians_lower': medians,
             'both_workload_paired_medians_lower': pairs,
-            'direction': 'consistent' if medians and pairs else 'mixed',
+            'direction': 'improved' if medians and pairs else 'regressed' if regressed else 'mixed',
             'limits': 'Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance.',
         }
     # These are the saved actual work executions, not an additional timing

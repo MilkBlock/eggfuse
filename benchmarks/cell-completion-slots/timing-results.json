@@ -5287,19 +5287,19 @@
     "historical": {
       "both_workload_medians_lower": false,
       "both_workload_paired_medians_lower": false,
-      "direction": "mixed",
+      "direction": "regressed",
       "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
     },
     "control": {
       "both_workload_medians_lower": false,
       "both_workload_paired_medians_lower": false,
-      "direction": "mixed",
+      "direction": "regressed",
       "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
     },
     "checkpoint": {
       "both_workload_medians_lower": false,
       "both_workload_paired_medians_lower": false,
-      "direction": "mixed",
+      "direction": "regressed",
       "limits": "Directional summary, not a significance test or an automatic speedup acceptance. Semantic checks do not establish performance."
     }
   },
