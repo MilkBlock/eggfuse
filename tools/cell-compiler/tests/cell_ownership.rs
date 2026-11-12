@@ -1162,3 +1162,29 @@ fn completed_instance_retires_unused_match_inputs_without_owner_transfer() {
             "unused match inputs must retire without shared-owner transfer");
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_writer_retires_unused_inputs_before_storage_handoff() {
+    let p=program("(datatype E (N i64))
+        (function Score (E) i64 :merge (max old new))
+        (relation Unused (i64)) (relation Seen (E i64))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n)) (Unused j)) ((set (Score x) n)) :ruleset a)
+        (rule ((= n (Score x))) ((Seen x n)) :ruleset b)
+        (N 1) (N 2) (Unused 17) (run a 1) (run b 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        reference.execute_until(Some(1)).unwrap();actual.execute_until(Some(1)).unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert!(actual.graph.stats.completed_dead_slots_elided>0);
+        let old=reference.graph.retained_cell_storage();let new=actual.graph.retained_cell_storage();
+        assert!(new["writer_count"].as_u64().unwrap()>0);
+        assert!(new["writer_bytes"].as_u64().unwrap()<old["writer_bytes"].as_u64().unwrap());
+        reference.execute_until(None).unwrap();actual.execute_until(None).unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+    }
+}

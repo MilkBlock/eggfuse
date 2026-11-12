@@ -1,20 +1,37 @@
 //! Discharge a completed instance's parent dependency through its existing
 //! composed symbols. Unknown/scalar projections retain the ordinary parent.
 use super::*;
+fn retire_dead_values(values:&mut crate::slots::FrameSlots,dead:&[usize])->usize {
+    let removed=values.retain_owned(|slot,_|dead.binary_search(slot).is_err());
+    if removed>0 {values.compact_capacity();}
+    removed
+}
 impl Graph {
-    pub(crate) fn complete_parent_handoff(&mut self, cell: u32, rid: usize) -> Result<()> {
-        // All completed result capture is finished before this hook. Retire
-        // proven dead bindings even when this frame never joins a shared owner.
-        if let Some(dead)=self.program.executions[rid].completed_dead_inputs.as_ref()
-            && let Some(c)=self.cells.get_mut(&cell).filter(|c|c.completed)
-        {
-            let removed=c.values.retain_owned(|slot,_|dead.binary_search(slot).is_err());
-            if removed>0 {
-                c.values.compact_capacity();
-                self.stats.completed_dead_slots_elided+=removed as u64;
-                self.stats.completed_dead_frames_compacted+=1;
-            }
+    pub(crate) fn retire_completed_writer_inputs(&mut self,cell:u32,rid:usize) {
+        let Some(index)=self.writer_dir.get(cell) else {
+            self.retire_completed_inputs(cell,rid);return;
+        };
+        let Some(dead)=self.program.executions[rid].completed_dead_inputs.as_ref() else {return;};
+        let Some(writer)=self.functions[index].writer.as_mut().filter(|w|w.completed) else {return;};
+        let removed=retire_dead_values(&mut writer.values,dead);
+        self.stats.completed_dead_slots_elided+=removed as u64;
+        self.stats.completed_dead_frames_compacted+=u64::from(removed>0);
+    }
+    pub(crate) fn retire_completed_inputs(&mut self, cell:u32, rid:usize) {
+        // A frame with no facts or retained users will be dropped immediately.
+        // Do not compact a temporary allocation just before destroying it.
+        if self.parent_users.get(&cell).copied().unwrap_or(0)==0
+            && self.rhs_frame(cell).is_none_or(|c|c.facts.is_empty()) {return;}
+        let (plan,_,frame)=self.execution_parts(rid,cell);
+        let Some(dead)=plan.completed_dead_inputs.as_ref() else {return;};
+        if !frame.completed {return;}
+        let removed=retire_dead_values(&mut frame.values,dead);
+        if removed>0 {
+            self.stats.completed_dead_slots_elided+=removed as u64;
+            self.stats.completed_dead_frames_compacted+=1;
         }
+    }
+    pub(crate) fn complete_parent_handoff(&mut self, cell: u32, rid: usize) -> Result<()> {
         let Some(layout)=self.program.executions[rid].parent_completion.as_ref() else {return Ok(());};
         let Some(c) = self.cells.get(&cell).filter(|c| c.completed) else { return Ok(()); };
         let Some(parent) = c.parent else { return Ok(()); };

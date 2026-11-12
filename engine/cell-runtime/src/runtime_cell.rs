@@ -246,6 +246,10 @@ impl Executor {
                 }
             }
         }
+        // Result/history capture is complete. Retire dead bindings before a
+        // private Cell moves into its functional writer's retained storage.
+        #[cfg(feature="storage-metrics")]
+        if completed {self.graph.retire_completed_inputs(cell,rid);}
         self.graph.release_empty(cell);
         #[cfg(feature="storage-metrics")]
         if completed { self.graph.complete_parent_handoff(cell, rid)?; }

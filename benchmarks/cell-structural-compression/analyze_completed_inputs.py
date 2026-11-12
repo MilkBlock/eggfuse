@@ -38,6 +38,10 @@ def analyze(before, after, old_heap, new_heap):
         'transfer_extra_after': new_heap['max_takeover_extra_bytes'],
         'explicit_slots_before': before['source_storage']['explicit_cell_slots'],
         'explicit_slots_after': after['source_storage']['explicit_cell_slots'],
+        'writer_bytes_before': before['source_storage']['writer_bytes'],
+        'writer_bytes_after': after['source_storage']['writer_bytes'],
+        'writer_count_before': before['source_storage']['writer_count'],
+        'writer_count_after': after['source_storage']['writer_count'],
         'graph_counter_changes': {k: [before['graph_work'].get(k), v] for k, v in after['graph_work'].items()
                                   if before['graph_work'].get(k) != v},
         'limitations': ['shared-prefix bindings remain unchanged',

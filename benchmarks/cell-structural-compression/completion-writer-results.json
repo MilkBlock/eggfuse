@@ -1,0 +1,38 @@
+{
+  "scope": "actual standalone Cell runtime, requested Graph heap; not native egglog, RSS or speedup",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "final_state_exact_equal": true,
+  "measured_execution_work_equal": true,
+  "graph_heap_before": 2802597,
+  "graph_heap_after": 2784981,
+  "graph_heap_saved": 17616,
+  "program_heap_before": 117230752,
+  "program_heap_after": 117230752,
+  "process_peak_before": 125496909,
+  "process_peak_after": 125480739,
+  "transfer_extra_before": 49576,
+  "transfer_extra_after": 49576,
+  "explicit_slots_before": 8354,
+  "explicit_slots_after": 8354,
+  "writer_bytes_before": 151976,
+  "writer_bytes_after": 134360,
+  "writer_count_before": 490,
+  "writer_count_after": 490,
+  "graph_counter_changes": {
+    "completed_dead_slots_elided": [
+      4027,
+      4411
+    ],
+    "completed_dead_frames_compacted": [
+      1987,
+      2130
+    ]
+  },
+  "limitations": [
+    "shared-prefix bindings remain unchanged",
+    "reclaiming removed-slot capacity can reallocate; no timing benefit established",
+    "no new rule, fact, index or RHS elimination established"
+  ]
+}

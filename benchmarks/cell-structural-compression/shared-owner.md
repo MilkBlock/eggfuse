@@ -450,3 +450,38 @@ CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-c
 CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_storage_peak -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/completion-input-heap.json inherited-owners
 python3 benchmarks/cell-structural-compression/analyze_completed_inputs.py out/cell-structural-compression/parent-forward-audit.json out/cell-structural-compression/completion-input-audit.json out/cell-structural-compression/dead-inputs-heap-inherited-owners.json out/cell-structural-compression/completion-input-heap.json benchmarks/cell-structural-compression/completion-input-results.json
 ```
+
+### Complete the same lifetime handoff for functional writers
+
+Review of the actual completion path found two holes in binding retirement:
+`release_empty` moved a private Cell into a functional writer before the prior
+hook could see it, and the single-write path bypassed `finish_cell` entirely.
+Generic completion now retires dead bindings after result capture but before
+storage handoff. The single-write path applies the same value-retirement helper
+after its own result capture. Both use the already compiled dead-input layout.
+Temporary frames with no facts or retained users are simply dropped, without an
+otherwise useless shrink immediately before destruction. Parent handoff remains
+in its original post-publication position. No function row, identity, writer or
+retained live input is removed by this change.
+
+Requested Graph heap falls from 2,802,597 to 2,784,981 bytes. The additional
+17,616 bytes are all in functional writer storage. Compiled layout storage does
+not change. This completes coverage of an existing proof; it is not the still
+required fact/index takeover, and no RHS or speed benefit is claimed.
+
+Reproduction uses the preceding completion-input commands with output names
+`completion-all-writers-audit.json` and `completion-all-writers-heap.json`.
+Compare them to `completion-input-audit.json` and `completion-input-heap.json`
+using `analyze_completed_inputs.py`. The serial/two-worker writer fixture requires
+reduced physical writer bytes and correct subsequent-stage reads, without shared
+owner transfer. The original generic hook alone failed this fixture because the
+single-write fast path never reached it.
+
+Validation: all 1,428 saved Run graph and ordered effect/resume hashes pass;
+selected execution work and final state exactly match. The equal saved export
+passes semantic acceptance. Ownership tests: 36; ripsat completion tests: 21;
+default runtime Cargo check passes. Writer count stays 490 while its accounted
+storage drops from 151,976 to 134,360 bytes. Cumulative dead slots removed rises
+from 4,027 to 4,411; affected-frame shrinks rise from 1,987 to 2,130. Process peak
+falls from 125,496,909 to 125,480,739 bytes, with unchanged transfer extra peak
+49,576 bytes. These are requested-heap measurements, not RSS or timing results.

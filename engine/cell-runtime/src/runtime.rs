@@ -2252,6 +2252,8 @@ impl Executor {
                     |_| key.take().ok_or("missing single-write boundary key".into()),
                 )?;
             }
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            if changed {self.graph.retire_completed_writer_inputs(cell,rid);}
             return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
