@@ -9,7 +9,7 @@ class Unsupported(ValueError):pass
 
 
 class Affine:
- def __init__(self,rule,inputs,bounds):
+ def __init__(self,rule,inputs,bounds,exports=None):
   self.inputs=list(inputs);self.bounds=list(bounds);n=len(inputs);self.destinations=[];self.certificates=[]
   if len(bounds)!=n or any(type(b)!=int or not 0<=b<=LIMIT for b in bounds):raise Unsupported('input bound')
   if any(rule['slots'][slot]['sort'].get('kind')!='i64' for slot in inputs):raise Unsupported('non-integer input slot')
@@ -23,6 +23,9 @@ class Affine:
    if abs(value)>LIMIT:raise Unsupported('inexact constant')
    return [0]*n,value
   for index,op in enumerate(rule['effects']):
+   if op.get('op')=='copy' and op.get('sort',{}).get('kind')=='i64':
+    if op['dst'] in forms:raise Unsupported('overwritten slot')
+    forms[op['dst']]=read(op['arg']);continue
    if op.get('kind')!='compute':continue
    if op.get('sort',{}).get('kind')!='i64':raise Unsupported('non-i64 operation')
    if op.get('call',{}).get('inputs')!=['i64','i64'] or op.get('call',{}).get('output')!='i64':raise Unsupported('primitive types')
@@ -43,6 +46,14 @@ class Affine:
    forms[dst]=(coeff,offset);self.destinations.append(dst)
    self.certificates.append(dict(operation=index,destination=dst,absolute_accumulation_bound=bound))
   if not self.destinations:raise Unsupported('empty scalar fragment')
+  self.all_destinations=list(self.destinations)
+  self.exports=list(self.all_destinations if exports is None else exports)
+  if not self.exports or not set(self.exports)<=set(self.all_destinations):raise Unsupported('invalid export contract')
+  unique={};self.output_columns={};self.destinations=[]
+  for slot in self.exports:
+   coeff,offset=forms[slot];key=(tuple(coeff),offset)
+   if key not in unique:unique[key]=len(unique);self.destinations.append(slot)
+   self.output_columns[slot]=unique[key]
   self.coefficients=np.array([forms[s][0] for s in self.destinations],dtype=np.float32).T
   self.bias=np.array([forms[s][1] for s in self.destinations],dtype=np.float32)
 
@@ -63,6 +74,8 @@ class Affine:
 def checked_reference(rule,inputs,values):
  env=dict(zip(inputs,values));out=[]
  for op in rule['effects']:
+  if op.get('op')=='copy' and op.get('sort',{}).get('kind')=='i64':
+   arg=op['arg'];env[op['dst']]=env[arg['slot']] if 'slot' in arg else arg['literal'];continue
   if op.get('kind')!='compute':continue
   args=[env[x['slot']] if 'slot' in x else x['literal'] for x in op['args']]
   name=op['call']['primitive']

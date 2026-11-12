@@ -1,0 +1,1242 @@
+{
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "file_sha256": "c120151d9ea14ff5171afec1a312f8e9b7522c219e40acfbb57c1a38a518e086",
+  "rules": {
+    "146": {
+      "metadata": {
+        "seminaive": true,
+        "source_set": "always-run",
+        "name": "(rewrite (TupleRemoveAt tuple idx) (Concat (SubTuple tuple 0 idx) (SubTuple tuple (+ idx 1) (- len (+ idx 1)))) :when ((= len (tuple-length tuple))) :ruleset always-run)"
+      },
+      "slots": [
+        {
+          "name": "tuple",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "idx",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@TupleRemoveAt1",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@tuple-length21",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "len",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 0
+        },
+        {
+          "name": "___rewrite_var__32",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 1
+        },
+        {
+          "name": "@SubTuple28",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 2
+        },
+        {
+          "name": "@+36",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 3
+        },
+        {
+          "name": "@+37",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 4
+        },
+        {
+          "name": "@-5",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 5
+        },
+        {
+          "name": "@SubTuple29",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 6
+        }
+      ],
+      "query": [
+        {
+          "call": {
+            "table": "TupleRemoveAt"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "tuple-length"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 3
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 4,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "arg": {
+            "slot": 3
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 2
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 6,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "literal": 0,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 7,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 8,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "-",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 8
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 10,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 7
+            },
+            {
+              "slot": 9
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Concat"
+          },
+          "args": [
+            {
+              "slot": 6
+            },
+            {
+              "slot": 10
+            }
+          ],
+          "value": {
+            "slot": 5
+          },
+          "kind": "set"
+        }
+      ],
+      "interface": {
+        "rows": [
+          {
+            "atom": 0,
+            "table": "TupleRemoveAt",
+            "columns": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "slot": 2
+              }
+            ],
+            "key_columns": [
+              0,
+              1
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 1,
+            "table": "tuple-length",
+            "columns": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 3
+              }
+            ],
+            "key_columns": [
+              0
+            ],
+            "witness": "complete visible row"
+          }
+        ],
+        "primitive_atoms": [],
+        "guaranteed_atoms": [],
+        "residual_atoms": [
+          0,
+          1
+        ],
+        "correlation": "one complete binding row; slot equality and literals remain constraints"
+      },
+      "footprint": {
+        "read_tables": [
+          "TupleRemoveAt",
+          "tuple-length"
+        ],
+        "write_tables": [
+          "Concat",
+          "SubTuple"
+        ],
+        "union_sorts": [
+          "Expr"
+        ],
+        "equality_invalidates": [
+          "Add-All-Gets",
+          "Add-Gets",
+          "AddContext",
+          "Alloc",
+          "Append",
+          "Arg",
+          "BodyContainsExpr",
+          "BodyContainsListExpr",
+          "Bop",
+          "Call",
+          "CellSpineApplied119",
+          "CellSpineApplied181",
+          "CellSpineApplied183",
+          "CellSpineApplied23",
+          "CellSpineApplied25",
+          "CellSpineApplied30",
+          "CellSpineApplied308",
+          "CellSpineApplied309",
+          "CellSpineApplied31",
+          "CellSpineApplied336",
+          "CellSpineApplied337",
+          "CellSpineApplied34",
+          "CellSpineApplied35",
+          "CellSpineApplied355",
+          "CellSpineApplied356",
+          "CellSpineApplied36",
+          "CellSpineApplied37",
+          "CellSpineApplied38",
+          "CellSpineApplied382",
+          "CellSpineApplied383",
+          "CellSpineApplied384",
+          "CellSpineApplied385",
+          "CellSpineApplied386",
+          "CellSpineApplied387",
+          "CellSpineApplied388",
+          "CellSpineApplied389",
+          "CellSpineApplied39",
+          "CellSpineApplied390",
+          "CellSpineApplied391",
+          "CellSpineApplied392",
+          "CellSpineApplied393",
+          "CellSpineApplied394",
+          "CellSpineApplied395",
+          "CellSpineApplied396",
+          "CellSpineApplied397",
+          "CellSpineApplied403",
+          "CellSpineApplied48",
+          "CellSpineApplied49",
+          "CellSpineApplied55",
+          "CellSpineApplied56",
+          "CellSpineApplied564",
+          "CellSpineApplied566",
+          "CellSpineApplied567",
+          "CellSpineApplied568",
+          "CellSpineApplied575",
+          "CellSpineApplied579",
+          "CellSpineApplied589",
+          "CellSpineApplied590",
+          "CellSpineApplied591",
+          "CellSpineApplied592",
+          "CellSpineApplied597",
+          "CellSpineApplied598",
+          "CellSpineApplied599",
+          "CellSpineApplied600",
+          "CellSpineApplied601",
+          "CellSpineApplied602",
+          "CellSpineApplied603",
+          "CellSpineApplied605",
+          "CellSpineApplied652",
+          "CellSpineApplied653",
+          "CellSpineApplied654",
+          "CellSpineApplied655",
+          "CellSpineApplied656",
+          "CellSpineApplied657",
+          "CellSpineApplied659",
+          "CellSpineApplied661",
+          "CellSpineApplied662",
+          "CellSpineApplied70",
+          "CellSpineApplied71",
+          "CellSpineApplied72",
+          "CellSpineView0",
+          "CellSpineView1",
+          "CellSpineView10",
+          "CellSpineView11",
+          "CellSpineView12",
+          "CellSpineView13",
+          "CellSpineView14",
+          "CellSpineView15",
+          "CellSpineView16",
+          "CellSpineView17",
+          "CellSpineView18",
+          "CellSpineView19",
+          "CellSpineView2",
+          "CellSpineView20",
+          "CellSpineView21",
+          "CellSpineView22",
+          "CellSpineView27",
+          "CellSpineView29",
+          "CellSpineView3",
+          "CellSpineView30",
+          "CellSpineView31",
+          "CellSpineView32",
+          "CellSpineView33",
+          "CellSpineView4",
+          "CellSpineView5",
+          "CellSpineView6",
+          "CellSpineView7",
+          "CellSpineView8",
+          "Concat",
+          "Cons",
+          "Const",
+          "ContextOf",
+          "DebugExpr",
+          "DelayedDropUnion",
+          "DelayedSubstUnion",
+          "DemandDontAlias",
+          "DoWhile",
+          "DontAlias",
+          "DropAt",
+          "DropAtInternal",
+          "ES",
+          "Empty",
+          "ExpectType",
+          "Expr-size",
+          "ExprIsPure",
+          "ExprIsResolved",
+          "ExprIsValid",
+          "ExprSet-insert",
+          "ExtractedExpr",
+          "ExtractedExprCache",
+          "Function",
+          "Get",
+          "HasArgType",
+          "HasType",
+          "IVTAnalysisRes",
+          "IVTNewInputsAnalysis",
+          "IVTNewInputsAnalysisDemand",
+          "IVTNewInputsAnalysisImpl",
+          "If",
+          "IfNode",
+          "IfSubst",
+          "InIf",
+          "InLoop",
+          "InSwitch",
+          "InlinedCall",
+          "InvCodeMotionCandidate",
+          "IsIsEven",
+          "ListExpr-ith",
+          "LoopIsFinite",
+          "LoopNumItersGuess",
+          "NTZIterations",
+          "NoAlias",
+          "Not-Just-Concat",
+          "PointsToCells",
+          "PointsToCellsAtIter",
+          "PointsToExpr",
+          "PotentialExtractedExpr",
+          "Program",
+          "Single",
+          "SubTuple",
+          "Subst",
+          "Switch",
+          "TermSubst",
+          "ToSubsumeIf",
+          "Top",
+          "TupleRemoveAt",
+          "Uop",
+          "___GeneratedFreshTable",
+          "___GeneratedFreshTable1",
+          "___GeneratedFreshTable2",
+          "___GeneratedFreshTable3",
+          "___GeneratedFreshTable4",
+          "___GeneratedFreshTable5",
+          "hi-bound",
+          "is-inv-Expr",
+          "is-inv-ListExpr",
+          "is-inv-ListExpr-helper",
+          "leading-Expr",
+          "lo-bound",
+          "lsr-inv",
+          "to-hoist",
+          "to-hoist-size",
+          "tuple-length"
+        ],
+        "operations": [
+          "compute",
+          "construct",
+          "copy",
+          "set"
+        ],
+        "precision": "conservative direct/merge footprint; global rebuild may have further effects"
+      }
+    },
+    "499": {
+      "metadata": {
+        "seminaive": true,
+        "source_set": "terms",
+        "name": "(rule ((= lhs (Top o e1 e2 e3))\n       (= (TCPair t1 c1) (ExtractedExpr e1))\n       (= (TCPair t2 c2) (ExtractedExpr e2))\n       (= (TCPair t3 c3) (ExtractedExpr e3)))\n      ((PotentialExtractedExpr lhs (TCPair (TermTop o t1 t2 t3) (+ (+ 1 c1) (+ c2 c3)))))\n        :ruleset terms )"
+      },
+      "slots": [
+        {
+          "name": "o",
+          "sort": {
+            "name": "TernaryOp",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "e1",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "e2",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "e3",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@Top19",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "t1",
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "c1",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@ExtractedExpr13",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "t2",
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "c2",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@ExtractedExpr14",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "t3",
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "c3",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@ExtractedExpr15",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@TCPair44",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": 0
+        },
+        {
+          "name": "@TCPair43",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": 1
+        },
+        {
+          "name": "@TCPair42",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": 2
+        },
+        {
+          "name": "lhs",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 3
+        },
+        {
+          "name": "@TermTop1",
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "definition": 4
+        },
+        {
+          "name": "@+21",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 5
+        },
+        {
+          "name": "@+22",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 6
+        },
+        {
+          "name": "@+23",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 7
+        },
+        {
+          "name": "@TCPair45",
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "definition": 8
+        },
+        {
+          "name": "@PotentialExtractedExpr13",
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "definition": 9
+        }
+      ],
+      "query": [
+        {
+          "call": {
+            "table": "Top"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 8
+            },
+            {
+              "slot": 9
+            },
+            {
+              "slot": 10
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 10
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 11
+            },
+            {
+              "slot": 12
+            },
+            {
+              "slot": 13
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "ExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 13
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 14,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 13
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 15,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 10
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 16,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 7
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "copy",
+          "dst": 17,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 4
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 18,
+          "sort": {
+            "name": "Term",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TermTop"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 11
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 19,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            },
+            {
+              "slot": 6
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 20,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 9
+            },
+            {
+              "slot": 12
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 21,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 19
+            },
+            {
+              "slot": 20
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 22,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "TCPair"
+          },
+          "args": [
+            {
+              "slot": 18
+            },
+            {
+              "slot": 21
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 23,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "PotentialExtractedExpr"
+          },
+          "args": [
+            {
+              "slot": 17
+            },
+            {
+              "slot": 22
+            }
+          ],
+          "kind": "construct"
+        }
+      ],
+      "interface": {
+        "rows": [
+          {
+            "atom": 0,
+            "table": "Top",
+            "columns": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "slot": 2
+              },
+              {
+                "slot": 3
+              },
+              {
+                "slot": 4
+              }
+            ],
+            "key_columns": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 1,
+            "table": "TCPair",
+            "columns": [
+              {
+                "slot": 5
+              },
+              {
+                "slot": 6
+              },
+              {
+                "slot": 7
+              }
+            ],
+            "key_columns": [
+              0,
+              1
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 2,
+            "table": "ExtractedExpr",
+            "columns": [
+              {
+                "slot": 1
+              },
+              {
+                "slot": 7
+              }
+            ],
+            "key_columns": [
+              0
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 3,
+            "table": "TCPair",
+            "columns": [
+              {
+                "slot": 8
+              },
+              {
+                "slot": 9
+              },
+              {
+                "slot": 10
+              }
+            ],
+            "key_columns": [
+              0,
+              1
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 4,
+            "table": "ExtractedExpr",
+            "columns": [
+              {
+                "slot": 2
+              },
+              {
+                "slot": 10
+              }
+            ],
+            "key_columns": [
+              0
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 5,
+            "table": "TCPair",
+            "columns": [
+              {
+                "slot": 11
+              },
+              {
+                "slot": 12
+              },
+              {
+                "slot": 13
+              }
+            ],
+            "key_columns": [
+              0,
+              1
+            ],
+            "witness": "complete visible row"
+          },
+          {
+            "atom": 6,
+            "table": "ExtractedExpr",
+            "columns": [
+              {
+                "slot": 3
+              },
+              {
+                "slot": 13
+              }
+            ],
+            "key_columns": [
+              0
+            ],
+            "witness": "complete visible row"
+          }
+        ],
+        "primitive_atoms": [],
+        "guaranteed_atoms": [],
+        "residual_atoms": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "correlation": "one complete binding row; slot equality and literals remain constraints"
+      },
+      "footprint": {
+        "read_tables": [
+          "ExtractedExpr",
+          "TCPair",
+          "Top"
+        ],
+        "write_tables": [
+          "PotentialExtractedExpr",
+          "TCPair",
+          "TermTop"
+        ],
+        "union_sorts": [],
+        "equality_invalidates": [],
+        "operations": [
+          "compute",
+          "construct",
+          "copy"
+        ],
+        "precision": "conservative direct/merge footprint; global rebuild may have further effects"
+      }
+    }
+  }
+}

@@ -24,8 +24,8 @@ validity and ordered effects. The bench does not publish anything.
 `compiler.py` derives affine integer coefficients directly from typed recipe
 instructions. It supports add/subtract and multiplication by a compile-time
 integer constant. It rejects division, variable multiplication, unsupported types,
-unknown/effect-dependent inputs and overwritten slots. Copy/general nonlinear
-primitive coverage is not implemented in this first subset.
+unknown/effect-dependent inputs and overwritten slots. Typed i64 copies are
+resolved as static aliases; general nonlinear primitives remain unsupported.
 
 For every original scalar operation, it proves
 
@@ -118,3 +118,53 @@ The recipe snapshot was obtained from `real_completion_dataset` with
 `include_program: true` on a single existing input, selecting compiled recipe
 rule 2. Its source text is checked against the saved original rule 138 on every
 run; program and recipe fingerprints are retained. Binary outputs stay in out/.
+
+## Shared scalar columns and explicit exports
+
+The next compiler step shares identical affine result columns. Consumers read
+through the template's static `output_columns` map; there is no per-instance
+alias registry. By default every original scalar result remains exported.
+An explicit `exports` contract may select fewer results, but the caller must
+establish that omitted slots are unnecessary for consumers, history and later
+stages. This prototype does not infer that global liveness proof. Every original
+intermediate operation still receives its range proof before output pruning.
+
+Two actual saved recipes in `shared-rules.json` exercise this:
+
+| Recipe | Original scalar work | GPU result columns |
+|---|---|---|
+| 146 TupleRemoveAt | `idx+1`, `idx+1`, `len-(idx+1)` | Two columns; slots 7 and 8 share column 0 |
+| 499 Top extraction cost | `1+c1`, `c2+c3`, sum of both | One column `1+c1+c2+c3` when only slot 21 is requested |
+
+`shared-results.json` records 8,204 exported results checked exactly against
+native runtime primitives on Metal. Inputs are synthetic bounded scalar values
+applied to real recipe instructions, not successful rule-match traffic. Both
+recipes also check an i64 overflow fallback case. In particular, the second
+recipe must reject an overflowing intermediate even when later cancellation
+would make the final mathematical result small. This is arithmetic validation,
+not full rule/effect validation or a new speed measurement. No engine primitive
+executions have been removed.
+
+`catalog-results.json` surveys the saved full program's 582 **base recipes**:
+50 contain RHS primitives, 37 pass the current affine subset at bound `2^20`,
+and the largest RHS has three primitives. The query-side maximum is four.
+These are static counts, not execution frequencies or an upper bound on
+cross-stage composed Cells. Longer composed fragments need actual execution
+and consumer-liveness evidence before claiming eliminated work. The census
+keeps fingerprints of its source; it does not credit saved runtime operations.
+
+Reproduce the additional checks and census:
+
+```sh
+out/cell-real-state/venv/bin/python benchmarks/cell-f32-scalar/check_shared.py \
+  --oracle target/debug/examples/scalar_fragment_reference \
+  --output out/cell-f32-scalar/shared-results.json
+out/cell-real-state/venv/bin/python benchmarks/cell-f32-scalar/catalog.py \
+  --program out/cell-execution-deferred/readme-compiled/program.json \
+  --output out/cell-f32-scalar/catalog-results.json
+```
+
+The checked-in recipe snapshots make the arithmetic checks independent of the
+saved full program. The full census requires that saved compiler artifact.
+The original joint scalar/ridge regression also passes after these changes;
+its earlier timings above remain the performance evidence.

@@ -1,0 +1,3196 @@
+{
+  "scope": "Static saved recipe census, not dynamic execution or speedup",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "file_sha256": "c120151d9ea14ff5171afec1a312f8e9b7522c219e40acfbb57c1a38a518e086",
+  "rules": 582,
+  "rules_with_rhs_primitives": 50,
+  "max_rhs_primitives": 3,
+  "max_query_primitives": 4,
+  "certified_rules": 37,
+  "duplicate_columns_removed": 1,
+  "primitive_histogram": {
+    "/": 3,
+    "*": 3,
+    "+": 37,
+    "-": 11,
+    "max": 2,
+    "min": 2,
+    "or": 1,
+    "and": 1,
+    "bool-<": 2
+  },
+  "rejections": {
+    "not supported affine primitive": 7,
+    "variable multiplication needs a separate fixed operator": 2,
+    "non-i64 operation": 4
+  },
+  "input_bound": 1048576,
+  "rows": [
+    {
+      "rule": 0,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 1,
+      "primitive_count": 1,
+      "query_primitive_count": 4,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 2,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 3,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 4,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 5,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 6,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 7,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 8,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 9,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 10,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 11,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 12,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 13,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 14,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 15,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 16,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 17,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 18,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 19,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 20,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 21,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 22,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 23,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 24,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 25,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 26,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 27,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 28,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 29,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 30,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 31,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "variable multiplication needs a separate fixed operator"
+    },
+    {
+      "rule": 32,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "14": 0
+      }
+    },
+    {
+      "rule": 33,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 34,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 35,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 36,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 37,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 38,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 39,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 40,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 41,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 42,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 43,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "18": 0
+      }
+    },
+    {
+      "rule": 44,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 45,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 46,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 47,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 48,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 49,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 50,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 51,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 52,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 53,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 54,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 55,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 56,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 57,
+      "primitive_count": 1,
+      "query_primitive_count": 2,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "9": 0
+      }
+    },
+    {
+      "rule": 58,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 59,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "9": 0
+      }
+    },
+    {
+      "rule": 60,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 61,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 62,
+      "primitive_count": 2,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 2,
+      "unique_columns": 2,
+      "output_columns": {
+        "7": 0,
+        "10": 1
+      }
+    },
+    {
+      "rule": 63,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 64,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 65,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 66,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 67,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 68,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 69,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 70,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 71,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 72,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 73,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 74,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 75,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 76,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 77,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 78,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 79,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 80,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 81,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 82,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 83,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 84,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 85,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 86,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 87,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 88,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 89,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 90,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 91,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 92,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 93,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 94,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 95,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 96,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 97,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 98,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 99,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 100,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 101,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 102,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 103,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 104,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 105,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 106,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 107,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 108,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 109,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 110,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 111,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 112,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 113,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 114,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 115,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 116,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 117,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 118,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 119,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 120,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 121,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 122,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 123,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 124,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 125,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 126,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 127,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 128,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 129,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 130,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 131,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 132,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 133,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 134,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 135,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 136,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 137,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 138,
+      "primitive_count": 2,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 2,
+      "unique_columns": 2,
+      "output_columns": {
+        "8": 0,
+        "9": 1
+      }
+    },
+    {
+      "rule": 139,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 140,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 141,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 142,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 143,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 144,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "9": 0
+      }
+    },
+    {
+      "rule": 145,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 146,
+      "primitive_count": 3,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 3,
+      "unique_columns": 2,
+      "output_columns": {
+        "7": 0,
+        "8": 0,
+        "9": 1
+      }
+    },
+    {
+      "rule": 147,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 148,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "8": 0
+      }
+    },
+    {
+      "rule": 149,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 150,
+      "primitive_count": 1,
+      "query_primitive_count": 2,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "12": 0
+      }
+    },
+    {
+      "rule": 151,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "9": 0
+      }
+    },
+    {
+      "rule": 152,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 153,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 154,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 155,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 156,
+      "primitive_count": 1,
+      "query_primitive_count": 2,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "11": 0
+      }
+    },
+    {
+      "rule": 157,
+      "primitive_count": 1,
+      "query_primitive_count": 3,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "14": 0
+      }
+    },
+    {
+      "rule": 158,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "8": 0
+      }
+    },
+    {
+      "rule": 159,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 160,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 161,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 162,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 163,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 164,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "8": 0
+      }
+    },
+    {
+      "rule": 165,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 166,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 167,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 168,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 169,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 170,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 171,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 172,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 173,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 174,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 175,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 176,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 177,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 178,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 179,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 180,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 181,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "7": 0
+      }
+    },
+    {
+      "rule": 182,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 183,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 184,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 185,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 186,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 187,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 188,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 189,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "7": 0
+      }
+    },
+    {
+      "rule": 190,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 191,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 192,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 193,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 194,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 195,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 196,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 197,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 198,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 199,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 200,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 201,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 202,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 203,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 204,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 205,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 206,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 207,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 208,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 209,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 210,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 211,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 212,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 213,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 214,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 215,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 216,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 217,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 218,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 219,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 220,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 221,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 222,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 223,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 224,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 225,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 226,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 227,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 228,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 229,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 230,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 231,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 232,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 233,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 234,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 235,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 236,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 237,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 238,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 239,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 240,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 241,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 242,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 243,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 244,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 245,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 246,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 247,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 248,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 249,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 250,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 251,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 252,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 253,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 254,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 255,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 256,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "7": 0
+      }
+    },
+    {
+      "rule": 257,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 258,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 259,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 260,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 261,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 262,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 263,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 264,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 265,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 266,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 267,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 268,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 269,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 270,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 271,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 272,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 273,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 274,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 275,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 276,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 277,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 278,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 279,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 280,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 281,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 282,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 283,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 284,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 285,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 286,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 287,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 288,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 289,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 290,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 291,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 292,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 293,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 294,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 295,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 296,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 297,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 298,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 299,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 300,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 301,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 302,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 303,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 304,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 305,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 306,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 307,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 308,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 309,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 310,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 311,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 312,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 313,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 314,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 315,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 316,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 317,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 318,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 319,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 320,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 321,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 322,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 323,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 324,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 325,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 326,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 327,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 328,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 329,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 330,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 331,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 332,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 333,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 334,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 335,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 336,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 337,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 338,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 339,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 340,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 341,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 342,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 343,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 344,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 345,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 346,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 347,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 348,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 349,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 350,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "13": 0
+      }
+    },
+    {
+      "rule": 351,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 352,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 353,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 354,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 355,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 356,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 357,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 358,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 359,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 360,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 361,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 362,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 363,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 364,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 365,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 366,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 367,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 368,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 369,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 370,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 371,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 372,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 373,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 374,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 375,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 376,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 377,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 378,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 379,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 380,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "non-i64 operation"
+    },
+    {
+      "rule": 381,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "non-i64 operation"
+    },
+    {
+      "rule": 382,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 383,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 384,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 385,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 386,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "11": 0
+      }
+    },
+    {
+      "rule": 387,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "11": 0
+      }
+    },
+    {
+      "rule": 388,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "11": 0
+      }
+    },
+    {
+      "rule": 389,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "11": 0
+      }
+    },
+    {
+      "rule": 390,
+      "primitive_count": 2,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "variable multiplication needs a separate fixed operator"
+    },
+    {
+      "rule": 391,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 392,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 393,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 394,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 395,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 396,
+      "primitive_count": 0,
+      "query_primitive_count": 2
+    },
+    {
+      "rule": 397,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "non-i64 operation"
+    },
+    {
+      "rule": 398,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": false,
+      "reason": "non-i64 operation"
+    },
+    {
+      "rule": 399,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 400,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 401,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 402,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 403,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 404,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 405,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 406,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 407,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 408,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 409,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 410,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 411,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 412,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 413,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 414,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 415,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 416,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 417,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 418,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 419,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 420,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 421,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 422,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 423,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 424,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 425,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 426,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 427,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 428,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 429,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 430,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 431,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 432,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 433,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 434,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 435,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 436,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 437,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 438,
+      "primitive_count": 2,
+      "query_primitive_count": 3,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 439,
+      "primitive_count": 3,
+      "query_primitive_count": 3,
+      "certified": false,
+      "reason": "not supported affine primitive"
+    },
+    {
+      "rule": 440,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 441,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 442,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 443,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 444,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 445,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 446,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 447,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 448,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 449,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 450,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 451,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 452,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 453,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 454,
+      "primitive_count": 2,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 2,
+      "unique_columns": 2,
+      "output_columns": {
+        "18": 0,
+        "33": 1
+      }
+    },
+    {
+      "rule": 455,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 456,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 457,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 458,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 459,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 460,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 461,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 462,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 463,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 464,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 465,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 466,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 467,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 468,
+      "primitive_count": 0,
+      "query_primitive_count": 3
+    },
+    {
+      "rule": 469,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 470,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 471,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 472,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 473,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 474,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 475,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 476,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 477,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 478,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 479,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 480,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 481,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 482,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 483,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 484,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 485,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 486,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 487,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 488,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 489,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 490,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 491,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 492,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 493,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 494,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 495,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 496,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 497,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 498,
+      "primitive_count": 2,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 2,
+      "unique_columns": 2,
+      "output_columns": {
+        "14": 0,
+        "15": 1
+      }
+    },
+    {
+      "rule": 499,
+      "primitive_count": 3,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 3,
+      "unique_columns": 3,
+      "output_columns": {
+        "19": 0,
+        "20": 1,
+        "21": 2
+      }
+    },
+    {
+      "rule": 500,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "9": 0
+      }
+    },
+    {
+      "rule": 501,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "13": 0
+      }
+    },
+    {
+      "rule": 502,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 503,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 504,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 505,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 506,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 507,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 508,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 509,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 510,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 511,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 512,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 513,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 514,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 515,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 516,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 517,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 518,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 519,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 520,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 521,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 522,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 523,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 524,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 525,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 526,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 527,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 528,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 529,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 530,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 531,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 532,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 533,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 534,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 535,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 536,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 537,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 538,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 539,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 540,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 541,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 542,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 543,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 544,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 545,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 546,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 547,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 548,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 549,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 550,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 551,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 552,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 553,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 554,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 555,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 556,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 557,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 558,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 559,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 560,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 561,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 562,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 563,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 564,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 565,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 566,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 567,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 568,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 569,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 570,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 571,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 572,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 573,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 574,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 575,
+      "primitive_count": 1,
+      "query_primitive_count": 0,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "6": 0
+      }
+    },
+    {
+      "rule": 576,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 577,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "7": 0
+      }
+    },
+    {
+      "rule": 578,
+      "primitive_count": 0,
+      "query_primitive_count": 1
+    },
+    {
+      "rule": 579,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 580,
+      "primitive_count": 0,
+      "query_primitive_count": 0
+    },
+    {
+      "rule": 581,
+      "primitive_count": 1,
+      "query_primitive_count": 1,
+      "certified": true,
+      "scalar_destinations": 1,
+      "unique_columns": 1,
+      "output_columns": {
+        "7": 0
+      }
+    }
+  ]
+}
