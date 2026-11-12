@@ -2,8 +2,8 @@
 
 This checkpoint covers the actual standalone Cell CPU, not native egglog. The
 work-count control is `c27cbcf1`; frozen programs and catalogs are unchanged.
-The periodic whole-runtime timing comparison is recorded separately below when
-complete. Work counters alone do not establish a speedup.
+The periodic whole-runtime comparison below includes this change and the five
+implementations since `2ae7b97e`. It has not established a stable speedup.
 
 ## Opportunity and compiler proof
 
@@ -123,3 +123,102 @@ cargo cell-bench --program out/cell-write-completion/readme-program/program.json
 
 Use fresh output directories for the Cargo smoke commands. Historical timings
 are not used as an apples-to-apples claim about this runtime.
+
+## Periodic whole-runtime checkpoint
+
+The eight lanes use the same frozen program, catalog, release features and flags
+above. Each has one warmup, followed by five sum-bits or three Raytrace samples.
+All lanes are interleaved in a recorded shuffled order. No local compilation is
+active during timing. The pre-event historical runtime is `8335929d` (saved at
+`cf452ed6`); the last full checkpoint is `2ae7b97e`, immediate control is
+`c27cbcf1`, and current runtime is `79e6fe0f`. These are newly measured binaries
+in this one campaign, not a comparison of timings from different dates.
+
+| Inference median | Historical 1 / 4 | Last checkpoint 1 / 4 | Immediate control 1 / 4 | Current 1 / 4 |
+| --- | ---: | ---: | ---: | ---: |
+| sum-bits, ms | 18.325 / 21.569 | 19.112 / 22.345 | 19.383 / 22.547 | 19.249 / 24.771 |
+| Raytrace, s | 5.979 / 5.238 | 6.199 / 5.811 | 6.154 / 5.166 | 5.871 / 5.389 |
+
+Current four-worker medians regress **9.86% / 4.31%** against the immediate
+control. Against the five-change checkpoint, sum-bits regresses 10.86% while
+Raytrace improves 7.26%. Against the pre-event runtime, both four-worker
+medians regress (14.84% / 2.89%). This does not pass the two-workload performance
+criterion. Current Raytrace scales only 1.089x from one to four workers;
+sum-bits becomes slower. Whole-process CPU/wall averages about 1.36 cores on
+four-worker Raytrace, including load and export, not inference-only utilization.
+
+Variation is material. The immediate-control Raytrace four-worker samples are
+5.422, 5.166 and 5.059 s; current samples are 5.389, 6.149 and 5.059 s. Ratios
+within the same interleaved iteration give a median change of +0.012%, unlike
+the +4.31% ratio of lane medians. The five-change comparison has an iteration
+paired median change of -0.82%, rather than -7.26%. Neither estimator establishes
+a stable causal improvement from three pairs. sum-bits current samples range
+22.27–28.19 ms and this scalar path has zero coverage there. No outlier is
+removed, and no replacement campaign is used to obtain a favorable result.
+The saved background snapshot shows other active desktop processes; it does
+not isolate the cause of the variation.
+
+All 80 executions, including 16 warmups, have exact final-state hashes, ordered
+Run-summary hashes and logical-effect counts. [timing-results.json](timing-results.json)
+keeps every sample/warmup, lane identity, execution order, both comparisons,
+background observations and the separate profiles. The unchanged native
+sum-bits proof is linked by its CPU state hash. Raytrace remains differential
+validation only.
+
+## Remaining waits and next takeover
+
+Separate five-second macOS stack samples compare immediate control and current
+four-worker Raytrace, with progress logging disabled. More than 98% of the main
+thread window lies under inference. These diagnostic executions are not included
+in timing samples. The profile's inclusive counts overlap; do not sum them or
+interpret them as CPU consumption or isolated lock cost.
+
+| Main-thread sampled residence | Control | Current |
+| --- | ---: | ---: |
+| Condition-variable waits within inference | 17.64% | 20.33% |
+| Query finishing, including its waits | 13.72% | 12.74% |
+| Entry `Scheduler::batches`, including callbacks | 12.28% | 11.61% |
+| Finished-table publication, including its waits | 20.71% | 21.64% |
+| Repair | 9.73% | 9.54% |
+| Scalar write region, including pool wait | 3.14% | 3.64% |
+
+Workers spend 79.6–83.3% of control samples and 78.1–82.7% of current samples
+in condition-variable waits. These include pool-idle and inside-job waits,
+and are not utilization percentages. The current main-thread wait samples
+split into publication 134, queries 121, scalar writes 58 and other 11; the
+total inference sample count is 1,594. Symbolication and optimized inlining
+limit attribution. The stacks confirm worker execution of `Completion::accept`,
+but the source still waits for the scalar pool before Cell publication.
+
+The remaining ownership boundaries are therefore concrete:
+
+1. Query admission still traverses `Scheduler::batches` and its source callback
+   before `finish_queries`; source Cursor sealing and the Run error fence remain.
+   The inclusive profile alone cannot identify how much is enumeration versus
+   callback work. Next inspect the callback's Entry/route ownership and reuse
+   the existing Cell input layout before adding more tasks or queues.
+2. Finished-table publication still joins table/index tasks before launching
+   the condition DAG. The existing DAG already releases parents from child
+   events, but it does not yet consume independent table-ready events. A next
+   takeover must join only the tables and children required by each condition,
+   while retaining index validity and the original Run visibility boundary.
+3. Shared constructor adoption, ordered mutable effects and ordinary repair
+   remain outside scalar ownership. Allowing duplicate private rows is already
+   useful, but exact adoption, actual result aliases and lifecycle checks still
+   have to complete. Moving these to workers without removing their global
+   rendezvous does not by itself create more parallel work.
+
+The immediate priority is the first two boundaries, whose remaining source work
+and waits are larger than this scalar region. More migrated rows or fewer
+barriers alone will not count as a performance result.
+
+Reproduce the campaign using fresh output directories and the recorded manifest
+paths (runtime/program hashes are verified by the checker):
+
+```sh
+python3 benchmarks/witness-prefix/measure.py out/cell-write-completion/sum-manifest.json out/cell-write-completion/timing-sum --repeat 5 --warmups 1 --timeout 120
+python3 benchmarks/witness-prefix/measure.py out/cell-write-completion/ray-manifest.json out/cell-write-completion/timing-ray --repeat 3 --warmups 1 --timeout 120
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-write-completion/ray-manifest.json out/cell-write-completion/timing-ray/samples.json out/cell-write-completion/profile-control4 --lane control4 --duration 5 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/raytrace-thread-bottlenecks/profile.py out/cell-write-completion/ray-manifest.json out/cell-write-completion/timing-ray/samples.json out/cell-write-completion/profile-candidate4 --lane candidate4 --duration 5 --interval-ms 2 --start-delay 0.5
+python3 benchmarks/cell-write-completion/timing_check.py out/cell-write-completion benchmarks/cell-write-completion/timing-results.json
+```
