@@ -15,10 +15,13 @@
             9
           ],
           "writers": [
-            [
-              1,
-              27
-            ]
+            {
+              "rule": 1,
+              "operation": 27,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -36,10 +39,13 @@
             5
           ],
           "writers": [
-            [
-              10,
-              70
-            ]
+            {
+              "rule": 10,
+              "operation": 70,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -49,10 +55,13 @@
             1
           ],
           "writers": [
-            [
-              10,
-              70
-            ]
+            {
+              "rule": 10,
+              "operation": 70,
+              "donor": {
+                "Query": 9
+              }
+            }
           ]
         }
       ]
@@ -70,18 +79,27 @@
             3
           ],
           "writers": [
-            [
-              278,
-              2
-            ],
-            [
-              556,
-              1
-            ],
-            [
-              570,
-              1
-            ]
+            {
+              "rule": 278,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 556,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 570,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -93,18 +111,27 @@
             0
           ],
           "writers": [
-            [
-              278,
-              2
-            ],
-            [
-              556,
-              1
-            ],
-            [
-              570,
-              1
-            ]
+            {
+              "rule": 278,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 556,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 570,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -121,14 +148,20 @@
             3
           ],
           "writers": [
-            [
-              250,
-              3
-            ],
-            [
-              288,
-              2
-            ]
+            {
+              "rule": 250,
+              "operation": 3,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 288,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         },
         {
@@ -139,14 +172,20 @@
             0
           ],
           "writers": [
-            [
-              250,
-              3
-            ],
-            [
-              288,
-              2
-            ]
+            {
+              "rule": 250,
+              "operation": 3,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 288,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -164,10 +203,13 @@
             3
           ],
           "writers": [
-            [
-              290,
-              2
-            ]
+            {
+              "rule": 290,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -185,10 +227,13 @@
             3
           ],
           "writers": [
-            [
-              291,
-              2
-            ]
+            {
+              "rule": 291,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -206,10 +251,13 @@
             4
           ],
           "writers": [
-            [
-              292,
-              2
-            ]
+            {
+              "rule": 292,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         },
         {
@@ -221,10 +269,13 @@
             0
           ],
           "writers": [
-            [
-              292,
-              2
-            ]
+            {
+              "rule": 292,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -242,10 +293,13 @@
             5
           ],
           "writers": [
-            [
-              293,
-              1
-            ]
+            {
+              "rule": 293,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -263,34 +317,55 @@
             0
           ],
           "writers": [
-            [
-              16,
-              23
-            ],
-            [
-              16,
-              24
-            ],
-            [
-              296,
-              2
-            ],
-            [
-              464,
-              12
-            ],
-            [
-              464,
-              13
-            ],
-            [
-              465,
-              19
-            ],
-            [
-              465,
-              20
-            ]
+            {
+              "rule": 16,
+              "operation": 23,
+              "donor": {
+                "Query": 3
+              }
+            },
+            {
+              "rule": 16,
+              "operation": 24,
+              "donor": {
+                "Query": 9
+              }
+            },
+            {
+              "rule": 296,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 464,
+              "operation": 12,
+              "donor": {
+                "Query": 3
+              }
+            },
+            {
+              "rule": 464,
+              "operation": 13,
+              "donor": {
+                "Query": 4
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 19,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 20,
+              "donor": {
+                "Query": 2
+              }
+            }
           ]
         }
       ]
@@ -309,22 +384,34 @@
             1
           ],
           "writers": [
-            [
-              42,
-              14
-            ],
-            [
-              276,
-              20
-            ],
-            [
-              277,
-              20
-            ],
-            [
-              298,
-              2
-            ]
+            {
+              "rule": 42,
+              "operation": 14,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 276,
+              "operation": 20,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 277,
+              "operation": 20,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 298,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -342,10 +429,13 @@
             0
           ],
           "writers": [
-            [
-              301,
-              2
-            ]
+            {
+              "rule": 301,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -355,10 +445,13 @@
             2
           ],
           "writers": [
-            [
-              301,
-              2
-            ]
+            {
+              "rule": 301,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -376,10 +469,13 @@
             0
           ],
           "writers": [
-            [
-              302,
-              2
-            ]
+            {
+              "rule": 302,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -389,10 +485,13 @@
             1
           ],
           "writers": [
-            [
-              302,
-              2
-            ]
+            {
+              "rule": 302,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -409,10 +508,13 @@
             3
           ],
           "writers": [
-            [
-              303,
-              2
-            ]
+            {
+              "rule": 303,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         },
         {
@@ -423,10 +525,13 @@
             0
           ],
           "writers": [
-            [
-              303,
-              2
-            ]
+            {
+              "rule": 303,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -445,14 +550,20 @@
             0
           ],
           "writers": [
-            [
-              261,
-              3
-            ],
-            [
-              304,
-              2
-            ]
+            {
+              "rule": 261,
+              "operation": 3,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 304,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -462,14 +573,20 @@
             4
           ],
           "writers": [
-            [
-              261,
-              3
-            ],
-            [
-              304,
-              2
-            ]
+            {
+              "rule": 261,
+              "operation": 3,
+              "donor": {
+                "Effect": 0
+              }
+            },
+            {
+              "rule": 304,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -487,10 +604,13 @@
             8
           ],
           "writers": [
-            [
-              305,
-              1
-            ]
+            {
+              "rule": 305,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -509,10 +629,13 @@
             1
           ],
           "writers": [
-            [
-              307,
-              2
-            ]
+            {
+              "rule": 307,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -528,18 +651,27 @@
             0
           ],
           "writers": [
-            [
-              281,
-              2
-            ],
-            [
-              375,
-              218
-            ],
-            [
-              465,
-              18
-            ]
+            {
+              "rule": 281,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 375,
+              "operation": 218,
+              "donor": {
+                "Effect": 48
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 18,
+              "donor": {
+                "Effect": 10
+              }
+            }
           ]
         },
         {
@@ -550,18 +682,27 @@
             1
           ],
           "writers": [
-            [
-              281,
-              2
-            ],
-            [
-              375,
-              218
-            ],
-            [
-              465,
-              18
-            ]
+            {
+              "rule": 281,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 375,
+              "operation": 218,
+              "donor": {
+                "Effect": 72
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 18,
+              "donor": {
+                "Effect": 11
+              }
+            }
           ]
         }
       ]
@@ -579,10 +720,13 @@
             0
           ],
           "writers": [
-            [
-              308,
-              2
-            ]
+            {
+              "rule": 308,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -593,10 +737,13 @@
             2
           ],
           "writers": [
-            [
-              308,
-              2
-            ]
+            {
+              "rule": 308,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -615,10 +762,13 @@
             5
           ],
           "writers": [
-            [
-              309,
-              1
-            ]
+            {
+              "rule": 309,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -636,10 +786,13 @@
             3
           ],
           "writers": [
-            [
-              310,
-              1
-            ]
+            {
+              "rule": 310,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -655,14 +808,20 @@
             0
           ],
           "writers": [
-            [
-              16,
-              20
-            ],
-            [
-              282,
-              2
-            ]
+            {
+              "rule": 16,
+              "operation": 20,
+              "donor": {
+                "Effect": 8
+              }
+            },
+            {
+              "rule": 282,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -673,14 +832,20 @@
             1
           ],
           "writers": [
-            [
-              16,
-              20
-            ],
-            [
-              282,
-              2
-            ]
+            {
+              "rule": 16,
+              "operation": 20,
+              "donor": {
+                "Effect": 9
+              }
+            },
+            {
+              "rule": 282,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -696,10 +861,13 @@
             0
           ],
           "writers": [
-            [
-              283,
-              2
-            ]
+            {
+              "rule": 283,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -710,10 +878,13 @@
             1
           ],
           "writers": [
-            [
-              283,
-              2
-            ]
+            {
+              "rule": 283,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -729,14 +900,20 @@
             0
           ],
           "writers": [
-            [
-              0,
-              20
-            ],
-            [
-              284,
-              2
-            ]
+            {
+              "rule": 0,
+              "operation": 20,
+              "donor": {
+                "Effect": 8
+              }
+            },
+            {
+              "rule": 284,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         },
         {
@@ -749,14 +926,20 @@
             1
           ],
           "writers": [
-            [
-              0,
-              20
-            ],
-            [
-              284,
-              2
-            ]
+            {
+              "rule": 0,
+              "operation": 20,
+              "donor": {
+                "Effect": 11
+              }
+            },
+            {
+              "rule": 284,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -776,10 +959,13 @@
             1
           ],
           "writers": [
-            [
-              285,
-              2
-            ]
+            {
+              "rule": 285,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         },
         {
@@ -788,10 +974,13 @@
             0
           ],
           "writers": [
-            [
-              285,
-              2
-            ]
+            {
+              "rule": 285,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
           ]
         }
       ]
@@ -809,30 +998,48 @@
             0
           ],
           "writers": [
-            [
-              286,
-              2
-            ],
-            [
-              502,
-              10
-            ],
-            [
-              503,
-              10
-            ],
-            [
-              504,
-              11
-            ],
-            [
-              505,
-              11
-            ],
-            [
-              507,
-              4
-            ]
+            {
+              "rule": 286,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 502,
+              "operation": 10,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 503,
+              "operation": 10,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 504,
+              "operation": 11,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 505,
+              "operation": 11,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 507,
+              "operation": 4,
+              "donor": {
+                "Query": 3
+              }
+            }
           ]
         },
         {
@@ -843,30 +1050,48 @@
             2
           ],
           "writers": [
-            [
-              286,
-              2
-            ],
-            [
-              502,
-              10
-            ],
-            [
-              503,
-              10
-            ],
-            [
-              504,
-              11
-            ],
-            [
-              505,
-              11
-            ],
-            [
-              507,
-              4
-            ]
+            {
+              "rule": 286,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 502,
+              "operation": 10,
+              "donor": {
+                "Effect": 2
+              }
+            },
+            {
+              "rule": 503,
+              "operation": 10,
+              "donor": {
+                "Effect": 2
+              }
+            },
+            {
+              "rule": 504,
+              "operation": 11,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 505,
+              "operation": 11,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 507,
+              "operation": 4,
+              "donor": {
+                "Query": 3
+              }
+            }
           ]
         }
       ]
@@ -884,22 +1109,34 @@
             2
           ],
           "writers": [
-            [
-              287,
-              2
-            ],
-            [
-              509,
-              2
-            ],
-            [
-              510,
-              2
-            ],
-            [
-              511,
-              2
-            ]
+            {
+              "rule": 287,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 509,
+              "operation": 2,
+              "donor": {
+                "Query": 2
+              }
+            },
+            {
+              "rule": 510,
+              "operation": 2,
+              "donor": {
+                "Query": 2
+              }
+            },
+            {
+              "rule": 511,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
           ]
         }
       ]
@@ -920,14 +1157,20 @@
           0
         ],
         "writers": [
-          [
-            250,
-            3
-          ],
-          [
-            288,
-            2
-          ]
+          {
+            "rule": 250,
+            "operation": 3,
+            "donor": {
+              "Query": 1
+            }
+          },
+          {
+            "rule": 288,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
         ],
         "view_name": "CellSpineView10",
         "constructor_name": "Uop"
@@ -945,10 +1188,13 @@
           0
         ],
         "writers": [
-          [
-            285,
-            2
-          ]
+          {
+            "rule": 285,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
         ],
         "view_name": "CellSpineView7",
         "constructor_name": "Write"
@@ -966,10 +1212,13 @@
           0
         ],
         "writers": [
-          [
-            285,
-            2
-          ]
+          {
+            "rule": 285,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
         ],
         "view_name": "CellSpineView7",
         "constructor_name": "Write"
@@ -989,30 +1238,48 @@
           2
         ],
         "writers": [
-          [
-            286,
-            2
-          ],
-          [
-            502,
-            10
-          ],
-          [
-            503,
-            10
-          ],
-          [
-            504,
-            11
-          ],
-          [
-            505,
-            11
-          ],
-          [
-            507,
-            4
-          ]
+          {
+            "rule": 286,
+            "operation": 2,
+            "donor": {
+              "Query": 1
+            }
+          },
+          {
+            "rule": 502,
+            "operation": 10,
+            "donor": {
+              "Effect": 2
+            }
+          },
+          {
+            "rule": 503,
+            "operation": 10,
+            "donor": {
+              "Effect": 2
+            }
+          },
+          {
+            "rule": 504,
+            "operation": 11,
+            "donor": {
+              "Effect": 3
+            }
+          },
+          {
+            "rule": 505,
+            "operation": 11,
+            "donor": {
+              "Effect": 3
+            }
+          },
+          {
+            "rule": 507,
+            "operation": 4,
+            "donor": {
+              "Query": 3
+            }
+          }
         ],
         "view_name": "CellSpineView8",
         "constructor_name": "TCPair"

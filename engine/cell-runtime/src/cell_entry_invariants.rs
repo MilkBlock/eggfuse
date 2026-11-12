@@ -1,8 +1,17 @@
 //! Closed-program constructor facts exported through ordinary Cell query slots.
 //! Proofs exist only during Bake. A result value is NOT a constructor FactRef.
-use crate::{cell::construction::{Construction, Known}, program::{Arg, Call, Op, Program}};
+use crate::{cell::{Site, construction::{Construction, Known}}, program::{Arg, Call, Op, Program}};
 use serde::Serialize;
 use std::collections::BTreeMap;
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub struct Writer {
+    pub rule: usize,
+    pub operation: usize,
+    /// Original query/effect site, never the position of a duplicate Let.
+    /// A query of the View is an inductive source, NOT a constructor receipt.
+    pub donor: Site,
+}
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Proof {
@@ -10,7 +19,7 @@ pub struct Proof {
     pub constructor: usize,
     /// Constructor inputs followed by its result, projected from View columns.
     pub columns: Vec<usize>,
-    pub writers: Vec<(usize, usize)>,
+    pub writers: Vec<Writer>,
 }
 
 pub fn prove(p: &Program, view: usize, constructor: usize, columns: &[usize]) -> Option<Proof> {
@@ -31,19 +40,19 @@ pub fn prove(p: &Program, view: usize, constructor: usize, columns: &[usize]) ->
     for (rid,r) in p.rules.iter().enumerate() {
         let template = &p.templates[r.template];
         if !template.ops.iter().any(|op|matches!(op,Op::Set(t,_,_) if *t==view)) {continue;}
-        let mut env = Construction::<usize,Arg,()>::default();
-        for atom in r.query.iter() {
+        let mut env = Construction::<usize,Arg,Site>::default();
+        for (atom_id,atom) in r.query.iter().enumerate() {
             let Call::Table(t) = atom.call else {continue;};
             if p.tables[t].constructor && !deleted.contains(&t) {
                 let (out,key)=atom.args.split_last()?;
-                env.matched(t,key.to_vec(),out.clone(),());
+                env.matched(t,key.to_vec(),out.clone(),Site::Query(atom_id));
             } else if t==view {
                 // Inductive assumption: all previously inserted rows satisfy
                 // this relation. Empty initial View is the base case. EVERY
                 // writer below must preserve it, including self-forwarding.
                 let fields=columns.iter().map(|&col|atom.args[col].clone()).collect::<Vec<_>>();
                 let (out,key)=fields.split_last()?;
-                env.matched(constructor,key.to_vec(),out.clone(),());
+                env.matched(constructor,key.to_vec(),out.clone(),Site::Query(atom_id));
             }
         }
         for (op,ins) in template.ops.iter().enumerate() {
@@ -51,7 +60,7 @@ pub fn prove(p: &Program, view: usize, constructor: usize, columns: &[usize]) ->
                 Op::Copy(dst,arg)=>env.copy(Arg::Slot(*dst),arg),
                 Op::Let(dst,Call::Table(t),args) if p.tables[*t].constructor=> {
                     let (known,_)=env.construct(*t,args.iter().cloned(),||Some(Known {
-                        value:Arg::Slot(*dst),source:(),
+                        value:Arg::Slot(*dst),source:Site::Effect(op),
                     }))?;
                     env.copy(Arg::Slot(*dst),&known.value);
                 }
@@ -61,7 +70,7 @@ pub fn prove(p: &Program, view: usize, constructor: usize, columns: &[usize]) ->
                     let (out,key)=fields.split_last()?;
                     let (known,_)=env.construct(constructor,key.iter().cloned(),||None)?;
                     if env.resolve(&known.value)!=*out {return None;}
-                    writers.push((rid,op));
+                    writers.push(Writer {rule:rid,operation:op,donor:known.source});
                 }
                 // Union effects are not used as immediate equalities. No fact
                 // is inferred from mutable reads, scalar results or a future op.
@@ -166,13 +175,15 @@ mod tests {
     #[test]
     fn induction_accepts_constructor_and_forwarding_but_checks_every_writer() {
         let mut p=fixture();
-        assert_eq!(prove(&p,1,0,&[0,1]).unwrap().writers,vec![(0,1)]);
+        assert_eq!(prove(&p,1,0,&[0,1]).unwrap().writers,vec![Writer {rule:0,operation:1,donor:Site::Effect(0)}]);
         let mut recursive=p.rules[0].clone();recursive.template=1;
         recursive.query=Rc::new(vec![Atom {call:Call::Table(1),args:vec![s(0),s(1),s(2)]}]);
         p.rules.push(recursive);
         let mut forward=p.templates[0].clone();forward.ops=Arc::new(vec![Op::Set(1,vec![s(0),s(1)],unit())]);
         p.templates.push(forward);
-        assert_eq!(prove(&p,1,0,&[0,1]).unwrap().writers.len(),2);
+        let proof=prove(&p,1,0,&[0,1]).unwrap();
+        assert_eq!(proof.writers.len(),2);
+        assert_eq!(proof.writers[1].donor,Site::Query(0));
         p.templates[1].ops=Arc::new(vec![Op::Set(1,vec![s(0),s(3)],unit())]);
         assert!(prove(&p,1,0,&[0,1]).is_none());
     }
@@ -220,7 +231,7 @@ mod tests {
         let mut p=fixture();
         p.templates[0].ops=Arc::new(vec![Op::Let(1,Call::Table(0),vec![s(0)]),
             Op::Copy(2,s(0)),Op::Let(3,Call::Table(0),vec![s(2)]),Op::Set(1,vec![s(2),s(3)],unit())]);
-        assert!(prove(&p,1,0,&[0,1]).is_some());
+        assert_eq!(prove(&p,1,0,&[0,1]).unwrap().writers[0].donor,Site::Effect(0));
         p.templates[0].ops=Arc::new(vec![Op::Let(1,Call::Table(0),vec![s(0)]),
             Op::Union(s(1),s(2)),Op::Set(1,vec![s(0),s(2)],unit())]);
         assert!(prove(&p,1,0,&[0,1]).is_none());
