@@ -994,6 +994,7 @@ struct TraceEvent {
     witness: Option<crate::graph::Dependency>,
     truncated_parent: bool,
     execution: Option<ExecutionObservation>,
+    capture: Option<crate::result_handoff::CaptureWork>,
 }
 #[derive(Clone, Serialize)]
 struct ExecutionObservation {
@@ -1042,6 +1043,14 @@ impl Training {
             retained_facts:c.facts.len(),non_hidden_facts:c.facts.values().filter(|f|!f.hidden).count(),
         });
         self.trace[start].execution=Some(ExecutionObservation {cell,registered,frame});
+    }
+    /// Per-event actual capture work, excluding later publication and deferred
+    /// root materialization. Missing observations are not zero-cost evidence.
+    pub(crate) fn trace_capture(&mut self, start:Option<usize>, work:crate::result_handoff::CaptureWork) {
+        let Some(start)=start else {return};
+        if self.trace.len()==start {return;}
+        assert_eq!(self.trace.len(),start+1,"one capture per completed event");
+        self.trace[start].capture=Some(work);
     }
     /// Count completed paths on actual cursor ancestry, never by joining
     /// marginal pair frequencies. Compile-time ranking only; missing history
@@ -1133,7 +1142,7 @@ impl Training {
                 let index = self.trace.len();
                 self.trace.push(TraceEvent { parent, unit:id, entry,
                     output, run:self.run, producer_run:parent_run, witness:discovery.witness,
-                    truncated_parent:parent.is_none() && parent_run!=0, execution:None });
+                    truncated_parent:parent.is_none() && parent_run!=0, execution:None, capture:None });
                 Some(index)
             } else { self.trace_dropped += 1; None };
             let window = Rc::make_mut(discovery.samples.get_or_insert_with(Default::default));
@@ -1273,7 +1282,7 @@ mod tests {
     fn bridge_support_requires_one_completed_cross_stage_ancestry() {
         let event = |rule, parent, run| TraceEvent {
             parent, unit:Some(rule), entry:(rule,Some(0)), output:0, run,
-            producer_run:0, witness:None, truncated_parent:false, execution:None,
+            producer_run:0, witness:None, truncated_parent:false, execution:None, capture:None,
         };
         let mut training = Training::default();
         // A->B and a separate B->C cannot establish A->B->C.
@@ -1381,6 +1390,15 @@ mod tests {
         g.release_empty(cell);
         training.trace_execution(start,&g,cell);
         assert!(training.trace[0].execution.as_ref().unwrap().frame.is_none());
+        training.trace_capture(start, crate::result_handoff::CaptureWork {
+            allocations:2, slots:3, inherited:4, ..Default::default()
+        });
+        let work=training.trace[0].capture.as_ref().unwrap();
+        assert_eq!((work.allocations,work.slots,work.inherited),(2,3,4));
+        // A dropped or disabled event cannot overwrite the last retained one.
+        training.trace_capture(Some(training.trace.len()),Default::default());
+        training.trace_capture(None,Default::default());
+        assert_eq!(training.trace[0].capture.as_ref().unwrap().allocations,2);
     }
 
     #[test]

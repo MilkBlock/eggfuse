@@ -387,7 +387,7 @@ pub(crate) struct History {
     // republishing the same results into another history container.
     empty: usize,
 }
-#[derive(Default)]
+#[derive(Clone, Default, Serialize)]
 pub(crate) struct CaptureWork {
     pub reads: usize,
     pub slots: usize,

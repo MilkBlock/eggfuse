@@ -56,7 +56,15 @@ large whole-egraph compression claim. Only 161 of the 458 observed source units
 have a supported settled structure (148 classes); unsupported units remain an
 explicit coverage limit.
 
-## How this changes the next implementation
+## Follow-up: most candidate sharing already exists
+
+The [actual capture audit](settled-capture.md) supersedes the proposed next
+implementation below: 153 of the 154 events already have direct plans, and 134
+already allocate no capture owner. Ordered-state inequality must not be treated
+as evidence of duplicated runtime state. The remaining ownership costs need
+separate analysis before adding a sharing mechanism.
+
+## Original implementation hypothesis (now qualified by the audit)
 
 Keep execution position and settled-state identity separate. A saturated step
 may retain the parent's completed state and actual results while installing the

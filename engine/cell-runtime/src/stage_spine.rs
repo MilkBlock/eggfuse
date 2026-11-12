@@ -368,7 +368,7 @@ impl Started {
         forwarded: u64,
         #[cfg(feature = "sparse-cells")] prepared: Option<crate::cell::Results>,
         stats: &mut Stats,
-    ) {
+    ) -> crate::result_handoff::CaptureWork {
         if let Self::Live(c) = self {
             let (sources, depth, inherit, layout) = cat.capture(&c.state);
             #[cfg(feature = "sparse-cells")]
@@ -393,7 +393,9 @@ impl Started {
             stats.history_inherited_slots += work.inherited as u64;
             stats.history_heap_frames += work.heap_frames as u64;
             stats.history_shared_slots += work.shared_slots as u64;
+            return work;
         }
+        Default::default()
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
         if let Self::Root {
@@ -1840,6 +1842,8 @@ impl Programs {
         self.stats.completed_steps += 1;
         #[cfg(feature = "iterative-bake")]
         let trace_start=self.training.execution_trace_start();
+        #[cfg(feature = "iterative-bake")]
+        let mut capture_work=crate::result_handoff::CaptureWork::default();
         // A selected query continuation is not an applied rule. Record its
         // bounded provenance only after every source RHS operation succeeded.
         // Queued unions still retain their original publication boundary.
@@ -1851,7 +1855,10 @@ impl Programs {
         self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
             #[cfg(feature = "iterative-bake")]
-            self.training.trace_execution(trace_start,g,_cell);
+            {
+                self.training.trace_execution(trace_start,g,_cell);
+                self.training.trace_capture(trace_start,capture_work);
+            }
             self.finish_effects(effects);
             return Ok(());
         }
@@ -1882,7 +1889,7 @@ impl Programs {
                 self.training.trace_root(&g.program.iterative, &mut cursor.state, rid);
             }
             if !joint {
-                s.remember(&g.program.iterative, rid,
+                capture_work=s.remember(&g.program.iterative, rid,
                     &query_fact, |i| effects.get(i), effects.forwarded(),
                     #[cfg(feature = "sparse-cells")] None, &mut self.stats);
             }
@@ -1971,7 +1978,7 @@ impl Programs {
             // unchanged. Move it once after boundary registration is done.
             let prepared = effects.take_results(rid).unwrap();
             let CompletionPhase::Started(step) = &mut self.pending_steps[slot].phase else { unreachable!() };
-            step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
+            capture_work=step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
                 effects.forwarded(), Some(prepared), &mut self.stats);
         }
         #[cfg(feature = "sparse-cells")]
@@ -1981,7 +1988,10 @@ impl Programs {
         self.finish_effects_to(effects, publish.then_some(slot));
         self.stats.captured_contexts += 1;
         #[cfg(feature = "iterative-bake")]
-        self.training.trace_execution(trace_start,g,_cell);
+        {
+            self.training.trace_execution(trace_start,g,_cell);
+            self.training.trace_capture(trace_start,capture_work);
+        }
         if let Some(clock) = clock { self.stats.capture_seconds += clock.elapsed().as_secs_f64(); }
         Ok(())
     }
