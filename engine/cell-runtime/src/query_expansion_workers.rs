@@ -213,14 +213,16 @@ impl Workers {
     /// The Entry already passed Sieve and has no published Cursor. Its rule
     /// may still have other, independently owned Spine continuations.
     pub(crate) fn uncovered_expansion_entry(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,
-        rid:usize,pivot:usize,watermark:u64,row:crate::graph::SharedRow,known:&QueryFacts)->Result<()> {
-        let code=self.activate_expansion(g,index,rid,pivot)?;
+        rid:usize,pivot:usize,node:usize,watermark:u64,witness:Dependency,known:&QueryFacts)->Result<()> {
+        // The first accepted Entry activates the compiled read layout. Later
+        // entries append only an address to that same query range.
+        let plan=self.expansion.rules[rid][pivot].as_ref().unwrap();
+        let code=if plan.active {plan.code} else {self.activate_expansion(g,index,rid,pivot)?};
         let plan=self.expansion.rules[rid][pivot].as_mut().unwrap();
         self.expansion.work.partitioned_pivots+=u64::from(!plan.partitioned);
         plan.partitioned=true;
-        self.enqueue_query(g,code,0,watermark,row,None,known,false);
+        self.enqueue_selected_entry(code,node,watermark,witness,known);
         self.expansion.work.partitioned_entries+=1;
-        self.expansion.work.queued_row_owners+=1;
         Ok(())
     }
     /// Record the original matcher's insertion point once per Cell query,
@@ -324,8 +326,10 @@ impl Workers {
     }
     pub(super) fn record_expansion_run(&mut self,seconds:f64,pooled:bool,header_capacity:usize) {
         if self.expansion.active.is_empty() {return;}
+        let partitioned_ranges=self.active_partitioned_ranges();
         let t=&mut self.expansion.work;t.batches+=1;t.merged_runs+=1;t.run_pool_calls+=u64::from(pooled);
         t.mixed_runs+=u64::from(!self.owned_ranges.is_empty()
+            || partitioned_ranges
             || self.cell_queries.iter().any(|q|!self.cell_codes[q.code].expansion));
         t.execute_seconds+=seconds;
         t.entry_header_capacity_bytes+=(header_capacity*std::mem::size_of::<QueryRead<'_>>()) as u64;

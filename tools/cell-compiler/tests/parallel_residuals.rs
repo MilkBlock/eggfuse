@@ -123,6 +123,8 @@ fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
         assert!(r["query_workers"]["stats"]["entry_range_descriptors"].as_u64().unwrap()>0, "residuals share the Run pool without per-entry Cell grouping");
         assert_eq!(work["queued_row_owners"].as_u64().unwrap() + r["query_workers"]["stats"]["entry_range_rows"].as_u64().unwrap(), work["input_rows"].as_u64().unwrap());
         assert!(r["query_workers"]["stats"]["entry_range_rows"].as_u64().unwrap() > 0, "worker must enumerate the existing Entry range");
+        assert_eq!(r["query_workers"]["stats"]["entry_range_row_borrows"],
+            r["query_workers"]["stats"]["entry_range_rows"], "ranges borrow the sealed Entry rows");
         assert!(work["merge_tasks"].as_u64().unwrap()>0);
         if workers>1 {
             assert_eq!(work["merge_pool_calls"],0,"winner sorting uses the existing Run pool, with no second barrier");
@@ -184,10 +186,52 @@ fn active_spine_keeps_owned_entries_and_transfers_uncovered_queries() {
         assert!(work["partitioned_admitted"].as_u64().unwrap()>0,"{work}");
         assert!(work["partitioned_answers"].as_u64().unwrap()>0,"{work}");
         assert!(work["column_prepares"].as_u64().unwrap()>0,"first activation prepares the layout");
-        assert!(work["column_prepare_reuses"].as_u64().unwrap()>0,"later Entries reuse this Run's preparation");
+        let ranges=&report["query_workers"]["stats"];
+        assert_eq!(ranges["selected_range_entries"],work["partitioned_entries"],
+            "every uncovered Entry uses its original address, with no queued row owner");
+        assert!(ranges["selected_range_descriptors"].as_u64().unwrap()>0);
+        assert!(ranges["selected_range_descriptors"].as_u64().unwrap()
+            < ranges["selected_range_entries"].as_u64().unwrap(), "one descriptor covers multiple accepted Entries");
+        assert_eq!(work["queued_row_owners"].as_u64().unwrap()+ranges["entry_range_rows"].as_u64().unwrap(),
+            work["input_rows"].as_u64().unwrap(), "every residual input is counted once");
         assert!(report["stage_spine"]["stats"]["routed_spine_seeds"].as_u64().unwrap()>0,"must retain actual owned continuations");
         let pooled=work["partitioned_worker_entries"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>();
         assert_eq!(pooled+work["partitioned_inline_entries"].as_u64().unwrap(),work["partitioned_entries"].as_u64().unwrap());
         assert_eq!(pooled>0,workers>1,"the newly uncovered queries must reach worker threads");
+    }
+}
+
+#[test]
+fn small_selected_ranges_share_a_task_without_sharing_rule_results() {
+    let mut source=String::from(r#"
+(datatype E (N i64) (Gate E) (Start E E) (Pair E E))
+(function Cost (E) i64 :merge new)
+(function Out (i64 E E) i64 :merge new)
+(ruleset make) (ruleset read) (ruleset change)
+(rule ((Start x y)) ((Pair x y)) :ruleset make)
+(rule ((Gate x) (Start x y)) ((set (Cost y) 9)) :ruleset change)
+"#);
+    // Every residual range is smaller than the worker grain. Distinct rule
+    // interfaces must retain their own answer spans even within one task.
+    for rule in 0..12 {
+        source+=&format!("(rule ((Gate x) (Pair x y) (= c (Cost y))) ((set (Out {rule} x y) c)) :ruleset read)\n");
+    }
+    for i in 0..3 {
+        source+=&format!("(Gate (N {i})) (Start (N {i}) (N {})) (set (Cost (N {})) {})\n",i+10,i+10,i+1);
+    }
+    source+="(Pair (N 2) (N 12))\n(run-schedule (seq (run make) (run read) (run change) (run read)))\n";
+    for rule in 0..12 {
+        for i in 0..3 {source+=&format!("(check (= (Out {rule} (N {i}) (N {})) 9))\n",i+10);}
+    }
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let before=run(&source,0,false);
+    for workers in [1,4] {
+        let after=run(&source,workers,true);
+        assert_eq!(before.snapshots,after.snapshots,"Run snapshots and updated values");
+        assert_eq!(before.binding_audit,after.binding_audit,"distinct source/rule winners");
+        let report=after.report();let stats=&report["query_workers"]["stats"];
+        assert!(stats["selected_range_entries"].as_u64().unwrap()>0,"{stats}");
+        assert!(stats["entry_range_batches"].as_u64().unwrap()<stats["entry_range_chunks"].as_u64().unwrap(),
+            "small ranges must actually share completion events: {stats}");
     }
 }

@@ -4,20 +4,21 @@ use super::*;
 
 #[cfg(feature="parallel-residuals")]
 pub(super) type ChunkDone = (Vec<(usize, Binding)>, Option<((usize, bool, Dependency, usize), String)>, Counts,
-    Option<usize>, expansion::ChunkWork, f64, Option<usize>);
+    Option<usize>, expansion::ChunkWork, f64);
 #[cfg(not(feature="parallel-residuals"))]
 pub(super) type ChunkDone = (Vec<(usize, Binding)>, Option<((usize, bool, Dependency, usize), String)>, Counts,
     Option<usize>, f64);
 
 pub(super) enum Task<'a> {
     Point(&'a Chunk),
-    #[cfg(feature="parallel-residuals")] Range(&'a entry_ranges::Chunk<'a>),
+    #[cfg(feature="parallel-residuals")] Range(&'a [entry_ranges::Chunk<'a>]),
     #[cfg(feature="parallel-residuals")] Owned(&'a owned_ranges::Task<'a>),
     Ready(ready::Group<'a>),
     Finish(Finish<'a>),
 }
 pub(super) enum Event<'a> {
     Point(ChunkDone),
+    #[cfg(feature="parallel-residuals")] Range(entry_ranges::Completed),
     #[cfg(feature="parallel-residuals")] Owned(owned_ranges::Done),
     Ready(ready::Group<'a>, ready::Work),
     Finish(Finish<'a>),

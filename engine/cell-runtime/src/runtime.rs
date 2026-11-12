@@ -1395,7 +1395,7 @@ impl Executor {
                             } else if active_spine && detach_spine && worker_expansion && !cfg!(feature="entry-admission-audit") {
                                 #[cfg(feature="parallel-residuals")]
                                 self.query_workers.as_mut().unwrap().uncovered_expansion_entry(
-                                    &self.graph,&mut self.query_indexes,rid,atom,watermark,entry.row.clone(),&query_facts)?;
+                                    &self.graph,&mut self.query_indexes,rid,atom,batch.range_node(),watermark,w,&query_facts)?;
                                 uncovered_worker_entries+=1;
                                 return Ok(());
                             } else if early_join && (point_only || (worker_expansion && !active_spine)) {

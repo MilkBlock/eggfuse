@@ -113,6 +113,16 @@ pub(crate) struct Counts {
     pub entry_range_descriptors: u64,
     pub entry_range_chunks: u64,
     pub entry_range_rows: u64,
+    pub entry_range_row_borrows: u64,
+    pub selected_range_descriptors: u64,
+    pub selected_range_entries: u64,
+    pub selected_range_growths: u64,
+    pub selected_range_growth_bytes: u64,
+    pub selected_range_capacity_bytes: u64,
+    pub entry_range_descriptor_capacity_bytes: u64,
+    pub entry_range_batches: u64,
+    pub range_answer_span_bytes: u64,
+    pub range_answer_span_heap_bytes: u64,
     pub entry_range_capacity_bytes: u64,
     pub output_buffer_capacity: u64,
     pub batch_buffers: u64,
@@ -136,6 +146,8 @@ pub(crate) struct Workers {
     next_source: usize,
     #[cfg(feature = "parallel-residuals")]
     entry_ranges: Vec<entry_ranges::Range>,
+    #[cfg(feature = "parallel-residuals")]
+    selected_entry_rows: Vec<Dependency>,
     #[cfg(feature="parallel-residuals")]
     owned_ranges: Vec<owned_ranges::Range>,
     rule_facts: Vec<Option<RuleRun>>,
@@ -283,6 +295,7 @@ impl Executor {
             expansion: Default::default(),
             cell_plans, cell_codes, first_reads, tasks: CellTasks::new(self.graph.program.templates.len()), cell_queries: Vec::new(), next_source: 0,
             #[cfg(feature = "parallel-residuals")] entry_ranges: Vec::new(),
+            #[cfg(feature = "parallel-residuals")] selected_entry_rows: Vec::new(),
             #[cfg(feature = "parallel-residuals")] owned_ranges: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
@@ -950,9 +963,13 @@ impl Workers {
         self.stats.entry_buffer_bytes += (headers.capacity() * std::mem::size_of::<QueryRead<'_>>()) as u64;
         self.stats.peak_cell_task_bytes = self.stats.peak_cell_task_bytes.max(self.tasks.bytes());
         #[cfg(feature="parallel-residuals")]
-        let range_jobs = entry_ranges::borrow(&self.entry_ranges, schedule, self.grain);
+        let range_jobs = entry_ranges::borrow(&self.entry_ranges, schedule, &self.selected_entry_rows, self.grain);
         #[cfg(feature="parallel-residuals")]
         { self.stats.entry_range_chunks += range_jobs.len() as u64;
+          self.stats.entry_range_descriptor_capacity_bytes +=
+              (self.entry_ranges.capacity()*std::mem::size_of::<entry_ranges::Range>()) as u64;
+          self.stats.selected_range_capacity_bytes +=
+              (self.selected_entry_rows.capacity()*std::mem::size_of::<Dependency>()) as u64;
           self.stats.entry_range_capacity_bytes += (range_jobs.capacity()*std::mem::size_of::<entry_ranges::Chunk<'_>>()) as u64; }
         #[cfg(feature="parallel-residuals")]
         let owned_jobs=owned_ranges::borrow(&self.owned_ranges,&self.cell_codes,schedule,indexes,sieve,&g.query_versions,self.grain);
@@ -1038,8 +1055,7 @@ impl Workers {
             { counts.sharing_audit = probe.finish(); }
             (answers, first_error, counts, if pooled { rayon::current_thread_index() } else { None },
                 #[cfg(feature="parallel-residuals")] residual,
-                clock.map_or(0.0,|clock|clock.elapsed().as_secs_f64()),
-                #[cfg(feature="parallel-residuals")] None::<usize>)
+                clock.map_or(0.0,|clock|clock.elapsed().as_secs_f64()))
         };
         let execution=residual_active.then(Instant::now);
         let grain = self.grain;
@@ -1062,9 +1078,22 @@ impl Workers {
             tasks.push((completion::Task::Point(range),rules));
         }
         #[cfg(feature="parallel-residuals")]
-        for job in &range_jobs {
-            let rid=self.cell_codes[job.code()].rule;remaining[rid]+=1;
-            tasks.push((completion::Task::Range(job),smallvec::smallvec![rid]));
+        {
+            // Small ranges share one worker frame/completion. Their original
+            // source ordinals and per-rule completion prerequisites stay exact.
+            let mut start=0;
+            while start<range_jobs.len() {
+                let mut end=start;let mut rows=0;
+                let mut rules=smallvec::SmallVec::<[usize;4]>::new();
+                while end<range_jobs.len() && rows<self.grain {
+                    let job=&range_jobs[end];let rid=self.cell_codes[job.code()].rule;
+                    if !rules.contains(&rid) {rules.push(rid);remaining[rid]+=1;}
+                    rows+=job.len();end+=1;
+                }
+                tasks.push((completion::Task::Range(&range_jobs[start..end]),rules));
+                self.stats.entry_range_batches+=1;
+                start=end;
+            }
         }
         #[cfg(feature="parallel-residuals")]
         for job in &owned_jobs {
@@ -1107,7 +1136,7 @@ impl Workers {
                 let event=match task {
                     completion::Task::Point(range)=>completion::Event::Point(with_worker_frame(|frame|run(range,frame))),
                     #[cfg(feature="parallel-residuals")]
-                    completion::Task::Range(job)=>completion::Event::Point(entry_ranges::run(job,codes,&plans.ready,&prepared,
+                    completion::Task::Range(job)=>completion::Event::Range(entry_ranges::run(job,codes,&plans.ready,&prepared,
                         reads.as_ref().unwrap(),rule_facts,local,templates,key_nodes,pooled)),
                     #[cfg(feature="parallel-residuals")]
                     completion::Task::Owned(job)=>completion::Event::Owned(owned_ranges::run(job,codes,rule_facts,
@@ -1136,12 +1165,7 @@ impl Workers {
                             completed=std::mem::take(&mut completed).add(work);
                         }
                         completion::Event::Point(mut chunk)=>{
-                            #[cfg(feature="parallel-residuals")] let range_code=chunk.6;
                             for (source,answer) in chunk.0.drain(..) {
-                                #[cfg(feature="parallel-residuals")]
-                                if let Some(code)=range_code {
-                                    outputs[codes[code].rule].rows.push(((0,source),answer));continue;
-                                }
                                 let q=&self.cell_queries[source];let code=&codes[q.code];
                                 #[cfg(feature="parallel-residuals")]
                                 if code.expansion {
@@ -1152,6 +1176,18 @@ impl Workers {
                                     q.cursor.borrow_mut().take().expect("one positive completion per Cell query"));
                             }
                             chunks.push(chunk);
+                        }
+                        #[cfg(feature="parallel-residuals")]
+                        completion::Event::Range(mut done)=>{
+                            let mut origins=done.origins.iter();
+                            let mut origin=origins.next();
+                            for (at,(source,answer)) in done.answers.drain(..).enumerate() {
+                                while origin.is_some_and(|(end,_)|at>=*end) {origin=origins.next();}
+                                let code=&codes[origin.expect("answer belongs to a compiled range").1];
+                                let position=plans.position(code.rule,code.pivot,0);
+                                outputs[code.rule].rows.push(((position,source),answer));
+                            }
+                            chunks.push((done.answers,done.error,done.counts,done.worker,done.residual,done.seconds));
                         }
                         #[cfg(feature="parallel-residuals")]
                         completion::Event::Owned(mut done)=>{
@@ -1261,11 +1297,14 @@ impl Workers {
         for done in &mut self.completed_rules {if let Some(work)=done.merge.take() {self.expansion.record_event_merge(work);}}
         for chunk in chunks {
             #[cfg(feature="parallel-residuals")]
-            let (answers,_,counts,worker,residual,_seconds,_range_code)=chunk;
+            let (answers,_,counts,worker,residual,_seconds)=chunk;
             #[cfg(not(feature="parallel-residuals"))]
             let (answers,_,counts,worker,_seconds)=chunk;
             g.record_constructor_query_work(&counts.constructors);
             self.stats.entry_range_rows += counts.entry_range_rows;
+            self.stats.entry_range_row_borrows += counts.entry_range_row_borrows;
+            self.stats.range_answer_span_bytes += counts.range_answer_span_bytes;
+            self.stats.range_answer_span_heap_bytes += counts.range_answer_span_heap_bytes;
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
             spine.stats.record_query_worker(&counts);

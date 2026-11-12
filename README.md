@@ -4,6 +4,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
+[Worker 直接读取已选 Entry 范围](benchmarks/cell-selected-entries/README.md)：Raytrace 删除约 113 万个逐条查询任务头，范围共用原 Entry 行，小范围合批后任务块从 94,016 降到 78,130。新增地址与结果归属存储已记账，状态和 Run 检查通过；混合入口的筛选仍在源线程，尚无本次净加速结论。
+
 [条件状态原地执行](benchmarks/cell-condition-borrows/README.md)：条件任务借用原有 Summary，删除搬出和回装；Raytrace 的执行记录由 97,487 降到 50,499，空条件只传播就绪。累计头部容量减少 38.2%，新增地址排序成本已计入；状态、Run 与语义检查通过，尚未证明耗时回退已修复。
 
 [表完成直接释放条件节点](benchmarks/cell-table-events/README.md)：同一线程池内按本表和静态子条件依赖继续执行，删除条件计算前的全表汇合及覆盖范围内的集中变化记录。Raytrace 独立条件池调用 719 → 0，免除约 197 万条源线程交接；预备节点增至约 9.7 万，新增成本已记录。状态、Run 与语义检查通过，尚无本次净加速结论。
