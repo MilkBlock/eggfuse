@@ -1,4 +1,5 @@
 """Prepare once from real operand exports, then replay only scalar buffers on GPU."""
+from model_projection import fold_plan, reference_state
 import argparse
 import hashlib
 import json
@@ -27,7 +28,7 @@ def main():
         entry,mapping=canonical(case)
         if entry!=r['entry']:raise ValueError('actual runtime input differs from labelled corpus')
         key=base.digest(base.structure(entry))
-        if key not in plans:plans[key]=base.Plan(entry)
+        if key not in plans:plans[key]=fold_plan(base.Plan(entry),model)
         plan=plans[key];indices={}
         for row in case['rows']:
             node=mapping[row['values'][-1]['eq']]
@@ -37,7 +38,7 @@ def main():
         addresses=np.array([indices[pos] for pos in plan.reads],np.int32)
         buffer=np.array(case['scalar_values'],np.float32)
         np.testing.assert_array_equal(buffer[addresses],plan.gather(entry))
-        np.testing.assert_allclose(plan.project(buffer[addresses]),base.reference(entry),atol=1e-4,rtol=1e-4)
+        np.testing.assert_allclose(plan.project(buffer[addresses]),reference_state(base.reference(entry),model),atol=1e-4,rtol=1e-4)
         checked+=1;slot_reads+=case['slot_reads'];operands+=case['operand_reads'];ns.append(case['gather_nanoseconds'])
         if r['split']=='test':instances.append((plan,buffer,addresses,r['completion_key']))
     prepare_ms=(time.perf_counter()-start)*1000

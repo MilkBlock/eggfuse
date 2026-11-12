@@ -386,3 +386,79 @@ runtime files and `--center-budgets 272,all --feature-kinds quadratic,radial`.
 For validation-only representation comparisons add `--pool-normalization mean`
 or `sqrt` and `--validation-only`; this writes no model and never evaluates test
 scores. `check_gpu_model.py` checks folded GPU arithmetic independently of data.
+
+## Learn a foldable entrance projection (no gradients)
+
+`train_invariant.py` freezes the prior augmentation admission manifest, checking
+its input hashes and split isolation. Only training vectors/labels build the
+within-completion scatter `Sw` and between-completion scatter `Sb`. It solves a
+regularized generalized eigenproblem via symmetric eigendecompositions. Validation
+chooses shrinkage, rank and the final quadratic ridge regularizer; test and stress
+labels do not build the projection. This is a supervised discriminant projection,
+not a proof that all entrances become identical. Optional training-only PCA
+residual directions are also tried; no additional runtime traversal results.
+
+Near-zero discriminant eigenvalues are excluded using training spectrum rank.
+An early residual trial included null directions beyond the at-most-23-dimensional
+between-class signal; folding exposed amplified float cancellation. The trial
+failed the numerical gate and was not exported. The implementation now skips
+unsupported discriminant ranks rather than relaxing the error threshold.
+
+For a learned affine map `x_new = x_old S + t`, each shared layout is rewritten:
+
+```
+A_new = A_old S_dynamic
+b_new = concat(b_old, static_metadata) S + t
+```
+
+The native runtime reads the same slots and directly computes the reduced state.
+There is **no 456-dimensional runtime intermediate or extra GPU projection**.
+`model_projection.py` checks dimensions/finite values and folds once per layout.
+It is used by export, replay and native-input verification. GPU inference remains
+three matmuls and a square; no backpropagation or device-dependent dispatch.
+
+On the 441-row training / 175-row validation admission, validation selects 16
+discriminant dimensions and no PCA residual. It scores 172/175 validation,
+91/102 original test, 80/90 new entrances and 74/82 new skeletons. The previous
+456-dimensional model scored 95/102, 80/90 and 75/82. **This is a compression
+tradeoff, not a new accuracy win; it does not replace the accuracy baseline.**
+
+Using the same 182 original layouts gives a fair storage comparison:
+
+| Quantity | 456-D model | Folded 16-D model |
+|---|---:|---:|
+| Shared affine layout matrices/biases | 8,876,224 B | 316,800 B |
+| GPU input for 102 cases | 186,048 B | 6,528 B |
+| Device ridge weights | 892,356 B | 73,956 B |
+
+`invariant-slot-results.json` verifies all 469 real-slot inputs. The unchanged
+native projection runner consumes the new folded artifact; all 102 predictions
+match the Python reference, max state discrepancy 3.58e-6. Native projection
+sums to 0.0116 ms and GPU inference ~0.360 ms in that diagnostic. Python adapter
+replay remains ~1.28 ms because gathering/interpreter/materialization costs remain.
+Component timings exclude transport and do not establish runtime acceleration.
+546 perturbed scalar tests also pass with the folded model.
+
+Repeating the projection search on expanded training admission selected 31 state
+dimensions (23 discriminant plus 8 PCA), improving its validation to 221/224 but
+only scoring 89/102 and 74/90 on the two test cohorts. It is retained as a failed
+generalization experiment in `invariant-expanded-results.json`, not adopted.
+Thus a small floating state is feasible, but better validation scores still do
+not reliably transfer to unseen entrance structure.
+
+```sh
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/train_invariant.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --train-runtime out/cell-fixed-state-gpu/augment-train-runtime.json \
+  --validation-runtime out/cell-fixed-state-gpu/augment-validation-runtime.json \
+  --stress-runtime out/cell-fixed-state-gpu/fresh-runtime.json \
+  --admission benchmarks/cell-fixed-state-gpu/augmented-results.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --residual-ranks 0,8,16 --output out/cell-fixed-state-gpu/invariant
+```
+
+Use that `model.npz` with the existing check_projection, emit_native_plan,
+completion_project_slots and bench_native_states commands. `fold_plan` folds
+projection metadata automatically; old unprojected models remain supported.
+The expanded trial instead uses expanded runtime files and the original expanded
+admission artifact, whose fingerprint is recorded in its results.

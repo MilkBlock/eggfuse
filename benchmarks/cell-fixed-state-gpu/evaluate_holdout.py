@@ -1,4 +1,5 @@
 """Evaluate frozen model on native-checked additional entrances; never refit."""
+from model_projection import fold_plan, reference_state
 import argparse,hashlib,json
 from pathlib import Path
 import numpy as np
@@ -17,7 +18,7 @@ for c in runtime['cases']:
     key=base.digest(entry);target=base.digest(final)
     if target!=c['metadata']['expected_known_completion']:raise ValueError('closure changed')
     if key in seen:duplicates+=1;continue
-    seen.add(key);plan=base.Plan(entry);x=plan.project(plan.gather(entry))
+    seen.add(key);plan=fold_plan(base.Plan(entry),model);x=plan.project(plan.gather(entry))
     rows.append((c,key,skeleton(entry),target,x))
 # One fixed GPU function, no completion-dependent control.
 import mlx.core as mx

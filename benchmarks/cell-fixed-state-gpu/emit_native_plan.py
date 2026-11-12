@@ -1,4 +1,5 @@
 """Bake fixture-bound slot operands and affine matrices into a native input plan."""
+from model_projection import fold_plan, reference_state
 import argparse,json,hashlib
 from pathlib import Path
 import numpy as np
@@ -14,7 +15,7 @@ for r in corpus['records']:
     if r['split']!='test':continue
     c=slots[r['id']];entry,mapping=canonical(c)
     if entry!=r['entry'] or c['source_sha256']!=r['source_sha256']:raise ValueError('input identity mismatch')
-    key=base.digest(base.structure(entry));plan=base.Plan(entry)
+    key=base.digest(base.structure(entry));plan=fold_plan(base.Plan(entry),model)
     plans.setdefault(key,dict(weight=plan.weight.tolist(),bias=plan.bias.tolist(),metadata=plan.metadata.tolist()))
     fields={}
     for row in c['rows']:

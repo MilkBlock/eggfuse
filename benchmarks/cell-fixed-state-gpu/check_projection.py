@@ -1,4 +1,5 @@
 """Verify baked projection for independent scalar values, without closure labels."""
+from model_projection import fold_plan, reference_state
 import argparse
 import copy
 import json
@@ -10,6 +11,7 @@ p=argparse.ArgumentParser()
 p.add_argument('--corpus',required=True)
 p.add_argument('--model')
 a=p.parse_args()
+model={}
 if a.model:
     model=dict(np.load(a.model))
     base.POOL_NORMALIZATION=str(model.get('pool_normalization','sum'))
@@ -20,11 +22,11 @@ seen=set();rng=np.random.default_rng(72);checks=0
 for row in rows:
     key=digest(structure(row['entry']))
     if key in seen:continue
-    seen.add(key);plan=Plan(row['entry'])
+    seen.add(key);plan=fold_plan(Plan(row['entry']),model)
     for _ in range(3):
         entry=copy.deepcopy(row['entry'])
         for n,f,pos in plan.reads:
             entry[n][f][1][pos][2]=int(rng.integers(-8,9))
-        np.testing.assert_allclose(plan.project(plan.gather(entry)),reference(entry),atol=1e-4,rtol=1e-4)
+        np.testing.assert_allclose(plan.project(plan.gather(entry)),reference_state(reference(entry),model),atol=1e-4,rtol=1e-4)
         checks+=1
 print(json.dumps(dict(layouts=len(seen),independent_scalar_checks=checks,status='pass')))

@@ -1,4 +1,5 @@
 """Consume states computed directly by native Graph.slot; verify then batch on GPU."""
+from model_projection import fold_plan, reference_state
 import argparse,hashlib,json,time
 from pathlib import Path
 import numpy as np
@@ -13,7 +14,7 @@ rows={r['id']:r for r in corpus['records'] if r['split']=='test'};cases=export['
 if len(cases)!=len(rows) or {c['id'] for c in cases}!=set(rows):raise ValueError('incomplete test instances')
 reference=[]
 for c in cases:
-    r=rows[c['id']];plan=base.Plan(r['entry']);reference.append(plan.project(plan.gather(r['entry'])))
+    r=rows[c['id']];plan=fold_plan(base.Plan(r['entry']),model);reference.append(plan.project(plan.gather(r['entry'])))
 x=np.array([c['state'] for c in cases],np.float32);reference=np.array(reference)
 np.testing.assert_allclose(x,reference,atol=1e-4,rtol=1e-4)
 import mlx.core as mx
