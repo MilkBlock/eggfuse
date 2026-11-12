@@ -4,6 +4,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
+[Cell 所有权执行链](benchmarks/cell-owner-chain/README.md)：将已发布 Entry 的枚举、筛选、查询和既有纯 RHS 接续交给 worker，并把 Shared Entry 更新并入索引的表任务。完整 Run 与语义检查通过；本轮四 worker 中位数仅小幅改善，sum-bits 单 worker 仍回退，未建立显著加速，采样仍显示大量池内空闲。
+
 [Raytrace 同步诊断](benchmarks/cell-sync-diagnosis/README.md)：关闭进度日志的两次采样中，协调线程条件等待约 17%–18%，worker 池内空闲约 80%–86%。新增 Unit 登记两轮仅占推理约 0.63%；主要接管机会仍在查询/Entry 准备、发布与剩余串行维护。区分有用计算、等待与调度间隙，保留全部对照和语义验证。
 
 [Worker Entry 范围、Unit 接续与表所有权](benchmarks/cell-entry-owned/README.md)：worker 接管大范围 Entry 枚举、匹配后实际 Unit 候选行构造，以及终端 Cell 的索引/变化登记。完整语义与 Run 对照通过；本次四线程 Raytrace 中位数改善约 2.3%，sum-bits 回退约 7.3%，未通过双样例性能门槛，也未打满线程。保留全部计时尝试及新增成本。
