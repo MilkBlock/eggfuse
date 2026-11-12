@@ -168,3 +168,109 @@ The checked-in recipe snapshots make the arithmetic checks independent of the
 saved full program. The full census requires that saved compiler artifact.
 The original joint scalar/ridge regression also passes after these changes;
 its earlier timings above remain the performance evidence.
+
+## Actual next-Run scalar composition
+
+`continuation.py` composes the scalar preparation of two real rules:
+
+```
+Concat(SubTuple(expr,a,b), SubTuple(expr,a+b,c))
+  -> SubTuple(expr,a,b+c)
+  -> Concat(Single(Get(expr,a)), SubTuple(expr,a+1,b+c-1))
+```
+
+The second rewrite still requires its ordinary successful match, including
+`b+c > 1`. The compiler prepares its arithmetic early; it does **not** predict
+or authorize that match, construction, union or publication.
+
+`continuation-cases.json` retains 12 actual multi-entry source cases from the
+existing corpus. The native Cell executor was rerun with audit enabled. For each
+case, the collector selects one producer binding, finds its constructor key in
+the completed Run's visible rows, and checks that the whole row (including its
+actual result witness) is the next Run's consumer query binding. It does not
+assume `(producer, operation)` is the returned constructor address. This is
+observed continuation evidence, not a count of new mutations or a full apply log.
+The example exporter now supports optional `include_bindings: true`.
+
+The declared constructor schema supplies the port wiring. Mutable functions,
+missing scalar inputs, incompatible interfaces and unsafe accumulation bounds
+are rejected. Producer and consumer scalar instructions are composed before
+matrix construction, preserving every original intermediate range obligation.
+For `[a,b,c]` the result is:
+
+```
+[a b c] @ [[0,1,0], [1,0,1], [1,0,1]] + [0,1,-1]
+       = [b+c, a+1, b+c-1]
+```
+
+There are 48 bytes of f32 coefficients and biases. The producer's slot 9 reads
+column 0; consumer slots 8 and 9 read columns 1 and 2. Its input slot 2 can also
+refer directly to column 0. These maps belong to the shared template. The GPU
+uses one fixed matrix expression; no backpropagation or dynamic graph traversal
+is added. This is an exact scalar block, not a newly trained ridge model.
+
+The bench retains that one device result batch for both stages. It removes the
+second GPU scalar submission and the consumer input `stack`; it does **not**
+remove the intermediate `b+c` output, which is required by the observable
+SubTuple construction. All three scalar outputs remain available to graph
+effects and other consumers. No runtime binding registry or consumer list is
+introduced.
+
+`check_continuation.py` validates 6,186 scalar results against the native
+primitive oracle: 12 observed bindings plus 2,050 synthetic arithmetic cases.
+Synthetic cases are not asserted to satisfy the full rule queries. It also
+checks mutable boundaries, unrelated constructors, late scalar inputs and
+unsafe accumulated ranges are rejected. The original compiler checks pass.
+
+Warm host request medians (20 repetitions), milliseconds:
+
+| Rows | Two GPU stages | Joint GPU block | NumPy CPU arithmetic |
+|---:|---:|---:|---:|
+| 12 | 0.461 | 0.258 | 0.007 |
+| 768 | 0.435 | 0.219 | 0.016 |
+| 12,288 | 0.584 | 0.362 | 0.146 |
+
+Larger batches repeat the 12 observed rows. Timings include range checking,
+f32 input packing, evaluation and host result reads. The separate path waits
+for producer completion before consumer preparation, representing two stage
+submissions; the fused path prepares both at once. Run execution, graph slot
+extraction, matching, publication, instance validation and the time/memory of
+waiting for a real consumer are **not** included. These are scalar-only replay
+measurements, not joint ridge timings or end-to-end engine speedups. CPU remains
+faster for these three additions/subtractions. The useful result is removal of
+an extra GPU boundary when arithmetic belongs in an already scheduled GPU Cell.
+
+The remaining production obligations are explicit: retain the device batch only
+for an appropriate instance lifetime; validate actual consumer inputs, guards,
+generation and visibility; use prepared results at original effect positions;
+account for speculative results never consumed and storage across Runs. The
+current prototype has **zero engine operations removed**. It does not establish
+that global history/publication maintenance can be deleted.
+
+Reproduce arithmetic and GPU checks from the committed evidence:
+
+```sh
+cargo build --locked -p eggfuse-cell-compiler --example scalar_fragment_reference
+out/cell-real-state/venv/bin/python benchmarks/cell-f32-scalar/check_continuation.py \
+  --oracle target/debug/examples/scalar_fragment_reference \
+  --output out/cell-f32-scalar/continuation-results.json
+```
+
+To regenerate actual execution evidence (each selected example is small):
+
+```sh
+python3 - <<'PY'
+import json
+from pathlib import Path
+p = json.loads(Path('benchmarks/cell-f32-scalar/continuation-cases.json').read_text())
+Path('out/cell-f32-scalar').mkdir(parents=True, exist_ok=True)
+Path('out/cell-f32-scalar/continuation-input.json').write_text(json.dumps({'cases': [
+    dict(id=r['id'], source=r['source'], include_program=True,
+         include_bindings=True, verify_ruleset='always-run') for r in p['records']]}))
+PY
+cargo run --locked -p eggfuse-cell-compiler --example real_completion_dataset -- \
+  out/cell-f32-scalar/continuation-input.json out/cell-f32-scalar/continuation-runtime.json
+out/cell-real-state/venv/bin/python benchmarks/cell-f32-scalar/collect_continuations.py \
+  --runtime out/cell-f32-scalar/continuation-runtime.json \
+  --output out/cell-f32-scalar/continuation-cases.json
+```

@@ -1,0 +1,116 @@
+{
+  "scope": "Standalone GPU scalar preparation replay, not integrated runtime takeover or whole-engine speedup",
+  "fixture_sha256": "684d0117c321ceebb4a2d023e315bde58fcfa697b75607185f0a9290ae4fb792",
+  "oracle_sha256": "5fc5d879c4e403c3ba3c01dfdd2b00165d37de95d1b6e296ce918c6bfe28de1c",
+  "actual_next_run_links": 12,
+  "synthetic_cases": 2050,
+  "exact_scalar_results": 6186,
+  "input_slots": [
+    1,
+    2,
+    5
+  ],
+  "coefficients": [
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      1.0
+    ],
+    [
+      1.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "bias": [
+    0.0,
+    1.0,
+    -1.0
+  ],
+  "stage_columns": [
+    {
+      "9": 0
+    },
+    {
+      "8": 1,
+      "9": 2
+    }
+  ],
+  "consumer_input_columns": {
+    "2": 0
+  },
+  "certificates": [
+    {
+      "operation": 0,
+      "destination": 9,
+      "absolute_accumulation_bound": 2097152
+    },
+    {
+      "operation": 3,
+      "destination": 18,
+      "absolute_accumulation_bound": 1048577
+    },
+    {
+      "operation": 4,
+      "destination": 19,
+      "absolute_accumulation_bound": 2097153
+    }
+  ],
+  "rejected": [
+    "mutable boundary",
+    "unrelated constructor",
+    "late scalar input",
+    "unsafe accumulated range"
+  ],
+  "obligations": [
+    "ordinary consumer match including guards and residual atoms",
+    "source Run publication and visibility",
+    "current instance lifetime and actual constructor witness",
+    "original ordered graph effects; no predicted union or mutation"
+  ],
+  "before": {
+    "gpu_stage_submissions": 2,
+    "consumer_input_assemblies": 1,
+    "retained_output_columns": 3
+  },
+  "after": {
+    "gpu_stage_submissions": 1,
+    "consumer_input_assemblies": 0,
+    "retained_output_columns": 3
+  },
+  "engine_operations_removed": 0,
+  "coefficient_bytes": 48,
+  "repeats": 20,
+  "timings": [
+    {
+      "rows": 12,
+      "repeated_real_rows": 1,
+      "separate_ms": 0.4606665,
+      "joint_ms": 0.2575415,
+      "cpu_numpy_ms": 0.0070209999999999995,
+      "speedup": 1.7887078393191
+    },
+    {
+      "rows": 768,
+      "repeated_real_rows": 64,
+      "separate_ms": 0.43489599999999995,
+      "joint_ms": 0.219291,
+      "cpu_numpy_ms": 0.0162705,
+      "speedup": 1.9831912846400441
+    },
+    {
+      "rows": 12288,
+      "repeated_real_rows": 1024,
+      "separate_ms": 0.583771,
+      "joint_ms": 0.362458,
+      "cpu_numpy_ms": 0.14575,
+      "speedup": 1.6105893648367535
+    }
+  ],
+  "timing_scope": "Warm host requests: bound check, f32 packing, GPU evaluation and output reads; no actual Run, slot extraction, matching, publication, lifetime maintenance or consumer delay. Larger batches repeat 12 rows."
+}

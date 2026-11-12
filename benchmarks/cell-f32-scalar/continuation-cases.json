@@ -1,0 +1,2141 @@
+{
+  "scope": "Successful bindings linked through an actual visible next-Run row; not committed mutation counts",
+  "producer_rule": 4,
+  "consumer_rule": 2,
+  "operation": 2,
+  "atom": 0,
+  "table": {
+    "name": "SubTuple",
+    "schema": [
+      {
+        "name": "Expr",
+        "kind": "eq"
+      },
+      {
+        "name": "i64",
+        "kind": "i64"
+      },
+      {
+        "name": "i64",
+        "kind": "i64"
+      },
+      {
+        "name": "Expr",
+        "kind": "eq"
+      }
+    ],
+    "kind": "constructor",
+    "merge": null,
+    "merge_expr": null,
+    "internal": false,
+    "can_subsume": true
+  },
+  "rules": [
+    {
+      "metadata": {
+        "seminaive": true,
+        "source_set": "always-run",
+        "name": "(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)"
+      },
+      "slots": [
+        {
+          "name": "expr",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "a",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "b",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@SubTuple11",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@+4",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "c",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@SubTuple12",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@Concat11",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@rewrite_var__3",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 0
+        },
+        {
+          "name": "@+5",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 1
+        }
+      ],
+      "query": [
+        {
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "call": {
+            "table": "Concat"
+          },
+          "args": [
+            {
+              "slot": 3
+            },
+            {
+              "slot": 6
+            },
+            {
+              "slot": 7
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 8,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 7
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "slot": 5
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 9
+            }
+          ],
+          "value": {
+            "slot": 8
+          },
+          "kind": "set"
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "seminaive": true,
+        "source_set": "always-run",
+        "name": "(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)"
+      },
+      "slots": [
+        {
+          "name": "expr",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "a",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "b",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@SubTuple4",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@>1",
+          "sort": {
+            "name": "Unit",
+            "kind": "Unit"
+          },
+          "definition": "query"
+        },
+        {
+          "name": "@rewrite_var__2",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 0
+        },
+        {
+          "name": "@Get3",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 1
+        },
+        {
+          "name": "@Single3",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 2
+        },
+        {
+          "name": "@+1",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 3
+        },
+        {
+          "name": "@-1",
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "definition": 4
+        },
+        {
+          "name": "@SubTuple5",
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "definition": 5
+        }
+      ],
+      "query": [
+        {
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "call": {
+            "primitive": ">",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "Unit"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            },
+            {
+              "slot": 4
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "op": "copy",
+          "dst": 5,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "arg": {
+            "slot": 3
+          },
+          "kind": "copy"
+        },
+        {
+          "op": "let",
+          "dst": 6,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "Get"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 7,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "Single"
+          },
+          "args": [
+            {
+              "slot": 6
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "let",
+          "dst": 8,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "+",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 1
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 9,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "call": {
+            "primitive": "-",
+            "inputs": [
+              "i64",
+              "i64"
+            ],
+            "output": "i64"
+          },
+          "args": [
+            {
+              "slot": 2
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "name": "i64",
+                "kind": "i64"
+              }
+            }
+          ],
+          "kind": "compute"
+        },
+        {
+          "op": "let",
+          "dst": 10,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "call": {
+            "table": "SubTuple"
+          },
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 9
+            }
+          ],
+          "kind": "construct"
+        },
+        {
+          "op": "set",
+          "call": {
+            "table": "Concat"
+          },
+          "args": [
+            {
+              "slot": 7
+            },
+            {
+              "slot": 10
+            }
+          ],
+          "value": {
+            "slot": 5
+          },
+          "kind": "set"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "456bb3c1a2c464a2",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 1) (SubTuple (Input 0) 1 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "e396110805fceeb113c859ec75f59f4263bcba1700a3211e1db9afacfc46a3f8",
+      "program_sha256": "2f4d90ca5de8f8978ce02ee531492b636bf50591a55ca341d59c508647007fde",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 2
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "6c4fb61ee1ae0d0d",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 1) (SubTuple (Input 0) 1 2))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "547c307bbd4b61f7c031b774343d0032ae30336aa622d306eca3f2c3607f3539",
+      "program_sha256": "035a4349beaa21b747ab9885ef2b0498d604b6e317959ff5764fe9ccab573e63",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 3
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "05ed9c6a540c24a9",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 1) (SubTuple (Input 0) 1 3))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "136d24261cb80a0311e87efce89ba7db47b46beb76577b254f45bfa3a04c9bf0",
+      "program_sha256": "8f46aab13e98ef87a31c26f91b2750200b7fda13cf3bca22011a374fccf1af5b",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "37fcc3b2e8b6cca8",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 2) (SubTuple (Input 0) 2 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "174b220696d027f19587513fbde336ab1832eef70c3674e9f627e2c94fb1d842",
+      "program_sha256": "238d0113a0acdbabb5fb67a861b03953d961fb568cbd0e5ac8b1f102e640ebe4",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 3
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "8eabff22c2b9cd9d",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 2) (SubTuple (Input 0) 2 2))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "40b202cda4c39ae9aab83fa389bdef7f24e1cd428a9fefe8388de515be792740",
+      "program_sha256": "795bcec348c4e8609fd7d91ce7ee07bc526006e4e3ad7700bb61d4351f7305b4",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "610e9f440d84794b",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 0 3) (SubTuple (Input 0) 3 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "8bf63523aa800e59933d4fc373eac4e065e28daadd32ff73d44f80a555934162",
+      "program_sha256": "53b2778713cb38c19e0949d230a9d939d2de6787724c14b0e0fd89dc62e96476",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 0
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 0
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        0,
+        3,
+        1
+      ]
+    },
+    {
+      "id": "6fc0625063ee7e06",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 1) (SubTuple (Input 0) 2 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "857a640b25c034a9ffa3d3f39cf976b9474339a309a58bb4e8ddfe7596402103",
+      "program_sha256": "43496d36e1bbe55e82efbf1834affd1c15817bf031ee9c31b85e172d749a5e08",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 2
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "15f0eb82106054bc",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 1) (SubTuple (Input 0) 2 2))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "f2149793761ad7f27833241985efe63fad985a1d7fad7729d8eaf59ed92a481a",
+      "program_sha256": "05ce073ac93909a3e049428a9b620a181d06c8910b29a0f0dc91a66df088d5c6",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 3
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "f2fc945377b2161a",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 1) (SubTuple (Input 0) 2 3))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "e5a6bb61480d60325d24a5f238f6323537db2a8b076434754b61b503d1a717fb",
+      "program_sha256": "f2b6f39b39dfdf70c5a9bc80109628a482e86da9c7493d6f9d540c31437fee8d",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "ebced963a3850163",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 2) (SubTuple (Input 0) 3 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "338d3418e5b02f4340fdbc3360a7c40e1fc862d18e38b7d060efc33eafea0058",
+      "program_sha256": "426844b79dff2ac6068cc5d6888ba9f00f9c590b804cf3b932960a948d4989a8",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 3
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "92c281f6daa3a00c",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 2) (SubTuple (Input 0) 3 2))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "e2e0de7a42f06e861f8c0a4580de8f4c63332968b895a26834d495d20799dcce",
+      "program_sha256": "d29a1fe0068d4d35540f7f5c587d59489e59a9a6f5b1117b790de65053d0e7ee",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 2
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "45a169e677ded564",
+      "source": "(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)\n(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)\n(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)\n(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )\n(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)\n(Concat (SubTuple (Input 0) 1 3) (SubTuple (Input 0) 4 1))\n(run-schedule (saturate (run always-run)))\n",
+      "source_sha256": "56978114e26524da266a33a3921c45db4d37c33d03939e2882a7d01f082640f0",
+      "program_sha256": "de989de9cf3e752c95e708bde4dff365d45a63cea53f39bca6f2593c69b5690c",
+      "producer_run": 1,
+      "consumer_run": 2,
+      "producer": {
+        "rule": 4,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 3
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(3)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 5,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 6,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(2)"
+            }
+          },
+          {
+            "slot": 7,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          }
+        ]
+      },
+      "consumer": {
+        "rule": 2,
+        "values": [
+          {
+            "slot": 0,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(1)"
+            }
+          },
+          {
+            "slot": 1,
+            "value": {
+              "sort": "i64",
+              "value": 1
+            }
+          },
+          {
+            "slot": 2,
+            "value": {
+              "sort": "i64",
+              "value": 4
+            }
+          },
+          {
+            "slot": 3,
+            "value": {
+              "sort": "Expr",
+              "eq": "Cell(4)"
+            }
+          },
+          {
+            "slot": 4,
+            "value": {
+              "sort": "Unit",
+              "value": 0
+            }
+          }
+        ]
+      },
+      "visible_row": [
+        {
+          "sort": "Expr",
+          "eq": "Cell(1)"
+        },
+        {
+          "sort": "i64",
+          "value": 1
+        },
+        {
+          "sort": "i64",
+          "value": 4
+        },
+        {
+          "sort": "Expr",
+          "eq": "Cell(4)"
+        }
+      ],
+      "input_values": [
+        1,
+        3,
+        1
+      ]
+    }
+  ],
+  "runtime_sha256": "d4ee4abe197e5a62252f23f990f6a1bc334248d96af3bbd5f2f8304d81920138"
+}

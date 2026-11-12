@@ -115,6 +115,11 @@ fn run_case(case: &Value) -> Result<Value, Box<dyn std::error::Error>> {
     if case["include_program"].as_bool() == Some(true) {
         output["compiled_program"] = artifact;
     }
+    if case["include_bindings"].as_bool() == Some(true) {
+        // Successful query bindings, not an apply log or committed mutations.
+        // Consumers must also inspect the completed Run's boundary export.
+        output["binding_audit"] = json!(executor.binding_audit);
+    }
     if case["native_reference"].as_bool() == Some(true) {
         let mut native = egglog::EGraph::default();
         eggfuse_bake::structural_key::source::install(&mut native, &executed_source)
