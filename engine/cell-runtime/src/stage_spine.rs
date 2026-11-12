@@ -15,6 +15,7 @@ use std::{
     cell::{OnceCell, RefCell},
     collections::{BTreeMap, BTreeSet},
     rc::Rc,
+    sync::Arc,
     time::Instant,
 };
 
@@ -501,10 +502,14 @@ mod set_counts_test {
             // Only the owned candidates cross threads. Their original Cursor
             // owners, including Rc roots, stay in this source Run's arena.
             let allocation = rows.as_ptr() as usize;
-            let mut rows = std::thread::spawn(move || rows).join().unwrap();
+            let selected = std::thread::spawn(move || {
+                let mut selected=Selection {rule:0,complete:true,covered:0,rows,retained:0,comparisons:0};
+                selected.select(&[1]);selected
+            }).join().unwrap();
+            let Selection {mut rows,retained,comparisons,..}=selected;
             assert_eq!(rows.as_ptr() as usize, allocation);
-            let mut comparisons = 0;
-            assert_eq!(select_worker_winners(&mut rows, &[1], &mut comparisons, &mut cursors), 3);
+            assert_eq!(rows.len()-retained,3);
+            for mut loser in rows.drain(retained..) {drop(take_origin(&mut cursors,loser.answer.direct.take().unwrap()));}
             let actual = rows.iter().map(|winner| {
                 let Value::Int(key) = winner.answer.values[&1] else { unreachable!() };
                 let cursor = cursors[winner.answer.direct.as_ref().unwrap().0].as_ref().unwrap();
@@ -905,9 +910,9 @@ pub struct Programs {
     active_tables: Vec<usize>,
     // Anchor-producing operations and their optional proven receipt sources.
     outputs: Vec<Vec<crate::cell::Output>>,
-    effect_plans: Vec<OnceCell<Rc<crate::cell::EffectPlan>>>,
+    effect_plans: Vec<OnceCell<Arc<crate::cell::EffectPlan>>>,
     #[cfg(feature = "structural-depth")]
-    full_effect_plans: Vec<OnceCell<Rc<crate::cell::EffectPlan>>>,
+    full_effect_plans: Vec<OnceCell<Arc<crate::cell::EffectPlan>>>,
     alias_query_facts: Vec<QueryFacts>,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
@@ -1006,6 +1011,25 @@ fn select_worker_winners(results: &mut Vec<Winner>, inputs: &[usize], comparison
         } else { false }
     });
     before - results.len()
+}
+/// Sendable ownership of candidate instances. Cursor objects remain in the
+/// original source arena; workers only sort their existing numeric handles.
+#[cfg(feature="sparse-cells")]
+pub(crate) struct Selection {rule:usize, complete:bool, covered:usize, rows:Vec<Winner>, retained:usize, pub comparisons:u64}
+#[cfg(feature="sparse-cells")]
+impl Selection {
+    pub fn len(&self)->usize {self.rows.len()}
+    pub fn select(&mut self, inputs:&[usize]) {
+        self.rows.sort_unstable_by(|a,b| {
+            self.comparisons+=1;
+            a.answer.compare_inputs(&b.answer,inputs).then_with(||b.depth.cmp(&a.depth)).then_with(||a.ordinal.cmp(&b.ordinal))
+        });
+        for i in 0..self.rows.len() {
+            if self.retained==0 || self.rows[i].answer.compare_inputs(&self.rows[self.retained-1].answer,inputs).is_ne() {
+                self.rows.swap(self.retained,i);self.retained+=1;
+            }
+        }
+    }
 }
 #[cfg(feature = "sparse-cells")]
 type Winners = Vec<Winner>;
@@ -1526,7 +1550,7 @@ impl Programs {
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn preparation_layout(&self, p: &Program, rid: usize) -> Option<std::sync::Arc<crate::cell::EffectLayout>> {
         if !self.capture_receipts(rid) { return None; }
-        let plan = self.effect_plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(
+        let plan = self.effect_plans[rid].get_or_init(|| Arc::new(crate::cell::EffectPlan::compile(
             p, rid, &self.outputs[rid], self.cell_output_widths[rid], false)));
         Some(plan.layout.clone())
     }
@@ -1574,7 +1598,7 @@ impl Programs {
         let plans = &self.effect_plans;
         #[cfg(feature = "structural-depth")]
         let plans = if full { &self.full_effect_plans } else { plans };
-        let plan = plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, published, full))).clone();
+        let plan = plans[rid].get_or_init(|| Arc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, published, full))).clone();
         #[cfg(feature = "sparse-cells")]
         debug_assert!(prepared.as_ref().is_none_or(|_| g.program.executions[rid].constructor.as_ref()
             .and_then(|p|p.result_layout.as_ref()).is_some_and(|layout|std::sync::Arc::ptr_eq(layout,&plan.layout))),
@@ -1702,7 +1726,7 @@ impl Programs {
             self.stats.ripsat_boundary_fallbacks+=1; return None;
         }
         if !outputs.is_empty() {
-            let effect=self.effect_plans[rid].get_or_init(||Rc::new(crate::cell::EffectPlan::compile(
+            let effect=self.effect_plans[rid].get_or_init(||Arc::new(crate::cell::EffectPlan::compile(
                 &g.program,rid,outputs,width,false)));
             if width!=0 && effect.joint_width()!=Some(plan.layout.sources.len()) {
                 self.stats.ripsat_layout_fallbacks+=1; return None;
@@ -2958,9 +2982,17 @@ impl Programs {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn deferred(&self, rid: usize) -> bool { self.deferred_slots[rid] != usize::MAX }
-    #[cfg(feature = "sparse-cells")]
+    #[cfg(all(test,feature = "sparse-cells"))]
     pub(crate) fn deferred_frames(&mut self) -> impl Iterator<Item = (usize, &mut [Winner])> {
         self.deferred_queries.iter_mut().map(|q| (q.rule, q.rows.as_mut_slice()))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn deferred_rows(&mut self) -> impl Iterator<Item = (usize, &mut Vec<Winner>)> {
+        self.deferred_queries.iter_mut().map(|q| (q.rule, &mut q.rows))
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn deferred_rule_rows(&mut self, rule: usize) -> &mut Vec<Winner> {
+        &mut self.deferred_queries[self.deferred_slots[rule]].rows
     }
     /// A failed source query cannot commit any of its accepted candidates.
     /// Release their origins as well as the candidate arrays, including roots
@@ -2984,16 +3016,27 @@ impl Programs {
         let winner = Winner::new(answer, cursor, ordinal, &mut self.sealed_cursors, &mut self.stats);
         self.deferred_queries[self.deferred_slots[rid]].rows.push(winner);
     }
-    #[cfg(feature = "sparse-cells")]
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn take_worker_selection(&mut self, rid:usize)->Option<Selection> {
+        let slot=std::mem::replace(&mut self.deferred_slots[rid],usize::MAX);
+        if slot==usize::MAX {return None;}
+        let DeferredQuery {rule,complete,covered,rows}=self.deferred_queries.swap_remove(slot);
+        if let Some(moved)=self.deferred_queries.get(slot) {self.deferred_slots[moved.rule]=slot;}
+        Some(Selection {rule,complete,covered,rows,retained:0,comparisons:0})
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn seal_worker_selection(&mut self, mut selected:Selection, inputs:&[usize])->(bool,Vec<Matched>) {
+        self.stats.losing_cursor_releases+=(selected.rows.len()-selected.retained) as u64;
+        for mut loser in selected.rows.drain(selected.retained..) {
+            drop(take_origin(&mut self.sealed_cursors,loser.answer.direct.take().expect("losing candidate origin")));
+        }
+        (selected.complete,self.seal_winners(selected.rule,inputs,selected.complete,selected.covered,selected.rows.into_iter()))
+    }
+    #[cfg(all(test,feature = "sparse-cells"))]
     pub(crate) fn finish_worker_rule(&mut self, rid: usize, inputs: &[usize], order_comparisons: &mut u64) -> Option<(bool, Vec<Matched>)> {
-        let slot = std::mem::replace(&mut self.deferred_slots[rid], usize::MAX);
-        if slot == usize::MAX { return None; }
-        let DeferredQuery { rule, complete, covered, mut rows } = self.deferred_queries.swap_remove(slot);
-        debug_assert_eq!(rule, rid);
-        if let Some(moved) = self.deferred_queries.get(slot) { self.deferred_slots[moved.rule] = slot; }
-        self.stats.losing_cursor_releases += select_worker_winners(&mut rows, inputs,
-            order_comparisons, &mut self.sealed_cursors) as u64;
-        Some((complete, self.seal_winners(rid, inputs, complete, covered, rows.into_iter())))
+        let mut selected=self.take_worker_selection(rid)?;
+        selected.select(inputs);*order_comparisons+=selected.comparisons;
+        Some(self.seal_worker_selection(selected,inputs))
     }
     pub fn shared(&self) -> bool {
         self.enabled && self.partial && self.shared_entries
@@ -3108,10 +3151,10 @@ impl Programs {
             .filter_map(|root| root.and_then(|r| r.context.get()));
         let live_materialized = materialized.clone().count();
         let facts: usize = materialized.map(|c| c.borrow().facts.len()).sum();
-        let effect_plan_cache_bytes = self.effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
+        let effect_plan_cache_bytes = self.effect_plans.capacity() * std::mem::size_of::<OnceCell<Arc<crate::cell::EffectPlan>>>();
         #[cfg(feature = "structural-depth")]
         let effect_plan_cache_bytes = effect_plan_cache_bytes
-            + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Rc<crate::cell::EffectPlan>>>();
+            + self.full_effect_plans.capacity() * std::mem::size_of::<OnceCell<Arc<crate::cell::EffectPlan>>>();
         #[cfg(feature = "sparse-cells")]
         let candidate_storage = json!({"layout":"owned-origin/v3",
             "winner_record_bytes":std::mem::size_of::<Winner>(),

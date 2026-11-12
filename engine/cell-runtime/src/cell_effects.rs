@@ -5,7 +5,7 @@
 //! Completion moves the retained prefix into its delivery without copying slots.
 use super::{Definition, Output, Site};
 use crate::{graph::Dependency, program::Program};
-use std::{num::NonZeroU32, rc::Rc, sync::Arc};
+use std::{num::NonZeroU32, sync::Arc};
 
 /// The completion interface is independent of receipt storage. Single writes
 /// carry their one actual return inline; other Cells own their result buffers.
@@ -36,7 +36,7 @@ pub(crate) trait CompletedEffects {
 #[cfg(feature = "sparse-cells")]
 pub(crate) struct ProjectedEffects {
     pub results: Option<super::Results>,
-    pub plan: Option<Rc<EffectPlan>>,
+    pub plan: Option<Arc<EffectPlan>>,
     pub published: usize,
 }
 #[cfg(feature = "sparse-cells")]
@@ -70,7 +70,7 @@ impl CompletedEffects for SingleEffect {
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq)]
 struct EffectSlot { index:Option<NonZeroU32>, history:u8 }
 /// One immutable operation-to-result layout, shared by worker preparation and
-/// source effects. Only this wiring crosses threads; source plan owners stay Rc.
+/// source effects. Result owners move to workers with this immutable plan; Cursors stay source-local.
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) struct EffectLayout {
     slots: Vec<EffectSlot>,
@@ -253,7 +253,7 @@ impl EffectPlan {
 
 #[derive(Default)]
 pub(crate) struct Effects {
-    plan: Option<Rc<EffectPlan>>,
+    plan: Option<Arc<EffectPlan>>,
     buffer: Vec<Option<Dependency>>,
     keep: usize,
     probes: u64,
@@ -272,7 +272,7 @@ impl Effects {
         EffectWriter { plan:self.plan.as_deref(), buffer:&mut self.buffer,
             history:&mut self.history, joint:self.joint, probes:&mut self.probes, targets:&mut self.targets }
     }
-    pub fn begin(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
+    pub fn begin(plan: Arc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
         debug_assert!(buffer.is_empty(), "each Cell owns only its results");
         buffer.resize(plan.layout.width, None);
         let keep = if keep { plan.outputs } else { 0 };
@@ -282,7 +282,7 @@ impl Effects {
             #[cfg(feature = "sparse-cells")] history:vec![] }
     }
     #[cfg(feature = "sparse-cells")]
-    pub fn begin_joint(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, facts: &super::QueryFacts) -> (Self, usize) {
+    pub fn begin_joint(plan: Arc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, facts: &super::QueryFacts) -> (Self, usize) {
         debug_assert!(buffer.is_empty(), "joint results own only private transient scratch");
         let joint = plan.joint.as_ref().unwrap();
         buffer.resize(joint.transient_width, None);
@@ -293,7 +293,7 @@ impl Effects {
         (Self { plan: Some(plan), buffer, keep, probes: 0, targets: 0, forwarded: 0, joint: true, prepared_buffer:false, history }, reads)
     }
     #[cfg(feature = "sparse-cells")]
-    pub(crate) fn adopt(plan: Rc<EffectPlan>, buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
+    pub(crate) fn adopt(plan: Arc<EffectPlan>, buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
         assert_eq!(buffer.len(), plan.layout.width, "checked worker result layout");
         let keep = if keep { plan.outputs } else { 0 };
         Self { plan:Some(plan), buffer, keep, probes:0, targets:0, forwarded:0,
@@ -474,7 +474,7 @@ mod packed_slot_tests {
     #[test]
     fn prepared_results_keep_their_allocation_through_effects_and_publication_and_joint_fallback() {
         let foreign = Dependency::Fact(crate::graph::FactRef { cell:77, op:9 });
-        let plan = Rc::new(EffectPlan {
+        let plan = Arc::new(EffectPlan {
             layout:Arc::new(EffectLayout { slots:vec![
                 EffectSlot { index:NonZeroU32::new(2), history:1 },
                 EffectSlot { index:NonZeroU32::new(1), history:2 }], width:2 }),
@@ -506,7 +506,7 @@ mod packed_slot_tests {
     #[cfg(feature = "sparse-cells")]
     #[test]
     fn simultaneous_joint_frames_keep_separate_results_and_private_transients() {
-        let plan = Rc::new(EffectPlan {
+        let plan = Arc::new(EffectPlan {
             layout: Arc::new(EffectLayout { slots: vec![EffectSlot { index: NonZeroU32::new(1), history: 1 },
                 EffectSlot { index: NonZeroU32::new(2), history: 0 }],
                 width: 2 }), outputs: 1,
@@ -539,7 +539,7 @@ mod packed_slot_tests {
         let largest = EffectSlot { index:NonZeroU32::new(u32::MAX), history:64 };
         let index = largest.index;
         assert_eq!(index.unwrap().get(), u32::MAX, "slot range is not truncated");
-        let plan = Rc::new(EffectPlan { layout:Arc::new(EffectLayout { slots:vec![EffectSlot::default(),
+        let plan = Arc::new(EffectPlan { layout:Arc::new(EffectLayout { slots:vec![EffectSlot::default(),
             EffectSlot { index:NonZeroU32::new(1), history:64 },
             EffectSlot { index:NonZeroU32::new(2), history:1 }], width:2 }), outputs:0,
             #[cfg(feature = "sparse-cells")] registration:None,

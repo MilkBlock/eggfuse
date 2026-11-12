@@ -14,13 +14,13 @@ impl Graph {
     /// Caller proves every parked Cell is already at its terminal boundary:
     /// no mutable read, union, fallible suffix or new Function-producing effect
     /// can intervene between classification and source-ordered adoption.
-    pub(crate) fn plan_unit_registration(&mut self, done: &mut [Done], pool: &rayon::ThreadPool) -> bool {
+    pub(crate) fn plan_unit_registration(&mut self, done: &mut [Completed], pool: &rayon::ThreadPool) -> bool {
         let mut diagnostic = Clock::new();
         if !self.pending_unions.is_empty() || !self.dirty.is_empty() || !self.dirty_markers.is_empty() { return false; }
-        let count = done.iter().map(|d|d.piece.units.len()).sum::<usize>();
-        if count < 32 || done.iter().flat_map(|d|&d.piece.units).any(|r|self.units.owned[r.function.table]) { return false; }
+        let count = done.iter().map(|d|d.done.piece.units.len()).sum::<usize>();
+        if count < 32 || done.iter().flat_map(|d|&d.done.piece.units).any(|r|self.units.owned[r.function.table]) { return false; }
         let mut tables = BTreeMap::<usize, Vec<Item<'_>>>::new();
-        for (source, row) in done.iter().flat_map(|d|&d.piece.units).enumerate() {
+        for (source, row) in done.iter().flat_map(|d|&d.done.piece.units).enumerate() {
             tables.entry(row.function.table).or_default().push(Item { source, row, choice: Choice::New });
         }
         if tables.len() < 2 { return false; }
@@ -51,7 +51,7 @@ impl Graph {
             for item in rows { choices[item.source] = item.choice; }
         }
         let mut next = self.functions.len();
-        for (source, row) in done.iter_mut().flat_map(|d|&mut d.piece.units).enumerate() {
+        for (source, row) in done.iter_mut().flat_map(|d|&mut d.done.piece.units).enumerate() {
             let (index, new) = match choices[source] {
                 Choice::New => { let i = next; next += 1; (i, true) }
                 Choice::Existing(i) => (i, false),

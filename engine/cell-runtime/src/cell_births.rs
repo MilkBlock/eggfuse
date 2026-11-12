@@ -6,7 +6,8 @@ use crate::cell::{Definition, EffectWriter};
 use crate::value::parent_epoch::Read;
 #[path = "cell_births_shared.rs"]
 mod shared;
-pub(crate) use shared::run as run_shared;
+pub(crate) use shared::stream as stream_shared;
+pub(crate) struct Completed { pub done: Done, pub effects: crate::cell::Effects }
 #[path = "cell_birth_units.rs"]
 pub(crate) mod units;
 #[path = "cell_unit_registration.rs"]

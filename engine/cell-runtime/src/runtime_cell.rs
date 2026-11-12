@@ -286,7 +286,7 @@ mod tests {
             inputs: vec![0, 1].into(), completion: Default::default(), seminaive: false, direct: None });
         let ops = host.graph.program.templates[0].ops.clone();
         host.graph.program.known_results.static_skip.push(Rc::new(vec![false; ops.len()]));
-        let plan = Rc::new(EffectPlan::compile(&host.graph.program, 0, &[], 0, true));
+        let plan = std::sync::Arc::new(EffectPlan::compile(&host.graph.program, 0, &[], 0, true));
         let mut values = Slots::with_capacity(8);
         values.extend([(0, Value::Int(1)), (1, Value::Int(2))]);
         let cell = host.graph.begin_transient(0, values, None).unwrap();

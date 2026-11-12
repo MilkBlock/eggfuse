@@ -29,15 +29,15 @@ struct Work {
     column_prepares:u64, column_prepare_reuses:u64,
 }
 #[derive(Default)]
-struct Output {
-    pending:bool, direct:u64, candidates:u64, rows:Vec<((usize,usize),Binding)>,
+pub(super) struct Output {
+    pub pending:bool, direct:u64, candidates:u64, pub rows:Vec<((usize,usize),Binding)>,
     merged:Option<(usize,usize)>, // (candidates before dedup, prior serial answers)
 }
 /// Each rule owns its existing answer vector and final RHS input vector. The
 /// input layout is borrowed from the Cell, not copied into every candidate.
 struct Merge<'a> {
-    rule:usize, inputs:&'a [usize], serial:&'a mut Vec<Binding>,
-    rows:Vec<((usize,usize),Binding)>, previous:usize, count:usize,
+    inputs:&'a [usize], serial:&'a mut Vec<Binding>,
+    rows:Vec<((usize,usize),Binding)>, count:usize,
     comparisons:u64, capacity_bytes:u64, worker:Option<usize>, seconds:f64,
 }
 impl Merge<'_> {
@@ -58,6 +58,23 @@ impl Merge<'_> {
     }
 }
 
+pub(super) struct MergeWork { pub comparisons:u64, pub bytes:u64, pub seconds:f64, pub worker:Option<usize>, pub count:usize }
+pub(super) struct PendingMerge { rows:Vec<((usize,usize),Binding)> }
+impl Output {
+    pub fn take_merge(&mut self)->Option<PendingMerge> {self.pending.then(||PendingMerge {rows:std::mem::take(&mut self.rows)})}
+    pub fn record_merge(&mut self,n:usize,previous:usize) {self.merged=Some((n,previous));}
+}
+impl PendingMerge {
+    pub fn len(&self)->usize {self.rows.len()}
+    pub fn run(self,serial:&mut Vec<Binding>,inputs:&[usize],pooled:bool)->(usize,usize,usize,MergeWork) {
+        let previous=serial.len();
+        let mut job=Merge {inputs,serial,rows:self.rows,count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0};
+        job.run(pooled);
+        (job.count,previous,job.serial.len(),MergeWork {comparisons:job.comparisons,bytes:job.capacity_bytes,
+            seconds:job.seconds,worker:job.worker,count:job.count})
+    }
+}
+
 #[cfg(test)]
 #[test]
 fn residual_winners_preserve_source_and_stable_expansion_ties() {
@@ -66,7 +83,7 @@ fn residual_winners_preserve_source_and_stable_expansion_ties() {
     // multiple expansion answers from exactly the same source Entry.
     for pooled in [false,true] {
         let mut serial=vec![binding(2,20),binding(1,10)];
-        let mut job=Merge {rule:0,inputs:&[0],previous:serial.len(),serial:&mut serial,
+        let mut job=Merge {inputs:&[0],serial:&mut serial,
             rows:vec![((0,2),binding(1,12)),((0,1),binding(1,11)),
                 ((1,0),binding(2,21)),((0,3),binding(3,30)),((0,3),binding(3,31))],
             count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0};
@@ -81,7 +98,7 @@ fn residual_winners_preserve_source_and_stable_expansion_ties() {
 #[derive(Default)]
 pub(super) struct Plans {
     pub(super) enabled:bool, rules:Vec<Vec<Option<Plan>>>, work:Work,
-    active:Vec<(usize,usize)>, pub ready:Vec<usize>, outputs:Vec<Output>,
+    active:Vec<(usize,usize)>, pub ready:Vec<usize>, pub(super) outputs:Vec<Output>,
 }
 impl Plans {
     pub fn report(&self)->J { json!({"enabled":self.enabled,
@@ -140,6 +157,21 @@ impl Plans {
                 partitioned:plan.partitioned}
         }).collect()
     }
+    pub fn position(&self, rid: usize, pivot: usize, original: usize) -> usize {
+        self.rules[rid][pivot].as_ref().filter(|p|p.partitioned).map_or(original,|p|p.serial_position)
+    }
+    pub fn record_event_merge(&mut self, work: MergeWork) {
+        let stats=&mut self.work;
+        stats.merge_tasks+=1;stats.merge_inline_tasks+=u64::from(work.worker.is_none());
+        stats.order_comparisons+=work.comparisons;stats.merge_capacity_bytes+=work.bytes;
+        stats.merge_execute_seconds+=work.seconds;
+        if let Some(worker)=work.worker {
+            if stats.merge_worker_rows.len()<=worker {
+                stats.merge_worker_rows.resize(worker+1,0);stats.merge_worker_tasks.resize(worker+1,0);stats.merge_worker_seconds.resize(worker+1,0.0);
+            }
+            stats.merge_worker_rows[worker]+=work.count as u64;stats.merge_worker_tasks[worker]+=1;stats.merge_worker_seconds[worker]+=work.seconds;
+        }
+    }
     pub fn finished(&mut self) {
         for (rid,pivot) in self.active.drain(..) {
             let plan=self.rules[rid][pivot].as_mut().unwrap();
@@ -197,10 +229,6 @@ impl Workers {
         if let Some(plan)=self.expansion.rules.get_mut(rid).and_then(|r|r.get_mut(pivot)).and_then(Option::as_mut)
             .filter(|p|p.partitioned) {plan.serial_position=position;}
     }
-    pub(super) fn expansion_position(&self,rid:usize,pivot:usize,original:usize)->usize {
-        self.expansion.rules[rid][pivot].as_ref().filter(|p|p.partitioned)
-            .map_or(original,|p|p.serial_position)
-    }
     pub(crate) fn expansion_ready(&self,g:&Graph,rid:usize,pivot:usize)->bool {
         if !self.expansion.enabled {return false;}
         let Some(plan)=&self.expansion.rules[rid][pivot] else {return false;};
@@ -256,46 +284,11 @@ impl Workers {
     pub(crate) fn pending_expansion(&self,rid:usize)->bool {
         self.expansion.outputs.get(rid).is_some_and(|o|o.pending)
     }
-    pub(crate) fn finish_expansion_rules(&mut self,work:&mut [(usize,Vec<Binding>)],rules:&[Rule]) {
-        let clock=Instant::now();
-        let mut jobs=Vec::new();
-        for (rid,serial) in work {
-            let Some(output)=self.expansion.outputs.get_mut(*rid).filter(|o|o.pending) else {continue};
-            debug_assert!(output.merged.is_none());
-            jobs.push(Merge {rule:*rid,inputs:&rules[*rid].inputs,previous:serial.len(),serial,
-                rows:std::mem::take(&mut output.rows),count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0});
-        }
-        if jobs.is_empty() {return;}
-        let n=self.stats.worker_entries.len();
-        let pooled=self.pool.is_some() && jobs.iter().filter(|j|j.rows.len()+j.previous>=self.grain).take(2).count()==2
-            && jobs.iter().map(|j|j.rows.len()+j.previous).sum::<usize>()>=self.grain.saturating_mul(n).max(256);
-        self.expansion.work.merge_prepare_seconds+=clock.elapsed().as_secs_f64();
-        let clock=Instant::now();
-        if pooled {self.pool.as_ref().unwrap().install(||jobs.par_iter_mut().for_each(|job|job.run(true)));}
-        else {for job in &mut jobs {job.run(false);}}
-        let stats=&mut self.expansion.work;
-        stats.merge_execute_seconds+=clock.elapsed().as_secs_f64();
-        stats.merge_pool_calls+=u64::from(pooled);
-        stats.merge_task_capacity_bytes+=(jobs.capacity()*std::mem::size_of::<Merge<'_>>()) as u64;
-        stats.merge_worker_rows.resize(n,0);stats.merge_worker_tasks.resize(n,0);stats.merge_worker_seconds.resize(n,0.0);
-        for job in jobs {
-            stats.merge_tasks+=1;stats.order_comparisons+=job.comparisons;
-            stats.merge_capacity_bytes+=job.capacity_bytes;
-            if let Some(i)=job.worker {
-                stats.merge_worker_rows[i]+=job.count as u64;stats.merge_worker_tasks[i]+=1;
-                stats.merge_worker_seconds[i]+=job.seconds;
-            } else {stats.merge_inline_tasks+=1;}
-            self.expansion.outputs[job.rule].merged=Some((job.count,job.previous));
-        }
-    }
     pub(crate) fn finish_expansion_rule(&mut self,rid:usize)->Option<(usize,usize,u64,u64)> {
         let output=self.expansion.outputs.get_mut(rid)?;
         if !std::mem::take(&mut output.pending) {return None;}
         let (n,previous)=output.merged.take().expect("joined residual winner selection");
         Some((n,previous,std::mem::take(&mut output.direct),std::mem::take(&mut output.candidates)))
-    }
-    pub(super) fn record_expansion_answer(&mut self,rid:usize,position:usize,source:usize,answer:Binding) {
-        self.expansion.outputs[rid].rows.push(((position,source),answer));
     }
     pub(super) fn record_expansion_chunk(&mut self,g:&mut Graph,sieve:&mut crate::sieve::Sieve,
         chunk:ChunkWork,worker:Option<usize>,seconds:f64,answer_capacity:usize) {

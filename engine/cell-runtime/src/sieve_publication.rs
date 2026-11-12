@@ -1,15 +1,16 @@
-//! Complete the existing Cell condition DAG in dependency order. Workers own
-//! distinct Summary values; children and published index columns stay borrowed.
-//! No locks, copied support sets or per-instance consumer lists are introduced.
+//! Complete the existing condition DAG from child completion events. Each node
+//! owns its original Summary; static guard links release only dependent nodes.
+//! A Run joins once before making its updated query conditions visible.
 use super::*;
 use crate::query::snapshot::TableRead;
-use rayon::prelude::*;
+use std::sync::{Mutex, OnceLock, atomic::{AtomicUsize, Ordering}};
 use std::time::Instant;
 
 #[derive(Default, serde::Serialize)]
 struct Work {
     enabled:bool, attempts:u64, batches:u64, small_batches:u64, unavailable_calls:u64,
-    levels:u64, pool_calls:u64, tasks:u64, inline_tasks:u64,
+    pool_calls:u64, tasks:u64, inline_tasks:u64,
+    event_nodes:u64, event_edges:u64, event_empty_nodes:u64, event_header_bytes:u64, event_inline_empty:u64,
     borrowed_rows:u64, group_headers:u64, prepared_columns:u64,
     direct_rows:u64, dependency_rows:u64, candidate_visits:u64, added_keys:u64,
     task_capacity_bytes:u64, row_header_capacity_bytes:u64, peak_scratch_bytes:u64,
@@ -20,10 +21,9 @@ struct Work {
 pub(super) struct State {
     // Scheduling addresses derived from the existing Spec guards/influences.
     compiled:bool,
-    depth:Vec<usize>, group:Vec<usize>, table_groups:Vec<usize>,
-    inputs:Vec<Vec<usize>>, outputs:Vec<Vec<Projection>>,
-    pending:Vec<Vec<usize>>, active:Vec<bool>, touched_groups:Vec<usize>,
-    touched_outputs:Vec<usize>, work:Work,
+    valid:bool, group:Vec<usize>, table_groups:Vec<usize>,
+    inputs:Vec<Vec<usize>>, pending:Vec<usize>, active:Vec<bool>,
+    touched_groups:Vec<usize>, work:Work,
 }
 impl State {
     pub fn compile(specs:&[Spec], tables:&[Dispatch])->Self {
@@ -32,9 +32,8 @@ impl State {
         // the original queue instead of claiming an unproved execution layer.
         for (id,spec) in specs.iter().enumerate() {
             if spec.guards.iter().any(|g|g.child>=id) {return Self {compiled:true,..Self::default()};}
-            s.depth.push(spec.guards.iter().map(|g|s.depth[g.child]+1).max().unwrap_or(0));
         }
-        s.pending=(0..s.depth.iter().max().map_or(0,|d|d+1)).map(|_|Vec::new()).collect();
+        s.valid=true;
         s.group=vec![0;specs.len()];
         for table in tables {
             s.table_groups.push(s.inputs.len());
@@ -44,64 +43,93 @@ impl State {
             }
         }
         s.active=vec![false;specs.len()];
-        s.outputs=(0..specs.len()).map(|_|Vec::new()).collect();
         s
     }
     fn schedule(&mut self,id:usize) {
-        if !self.active[id] {self.active[id]=true;self.pending[self.depth[id]].push(id);}
+        if !self.active[id] {self.active[id]=true;self.pending.push(id);}
     }
     fn scratch_bytes(&self)->usize {
         self.inputs.iter().map(|v|v.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
-        + self.outputs.iter().map(|v|v.capacity()*std::mem::size_of::<Projection>()).sum::<usize>()
-        + self.pending.iter().map(|v|v.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
-        + (self.touched_groups.capacity()+self.touched_outputs.capacity())*std::mem::size_of::<usize>()
+        + (self.pending.capacity()+self.touched_groups.capacity())*std::mem::size_of::<usize>()
     }
     pub fn report(&self)->serde_json::Value {
-        serde_json::json!({"organization":"cell-condition-layers/v1", "compiled":self.compiled, "levels":self.pending.len(),
-            "plan_payload_bytes":(self.depth.capacity()+self.group.capacity()+self.table_groups.capacity())*std::mem::size_of::<usize>()
+        serde_json::json!({"organization":"cell-condition-events/v2", "compiled":self.compiled, "valid":self.valid,
+            "plan_payload_bytes":(self.group.capacity()+self.table_groups.capacity())*std::mem::size_of::<usize>()
                 + self.active.capacity()*std::mem::size_of::<bool>()
-                + (self.inputs.capacity()+self.pending.capacity())*std::mem::size_of::<Vec<usize>>()
-                + self.outputs.capacity()*std::mem::size_of::<Vec<Projection>>(),
+                + self.inputs.capacity()*std::mem::size_of::<Vec<usize>>(),
             "scratch_capacity_bytes":self.scratch_bytes(),
             "pending_group_rows":self.inputs.iter().map(Vec::len).sum::<usize>(),
-            "pending_support_keys":self.outputs.iter().map(Vec::len).sum::<usize>(),
-            "pending_tasks":self.pending.iter().map(Vec::len).sum::<usize>(),"stats":self.work})
+            "pending_support_keys":0, // retired layer output scratch
+            "pending_tasks":self.pending.len(),"stats":self.work})
     }
 }
 struct Task<'a> {
     id:usize, spec:&'a Spec, state:Summary, added:Vec<Projection>,
-    direct:&'a [usize], read:Option<TableRead<'a>>, estimate:usize,
+    direct:&'a [usize], read:Option<TableRead<'a>>,
     dependency_rows:u64, candidate_visits:u64, worker:Option<usize>, seconds:f64,
 }
 impl Task<'_> {
-    fn admit(&mut self,keys:&[u64],states:&[Summary],collide:bool) {
-        if self.spec.guards.iter().all(|g|states[g.child].allows(keys,&g.cols)) {
-            if let Some(k)=self.state.insert::<false>(self.spec,keys,collide) {self.added.push(k);}
-        }
-    }
-    fn run(&mut self,rows:&[&[u64]],states:&[Summary],outputs:&[Vec<Projection>],collide:bool,pooled:bool) {
+    fn run<'a>(&mut self, rows:&[&[u64]], child:impl Fn(usize)->(&'a Summary,&'a [Projection]), collide:bool, pooled:bool) {
         self.worker=pooled.then(rayon::current_thread_index).flatten();
         let clock=Instant::now();
-        for &position in self.direct {self.admit(rows[position],states,collide);}
-        // These are the same static parent/guard links as queue propagation.
-        // Columns are finished on the coordinator; workers borrow membership
-        // directly, removing hash_candidates' temporary witness vectors.
-        let read=self.read.take();
-        if let Some(read)=&read {
-            for guard in &self.spec.guards {
+        let spec=self.spec;
+        let mut admit=|keys:&[u64]| {
+            if spec.guards.iter().all(|g| child(g.child).0.allows(keys,&g.cols)) {
+                // Multiple child routes may produce the same candidate. The
+                // original exact support insertion adopts it only once.
+                if let Some(key)=self.state.insert::<false>(spec,keys,collide) {self.added.push(key);}
+            }
+        };
+        for &position in self.direct {admit(rows[position]);}
+        if let Some(read)=&self.read {
+            for guard in &spec.guards {
                 if guard.cols.is_empty() {continue;}
-                for key in &outputs[guard.child] {
+                for key in child(guard.child).1 {
                     let domain=read.domain(guard.cols.iter().copied().zip(key.iter().copied()).collect());
-                    for witness in domain.iter() {
-                        self.dependency_rows+=1;
-                        self.admit(read.hashes(witness),states,collide);
-                    }
+                    for witness in domain.iter() {self.dependency_rows+=1;admit(read.hashes(witness));}
                     self.candidate_visits+=domain.take_examined();
                 }
             }
         }
-        self.read=read;
         self.seconds=clock.elapsed().as_secs_f64();
+    }
+}
+
+struct Events<'a,'b> {
+    tasks:&'a [Mutex<Option<Task<'b>>>], finished:&'a [OnceLock<Task<'b>>],
+    remaining:&'a [AtomicUsize], positions:&'a [usize], parents:&'a [Vec<(usize,usize)>],
+    states:&'a [Summary], rows:&'a [&'b [u64]], collide:bool, inline_empty:AtomicUsize,
+    #[cfg(test)] before:Option<&'a (dyn Fn(usize)+Sync)>,
+}
+impl<'a,'b> Events<'a,'b> {
+    fn complete<'scope>(&'scope self,position:usize,scope:Option<&rayon::Scope<'scope>>)
+        where 'a:'scope, 'b:'scope {
+        let mut task=self.tasks[position].lock().unwrap().take().expect("one condition owner");
+        #[cfg(test)] if let Some(before)=self.before {before(task.id);}
+        task.run(self.rows,|child| {
+            let position=self.positions[child];
+            if position==usize::MAX {(&self.states[child],&[])}
+            else {let task=self.finished[position].get().expect("ready child");(&task.state,task.added.as_slice())}
+        },self.collide,scope.is_some());
+        let id=task.id;
+        assert!(self.finished[position].set(task).is_ok());
+        for &(parent,_) in &self.parents[id] {
+            let next=self.positions[parent];
+            if next!=usize::MAX && self.remaining[next].fetch_sub(1,Ordering::AcqRel)==1 {
+                let has_work={
+                    let next_task=self.tasks[next].lock().unwrap();let next_task=next_task.as_ref().unwrap();
+                    !next_task.direct.is_empty() || next_task.spec.guards.iter().any(|g| {
+                        let position=self.positions[g.child];
+                        !g.cols.is_empty() && position!=usize::MAX && !self.finished[position].get().unwrap().added.is_empty()
+                    })
+                };
+                if let Some(scope)=scope.filter(|_|has_work) {scope.spawn(move |scope|self.complete(next,Some(scope)));}
+                else {
+                    if !has_work {self.inline_empty.fetch_add(1,Ordering::Relaxed);}
+                    self.complete(next,scope);
+                }
+            }
+        }
     }
 }
 
@@ -111,7 +139,36 @@ mod tests {
     use crate::value::Value;
 
     #[test]
-    fn layered_publication_matches_queue_with_late_children_field_masks_and_collisions() {
+    fn a_child_completion_releases_parent_before_unrelated_root() {
+        use std::{sync::mpsc, time::Duration};
+        let specs=[Spec::new(0,vec![0],vec![]),Spec::new(0,vec![0],vec![]),
+            Spec::new(0,vec![0],vec![Guard {cols:vec![0],child:0}])];
+        let tasks:Vec<_>=specs.iter().enumerate().map(|(id,spec)|Mutex::new(Some(Task {
+            id,spec,state:Summary::default(),added:vec![],direct:&[],read:None,
+            dependency_rows:0,candidate_visits:0,worker:None,seconds:0.0,
+        }))).collect();
+        let finished:Vec<_>=(0..3).map(|_|OnceLock::new()).collect();
+        let (tx,rx)=mpsc::channel();let rx=Mutex::new(rx);
+        let before=|id| {
+            if id==1 {rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
+            if id==2 {tx.send(()).unwrap();}
+        };
+        let remaining=[AtomicUsize::new(0),AtomicUsize::new(0),AtomicUsize::new(1)];
+        let parents=[vec![(2,0)],vec![],vec![]];
+        let states:Vec<_>=(0..3).map(|_|Summary::default()).collect();
+        let events=Events {tasks:&tasks,finished:&finished,remaining:&remaining,positions:&[0,1,2],
+            parents:&parents,states:&states,rows:&[],collide:false,inline_empty:AtomicUsize::new(0),before:Some(&before)};
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
+        pool.scope(|scope| {
+            let events=&events;
+            scope.spawn(move |scope|events.complete(0,Some(scope)));
+            scope.spawn(move |scope|events.complete(1,Some(scope)));
+        });
+        assert!(finished.iter().all(|s|s.get().is_some()));
+    }
+
+    #[test]
+    fn event_publication_matches_queue_with_late_children_field_masks_and_collisions() {
         fn fixture(g:&Graph,index:&mut QueryIndexes,collide:bool)->Sieve {
             let mut s=Sieve::new(&g.program);
             s.specs=vec![
@@ -163,8 +220,7 @@ mod tests {
                     assert_eq!(x.built,y.built);
                 }
                 assert!(staged.publication.inputs.iter().all(Vec::is_empty));
-                assert!(staged.publication.outputs.iter().all(Vec::is_empty));
-                assert!(staged.publication.pending.iter().all(Vec::is_empty));
+                assert!(staged.publication.pending.is_empty());
                 assert!(staged.publication.active.iter().all(|a|!*a));
                 graph.changes.clear();
             }
@@ -201,7 +257,7 @@ impl Sieve {
             self.publication=State::compile(&self.specs,&self.by_table);
             self.publication.work=work;
         }
-        if self.publication.depth.len()!=self.specs.len() {
+        if !self.publication.valid {
             self.publication.work.unavailable_calls+=1;
             return false;
         }
@@ -238,62 +294,83 @@ impl Sieve {
         plan.work.prepare_seconds+=clock.elapsed().as_secs_f64();
         let workers=pool.map_or(1,rayon::ThreadPool::current_num_threads);
         plan.work.worker_tasks.resize(workers,0);plan.work.worker_rows.resize(workers,0);plan.work.worker_seconds.resize(workers,0.0);
-        for level in 0..plan.pending.len() {
-            if plan.pending[level].is_empty() {continue;}
-            let clock=Instant::now();
-            let mut ids=std::mem::take(&mut plan.pending[level]);
-            let mut tasks=Vec::with_capacity(ids.len());
-            for &id in &ids {
-                let spec=&self.specs[id];
-                let direct=&plan.inputs[plan.group[id]];
-                let mut columns=smallvec::SmallVec::<[usize;4]>::new();
-                let mut estimate=direct.len();
-                for guard in &spec.guards {
-                    let added=&plan.outputs[guard.child];
-                    estimate+=added.len();
-                    if !added.is_empty() {columns.extend(guard.cols.iter().copied());}
+        let clock=Instant::now();
+        let mut ids:Vec<_>=plan.pending.drain(..).collect();
+        // Determine only the potentially affected closure. These are the
+        // existing compiled parent links, never producer subscriptions.
+        let mut head=0;
+        while head<ids.len() {
+            for &(parent,_) in &self.parents[ids[head]] {
+                if self.states[parent].built && !plan.active[parent] {
+                    plan.active[parent]=true;ids.push(parent);
                 }
-                columns.sort_unstable();columns.dedup();
-                plan.work.prepared_columns+=columns.len() as u64;
-                let read=(!columns.is_empty()).then(||index.publication_support(spec.table,&columns));
-                tasks.push(Task {id,spec,state:std::mem::take(&mut self.states[id]),
-                    added:std::mem::take(&mut plan.outputs[id]),direct,read,estimate,
-                    dependency_rows:0,candidate_visits:0,worker:None,seconds:0.0});
             }
-            plan.work.prepare_seconds+=clock.elapsed().as_secs_f64();
-            let pooled=pool.is_some() && tasks.len()>1
-                && tasks.iter().map(|t|t.estimate).sum::<usize>()>=grain.saturating_mul(workers).max(256);
-            let clock=Instant::now();
-            let run=|task:&mut Task<'_>|task.run(&rows,&self.states,&plan.outputs,self.collide,pooled);
-            if pooled {pool.unwrap().install(||tasks.par_iter_mut().for_each(run));}
-            else {tasks.iter_mut().for_each(run);}
-            plan.work.execute_seconds+=clock.elapsed().as_secs_f64();
-            plan.work.pool_calls+=u64::from(pooled);plan.work.levels+=1;
-            plan.work.task_capacity_bytes+=(tasks.capacity()*std::mem::size_of::<Task<'_>>()) as u64;
-            let clock=Instant::now();
-            // End all borrows of group inputs before scheduling any parent.
-            for task in tasks {
-                let added=task.added.len() as u64;
-                let direct=task.direct.len() as u64;
-                self.stats.update_rows+=direct;self.stats.dependency_rows+=task.dependency_rows;self.stats.added_keys+=added;
-                plan.work.tasks+=1;plan.work.direct_rows+=direct;plan.work.dependency_rows+=task.dependency_rows;
-                plan.work.candidate_visits+=task.candidate_visits;plan.work.added_keys+=added;
-                if let Some(worker)=task.worker {
-                    plan.work.worker_tasks[worker]+=1;plan.work.worker_rows[worker]+=direct+task.dependency_rows;
-                    plan.work.worker_seconds[worker]+=task.seconds;
-                } else {plan.work.inline_tasks+=1;}
-                self.states[task.id]=task.state;plan.outputs[task.id]=task.added;plan.active[task.id]=false;
-            }
-            for &id in &ids {
-                if plan.outputs[id].is_empty() {continue;}
-                plan.touched_outputs.push(id);
-                for &(parent,_) in &self.parents[id] {if self.states[parent].built {plan.schedule(parent);}}
-            }
-            ids.clear();plan.pending[level]=ids;
-            plan.work.restore_seconds+=clock.elapsed().as_secs_f64();
+            head+=1;
         }
+        let mut positions=vec![usize::MAX;self.specs.len()];
+        for (position,&id) in ids.iter().enumerate() {positions[id]=position;}
+        let mut tasks=Vec::with_capacity(ids.len());
+        let mut roots=Vec::new();
+        let mut remaining=Vec::with_capacity(ids.len());
+        for (position,&id) in ids.iter().enumerate() {
+            let spec=&self.specs[id];
+            let direct=&plan.inputs[plan.group[id]];
+            let mut columns=smallvec::SmallVec::<[usize;4]>::new();
+            let mut dependencies=0;
+            for guard in &spec.guards {
+                if positions[guard.child]!=usize::MAX {
+                    dependencies+=1;columns.extend(guard.cols.iter().copied());
+                }
+            }
+            plan.work.event_edges+=dependencies as u64;
+            if dependencies==0 {roots.push(position);}
+            remaining.push(AtomicUsize::new(dependencies));
+            columns.sort_unstable();columns.dedup();
+            plan.work.prepared_columns+=columns.len() as u64;
+            let read=(!columns.is_empty()).then(||index.publication_support(spec.table,&columns));
+            tasks.push(Mutex::new(Some(Task {id,spec,state:std::mem::take(&mut self.states[id]),
+                added:Vec::new(),direct,read,
+                dependency_rows:0,candidate_visits:0,worker:None,seconds:0.0})));
+        }
+        let finished:Vec<OnceLock<Task<'_>>>=(0..ids.len()).map(|_|OnceLock::new()).collect();
+        let pooled=pool.is_some() && ids.len()>1 && rows.len()>=grain.saturating_mul(workers).max(256);
+        let events=Events {tasks:&tasks,finished:&finished,remaining:&remaining,positions:&positions,
+            parents:&self.parents,states:&self.states,rows:&rows,collide:self.collide,inline_empty:AtomicUsize::new(0),
+            #[cfg(test)] before:None};
+        plan.work.event_nodes+=ids.len() as u64;
+        plan.work.event_header_bytes+=(tasks.capacity()*std::mem::size_of::<Mutex<Option<Task<'_>>>>()
+            + finished.capacity()*std::mem::size_of::<OnceLock<Task<'_>>>()
+            + remaining.capacity()*std::mem::size_of::<AtomicUsize>()
+            + (ids.capacity()+positions.capacity()+roots.capacity())*std::mem::size_of::<usize>()) as u64;
+        plan.work.prepare_seconds+=clock.elapsed().as_secs_f64();
+        let clock=Instant::now();
+        if pooled {
+            pool.unwrap().scope(|scope| {
+                let events=&events;
+                for &root in &roots {scope.spawn(move |scope|events.complete(root,Some(scope)));}
+            });
+        } else { for root in roots {events.complete(root,None);} }
+        plan.work.pool_calls+=u64::from(pooled);
+        plan.work.execute_seconds+=clock.elapsed().as_secs_f64();
+        let clock=Instant::now();
+        plan.work.event_inline_empty+=events.inline_empty.load(Ordering::Relaxed) as u64;
+        drop(events);drop(tasks);
+        for (position,result) in finished.into_iter().enumerate() {
+            let task=result.into_inner().expect("every affected condition completed");
+            let direct=task.direct.len() as u64;
+            self.stats.update_rows+=direct;self.stats.dependency_rows+=task.dependency_rows;
+            self.stats.added_keys+=task.added.len() as u64;
+            plan.work.tasks+=1;plan.work.direct_rows+=direct;plan.work.dependency_rows+=task.dependency_rows;
+            plan.work.candidate_visits+=task.candidate_visits;plan.work.added_keys+=task.added.len() as u64;
+            plan.work.event_empty_nodes+=u64::from(direct==0 && task.dependency_rows==0);
+            if let Some(worker)=task.worker {
+                plan.work.worker_tasks[worker]+=1;plan.work.worker_rows[worker]+=direct+task.dependency_rows;
+                plan.work.worker_seconds[worker]+=task.seconds;
+            } else {plan.work.inline_tasks+=1;}
+            self.states[task.id]=task.state;plan.active[ids[position]]=false;
+        }
+        plan.work.restore_seconds+=clock.elapsed().as_secs_f64();
         plan.work.peak_scratch_bytes=plan.work.peak_scratch_bytes.max(plan.scratch_bytes() as u64);
-        for id in plan.touched_outputs.drain(..) {plan.outputs[id].clear();}
         for group in plan.touched_groups.drain(..) {plan.inputs[group].clear();}
         changes.clear();index.changes=changes;
         true

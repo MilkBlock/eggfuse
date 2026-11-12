@@ -125,7 +125,8 @@ fn residuals_and_point_cells_share_one_run_snapshot_before_ordered_writes() {
         assert!(r["query_workers"]["stats"]["entry_range_rows"].as_u64().unwrap() > 0, "worker must enumerate the existing Entry range");
         assert!(work["merge_tasks"].as_u64().unwrap()>0);
         if workers>1 {
-            assert!(work["merge_pool_calls"].as_u64().unwrap()>0,"winner sorting must actually reach the pool: {work}");
+            assert_eq!(work["merge_pool_calls"],0,"winner sorting uses the existing Run pool, with no second barrier");
+            assert!(work["merge_worker_tasks"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>()>0,"winner sorting must actually reach the pool: {work}");
             assert!(work["merge_worker_rows"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>()>=256);
         } else {
             assert_eq!(work["merge_pool_calls"],0);

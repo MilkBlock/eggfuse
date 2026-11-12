@@ -18,7 +18,7 @@ enum Members<'a> {
     Tree(&'a BTreeSet<(u64, Dependency)>),
 }
 pub(super) struct Task<'a> {
-    code: usize,
+    pub(super) code: usize,
     rows: crate::entry_schedule::ReadEntries<'a>,
     members: Members<'a>,
     index: crate::query::snapshot::EntryHashes<'a>,

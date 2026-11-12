@@ -1,7 +1,6 @@
-//! Borrow already matched Cell instances into the source Run's query invocation.
-//! The existing rule groups own their slots and source order throughout. These
-//! jobs produce no answer vector, effects or Cursor mutations. Constructor
-//! preparation borrows the same sealed Run reader as query completion.
+//! Move already matched Cell instance groups through the same Run completion
+//! events as queries. Their original arrays and slots return unchanged in
+//! ownership; only the prepared fields are filled. Cursors stay source-local.
 use crate::{cell::{Instance, execution}, graph::Graph, program::Template};
 use rayon::prelude::*;
 use serde::Serialize;
@@ -31,61 +30,68 @@ pub(crate) struct Stats {
     pub execution: execution::Counts,
 }
 
-enum Rows<'a> {
-    Matched(&'a mut [Instance]),
-    Deferred(&'a mut [crate::stage_spine::Winner]),
+enum Rows {
+    Matched(Vec<Instance>),
+    Deferred(Vec<crate::stage_spine::Winner>),
 }
 trait Frame {
-    fn frame(&self) -> &Instance;
     fn frame_mut(&mut self) -> &mut Instance;
 }
 impl Frame for Instance {
-    fn frame(&self) -> &Instance { self }
     fn frame_mut(&mut self) -> &mut Instance { self }
 }
 impl Frame for crate::stage_spine::Winner {
-    fn frame(&self) -> &Instance { &self.answer }
     fn frame_mut(&mut self) -> &mut Instance { &mut self.answer }
 }
-impl Rows<'_> {
+impl Rows {
     fn len(&self) -> usize {
         match self { Self::Matched(rows) => rows.len(), Self::Deferred(rows) => rows.len() }
     }
-    fn any_pending(&self, code: &execution::Plan, checks: &mut u64) -> bool {
-        fn pending<T: Frame>(rows: &[T], code: &execution::Plan, checks: &mut u64) -> bool {
-            rows.iter().any(|row| { *checks += 1; code.needs_preparation(row.frame()) })
-        }
-        match self {
-            Self::Matched(rows) => pending(rows, code, checks),
-            Self::Deferred(rows) => pending(rows, code, checks),
-        }
-    }
+
 }
 pub(super) struct Group<'a> {
     code: &'a execution::Plan,
     template: &'a Template,
-    rows: Rows<'a>,
+    rows: Rows,
+    pub rule: usize,
+    target: usize,
 }
-pub(super) fn borrow<'a>(g: &'a Graph, matches: &'a mut [(usize, Vec<Instance>)],
-    spine: &'a mut crate::stage_spine::Programs, stats: &mut Stats)
-    -> Vec<Group<'a>> {
+pub(super) fn take<'a>(g: &'a Graph, matches: &mut [(usize, Vec<Instance>)],
+    spine: &mut crate::stage_spine::Programs, stats: &mut Stats) -> Vec<Group<'a>> {
     let mut groups = Vec::new();
-    let rows = matches.iter_mut().map(|(rule, rows)| (*rule, Rows::Matched(rows)))
-        .chain(spine.deferred_frames().map(|(rule, rows)| (rule, Rows::Deferred(rows))));
-    for (rule, rows) in rows {
+    for (target, (rule, rows)) in matches.iter_mut().enumerate() {
+        let code = &g.program.executions[*rule];
         stats.rule_checks += 1;
-        let code = &g.program.executions[rule];
-        if !code.has_preparation() { continue; }
-        let template = &g.program.templates[g.program.rules[rule].template];
-        if !rows.any_pending(code, &mut stats.admission_instances) { continue; }
+        if !code.has_preparation() || !rows.iter().any(|r| { stats.admission_instances += 1; code.needs_preparation(r) }) { continue; }
+        groups.push(Group { code, template: &g.program.templates[g.program.rules[*rule].template],
+            rows: Rows::Matched(std::mem::take(rows)), rule: *rule, target });
         stats.constructor_groups += u64::from(code.constructor.is_some());
-        stats.deferred_groups += u64::from(matches!(rows, Rows::Deferred(_)));
-        stats.header_growths += u64::from(groups.len() == groups.capacity());
-        groups.push(Group { code, template, rows });
+    }
+    for (rule, rows) in spine.deferred_rows() {
+        let code = &g.program.executions[rule];
+        stats.rule_checks += 1;
+        if !code.has_preparation() || !rows.iter().any(|r| { stats.admission_instances += 1; code.needs_preparation(&r.answer) }) { continue; }
+        groups.push(Group { code, template: &g.program.templates[g.program.rules[rule].template],
+            rows: Rows::Deferred(std::mem::take(rows)), rule, target: usize::MAX });
+        stats.constructor_groups += u64::from(code.constructor.is_some());
+        stats.deferred_groups += 1;
     }
     stats.groups += groups.len() as u64;
+    stats.header_growths += u64::from(!groups.is_empty());
     stats.header_capacity_bytes += (groups.capacity() * std::mem::size_of::<Group<'_>>()) as u64;
     groups
+}
+impl Group<'_> {
+    pub fn restore(self, matches: &mut [(usize, Vec<Instance>)], spine: &mut crate::stage_spine::Programs) {
+        match self.rows {
+            Rows::Matched(rows) => { debug_assert!(matches[self.target].1.is_empty()); matches[self.target].1 = rows; }
+            Rows::Deferred(mut rows) => { rows.append(spine.deferred_rule_rows(self.rule)); *spine.deferred_rule_rows(self.rule) = rows; }
+        }
+    }
+    pub fn execute(&mut self, grain: usize, reads: Option<&crate::graph::query_reads::QueryReads<'_>>, pooled: bool) -> Work {
+        if pooled { parallel(std::slice::from_mut(self), grain, reads) }
+        else { inline(std::slice::from_mut(self), grain, reads) }
+    }
 }
 pub(super) fn instances(groups: &[Group<'_>]) -> usize {
     groups.iter().map(|g| g.rows.len()).sum()
@@ -119,7 +125,7 @@ impl Work {
         self.histogram_capacity_bytes += ((after.saturating_sub(before)
             + after_constructors.saturating_sub(before_constructors)) * std::mem::size_of::<u64>()) as u64;
     }
-    fn add(mut self, other: Self) -> Self {
+    pub(super) fn add(mut self, other: Self) -> Self {
         self.execution.add(&other.execution);
         self.constructors.add(&other.constructors);
         self.instances += other.instances;
@@ -206,7 +212,7 @@ mod tests {
             ]),
         };
         let code = execution::Plan::derive(&[], &template, &[0, 1]);
-        let mut rows: Vec<_> = (0..64).map(|i| {
+        let rows: Vec<_> = (0..64).map(|i| {
             let mut values = Slots::with_capacity(4);
             values.extend([(0, Value::Eq(9)), (1, Value::Int(i))]);
             let mut row = Instance::matched(values, QueryFacts::None, 17);
@@ -218,7 +224,7 @@ mod tests {
         let allocations: Vec<_> = rows.iter().map(|r| std::ptr::from_ref(&r.values[&0])).collect();
         let row_array = rows.as_ptr();
         let pool = rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
-        let mut groups = [Group { code: &code, template: &template, rows: Rows::Matched(&mut rows) }];
+        let mut groups = [Group { code: &code, template: &template, rows: Rows::Matched(rows), rule:0, target:0 }];
         let work = pool.install(|| parallel(&mut groups, 8, None));
         assert_eq!(work.execution.operations, 64);
         assert_eq!(work.execution.later_operations, 32);
@@ -226,6 +232,7 @@ mod tests {
         assert_eq!(work.execution.frame_growths, 0);
         assert_eq!(work.histogram_growths, 0);
         assert_eq!(inline(&mut groups, 8, None).execution.operations, 0);
+        let Rows::Matched(rows) = &groups[0].rows else { unreachable!() };
         assert_eq!(rows.as_ptr(), row_array);
         for (i, row) in rows.iter().enumerate() {
             assert_eq!(std::ptr::from_ref(&row.values[&0]), allocations[i]);

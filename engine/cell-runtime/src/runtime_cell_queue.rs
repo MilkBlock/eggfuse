@@ -3,10 +3,9 @@
 //! retain source completion; shared effects and publication remain ordered.
 use super::*;
 use crate::graph::{
-    cell_births::{Done, Job},
+    cell_births::{Completed, Job},
     rhs_ownership::Suspended,
 };
-use rayon::prelude::*;
 
 struct Parked {
     execution: owned_cell::Execution,
@@ -51,151 +50,122 @@ impl Executor {
             }
         }
     }
-    fn drain_cell_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
-        if queue.owners.is_empty() {
-            return Ok(());
+    fn adopt_cell_event(&mut self, parked: Parked, completed: Option<Completed>) -> Result<()> {
+        let mut execution = parked.execution;
+        self.graph.restore_rhs(parked.context);
+        if let Some(Completed { done, effects }) = completed {
+            debug_assert_eq!(done.cell(), execution.cell);
+            execution.effects = effects;
+            if let Some(worker) = done.worker {
+                let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
+                if stats.worker_jobs.len() <= worker {
+                    let before = stats.worker_jobs.capacity();
+                    stats.worker_jobs.resize(worker + 1, 0);
+                    stats.queue_growths += u64::from(before != stats.worker_jobs.capacity());
+                    stats.queue_bytes += ((stats.worker_jobs.capacity() - before) * std::mem::size_of::<u64>()) as u64;
+                }
+                stats.worker_jobs[worker] += 1;
+            }
+            let worker = done.worker.is_some();
+            let mut counts = self.graph.commit_local_job(done, &mut execution.effects.writer())?;
+            execution.work.facts += counts.committed_rows;
+            execution.work.updates += counts.unit_inserts;
+            execution.work.constructors += counts.local_births + counts.local_reuses;
+            if worker { counts.worker_operations += counts.local_births + counts.local_reuses; }
+            self.cell_execution.as_mut().unwrap().counts.births.add(counts);
         }
-        let count = queue.owners.iter().filter(|p| p.job.is_some()).count();
-        let mut completed = if count != 0 {
+        self.finish_attached_cell(execution)?;
+        self.graph.sealed_input_cell = None;
+        self.graph.sealed_generation = None;
+        Ok(())
+    }
+    fn drain_cell_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
+        if queue.owners.is_empty() { return Ok(()); }
+        let pool = self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
+        let tasks: Vec<_> = queue.owners.iter_mut().filter_map(|p| p.job.take()
+            .map(|job| (job, std::mem::take(&mut p.execution.effects)))).collect();
+        let count = tasks.len();
+        let mut owners = queue.owners.drain(..);
+        let result = if count != 0 {
             #[cfg(feature="cell-sync-diagnostics")]
             let mut diagnostic = crate::sync_diagnostics::Clock::new();
+            // Only the parent snapshot crosses workers. Source writes go to
+            // its existing epoch overlay until all borrowed readers leave.
             let parents = self.graph.parents.freeze();
-            let tasks: Vec<_> = queue
-                .owners
-                .iter_mut()
-                .filter_map(|p| p.job.take().map(|job| (job, p.execution.effects.writer())))
-                .collect();
-            let bytes =
-                tasks.capacity() * std::mem::size_of::<(Job, crate::cell::EffectWriter<'_>)>();
             let grain = self.cell_execution.as_ref().unwrap().grain;
             let stats = &mut self.cell_execution.as_mut().unwrap().counts;
             stats.births.root_snapshots += 1;
             stats.scheduler.queue_growths += 1;
-            stats.scheduler.queue_bytes += bytes as u64;
+            stats.scheduler.queue_bytes += (tasks.capacity() * std::mem::size_of::<(Job, crate::cell::Effects)>()) as u64;
             stats.scheduler.batches += 1;
             stats.scheduler.jobs += count as u64;
             stats.scheduler.max_ready = stats.scheduler.max_ready.max(count);
-            let parallel = count > 1
-                && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
-            let clock = Instant::now();
-            let pool = self
-                .query_workers
-                .as_ref()
-                .unwrap()
-                .execution_pool()
-                .unwrap();
-            let run = |(job, mut effects): (Job, crate::cell::EffectWriter<'_>)| {
-                job.run(
-                    crate::value::parent_epoch::Read {
-                        base: &parents,
-                        delta: None,
-                    },
-                    &mut effects,
-                )
+            let parallel = count > 1 && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
+            let read = crate::value::parent_epoch::Read { base: &parents, delta: None };
+            let consume = |completed: &mut Vec<Completed>| {
+                // A ready prefix may retain table ownership. No wait for a
+                // larger batch: small prefixes use ordinary exact validation.
+                let registry_start = self.graph.functions.len();
+                let registered = completed.len() <= owners.len()
+                    && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
+                        done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()))
+                    && self.graph.plan_unit_registration(completed, &pool);
+                #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
+                let result = (|| {
+                    for done in completed.drain(..) {
+                        loop {
+                            let parked = owners.next().expect("one owner per completion");
+                            if parked.execution.cell == done.done.cell() {
+                                self.adopt_cell_event(parked, Some(done))?;
+                                break;
+                            }
+                            // Already-complete Cells parked behind this source
+                            // prefix carry no worker result, but keep effect order.
+                            self.adopt_cell_event(parked, None)?;
+                        }
+                    }
+                    Ok(())
+                })();
+                #[cfg(feature="cell-sync-diagnostics")]
+                { let elapsed = adoption.elapsed().as_nanos() as u64;
+                  let stats = &mut self.graph.stats.sync_diagnostics;
+                  stats.source_batches += 1; stats.source_adoption_ns += elapsed;
+                  if registered { stats.registered_source_batches += 1; stats.registered_source_adoption_ns += elapsed; } }
+                if registered { self.graph.finish_unit_registration(registry_start, &pool); }
+                result
             };
+            let clock = Instant::now();
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
-            let done: Vec<Done> = if tasks.iter().any(|(job, _)| job.dependent()) {
-                let (done, counts) = crate::graph::cell_births::run_shared(
-                    tasks,
-                    crate::value::parent_epoch::Read {
-                        base: &parents,
-                        delta: None,
-                    },
-                    pool,
-                    parallel,
-                );
-                stats.births.add(counts);
-                done
-            } else if parallel {
-                pool.install(|| tasks.into_par_iter().with_min_len(4).map(run).collect())
+            let (result, events, shared) = if tasks.iter().any(|(job, _)| job.dependent()) {
+                let ((result, events), shared) = crate::graph::cell_births::stream_shared(
+                    tasks, read, parallel.then_some(pool.as_ref()), consume);
+                (result, events, Some(shared))
             } else {
-                tasks.into_iter().map(run).collect()
+                let (result, events) = crate::completion_events::ordered(tasks, parallel.then_some(pool.as_ref()),
+                    |(job, mut effects)| { let done = job.run(read, &mut effects.writer()); Completed { done, effects } }, consume);
+                (result, events, None)
             };
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.join();
             let elapsed = clock.elapsed().as_nanos() as u64;
-            stats.scheduler.wait_ns += elapsed;
-            if parallel {
-                stats.births.worker_batches += 1;
-                stats.births.worker_wait_ns += elapsed;
-            }
-            stats.scheduler.queue_growths += 1;
-            stats.scheduler.queue_bytes += (done.capacity() * std::mem::size_of::<Done>()) as u64;
             drop(parents);
             let work = self.graph.parents.thaw();
+            let stats = &mut self.cell_execution.as_mut().unwrap().counts;
+            stats.scheduler.wait_ns += elapsed; // scope span, including source adoption
+            stats.scheduler.event_waves += events.waves;
+            stats.scheduler.event_early_cells += events.early;
+            stats.scheduler.event_wait_ns += events.wait_ns;
+            stats.scheduler.event_bytes += events.bytes;
+            if let Some(shared) = shared { stats.births.add(shared); }
+            if parallel { stats.births.worker_batches += 1; stats.births.worker_wait_ns += elapsed; }
             stats.births.root_writes += work.writes;
             stats.births.root_growths += work.growths;
             stats.births.root_merges += work.merged_entries;
             #[cfg(feature="cell-sync-diagnostics")]
             self.graph.stats.sync_diagnostics.constructors.record(diagnostic,None,parallel,pool.current_num_threads());
-            done
-        } else {
-            Vec::new()
-        };
-        // All remaining effects must already be represented by these terminal
-        // rows. A partial tail or scalar suffix retains ordinary source lookup.
-        let registry_start = self.graph.functions.len();
-        let registered = completed.len() == queue.owners.len()
-            && completed.iter().zip(&queue.owners).all(|(done, owner)|
-                done.cell() == owner.execution.cell && done.complete_at(owner.execution.ops.len()))
-            && self.graph.plan_unit_registration(&mut completed,
-                self.query_workers.as_ref().unwrap().execution_pool().unwrap());
-        let mut completed = completed.into_iter().peekable();
-        #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
-        let result = (|| {
-        for parked in queue.owners.drain(..) {
-            let mut execution = parked.execution;
-            self.graph.restore_rhs(parked.context);
-            if completed
-                .peek()
-                .is_some_and(|done| done.cell() == execution.cell)
-            {
-                let done = completed.next().unwrap();
-                if let Some(worker) = done.worker {
-                    let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
-                    if stats.worker_jobs.len() <= worker {
-                        let before = stats.worker_jobs.capacity();
-                        stats.worker_jobs.resize(worker + 1, 0);
-                        stats.queue_growths += u64::from(before != stats.worker_jobs.capacity());
-                        stats.queue_bytes += ((stats.worker_jobs.capacity() - before)
-                            * std::mem::size_of::<u64>())
-                            as u64;
-                    }
-                    stats.worker_jobs[worker] += 1;
-                }
-                let worker = done.worker.is_some();
-                let mut counts = self.graph.commit_local_job(done,&mut execution.effects.writer())?;
-                execution.work.facts += counts.committed_rows;
-                execution.work.updates += counts.unit_inserts;
-                execution.work.constructors += counts.local_births + counts.local_reuses;
-                if worker {
-                    counts.worker_operations += counts.local_births + counts.local_reuses;
-                }
-                self.cell_execution
-                    .as_mut()
-                    .unwrap()
-                    .counts
-                    .births
-                    .add(counts);
-            }
-            self.finish_attached_cell(execution)?;
-            self.graph.sealed_input_cell = None;
-            self.graph.sealed_generation = None;
-        }
-        debug_assert!(completed.next().is_none());
-        Ok(())
-        })();
-        #[cfg(feature="cell-sync-diagnostics")]
-        { let elapsed = adoption.elapsed().as_nanos() as u64;
-          let stats = &mut self.graph.stats.sync_diagnostics;
-          stats.source_batches += 1; stats.source_adoption_ns += elapsed;
-          if registered { stats.registered_source_batches += 1; stats.registered_source_adoption_ns += elapsed; } }
-        if registered {
-            self.graph.finish_unit_registration(registry_start,
-                self.query_workers.as_ref().unwrap().execution_pool().unwrap());
-        }
-        pending.clear();
-        queue.operations = 0;
-        queue.shared = false;
+            result
+        } else { Ok(()) };
+        let result = result.and_then(|()| { for parked in owners { self.adopt_cell_event(parked, None)?; } Ok(()) });
+        pending.clear(); queue.operations = 0; queue.shared = false;
         result
     }
     pub(super) fn apply_cell_batch(

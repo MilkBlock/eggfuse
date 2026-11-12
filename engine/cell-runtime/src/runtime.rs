@@ -2711,35 +2711,35 @@ impl Executor {
                 #[cfg(feature="parallel-residuals")] &mut self.sieve,
                 #[cfg(feature="parallel-residuals")] self.free_join.entry_plan(),
                 #[cfg(feature="parallel-residuals")] &self.entry_schedule)?;
-            #[cfg(feature="parallel-residuals")]
-            workers.finish_expansion_rules(&mut work,&self.graph.program.rules);
-            let (mut order_comparisons, mut binding_moves) = (0, 0);
-            for (rid, residual) in &mut work {
+            // Query completion events already selected winners and assembled
+            // the actual RHS instances. Only aggregate accounting waits here.
+            let completed=std::mem::take(&mut workers.completed_rules);
+            let (mut order_comparisons,mut binding_moves)=(0,0);
+            for done in completed {
+                let rid=done.rule;
                 #[cfg(feature="parallel-residuals")]
-                {
-                    if let Some((n,previous,direct,candidates))=self.query_workers.as_mut().unwrap()
-                        .finish_expansion_rule(*rid) {
-                        self.dedup_rows+=n as u64;
-                        let fields=(n*self.graph.program.rules[*rid].inputs.len()) as u64;
-                        self.dedup_full_elements+=fields;self.dedup_elements+=fields;
-                        self.dedup_duplicates+=(n-residual.len()) as u64;
-                        if self.graph.program.neighbor_plans[*rid].is_some() {self.neighbor.stats(*rid).residual_entries+=direct;}
-                        if self.profile_queries {
-                            self.query_profile[*rid].2+=candidates;
-                            self.query_profile[*rid].3=self.query_profile[*rid].3-previous as u64+residual.len() as u64;
-                        }
-                    }
-                }
-                if let Some((complete, answers)) = self.stage_spine.finish_worker_rule(*rid, &self.graph.program.rules[*rid].inputs, &mut order_comparisons) {
-                    binding_moves += residual.len() as u64;
-                    let previous_answers = residual.len();
-                    let mut merged = answers;
-                    merged.append(residual);
-                    *residual = if complete { merged } else { self.dedup_bindings(*rid, merged)? };
+                if let Some((n,previous,selected))=done.residual {
+                    let (_,_,direct,candidates)=self.query_workers.as_mut().unwrap().finish_expansion_rule(rid)
+                        .expect("completed residual rule");
+                    self.dedup_rows+=n as u64;
+                    let fields=(n*self.graph.program.rules[rid].inputs.len()) as u64;
+                    self.dedup_full_elements+=fields;self.dedup_elements+=fields;
+                    self.dedup_duplicates+=(n-selected) as u64;
+                    if self.graph.program.neighbor_plans[rid].is_some() {self.neighbor.stats(rid).residual_entries+=direct;}
                     if self.profile_queries {
-                        self.query_profile[*rid].3 = self.query_profile[*rid].3 - previous_answers as u64 + residual.len() as u64;
+                        self.query_profile[rid].2+=candidates;
+                        self.query_profile[rid].3=self.query_profile[rid].3-previous as u64+selected as u64;
                     }
                 }
+                if let Some(previous)=done.spine_previous {
+                    binding_moves+=previous as u64;
+                    if self.profile_queries {self.query_profile[rid].3=self.query_profile[rid].3-previous as u64+done.final_len as u64;}
+                }
+                self.dedup_rows+=done.dedup_rows as u64;
+                let fields=(done.dedup_rows*self.graph.program.rules[rid].inputs.len()) as u64;
+                self.dedup_full_elements+=fields;self.dedup_elements+=fields;
+                self.dedup_duplicates+=done.dedup_duplicates as u64;
+                order_comparisons+=done.comparisons;
             }
             self.query_workers.as_mut().unwrap().record_completion(order_comparisons, binding_moves);
             count = work.iter().map(|(_, b)| b.len()).sum();
@@ -3314,8 +3314,8 @@ impl Executor {
                 "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
                 "scope":"workers materialize constructor and terminal Unit rows; source-order interning adopts winners and invalidates duplicate Unit candidates without replaying Set",
                 "synchronous_single_cell_dispatch":false,"available_through_ready_queue":true});
-            report["cell_execution"]["scheduler"] = json!({"schema":"cell-ready-batches/v3",
-                "scope":"inherited and fresh Cell tails share ready batches; early completion waits for preceding source tails; uncovered effects and Run visibility retain source order",
+            report["cell_execution"]["scheduler"] = json!({"schema":"cell-completion-events/v4",
+                "scope":"inherited and fresh Cell tails return completion events; each ready source prefix validates and resumes immediately; effect order and Run visibility remain live",
                 "ready_limit":64,"independent_scheduling":true,
                 "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,

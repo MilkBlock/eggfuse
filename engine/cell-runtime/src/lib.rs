@@ -22,6 +22,8 @@ mod rhs_work;
 mod tiny_set;
 #[cfg(feature = "sparse-cells")]
 mod ordered_run;
+#[cfg(feature = "sparse-cells")]
+mod completion_events;
 #[cfg(feature = "slot-transfer-audit")]
 pub mod transfer_audit;
 mod view_plan;

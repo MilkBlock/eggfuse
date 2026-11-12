@@ -19,6 +19,7 @@ pub(super) struct Chunk<'a> {
     source: usize,
     members: Members<'a>,
 }
+impl Chunk<'_> { pub(super) fn code(&self) -> usize { self.range.code } }
 impl Workers {
     pub(super) fn enqueue_entry_range(&mut self, code: usize,
         batch: crate::entry_schedule::Batch<'_>, watermark: u64, known: &QueryFacts) {

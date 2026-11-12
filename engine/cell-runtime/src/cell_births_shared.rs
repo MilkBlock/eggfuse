@@ -3,7 +3,6 @@
 //! Only earlier source Cells/operations are candidates, so recursive helping is
 //! acyclic. Public graph mutation and effect ordering remain with the owner.
 use super::*;
-use rayon::prelude::*;
 use std::sync::{
     OnceLock,
     atomic::{AtomicU64, AtomicUsize, Ordering},
@@ -338,7 +337,7 @@ impl<'a> Batch<'a> {
             counts: Counts::default(),
         };
         // This is another handle to the same sealed inputs, not a bindings copy.
-        // The immutable job handle is dropped before the owner is reattached.
+        // Peers may retain this immutable prefix after its source owner resumes.
         let mut values = owner.frame.values.shared_suffix();
         piece.counts.frame_handles += 1;
         let capacity = values.capacity_bytes();
@@ -403,33 +402,26 @@ impl<'a> Batch<'a> {
     }
 }
 
-pub(crate) fn run(
-    tasks: Vec<(Job, EffectWriter<'_>)>,
-    parents: Read<'_>,
-    pool: &rayon::ThreadPool,
-    parallel: bool,
-) -> (Vec<Done>, Counts) {
+pub(crate) fn stream<E>(
+    tasks: Vec<(Job, crate::cell::Effects)>, parents: Read<'_>,
+    pool: Option<&rayon::ThreadPool>, consume: impl FnMut(&mut Vec<Completed>) -> std::result::Result<(), E>,
+) -> ((std::result::Result<(), E>, crate::completion_events::Work), Counts) {
     let (jobs, effects): (Vec<_>, Vec<_>) = tasks.into_iter().unzip();
     let mut counts = Counts::default();
     counts.shared_growths += 2;
     counts.shared_bytes += (jobs.capacity() * std::mem::size_of::<Job>()
-        + effects.capacity() * std::mem::size_of::<EffectWriter<'_>>())
-        as u64;
+        + effects.capacity() * std::mem::size_of::<crate::cell::Effects>()) as u64;
     let batch = Batch::new(&jobs, parents, &mut counts);
-    let run = |(i, mut effects): (usize, EffectWriter<'_>)| batch.finish(i, &mut effects);
-    let done = if parallel {
-        pool.install(|| {
-            effects
-                .into_par_iter()
-                .enumerate()
-                .with_min_len(4)
-                .map(run)
-                .collect()
-        })
-    } else {
-        effects.into_iter().enumerate().map(run).collect()
+    // Peers retain immutable input handles. The owner can reattach and advance
+    // its mutable suffix while these readers keep the admitted input snapshot.
+    let tasks: Vec<_> = effects.into_iter().enumerate().collect();
+    counts.shared_growths += 1;
+    counts.shared_bytes += (tasks.capacity() * std::mem::size_of::<(usize, crate::cell::Effects)>()) as u64;
+    let run = |(i, mut effects): (usize, crate::cell::Effects)| {
+        let done = batch.finish(i, &mut effects.writer());
+        Completed { done, effects }
     };
-    (done, counts)
+    (crate::completion_events::ordered(tasks, pool, run, consume), counts)
 }
 
 impl Graph {
