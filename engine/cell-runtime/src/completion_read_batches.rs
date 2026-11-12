@@ -460,7 +460,7 @@ impl Graph {
     ) -> Result<()> {
         // Input values are certified unchanged. Result, visibility and
         // epoch are current commit-time data, not prefetched metadata.
-        let state = &self.cells[&fact.cell].facts[&fact.op];
+        let state = self.cells.fact_state(fact).unwrap();
         row.hidden = state.hidden;
         row.epoch = state.epoch;
         let mut refreshed_result = None;
@@ -487,7 +487,7 @@ impl Graph {
         for answer in answers {
             self.batch_stats().selection_checks += 1;
             let f = answer.candidate.fact;
-            let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+            let Some(state) = self.cells.fact_state(f) else {
                 self.batch_stats().selection_dead_skips += 1;
                 continue;
             };

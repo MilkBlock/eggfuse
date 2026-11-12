@@ -141,7 +141,7 @@ impl Graph {
         if !matched? {
             return Ok(None);
         }
-        self.read_stable_fact(f, &self.cells[&f.cell].facts[&f.op], row)
+        self.read_stable_fact(f, self.cells.fact_state(f).unwrap(), row)
             .map(Some)
     }
     pub(in crate::graph) fn complete_port_key(&mut self, f: FactRef, row: Row) -> Result<()> {

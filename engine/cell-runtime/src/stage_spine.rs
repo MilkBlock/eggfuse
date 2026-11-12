@@ -1,6 +1,7 @@
 //! Source-scheduled Cell programs. A committed producer supplies the next
 //! stage's complete context; the stage consumes it without a structural join.
 //! Coverage is proved from functional table keys, not from observed frequency.
+use crate::graph::FactStates as _;
 use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
@@ -2267,9 +2268,7 @@ impl Programs {
                 self.stats.legacy_retirement_checks += 1;
                 let live = match *w {
                     Dependency::Fact(f) => g
-                        .cells
-                        .get(&f.cell)
-                        .and_then(|c| c.facts.get(&f.op))
+                        .cells.fact_state(f)
                         .is_some_and(|f| !f.hidden),
                     Dependency::Function(i) => g.functions.get(i).is_some_and(|f| f.live),
                 };

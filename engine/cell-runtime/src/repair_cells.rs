@@ -269,9 +269,7 @@ impl Graph {
         let stats = self.repair_cells.as_mut().unwrap();
         stats.attempts += 1;
         let Some(state) = self
-            .cells
-            .get_mut(&f.cell)
-            .and_then(|c| c.facts.get_mut(&f.op))
+            .cells.fact_state_mut(f)
         else {
             stats.unmatched += 1;
             return Delta::Uncovered;
@@ -345,7 +343,7 @@ impl Graph {
     /// Match the exact key from the retained canonical body, then execute the
     /// checked terminal effect. No legacy decode or second lookup follows.
     pub(super) fn match_repair_key(&mut self, f: FactRef) -> Result<bool> {
-        let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+        let Some(state) = self.cells.fact_state(f) else {
             return Ok(false);
         };
         let Some((table, _)) = &state.decoded else {

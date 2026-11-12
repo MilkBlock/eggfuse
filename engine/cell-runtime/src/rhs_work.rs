@@ -1,6 +1,7 @@
 //! Diagnostic cohort, selected by actual non-resumed closed RHS executions.
 //! Replay validates the exact inputs, scheduling position and ordered
 //! non-reflexive union requests. It observes normal execution without routing it.
+use crate::graph::FactStates as _;
 use crate::{
     graph::{Dependency, FactRef, Graph},
     program::{Program, Result},
@@ -230,7 +231,7 @@ impl Ledger {
                 } else {
                     life.visible_forwarded += 1;
                     if let Dependency::Fact(keep) = target
-                        && g.cells[&keep.cell].facts[&keep.op].born < g.epoch
+                        && g.cells.fact_state(keep).unwrap().born < g.epoch
                     {
                         #[cfg(feature = "keeper-proof")]
                         if !seen.get() {

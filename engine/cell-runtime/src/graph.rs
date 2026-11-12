@@ -12,6 +12,9 @@ pub mod maintenance;
 pub mod local_union_cells;
 #[path = "cell_ownership.rs"]
 pub mod cell_ownership;
+#[path="fact_states.rs"]
+mod fact_states;
+pub(crate) use fact_states::FactStates;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -473,10 +476,7 @@ impl Graph {
     pub(crate) fn current_port_slot(&self, w: Dependency) -> Option<u32> {
         match w {
             Dependency::Fact(f) => self
-                .cells
-                .get(&f.cell)?
-                .facts
-                .get(&f.op)
+                .cells.fact_state(f)
                 .map(|f| f.port_slot),
             Dependency::Function(i) => self.functions.get(i).map(|f| f.port_slot),
         }
@@ -494,11 +494,7 @@ impl Graph {
     pub(crate) fn set_port_slot(&mut self, w: Dependency, id: u32) {
         match w {
             Dependency::Fact(f) => {
-                self.cells
-                    .get_mut(&f.cell)
-                    .unwrap()
-                    .facts
-                    .get_mut(&f.op)
+                self.cells.fact_state_mut(f)
                     .unwrap()
                     .port_slot = id
             }
@@ -531,9 +527,7 @@ impl Graph {
             Dependency::Fact(f) => {
                 self.live_table(w) == Some(table)
                     && self
-                        .cells
-                        .get(&f.cell)
-                        .and_then(|c| c.facts.get(&f.op))
+                        .cells.fact_state(f)
                         .is_some_and(|s| !s.hidden)
             }
             Dependency::Function(i) => self
@@ -1097,10 +1091,7 @@ impl Graph {
     }
     #[inline]
     pub fn fact(&self, f: FactRef) -> Result<Option<Row>> {
-        let Some(c) = self.cells.get(&f.cell) else {
-            return Ok(None);
-        };
-        let Some(s) = c.facts.get(&f.op) else {
+        let Some(s) = self.cells.fact_state(f) else {
             return Ok(None);
         };
         if let Some(stored) = self.stable_node(f) {
@@ -1116,6 +1107,9 @@ impl Graph {
             }));
         }
 
+        // Stable fields and cached rows need only the fact's logical identity.
+        // The ordinary recipe fallback still requires the original frame.
+        let c = self.cells.get(&f.cell).ok_or("live fact lacks recipe owner")?;
         self.decode_fact(f, c, s).map(Some)
     }
 
@@ -1231,10 +1225,7 @@ impl Graph {
     pub(crate) fn visible_epoch(&self, w: Dependency) -> Option<u64> {
         match w {
             Dependency::Fact(f) => self
-                .cells
-                .get(&f.cell)?
-                .facts
-                .get(&f.op)
+                .cells.fact_state(f)
                 .filter(|s| !s.hidden)
                 .map(|s| s.epoch),
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.epoch),
@@ -1246,7 +1237,7 @@ impl Graph {
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.table),
             Dependency::Fact(f) => {
                 let c = self.cells.get(&f.cell)?;
-                c.facts.get(&f.op)?;
+                self.cells.fact_state(f)?;
 
                 match self.program.templates[c.template].ops.get(f.op as usize)? {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => Some(*t),
@@ -1612,11 +1603,8 @@ impl Graph {
         let local_union_owned = self.defer_local_birth(f, t);
         let owned = self.owns_birth(f);
         assert!(!port_key || owned, "port-key constructor lacks shared-template coverage");
-        let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
-        #[cfg(feature = "sparse-cells")]
-        facts.reserve_first();
-        facts.insert(
-            f.op,
+        self.cells.insert_fact_state(
+            f,
             FactState {
                 owned,
                 local_union_owned,
@@ -1828,7 +1816,7 @@ impl Graph {
         self.stats.constructor_prepared_liveness_checks += 1;
         if self.receipt_forwards.contains_key(&Dependency::Fact(witness)) { return Ok(None); }
         let Some(frame) = self.cells.get(&witness.cell) else { return Ok(None); };
-        let Some(state) = frame.facts.get(&witness.op).filter(|s| !s.hidden) else { return Ok(None); };
+        let Some(state) = self.cells.fact_state(witness).filter(|s| !s.hidden) else { return Ok(None); };
         let (actual, args, result) = match &self.program.templates[frame.template].ops[witness.op as usize] {
             Op::Let(dst, Call::Table(t), args) => (*t, args, Arg::Slot(*dst)),
             Op::Set(t, args, value) => (*t, args, value.clone()),
@@ -2066,9 +2054,7 @@ impl Graph {
             }
             if !retained && let Dependency::Fact(f) = d
                 && let Some(state) = self
-                    .cells
-                    .get_mut(&f.cell)
-                    .and_then(|c| c.facts.get_mut(&f.op))
+                    .cells.fact_state_mut(*f)
             {
                 state.decoded = None;
             }
@@ -2445,7 +2431,7 @@ impl Graph {
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
             let owned=self.retire_owned(f,r.table);
-            let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
+            let local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, true);
             if let Some(matcher) = self.union_digest.as_mut() {
                 matcher.removed(f);
@@ -2453,11 +2439,7 @@ impl Graph {
             self.changes.retire(r.table, Dependency::Fact(f));
             self.query_versions[r.table] += 1;
             let s = self
-                .cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .remove(&f.op)
+                .cells.remove_fact_state(f)
                 .unwrap();
             self.retire_stable_node(f);
             #[cfg(feature = "receipt-slots")]
@@ -2511,17 +2493,13 @@ impl Graph {
         };
         match row.witness {
             Dependency::Fact(f) => {
-                let born = self.cells[&f.cell].facts[&f.op].born;
+                let born = self.cells.fact_state(f).unwrap().born;
                 if delete {
                     self.retire(f)?;
                     self.changed = true;
                 } else {
                     let s = self
-                        .cells
-                        .get_mut(&f.cell)
-                        .unwrap()
-                        .facts
-                        .get_mut(&f.op)
+                        .cells.fact_state_mut(f)
                         .unwrap();
                     if !s.hidden {
                         self.query_versions[t] += 1;
@@ -2620,7 +2598,7 @@ impl Graph {
     }
     fn commit_constructor_collision(&mut self, f: FactRef, r: Row, h: Option<u64>, found: Option<Row>) -> Result<()> {
         let d = Dependency::Fact(f);
-        let old = self.cells[&f.cell].facts[&f.op].hash;
+        let old = self.cells.fact_state(f).unwrap().hash;
         self.stats.repair_key_hash_changes += u64::from(h.is_some_and(|h|h != old));
         if h.is_some() && let Some(bucket) = self.intern.get_mut(&old) {
             bucket.remove(&f);
@@ -2633,11 +2611,7 @@ impl Graph {
             if let Dependency::Fact(keep) = other.witness {
                 self.query_versions[r.table] += 1;
                 let target = self
-                    .cells
-                    .get_mut(&keep.cell)
-                    .unwrap()
-                    .facts
-                    .get_mut(&keep.op)
+                    .cells.fact_state_mut(keep)
                     .unwrap();
                 #[cfg(feature = "receipt-slots")]
                 if r.hidden && target.port_slot != 0 {
@@ -2660,21 +2634,17 @@ impl Graph {
             }
             self.retire(f)?;
         } else {
-            let was_local = self.cells[&f.cell].facts[&f.op].local_union_owned;
+            let was_local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, false);
             if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
             let s = self
-                .cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+                .cells.fact_state_mut(f)
                 .unwrap();
 
             s.decoded = if self.stable_ports.is_none() || !s.owned { Some((r.table, r.values.clone())) } else { None };
             if let Some(h) = h { s.hash = h; }
             s.epoch = self.epoch;
-            if self.cells[&f.cell].facts[&f.op].owned {
+            if self.cells.fact_state(f).unwrap().owned {
                 self.query_versions[r.table]+=1;
             } else { self.subscribe_rows(r.table, d, if was_local { &[] } else { &r.values }, &r.values); }
             self.changes.touch(r.table, d);
@@ -2887,7 +2857,7 @@ impl Graph {
     }
     fn retire_empty(&mut self, cell: u32) {
         if self.parent_users.get(&cell).copied().unwrap_or(0) == 0
-            && self.cells.get(&cell).is_some_and(|c| c.facts.is_empty())
+            && self.cells.fact_count(cell)==Some(0)
         {
             if let Some(c) = self.cells.remove(&cell) {
                 if let Some(p) = c.parent {

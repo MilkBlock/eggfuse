@@ -1,5 +1,6 @@
 //! Compiler-owned shared entry nodes. Current parameter packets are maintained
 //! once per changed input; consumers borrow them at their original source Run.
+use crate::graph::FactStates as _;
 use crate::{
     graph::{Dependency, Graph, Row},
     program::*,
@@ -854,8 +855,7 @@ impl Scheduler {
                     } else {
                         self.stats.entry_retirement_checks += 1;
                         match w {
-                            Dependency::Fact(f) => g.cells.get(&f.cell)
-                                .and_then(|c| c.facts.get(&f.op)).is_some_and(|f| !f.hidden),
+                            Dependency::Fact(f) => g.cells.fact_state(f).is_some_and(|f| !f.hidden),
                             Dependency::Function(i) => g.functions.get(i).is_some_and(|f| f.live),
                         }
                     };

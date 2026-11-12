@@ -135,7 +135,7 @@ impl Read<'_> {
         let Some(node) = self.guard.node(fact, &mut w.reads) else { return Ok(None) };
         if !self.guard.key_matches(node, table, key, &mut w.reads)? { return Ok(None); }
         w.metadata_reads += 1;
-        let state = self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op))
+        let state = self.cells.fact_state(fact)
             .ok_or("live stable constructor has no lifecycle state")?;
         Ok(Some((self.guard.result(node, &mut w.reads)?, state.epoch, Dependency::Fact(fact), state.hidden)))
     }

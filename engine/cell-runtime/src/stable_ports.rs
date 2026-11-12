@@ -130,12 +130,8 @@ impl Graph {
         let facts = self
             .cells
             .iter()
-            .flat_map(|(&cell, c)| {
-                c.facts
-                    .iter()
-                    .filter(|(_, s)| s.owned)
-                    .map(move |(&op, _)| FactRef { cell, op })
-            })
+            .flat_map(|(&cell, _)| self.cells.fact_states(cell)
+                .filter(|(_,s)|s.owned).map(|(f,_)|f))
             .collect::<Vec<_>>();
         for f in facts {
             let row = self.fact(f)?.ok_or("missing initial owned fact")?;
@@ -191,11 +187,7 @@ impl Graph {
         let Some(scalars) = scalars else { return; };
         let fields = Fields { component: frame.component, program, ports, operation: f.op as usize, scalars: scalars.into_boxed_slice() };
         let state = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
+            .cells.fact_state_mut(f)
             .unwrap();
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
@@ -303,11 +295,7 @@ impl Graph {
         let unique = port_key && stable.unwrap().1 && self.unique_port_input(f, columns);
         let m = self.ownership.as_mut().unwrap();
         let state = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
+            .cells.fact_state_mut(f)
             .unwrap();
         let mut stats = stable.map(|_| self.stable_ports.as_mut().unwrap());
         let (table, key) = if let Some((table, key)) = stable {

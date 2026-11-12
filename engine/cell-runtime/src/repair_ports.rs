@@ -70,9 +70,7 @@ impl Graph {
         let stats = self.repair_ports.as_mut().unwrap();
         stats.attempts += 1;
         let Some(state) = self
-            .cells
-            .get_mut(&f.cell)
-            .and_then(|c| c.facts.get_mut(&f.op))
+            .cells.fact_state_mut(f)
         else {
             return false;
         };

@@ -156,7 +156,7 @@ impl Graph {
         matcher.live_rows += 1;
         matcher.stats.peak_packets = matcher.stats.peak_packets.max(matcher.live_rows);
         if let Some(e) = matcher.expressions.as_mut() {
-            let state = &self.cells[&f.cell].facts[&f.op];
+            let state = self.cells.fact_state(f).unwrap();
             let (table, fields) = state.decoded.as_ref().ok_or("missing application fields")?;
             if self.program.tables[*table].constructor {
                 e.application(*table, fields.clone(), &self.parents, self.epoch);
@@ -179,7 +179,7 @@ impl Graph {
     /// Exact correlated join against the SAME buckets used by constructor
     /// lookup. A hash collision only adds candidate work, never equality.
     fn join_digest(&mut self, f: FactRef) -> Result<()> {
-        let state = &self.cells[&f.cell].facts[&f.op];
+        let state = self.cells.fact_state(f).unwrap();
         let (table, fields) = state
             .decoded
             .as_ref()
@@ -192,7 +192,7 @@ impl Graph {
                 continue;
             }
             matcher.stats.full_key_checks += 1;
-            let other_state = &self.cells[&other.cell].facts[&other.op];
+            let other_state = self.cells.fact_state(other).unwrap();
             let (other_table, other_fields) = other_state
                 .decoded
                 .as_ref()
@@ -271,9 +271,7 @@ impl Graph {
                 }
             };
             let Some(state) = self
-                .cells
-                .get_mut(&f.cell)
-                .and_then(|c| c.facts.get_mut(&f.op))
+                .cells.fact_state_mut(f)
             else {
                 continue;
             };
@@ -326,7 +324,7 @@ impl Graph {
         rekeyed.sort_unstable();
         for f in rekeyed {
             self.join_digest(f)?;
-            let h = self.cells[&f.cell].facts[&f.op].hash;
+            let h = self.cells.fact_state(f).unwrap().hash;
             self.intern.entry(h).or_default().insert(f);
         }
         Ok(())
@@ -338,7 +336,7 @@ impl Graph {
     pub(super) fn retire_digest_duplicates(&mut self) -> Result<()> {
         let duplicates = std::mem::take(&mut self.union_digest.as_mut().unwrap().duplicates);
         for f in duplicates {
-            let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+            let Some(state) = self.cells.fact_state(f) else {
                 continue;
             };
             let (table, fields) = state.decoded.as_ref().ok_or("missing duplicate fields")?;
@@ -348,7 +346,7 @@ impl Graph {
                 .iter()
                 .copied()
                 .find(|other| {
-                    let (t, vs) = self.cells[&other.cell].facts[&other.op]
+                    let (t, vs) = self.cells.fact_state(*other).unwrap()
                         .decoded
                         .as_ref()
                         .unwrap();
@@ -364,11 +362,7 @@ impl Graph {
                 .stats
                 .duplicate_rows_retired += 1;
             let target = self
-                .cells
-                .get_mut(&keep.cell)
-                .unwrap()
-                .facts
-                .get_mut(&keep.op)
+                .cells.fact_state_mut(keep)
                 .unwrap();
             target.epoch = self.epoch;
             self.query_versions[table] += 1;
@@ -429,9 +423,7 @@ impl Graph {
         let pending = std::mem::take(&mut self.union_digest.as_mut().unwrap().publication);
         for &f in &pending {
             let state = self
-                .cells
-                .get_mut(&f.cell)
-                .and_then(|c| c.facts.get_mut(&f.op))
+                .cells.fact_state_mut(f)
                 .ok_or("missing expression publication witness")?;
             let (table, fields) = state.decoded.as_mut().ok_or("missing expression row")?;
             let m = self.union_digest.as_mut().unwrap();
@@ -456,7 +448,7 @@ impl Graph {
         }
         for f in pending {
             self.join_digest(f)?;
-            let h = self.cells[&f.cell].facts[&f.op].hash;
+            let h = self.cells.fact_state(f).unwrap().hash;
             self.intern.entry(h).or_default().insert(f);
         }
         self.retire_digest_duplicates()?;

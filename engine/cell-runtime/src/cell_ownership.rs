@@ -399,18 +399,10 @@ impl Graph {
             self.replace_row_edges(Dependency::Fact(f), &row.values, &[]);
             #[cfg(not(feature = "sparse-cells"))]
             self.dependencies.remove(&Dependency::Fact(f));
-            self.cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+            self.cells.fact_state_mut(f)
                 .unwrap()
                 .owned = true;
-            self.cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+            self.cells.fact_state_mut(f)
                 .unwrap()
                 .decoded = Some((row.table, row.values.clone()));
             let m = self.ownership.as_mut().unwrap();
@@ -529,9 +521,7 @@ impl Graph {
                 if shape.signals[signal.symbol].iter().any(|step| {
                     step.frame < frame.ordinal
                         && self
-                            .cells
-                            .get(&c.frames[step.frame])
-                            .and_then(|cell| cell.facts.get(&step.op))
+                            .cells.fact_state(FactRef{cell:c.frames[step.frame],op:step.op})
                             .is_some_and(|fact| fact.owned)
                 }) {
                     m.composition
@@ -577,9 +567,7 @@ impl Graph {
                 op: step.op,
             };
             if self
-                .cells
-                .get(&fact.cell)
-                .and_then(|c| c.facts.get(&fact.op))
+                .cells.fact_state(fact)
                 .is_some_and(|s| s.owned)
             {
                 return Some(composition::Cursor {
@@ -724,7 +712,7 @@ impl Graph {
         self.complete_canonical_cell(f, r)
     }
     pub(super) fn retire_owned(&mut self, f: FactRef, t: usize) -> bool {
-        if !self.cells[&f.cell].facts[&f.op].owned {
+        if !self.cells.fact_state(f).unwrap().owned {
             return false;
         }
         self.composition_retire_fact(f.cell);
@@ -838,7 +826,7 @@ impl Graph {
                     self.stable_node(fact).is_some_and(|node| node.table == table)
                 } else {
                     s.domain_legacy_fact_probes.set(s.domain_legacy_fact_probes.get() + 1);
-                    self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op))
+                    self.cells.fact_state(fact)
                         .is_some_and(|state| state.owned && state.decoded.as_ref().unwrap().0 == table)
                 };
                 if matches {

@@ -762,9 +762,7 @@ impl Graph {
                         continue;
                     };
                     if !self
-                        .cells
-                        .get(&f.cell)
-                        .and_then(|c| c.facts.get(&f.op))
+                        .cells.fact_state(f)
                         .is_some_and(|s| s.owned)
                     {
                         m.stats.composition_missing_sources += 1;

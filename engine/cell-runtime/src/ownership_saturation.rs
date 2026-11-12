@@ -187,15 +187,12 @@ impl Graph {
                     };
                     let mut found = None;
                     'frames: for id in &component.frames {
-                        let Some(cell) = self.cells.get(id) else {
-                            continue;
-                        };
-                        for (&op, state) in cell.facts.iter() {
+                        for (fact, state) in self.cells.fact_states(*id) {
                             if !state.owned || state.hidden {
                                 continue;
                             }
                             visits += 1;
-                            let Ok(Some(row)) = self.fact(FactRef { cell: *id, op }) else {
+                            let Ok(Some(row)) = self.fact(fact) else {
                                 continue;
                             };
                             if row.table == *table

@@ -333,7 +333,7 @@ impl Graph {
                 } else {
                     local.boundary_collisions += 1;
                 }
-                let state = &self.cells[&target.cell].facts[&target.op];
+                let state = self.cells.fact_state(target).unwrap();
                 return self
                     .read_stable_fact(target, state, self.stable_node(target).unwrap())
                     .map(|row| Some(Some(row)));

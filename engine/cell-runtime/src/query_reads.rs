@@ -1,5 +1,6 @@
 //! A source-Run borrow of authoritative function slots and Cell fields.
 //! It owns no rows, bindings, indexes, snapshots or invalidation state.
+use crate::graph::FactStates as _;
 use super::*;
 pub(crate) use cell_ownership::query_read::{Scratch, Work};
 
@@ -68,7 +69,7 @@ impl QueryReads<'_> {
         match witness {
             Dependency::Fact(fact) => {
                 let Some(Constructors::Canonical(read)) = &self.constructors else { return Err("unsealed expansion fields".into()); };
-                let Some(state) = read.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op)) else { return Ok(None) };
+                let Some(state) = read.cells.fact_state(fact) else { return Ok(None) };
                 let (table, values) = state.decoded.as_ref().ok_or("canonical expansion lacks decoded fields")?;
                 Ok(Some(Row { table:*table, values:values.clone(), hidden:state.hidden, epoch:state.epoch, witness }))
             }
@@ -85,7 +86,7 @@ impl QueryReads<'_> {
         match witness {
             Dependency::Fact(fact) => {
                 let Some(Constructors::Canonical(read)) = &self.constructors else { return None };
-                read.cells.get(&fact.cell)?.facts.get(&fact.op).filter(|s| !s.hidden).map(|s| s.epoch)
+                read.cells.fact_state(fact).filter(|s| !s.hidden).map(|s| s.epoch)
             }
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.epoch),
         }
@@ -107,7 +108,7 @@ impl Canonical<'_> {
     fn candidate(&self, fact: FactRef, table: usize, key: &[Value], work: &mut Work)
         -> Result<Option<(Value, u64, Dependency, bool)>> {
         work.canonical_candidates += 1;
-        let Some(state) = self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op)) else {
+        let Some(state) = self.cells.fact_state(fact) else {
             return Ok(None);
         };
         let (stored_table, fields) = state.decoded.as_ref()
