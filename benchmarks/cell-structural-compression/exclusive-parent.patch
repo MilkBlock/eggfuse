@@ -1,0 +1,133 @@
+diff --git a/engine/cell-runtime/src/cell_completion_lifetime.rs b/engine/cell-runtime/src/cell_completion_lifetime.rs
+index 7126dee0..e09ab3fb 100644
+--- a/engine/cell-runtime/src/cell_completion_lifetime.rs
++++ b/engine/cell-runtime/src/cell_completion_lifetime.rs
+@@ -42,10 +42,8 @@ pub(crate) fn parent_layout(p:&Program,rid:usize)->Option<Box<[usize]>> {
+     let t=&p.templates[rule.template];
+     if t.parent_columns.is_empty() {return None;}
+     let used=retained_slots(p,rid)?;
+-    let ports=&p.cell_ownership.markers.get(rule.template)?.program.slots;
+     let mut retained=Vec::new();
+     for &slot in t.parent_columns.keys().filter(|s|used.binary_search(s).is_ok()) {
+-        ports.get(slot).copied().flatten()?;
+         retained.push(slot);
+     }
+     Some(retained.into_boxed_slice())
+diff --git a/engine/cell-runtime/src/cell_execution.rs b/engine/cell-runtime/src/cell_execution.rs
+index 623bcab1..b5071996 100644
+--- a/engine/cell-runtime/src/cell_execution.rs
++++ b/engine/cell-runtime/src/cell_execution.rs
+@@ -47,8 +47,9 @@ pub(crate) struct Plan {
+     #[cfg(feature = "sparse-cells")]
+     #[serde(skip)]
+     pub births: Option<std::sync::Arc<crate::graph::cell_births::Plan>>,
+-    /// Parent columns still reachable after completion, only when every one
+-    /// has a composed symbol. None rejects the template before runtime probing.
++    /// Parent columns still reachable after completion. Runtime requires each
++    /// to be already local, symbolically inherited, or taken from an exclusive
++    /// factless source. None disables completed parent handoff.
+     #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
+     #[serde(skip)]
+     pub parent_completion: Option<Box<[usize]>>,
+diff --git a/engine/cell-runtime/src/completed_parent.rs b/engine/cell-runtime/src/completed_parent.rs
+index 18c24ec7..6c45233c 100644
+--- a/engine/cell-runtime/src/completed_parent.rs
++++ b/engine/cell-runtime/src/completed_parent.rs
+@@ -36,21 +36,33 @@ impl Graph {
+         let Some(layout)=self.program.executions[rid].parent_completion.as_ref() else {return Ok(());};
+         let Some(c) = self.cells.get(&cell).filter(|c| c.completed) else { return Ok(()); };
+         let Some(parent) = c.parent else { return Ok(()); };
+-        if self.ownership.is_none() { return Ok(()); }
+         let template = c.template;
+         self.stats.completed_parent_candidates += 1;
+-        // No partially copied bindings and no second ownership table. All
+-        // retained parent projections must already be represented by this component.
++        // Only a factless, exclusively referenced source may exchange its
++        // whole retained frame for the child's necessary residual fields.
++        // Shared sources keep the existing all-symbolic admission rule.
++        let exclusive=self.parent_users.get(&parent.cell).copied()==Some(1)
++            && self.cells.fact_count(parent.cell)==Some(0);
++        let mut copied=smallvec::SmallVec::<[(usize,Value);2]>::new();
++        let mut delegated=0;
+         for &slot in layout.iter() {
++            if self.cells.get(&cell).unwrap().values.get(&slot).is_some() {continue;}
+             self.stats.completed_parent_slot_checks += 1;
+-            let Some(value) = self.inherited_cell_slot(cell, template, slot) else { return Ok(()); };
+-            if self.slot(cell, slot)? != value { return Ok(()); }
++            let actual=self.slot(cell,slot)?;
++            if self.inherited_cell_slot(cell,template,slot).is_some_and(|value| value==actual) {
++                delegated+=1;
++            } else if exclusive {
++                copied.push((slot,actual));
++            } else {return Ok(());}
+         }
+         let c = self.cells.get_mut(&cell).unwrap();
+-        c.symbolic_slots = true;
++        self.stats.completed_parent_slots_materialized+=copied.len() as u64;
++        self.stats.completed_parent_exclusive_sources+=u64::from(exclusive);
++        for (slot,value) in copied {c.values.insert(slot,value);}
++        c.symbolic_slots |= delegated!=0;
+         c.parent = None;
+         self.stats.completed_parent_detachments += 1;
+-        self.stats.completed_parent_slots_delegated += layout.len() as u64;
++        self.stats.completed_parent_slots_delegated += delegated;
+         self.release_reference(parent);
+         // Existing source-Run GC retires unused ancestors after pending matches
+         // have consumed their bindings. Never collect ancestors mid-Run.
+@@ -90,3 +102,41 @@ impl Graph {
+         crate::receipt_trace::parent_scan(frames,parents);
+     }
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn exclusive_factless_source_moves_only_required_scalar_and_retires() {
++        let mut g=crate::query::test_projection_graph();
++        let base=g.program.templates.len();
++        g.program.templates.push(Template{name:"retired source".into(),sorts:vec![],
++            defs:Default::default(),parent_columns:Default::default(),
++            ops:vec![Op::Let(0,Call::Table(0),vec![Arg::Slot(1)])].into()});
++        g.program.templates.push(Template{name:"completed child".into(),sorts:vec![],
++            defs:Default::default(),parent_columns:[(0,0)].into_iter().collect(),ops:vec![].into()});
++        let rid=g.program.executions.len();
++        g.program.executions.push(crate::cell::execution::Plan{
++            parent_completion:Some(vec![0].into_boxed_slice()),..Default::default()});
++        let mut parent=Cell{symbolic_slots:false,completed_prefix:1,started_epoch:1,completed:true,
++            template:base,parent:None,values:Default::default(),facts:Default::default(),recipe_depth:0};
++        parent.values.insert(1,Value::Int(7));parent.values.insert(2,Value::Int(99));
++        g.cells.insert(100,parent);
++        g.cells.insert(101,Cell{symbolic_slots:false,completed_prefix:0,started_epoch:2,completed:true,
++            template:base+1,parent:Some(FactRef{cell:100,op:0}),values:Default::default(),
++            facts:Default::default(),recipe_depth:1});
++        g.parent_users.insert(100,2);
++        g.complete_parent_handoff(101,rid).unwrap();
++        assert!(g.cells.get(&101).unwrap().parent.is_some(),"shared source must not be copied");
++        assert!(g.cells.get(&101).unwrap().values.is_empty());
++        g.parent_users.insert(100,1);
++        g.complete_parent_handoff(101,rid).unwrap();
++        assert!(g.cells.get(&101).unwrap().parent.is_none());
++        assert_eq!(g.cells.get(&101).unwrap().values.len(),1);
++        assert_eq!(g.slot(101,0).unwrap(),Value::Int(7));
++        assert_eq!(g.stats.completed_parent_slots_materialized,1);
++        g.collect_garbage();
++        assert!(g.cells.get(&100).is_none(),"source record must retire through normal GC");
++        assert_eq!(g.slot(101,0).unwrap(),Value::Int(7));
++    }
++}
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index 08049691..5097f973 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -356,6 +356,10 @@ pub struct Stats {
+     pub completed_parent_detachments: u64,
+     #[serde(default)]
+     pub completed_parent_slots_delegated: u64,
++    #[serde(default)]
++    pub completed_parent_slots_materialized: u64,
++    #[serde(default)]
++    pub completed_parent_exclusive_sources: u64,
+     pub native_table_reads: u64,
+     pub native_table_writes: u64,
+     pub native_free_join_calls: u64,
