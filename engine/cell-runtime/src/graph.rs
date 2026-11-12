@@ -337,6 +337,8 @@ pub struct Stats {
     #[serde(default)]
     pub shared_owner_frames_restored:u64,
     #[serde(default)]
+    pub shared_owner_inherited_frames:u64,
+    #[serde(default)]
     pub completed_parent_candidates: u64,
     #[serde(default)]
     pub completed_parent_slot_checks: u64,

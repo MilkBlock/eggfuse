@@ -96,3 +96,48 @@ the audited valid runtime path; the storage control uses the final profiling cod
 CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_closure_work -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/shared-owner-symbolic.json --natural --shared-owners
 CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_parent_storage -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/shared-owner-symbolic.json out/cell-structural-compression/shared-owner-storage-control.json --shared-owners
 ```
+
+## Connect completed parent inheritance to owner replacement
+
+The last catalog's actual execution detached 128 parents, but the storage transfer
+excluded every `symbolic_slots` frame. That excluded the exact state produced by
+completed-parent lowering. Removing this exclusion lets the checked symbolic
+read contract survive physical replacement. Unsupported parent projections,
+external references, active writers, shared arrays and unsettled Runs retain the
+same exclusions. No new binding copy or lookup registry is introduced.
+
+The combined opt-in run enables `use_completed_parent_takeover` and calls the
+existing transfer at Run boundaries. The new `shared_owner_inherited_frames`
+counter records already-symbolic frames actually transferred (not all detached
+parents, and not saved RHS work). It records 37 frames. Cumulative transfers grow
+838 -> 898; surviving transferred frames 728 -> 787. Rule 58 now contributes 28
+surviving transferred frames; rule 143 remains outside this surviving coverage.
+Cross-started-epoch owners grow 302 -> 321. Their epochs establish observed stage
+span, not a proof of saturation against arbitrary future external input.
+
+With the same source-record capacity control in both lanes:
+
+| Final counted storage | Bytes |
+| --- | ---: |
+| Control | 1,541,640 |
+| Previous shared owners | 1,447,936 |
+| Parent inheritance + shared owners | 1,438,168 |
+
+The combined saving is 103,472 bytes (6.71%); incremental saving is 9,768 bytes.
+Explicit slots are 11,833; parent links 216. Boundary high-water equals final
+storage. The full results, including charged metadata and retired array ranges,
+are in `inherited-owner-results.json`. This remains a partial Graph census, not
+full heap or intra-Run peak; no additional saturated RHS skipping or speed gain
+is claimed. It demonstrates why parent detachment and owner replacement need to
+compose, but does not establish the requested large whole-egraph compression.
+
+All 1,428 original graph and ordered RHS/write/resume checks pass. The new final
+export passes `choice_diagnosis.py`; see `inherited-owner-semantic.json`. All 34
+ownership tests pass. The existing deletion/union/retained-parent regression now
+runs both ordinary inputs and parent-inherited inputs, each serially and with two
+workers, and requires inherited frames to reach physical shared storage.
+
+```sh
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_closure_work -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/shared-owner-inherited.json --natural --shared-owners --parent-takeover
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_parent_storage -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/shared-owner-inherited.json out/cell-structural-compression/shared-owner-inherited-storage.json --shared-owners --parent-takeover
+```

@@ -1075,6 +1075,7 @@ fn completed_layout_distinguishes_dead_inputs_from_scalar_and_result_readers() {
 #[test]
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
 fn shared_completed_owners_survive_later_reads_and_deletion() {
+    for parent_takeover in [false,true] {
     let src="(datatype E (N i64) (Start E) (Pair E E) (Seen E)) (relation Flag ())
         (ruleset a) (ruleset b) (ruleset c) (ruleset d)
         (rule ((= x (N n)) (Flag)) ((Start x)) :ruleset a)
@@ -1082,10 +1083,12 @@ fn shared_completed_owners_survive_later_reads_and_deletion() {
         (rule ((Pair s x)) ((Seen x)) :ruleset c)
         (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset d)
         (N 1) (N 2) (Flag) (run a 1) (run b 1) (run c 1) (run d 1) (run c 1)";
-    let p=program(src);
+    let src=if parent_takeover {src.replace(" (Flag))", ")")} else {src.to_owned()};
+    let p=program(&src);
     for workers in [0,2] {
     let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
     let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    if parent_takeover {actual.use_completed_parent_takeover().unwrap();}
     if workers>0 {actual.use_query_workers(workers,1).unwrap();}
     let mut moved=0;
     loop {
@@ -1097,6 +1100,10 @@ fn shared_completed_owners_survive_later_reads_and_deletion() {
         actual.graph.ownership_report();actual.graph.stable_port_report();
     }
     assert!(moved>0,"exercise physical source-frame removal");
+    if parent_takeover {
+        assert!(actual.graph.stats.completed_parent_detachments>0);
+        assert!(actual.graph.stats.shared_owner_inherited_frames>0,"inherited frames must enter shared storage");
+    }
     let table=actual.graph.program.tables.iter().position(|t|t.name=="Pair").unwrap();
     let witness=actual.graph.witnesses(table)[0];
     let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor fact")};
@@ -1127,4 +1134,5 @@ fn shared_completed_owners_survive_later_reads_and_deletion() {
     assert!(actual.graph.stats.shared_owner_frames_restored>0);
     assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
     }
+}
 }

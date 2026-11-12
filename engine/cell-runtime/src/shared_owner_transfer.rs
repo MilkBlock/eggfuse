@@ -13,7 +13,7 @@ impl Graph {
         let groups=m.composition.components.iter().flatten().map(|component| {
             component.frames.iter().copied().filter(|id| {
                 self.parent_users.get(id).copied().unwrap_or(0)==0
-                    && self.cells.get(id).is_some_and(|c| c.completed && !c.symbolic_slots && c.parent.is_none()
+                    && self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()
                         && !c.facts.is_empty() && c.values.is_unshared()
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
             }).collect::<Vec<_>>()
@@ -21,6 +21,9 @@ impl Graph {
         let mut count=0;
         for ids in groups {
             if !self.cells.can_transfer_completed(&ids) {continue;}
+            // A completed parent handoff has already proved symbolic reads.
+            // Reuse that storage contract instead of excluding inherited frames.
+            let inherited=ids.iter().filter(|id|self.cells.get(id).unwrap().symbolic_slots).count();
             for &id in &ids {
                 let m=self.ownership.as_ref().unwrap();
                 let frame=m.composition.frames[&id];
@@ -37,7 +40,10 @@ impl Graph {
                 if removed>0 {c.symbolic_slots=true;}
                 self.stats.shared_owner_slots_delegated+=removed as u64;
             }
-            if self.cells.transfer_completed(&ids) {count+=ids.len();}
+            if self.cells.transfer_completed(&ids) {
+                count+=ids.len();
+                self.stats.shared_owner_inherited_frames+=inherited as u64;
+            }
         }
         if count>0 {self.cells.release_source_capacity();}
         Ok(count)
