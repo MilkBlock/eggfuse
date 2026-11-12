@@ -52,6 +52,71 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn constructor_continuation_crosses_completed_scalar_segments_but_stops_at_missing_results() {
+    for existing in [1, 2] {
+        let seed = (0..16).map(|n| {
+            let first = format!("(F (N {n}) {})", n+1);
+            if existing == 1 { first } else { format!("(G {first} {})", 2*(n+1)) }
+        }).collect::<Vec<_>>().join("\n");
+        let source = format!(r#"
+(datatype E (N i64) (F E i64) (G E i64) (Seen E))
+(function Out (E) i64 :merge new)
+(ruleset step) (ruleset next)
+(rule ((= x (N n)))
+ ((let a (+ n 1)) (let u (F x a)) (let b (* a 2))
+  (let v (G u b)) (set (Out v) b)) :ruleset step)
+(rule ((= n (Out x))) ((Seen x)) :ruleset next)
+{seed}
+(run-schedule (seq (run step) (run next)))
+(check (= (Out (G (F (N 2) 3) 6)) 6) (Seen (G (F (N 2) 3) 6)))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,4);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);
+            candidate.use_cell_execution(1).unwrap();candidate.execute().unwrap();
+            same(&control,&candidate);
+            assert_eq!(candidate.graph.stats.constructor_prefix_operations,16*existing);
+            assert_eq!(candidate.graph.stats.prepared_rhs_operations,16);
+            assert_eq!(candidate.graph.stats.prepared_rhs_later_operations,16);
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+            assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+            assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+            let report=candidate.report();
+            assert_eq!(report["query_workers"]["stats"]["execution"]["constructor"]["prefix_scalar_checks"],32);
+        }
+    }
+}
+
+#[test]
+fn failed_scalar_does_not_certify_a_later_constructor_or_move_its_error() {
+    for head in [false,true] {
+        let first=if head {"(/ n 0)"} else {"(+ n 1)"};
+        let second=if head {"(* a 2)"} else {"(/ a 0)"};
+        let source=format!(r#"
+(datatype E (N i64) (F E i64) (G E i64))
+(function Out (E) i64 :merge new)
+(ruleset step)
+(rule ((= x (N n))) ((let a {first}) (let u (F x a))
+ (let b {second}) (let v (G u b)) (set (Out v) b)) :ruleset step)
+(G (F (N 1) 2) 4) (G (F (N 2) 3) 6)
+(run-schedule (run step))
+"#);
+        let mut control=executor(&source,4);
+        let error=control.execute().unwrap_err();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            assert_eq!(candidate.execute().unwrap_err(),error);
+            assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+            assert_eq!(candidate.graph.stats.constructor_prefix_operations,u64::from(!head));
+            let report=candidate.report();
+            assert_eq!(report["query_workers"]["stats"]["execution"]["constructor"]["prefix_scalar_stops"],2);
+        }
+    }
+}
+
+#[test]
 fn constructor_progress_and_later_scalar_preparation_share_the_instance_without_replaying_either() {
     let source = r#"
 (datatype E (N i64) (F E) (G E) (H E))

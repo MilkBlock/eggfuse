@@ -17,6 +17,9 @@ pub(crate) struct Plan {
     pub handoff: bool,
     keys: Vec<Arg>,
     prefix: Vec<prefix::Step>,
+    // Slots established by the existing input-derived scalar program. Prefix
+    // steps reference a cumulative slice; there is no second scalar evaluator.
+    scalar_ready: Vec<usize>,
     pub(crate) result_layout: Option<std::sync::Arc<crate::cell::EffectLayout>>,
 }
 
@@ -155,6 +158,8 @@ pub(crate) struct Counts {
     pub prefix_layout_checks: u64,
     pub prefix_result_initializations: u64,
     pub prefix_progress_writes: u64,
+    pub prefix_scalar_checks: u64,
+    pub prefix_scalar_stops: u64,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
@@ -163,6 +168,7 @@ impl Counts {
         add!(prefix_instances, prefix_slot_writes, prefix_slot_growths, prefix_capacity_bytes,
             prefix_witness_growths, prefix_witness_bytes);
         add!(prefix_layout_checks, prefix_result_initializations, prefix_progress_writes);
+        add!(prefix_scalar_checks, prefix_scalar_stops);
     }
 }
 impl Plan {
@@ -186,12 +192,13 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], result_layout:None }); }
+                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], scalar_ready:vec![], result_layout:None }); }
         }
         None
     }
     pub fn storage_bytes(&self) -> usize { self.keys.capacity() * std::mem::size_of::<Arg>()
         + self.prefix.capacity() * std::mem::size_of::<prefix::Step>()
+        + self.scalar_ready.capacity() * std::mem::size_of::<usize>()
         + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>() }
     pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,

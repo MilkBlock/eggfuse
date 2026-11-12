@@ -92,6 +92,7 @@ impl Work {
             Some(J::String(v)) if v == "cell-constructor-preparation/v3" => 3,
             Some(J::String(v)) if v == "cell-constructor-preparation/v4" => 4,
             Some(J::String(v)) if v == "cell-constructor-preparation/v5" => 5,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v6" => 6,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -167,6 +168,12 @@ impl Work {
                 work.insert(key,value);
             }
         }
+        let key = "query_workers/stats/execution/constructor/prefix_scalar_checks";
+        let value = if constructor_preparation >= 6 && report["query_workers"]["enabled"] == true {
+            report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing constructor preparation work {key}"))?
+        } else { 0 };
+        work.insert(key.into(),value);
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
                 None => 0,
@@ -596,6 +603,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "query_workers/stats/execution/constructor/prefix_layout_checks",
         "query_workers/stats/execution/constructor/prefix_result_initializations",
         "query_workers/stats/execution/constructor/prefix_progress_writes",
+        "query_workers/stats/execution/constructor/prefix_scalar_checks",
         "stage_spine/stats/prepared_effect_buffer_moves",
         "stage_spine/stats/prepared_effect_spares_released",
         "stage_spine/stats/prepared_effect_joint_positions", "stage_spine/stats/prepared_effect_joint_reads",

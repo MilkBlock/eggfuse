@@ -1596,7 +1596,13 @@ impl Programs {
                         self.stats.prepared_effect_joint_positions += positions as u64;
                         self.stats.prepared_effect_joint_reads += reads as u64;
                         self.stats.prepared_effect_joint_writes += writes as u64;
-                        self.recycle_effect_buffer(prepared);
+                        // This execution already borrowed its ordinary spare
+                        // for joint scratch. Recycling a second incoming array
+                        // would grow the idle pool on every such handoff.
+                        self.stats.prepared_effect_spares_released += 1;
+                        self.stats.prepared_effect_spare_bytes_released +=
+                            (prepared.capacity()*std::mem::size_of::<Option<Dependency>>()) as u64;
+                        drop(prepared);
                     }
                     return frame;
                 }

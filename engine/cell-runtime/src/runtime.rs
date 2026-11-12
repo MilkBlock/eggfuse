@@ -2117,8 +2117,7 @@ impl Executor {
                 Prepared::Found(witness) => (Some(witness),None),
                 Prepared::Prefix(results) => {
                     let mut witness=None;
-                    let completed=std::mem::replace(&mut b.prepared,0);
-                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,completed,results,&mut witness);
+                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,&mut b.prepared,results,&mut witness);
                     (witness,prefix)
                 },
                 _ => (None,None),
@@ -3235,7 +3234,7 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v5",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v6",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),

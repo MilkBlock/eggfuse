@@ -51,10 +51,12 @@ Run R+1 consumer: use G(u) and Out(a)
 2. Worker-local computation can fill `k`. If a safe speculation fails, it does
    not surface an RHS error early; the original source position remains live.
 3. A typed proof may let existing `F(a)` and `G(u)` fill `u,v` in those same
-   slots. Actual witnesses may belong to other physical Cells. For the current
-   prefix implementation, constructors must lead the RHS after Copies; this
-   illustrative scalar-before-constructor example instead retains the existing
-   single input-ready probe. Neither path invents graph identities.
+   slots. Actual witnesses may belong to other physical Cells. The prefix can
+   cross scalar operations already completed from captured inputs, including
+   `k = n + 1` above. Bake records their required slots; a missing scalar result
+   stops continuation before the next constructor. It does not reevaluate the
+   scalar or invent graph identities. An invalid constructor certificate clears
+   speculative Eq slots while retaining independently captured scalar results.
 4. If a constructor is absent, source-time resolution remains necessary. A
    worker miss cannot skip that resolution: earlier source effects may create
    it. On its original turn, normal interning returns an existing or newly

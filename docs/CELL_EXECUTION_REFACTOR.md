@@ -86,6 +86,16 @@ overall objective complete until all applicable items above are proven.
 
 ## Current state
 
+- Constructor continuation now crosses already completed captured-input scalar
+  operations in the same instance; see [coverage and costs](../benchmarks/cell-scalar-boundaries/README.md).
+  Raytrace removes 60,721 coordinator constructor boundaries and 27,738 source
+  lookups, but adds 7,621 total lookups and 33,068 scalar-slot checks. Joint
+  imports and additional arrays are charged; the equal-weight work proxy
+  worsens by 547,001, so no speedup is claimed. Imported spare arrays no longer
+  accumulate in the idle pool. Original source effects, all ordered Run
+  summaries and final states remain unchanged; native sum-bits acceptance passes.
+  Independent parked scheduling, compatible read/write storage and useful
+  multithreaded throughput remain unfinished.
 - Baseline tag created; prior separate-pass draft archived.
 - Source-derived boundary plans and direct query-to-local-prefix continuation
   implemented; [work and semantic acceptance](../benchmarks/cell-execution-prefix/README.md).
