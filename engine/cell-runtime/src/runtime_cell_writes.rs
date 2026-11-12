@@ -93,11 +93,9 @@ impl Executor {
                 .prepared_operations(&self.graph.program.templates[template], b.prepared)
                 as u64;
             let (key, value, destination) = if direct {
-                (
-                    ports.project_key(&b.values, self.graph.parents.reader())?,
-                    0,
-                    None,
-                )
+                // The original slots cross directly to the write owner. It
+                // projects this key before lookup or any shared mutation.
+                (Value::Int(0), 0, None)
             } else {
                 projections.next().unwrap().unwrap()
             };

@@ -3328,7 +3328,8 @@ impl Executor {
                 "scope":"typed Eq-to-i64 single writes with old/min/max merge; workers mutate authoritative rows and invalidate superseded private Cell slots",
                 "duplicate_computation_allowed":true,"coordinator_effect_replay":false,
                 "minimum_bindings":32,"publication":"original source Run boundary",
-                "timers":"preparation and execution include dispatch/work/join, not pure waiting; boundary and source completion remain on the coordinator"});
+                "admission":"existing slots enter one worker region for input projection, parallel exact target lookup, ordered missing-ID allocation, grouping and actual row writes",
+                "timers":"execution includes owner admission, work and join, not pure waiting; boundary counts source lifecycle/index completion and source completion counts ordered Cell publication"});
         }
         report["query_point_transport"] = point_transport;
         report

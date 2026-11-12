@@ -29,6 +29,95 @@ pub(crate) struct Counts {
     pub source_completion_ns: u64,
     pub temporary_bytes: u64,
     pub fallback_batches: u64,
+    pub owner_pool_calls: u64,
+    pub owner_candidates: u64,
+    pub worker_key_rows: u64,
+    pub admission_probes: u64,
+    pub new_key_rechecks: u64,
+    pub owner_sort_rows: u64,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::rc::Rc;
+    fn graph() -> Graph {
+        let eq = json!({"kind":"eq","name":"E"});
+        let int = json!({"kind":"i64"});
+        let template = Template {
+            name: "write-owner".into(),
+            sorts: vec![eq.clone(), int.clone()],
+            defs: Default::default(),
+            parent_columns: Default::default(),
+            ops: std::sync::Arc::new(vec![Op::Set(0, vec![Arg::Slot(0)], Arg::Slot(1))]),
+        };
+        let rule = Rule {
+            template: 0,
+            query: Rc::new(vec![]),
+            inputs: vec![0, 1].into(),
+            completion: Default::default(),
+            seminaive: false,
+            direct: None,
+        };
+        let mut p:Program = serde_json::from_value(json!({
+            "multi_stage":crate::multistage::MultiStage::default(),
+            "entry_schedule":crate::entry_schedule::Plan::default(),
+            "tables":[{"name":"Score","schema":[eq,int],"constructor":false,"virtual_fact":false,
+                "internal":false,"merge":{"var":"old"}}],
+            "templates":[template],"rules":[rule],"sets":{},"control":[],"initial":[],"table_templates":[],"artifact":{}
+        })).unwrap();
+        p.physical = crate::physical_plan::Plan::derive(&p).into();
+        p.writes = crate::row_kernel::writes(&p);
+        Graph::new(p).unwrap()
+    }
+    #[test]
+    fn invalid_parallel_input_never_reserves_ids_or_changes_any_directory() {
+        for workers in [1, 4] {
+            let mut g = graph();
+            let before = g.export().unwrap();
+            let next = g.next_cell;
+            let pool = rayon::ThreadPoolBuilder::new()
+                .num_threads(workers)
+                .build()
+                .unwrap();
+            let mut tasks: Vec<_> = (0..128)
+                .map(|i| {
+                    let values = [
+                        (
+                            0,
+                            if i == 17 || i == 97 {
+                                Value::Int(9)
+                            } else {
+                                Value::Eq(i as u64)
+                            },
+                        ),
+                        (1, Value::Int(i as i64)),
+                    ]
+                    .into_iter()
+                    .collect();
+                    Task::new(values, Value::Int(0), 0, None, i)
+                })
+                .collect();
+            let mut counts = Counts::default();
+            assert_eq!(
+                g.write_cells(0, &mut tasks, &pool, &mut counts, Some(false))
+                    .unwrap_err(),
+                "invalid producer expression port"
+            );
+            assert_eq!(g.next_cell, next);
+            assert!(g.functions.is_empty());
+            assert!(g.function_decoded.is_empty());
+            assert!(g.changes.is_empty());
+            assert_eq!(g.export().unwrap(), before);
+            assert_eq!(counts.owner_candidates, 0);
+            assert_eq!(counts.row_writes, 0);
+            assert_eq!(counts.admission_probes, 126, "charge valid probes even on failure");
+            assert_eq!(counts.worker_key_rows, 126);
+            for task in tasks {
+                assert!(g.function_index(0, &[task.key]).is_none());
+            }
+        }
+    }
 }
 pub(crate) struct Task {
     pub values: Slots,
@@ -127,10 +216,9 @@ impl Graph {
             && self.functions.len() < u32::MAX as usize
     }
 
-    /// Shared key/identity allocation is the boundary. Duplicate keys join the
-    /// same destination without rejecting the batch or waiting for computation.
-    /// Keys are resolved before allocation; values run on workers either here
-    /// or in the checked-arithmetic prepass.
+    /// The table owner projects and looks up keys on workers, then resolves
+    /// missing identities in source order before parallel row writes. Existing
+    /// instances and authoritative rows stay in this one worker region.
     pub(crate) fn write_cells(
         &mut self,
         rid: usize,
@@ -153,60 +241,105 @@ impl Graph {
             .checked_add(length)
             .ok_or("Cell identity exhausted")?;
         let first = self.next_cell;
-        self.next_cell = end;
-        for (ordinal, task) in tasks.iter_mut().enumerate() {
-            task.cell = first + ordinal as u32;
-            let key = std::slice::from_ref(&task.key);
-            task.index = if let Some(i) = self.function_index(table, key) {
-                i
-            } else {
-                let i = self.functions.len();
-                self.function_keys[table].insert(key, i);
-                // Reserved storage is exclusively held by this RHS batch. It
-                // is never visible to queries or published before initialization.
-                self.functions.push(Function {
-                    writer: None,
-                    #[cfg(feature = "receipt-slots")]
-                    port_slot: 0,
-                    table,
-                    key: key.to_vec(),
-                    value: Value::Int(0),
-                    epoch,
-                    live: false,
-                    origin: None,
-                });
-                self.function_decoded.push(None);
-                i
-            };
-        }
-        tasks.sort_unstable_by_key(|task| (task.index, task.ordinal));
-        let mut functions = self.functions.as_mut_slice();
-        let mut decoded = self.function_decoded.as_mut_slice();
-        let mut offset = 0;
-        let mut targets = Vec::new();
-        for group in tasks.chunk_by_mut(|a, b| a.index == b.index) {
-            let skip = group[0].index - offset;
-            functions = &mut functions[skip..];
-            decoded = &mut decoded[skip..];
-            let (f, rest) = functions.split_first_mut().unwrap();
-            let (d, rest_d) = decoded.split_first_mut().unwrap();
-            functions = rest;
-            decoded = rest_d;
-            offset = group[0].index + 1;
-            let retained = f.origin.is_some_and(|origin| {
-                self.parent_users.get(&origin.cell).copied().unwrap_or(0) != 0
-            });
-            targets.push((f, d, group, retained));
-        }
-        counts.rows += targets.len() as u64;
-        counts.duplicate_targets += (length as usize - targets.len()) as u64;
-        counts.temporary_bytes += (targets.capacity()
-            * std::mem::size_of::<(&mut Function, &mut Option<RowFields>, &mut [Task], bool)>())
-            as u64;
+        let next_cell = &mut self.next_cell;
+        let keys = &mut self.function_keys[table];
+        let functions = &mut self.functions;
+        let decoded = &mut self.function_decoded;
+        let parent_users = &self.parent_users;
+        let parents = self.parents.reader();
         counts.boundary_ns += boundary.elapsed().as_nanos() as u64;
         let clock = std::time::Instant::now();
-        let done: Vec<_> = pool.install(|| {
-            targets
+        counts.owner_pool_calls += 1;
+        let done: Vec<_> = pool.install(|| -> Result<Vec<Finished>> {
+            // No identity or shared row is changed until all input keys are valid.
+            // If malformed inputs fail on different workers, retain the first
+            // source error, independent of completion order.
+            let (error, probes) = tasks
+                .par_iter_mut()
+                .with_min_len(32)
+                .map(|task| {
+                    task.cell = first + task.ordinal as u32;
+                    if evaluate.is_some() {
+                        match ports.project_key(&task.values, parents) {
+                            Ok(key) => task.key = key,
+                            Err(error) => return (Some((task.ordinal, error)), 0),
+                        }
+                    }
+                    // The checked Eq-to-i64 plan excludes compact Unit aliases.
+                    task.index = keys
+                        .get(std::slice::from_ref(&task.key))
+                        .copied()
+                        .unwrap_or(usize::MAX);
+                    (None, 1)
+                })
+                .reduce(
+                    || (None, 0),
+                    |(a, left), (b, right)| (match (a, b) {
+                        (Some(a), Some(b)) => Some(if a.0 <= b.0 { a } else { b }),
+                        (a, b) => a.or(b),
+                    }, left + right),
+                );
+            counts.admission_probes += probes;
+            counts.worker_key_rows += u64::from(evaluate.is_some()) * probes;
+            if let Some((_, error)) = error {
+                return Err(error);
+            }
+            counts.owner_candidates += length as u64;
+            *next_cell = end;
+            // Existing identities need no second directory lookup. Only misses
+            // recheck the evolving directory, so equal new keys share one row.
+            // The scan itself remains ordered; it is not claimed as parallel work.
+            for task in tasks.iter_mut().filter(|task| task.index == usize::MAX) {
+                counts.new_key_rechecks += 1;
+                let key = std::slice::from_ref(&task.key);
+                task.index = if let Some(&i) = keys.get(key) {
+                    i
+                } else {
+                    let i = functions.len();
+                    keys.insert(key, i);
+                    // Reserved storage is exclusively held by this RHS batch. It
+                    // is never visible to queries or published before initialization.
+                    functions.push(Function {
+                        writer: None,
+                        #[cfg(feature = "receipt-slots")]
+                        port_slot: 0,
+                        table,
+                        key: key.to_vec(),
+                        value: Value::Int(0),
+                        epoch,
+                        live: false,
+                        origin: None,
+                    });
+                    decoded.push(None);
+                    i
+                };
+            }
+            tasks.par_sort_unstable_by_key(|task| (task.index, task.ordinal));
+            counts.owner_sort_rows += length as u64;
+            let mut functions = functions.as_mut_slice();
+            let mut decoded = decoded.as_mut_slice();
+            let mut offset = 0;
+            let mut targets = Vec::new();
+            for group in tasks.chunk_by_mut(|a, b| a.index == b.index) {
+                let skip = group[0].index - offset;
+                functions = &mut functions[skip..];
+                decoded = &mut decoded[skip..];
+                let (f, rest) = functions.split_first_mut().unwrap();
+                let (d, rest_d) = decoded.split_first_mut().unwrap();
+                functions = rest;
+                decoded = rest_d;
+                offset = group[0].index + 1;
+                let retained = f.origin.is_some_and(|origin| {
+                    parent_users.get(&origin.cell).copied().unwrap_or(0) != 0
+                });
+                targets.push((f, d, group, retained));
+            }
+            counts.rows += targets.len() as u64;
+            counts.duplicate_targets += (length as usize - targets.len()) as u64;
+            counts.temporary_bytes += (targets.capacity()
+                * std::mem::size_of::<(&mut Function, &mut Option<RowFields>, &mut [Task], bool)>())
+                as u64;
+            let done = targets
                 .into_par_iter()
                 .with_min_len(16)
                 .map(|(f, decoded, group, retained)| {
@@ -320,8 +453,13 @@ impl Graph {
                         worker: rayon::current_thread_index().is_some(),
                     }
                 })
-                .collect()
-        });
+                .collect();
+            // Source publication consumes original ordinals. Restore that order
+            // here without a second pool call or a source sorting pass.
+            tasks.par_sort_unstable_by_key(|task| task.ordinal);
+            counts.owner_sort_rows += length as u64;
+            Ok(done)
+        })?;
         counts.execution_ns += clock.elapsed().as_nanos() as u64;
         counts.temporary_bytes += (done.capacity() * std::mem::size_of::<Finished>()) as u64;
         let boundary = std::time::Instant::now();
@@ -386,7 +524,6 @@ impl Graph {
         self.stats.transient_writes += unchanged;
         self.stats.rhs_frames_avoided += unchanged;
         counts.invalidated += length as u64 - row_writes;
-        tasks.sort_unstable_by_key(|task| task.ordinal);
         counts.boundary_ns += boundary.elapsed().as_nanos() as u64;
         Ok(())
     }

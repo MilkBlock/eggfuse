@@ -248,6 +248,11 @@ fn workers_write_actual_rows_and_invalidate_duplicate_cells_before_publication()
         let report = candidate.report();
         let work = &report["cell_execution"]["runtime"]["stats"]["writes"];
         assert!(work["worker_rows"].as_u64().unwrap() > 0, "{merge}: {work}");
+        assert_eq!(work["owner_candidates"], work["candidates"], "every admitted instance goes directly through its table owner");
+        assert_eq!(work["worker_key_rows"], work["candidates"], "input key projection must not return to the source loop");
+        assert_eq!(work["owner_pool_calls"], work["batches"], "projection, lookup, grouping and writes share one worker region");
+        assert_eq!(work["owner_sort_rows"].as_u64().unwrap(), 2 * work["candidates"].as_u64().unwrap());
+        assert!(work["new_key_rechecks"].as_u64().unwrap() > 0, "new duplicate keys still need exact identity assignment");
         assert!(work["duplicate_targets"].as_u64().unwrap() > 0, "{work}");
         assert!(work["invalidated"].as_u64().unwrap() > 0, "{work}");
         assert!(work["row_writes"].as_u64().unwrap() < work["candidates"].as_u64().unwrap(), "{work}");
