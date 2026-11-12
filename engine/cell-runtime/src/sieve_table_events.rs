@@ -23,6 +23,13 @@ pub(super) struct Work {
     group_capacity_bytes: u64,
     group_header_bytes: u64,
     group_growth_bytes: u64,
+    materialized_nodes: u64,
+    summary_borrows: u64,
+    unchanged_child_borrows: u64,
+    partition_steps: u64,
+    partition_comparisons: u64,
+    owner_header_bytes: u64,
+    result_header_bytes: u64,
 }
 
 #[derive(Default)]
@@ -41,9 +48,8 @@ struct Table {
     inputs: Inputs,
     ok: bool,
 }
-struct Node {
-    id: usize,
-    state: Summary,
+struct Node<'a> {
+    state: &'a mut Summary,
     added: Vec<Projection>,
     direct: u64,
     dependencies: u64,
@@ -52,20 +58,35 @@ struct Node {
     worker: Option<usize>,
     seconds: f64,
 }
+// Empty readiness propagation only exposes the original immutable Summary.
+// It never creates execution state, a delta vector or a timing record.
+enum Finished<'a> {
+    Empty(&'a Summary),
+    Executed(Node<'a>),
+}
+impl Finished<'_> {
+    fn read(&self) -> (&Summary, &[Projection]) {
+        match self {
+            Self::Empty(state) => (state, &[]),
+            Self::Executed(node) => (&*node.state, &node.added),
+        }
+    }
+}
 struct Events<'a> {
     specs: &'a [Spec],
     parents: &'a [Vec<(usize, usize)>],
     dispatch: &'a [Dispatch],
     group: &'a [usize],
     table_groups: &'a [usize],
-    unchanged: &'a [Summary],
+    unchanged: Vec<&'a Summary>,
     index: &'a QueryIndexes,
     collide: bool,
     positions: Vec<usize>,
     table_positions: Vec<usize>,
     table_ids: &'a [(usize, bool)],
-    nodes: Vec<Mutex<Option<Node>>>,
-    finished: Vec<OnceLock<Node>>,
+    node_ids: &'a [usize],
+    owners: Vec<Mutex<Option<&'a mut Summary>>>,
+    finished: Vec<OnceLock<Finished<'a>>>,
     remaining: Vec<AtomicUsize>,
     inputs: Vec<Mutex<Option<Inputs>>>,
     tables: Vec<OnceLock<Table>>,
@@ -74,16 +95,15 @@ struct Events<'a> {
     early_work: AtomicUsize,
     empty: AtomicUsize,
     #[cfg(test)]
-    after: Option<&'a (dyn Fn(usize) + Sync)>,
+    after: Option<&'a (dyn Fn(usize, &Summary) + Sync)>,
 }
-impl Events<'_> {
+impl<'a> Events<'a> {
     fn child(&self, id: usize) -> (&Summary, &[Projection]) {
         let p = self.positions[id];
-        if p == usize::MAX {
-            (&self.unchanged[id], &[])
+        if p >= self.node_ids.len() {
+            (self.unchanged[p - self.node_ids.len()], &[])
         } else {
-            let n = self.finished[p].get().expect("completed child");
-            (&n.state, &n.added)
+            self.finished[p].get().expect("completed child").read()
         }
     }
     fn table(&self, id: usize) -> Option<&Table> {
@@ -114,58 +134,83 @@ impl Events<'_> {
         self.ready(p, scope);
     }
     fn ready<'scope>(&'scope self, p: usize, scope: Option<&rayon::Scope<'scope>>) {
-        let id = self.nodes[p].lock().unwrap().as_ref().unwrap().id;
-        if let Some(scope) = scope.filter(|_| self.has_work(id)) {
-            scope.spawn(move |scope| self.complete(p, Some(scope)));
-        } else {
-            self.complete(p, scope);
-        }
-    }
-    fn complete<'scope>(&'scope self, p: usize, scope: Option<&rayon::Scope<'scope>>) {
-        let mut n = self.nodes[p]
+        let id = self.node_ids[p];
+        let has_work = self.has_work(id);
+        let state = self.owners[p]
             .lock()
             .unwrap()
             .take()
-            .expect("one Summary owner");
-        let spec = &self.specs[n.id];
-        let clock = Instant::now();
-        let (direct, column) = self.direct(n.id);
-        n.direct = direct.len() as u64;
-        if self.has_work(n.id) {
-            let mut columns = smallvec::SmallVec::<[usize; 4]>::new();
-            for guard in &spec.guards {
-                if !self.child(guard.child).1.is_empty() {
-                    columns.extend(guard.cols.iter().copied());
-                }
-            }
-            columns.sort_unstable();
-            columns.dedup();
-            n.columns = columns.len() as u64;
-            let read = (!columns.is_empty()).then(|| match column {
-                Some(c) => c.publication_support(&columns),
-                None => self.index.publication_support(spec.table, &columns),
-            });
-            let rows = direct.iter().map(|&p| {
-                let c = column.expect("direct notification owner");
-                c.hashes(c.changes()[p].0).expect("visible changed row")
-            });
-            (n.dependencies, n.visits) = complete_condition(
-                spec,
-                &mut n.state,
-                &mut n.added,
-                rows,
-                read.as_ref(),
-                |id| self.child(id),
-                self.collide,
-            );
-            n.worker = scope.and_then(|_| rayon::current_thread_index());
-        } else {
+            .expect("one Summary borrow");
+        if !has_work {
             self.empty.fetch_add(1, Ordering::Relaxed);
+            self.finish(p, Finished::Empty(state), scope, false);
+        } else if let Some(scope) = scope {
+            scope.spawn(move |scope| self.complete(p, state, Some(scope)));
+        } else {
+            self.complete(p, state, None);
         }
+    }
+    fn complete<'scope>(
+        &'scope self,
+        p: usize,
+        state: &'a mut Summary,
+        scope: Option<&rayon::Scope<'scope>>,
+    ) {
+        let id = self.node_ids[p];
+        let mut n = Node {
+            state,
+            added: Vec::new(),
+            direct: 0,
+            dependencies: 0,
+            visits: 0,
+            columns: 0,
+            worker: None,
+            seconds: 0.0,
+        };
+        let spec = &self.specs[id];
+        let clock = Instant::now();
+        let (direct, column) = self.direct(id);
+        n.direct = direct.len() as u64;
+        let mut columns = smallvec::SmallVec::<[usize; 4]>::new();
+        for guard in &spec.guards {
+            if !self.child(guard.child).1.is_empty() {
+                columns.extend(guard.cols.iter().copied());
+            }
+        }
+        columns.sort_unstable();
+        columns.dedup();
+        n.columns = columns.len() as u64;
+        let read = (!columns.is_empty()).then(|| match column {
+            Some(c) => c.publication_support(&columns),
+            None => self.index.publication_support(spec.table, &columns),
+        });
+        let rows = direct.iter().map(|&p| {
+            let c = column.expect("direct notification owner");
+            c.hashes(c.changes()[p].0).expect("visible changed row")
+        });
+        (n.dependencies, n.visits) = complete_condition(
+            spec,
+            n.state,
+            &mut n.added,
+            rows,
+            read.as_ref(),
+            |id| self.child(id),
+            self.collide,
+        );
+        n.worker = scope.and_then(|_| rayon::current_thread_index());
         n.seconds = clock.elapsed().as_secs_f64();
-        let id = n.id;
         let did_work = n.direct > 0 || n.columns > 0;
-        assert!(self.finished[p].set(n).is_ok());
+        self.finish(p, Finished::Executed(n), scope, did_work);
+    }
+    fn finish<'scope>(
+        &'scope self,
+        p: usize,
+        result: Finished<'a>,
+        scope: Option<&rayon::Scope<'scope>>,
+        did_work: bool,
+    ) {
+        let id = self.node_ids[p];
+        assert!(self.finished[p].set(result).is_ok());
         // Count actual unfinished table computation, not unprocessed callbacks.
         if self.unfinished_tables.load(Ordering::Acquire) != 0 {
             self.early.fetch_add(1, Ordering::Relaxed);
@@ -175,11 +220,11 @@ impl Events<'_> {
         }
         #[cfg(test)]
         if let Some(after) = self.after {
-            after(id);
+            after(id, self.finished[p].get().unwrap().read().0);
         }
         for &(parent, _) in &self.parents[id] {
             let p = self.positions[parent];
-            if p != usize::MAX {
+            if p < self.node_ids.len() {
                 self.release(p, scope);
             }
         }
@@ -234,7 +279,7 @@ impl Events<'_> {
         // Static template membership, never a per-instance subscriber list.
         for &id in &self.dispatch[table].members {
             let position = self.positions[id];
-            if position != usize::MAX {
+            if position < self.node_ids.len() {
                 self.release(position, scope);
             }
         }
@@ -388,7 +433,16 @@ mod tests {
         let versions = g.query_versions.clone();
         let (tx, rx) = mpsc::channel();
         let rx = Mutex::new(rx);
-        let after = |id| {
+        let addresses: Vec<_> = s
+            .states
+            .iter()
+            .map(|s| s as *const Summary as usize)
+            .collect();
+        let after = |id, state: &Summary| {
+            assert_eq!(
+                state as *const Summary as usize, addresses[id],
+                "original Summary stays in place"
+            );
             if id == 3 {
                 tx.send(()).unwrap();
             }
@@ -425,6 +479,89 @@ mod tests {
             "both guards and actual own row are ready"
         );
         assert!(s.publication.work.table_events.early_nodes > 0);
+        restore(&mut index, tasks);
+        assert!(index.changes.is_empty());
+    }
+
+    #[test]
+    fn empty_children_keep_existing_support_at_its_original_address() {
+        let mut g = graph();
+        let mut index = crate::query::test_projection_indexes(64);
+        index.track_changes = true;
+        let mut s = fixture(&g, &mut index, false);
+        for table in 0..3 {
+            fill(&mut g, table, 2000);
+        }
+        index.update(&mut g).unwrap();
+        s.publish(&mut index);
+        g.changes.clear();
+        assert_eq!(s.states[0].keys.len(), 128);
+        assert_eq!(s.states[7].keys.len(), 128);
+        let addresses: Vec<_> = s
+            .states
+            .iter()
+            .map(|s| s as *const Summary as usize)
+            .collect();
+        fill(&mut g, 0, 3000);
+        let mut tasks = tasks(&g, &mut index);
+        let ids: Vec<_> = tasks.iter().map(|t| (t.table, true)).collect();
+        let rows: Vec<_> = g
+            .changes
+            .tables()
+            .find(|(table, _)| *table == 0)
+            .unwrap()
+            .1
+            .iter()
+            .map(|(&w, c)| (w, c.row(&g, w).unwrap()))
+            .collect();
+        let version = g.query_versions[0];
+        let after = |id, state: &Summary| {
+            assert_eq!(state as *const Summary as usize, addresses[id]);
+            if id == 0 {
+                assert_eq!(
+                    state.keys.len(),
+                    128,
+                    "empty completion must retain old support"
+                );
+            }
+        };
+        let pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(4)
+            .build()
+            .unwrap();
+        assert!(s.publish_table_events_inner(
+            &index,
+            &ids,
+            &mut tasks,
+            Some(&pool),
+            |t| {
+                let mut c = t.column.take().unwrap();
+                for (w, row) in &rows {
+                    c.update(*w, row.as_ref());
+                }
+                c.finish(version);
+                (Some(c), true)
+            },
+            &mut |t, c| t.column = c,
+            Some(&after)
+        ));
+        assert_eq!(
+            s.states[7].keys.len(),
+            256,
+            "parent reads the empty child's unchanged support"
+        );
+        assert_eq!(
+            s.states[2].keys.len(),
+            256,
+            "parent also borrows its unaffected child"
+        );
+        let work = &s.publication.work.table_events;
+        assert!(work.empty_nodes > 0 && work.unchanged_child_borrows > 0);
+        assert_eq!(
+            work.materialized_nodes + work.empty_nodes,
+            work.completed_nodes
+        );
+        assert_eq!(work.summary_borrows, work.potential_nodes);
         restore(&mut index, tasks);
         assert!(index.changes.is_empty());
     }
@@ -550,7 +687,8 @@ mod tests {
                 })
                 .collect();
             let versions = g.query_versions.clone();
-            let after = |id| assert_ne!(id, 5, "failed table must not release its condition");
+            let after =
+                |id, _: &Summary| assert_ne!(id, 5, "failed table must not release its condition");
             assert!(s.publish_table_events_inner(
                 &index,
                 &ids,
@@ -641,7 +779,7 @@ impl Sieve {
         pool: Option<&rayon::ThreadPool>,
         run: impl Fn(&mut T) -> (Option<PublicationTask>, bool) + Sync,
         restore: &mut impl FnMut(&mut T, Option<PublicationTask>),
-        #[cfg(test)] after: Option<&(dyn Fn(usize) + Sync)>,
+        #[cfg(test)] after: Option<&(dyn Fn(usize, &Summary) + Sync)>,
     ) -> bool {
         self.publication.work.table_events.attempts += 1;
         if !self.enabled
@@ -700,7 +838,6 @@ impl Sieve {
             }
             head += 1;
         }
-        let mut nodes = Vec::with_capacity(affected.len());
         let mut remaining = Vec::with_capacity(affected.len());
         let mut roots = Vec::new();
         for (p, &id) in affected.iter().enumerate() {
@@ -716,31 +853,59 @@ impl Sieve {
                 roots.push(p);
             }
             remaining.push(AtomicUsize::new(dependencies));
-            nodes.push(Mutex::new(Some(Node {
-                id,
-                state: std::mem::take(&mut self.states[id]),
-                added: Vec::new(),
-                direct: 0,
-                dependencies: 0,
-                visits: 0,
-                columns: 0,
-                worker: None,
-                seconds: 0.0,
-            })));
         }
+        // Partition only the affected states and their actual guard inputs.
+        // Their addresses remain in the existing Summary array. The source
+        // creates borrowed handles, never moves out/reinstalls Summary values.
+        let mut required = affected.clone();
+        for &id in &affected {
+            for guard in &self.specs[id].guards {
+                if positions[guard.child] == usize::MAX {
+                    positions[guard.child] = usize::MAX - 1;
+                    required.push(guard.child);
+                }
+            }
+        }
+        let mut partition_comparisons = 0;
+        required.sort_unstable_by(|a, b| {
+            partition_comparisons += 1;
+            a.cmp(b)
+        });
+        let partition_steps = required.len();
+        let partition_bytes = required.capacity() * std::mem::size_of::<usize>();
+        let mut owners: Vec<_> = (0..affected.len()).map(|_| Mutex::new(None)).collect();
+        let mut unchanged = Vec::with_capacity(required.len() - affected.len());
+        let mut tail = self.states.as_mut_slice();
+        let mut next = 0;
+        for &id in &required {
+            let (_, suffix) = tail.split_at_mut(id - next);
+            let (state, suffix) = suffix.split_first_mut().unwrap();
+            tail = suffix;
+            next = id + 1;
+            let p = positions[id];
+            if p < affected.len() {
+                *owners[p].get_mut().unwrap() = Some(state);
+            } else {
+                positions[id] = affected.len() + unchanged.len();
+                unchanged.push(&*state);
+            }
+        }
+        drop(required);
+        let child_borrows = unchanged.len();
         let events = Events {
             specs: &self.specs,
             parents: &self.parents,
             dispatch: &self.by_table,
             group: &plan.group,
             table_groups: &plan.table_groups,
-            unchanged: &self.states,
+            unchanged,
             index,
             collide: self.collide,
             positions,
             table_positions,
             table_ids: ids,
-            nodes,
+            node_ids: &affected,
+            owners,
             remaining,
             inputs,
             finished: (0..affected.len()).map(|_| OnceLock::new()).collect(),
@@ -752,8 +917,14 @@ impl Sieve {
             #[cfg(test)]
             after,
         };
-        let header_bytes = events.nodes.capacity() * std::mem::size_of::<Mutex<Option<Node>>>()
-            + events.finished.capacity() * std::mem::size_of::<OnceLock<Node>>()
+        let owner_bytes =
+            events.owners.capacity() * std::mem::size_of::<Mutex<Option<&mut Summary>>>();
+        let result_bytes =
+            events.finished.capacity() * std::mem::size_of::<OnceLock<Finished<'_>>>();
+        let header_bytes = owner_bytes
+            + result_bytes
+            + partition_bytes
+            + events.unchanged.capacity() * std::mem::size_of::<&Summary>()
             + events.tables.capacity() * std::mem::size_of::<OnceLock<Table>>()
             + events.inputs.capacity() * std::mem::size_of::<Mutex<Option<Inputs>>>()
             + events.remaining.capacity() * std::mem::size_of::<AtomicUsize>()
@@ -797,11 +968,14 @@ impl Sieve {
         let early_work = events.early_work.load(Ordering::Relaxed) as u64;
         let empty = events.empty.load(Ordering::Relaxed) as u64;
         let Events {
-            nodes,
+            owners,
+            unchanged,
             finished,
             tables,
             ..
         } = events;
+        drop(owners);
+        drop(unchanged);
         let work = &mut plan.work;
         work.enabled = true;
         work.attempts += 1;
@@ -821,11 +995,23 @@ impl Sieve {
         work.table_events.early_work_nodes += early_work;
         work.table_events.empty_nodes += empty;
         work.table_events.failed_batches += u64::from(!success);
-        for (slot, pending) in finished.into_iter().zip(nodes) {
-            let n = if let Some(n) = slot.into_inner() {
+        work.table_events.summary_borrows += affected.len() as u64;
+        work.table_events.unchanged_child_borrows += child_borrows as u64;
+        work.table_events.partition_steps += partition_steps as u64;
+        work.table_events.partition_comparisons += partition_comparisons;
+        work.table_events.owner_header_bytes += owner_bytes as u64;
+        work.table_events.result_header_bytes += result_bytes as u64;
+        for slot in finished {
+            if let Some(done) = slot.into_inner() {
                 work.table_events.completed_nodes += 1;
                 work.table_events.discarded_nodes += u64::from(!success);
                 work.tasks += 1;
+                let Finished::Executed(n) = done else {
+                    work.inline_tasks += 1;
+                    work.event_empty_nodes += 1;
+                    continue;
+                };
+                work.table_events.materialized_nodes += 1;
                 work.direct_rows += n.direct;
                 work.dependency_rows += n.dependencies;
                 work.candidate_visits += n.visits;
@@ -844,12 +1030,9 @@ impl Sieve {
                     self.stats.dependency_rows += n.dependencies;
                     self.stats.added_keys += n.added.len() as u64;
                 }
-                n
             } else {
                 assert!(!success);
-                pending.into_inner().unwrap().unwrap()
-            };
-            self.states[n.id] = n.state;
+            }
         }
         for ((slot, task), &(table, _)) in tables.into_iter().zip(tasks).zip(ids) {
             let mut done = slot.into_inner().unwrap();
