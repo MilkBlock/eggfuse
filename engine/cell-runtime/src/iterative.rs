@@ -465,6 +465,23 @@ impl Catalog {
             "transitions":transitions,
             "scope":"finite positive constructor closure; not whole-program saturation"})
     }
+    /// Recompile selected paths against the target typed Cells without searching
+    /// for additional paths or carrying source receipt/layout certificates.
+    pub fn relower_selected(p: &Program, plan: &mut J, policy: &J) -> Result<()> {
+        let (congruence, queries, completion, lazy) = match policy["schema"].as_str() {
+            Some("eggfuse-result-switch/v1") => (false,false,false,false),
+            Some("eggfuse-result-switch/v2") => (true,false,false,false),
+            Some("eggfuse-result-switch/v3") => (true,true,false,false),
+            Some("eggfuse-result-switch/v4") => (true,true,true,false),
+            Some("eggfuse-result-switch/v5") => (true,true,true,true),
+            _ => return Err("unsupported selected-path policy".into()),
+        };
+        let reuse=policy["reuse_results"].as_bool().ok_or("missing reuse policy")?;
+        let mut candidate=plan.clone();
+        Self::emit_policy(p,&mut candidate,reuse,congruence,queries,completion,lazy,false,None)?;
+        *plan=candidate;
+        Ok(())
+    }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
     }

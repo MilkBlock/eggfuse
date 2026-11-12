@@ -26,6 +26,13 @@ fn entry_values_replace_construction_without_history_or_receipts() {
     let raw=compiler::specialize_entry_values(&p).unwrap();
     assert!(!raw["entry_value_specialization"]["projections"].as_array().unwrap().is_empty());
     let q=Program::parse(raw).unwrap();
+    compiler::validate_entry_value_specialization(&p,&q).unwrap();
+    let mut forged=q.clone();
+    forged.artifact["entry_value_specialization"]["projections"]=serde_json::json!([]);
+    assert!(compiler::validate_entry_value_specialization(&p,&forged).is_err());
+    let mut forged=q.clone();
+    forged.artifact["source_core"]["initial"]=serde_json::json!([]);
+    assert!(compiler::validate_entry_value_specialization(&p,&forged).is_err());
     let constructors=|p:&Program|p.templates.iter().flat_map(|t|t.ops.iter()).filter(|op|matches!(op,Op::Let(..))).count();
     assert!(constructors(&q)<constructors(&p));
     let b=execute(p);let a=execute(q);

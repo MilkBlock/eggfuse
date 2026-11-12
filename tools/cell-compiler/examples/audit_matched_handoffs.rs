@@ -19,6 +19,10 @@ fn main()->Result<(),Box<dyn Error>> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
     if a.len()!=4 {return Err("usage: audit_matched_handoffs BASE CANDIDATE SAVED_CHECKS OUTPUT".into());}
     let mut base=executor(&a[0])?;let mut candidate=executor(&a[1])?;
+    let source_specialized=base.graph.program.artifact["source_core"]!=candidate.graph.program.artifact["source_core"];
+    if source_specialized {
+        eggfuse_cell_runtime::compiler::validate_entry_value_specialization(&base.graph.program,&candidate.graph.program)?;
+    }
     let saved:Value=serde_json::from_slice(&fs::read(&a[2])?)?;
     let checks=saved["run_checks"].as_array().ok_or("saved checks missing")?;
     let mut resumes=vec![];
@@ -39,7 +43,7 @@ fn main()->Result<(),Box<dyn Error>> {
         "source_storage":e.graph.retained_cell_storage(),"key_lookup_calls":e.graph.key_lookup_calls.get()});
     fs::write(&a[3],serde_json::to_vec_pretty(&json!({"scope":"actual standalone Cell runtime; ordered resume history may change, graph/RHS/writes may not",
         "base_program":base.graph.program.artifact["sha256"],"program_sha256":candidate.graph.program.artifact["sha256"],
-        "runs":checks.len(),"baseline_saved_checks_equal":true,"graph_rhs_writes_equal":true,
+        "runs":checks.len(),"source_specialization_verified":source_specialized,"baseline_saved_checks_equal":true,"graph_rhs_writes_equal":true,
         "resume_changed_runs":resumes,"before":report(&base),"after":report(&candidate),"final_state":state}))?)?;
     Ok(())
 }

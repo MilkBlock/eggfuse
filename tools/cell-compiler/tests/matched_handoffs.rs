@@ -57,3 +57,18 @@ fn matched_routes_reject_a_nonmatching_publication_without_changing_the_plan() {
     assert!(Catalog::emit_matched_routes(&p,&mut plan,&[(producer,wrong_output,consumer,pivot)]).is_err());
     assert_eq!(plan,before);
 }
+
+#[test]
+fn selected_paths_relower_without_expansion_and_reject_removed_publications() {
+    let p=fixture::program(fixture::SOURCE);
+    let before=p.artifact["iterative_bake"].clone();
+    let policy=before["rhs_handoffs"].clone();
+    let mut plan=before.clone();
+    Catalog::relower_selected(&p,&mut plan,&policy).unwrap();
+    assert_eq!(plan["joins"],before["joins"]);
+    assert_eq!(plan["rhs_handoffs"],before["rhs_handoffs"]);
+    plan["joins"][0]["output"]=serde_json::json!(usize::MAX);
+    let invalid=plan.clone();
+    assert!(Catalog::relower_selected(&p,&mut plan,&policy).is_err());
+    assert_eq!(plan,invalid);
+}

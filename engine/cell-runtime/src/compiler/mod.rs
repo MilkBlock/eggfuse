@@ -156,7 +156,7 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
 /// Specialize ordinary typed Cell instructions after whole-program proof.
 /// The optimized source core is explicit: no source-validation bypass and no
 /// constructor receipt is fabricated from the View row.
-pub fn specialize_entry_values(p: &Program) -> Result<J> {
+fn entry_value_core(p: &Program) -> Result<(J,Vec<crate::cell_entry_invariants::Projection>)> {
     let mut core=p.artifact["source_core"].clone();
     let projections=crate::cell_entry_invariants::discover(p);
     for (set_id,set) in array(&p.artifact["recipe"]["rulesets"] )?.iter().enumerate() {
@@ -173,6 +173,24 @@ pub fn specialize_entry_values(p: &Program) -> Result<J> {
     }
     core.as_object_mut().ok_or("core object")?.remove("sha256");
     core["sha256"]=crate::checksum::artifact_digest(&core).into();
+    Ok((core,projections))
+}
+
+/// Admit only the exact source rewrite re-proven from the original typed Cells.
+/// This extends source acceptance without weakening graph or effect checks.
+pub fn validate_entry_value_specialization(source:&Program,target:&Program)->Result<()> {
+    let (core,projections)=entry_value_core(source)?;
+    let proof=&target.artifact["entry_value_specialization"];
+    if target.artifact["source_core"]!=core
+        || proof["source_program"]!=source.artifact["sha256"]
+        || proof["projections"]!=serde_json::to_value(projections).map_err(|e|e.to_string())? {
+        return Err("unproved Entry source specialization".into());
+    }
+    Ok(())
+}
+
+pub fn specialize_entry_values(p: &Program) -> Result<J> {
+    let (core,projections)=entry_value_core(p)?;
     let markers=p.marker_tables.iter().map(|&t|p.tables[t].name.clone()).collect();
     let mut result=compile(core,&markers)?;
     result.as_object_mut().unwrap().remove("sha256");
