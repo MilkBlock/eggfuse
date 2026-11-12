@@ -29,7 +29,7 @@ class OwnersTests(unittest.TestCase):
     def test_complete_cell_requires_all_constructor_sites(self):
         a = fixture()
         t = a['rhs_projection_trace']['trace']
-        t['events'] = [dict(cell=4, rule=0, constructor_requests=1)]
+        t['events'] = [dict(cell=4, rule=0, constructor_requests=1, facts=0, updates=0, union_requests=0)]
         t['plans'] = [dict(constructor_sites=1)]
         self.assertEqual(analyze(a)['complete_cells']['cross_run_constructor_requests'], 1)
         t['plans'][0]['constructor_sites'] = 2
