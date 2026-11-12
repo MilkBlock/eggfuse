@@ -2121,7 +2121,7 @@ impl Executor {
             self.graph.begin_owner_entry(rid,anchors);
         }
         let result = (|| {
-            let Some(mut execution) = self.start_cell_execution(rid, b, &[],
+            let Some(mut execution) = self.start_cell_execution(rid, b, &[], false,
                 #[cfg(feature="structural-depth")] evidence)? else { return Ok(()) };
             loop {
                 match self.advance_cell(&mut execution)? {
@@ -2138,6 +2138,7 @@ impl Executor {
         rid: usize,
         b: Binding,
         pending: &[u32],
+        defer_constructor_prefix: bool,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<Option<owned_cell::Execution>> {
         #[cfg(feature = "iterative-bake")]
@@ -2440,6 +2441,7 @@ impl Executor {
                         receipts: &mut crate::cell::Effects| -> Result<Start> {
             if me.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
                 && stage_cursor.is_none() && origin.is_none()
+                && (!defer_constructor_prefix || prefix_end==me.graph.program.templates[template].ops.len())
             {
                 let width = me.graph.program.templates[template].ops.len();
                 me.graph.start_cell(template, values, b.parent, receipts, SourcePrefix::new(width, aliases).starting_at(prefix_end).pending(pending),

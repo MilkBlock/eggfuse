@@ -371,10 +371,12 @@ impl<'a> Batch<'a> {
                 piece.counts.pending_bytes +=
                     ((after - before) * std::mem::size_of::<Born>()) as u64;
                 piece.counts.local_births += 1;
+                piece.counts.root_births += u64::from(owner.starts_root() && index==owner.from);
             } else {
                 values.insert(step.destination, value.fields.last().unwrap().clone());
                 piece.counts.value_writes += 1;
                 piece.counts.local_reuses += 1;
+                piece.counts.root_reuses += u64::from(owner.starts_root() && index==owner.from);
             }
             receipts.record(step.operation, Dependency::Fact(value.witness));
             piece.end = step.operation + 1;
@@ -581,6 +583,7 @@ impl Graph {
                 key,
                 isolated: false,
                 fresh_root: None,
+                root: None,
             }),
         ))
     }

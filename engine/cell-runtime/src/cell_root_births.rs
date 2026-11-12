@@ -1,0 +1,189 @@
+//! Start a compiled fresh cone without a source-created anchor. An empty
+//! authoritative hash bucket proves absence; a nonempty bucket stays on the
+//! ordinary exact path. Peers resolve duplicate roots in their existing result
+//! slots before using the returned identity in downstream constructors.
+use super::*;
+
+/// Distinct root hashes prove distinct exact keys, never the converse. Such a
+/// root's fresh cone cannot alias an old source-created anchor. If the compiler
+/// also proves the local tail complete, omit peer slots and recursive helping.
+pub(crate) fn isolate(tasks:&mut [(Job,crate::cell::Effects)]) -> (Vec<u64>,Counts) {
+    let mut counts=Counts::default();
+    let mut hashes:Vec<_>=tasks.iter().filter_map(|(job,_)|job.root_hash()).collect();
+    counts.root_hash_bytes=(hashes.capacity()*std::mem::size_of::<u64>()) as u64;
+    hashes.sort_unstable_by(|a,b| {counts.directory_checks+=1;a.cmp(b)});
+    for (job,_) in tasks {
+        let Some(hash)=job.root_hash() else {continue;};
+        if job.from+1<job.limit && !job.plan.isolated[job.from+1] {continue;}
+        let first=hashes.partition_point(|&h| {counts.directory_checks+=1;h<hash});
+        if hashes.get(first+1)!=Some(&hash) {
+            job.isolated=true;counts.root_isolated+=1;
+        }
+    }
+    hashes.dedup();(hashes,counts)
+}
+
+impl Graph {
+    pub(crate) fn root_boundary_key(&self,cell:u32,table:usize,args:&[Arg],pending:&[u32])
+        ->Result<(u64,bool,Counts)> {
+        let key=self.inline_arguments(cell,args)?;
+        let (probes,blocked)=super::blocked(&key,pending);
+        Ok((self.constructor_hash(table,&key),blocked,Counts {
+            root_boundary_probes:1,source_operand_reads:key.len() as u64,
+            dependency_proofs:probes,..Counts::default()}))
+    }
+    pub(crate) fn take_root_job(&mut self,rule:usize,cell:u32,stop:usize,
+        pending:&[u32],operations:usize,unregistered:impl Fn(u64)->bool)->Result<(Counts,Option<Job>)> {
+        let mut counts=Counts::default();
+        if !self.local_jobs_supported() || !self.pipelined_births_ready() {return Ok((counts,None));}
+        let position=self.rhs_frame(cell).unwrap().completed_prefix;
+        let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok((counts,None));};
+        let Ok(from)=plan.steps.binary_search_by_key(&position,|s|s.operation) else {return Ok((counts,None));};
+        if !plan.roots[from] || stop!=self.program.templates[self.rhs_frame(cell).unwrap().template].ops.len()
+            || operations+plan.steps.len()-from>256 {return Ok((counts,None));}
+        let step=&plan.steps[from];
+        let key=self.inline_arguments(cell,&step.keys)?;
+        counts.source_operand_reads+=key.len() as u64;
+        let (probes,blocked)=super::blocked(&key,pending);
+        counts.dependency_proofs+=probes;
+        if blocked {return Ok((counts,None));}
+        counts.root_bucket_probes+=1;
+        let hash=self.constructor_hash(step.table,&key);
+        if unregistered(hash) {counts.root_pending+=1;return Ok((counts,None));}
+        // Hash/Bloom equality never proves constructor equality. Empty storage
+        // proves absence, including under forced collisions; exact peer tests
+        // still select the earliest actual result within this bounded group.
+        if self.intern.contains_key(&hash) {
+            counts.root_bucket_fallbacks+=1;return Ok((counts,None));
+        }
+        let value=Value::Eq(((cell as u64)<<32)|(step.destination as u64+1));
+        if canon(&value,&self.parents)!=value {return Ok((counts,None));}
+        let plan=plan.clone();counts.plan_handles+=1;
+        // Keep any parent-projected inputs in the same instance. Results of
+        // this region remain implicit addresses or actual peer result aliases.
+        for arg in plan.steps[from..].iter().flat_map(|s|&s.keys).chain(
+            plan.units.iter().flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
+            let Arg::Slot(slot)=arg else {continue;};
+            if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
+                && plan.definitions.binary_search_by_key(slot,|&(s,_)|s).ok()
+                    .is_none_or(|i|plan.definitions[i].1<position) {
+                let value=self.slot(cell,*slot)?;
+                counts.captured_reads+=1;counts.captured_writes+=1;
+                let values=&mut self.rhs_frame_mut(cell).unwrap().values;
+                let before=values.capacity_bytes();values.insert(*slot,value);
+                let growth=values.capacity_bytes()-before;
+                counts.slot_growths+=u64::from(growth!=0);counts.slot_bytes+=growth as u64;
+            }
+        }
+        self.promote_active();
+        let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
+        counts.slot_leases+=1;counts.slot_seals+=u64::from(sealed);
+        counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
+        counts.root_jobs+=1;
+        let unit_epoch=plan.units.as_ref().map(|_|self.epoch);
+        let limit=plan.steps.len();
+        Ok((counts,Some(Job {cell,plan,frame:Local {values,facts:Default::default(),completed_prefix:position},
+            from,limit,first:position,anchor:position,key,isolated:false,fresh_root:Some(from),unit_epoch,root:Some(hash)})))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::cell::Effects;
+    use std::sync::atomic::AtomicUsize;
+
+    #[test]
+    fn disjoint_complete_roots_need_no_peer_slots_and_hash_collisions_keep_sharing() {
+        for collide in [false,true] {
+            let mut g=super::super::tests::graph();
+            let template=&mut g.program.templates[0];
+            std::sync::Arc::make_mut(&mut template.ops).remove(2);
+            template.defs.remove(&3);template.defs.insert(4,2);
+            g.program.known_results.static_skip[0]=std::rc::Rc::new(vec![false;3]);
+            g.program.executions[0].births=Plan::derive(&g.program,0).map(std::sync::Arc::new);
+            let mut tasks=Vec::new();
+            for input in [100,200] {
+                let cell=g.begin_transient(0,[(0,Value::Eq(input))].into_iter().collect(),None).unwrap();
+                let (_,job)=g.take_root_job(0,cell,3,&[],tasks.len()*3,|_|false).unwrap();
+                let mut job=job.unwrap();
+                if collide {job.root=Some(0);}
+                tasks.push((job,Effects::default()));
+            }
+            let (_,counts)=isolate(&mut tasks);
+            assert_eq!(counts.root_isolated,if collide {0}else{2});
+            assert!(tasks.iter().all(|(j,_)|j.dependent()==collide));
+            if !collide {
+                for (job,mut effects) in tasks {
+                    let done=job.run(g.parents.reader(),&mut effects.writer());
+                    let counts=g.commit_local_job(done,&mut effects.writer()).unwrap();
+                    assert_eq!(counts.root_births,1);assert_eq!(counts.local_births,3);
+                    assert_eq!(counts.shared_slots,0);
+                }
+                assert_eq!(g.stats.logical_facts_created,6);
+            }
+        }
+    }
+
+    #[test]
+    fn duplicate_roots_resolve_before_their_descendants_without_a_source_anchor() {
+        for workers in [1,4] {
+            let mut control=super::super::tests::graph();
+            for _ in 0..8 {
+                let cell=control.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
+                for (op,input,dst) in [(0,0,1),(1,1,2),(2,1,3),(3,2,4)] {
+                    control.construct(cell,op,0,&[Arg::Slot(input)],dst).unwrap();
+                }
+                control.promote_active();
+            }
+            let mut g=super::super::tests::graph();let mut tasks=Vec::new();let mut pending=Vec::new();
+            let mut counts=Counts::default();
+            for _ in 0..8 {
+                let cell=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
+                let (work,job)=g.take_root_job(0,cell,4,&pending,tasks.len()*4,|_|false).unwrap();counts.add(work);
+                let job=job.expect("empty authoritative root bucket");
+                assert!(g.cells[&cell].facts.is_empty(),"source has not constructed an anchor");
+                assert!(job.terminal_at(4),"disjoint root hashes may overlap the next admission wave");
+                pending.push(cell);tasks.push((job,Effects::default()));
+            }
+            let parents=g.parents.freeze();let pool=rayon::ThreadPoolBuilder::new().num_threads(workers).build().unwrap();
+            let unfinished=AtomicUsize::new(tasks.len());
+            let ((result,_),work)=stream_shared(tasks,Read {base:&parents,delta:None},Some(&pool),&unfinished,|ready| {
+                for mut d in ready.drain(..) {
+                    counts.add(g.commit_local_job(d.done,&mut d.effects.writer())?);
+                }
+                Ok::<_,String>(())
+            });
+            result.unwrap();counts.add(work);drop(parents);g.parents.thaw();
+            assert_eq!((counts.root_jobs,counts.root_births,counts.root_reuses),(8,1,7));
+            assert_eq!((counts.local_births,counts.local_reuses),(3,29));
+            assert_eq!(g.key_lookup_calls.get(),0,"no ordinary source constructor lookup");
+            assert_eq!(g.export().unwrap(),control.export().unwrap());
+            assert_eq!(g.stats.constructor_requests,control.stats.constructor_requests);
+            assert_eq!(g.stats.constructor_reused,control.stats.constructor_reused);
+            assert!(pending.iter().all(|c|g.slot(*c,1).unwrap()==g.slot(pending[0],1).unwrap()));
+            let a=g.slot(pending[0],1).unwrap();let b=g.slot(pending[0],2).unwrap();
+            g.enqueue_union(a.clone(),b.clone()).unwrap();control.enqueue_union(a,b).unwrap();
+            g.repair().unwrap();control.repair().unwrap();
+            assert_eq!(g.export().unwrap(),control.export().unwrap(),"later congruence repair");
+        }
+    }
+
+    #[test]
+    fn occupied_root_bucket_and_pending_union_keep_exact_source_completion() {
+        let mut g=super::super::tests::graph();
+        let (old,_,_)=super::super::tests::start(&mut g);
+        let cell=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,|_|false).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_bucket_fallbacks,1);
+        assert_eq!(g.construct(cell,0,0,&[Arg::Slot(0)],1).unwrap(),g.slot(old,1).unwrap());
+        g.promote_active();
+        let cell=g.begin_transient(0,[(0,Value::Eq(200))].into_iter().collect(),None).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,|_|true).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_pending,1);
+        assert_eq!(counts.slot_leases,0,"an in-flight hash is not proof of absence");
+        g.enqueue_union(Value::Eq(100),Value::Eq(200)).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,|_|false).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_bucket_probes,0);
+    }
+}

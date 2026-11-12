@@ -9,10 +9,13 @@ pub(super) struct Flying {
     producer:Background<Completed,cell_births::Counts>,
     ready:Vec<Completed>,
     clock:Instant,
+    root_hashes:Vec<u64>,
     #[cfg(feature="cell-sync-diagnostics")] diagnostic:crate::sync_diagnostics::Clock,
 }
 impl Flying {
     pub fn unfinished(&self)->usize {self.producer.unfinished()}
+    pub fn has_roots(&self)->bool {!self.root_hashes.is_empty()}
+    pub fn contains_root(&self,hash:u64)->bool {self.root_hashes.binary_search(&hash).is_ok()}
     pub fn references(&self,key:&[Value],probes:&mut u64)->bool {
         key.iter().any(|v| { *probes+=1;match v {
             Value::Eq(id)=>self.owners.binary_search_by(|p| {*probes+=1;p.execution.cell.cmp(&((*id>>32) as u32))}).is_ok(),
@@ -35,9 +38,13 @@ impl Executor {
             return self.drain_ready_queue(queue,pending);
         }
         let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
-        let tasks:Vec<_>=queue.owners.iter_mut().filter_map(|p|p.job.take()
+        let mut tasks:Vec<_>=queue.owners.iter_mut().filter_map(|p|p.job.take()
             .map(|j|(j,std::mem::take(&mut p.execution.effects)))).collect();
-        let shared=queue.shared;
+        // Only absence certificates cross this admission boundary. The actual
+        // bindings and result slots remain in their original worker jobs.
+        let (root_hashes,counts)=cell_births::isolate_roots(&mut tasks);
+        self.cell_execution.as_mut().unwrap().counts.births.add(counts);
+        let shared=tasks.iter().any(|(job,_)|job.dependent());
         let parents=self.graph.parents.freeze();
         let stats=&mut self.cell_execution.as_mut().unwrap().counts;
         stats.births.root_snapshots+=1;stats.births.worker_batches+=1;
@@ -63,8 +70,8 @@ impl Executor {
         });
         let owners=std::mem::replace(&mut queue.owners,std::mem::take(&mut queue.spare));
         queue.flying=Some(Flying {owners:owners.into(),producer,
-            ready:Vec::new(),clock,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
-        queue.operations=0;queue.shared=false;Ok(())
+            ready:Vec::new(),clock,root_hashes,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
+        queue.operations=0;queue.shared=false;queue.roots=false;Ok(())
     }
 
     pub(super) fn poll_cell_queue(&mut self,queue:&mut Ready,pending:&mut Vec<u32>,wait:bool)->Result<()> {

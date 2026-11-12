@@ -20,6 +20,7 @@ struct Ready {
     owners: Vec<Parked>,
     operations: usize,
     shared: bool,
+    roots: bool,
     flying:Option<pipeline::Flying>,
     spare:Vec<Parked>,
 }
@@ -160,8 +161,10 @@ impl Executor {
     fn drain_ready_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
         if queue.owners.is_empty() { return Ok(()); }
         let pool = self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
-        let tasks: Vec<_> = queue.owners.iter_mut().filter_map(|p| p.job.take()
+        let mut tasks: Vec<_> = queue.owners.iter_mut().filter_map(|p| p.job.take()
             .map(|job| (job, std::mem::take(&mut p.execution.effects)))).collect();
+        let (_,counts)=crate::graph::cell_births::isolate_roots(&mut tasks);
+        self.cell_execution.as_mut().unwrap().counts.births.add(counts);
         let count = tasks.len();
         let mut owners = queue.owners.drain(..);
         let result = if count != 0 {
@@ -237,7 +240,7 @@ impl Executor {
             result
         } else { Ok(()) };
         let result = result.and_then(|()| { for parked in owners { self.adopt_cell_event(parked, None,None)?; } Ok(()) });
-        pending.clear(); queue.operations = 0; queue.shared = false;
+        pending.clear(); queue.operations = 0; queue.shared = false; queue.roots = false;
         result
     }
     pub(super) fn apply_cell_batch(
@@ -254,6 +257,7 @@ impl Executor {
             .rule_groups += 1;
         let mut queue = Ready::default();
         let mut pending = Vec::new();
+        let roots=self.graph.program.executions[rid].births.as_ref().is_some_and(|p|p.has_roots());
         let result = (|| {
             for binding in rows {
                 // The same inherited Cursor travels with the execution. When
@@ -264,6 +268,10 @@ impl Executor {
                     rid,
                     binding,
                     &pending,
+                    // Preserve the existing all-hit source prefix when no
+                    // peer roots are outstanding. Once a group is open, its
+                    // remaining instances can start on workers themselves.
+                    roots && !pending.is_empty(),
                     #[cfg(feature = "structural-depth")]
                     None,
                 )?;
@@ -302,6 +310,47 @@ impl Executor {
                         self.graph.stats.prepared_rhs_later_operations += 1;
                         self.graph.rhs_frame_mut(execution.cell).unwrap().completed_prefix = position + 1;
                         continue;
+                    }
+                    let mut existing_root=false;
+                    if roots && execution.births.is_none() {
+                        let stop=execution.transfers[execution.transfer..].iter().find(|t|t.op>=position)
+                            .map_or(execution.ops.len(),|t|t.op);
+                        let (counts,job)=self.graph.take_root_job(rid,execution.cell,stop,&pending,queue.operations,
+                            |hash|queue.flying.as_ref().is_some_and(|w|w.contains_root(hash)))?;
+                        existing_root=counts.root_bucket_fallbacks!=0;
+                        self.cell_execution.as_mut().unwrap().counts.births.add(counts);
+                        if let Some(job)=job {
+                            let before=pending.capacity();pending.push(execution.cell);
+                            let stats=&mut self.cell_execution.as_mut().unwrap().counts.scheduler;
+                            stats.queue_growths+=u64::from(before!=pending.capacity());
+                            stats.queue_bytes+=((pending.capacity()-before)*std::mem::size_of::<u32>()) as u64;
+                            self.park_cell(&mut queue,execution,Some(job));break;
+                        }
+                    }
+                    // Only an unresolved root key or value dependency requires
+                    // this fence. Other constructors may keep admitting while
+                    // workers fill unrelated roots. Shared effects stay ordered.
+                    if (queue.roots || queue.flying.as_ref().is_some_and(|w|w.has_roots()))
+                        && !matches!(&execution.ops[position],Op::Copy(..))
+                        && !execution.aliases.as_ref().is_some_and(|a|a[position]) {
+                        let conflict=match &execution.ops[position] {
+                            Op::Let(_,Call::Table(table),args) if self.graph.program.tables[*table].virtual_fact => {
+                                if existing_root {false} else {
+                                    let (hash,blocked,counts)=self.graph.root_boundary_key(execution.cell,*table,args,&pending)?;
+                                    self.cell_execution.as_mut().unwrap().counts.births.add(counts);
+                                    blocked || queue.flying.as_ref().is_some_and(|w|w.contains_root(hash))
+                                        || queue.owners.iter().any(|p|p.job.as_ref().and_then(Job::root_hash)==Some(hash))
+                                }
+                            }
+                            Op::Let(_,Call::Primitive(..),_)=>false,
+                            _=>true,
+                        };
+                        if conflict {
+                            let state=self.graph.suspend_rhs(execution.cell);
+                            self.drain_cell_queue(&mut queue,&mut pending)?;
+                            self.graph.restore_rhs(state);
+                            if let Some(window)=&mut execution.births {window.after_ready_batch(&self.graph);}
+                        }
                     }
                     if execution.births.is_some() {
                         let stop = execution.transfers[execution.transfer..]
@@ -527,6 +576,7 @@ impl Executor {
         if let Some(job) = &job {
             queue.operations += job.operations();
             queue.shared |= job.dependent();
+            queue.roots |= job.starts_root();
         }
         queue.owners.push(Parked {
             execution,

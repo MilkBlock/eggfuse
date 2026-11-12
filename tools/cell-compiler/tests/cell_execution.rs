@@ -323,7 +323,13 @@ fn ready_cells_share_results_without_draining_or_replaying_their_prefix() {
             eggfuse_cell_runtime::transfer_audit::set_active(false);
         }
         let r=candidate.report();let queue=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
-        if ordered {assert_eq!(queue["admission_waves"],0,"a union suffix retains the admission fence");}
+        // The independent `next` rule now pipelines its single constructor.
+        // The `step` rule's union suffix still cannot enter that pipeline.
+        if ordered {
+            let roots=r["cell_execution"]["runtime"]["stats"]["births"]["root_jobs"].as_u64().unwrap();
+            assert!(queue["admission_jobs"].as_u64().unwrap()<=roots,
+                "only root jobs from the independent successor may pipeline: {queue}");
+        }
         assert!(queue["jobs"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
         if shared {
             assert!(queue["dependency_admissions"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
@@ -373,6 +379,38 @@ fn new_constructor_roots_complete_local_cells_and_publish_actual_results() {
             assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
             assert_eq!(candidate.graph.stats.logical_facts_created,control.graph.stats.logical_facts_created);
         }
+    }
+}
+
+#[test]
+fn workers_choose_duplicate_root_witnesses_before_continuing_the_same_cell() {
+    let seed=(0..128).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E i64) (Seen E))
+(function Out (E) Unit :merge old)
+(ruleset step) (ruleset next) (ruleset join)
+(rule ((= x (N n))) ((let a (F (N 0))) (let b (G a))
+ (let c (H b n)) (set (Out c) ())) :ruleset step)
+(rule ((Out x)) ((Seen x)) :ruleset next)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset join)
+{seed}
+(run-schedule (seq (run step) (run next) (run join) (run step) (run next)))
+(check (Seen (H (G (F (N 0))) 127)))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,4);control.execute().unwrap();
+    for workers in [1,2,4] {
+        let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();same(&control,&candidate);
+        let report=candidate.report();let work=&report["cell_execution"]["runtime"]["stats"]["births"];
+        if workers==1 {continue;} // The executor deliberately runs this tiny rule inline.
+        assert!(work["root_births"].as_u64().unwrap()>0,"worker must create the first constructor: {work}");
+        assert!(work["root_reuses"].as_u64().unwrap()>0,"duplicate roots must return an actual peer result: {work}");
+        assert!(work["root_bucket_fallbacks"].as_u64().unwrap()>0,"later groups see prior published roots: {work}");
+        for key in ["constructor_requests","constructor_reused","logical_facts_created","function_updates","unions"] {
+            assert_eq!(report["stats"][key],control.report()["stats"][key],"{key}");
+        }
+        assert_eq!(candidate.graph.stats.rhs_suspend_holds,candidate.graph.stats.rhs_suspend_releases);
     }
 }
 

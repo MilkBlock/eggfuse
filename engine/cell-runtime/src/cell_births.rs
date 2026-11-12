@@ -6,6 +6,9 @@ use crate::cell::{Definition, EffectWriter};
 use crate::value::parent_epoch::Read;
 #[path = "cell_births_shared.rs"]
 mod shared;
+#[path = "cell_root_births.rs"]
+mod roots;
+pub(crate) use roots::isolate as isolate_roots;
 pub(crate) use shared::stream as stream_shared;
 pub(crate) use shared::produce as produce_shared;
 pub(crate) struct Completed { pub done: Done, pub effects: crate::cell::Effects }
@@ -30,9 +33,10 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, no_unions:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, units:Option<units::Tail> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, no_unions:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, roots:Vec<bool>, units:Option<units::Tail> }
 impl Plan {
     pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
+    pub(crate) fn has_roots(&self)->bool {self.roots.iter().any(|&v|v)}
     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
     pub(crate) fn continues_after(&self,operation:usize)->bool {self.continues.get(operation).copied().unwrap_or(false)}
     pub(crate) fn derive(p:&Program, rule:usize) -> Option<Self> {
@@ -70,7 +74,7 @@ impl Plan {
                 candidates:group,prior:candidates.len(),skipped});
             skipped=0;candidates.push(operation);origins.insert(destination,operation);
         }
-        if !steps.iter().any(|s|!s.anchors.is_empty()) {return None;}
+        if steps.is_empty() {return None;}
         let mut continues=vec![false;cell.template.ops.len()];
         let mut next=false;
         for (operation,op) in cell.template.ops.iter().enumerate().rev() {
@@ -125,7 +129,7 @@ impl Plan {
         // A dependent tail may reuse a peer's result. Prove only that every key
         // stays in the fresh cone, not that each operation creates a new node.
         // These are input slots, not runtime producer/consumer subscriptions.
-        let lineage=if batch_rule {steps.iter().enumerate().map(|(from,first)| {
+        let lineage:Vec<Vec<usize>>=if batch_rule {steps.iter().enumerate().map(|(from,first)| {
             first.keys.iter().filter_map(|arg| {
                 let Arg::Slot(seed)=arg else {return None;};
                 let mut derived=vec![*seed];
@@ -138,7 +142,16 @@ impl Plan {
         }).collect()} else {vec![]};
         let units=units::Tail::derive(p,rule,last_constructor);
         let no_unions=!cell.template.ops.iter().any(|op|matches!(op,Op::Union(..)));
-        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,no_unions,isolated,lineage,units})
+        // A missing first key can start the same fresh cone on a worker. Every
+        // later constructor must consume that result (or one derived from it),
+        // and the region must finish without an ordered/fallible suffix.
+        let terminal=last_constructor+1==cell.template.ops.len() || units.as_ref()
+            .is_some_and(|u|u.ends_at(cell.template.ops.len()));
+        let roots=steps.iter().enumerate().map(|(i,step)|!cfg!(feature="rhs-locals") && batch_rule && no_unions && terminal
+            && (i+1==steps.len() || steps[i+1].region==step.region
+                && lineage[i+1].contains(&step.destination))).collect::<Vec<_>>();
+        if !steps.iter().any(|s|!s.anchors.is_empty()) && !roots.iter().any(|&v|v) {return None;}
+        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,no_unions,isolated,lineage,roots,units})
     }
     pub(crate) fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
@@ -149,6 +162,7 @@ impl Plan {
             + self.continues.capacity()*std::mem::size_of::<bool>()
             + self.definitions.capacity()*std::mem::size_of::<(usize,usize)>()
             + self.isolated.capacity()*std::mem::size_of::<bool>()
+            + self.roots.capacity()*std::mem::size_of::<bool>()
             + self.lineage.capacity()*std::mem::size_of::<Vec<usize>>()
             + self.lineage.iter().map(|s|s.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
             + self.units.as_ref().map_or(0,units::Tail::storage_bytes)
@@ -193,6 +207,9 @@ impl Window {
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub root_bucket_probes:u64, pub root_bucket_fallbacks:u64, pub root_jobs:u64,
+    pub root_births:u64, pub root_reuses:u64, pub root_pending:u64, pub root_boundary_probes:u64,
+    pub root_isolated:u64, pub root_hash_bytes:u64,
     pub plan_checks:u64, pub resume_checks:u64,
     pub window_checks:u64,
     pub attempts:u64, pub invalidated:u64, pub anchor_checks:u64,
@@ -218,7 +235,8 @@ pub(crate) struct Counts {
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
         macro_rules! add {($($f:ident),*)=>{$(self.$f+=b.$f;)*};}
-        add!(plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
+        add!(root_bucket_probes,root_bucket_fallbacks,root_jobs,root_births,root_reuses,root_pending,root_boundary_probes,root_isolated,root_hash_bytes,
+            plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,
             worker_batches,worker_operations,worker_wait_ns,prefix_reads,prefix_handles,prefix_unavailable,
@@ -362,6 +380,7 @@ pub(crate) struct Job {
     from:usize,limit:usize,first:usize,anchor:usize,
     key:smallvec::SmallVec<[Value;4]>, isolated:bool, fresh_root:Option<usize>,
     unit_epoch:Option<u64>,
+    root:Option<u64>,
 }
 pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
 impl Done {
@@ -369,6 +388,8 @@ impl Done {
     pub(crate) fn complete_at(&self, end: usize)->bool {self.piece.end == end}
 }
 impl Job {
+    pub(crate) fn starts_root(&self)->bool {self.root.is_some()}
+    pub(crate) fn root_hash(&self)->Option<u64> {self.root}
     pub(crate) fn dependent(&self)->bool {!self.isolated}
     /// Only a complete, union-free final region may overlap admission of the
     /// next wave. A transfer stop or an ordered suffix retains the old fence.
@@ -386,6 +407,7 @@ impl Job {
     pub(crate) fn run(mut self,parents:Read<'_>,receipts:&mut EffectWriter<'_>)->Done {
         let mut piece=self.plan.prepare(self.from,self.limit,self.cell,&mut self.frame,parents,
             self.first,self.anchor,self.key,receipts);
+        piece.counts.root_births+=u64::from(self.root.is_some() && piece.end>self.frame.completed_prefix);
         if self.isolated {
             assert_eq!(piece.end,self.plan.steps[self.limit-1].operation+1,
                 "compiled isolated Cell tail must reach its proven boundary");
@@ -461,7 +483,7 @@ impl Graph {
         let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
         counts.slot_seals+=u64::from(sealed);counts.slot_leases+=1;frame.values=values;
         counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
-        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch})))
+        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch,root:None})))
     }
     pub(crate) fn commit_local_job(&mut self,done:Done,receipts:&mut EffectWriter<'_>)->Result<Counts> {
         self.commit_registered_local_job(done,receipts,None)
