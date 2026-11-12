@@ -173,6 +173,41 @@ fn scalar_failure_before_or_after_a_constructor_tail_keeps_the_source_prefix() {
 }
 
 #[test]
+fn pipelined_terminal_waves_keep_unit_winners_run_visibility_and_late_source_errors() {
+    for fail in [false,true] {
+        let seed=(0..320).map(|n|format!("(N {})",if fail && n==300 {i64::MAX} else {n}))
+            .collect::<Vec<_>>().join("\n");
+        let source=format!(r#"
+(datatype E (N i64) (F E i64) (G E) (Seen E))
+(function Stamp (i64) Unit :merge old)
+(function Ticket (E E) Unit :merge old)
+(ruleset step) (ruleset next) (ruleset change) (ruleset remove)
+(rule ((= x (N n))) ((let v (+ n 1)) (let a (F x v)) (let b (G a))
+ (set (Stamp 0) ()) (set (Ticket a b) ())) :ruleset step)
+(rule ((Ticket a b)) ((Seen b)) :ruleset step)
+(rule ((Ticket a b)) ((Seen b)) :ruleset next)
+(rule ((Ticket a b)) ((delete (Ticket a b))) :ruleset remove)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+{seed}
+(run-schedule (seq (run step) (run next) (run remove) (run step) (run change) (run step) (run next)))
+"#);
+        let mut control=executor(&source,4);let expected=control.execute();
+        let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+        let actual=candidate.execute();
+        assert_eq!(actual,expected,"source error identity");
+        if fail {assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap(),"only earlier effects survive");}
+        else {same(&control,&candidate);}
+        let report=candidate.report();let queue=&report["cell_execution"]["runtime"]["stats"]["scheduler"];
+        assert!(queue["admission_waves"].as_u64().unwrap()>0,"must execute the asynchronous owner path: {queue}");
+        assert!(queue["admission_polls"].as_u64().unwrap()>0);
+        let births=&report["cell_execution"]["runtime"]["stats"]["births"];
+        assert!(births["unit_invalidated"].as_u64().unwrap()>0);
+        assert_eq!(births["unit_candidates"].as_u64().unwrap(),
+            births["unit_inserts"].as_u64().unwrap()+births["unit_invalidated"].as_u64().unwrap());
+    }
+}
+
+#[test]
 fn workers_write_actual_rows_and_invalidate_duplicate_cells_before_publication() {
     for merge in ["(min old new)", "(max old new)", "old"] {
         let seed = (0..96).flat_map(|key| (0..8).map(move |v|
@@ -267,6 +302,7 @@ fn ready_cells_share_results_without_draining_or_replaying_their_prefix() {
             eggfuse_cell_runtime::transfer_audit::set_active(false);
         }
         let r=candidate.report();let queue=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
+        if ordered {assert_eq!(queue["admission_waves"],0,"a union suffix retains the admission fence");}
         assert!(queue["jobs"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");
         if shared {
             assert!(queue["dependency_admissions"].as_u64().unwrap()>0,"shared={shared}, ordered={ordered}: {queue}");

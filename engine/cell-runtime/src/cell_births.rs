@@ -7,6 +7,7 @@ use crate::value::parent_epoch::Read;
 #[path = "cell_births_shared.rs"]
 mod shared;
 pub(crate) use shared::stream as stream_shared;
+pub(crate) use shared::produce as produce_shared;
 pub(crate) struct Completed { pub done: Done, pub effects: crate::cell::Effects }
 #[path = "cell_birth_units.rs"]
 pub(crate) mod units;
@@ -26,7 +27,7 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, units:Option<units::Tail> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, no_unions:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, units:Option<units::Tail> }
 impl Plan {
     pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
     pub(crate) fn sites(&self)->usize {self.steps.iter().filter(|s|!s.anchors.is_empty()).count()}
@@ -133,7 +134,8 @@ impl Plan {
             }).collect::<BTreeSet<_>>().into_iter().collect()
         }).collect()} else {vec![]};
         let units=units::Tail::derive(p,rule,last_constructor);
-        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,isolated,lineage,units})
+        let no_unions=!cell.template.ops.iter().any(|op|matches!(op,Op::Union(..)));
+        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,no_unions,isolated,lineage,units})
     }
     pub(crate) fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
@@ -365,6 +367,14 @@ impl Done {
 }
 impl Job {
     pub(crate) fn dependent(&self)->bool {!self.isolated}
+    /// Only a complete, union-free final region may overlap admission of the
+    /// next wave. A transfer stop or an ordered suffix retains the old fence.
+    pub(crate) fn terminal_at(&self,end:usize)->bool {
+        if !self.plan.no_unions {return false;}
+        let stop=self.plan.steps[self.limit-1].operation+1;
+        stop==end || self.unit_epoch.is_some() && self.plan.units.as_ref()
+            .is_some_and(|tail|tail.starts_at(stop) && tail.ends_at(end))
+    }
     pub(crate) fn unstarted(self)->Done {
         Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,counts:Counts::default()},
             frame:self.frame,worker:None}
@@ -568,6 +578,14 @@ mod tests {
         }
     }
     #[test]
+    fn an_earlier_pending_union_keeps_the_parent_epoch_admission_fence() {
+        let mut g=graph();let (_,u,_)=start(&mut g);
+        assert!(g.pipelined_births_ready());
+        g.enqueue_union(u,Value::Eq(100)).unwrap();
+        assert!(!g.pipelined_births_ready(),"this template alone cannot prove an earlier repair harmless");
+        g.repair().unwrap();assert!(g.pipelined_births_ready());
+    }
+    #[test]
     fn an_external_birth_or_union_invalidates_local_exclusion_before_any_effect() {
         for union in [false,true] {
             let mut g=graph();let (cell,u,mut window)=start(&mut g);
@@ -651,6 +669,12 @@ pub(crate) fn blocked(values:&[Value],pending:&[u32])->(u64,bool) {
     (probes,false)
 }
 impl Graph {
+    pub(crate) fn pipelined_births_ready(&self)->bool {
+        // An earlier rule may already have queued a union even when this
+        // template contains none. Do not carry its old parent read epoch
+        // across admission that could complete that repair.
+        self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty()
+    }
     pub(crate) fn local_jobs_supported(&self)->bool {
         self.stable_ports.is_none() && self.union_digest.is_none() && self.ownership.is_none()
             && self.local_unions.is_none() && !cfg!(feature="keeper-proof")

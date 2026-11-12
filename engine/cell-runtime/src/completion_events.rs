@@ -3,6 +3,9 @@
 //! The slots contain the original owners, not copies of bindings or effects.
 use std::sync::{Condvar, Mutex};
 use std::time::Instant;
+#[path="completion_background.rs"]
+mod background;
+pub(crate) use background::Background;
 
 #[derive(Default)]
 pub(crate) struct Work {

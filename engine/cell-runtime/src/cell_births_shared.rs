@@ -425,6 +425,23 @@ pub(crate) fn stream<E>(
     (crate::completion_events::ordered(tasks, pool, run, consume), counts)
 }
 
+/// The original finite peer directory stays with this owned wave. Source
+/// admission can continue while these readers share or redundantly evaluate
+/// pure nodes; no Cursor or public graph mutation crosses to the pool.
+pub(crate) fn produce(tasks:Vec<(Job,crate::cell::Effects)>,parents:Read<'_>,
+    emit:impl Fn(usize,Completed)+Sync)->Counts {
+    use rayon::prelude::*;
+    let (jobs,effects):(Vec<_>,Vec<_>)=tasks.into_iter().unzip();
+    let mut counts=Counts::default();counts.shared_growths+=2;
+    counts.shared_bytes+=(jobs.capacity()*std::mem::size_of::<Job>()
+        +effects.capacity()*std::mem::size_of::<crate::cell::Effects>()) as u64;
+    let batch=Batch::new(&jobs,parents,&mut counts);
+    effects.into_par_iter().enumerate().for_each(|(i,mut effects)| {
+        let done=batch.finish(i,&mut effects.writer());emit(i,Completed {done,effects});
+    });
+    counts
+}
+
 impl Graph {
     pub(crate) fn take_dependent_job<'a>(
         &mut self,

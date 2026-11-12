@@ -6,6 +6,8 @@ use crate::graph::{
     cell_births::{Completed, Job},
     rhs_ownership::Suspended,
 };
+#[path="runtime_cell_pipeline.rs"]
+mod pipeline;
 
 struct Parked {
     execution: owned_cell::Execution,
@@ -18,7 +20,10 @@ struct Ready {
     owners: Vec<Parked>,
     operations: usize,
     shared: bool,
+    flying:Option<pipeline::Flying>,
+    spare:Vec<Parked>,
 }
+impl Ready {fn is_empty(&self)->bool {self.owners.is_empty() && self.flying.is_none()}}
 
 impl Executor {
     pub(super) fn batch_cell_rule(&self, rid: usize, rows: usize) -> bool {
@@ -80,6 +85,10 @@ impl Executor {
         Ok(())
     }
     fn drain_cell_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
+        while queue.flying.is_some() {self.poll_cell_queue(queue,pending,true)?;}
+        self.drain_ready_queue(queue,pending)
+    }
+    fn drain_ready_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
         if queue.owners.is_empty() { return Ok(()); }
         let pool = self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
         let tasks: Vec<_> = queue.owners.iter_mut().filter_map(|p| p.job.take()
@@ -204,6 +213,9 @@ impl Executor {
                     self.graph.sealed_generation = None;
                     continue;
                 };
+                if queue.flying.as_ref().is_some_and(|wave|wave.unfinished()!=0) {
+                    self.cell_execution.as_mut().unwrap().counts.scheduler.admission_overlap_instances+=1;
+                }
                 self.cell_execution
                     .as_mut()
                     .unwrap()
@@ -217,7 +229,7 @@ impl Executor {
                         .unwrap()
                         .completed_prefix;
                     if position == execution.ops.len() {
-                        if queue.owners.is_empty() {
+                        if queue.is_empty() {
                             self.finish_attached_cell(execution)?;
                         } else {
                             self.park_cell(&mut queue, execution, None);
@@ -311,7 +323,7 @@ impl Executor {
                             // Retain the ordinary local-dedup path when isolation is
                             // unproved. It can still reuse equal dynamic keys inside
                             // this one Cell; the queue must not replace it with replays.
-                            if !queue.owners.is_empty() {
+                            if !queue.is_empty() {
                                 let state = self.graph.suspend_rhs(execution.cell);
                                 self.drain_cell_queue(&mut queue, &mut pending)?;
                                 self.graph.restore_rhs(state);
@@ -345,8 +357,26 @@ impl Executor {
                             stats.queue_bytes +=
                                 (key.capacity() * std::mem::size_of::<Value>()) as u64;
                         }
-                        let (probes, blocked) = crate::graph::cell_births::blocked(&key, &pending);
+                        let (probes, mut blocked) = crate::graph::cell_births::blocked(&key, &pending);
                         self.graph.stats.rhs_pending_probes += probes;
+                        let mut wave_probes=0;
+                        let mut wave_dependency=blocked && queue.flying.as_ref().is_some_and(|wave|wave.references(&key,&mut wave_probes));
+                        self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_probes+=wave_probes;
+                        if wave_dependency {
+                            self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_waits+=1;
+                            let state=self.graph.suspend_rhs(execution.cell);
+                            while wave_dependency {
+                                self.poll_cell_queue(&mut queue,&mut pending,true)?;
+                                wave_probes=0;
+                                wave_dependency=queue.flying.as_ref().is_some_and(|wave|wave.references(&key,&mut wave_probes));
+                                self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_probes+=wave_probes;
+                            }
+                            self.graph.restore_rhs(state);
+                            self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_early+=
+                                u64::from(queue.flying.as_ref().is_some_and(|wave|wave.unfinished()!=0));
+                            let (probes,still_blocked)=crate::graph::cell_births::blocked(&key,&pending);
+                            self.graph.stats.rhs_pending_probes+=probes;blocked=still_blocked;
+                        }
                         if blocked {
                             self.graph.stats.rhs_pending_stops += 1;
                             let stop = execution.transfers[execution.transfer..]
@@ -417,9 +447,8 @@ impl Executor {
                     execution.phase = owned_cell::Phase::Boundary;
                     self.resolve_cell_boundary(&mut execution, position)?;
                 }
-                if queue.owners.len() >= READY_LIMIT {
-                    self.drain_cell_queue(&mut queue, &mut pending)?;
-                }
+                self.poll_cell_queue(&mut queue,&mut pending,false)?;
+                if queue.owners.len() >= READY_LIMIT {self.dispatch_cell_queue(&mut queue,&mut pending)?;}
                 self.graph.sealed_input_cell = None;
                 self.graph.sealed_generation = None;
             }

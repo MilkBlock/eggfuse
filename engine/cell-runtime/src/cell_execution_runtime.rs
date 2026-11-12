@@ -75,6 +75,9 @@ pub(crate) struct QueueCounts {
     pub dependency_flushes:u64,pub effect_flushes:u64,pub revalidations:u64,pub max_ready:usize,pub wait_ns:u64,
     pub dependency_admissions:u64, pub budget_checks:u64, pub budget_flushes:u64,
     pub event_waves:u64, pub event_early_cells:u64, pub event_completed_early:u64, pub event_wait_ns:u64, pub event_bytes:u64,
+    pub admission_waves:u64, pub admission_jobs:u64, pub admission_overlap_instances:u64, pub admission_polls:u64,
+    pub admission_empty_polls:u64, pub admission_fence_fallbacks:u64,
+    pub admission_dependency_waits:u64, pub admission_dependency_early:u64, pub admission_dependency_probes:u64,
     pub worker_jobs:Vec<u64>,
 }
 pub(crate) struct State {

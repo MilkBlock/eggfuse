@@ -31,6 +31,8 @@ impl Row {
     }
 }
 impl Tail {
+    pub(super) fn starts_at(&self,position:usize)->bool {self.start==position}
+    pub(super) fn ends_at(&self,position:usize)->bool {self.end==position}
     pub fn derive(p: &Program, rule: usize, last: usize) -> Option<Self> {
         let cell = Definition::new(p, rule).ok()?;
         // An earlier union could enable compact view projection at the source

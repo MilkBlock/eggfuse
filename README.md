@@ -4,6 +4,8 @@ This branch builds the Rust Cell compiler, offline Bake and standalone CPU execu
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。
 
+[RHS 准备流水线](benchmarks/cell-admission-pipeline/README.md)：已证明无 union 的终端 Cell 批次执行时，源线程可继续准备下一批；跨批输入只推进到所需 Cell。Raytrace 41,789 个作业进入此路径，状态与 Run 摘要一致；新增轮询、缓冲和查询成本已记录，尚无新测速或打满多核的结论。
+
 [规则完成接管](benchmarks/cell-rule-retirement/README.md)：将 Cell 赢家与 residual 的最终合并纳入规则完成任务，协调线程只原地封存 Cursor；Raytrace 这一环节的 93.7% 候选移到 worker。实际实例、全部 Run 摘要及语义验收保持一致；本轮仅验证工作量，尚无新测速。
 
 [Cell 完成事件](benchmarks/cell-completion-events/README.md)：查询结果整理、RHS 就绪前缀接管和 Sieve 后继条件改为事件推动，保留实际实例与结果槽。语义与 Run 检查通过；修正后的计数区分提前接收和真正重叠完成。两轮实测未建立稳定加速，最终四线程 sum-bits / Raytrace 分别回退约 2.3% / 2.7%；源前缀提交及 Run 可见性仍是待拆边界。
