@@ -50,9 +50,10 @@ struct Boundary {
     run:usize,rule:usize,cell:u32,operation:usize,table:usize,
     previous_run:Option<usize>,previous_rule:Option<usize>,prior_status:&'static str,
     forwarded:bool,receipt:Option<Dependency>,facts:u64,success:bool,
+    prior_receipt:Option<Dependency>,owner_links:serde_json::Value,
 }
 pub(crate) struct Probe { key:(usize,Vec<Value>), event:Boundary, facts:u64 }
-pub(crate) fn before(g:&Graph,rule:usize,cell:u32,operation:usize)->Option<Probe> {
+pub(crate) fn before(g:&Graph,rule:usize,cell:u32,operation:usize,known:&crate::cell::QueryFacts)->Option<Probe> {
     TRACE.with(|t| {
         let mut t=t.borrow_mut();let t=t.as_mut()?;
         t.plans.get(rule)?.as_ref()?;
@@ -60,12 +61,12 @@ pub(crate) fn before(g:&Graph,rule:usize,cell:u32,operation:usize)->Option<Probe
         if t.boundaries.len()>=t.limit {t.boundary_dropped+=1;return None;}
         let key=(*table,g.arguments(cell,args).ok()?);
         let prior=t.results.get(&key);
-        let mut forwarded=false;
+        let mut forwarded=false;let mut prior_receipt=None;
         let status=match prior {
             None=>"unobserved",
             Some((_,_,None))=>"receipt_not_retained",
             Some((_,_,Some(old)))=>{
-                let current=g.resolve_receipt(*old);forwarded=current!=*old;
+                let current=g.resolve_receipt(*old);forwarded=current!=*old;prior_receipt=Some(current);
                 match g.live_table(current) {
                     None=>"retired",
                     Some(found) if found!=*table=>"wrong_table",
@@ -76,7 +77,9 @@ pub(crate) fn before(g:&Graph,rule:usize,cell:u32,operation:usize)->Option<Probe
         };
         Some(Probe{key,event:Boundary{run:t.run,rule,cell,operation,table:*table,
             previous_run:prior.map(|p|p.0),previous_rule:prior.map(|p|p.1),prior_status:status,
-            forwarded,receipt:None,facts:0,success:false},facts:g.stats.logical_facts_created})
+            forwarded,receipt:None,facts:0,success:false,prior_receipt,
+            owner_links:prior_receipt.filter(|_|status=="visible").map_or(serde_json::Value::Null,
+                |donor|g.trace_rhs_owner_links(cell,rule,donor,known))},facts:g.stats.logical_facts_created})
     })
 }
 pub(crate) fn after(g:&Graph,probe:Option<Probe>,effects:&crate::cell::Effects,success:bool) {
@@ -95,7 +98,7 @@ pub(crate) fn after(g:&Graph,probe:Option<Probe>,effects:&crate::cell::Effects,s
 pub fn finish()->serde_json::Value {
     TRACE.with(|t|t.borrow_mut().take().map_or(serde_json::Value::Null,|t|serde_json::json!({
         "schema":"cell-rhs-projection-trace/v1","complete_archive":t.dropped==0 && t.boundary_dropped==0,
-        "scope":"post-completion observation; equal projections are candidates, not authorization to skip matches, publications or effects",
+        "scope":"completion projections and pre-boundary receipt/owner snapshots; candidates, not authorization to skip matches, publications or effects",
         "trace":t})))
 }
 

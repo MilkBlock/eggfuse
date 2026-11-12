@@ -141,7 +141,7 @@ impl Executor {
         execution.phase = Phase::Failed;
         let before = Work::read(&self.graph);
         #[cfg(feature="storage-metrics")]
-        let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position);
+        let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position,&execution.known);
         let result = self.execute_cell_boundary(execution, position);
         #[cfg(feature="storage-metrics")]
         crate::rhs_projection_trace::after(&self.graph,probe,&execution.effects,matches!(result,Ok(true)));

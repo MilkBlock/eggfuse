@@ -49,3 +49,34 @@ impl Graph {
         Ok(count)
     }
 }
+
+// Read-only, bounded caller-side observation. Do not retain any of these frame
+// addresses or component memberships as execution proofs across a source Run.
+impl Graph {
+    pub(crate) fn trace_rhs_owner_links(&self, cell:u32, rule:usize, donor:Dependency, known:&crate::cell::QueryFacts)->J {
+        let Some(m)=self.ownership.as_ref() else {return J::Null;};
+        let locate=|id:u32| -> J {
+            let Some(frame)=m.composition.frames.get(&id) else {return J::Null;};
+            let Some(component)=m.composition.components.get(frame.component as usize).and_then(Option::as_ref) else {return J::Null;};
+            json!({"cell":id,"component":frame.component,"ordinal":frame.ordinal,
+                "shape":component.shape,"frames":component.frames.len()})
+        };
+        let dependency=|receipt:Dependency| -> J {match receipt {
+            Dependency::Fact(f)=>locate(f.cell),Dependency::Function(_)=>J::Null,
+        }};
+        let entry=m.composition.entry.as_ref().filter(|entry|entry.rule==rule);
+        let anchors=entry.map(|entry|entry.anchors.iter().enumerate().filter_map(|(atom,receipt)| {
+            let receipt=(*receipt)?;
+            Some(json!({"atom":atom,"receipt":receipt,"location":dependency(receipt)}))
+        }).collect::<Vec<_>>()).unwrap_or_default();
+        let parent=self.rhs_frame(cell).and_then(|frame|frame.parent);
+        let query=self.program.rules[rule].query.iter().enumerate().filter_map(|(atom,_)| {
+            let receipt=known.receipt(atom)?;
+            Some(json!({"atom":atom,"receipt":receipt,"location":dependency(receipt)}))
+        }).collect::<Vec<_>>();
+        json!({"receiver":locate(cell),"donor":dependency(donor),
+            "entry_present":entry.is_some(),"anchors":anchors,"query":query,
+            "query_atoms":self.program.rules[rule].query.len(),
+            "parent":parent.map(|fact|json!({"receipt":Dependency::Fact(fact),"location":locate(fact.cell)}))})
+    }
+}
