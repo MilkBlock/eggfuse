@@ -1,0 +1,115 @@
+{
+  "scope": "Standalone fixed-path whole-Cell GPU ridge; no runtime takeover",
+  "selection": {
+    "kind": "quadratic",
+    "regularization": 0.001,
+    "validation_correct": 94,
+    "validation_macro": 0.9916666666666667
+  },
+  "validation": [
+    {
+      "kind": "quadratic",
+      "regularization": 0.001,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667
+    },
+    {
+      "kind": "quadratic",
+      "regularization": 0.1,
+      "validation_correct": 94,
+      "validation_macro": 0.9916666666666667
+    },
+    {
+      "kind": "quadratic",
+      "regularization": 10.0,
+      "validation_correct": 89,
+      "validation_macro": 0.9069444444444444
+    },
+    {
+      "kind": "tanh",
+      "regularization": 0.001,
+      "validation_correct": 89,
+      "validation_macro": 0.9208333333333334
+    },
+    {
+      "kind": "tanh",
+      "regularization": 0.1,
+      "validation_correct": 91,
+      "validation_macro": 0.9555555555555556
+    },
+    {
+      "kind": "tanh",
+      "regularization": 10.0,
+      "validation_correct": 92,
+      "validation_macro": 0.9638888888888889
+    }
+  ],
+  "test": {
+    "correct": 92,
+    "total": 102,
+    "wrong_passing_containment": 3
+  },
+  "dimensions": {
+    "cell_state": 72,
+    "hidden": 272,
+    "classes": 24,
+    "layouts": 182
+  },
+  "execution": {
+    "gpu": "Device(gpu, 0)",
+    "backpropagation": false,
+    "node_traversal_on_gpu": false,
+    "data_dependent_gpu_branches": false,
+    "matmuls": 3,
+    "nonlinearities": 1,
+    "all_layouts_in_one_batch": true,
+    "cpu_projection": "scalar basis times baked layout matrix plus static bias"
+  },
+  "correctness": {
+    "affine_projection_matches_reference": 469,
+    "cpu_gpu_top1_equal": true,
+    "max_score_error": 7.837265729904175e-05
+  },
+  "costs_ms": {
+    "compile_all_layouts": 17.00141601031646,
+    "encode_all_rows": 3.6442500131670386,
+    "test_gather_and_projection": 0.7068167004035786,
+    "test_upload": 0.02258300082758069,
+    "first_gpu_call": 484.1792499937583,
+    "test_download": 0.0186669931281358,
+    "cpu_numeric": 0.04211670020595193,
+    "prototype_request_median": 0.9230834984919056,
+    "necessary_containment": 5.279375007376075
+  },
+  "batches": [
+    {
+      "rows": 102,
+      "repetition": 1,
+      "median_ms": 0.28320850105956197
+    },
+    {
+      "rows": 1632,
+      "repetition": 16,
+      "median_ms": 0.3554580034688115
+    },
+    {
+      "rows": 13056,
+      "repetition": 128,
+      "median_ms": 0.46554200525861233
+    }
+  ],
+  "storage": {
+    "layout_projection_bytes": 1273024,
+    "device_weights_bytes": 112544,
+    "test_input_bytes": 29376
+  },
+  "limitations": [
+    "CPU affine projection remains and is charged",
+    "export adapter, not live compressed-slot integration",
+    "acyclic static topology per layout; no dynamic Eq input support",
+    "catalog classification, not generative completion",
+    "no derivability certificate or lifecycle integration",
+    "repeated throughput rows are not additional accuracy samples"
+  ],
+  "corpus_sha256": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881"
+}
