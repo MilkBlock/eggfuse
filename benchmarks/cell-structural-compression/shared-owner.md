@@ -200,3 +200,63 @@ target/debug/examples/runtime_storage_peak out/cell-structural-compression/closu
 target/debug/examples/runtime_storage_peak out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/heap-detail-inherited-owners.json inherited-owners
 python3 benchmarks/cell-structural-compression/analyze_owner_heap.py out/cell-structural-compression/heap-detail-record-control.json out/cell-structural-compression/heap-detail-inherited-owners.json out/cell-structural-compression/shared-owner-inherited-storage.json benchmarks/cell-structural-compression/inherited-owner-heap.json
 ```
+
+## Discard dead matched inputs from completed owners
+
+The last catalog's executed frames still retained matched inputs that no completed
+operation or later producer projection could read. The existing completed-parent
+analysis now supplies both its parent proof and a per-rule discard list. It keeps
+all operation operands/results, static result alias sources and multi-stage read
+columns. Only matched input slots absent from that conservative retained set enter
+the discard list. Imported or manually constructed templates without the checked
+rule/template correspondence retain their fields.
+
+At an eligible completed owner transfer, the runtime removes those fields before
+moving the remaining array. The layout is shared per rule; there is no second
+binding map or per-instance lifetime graph. Required scalar inputs, actual
+constructor-result aliases and later cross-stage projections remain live. Ordinary
+execution remains unchanged; `use_completed_parent_takeover` prepares this opt-in
+analysis, and `transfer_completed_owners` applies it at the same settled Run
+boundary. Existing external-reference, parent and shared-array exclusions remain.
+
+An initial representation stored every retained slot and grew compiled Program
+heap by 47,184 bytes to save only 34,008 runtime bytes. It was rejected. The final
+representation stores only dead matched input numbers; it does not duplicate the
+whole retained set in every compiled plan. It still has a measured static cost,
+which is charged below.
+
+Compared with the previous inherited-owner configuration:
+
+| Measure | Previous | Dead-input layout |
+| --- | ---: | ---: |
+| Graph-owned requested heap | 2,964,621 | 2,930,613 |
+| Compiled Program requested heap | 117,208,416 | 117,230,752 |
+| Final explicit live Cell slots | 11,833 | 10,537 |
+| Maximum transfer extra requested heap | 49,552 | 48,752 |
+
+Runtime heap saves 34,008 bytes; compiled Program costs 22,336 additional bytes;
+the combined retained Graph+Program saving is 11,672 bytes. Against the matched
+control's 3,068,093 Graph bytes, cumulative Graph reduction is 137,480 bytes,
+**4.48%**. This does not meet the large-compression target. No source facts,
+constructor operations or additional RHS applications are skipped.
+
+The discard counter is 1,482 cumulative fields, while the live field difference
+is 1,296. Eq-symbol delegation remains 2,260 and is not counted again as a dead
+input saving. Actual transfer count remains 898. Ownership components, frame
+directory and boundary maintenance remain present; this change does not claim
+to replace those paths.
+
+Validation: 1,428 original Run graph and ordered RHS/write/resume checks pass;
+final export semantic acceptance passes; 149 runtime, 35 ownership and 21 ripsat
+tests pass; default runtime cargo check passes.
+The dedicated fixture requires real unused-input deletion and later-stage reads
+in both serial and two-worker execution. The retained-subset proof is conservative;
+all original source/effect boundaries remain authoritative.
+
+Reproduction uses the preceding commands with `completed-dead-inputs-audit.json`
+as the audit output, and `dead-inputs-heap-record-control.json` /
+`dead-inputs-heap-inherited-owners.json` as memory outputs. The analyzer's audited
+final-state digest is unchanged. Tracked evidence is in
+`completed-dead-inputs-results.json`, `completed-dead-inputs-heap.json`, and
+`completed-dead-inputs-semantic.json`. These measure the actual standalone Cell
+runtime, not native egglog; requested allocation bytes are not RSS.

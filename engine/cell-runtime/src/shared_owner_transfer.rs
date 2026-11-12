@@ -30,6 +30,13 @@ impl Graph {
                 let component=m.composition.components[frame.component as usize].as_ref().unwrap();
                 let ports=&m.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
                 let c=self.cells.get_mut(&id).unwrap();
+                // Rule templates occupy their rule index; imported/manual
+                // templates without this checked correspondence retain all fields.
+                if self.program.rules.get(c.template).is_some_and(|r|r.template==c.template) {
+                    if let Some(dead)=self.program.executions[c.template].completed_dead_inputs.as_ref() {
+                        self.stats.shared_owner_dead_slots_elided+=c.values.retain_owned(|slot,_|dead.binary_search(slot).is_err()) as u64;
+                    }
+                }
                 let slots=&self.program.cell_ownership.markers[c.template].program.slots;
                 let removed=c.values.retain_owned(|slot,value| {
                     let Value::Eq(value)=value else {return true;};
