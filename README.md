@@ -12,7 +12,7 @@ Original Run boundaries, effect ordering, equality repair, and residual matching
 
 This branch develops **Cell-oriented parallel execution**: workers borrow Entry ranges, continue queries, and perform eligible completion work. Table completion events release dependent conditions in the same pool. Ordered effects and visibility still constrain execution; stable end-to-end parallel speedup has not been established.
 
-Recent checkpoints: [task completion payload](benchmarks/cell-event-payload/README.md), [rule-local Entry coverage](benchmarks/cell-query-coverage/README.md), [borrowed Entry ranges](benchmarks/cell-selected-entries/README.md), [in-place condition state](benchmarks/cell-condition-borrows/README.md), and [table completion events](benchmarks/cell-table-events/README.md).
+Recent checkpoints: [constructor registration owners](benchmarks/cell-constructor-registry/README.md), [task completion payload](benchmarks/cell-event-payload/README.md), [rule-local Entry coverage](benchmarks/cell-query-coverage/README.md), [borrowed Entry ranges](benchmarks/cell-selected-entries/README.md), [in-place condition state](benchmarks/cell-condition-borrows/README.md), and [table completion events](benchmarks/cell-table-events/README.md).
 
 ## Quick start
 

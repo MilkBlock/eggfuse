@@ -214,6 +214,20 @@ pub struct Stats {
     #[serde(default)]
     pub unit_registry_discarded:u64,
     #[serde(default)]
+    pub constructor_registry_batches:u64,
+    #[serde(default)]
+    pub constructor_registry_rows:u64,
+    #[serde(default)]
+    pub constructor_registry_adopted:u64,
+    #[serde(default)]
+    pub constructor_registry_discarded:u64,
+    #[serde(default)]
+    pub constructor_registry_bytes:u64,
+    #[serde(default)]
+    pub constructor_registry_worker_rows:u64,
+    #[serde(default)]
+    pub constructor_registry_fragments:u64,
+    #[serde(default)]
     pub constructor_prepared_checks: u64,
     #[serde(default)]
     pub constructor_prepared_fields: u64,
@@ -1526,18 +1540,8 @@ impl Graph {
             // Row views are already canonical at this call; no graph effect
             // occurs between obtaining those fields and installing their uses.
             // Raw local-completion fields still use subscribe_edges below.
-            let refs = columns.iter().copied().chain(std::iter::once(values.len() - 1))
-                .map(|column| {
-                    let Value::Eq(id) = values[column] else { panic!("typed constructor Eq port") };
-                    debug_assert_eq!(id, root(&self.parents, id), "unsealed constructor subscription");
-                    id
-                }).collect::<smallvec::SmallVec<[u64; 3]>>();
-            self.maintenance.subscription_calls += 1;
-            self.maintenance.canonical_subscription_calls += 1;
-            self.maintenance.subscription_value_visits += refs.len() as u64;
-            self.maintenance.subscription_scalar_fields_skipped += (values.len() - refs.len()) as u64;
-            self.maintenance.subscription_root_reads_omitted += refs.len() as u64;
-            self.replace_subscriptions(d, refs);
+            maintenance::subscribe_canonical_constructor(&mut self.uses,&mut self.dependencies,
+                &mut self.maintenance,&self.parents,d,values,columns);
             return;
         }
         self.subscribe_edges(d, values);

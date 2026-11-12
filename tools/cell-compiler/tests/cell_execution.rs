@@ -145,6 +145,10 @@ fn unit_tails_write_candidate_rows_and_invalidate_duplicates_without_set_replay(
     let r=candidate.report();let w=&r["cell_execution"]["runtime"]["stats"]["births"];
     assert!(w["unit_worker_rows"].as_u64().unwrap()>0,"{w}");
     assert!(r["stats"]["unit_registry_installs"].as_u64().unwrap()>0,"table owner must install actual index and publication entries: {}",r["stats"]);
+    assert!(r["stats"]["constructor_registry_adopted"].as_u64().unwrap()>0,
+        "constructor indexes and subscriptions must enter the existing owner region");
+    assert_eq!(r["stats"]["constructor_registry_adopted"],r["stats"]["constructor_registry_rows"]);
+    assert_eq!(r["stats"]["constructor_registry_discarded"],0);
     assert_eq!(r["stats"]["unit_registry_identity_rows"],r["stats"]["unit_registry_candidates"]);
     if !r["stats"]["sync_diagnostics"]["inline_registry"].as_bool().unwrap_or(false) {
         assert_eq!(r["stats"]["unit_registry_worker_identity_rows"],r["stats"]["unit_registry_candidates"]);

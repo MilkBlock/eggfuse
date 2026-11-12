@@ -33,6 +33,21 @@ pub(crate) struct ChangeBatch {
 
 impl ChangeBatch {
     #[cfg(feature="sparse-cells")]
+    pub(crate) fn prepare_new_row(&mut self,table:usize,witness:Dependency)->bool {
+        let rows=&mut self.tables[table];let activate=rows.is_empty();
+        assert!(rows.insert(witness,Change::Wake).is_none(),"fresh row publication");
+        activate
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn activate_prepared_table(&mut self,table:usize) {
+        assert!(!self.tables[table].is_empty());
+        self.active.push(table);
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn discard_prepared_row(&mut self,table:usize,witness:Dependency) {
+        assert!(self.tables[table].remove(&witness).is_some());
+    }
+    #[cfg(feature="sparse-cells")]
     pub(crate) fn take_new_row_table(&mut self,table:usize)->FxHashMap<Dependency,Change> {
         std::mem::take(&mut self.tables[table])
     }

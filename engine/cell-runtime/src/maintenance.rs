@@ -57,6 +57,24 @@ impl Graph {
 }
 
 #[cfg(feature="sparse-cells")]
+pub(super) fn subscribe_canonical_constructor(
+    uses:&mut HashMap<u64,UseSet>, dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    metrics:&mut Metrics, parents:&Parents, d:Dependency, values:&[Value], columns:&[usize],
+) {
+    let refs=columns.iter().copied().chain(std::iter::once(values.len()-1))
+        .map(|column| {
+            let Value::Eq(id)=values[column] else {panic!("typed constructor Eq port")};
+            debug_assert_eq!(id,root(parents,id),"unsealed constructor subscription");id
+        }).collect::<smallvec::SmallVec<[u64;3]>>();
+    metrics.subscription_calls+=1;
+    metrics.canonical_subscription_calls+=1;
+    metrics.subscription_value_visits+=refs.len() as u64;
+    metrics.subscription_scalar_fields_skipped+=(values.len()-refs.len()) as u64;
+    metrics.subscription_root_reads_omitted+=refs.len() as u64;
+    replace_subscriptions(uses,dependencies,metrics,parents,d,refs);
+}
+
+#[cfg(feature="sparse-cells")]
 pub(super) fn replace_subscriptions(
     uses:&mut HashMap<u64,UseSet>, dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
     metrics:&mut Metrics, parents:&Parents, d:Dependency, mut refs:smallvec::SmallVec<[u64;3]>,

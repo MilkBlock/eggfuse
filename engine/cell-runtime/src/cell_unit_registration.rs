@@ -15,7 +15,13 @@ struct Owner {
 }
 struct TableJob<'a> {owner:Owner,items:Vec<Item<'a>>}
 #[must_use="table owners must be returned even when source adoption fails"]
-pub(crate) struct Registration {owners:Vec<Owner>,start:usize,end:usize}
+pub(crate) struct Registration {owners:Vec<Owner>,start:usize,end:usize,
+    constructors:Option<constructor_registration::Registration>}
+impl Registration {
+    pub(crate) fn take_births(&mut self,cell:u32)->Option<constructor_registration::Publication> {
+        self.constructors.as_mut().map(|r|r.take(cell))
+    }
+}
 
 impl Graph {
     /// The caller proves a complete terminal prefix: no intervening mutable
@@ -24,13 +30,31 @@ impl Graph {
     pub(crate) fn plan_unit_registration(&mut self,done:&mut [Completed],pool:&rayon::ThreadPool)->Option<Registration> {
         let mut diagnostic=Clock::new();
         if !self.pipelined_births_ready() {return None;}
-        let count=done.iter().map(|d|d.done.piece.units.len()).sum::<usize>();
-        if count<32 || done.iter().flat_map(|d|&d.done.piece.units).any(|r|self.units.owned[r.function.table]) {return None;}
-        let mut tables=BTreeMap::<usize,Vec<Item<'_>>>::new();
-        for (source,row) in done.iter_mut().flat_map(|d|&mut d.done.piece.units).enumerate() {
-            tables.entry(row.function.table).or_default().push(Item {source,row,choice:Choice::New});
+        let mut count=0;let mut first_table=None;let mut multiple_tables=false;
+        for row in done.iter().flat_map(|d|&d.done.piece.units) {
+            let table=row.function.table;if self.units.owned[table] {return None;}
+            count+=1;
+            if let Some(first)=first_table {multiple_tables|=table!=first;} else {first_table=Some(table);}
         }
-        if tables.len()<2 {return None;}
+        // Reject small/single-table regions before constructing any new Cell
+        // registration state. This reuses the existing owner admission limit.
+        if count<32 || !multiple_tables {return None;}
+        let birth_count=done.iter().map(|d|d.done.piece.rows.len()).sum::<usize>();
+        let births=birth_count!=0 && self.local_jobs_supported() && done.iter().all(|d| {
+            self.cells.get(&d.done.cell).is_some_and(|c|d.done.piece.rows.iter().all(|r|
+                r.operation>=c.completed_prefix && !c.facts.contains_key(&(r.operation as u32))
+                && self.program.repair_ports.key_eq_columns[r.table].is_some()))
+        });
+        let mut groups=Vec::new();
+        let mut tables=BTreeMap::<usize,Vec<Item<'_>>>::new();let mut source=0;
+        for d in done.iter_mut() {
+            if births {groups.push(constructor_registration::Group {cell:d.done.cell,
+                first:self.cells[&d.done.cell].completed_prefix,end:d.done.piece.end,rows:&d.done.piece.rows});}
+            for row in &mut d.done.piece.units {
+                tables.entry(row.function.table).or_default().push(Item {source,row,choice:Choice::New});source+=1;
+            }
+        }
+        debug_assert!(tables.len()>=2);
         let mut jobs:Vec<_>=tables.into_iter().map(|(table,items)|TableJob {items,owner:Owner {
             table,keys:self.function_keys[table].take_owner(),members:self.members[table].take_owner(),
             version:self.query_versions[table],changes:self.changes.take_new_row_table(table),added:Vec::new(),
@@ -85,13 +109,31 @@ impl Graph {
             if inline {jobs.iter_mut().for_each(install);} else {jobs.par_iter_mut().for_each(install);}
             (end,worker,scratch+choices.capacity()*std::mem::size_of::<Choice>())
         };
+        let constructors=births.then_some(constructor_registration::Owner {
+            cells:&mut self.cells,intern:&mut self.intern,members:&mut self.members,changes:&mut self.changes,
+            uses:&mut self.uses,dependencies:&mut self.dependencies,metrics:&mut self.maintenance,
+            parents:&self.parents,columns:&self.program.repair_ports.key_eq_columns,epoch:self.epoch,
+        });
+        let install=||if let Some(owner)=constructors {
+            if inline {(run(&mut jobs),Some(owner.install(&groups,true)))}
+            else {let (unit,constructor)=rayon::join(||run(&mut jobs),||owner.install(&groups,false));
+                (unit,Some(constructor))}
+        } else {(run(&mut jobs),None)};
         diagnostic.enter();
-        let (end,worker,scratch)=if inline {run(&mut jobs)} else {pool.install(||run(&mut jobs))};
+        let ((end,worker,scratch),constructors)=if inline {install()} else {pool.install(install)};
         diagnostic.join();
         let mut bytes=jobs.capacity()*std::mem::size_of::<TableJob<'_>>() + scratch;
         bytes+=jobs.iter().map(|j|j.items.capacity()*std::mem::size_of::<Item<'_>>()
             +j.owner.added.capacity()*std::mem::size_of::<NewRow>()).sum::<usize>();
         let owners:Vec<_>=jobs.into_iter().map(|job|job.owner).collect();
+        let group_bytes=groups.capacity()*std::mem::size_of::<constructor_registration::Group<'_>>();
+        drop(groups);
+        if let Some(constructors)=&constructors {
+            self.stats.constructor_registry_bytes+=(group_bytes+constructors.storage_bytes()) as u64;
+            self.stats.constructor_registry_rows+=birth_count as u64;
+            self.stats.constructor_registry_worker_rows+=if worker {birth_count as u64}else{0};
+            self.stats.constructor_registry_batches+=1;
+        }
         bytes+=owners.capacity()*std::mem::size_of::<Owner>();
         self.stats.unit_registry_batches+=1;self.stats.unit_registry_candidates+=count as u64;
         self.stats.unit_registry_bytes+=bytes as u64;
@@ -101,13 +143,14 @@ impl Graph {
         self.stats.unit_registry_owner_tables+=owners.len() as u64;
         #[cfg(feature="cell-sync-diagnostics")]
         self.stats.sync_diagnostics.registration.record(diagnostic,None,!inline,pool.current_num_threads());
-        Some(Registration {owners,start,end})
+        Some(Registration {owners,start,end,constructors})
     }
 
     /// No second pool invocation, table regrouping, key hashing or insertion
     /// on success. Restore the actual prepared maps after rows exist. Failure
     /// removes only identities beyond the source-adopted prefix first.
     pub(crate) fn finish_unit_registration(&mut self,registration:Registration) {
+        if let Some(constructors)=registration.constructors {constructors.finish(self);}
         let adopted=self.functions.len();
         assert!(registration.start<=adopted && adopted<=registration.end,"terminal Function prefix");
         for mut owner in registration.owners {

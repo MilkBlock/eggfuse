@@ -55,7 +55,8 @@ impl Executor {
             }
         }
     }
-    fn adopt_cell_event(&mut self, parked: Parked, completed: Option<Completed>) -> Result<()> {
+    fn adopt_cell_event(&mut self, parked: Parked, completed: Option<Completed>,
+        registration:Option<&mut crate::graph::cell_births::Registration>) -> Result<()> {
         let mut execution = parked.execution;
         self.graph.restore_rhs(parked.context);
         if let Some(Completed { done, effects }) = completed {
@@ -72,7 +73,8 @@ impl Executor {
                 stats.worker_jobs[worker] += 1;
             }
             let worker = done.worker.is_some();
-            let mut counts = self.graph.commit_local_job(done, &mut execution.effects.writer())?;
+            let publication=registration.and_then(|r|r.take_births(done.cell()));
+            let mut counts = self.graph.commit_registered_local_job(done, &mut execution.effects.writer(),publication)?;
             execution.work.facts += counts.committed_rows;
             execution.work.updates += counts.unit_inserts;
             execution.work.constructors += counts.local_births + counts.local_reuses;
@@ -118,7 +120,7 @@ impl Executor {
                 let eligible = completed.len() <= owners.len()
                     && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
                         done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-                let registration=eligible.then(||self.graph.plan_unit_registration(completed,&pool)).flatten();
+                let mut registration=eligible.then(||self.graph.plan_unit_registration(completed,&pool)).flatten();
                 #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
                 #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
                 let result = (|| {
@@ -126,14 +128,14 @@ impl Executor {
                         loop {
                             let parked = owners.next().expect("one owner per completion");
                             if parked.execution.cell == done.done.cell() {
-                                self.adopt_cell_event(parked, Some(done))?;
+                                self.adopt_cell_event(parked, Some(done),registration.as_mut())?;
                                 self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
                                     u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);
                                 break;
                             }
                             // Already-complete Cells parked behind this source
                             // prefix carry no worker result, but keep effect order.
-                            self.adopt_cell_event(parked, None)?;
+                            self.adopt_cell_event(parked, None,None)?;
                         }
                     }
                     Ok(())
@@ -177,7 +179,7 @@ impl Executor {
             self.graph.stats.sync_diagnostics.constructors.record(diagnostic,None,parallel,pool.current_num_threads());
             result
         } else { Ok(()) };
-        let result = result.and_then(|()| { for parked in owners { self.adopt_cell_event(parked, None)?; } Ok(()) });
+        let result = result.and_then(|()| { for parked in owners { self.adopt_cell_event(parked, None,None)?; } Ok(()) });
         pending.clear(); queue.operations = 0; queue.shared = false;
         result
     }

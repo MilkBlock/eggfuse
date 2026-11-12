@@ -13,6 +13,9 @@ pub(crate) struct Completed { pub done: Done, pub effects: crate::cell::Effects 
 pub(crate) mod units;
 #[path = "cell_unit_registration.rs"]
 mod unit_registration;
+#[path = "cell_constructor_registration.rs"]
+mod constructor_registration;
+pub(crate) use unit_registration::Registration;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Step {
@@ -461,12 +464,16 @@ impl Graph {
         Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch})))
     }
     pub(crate) fn commit_local_job(&mut self,done:Done,receipts:&mut EffectWriter<'_>)->Result<Counts> {
+        self.commit_registered_local_job(done,receipts,None)
+    }
+    pub(crate) fn commit_registered_local_job(&mut self,done:Done,receipts:&mut EffectWriter<'_>,
+        publication:Option<constructor_registration::Publication>)->Result<Counts> {
         let Done{cell,frame,mut piece,..}=done;
         self.rhs_frame_mut(cell).unwrap().values.reattach(frame.values)
             .map_err(|_|"Cell continuation lost its public prefix".to_string())?;
         piece.counts.slot_reattachments+=1;
         let units=std::mem::take(&mut piece.units);
-        let mut counts=self.register_local_piece(cell,piece)?;
+        let mut counts=self.register_local_piece(cell,piece,publication)?;
         for unit in units {
             let operation=unit.function.origin.unwrap().op as usize;
             let (index,inserted)=self.commit_unit_row(unit)?;
@@ -476,11 +483,15 @@ impl Graph {
         }
         Ok(counts)
     }
-    fn register_local_piece(&mut self,cell:u32,mut piece:Piece)->Result<Counts> {
-        for row in piece.rows {
-            self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
-            piece.counts.committed_rows+=1;
-        }
+    fn register_local_piece(&mut self,cell:u32,mut piece:Piece,
+        publication:Option<constructor_registration::Publication>)->Result<Counts> {
+        if let Some(publication)=publication {
+            self.publish_registered_births(publication,piece.rows.len());
+            piece.counts.committed_rows+=piece.rows.len() as u64;
+        } else { for row in piece.rows {
+                self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
+                piece.counts.committed_rows+=1;
+        }}
         self.stats.constructor_requests+=piece.counts.local_births+piece.counts.local_reuses;
         self.stats.constructor_reused+=piece.counts.local_reuses;
         self.known_stats.static_eliminated+=piece.aliases;
@@ -511,7 +522,7 @@ impl Graph {
         let frame=self.cells.get_mut(&cell).expect("fresh constructor has a public Cell");
         let parents=self.parents.reader();
         let piece=plan.prepare(from,limit,cell,frame,parents,cert.first,first_anchor,key,receipts);
-        let piece=self.register_local_piece(cell,piece)?;
+        let piece=self.register_local_piece(cell,piece,None)?;
         if let Some(cert)=window {cert.births=self.stats.logical_facts_created;}
         counts.add(piece);Ok(counts)
     }

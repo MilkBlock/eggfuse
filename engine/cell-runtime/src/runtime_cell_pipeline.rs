@@ -76,7 +76,7 @@ impl Executor {
         let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
         let eligible=!wave.ready.is_empty() && wave.ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
             done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-        let registration=eligible.then(||self.graph.plan_unit_registration(&mut wave.ready,&pool)).flatten();
+        let mut registration=eligible.then(||self.graph.plan_unit_registration(&mut wave.ready,&pool)).flatten();
         #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
         #[cfg(feature="cell-sync-diagnostics")] let adoption=Instant::now();
         let result=(|| {
@@ -84,12 +84,12 @@ impl Executor {
                 loop {
                     let parked=wave.owners.pop_front().expect("source owner for completed job");
                     if parked.execution.cell==done.done.cell() {
-                        self.adopt_cell_event(parked,Some(done))?;
+                        self.adopt_cell_event(parked,Some(done),registration.as_mut())?;
                         self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=
                             u64::from(wave.producer.unfinished()!=0);
                         break;
                     }
-                    self.adopt_cell_event(parked,None)?;
+                    self.adopt_cell_event(parked,None,None)?;
                 }
             }
             // Job identities occur in source order, ahead of the buffer still
@@ -123,7 +123,7 @@ impl Executor {
         if let Err(error)=result {
             queue.owners.clear();queue.operations=0;queue.shared=false;pending.clear();return Err(error);
         }
-        for parked in wave.owners.drain(..) {self.adopt_cell_event(parked,None)?;}
+        for parked in wave.owners.drain(..) {self.adopt_cell_event(parked,None,None)?;}
         let spare:Vec<_>=wave.owners.into();
         if queue.owners.is_empty() && queue.owners.capacity()<spare.capacity() {queue.owners=spare;}
         else if queue.spare.capacity()<spare.capacity() {queue.spare=spare;}
