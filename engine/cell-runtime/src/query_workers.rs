@@ -202,6 +202,7 @@ impl Executor {
                 plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables());
             }
             self.graph.program.executions[rule].constructor = constructor;
+            self.graph.program.executions[rule].births = crate::graph::cell_births::Plan::derive(&self.graph.program,rule);
         }
         self.refresh_cell_execution_layouts();
         Ok(())

@@ -95,6 +95,9 @@ pub struct Cell {
     #[serde(default)]
     pub recipe_depth: u32,
 }
+#[cfg(feature = "sparse-cells")]
+#[path = "cell_births.rs"]
+pub(crate) mod cell_births;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Function {
     #[cfg(feature = "sparse-cells")]
@@ -1597,11 +1600,16 @@ impl Graph {
         if hidden {
             self.visibility_tainted[t] = true;
         }
-        let port_key = self.port_keys_enabled(t);
         // In port-key mode this is an immutable birth hint, not a promise
         // that the hash follows future canonical representatives.
         let h = self.constructor_hash(t, key);
         let vs = Self::shared_fields(key, &v);
+        self.activate_fields(f,t,vs,h,hidden)
+    }
+    /// Adopt the actual row allocation. Local Cell construction has already
+    /// computed its canonical fields/hash; source registration remains ordered.
+    fn activate_fields(&mut self, f:FactRef, t:usize, vs:RowFields, h:u64, hidden:bool) -> Result<()> {
+        let port_key = self.port_keys_enabled(t);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);

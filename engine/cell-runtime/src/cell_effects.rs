@@ -267,6 +267,11 @@ pub(crate) struct Effects {
     history: Vec<Option<Dependency>>,
 }
 impl Effects {
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn writer(&mut self) -> EffectWriter<'_> {
+        EffectWriter { plan:self.plan.as_deref(), buffer:&mut self.buffer,
+            history:&mut self.history, joint:self.joint, probes:&mut self.probes, targets:&mut self.targets }
+    }
     pub fn begin(plan: Rc<EffectPlan>, mut buffer: Vec<Option<Dependency>>, keep: bool) -> Self {
         debug_assert!(buffer.is_empty(), "each Cell owns only its results");
         buffer.resize(plan.layout.width, None);
@@ -322,20 +327,17 @@ impl Effects {
     #[cfg(feature = "sparse-cells")]
     pub fn has_joint_results(&self) -> bool { self.joint }
     pub fn slot(&mut self, operation: usize) -> Option<&mut Option<Dependency>> {
+        #[cfg(feature = "sparse-cells")]
+        { return self.writer().into_slot(operation); }
+        #[cfg(not(feature = "sparse-cells"))]
+        {
         let plan = self.plan.as_ref()?;
         self.probes += 1;
         let descriptor = *plan.layout.slots.get(operation)?;
         let slot = descriptor.index?.get() as usize - 1;
-        #[cfg(feature = "sparse-cells")]
-        let slot = if self.joint {
-            if descriptor.history != 0 {
-                self.targets += 1;
-                return self.history.get_mut(descriptor.history as usize - 1);
-            }
-            plan.joint.as_ref()?.transient[slot]?
-        } else { slot };
         self.targets += 1;
         Some(&mut self.buffer[slot])
+        }
     }
     #[cfg(feature = "iterative-bake")]
     pub fn record_handoff(&mut self, operation:usize, receipt:Dependency, input:&crate::result_handoff::Input, original:bool, track:bool) {
@@ -391,6 +393,43 @@ impl Effects {
         } else {
             *slot = Some(receipt);
             true
+        }
+    }
+}
+
+/// Borrow the existing output slots across a worker invocation. The Rc owner
+/// stays on the coordinator; its immutable plan and unique arrays are shared
+/// by reference, without another result packet or layout conversion.
+#[cfg(feature = "sparse-cells")]
+pub(crate) struct EffectWriter<'a> {
+    plan: Option<&'a EffectPlan>,
+    buffer: &'a mut Vec<Option<Dependency>>,
+    history: &'a mut Vec<Option<Dependency>>,
+    joint: bool,
+    probes: &'a mut u64,
+    targets: &'a mut u64,
+}
+#[cfg(feature = "sparse-cells")]
+impl<'a> EffectWriter<'a> {
+    fn into_slot(self, operation:usize) -> Option<&'a mut Option<Dependency>> {
+        let plan=self.plan?;
+        *self.probes+=1;
+        let descriptor=*plan.layout.slots.get(operation)?;
+        let slot=descriptor.index?.get() as usize-1;
+        let slot=if self.joint {
+            if descriptor.history!=0 {
+                *self.targets+=1;
+                return self.history.get_mut(descriptor.history as usize-1);
+            }
+            plan.joint.as_ref()?.transient[slot]?
+        } else {slot};
+        *self.targets+=1;
+        Some(&mut self.buffer[slot])
+    }
+    pub(crate) fn record(&mut self, operation:usize, result:Dependency) {
+        if let Some(slot)=(EffectWriter { plan:self.plan, buffer:self.buffer, history:self.history,
+            joint:self.joint, probes:self.probes, targets:self.targets }).into_slot(operation) {
+            *slot=Some(result);
         }
     }
 }

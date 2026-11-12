@@ -86,6 +86,18 @@ overall objective complete until all applicable items above are proven.
 
 ## Current state
 
+- Workers now construct certified fresh local suffixes in the existing Cell,
+  returning actual row allocations for source-ordered registration; see
+  [local construction evidence](../benchmarks/cell-local-births/README.md).
+  Raytrace removes 139,448 global queries. A shared typed plan identifies exact
+  local candidates; external births/unions and unsupported effects keep their
+  original boundaries. Pending metadata growths fall from the initial 77,070
+  to 166 with four inline row handles. All logical effects, ordered Run summaries
+  and final graphs match; native sum-bits acceptance passes. However, 4,969,038
+  plan checks and 76,904 synchronous worker pieces remain, with 507 ms accumulated
+  wait in this diagnostic run. The uncalibrated work proxy worsens by 7,015,059;
+  no speedup is claimed. Independent parked scheduling, compatible public-frame
+  storage, useful batch sizes and demonstrated throughput remain unfinished.
 - Constructor continuation now crosses already completed captured-input scalar
   operations in the same instance; see [coverage and costs](../benchmarks/cell-scalar-boundaries/README.md).
   Raytrace removes 60,721 coordinator constructor boundaries and 27,738 source

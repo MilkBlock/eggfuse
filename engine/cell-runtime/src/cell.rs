@@ -48,6 +48,8 @@ pub(crate) use links::QueryLinks;
 #[path = "cell_effects.rs"]
 mod effects;
 pub(crate) use effects::{CompletedEffects, EffectLayout, EffectPlan, Effects, SingleEffect};
+#[cfg(feature = "sparse-cells")]
+pub(crate) use effects::EffectWriter;
 #[path = "cell_bound.rs"]
 mod bound;
 pub(crate) use bound::{BoundRhs, BoundValue};

@@ -52,6 +52,93 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn new_constructor_roots_complete_local_cells_and_publish_actual_results() {
+    for existing in 0..=3 {
+        let seed=(0..16).map(|n| {
+            let mut term=format!("(N {n})");
+            for name in ["F","G","H"].iter().take(existing) {term=format!("({name} {term})");}
+            term
+        }).collect::<Vec<_>>().join("\n");
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E) (Seen E))
+(function Out (E) i64 :merge new)
+(ruleset step) (ruleset next)
+(rule ((= x (N n))) ((let a (F x)) (let b (G a)) (let c (H b)) (set (Out c) n)) :ruleset step)
+(rule ((= n (Out x))) ((Seen x)) :ruleset next)
+{seed}
+(run-schedule (seq (run step) (run next) (run step) (run next)))
+(check (Seen (H (G (F (N 2))))) (= (Out (H (G (F (N 2))))) 2))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,4);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();same(&control,&candidate);
+            let r=candidate.report();let work=&r["cell_execution"]["runtime"]["stats"]["births"];
+            let minimum=(2usize.saturating_sub(existing)*16) as u64;
+            assert!(work["local_births"].as_u64().unwrap()>=minimum,"{r}");
+            assert_eq!(work["committed_rows"],work["local_births"]);
+            if workers>1 && minimum>0 {assert!(work["worker_operations"].as_u64().unwrap()>=minimum);}
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+            assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+            assert_eq!(candidate.graph.stats.logical_facts_created,control.graph.stats.logical_facts_created);
+        }
+    }
+}
+
+#[test]
+fn shared_effects_cut_local_birth_proofs_and_later_failure_preserves_committed_rows() {
+    for fail in [false,true] {
+        let tail=if fail {"(panic \"after local construction\")"} else {"(set (Out (H b)) n)"};
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(function Out (E) i64 :merge new)
+(ruleset step)
+(rule ((= x (N n))) ((let a (F x)) (set (Out a) n)
+ (let b (G a)) (H b) {tail}) :ruleset step)
+(N 1) (N 2)
+(run-schedule (run step))
+"#);
+        let mut control=executor(&source,4);let expected=control.execute();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            assert_eq!(candidate.execute(),expected);
+            assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+            if !fail {same(&control,&candidate);}
+            let r=candidate.report();
+            assert_eq!(r["cell_execution"]["runtime"]["stats"]["births"]["local_births"],if fail {1}else{2});
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+        }
+    }
+}
+
+#[test]
+fn local_constructor_candidates_compare_actual_bound_values_and_export_the_returned_witness() {
+    let seed=(0..16).map(|n|format!("(set (Left (N {n})) {n}) (set (Right (N {n})) {n})"))
+        .collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E) (G E i64) (H E) (Seen E))
+(function Left (E) i64 :merge new) (function Right (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(ruleset step) (ruleset next)
+(rule ((= x (N n)) (= a (Left x)) (= b (Right x)))
+ ((let u (F x)) (G u a) (let v (G u b)) (set (Out (H v)) n)) :ruleset step)
+(rule ((= n (Out x))) ((Seen x)) :ruleset next)
+{seed}
+(run-schedule (seq (run step) (run next)))
+(check (Seen (H (G (F (N 2)) 2))))
+"#);
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,4);control.execute().unwrap();
+    for workers in [1,4] {
+        let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();same(&control,&candidate);
+        assert_eq!(candidate.report()["cell_execution"]["runtime"]["stats"]["births"]["local_reuses"],16);
+        assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+    }
+}
+
+#[test]
 fn constructor_continuation_crosses_completed_scalar_segments_but_stops_at_missing_results() {
     for existing in [1, 2] {
         let seed = (0..16).map(|n| {

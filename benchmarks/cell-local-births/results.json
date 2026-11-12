@@ -1,0 +1,146 @@
+{
+  "scope": "standalone Cell CPU; work and semantics, not a timing campaign",
+  "control_commit": "4088086e",
+  "runtime_sha256": "912924d6ff2c20aea3c1f4684756b81d4d9ef08696cbb23b2090979282cd5af2",
+  "control_runtime_sha256": "d8c2616a056e6c99940fd1e5a59fba734af790b647406fe1c347e3fc874b2c29",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "graph_effects_queries_repair_and_publication_work_unchanged": true,
+      "total_lookup_calls": [
+        14579,
+        14054
+      ],
+      "source_constructor_boundaries": [
+        8837,
+        8288
+      ],
+      "removed_lookup_calls": 525,
+      "local_construction": {
+        "anchor_checks": 545,
+        "attempts": 303,
+        "candidate_probes": 48,
+        "candidate_ranges": 525,
+        "committed_rows": 525,
+        "field_checks": 75,
+        "hashes": 525,
+        "identity_checks": 525,
+        "invalidated": 0,
+        "local_births": 525,
+        "local_reuses": 0,
+        "missing_operands": 0,
+        "operand_reads": 451,
+        "pending_bytes": 4480,
+        "pending_growths": 10,
+        "plan_checks": 20215,
+        "resume_checks": 668,
+        "row_fields": 1569,
+        "slot_bytes": 0,
+        "slot_growths": 0,
+        "source_operand_reads": 593,
+        "value_writes": 0,
+        "window_checks": 1423,
+        "worker_batches": 299,
+        "worker_operations": 525,
+        "worker_wait_ns": 2131287
+      },
+      "compiled_local_plan": {
+        "compiled_payload_bytes": 119838,
+        "independent_scheduling": false,
+        "pending_row_bytes": 40,
+        "pending_storage_bytes": 168,
+        "rules": 88,
+        "schema": "cell-local-births/v1",
+        "scope": "canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
+        "sites": 275,
+        "window_bytes": 32
+      },
+      "useful_constructors_per_worker_batch": 1.7558528428093645,
+      "instance_header_bytes": 152,
+      "execution_header_bytes": [
+        456,
+        488
+      ],
+      "compiled_execution_bytes": [
+        515512,
+        677254
+      ],
+      "net_saved_uncalibrated_operations": -27249,
+      "work_ledger_sha256": "0a33fc6fc0ccb0ddf96dfe8944ab39fb0b204de63caaa0675392484e3e7f8689"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "graph_effects_queries_repair_and_publication_work_unchanged": true,
+      "total_lookup_calls": [
+        4176557,
+        4037109
+      ],
+      "source_constructor_boundaries": [
+        2006052,
+        1866039
+      ],
+      "removed_lookup_calls": 139448,
+      "local_construction": {
+        "anchor_checks": 140232,
+        "attempts": 76999,
+        "candidate_probes": 100948,
+        "candidate_ranges": 139448,
+        "committed_rows": 139448,
+        "field_checks": 114022,
+        "hashes": 139448,
+        "identity_checks": 139448,
+        "invalidated": 0,
+        "local_births": 139448,
+        "local_reuses": 0,
+        "missing_operands": 0,
+        "operand_reads": 127654,
+        "pending_bytes": 780160,
+        "pending_growths": 166,
+        "plan_checks": 4969038,
+        "resume_checks": 156535,
+        "row_fields": 420395,
+        "slot_bytes": 0,
+        "slot_growths": 0,
+        "source_operand_reads": 153293,
+        "value_writes": 0,
+        "window_checks": 399977,
+        "worker_batches": 76904,
+        "worker_operations": 139448,
+        "worker_wait_ns": 507252662
+      },
+      "compiled_local_plan": {
+        "compiled_payload_bytes": 3327560,
+        "independent_scheduling": false,
+        "pending_row_bytes": 40,
+        "pending_storage_bytes": 168,
+        "rules": 88,
+        "schema": "cell-local-births/v1",
+        "scope": "canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
+        "sites": 13489,
+        "window_bytes": 32
+      },
+      "useful_constructors_per_worker_batch": 1.8132736918755852,
+      "instance_header_bytes": 152,
+      "execution_header_bytes": [
+        456,
+        488
+      ],
+      "compiled_execution_bytes": [
+        2447928,
+        5817392
+      ],
+      "net_saved_uncalibrated_operations": -7015059,
+      "work_ledger_sha256": "fcf4d219daf0f0ca56e9a557308ecbf41a28dc3a9ca78c62a7c28620b4c1c982"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

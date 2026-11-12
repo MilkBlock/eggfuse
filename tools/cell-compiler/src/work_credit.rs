@@ -174,6 +174,21 @@ impl Work {
                 .ok_or_else(||format!("missing constructor preparation work {key}"))?
         } else { 0 };
         work.insert(key.into(),value);
+        let local_births=match report["cell_execution"].get("local_construction") {
+            None=>false,
+            Some(v) if v["schema"]=="cell-local-births/v1"=>true,
+            _=>return Err("unknown Cell local construction accounting".into()),
+        };
+        for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
+            "candidate_ranges","candidate_probes","field_checks","identity_checks","hashes","row_fields",
+            "pending_growths","value_writes","slot_growths","worker_batches"] {
+            let key=format!("cell_execution/runtime/stats/births/{field}");
+            let value=if local_births {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing local construction work {key}"))?
+            } else {0};
+            work.insert(key,value);
+        }
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
                 None => 0,
@@ -586,6 +601,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let p = Program::parse(compiler::compile(core, &Default::default()).unwrap()).unwrap();
     let mut e = Executor::new(Graph::new_with_local_congruence(p).unwrap(), false);
     e.use_query_workers(1, 16).unwrap();
+    e.use_cell_execution(1).unwrap();
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
@@ -604,6 +620,23 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "query_workers/stats/execution/constructor/prefix_result_initializations",
         "query_workers/stats/execution/constructor/prefix_progress_writes",
         "query_workers/stats/execution/constructor/prefix_scalar_checks",
+        "cell_execution/runtime/stats/births/plan_checks",
+        "cell_execution/runtime/stats/births/resume_checks",
+        "cell_execution/runtime/stats/births/window_checks",
+        "cell_execution/runtime/stats/births/attempts",
+        "cell_execution/runtime/stats/births/anchor_checks",
+        "cell_execution/runtime/stats/births/source_operand_reads",
+        "cell_execution/runtime/stats/births/operand_reads",
+        "cell_execution/runtime/stats/births/candidate_ranges",
+        "cell_execution/runtime/stats/births/candidate_probes",
+        "cell_execution/runtime/stats/births/field_checks",
+        "cell_execution/runtime/stats/births/identity_checks",
+        "cell_execution/runtime/stats/births/hashes",
+        "cell_execution/runtime/stats/births/row_fields",
+        "cell_execution/runtime/stats/births/pending_growths",
+        "cell_execution/runtime/stats/births/value_writes",
+        "cell_execution/runtime/stats/births/slot_growths",
+        "cell_execution/runtime/stats/births/worker_batches",
         "stage_spine/stats/prepared_effect_buffer_moves",
         "stage_spine/stats/prepared_effect_spares_released",
         "stage_spine/stats/prepared_effect_joint_positions", "stage_spine/stats/prepared_effect_joint_reads",
@@ -615,7 +648,10 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         *value = json!(value.as_u64().unwrap() + 1);
         assert_eq!(work.savings(&Work::read(&changed).unwrap()).0, -1);
         *changed.pointer_mut(&format!("/{key}")).unwrap() = J::Null;
-        assert!(Work::read(&changed).unwrap_err().contains("constructor preparation work"));
+        let category=if key.starts_with("cell_execution/runtime/stats/births/") {
+            "local construction work"
+        } else {"constructor preparation work"};
+        assert!(Work::read(&changed).unwrap_err().contains(category));
     }
     for field in ["rhs_context_suspends", "rhs_context_resumes", "rhs_suspend_holds", "rhs_suspend_releases"] {
         let mut changed = report.clone();
@@ -638,6 +674,12 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     coverage["query_workers"]["matched"]["execution"]["operations"] = u64::MAX.into();
     coverage["query_workers"]["stats"]["execution"]["later_operations"] = u64::MAX.into();
     assert_eq!(Work::read(&coverage).unwrap(), work, "subsets do not earn or charge work twice");
+    for field in ["local_births", "local_reuses", "committed_rows", "worker_operations"] {
+        coverage["cell_execution"]["runtime"]["stats"]["births"][field]=u64::MAX.into();
+    }
+    assert_eq!(Work::read(&coverage).unwrap(),work,"local outcomes do not earn credit twice");
+    coverage["cell_execution"]["local_construction"]["schema"]="unknown".into();
+    assert!(Work::read(&coverage).unwrap_err().contains("unknown Cell local construction"));
     let mut domains = report.clone();
     domains["free_join"]["projection_shape_checks"] = 9.into();
     domains["free_join"]["inline_domain_deliveries"] = u64::MAX.into();

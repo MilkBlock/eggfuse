@@ -44,6 +44,9 @@ pub(crate) struct Plan {
     #[cfg(feature = "sparse-cells")]
     #[serde(skip)]
     pub constructor: Option<super::constructor_prepare::Plan>,
+    #[cfg(feature = "sparse-cells")]
+    #[serde(skip)]
+    pub births: Option<crate::graph::cell_births::Plan>,
     pub segments: Vec<Segment>,
     /// Source positions after the first boundary whose scalar operands are
     /// derived entirely from matched inputs. Outputs have unique SSA slots;
@@ -183,12 +186,14 @@ impl Plan {
             }
         }
         Self { segments, input_ready,
-            #[cfg(feature = "sparse-cells")] constructor: None }
+            #[cfg(feature = "sparse-cells")] constructor: None,
+            #[cfg(feature = "sparse-cells")] births: None }
     }
     pub fn storage_bytes(&self) -> usize {
         let constructor = {
             #[cfg(feature = "sparse-cells")]
-            { self.constructor.as_ref().map_or(0, |p| p.storage_bytes()) }
+            { self.constructor.as_ref().map_or(0, |p| p.storage_bytes())
+                + self.births.as_ref().map_or(0, |p| p.storage_bytes()) }
             #[cfg(not(feature = "sparse-cells"))]
             { 0 }
         };

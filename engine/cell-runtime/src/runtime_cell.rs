@@ -47,6 +47,8 @@ pub(super) struct Execution {
     pub effects: crate::cell::Effects,
     #[cfg(feature = "sparse-cells")]
     pub constructor: Option<FactRef>,
+    #[cfg(feature = "sparse-cells")]
+    pub births: Option<crate::graph::cell_births::Window>,
     pub continuation: bool,
     pub work: Work,
     #[cfg(feature = "view-consumers")]
@@ -62,8 +64,8 @@ pub(super) struct Execution {
 }
 
 impl Executor {
-    /// Pure preparation may advance the existing slots. Repeatedly observing a
-    /// boundary does not query, submit an effect or consume a handoff twice.
+    /// Advance the existing owner. Certified local births retain source-ordered
+    /// registration; repeatedly observing an unresolved boundary has no effect.
     pub(super) fn advance_cell(&mut self, execution: &mut Execution) -> Result<Frontier> {
         match execution.phase {
             Phase::Complete => return Ok(Frontier::Complete),
@@ -79,6 +81,24 @@ impl Executor {
         loop {
             #[cfg(feature = "sparse-cells")]
             let position = self.graph.rhs_frame(cell).expect("executing Cell").completed_prefix;
+            #[cfg(feature = "sparse-cells")]
+            if execution.births.is_some() && let Some(runtime)=&mut self.cell_execution {
+                #[cfg(feature = "iterative-bake")]
+                let stop=execution.transfers[execution.transfer..].iter().find(|t|t.op>=position)
+                    .map_or(execution.ops.len(),|t|t.op);
+                #[cfg(not(feature = "iterative-bake"))]
+                let stop=execution.ops.len();
+                let before=Work::read(&self.graph);
+                let result=self.graph.complete_local_births(rid,cell,&mut execution.births,
+                    &mut execution.effects.writer(),stop,
+                    self.query_workers.as_ref().and_then(|w|w.execution_pool()),runtime.grain);
+                execution.work.add_since(&self.graph,before);
+                match result {
+                    Ok(counts)=>runtime.counts.births.add(counts),
+                    Err(error)=>{execution.phase=Phase::Failed;return Err(error);}
+                }
+                if self.graph.rhs_frame(cell).unwrap().completed_prefix!=position {continue;}
+            }
             #[cfg(feature = "sparse-cells")]
             if matches!(execution.ops.get(position), Some(Op::Let(_, Call::Primitive(..), _)))
                 && self.graph.program.executions[rid].prepared_at(position,
@@ -125,6 +145,15 @@ impl Executor {
         match result {
             Ok(live) => {
                 self.graph.rhs_frame_mut(execution.cell).unwrap().completed_prefix = position + 1;
+                #[cfg(feature = "sparse-cells")]
+                if let Some(runtime)=&mut self.cell_execution {
+                    runtime.counts.births.plan_checks+=1;
+                    if self.graph.program.executions[execution.rule].births.as_ref().is_some_and(|p|p.continues_after(position)) {
+                        runtime.counts.births.window_checks+=1;
+                        execution.births=crate::graph::cell_births::Window::observes(
+                            &self.graph,execution.cell,position,execution.births);
+                    } else {execution.births=None;}
+                }
                 execution.phase = if live { Phase::Ready } else { Phase::Stopped };
                 Ok(())
             }
@@ -252,6 +281,7 @@ mod tests {
             rule: 0, cell, phase: Phase::Ready, ops, aliases: None, known: QueryFacts::None,
             cursor: None, effects: Effects::begin(plan, vec![], false), continuation: true, work: Work::default(),
             constructor: None,
+            births: None,
             #[cfg(feature = "view-consumers")]
             view_source: None,
             transfers: Default::default(), transfer: 0,

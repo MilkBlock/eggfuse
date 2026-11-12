@@ -2465,6 +2465,15 @@ impl Executor {
         }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &mut self.cell_execution { execution.counts.frames += 1; }
+        #[cfg(feature = "sparse-cells")]
+        let births=if let Some(runtime)=&mut self.cell_execution {
+            runtime.counts.births.plan_checks+=1;
+            if first_op.checked_sub(1).is_some_and(|previous|
+                self.graph.program.executions[rid].births.as_ref().is_some_and(|p|p.continues_after(previous))) {
+                runtime.counts.births.window_checks+=1;
+                crate::graph::cell_births::Window::seed(&self.graph,cell,first_op)
+            } else {None}
+        } else {None};
         Ok(Some(owned_cell::Execution {
             rule: rid, cell, phase: owned_cell::Phase::Ready,
             ops: self.graph.program.templates[template].ops.clone(),
@@ -2472,6 +2481,8 @@ impl Executor {
             effects: effect_receipts, continuation: origin.is_some(),
             #[cfg(feature = "sparse-cells")]
             constructor,
+            #[cfg(feature = "sparse-cells")]
+            births,
             work: owned_cell::Work::started(&self.graph, facts, updates, stage_counts),
             #[cfg(feature = "view-consumers")]
             view_source: b.view_source,
@@ -3228,7 +3239,7 @@ impl Executor {
                 "progress_bytes":std::mem::size_of::<usize>(),
                 "rhs_owner_bytes":std::mem::size_of::<owned_cell::Execution>(),
                 "position_owner":"Cell.completed_prefix",
-                "worker_scope":"query, input-derived scalars and existing constructor prefixes; original Run/effect/publication order"});
+                "worker_scope":"query, captured scalars, existing constructor prefixes and fresh local construction; source-ordered effects and publication"});
         #[cfg(feature = "sparse-cells")]
         { report["cell_execution"]["suspension"] = json!({"schema":"owned-rhs-context/v1",
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
@@ -3247,6 +3258,15 @@ impl Executor {
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
+            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v1",
+                "rules":self.graph.program.executions.iter().filter(|p|p.births.is_some()).count(),
+                "sites":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.sites()).sum::<usize>(),
+                "compiled_payload_bytes":self.graph.program.executions.iter().filter_map(|p|p.births.as_ref()).map(|p|p.storage_bytes()).sum::<usize>(),
+                "window_bytes":std::mem::size_of::<Option<crate::graph::cell_births::Window>>(),
+                "pending_row_bytes":crate::graph::cell_births::record_bytes(),
+                "pending_storage_bytes":crate::graph::cell_births::pending_bytes(),
+                "scope":"canonical constructor segments with fresh local input; workers build rows and coordinator registers them in source order",
+                "independent_scheduling":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
                 "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
                 "scope":"same Cell resumes between ordered effects; coordinator waits for its frontier",

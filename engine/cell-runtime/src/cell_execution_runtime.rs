@@ -22,6 +22,7 @@ pub(crate) enum Stop {
 
 #[derive(Default, Serialize)]
 pub(crate) struct Counts {
+    pub births: crate::graph::cell_births::Counts,
     pub frames: u64,
     pub segments: u64,
     pub local_operations: u64,
@@ -49,6 +50,7 @@ impl Counts {
         self.boundaries[index] += 1;
     }
     pub fn add(&mut self, other: Self) {
+        self.births.add(other.births);
         self.frames += other.frames;
         self.segments += other.segments;
         self.local_operations += other.local_operations;

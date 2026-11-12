@@ -1,7 +1,7 @@
 # Owned Cell execution: trace, boundaries and equivalence
 
-This explains the ongoing refactor, including constructor-prefix continuation
-and its shared prepared-result layout. It distinguishes implemented ownership from the still-unfinished
+This explains the ongoing refactor, including constructor-prefix continuation,
+shared prepared-result layout and fresh local construction. It distinguishes implemented ownership from the still-unfinished
 independent scheduler. See [the checklist](CELL_EXECUTION_REFACTOR.md) for scope.
 
 ## What remains the same instance
@@ -61,6 +61,13 @@ Run R+1 consumer: use G(u) and Out(a)
    worker miss cannot skip that resolution: earlier source effects may create
    it. On its original turn, normal interning returns an existing or newly
    created actual result. That result fills the destination slot exactly once.
+   If `F(a)` genuinely creates a new `u`, the new local plan can continue `G(u)`
+   without another global lookup. It compares the exact compiled local candidates
+   and builds the final row in the worker. The source then adopts that allocation
+   and registers it in order. External births/unions, shared effects and missing
+   operands close this proof; ordinary resolution remains available at the
+   unfinished operation. This is currently synchronous, not an independently
+   queued local suffix. See [local construction](../benchmarks/cell-local-births/README.md).
 5. `set Out` retains its original order, merge callback and any resulting
    effects. More pure operations could run after its returned operands become
    available. Merely moving the operation to another thread does not prove
@@ -83,6 +90,7 @@ Run R+1 consumer: use G(u) and Out(a)
 | Captured scalar or static alias | Compute/read the original slot; skip the corresponding source work only with the existing proof. |
 | Existing constructor | Use actual results under source-valid evidence. Historical Cursor evidence cannot acquire a current-Run certificate merely by being retained. |
 | Missing constructor | Park at the unresolved source operation in the target scheduler; normal source interning resolves it once. No private invented identity. |
+| Constructor containing a genuinely fresh local result | In an admitted canonical region, exact local candidates suffice. Worker builds the actual row using the original source identity; source registers it before later effects. External interference invalidates the proof. |
 | Missing parent projection/implicit result | Use the original operand reader at that unfinished instruction; completed instructions do not replay. |
 | Union, retirement, hiding or generation change after preparation | Discard invalid optimization evidence and resolve the unfinished operation normally. Current prefix fallback clears all speculative Eq slots before allocation/effects. |
 | Earlier RHS deletes an accepted match's LHS witness | Preserve the accepted source binding. Invalid reuse evidence is not grounds for canceling the original application. |
@@ -109,6 +117,13 @@ result, an internal Entry needs no materialized handoff, or only a specific
 completion scope must finish before an observation. Runtime checks supply the
 instance-specific facts: actual returned witness, generation, current equality,
 table readiness and the legal source phase. Unknown facts leave the cut live.
+
+The fresh local plan is a concrete refinement: static producer anchors and
+operator ranges describe possible local competitors; the actual new-result
+identity and existing birth/union counters certify exclusion of external ones.
+A continuation mask says where maintaining this proof can still be useful.
+It removes global constructor queries within coverage, while retaining ordered
+row registration, repair, publication and all unsupported birth-time backends.
 
 For a dominated-to-dominator transition, the compiled mapping must retain the
 entry proof, old slot identities, demanded exports and remaining ordered effects.
