@@ -1,0 +1,324 @@
+{
+  "scope": "actual standalone Cell runtime, not native egglog; fixed original baseline",
+  "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "original_graph_heap_bytes": 3979373,
+  "optimized_graph_heap_bytes": 2790213,
+  "remaining_fraction": 0.7011690032575484,
+  "target_bytes": 1193811,
+  "target_met_graph_heap": false,
+  "added_shared_field_layout_bytes": 0,
+  "graph_plus_added_layout_fraction": 0.7011690032575484,
+  "limitation": "retained Program delta includes new compiled layouts without charging them twice; complete process peaks are recorded separately; Graph-exclusive within-Run peak remains unmeasured",
+  "runs": 1428,
+  "all_original_run_graph_and_audit_digests_equal": true,
+  "boundary_array_peak_before": 1759632,
+  "boundary_array_peak_after": 1199544,
+  "source_counts": {
+    "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
+    "excluded": "allocator padding/control bytes, Value-owned payloads, BTree nodes, sparse ID outlier map, auxiliary caches, ownership backends, executor storage",
+    "index_payload_estimate_bytes": 214376,
+    "reverse_index_header_payload": 21456,
+    "reverse_index_heap_payload": 75328,
+    "reverse_degrees": {
+      "1": 212,
+      "2": 168,
+      "3": 8,
+      "4": 10,
+      "5": 126,
+      "6": 41,
+      "7": 25,
+      "8": 10,
+      "9": 7,
+      "10": 9,
+      "11": 11,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 3,
+      "16": 3,
+      "18": 1,
+      "20": 1,
+      "21": 1,
+      "23": 1,
+      "25": 2,
+      "26": 1,
+      "28": 1,
+      "37": 1,
+      "44": 1,
+      "47": 1,
+      "49": 1,
+      "51": 1,
+      "66": 1,
+      "100": 1
+    },
+    "forward_index_payload": 0,
+    "function_index_payload": 34264,
+    "constructor_index_header_payload": 83328,
+    "members_array_bytes": 83640,
+    "members_tree_entries": 0,
+    "union_find": {
+      "map_capacity_payload": 28672,
+      "directory_bytes": 1024,
+      "shared_base": false
+    },
+    "writer_bytes": 143120,
+    "writer_count": 490,
+    "accounting_note": "HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
+    "parent_links": 0,
+    "delegated_cell_frames": 1863,
+    "explicit_cell_slots": 10780,
+    "cell_records_bytes": 286200,
+    "cell_positions_bytes": 29968,
+    "id_outliers": 0,
+    "cell_slot_bytes": 258720,
+    "shared_slot_owners": 0,
+    "removal_entries": 0,
+    "fact_record_capacity_bytes": 208440,
+    "fact_record_live_bytes": 208440,
+    "decoded_row_bytes": 0,
+    "decoded_row_owners": 1300,
+    "function_records_bytes": 72800,
+    "function_row_bytes": 116656,
+    "cell_fact_arities": {
+      "0": 211,
+      "1": 1747,
+      "2": 225,
+      "3": 194,
+      "4": 6,
+      "7": 1,
+      "85": 1
+    },
+    "counted_bytes": 1199544
+  },
+  "ordered_field_releases": [
+    [
+      "cells",
+      783328
+    ],
+    [
+      "functions",
+      303664
+    ],
+    [
+      "parents",
+      35848
+    ],
+    [
+      "writer_dir",
+      28912
+    ],
+    [
+      "local_unions",
+      0
+    ],
+    [
+      "ownership",
+      814152
+    ],
+    [
+      "stable_ports",
+      289654
+    ],
+    [
+      "repair_ports",
+      3208
+    ],
+    [
+      "union_digest",
+      0
+    ],
+    [
+      "members",
+      83640
+    ],
+    [
+      "intern",
+      102408
+    ],
+    [
+      "function_keys",
+      70716
+    ],
+    [
+      "uses",
+      119468
+    ],
+    [
+      "changes",
+      63212
+    ],
+    [
+      "anchors",
+      10247
+    ],
+    [
+      "dirty",
+      192
+    ],
+    [
+      "dirty_markers",
+      0
+    ],
+    [
+      "dirty_facts",
+      12744
+    ],
+    [
+      "parent_users",
+      8712
+    ],
+    [
+      "garbage",
+      56
+    ],
+    [
+      "receipt_forwards",
+      4232
+    ]
+  ],
+  "explicit_slot_types": {
+    "Eq": 7374,
+    "Text": 48,
+    "Int": 3358
+  },
+  "fact_free_frames": {
+    "instances": 211,
+    "slots": 2097,
+    "function_users": 387
+  },
+  "largest_retained_templates": [
+    {
+      "template": 507,
+      "instances": 102,
+      "slots": 1122,
+      "facts": 0
+    },
+    {
+      "template": 510,
+      "instances": 76,
+      "slots": 684,
+      "facts": 0
+    },
+    {
+      "template": 62,
+      "instances": 67,
+      "slots": 603,
+      "facts": 67
+    },
+    {
+      "template": 144,
+      "instances": 64,
+      "slots": 448,
+      "facts": 64
+    },
+    {
+      "template": 59,
+      "instances": 83,
+      "slots": 441,
+      "facts": 153
+    },
+    {
+      "template": 143,
+      "instances": 146,
+      "slots": 403,
+      "facts": 152
+    },
+    {
+      "template": 504,
+      "instances": 89,
+      "slots": 392,
+      "facts": 231
+    },
+    {
+      "template": 312,
+      "instances": 98,
+      "slots": 294,
+      "facts": 98
+    },
+    {
+      "template": 340,
+      "instances": 45,
+      "slots": 283,
+      "facts": 60
+    },
+    {
+      "template": 540,
+      "instances": 33,
+      "slots": 276,
+      "facts": 44
+    },
+    {
+      "template": 91,
+      "instances": 78,
+      "slots": 244,
+      "facts": 108
+    },
+    {
+      "template": 509,
+      "instances": 24,
+      "slots": 216,
+      "facts": 0
+    },
+    {
+      "template": 498,
+      "instances": 26,
+      "slots": 208,
+      "facts": 78
+    },
+    {
+      "template": 906,
+      "instances": 103,
+      "slots": 206,
+      "facts": 103
+    },
+    {
+      "template": 57,
+      "instances": 29,
+      "slots": 203,
+      "facts": 29
+    },
+    {
+      "template": 501,
+      "instances": 29,
+      "slots": 203,
+      "facts": 87
+    },
+    {
+      "template": 539,
+      "instances": 34,
+      "slots": 200,
+      "facts": 37
+    },
+    {
+      "template": 90,
+      "instances": 52,
+      "slots": 156,
+      "facts": 52
+    },
+    {
+      "template": 0,
+      "instances": 8,
+      "slots": 148,
+      "facts": 20
+    },
+    {
+      "template": 538,
+      "instances": 29,
+      "slots": 140,
+      "facts": 40
+    }
+  ],
+  "traces": {
+    "original-baseline.json": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
+    "longer-code-trace.json": "902178cc072ba94b57b58139ef81e172ad39c7f68aa035744fa6fab8cd3ccbdf",
+    "original-whole-storage.json": "0f2ad4a48947d57994f57d764700964eb8239e1f58d4a634afed0938a76595f7",
+    "longer-code-peak.json": "48deb6e657b1d4f5b0d8947e6a049ca87b1cc6e8444d6f61262af69dc9d5a600"
+  },
+  "retained_program_accounting_available": true,
+  "original_retained_program_bytes": 115462476,
+  "current_retained_program_bytes": 116499047,
+  "added_retained_program_bytes": 1036571,
+  "graph_plus_added_program_bytes": 3826784,
+  "graph_plus_added_program_fraction": 0.9616550144960022,
+  "target_met_with_added_program": false
+}

@@ -139,10 +139,20 @@ pub fn source_digest(raw: &J) -> String {
         &["sha256", "ownership_markers", "ownership_fragments"],
     )
 }
+/// A bounded training/catalog policy, never evidence for an equality.
+pub fn checked_frame_limit(raw: Option<&J>) -> Result<usize> {
+    let n = match raw {
+        None => 4,
+        Some(value) => value.as_u64().ok_or("max_frames must be an integer")?,
+    };
+    if !(2..=32).contains(&n) { return Err("max_frames must be in 2..=32".into()); }
+    Ok(n as usize)
+}
 /// Rank repeated, actually used local continuations within a static code budget.
 /// The score is a proposal heuristic. Whole-execution timing admits speedups.
 pub fn select_profile(profile: &J) -> Result<J> {
     let format = wire::Format::profile(profile)?;
+    let max_frames = checked_frame_limit(profile.get("max_frames"))?;
     let records = profile["records"]
         .as_array()
         .ok_or("missing fragment observations")?;
@@ -165,6 +175,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
         let net = 2 * i128::from(saved) - i128::from(probes);
         let fragment: Fragment =
             serde_json::from_value(row["fragment"].clone()).map_err(|e| e.to_string())?;
+        if fragment.hops.len() >= max_frames { return Err("profile fragment exceeds max_frames".into()); }
         code_costs.insert(fragment.clone(), cost);
         if uses >= 2 && net > 0 {
             ranked.push((net as f64 / (1.0 + cost as f64), fragment, cost, net));
@@ -195,7 +206,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
         }
     }
     Ok(
-        json!({"schema":format.fragment_schema(),"source":profile["source"],"fragments":selected,
+        json!({"schema":format.fragment_schema(),"source":profile["source"],"max_frames":max_frames,"fragments":selected,
         "ranking":{"minimum_activations":2,"max_fragments":256,"instruction_handle_budget":16384,
             "charged_static_handles":handles,"sum_of_candidate_scores_not_global_savings":net,"alternatives_overlap":true,
             "rule":"rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
@@ -277,7 +288,7 @@ impl Plan {
                 .map(|root| Fragment { root, hops: vec![] })
                 .collect(),
             transitions: vec![],
-            max_frames: 4,
+            max_frames: checked_frame_limit(p.artifact.get("ownership_fragments").and_then(|f|f.get("max_frames")))?,
         };
         let mut transitions = BTreeMap::new();
         // Guard history selects a transition; code identity is just the local
@@ -582,6 +593,18 @@ impl Runtime {
 }
 impl Graph {
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
+        self.train_ownership_fragments_with_limit(4)
+    }
+    pub fn train_ownership_fragments_with_limit(&mut self, max_frames: usize) -> Result<()> {
+        self.start_ownership_fragment_training(max_frames, false)
+    }
+    /// Learn continuations while executing the currently checked catalog.
+    /// Existing shape IDs and proof programs remain authoritative.
+    pub fn continue_ownership_fragment_training(&mut self, max_frames: usize) -> Result<()> {
+        self.start_ownership_fragment_training(max_frames, true)
+    }
+    fn start_ownership_fragment_training(&mut self, max_frames: usize, extend: bool) -> Result<()> {
+        let max_frames = checked_frame_limit(Some(&json!(max_frames)))?;
         let m = self
             .ownership
             .as_mut()
@@ -589,15 +612,13 @@ impl Graph {
         if m.stats.marker_entries != 0 {
             return Err("start fragment profiling before execution".into());
         }
-        if !self
-            .program
-            .cell_ownership
-            .composition
-            .transitions
-            .is_empty()
-        {
+        if !extend && !self.program.cell_ownership.composition.transitions.is_empty() {
             return Err("profile fragments from the unbaked source catalog".into());
         }
+        if self.program.cell_ownership.composition.shapes.iter().any(|s| s.programs.len() > max_frames) {
+            return Err("training limit is smaller than the existing catalog".into());
+        }
+        self.program.cell_ownership.composition.max_frames = max_frames;
         m.composition.training = Some(Training {
             fragments: self.program.cell_ownership.composition.fragments.clone(),
             ..Training::default()
@@ -668,6 +689,9 @@ impl Graph {
         })).collect::<Vec<_>>();
         Ok(
             json!({"schema":self.program.cell_ownership.format.profile_schema(),"source":source_digest(&self.program.artifact),
+                "max_frames":self.program.cell_ownership.composition.max_frames,
+                "seed_catalog":{"shapes":self.program.cell_ownership.composition.shapes.len(),
+                    "transitions":self.program.cell_ownership.composition.transitions.len()},
             "scope":"checked Entry applications with actual owned births; diagnostic training, not production latency",
             "alternatives_overlap":true,
             "credit":"one avoided binding creation plus one avoided boundary insertion per observed shared input, minus transition probes; uncalibrated ranking only",
@@ -691,83 +715,94 @@ impl Graph {
         if let Some(source) = &m.composition.entry
             && source.template == template {
             let rid = source.rule;
-            for (entry, anchor) in source.anchors.iter().copied().enumerate() {
-                m.stats.composition_entry_reads += 1;
-                let Some(Dependency::Fact(f)) = anchor else {
-                    continue;
-                };
-                if !self
-                    .cells
-                    .get(&f.cell)
-                    .and_then(|c| c.facts.get(&f.op))
-                    .is_some_and(|s| s.owned)
-                {
-                    m.stats.composition_missing_sources += 1;
-                    continue;
-                }
-                let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
-                    continue;
-                };
-                let c = m.composition.components[frame.component as usize]
-                    .as_ref()
-                    .unwrap();
-                if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
-                    m.stats.composition_capacity_cuts += 1;
-                    continue;
-                }
-                if c.frames.last().is_some_and(|&last| last >= cell) {
-                    continue;
-                }
-                let key = Key {
-                    shape: c.shape,
-                    hop: Hop {
-                        source_frame: frame.ordinal,
-                        rule: rid,
-                        entry,
-                        op: f.op,
-                    },
-                };
-                m.stats.composition_transition_probes += 1;
-                let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
-                    m.stats.composition_cache_hits += 1;
-                    m.stats.composition_baked_hits +=
-                        u64::from(shape < self.program.cell_ownership.composition.shapes.len());
-                    shape
-                } else if m.composition.training.is_some() {
-                    let Some(subst) = substitutions(
-                        &self.program.cell_ownership.composition.sources,
-                        &self.program.cell_ownership.programs,
-                        m.composition.shapes[c.shape].as_ref().unwrap(),
-                        &key.hop,
-                    ) else {
+            // Reproduce the installed catalog's choice before exploring an
+            // uncovered anchor. Otherwise training can steal a production hit.
+            let prefer_catalog = m.composition.training.is_some()
+                && !self.program.cell_ownership.composition.transitions.is_empty();
+            'candidate: for pass in 0..=usize::from(prefer_catalog) {
+                for (entry, anchor) in source.anchors.iter().copied().enumerate() {
+                    m.stats.composition_entry_reads += 1;
+                    let Some(Dependency::Fact(f)) = anchor else {
                         continue;
                     };
-                    let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
-                        program,
-                        &self.program.cell_ownership.programs[program],
-                        &subst,
-                    );
-                    let t = m.composition.training.as_mut().unwrap();
-                    let mut fragment = t.fragments[c.shape].clone();
-                    fragment.hops.push(key.hop.clone());
-                    t.fragments.push(fragment);
-                    let id = m.composition.shapes.len();
-                    m.composition.shapes.push(Some(Arc::new(code)));
-                    m.composition.transitions.insert(key, id);
-                    m.stats.composition_shape_builds += 1;
-                    m.stats.composition_materializations += 1;
-                    m.stats.composition_shape_steps += steps as u64;
-                    id
-                } else {
-                    m.stats.composition_unbaked_fallbacks += 1;
-                    continue;
-                };
-                selected = Some((
-                    frame.component,
-                    shape,
-                    self.cells[&f.cell].started_epoch != self.epoch,
-                ));
-                break;
+                    if !self
+                        .cells
+                        .get(&f.cell)
+                        .and_then(|c| c.facts.get(&f.op))
+                        .is_some_and(|s| s.owned)
+                    {
+                        m.stats.composition_missing_sources += 1;
+                        continue;
+                    }
+                    let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
+                        continue;
+                    };
+                    let c = m.composition.components[frame.component as usize]
+                        .as_ref()
+                        .unwrap();
+                    if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
+                        m.stats.composition_capacity_cuts += 1;
+                        continue;
+                    }
+                    if c.frames.last().is_some_and(|&last| last >= cell) {
+                        continue;
+                    }
+                    let key = Key {
+                        shape: c.shape,
+                        hop: Hop {
+                            source_frame: frame.ordinal,
+                            rule: rid,
+                            entry,
+                            op: f.op,
+                        },
+                    };
+                    if prefer_catalog {
+                        let installed = m.composition.transitions.get(&key)
+                            .is_some_and(|&shape| shape < self.program.cell_ownership.composition.shapes.len());
+                        if installed != (pass == 0) { continue; }
+                    }
+                    m.stats.composition_transition_probes += 1;
+                    let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
+                        m.stats.composition_cache_hits += 1;
+                        m.stats.composition_baked_hits +=
+                            u64::from(shape < self.program.cell_ownership.composition.shapes.len());
+                        shape
+                    } else if m.composition.training.is_some() {
+                        let Some(subst) = substitutions(
+                            &self.program.cell_ownership.composition.sources,
+                            &self.program.cell_ownership.programs,
+                            m.composition.shapes[c.shape].as_ref().unwrap(),
+                            &key.hop,
+                        ) else {
+                            continue;
+                        };
+                        let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
+                            program,
+                            &self.program.cell_ownership.programs[program],
+                            &subst,
+                        );
+                        let t = m.composition.training.as_mut().unwrap();
+                        let mut fragment = t.fragments[c.shape].clone();
+                        fragment.hops.push(key.hop.clone());
+                        t.fragments.push(fragment);
+                        let id = m.composition.shapes.len();
+                        m.composition.shapes.push(Some(Arc::new(code)));
+                        m.composition.transitions.insert(key, id);
+                        m.stats.composition_shape_builds += 1;
+                        m.stats.composition_materializations += 1;
+                        m.stats.composition_shape_steps += steps as u64;
+                        id
+                    } else {
+                        m.stats.composition_unbaked_fallbacks += 1;
+                        continue;
+                    };
+                    selected = Some((
+                        frame.component,
+                        shape,
+                        self.cells[&f.cell].started_epoch != self.epoch,
+                    ));
+                    break 'candidate;
+                }
             }
         }
         let (component, ordinal) = if let Some((component, shape, cross_stage)) = selected {

@@ -451,3 +451,69 @@ The next physical takeover still needs to eliminate source Cell records and
 storage, while keeping published FactRef identity and restoring delegated slots
 when a surviving source outlives its component. This shared-code change does not
 satisfy that remaining obligation.
+
+## Continue training from the installed Cell catalog
+
+Saved source-state analysis finds 2,385 retained source Cells, only two without
+explicit values. Most composed sources still own facts and bindings. Deleting
+those records just because a continuation succeeded would invalidate current
+reads. The current four-frame catalog also recorded 771 capacity cuts.
+`analyze_source_takeover.py` inventories this evidence without claiming that raw
+value equality authorizes static sharing or retirement.
+
+Training now accepts an explicit bounded `--max-frames 2..32` policy and writes
+it into the profile and selected catalog. Missing metadata retains the original
+four-frame policy. The loader rechecks each path against the declared limit;
+operator/condition coverage budgets remain unchanged and uncovered cases still
+fall back completely. No new proof is inferred from a larger limit.
+
+A first unseeded 16-frame training run found 1,592 candidates, compared with 646
+in the prior four-frame run. Repeated-use selection kept 256 fragments (267
+transitions), with at most nine frames. It was **rejected as a compression
+configuration** after actual execution:
+
+| Measure | Accepted four-frame catalog | New unseeded catalog |
+| --- | ---: | ---: |
+| Successful compositions | 1,066 | 1,008 |
+| Capacity cuts | 771 | 0 |
+| Live components | 1,392 | 1,425 |
+| Explicit source slots | 10,742 | 10,780 |
+| Graph bytes | 2,781,877 | 2,790,213 |
+| Charged Graph + added Program bytes | 3,803,192 | 3,826,784 |
+
+All 1,428 graph and ordered execution digests match the original; native semantic
+acceptance passes. Execution/takeover process peak increases from 124,867,975 to
+124,891,565 B; initialization-relative growth rises from 5,862,977 to 5,871,257 B.
+Removing capacity cuts alone is therefore a bad optimization objective. Results
+are in `longer-catalog-results.json` and `longer-catalog-comparison.json`; accepted
+`results.json` is deliberately unchanged. No timing claim is made.
+
+The prior training API rejected every already-baked catalog. The new explicit
+`--extend-catalog true` mode retains its checked shapes and transitions, executes
+known transitions first, and discovers uncovered continuations. Before exploring
+any unknown anchor, it searches the installed catalog across the eligible
+anchors, preserving production's preference for an existing implementation.
+Candidate fragments and checked source identities remain in the existing format;
+there is no second runtime fact graph. Existing fresh-training calls still reject
+a baked input, and training cannot lower the limit below an existing shape.
+
+```sh
+cargo run --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics -- profile-cell-ownership --program out/cell-structural-compression/baked-lean/program.json --extend-catalog true --max-frames 16 --output out/cell-structural-compression/profile-seeded-priority-16
+python3 benchmarks/cell-structural-compression/analyze_source_takeover.py out/cell-structural-compression/shared-code-trace.json out/cell-structural-compression/shared-code-peak.json out/cell-structural-compression/profile.json out/cell-structural-compression/profile-16/profile.json benchmarks/cell-structural-compression/source-takeover-results.json out/cell-structural-compression/profile-seeded-priority-16/profile.json
+```
+
+The seeded run starts with 617 shapes / 259 transitions, records 530 installed
+catalog hits, discovers 1,160 dynamic shapes and exports 1,559 candidate records.
+These are **training observations, not committed mutation counts or proven
+memory savings**. Exploratory composition changes later ownership contexts, so
+this mode does not reproduce every production catalog hit: a candidate catalog
+still needs separate execution admission. No seeded successor has been admitted
+as a new compressed configuration. A subsequent selector must charge retained
+state and shared code and justify intermediate-source retirement; maximizing
+history length or the number of candidate paths cannot replace that obligation.
+
+Validation: 29 ownership integration tests pass, including a six-Run chain
+that exceeds four frames, rejection of invalid limits, rejection of a catalog
+whose paths exceed its limit, and seeded discovery from a shorter installed
+catalog. All-feature runtime compilation passes. The new test verifies that
+seeded training both hits existing code and discovers longer checked paths.

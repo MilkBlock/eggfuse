@@ -873,3 +873,82 @@ fn baked_cells_rederive_the_same_plan_without_materialized_marker_json() {
     assert_eq!(a.snapshots,b.snapshots);
     assert_eq!(a.binding_audit,b.binding_audit);
 }
+
+#[test]
+fn bounded_longer_catalog_preserves_cross_run_execution() {
+    use eggfuse_cell_runtime::{checksum::artifact_digest, graph::cell_ownership::composition};
+    assert_eq!(composition::checked_frame_limit(None).unwrap(), 4);
+    for invalid in [json!(0), json!(1), json!(33), json!(-1), json!("16")] {
+        assert!(composition::checked_frame_limit(Some(&invalid)).is_err());
+    }
+    let src = r#"
+(datatype E (N i64) (A E) (B E) (C E) (D E) (F E) (G E))
+(ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset f) (ruleset g)
+(rule ((= x (N n))) ((A x)) :ruleset a)
+(rule ((= x (A y))) ((B x)) :ruleset b)
+(rule ((= x (B y))) ((C x)) :ruleset c)
+(rule ((= x (C y))) ((D x)) :ruleset d)
+(rule ((= x (D y))) ((F x)) :ruleset f)
+(rule ((= x (F y))) ((G x)) :ruleset g)
+(N 0)
+(run-schedule (seq (run a) (run b) (run c) (run d) (run f) (run g)))
+"#;
+    let core = eggfuse_bake::device_frontend::core("longer-owner", src).unwrap();
+    let raw = compiler::compile(core, &BTreeSet::new()).unwrap();
+    let p = Program::parse(raw.clone()).unwrap();
+    let mut graph = Graph::new_with_cell_ownership(p.clone()).unwrap();
+    graph.train_ownership_fragments_with_limit(8).unwrap();
+    let mut training = Executor::new(graph, false);
+    training.execute().unwrap();
+    let profile = training.graph.ownership_fragment_profile().unwrap();
+    assert_eq!(profile["max_frames"], 8);
+    assert!(profile["records"].as_array().unwrap().iter()
+        .any(|r|r["fragment"]["hops"].as_array().unwrap().len() >= 4));
+    let mut raw = raw;
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
+        "source":profile["source"], "max_frames":8,
+        "fragments":profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    let baked = Program::parse(raw.clone()).unwrap();
+    assert_eq!(baked.cell_ownership.composition.max_frames, 8);
+    let mut reference = Executor::new(Graph::new_with_repair_ports(p).unwrap(), false);
+    let mut actual = Executor::new(Graph::new_with_cell_ownership(baked).unwrap(), false);
+    for run in 1..=6 {
+        reference.execute_until(Some(run)).unwrap();
+        actual.execute_until(Some(run)).unwrap();
+        assert_eq!(reference.graph.export().unwrap(), actual.graph.export().unwrap());
+        assert_eq!(reference.steps.len(), actual.steps.len());
+        for (left, right) in reference.steps.iter().zip(&actual.steps) {
+            for key in ["ordinal", "ruleset", "path", "iterations", "epoch", "logical_matches", "executed_bindings", "changed"] {
+                assert_eq!(left[key], right[key], "{key}");
+            }
+        }
+    }
+    assert!(actual.graph.ownership_report()["inventory"]["largest_component_frames"].as_u64().unwrap() > 4);
+    raw["ownership_fragments"]["max_frames"] = json!(4);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    assert!(Program::parse(raw.clone()).is_err(), "a lower bound must reject deeper code");
+    raw["ownership_fragments"]["fragments"].as_array_mut().unwrap()
+        .retain(|f|f["hops"].as_array().unwrap().len() < 4);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    let prefix_catalog = Program::parse(raw).unwrap();
+    let seed_transitions = prefix_catalog.cell_ownership.composition.transitions.len();
+    assert!(seed_transitions > 0);
+    let mut graph = Graph::new_with_cell_ownership(prefix_catalog).unwrap();
+    assert!(graph.train_ownership_fragments().is_err(), "fresh training must stay explicit");
+    assert!(graph.continue_ownership_fragment_training(2).is_err());
+    graph.continue_ownership_fragment_training(8).unwrap();
+    let mut continued = Executor::new(graph, false);
+    continued.execute().unwrap();
+    assert_eq!(reference.graph.export().unwrap(), continued.graph.export().unwrap());
+    let profile = continued.graph.ownership_fragment_profile().unwrap();
+    assert_eq!(profile["seed_catalog"]["transitions"], seed_transitions);
+    assert!(profile["records"].as_array().unwrap().iter()
+        .any(|r|r["fragment"]["hops"].as_array().unwrap().len() >= 4));
+    let report = continued.graph.ownership_report();
+    assert!(report["stats"]["composition_baked_hits"].as_u64().unwrap() > 0);
+    assert!(report["stats"]["composition_shape_builds"].as_u64().unwrap() > 0);
+}

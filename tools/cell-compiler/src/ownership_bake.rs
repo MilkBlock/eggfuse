@@ -90,10 +90,10 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
 /// Explicit training command. Baking itself never executes the input workload.
 pub(crate) fn profile(args: Vec<String>) -> Result<()> {
     if args.iter().any(|a| a == "--help") {
-        println!("profile-cell-ownership --program FILE --output NEW_DIR");
+        println!("profile-cell-ownership --program FILE [--max-frames 2..32] [--extend-catalog true|false] --output NEW_DIR");
         return Ok(());
     }
-    let opts = super::options(args.into_iter(), &["--program", "--output"])?;
+    let opts = super::options(args.into_iter(), &["--program", "--output", "--max-frames", "--extend-catalog"])?;
     let out = Path::new(opts.get("--output").ok_or("--output required")?);
     if out.exists() {
         return Err("output already exists".into());
@@ -102,7 +102,14 @@ pub(crate) fn profile(args: Vec<String>) -> Result<()> {
         opts.get("--program").ok_or("--program required")?,
     ))?)?;
     let mut g = Graph::new_with_cell_ownership(p)?;
-    g.train_ownership_fragments()?;
+    let max_frames = opts.get("--max-frames").map(|s|s.parse::<usize>())
+        .transpose().map_err(|_|"--max-frames must be an integer")?
+        .unwrap_or(g.program.cell_ownership.composition.max_frames);
+    match opts.get("--extend-catalog").map(String::as_str) {
+        None | Some("false") => g.train_ownership_fragments_with_limit(max_frames)?,
+        Some("true") => g.continue_ownership_fragment_training(max_frames)?,
+        _ => return Err("--extend-catalog must be true or false".into()),
+    }
     let mut e = Executor::new(g, false);
     e.execute()?;
     let profile = e.graph.ownership_fragment_profile()?;

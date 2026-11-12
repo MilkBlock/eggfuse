@@ -1,0 +1,129 @@
+{
+  "scope": "actual standalone Cell runtime; offline evidence, no source retirement or memory saving claimed",
+  "source_records": 2385,
+  "empty_value_sources": 2,
+  "fact_free_sources": 211,
+  "source_records_inside_components": 2177,
+  "component_frame_and_source_record_counts": {
+    "1 addresses / 1 source records": 892,
+    "2 addresses / 1 source records": 18,
+    "2 addresses / 2 source records": 181,
+    "3 addresses / 1 source records": 6,
+    "3 addresses / 2 source records": 8,
+    "3 addresses / 3 source records": 112,
+    "4 addresses / 1 source records": 24,
+    "4 addresses / 2 source records": 27,
+    "4 addresses / 3 source records": 27,
+    "4 addresses / 4 source records": 97
+  },
+  "explicit_values_inside_components": {
+    "Eq": 6092,
+    "Int": 2538,
+    "Text": 48
+  },
+  "repeated_raw_values_inside_components": {
+    "Eq": 467,
+    "Int": 1061,
+    "Text": 3
+  },
+  "warning": "Raw value equality is not a static proof; overlaps do not measure reclaimable storage. Facts, readers and deleted-producer lifetimes remain authoritative.",
+  "existing_composition_requests": 1066,
+  "existing_capacity_cuts": 771,
+  "existing_unbaked_fallbacks": 1928,
+  "short_history": {
+    "limit": 4,
+    "candidates": 646,
+    "candidate_frame_lengths": {
+      "2": 247,
+      "3": 190,
+      "4": 209
+    },
+    "repeated_candidate_frame_lengths": {
+      "2": 156,
+      "3": 84,
+      "4": 62
+    }
+  },
+  "long_history": {
+    "limit": 16,
+    "candidates": 1592,
+    "candidate_frame_lengths": {
+      "2": 327,
+      "3": 113,
+      "4": 124,
+      "5": 122,
+      "6": 113,
+      "7": 103,
+      "8": 98,
+      "9": 94,
+      "10": 87,
+      "11": 80,
+      "12": 75,
+      "13": 70,
+      "14": 67,
+      "15": 60,
+      "16": 59
+    },
+    "repeated_candidate_frame_lengths": {
+      "2": 221,
+      "3": 46,
+      "4": 29,
+      "5": 17,
+      "6": 12,
+      "7": 8,
+      "8": 4,
+      "9": 3,
+      "10": 2,
+      "11": 1,
+      "12": 1,
+      "13": 1,
+      "14": 1,
+      "15": 1
+    }
+  },
+  "inputs_sha256": {
+    "shared-code-trace.json": "05612e37e7abe723f65681bb4fbbf361202aa8705d7065b15d6436d4350b8ede",
+    "shared-code-peak.json": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd"
+  },
+  "profile_sha256": {
+    "short": "f97eec62351c5ff3ef1e28b2c1a0896de76f9808fd5f45735349175d8bd8980a",
+    "long": "ebe43d4c04da94bb693129ef0e5cc0e4f20defa6d07dd643b147c6b119415feb",
+    "seeded": "5e434a3287dbf9b7056481b0a6e70e9fd6a1cd5461faf69b424c493cf07b5bbd"
+  },
+  "seeded_history": {
+    "limit": 16,
+    "candidates": 1559,
+    "candidate_frame_lengths": {
+      "2": 331,
+      "3": 110,
+      "4": 117,
+      "5": 122,
+      "6": 113,
+      "7": 103,
+      "8": 97,
+      "9": 92,
+      "10": 88,
+      "11": 78,
+      "12": 71,
+      "13": 65,
+      "14": 63,
+      "15": 56,
+      "16": 53
+    },
+    "repeated_candidate_frame_lengths": {
+      "2": 220,
+      "3": 49,
+      "4": 36,
+      "5": 21,
+      "6": 13,
+      "7": 11,
+      "8": 5,
+      "9": 3,
+      "10": 1
+    },
+    "seed_catalog": {
+      "shapes": 617,
+      "transitions": 259
+    }
+  }
+}
