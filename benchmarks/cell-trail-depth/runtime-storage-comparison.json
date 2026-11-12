@@ -1,0 +1,350 @@
+{
+  "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "runs": 1428,
+  "every_run_graph_and_ordered_audits_equal": true,
+  "baseline": {
+    "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
+    "excluded": "allocator padding/control bytes, Value-owned payloads, BTree nodes, sparse ID outlier map, auxiliary caches, ownership backends, executor storage",
+    "index_payload_estimate_bytes": 384800,
+    "reverse_index_header_payload": 21456,
+    "reverse_index_heap_payload": 75328,
+    "reverse_degrees": {
+      "1": 212,
+      "2": 168,
+      "3": 8,
+      "4": 10,
+      "5": 126,
+      "6": 41,
+      "7": 25,
+      "8": 10,
+      "9": 7,
+      "10": 9,
+      "11": 11,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 3,
+      "16": 3,
+      "18": 1,
+      "20": 1,
+      "21": 1,
+      "23": 1,
+      "25": 2,
+      "26": 1,
+      "28": 1,
+      "37": 1,
+      "44": 1,
+      "47": 1,
+      "49": 1,
+      "51": 1,
+      "66": 1,
+      "100": 1
+    },
+    "forward_index_payload": 102304,
+    "function_index_payload": 102384,
+    "constructor_index_header_payload": 83328,
+    "members_array_bytes": 83640,
+    "members_tree_entries": 0,
+    "union_find": {
+      "map_capacity_payload": 28672,
+      "directory_bytes": 1024,
+      "shared_base": false
+    },
+    "writer_bytes": 154136,
+    "writer_count": 490,
+    "accounting_note": "HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
+    "cell_records_bytes": 491520,
+    "cell_positions_bytes": 32768,
+    "id_outliers": 0,
+    "cell_slot_bytes": 473472,
+    "shared_slot_owners": 0,
+    "removal_entries": 0,
+    "fact_record_capacity_bytes": 292752,
+    "fact_record_live_bytes": 208440,
+    "decoded_row_bytes": 102384,
+    "decoded_row_owners": 1150,
+    "function_records_bytes": 163840,
+    "function_key_array_bytes": 75056,
+    "function_decoded_directory_bytes": 32768,
+    "cell_fact_arities": {
+      "0": 211,
+      "1": 1747,
+      "2": 225,
+      "3": 194,
+      "4": 6,
+      "7": 1,
+      "85": 1
+    },
+    "counted_bytes": 1902336
+  },
+  "compacted": {
+    "scope": "graph-reachable Cell/function record and array capacities, shared owners counted once; NOT total egraph heap",
+    "excluded": "allocator padding/control bytes, Value-owned payloads, BTree nodes, sparse ID outlier map, auxiliary caches, ownership backends, executor storage",
+    "index_payload_estimate_bytes": 384800,
+    "reverse_index_header_payload": 21456,
+    "reverse_index_heap_payload": 75328,
+    "reverse_degrees": {
+      "1": 212,
+      "2": 168,
+      "3": 8,
+      "4": 10,
+      "5": 126,
+      "6": 41,
+      "7": 25,
+      "8": 10,
+      "9": 7,
+      "10": 9,
+      "11": 11,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 3,
+      "16": 3,
+      "18": 1,
+      "20": 1,
+      "21": 1,
+      "23": 1,
+      "25": 2,
+      "26": 1,
+      "28": 1,
+      "37": 1,
+      "44": 1,
+      "47": 1,
+      "49": 1,
+      "51": 1,
+      "66": 1,
+      "100": 1
+    },
+    "forward_index_payload": 102304,
+    "function_index_payload": 102384,
+    "constructor_index_header_payload": 83328,
+    "members_array_bytes": 83640,
+    "members_tree_entries": 0,
+    "union_find": {
+      "map_capacity_payload": 28672,
+      "directory_bytes": 1024,
+      "shared_base": false
+    },
+    "writer_bytes": 143120,
+    "writer_count": 490,
+    "accounting_note": "HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
+    "cell_records_bytes": 286200,
+    "cell_positions_bytes": 29968,
+    "id_outliers": 0,
+    "cell_slot_bytes": 354120,
+    "shared_slot_owners": 0,
+    "removal_entries": 0,
+    "fact_record_capacity_bytes": 208440,
+    "fact_record_live_bytes": 208440,
+    "decoded_row_bytes": 102384,
+    "decoded_row_owners": 1150,
+    "function_records_bytes": 104000,
+    "function_key_array_bytes": 75056,
+    "function_decoded_directory_bytes": 20800,
+    "cell_fact_arities": {
+      "0": 211,
+      "1": 1747,
+      "2": 225,
+      "3": 194,
+      "4": 6,
+      "7": 1,
+      "85": 1
+    },
+    "counted_bytes": 1407728
+  },
+  "boundary_peak_before": 1902336,
+  "boundary_peak_after": 1407728,
+  "compaction_seconds": 0.03789854399999999,
+  "scope": "actual Cell runtime capacity reclamation; boundary peaks exclude within-Run peaks; not a speed benchmark or complete heap census",
+  "field_release_baseline": [
+    [
+      "cells",
+      1290512
+    ],
+    [
+      "functions",
+      364120
+    ],
+    [
+      "function_decoded",
+      135152
+    ],
+    [
+      "parents",
+      35848
+    ],
+    [
+      "writer_dir",
+      28912
+    ],
+    [
+      "local_unions",
+      0
+    ],
+    [
+      "ownership",
+      1013984
+    ],
+    [
+      "stable_ports",
+      390022
+    ],
+    [
+      "repair_ports",
+      3208
+    ],
+    [
+      "union_digest",
+      0
+    ],
+    [
+      "members",
+      83640
+    ],
+    [
+      "intern",
+      102408
+    ],
+    [
+      "function_keys",
+      140236
+    ],
+    [
+      "uses",
+      119468
+    ],
+    [
+      "dependencies",
+      116648
+    ],
+    [
+      "changes",
+      63212
+    ],
+    [
+      "anchors",
+      10247
+    ],
+    [
+      "dirty",
+      192
+    ],
+    [
+      "dirty_markers",
+      0
+    ],
+    [
+      "dirty_facts",
+      12744
+    ],
+    [
+      "parent_users",
+      8712
+    ],
+    [
+      "garbage",
+      56
+    ],
+    [
+      "receipt_forwards",
+      4232
+    ]
+  ],
+  "field_release_compacted": [
+    [
+      "cells",
+      878728
+    ],
+    [
+      "functions",
+      293264
+    ],
+    [
+      "function_decoded",
+      123184
+    ],
+    [
+      "parents",
+      35848
+    ],
+    [
+      "writer_dir",
+      28912
+    ],
+    [
+      "local_unions",
+      0
+    ],
+    [
+      "ownership",
+      1013984
+    ],
+    [
+      "stable_ports",
+      390022
+    ],
+    [
+      "repair_ports",
+      3208
+    ],
+    [
+      "union_digest",
+      0
+    ],
+    [
+      "members",
+      83640
+    ],
+    [
+      "intern",
+      102408
+    ],
+    [
+      "function_keys",
+      140236
+    ],
+    [
+      "uses",
+      119468
+    ],
+    [
+      "dependencies",
+      116648
+    ],
+    [
+      "changes",
+      63212
+    ],
+    [
+      "anchors",
+      10247
+    ],
+    [
+      "dirty",
+      192
+    ],
+    [
+      "dirty_markers",
+      0
+    ],
+    [
+      "dirty_facts",
+      12744
+    ],
+    [
+      "parent_users",
+      8712
+    ],
+    [
+      "garbage",
+      56
+    ],
+    [
+      "receipt_forwards",
+      4232
+    ]
+  ],
+  "graph_owned_heap_requested_before": 3979373,
+  "graph_owned_heap_requested_after": 3484765,
+  "heap_scope": "actual System allocator bytes released by Graph drop, excluding retained Programs and already-dropped Executor caches; field attribution charges shared allocations to last owner; not RSS/allocator padding"
+}
