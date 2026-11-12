@@ -1,4 +1,8 @@
-#![cfg(feature = "parallel-publication")]
+// These diagnostic modes deliberately retain per-entry source ownership.
+#![cfg(all(
+    feature = "parallel-publication",
+    not(any(feature = "structural-depth", feature = "cell-entry-reverse"))
+))]
 use eggfuse_cell_runtime::{compiler, executor::Executor, graph::Graph, program::Program};
 
 fn run(source: &str, workers: usize) -> Executor {
