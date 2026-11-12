@@ -26,7 +26,7 @@ pub fn start(limit:usize,p:&Program) {
             }
         }
         if sites==0 {return None;}
-        let dead=p.executions[rule].completed_dead_inputs.as_deref().unwrap_or(&[]);
+        let dead=p.executions[rule].completed_dead_slots.as_deref().unwrap_or(&[]);
         Some(Plan{rule,slots:r.inputs.iter().copied().filter(|s|dead.binary_search(s).is_err()).collect(),constructor_sites:sites,tables})
     }).collect();
     TRACE.with(|t|*t.borrow_mut()=Some(Trace{limit,run:0,dropped:0,unsupported_completions:0,plans,events:vec![],boundaries:vec![],boundary_dropped:0,results:HashMap::new()}));

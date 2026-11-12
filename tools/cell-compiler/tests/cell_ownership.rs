@@ -1219,3 +1219,29 @@ fn port_domains_replace_birth_hints_across_union_and_deletion() {
         }
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_scalar_chain_releases_operands_but_preserves_later_fact_reads() {
+    let p=program("(datatype E (N i64) (Out i64) (Seen i64))
+        (ruleset a) (ruleset retire) (ruleset b)
+        (rule ((= x (N n))) ((let t (+ n 1)) (let v (* t 2)) (Out v)) :ruleset a)
+        (rule ((= x (N n))) ((delete (N n))) :ruleset retire)
+        (rule ((Out v)) ((Seen v)) :ruleset b)
+        (N 3) (N 7) (run a 1) (run retire 1) (run b 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        for run in 1..=3 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}");
+            assert_eq!(reference.steps.len(),actual.steps.len());
+        }
+        assert!(actual.graph.stats.completed_dead_slots_elided>=2,
+            "completed scalar intermediates must not survive as execution scratch");
+        assert!(actual.graph.stats.completed_parent_detachments>0,
+            "a scalar operand needed only during execution must not pin the parent");
+    }
+}

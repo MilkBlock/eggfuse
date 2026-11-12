@@ -410,7 +410,7 @@ impl Executor {
         if !self.steps.is_empty() {return Err("configure parent takeover before execution".into());}
         if !self.graph.ownership_enabled() {return Err("parent takeover requires composed Cell symbols".into());}
         for rid in 0..self.graph.program.rules.len() {
-            self.graph.program.executions[rid].completed_dead_inputs=crate::cell::completion_lifetime::dead_inputs(&self.graph.program,rid);
+            self.graph.program.executions[rid].completed_dead_slots=crate::cell::completion_lifetime::dead_slots(&self.graph.program,rid);
             self.graph.program.executions[rid].parent_completion=crate::cell::completion_lifetime::parent_layout(&self.graph.program,rid);
         }
         Ok(())

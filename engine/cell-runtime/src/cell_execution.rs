@@ -52,11 +52,11 @@ pub(crate) struct Plan {
     #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
     #[serde(skip)]
     pub parent_completion: Option<Box<[usize]>>,
-    /// Matched inputs unused by completed operations, static aliases and
-    /// cross-stage producer projections. Only this small discard set is stored.
+    /// Execution slots not reachable from completed fact recipes or Entry
+    /// projections, including lazy-copy and actual-result alias dependencies.
     #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
     #[serde(skip)]
-    pub completed_dead_inputs: Option<Box<[usize]>>,
+    pub completed_dead_slots: Option<Box<[usize]>>,
     pub segments: Vec<Segment>,
     /// Source positions after the first boundary whose scalar operands are
     /// derived entirely from matched inputs. Outputs have unique SSA slots;
@@ -197,7 +197,7 @@ impl Plan {
         }
         Self { segments, input_ready,
             #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))] parent_completion: None,
-            #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))] completed_dead_inputs: None,
+            #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))] completed_dead_slots: None,
             #[cfg(feature = "sparse-cells")] constructor: None,
             #[cfg(feature = "sparse-cells")] births: None }
     }
@@ -210,7 +210,7 @@ impl Plan {
             { 0 }
         };
         constructor
-            + { #[cfg(all(feature="sparse-cells",feature="storage-metrics"))] {(self.parent_completion.as_ref().map_or(0,|p|p.len())+self.completed_dead_inputs.as_ref().map_or(0,|p|p.len()))*std::mem::size_of::<usize>()}
+            + { #[cfg(all(feature="sparse-cells",feature="storage-metrics"))] {(self.parent_completion.as_ref().map_or(0,|p|p.len())+self.completed_dead_slots.as_ref().map_or(0,|p|p.len()))*std::mem::size_of::<usize>()}
                 #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))] {0} }
             + self.input_ready.capacity() * std::mem::size_of::<usize>()
             + self.segments.capacity() * std::mem::size_of::<Segment>()

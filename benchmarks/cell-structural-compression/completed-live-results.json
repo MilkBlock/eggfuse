@@ -1,0 +1,87 @@
+{
+  "scope": "actual standalone Cell runtime; requested heap, not RSS or native egglog",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "source_storage": {
+    "explicit_cell_slots": [
+      8354,
+      7482
+    ],
+    "cell_slot_bytes": [
+      218592,
+      197640
+    ],
+    "writer_bytes": [
+      134360,
+      132488
+    ],
+    "parent_links": [
+      216,
+      216
+    ],
+    "completed_owner_frames": [
+      787,
+      787
+    ],
+    "cell_fact_arities": [
+      {
+        "0": 211,
+        "1": 1747,
+        "2": 225,
+        "3": 194,
+        "4": 6,
+        "7": 1,
+        "85": 1
+      },
+      {
+        "0": 211,
+        "1": 1747,
+        "2": 225,
+        "3": 194,
+        "4": 6,
+        "7": 1,
+        "85": 1
+      }
+    ]
+  },
+  "graph_work_changes": {
+    "completed_dead_slots_elided": [
+      4411,
+      5375
+    ],
+    "completed_dead_frames_compacted": [
+      2130,
+      2137
+    ]
+  },
+  "heap": {
+    "graph_owned_teardown_bytes": [
+      2682261,
+      2659437
+    ],
+    "retained_program_teardown_bytes": [
+      117310933,
+      117318509
+    ],
+    "execution_and_takeover_peak_bytes": [
+      125458209,
+      125443265
+    ],
+    "net_growth_over_setup_bytes": [
+      5634875,
+      5612363
+    ],
+    "max_takeover_extra_bytes": [
+      49576,
+      49576
+    ]
+  },
+  "net_graph_and_program_saved_bytes": 15248,
+  "limitations": [
+    "No decrease in facts, source frame count, RHS requests or maintenance work.",
+    "Cross-stage reads retain actual result aliases and lazy Copy dependencies.",
+    "Program discard layouts increase; they are charged against Graph savings.",
+    "Parent detachment is proven in a regression; workload parent links remain unchanged."
+  ]
+}

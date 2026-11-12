@@ -11,7 +11,7 @@ impl Graph {
         let Some(index)=self.writer_dir.get(cell) else {
             self.retire_completed_inputs(cell,rid);return;
         };
-        let Some(dead)=self.program.executions[rid].completed_dead_inputs.as_ref() else {return;};
+        let Some(dead)=self.program.executions[rid].completed_dead_slots.as_ref() else {return;};
         let Some(writer)=self.functions[index].writer.as_mut().filter(|w|w.completed) else {return;};
         let removed=retire_dead_values(&mut writer.values,dead);
         self.stats.completed_dead_slots_elided+=removed as u64;
@@ -23,7 +23,7 @@ impl Graph {
         if self.parent_users.get(&cell).copied().unwrap_or(0)==0
             && self.rhs_frame(cell).is_none_or(|c|c.facts.is_empty()) {return;}
         let (plan,_,frame)=self.execution_parts(rid,cell);
-        let Some(dead)=plan.completed_dead_inputs.as_ref() else {return;};
+        let Some(dead)=plan.completed_dead_slots.as_ref() else {return;};
         if !frame.completed {return;}
         let removed=retire_dead_values(&mut frame.values,dead);
         if removed>0 {
