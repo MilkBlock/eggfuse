@@ -1,0 +1,935 @@
+{
+  "scope": "offline analysis of actual standalone runtime and compiled Entries; not a takeover",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "counts": {
+    "cross_run_visible_boundaries": 1074,
+    "owner_not_in_completion_archive": 128,
+    "earlier_returned_owner_observed": 848,
+    "same_rule_owner": 553,
+    "exact_effect_entry_present": 15,
+    "exact_effect_entry_without_residual": 0,
+    "returned_fact_unavailable": 98
+  },
+  "unique_returned_facts": 436,
+  "routes": [
+    {
+      "producer": 122,
+      "effect": 1,
+      "consumer": 122,
+      "earlier_returned_owner_observed": 74,
+      "same_rule_owner": 74,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 518,
+      "effect": 1,
+      "consumer": 518,
+      "earlier_returned_owner_observed": 57,
+      "same_rule_owner": 57,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 424,
+      "effect": 1,
+      "consumer": 424,
+      "earlier_returned_owner_observed": 57,
+      "same_rule_owner": 57,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 538,
+      "effect": 1,
+      "consumer": 538,
+      "earlier_returned_owner_observed": 53,
+      "same_rule_owner": 53,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 58,
+      "effect": 0,
+      "consumer": 58,
+      "earlier_returned_owner_observed": 48,
+      "same_rule_owner": 48,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 340,
+      "effect": 3,
+      "consumer": 340,
+      "earlier_returned_owner_observed": 45,
+      "same_rule_owner": 45,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 540,
+      "effect": 1,
+      "consumer": 540,
+      "earlier_returned_owner_observed": 31,
+      "same_rule_owner": 31,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 522,
+      "effect": 1,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 26,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 123,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 25,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 340,
+      "effect": 2,
+      "consumer": 340,
+      "earlier_returned_owner_observed": 17,
+      "same_rule_owner": 17,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 344,
+      "effect": 4,
+      "consumer": 344,
+      "earlier_returned_owner_observed": 17,
+      "same_rule_owner": 17,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 518,
+      "effect": 1,
+      "consumer": 515,
+      "earlier_returned_owner_observed": 16,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 122,
+      "effect": 1,
+      "consumer": 116,
+      "earlier_returned_owner_observed": 16,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 119,
+      "effect": 1,
+      "consumer": 122,
+      "earlier_returned_owner_observed": 15,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 540,
+      "effect": 2,
+      "consumer": 540,
+      "earlier_returned_owner_observed": 15,
+      "same_rule_owner": 15,
+      "exact_effect_entry_present": 15,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 422,
+      "effect": 1,
+      "consumer": 424,
+      "earlier_returned_owner_observed": 13,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 119,
+      "effect": 1,
+      "consumer": 119,
+      "earlier_returned_owner_observed": 12,
+      "same_rule_owner": 12,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 513,
+      "effect": 1,
+      "consumer": 513,
+      "earlier_returned_owner_observed": 12,
+      "same_rule_owner": 12,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 513,
+      "effect": 1,
+      "consumer": 518,
+      "earlier_returned_owner_observed": 12,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 523,
+      "effect": 1,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 11,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 538,
+      "effect": 2,
+      "consumer": 538,
+      "earlier_returned_owner_observed": 11,
+      "same_rule_owner": 11,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 343,
+      "effect": 3,
+      "consumer": 343,
+      "earlier_returned_owner_observed": 11,
+      "same_rule_owner": 11,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 539,
+      "effect": 3,
+      "consumer": 539,
+      "earlier_returned_owner_observed": 10,
+      "same_rule_owner": 10,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 102,
+      "effect": 1,
+      "consumer": 103,
+      "earlier_returned_owner_observed": 9,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 124,
+      "effect": 1,
+      "consumer": 123,
+      "earlier_returned_owner_observed": 9,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 522,
+      "effect": 1,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 9,
+      "same_rule_owner": 9,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 344,
+      "effect": 2,
+      "consumer": 340,
+      "earlier_returned_owner_observed": 9,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 102,
+      "effect": 1,
+      "consumer": 102,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 8,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 123,
+      "effect": 1,
+      "consumer": 123,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 8,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 422,
+      "effect": 1,
+      "consumer": 422,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 8,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 425,
+      "effect": 1,
+      "consumer": 425,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 8,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 338,
+      "effect": 4,
+      "consumer": 338,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 8,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 424,
+      "effect": 1,
+      "consumer": 421,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 518,
+      "effect": 1,
+      "consumer": 486,
+      "earlier_returned_owner_observed": 8,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 114,
+      "effect": 1,
+      "consumer": 122,
+      "earlier_returned_owner_observed": 7,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 103,
+      "effect": 1,
+      "consumer": 103,
+      "earlier_returned_owner_observed": 7,
+      "same_rule_owner": 7,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 513,
+      "effect": 1,
+      "consumer": 486,
+      "earlier_returned_owner_observed": 7,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 513,
+      "effect": 1,
+      "consumer": 514,
+      "earlier_returned_owner_observed": 6,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 420,
+      "effect": 1,
+      "consumer": 424,
+      "earlier_returned_owner_observed": 6,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 343,
+      "effect": 2,
+      "consumer": 338,
+      "earlier_returned_owner_observed": 5,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 119,
+      "effect": 1,
+      "consumer": 120,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 121,
+      "effect": 1,
+      "consumer": 122,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 512,
+      "effect": 1,
+      "consumer": 518,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 428,
+      "effect": 1,
+      "consumer": 425,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 51,
+      "effect": 4,
+      "consumer": 51,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 4,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 104,
+      "effect": 1,
+      "consumer": 104,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 4,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 344,
+      "effect": 2,
+      "consumer": 344,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 4,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 340,
+      "effect": 3,
+      "consumer": 56,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 107,
+      "effect": 1,
+      "consumer": 104,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 103,
+      "effect": 1,
+      "consumer": 101,
+      "earlier_returned_owner_observed": 4,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 113,
+      "effect": 1,
+      "consumer": 123,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 544,
+      "effect": 3,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 430,
+      "effect": 1,
+      "consumer": 425,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 423,
+      "effect": 1,
+      "consumer": 424,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 127,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 51,
+      "effect": 3,
+      "consumer": 51,
+      "earlier_returned_owner_observed": 3,
+      "same_rule_owner": 3,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 514,
+      "effect": 1,
+      "consumer": 513,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 100,
+      "effect": 1,
+      "consumer": 103,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 120,
+      "effect": 1,
+      "consumer": 122,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 128,
+      "effect": 1,
+      "consumer": 123,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 113,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 524,
+      "effect": 1,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 124,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 2,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 340,
+      "effect": 2,
+      "consumer": 344,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 425,
+      "effect": 1,
+      "consumer": 428,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 346,
+      "effect": 4,
+      "consumer": 346,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 2,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 522,
+      "effect": 1,
+      "consumer": 486,
+      "earlier_returned_owner_observed": 2,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 548,
+      "effect": 1,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 548,
+      "effect": 1,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 523,
+      "effect": 1,
+      "consumer": 545,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 548,
+      "effect": 1,
+      "consumer": 521,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 538,
+      "effect": 2,
+      "consumer": 528,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 546,
+      "effect": 1,
+      "consumer": 56,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 120,
+      "effect": 1,
+      "consumer": 119,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 128,
+      "effect": 1,
+      "consumer": 127,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 105,
+      "effect": 1,
+      "consumer": 105,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 125,
+      "effect": 1,
+      "consumer": 125,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 128,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 129,
+      "effect": 1,
+      "consumer": 123,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 129,
+      "effect": 1,
+      "consumer": 124,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 521,
+      "effect": 1,
+      "consumer": 521,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 525,
+      "effect": 1,
+      "consumer": 522,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 544,
+      "effect": 3,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 525,
+      "effect": 1,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 524,
+      "effect": 1,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 429,
+      "effect": 1,
+      "consumer": 425,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 344,
+      "effect": 3,
+      "consumer": 340,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 338,
+      "effect": 2,
+      "consumer": 343,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 344,
+      "effect": 3,
+      "consumer": 344,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 346,
+      "effect": 2,
+      "consumer": 339,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 522,
+      "effect": 1,
+      "consumer": 524,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 523,
+      "effect": 1,
+      "consumer": 524,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 339,
+      "effect": 3,
+      "consumer": 339,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 51,
+      "effect": 2,
+      "consumer": 51,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 51,
+      "effect": 3,
+      "consumer": 54,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 123,
+      "effect": 1,
+      "consumer": 113,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 123,
+      "effect": 1,
+      "consumer": 127,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 124,
+      "effect": 1,
+      "consumer": 127,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 523,
+      "effect": 1,
+      "consumer": 523,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 428,
+      "effect": 1,
+      "consumer": 428,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 1,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    },
+    {
+      "producer": 514,
+      "effect": 1,
+      "consumer": 486,
+      "earlier_returned_owner_observed": 1,
+      "same_rule_owner": 0,
+      "exact_effect_entry_present": 0,
+      "exact_effect_entry_without_residual": 0
+    }
+  ],
+  "obligations": [
+    "Returned receipt owner is not necessarily the last rule that reused it.",
+    "These are post-operation returned receipts, not identities of the pre-operation checked donor.",
+    "An Entry from another effect of the same rule does not establish reachability for this result.",
+    "A route with residual query atoms is not a complete consumer match.",
+    "Neither a route nor an equal key establishes actual cursor ancestry or scheduled availability.",
+    "Trace scope omits non-pure and unrecorded owners; missing ownership is unknown, not impossible.",
+    "Repeated requests returning an existing fact do not imply duplicate stored facts.",
+    "Future takeover must use existing instance/component wiring, preserve residual enumeration and Run publication, and retire superseded state."
+  ]
+}
