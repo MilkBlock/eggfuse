@@ -26,6 +26,65 @@ struct Ready {
 impl Ready {fn is_empty(&self)->bool {self.owners.is_empty() && self.flying.is_none()}}
 
 impl Executor {
+    fn consume_cell_events(&mut self,completed:&mut Vec<Completed>,eligible:bool,pool:&rayon::ThreadPool,
+        mut consume:impl FnMut(&mut Self,std::vec::Drain<'_,Completed>,
+            Option<&mut crate::graph::cell_births::Registration>)->Result<()>)->Result<()> {
+        let mut diagnostic=crate::sync_diagnostics::Clock::new();
+        let Some(mut pending)=eligible.then(||self.graph.prepare_unit_registration(completed)).flatten() else {
+            #[cfg(feature="cell-sync-diagnostics")] let start=Instant::now();
+            let result=consume(self,completed.drain(..),None);
+            #[cfg(feature="cell-sync-diagnostics")] {
+                let stats=&mut self.graph.stats.sync_diagnostics;
+                stats.source_batches+=1;stats.source_adoption_ns+=start.elapsed().as_nanos() as u64;
+            }
+            return result;
+        };
+        let tasks=std::mem::take(&mut pending.tasks);
+        let unfinished=std::sync::atomic::AtomicUsize::new(tasks.len());
+        let inline=crate::sync_diagnostics::registry_inline();
+        let mut result=Ok(());
+        diagnostic.enter();
+        let events=crate::completion_events::fragments(tasks,(!inline).then_some(pool),|task,emit| {
+            task.run(&|event| {
+                // Registration has already finished before its final owner
+                // event is queued. Do not count a delayed task epilogue as
+                // overlap with unfinished registration work.
+                if event.completes_owner() {unfinished.fetch_sub(1,std::sync::atomic::Ordering::AcqRel);}
+                emit(event);
+            });
+        },|ready| {
+            for event in ready.drain(..) {pending.accept(&mut self.graph,completed,event);}
+            if result.is_ok() {
+                let count=pending.ready(completed);
+                if count!=0 {
+                    pending.advance(count);
+                    #[cfg(feature="cell-sync-diagnostics")] let start=Instant::now();
+                    result=consume(self,completed.drain(..count),Some(&mut pending.registration));
+                    self.graph.stats.unit_registry_ready_prefixes+=1;
+                    if result.is_ok() {self.graph.stats.unit_registry_accepted_cells+=count as u64;}
+                    if result.is_ok() && unfinished.load(std::sync::atomic::Ordering::Acquire)!=0 {
+                        self.graph.stats.unit_registry_early_cells+=count as u64;
+                    }
+                    #[cfg(feature="cell-sync-diagnostics")] {
+                        let elapsed=start.elapsed().as_nanos() as u64;
+                        let stats=&mut self.graph.stats.sync_diagnostics;
+                        stats.source_batches+=1;stats.source_adoption_ns+=elapsed;
+                        stats.registered_source_batches+=1;stats.registered_source_adoption_ns+=elapsed;
+                    }
+                }
+            }
+            // A source error must not discard late owner events: return every
+            // original directory before rolling back the unadopted suffix.
+        });
+        diagnostic.join();
+        self.graph.stats.unit_registry_event_bytes+=events.bytes;
+        self.graph.stats.unit_registry_event_wait_ns+=events.wait_ns;
+        self.graph.finish_unit_registration(pending.registration);
+        #[cfg(feature="cell-sync-diagnostics")]
+        self.graph.stats.sync_diagnostics.registration.record(diagnostic,None,!inline,pool.current_num_threads());
+        debug_assert!(result.is_err() || completed.is_empty(),"every ready Cell must be adopted");
+        result
+    }
     pub(super) fn batch_cell_rule(&self, rid: usize, rows: usize) -> bool {
         rows > 1
             && self.cell_execution.is_some()
@@ -120,33 +179,23 @@ impl Executor {
                 let eligible = completed.len() <= owners.len()
                     && completed.iter().zip(owners.as_slice()).all(|(done, owner)|
                         done.done.cell() == owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-                let mut registration=eligible.then(||self.graph.plan_unit_registration(completed,&pool)).flatten();
-                #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
-                #[cfg(feature="cell-sync-diagnostics")] let adoption = Instant::now();
-                let result = (|| {
-                    for done in completed.drain(..) {
+                self.consume_cell_events(completed,eligible,&pool,|host,completed,mut registration| {
+                    for done in completed {
                         loop {
                             let parked = owners.next().expect("one owner per completion");
                             if parked.execution.cell == done.done.cell() {
-                                self.adopt_cell_event(parked, Some(done),registration.as_mut())?;
-                                self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
+                                host.adopt_cell_event(parked, Some(done),registration.as_deref_mut())?;
+                                host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early +=
                                     u64::from(unfinished.load(std::sync::atomic::Ordering::Acquire)!=0);
                                 break;
                             }
                             // Already-complete Cells parked behind this source
                             // prefix carry no worker result, but keep effect order.
-                            self.adopt_cell_event(parked, None,None)?;
+                            host.adopt_cell_event(parked, None,None)?;
                         }
                     }
                     Ok(())
-                })();
-                #[cfg(feature="cell-sync-diagnostics")]
-                { let elapsed = adoption.elapsed().as_nanos() as u64;
-                  let stats = &mut self.graph.stats.sync_diagnostics;
-                  stats.source_batches += 1; stats.source_adoption_ns += elapsed;
-                  if registered { stats.registered_source_batches += 1; stats.registered_source_adoption_ns += elapsed; } }
-                if let Some(registration)=registration {self.graph.finish_unit_registration(registration);}
-                result
+                })
             };
             let clock = Instant::now();
             #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();

@@ -486,8 +486,9 @@ impl Graph {
     fn register_local_piece(&mut self,cell:u32,mut piece:Piece,
         publication:Option<constructor_registration::Publication>)->Result<Counts> {
         if let Some(publication)=publication {
-            self.publish_registered_births(publication,piece.rows.len());
-            piece.counts.committed_rows+=piece.rows.len() as u64;
+            let rows=self.publish_registered_births(publication);
+            debug_assert!(piece.rows.is_empty() || piece.rows.len()==rows);
+            piece.counts.committed_rows+=rows as u64;
         } else { for row in piece.rows {
                 self.activate_fields(FactRef{cell,op:row.operation as u32},row.table,row.fields,row.hash,false)?;
                 piece.counts.committed_rows+=1;

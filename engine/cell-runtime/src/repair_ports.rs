@@ -9,7 +9,7 @@ use super::*;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct Plan {
-    pub key_eq_columns: Vec<Option<Vec<usize>>>,
+    pub key_eq_columns: std::sync::Arc<[Option<Vec<usize>>]>,
 }
 impl Plan {
     pub fn derive(p: &Program) -> Self {

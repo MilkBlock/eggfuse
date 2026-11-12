@@ -8,11 +8,12 @@ use super::*;
 pub(crate) struct Publication {
     tables: smallvec::SmallVec<[(usize, u64, bool); 2]>,
 }
+#[derive(Clone,Copy)]
 pub(super) struct Group<'a> {
     pub cell: u32,
     pub first: usize,
     pub end: usize,
-    pub rows: &'a Rows,
+    pub rows: &'a [Born],
 }
 struct Installed {
     cell: u32,
@@ -22,23 +23,79 @@ struct Installed {
 }
 pub(super) struct Registration { installed: Vec<Installed>, next:usize }
 
-pub(super) struct Owner<'a> {
-    pub cells: &'a mut arena::Cells,
-    pub intern: &'a mut HashMap<u64, crate::tiny_set::TinySet<FactRef>>,
-    pub members: &'a mut [TableRows<u64>],
-    pub changes: &'a mut crate::change_batch::ChangeBatch,
-    pub uses: &'a mut HashMap<u64, UseSet>,
-    pub dependencies: &'a mut HashMap<Dependency, smallvec::SmallVec<[u64; 3]>>,
-    pub metrics: &'a mut maintenance::Metrics,
-    pub parents: &'a Parents,
-    pub columns: &'a [Option<Vec<usize>>],
-    pub epoch: u64,
+/// Transfer the existing directories, not a copy of the graph. No source Cell
+/// may advance until this owner has returned. Unit table owners are disjoint
+/// and may still be running when it returns.
+pub(super) struct Owned {
+    cells:arena::Cells,intern:HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
+    members:Vec<TableRows<u64>>,changes:crate::change_batch::ChangeBatch,
+    epoch:u64,input:std::sync::Arc<Input>,installed:Option<Registration>,
 }
-impl Owner<'_> {
-    pub fn install(self, groups: &[Group<'_>], inline: bool) -> Registration {
-        let Self { cells, intern, members, changes, uses, dependencies,
-            metrics, parents, columns, epoch } = self;
-        let rows = || groups.iter().map(|group| {
+pub(crate) struct Subscriptions {
+    uses:HashMap<u64,UseSet>,dependencies:HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    metrics:maintenance::Metrics,parents:Parents,columns:std::sync::Arc<[Option<Vec<usize>>]>,
+    input:std::sync::Arc<Input>,
+}
+struct Input {groups:Vec<OwnedGroup>,rows:Vec<Born>}
+struct OwnedGroup {cell:u32,first:usize,end:usize,rows:std::ops::Range<usize>}
+impl Input {
+    fn groups(&self)->impl Iterator<Item=Group<'_>>+Clone {
+        self.groups.iter().map(|g|Group {cell:g.cell,first:g.first,end:g.end,rows:&self.rows[g.rows.clone()]})
+    }
+}
+impl Owned {
+    pub fn take(graph:&mut Graph,done:&mut [Completed])->(Self,Subscriptions) {
+        let mut rows=Vec::with_capacity(done.iter().map(|d|d.done.piece.rows.len()).sum());
+        let groups=done.iter_mut().map(|d| {
+            let first=rows.len();rows.extend(d.done.piece.rows.drain(..));
+            OwnedGroup {cell:d.done.cell,first:graph.cells[&d.done.cell].completed_prefix,
+                end:d.done.piece.end,rows:first..rows.len()}
+        }).collect();
+        let input=std::sync::Arc::new(Input {groups,rows});
+        let subscriptions=Subscriptions {uses:std::mem::take(&mut graph.uses),
+            dependencies:std::mem::take(&mut graph.dependencies),metrics:std::mem::take(&mut graph.maintenance),
+            parents:std::mem::take(&mut graph.parents),columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
+        let rows=Self {cells:std::mem::take(&mut graph.cells),intern:std::mem::take(&mut graph.intern),
+            members:std::mem::take(&mut graph.members),
+            changes:std::mem::replace(&mut graph.changes,crate::change_batch::ChangeBatch::new(0)),
+            epoch:graph.epoch,input,installed:None};
+        (rows,subscriptions)
+    }
+    pub fn install(&mut self) {
+        self.installed=Some(RowOwner {cells:&mut self.cells,intern:&mut self.intern,members:&mut self.members,
+            changes:&mut self.changes,epoch:self.epoch}.install(self.input.groups()));
+    }
+    pub fn storage_bytes(&self)->usize {
+        // Two tasks share the moved row headers; no binding or fields are copied.
+        // Arc counters and both owner boxes are included once for this region.
+        std::mem::size_of::<Self>()+std::mem::size_of::<Subscriptions>()+std::mem::size_of::<Input>()
+            +2*std::mem::size_of::<usize>()+self.input.groups.capacity()*std::mem::size_of::<OwnedGroup>()
+            +self.input.rows.capacity()*std::mem::size_of::<Born>()
+            +self.installed.as_ref().map_or(0,Registration::storage_bytes)
+    }
+    pub fn restore(self,graph:&mut Graph)->Registration {
+        assert!(graph.cells.is_empty() && graph.members.is_empty(),"no source access before structure completion");
+        graph.cells=self.cells;graph.intern=self.intern;graph.members=self.members;graph.changes=self.changes;
+        self.installed.expect("completed constructor owner")
+    }
+}
+impl Subscriptions {
+    pub fn install(&mut self) {
+        subscribe_rows(&mut self.uses,&mut self.dependencies,&mut self.metrics,&self.parents,&self.columns,self.input.groups());
+    }
+    pub fn restore(self,graph:&mut Graph) {
+        assert!(graph.uses.is_empty() && graph.dependencies.is_empty());
+        graph.uses=self.uses;graph.dependencies=self.dependencies;graph.maintenance=self.metrics;graph.parents=self.parents;
+    }
+}
+struct RowOwner<'a> {
+    cells:&'a mut arena::Cells,intern:&'a mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
+    members:&'a mut [TableRows<u64>],changes:&'a mut crate::change_batch::ChangeBatch,epoch:u64,
+}
+impl RowOwner<'_> {
+    fn install<'a>(self,groups:impl Iterator<Item=Group<'a>>)->Registration {
+        let Self {cells,intern,members,changes,epoch}=self;
+        let installed = groups.map(|group| {
             let mut publication = Publication::default();
             let facts = &mut cells.get_mut(&group.cell).expect("public constructor prefix").facts;
             for row in group.rows {
@@ -58,20 +115,19 @@ impl Owner<'_> {
             }
             Installed {cell:group.cell,first:group.first,end:group.end,publication}
         }).collect();
-        let subscriptions = || {
-            for group in groups { for row in group.rows {
-                // The same typed footprint and sealed canonical fields used
-                // by Graph::subscribe. No union or mutable read intervenes.
-                let columns = columns[row.table].as_ref().expect("typed constructor footprint");
-                maintenance::subscribe_canonical_constructor(uses,dependencies,metrics,parents,
-                    Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,columns);
-            }}
-        };
-        let installed = if inline { let mut rows=rows;let mut subscriptions=subscriptions;
-            let result=rows();subscriptions();result
-        } else { rayon::join(rows,subscriptions).0 };
         Registration {installed,next:0}
     }
+}
+fn subscribe_rows<'a>(uses:&mut HashMap<u64,UseSet>,
+    dependencies:&mut HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    metrics:&mut maintenance::Metrics,parents:&Parents,columns:&[Option<Vec<usize>>],
+    groups:impl Iterator<Item=Group<'a>>) {
+    for group in groups {for row in group.rows {
+        // The same typed footprint and sealed canonical fields used by Graph.
+        let columns=columns[row.table].as_ref().expect("typed constructor footprint");
+        maintenance::subscribe_canonical_constructor(uses,dependencies,metrics,parents,
+            Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,columns);
+    }}
 }
 impl Registration {
     pub fn storage_bytes(&self) -> usize {
@@ -111,7 +167,8 @@ impl Registration {
     }
 }
 impl Graph {
-    pub(super) fn publish_registered_births(&mut self, publication: Publication, count: usize) {
+    pub(super) fn publish_registered_births(&mut self, publication: Publication) -> usize {
+        let count=publication.tables.iter().map(|(_,n,_)|*n as usize).sum::<usize>();
         self.stats.constructor_registry_fragments+=publication.tables.len() as u64;
         for (table,rows,activate) in publication.tables {
             if activate {self.changes.activate_prepared_table(table);}
@@ -121,6 +178,7 @@ impl Graph {
         self.stats.logical_facts_created+=count as u64;
         self.stats.constructor_registry_adopted+=count as u64;
         self.changed |= count!=0;
+        count
     }
 }
 
@@ -169,10 +227,11 @@ mod tests {
                 first:g.cells[&d.done.cell].completed_prefix,end:d.done.piece.end,rows:&d.done.piece.rows}).collect();
             let pointers:Vec<_>=groups.iter().flat_map(|group|group.rows.iter().map(move |r|
                 (FactRef {cell:group.cell,op:r.operation as u32},r.fields.as_ptr()))).collect();
-            let owner=Owner {cells:&mut g.cells,intern:&mut g.intern,members:&mut g.members,changes:&mut g.changes,
-                uses:&mut g.uses,dependencies:&mut g.dependencies,metrics:&mut g.maintenance,
-                parents:&g.parents,columns:&g.program.repair_ports.key_eq_columns,epoch:g.epoch};
-            let mut registration=pool.install(||owner.install(&groups,false));drop(groups);
+            let row_owner=RowOwner {cells:&mut g.cells,intern:&mut g.intern,members:&mut g.members,
+                changes:&mut g.changes,epoch:g.epoch};
+            let mut registration=pool.install(||rayon::join(||row_owner.install(groups.iter().copied()),
+                ||subscribe_rows(&mut g.uses,&mut g.dependencies,&mut g.maintenance,&g.parents,
+                    &g.program.repair_ports.key_eq_columns,groups.iter().copied())).0);drop(groups);
             for (f,pointer) in pointers {assert_eq!(g.cells[&f.cell].facts[&f.op].decoded.as_ref().unwrap().1.as_ptr(),pointer);}
             // Prepared rows do not count as source-applied mutations or open
             // a Run publication. Only source acceptance advances those counts.

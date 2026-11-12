@@ -48,6 +48,62 @@ pub(crate) fn followups<T: Send, R: Send, E>(tasks: Vec<T>, extra:usize, pool: O
     run: impl Fn(T) -> R + Sync, consume: impl FnMut(&mut Vec<R>, &mut Vec<T>) -> Result<(), E>,
 ) -> (Result<(), E>, Work) { run_events(tasks, extra, pool, run, consume, false) }
 
+/// A long-lived owner may release several completed fragments before returning
+/// its directory. The receiver drains every event, including after its own
+/// source error, so leased owners are never discarded by an early return.
+pub(crate) fn fragments<T:Send,R:Send>(tasks:Vec<T>,pool:Option<&rayon::ThreadPool>,
+    run:impl Fn(T,&(dyn Fn(R)+Sync))+Sync,mut consume:impl FnMut(&mut Vec<R>))->Work {
+    struct State<R> {ready:Vec<R>,remaining:usize,aborted:bool,bytes:u64}
+    struct Guard<'a,R> {state:&'a Mutex<State<R>>,wake:&'a Condvar,done:bool}
+    impl<R> Drop for Guard<'_,R> {
+        fn drop(&mut self) {
+            let mut state=self.state.lock().unwrap_or_else(|e|e.into_inner());
+            state.remaining-=1;state.aborted|=!self.done;self.wake.notify_one();
+        }
+    }
+    let mut work=Work::default();
+    // Use the same event semantics inline, without borrowing the source from
+    // a worker callback. This mode is a diagnostic, not the parallel runtime.
+    let Some(pool)=pool else {
+        for task in tasks {
+            let ready=Mutex::new(Vec::new());run(task,&|event|ready.lock().unwrap().push(event));
+            let mut ready=ready.into_inner().unwrap();work.bytes+=(ready.capacity()*std::mem::size_of::<R>()) as u64;
+            work.waves+=u64::from(!ready.is_empty());consume(&mut ready);
+        }
+        return work;
+    };
+    let state=Mutex::new(State {ready:Vec::new(),remaining:tasks.len(),aborted:false,bytes:0});
+    let wake=Condvar::new();let mut ready=Vec::new();
+    let send=|event| {
+            let mut state=state.lock().unwrap();let before=state.ready.capacity();state.ready.push(event);
+            state.bytes+=((state.ready.capacity()-before)*std::mem::size_of::<R>()) as u64;
+            wake.notify_one();
+        };
+    pool.in_place_scope_fifo(|scope| {
+        for task in tasks {
+            let (state,wake,run,send)=(&state,&wake,&run,&send);
+            scope.spawn_fifo(move |_| {
+                let mut guard=Guard {state,wake,done:false};run(task,send);guard.done=true;
+            });
+        }
+        loop {
+            let mut pending=state.lock().unwrap();
+            if pending.aborted {break;}
+            if pending.ready.is_empty() && pending.remaining!=0 {
+                let clock=Instant::now();pending=wake.wait_while(pending,|p|p.ready.is_empty() && p.remaining!=0 && !p.aborted).unwrap();
+                work.wait_ns+=clock.elapsed().as_nanos() as u64;
+            }
+            if pending.aborted || (pending.ready.is_empty() && pending.remaining==0) {break;}
+            std::mem::swap(&mut ready,&mut pending.ready);
+            work.early+=if pending.remaining!=0 {ready.len() as u64}else{0};drop(pending);
+            work.waves+=1;consume(&mut ready);ready.clear();
+        }
+    });
+    // Growth is counted where each vector grows, not again when it swaps hands.
+    let pending=state.into_inner().unwrap();work.bytes+=pending.bytes;
+    work
+}
+
 /// Infallible worker continuations transfer one mutable owner along the ready
 /// prefix. Producers only lock to publish/take original result owners; they do
 /// not wait for the active consumer's maintenance or for missing predecessors.
@@ -167,6 +223,19 @@ fn run_events<T: Send, R: Send, E>(mut tasks: Vec<T>, extra:usize, pool: Option<
 mod tests {
     use super::*;
     use std::{sync::mpsc, time::Duration};
+
+    #[test]
+    fn fragment_stream_handles_one_worker_empty_work_and_worker_panics() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
+        for count in [0,1,3] {
+            let mut values=Vec::new();
+            fragments((0..count).collect(),Some(&pool),|i,emit| {emit(2*i);emit(2*i+1);},|ready|values.append(ready));
+            assert_eq!(values,(0..2*count).collect::<Vec<_>>());
+        }
+        assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            fragments(vec![0,1],Some(&pool),|i,emit| {emit(i);assert_ne!(i,0,"failed owner");},|ready|ready.clear());
+        })).is_err());
+    }
 
     #[test]
     fn worker_owner_retires_a_prefix_while_a_later_job_is_still_running() {

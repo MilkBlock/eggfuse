@@ -76,34 +76,22 @@ impl Executor {
         let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
         let eligible=!wave.ready.is_empty() && wave.ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
             done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-        let mut registration=eligible.then(||self.graph.plan_unit_registration(&mut wave.ready,&pool)).flatten();
-        #[cfg(feature="cell-sync-diagnostics")] let registered=registration.is_some();
-        #[cfg(feature="cell-sync-diagnostics")] let adoption=Instant::now();
-        let result=(|| {
-            for done in wave.ready.drain(..) {
+        let result=self.consume_cell_events(&mut wave.ready,eligible,&pool,|host,completed,mut registration| {
+            for done in completed {
                 loop {
                     let parked=wave.owners.pop_front().expect("source owner for completed job");
                     if parked.execution.cell==done.done.cell() {
-                        self.adopt_cell_event(parked,Some(done),registration.as_mut())?;
-                        self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=
+                        host.adopt_cell_event(parked,Some(done),registration.as_deref_mut())?;
+                        host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=
                             u64::from(wave.producer.unfinished()!=0);
                         break;
                     }
-                    self.adopt_cell_event(parked,None,None)?;
+                    host.adopt_cell_event(parked,None,None)?;
                 }
             }
-            // Job identities occur in source order, ahead of the buffer still
-            // being admitted. No result consumers or reverse edges are added.
-            pending.drain(..count);
             Ok(())
-        })();
-        #[cfg(feature="cell-sync-diagnostics")]
-        if count!=0 {
-            let elapsed=adoption.elapsed().as_nanos() as u64;
-            let stats=&mut self.graph.stats.sync_diagnostics;stats.source_batches+=1;stats.source_adoption_ns+=elapsed;
-            if registered {stats.registered_source_batches+=1;stats.registered_source_adoption_ns+=elapsed;}
-        }
-        if let Some(registration)=registration {self.graph.finish_unit_registration(registration);}
+        });
+        if result.is_ok() {pending.drain(..count);}
         if result.is_ok() && !wave.producer.finished() {queue.flying=Some(wave);return Ok(());}
         // Completion of the producer also joins its peer readers. A source
         // error waits for those private readers but never adopts later rows.
