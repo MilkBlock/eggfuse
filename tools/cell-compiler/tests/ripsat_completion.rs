@@ -593,10 +593,25 @@ fn staged_lazy_union_contracts_share_renamed_routes_without_erasing_effects() {
     assert_eq!(a["class"],b["class"]);
     assert_ne!(a["class"],plain["class"]);
     let shape=&contracts["structures"][a["class"].as_u64().unwrap() as usize];
-    assert_eq!(shape["stages"][0]["terminal_unions"].as_array().unwrap().len(),1);
+    let expanded=eggfuse_cell_runtime::cell_completion::expand_stages(shape,
+        contracts["stage_structures"].as_array().unwrap()).unwrap();
+    assert_eq!(expanded["stages"][0]["terminal_unions"].as_array().unwrap().len(),1);
+    let mut invalid=contracts.clone();
+    invalid["structures"][a["class"].as_u64().unwrap() as usize]["stage_refs"][0]=json!(usize::MAX);
+    assert!(eggfuse_bake::native_analyze::register_cpu_completion_structures(&invalid).is_err());
     assert_eq!(shape["links"].as_array().unwrap().len(),1);
     eggfuse_bake::native_analyze::register_cpu_completion_structures(&contracts).unwrap();
     let compiled=eggfuse_cell_compiler::completion_bake::compile(p.clone()).unwrap();
+    let mut tampered=compiled.clone();
+    tampered["iterative_bake"]["completion"]["contracts"]["stage_structures"][0]["colors"][0]=json!("wrong-sort");
+    assert!(Program::parse(seal(tampered)).is_err(),"shared definitions remain authoritative proofs");
+    let mut legacy=compiled.clone();
+    let contracts=&mut legacy["iterative_bake"]["completion"]["contracts"];
+    let stages=contracts.as_object_mut().unwrap().remove("stage_structures").unwrap();
+    for structure in contracts["structures"].as_array_mut().unwrap() {
+        *structure=eggfuse_cell_runtime::cell_completion::expand_stages(structure,stages.as_array().unwrap()).unwrap();
+    }
+    Program::parse(seal(legacy)).expect("old expanded certificates retain exact validation");
     let (before,expected)=execute(p.artifact);let (after,actual)=execute(compiled);
     assert_eq!(expected,actual);assert_eq!(before.snapshots,after.snapshots);
     assert_eq!(before.binding_audit,after.binding_audit);

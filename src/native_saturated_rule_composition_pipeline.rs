@@ -758,6 +758,17 @@ pub(super) fn cpu_completion_egraph(contracts:&Json) -> Result<Json> {
     }
     let structures=contracts["structures"].as_array().ok_or("missing completion structures")?;
     let implementations=contracts["implementations"].as_array().ok_or("missing completion entries")?;
+    // Shared stage IDs are meaningful only inside this one immutable registry.
+    // Keep definitions once in the report, never expand them into every key.
+    let stages=contracts.get("stage_structures").and_then(Json::as_array);
+    for structure in structures {
+        if structure["normalization"]=="staged-lazy-union/v2" {
+            let stages=stages.ok_or("missing shared completion stages")?;
+            let refs=structure["stage_refs"].as_array().ok_or("missing stage references")?;
+            if refs.iter().any(|r|r.as_u64().and_then(|n|usize::try_from(n).ok())
+                .is_none_or(|id|id>=stages.len())) {return Err("invalid completion stage reference".into());}
+        }
+    }
     let mut registry=cell_egraph::Registry::new()?;
     for (id,implementation) in implementations.iter().enumerate() {
         let class=implementation["class"].as_u64().and_then(|n|usize::try_from(n).ok())
@@ -770,6 +781,7 @@ pub(super) fn cpu_completion_egraph(contracts:&Json) -> Result<Json> {
     let edges=registry.completion_edges(contracts["transitions"].as_array().ok_or("missing completion transitions")?)?;
     let mut report=registry.report();
     report["completion_transitions"]=edges;
+    report["shared_stage_scope"]=json!("completion contracts stage_structures; no duplicate definitions");
     report["scope"]=json!("exact finite constructor completion structures; source Runs remain authoritative");
     report["implementations"]=contracts["implementations"].clone();
     Ok(report)

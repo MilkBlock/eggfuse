@@ -310,6 +310,16 @@ impl Catalog {
         }
         if let Some(completion)=raw.get("completion") {
             let mut contracts = s.completion_contracts(p);
+            // Accept the previous expanded encoding only after reconstructing
+            // every definition from today's checked shared representation.
+            if completion["contracts"].get("stage_structures").is_none() {
+                let stages=contracts["stage_structures"].as_array().unwrap().clone();
+                for structure in contracts["structures"].as_array_mut().unwrap() {
+                    *structure=crate::cell_completion::expand_stages(structure,&stages)
+                        .ok_or("invalid shared completion stage")?;
+                }
+                contracts.as_object_mut().unwrap().remove("stage_structures");
+            }
             // Early v1 exports predate the compile-only transition census.
             // Executable switch and source/port proofs are still checked above.
             if completion["contracts"].get("transitions").is_none() {
@@ -413,8 +423,9 @@ impl Catalog {
             } else {json!({"ordered_source":unit.path,"output":join.output,"entry":self.units[join.right].path})};
             json!({"from":join.left,"to":target,"application":signature})
         }).collect::<Vec<_>>();
+        let stage_structures=crate::cell_completion::share_stages(&mut structures);
         json!({"schema":"eggfuse-constructor-completion-contracts/v1",
-            "recipe":p.artifact["recipe"]["sha256"],"structures":structures,"implementations":implementations,
+            "recipe":p.artifact["recipe"]["sha256"],"structures":structures,"stage_structures":stage_structures,"implementations":implementations,
             "transitions":transitions,
             "scope":"finite positive constructor closure; not whole-program saturation"})
     }

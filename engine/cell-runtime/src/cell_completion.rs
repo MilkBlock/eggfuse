@@ -283,6 +283,38 @@ pub(crate) fn staged_contract(p: &Program, path: &[(Option<usize>, Entry)]) -> O
         "links":links,"effects":"ordered-at-original-source-boundary"}))
 }
 
+/// Intern immutable stage definitions once per catalog. Ordered links remain
+/// with each composition; references are scoped to this exact stage table.
+pub fn share_stages(structures: &mut [Json]) -> Vec<Json> {
+    let mut stages=vec![];
+    let mut ids=BTreeMap::new();
+    for structure in structures {
+        if structure["normalization"]!="staged-lazy-union/v1" {continue;}
+        let definitions=structure.as_object_mut().unwrap().remove("stages").unwrap();
+        let references=definitions.as_array().unwrap().iter().map(|stage| {
+            let key=crate::checksum::canonical(stage,false);
+            let next=stages.len();
+            *ids.entry(key).or_insert_with(|| {stages.push(stage.clone());next})
+        }).collect::<Vec<_>>();
+        structure["normalization"]=json!("staged-lazy-union/v2");
+        structure["stage_refs"]=json!(references);
+    }
+    stages
+}
+
+/// Exact expansion for artifact comparison and offline compression audits.
+pub fn expand_stages(structure: &Json, stages: &[Json]) -> Option<Json> {
+    if structure["normalization"]!="staged-lazy-union/v2" {return Some(structure.clone());}
+    let refs=structure["stage_refs"].as_array()?;
+    let definitions=refs.iter().map(|r|stages.get(usize::try_from(r.as_u64()?).ok()?).cloned())
+        .collect::<Option<Vec<_>>>()?;
+    let mut expanded=structure.clone();
+    expanded.as_object_mut()?.remove("stage_refs");
+    expanded["normalization"]=json!("staged-lazy-union/v1");
+    expanded["stages"]=json!(definitions);
+    Some(expanded)
+}
+
 /// Offline trace analysis using the same structural proofs as Bake.
 pub fn describe_path(p: &Program, path: &[(Option<usize>, (usize, Option<usize>))]) -> Json {
     if let Some(n)=normalize(p,path) {

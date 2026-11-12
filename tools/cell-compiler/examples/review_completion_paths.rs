@@ -32,9 +32,36 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
         if kind!="opaque" {classes.insert(canonical(&result["structure"],false));}
         rows.push(json!({"path":path,"occurrences":candidate["occurrences"],"result":result}));
     }
+    let expanded=rows.iter().map(|r| if r["result"]["kind"]=="opaque" {
+        json!({"normalization":"opaque-source-contract","ordered_source":r["path"]})
+    } else {r["result"]["structure"].clone()}).collect::<Vec<_>>();
+    let mut shared=expanded.clone();
+    let stage_occurrences=shared.iter().map(|s|s["stages"].as_array().map_or(0,Vec::len)).sum::<usize>();
+    let stages=eggfuse_cell_runtime::cell_completion::share_stages(&mut shared);
+    for (before,after) in expanded.iter().zip(&shared) {
+        assert_eq!(Some(before.clone()),eggfuse_cell_runtime::cell_completion::expand_stages(after,&stages));
+    }
+    let entries=rows.iter().enumerate().map(|(id,r)|json!({"unit":id,"class":id,"source_path":r["path"]})).collect::<Vec<_>>();
+    let before=json!({"schema":"eggfuse-constructor-completion-contracts/v1",
+        "recipe":review["recipe_sha256"],"structures":expanded,"implementations":entries,"transitions":[]});
+    let mut after=before.clone();after["structures"]=json!(shared);after["stage_structures"]=json!(stages);
+    let old_registry=eggfuse_bake::native_analyze::register_cpu_completion_structures(&before)?;
+    let new_registry=eggfuse_bake::native_analyze::register_cpu_completion_structures(&after)?;
+    assert_eq!(old_registry["eclasses"],new_registry["eclasses"]);
+    assert_eq!(old_registry["units"],new_registry["units"]);
+    let bytes=|value:&Value|serde_json::to_vec(value).unwrap().len();
+    let compression=json!({"roundtrip_exact":true,"native_partition_unchanged":true,
+        "stage_occurrences":stage_occurrences,"unique_stages":stages.len(),
+        "contracts_bytes_before":bytes(&before),"contracts_bytes_after":bytes(&after),
+        "structure_bytes_before":bytes(&before["structures"]),
+        "structure_bytes_after_with_pool":bytes(&json!({"structures":after["structures"],"stage_structures":after["stage_structures"]})),
+        "descriptor_key_bytes_before":old_registry["descriptor_key_bytes"],
+        "descriptor_key_bytes_after":new_registry["descriptor_key_bytes"],
+        "stage_pool_bytes":bytes(&after["stage_structures"]),"eclasses":new_registry["eclasses"],
+        "scope":"compiler representation and native registry key payload; not runtime heap or speed"});
     let result=json!({"scope":"saved trace structural analysis, no workload execution or speed claim",
-        "counts":counts,"prior_set_rejection_counts":prior_counts,"supported_classes":classes.len(),"paths":rows});
+        "counts":counts,"prior_set_rejection_counts":prior_counts,"supported_classes":classes.len(),"compression":compression,"paths":rows});
     fs::write(&args[2],serde_json::to_vec_pretty(&result)?)?;
-    println!("{}",json!({"counts":counts,"prior_set_rejection_counts":prior_counts,"supported_classes":classes.len()}));
+    println!("{}",compression);
     Ok(())
 }

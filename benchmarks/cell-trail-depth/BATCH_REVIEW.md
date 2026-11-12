@@ -94,3 +94,42 @@ The previously uncompiled route regression is now fixed and validated. Focused
 negative coverage ensures pending constructor Set cannot make the requested
 value the key of a later constructor, even when no existing result is known
 locally. Full ripsat completion and query-receipt integration tests pass.
+
+## Proven representation compression: shared stage definitions
+
+The same 141-pattern batch contains 302 stage occurrences but only eight unique
+canonical stage definitions. Actual completion contracts now store those eight
+definitions once in `stage_structures`. Each staged structure keeps ordered
+`stage_refs`, links, and boundary effects. This is ordinary indexed sharing,
+not bit packing. The native registry retains the compact keys instead of
+expanding each stage into every descriptor. References are scoped to that
+registry's immutable contract table; reports refer to the authoritative table
+rather than duplicating it. Exact canonical strings establish stage equality.
+
+Measured by the production serializer and native registry, including all 43
+opaque paths and all implementation maps:
+
+| Payload | Before | After |
+|---|---:|---:|
+| Complete contracts | 203,547 B | 47,698 B |
+| Structure table, including shared stage pool | 191,906 B | 36,072 B |
+| Native registry descriptor key strings | 210,541 B | 50,590 B |
+| Shared stage pool alone (already included in contracts) | — | 4,082 B |
+
+Complete contracts shrink 76.6%, or 4.27x. Counting descriptor keys plus a
+separate stage pool still saves 74.0%. These are serialized bytes and key-string
+payload lengths, not allocator/RSS measurements. Stage payloads shrink from 302
+copies to eight definitions; semantic eclasses stay at 141. All expanded
+structures compare exactly, and all native unit-to-eclass assignments agree.
+This is large compile-time representation compression, not an inference speedup
+or a reduction in semantically distinct states. No runtime slot/union behavior
+is changed by this factoring.
+
+The analysis example now performs the exact round-trip and native partition
+checks, with the measured summary saved in `shared-stage-compression.json`.
+The batch analysis was validated against an isolated checkout of 2f4425b3 plus
+these changes while another worker modified the runtime. Integration tests also
+passed in the main worktree once its missing source file appeared. Corrupted
+stage references and corrupted stage definitions are rejected. Old expanded
+contracts are compared against exact expansion of the newly computed proofs;
+this compatibility does not waive any structural check.

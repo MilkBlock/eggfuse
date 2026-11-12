@@ -1,0 +1,17 @@
+{
+  "sample": "all 141 paths from saved sum-bits round-0 trace",
+  "source_recipe": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+  "roundtrip_exact": true,
+  "native_partition_unchanged": true,
+  "stage_occurrences": 302,
+  "unique_stages": 8,
+  "contracts_bytes_before": 203547,
+  "contracts_bytes_after": 47698,
+  "structure_bytes_before": 191906,
+  "structure_bytes_after_with_pool": 36072,
+  "descriptor_key_bytes_before": 210541,
+  "descriptor_key_bytes_after": 50590,
+  "stage_pool_bytes": 4082,
+  "eclasses": 141,
+  "scope": "compiler representation and native registry key payload; not runtime heap or speed"
+}
