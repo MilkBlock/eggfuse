@@ -70,6 +70,10 @@ impl Builder {
                 .all(|(&a,&b)| self.eq.root(a) == self.eq.root(b)));
         if let Some(f) = previous {
             self.eq.equal(*f.columns.last().unwrap(), *columns.last().unwrap());
+            // Ports retain every stage's addressing. The constructor relation
+            // is already established: keep its existing representative rather
+            // than replaying duplicate facts through each later closure.
+            return;
         } else if assumption {
             self.assumptions.push(Fact { table, columns: columns.clone() });
         }
@@ -242,6 +246,33 @@ pub(crate) fn extension(before:&Normalized,after:&Normalized) -> Option<Json> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn repeated_completed_relations_share_one_fact_but_keep_stage_ports() {
+        let mut compact = Builder::default();
+        let mut expanded = Builder::default();
+        for b in [&mut compact, &mut expanded] { b.fresh("E".into()); }
+        for stage in 0..64 {
+            for b in [&mut compact, &mut expanded] {
+                let output = b.fresh("E".into());
+                b.relation(0,vec![0,output],stage==0);
+                b.ports.push((stage,Site::Effect(0),vec![0,output]));
+                b.close();
+            }
+            // Reproduce the old retained duplicate, after its equality proof.
+            if stage != 0 {
+                expanded.facts.push(Fact {table:0,columns:vec![0,stage+1]});
+            }
+        }
+        assert_eq!(compact.facts.len(),1);
+        assert_eq!(expanded.facts.len(),64);
+        assert_eq!(compact.assumptions.len(),1);
+        let a=compact.finish().unwrap(); let b=expanded.finish().unwrap();
+        assert_eq!(a.structure,b.structure);
+        assert_eq!(a.ports,b.ports);
+        assert_eq!(a.symbols,b.symbols);
+        assert_eq!(a.ports.len(),64);
+    }
+
     use super::*;
     fn shape(reverse:bool, crossed:bool, assumed:bool) -> Normalized {
         let mut b=Builder::default();

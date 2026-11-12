@@ -48,3 +48,21 @@ cannot establish any of those rates or the causal effect of winner ordering.
 
 This change adds only an offline analysis and saved text results. It neither
 changes runtime winner selection nor claims reduced runtime work or speedup.
+
+## Eager constructor-fact compression
+
+The observed inverse-looking/repeated routes motivated checking when duplicate
+constructor facts disappear. `Builder::relation` already proved equal inputs
+and unified outputs, but still appended the duplicate fact until final canonical
+projection. It now retains the original fact immediately after that proof.
+All per-stage ports and symbolic aliases remain available for completion
+projection and inclusion proofs; ordered terminal unions are unchanged.
+
+The focused 64-stage repeated-constructor control retains 1 fact instead of 64
+through subsequent closures. It produces exactly the old normalized structure,
+all 64 port mappings and the same symbol map. This measures the real compiler
+normalizer on a synthetic repeated relation, not a sum-bits runtime speedup.
+Final normalized graph size does not change: the old final projection already
+deduplicated it. No executable state or runtime history has yet been merged by
+this change. Intermediate nontrivial unions remain a structural-normalization
+boundary; the 196-edge workload route is not claimed to be fully absorbed.
