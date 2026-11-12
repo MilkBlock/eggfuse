@@ -1832,6 +1832,8 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let mut effects = effects;
         self.stats.completed_steps += 1;
+        #[cfg(feature = "iterative-bake")]
+        let trace_start=self.training.execution_trace_start();
         // A selected query continuation is not an applied rule. Record its
         // bounded provenance only after every source RHS operation succeeded.
         // Queued unions still retain their original publication boundary.
@@ -1842,6 +1844,8 @@ impl Programs {
         }
         self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
+            #[cfg(feature = "iterative-bake")]
+            self.training.trace_execution(trace_start,g,_cell);
             self.finish_effects(effects);
             return Ok(());
         }
@@ -1970,6 +1974,8 @@ impl Programs {
         let publish = false;
         self.finish_effects_to(effects, publish.then_some(slot));
         self.stats.captured_contexts += 1;
+        #[cfg(feature = "iterative-bake")]
+        self.training.trace_execution(trace_start,g,_cell);
         if let Some(clock) = clock { self.stats.capture_seconds += clock.elapsed().as_secs_f64(); }
         Ok(())
     }

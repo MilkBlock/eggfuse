@@ -993,6 +993,21 @@ struct TraceEvent {
     producer_run: usize,
     witness: Option<crate::graph::Dependency>,
     truncated_parent: bool,
+    execution: Option<ExecutionObservation>,
+}
+#[derive(Clone, Serialize)]
+struct ExecutionObservation {
+    cell: u32,
+    registered: bool,
+    frame: Option<FrameObservation>,
+}
+#[derive(Clone, Serialize)]
+struct FrameObservation {
+    template: usize,
+    parent: Option<crate::graph::FactRef>,
+    logical_slots: usize,
+    retained_facts: usize,
+    non_hidden_facts: usize,
 }
 #[derive(Default)]
 pub struct Training {
@@ -1010,6 +1025,24 @@ pub struct Training {
     pub(crate) seal_moves: u64,
 }
 impl Training {
+    pub(crate) fn execution_trace_start(&self) -> Option<usize> {
+        self.collect_pairs.then_some(self.trace.len())
+    }
+    /// Observational snapshot after RHS, before source-Run repair. A reserved
+    /// execution id can have no registered/transient frame; writer-owned storage
+    /// is outside this snapshot. Neither fact count nor logical
+    /// slot count denotes new mutations or unique allocated bytes.
+    pub(crate) fn trace_execution(&mut self, start:Option<usize>, g:&crate::graph::Graph, cell:u32) {
+        let Some(start)=start else {return};
+        if self.trace.len()==start {return;} // disabled route or archive overflow
+        assert_eq!(self.trace.len(),start+1,"one completed event per source apply");
+        let registered=g.cells.contains_key(&cell);
+        let frame=g.rhs_frame(cell).map(|c|FrameObservation {
+            template:c.template,parent:c.parent,logical_slots:c.values.len(),
+            retained_facts:c.facts.len(),non_hidden_facts:c.facts.values().filter(|f|!f.hidden).count(),
+        });
+        self.trace[start].execution=Some(ExecutionObservation {cell,registered,frame});
+    }
     /// Count completed paths on actual cursor ancestry, never by joining
     /// marginal pair frequencies. Compile-time ranking only; missing history
     /// cannot establish support and does not invalidate direct pair evidence.
@@ -1100,7 +1133,7 @@ impl Training {
                 let index = self.trace.len();
                 self.trace.push(TraceEvent { parent, unit:id, entry,
                     output, run:self.run, producer_run:parent_run, witness:discovery.witness,
-                    truncated_parent:parent.is_none() && parent_run!=0 });
+                    truncated_parent:parent.is_none() && parent_run!=0, execution:None });
                 Some(index)
             } else { self.trace_dropped += 1; None };
             let window = Rc::make_mut(discovery.samples.get_or_insert_with(Default::default));
@@ -1240,7 +1273,7 @@ mod tests {
     fn bridge_support_requires_one_completed_cross_stage_ancestry() {
         let event = |rule, parent, run| TraceEvent {
             parent, unit:Some(rule), entry:(rule,Some(0)), output:0, run,
-            producer_run:0, witness:None, truncated_parent:false,
+            producer_run:0, witness:None, truncated_parent:false, execution:None,
         };
         let mut training = Training::default();
         // A->B and a separate B->C cannot establish A->B->C.
@@ -1325,6 +1358,31 @@ mod tests {
         assert!(ordinary.discovery.as_ref().unwrap().samples.is_none());
         assert_eq!(training.trace_dropped,1);
     }
+    #[test]
+    #[cfg(feature="sparse-cells")]
+    fn execution_observation_distinguishes_transient_and_registered_frames() {
+        let mut g=crate::query::test_projection_graph();
+        g.program.templates.push(Template {name:"trace".into(),sorts:vec![json!({"kind":"i64"})],
+            defs:Default::default(),parent_columns:Default::default(),ops:vec![].into()});
+        let mut values=crate::slots::Slots::default();values.insert(0,crate::value::Value::Int(7));
+        let cell=g.begin_transient(0,values,None).unwrap();
+        let c=Catalog::default();
+        let mut state=c.root_state(99,1,true).unwrap();
+        let mut training=Training {collect_pairs:true,run:1,..Default::default()};
+        let start=training.execution_trace_start();
+        training.trace_root(&c,&mut state,99);
+        training.trace_execution(start,&g,cell);
+        let observation=training.trace[0].execution.as_ref().unwrap();
+        assert!(!observation.registered);
+        assert_eq!(observation.frame.as_ref().unwrap().logical_slots,1);
+        g.promote_active();
+        training.trace_execution(start,&g,cell);
+        assert!(training.trace[0].execution.as_ref().unwrap().registered);
+        g.release_empty(cell);
+        training.trace_execution(start,&g,cell);
+        assert!(training.trace[0].execution.as_ref().unwrap().frame.is_none());
+    }
+
     #[test]
     fn diagnostic_event_budget_does_not_change_candidate_limits() {
         let c=Catalog::default();

@@ -200,6 +200,7 @@ fn history_selected_closure_executes_without_replaying_constructor_rhs() {
     training.collect_iterative_pairs();training.execute().unwrap();
     let history=training.iterative_training().completion_history(&training.graph.program);
     assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
+    assert!(history["events"].as_array().unwrap().iter().all(|e|e["execution"]["cell"].as_u64().is_some()), "successful history events retain their actual execution identity");
     let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
     assert!(compiled["iterative_bake"]["closure_selection"]["redundant_terminal_transfers"].as_array().unwrap().iter().any(|r| r["source_path"][0][1][1].is_null()), "uncompiled roots with no additional reuse must not spend the budget");
     assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
@@ -241,6 +242,7 @@ fn history_admits_a_missing_root_only_with_new_result_reuse() {
     training.collect_iterative_pairs();training.execute().unwrap();
     let history=training.iterative_training().completion_history(&training.graph.program);
     assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
+    assert!(history["events"].as_array().unwrap().iter().all(|e|e["execution"]["cell"].as_u64().is_some()), "successful history events retain their actual execution identity");
     let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
     assert!(compiled["iterative_bake"]["closure_selection"]["selected"].as_array().unwrap().iter().any(|r| r["added_roots"].as_u64()==Some(1)), "{}", compiled["iterative_bake"]["closure_selection"]);
     assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
