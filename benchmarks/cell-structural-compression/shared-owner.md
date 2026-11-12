@@ -141,3 +141,62 @@ workers, and requires inherited frames to reach physical shared storage.
 CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_closure_work -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/original-baseline.json out/cell-structural-compression/shared-owner-inherited.json --natural --shared-owners --parent-takeover
 CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo run --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_parent_storage -- out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/shared-owner-inherited.json out/cell-structural-compression/shared-owner-inherited-storage.json --shared-owners --parent-takeover
 ```
+
+## Whole Graph heap and transfer peak (requested allocation bytes)
+
+The partial census above omitted ownership and other Graph state. The existing
+allocation observer now has matched `record-control` / `inherited-owners` modes,
+records the transfer's within-Run peak, and emits destructive field attribution.
+Both modes run the same 1,428 source Runs and match the previously audited final
+state. This memory observer does not replace the earlier per-Run semantic audit.
+
+| Requested allocation measure | Control | Inherited owners |
+| --- | ---: | ---: |
+| Graph-owned heap released after Executor teardown | 3,068,093 | 2,964,621 |
+| Compiled Program heap released afterwards | 117,207,936 | 117,208,416 |
+| Maximum additional heap during a transfer boundary | 0 | 49,552 |
+
+Thus the **Graph-owned heap reduction is 3.37%**, not 6.71%. Both are valid only
+with their stated denominators. Compiled Program memory is separate, and gains
+480 bytes for completed-parent layouts. Process peaks include that Program,
+Executor caches and the fixed diagnostic buffer; they are not Graph-only peaks.
+The complete summary is `inherited-owner-heap.json`. Its unlisted Graph teardown
+residual is explicitly charged: 55,820 bytes in both lanes. Shared allocations
+are charged to their last owner; these are requested bytes, not RSS.
+
+Largest remaining Graph fields after takeover:
+
+| Field | Bytes |
+| --- | ---: |
+| Cell storage | 971,208 |
+| Functions | 354,408 |
+| Ownership components | 279,488 |
+| Stable ports | 224,118 |
+| Ownership boundary signal index | 214,568 |
+| Ownership frame directory/records | 163,584 |
+| Legacy uses index | 119,468 |
+| Constructor intern index | 102,408 |
+| Ownership barrier observation history | 98,304 |
+
+The measured 103,472-byte saving is entirely in Cell storage. The ownership
+components, frame directory and boundary index have not been replaced by the
+completed owner backend. This changes the next priority: increasing source-frame
+transfer counts alone still leaves the parallel ownership representation intact.
+A structural completion state must share the authoritative component addressing
+and template wiring, and remove its redundant representation, while retaining
+external query domains, fact visibility, stable port identities and worker read
+epochs. The boundary index is not all removable just because a component spans
+Runs: external consumers and future union-enabled matches remain live.
+
+The 98,304-byte barrier vector is observer history, not a semantic egraph fact.
+Removing it must not be credited as saturated-Cell compression. This distinction
+prevents hiding instrumentation reclamation inside the requested structural gain.
+
+Reproduce the two heap lanes with `runtime_storage_peak` and then compare:
+
+```sh
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo build --locked -p eggfuse-cell-compiler --features sparse-cells,iterative-bake,storage-metrics --example runtime_storage_peak
+target/debug/examples/runtime_storage_peak out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/heap-detail-record-control.json record-control
+target/debug/examples/runtime_storage_peak out/cell-structural-compression/closure-existing/program.json out/cell-structural-compression/heap-detail-inherited-owners.json inherited-owners
+python3 benchmarks/cell-structural-compression/analyze_owner_heap.py out/cell-structural-compression/heap-detail-record-control.json out/cell-structural-compression/heap-detail-inherited-owners.json out/cell-structural-compression/shared-owner-inherited-storage.json benchmarks/cell-structural-compression/inherited-owner-heap.json
+```

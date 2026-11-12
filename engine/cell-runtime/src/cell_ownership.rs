@@ -1034,3 +1034,33 @@ impl Graph {
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
 #[path="shared_owner_transfer.rs"]
 mod shared_owner_transfer;
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+impl Runtime {
+    /// Destructive observer only. Preserve last-owner accounting, and never
+    /// allocate the output buffer while measuring a field release.
+    pub(super) fn release_runtime_storage(self, live: &impl Fn()->usize, rows: &mut Vec<(&'static str,usize)>) {
+        assert!(rows.capacity()-rows.len()>=17);
+        macro_rules! release {
+            ($name:literal,$value:expr)=>{{
+                let before=live();drop($value);rows.push(($name,before-live()));
+            }};
+        }
+        release!("ownership.components",self.composition.components);
+        release!("ownership.live_facts",self.composition.live_facts);
+        release!("ownership.frames",self.composition.frames);
+        release!("ownership.shapes",self.composition.shapes);
+        release!("ownership.transitions",self.composition.transitions);
+        release!("ownership.training",self.composition.training);
+        release!("ownership.catalog_trace",self.composition.catalog_trace);
+        release!("ownership.entry",self.composition.entry);
+        release!("ownership.heap",self.composition.heap);
+        release!("ownership.columns",self.composition.columns);
+        release!("ownership.boundaries",self.boundaries);
+        release!("ownership.port_completion",self.port_completion);
+        release!("ownership.pending",self.pending);
+        release!("ownership.tables",self.tables);
+        release!("ownership.stats",self.stats);
+        release!("ownership.barriers",self.barriers);
+    }
+}

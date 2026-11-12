@@ -162,7 +162,7 @@ impl Graph {
         live_bytes: impl Fn() -> usize,
         rows: &mut Vec<(&'static str, usize)>,
     ) -> Program {
-        assert!(rows.capacity() - rows.len() >= 23);
+        assert!(rows.capacity() - rows.len() >= 40);
         macro_rules! release {
             ($field:ident) => {{
                 let before = live_bytes();
@@ -175,7 +175,9 @@ impl Graph {
         release!(parents);
         release!(writer_dir);
         release!(local_unions);
-        release!(ownership);
+        if let Some(ownership)=self.ownership {
+            ownership.release_runtime_storage(&live_bytes,rows);
+        }
         release!(stable_ports);
         release!(repair_ports);
         release!(union_digest);

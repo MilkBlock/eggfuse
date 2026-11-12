@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len() != 3 || !matches!(args[2].as_str(), "baseline" | "takeover") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover".into());
+    if args.len() != 3 || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -67,6 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let source_loaded = LIVE.load(Relaxed);
     reset_peak();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
+    if args[2] == "inherited-owners" {e.use_completed_parent_takeover()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
     loop {
@@ -85,6 +86,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         reset_peak();
         if args[2] == "takeover" {
             e.graph.compact_retained_capacity()?;
+        }
+        if args[2] == "inherited-owners" {e.graph.transfer_completed_owners()?;}
+        if matches!(args[2].as_str(), "record-control" | "inherited-owners") {
+            e.graph.compact_source_record_capacity();
         }
         let takeover_peak = PEAK.load(Relaxed);
         let after = LIVE.load(Relaxed);
@@ -143,6 +148,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         program_bytes,
         program_fields.iter().map(|(_, bytes)| bytes).sum::<usize>()
     );
+    let attributed= released.iter().map(|(_,bytes)|bytes).sum::<usize>();
+    assert!(attributed<=graph_bytes);
+    result["graph_unlisted_teardown_bytes"] = json!(graph_bytes-attributed);
+    result["graph_fields"] = json!(released);
     result["program_fields"] = json!(program_fields);
     result["graph_owned_teardown_bytes"] = json!(graph_bytes);
     result["retained_program_teardown_bytes"] = json!(program_bytes);
