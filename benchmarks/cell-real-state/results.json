@@ -1,0 +1,2911 @@
+{
+  "scope": "standalone finite constructor/equality teacher; no production takeover",
+  "experiment_status": "complete",
+  "semantic_takeover_accepted": false,
+  "states": 806,
+  "observables": 155,
+  "varying_observables": 38,
+  "training_covariance_rank": 35,
+  "train_states": 496,
+  "validation_states": 154,
+  "test_states": 156,
+  "training_transitions": 6224,
+  "event_types": 17,
+  "observed_native_runtime": false,
+  "gpu_execution": false,
+  "results": [
+    {
+      "dimension": 16,
+      "encoding_test": {
+        "exact_state_rate": 0.7564102564102564,
+        "wrong_bits": 54,
+        "rows": 156,
+        "variable_bit_error": 0.009109311740890687,
+        "false_positive": 6,
+        "false_negative": 48
+      },
+      "models": [
+        {
+          "kind": "linear",
+          "hidden": 0,
+          "parameters": 800,
+          "validation": {
+            "exact_state_rate": 0.17074102368220015,
+            "wrong_bits": 12367,
+            "rows": 2618,
+            "variable_bit_error": 0.12431144706686502,
+            "false_positive": 668,
+            "false_negative": 11699,
+            "latent_rmse": 0.7314690351486206,
+            "changed": {
+              "exact_state_rate": 0.0648793565683646,
+              "wrong_bits": 11553,
+              "rows": 1865,
+              "variable_bit_error": 0.1630167913080288,
+              "false_positive": 99,
+              "false_negative": 11454
+            },
+            "no_op": {
+              "exact_state_rate": 0.43293492695883135,
+              "wrong_bits": 814,
+              "rows": 753,
+              "variable_bit_error": 0.028447613056545747,
+              "false_positive": 569,
+              "false_negative": 245
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.18665158371040724,
+            "wrong_bits": 13624,
+            "rows": 2652,
+            "variable_bit_error": 0.13519091847265222,
+            "false_positive": 577,
+            "false_negative": 13047,
+            "latent_rmse": 0.7494868636131287,
+            "changed": {
+              "exact_state_rate": 0.06928645294725956,
+              "wrong_bits": 12848,
+              "rows": 1934,
+              "variable_bit_error": 0.1748217493060469,
+              "false_positive": 96,
+              "false_negative": 12752
+            },
+            "no_op": {
+              "exact_state_rate": 0.5027855153203342,
+              "wrong_bits": 776,
+              "rows": 718,
+              "variable_bit_error": 0.028441577481307725,
+              "false_positive": 481,
+              "false_negative": 295
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.1971153846153846,
+                "wrong_bits": 3142,
+                "rows": 624,
+                "variable_bit_error": 0.1325067476383266,
+                "false_positive": 145,
+                "false_negative": 2997
+              },
+              {
+                "exact_state_rate": 0.030448717948717948,
+                "wrong_bits": 5821,
+                "rows": 624,
+                "variable_bit_error": 0.2454875168690958,
+                "false_positive": 921,
+                "false_negative": 4900
+              },
+              {
+                "exact_state_rate": 0.016025641025641024,
+                "wrong_bits": 7706,
+                "rows": 624,
+                "variable_bit_error": 0.3249831309041835,
+                "false_positive": 2233,
+                "false_negative": 5473
+              },
+              {
+                "exact_state_rate": 0.13141025641025642,
+                "wrong_bits": 7786,
+                "rows": 624,
+                "variable_bit_error": 0.3283569500674764,
+                "false_positive": 3435,
+                "false_negative": 4351
+              },
+              {
+                "exact_state_rate": 0.2708333333333333,
+                "wrong_bits": 6143,
+                "rows": 624,
+                "variable_bit_error": 0.25906713900134953,
+                "false_positive": 3027,
+                "false_negative": 3116
+              },
+              {
+                "exact_state_rate": 0.21634615384615385,
+                "wrong_bits": 5477,
+                "rows": 624,
+                "variable_bit_error": 0.23098009446693657,
+                "false_positive": 2892,
+                "false_negative": 2585
+              },
+              {
+                "exact_state_rate": 0.296474358974359,
+                "wrong_bits": 3379,
+                "rows": 624,
+                "variable_bit_error": 0.14250168690958165,
+                "false_positive": 1905,
+                "false_negative": 1474
+              },
+              {
+                "exact_state_rate": 0.3798076923076923,
+                "wrong_bits": 2144,
+                "rows": 624,
+                "variable_bit_error": 0.09041835357624832,
+                "false_positive": 1367,
+                "false_negative": 777
+              },
+              {
+                "exact_state_rate": 0.42948717948717946,
+                "wrong_bits": 1893,
+                "rows": 624,
+                "variable_bit_error": 0.079832995951417,
+                "false_positive": 1417,
+                "false_negative": 476
+              },
+              {
+                "exact_state_rate": 0.5192307692307693,
+                "wrong_bits": 1209,
+                "rows": 624,
+                "variable_bit_error": 0.05098684210526316,
+                "false_positive": 878,
+                "false_negative": 331
+              },
+              {
+                "exact_state_rate": 0.5512820512820513,
+                "wrong_bits": 800,
+                "rows": 624,
+                "variable_bit_error": 0.033738191632928474,
+                "false_positive": 513,
+                "false_negative": 287
+              },
+              {
+                "exact_state_rate": 0.5528846153846154,
+                "wrong_bits": 660,
+                "rows": 624,
+                "variable_bit_error": 0.02783400809716599,
+                "false_positive": 382,
+                "false_negative": 278
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 55.28125,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "bilinear",
+          "hidden": 0,
+          "parameters": 2976,
+          "validation": {
+            "exact_state_rate": 0.2708174178762414,
+            "wrong_bits": 9728,
+            "rows": 2618,
+            "variable_bit_error": 0.09778456837280367,
+            "false_positive": 994,
+            "false_negative": 8734,
+            "latent_rmse": 0.6411633491516113,
+            "changed": {
+              "exact_state_rate": 0.17372654155495978,
+              "wrong_bits": 8918,
+              "rows": 1865,
+              "variable_bit_error": 0.12583603781571892,
+              "false_positive": 469,
+              "false_negative": 8449
+            },
+            "no_op": {
+              "exact_state_rate": 0.5112881806108898,
+              "wrong_bits": 810,
+              "rows": 753,
+              "variable_bit_error": 0.02830782134619417,
+              "false_positive": 525,
+              "false_negative": 285
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.28808446455505277,
+            "wrong_bits": 10965,
+            "rows": 2652,
+            "variable_bit_error": 0.10880566801619433,
+            "false_positive": 885,
+            "false_negative": 10080,
+            "latent_rmse": 0.6598498821258545,
+            "changed": {
+              "exact_state_rate": 0.17735263702171664,
+              "wrong_bits": 10247,
+              "rows": 1934,
+              "variable_bit_error": 0.13943014205627824,
+              "false_positive": 518,
+              "false_negative": 9729
+            },
+            "no_op": {
+              "exact_state_rate": 0.5863509749303621,
+              "wrong_bits": 718,
+              "rows": 718,
+              "variable_bit_error": 0.02631578947368421,
+              "false_positive": 367,
+              "false_negative": 351
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.2948717948717949,
+                "wrong_bits": 2489,
+                "rows": 624,
+                "variable_bit_error": 0.10496794871794872,
+                "false_positive": 195,
+                "false_negative": 2294
+              },
+              {
+                "exact_state_rate": 0.09455128205128205,
+                "wrong_bits": 4287,
+                "rows": 624,
+                "variable_bit_error": 0.18079453441295545,
+                "false_positive": 1042,
+                "false_negative": 3245
+              },
+              {
+                "exact_state_rate": 0.060897435897435896,
+                "wrong_bits": 5440,
+                "rows": 624,
+                "variable_bit_error": 0.22941970310391363,
+                "false_positive": 1481,
+                "false_negative": 3959
+              },
+              {
+                "exact_state_rate": 0.1778846153846154,
+                "wrong_bits": 5327,
+                "rows": 624,
+                "variable_bit_error": 0.22465418353576247,
+                "false_positive": 2712,
+                "false_negative": 2615
+              },
+              {
+                "exact_state_rate": 0.4166666666666667,
+                "wrong_bits": 4166,
+                "rows": 624,
+                "variable_bit_error": 0.17569163292847503,
+                "false_positive": 2915,
+                "false_negative": 1251
+              },
+              {
+                "exact_state_rate": 0.49198717948717946,
+                "wrong_bits": 3786,
+                "rows": 624,
+                "variable_bit_error": 0.159665991902834,
+                "false_positive": 2788,
+                "false_negative": 998
+              },
+              {
+                "exact_state_rate": 0.717948717948718,
+                "wrong_bits": 2312,
+                "rows": 624,
+                "variable_bit_error": 0.0975033738191633,
+                "false_positive": 1984,
+                "false_negative": 328
+              },
+              {
+                "exact_state_rate": 0.844551282051282,
+                "wrong_bits": 1493,
+                "rows": 624,
+                "variable_bit_error": 0.06296390013495276,
+                "false_positive": 1379,
+                "false_negative": 114
+              },
+              {
+                "exact_state_rate": 0.8589743589743589,
+                "wrong_bits": 1464,
+                "rows": 624,
+                "variable_bit_error": 0.06174089068825911,
+                "false_positive": 1420,
+                "false_negative": 44
+              },
+              {
+                "exact_state_rate": 0.9022435897435898,
+                "wrong_bits": 916,
+                "rows": 624,
+                "variable_bit_error": 0.0386302294197031,
+                "false_positive": 889,
+                "false_negative": 27
+              },
+              {
+                "exact_state_rate": 0.8846153846153846,
+                "wrong_bits": 558,
+                "rows": 624,
+                "variable_bit_error": 0.02353238866396761,
+                "false_positive": 516,
+                "false_negative": 42
+              },
+              {
+                "exact_state_rate": 0.8605769230769231,
+                "wrong_bits": 447,
+                "rows": 624,
+                "variable_bit_error": 0.018851214574898786,
+                "false_positive": 382,
+                "false_negative": 65
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 63.75,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 256,
+          "parameters": 13344,
+          "validation": {
+            "exact_state_rate": 0.1573720397249809,
+            "wrong_bits": 12133,
+            "rows": 2618,
+            "variable_bit_error": 0.1219593100398054,
+            "false_positive": 2110,
+            "false_negative": 10023,
+            "latent_rmse": 0.7183347344398499,
+            "changed": {
+              "exact_state_rate": 0.06970509383378017,
+              "wrong_bits": 10375,
+              "rows": 1865,
+              "variable_bit_error": 0.14639480739381966,
+              "false_positive": 709,
+              "false_negative": 9666
+            },
+            "no_op": {
+              "exact_state_rate": 0.3745019920318725,
+              "wrong_bits": 1758,
+              "rows": 753,
+              "variable_bit_error": 0.06143845669951772,
+              "false_positive": 1401,
+              "false_negative": 357
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.16289592760180996,
+            "wrong_bits": 13316,
+            "rows": 2652,
+            "variable_bit_error": 0.13213463523061048,
+            "false_positive": 2052,
+            "false_negative": 11264,
+            "latent_rmse": 0.7349947690963745,
+            "changed": {
+              "exact_state_rate": 0.07394002068252327,
+              "wrong_bits": 11643,
+              "rows": 1934,
+              "variable_bit_error": 0.15842540684700376,
+              "false_positive": 717,
+              "false_negative": 10926
+            },
+            "no_op": {
+              "exact_state_rate": 0.4025069637883008,
+              "wrong_bits": 1673,
+              "rows": 718,
+              "variable_bit_error": 0.06131798856472658,
+              "false_positive": 1335,
+              "false_negative": 338
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.15544871794871795,
+                "wrong_bits": 3039,
+                "rows": 624,
+                "variable_bit_error": 0.12816295546558704,
+                "false_positive": 429,
+                "false_negative": 2610
+              },
+              {
+                "exact_state_rate": 0.02403846153846154,
+                "wrong_bits": 5786,
+                "rows": 624,
+                "variable_bit_error": 0.2440114709851552,
+                "false_positive": 1322,
+                "false_negative": 4464
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 8455,
+                "rows": 624,
+                "variable_bit_error": 0.35657051282051283,
+                "false_positive": 1823,
+                "false_negative": 6632
+              },
+              {
+                "exact_state_rate": 0.035256410256410256,
+                "wrong_bits": 9040,
+                "rows": 624,
+                "variable_bit_error": 0.38124156545209176,
+                "false_positive": 1931,
+                "false_negative": 7109
+              },
+              {
+                "exact_state_rate": 0.06891025641025642,
+                "wrong_bits": 8891,
+                "rows": 624,
+                "variable_bit_error": 0.37495782726045884,
+                "false_positive": 1623,
+                "false_negative": 7268
+              },
+              {
+                "exact_state_rate": 0.07692307692307693,
+                "wrong_bits": 9816,
+                "rows": 624,
+                "variable_bit_error": 0.4139676113360324,
+                "false_positive": 1448,
+                "false_negative": 8368
+              },
+              {
+                "exact_state_rate": 0.08653846153846154,
+                "wrong_bits": 9190,
+                "rows": 624,
+                "variable_bit_error": 0.38756747638326583,
+                "false_positive": 958,
+                "false_negative": 8232
+              },
+              {
+                "exact_state_rate": 0.10897435897435898,
+                "wrong_bits": 8545,
+                "rows": 624,
+                "variable_bit_error": 0.3603660593792173,
+                "false_positive": 763,
+                "false_negative": 7782
+              },
+              {
+                "exact_state_rate": 0.09935897435897435,
+                "wrong_bits": 8294,
+                "rows": 624,
+                "variable_bit_error": 0.34978070175438597,
+                "false_positive": 818,
+                "false_negative": 7476
+              },
+              {
+                "exact_state_rate": 0.08814102564102565,
+                "wrong_bits": 8347,
+                "rows": 624,
+                "variable_bit_error": 0.3520158569500675,
+                "false_positive": 549,
+                "false_negative": 7798
+              },
+              {
+                "exact_state_rate": 0.08974358974358974,
+                "wrong_bits": 8913,
+                "rows": 624,
+                "variable_bit_error": 0.37588562753036436,
+                "false_positive": 304,
+                "false_negative": 8609
+              },
+              {
+                "exact_state_rate": 0.07051282051282051,
+                "wrong_bits": 9939,
+                "rows": 624,
+                "variable_bit_error": 0.41915485829959515,
+                "false_positive": 184,
+                "false_negative": 9755
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 800.5,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 768,
+          "parameters": 38432,
+          "validation": {
+            "exact_state_rate": 0.2001527883880825,
+            "wrong_bits": 11553,
+            "rows": 2618,
+            "variable_bit_error": 0.11612922681034137,
+            "false_positive": 2604,
+            "false_negative": 8949,
+            "latent_rmse": 0.7172853946685791,
+            "changed": {
+              "exact_state_rate": 0.1383378016085791,
+              "wrong_bits": 9380,
+              "rows": 1865,
+              "variable_bit_error": 0.1323550162268943,
+              "false_positive": 1265,
+              "false_negative": 8115
+            },
+            "no_op": {
+              "exact_state_rate": 0.35325365205843295,
+              "wrong_bits": 2173,
+              "rows": 753,
+              "variable_bit_error": 0.07594184664849374,
+              "false_positive": 1339,
+              "false_negative": 834
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.2107843137254902,
+            "wrong_bits": 12068,
+            "rows": 2652,
+            "variable_bit_error": 0.11975073430181789,
+            "false_positive": 2733,
+            "false_negative": 9335,
+            "latent_rmse": 0.723330557346344,
+            "changed": {
+              "exact_state_rate": 0.14632885211995864,
+              "wrong_bits": 10256,
+              "rows": 1934,
+              "variable_bit_error": 0.13955260436510097,
+              "false_positive": 1396,
+              "false_negative": 8860
+            },
+            "no_op": {
+              "exact_state_rate": 0.38440111420612816,
+              "wrong_bits": 1812,
+              "rows": 718,
+              "variable_bit_error": 0.06641254947954846,
+              "false_positive": 1337,
+              "false_negative": 475
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.20993589743589744,
+                "wrong_bits": 2836,
+                "rows": 624,
+                "variable_bit_error": 0.11960188933873145,
+                "false_positive": 639,
+                "false_negative": 2197
+              },
+              {
+                "exact_state_rate": 0.03685897435897436,
+                "wrong_bits": 5947,
+                "rows": 624,
+                "variable_bit_error": 0.25080128205128205,
+                "false_positive": 1909,
+                "false_negative": 4038
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 8781,
+                "rows": 624,
+                "variable_bit_error": 0.3703188259109312,
+                "false_positive": 2419,
+                "false_negative": 6362
+              },
+              {
+                "exact_state_rate": 0.01282051282051282,
+                "wrong_bits": 9987,
+                "rows": 624,
+                "variable_bit_error": 0.4211791497975709,
+                "false_positive": 2613,
+                "false_negative": 7374
+              },
+              {
+                "exact_state_rate": 0.008012820512820512,
+                "wrong_bits": 10712,
+                "rows": 624,
+                "variable_bit_error": 0.4517543859649123,
+                "false_positive": 2146,
+                "false_negative": 8566
+              },
+              {
+                "exact_state_rate": 0.004807692307692308,
+                "wrong_bits": 12149,
+                "rows": 624,
+                "variable_bit_error": 0.5123566126855601,
+                "false_positive": 1764,
+                "false_negative": 10385
+              },
+              {
+                "exact_state_rate": 0.0016025641025641025,
+                "wrong_bits": 13166,
+                "rows": 624,
+                "variable_bit_error": 0.5552462887989204,
+                "false_positive": 1055,
+                "false_negative": 12111
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 13498,
+                "rows": 624,
+                "variable_bit_error": 0.5692476383265856,
+                "false_positive": 670,
+                "false_negative": 12828
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 13081,
+                "rows": 624,
+                "variable_bit_error": 0.5516616059379217,
+                "false_positive": 666,
+                "false_negative": 12415
+              },
+              {
+                "exact_state_rate": 0.0016025641025641025,
+                "wrong_bits": 12229,
+                "rows": 624,
+                "variable_bit_error": 0.5157304318488529,
+                "false_positive": 462,
+                "false_negative": 11767
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 11110,
+                "rows": 624,
+                "variable_bit_error": 0.4685391363022942,
+                "false_positive": 246,
+                "false_negative": 10864
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 10196,
+                "rows": 624,
+                "variable_bit_error": 0.4299932523616734,
+                "false_positive": 197,
+                "false_negative": 9999
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 1826.0,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "switched-linear",
+          "hidden": 0,
+          "parameters": 4896,
+          "validation": {
+            "exact_state_rate": 0.3777692895339954,
+            "wrong_bits": 6886,
+            "rows": 2618,
+            "variable_bit_error": 0.0692171605484299,
+            "false_positive": 777,
+            "false_negative": 6109,
+            "latent_rmse": 0.5395395159721375,
+            "changed": {
+              "exact_state_rate": 0.31528150134048255,
+              "wrong_bits": 6195,
+              "rows": 1865,
+              "variable_bit_error": 0.08741357414985185,
+              "false_positive": 434,
+              "false_negative": 5761
+            },
+            "no_op": {
+              "exact_state_rate": 0.5325365205843293,
+              "wrong_bits": 691,
+              "rows": 753,
+              "variable_bit_error": 0.02414901796323478,
+              "false_positive": 343,
+              "false_negative": 348
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.385369532428356,
+            "wrong_bits": 7892,
+            "rows": 2652,
+            "variable_bit_error": 0.07831229657855045,
+            "false_positive": 669,
+            "false_negative": 7223,
+            "latent_rmse": 0.5531259775161743,
+            "changed": {
+              "exact_state_rate": 0.3216132368148914,
+              "wrong_bits": 7250,
+              "rows": 1934,
+              "variable_bit_error": 0.09865019321830948,
+              "false_positive": 420,
+              "false_negative": 6830
+            },
+            "no_op": {
+              "exact_state_rate": 0.5571030640668524,
+              "wrong_bits": 642,
+              "rows": 718,
+              "variable_bit_error": 0.023530274153349948,
+              "false_positive": 249,
+              "false_negative": 393
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.3766025641025641,
+                "wrong_bits": 1785,
+                "rows": 624,
+                "variable_bit_error": 0.07527834008097166,
+                "false_positive": 130,
+                "false_negative": 1655
+              },
+              {
+                "exact_state_rate": 0.1778846153846154,
+                "wrong_bits": 3046,
+                "rows": 624,
+                "variable_bit_error": 0.12845816464237517,
+                "false_positive": 821,
+                "false_negative": 2225
+              },
+              {
+                "exact_state_rate": 0.14743589743589744,
+                "wrong_bits": 3556,
+                "rows": 624,
+                "variable_bit_error": 0.14996626180836709,
+                "false_positive": 804,
+                "false_negative": 2752
+              },
+              {
+                "exact_state_rate": 0.28685897435897434,
+                "wrong_bits": 3626,
+                "rows": 624,
+                "variable_bit_error": 0.1529183535762483,
+                "false_positive": 1934,
+                "false_negative": 1692
+              },
+              {
+                "exact_state_rate": 0.5032051282051282,
+                "wrong_bits": 2984,
+                "rows": 624,
+                "variable_bit_error": 0.1258434547908232,
+                "false_positive": 2200,
+                "false_negative": 784
+              },
+              {
+                "exact_state_rate": 0.5560897435897436,
+                "wrong_bits": 2661,
+                "rows": 624,
+                "variable_bit_error": 0.11222165991902834,
+                "false_positive": 1991,
+                "false_negative": 670
+              },
+              {
+                "exact_state_rate": 0.75,
+                "wrong_bits": 1777,
+                "rows": 624,
+                "variable_bit_error": 0.07494095816464237,
+                "false_positive": 1477,
+                "false_negative": 300
+              },
+              {
+                "exact_state_rate": 0.8525641025641025,
+                "wrong_bits": 1205,
+                "rows": 624,
+                "variable_bit_error": 0.05081815114709851,
+                "false_positive": 1101,
+                "false_negative": 104
+              },
+              {
+                "exact_state_rate": 0.8669871794871795,
+                "wrong_bits": 1237,
+                "rows": 624,
+                "variable_bit_error": 0.05216767881241566,
+                "false_positive": 1195,
+                "false_negative": 42
+              },
+              {
+                "exact_state_rate": 0.9166666666666666,
+                "wrong_bits": 800,
+                "rows": 624,
+                "variable_bit_error": 0.033738191632928474,
+                "false_positive": 774,
+                "false_negative": 26
+              },
+              {
+                "exact_state_rate": 0.9455128205128205,
+                "wrong_bits": 485,
+                "rows": 624,
+                "variable_bit_error": 0.020453778677462887,
+                "false_positive": 470,
+                "false_negative": 15
+              },
+              {
+                "exact_state_rate": 0.9535256410256411,
+                "wrong_bits": 362,
+                "rows": 624,
+                "variable_bit_error": 0.015266531713900135,
+                "false_positive": 349,
+                "false_negative": 13
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 86.625,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "switched-quadratic",
+          "hidden": 0,
+          "parameters": 41888,
+          "validation": {
+            "exact_state_rate": 0.5320855614973262,
+            "wrong_bits": 3377,
+            "rows": 2618,
+            "variable_bit_error": 0.03394515701017249,
+            "false_positive": 964,
+            "false_negative": 2413,
+            "latent_rmse": 0.3477347493171692,
+            "changed": {
+              "exact_state_rate": 0.5077747989276139,
+              "wrong_bits": 2495,
+              "rows": 1865,
+              "variable_bit_error": 0.03520530548892338,
+              "false_positive": 428,
+              "false_negative": 2067
+            },
+            "no_op": {
+              "exact_state_rate": 0.5922974767596282,
+              "wrong_bits": 882,
+              "rows": 753,
+              "variable_bit_error": 0.030824072132522543,
+              "false_positive": 536,
+              "false_negative": 346
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.5350678733031674,
+            "wrong_bits": 3510,
+            "rows": 2652,
+            "variable_bit_error": 0.0348297213622291,
+            "false_positive": 826,
+            "false_negative": 2684,
+            "latent_rmse": 0.33754763007164,
+            "changed": {
+              "exact_state_rate": 0.4963805584281282,
+              "wrong_bits": 3050,
+              "rows": 1934,
+              "variable_bit_error": 0.04150111576770261,
+              "false_positive": 738,
+              "false_negative": 2312
+            },
+            "no_op": {
+              "exact_state_rate": 0.6392757660167131,
+              "wrong_bits": 460,
+              "rows": 718,
+              "variable_bit_error": 0.016859697991496846,
+              "false_positive": 88,
+              "false_negative": 372
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.5352564102564102,
+                "wrong_bits": 786,
+                "rows": 624,
+                "variable_bit_error": 0.03314777327935223,
+                "false_positive": 177,
+                "false_negative": 609
+              },
+              {
+                "exact_state_rate": 0.3301282051282051,
+                "wrong_bits": 1547,
+                "rows": 624,
+                "variable_bit_error": 0.06524122807017543,
+                "false_positive": 541,
+                "false_negative": 1006
+              },
+              {
+                "exact_state_rate": 0.36217948717948717,
+                "wrong_bits": 1610,
+                "rows": 624,
+                "variable_bit_error": 0.06789811066126855,
+                "false_positive": 469,
+                "false_negative": 1141
+              },
+              {
+                "exact_state_rate": 0.23076923076923078,
+                "wrong_bits": 3384,
+                "rows": 624,
+                "variable_bit_error": 0.14271255060728744,
+                "false_positive": 1068,
+                "false_negative": 2316
+              },
+              {
+                "exact_state_rate": 0.14583333333333334,
+                "wrong_bits": 5515,
+                "rows": 624,
+                "variable_bit_error": 0.23258265856950067,
+                "false_positive": 1112,
+                "false_negative": 4403
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "trajectories": 624,
+            "nonfinite_at_step": 6
+          }
+        }
+      ]
+    },
+    {
+      "dimension": 32,
+      "encoding_test": {
+        "exact_state_rate": 1.0,
+        "wrong_bits": 0,
+        "rows": 156,
+        "variable_bit_error": 0.0,
+        "false_positive": 0,
+        "false_negative": 0
+      },
+      "models": [
+        {
+          "kind": "linear",
+          "hidden": 0,
+          "parameters": 1840,
+          "validation": {
+            "exact_state_rate": 0.27692895339954166,
+            "wrong_bits": 11463,
+            "rows": 2618,
+            "variable_bit_error": 0.11522455872301074,
+            "false_positive": 319,
+            "false_negative": 11144,
+            "latent_rmse": 0.939631998538971,
+            "changed": {
+              "exact_state_rate": 0.06380697050938337,
+              "wrong_bits": 11148,
+              "rows": 1865,
+              "variable_bit_error": 0.15730210244108933,
+              "false_positive": 4,
+              "false_negative": 11144
+            },
+            "no_op": {
+              "exact_state_rate": 0.8047808764940239,
+              "wrong_bits": 315,
+              "rows": 753,
+              "variable_bit_error": 0.011008597190186622,
+              "false_positive": 315,
+              "false_negative": 0
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.2918552036199095,
+            "wrong_bits": 12498,
+            "rows": 2652,
+            "variable_bit_error": 0.12401762324362943,
+            "false_positive": 155,
+            "false_negative": 12343,
+            "latent_rmse": 0.9514513611793518,
+            "changed": {
+              "exact_state_rate": 0.07445708376421924,
+              "wrong_bits": 12346,
+              "rows": 1934,
+              "variable_bit_error": 0.16799107385837914,
+              "false_positive": 3,
+              "false_negative": 12343
+            },
+            "no_op": {
+              "exact_state_rate": 0.8774373259052924,
+              "wrong_bits": 152,
+              "rows": 718,
+              "variable_bit_error": 0.005571030640668524,
+              "false_positive": 152,
+              "false_negative": 0
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.296474358974359,
+                "wrong_bits": 2884,
+                "rows": 624,
+                "variable_bit_error": 0.12162618083670715,
+                "false_positive": 48,
+                "false_negative": 2836
+              },
+              {
+                "exact_state_rate": 0.04326923076923077,
+                "wrong_bits": 5261,
+                "rows": 624,
+                "variable_bit_error": 0.22187078272604588,
+                "false_positive": 926,
+                "false_negative": 4335
+              },
+              {
+                "exact_state_rate": 0.03365384615384615,
+                "wrong_bits": 6836,
+                "rows": 624,
+                "variable_bit_error": 0.2882928475033738,
+                "false_positive": 2045,
+                "false_negative": 4791
+              },
+              {
+                "exact_state_rate": 0.15544871794871795,
+                "wrong_bits": 6820,
+                "rows": 624,
+                "variable_bit_error": 0.28761808367071523,
+                "false_positive": 3314,
+                "false_negative": 3506
+              },
+              {
+                "exact_state_rate": 0.27564102564102566,
+                "wrong_bits": 5505,
+                "rows": 624,
+                "variable_bit_error": 0.23216093117408906,
+                "false_positive": 3180,
+                "false_negative": 2325
+              },
+              {
+                "exact_state_rate": 0.33974358974358976,
+                "wrong_bits": 4830,
+                "rows": 624,
+                "variable_bit_error": 0.20369433198380565,
+                "false_positive": 3057,
+                "false_negative": 1773
+              },
+              {
+                "exact_state_rate": 0.4230769230769231,
+                "wrong_bits": 2869,
+                "rows": 624,
+                "variable_bit_error": 0.12099358974358974,
+                "false_positive": 1978,
+                "false_negative": 891
+              },
+              {
+                "exact_state_rate": 0.5,
+                "wrong_bits": 1830,
+                "rows": 624,
+                "variable_bit_error": 0.07717611336032389,
+                "false_positive": 1392,
+                "false_negative": 438
+              },
+              {
+                "exact_state_rate": 0.5272435897435898,
+                "wrong_bits": 1782,
+                "rows": 624,
+                "variable_bit_error": 0.07515182186234817,
+                "false_positive": 1433,
+                "false_negative": 349
+              },
+              {
+                "exact_state_rate": 0.5737179487179487,
+                "wrong_bits": 1197,
+                "rows": 624,
+                "variable_bit_error": 0.05048076923076923,
+                "false_positive": 890,
+                "false_negative": 307
+              },
+              {
+                "exact_state_rate": 0.6314102564102564,
+                "wrong_bits": 788,
+                "rows": 624,
+                "variable_bit_error": 0.03323211875843455,
+                "false_positive": 516,
+                "false_negative": 272
+              },
+              {
+                "exact_state_rate": 0.6586538461538461,
+                "wrong_bits": 625,
+                "rows": 624,
+                "variable_bit_error": 0.02635796221322537,
+                "false_positive": 382,
+                "false_negative": 243
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 13.359375,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "bilinear",
+          "hidden": 0,
+          "parameters": 10160,
+          "validation": {
+            "exact_state_rate": 0.4274255156608098,
+            "wrong_bits": 7802,
+            "rows": 2618,
+            "variable_bit_error": 0.07842467130392827,
+            "false_positive": 947,
+            "false_negative": 6855,
+            "latent_rmse": 0.8686881065368652,
+            "changed": {
+              "exact_state_rate": 0.2686327077747989,
+              "wrong_bits": 7243,
+              "rows": 1865,
+              "variable_bit_error": 0.1022012134894878,
+              "false_positive": 393,
+              "false_negative": 6850
+            },
+            "no_op": {
+              "exact_state_rate": 0.8207171314741036,
+              "wrong_bits": 559,
+              "rows": 753,
+              "variable_bit_error": 0.019535891521632768,
+              "false_positive": 554,
+              "false_negative": 5
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.4249622926093514,
+            "wrong_bits": 8763,
+            "rows": 2652,
+            "variable_bit_error": 0.0869552274351036,
+            "false_positive": 686,
+            "false_negative": 8077,
+            "latent_rmse": 0.8752540349960327,
+            "changed": {
+              "exact_state_rate": 0.2533609100310238,
+              "wrong_bits": 8550,
+              "rows": 1934,
+              "variable_bit_error": 0.11633919338159256,
+              "false_positive": 481,
+              "false_negative": 8069
+            },
+            "no_op": {
+              "exact_state_rate": 0.8871866295264624,
+              "wrong_bits": 213,
+              "rows": 718,
+              "variable_bit_error": 0.007806773200410497,
+              "false_positive": 205,
+              "false_negative": 8
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.4326923076923077,
+                "wrong_bits": 2044,
+                "rows": 624,
+                "variable_bit_error": 0.08620107962213225,
+                "false_positive": 171,
+                "false_negative": 1873
+              },
+              {
+                "exact_state_rate": 0.17467948717948717,
+                "wrong_bits": 3359,
+                "rows": 624,
+                "variable_bit_error": 0.14165823211875844,
+                "false_positive": 1000,
+                "false_negative": 2359
+              },
+              {
+                "exact_state_rate": 0.1346153846153846,
+                "wrong_bits": 4327,
+                "rows": 624,
+                "variable_bit_error": 0.1824814439946019,
+                "false_positive": 1568,
+                "false_negative": 2759
+              },
+              {
+                "exact_state_rate": 0.2516025641025641,
+                "wrong_bits": 4494,
+                "rows": 624,
+                "variable_bit_error": 0.1895242914979757,
+                "false_positive": 2641,
+                "false_negative": 1853
+              },
+              {
+                "exact_state_rate": 0.45032051282051283,
+                "wrong_bits": 3674,
+                "rows": 624,
+                "variable_bit_error": 0.15494264507422403,
+                "false_positive": 2774,
+                "false_negative": 900
+              },
+              {
+                "exact_state_rate": 0.532051282051282,
+                "wrong_bits": 3435,
+                "rows": 624,
+                "variable_bit_error": 0.14486336032388664,
+                "false_positive": 2891,
+                "false_negative": 544
+              },
+              {
+                "exact_state_rate": 0.7451923076923077,
+                "wrong_bits": 2065,
+                "rows": 624,
+                "variable_bit_error": 0.08708670715249663,
+                "false_positive": 1851,
+                "false_negative": 214
+              },
+              {
+                "exact_state_rate": 0.8381410256410257,
+                "wrong_bits": 1385,
+                "rows": 624,
+                "variable_bit_error": 0.05840924426450742,
+                "false_positive": 1295,
+                "false_negative": 90
+              },
+              {
+                "exact_state_rate": 0.8413461538461539,
+                "wrong_bits": 1394,
+                "rows": 624,
+                "variable_bit_error": 0.05878879892037787,
+                "false_positive": 1321,
+                "false_negative": 73
+              },
+              {
+                "exact_state_rate": 0.9022435897435898,
+                "wrong_bits": 854,
+                "rows": 624,
+                "variable_bit_error": 0.03601551956815115,
+                "false_positive": 815,
+                "false_negative": 39
+              },
+              {
+                "exact_state_rate": 0.9358974358974359,
+                "wrong_bits": 544,
+                "rows": 624,
+                "variable_bit_error": 0.022941970310391364,
+                "false_positive": 493,
+                "false_negative": 51
+              },
+              {
+                "exact_state_rate": 0.9375,
+                "wrong_bits": 428,
+                "rows": 624,
+                "variable_bit_error": 0.018049932523616734,
+                "false_positive": 364,
+                "false_negative": 64
+              }
+            ],
+            "all_steps_exact_rate": 0.0016025641025641025,
+            "latent_max_abs": 23.359375,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 256,
+          "parameters": 22576,
+          "validation": {
+            "exact_state_rate": 0.21237585943468296,
+            "wrong_bits": 11868,
+            "rows": 2618,
+            "variable_bit_error": 0.11929556511599855,
+            "false_positive": 1891,
+            "false_negative": 9977,
+            "latent_rmse": 0.9746072292327881,
+            "changed": {
+              "exact_state_rate": 0.05630026809651475,
+              "wrong_bits": 10300,
+              "rows": 1865,
+              "variable_bit_error": 0.14533653167771976,
+              "false_positive": 397,
+              "false_negative": 9903
+            },
+            "no_op": {
+              "exact_state_rate": 0.598937583001328,
+              "wrong_bits": 1568,
+              "rows": 753,
+              "variable_bit_error": 0.05479835045781785,
+              "false_positive": 1494,
+              "false_negative": 74
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.21832579185520362,
+            "wrong_bits": 12759,
+            "rows": 2652,
+            "variable_bit_error": 0.12660752560133365,
+            "false_positive": 1435,
+            "false_negative": 11324,
+            "latent_rmse": 0.9787765741348267,
+            "changed": {
+              "exact_state_rate": 0.05687693898655636,
+              "wrong_bits": 11767,
+              "rows": 1934,
+              "variable_bit_error": 0.16011266532411692,
+              "false_positive": 467,
+              "false_negative": 11300
+            },
+            "no_op": {
+              "exact_state_rate": 0.6532033426183844,
+              "wrong_bits": 992,
+              "rows": 718,
+              "variable_bit_error": 0.03635830523383668,
+              "false_positive": 968,
+              "false_negative": 24
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.21794871794871795,
+                "wrong_bits": 2924,
+                "rows": 624,
+                "variable_bit_error": 0.12331309041835357,
+                "false_positive": 336,
+                "false_negative": 2588
+              },
+              {
+                "exact_state_rate": 0.03205128205128205,
+                "wrong_bits": 5786,
+                "rows": 624,
+                "variable_bit_error": 0.2440114709851552,
+                "false_positive": 1749,
+                "false_negative": 4037
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 7937,
+                "rows": 624,
+                "variable_bit_error": 0.3347250337381916,
+                "false_positive": 2918,
+                "false_negative": 5019
+              },
+              {
+                "exact_state_rate": 0.014423076923076924,
+                "wrong_bits": 8339,
+                "rows": 624,
+                "variable_bit_error": 0.35167847503373817,
+                "false_positive": 3011,
+                "false_negative": 5328
+              },
+              {
+                "exact_state_rate": 0.019230769230769232,
+                "wrong_bits": 7629,
+                "rows": 624,
+                "variable_bit_error": 0.32173582995951416,
+                "false_positive": 2373,
+                "false_negative": 5256
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 8296,
+                "rows": 624,
+                "variable_bit_error": 0.3498650472334683,
+                "false_positive": 2282,
+                "false_negative": 6014
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 7236,
+                "rows": 624,
+                "variable_bit_error": 0.30516194331983804,
+                "false_positive": 1550,
+                "false_negative": 5686
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 6247,
+                "rows": 624,
+                "variable_bit_error": 0.26345310391363025,
+                "false_positive": 1069,
+                "false_negative": 5178
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 5904,
+                "rows": 624,
+                "variable_bit_error": 0.24898785425101214,
+                "false_positive": 1109,
+                "false_negative": 4795
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 5365,
+                "rows": 624,
+                "variable_bit_error": 0.2262567476383266,
+                "false_positive": 679,
+                "false_negative": 4686
+              },
+              {
+                "exact_state_rate": 0.0016025641025641025,
+                "wrong_bits": 4954,
+                "rows": 624,
+                "variable_bit_error": 0.20892375168690958,
+                "false_positive": 389,
+                "false_negative": 4565
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 4742,
+                "rows": 624,
+                "variable_bit_error": 0.19998313090418354,
+                "false_positive": 283,
+                "false_negative": 4459
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 1246.0,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 768,
+          "parameters": 64048,
+          "validation": {
+            "exact_state_rate": 0.20053475935828877,
+            "wrong_bits": 13170,
+            "rows": 2618,
+            "variable_bit_error": 0.13238309677938162,
+            "false_positive": 4620,
+            "false_negative": 8550,
+            "latent_rmse": 1.1294866800308228,
+            "changed": {
+              "exact_state_rate": 0.11903485254691688,
+              "wrong_bits": 10327,
+              "rows": 1865,
+              "variable_bit_error": 0.14571751093551574,
+              "false_positive": 2289,
+              "false_negative": 8038
+            },
+            "no_op": {
+              "exact_state_rate": 0.40239043824701193,
+              "wrong_bits": 2843,
+              "rows": 753,
+              "variable_bit_error": 0.09935695813238275,
+              "false_positive": 2331,
+              "false_negative": 512
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.20098039215686275,
+            "wrong_bits": 13595,
+            "rows": 2652,
+            "variable_bit_error": 0.1349031515440184,
+            "false_positive": 4642,
+            "false_negative": 8953,
+            "latent_rmse": 1.0721635818481445,
+            "changed": {
+              "exact_state_rate": 0.11789038262668046,
+              "wrong_bits": 11290,
+              "rows": 1934,
+              "variable_bit_error": 0.15362216295651226,
+              "false_positive": 2502,
+              "false_negative": 8788
+            },
+            "no_op": {
+              "exact_state_rate": 0.42479108635097496,
+              "wrong_bits": 2305,
+              "rows": 718,
+              "variable_bit_error": 0.08448174754434834,
+              "false_positive": 2140,
+              "false_negative": 165
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.20352564102564102,
+                "wrong_bits": 3241,
+                "rows": 624,
+                "variable_bit_error": 0.1366818488529015,
+                "false_positive": 1171,
+                "false_negative": 2070
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 7063,
+                "rows": 624,
+                "variable_bit_error": 0.2978660593792173,
+                "false_positive": 3075,
+                "false_negative": 3988
+              },
+              {
+                "exact_state_rate": 0.004807692307692308,
+                "wrong_bits": 9580,
+                "rows": 624,
+                "variable_bit_error": 0.4040148448043185,
+                "false_positive": 3789,
+                "false_negative": 5791
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 10757,
+                "rows": 624,
+                "variable_bit_error": 0.4536521592442645,
+                "false_positive": 3163,
+                "false_negative": 7594
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 12345,
+                "rows": 624,
+                "variable_bit_error": 0.5206224696356275,
+                "false_positive": 2086,
+                "false_negative": 10259
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 13965,
+                "rows": 624,
+                "variable_bit_error": 0.5889423076923077,
+                "false_positive": 1374,
+                "false_negative": 12591
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 14437,
+                "rows": 624,
+                "variable_bit_error": 0.6088478407557355,
+                "false_positive": 754,
+                "false_negative": 13683
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 13948,
+                "rows": 624,
+                "variable_bit_error": 0.588225371120108,
+                "false_positive": 493,
+                "false_negative": 13455
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 13822,
+                "rows": 624,
+                "variable_bit_error": 0.5829116059379217,
+                "false_positive": 567,
+                "false_negative": 13255
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 14110,
+                "rows": 624,
+                "variable_bit_error": 0.5950573549257759,
+                "false_positive": 355,
+                "false_negative": 13755
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 13628,
+                "rows": 624,
+                "variable_bit_error": 0.5747300944669366,
+                "false_positive": 229,
+                "false_negative": 13399
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 12298,
+                "rows": 624,
+                "variable_bit_error": 0.518640350877193,
+                "false_positive": 178,
+                "false_negative": 12120
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 41536.0,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "switched-linear",
+          "hidden": 0,
+          "parameters": 18224,
+          "validation": {
+            "exact_state_rate": 0.5977845683728037,
+            "wrong_bits": 4609,
+            "rows": 2618,
+            "variable_bit_error": 0.04632905793896506,
+            "false_positive": 839,
+            "false_negative": 3770,
+            "latent_rmse": 0.7907012701034546,
+            "changed": {
+              "exact_state_rate": 0.4938337801608579,
+              "wrong_bits": 4211,
+              "rows": 1865,
+              "variable_bit_error": 0.05941865387328912,
+              "false_positive": 454,
+              "false_negative": 3757
+            },
+            "no_op": {
+              "exact_state_rate": 0.8552456839309429,
+              "wrong_bits": 398,
+              "rows": 753,
+              "variable_bit_error": 0.013909275179981827,
+              "false_positive": 385,
+              "false_negative": 13
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.6059577677224736,
+            "wrong_bits": 5341,
+            "rows": 2652,
+            "variable_bit_error": 0.05299872985631499,
+            "false_positive": 566,
+            "false_negative": 4775,
+            "latent_rmse": 0.7974581718444824,
+            "changed": {
+              "exact_state_rate": 0.48965873836608065,
+              "wrong_bits": 5213,
+              "rows": 1934,
+              "variable_bit_error": 0.07093289065476514,
+              "false_positive": 456,
+              "false_negative": 4757
+            },
+            "no_op": {
+              "exact_state_rate": 0.9192200557103064,
+              "wrong_bits": 128,
+              "rows": 718,
+              "variable_bit_error": 0.004691394223720862,
+              "false_positive": 110,
+              "false_negative": 18
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.6185897435897436,
+                "wrong_bits": 1195,
+                "rows": 624,
+                "variable_bit_error": 0.05039642375168691,
+                "false_positive": 137,
+                "false_negative": 1058
+              },
+              {
+                "exact_state_rate": 0.36378205128205127,
+                "wrong_bits": 1932,
+                "rows": 624,
+                "variable_bit_error": 0.08147773279352227,
+                "false_positive": 689,
+                "false_negative": 1243
+              },
+              {
+                "exact_state_rate": 0.3942307692307692,
+                "wrong_bits": 2114,
+                "rows": 624,
+                "variable_bit_error": 0.0891531713900135,
+                "false_positive": 585,
+                "false_negative": 1529
+              },
+              {
+                "exact_state_rate": 0.46955128205128205,
+                "wrong_bits": 2262,
+                "rows": 624,
+                "variable_bit_error": 0.09539473684210527,
+                "false_positive": 1308,
+                "false_negative": 954
+              },
+              {
+                "exact_state_rate": 0.5737179487179487,
+                "wrong_bits": 2053,
+                "rows": 624,
+                "variable_bit_error": 0.0865806342780027,
+                "false_positive": 1484,
+                "false_negative": 569
+              },
+              {
+                "exact_state_rate": 0.6298076923076923,
+                "wrong_bits": 1849,
+                "rows": 624,
+                "variable_bit_error": 0.07797739541160593,
+                "false_positive": 1433,
+                "false_negative": 416
+              },
+              {
+                "exact_state_rate": 0.7596153846153846,
+                "wrong_bits": 1246,
+                "rows": 624,
+                "variable_bit_error": 0.0525472334682861,
+                "false_positive": 1043,
+                "false_negative": 203
+              },
+              {
+                "exact_state_rate": 0.8477564102564102,
+                "wrong_bits": 877,
+                "rows": 624,
+                "variable_bit_error": 0.03698549257759784,
+                "false_positive": 771,
+                "false_negative": 106
+              },
+              {
+                "exact_state_rate": 0.8541666666666666,
+                "wrong_bits": 948,
+                "rows": 624,
+                "variable_bit_error": 0.039979757085020245,
+                "false_positive": 859,
+                "false_negative": 89
+              },
+              {
+                "exact_state_rate": 0.905448717948718,
+                "wrong_bits": 592,
+                "rows": 624,
+                "variable_bit_error": 0.02496626180836707,
+                "false_positive": 539,
+                "false_negative": 53
+              },
+              {
+                "exact_state_rate": 0.9391025641025641,
+                "wrong_bits": 374,
+                "rows": 624,
+                "variable_bit_error": 0.015772604588394062,
+                "false_positive": 321,
+                "false_negative": 53
+              },
+              {
+                "exact_state_rate": 0.9535256410256411,
+                "wrong_bits": 236,
+                "rows": 624,
+                "variable_bit_error": 0.0099527665317139,
+                "false_positive": 209,
+                "false_negative": 27
+              }
+            ],
+            "all_steps_exact_rate": 0.038461538461538464,
+            "latent_max_abs": 22.3125,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "switched-quadratic",
+          "hidden": 0,
+          "parameters": 305456,
+          "validation": {
+            "exact_state_rate": 0.7303284950343774,
+            "wrong_bits": 4088,
+            "rows": 2618,
+            "variable_bit_error": 0.04109203490008444,
+            "false_positive": 2548,
+            "false_negative": 1540,
+            "latent_rmse": 1.1073366403579712,
+            "changed": {
+              "exact_state_rate": 0.6991957104557641,
+              "wrong_bits": 2927,
+              "rows": 1865,
+              "variable_bit_error": 0.04130097361365881,
+              "false_positive": 1535,
+              "false_negative": 1392
+            },
+            "no_op": {
+              "exact_state_rate": 0.8074369189907038,
+              "wrong_bits": 1161,
+              "rows": 753,
+              "variable_bit_error": 0.04057454392954498,
+              "false_positive": 1013,
+              "false_negative": 148
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.7311463046757164,
+            "wrong_bits": 3815,
+            "rows": 2652,
+            "variable_bit_error": 0.03785623561165357,
+            "false_positive": 1999,
+            "false_negative": 1816,
+            "latent_rmse": 0.8660901188850403,
+            "changed": {
+              "exact_state_rate": 0.6706308169596691,
+              "wrong_bits": 3504,
+              "rows": 1934,
+              "variable_bit_error": 0.04767865890164916,
+              "false_positive": 1747,
+              "false_negative": 1757
+            },
+            "no_op": {
+              "exact_state_rate": 0.8941504178272981,
+              "wrong_bits": 311,
+              "rows": 718,
+              "variable_bit_error": 0.011398621902946783,
+              "false_positive": 252,
+              "false_negative": 59
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.7227564102564102,
+                "wrong_bits": 863,
+                "rows": 624,
+                "variable_bit_error": 0.03639507422402159,
+                "false_positive": 443,
+                "false_negative": 420
+              },
+              {
+                "exact_state_rate": 0.49198717948717946,
+                "wrong_bits": 1865,
+                "rows": 624,
+                "variable_bit_error": 0.07865215924426451,
+                "false_positive": 982,
+                "false_negative": 883
+              },
+              {
+                "exact_state_rate": 0.46955128205128205,
+                "wrong_bits": 1980,
+                "rows": 624,
+                "variable_bit_error": 0.08350202429149797,
+                "false_positive": 861,
+                "false_negative": 1119
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "trajectories": 624,
+            "nonfinite_at_step": 4
+          }
+        }
+      ]
+    },
+    {
+      "dimension": 64,
+      "encoding_test": {
+        "exact_state_rate": 1.0,
+        "wrong_bits": 0,
+        "rows": 156,
+        "variable_bit_error": 0.0,
+        "false_positive": 0,
+        "false_negative": 0
+      },
+      "models": [
+        {
+          "kind": "linear",
+          "hidden": 0,
+          "parameters": 5456,
+          "validation": {
+            "exact_state_rate": 0.2857142857142857,
+            "wrong_bits": 11469,
+            "rows": 2618,
+            "variable_bit_error": 0.11528486992883277,
+            "false_positive": 306,
+            "false_negative": 11163,
+            "latent_rmse": 0.6986961960792542,
+            "changed": {
+              "exact_state_rate": 0.064343163538874,
+              "wrong_bits": 11164,
+              "rows": 1865,
+              "variable_bit_error": 0.15752786792719062,
+              "false_positive": 1,
+              "false_negative": 11163
+            },
+            "no_op": {
+              "exact_state_rate": 0.8339973439575034,
+              "wrong_bits": 305,
+              "rows": 753,
+              "variable_bit_error": 0.01065911791430768,
+              "false_positive": 305,
+              "false_negative": 0
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.2918552036199095,
+            "wrong_bits": 12498,
+            "rows": 2652,
+            "variable_bit_error": 0.12401762324362943,
+            "false_positive": 166,
+            "false_negative": 12332,
+            "latent_rmse": 0.708388090133667,
+            "changed": {
+              "exact_state_rate": 0.07445708376421924,
+              "wrong_bits": 12334,
+              "rows": 1934,
+              "variable_bit_error": 0.16782779077994883,
+              "false_positive": 2,
+              "false_negative": 12332
+            },
+            "no_op": {
+              "exact_state_rate": 0.8774373259052924,
+              "wrong_bits": 164,
+              "rows": 718,
+              "variable_bit_error": 0.006010848849142355,
+              "false_positive": 164,
+              "false_negative": 0
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.2932692307692308,
+                "wrong_bits": 2886,
+                "rows": 624,
+                "variable_bit_error": 0.12171052631578948,
+                "false_positive": 50,
+                "false_negative": 2836
+              },
+              {
+                "exact_state_rate": 0.04807692307692308,
+                "wrong_bits": 5274,
+                "rows": 624,
+                "variable_bit_error": 0.22241902834008098,
+                "false_positive": 1001,
+                "false_negative": 4273
+              },
+              {
+                "exact_state_rate": 0.03685897435897436,
+                "wrong_bits": 6891,
+                "rows": 624,
+                "variable_bit_error": 0.29061234817813764,
+                "false_positive": 2012,
+                "false_negative": 4879
+              },
+              {
+                "exact_state_rate": 0.13782051282051283,
+                "wrong_bits": 6782,
+                "rows": 624,
+                "variable_bit_error": 0.28601551956815113,
+                "false_positive": 3120,
+                "false_negative": 3662
+              },
+              {
+                "exact_state_rate": 0.2564102564102564,
+                "wrong_bits": 5543,
+                "rows": 624,
+                "variable_bit_error": 0.23376349527665316,
+                "false_positive": 3061,
+                "false_negative": 2482
+              },
+              {
+                "exact_state_rate": 0.3157051282051282,
+                "wrong_bits": 4841,
+                "rows": 624,
+                "variable_bit_error": 0.20415823211875844,
+                "false_positive": 2834,
+                "false_negative": 2007
+              },
+              {
+                "exact_state_rate": 0.4551282051282051,
+                "wrong_bits": 2959,
+                "rows": 624,
+                "variable_bit_error": 0.1247891363022942,
+                "false_positive": 1846,
+                "false_negative": 1113
+              },
+              {
+                "exact_state_rate": 0.5544871794871795,
+                "wrong_bits": 1869,
+                "rows": 624,
+                "variable_bit_error": 0.07882085020242915,
+                "false_positive": 1316,
+                "false_negative": 553
+              },
+              {
+                "exact_state_rate": 0.5801282051282052,
+                "wrong_bits": 1862,
+                "rows": 624,
+                "variable_bit_error": 0.07852564102564102,
+                "false_positive": 1363,
+                "false_negative": 499
+              },
+              {
+                "exact_state_rate": 0.6073717948717948,
+                "wrong_bits": 1424,
+                "rows": 624,
+                "variable_bit_error": 0.06005398110661268,
+                "false_positive": 854,
+                "false_negative": 570
+              },
+              {
+                "exact_state_rate": 0.6330128205128205,
+                "wrong_bits": 1045,
+                "rows": 624,
+                "variable_bit_error": 0.044070512820512824,
+                "false_positive": 487,
+                "false_negative": 558
+              },
+              {
+                "exact_state_rate": 0.6362179487179487,
+                "wrong_bits": 952,
+                "rows": 624,
+                "variable_bit_error": 0.04014844804318488,
+                "false_positive": 364,
+                "false_negative": 588
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 10.2265625,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "bilinear",
+          "hidden": 0,
+          "parameters": 38352,
+          "validation": {
+            "exact_state_rate": 0.44270435446906037,
+            "wrong_bits": 7499,
+            "rows": 2618,
+            "variable_bit_error": 0.07537895540991517,
+            "false_positive": 997,
+            "false_negative": 6502,
+            "latent_rmse": 0.6414929032325745,
+            "changed": {
+              "exact_state_rate": 0.28150134048257375,
+              "wrong_bits": 6975,
+              "rows": 1865,
+              "variable_bit_error": 0.09841964159729082,
+              "false_positive": 474,
+              "false_negative": 6501
+            },
+            "no_op": {
+              "exact_state_rate": 0.8419654714475432,
+              "wrong_bits": 524,
+              "rows": 753,
+              "variable_bit_error": 0.018312714056056476,
+              "false_positive": 523,
+              "false_negative": 1
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.42835595776772245,
+            "wrong_bits": 8389,
+            "rows": 2652,
+            "variable_bit_error": 0.08324402635548146,
+            "false_positive": 860,
+            "false_negative": 7529,
+            "latent_rmse": 0.6490968465805054,
+            "changed": {
+              "exact_state_rate": 0.25698035160289556,
+              "wrong_bits": 8133,
+              "rows": 1934,
+              "variable_bit_error": 0.11066510640613944,
+              "false_positive": 607,
+              "false_negative": 7526
+            },
+            "no_op": {
+              "exact_state_rate": 0.8899721448467967,
+              "wrong_bits": 256,
+              "rows": 718,
+              "variable_bit_error": 0.009382788447441724,
+              "false_positive": 253,
+              "false_negative": 3
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.4326923076923077,
+                "wrong_bits": 1951,
+                "rows": 624,
+                "variable_bit_error": 0.08227901484480432,
+                "false_positive": 223,
+                "false_negative": 1728
+              },
+              {
+                "exact_state_rate": 0.20673076923076922,
+                "wrong_bits": 3455,
+                "rows": 624,
+                "variable_bit_error": 0.14570681511470984,
+                "false_positive": 1058,
+                "false_negative": 2397
+              },
+              {
+                "exact_state_rate": 0.1201923076923077,
+                "wrong_bits": 4917,
+                "rows": 624,
+                "variable_bit_error": 0.20736336032388664,
+                "false_positive": 1700,
+                "false_negative": 3217
+              },
+              {
+                "exact_state_rate": 0.1907051282051282,
+                "wrong_bits": 4847,
+                "rows": 624,
+                "variable_bit_error": 0.2044112685560054,
+                "false_positive": 2300,
+                "false_negative": 2547
+              },
+              {
+                "exact_state_rate": 0.35096153846153844,
+                "wrong_bits": 3993,
+                "rows": 624,
+                "variable_bit_error": 0.16839574898785425,
+                "false_positive": 2299,
+                "false_negative": 1694
+              },
+              {
+                "exact_state_rate": 0.4182692307692308,
+                "wrong_bits": 3439,
+                "rows": 624,
+                "variable_bit_error": 0.1450320512820513,
+                "false_positive": 2136,
+                "false_negative": 1303
+              },
+              {
+                "exact_state_rate": 0.594551282051282,
+                "wrong_bits": 2015,
+                "rows": 624,
+                "variable_bit_error": 0.0849780701754386,
+                "false_positive": 1424,
+                "false_negative": 591
+              },
+              {
+                "exact_state_rate": 0.7307692307692307,
+                "wrong_bits": 1278,
+                "rows": 624,
+                "variable_bit_error": 0.05389676113360324,
+                "false_positive": 1004,
+                "false_negative": 274
+              },
+              {
+                "exact_state_rate": 0.6842948717948718,
+                "wrong_bits": 1414,
+                "rows": 624,
+                "variable_bit_error": 0.05963225371120108,
+                "false_positive": 1063,
+                "false_negative": 351
+              },
+              {
+                "exact_state_rate": 0.7692307692307693,
+                "wrong_bits": 921,
+                "rows": 624,
+                "variable_bit_error": 0.03884109311740891,
+                "false_positive": 639,
+                "false_negative": 282
+              },
+              {
+                "exact_state_rate": 0.7836538461538461,
+                "wrong_bits": 711,
+                "rows": 624,
+                "variable_bit_error": 0.02998481781376518,
+                "false_positive": 381,
+                "false_negative": 330
+              },
+              {
+                "exact_state_rate": 0.7532051282051282,
+                "wrong_bits": 717,
+                "rows": 624,
+                "variable_bit_error": 0.030237854251012147,
+                "false_positive": 276,
+                "false_negative": 441
+              }
+            ],
+            "all_steps_exact_rate": 0.0016025641025641025,
+            "latent_max_abs": 14.609375,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 256,
+          "parameters": 42576,
+          "validation": {
+            "exact_state_rate": 0.21886936592818945,
+            "wrong_bits": 11792,
+            "rows": 2618,
+            "variable_bit_error": 0.11853162317558602,
+            "false_positive": 1738,
+            "false_negative": 10054,
+            "latent_rmse": 0.7261742353439331,
+            "changed": {
+              "exact_state_rate": 0.055764075067024126,
+              "wrong_bits": 10380,
+              "rows": 1865,
+              "variable_bit_error": 0.14646535910822633,
+              "false_positive": 407,
+              "false_negative": 9973
+            },
+            "no_op": {
+              "exact_state_rate": 0.6228419654714475,
+              "wrong_bits": 1412,
+              "rows": 753,
+              "variable_bit_error": 0.04934647375410638,
+              "false_positive": 1331,
+              "false_negative": 81
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.22209653092006032,
+            "wrong_bits": 12885,
+            "rows": 2652,
+            "variable_bit_error": 0.12785782329125983,
+            "false_positive": 1943,
+            "false_negative": 10942,
+            "latent_rmse": 0.7266316413879395,
+            "changed": {
+              "exact_state_rate": 0.06359875904860393,
+              "wrong_bits": 11557,
+              "rows": 1934,
+              "variable_bit_error": 0.15725521145158658,
+              "false_positive": 639,
+              "false_negative": 10918
+            },
+            "no_op": {
+              "exact_state_rate": 0.649025069637883,
+              "wrong_bits": 1328,
+              "rows": 718,
+              "variable_bit_error": 0.04867321507110394,
+              "false_positive": 1304,
+              "false_negative": 24
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.22435897435897437,
+                "wrong_bits": 3051,
+                "rows": 624,
+                "variable_bit_error": 0.12866902834008098,
+                "false_positive": 526,
+                "false_negative": 2525
+              },
+              {
+                "exact_state_rate": 0.02403846153846154,
+                "wrong_bits": 5507,
+                "rows": 624,
+                "variable_bit_error": 0.23224527665317138,
+                "false_positive": 1824,
+                "false_negative": 3683
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 8372,
+                "rows": 624,
+                "variable_bit_error": 0.3530701754385965,
+                "false_positive": 2853,
+                "false_negative": 5519
+              },
+              {
+                "exact_state_rate": 0.011217948717948718,
+                "wrong_bits": 8718,
+                "rows": 624,
+                "variable_bit_error": 0.36766194331983804,
+                "false_positive": 3079,
+                "false_negative": 5639
+              },
+              {
+                "exact_state_rate": 0.019230769230769232,
+                "wrong_bits": 8658,
+                "rows": 624,
+                "variable_bit_error": 0.3651315789473684,
+                "false_positive": 2408,
+                "false_negative": 6250
+              },
+              {
+                "exact_state_rate": 0.01282051282051282,
+                "wrong_bits": 9496,
+                "rows": 624,
+                "variable_bit_error": 0.400472334682861,
+                "false_positive": 2072,
+                "false_negative": 7424
+              },
+              {
+                "exact_state_rate": 0.014423076923076924,
+                "wrong_bits": 9930,
+                "rows": 624,
+                "variable_bit_error": 0.4187753036437247,
+                "false_positive": 1089,
+                "false_negative": 8841
+              },
+              {
+                "exact_state_rate": 0.004807692307692308,
+                "wrong_bits": 11381,
+                "rows": 624,
+                "variable_bit_error": 0.47996794871794873,
+                "false_positive": 632,
+                "false_negative": 10749
+              },
+              {
+                "exact_state_rate": 0.01282051282051282,
+                "wrong_bits": 12362,
+                "rows": 624,
+                "variable_bit_error": 0.5213394062078273,
+                "false_positive": 619,
+                "false_negative": 11743
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 12942,
+                "rows": 624,
+                "variable_bit_error": 0.5457995951417004,
+                "false_positive": 409,
+                "false_negative": 12533
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 12582,
+                "rows": 624,
+                "variable_bit_error": 0.5306174089068826,
+                "false_positive": 209,
+                "false_negative": 12373
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 11768,
+                "rows": 624,
+                "variable_bit_error": 0.49628879892037786,
+                "false_positive": 189,
+                "false_negative": 11579
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "latent_max_abs": 216.0,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "nonlinear",
+          "hidden": 768,
+          "parameters": 116816,
+          "validation": {
+            "exact_state_rate": 0.2043544690603514,
+            "wrong_bits": 12984,
+            "rows": 2618,
+            "variable_bit_error": 0.1305134493988983,
+            "false_positive": 3931,
+            "false_negative": 9053,
+            "latent_rmse": 0.8278295397758484,
+            "changed": {
+              "exact_state_rate": 0.12225201072386059,
+              "wrong_bits": 10483,
+              "rows": 1865,
+              "variable_bit_error": 0.14791872442500353,
+              "false_positive": 2017,
+              "false_negative": 8466
+            },
+            "no_op": {
+              "exact_state_rate": 0.4077025232403719,
+              "wrong_bits": 2501,
+              "rows": 753,
+              "variable_bit_error": 0.08740476689732299,
+              "false_positive": 1914,
+              "false_negative": 587
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.20739064856711917,
+            "wrong_bits": 13262,
+            "rows": 2652,
+            "variable_bit_error": 0.13159879336349925,
+            "false_positive": 4105,
+            "false_negative": 9157,
+            "latent_rmse": 0.7977294325828552,
+            "changed": {
+              "exact_state_rate": 0.12202688728024819,
+              "wrong_bits": 11020,
+              "rows": 1934,
+              "variable_bit_error": 0.1499482936918304,
+              "false_positive": 2118,
+              "false_negative": 8902
+            },
+            "no_op": {
+              "exact_state_rate": 0.4373259052924791,
+              "wrong_bits": 2242,
+              "rows": 718,
+              "variable_bit_error": 0.08217270194986072,
+              "false_positive": 1987,
+              "false_negative": 255
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.21153846153846154,
+                "wrong_bits": 3075,
+                "rows": 624,
+                "variable_bit_error": 0.12968117408906882,
+                "false_positive": 994,
+                "false_negative": 2081
+              },
+              {
+                "exact_state_rate": 0.00641025641025641,
+                "wrong_bits": 7372,
+                "rows": 624,
+                "variable_bit_error": 0.3108974358974359,
+                "false_positive": 3277,
+                "false_negative": 4095
+              },
+              {
+                "exact_state_rate": 0.003205128205128205,
+                "wrong_bits": 9765,
+                "rows": 624,
+                "variable_bit_error": 0.4118168016194332,
+                "false_positive": 4279,
+                "false_negative": 5486
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 10667,
+                "rows": 624,
+                "variable_bit_error": 0.44985661268556004,
+                "false_positive": 3880,
+                "false_negative": 6787
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 11189,
+                "rows": 624,
+                "variable_bit_error": 0.4718707827260459,
+                "false_positive": 2515,
+                "false_negative": 8674
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 12090,
+                "rows": 624,
+                "variable_bit_error": 0.5098684210526315,
+                "false_positive": 2100,
+                "false_negative": 9990
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 11900,
+                "rows": 624,
+                "variable_bit_error": 0.501855600539811,
+                "false_positive": 1160,
+                "false_negative": 10740
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 10838,
+                "rows": 624,
+                "variable_bit_error": 0.45706815114709853,
+                "false_positive": 818,
+                "false_negative": 10020
+              },
+              {
+                "exact_state_rate": 0.0,
+                "wrong_bits": 10100,
+                "rows": 624,
+                "variable_bit_error": 0.425944669365722,
+                "false_positive": 844,
+                "false_negative": 9256
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "trajectories": 624,
+            "nonfinite_at_step": 10
+          }
+        },
+        {
+          "kind": "switched-linear",
+          "hidden": 0,
+          "parameters": 70992,
+          "validation": {
+            "exact_state_rate": 0.6149732620320856,
+            "wrong_bits": 4546,
+            "rows": 2618,
+            "variable_bit_error": 0.045695790277833624,
+            "false_positive": 905,
+            "false_negative": 3641,
+            "latent_rmse": 0.5916457176208496,
+            "changed": {
+              "exact_state_rate": 0.5072386058981233,
+              "wrong_bits": 4116,
+              "rows": 1865,
+              "variable_bit_error": 0.05807817129956258,
+              "false_positive": 487,
+              "false_negative": 3629
+            },
+            "no_op": {
+              "exact_state_rate": 0.8818061088977424,
+              "wrong_bits": 430,
+              "rows": 753,
+              "variable_bit_error": 0.015027608862794436,
+              "false_positive": 418,
+              "false_negative": 12
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.6153846153846154,
+            "wrong_bits": 5233,
+            "rows": 2652,
+            "variable_bit_error": 0.05192704612209256,
+            "false_positive": 672,
+            "false_negative": 4561,
+            "latent_rmse": 0.5962367653846741,
+            "changed": {
+              "exact_state_rate": 0.49896587383660806,
+              "wrong_bits": 5106,
+              "rows": 1934,
+              "variable_bit_error": 0.06947694987209492,
+              "false_positive": 562,
+              "false_negative": 4544
+            },
+            "no_op": {
+              "exact_state_rate": 0.9289693593314763,
+              "wrong_bits": 127,
+              "rows": 718,
+              "variable_bit_error": 0.0046547427063480425,
+              "false_positive": 110,
+              "false_negative": 17
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.6217948717948718,
+                "wrong_bits": 1173,
+                "rows": 624,
+                "variable_bit_error": 0.049468623481781375,
+                "false_positive": 163,
+                "false_negative": 1010
+              },
+              {
+                "exact_state_rate": 0.3942307692307692,
+                "wrong_bits": 1922,
+                "rows": 624,
+                "variable_bit_error": 0.08105600539811066,
+                "false_positive": 729,
+                "false_negative": 1193
+              },
+              {
+                "exact_state_rate": 0.4166666666666667,
+                "wrong_bits": 2090,
+                "rows": 624,
+                "variable_bit_error": 0.08814102564102565,
+                "false_positive": 582,
+                "false_negative": 1508
+              },
+              {
+                "exact_state_rate": 0.46794871794871795,
+                "wrong_bits": 2180,
+                "rows": 624,
+                "variable_bit_error": 0.09193657219973009,
+                "false_positive": 1230,
+                "false_negative": 950
+              },
+              {
+                "exact_state_rate": 0.5817307692307693,
+                "wrong_bits": 1927,
+                "rows": 624,
+                "variable_bit_error": 0.08126686909581646,
+                "false_positive": 1382,
+                "false_negative": 545
+              },
+              {
+                "exact_state_rate": 0.6426282051282052,
+                "wrong_bits": 1718,
+                "rows": 624,
+                "variable_bit_error": 0.0724527665317139,
+                "false_positive": 1305,
+                "false_negative": 413
+              },
+              {
+                "exact_state_rate": 0.7548076923076923,
+                "wrong_bits": 1226,
+                "rows": 624,
+                "variable_bit_error": 0.05170377867746289,
+                "false_positive": 996,
+                "false_negative": 230
+              },
+              {
+                "exact_state_rate": 0.8253205128205128,
+                "wrong_bits": 877,
+                "rows": 624,
+                "variable_bit_error": 0.03698549257759784,
+                "false_positive": 693,
+                "false_negative": 184
+              },
+              {
+                "exact_state_rate": 0.7612179487179487,
+                "wrong_bits": 1029,
+                "rows": 624,
+                "variable_bit_error": 0.04339574898785425,
+                "false_positive": 751,
+                "false_negative": 278
+              },
+              {
+                "exact_state_rate": 0.7932692307692307,
+                "wrong_bits": 735,
+                "rows": 624,
+                "variable_bit_error": 0.030996963562753038,
+                "false_positive": 465,
+                "false_negative": 270
+              },
+              {
+                "exact_state_rate": 0.8141025641025641,
+                "wrong_bits": 562,
+                "rows": 624,
+                "variable_bit_error": 0.023701079622132255,
+                "false_positive": 272,
+                "false_negative": 290
+              },
+              {
+                "exact_state_rate": 0.780448717948718,
+                "wrong_bits": 556,
+                "rows": 624,
+                "variable_bit_error": 0.02344804318488529,
+                "false_positive": 170,
+                "false_negative": 386
+              }
+            ],
+            "all_steps_exact_rate": 0.027243589743589744,
+            "latent_max_abs": 18.71875,
+            "trajectories": 624
+          }
+        },
+        {
+          "kind": "switched-quadratic",
+          "hidden": 0,
+          "parameters": 2334032,
+          "validation": {
+            "exact_state_rate": 0.7303284950343774,
+            "wrong_bits": 4182,
+            "rows": 2618,
+            "variable_bit_error": 0.04203691045796309,
+            "false_positive": 2601,
+            "false_negative": 1581,
+            "latent_rmse": 0.8129449486732483,
+            "changed": {
+              "exact_state_rate": 0.6991957104557641,
+              "wrong_bits": 2956,
+              "rows": 1865,
+              "variable_bit_error": 0.04171017355721744,
+              "false_positive": 1523,
+              "false_negative": 1433
+            },
+            "no_op": {
+              "exact_state_rate": 0.8074369189907038,
+              "wrong_bits": 1226,
+              "rows": 753,
+              "variable_bit_error": 0.04284615922275809,
+              "false_positive": 1078,
+              "false_negative": 148
+            }
+          },
+          "test": {
+            "exact_state_rate": 0.7266214177978884,
+            "wrong_bits": 4014,
+            "rows": 2652,
+            "variable_bit_error": 0.03983091212193379,
+            "false_positive": 2206,
+            "false_negative": 1808,
+            "latent_rmse": 0.6875708103179932,
+            "changed": {
+              "exact_state_rate": 0.6597724922440538,
+              "wrong_bits": 3678,
+              "rows": 1934,
+              "variable_bit_error": 0.05004626353888859,
+              "false_positive": 1920,
+              "false_negative": 1758
+            },
+            "no_op": {
+              "exact_state_rate": 0.9066852367688022,
+              "wrong_bits": 336,
+              "rows": 718,
+              "variable_bit_error": 0.012314909837267263,
+              "false_positive": 286,
+              "false_negative": 50
+            }
+          },
+          "autonomous": {
+            "steps": [
+              {
+                "exact_state_rate": 0.7259615384615384,
+                "wrong_bits": 943,
+                "rows": 624,
+                "variable_bit_error": 0.03976889338731444,
+                "false_positive": 529,
+                "false_negative": 414
+              },
+              {
+                "exact_state_rate": 0.5336538461538461,
+                "wrong_bits": 1805,
+                "rows": 624,
+                "variable_bit_error": 0.07612179487179487,
+                "false_positive": 1003,
+                "false_negative": 802
+              },
+              {
+                "exact_state_rate": 0.5448717948717948,
+                "wrong_bits": 1822,
+                "rows": 624,
+                "variable_bit_error": 0.0768387314439946,
+                "false_positive": 833,
+                "false_negative": 989
+              }
+            ],
+            "all_steps_exact_rate": 0.0,
+            "trajectories": 624,
+            "nonfinite_at_step": 4
+          }
+        }
+      ]
+    }
+  ],
+  "teacher_validation": {
+    "status": "pass",
+    "checked_transitions": 13702,
+    "idempotent_actions": 17,
+    "commuting_action_pairs": 289,
+    "scope": "finite model only; no native egglog acceptance"
+  },
+  "invariant_span_checks": [
+    {
+      "dimensions": [
+        36,
+        380,
+        579,
+        641,
+        645,
+        645
+      ],
+      "final_dimension": 645,
+      "maximum_invariance_residual": 8.4671922251367e-12,
+      "singular_cutoff": 1e-07,
+      "scope": "all finite states, linear state/action operators and linear readouts only; not a nonlinear lower bound"
+    },
+    {
+      "dimensions": [
+        36,
+        380,
+        579,
+        641,
+        645,
+        645
+      ],
+      "final_dimension": 645,
+      "maximum_invariance_residual": 8.4671922251367e-12,
+      "singular_cutoff": 1e-08,
+      "scope": "all finite states, linear state/action operators and linear readouts only; not a nonlinear lower bound"
+    },
+    {
+      "dimensions": [
+        36,
+        380,
+        579,
+        641,
+        645,
+        645
+      ],
+      "final_dimension": 645,
+      "maximum_invariance_residual": 8.4671922251367e-12,
+      "singular_cutoff": 1e-09,
+      "scope": "all finite states, linear state/action operators and linear readouts only; not a nonlinear lower bound"
+    }
+  ],
+  "trained_nonlinear": {
+    "validation_checkpoints": [
+      {
+        "iteration": 200,
+        "one_step": 0.23911382734912145,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 400,
+        "one_step": 0.239877769289534,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 600,
+        "one_step": 0.24598930481283424,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 800,
+        "one_step": 0.2440794499618029,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 1000,
+        "one_step": 0.24369747899159663,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 1200,
+        "one_step": 0.24293353705118412,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 1400,
+        "one_step": 0.24331550802139038,
+        "whole_trace": 0.0
+      },
+      {
+        "iteration": 1600,
+        "one_step": 0.23834988540870894,
+        "whole_trace": 0.0
+      }
+    ],
+    "chosen_iteration": 600,
+    "training_steps": 3,
+    "training_sequences": 4096,
+    "hidden": 128,
+    "test": {
+      "exact_state_rate": 0.24245852187028658,
+      "wrong_bits": 12652,
+      "rows": 2652,
+      "variable_bit_error": 0.1255457648646503,
+      "false_positive": 1103,
+      "false_negative": 11549,
+      "latent_rmse": 0.9662476778030396,
+      "changed": {
+        "exact_state_rate": 0.04395036194415719,
+        "wrong_bits": 11853,
+        "rows": 1934,
+        "variable_bit_error": 0.1612828607195341,
+        "false_positive": 306,
+        "false_negative": 11547
+      },
+      "no_op": {
+        "exact_state_rate": 0.7771587743732591,
+        "wrong_bits": 799,
+        "rows": 718,
+        "variable_bit_error": 0.02928456238088257,
+        "false_positive": 797,
+        "false_negative": 2
+      }
+    },
+    "autonomous": {
+      "steps": [
+        {
+          "exact_state_rate": 0.2419871794871795,
+          "wrong_bits": 2912,
+          "rows": 624,
+          "variable_bit_error": 0.12280701754385964,
+          "false_positive": 279,
+          "false_negative": 2633
+        },
+        {
+          "exact_state_rate": 0.07211538461538461,
+          "wrong_bits": 5256,
+          "rows": 624,
+          "variable_bit_error": 0.2216599190283401,
+          "false_positive": 954,
+          "false_negative": 4302
+        },
+        {
+          "exact_state_rate": 0.04006410256410257,
+          "wrong_bits": 7187,
+          "rows": 624,
+          "variable_bit_error": 0.3030954790823212,
+          "false_positive": 1646,
+          "false_negative": 5541
+        },
+        {
+          "exact_state_rate": 0.11378205128205128,
+          "wrong_bits": 7562,
+          "rows": 624,
+          "variable_bit_error": 0.3189102564102564,
+          "false_positive": 2469,
+          "false_negative": 5093
+        },
+        {
+          "exact_state_rate": 0.21634615384615385,
+          "wrong_bits": 6614,
+          "rows": 624,
+          "variable_bit_error": 0.27893049932523617,
+          "false_positive": 2281,
+          "false_negative": 4333
+        },
+        {
+          "exact_state_rate": 0.20512820512820512,
+          "wrong_bits": 6613,
+          "rows": 624,
+          "variable_bit_error": 0.278888326585695,
+          "false_positive": 2197,
+          "false_negative": 4416
+        },
+        {
+          "exact_state_rate": 0.25801282051282054,
+          "wrong_bits": 5161,
+          "rows": 624,
+          "variable_bit_error": 0.21765350877192982,
+          "false_positive": 1531,
+          "false_negative": 3630
+        },
+        {
+          "exact_state_rate": 0.28044871794871795,
+          "wrong_bits": 4121,
+          "rows": 624,
+          "variable_bit_error": 0.1737938596491228,
+          "false_positive": 1143,
+          "false_negative": 2978
+        },
+        {
+          "exact_state_rate": 0.266025641025641,
+          "wrong_bits": 3895,
+          "rows": 624,
+          "variable_bit_error": 0.1642628205128205,
+          "false_positive": 1235,
+          "false_negative": 2660
+        },
+        {
+          "exact_state_rate": 0.2724358974358974,
+          "wrong_bits": 3273,
+          "rows": 624,
+          "variable_bit_error": 0.13803137651821862,
+          "false_positive": 769,
+          "false_negative": 2504
+        },
+        {
+          "exact_state_rate": 0.27724358974358976,
+          "wrong_bits": 2780,
+          "rows": 624,
+          "variable_bit_error": 0.11724021592442645,
+          "false_positive": 462,
+          "false_negative": 2318
+        },
+        {
+          "exact_state_rate": 0.27403846153846156,
+          "wrong_bits": 2619,
+          "rows": 624,
+          "variable_bit_error": 0.1104504048582996,
+          "false_positive": 347,
+          "false_negative": 2272
+        }
+      ],
+      "all_steps_exact_rate": 0.0,
+      "latent_max_abs": 10.15625,
+      "trajectories": 624
+    }
+  },
+  "selected_by_validation": {
+    "dimension": 32,
+    "hidden": 128,
+    "checkpoint": 600
+  },
+  "seconds": 10.650179999996908,
+  "source_sha256": "a2dfcf3b099b8772147756cda080f8ebfd6a8cbfa6dd05d756c139c67d7bf26b"
+}
