@@ -203,7 +203,18 @@ impl Executor {
             }
             self.graph.program.executions[rule].constructor = constructor;
         }
+        self.refresh_cell_execution_layouts();
         Ok(())
+    }
+    /// All layout mutation is configuration, before the first Run. Refresh
+    /// static wiring there instead of checking its identity on every instance.
+    pub(super) fn refresh_cell_execution_layouts(&mut self) {
+        for rule in 0..self.graph.program.rules.len() {
+            if self.graph.program.executions[rule].constructor.as_ref().is_some_and(|p|p.prefix_width()!=0) {
+                let layout=self.stage_spine.preparation_layout(&self.graph.program,rule);
+                self.graph.program.executions[rule].constructor.as_mut().unwrap().result_layout=layout;
+            }
+        }
     }
     #[cfg(feature = "parallel-entry-filters")]
     pub fn use_parallel_entry_filters(&mut self) -> Result<()> {

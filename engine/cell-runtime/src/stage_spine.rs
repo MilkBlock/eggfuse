@@ -655,6 +655,12 @@ pub struct Stats {
     effect_buffer_growth_bytes: u64,
     effect_buffer_pool_growths: u64,
     effect_buffer_pool_growth_bytes: u64,
+    prepared_effect_buffer_moves: u64,
+    prepared_effect_spares_released: u64,
+    prepared_effect_spare_bytes_released: u64,
+    prepared_effect_joint_positions: u64,
+    prepared_effect_joint_reads: u64,
+    prepared_effect_joint_writes: u64,
     publication_buffer_moves: u64,
     joint_history_query_reads: u64,
     joint_history_query_writes: u64,
@@ -1502,6 +1508,13 @@ impl Programs {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn permanent_tables(&self) -> &[bool] { &self.permanent }
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) fn preparation_layout(&self, p: &Program, rid: usize) -> Option<std::sync::Arc<crate::cell::EffectLayout>> {
+        if !self.capture_receipts(rid) { return None; }
+        let plan = self.effect_plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(
+            p, rid, &self.outputs[rid], self.cell_output_widths[rid], false)));
+        Some(plan.layout.clone())
+    }
     pub(crate) fn alias_query_facts(&self, g: &Graph, rid: usize) -> QueryFacts {
         // Only an admitted continuation (or explicit fragment training) reads
         // the ownership Entry receipts. Keep the original Spine alias plan
@@ -1525,11 +1538,19 @@ impl Programs {
         // requirements; repeated configuration cannot broaden their scope.
         self.owner_queries = true;
     }
-    /// Lend the pending arena to one source RHS. Its suffix is private until
-    /// complete seals it; matching and publication never run during this loan.
+    /// Begin the source owner's existing result layout. Prepared worker results
+    /// may transfer the same allocation; no unrelated publication is borrowed.
     pub(crate) fn begin_effects(&mut self, g: &Graph, rid: usize, full: bool, force: bool,
         _step: Option<&Started>, _facts: &QueryFacts) -> crate::cell::Effects {
-        if !force && !full && !self.capture_receipts(rid) { return Default::default(); }
+        self.begin_effects_with_results(g, rid, full, force, _step, _facts, None)
+    }
+    pub(crate) fn begin_effects_with_results(&mut self, g: &Graph, rid: usize, full: bool, force: bool,
+        _step: Option<&Started>, _facts: &QueryFacts,
+        prepared: Option<Vec<Option<Dependency>>>) -> crate::cell::Effects {
+        if !force && !full && !self.capture_receipts(rid) {
+            debug_assert!(prepared.as_ref().is_none_or(Vec::is_empty));
+            return Default::default();
+        }
         let outputs = self.outputs.get(rid).map_or(&[][..], Vec::as_slice);
         #[cfg(feature = "sparse-cells")]
         let published = self.cell_output_widths[rid];
@@ -1540,10 +1561,15 @@ impl Programs {
         let plans = if full { &self.full_effect_plans } else { plans };
         let plan = plans[rid].get_or_init(|| Rc::new(crate::cell::EffectPlan::compile(&g.program, rid, outputs, published, full))).clone();
         #[cfg(feature = "sparse-cells")]
+        debug_assert!(prepared.as_ref().is_none_or(|_| g.program.executions[rid].constructor.as_ref()
+            .and_then(|p|p.result_layout.as_ref()).is_some_and(|layout|std::sync::Arc::ptr_eq(layout,&plan.layout))),
+            "configuration freezes one worker/source result layout before execution");
+        #[cfg(feature = "sparse-cells")]
         let keep = self.compiled_commits && self.receipts && !self.audit_receipts
             && published != 0 && outputs[..published].iter().all(|o| !g.has_visibility_changes(o.table));
         #[cfg(not(feature = "sparse-cells"))]
         let keep = false;
+        let prepared = prepared.filter(|b| !b.is_empty());
         let buffer = self.borrow_effect_buffer();
         let before = buffer.capacity() * std::mem::size_of::<Option<Dependency>>();
         self.stats.owned_effect_frames += 1;
@@ -1555,7 +1581,7 @@ impl Programs {
                 // Supply is a checked subset of this rule's exports. Equal
                 // width proves complete coverage without per-instance maps.
                 if depth != 0 && sources.len() == width {
-                    let (frame, queries) = crate::cell::Effects::begin_joint(plan, buffer, _facts);
+                    let (mut frame, queries) = crate::cell::Effects::begin_joint(plan, buffer, _facts);
                     let growth = frame.scratch_capacity_bytes().saturating_sub(before);
                     self.stats.joint_scratch_borrows += 1;
                     self.stats.joint_scratch_growths += u64::from(growth != 0);
@@ -1565,9 +1591,27 @@ impl Programs {
                     self.stats.joint_history_frames += 1;
                     self.stats.joint_history_query_reads += queries as u64;
                     self.stats.joint_history_query_writes += queries as u64;
+                    if let Some(prepared) = prepared {
+                        let (positions, reads, writes) = frame.import_prepared(&prepared);
+                        self.stats.prepared_effect_joint_positions += positions as u64;
+                        self.stats.prepared_effect_joint_reads += reads as u64;
+                        self.stats.prepared_effect_joint_writes += writes as u64;
+                        self.recycle_effect_buffer(prepared);
+                    }
                     return frame;
                 }
             }
+        }
+        #[cfg(feature = "sparse-cells")]
+        if let Some(prepared) = prepared {
+            self.stats.prepared_effect_buffer_moves += 1;
+            // The incoming frame replaces the spare this execution would have
+            // borrowed. Otherwise every prepared publication adds another
+            // permanent cache entry, even when the live working set is stable.
+            self.stats.prepared_effect_spares_released += u64::from(buffer.capacity()!=0);
+            self.stats.prepared_effect_spare_bytes_released += before as u64;
+            drop(buffer);
+            return crate::cell::Effects::adopt(plan, prepared, keep);
         }
         let frame = crate::cell::Effects::begin(plan, buffer, keep);
         let growth = frame.scratch_capacity_bytes().saturating_sub(before);
@@ -3062,6 +3106,8 @@ impl Programs {
             "query_value_bytes":std::mem::size_of::<Value>(),
             "enabled":self.enabled,"receipts_enabled":self.receipts,"partial_enabled":self.partial,"shared_entries_enabled":self.shared_entries,"stats":self.stats,"producer_rules":self.outputs.iter().filter(|ops| !ops.is_empty()).count(),
             "effect_plan_slot_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.slot_bytes()).sum::<usize>(),"effect_plan_cache_bytes":effect_plan_cache_bytes,"keyed_entries":self.queries.len(),"shared_query_plans":self.queries.shared(),"live_spines":contexts.len(),"live_materialized_contexts":live_materialized,
+            "effect_plan_layout_bytes":self.effect_plans.iter().filter(|p|p.get().is_some()).count()
+                * (std::mem::size_of::<crate::cell::EffectLayout>() + 2*std::mem::size_of::<usize>()),
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
         #[cfg(feature = "iterative-bake")]

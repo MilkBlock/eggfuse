@@ -219,3 +219,15 @@ overall objective complete until all applicable items above are proven.
   Four-worker prefix execution is only 2.1% faster than current serial on
   Raytrace and 29.5% slower on sum-bits. Independent scheduling, removal of
   temporary result storage and useful throughput/utilization remain unfinished.
+- Prepared constructor witnesses now occupy the same compiled result layout as
+  source Effects; see [shared prepared results](../benchmarks/cell-prepared-results/README.md).
+  Raytrace transfers 185,328 arrays into Effects, removes 262,894 source receipt
+  writes and 483,504 intermediate writes across both phases. Combined result-buffer
+  growth events fall by 115,102. A measured cache-retention regression was corrected
+  by replacing the source spare when adopting an incoming array; the pool keeps
+  39,067 buffers and shrinks from 2,742,768 to 698,240 capacity bytes. Actual query,
+  graph, repair and source-boundary work is unchanged. Header sizes remain unchanged,
+  while shared layout storage, worker checks, moves and spare releases are charged.
+  Ordinary publication retains this buffer; joint-history conversion is explicit,
+  and ordinary history capture remains separate. Native acceptance and Run checks
+  pass. There is no new speed claim or independent parked scheduler.

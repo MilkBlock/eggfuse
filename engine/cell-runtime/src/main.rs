@@ -226,12 +226,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else if opt("--query-grain").is_some() {
         return Err("query grain requires query workers".into());
     }
-    if let Some(grain) = opt("--cell-execution-grain") {
-        #[cfg(feature = "sparse-cells")]
-        runtime.use_cell_execution(grain.parse()?)?;
-        #[cfg(not(feature = "sparse-cells"))]
-        { let _ = grain; return Err("Cell execution requires sparse-cells".into()); }
-    }
     if scoped_execution { runtime.use_scoped_execution()?; }
     if port_scopes { runtime.use_port_scopes()?; }
     if pure_epochs { runtime.use_pure_epochs()?; }
@@ -239,6 +233,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "sparse-cells")]
     if !ownership && args.iter().any(|x| x == "--entry-publications") {
         runtime.use_entry_publications()?;
+    }
+    // Compile worker result wiring after the final Entry output layout.
+    if let Some(grain) = opt("--cell-execution-grain") {
+        #[cfg(feature = "sparse-cells")]
+        runtime.use_cell_execution(grain.parse()?)?;
+        #[cfg(not(feature = "sparse-cells"))]
+        { let _ = grain; return Err("Cell execution requires sparse-cells".into()); }
     }
     #[cfg(feature = "cell-absorption")]
     if args.iter().any(|x| x == "--cell-absorption") {

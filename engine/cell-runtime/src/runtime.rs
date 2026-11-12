@@ -402,6 +402,7 @@ impl Executor {
             #[cfg(not(feature = "view-consumers"))]
             { false }
         });
+        if self.cell_execution.is_some() { self.refresh_cell_execution_layouts(); }
         Ok(())
     }
     #[cfg(feature = "cell-absorption")]
@@ -2116,7 +2117,8 @@ impl Executor {
                 Prepared::Found(witness) => (Some(witness),None),
                 Prepared::Prefix(results) => {
                     let mut witness=None;
-                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,results,&mut witness);
+                    let completed=std::mem::replace(&mut b.prepared,0);
+                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,completed,results,&mut witness);
                     (witness,prefix)
                 },
                 _ => (None,None),
@@ -2124,8 +2126,12 @@ impl Executor {
         };
         #[cfg(feature = "sparse-cells")]
         let prefix_ready = prefix.is_some();
+        #[cfg(feature = "sparse-cells")]
+        let (prefix_count, prefix_results) = prefix.map_or((0,None),|(count,results)|(count,Some(results)));
         #[cfg(not(feature = "sparse-cells"))]
         let prefix_ready = false;
+        #[cfg(not(feature = "sparse-cells"))]
+        let prefix_results = None;
         #[cfg(feature = "sparse-cells")]
         { self.graph.stats.constructor_prepared_inputs += u64::from(constructor.is_some()); }
         #[cfg(feature = "slot-transfer-audit")]
@@ -2354,11 +2360,11 @@ impl Executor {
         #[cfg(feature = "iterative-bake")]
         let (mut effect_receipts, resume_start) = match resumed {
             Some((start, receipts)) => (receipts, Some(start)),
-            None => (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None),
+            None => (self.stage_spine.begin_effects_with_results(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known, prefix_results), None),
         };
         #[cfg(not(feature = "iterative-bake"))]
         let (mut effect_receipts, resume_start) =
-            (self.stage_spine.begin_effects(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known), None::<Start>);
+            (self.stage_spine.begin_effects_with_results(&self.graph, rid, full_effects, false, stage_cursor.as_ref(), &b.known, prefix_results), None::<Start>);
         #[cfg(feature = "rhs-locals")]
         let local = if !prefix_ready && resume_start.is_none() && {
             #[cfg(feature="sparse-cells")] { b.prepared==0 }
@@ -2384,11 +2390,11 @@ impl Executor {
         #[cfg(not(feature="sparse-cells"))]
         let prepared=0;
         #[cfg(feature="sparse-cells")]
-        let prefix_end = prefix.map_or(prepared,|results| {
+        let prefix_end = if prefix_count != 0 {
             let lazy = self.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
                 && stage_cursor.is_none() && origin.is_none();
-            self.graph.consume_constructor_prefix(rid,results,&mut effect_receipts,lazy)
-        });
+            self.graph.consume_constructor_prefix(rid,prefix_count,lazy)
+        } else { prepared };
         #[cfg(not(feature="sparse-cells"))]
         let prefix_end = prepared;
         #[allow(unused_mut)]
@@ -3229,7 +3235,7 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v4",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v5",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),

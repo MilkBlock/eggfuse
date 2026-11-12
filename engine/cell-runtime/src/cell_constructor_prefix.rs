@@ -45,6 +45,7 @@ impl Plan {
         let Some(reads) = reads else { counts.unavailable += 1; return; };
         let capacity = instance.values.capacity_bytes();
         let mut results = Vec::new();
+        let mut completed = 0;
         for step in &self.prefix {
             if !reads.constructor_available(step.table) { counts.unavailable += 1; break; }
             let mut key = smallvec::SmallVec::<[Value;4]>::new();
@@ -63,16 +64,26 @@ impl Plan {
             counts.lookups += 1;
             match reads.point(step.table,&key,scratch,work) {
                 Ok(Some((value,_,Dependency::Fact(witness)))) => {
-                    if results.is_empty() {
-                        results.reserve_exact(self.prefix.len());
-                        counts.prefix_witness_growths += 1;
-                        counts.prefix_witness_bytes += (results.capacity()*std::mem::size_of::<FactRef>()) as u64;
+                    if completed == 0 {
                         instance.values.reserve_exact(self.prefix.len());
                     }
                     debug_assert!(!instance.values.contains_key(&step.destination));
                     instance.values.insert(step.destination,value);
-                    results.push(witness);
-                    counts.hits += 1; counts.result_writes += 1; counts.prefix_slot_writes += 1;
+                    counts.prefix_layout_checks += 1;
+                    if let Some(layout) = &self.result_layout
+                        && let Some(slot) = layout.index(step.operation) {
+                        if results.is_empty() {
+                            results.reserve_exact(layout.width());
+                            results.resize(layout.width(), None);
+                            counts.prefix_witness_growths += 1;
+                            counts.prefix_witness_bytes += (results.capacity()*std::mem::size_of::<Option<Dependency>>()) as u64;
+                            counts.prefix_result_initializations += results.len() as u64;
+                        }
+                        results[slot] = Some(Dependency::Fact(witness));
+                        counts.result_writes += 1;
+                    }
+                    completed += 1;
+                    counts.hits += 1; counts.prefix_slot_writes += 1;
                 },
                 Ok(None) => { counts.misses += 1; break; },
                 _ => { counts.unavailable += 1; break; },
@@ -81,8 +92,10 @@ impl Plan {
         let growth = instance.values.capacity_bytes().saturating_sub(capacity);
         counts.prefix_slot_growths += u64::from(growth!=0);
         counts.prefix_capacity_bytes += growth as u64;
-        if !results.is_empty() {
+        if completed != 0 {
             counts.prefix_instances += 1;
+            instance.prepared = completed;
+            counts.prefix_progress_writes += 1;
             instance.constructor = Prepared::Prefix(results);
         }
     }
@@ -92,8 +105,11 @@ impl Graph {
     /// Only this checked recipe may turn prepared Eq slots into source results.
     /// Source effects have not begun, and the prefix contains no graph mutation.
     pub(crate) fn seal_constructor_prefix(&mut self, rule: usize, values: &mut Slots,
-        results: Vec<FactRef>, first: &mut Option<FactRef>) -> Option<Vec<FactRef>> {
-        let steps = &self.program.executions[rule].constructor.as_ref().expect("prepared prefix plan").prefix[..results.len()];
+        count: usize, results: Vec<Option<Dependency>>,
+        first: &mut Option<FactRef>) -> Option<(usize, Vec<Option<Dependency>>)> {
+        let plan = self.program.executions[rule].constructor.as_ref().expect("prepared prefix plan");
+        let steps = &plan.prefix[..count];
+        assert!(!steps.is_empty(), "prepared prefix has completed steps");
         self.stats.constructor_prefix_checks += 1;
         let mut checks = 0;
         let valid = self.sealed_generation == Some(self.stats.unions) && steps.iter().all(|step| {
@@ -101,36 +117,33 @@ impl Graph {
             self.constructor_prefix_table_ready(step.table)
         });
         self.stats.constructor_prefix_table_checks += checks;
-        if valid { Some(results) } else {
+        if valid { Some((count, results)) } else {
             self.stats.constructor_prefix_rejected += 1;
             for step in steps {
                 values.remove(&step.destination);
                 self.stats.constructor_prefix_discarded_slots += 1;
             }
-            // The first witness still has the original single-operation proof
-            // shape. It may use exact source validation; no speculative Eq stays.
-            *first = Some(results[0]);
+            // Reuse a demanded first result if present. Undemanded witnesses
+            // are no longer retained solely for this rare invalidation path.
+            *first = plan.result_layout.as_ref().and_then(|p|p.index(plan.operation))
+                .and_then(|i|results.get(i)).copied().flatten().and_then(|w|match w {
+                    Dependency::Fact(w) => Some(w), _ => None,
+                });
             None
         }
     }
     pub(crate) fn consume_constructor_prefix(&mut self, rule: usize,
-        results: Vec<FactRef>, effects: &mut crate::cell::Effects, lazy: bool) -> usize {
-        let steps = &self.program.executions[rule].constructor.as_ref().unwrap().prefix[..results.len()];
+        count: usize, lazy: bool) -> usize {
+        let steps = &self.program.executions[rule].constructor.as_ref().unwrap().prefix[..count];
         let end = steps.last().unwrap().operation + 1;
         self.stats.constructor_prefix_frames += 1;
-        self.stats.constructor_prefix_operations += results.len() as u64;
-        self.stats.constructor_requests += results.len() as u64;
-        self.stats.constructor_reused += results.len() as u64;
+        self.stats.constructor_prefix_operations += count as u64;
+        self.stats.constructor_requests += count as u64;
+        self.stats.constructor_reused += count as u64;
         let aliases = steps.last().unwrap().aliases as u64;
         self.known_stats.static_eliminated += aliases;
         self.known_stats.avoided_lookups += aliases;
         if lazy { self.known_stats.lazy_prefix_eliminated += aliases; }
-        for (step,witness) in steps.iter().zip(results) {
-            if let Some(slot) = effects.slot(step.operation) {
-                *slot = Some(Dependency::Fact(witness));
-                self.stats.constructor_prefix_receipt_writes += 1;
-            }
-        }
         end
     }
 }
@@ -170,17 +183,17 @@ mod tests {
             }
             let Prepared::Prefix(results)=std::mem::take(&mut instance.constructor) else {panic!("worker prefix")};
             let mut witness=None;
-            let prefix=g.seal_constructor_prefix(0,&mut instance.values,results,&mut witness);
+            let prefix=g.seal_constructor_prefix(0,&mut instance.values,instance.prepared,results,&mut witness);
             if change=="same" {
-                let mut effects=crate::cell::Effects::default();
-                assert_eq!(g.consume_constructor_prefix(0,prefix.unwrap(),&mut effects,false),2);
+                assert_eq!(g.consume_constructor_prefix(0,prefix.unwrap().0,false),2);
                 assert_eq!(instance.values.get(&1),Some(&first));
                 assert_eq!(g.stats.constructor_prefix_operations,2);
             } else {
                 assert!(prefix.is_none());
                 assert!(!instance.values.contains_key(&1) && !instance.values.contains_key(&2));
                 let cell=g.begin_transient(0,instance.values,None).unwrap();
-                let actual=g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness.unwrap()).unwrap();
+                assert!(witness.is_none(), "undemanded result has no extra retained witness");
+                let actual=g.construct(cell,0,0,&[Arg::Slot(0)],1).unwrap();
                 let next=g.construct(cell,1,0,&[Arg::Slot(1)],2).unwrap();
                 if change=="delete" {assert_ne!(actual,first);assert_ne!(next,second);}
                 assert_eq!(g.stats.constructor_prefix_discarded_slots,2);

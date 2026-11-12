@@ -1,7 +1,7 @@
 # Owned Cell execution: trace, boundaries and equivalence
 
-This explains the ongoing refactor, including the constructor-prefix extension
-in `356f0424`. It distinguishes implemented ownership from the still-unfinished
+This explains the ongoing refactor, including constructor-prefix continuation
+and its shared prepared-result layout. It distinguishes implemented ownership from the still-unfinished
 independent scheduler. See [the checklist](CELL_EXECUTION_REFACTOR.md) for scope.
 
 ## What remains the same instance
@@ -16,7 +16,9 @@ The result buffer later moves into completion/publication ownership.
 These are lifecycle views of the execution, not a requirement that one Rust
 struct or physical address remain unchanged. Moving ownership is permitted;
 reconstructing bindings or replaying completed effects is what must disappear.
-Current result preparation still has a temporary witness array; ordinary history
+Constructor preparation now writes demanded witnesses into the source Effects
+layout; ordinary completion/publication can retain the same allocation. The
+existing joint-history path may need an explicit layout import. Ordinary history
 capture and result publication are not yet completely unified.
 
 The target scheduler parks the execution and queues its unfinished operation

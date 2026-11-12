@@ -47,7 +47,7 @@ mod links;
 pub(crate) use links::QueryLinks;
 #[path = "cell_effects.rs"]
 mod effects;
-pub(crate) use effects::{CompletedEffects, EffectPlan, Effects, SingleEffect};
+pub(crate) use effects::{CompletedEffects, EffectLayout, EffectPlan, Effects, SingleEffect};
 #[path = "cell_bound.rs"]
 mod bound;
 pub(crate) use bound::{BoundRhs, BoundValue};

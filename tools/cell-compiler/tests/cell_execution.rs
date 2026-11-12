@@ -52,6 +52,60 @@ const HEADER: &str = r#"
 "#;
 
 #[test]
+fn constructor_progress_and_later_scalar_preparation_share_the_instance_without_replaying_either() {
+    let source = r#"
+(datatype E (N i64) (F E) (G E) (H E))
+(function Out (E) i64 :merge new)
+(ruleset step)
+(rule ((= x (N n)))
+ ((let u (F x)) (let v (G u)) (set (Out v) (+ n 1)) (H u)) :ruleset step)
+(G (F (N 1))) (G (F (N 2)))
+(run-schedule (run step))
+(check (= (Out (G (F (N 2)))) 3))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None,source).unwrap();
+    let mut control=executor(source,4);control.execute().unwrap();
+    for workers in [1,4] {
+        let mut candidate=executor(source,workers);
+        candidate.use_cell_execution(1).unwrap();candidate.execute().unwrap();
+        same(&control,&candidate);
+        assert!(candidate.graph.stats.constructor_prefix_operations>=4);
+        assert!(candidate.graph.stats.prepared_rhs_later_operations>=2);
+        assert_eq!(candidate.graph.stats.prepared_rhs_operations,0,
+            "constructor progress is not charged as scalar preparation");
+        assert_eq!(candidate.graph.stats.constructor_prefix_receipt_writes,0);
+    }
+}
+
+#[test]
+fn entry_configuration_refreshes_the_shared_preparation_layout_before_the_first_run() {
+    let source = r#"
+(datatype E (N i64) (F E) (G E) (Seen E))
+(ruleset step) (ruleset next)
+(rule ((= x (N n))) ((G (F x))) :ruleset step)
+(rule ((G x)) ((Seen x)) :ruleset next)
+(G (F (N 1))) (G (F (N 2)))
+(run-schedule (seq (run step) (run next) (run step) (run next)))
+"#;
+    let mut control=executor(source,4);control.execute().unwrap();
+    let mut candidate=Executor::new(Graph::new_with_repair_ports(Program::parse(artifact(source)).unwrap()).unwrap(),true);
+    candidate.use_query_workers(4,1).unwrap();
+    candidate.use_cell_execution(1).unwrap();
+    // Configuration precedes every instance. Refresh the compiled layout once,
+    // preserving the same buffer path despite the order of configuration calls.
+    candidate.use_entry_publications().unwrap();
+    candidate.execute().unwrap();
+    same(&control,&candidate);
+    assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+    assert!(candidate.graph.stats.constructor_prefix_operations>0);
+    assert!(candidate.report()["stage_spine"]["stats"]["prepared_effect_buffer_moves"].as_u64().unwrap()>0);
+    assert!(candidate.report()["stage_spine"]["stats"]["prepared_effect_spares_released"].as_u64().unwrap()>0);
+    assert!(candidate.report()["stage_spine"]["owned_output_storage"]["pooled_buffers"].as_u64().unwrap()
+        <= control.report()["stage_spine"]["owned_output_storage"]["pooled_buffers"].as_u64().unwrap(),
+        "prepared frames replace idle cache entries instead of accumulating across Runs");
+}
+
+#[test]
 fn worker_constructor_prefix_continues_to_first_missing_result_and_exports_actual_foreign_results() {
     for existing in [0,1,2,3] {
         for union in [false,true] {

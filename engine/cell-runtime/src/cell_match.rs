@@ -20,7 +20,9 @@ pub(crate) struct Instance {
     // Query completion writes the RHS's owned slot storage directly. Winner
     // selection borrows its values; it must not assemble a second binding.
     pub values: Slots,
-    // Prepared local prefix, not a committed effect position.
+    // Position in the selected preparation program, not a committed effect:
+    // source op position normally; step position for Prepared::Prefix. The
+    // shared constructor program maps that position back to the source once.
     #[cfg(feature="sparse-cells")]
     pub prepared: usize,
     pub known: QueryFacts,

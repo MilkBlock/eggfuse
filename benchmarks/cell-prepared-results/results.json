@@ -1,0 +1,290 @@
+{
+  "scope": "standalone Cell CPU; work and semantic evidence, not timing",
+  "control_commit": "356f0424",
+  "runtime_sha256": "9d62a9fde4a6c006692f78d461ec3b4d930df41f4d42b725626c0b1b4936d2c2",
+  "control_runtime_sha256": "9641aafc997100ca26957ad682b0554062818a18b4e36cbad1f7fe3de8b46b2a",
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "logical_graph_query_repair_and_boundary_work_unchanged": true,
+      "removed_source_receipt_writes": 1107,
+      "removed_intermediate_result_writes": 2022,
+      "combined_result_buffer_growths": [
+        1073,
+        736
+      ],
+      "constructor_preparation_before": {
+        "attempts": 4860,
+        "hits": 3971,
+        "key_fields": 11703,
+        "key_spills": 0,
+        "lookups": 6190,
+        "misses": 2219,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 44400,
+        "prefix_instances": 945,
+        "prefix_slot_growths": 880,
+        "prefix_slot_writes": 2022,
+        "prefix_witness_bytes": 18880,
+        "prefix_witness_growths": 945,
+        "result_writes": 3971,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 4860,
+        "hits": 3971,
+        "key_fields": 11703,
+        "key_spills": 0,
+        "lookups": 6190,
+        "misses": 2219,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 44400,
+        "prefix_instances": 945,
+        "prefix_layout_checks": 2022,
+        "prefix_progress_writes": 945,
+        "prefix_result_initializations": 1621,
+        "prefix_slot_growths": 880,
+        "prefix_slot_writes": 2022,
+        "prefix_witness_bytes": 25936,
+        "prefix_witness_growths": 591,
+        "result_writes": 3056,
+        "unavailable": 0
+      },
+      "spine_work_changes": {
+        "effect_buffer_growth_bytes": [
+          9520,
+          8352
+        ],
+        "effect_buffer_growths": [
+          128,
+          145
+        ],
+        "effect_slot_probes": [
+          9070,
+          7687
+        ],
+        "effect_slot_targets": [
+          7283,
+          6176
+        ],
+        "effect_slots_initialized": [
+          8056,
+          6435
+        ],
+        "prepared_effect_buffer_moves": [
+          null,
+          591
+        ],
+        "prepared_effect_joint_positions": [
+          null,
+          0
+        ],
+        "prepared_effect_joint_reads": [
+          null,
+          0
+        ],
+        "prepared_effect_joint_writes": [
+          null,
+          0
+        ],
+        "prepared_effect_spare_bytes_released": [
+          null,
+          28192
+        ],
+        "prepared_effect_spares_released": [
+          null,
+          534
+        ]
+      },
+      "owned_output_storage": [
+        {
+          "completion_capacity_bytes": 30720,
+          "pending_capacity_bytes": 0,
+          "pool_header_bytes": 3072,
+          "pooled_buffers": 121,
+          "pooled_capacity_bytes": 9520
+        },
+        {
+          "completion_capacity_bytes": 30720,
+          "pending_capacity_bytes": 0,
+          "pool_header_bytes": 3072,
+          "pooled_buffers": 121,
+          "pooled_capacity_bytes": 6096
+        }
+      ],
+      "instance_header_bytes": 152,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        487784,
+        492440
+      ],
+      "effect_plan_slot_bytes": [
+        3985,
+        6425
+      ],
+      "effect_plan_layout_bytes": 9120,
+      "effect_plan_support_bytes": {
+        "joint_result_plan_bytes": [
+          1560,
+          1952
+        ],
+        "effect_plan_registration_bytes": [
+          6184,
+          8144
+        ],
+        "effect_plan_cache_bytes": [
+          4656,
+          4656
+        ]
+      },
+      "net_saved_uncalibrated_operations": -1733,
+      "work_ledger_sha256": "d6a0d3ab9d1ed040be1a40d56fad92073e2d6b61fcbb5873c65be6b083154f2c"
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_and_ordered_run_summaries": true,
+      "logical_graph_query_repair_and_boundary_work_unchanged": true,
+      "removed_source_receipt_writes": 262894,
+      "removed_intermediate_result_writes": 483504,
+      "combined_result_buffer_growths": [
+        324034,
+        208932
+      ],
+      "constructor_preparation_before": {
+        "attempts": 885192,
+        "hits": 758771,
+        "key_fields": 2459620,
+        "key_spills": 0,
+        "lookups": 1230531,
+        "misses": 471760,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 13555992,
+        "prefix_instances": 284545,
+        "prefix_slot_growths": 274769,
+        "prefix_slot_writes": 483504,
+        "prefix_witness_bytes": 5083984,
+        "prefix_witness_growths": 284545,
+        "result_writes": 758771,
+        "unavailable": 0
+      },
+      "constructor_preparation_after": {
+        "attempts": 885192,
+        "hits": 758771,
+        "key_fields": 2459620,
+        "key_spills": 0,
+        "lookups": 1230531,
+        "misses": 471760,
+        "missing_inputs": 0,
+        "prefix_capacity_bytes": 13555992,
+        "prefix_instances": 284545,
+        "prefix_layout_checks": 483504,
+        "prefix_progress_writes": 284545,
+        "prefix_result_initializations": 326468,
+        "prefix_slot_growths": 274769,
+        "prefix_slot_writes": 483504,
+        "prefix_witness_bytes": 5223488,
+        "prefix_witness_growths": 185328,
+        "result_writes": 538161,
+        "unavailable": 0
+      },
+      "spine_work_changes": {
+        "effect_buffer_growth_bytes": [
+          2742768,
+          1548320
+        ],
+        "effect_buffer_growths": [
+          39489,
+          23604
+        ],
+        "effect_slot_probes": [
+          1780404,
+          1484179
+        ],
+        "effect_slot_targets": [
+          1112681,
+          849787
+        ],
+        "effect_slots_initialized": [
+          1202660,
+          876192
+        ],
+        "prepared_effect_buffer_moves": [
+          null,
+          185328
+        ],
+        "prepared_effect_joint_positions": [
+          null,
+          0
+        ],
+        "prepared_effect_joint_reads": [
+          null,
+          0
+        ],
+        "prepared_effect_joint_writes": [
+          null,
+          0
+        ],
+        "prepared_effect_spare_bytes_released": [
+          null,
+          6073568
+        ],
+        "prepared_effect_spares_released": [
+          null,
+          161951
+        ]
+      },
+      "owned_output_storage": [
+        {
+          "completion_capacity_bytes": 7864320,
+          "pending_capacity_bytes": 0,
+          "pool_header_bytes": 1572864,
+          "pooled_buffers": 39067,
+          "pooled_capacity_bytes": 2742768
+        },
+        {
+          "completion_capacity_bytes": 7864320,
+          "pending_capacity_bytes": 0,
+          "pool_header_bytes": 1572864,
+          "pooled_buffers": 39067,
+          "pooled_capacity_bytes": 698240
+        }
+      ],
+      "instance_header_bytes": 152,
+      "execution_header_bytes": 456,
+      "compiled_payload_bytes": [
+        2419688,
+        2424344
+      ],
+      "effect_plan_slot_bytes": [
+        141705,
+        143665
+      ],
+      "effect_plan_layout_bytes": 11376,
+      "effect_plan_support_bytes": {
+        "joint_result_plan_bytes": [
+          2040,
+          2328
+        ],
+        "effect_plan_registration_bytes": [
+          8680,
+          10120
+        ],
+        "effect_plan_cache_bytes": [
+          4656,
+          4656
+        ]
+      },
+      "net_saved_uncalibrated_operations": -516722,
+      "work_ledger_sha256": "e8ab7523109c1c86517e354ef06268d8d0587fc3b06092f9f7c6a3c4a8942b57"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "8b548dd61bd337b006a36903482e7e175ba428e3c0fc0b8a4a92b6396544df84"
+  }
+}

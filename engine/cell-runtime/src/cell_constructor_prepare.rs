@@ -17,6 +17,7 @@ pub(crate) struct Plan {
     pub handoff: bool,
     keys: Vec<Arg>,
     prefix: Vec<prefix::Step>,
+    pub(crate) result_layout: Option<std::sync::Arc<crate::cell::EffectLayout>>,
 }
 
 #[cfg(test)]
@@ -123,9 +124,9 @@ pub(crate) enum Prepared {
     Untried,
     Absent,
     Found(FactRef),
-    // Actual result witnesses in the shared prefix plan's order. Values stay
-    // in Instance.values; this is neither another binding nor an effect log.
-    Prefix(Vec<FactRef>),
+    // Demanded actual results already occupy the source Effects layout.
+    // Progress uses Instance.prepared; no temporary per-constructor receipt log.
+    Prefix(Vec<Option<Dependency>>),
 }
 impl Prepared {
     pub fn pending(&self) -> bool { matches!(self, Self::Untried) }
@@ -151,6 +152,9 @@ pub(crate) struct Counts {
     pub prefix_capacity_bytes: u64,
     pub prefix_witness_growths: u64,
     pub prefix_witness_bytes: u64,
+    pub prefix_layout_checks: u64,
+    pub prefix_result_initializations: u64,
+    pub prefix_progress_writes: u64,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
@@ -158,6 +162,7 @@ impl Counts {
         add!(attempts, unavailable, missing_inputs, key_fields, key_spills, lookups, hits, misses, result_writes);
         add!(prefix_instances, prefix_slot_writes, prefix_slot_growths, prefix_capacity_bytes,
             prefix_witness_growths, prefix_witness_bytes);
+        add!(prefix_layout_checks, prefix_result_initializations, prefix_progress_writes);
     }
 }
 impl Plan {
@@ -181,7 +186,7 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![] }); }
+                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], result_layout:None }); }
         }
         None
     }

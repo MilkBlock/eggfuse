@@ -91,6 +91,7 @@ impl Work {
             Some(J::String(v)) if v == "cell-constructor-preparation/v2" => 2,
             Some(J::String(v)) if v == "cell-constructor-preparation/v3" => 3,
             Some(J::String(v)) if v == "cell-constructor-preparation/v4" => 4,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v5" => 5,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -148,6 +149,24 @@ impl Work {
         // Union requests are already charged above. Charge only the new direct
         // operand acquisition here, including actual result-row access; neither
         // covered Cells nor queued unions earn a second saved-operation credit.
+        for (group, fields) in [
+            ("query_workers/stats/execution/constructor", &["prefix_layout_checks",
+                "prefix_result_initializations", "prefix_progress_writes"][..]),
+            ("stage_spine/stats", &["prepared_effect_buffer_moves",
+                "prepared_effect_spares_released", "prepared_effect_joint_positions",
+                "prepared_effect_joint_reads", "prepared_effect_joint_writes"]),
+        ] {
+            for field in fields {
+                let key = format!("{group}/{field}");
+                let enabled = constructor_preparation >= 5 && (group != "query_workers/stats/execution/constructor"
+                    || report["query_workers"]["enabled"] == true);
+                let value = if enabled {
+                    report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                        .ok_or_else(||format!("missing constructor preparation work {key}"))?
+                } else { 0 };
+                work.insert(key,value);
+            }
+        }
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
                 None => 0,
@@ -574,6 +593,13 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "query_workers/stats/execution/constructor/prefix_slot_writes",
         "query_workers/stats/execution/constructor/prefix_slot_growths",
         "query_workers/stats/execution/constructor/prefix_witness_growths",
+        "query_workers/stats/execution/constructor/prefix_layout_checks",
+        "query_workers/stats/execution/constructor/prefix_result_initializations",
+        "query_workers/stats/execution/constructor/prefix_progress_writes",
+        "stage_spine/stats/prepared_effect_buffer_moves",
+        "stage_spine/stats/prepared_effect_spares_released",
+        "stage_spine/stats/prepared_effect_joint_positions", "stage_spine/stats/prepared_effect_joint_reads",
+        "stage_spine/stats/prepared_effect_joint_writes",
         "query_workers/stats/execution/constructor/attempts", "query_workers/stats/execution/constructor/key_fields",
         "query_workers/stats/execution/constructor/key_spills", "query_workers/stats/execution/constructor/result_writes"] {
         let mut changed = report.clone();
