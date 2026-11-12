@@ -1,0 +1,20 @@
+{
+  "scope": "Fresh native instances -> Graph.slot affine state -> serialized batch -> Metal GPU; bench only, no completion effects",
+  "correct": 97,
+  "total": 102,
+  "native_python_state_max_error": 2.384185791015625e-06,
+  "top1_equal": true,
+  "native_projection_ns_per_case_median": 784.165,
+  "native_projection_ns_batch_sum": 78669.61,
+  "gpu_batch_ms_median": 0.3585419908631593,
+  "caveats": [
+    "native timing is warm release-build projection only",
+    "serialization and subprocess transport excluded, not a fused end-to-end timing",
+    "addresses pinned to unchanged fresh initial fixtures; no general cross-stage binding or generation handling"
+  ],
+  "hashes": {
+    "states": "6eb28ebf0ca1698039c4c15f991d9d95a741c35ce970cc81ed6782b6054a5db5",
+    "corpus": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "model": "2c99e1e528324746a85974b3f46087f98803fc1e7de6d97e136d6c0572cc08d2"
+  }
+}

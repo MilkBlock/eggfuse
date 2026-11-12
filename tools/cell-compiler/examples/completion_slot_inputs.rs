@@ -59,7 +59,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             return Err(error("slot and row disagree").into());
                         }
                         reads.push((f.cell, arg.clone()));
-                        fields.push(json!({"column":column,"buffer_index":reads.len()-1,"source":match arg{Arg::Slot(s)=>json!({"slot":s}),Arg::Literal(_)=>json!({"literal":true})}}));
+                        fields.push(json!({"column":column,"buffer_index":reads.len()-1,"cell":f.cell,"template":cell.template,"source":match arg{Arg::Slot(s)=>json!({"slot":s}),Arg::Literal(_)=>json!({"literal":true})}}));
                     }
                 }
                 records.push(json!({"table":graph.program.tables[t].name,

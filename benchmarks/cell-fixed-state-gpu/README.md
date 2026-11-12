@@ -166,3 +166,82 @@ out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/bench_slots.
   --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
   --output out/cell-fixed-state-gpu/slot-results.json
 ```
+
+## Native projection and expanded-entrance stress test
+
+`emit_native_plan.py` freezes shared affine matrices plus operand addresses into
+an artifact. The artifact is assembled from the checked initial-instance adapter,
+not yet emitted directly by the general Cell compiler. The release Rust example
+`completion_project_slots` creates fresh actual Graph instances, verifies the
+source hash and operand-owner template, and reads `Graph.slot` directly into the
+affine projection. It never exports, canonicalizes, enumerates witnesses or
+interprets node edges to produce vectors. Addresses are only valid for the exact
+unchanged initial fixture; this is not a producer/op universal-address assumption
+and does not support relocation across Runs. No prediction authorizes effects.
+
+`bench_native_states.py` checks those native vectors against Python projection,
+then feeds one batch into the unchanged fixed GPU model. On 102 original test
+instances, prediction remains 97/102; max vector difference is 2.39e-6. Native
+warm release projection sums to 0.079 ms over the 102 instances; synchronized GPU
+numeric execution is 0.359 ms. These are separate component measurements, not an
+end-to-end speedup: source compilation, serialization and subprocess transport
+are excluded. A corrupted owner template is rejected before projection.
+
+A stronger entrance test exposes the model's remaining weakness. Before model
+evaluation, `generate_holdout.py` froze 120 extra sources by adding facts already
+present in each parent's known completion. `collect.py` ran actual Cell and
+native egglog executions with a one-second per-case timeout and two unchanged
+verification Runs. All 120 completed graphs agree with native and retain the
+expected completion. Generation deliberately uses completion graphs; this tests
+additional entrances to the known catalog, not natural traffic or novel targets.
+The model is frozen and is not refitted for this test.
+
+After deduplicating initial graphs:
+
+| Cohort | Correct / total |
+|---|---:|
+| All unique generated inputs | 38 / 108 |
+| Inputs absent from the original corpus | **20 / 90** |
+| Skeletons absent from the original corpus | **18 / 82** |
+
+Thus the 95.10% original development result does **not** establish robust
+multi-entry completion. Adding already derivable facts changes the additive
+feature state too much. This failure is preserved in `holdout-results.json` and
+must remain visible during further representation/training changes. Once used
+to guide development, this cohort is a stress/development set, no longer blind.
+No test exclusions or correctness rules were broadened to improve the result.
+
+Reproduce (regenerate addressed slot export after updating the Rust example):
+
+```sh
+cargo build --locked -p eggfuse-cell-compiler --example completion_slot_inputs
+./target/debug/examples/completion_slot_inputs \
+  out/cell-multi-entry-ridge/inputs.json out/cell-fixed-state-gpu/slot-inputs-addressed.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/emit_native_plan.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --slots out/cell-fixed-state-gpu/slot-inputs-addressed.json \
+  --inputs out/cell-multi-entry-ridge/inputs.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --output out/cell-fixed-state-gpu/native-plan.json
+cargo build --locked --release -p eggfuse-cell-compiler --example completion_project_slots
+./target/release/examples/completion_project_slots \
+  out/cell-fixed-state-gpu/native-plan.json out/cell-fixed-state-gpu/native-states.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/bench_native_states.py \
+  --states out/cell-fixed-state-gpu/native-states.json \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --output out/cell-fixed-state-gpu/native-results.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/generate_holdout.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --inputs out/cell-multi-entry-ridge/inputs.json \
+  --output out/cell-fixed-state-gpu/fresh-inputs.json
+python3 benchmarks/cell-multi-entry-ridge/collect.py \
+  --inputs out/cell-fixed-state-gpu/fresh-inputs.json \
+  --runner target/debug/examples/real_completion_dataset \
+  --output out/cell-fixed-state-gpu/fresh-runtime.json
+out/cell-real-state/venv/bin/python benchmarks/cell-fixed-state-gpu/evaluate_holdout.py \
+  --corpus out/cell-multi-entry-ridge/corpus.json \
+  --runtime out/cell-fixed-state-gpu/fresh-runtime.json \
+  --model out/cell-fixed-state-gpu/typed-pooling/model.npz \
+  --output out/cell-fixed-state-gpu/holdout-results.json
+```
