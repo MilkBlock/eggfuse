@@ -203,6 +203,34 @@ pub fn select_profile(profile: &J) -> Result<J> {
     )
 }
 impl Plan {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
+        assert!(rows.capacity() - rows.len() >= 32);
+        let before = live_bytes();
+        drop(self.sources);
+        rows.push(("composition.sources", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.active_rules);
+        rows.push(("composition.active_rules", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.shapes);
+        rows.push(("composition.shapes", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.conditions);
+        rows.push(("composition.conditions", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.effects);
+        rows.push(("composition.effects", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.queries);
+        rows.push(("composition.queries", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.fragments);
+        rows.push(("composition.fragments", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.transitions);
+        rows.push(("composition.transitions", before - live_bytes()));
+    }
     pub(super) fn derive(
         p: &Program,
         markers: &[Marker],

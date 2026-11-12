@@ -135,9 +135,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     let before = LIVE.load(Relaxed);
     let program = graph.release_storage_by_field(|| LIVE.load(Relaxed), &mut released);
     let graph_bytes = before - LIVE.load(Relaxed);
+    let mut program_fields = Vec::with_capacity(128);
     let before = LIVE.load(Relaxed);
-    drop(program);
+    program.release_storage_by_field(|| LIVE.load(Relaxed), &mut program_fields);
     let program_bytes = before - LIVE.load(Relaxed);
+    assert_eq!(
+        program_bytes,
+        program_fields.iter().map(|(_, bytes)| bytes).sum::<usize>()
+    );
+    result["program_fields"] = json!(program_fields);
     result["graph_owned_teardown_bytes"] = json!(graph_bytes);
     result["retained_program_teardown_bytes"] = json!(program_bytes);
     result["teardown_scope"] = json!(

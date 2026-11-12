@@ -54,6 +54,35 @@ pub struct Marker {
     pub program: Arc<PortProgram>,
 }
 impl Plan {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
+        assert!(rows.capacity() - rows.len() >= 32);
+        let before = live_bytes();
+        drop(self.tables);
+        rows.push(("ownership.tables", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.markers);
+        rows.push(("ownership.markers", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.programs);
+        rows.push(("ownership.programs", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.code_programs);
+        rows.push(("ownership.code_programs", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.code_operators);
+        rows.push(("ownership.code_operators", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.query_classes);
+        rows.push(("ownership.query_classes", before - live_bytes()));
+        self.composition.release_storage_by_field(live_bytes, rows);
+        let before = live_bytes();
+        drop(self.entries);
+        rows.push(("ownership.entries", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.routes);
+        rows.push(("ownership.routes", before - live_bytes()));
+    }
     pub(crate) fn derive(p: &Program) -> Result<Self> {
         let tables = p
             .repair_ports

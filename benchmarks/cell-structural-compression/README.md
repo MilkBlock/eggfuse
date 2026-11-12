@@ -369,3 +369,40 @@ comparison. Raw inputs are `row-footprints-trace.json`, `peak-row-footprints.jso
 ignored experiment output directory. The control is dc63f8f0 with only the same
 post-observation maintenance export added to the example. Both lanes use their
 own worktree-local Cargo target directories.
+
+## Retained compiled-state attribution
+
+The complete post-Graph Program release now attributes its fields in destruction
+order, including ownership composition. The observer preallocates its result
+buffer and checks that all attributed bytes sum to the complete teardown.
+Shared allocations belong to their last owner; these are not independent
+inclusive field sizes. No execution storage or decisions change.
+
+| Added retained owner | Delta from fixed original |
+| --- | ---: |
+| Composition shapes | 413,256 B |
+| Congruence conditions | 476,256 B |
+| Query column positions | 423,672 B |
+| Representative fragments | 44,128 B |
+| Transition keys | 12,432 B |
+| Source artifact | 547,259 B |
+| Total | 1,917,003 B |
+
+Effects have no measured increment in this configuration. The runtime still
+retains the artifact, so its added fragment JSON is charged as well as compiled
+code. Removing only small runtime arrays cannot compensate for these costs.
+The next structural opportunity is shared query/condition prefixes: current
+`prepare_queries` and `prepare_conditions` derive a complete plan per composed
+shape, while shape signal slices already share unchanged prefixes. Sharing
+must use identical compiled meaning, including frame, operator and scalar/input
+checks; observed equality alone cannot justify deleting conditions. This is an
+opportunity identified by measurement, not an implemented takeover or saving.
+
+```sh
+python3 benchmarks/cell-structural-compression/analyze_program.py out/cell-structural-compression/program-fields-original.json out/cell-structural-compression/program-fields-current.json benchmarks/cell-structural-compression/program-storage-results.json
+```
+
+Both lanes use the same destructive observer on their respective actual runtime;
+the original worktree carries only diagnostic instrumentation. Both completed
+1,428 Runs with the same final hash and unchanged complete teardown totals.
+`program-storage-results.json` records all owner contributions and input hashes.
