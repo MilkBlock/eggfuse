@@ -998,6 +998,7 @@ struct TraceEvent {
 pub struct Training {
     trace: Vec<TraceEvent>,
     trace_dropped: u64,
+    pub(crate) trace_event_limit: Option<usize>,
     pub(crate) collect_pairs: bool,
     pairs: BTreeMap<Join, Evidence>,
     hits: BTreeMap<Id, u64>,
@@ -1095,7 +1096,7 @@ impl Training {
             let output = s.output;
             let discovery = s.discover();
             let parent = discovery.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
-            let trace = if self.trace.len() < c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes)) {
+            let trace = if self.trace.len() < self.trace_event_limit.unwrap_or_else(|| c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes))) {
                 let index = self.trace.len();
                 self.trace.push(TraceEvent { parent, unit:id, entry,
                     output, run:self.run, producer_run:parent_run, witness:discovery.witness,
@@ -1178,6 +1179,7 @@ impl Training {
             "sampled_applications":applications,"pair_counter_prunes":self.evictions,
             "program_sha256":p.artifact["sha256"],"events":self.trace,
             "event_units":event_units,"dropped_events":self.trace_dropped,
+            "event_limit":self.trace_event_limit.unwrap_or_else(|| p.iterative.limits.candidates.saturating_mul(p.iterative.limits.depth.min(p.iterative.limits.nodes))),
             "contracts":catalog.completion_contracts(p),
             "closure_transfers":catalog.closure_transfers(p),
             "scope":"bounded completed cursor lineage; not all matches or committed mutations"})
@@ -1323,6 +1325,25 @@ mod tests {
         assert!(ordinary.discovery.as_ref().unwrap().samples.is_none());
         assert_eq!(training.trace_dropped,1);
     }
+    #[test]
+    fn diagnostic_event_budget_does_not_change_candidate_limits() {
+        let c=Catalog::default();
+        let mut training=Training {trace_event_limit:Some(1),run:1,..Default::default()};
+        let mut root=c.root_state(99,1,true).unwrap();
+        training.trace_root(&c,&mut root,99);
+        training.run=2;
+        training.trace_root(&c,&mut root,99);
+        assert_eq!(training.trace.len(),1);
+        assert_eq!(training.trace_dropped,1);
+        training.trace_event_limit=Some(3);
+        training.run=3;
+        training.trace_completed(&c,&mut root,None,(99,None),2);
+        assert_eq!(training.trace.len(),2);
+        assert_eq!(training.trace[1].parent,None);
+        assert!(training.trace[1].truncated_parent,"raising the cap cannot reconstruct a dropped parent");
+        assert_eq!(c.limits.candidates,Limits::default().candidates);
+    }
+
     #[test]
     fn tail_counters_remain_bounded_and_credit_only_complete_entries() {
         let mut c = Catalog::default();

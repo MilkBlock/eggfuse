@@ -259,6 +259,13 @@ impl Executor {
     pub fn collect_iterative_pairs(&mut self) {
         self.stage_spine.training.collect_pairs = true;
     }
+    /// Diagnostic archive budget, independent of candidate-shape selection.
+    /// Zero retains pair counters without raw events. Does not alter the catalog.
+    #[cfg(feature = "iterative-bake")]
+    pub fn collect_iterative_history(&mut self, event_limit: usize) {
+        self.collect_iterative_pairs();
+        self.stage_spine.training.trace_event_limit = Some(event_limit);
+    }
     #[cfg(feature = "iterative-bake")]
     pub fn iterative_training(&self) -> &crate::iterative::Training {
         &self.stage_spine.training
