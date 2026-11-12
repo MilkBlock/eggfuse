@@ -153,6 +153,35 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
         "contract":{"activation":"committed producer fact; current visible exhaustive projection","publication":"original Run occurrence, after all entry bindings are gathered","late_input":"ordinary delta route remains authoritative","alias_alternatives":"residual matching whenever a projection is not exhaustive"}})
 }
 
+/// Specialize ordinary typed Cell instructions after whole-program proof.
+/// The optimized source core is explicit: no source-validation bypass and no
+/// constructor receipt is fabricated from the View row.
+pub fn specialize_entry_values(p: &Program) -> Result<J> {
+    let mut core=p.artifact["source_core"].clone();
+    let projections=crate::cell_entry_invariants::discover(p);
+    for (set_id,set) in array(&p.artifact["recipe"]["rulesets"] )?.iter().enumerate() {
+        for (position,rid) in array(&set["rule_ids"] )?.iter().enumerate() {
+            let rid=rid.as_u64().ok_or("rule id")? as usize;
+            for projection in projections.iter().filter(|x|x.rule==rid) {
+                let effect=&mut core["rulesets"][set_id]["rules"][position]["head"][projection.operation];
+                let dst=effect["dst"].clone();
+                let sort=effect["sort"].clone();
+                let name=p.artifact["recipe"]["rules"][rid]["slots"][projection.result_slot]["name"].clone();
+                *effect=json!({"op":"copy","dst":dst,"sort":sort,"arg":{"var":name,"sort":sort}});
+            }
+        }
+    }
+    core.as_object_mut().ok_or("core object")?.remove("sha256");
+    core["sha256"]=crate::checksum::artifact_digest(&core).into();
+    let markers=p.marker_tables.iter().map(|&t|p.tables[t].name.clone()).collect();
+    let mut result=compile(core,&markers)?;
+    result.as_object_mut().unwrap().remove("sha256");
+    result["entry_value_specialization"]=json!({"source_program":p.artifact["sha256"],
+        "projections":projections,"contract":"all-writer proof; explicit optimized core; regenerate receipt and publication plans"});
+    result["sha256"]=crate::checksum::artifact_digest(&result).into();
+    Ok(result)
+}
+
 pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
     let ir = recipe::build(&core)?;
     let mut templates = vec![];
