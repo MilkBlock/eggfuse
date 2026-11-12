@@ -3,10 +3,10 @@
   "runs": 1428,
   "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
   "original_program_bytes": 115462476,
-  "current_program_bytes": 117379479,
-  "program_delta_bytes": 1917003,
+  "current_program_bytes": 116483791,
+  "program_delta_bytes": 1021315,
   "current_graph_bytes": 2781877,
-  "charged_graph_plus_positive_program_delta_bytes": 4698880,
+  "charged_graph_plus_positive_program_delta_bytes": 3803192,
   "changed_owners": [
     {
       "owner": "artifact",
@@ -17,8 +17,8 @@
     {
       "owner": "composition.conditions",
       "original": 220616,
-      "current": 696872,
-      "delta": 476256
+      "current": 404920,
+      "delta": 184304
     },
     {
       "owner": "composition.fragments",
@@ -29,8 +29,8 @@
     {
       "owner": "composition.queries",
       "original": 304704,
-      "current": 728376,
-      "delta": 423672
+      "current": 124640,
+      "delta": -180064
     },
     {
       "owner": "composition.shapes",
@@ -85,8 +85,8 @@
     {
       "owner": "composition.conditions",
       "original": 220616,
-      "current": 696872,
-      "delta": 476256
+      "current": 404920,
+      "delta": 184304
     },
     {
       "owner": "composition.effects",
@@ -109,8 +109,8 @@
     {
       "owner": "composition.queries",
       "original": 304704,
-      "current": 728376,
-      "delta": 423672
+      "current": 124640,
+      "delta": -180064
     },
     {
       "owner": "composition.shapes",
@@ -349,7 +349,7 @@
   ],
   "inputs_sha256": {
     "original": "675f18d5ea6fdbaf9374a9d57142908cf753b5fd10becfff91d3d043273d704a",
-    "current": "15f216861f63bcf1b381455b0d737e87b0d4a087fb149a7672d7f481b45415b8"
+    "current": "f09c0340658d21112c6127fa4c8999f55e7538c71d46558b565cf180324ddbdd"
   },
   "limitation": "matching final state is only a diagnostic; use the full per-Run audit and semantic acceptance for correctness"
 }

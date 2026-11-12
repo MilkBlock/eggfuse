@@ -4,7 +4,7 @@ use super::*;
 
 /// The low bit records an input use. One word replaces the separate condition
 /// input directory without widening each stored query position.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Position(usize);
 impl Position {
     fn new(index: usize, input: bool) -> Self {
@@ -15,7 +15,7 @@ impl Position {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Plan {
     /// Symbol -> column -> positions in Shape::signals[symbol].
-    pub columns: Vec<Vec<Vec<Position>>>,
+    pub columns: Vec<Arc<Vec<Vec<Position>>>>,
 }
 impl Plan {
     pub fn derive(shape: &Shape, programs: &[Arc<PortProgram>]) -> Self {
@@ -31,10 +31,21 @@ impl Plan {
                         columns[column].push(Position::new(position, column + 1 < width));
                     }
                 }
-                columns
+                Arc::new(columns)
             })
             .collect();
         Self { columns }
+    }
+    /// Content-address only immutable relative positions and input-use bits.
+    /// The caller's shape still supplies the actual instruction/frame identity.
+    pub(super) fn share_columns(&mut self, shared: &mut std::collections::HashSet<Arc<Vec<Vec<Position>>>>) {
+        for columns in &mut self.columns {
+            if let Some(existing) = shared.get(columns) {
+                *columns = existing.clone();
+            } else {
+                shared.insert(columns.clone());
+            }
+        }
     }
     fn positions(&self, symbol: usize, column: usize) -> &[Position] {
         self.columns[symbol].get(column).map_or(&[], Vec::as_slice)

@@ -26,13 +26,13 @@ pub fn operators(templates: &[Template], markers: &[Marker], programs: &[Arc<Por
     result
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Site {
     pub frame: usize,
     pub op: u32,
     pub fields: Vec<Option<usize>>,
 }
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Condition {
     pub sites: [usize; 2],
     pub equality_inputs: Vec<[usize; 2]>,
@@ -42,8 +42,8 @@ pub struct Condition {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Plan {
     pub complete: bool,
-    pub sites: Vec<Site>,
-    pub conditions: Vec<Condition>,
+    pub sites: Vec<Arc<Site>>,
+    pub conditions: Vec<Arc<Condition>>,
     /// Site -> conditions, ordered by the other site. Shared code, never a
     /// consumer list attached to an individual producer instance.
     pub routes: Vec<Vec<usize>>,
@@ -63,14 +63,14 @@ impl Plan {
                 if sites.len() == Self::MAX_SITES {
                     return Self::default(); // Uncovered shape, never a truncated proof.
                 }
-                sites.push(Site {
+                sites.push(Arc::new(Site {
                     frame,
                     op: op as u32,
                     fields: fields
                         .iter()
                         .map(|s| s.map(|s| shape.ports[frame][s]))
                         .collect(),
-                });
+                }));
             }
         }
         let mut plan = Self {
@@ -117,7 +117,7 @@ impl Plan {
                     }
                 }
                 let id = plan.conditions.len();
-                plan.conditions.push(Condition {
+                plan.conditions.push(Arc::new(Condition {
                     sites: [a, b],
                     equality_inputs,
                     scalar_columns: left[..left.len() - 1]
@@ -126,7 +126,7 @@ impl Plan {
                         .filter_map(|(i, a)| a.is_none().then_some(i))
                         .collect(),
                     outputs: [u, v],
-                });
+                }));
                 plan.routes[a].push(id);
                 plan.routes[b].push(id);
             }

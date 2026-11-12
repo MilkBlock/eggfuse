@@ -357,18 +357,41 @@ impl Plan {
     }
     pub fn prepare_queries(&mut self, programs: &[Arc<PortProgram>]) {
         if self.queries.is_empty() {
-            self.queries = self.shapes.iter()
-                .map(|shape| Arc::new(queries::Plan::derive(shape, programs))).collect();
+            // The interner exists only while compiling; no runtime lookup or
+            // extra maintained binding directory is introduced.
+            let mut shared = std::collections::HashSet::new();
+            self.queries = self.shapes.iter().map(|shape| {
+                let mut plan = queries::Plan::derive(shape, programs);
+                plan.share_columns(&mut shared);
+                Arc::new(plan)
+            }).collect();
         }
     }
     pub fn prepare_conditions(&mut self, programs: &[Arc<PortProgram>], templates: &[Template], markers: &[Marker]) {
         if self.conditions.is_empty() {
             let operators = conditions::operators(templates, markers, programs);
-            self.conditions = self
-                .shapes
-                .iter()
-                .map(|shape| Arc::new(conditions::Plan::derive(shape, programs, &operators)))
-                .collect();
+            let mut sites = std::collections::HashSet::new();
+            let mut conditions = std::collections::HashSet::new();
+            self.conditions = self.shapes.iter().map(|shape| {
+                let mut plan = conditions::Plan::derive(shape, programs, &operators);
+                // Full typed code equality, not observed instance equality.
+                // Local site/symbol indices retain their original meaning.
+                for site in &mut plan.sites {
+                    if let Some(shared) = sites.get(site) {
+                        *site = Arc::clone(shared);
+                    } else {
+                        sites.insert(site.clone());
+                    }
+                }
+                for condition in &mut plan.conditions {
+                    if let Some(shared) = conditions.get(condition) {
+                        *condition = Arc::clone(shared);
+                    } else {
+                        conditions.insert(condition.clone());
+                    }
+                }
+                Arc::new(plan)
+            }).collect();
         }
     }
     fn substitutions(

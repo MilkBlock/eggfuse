@@ -331,9 +331,9 @@ impl Graph {
             "query_classes":self.program.cell_ownership.query_classes.as_ref().map(|p|p.report()),
             "shared_operator_slots":self.program.cell_ownership.code_operators.iter().map(Vec::len).sum::<usize>(),
             "shared_query_routes":self.program.cell_ownership.composition.queries.iter()
-                .flat_map(|p|&p.columns).map(Vec::len).sum::<usize>(),
+                .flat_map(|p|&p.columns).map(|columns| columns.len()).sum::<usize>(),
             "shared_query_positions":self.program.cell_ownership.composition.queries.iter()
-                .flat_map(|p|&p.columns).flatten().map(Vec::len).sum::<usize>(),
+                .flat_map(|p|&p.columns).flat_map(|columns| columns.iter()).map(Vec::len).sum::<usize>(),
             "scope":"shared local all-input guards plus one complete foreign input domain; global Run barrier remains"})
     }
 }

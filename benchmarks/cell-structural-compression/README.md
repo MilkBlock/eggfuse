@@ -5,14 +5,16 @@ The target is at most 30% of the original 3,979,373-byte Graph-exclusive heap
 that target. It is an actual standalone Cell runtime experiment, not a native
 egglog runtime change or standalone simulated compression model.
 
-**Complete retained-cost correction:** the current Graph uses 2,781,877 B,
-but retained Program/shared compiled data adds 1,917,003 B versus the fixed
-original. The charged total is **4,698,880 B (118.08% of baseline)**. This
-configuration has not achieved net compression. The 69.91% Graph-only fraction
-below must not be read as whole-scheme progress toward the 30% target.
+**Latest complete retained cost:** the Graph uses 2,781,877 B and retained
+Program/shared compiled data adds 1,021,315 B versus the fixed original.
+The charged total is **3,803,192 B (95.57% of baseline)**, still far above the
+1,193,811-byte target. This is a 4.43% net reduction, not 70% compression.
+Before shared query/condition code, the total was 4,698,880 B (118.08%).
+The Graph-only fraction remains 69.91% and must not be used as the whole-scheme
+acceptance result.
 
 The observer now drops the executor and Graph, then measures the final retained
-Program teardown. Original/current Program ownership is 115,462,476 / 117,379,479 B.
+Program teardown. Original/latest Program ownership is 115,462,476 / 116,483,791 B.
 Only the positive increment is charged; the original common Program is excluded.
 Shared allocations are released once, avoiding double-counting compiled layouts.
 All measurements are taken after the recorded execution peaks. This does not
@@ -21,7 +23,7 @@ measure a Graph-exclusive within-Run peak; full process peaks are separate.
 Reproduce complete retained accounting from the saved traces:
 
 ```sh
-python3 benchmarks/cell-structural-compression/analyze.py out/cell-structural-compression/original-baseline.json out/cell-structural-compression/row-footprints-trace.json benchmarks/cell-structural-compression/results.json out/cell-structural-compression/original-whole-storage.json out/cell-structural-compression/footprints-whole-storage.json
+python3 benchmarks/cell-structural-compression/analyze.py out/cell-structural-compression/original-baseline.json out/cell-structural-compression/shared-code-trace.json benchmarks/cell-structural-compression/results.json out/cell-structural-compression/original-whole-storage.json out/cell-structural-compression/shared-code-peak.json
 ```
 
 Both teardown runs use the same observer source; the original build omits only
@@ -370,7 +372,7 @@ ignored experiment output directory. The control is dc63f8f0 with only the same
 post-observation maintenance export added to the example. Both lanes use their
 own worktree-local Cargo target directories.
 
-## Retained compiled-state attribution
+## Retained compiled-state attribution before shared code
 
 The complete post-Graph Program release now attributes its fields in destruction
 order, including ownership composition. The observer preallocates its result
@@ -399,10 +401,53 @@ checks; observed equality alone cannot justify deleting conditions. This is an
 opportunity identified by measurement, not an implemented takeover or saving.
 
 ```sh
-python3 benchmarks/cell-structural-compression/analyze_program.py out/cell-structural-compression/program-fields-original.json out/cell-structural-compression/program-fields-current.json benchmarks/cell-structural-compression/program-storage-results.json
+python3 benchmarks/cell-structural-compression/analyze_program.py out/cell-structural-compression/program-fields-original.json out/cell-structural-compression/shared-code-peak.json benchmarks/cell-structural-compression/program-storage-results.json
 ```
 
 Both lanes use the same destructive observer on their respective actual runtime;
 the original worktree carries only diagnostic instrumentation. Both completed
 1,428 Runs with the same final hash and unchanged complete teardown totals.
 `program-storage-results.json` records all owner contributions and input hashes.
+
+## Share repeated query and congruence code
+
+Actual executions selected the same 259 transitions; no retraining or change
+of coverage is involved. Composed shapes previously reallocated identical query
+column positions and condition/site records. Query column slices now share exact
+position/input-bit contents. Condition and site records share exact structural
+contents, including frame/op positions, all field bindings, equality inputs,
+scalar columns, output symbols, and check ordering. Caller-local shape identity,
+operator guards, liveness checks and source Run order remain authoritative.
+
+The content interners are temporary compile-time sets and are discarded before
+execution. Runtime reads immutable shared code through Arc handles; it performs
+no new content lookup and maintains no producer/consumer list. No condition is
+removed based on training observations. Full Eq comparison resolves hash matches.
+
+| Retained owner | Before | After |
+| --- | ---: | ---: |
+| Queries | 728,376 B | 124,640 B |
+| Conditions | 696,872 B | 404,920 B |
+| Complete Program | 117,379,479 B | 116,483,791 B |
+| Graph | 2,781,877 B | 2,781,877 B |
+| Graph + positive Program increment vs original | 4,698,880 B | 3,803,192 B |
+
+The 895,688 B saving is shared compiled storage, **not** fewer runtime instances,
+facts or fields. Process execution/takeover peak falls from 125,763,669 to
+124,867,975 B (small path-length differences also affect the process observer).
+Initialization-relative growth stays 5,862,977 B and takeover extra peak stays
+16,548 B. Setup peak is 119,007,614 B; temporary interning is included in observed
+setup allocations. No speed claim is made.
+
+All 1,428 Run graph and ordered effect digests match the fixed original and the
+previous iteration. Native choice acceptance passes / exit 0. Checks: 138 sparse
+runtime tests, 84 default runtime tests, 28 ownership, 14 stable-port and 5
+local-union integrations pass; all-feature runtime compilation passes. Historical
+union-digest diagnostic failures documented above were not reinterpreted as
+passing by this change. `shared-code-results.json` records peak comparison;
+`program-storage-results.json` records the latest complete ownership accounting.
+
+The next physical takeover still needs to eliminate source Cell records and
+storage, while keeping published FactRef identity and restoring delegated slots
+when a surviving source outlives its component. This shared-code change does not
+satisfy that remaining obligation.

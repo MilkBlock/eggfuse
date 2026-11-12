@@ -204,7 +204,7 @@ impl Graph {
                     candidate,
                     pending,
                     target,
-                    condition: candidate.condition.map(|id| &plan.conditions[id]),
+                    condition: candidate.condition.map(|id| plan.conditions[id].as_ref()),
                     result: Ok(false),
                     work: guard::Work::default(),
                     worker: usize::MAX,
