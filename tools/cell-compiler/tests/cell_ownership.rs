@@ -842,3 +842,34 @@ fn retained_inactive_routes_do_not_return_deleted_candidates() {
         .parse_and_run_program(None, src)
         .unwrap();
 }
+
+#[test]
+fn baked_cells_rederive_the_same_plan_without_materialized_marker_json() {
+    use std::{fs,process::Command};
+    let p=program(STAGES);
+    let temp=tempfile::tempdir().unwrap();
+    let input=temp.path().join("input.json");
+    fs::write(&input,serde_json::to_vec(&p.artifact).unwrap()).unwrap();
+    let materialized=temp.path().join("materialized");
+    let compact=temp.path().join("compact");
+    for (input,out,flag) in [(input,materialized.clone(),"true"),
+        (materialized.join("program.json"),compact.clone(),"false")] {
+        let r=Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+            .args(["bake-cell-ownership","--program"]).arg(input)
+            .arg("--output").arg(out).args(["--materialize-markers",flag]).output().unwrap();
+        assert!(r.status.success(),"{}",String::from_utf8_lossy(&r.stderr));
+    }
+    assert!(materialized.join("markers.json").exists());
+    assert!(!compact.join("markers.json").exists());
+    let load=|path:std::path::PathBuf| {
+        Program::parse(serde_json::from_slice(&fs::read(path).unwrap()).unwrap()).unwrap()
+    };
+    let mut a=Executor::new(Graph::new_with_local_congruence(load(materialized.join("program.json"))).unwrap(),true);
+    let mut b=Executor::new(Graph::new_with_local_congruence(load(compact.join("program.json"))).unwrap(),true);
+    assert!(b.graph.program.artifact.get("ownership_markers").is_none());
+    assert_eq!(a.graph.program.cell_ownership,b.graph.program.cell_ownership);
+    a.execute().unwrap();b.execute().unwrap();
+    assert_eq!(a.graph.export().unwrap(),b.graph.export().unwrap());
+    assert_eq!(a.snapshots,b.snapshots);
+    assert_eq!(a.binding_audit,b.binding_audit);
+}

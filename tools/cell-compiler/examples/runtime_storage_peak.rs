@@ -1,0 +1,133 @@
+//! Single-lane allocation high-water trace, including work between Run boundaries.
+//! This measures process requested heap, not an inferred Graph-only peak or RSS.
+use eggfuse_cell_runtime::{executor::Executor, graph::Graph, program::Program};
+use serde_json::json;
+use std::alloc::{GlobalAlloc, Layout, System};
+use std::sync::atomic::{AtomicUsize, Ordering::Relaxed};
+use std::{error::Error, fs};
+
+static LIVE: AtomicUsize = AtomicUsize::new(0);
+static PEAK: AtomicUsize = AtomicUsize::new(0);
+struct Counted;
+fn added(bytes: usize) {
+    let live = LIVE.fetch_add(bytes, Relaxed) + bytes;
+    PEAK.fetch_max(live, Relaxed);
+}
+unsafe impl GlobalAlloc for Counted {
+    unsafe fn alloc(&self, l: Layout) -> *mut u8 {
+        let p = unsafe { System.alloc(l) };
+        if !p.is_null() {
+            added(l.size());
+        }
+        p
+    }
+    unsafe fn dealloc(&self, p: *mut u8, l: Layout) {
+        unsafe { System.dealloc(p, l) };
+        LIVE.fetch_sub(l.size(), Relaxed);
+    }
+    unsafe fn realloc(&self, p: *mut u8, l: Layout, n: usize) -> *mut u8 {
+        let q = unsafe { System.realloc(p, l, n) };
+        if !q.is_null() {
+            if n >= l.size() {
+                added(n - l.size());
+            } else {
+                LIVE.fetch_sub(l.size() - n, Relaxed);
+            }
+        }
+        q
+    }
+}
+#[global_allocator]
+static ALLOCATOR: Counted = Counted;
+struct Sample {
+    run: usize,
+    before: usize,
+    execution_peak: usize,
+    before_takeover: usize,
+    takeover_peak: usize,
+    after: usize,
+}
+fn reset_peak() {
+    PEAK.store(LIVE.load(Relaxed), Relaxed);
+}
+fn main() -> Result<(), Box<dyn Error>> {
+    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    if args.len() != 3 || !matches!(args[2].as_str(), "baseline" | "takeover") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover".into());
+    }
+    let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
+    let program = p.artifact["sha256"].clone();
+    // Fixed trace buffer is allocated before observation. It never grows while
+    // runtime peaks are sampled; its capacity is reported separately.
+    let mut samples = Vec::with_capacity(4096);
+    let trace_bytes = samples.capacity() * std::mem::size_of::<Sample>();
+    let source_loaded = LIVE.load(Relaxed);
+    reset_peak();
+    let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
+    let setup_peak = PEAK.load(Relaxed);
+    let setup_live = LIVE.load(Relaxed);
+    loop {
+        let n = e.steps.len();
+        if samples.len() == samples.capacity() {
+            return Err("trace capacity exhausted".into());
+        }
+        let before = LIVE.load(Relaxed);
+        reset_peak();
+        e.execute_until(Some(n + 1))?;
+        let execution_peak = PEAK.load(Relaxed);
+        let before_takeover = LIVE.load(Relaxed);
+        if e.steps.len() == n {
+            break;
+        }
+        reset_peak();
+        if args[2] == "takeover" {
+            e.graph.compact_retained_capacity()?;
+        }
+        let takeover_peak = PEAK.load(Relaxed);
+        let after = LIVE.load(Relaxed);
+        samples.push(Sample {
+            run: n + 1,
+            before,
+            execution_peak,
+            before_takeover,
+            takeover_peak,
+            after,
+        });
+    }
+    let high_water = samples
+        .iter()
+        .map(|s| s.execution_peak.max(s.takeover_peak))
+        .max()
+        .unwrap_or(setup_live);
+    let max_takeover_extra = samples
+        .iter()
+        .map(|s| s.takeover_peak.saturating_sub(s.before_takeover))
+        .max()
+        .unwrap_or(0);
+    let state = e.graph.export()?;
+    if args[2] == "takeover" {
+        // Catch a stale runtime library reused from a different worktree.
+        let census = e.graph.retained_cell_storage();
+        if census.get("delegated_cell_frames").is_none() {
+            return Err(
+                "runtime lacks takeover census; rebuild with an isolated target directory".into(),
+            );
+        }
+    }
+    let result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+        "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
+        "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
+        "setup_peak_bytes":setup_peak,"setup_live_bytes":setup_live,
+        "execution_and_takeover_peak_bytes":high_water,"max_takeover_extra_bytes":max_takeover_extra,
+        "net_growth_over_setup_bytes":high_water.saturating_sub(setup_live),
+        "final_state_sha256":eggfuse_cell_runtime::checksum::artifact_digest(&state),"samples":samples.iter().map(|s|json!({"run":s.run,"before":s.before,
+            "execution_peak":s.execution_peak,"before_takeover":s.before_takeover,
+            "takeover_peak":s.takeover_peak,"after":s.after})).collect::<Vec<_>>()});
+    fs::write(&args[1], serde_json::to_vec_pretty(&result)?)?;
+    println!(
+        "{}",
+        json!({"runs":result["runs"],"process_peak":high_water,
+        "net_growth_over_setup":result["net_growth_over_setup_bytes"],"takeover_extra":max_takeover_extra})
+    );
+    Ok(())
+}

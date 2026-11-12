@@ -10,14 +10,19 @@ use serde_json::json;
 use std::{fs, path::Path};
 pub(crate) fn run(args: Vec<String>) -> Result<()> {
     if args.iter().any(|s| s == "--help") {
-        println!("bake-cell-ownership --program FILE [--profile FILE] [--query-classes true|false] --output NEW_DIR");
+        println!("bake-cell-ownership --program FILE [--profile FILE] [--query-classes true|false] [--materialize-markers true|false] --output NEW_DIR");
         return Ok(());
     }
-    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile", "--query-classes"])?;
+    let opts = super::options(args.into_iter(), &["--program", "--output", "--profile", "--query-classes", "--materialize-markers"])?;
     let classes = match opts.get("--query-classes").map(String::as_str) {
         None | Some("false") => false,
         Some("true") => true,
         _ => return Err("--query-classes must be true or false".into()),
+    };
+    let materialize = match opts.get("--materialize-markers").map(String::as_str) {
+        None | Some("true") => true,
+        Some("false") => false,
+        _ => return Err("--materialize-markers must be true or false".into()),
     };
     let mut raw = super::read(Path::new(
         opts.get("--program").ok_or("--program required")?,
@@ -35,7 +40,7 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
     let mut p = Program::parse(raw)?;
     p.prepare_cell_ownership()?;
     let out = Path::new(opts.get("--output").ok_or("--output required")?);
-    let markers = p.cell_ownership.artifact(&p);
+    let markers = materialize.then(|| p.cell_ownership.artifact(&p));
     let mut raw = p.artifact.clone();
     if opts.get("--query-classes").is_some_and(|s| s == "false") {
         if let Some(fragments) = raw["ownership_fragments"].as_object_mut() {
@@ -50,15 +55,25 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
         raw["ownership_fragments"]["query_classes"] = p.bake_query_classes()?;
     }
     raw.as_object_mut().unwrap().remove("sha256");
-    raw["ownership_markers"] = markers.clone();
+    if let Some(markers) = &markers {
+        raw["ownership_markers"] = markers.clone();
+    } else {
+        raw.as_object_mut().unwrap().remove("ownership_markers");
+        // Keep the checked wiring address version even when no profile was
+        // supplied. Source definitions rederive the plan; no repeated plan JSON.
+        if raw.get("ownership_fragments").is_none() {
+            raw["ownership_fragments"] = json!({"schema":p.cell_ownership.fragment_schema(),
+                "source":composition::source_digest(&raw),"fragments":[]});
+        }
+    }
     raw["sha256"] = artifact_digest(&raw).into();
     let checked = Program::parse(raw)?;
     fs::create_dir(out)?;
     super::write(&out.join("program.json"), &checked.artifact)?;
-    super::write(&out.join("markers.json"), &markers)?;
+    if let Some(markers) = &markers { super::write(&out.join("markers.json"), markers)?; }
     super::write(
         &out.join("coverage.json"),
-        &json!({"scope":"typed compiler coverage, no workload execution or timing",
+        &json!({"scope":"typed compiler coverage, no workload execution or timing","materialized_markers":materialize,
         "templates":p.cell_ownership.markers.len(),"covered_bodies":p.cell_ownership.markers.iter().map(|m|m.program.fields.iter().filter(|fields|!fields.is_empty()).count()).sum::<usize>(),
         "covered_tables":p.cell_ownership.tables.iter().filter(|x|**x).count(),"entry_ports":p.cell_ownership.entries.iter().map(Vec::len).sum::<usize>(),
         "shared_port_programs":p.cell_ownership.markers.iter().map(|m|std::sync::Arc::as_ptr(&m.program)).collect::<std::collections::BTreeSet<_>>().len(),

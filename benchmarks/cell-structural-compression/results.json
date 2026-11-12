@@ -319,6 +319,6 @@
   ],
   "traces": {
     "original-baseline.json": "ab7925ed9d1a55c40a80ebaed932487cadabe2d879d4c3d2b83817922152d241",
-    "final-trace.json": "bf8c76d7ac151fd499ec482e8bc7398d58b514c10904036211423c0e0e892962"
+    "lean-isolated-trace.json": "56ab8d40b89543a811853d795ffe6660bae14bbbe4301a5f5a615434697e0578"
   }
 }

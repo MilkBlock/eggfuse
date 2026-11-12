@@ -93,3 +93,73 @@ Raw inputs/outputs are retained locally under `out/cell-structural-compression/`
 `original-baseline.json`, `profile.json`, `baked-program.json`, `final-trace.json`.
 The original baseline is preserved across subsequent iterations. The sources,
 summary and semantic proof are versioned; generated programs/raw traces are not.
+
+## Program materialization and iteration peaks
+
+The optional `bake-cell-ownership --materialize-markers false` flag omits the
+redundant JSON copy of the typed ownership plan. Source Cell definitions and
+checked ownership fragments still derive that plan. The default remains true
+for existing artifact consumers. This does not remove logical `.egg` marker
+facts, change the chosen fragments, or count as runtime instance compression.
+
+`peak-results.json` compares single-lane allocator traces. These include Program,
+Graph, Executor and a fixed 196,608-byte diagnostic buffer. They exclude parsing
+high water and allocator padding; they are not RSS or Graph-exclusive peaks.
+
+| Lane | Loaded program + process bytes | Execution/takeover peak bytes |
+| --- | ---: | ---: |
+| Fixed original f20c0fce | 113,734,400 | 124,720,514 |
+| Current, materialized plan | 123,705,635 | 133,667,563 |
+| Current, derived plan | 116,099,089 | 126,061,017 |
+
+The current two lanes use the same runtime source and differ by optional JSON
+materialization. Their initialization-relative peak growth is identical:
+6,147,585 bytes. The materialization costs 7,606,546 bytes; even after removing
+it the process peak remains 1,340,503 bytes above original. All 1,428 Runs are
+sampled, including allocations between boundaries. Final graph digests match.
+Cross-worktree shared Cargo caches reused an older runtime in an intermediate
+comparison (detected by missing new census fields). Those results are discarded.
+All three published lanes use independent worktree-local target directories.
+The observer rejects takeover runs without the delegated-frame census.
+No Graph-exclusive within-Run peak or 30% completion claim follows from these
+numbers. The CLI plan equivalence and execution audit test passes as part of
+all 28 ownership tests.
+
+The isolated lean-program validation also reproduces the 3,080,829-byte
+Graph-exclusive result, 1,863 delegated frames and 10,742 stored source slots.
+All 1,428 graph and ordered RHS/write/resume hashes match the fixed original
+trace. `choice_diagnosis.py` returns `pass` / exit 0 on that exported state.
+`results.json` now references `lean-isolated-trace.json`; raw traces remain
+under the ignored experiment output directory.
+
+```sh
+cargo run --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells -- bake-cell-ownership --program out/structural-baked/program.json --materialize-markers false --output out/structural-lean
+cargo run --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics --example runtime_storage_peak -- out/structural-lean/program.json out/peak-lean.json takeover
+python3 benchmarks/cell-structural-compression/compare_peaks.py ORIGINAL_PEAK MATERIALIZED_PEAK out/peak-lean.json out/peak-results.json
+```
+
+Use `CARGO_TARGET_DIR="$PWD/target"` in each worktree; do not share compiled
+workspace crates between baseline and current lanes. The original lane uses
+the same allocation observer built against f20c0fce,
+with the original source artifact and `baseline` mode. The observer is not a
+performance benchmark and serialization happens after peak observation.
+
+Two rejected approaches guide the next structural change. Pruning slots from
+future consumer `LocalRead` demands alone fails the surviving-source-frame
+contract: component retirement can expose a still-observable source slot.
+`retiring_shared_owner_restores_delegated_source_slots_before_gc` caught the
+failure; that edit was reverted without weakening the test. Exact identical
+binding-array sharing has only a 5,464-byte positive-group upper bound in the
+saved final trace, before grouping overhead. Neither approach can replace
+proper composed ownership of source instances, facts and indexes.
+
+The saved allocator teardown also gives a useful impossibility bound for a
+frame-only solution: `cells` releases 782,416 bytes and `ownership` releases
+806,728 bytes. Even deleting both in their entirety, with zero replacement
+cost, leaves 1,491,685 bytes, above the 1,193,811-byte goal. Real takeover must
+therefore cover fact/field and index representation too. Next implementation
+must preserve stable fact identity, source reads after component retirement,
+visibility and worker read epochs while consolidating these owners. Merely
+moving source bindings into an additional composition object cannot meet the
+target. Field teardown charges shared allocations to their last owner; these
+numbers are an optimistic bound, not achievable independent savings.
