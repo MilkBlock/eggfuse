@@ -2110,6 +2110,7 @@ impl Executor {
         pending: &[u32],
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<Option<owned_cell::Execution>> {
+        self.graph.observe_saturated_apply(rid, &b, !pending.is_empty());
         #[cfg(feature = "iterative-bake")]
         let mut b = b;
         #[cfg(feature = "sparse-cells")]

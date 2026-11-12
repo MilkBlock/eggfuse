@@ -19,6 +19,50 @@ fn program(src: &str) -> Program {
     raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
     Program::parse(raw).unwrap()
 }
+
+#[test]
+fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
+    for (body, outcome) in [
+        ("(N n)", "rhs_covered"),
+        ("(union x x)", "rhs_covered_by_inputs"),
+        ("(F x)", "missing_local_constructor"),
+        ("(union x (N 1))", "write_effect"),
+    ] {
+        let source = format!("(datatype E (N i64) (F E)) (N 0) (N 1) (ruleset r)\n(rule ((= x (N n))) ({body}) :ruleset r) (run r 1)");
+        let core = eggfuse_bake::device_frontend::core("saturation", &source).unwrap();
+        let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+        let mut a = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
+        let mut g = Graph::new_with_cell_ownership(p).unwrap();
+        g.trace_ownership_catalog(8).unwrap();
+        let mut b = Executor::new(g, true);
+        a.execute().unwrap(); b.execute().unwrap();
+        assert_eq!(a.graph.export().unwrap(), b.graph.export().unwrap());
+        assert_eq!(a.snapshots, b.snapshots);
+        assert_eq!(a.binding_audit, b.binding_audit);
+        let report = b.graph.ownership_catalog_trace().unwrap();
+        let rows = report["saturation"]["rows"].as_array().unwrap();
+        assert!(rows.iter().any(|r|r["outcome"] == outcome), "{body}: {report}");
+        let applications = rows.iter().map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();
+        assert_eq!(applications, 2, "count applications, not anchor alternatives");
+    }
+}
+
+#[test]
+fn saturation_observer_does_not_skip_a_nontrivial_union() {
+    let source = "(datatype E (N i64)) (N 0) (N 1) (ruleset r)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset r) (run r 1)";
+    let core = eggfuse_bake::device_frontend::core("union-coverage", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let mut g = Graph::new_with_cell_ownership(p).unwrap();
+    g.trace_ownership_catalog(8).unwrap();
+    let mut e = Executor::new(g, false);
+    e.execute().unwrap();
+    let report = e.graph.ownership_catalog_trace().unwrap();
+    let rows = report["saturation"]["rows"].as_array().unwrap();
+    assert_eq!(rows.len(), 1, "{report}");
+    assert_eq!(rows[0]["outcome"], "nontrivial_union", "{report}");
+    assert_eq!(rows[0]["counts"]["applications"], 1);
+}
 fn compare(src: &str) -> Executor {
     let p = program(src);
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);

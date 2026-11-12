@@ -7,6 +7,8 @@ pub mod conditions;
 pub mod effects;
 #[path = "ownership_queries.rs"]
 pub mod queries;
+#[path = "ownership_saturation.rs"]
+mod saturation;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -443,6 +445,7 @@ pub(super) struct CatalogTrace {
     max_frames: usize,
     records: BTreeMap<Key, (Fragment, u64, u64, usize)>,
     uncovered_births: u64,
+    saturation: saturation::Trace,
 }
 #[derive(Default)]
 pub(super) struct Training {
@@ -622,7 +625,7 @@ impl Graph {
             "seed_transitions":self.program.cell_ownership.composition.transitions.len(),
             "uncovered_births":trace.uncovered_births,"alternatives_overlap":true,
             "scope":"observed unmatched owned births in installed catalog execution; proposed reuse is not saved work or committed mutations",
-            "records":records}))
+            "records":records,"saturation":trace.saturation.report()}))
     }
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
         self.train_ownership_fragments_with_limit(4)
