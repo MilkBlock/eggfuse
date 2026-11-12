@@ -900,7 +900,7 @@ fn baked_cells_rederive_the_same_plan_without_materialized_marker_json() {
         (materialized.join("program.json"),compact.clone(),"false")] {
         let r=Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
             .args(["bake-cell-ownership","--program"]).arg(input)
-            .arg("--output").arg(out).args(["--materialize-markers",flag]).output().unwrap();
+            .arg("--output").arg(out).args(["--materialize-markers",flag,"--query-classes","true"]).output().unwrap();
         assert!(r.status.success(),"{}",String::from_utf8_lossy(&r.stderr));
     }
     assert!(materialized.join("markers.json").exists());
@@ -911,6 +911,8 @@ fn baked_cells_rederive_the_same_plan_without_materialized_marker_json() {
     let mut a=Executor::new(Graph::new_with_local_congruence(load(materialized.join("program.json"))).unwrap(),true);
     let mut b=Executor::new(Graph::new_with_local_congruence(load(compact.join("program.json"))).unwrap(),true);
     assert!(b.graph.program.artifact.get("ownership_markers").is_none());
+    assert_eq!(b.graph.program.artifact["ownership_fragments"]["query_classes"],true);
+    assert!(a.graph.program.artifact["ownership_fragments"]["query_classes"].is_object());
     assert_eq!(a.graph.program.cell_ownership,b.graph.program.cell_ownership);
     a.execute().unwrap();b.execute().unwrap();
     assert_eq!(a.graph.export().unwrap(),b.graph.export().unwrap());
@@ -1212,6 +1214,7 @@ fn port_domains_replace_birth_hints_across_union_and_deletion() {
             let report=actual.graph.stable_port_report();
             assert_eq!(report["birth_indexed_port_keys"],0);
             assert_eq!(report["birth_hints_enabled"],false);
+            assert_eq!(actual.graph.ownership_report()["stats"]["domain_legacy_visits"],0);
             if reference.steps.len()==n {break;}
         }
     }

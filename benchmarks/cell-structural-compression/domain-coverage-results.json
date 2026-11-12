@@ -1,0 +1,79 @@
+{
+  "scope": "actual standalone Cell runtime; work and requested heap, not timing",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "only_optional_classes_changed": true,
+  "final_states_equal": true,
+  "work": [
+    {
+      "mode": "prior",
+      "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+      "work": {
+        "domain_legacy_visits": 50851,
+        "domain_signal_visits": 147071,
+        "domain_slice_steps": 156012,
+        "domain_results": 20930,
+        "domain_type_guards": 156012,
+        "query_class_probes": 0,
+        "query_class_range_jumps": 0,
+        "key_candidates": 16972,
+        "key_field_comparisons": 36005
+      }
+    },
+    {
+      "mode": "coverage",
+      "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+      "work": {
+        "domain_legacy_visits": 0,
+        "domain_signal_visits": 146302,
+        "domain_slice_steps": 157395,
+        "domain_results": 22165,
+        "domain_type_guards": 157395,
+        "query_class_probes": 0,
+        "query_class_range_jumps": 0,
+        "key_candidates": 17656,
+        "key_field_comparisons": 38758
+      }
+    },
+    {
+      "mode": "classes",
+      "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+      "work": {
+        "domain_legacy_visits": 0,
+        "domain_signal_visits": 35920,
+        "domain_slice_steps": 65064,
+        "domain_results": 22165,
+        "domain_type_guards": 65064,
+        "query_class_probes": 96073,
+        "query_class_range_jumps": 67943,
+        "key_candidates": 17656,
+        "key_field_comparisons": 38758
+      }
+    }
+  ],
+  "memory": [
+    {
+      "mode": "no_classes",
+      "graph_owned_teardown_bytes": 2684181,
+      "retained_program_teardown_bytes": 117230752,
+      "execution_and_takeover_peak_bytes": 125379947
+    },
+    {
+      "mode": "materialized_classes",
+      "graph_owned_teardown_bytes": 2682261,
+      "retained_program_teardown_bytes": 118015419,
+      "execution_and_takeover_peak_bytes": 126162687
+    },
+    {
+      "mode": "derived_classes",
+      "graph_owned_teardown_bytes": 2682261,
+      "retained_program_teardown_bytes": 117310933,
+      "execution_and_takeover_peak_bytes": 125458209
+    }
+  ],
+  "limitations": [
+    "materialized classes have a final-state heap observation, not a separate full Run audit",
+    "extra candidate and compiled storage costs are reported; no speedup claimed",
+    "facts and RHS effects remain unchanged"
+  ]
+}

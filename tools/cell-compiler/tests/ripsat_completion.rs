@@ -45,7 +45,15 @@ fn alternate_routes_share_the_native_cell_registry_but_keep_entry_proofs() {
     // The native compiler enables serde_json/preserve_order transitively;
     // the standalone runtime need not. Reordering schema objects must not
     // change the checked Cell identity embedded in the same artifact.
-    let compiled=eggfuse_cell_compiler::completion_bake::compile(p).unwrap();
+    let mut with_classes=p.artifact.clone();
+    let mut prepared=p;prepared.prepare_cell_ownership().unwrap();
+    with_classes["ownership_fragments"]=json!({
+        "schema":prepared.cell_ownership.fragment_schema(),
+        "source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&with_classes),
+        "fragments":[],"query_classes":true});
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(seal(with_classes)).unwrap()).unwrap();
+    assert_eq!(compiled["ownership_fragments"]["query_classes"],true,
+        "iterative completion must preserve derivation instead of rematerializing class JSON");
     let mut sorted=compiled.clone();
     sorted.sort_all_objects();
     assert_ne!(serde_json::to_string(&compiled).unwrap(),serde_json::to_string(&sorted).unwrap(),

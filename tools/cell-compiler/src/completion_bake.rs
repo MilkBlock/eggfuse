@@ -67,7 +67,11 @@ fn restore_ownership(original:&Value,raw:&mut Value) -> Result<(),Box<dyn std::e
     let mut checked=Program::parse(raw.clone())?;
     checked.prepare_cell_ownership()?;
     if had_markers {raw["ownership_markers"]=checked.cell_ownership.artifact(&checked);}
-    if old.get("query_classes").is_some() {raw["ownership_fragments"]["query_classes"]=checked.bake_query_classes()?;}
+    if let Some(classes)=old.get("query_classes") {
+        raw["ownership_fragments"]["query_classes"]=if classes==&Value::Bool(true) {
+            Value::Bool(true)
+        } else {checked.bake_query_classes()?};
+    }
     Ok(())
 }
 pub(crate) fn run(args:Vec<String>) -> Result<(),Box<dyn std::error::Error>> {

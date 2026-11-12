@@ -52,7 +52,9 @@ pub(crate) fn run(args: Vec<String>) -> Result<()> {
             raw["ownership_fragments"] = json!({"schema":p.cell_ownership.fragment_schema(),
                 "source":composition::source_digest(&raw),"fragments":[]});
         }
-        raw["ownership_fragments"]["query_classes"] = p.bake_query_classes()?;
+        raw["ownership_fragments"]["query_classes"] = if materialize {
+            p.bake_query_classes()?
+        } else {json!(true)};
     }
     raw.as_object_mut().unwrap().remove("sha256");
     if let Some(markers) = &markers {

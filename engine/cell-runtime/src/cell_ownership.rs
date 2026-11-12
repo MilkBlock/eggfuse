@@ -149,7 +149,9 @@ impl Plan {
         }
         if let Some(raw) = p.artifact["ownership_fragments"].get("query_classes") {
             plan.prepare_codes(&p.templates);
-            plan.query_classes = Some(Arc::new(query_classes::Plan::validate(raw, p, &plan)?));
+            plan.query_classes = Some(Arc::new(if raw == &J::Bool(true) {
+                query_classes::Plan::bake(p,&plan)
+            } else {query_classes::Plan::validate(raw,p,&plan)?}));
         }
         Ok(plan)
     }
@@ -748,11 +750,12 @@ impl Graph {
             });
         }
     }
-    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<(usize, u64)> {
+    fn smallest_signal_domain(&self, table:usize, bound: &[Option<Value>]) -> Option<(usize, u64)> {
         let m = self.ownership.as_ref()?;
         m.stats
             .domain_planning_calls
             .set(m.stats.domain_planning_calls.get() + 1);
+        let complete = m.tables[table] == self.witness_count(table);
         bound
             .iter()
             .enumerate()
@@ -767,7 +770,7 @@ impl Graph {
                 // must never be used as a candidate-count upper bound.
                 let count = m.boundaries.get(&id).map_or(0, |s| s.len())
                     + usize::from(self.native_signal(id).is_some())
-                    + self.uses.get(&id).map_or(0, UseSet::len);
+                    + if complete {0} else {self.uses.get(&id).map_or(0, UseSet::len)};
                 Some((column, id, count))
             })
             .min_by_key(|x| x.2)
@@ -783,7 +786,7 @@ impl Graph {
         table: usize,
         bound: &[Option<Value>],
     ) -> Vec<Dependency> {
-        let Some((column, id)) = self.smallest_signal_domain(bound) else {
+        let Some((column, id)) = self.smallest_signal_domain(table,bound) else {
             let rows = self.witnesses(table);
             let s = &self.ownership.as_ref().unwrap().stats;
             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
@@ -834,10 +837,15 @@ impl Graph {
                 }
             }
         }
-        for &d in self.uses.get(&id).into_iter().flat_map(|s| s.iter()) {
-            s.domain_legacy_visits.set(s.domain_legacy_visits.get() + 1);
-            if self.dependency_table(d) == Some(table) {
-                result.insert(d);
+        // Every live row is already represented by checked Cell wiring.
+        // Foreign legacy uses cannot add a candidate to this table. Partial
+        // coverage still requires the complete residual subscription path.
+        if owner.tables[table] != self.witness_count(table) {
+            for &d in self.uses.get(&id).into_iter().flat_map(|s| s.iter()) {
+                s.domain_legacy_visits.set(s.domain_legacy_visits.get() + 1);
+                if self.dependency_table(d) == Some(table) {
+                    result.insert(d);
+                }
             }
         }
         s.domain_results
