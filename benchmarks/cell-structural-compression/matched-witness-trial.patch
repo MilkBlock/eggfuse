@@ -1,0 +1,161 @@
+diff --git a/engine/cell-runtime/src/cell_results.rs b/engine/cell-runtime/src/cell_results.rs
+index ba2c3ea5..2441a7fb 100644
+--- a/engine/cell-runtime/src/cell_results.rs
++++ b/engine/cell-runtime/src/cell_results.rs
+@@ -213,9 +213,7 @@ impl ResultView<'_> {
+             let Some(port)=projection.sources.get(slot).copied().flatten() else {return false};
+             port
+         } else {ResultPort::new(self.results.rule,slot)};
+-        let Some(target)=self.results.slot(port) else {return false};
+-        target.set(Some(result));
+-        true
++        self.results.refresh_proven_result(port,result)
+     }
+     #[cfg(feature = "sparse-cells")]
+     pub(crate) fn output(self, slot: usize) -> Option<Dependency> {
+@@ -265,6 +263,14 @@ impl Results {
+         if self.rule == port.rule() && self.inherits(port) { *extra += 1; }
+         self.get(port)
+     }
++    /// The caller proves the same complete constructor relation (or uses the
++    /// Run's same-key forwarding map). Equality of result classes alone is not
++    /// sufficient. Update existing shared storage without allocating an owner.
++    #[cfg(feature = "sparse-cells")]
++    pub(crate) fn refresh_proven_result(&self, port:ResultPort, result:Dependency)->bool {
++        let Some(target)=self.slot(port) else {return false};
++        target.set(Some(result));true
++    }
+     pub fn get(&self, port: ResultPort) -> Option<Dependency> {
+         self.slot(port)?.get()
+     }
+diff --git a/engine/cell-runtime/src/runtime.rs b/engine/cell-runtime/src/runtime.rs
+index cb31b0b9..33532ace 100644
+--- a/engine/cell-runtime/src/runtime.rs
++++ b/engine/cell-runtime/src/runtime.rs
+@@ -2256,7 +2256,7 @@ impl Executor {
+         }
+         #[cfg(feature = "sparse-cells")]
+         if !prefix_ready && !full_effects && let Some(step)=stage_cursor.as_ref()
+-            && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
++            && let Some((results,unions))=self.stage_spine.prepare_direct_completion(&self.graph,rid,step,|atom|b.known.receipt(atom)) {
+             let cell=self.graph.reserve_completed_cell()?;
+             if let Some(unions)=unions {
+                 self.stage_spine.enqueue_direct_unions(&mut self.graph,rid,&b.values,&results,&unions)?;
+diff --git a/engine/cell-runtime/src/stage_spine.rs b/engine/cell-runtime/src/stage_spine.rs
+index 83f4bfa2..24aee234 100644
+--- a/engine/cell-runtime/src/stage_spine.rs
++++ b/engine/cell-runtime/src/stage_spine.rs
+@@ -724,6 +724,10 @@ pub struct Stats {
+     ripsat_witness_retired: u64,
+     ripsat_witness_wrong_table: u64,
+     ripsat_witness_hidden: u64,
++    ripsat_matched_receipt_checks: u64,
++    ripsat_matched_receipt_updates: u64,
++    ripsat_matched_receipt_misses: u64,
++    ripsat_matched_receipt_scratch_bytes: u64,
+     history_slots_written: u64,
+     history_seal_checks: u64,
+     history_seal_reads: u64,
+@@ -1724,7 +1728,7 @@ impl Programs {
+     /// the published anchor were already matched; the pure monotone template
+     /// proves the full keys. Only actual receipt lifetime remains to validate.
+     #[cfg(feature = "sparse-cells")]
+-    pub(crate) fn prepare_direct_completion(&mut self,g:&Graph,rid:usize,step:&Started)
++    pub(crate) fn prepare_direct_completion(&mut self,g:&Graph,rid:usize,step:&Started, query:impl Fn(usize)->Option<Dependency>)
+         -> Option<(crate::cell::Results, Option<crate::cell::LazyUnions>)> {
+         if !g.program.iterative.completion_enabled() {return None;}
+         let Started::Live(cursor)=step else {return None};
+@@ -1749,7 +1753,8 @@ impl Programs {
+         let Some(results)=cursor.state.history.project_complete(plan,&mut self.stats.ripsat_projection_checks) else {
+             self.stats.ripsat_layout_fallbacks+=1; return None;
+         };
+-        for &(_,table,slot) in &plan.outputs {
++        let mut refresh=smallvec::SmallVec::<[(crate::cell::ResultPort,Dependency);4]>::new();
++        for &(site,table,slot) in &plan.outputs {
+             self.stats.ripsat_witness_checks+=1;
+             let port=crate::cell::ResultPort::new(rid,slot);
+             let Some(w)=results.get(port) else {
+@@ -1758,15 +1763,45 @@ impl Programs {
+                 return None;
+             };
+             let resolved=g.resolve_receipt(w);
+-            if !g.receipt_visible(resolved,table) {
+-                self.stats.ripsat_witness_fallbacks+=1;
+-                match g.live_table(resolved) {
+-                    None => self.stats.ripsat_witness_retired+=1,
+-                    Some(actual) if actual!=table => self.stats.ripsat_witness_wrong_table+=1,
+-                    Some(_) => self.stats.ripsat_witness_hidden+=1,
++            if g.receipt_visible(resolved,table) {continue;}
++            let actual_table=g.live_table(resolved);
++            // Query sites and prechecked static constructor aliases identify
++            // the full relation under this already successful match. Never
++            // repair a wrong-table/hidden receipt using mere Eq coincidence.
++            if actual_table.is_none() && g.program.tables[table].constructor {
++                let atom=match site {
++                    crate::cell::Site::Query(atom)=>Some(atom),
++                    crate::cell::Site::Effect(op)=>match g.program.known_results.static_sources
++                        .get(rid).and_then(|sources|sources.get(op)).copied().flatten() {
++                        Some(crate::cell::Site::Query(atom))=>Some(atom),_=>None,
++                    },
++                };
++                if let Some(atom)=atom {
++                    self.stats.ripsat_matched_receipt_checks+=1;
++                    if let Some(witness)=query(atom).map(|w|g.resolve_receipt(w))
++                        .filter(|w|g.receipt_visible(*w,table)) {
++                        let before=if refresh.spilled() {refresh.capacity()} else {0};
++                        refresh.push((port,witness));
++                        if refresh.spilled() {self.stats.ripsat_matched_receipt_scratch_bytes+=
++                            ((refresh.capacity()-before)*std::mem::size_of::<(crate::cell::ResultPort,Dependency)>()) as u64;}
++                        continue;
++                    }
++                    self.stats.ripsat_matched_receipt_misses+=1;
+                 }
+-                return None;
+             }
++            self.stats.ripsat_witness_fallbacks+=1;
++            match actual_table {
++                None => self.stats.ripsat_witness_retired+=1,
++                Some(actual) if actual!=table => self.stats.ripsat_witness_wrong_table+=1,
++                Some(_) => self.stats.ripsat_witness_hidden+=1,
++            }
++            return None;
++        }
++        // Commit only after all outputs validate; no partial refresh on a
++        // failed direct-completion attempt. project_complete proved the slots.
++        for (port,witness) in refresh {
++            assert!(results.refresh_proven_result(port,witness));
++            self.stats.ripsat_matched_receipt_updates+=1;
+         }
+         Some((results,plan.unions.clone()))
+     }
+@@ -3195,6 +3230,7 @@ impl Programs {
+             "history_sealing":"unique-cell-results/v1",
+             "history_publication_forwarding":"shared-result-slots/v1",
+             "completion_witness_diagnosis":"receipt-lifetime/v1",
++            "completion_matched_receipts":"typed-query-source/v1",
+             "completion_record_bytes":std::mem::size_of::<Completion>(),
+             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
+             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),
+diff --git a/tools/cell-compiler/src/work_credit.rs b/tools/cell-compiler/src/work_credit.rs
+index 32050b35..7afeef06 100644
+--- a/tools/cell-compiler/src/work_credit.rs
++++ b/tools/cell-compiler/src/work_credit.rs
+@@ -257,6 +257,18 @@ impl Work {
+             };
+             work.insert(format!("stage_spine/stats/{field}"),value);
+         }
++        // Recover only retired results with an already matched, typed source.
++        // These are added checks/writes, never a saved query count.
++        for field in ["ripsat_matched_receipt_checks", "ripsat_matched_receipt_updates", "ripsat_matched_receipt_scratch_bytes"] {
++            let value=match report["stage_spine"].get("completion_matched_receipts") {
++                None=>0,
++                Some(J::String(v)) if v=="typed-query-source/v1" =>
++                    report["stage_spine"]["stats"][field].as_u64()
++                        .ok_or_else(||format!("missing Cell matched receipt work {field}"))?,
++                _=>return Err("unknown Cell matched receipt completion".into()),
++            };
++            work.insert(format!("stage_spine/stats/{field}"),value);
++        }
+         // Output delivery already resolves forwarding. Charge only the added
+         // shared-slot address and write, not a second receipt lookup.
+         for field in ["history_publication_slot_probes", "history_publication_slot_writes"] {

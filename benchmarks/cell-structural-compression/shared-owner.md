@@ -260,3 +260,50 @@ final-state digest is unchanged. Tracked evidence is in
 `completed-dead-inputs-results.json`, `completed-dead-inputs-heap.json`, and
 `completed-dead-inputs-semantic.json`. These measure the actual standalone Cell
 runtime, not native egglog; requested allocation bytes are not RSS.
+
+## Rejected: replace a retired completion receipt from the current match
+
+The current executable catalog contains seven direct-completion plans. Their
+exports include current Query sites as well as historical Effect sites. A trial
+used those existing typed sites (and known static query aliases) to repair a
+retired receipt from an already matched constructor witness, with no key search.
+It validated every output before updating any shared result slot and charged
+new checks, writes and scratch allocations. Hidden/wrong-table/missing receipts
+retained the old fallback; no equality-only substitution was admitted.
+
+The actual 1,428-Run execution rejects this as a useful optimization:
+
+- Direct completions remain 183; retired-witness fallbacks remain 26.
+- Eligible matched-receipt checks: **zero**; updates, misses and scratch bytes:
+  zero. None of these retired outputs is a Query site or the supported static
+  Query alias. The relevant Get, Single and SubTuple tables are constructors,
+  so the zero is not caused by a non-constructor admission guard.
+- All pre-existing integer stage counters, Graph work counters, query counters
+  and final source storage are unchanged. Timing fields are excluded.
+- Every saved Run graph and ordered RHS/write/resume hash passes; final export
+  exactly equals the already accepted dead-input execution.
+
+The trial was removed from the engine. The reproducible source is
+`matched-witness-trial.patch` (applies to `35c9afd0`); evidence is in
+`matched-witness-trial-results.json`. The trial passed 21 ripsat integration tests
+and five work-credit tests. This is a rejected experiment, not a new default
+execution path, compression claim or latency improvement. Its work-credit reader
+was finalized to exclude the miss outcome from charged work; the raw audited
+reader also reported that zero-valued outcome.
+
+This narrows the next structural target: current query evidence cannot replace
+the remaining historical RHS results. Their actual receipt identities need to
+survive coalescence through the existing completed-owner/publication state.
+Adding a general pre-RHS query probe or retaining a second unbounded forwarding
+history would preserve the duplicate maintenance we are trying to remove.
+A future takeover must connect the existing result slots to static Cell wiring
+at the actual coalescence point and preserve source-Run visibility; it cannot
+infer constructor identity from equal result classes alone. That takeover is
+not implemented by this trial.
+
+To reproduce the trial in an isolated checkout with the same saved artifacts:
+apply the patch, build `runtime_closure_work` with the preceding features, and
+run the preceding audited command with output `matched-witness-audit.json`.
+Keep the `--natural --shared-owners --parent-takeover` options. Compare to
+`completed-dead-inputs-audit.json`, excluding timing fields; do not install the
+trial merely because its semantic audit passes.
