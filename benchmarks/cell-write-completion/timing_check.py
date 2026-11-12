@@ -17,17 +17,20 @@ def sha(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def collect(root):
-    revisions = {'historical': '8335929d', 'checkpoint': '2ae7b97e',
-                 'control': 'c27cbcf1', 'candidate': '79e6fe0f'}
-    evidence = read(Path(__file__).with_name('results.json'))
+def collect(root, *, revisions=None, evidence_path=None):
+    if revisions is None:
+        revisions = {'historical': '8335929d', 'checkpoint': '2ae7b97e',
+                     'control': 'c27cbcf1', 'candidate': '79e6fe0f'}
+    if evidence_path is None:
+        evidence_path = Path(__file__).with_name('results.json')
+    evidence = read(evidence_path)
     effects = ('constructor_requests', 'constructor_reused', 'logical_facts_created',
                'function_updates', 'union_requests', 'unions', 'bindings')
     result = {
         'scope': 'actual standalone Cell CPU, not native egglog performance',
         'runtime_revisions': revisions,
         'limits': 'All samples and warmups retained. Ambient load and within-lane variation are material; median differences are not established causal speedups. CPU/wall includes load and export, not inference-only utilization. Profiles are separate diagnostic executions, not timing samples.',
-        'work_evidence_sha256': sha(Path(__file__).with_name('results.json')),
+        'work_evidence_sha256': sha(evidence_path),
         'workloads': {},
     }
     for case, repeat in (('sum', 5), ('ray', 3)):
@@ -127,7 +130,7 @@ def collect(root):
         profile['main_selected_inclusive'] = {
             key: sum(n for s, n in main['inference_inclusive'].items() if s.endswith(key))
             for key in selected}
-        profile['selected_limits'] = 'Inclusive frames overlap and include callees and waits; do not sum. Worker condition waits include both pool idle and inside-job waits. Context classification is heuristic. Five-second windows are partial, sampled wall residence, not CPU percentages or isolated synchronization costs.'
+        profile['selected_limits'] = 'Inclusive frames overlap and include callees and waits; do not sum. Worker condition waits include both pool idle and inside-job waits. Context classification is heuristic. These windows are partial, sampled wall residence, not CPU percentages or isolated synchronization costs.'
         profile['thread_top_inclusive'] = [list(t['inclusive'].items())[:60] for t in threads]
         profile['main_top_self'] = list(main['own'].items())[:30]
         profiles[label] = profile

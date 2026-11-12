@@ -21,8 +21,45 @@ mod ready;
 #[path = "query_completion.rs"]
 mod completion;
 
-#[derive(Default, Serialize)]
+// A completion transports only work produced by that task. Run admission,
+// template/queue capacities and per-worker totals stay with the executor.
+#[derive(Default)]
 pub(crate) struct Counts {
+    pub execution: crate::cell::execution::Counts,
+    #[cfg(feature = "cell-query-sharing-audit")]
+    pub sharing_audit: sharing_audit::Counts,
+    pub constructors: crate::graph::query_reads::Work,
+    pub shared_first_reads: u64,
+    pub shared_first_key_fields: u64,
+    pub frame_cache_borrows: u64,
+    pub frame_capacity_bytes: u64,
+    pub completion_headers: u64,
+    pub guards: u64,
+    pub guard_rejections: u64,
+    pub entries: u64,
+    pub answers: u64,
+    pub steps: u64,
+    pub point_reads: u64,
+    pub key_operations: u64,
+    pub result_writes: u64,
+    pub owner_rejections: u64,
+    pub chunks: u64,
+    pub frame_allocations: u64,
+    pub owned_support_checks: u64,
+    pub owned_support_rejections: u64,
+    pub owned_support_unavailable: u64,
+    pub owned_range_rows: u64,
+    pub entry_range_rows: u64,
+    pub entry_range_row_borrows: u64,
+    pub range_answer_span_bytes: u64,
+    pub range_answer_span_heap_bytes: u64,
+    pub coverage_range_rows: u64,
+    pub coverage_event_heap_bytes: u64,
+    pub output_buffer_capacity: u64,
+    pub answer_buffer_allocations: u64,
+}
+#[derive(Default, Serialize)]
+pub(super) struct Stats {
     pub execution: crate::cell::execution::Counts,
     pub worker_local_operations: Vec<u64>,
     pub worker_constructor_lookups: Vec<u64>,
@@ -146,7 +183,7 @@ pub(crate) struct Workers {
     expansion: expansion::Plans,
     pool: Option<std::sync::Arc<rayon::ThreadPool>>,
     grain: usize,
-    stats: Counts,
+    stats: Stats,
     cell_plans: Vec<Option<CellPlan>>,
     cell_codes: Vec<CellCode>,
     first_reads: FirstReads,
@@ -308,7 +345,7 @@ impl Executor {
             #[cfg(feature = "parallel-residuals")] owned_ranges: Vec::new(),
             rule_facts: (0..self.graph.program.rules.len()).map(|_| None).collect(),
             inline_frame: Frame::default(),
-            stats: Counts { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_constructor_lookups:vec![0;workers], worker_steps: vec![0; workers],
+            stats: Stats { compiled_cell_code_bytes, fixed_read_storage_bytes, worker_entries: vec![0; workers], worker_local_operations:vec![0; workers], worker_constructor_lookups:vec![0;workers], worker_steps: vec![0; workers],
                 #[cfg(feature = "cell-query-sharing-audit")]
                 sharing_audit,
                 worker_frame_capacity_bytes: vec![0; workers], ..Default::default() } });
@@ -319,6 +356,9 @@ impl Executor {
             json!({"enabled":true,"workers":w.stats.worker_entries.len(),"grain":w.grain,
                 "organization":"cell-run-events/v6","overlap_measurement":"unfinished-jobs-after-seal/v1","winner_ordering":"input-depth-ordinal/v1",
                 "instance_header_bytes":std::mem::size_of::<Binding>(),
+                "completion_event_bytes":std::mem::size_of::<completion::Event<'_>>(),
+                "query_task_counter_bytes":std::mem::size_of::<Counts>(),
+                "query_executor_counter_bytes":std::mem::size_of::<Stats>(),
                 "matched":w.matched,
                 "constructor_access":"canonical-or-stable/v1", "first_read_sharing":"literal-run/v1",
                 "rule_run_capacity_bytes":w.rule_facts.capacity()*std::mem::size_of::<Option<RuleRun>>(),
@@ -670,7 +710,7 @@ struct Chunk {
     reads: usize,
 }
 fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCode],
-    headers: &mut Vec<QueryRead<'a>>, chunk: &mut Chunk, counts: &mut Counts,
+    headers: &mut Vec<QueryRead<'a>>, chunk: &mut Chunk, counts: &mut Stats,
     #[cfg(feature = "parallel-residuals")] positions: &[usize],
     #[cfg(feature = "cell-query-sharing-audit")] g: &Graph) {
     let q = &queries[source];
@@ -717,7 +757,7 @@ impl CellTasks {
     fn new(templates: usize) -> Self {
         Self { by_cell: Default::default(), cells: Vec::new(), templates: vec![(0, 0); templates], active: Vec::new() }
     }
-    fn push(&mut self, cell: (usize, Dependency), source: usize, rule: usize, queries: &mut [CellQuery], counts: &mut Counts) {
+    fn push(&mut self, cell: (usize, Dependency), source: usize, rule: usize, queries: &mut [CellQuery], counts: &mut Stats) {
         counts.cell_task_probes += 1;
         let capacity = self.by_cell.capacity();
         match self.by_cell.entry(cell) {
@@ -756,7 +796,7 @@ impl CellTasks {
             + self.templates.capacity() * std::mem::size_of::<(usize, usize)>()
             + self.active.capacity() * std::mem::size_of::<usize>()) as u64
     }
-    fn clear(&mut self, counts: &mut Counts) {
+    fn clear(&mut self, counts: &mut Stats) {
         counts.cell_task_clears += self.cells.len() as u64;
         self.by_cell.clear();
         self.cells.clear();

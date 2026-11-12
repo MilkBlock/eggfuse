@@ -64,7 +64,7 @@ impl Merge<'_> {
 pub(super) struct MergeWork { pub comparisons:u64, pub bytes:u64, pub seconds:f64, pub worker:Option<usize>, pub count:usize }
 pub(super) struct PendingMerge { rows:Vec<((usize,usize),Binding)> }
 impl Output {
-    pub fn resolve_coverage(&mut self,g:&Graph,spine:&mut crate::stage_spine::Programs,rid:usize,stats:&mut Counts) {
+    pub fn resolve_coverage(&mut self,g:&Graph,spine:&mut crate::stage_spine::Programs,rid:usize,stats:&mut Stats) {
         if let Some(coverage)=self.coverage.take() {
             if coverage.residual==0 {
                 assert!(self.rows.is_empty(),"no residual Entry implies no residual answer");
@@ -123,6 +123,8 @@ pub(super) struct Plans {
 impl Plans {
     pub fn report(&self)->J { json!({"enabled":self.enabled,
         "organization":"shared-cell-run/v1",
+        "task_counter_bytes":std::mem::size_of::<InputWork>(),
+        "executor_counter_bytes":std::mem::size_of::<Work>(),
         "compiled_entries":self.rules.iter().flatten().filter(|p|p.is_some()).count(),
         "plan_capacity_bytes":self.plan_bytes(),"stats":self.work}) }
     fn plan_bytes(&self)->usize {
@@ -380,8 +382,17 @@ pub(super) struct Prepared<'a> {
     projections:&'a [crate::entry_join::Projection],expanded:usize,partitioned:bool,
 }
 #[derive(Default)]
+struct InputWork {
+    admission_probes:u64, admission_rejected:u64, admission_rows:u64,
+    expansion_probes:u64, expansion_rows:u64, row_reads:u64,
+    index_rows_examined:u64,
+    input_rows:u64, filter_probes:u64, filter_rejected:u64, direct_entries:u64,
+    partitioned_entries:u64, partitioned_admitted:u64, partitioned_answers:u64,
+    partitioned_admission_probes:u64, partitioned_expansion_rows:u64, partitioned_point_reads:u64,
+}
+#[derive(Default)]
 pub(super) struct ChunkWork {
-    pub counts:Counts,work:Work,
+    pub counts:Counts,work:InputWork,
     filters:SmallVec<[(usize,u64,u64,u64,u64);4]>,
 }
 impl ChunkWork { pub(super) fn admitted_entries(&self)->u64 {self.counts.entries} }
@@ -447,7 +458,7 @@ struct Host<'a,'g,'i> {
     query:&'a crate::cell::Query, entry:&'a Entry<'a>, pivot:usize,
     reads:&'a crate::graph::query_reads::QueryReads<'g>, index:&'a Read<'i>, key_nodes:&'a J,
     inputs:&'a [usize], known:&'a QueryFacts, frame:&'a mut Frame,
-    counts:&'a mut Counts, work:&'a mut Work, answers:&'a mut Vec<(usize,Binding)>, source:usize, watermark:u64,
+    counts:&'a mut Counts, work:&'a mut InputWork, answers:&'a mut Vec<(usize,Binding)>, source:usize, watermark:u64,
 }
 impl Host<'_, '_, '_> {
     fn step(&mut self, pc:usize, expanded:Option<(usize,&Row)>, mut epoch:u64,
