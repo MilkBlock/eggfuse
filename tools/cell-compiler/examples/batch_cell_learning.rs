@@ -84,7 +84,7 @@ fn main()->Result<()> {
             eprintln!("compiled pooled catalog for {name}");
         }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" {
-        if !(a.len()==3 || (a.len()==4 && a[0]=="check-passive" && matches!(a[3].as_str(),"template-fields"|"template-overlap"))) {return Err("apply-passive/check-passive ROOT VARIANT [template-fields|template-overlap]".into());}
+        if !(a.len()==3 || (a.len()==4 && a[0]=="check-passive" && matches!(a[3].as_str(),"template-fields"|"template-overlap"|"witness-trace"))) {return Err("apply-passive/check-passive ROOT VARIANT [template-fields|template-overlap|witness-trace]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -134,6 +134,7 @@ fn main()->Result<()> {
                 let raw=read(dir.join("candidate.json"))?;
                 if raw["ownership_fragments"]!=proposal["selection"] {return Err("candidate differs from selection".into());}
                 let mut target=executor(raw)?;
+                if a.get(3).is_some_and(|a|a=="witness-trace") {target.graph.trace_ownership_catalog(16)?;}
                 if a.get(3).is_some_and(|a|matches!(a.as_str(),"template-fields"|"template-overlap")) {target.graph.use_template_stable_fields()?;}
                 if a.get(3).is_some_and(|a|a=="template-overlap") {
                     target.graph.use_parallel_port_guards(2,1)?;
@@ -150,6 +151,7 @@ fn main()->Result<()> {
                 if step(&mut target,checks.len()+1)?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
                 reports.push(json!({"case":name,"runs":checks.len(),"all_saved_run_checks_equal":true,
                     "program":target.graph.program.artifact["sha256"],"source_storage":target.graph.retained_cell_storage(),
+                    "catalog_trace":if a.get(3).is_some_and(|a|a=="witness-trace") {Some(target.graph.ownership_catalog_trace()?)} else {None},
                     "completion_batches":target.graph.completion_batch_report(),
                     "stable_ports":target.graph.stable_port_report(),
                     "final_state":artifact_digest(&target.graph.export()?)}));
