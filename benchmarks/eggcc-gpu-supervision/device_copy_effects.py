@@ -40,11 +40,11 @@ def main():
     from collections import Counter
     from collect_observed_corpus import read_bytes
     from device_constructor_completion import compile_completion
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('entry_audit',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('entry_audit',type=Path);p.add_argument('output',type=Path);p.add_argument('--unions',action='store_true');a=p.parse_args()
     raw=read_bytes(a.trace);recipe=json.loads(raw)['recipe'];audit=json.loads(a.entry_audit.read_text())
     digest=hashlib.sha256(raw).hexdigest()
     if audit['trace_sha256']!=digest:raise ValueError('entry audit uses another trace')
-    copies=compile_copies(recipe);plan=compile_completion(recipe,max(len(r['slots']) for r in recipe['rules']))
+    copies=compile_copies(recipe);plan=compile_completion(recipe,max(len(r['slots']) for r in recipe['rules']),include_unions=a.unions)
     covered={(s['rule'],s['operation']) for _,s in plan['operations']};prefix=[];full=[]
     for rid,rule in enumerate(recipe['rules']):
         count=0
@@ -54,7 +54,7 @@ def main():
     rows=audit['records']
     result=dict(scope='Static recipe coverage, not executed real-workload completion',trace_sha256=digest,
         compiled_copy_sites=len(copies['sites']),copy_boundaries=dict(Counter(m['reason'] for m in copies['marks'])),
-        compiled_effect_sites=len(plan['operations']),fully_supported_rules=len(full),probed_entries=len(rows),
+        include_unions=a.unions,compiled_effect_sites=len(plan['operations']),fully_supported_rules=len(full),probed_entries=len(rows),
         probed_entries_with_supported_prefix=sum(prefix[r['consumer']]>0 for r in rows),
         probed_fully_supported_entries=sum(r['consumer'] in full for r in rows),boundary_counts=dict(Counter(m['reason'] for m in plan['marks'])))
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

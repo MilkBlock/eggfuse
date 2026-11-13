@@ -82,3 +82,49 @@ remain major boundaries. Reference Bake tip is still `51853f11`.
 Reproduce the coverage report with `device_copy_effects.py TRACE ENTRY_AUDIT
 OUTPUT`; it rejects a mismatched trace identity. Results are saved in
 `copy-completion-coverage.json`. No native runtime or speed claim is made.
+
+## Ordered typed union integration
+
+With `compile_completion(..., include_unions=True)`, the completion plan includes
+union sites and a recipe-wide typed slot layout. `complete` then requires an
+explicit fixed-capacity identity registry (`roots`, `sorts`); `eq_sort_names`
+defines its type codes. It returns the updated registry and Eq settlement flag
+in its diagnostics. Constructor allocation is capped by registry capacity and
+initializes the new identity's type and self-root. It does not infer a global
+namespace reservation from a partial witness view.
+
+At a union site, the device collects only instances at the matching effect_pc,
+checks declared slot types against the registry, runs bounded Eq/congruence
+completion, and advances only if completion settles. The subsequent constructor
+uses refreshed roots. Query-only constructor views are included in congruence;
+refresh layouts include all recipe templates so inactive but visible shared
+readers also receive updated tokens. Actual slot IDs remain unchanged. No-op
+completed union effects still refresh their instance's completed representation.
+
+No applicable union means no closure state is installed. Missing operands,
+wrong types, unknown external coverage or exhausted closure rounds remain
+pending. New roots may be provisional on budget exhaustion, but later constructor
+lookup is blocked until a settled snapshot is available. This exact dense
+closure is a correctness path, not the desired efficient floating execution.
+It does not establish whole-program saturation or ownership transfer.
+
+75 mechanism tests pass. A compiled GPU fixture merges a/b, propagates equality
+through two F witnesses, reuses an existing G result later in the same effect
+sequence, and refreshes a visible shared reader. Other tests cover budget and
+external-view failure, typed fresh allocation and equal-registry-type values
+that disagree with template slot types. Full original cross-instance effect
+ordering and Run/stage scheduling remain outside this fixture's evidence.
+
+The recipe-only coverage report (`device_copy_effects.py ... --unions`) now
+includes 52 union sites, 1,996 total supported effect sites, and complete effect
+lists for 235 rules. The prior 44-Entry probe still has only 22 completely
+supported consumers; adding union does not remove their other boundaries. The
+report is `union-completion-coverage.json`; it is not executed coverage or
+prediction-accuracy evidence. Default constructor/copy-only plan behavior is
+preserved for callers without a typed registry.
+
+Reference Bake tip `3ae40414` measures receipt omission against the original
+workload and reports both Program and Graph storage. Its key lesson applies
+here: static support counts and local fixture completion cannot replace a full
+runtime denominator or final semantic acceptance. No native branch was merged
+and no full Eggcc execution/speed claim is made.
