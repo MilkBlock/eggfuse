@@ -3364,6 +3364,7 @@ impl Executor {
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.has_unit_tail())).count(),
             "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),
             "inline_evidence_bytes":std::mem::size_of::<crate::cell::constructor_prepare::Prepared>(),
+            "unit_outcome_bytes":std::mem::size_of::<(usize,crate::cell::unit_prepare::Unit)>(),
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {

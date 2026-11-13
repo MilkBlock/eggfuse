@@ -57,11 +57,16 @@ impl Graph {
 impl QueryReads<'_> {
     /// A typed Unit continuation can reuse this exact row at its source effect
     /// position if the original Run generation and row lifecycle still hold.
+    pub(crate) fn unit_witness_projected<'a>(&self, table: usize, len: usize,
+        field: impl Fn(usize)->Option<&'a Value>) -> std::result::Result<Option<crate::cell::unit_prepare::Witness>, ()> {
+        let Some(&index) = self.keys[table].get_projected(len,field,self.functions)? else {return Ok(None)};
+        Ok(self.functions.get(index).filter(|f|f.live && f.table == table
+            && f.canonical && !f.projected && f.value() == &Value::Int(0))
+            .map(|f|crate::cell::unit_prepare::Witness { table, index, epoch:f.epoch }))
+    }
+    #[cfg(test)]
     pub(crate) fn unit_witness(&self, table: usize, keys: &[Value]) -> Option<crate::cell::unit_prepare::Witness> {
-        let &index = self.keys[table].get(keys, self.functions)?;
-        let f = self.functions.get(index)?;
-        (f.live && f.table == table && f.canonical && !f.projected && f.value() == &Value::Int(0))
-            .then_some(crate::cell::unit_prepare::Witness { table, index, epoch:f.epoch })
+        self.unit_witness_projected(table,keys.len(),|i|keys.get(i)).ok().flatten()
     }
     pub fn constructor_available(&self, table: usize) -> bool {
         match &self.constructors {

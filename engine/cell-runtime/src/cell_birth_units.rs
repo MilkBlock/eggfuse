@@ -24,8 +24,11 @@ pub(crate) struct Row {
     pub(super) registered: Option<(usize, bool, bool, bool)>,
 }
 impl Row {
+    #[cfg(test)]
     pub(crate) fn prepared(table: usize, key: &[Value]) -> Self {
-        let fields = Graph::shared_fields(key, &Value::Int(0));
+        Self::from_fields(table,Graph::shared_fields(key, &Value::Int(0)))
+    }
+    fn from_fields(table: usize, fields: RowFields) -> Self {
         Self { fields:fields.clone(), registered: None, function: Function { writer: None,
             #[cfg(feature="receipt-slots")] port_slot: 0,
             table, fields, canonical:true, projected:false, epoch: 0, live: true, origin: None } }
@@ -170,7 +173,8 @@ impl Graph {
         let table = unit.table();
         if !self.accept_prepared_unit(table) { self.stats.unit_prepared_stale += 1; return Ok(None); }
         match unit {
-            Unit::Row(mut row) => {
+            Unit::Row {table,fields} => {
+                let mut row = Row::from_fields(table,fields);
                 row.function.origin = origin;
                 row.function.epoch = self.epoch;
                 let key = keep_key.then(||row.function.key().to_vec());

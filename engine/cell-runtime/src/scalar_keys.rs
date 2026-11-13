@@ -64,6 +64,27 @@ impl FunctionKeys {
     pub fn get(&self, key: &[Value], functions: &[Function]) -> Option<&usize> {
         self.get_if(key, |i| functions.get(i).is_some_and(|f| f.live && f.key() == key))
     }
+    /// Read the compiler's operand projection directly from the same Cell.
+    /// Missing slots reject preparation; neither a digest nor a partial key
+    /// can establish equality. Hash and exact comparison borrow the values.
+    pub(crate) fn get_projected<'a>(&self, len: usize,
+        field: impl Fn(usize)->Option<&'a Value>, functions: &[Function]) -> std::result::Result<Option<&usize>, ()> {
+        let scalar = if len == 1 { self.word(std::slice::from_ref(field(0).ok_or(())?)) }
+            else { self.word(&[]) };
+        if let Some(word) = scalar { return Ok(self.words.get(&word)); }
+        // Match hashkey(0, slice): table, slice length, then Value::hash for
+        // each field. Insert/remove keep their existing authoritative keys.
+        let mut hash = rustc_hash::FxHasher::default();
+        0usize.hash(&mut hash);
+        len.hash(&mut hash);
+        for i in 0..len { field(i).ok_or(())?.hash(&mut hash); }
+        let hash = hash.finish();
+        #[cfg(test)]
+        let hash = hash & self.hash_mask;
+        Ok(self.other.get(&hash).and_then(|bucket|bucket.iter().find(|&&i|
+            functions.get(i).is_some_and(|row|row.live && row.key().len()==len
+                && row.key().iter().enumerate().all(|(i,v)|Some(v)==field(i))))))
+    }
     /// Terminal owners pin only relevant immutable rows. Exact comparison
     /// still belongs to the worker, including rows it has just registered.
     pub(super) fn get_if(&self, key: &[Value], mut matches: impl FnMut(usize)->bool) -> Option<&usize> {
@@ -112,6 +133,35 @@ impl FunctionKeys {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn projected_keys_match_inserted_slice_keys_including_collisions_and_missing_slots() {
+        let keys = vec![vec![], vec![Value::Eq(7)], vec![Value::Int(-3)],
+            vec![Value::Float(f64::NAN.to_bits() as i64)], vec![Value::Text("long text".to_string().into())],
+            vec![Value::Set(vec![Value::Eq(7),Value::Int(3)].into())],
+            (0..17).map(|i|if i%2==0 {Value::Eq(i)} else {Value::Int(-(i as i64))}).collect()];
+        let mut rows:Vec<Function> = keys.iter().map(|key|serde_json::from_value(json!({
+            "table":0,"key":key,"value":Value::Int(0),"epoch":0,"live":true
+        })).unwrap()).collect();
+        for kind in [None,Some(Kind::Eq),Some(Kind::Int),Some(Kind::Float)] {
+            for mask in [u64::MAX,0] {
+                let mut index=FunctionKeys {scalar:kind,words:Default::default(),other:Default::default(),hash_mask:mask};
+                for (i,key) in keys.iter().enumerate() {index.insert(key,i);}
+                for (i,key) in keys.iter().enumerate() {
+                    // The projection need not use contiguous or ascending slots.
+                    let slots=key.iter().rev().cloned().collect::<Vec<_>>();
+                    assert_eq!(index.get_projected(key.len(),|col|slots.get(key.len()-1-col),&rows),Ok(Some(&i)));
+                    assert_eq!(index.get_projected(key.len()+1,|col|key.get(col),&rows),Err(()));
+                }
+                assert_eq!(index.get_projected(2,|_|Some(&Value::Int(99)),&rows),Ok(None));
+                index.remove(&keys[6],6);
+                assert_eq!(index.get_projected(keys[6].len(),|col|keys[6].get(col),&rows),Ok(None));
+                rows[6].live=false;
+                index.insert(&keys[6],6);
+                assert_eq!(index.get_projected(keys[6].len(),|col|keys[6].get(col),&rows),Ok(None));
+                rows[6].live=true;
+            }
+        }
+    }
     #[test]
     fn colliding_keys_read_authoritative_rows_and_remove_only_the_selected_id() {
         let mut index = FunctionKeys {

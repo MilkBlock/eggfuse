@@ -303,8 +303,8 @@ mod tests {
             let mut witness=None;
             let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut witness,&mut units);
             if change=="same" {
-                let crate::cell::unit_prepare::Unit::Row(row)=units.take(2).unwrap() else {panic!("prepared row")};
-                assert_eq!(row.fields[0],second);
+                let crate::cell::unit_prepare::Unit::Row {fields,..}=units.take(2).unwrap() else {panic!("prepared row")};
+                assert_eq!(fields[0],second);
                 assert_eq!(g.consume_constructor_prefix(0,prefix.unwrap().0,false),2);
                 assert_eq!(instance.values.get(&1),Some(&first));
                 assert_eq!(g.stats.constructor_prefix_operations,2);

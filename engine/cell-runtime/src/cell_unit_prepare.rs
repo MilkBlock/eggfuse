@@ -1,7 +1,7 @@
 //! Total Unit writes whose operands come exclusively from the successful Cell
 //! match and its pure scalar program. Candidates stay in that same instance;
 //! only the source winner may give a row an origin and publish its receipt.
-use crate::{cell::{Definition, Instance}, graph::{cell_births::units::Row, query_reads::QueryReads},
+use crate::{cell::{Definition, Instance}, graph::{RowFields, query_reads::QueryReads},
     program::{Arg, Call, Op, Program}, value::Value};
 use serde::Serialize;
 
@@ -14,9 +14,11 @@ pub(crate) struct Prepared(Vec<(usize, Unit)>);
 #[derive(Clone, Copy, Debug)]
 pub(crate) struct Witness { pub table: usize, pub index: usize, pub epoch: u64 }
 #[derive(Debug)]
-pub(crate) enum Unit { Row(Row), Existing(Witness) }
+// Workers own the final field allocation. Source-only origin/epoch and the
+// fixed Unit storage metadata belong to adoption, not every prepared record.
+pub(crate) enum Unit { Row { table: usize, fields: RowFields }, Existing(Witness) }
 impl Unit {
-    pub fn table(&self) -> usize { match self { Self::Row(row) => row.function.table, Self::Existing(w) => w.table } }
+    pub fn table(&self) -> usize { match self { Self::Row {table,..} => *table, Self::Existing(w) => w.table } }
 }
 impl Prepared {
     pub fn len(&self) -> usize { self.0.len() }
@@ -105,22 +107,25 @@ impl Plan {
         }
         let mut rows = Vec::with_capacity(self.sites.len());
         for site in &self.sites {
-            let Some(keys) = site.keys.iter().map(|a| match a {
-                Arg::Slot(s) => instance.values.get(s).cloned(), Arg::Literal(v) => Some(v.clone()),
-            }).collect::<Option<smallvec::SmallVec<[Value;4]>>>() else { counts.missing += 1; continue; };
-            if keys.spilled() { counts.key_spill_bytes += (keys.capacity()*std::mem::size_of::<Value>()) as u64; }
+            let field = |i| match &site.keys[i] {
+                Arg::Slot(s) => instance.values.get(s), Arg::Literal(v) => Some(v),
+            };
             if let Some(reads) = reads {
+                let Ok(witness) = reads.unit_witness_projected(site.table,site.keys.len(),field)
+                    else { counts.missing += 1; continue; };
                 counts.probes += 1;
-                if let Some(witness) = reads.unit_witness(site.table, &keys) {
+                if let Some(witness) = witness {
                     counts.existing += 1;
                     rows.push((site.operation, Unit::Existing(witness)));
                     continue;
                 }
             }
-            let row = Row::prepared(site.table, &keys);
-            counts.bytes += (row.fields.len()*std::mem::size_of::<Value>()) as u64;
+            let Some(fields) = (0..site.keys.len()).map(|i|field(i).cloned())
+                .chain(std::iter::once(Some(Value::Int(0)))).collect::<Option<RowFields>>()
+                else { counts.missing += 1; continue; };
+            counts.bytes += (fields.len()*std::mem::size_of::<Value>()) as u64;
             counts.rows += 1;
-            rows.push((site.operation, Unit::Row(row)));
+            rows.push((site.operation, Unit::Row {table:site.table,fields}));
         }
         counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Unit)>()) as u64;
         counts.instances += 1;

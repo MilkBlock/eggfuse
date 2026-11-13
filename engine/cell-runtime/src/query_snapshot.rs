@@ -128,9 +128,11 @@ mod tests {
     #[cfg(feature = "parallel-publication")]
     #[test]
     fn publication_moves_existing_columns_and_reuses_only_empty_change_storage() {
+        for bits in [0,64] {
         let mut graph=crate::query::test_projection_graph();
         graph.set_function(0,vec![Value::Int(1),Value::Int(2)],Value::Int(3)).unwrap();
         let mut index=QueryIndexes::default();
+        index.bits=bits;
         index.track_changes=true;
         index.ensure_selected(&graph,0,[0]).unwrap();
         let row=graph.row(graph.witnesses(0)[0]).unwrap().unwrap();
@@ -158,8 +160,15 @@ mod tests {
         task.update(row.witness,Some(&row));
         task.finish(graph.query_versions[0]);
         index.restore_publication(task);
-        assert_eq!(index.changes,[(row.witness,0,super::super::column_bit(2))]);
+        // Notifications describe changed fingerprint buckets. With all bits
+        // masked out, the authoritative row changes but its candidate bucket
+        // does not; exact consumers still read the new value from that row.
+        if bits==0 {assert!(index.changes.is_empty());}
+        else {assert_eq!(index.changes,[(row.witness,0,super::super::column_bit(2))]);}
+        assert_eq!(index.tables[&0].keys[&row.witness][2],fingerprint(&Value::Int(4),bits));
+        assert_eq!(graph.row(row.witness).unwrap().unwrap().values[2],Value::Int(4));
         index.clear();assert_eq!(index.publication_buffer_bytes(),0);
+        }
     }
 
     #[cfg(feature = "parallel-publication")]

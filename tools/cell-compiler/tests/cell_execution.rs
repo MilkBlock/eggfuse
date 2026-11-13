@@ -244,6 +244,41 @@ fn existing_constructor_results_continue_into_worker_unit_storage() {
 }
 
 #[test]
+fn unit_projection_reads_wide_keys_and_keeps_mixed_outcomes_in_one_cell() {
+    let mut source=String::from(r#"
+(datatype E (N i64) (Seen i64))
+(function Wide (i64 i64 i64 i64 i64 i64 String) Unit :merge new)
+(function Narrow (i64) Unit :merge old)
+(ruleset step) (ruleset observe)
+(rule ((N n)) ((set (Wide n (+ n 1) (+ n 2) (+ n 3) (+ n 4) (+ n 5) "tag") ())
+ (set (Narrow n) ())) :ruleset step)
+(rule ((Wide n a b c d e "tag") (Narrow n)) ((Seen n)) :ruleset observe)
+"#);
+    for n in 0..64 {
+        source+=&format!("(N {n}) (set (Wide {n} {} {} {} {} {} \"tag\") ())\n",n+1,n+2,n+3,n+4,n+5);
+        if n%2==0 {source+=&format!("(set (Narrow {n}) ())\n");}
+    }
+    source+="(run-schedule (seq (run step) (run observe))) (check (Seen 1))";
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let mut control=executor(&source,0);control.execute().unwrap();
+    for workers in [1,4] {
+        let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();same(&control,&candidate);
+        assert_eq!(candidate.graph.stats.merge_calls,control.graph.stats.merge_calls);
+        let report=candidate.report();let units=&report["query_workers"]["stats"]["execution"]["units"];
+        assert_eq!(report["cell_execution"]["constructor_preparation"]["unit_outcome_bytes"],40);
+        assert_eq!(report["cell_execution"]["constructor_preparation"]["instance_bytes"],160);
+        assert_eq!(units["key_spill_bytes"],0);
+        if workers==4 {
+            assert!(units["existing"].as_u64().unwrap()>0);
+            assert!(units["rows"].as_u64().unwrap()>0);
+            assert!(candidate.graph.stats.unit_prepared_existing>0);
+            assert!(candidate.graph.stats.unit_prepared_consumed>0);
+        }
+    }
+}
+
+#[test]
 fn worker_unit_witnesses_preserve_source_deletion_recreation_and_pending_union() {
     for change in ["same", "delete", "recreate", "union"] {
         let mut source=String::from(r#"
